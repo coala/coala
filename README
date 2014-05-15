@@ -1,0 +1,6 @@
+This is a simple code checking utility.
+
+It aims to be fast, easily extensible through modular filter design and filter
+library as well as easy to use. (Just write a simple .conf file and execute the
+installed codec in the directory.)
+
