@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from codeclib.fillib.util.Settings import Settings
+from codeclib.fillib.util.settings import Settings
 from codeclib.internal import FilterManager
 from codeclib.internal.Process import Process
 
