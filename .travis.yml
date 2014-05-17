@@ -14,5 +14,7 @@ python:
   - "3.4"
   - "pypy"
 
-script: python setup.py test
+script:
+  - ./setup.py test
+  - sudo ./setup.py install; codec
 
