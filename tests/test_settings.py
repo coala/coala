@@ -20,6 +20,7 @@ from codeclib.fillib.util import settings
 
 class TestSettings(unittest.TestCase):
 
+    @unittest.skipIf(sys.version_info < (3, 4), "This test is not supported by python < 3.4")
     def test_accept_possible_arguments(self):
 
         argument_list = [
@@ -47,6 +48,7 @@ class TestSettings(unittest.TestCase):
             with self.subTest(i=i):
                 self.assertEqual(settings.parse_args(argument_list[i].split()), expected_result_list[i])
 
+    @unittest.skipIf(sys.version_info < (3, 4), "This test is not supported by python < 3.4")
     def test_reject_impossible_arguments(self):
 
         argument_list = [
@@ -55,8 +57,7 @@ class TestSettings(unittest.TestCase):
         "-x",
         "argument",
         "--vs",
-        "v",
-        ""
+        "v"
         ]
 
         # A SystemExit with code 2 should be raised in any of these cases
