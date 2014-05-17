@@ -1,0 +1,13 @@
+language: python
+
+notifications:
+  recipients:
+    - lasse.schuirmann@gmail.com
+  email:
+    on_failure: always
+
+python:
+  - "3.4"
+
+script: python setup.py test
+
