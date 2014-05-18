@@ -16,5 +16,4 @@ python:
 
 script:
   - python setup.py test
-  - sudo python setup.py install; codec
 
