@@ -97,7 +97,7 @@ class Settings:
 
         return norm_arg_vars
 
-    def saveConfig(self, ccfile_path):
+    def save_conf(self, ccfile_path):
         pass
 
     def parse_conf(self, ccfile_path):
