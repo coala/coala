@@ -20,6 +20,10 @@ from codeclib.fillib.util import settings
 
 class TestSettings(unittest.TestCase):
 
+    def setUp(self):
+        # passing None will result in error because "test" from "setup.py test" will be interpreted
+        self.Settings = settings.Settings(['-v'])
+
     @unittest.skipIf(sys.version_info < (3, 4), "This test is not supported by python < 3.4")
     def test_accept_possible_arguments(self):
 
@@ -34,19 +38,81 @@ class TestSettings(unittest.TestCase):
         ]
 
         expected_result_list = [
-        {'d':["Hallo"], 'dd':None, 'f':None, 'ff':None, 't':None, 'i':None, 'c':'ccfile', 's':False, 'v':False},
-        {'d':["Hallo"], 'dd':None, 'f':None, 'ff':None, 't':None, 'i':None, 'c':'ccfile', 's':False, 'v':False},
-        {'d':["Hallo", "Welt"], 'dd':None, 'f':None, 'ff':None, 't':None, 'i':None, 'c':'ccfile', 's':False, 'v':False},
-        {'d':None, 'dd':None, 'f':None, 'ff':None, 't':None, 'i':None, 'c':'ccfile', 's':False, 'v':True},
-        {'d':None, 'dd':None, 'f':None, 'ff':None, 't':None, 'i':None, 'c':'ccfile', 's':True, 'v':True},
-        {'d':None, 'dd':None, 'f':None, 'ff':None, 't':['.dif'], 'i':['foo','bar'], 'c':'ccfile', 's':False, 'v':False},
-        {'d':None, 'dd':None, 'f':None, 'ff':None, 't':None, 'i':None, 'c':'/home/fabian/codec.conf', 's':False, 'v':False}
+        {'TargetLocations':["Hallo"],
+        'RecursiveTargetLocations':None,
+        'Filters':None,
+        'FilterMatches':None,
+        'CheckedFileTypes':None,
+        'IgnoredFileTypes':None,
+        'ConfigLocation':None,
+        'SaveSettings':False,
+        'Verbosity':False},
+
+        {'TargetLocations':["Hallo"],
+        'RecursiveTargetLocations':None,
+        'Filters':None,
+        'FilterMatches':None,
+        'CheckedFileTypes':None,
+        'IgnoredFileTypes':None,
+        'ConfigLocation':None,
+        'SaveSettings':False,
+        'Verbosity':False},
+
+        {'TargetLocations':["Hallo", "Welt"],
+         'RecursiveTargetLocations':None,
+         'Filters':None,
+         'FilterMatches':None,
+         'CheckedFileTypes':None,
+         'IgnoredFileTypes':None,
+         'ConfigLocation':None,
+         'SaveSettings':False,
+         'Verbosity':False},
+
+        {'TargetLocations':None,
+         'RecursiveTargetLocations':None,
+         'Filters':None,
+         'FilterMatches':None,
+         'CheckedFileTypes':None,
+         'IgnoredFileTypes':None,
+         'ConfigLocation':None,
+         'SaveSettings':False,
+         'Verbosity':True},
+
+        {'TargetLocations':None,
+         'RecursiveTargetLocations':None,
+         'Filters':None,
+         'FilterMatches':None,
+         'CheckedFileTypes':None,
+         'IgnoredFileTypes':None,
+         'ConfigLocation':None,
+         'SaveSettings':True,
+         'Verbosity':True},
+
+        {'TargetLocations':None,
+         'RecursiveTargetLocations':None,
+         'Filters':None,
+         'FilterMatches':None,
+         'CheckedFileTypes':['.dif'],
+         'IgnoredFileTypes':['foo','bar'],
+         'ConfigLocation':None,
+         'SaveSettings':False,
+         'Verbosity':False},
+
+        {'TargetLocations':None,
+         'RecursiveTargetLocations':None,
+         'Filters':None,
+         'FilterMatches':None,
+         'CheckedFileTypes':None,
+         'IgnoredFileTypes':None,
+         'ConfigLocation':'/home/fabian/codec.conf',
+         'SaveSettings':False,
+         'Verbosity':False}
         ]
 
         # the result should be equal to the expected result in any of these cases
         for i in range(len(argument_list)):
             with self.subTest(i=i):
-                self.assertEqual(settings.parse_args(argument_list[i].split()), expected_result_list[i])
+                self.assertEqual(self.Settings.parse_args(argument_list[i].split()), expected_result_list[i])
 
     @unittest.skipIf(sys.version_info < (3, 4), "This test is not supported by python < 3.4")
     def test_reject_impossible_arguments(self):
@@ -64,7 +130,7 @@ class TestSettings(unittest.TestCase):
         for i in range(len(argument_list)):
             with self.subTest(i=i):
                 with self.assertRaises(SystemExit) as SE:
-                    args = settings.parse_args(argument_list[i].split())
+                    args = self.Settings.parse_args(argument_list[i].split())
                 self.assertEqual(SE.exception.code, 2)
 
 if __name__ == "__main__":
