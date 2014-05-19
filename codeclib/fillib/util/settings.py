@@ -17,25 +17,88 @@ import os
 import inspect
 import pkgutil
 import argparse
-import configparser
 import collections
 import logging
 
 
-class Settings:
-    def __init__(self, custom_arg_list = None):
+class Settings(collections.OrderedDict):
+    def __init__(self, custom_arg_list=None):
+        # derived from ordered Dict for cleaner configuration files
+        collections.OrderedDict.__init__(self)
 
-        # TODO get settings
-        # 1. load conf
-        # 2. override with args
+        # TODO get settings:
+        # 1. set defaults
+        # 2. override with (earliest) conf
+        # 3. override with confs up to latest
+        # 4. override with cli args
 
-        # getting cli Arguments
-        arg_vars = self.parse_args(custom_arg_list)
+    def defaultOptions(self):
 
-    def getSetting(self, key):
-        pass
+        # dict of default values:
+        defaultValues={'TargetDirectories': [os.getcwd()],
+                       'IgnoredDirectories': None,
+                       'FlatDirectories': None,
+                       'TargetFileTypes': None,
+                       'IgnoredFileTypes': ['.gitignore'],
 
-    def setDefaultOptions(self):
+                       'Filters': None,
+                       'IgnoredFilters': None,
+                       'RegexFilters': None,
+
+                       'FileOkColor': 'bright red',
+                       'FileBadColor': 'bright green',
+                       'FilterColor': 'grey',
+                       'ErrorResultColor': 'red',
+                       'WarningResultColor': 'yellow',
+                       'InfoResultColor': 'normal',
+                       'DebugResultColor': 'cyan',
+
+                       'LogType': 'CONSOLE',
+                       'LogOutput': None,
+                       'Verbosity': 'INFO',
+
+                       'ConfigFile': '.codecfile',
+                       'Save': None,
+                       'JobCount': None
+                       }
+        return defaultValues
+
+# WHILE THIS CAN BE TAKEN AS A STARTING POINT FOR LATER WORK, IT IS NOW OBSOLETE BECAUSE CONFIGPARSER WILL NOT BE USED!
+#    def list_config_hierarchy(self, ccfile_path_list):
+#        """Config files may refer to other config files which are included for values that don't differ from defaults
+#        :param ccfile_path_list: list with already found config file paths
+#        :returns: List of config files that refer to each other, highest priority file first
+#        """
+#        ccfile_path_list = ccfile_path_list
+#        cfg_parser = configparser.ConfigParser()
+#        cfg_parser.optionxform = str # this makes options case sensitive:
+#
+#        # let cfg_parser try to read last item of that list
+#        # cfg_parser returns [] if it cannot read that file for any reason
+#        if cfg_parser.read(ccfile_path_list[len(ccfile_path_list)]):
+#            try:
+#                # this will raise KeyError if either key or sub-key is not in the config:
+#                next_config_path = cfg_parser['CODEC-SETTINGS']['ConfigLocation']
+#
+#                # the value can only be added to the list if it isn't None or already contained in the list:
+#                if next_config_path and (next_config_path not in ccfile_path_list):
+#                    ccfile_path_list.append(next_config_path)
+#                    # recursive call looks for even further delegation of configs
+#                    return self.list_config_hierarchy(ccfile_path_list)
+#                else:
+#                    # return list as is because 'ConfigLocation' had no value or to prevent infinite loop:
+#                    return ccfile_path_list
+#
+#            except KeyError:
+#                # another 'ConfigLocation' is not specified in this config, therefore the list can be returned as is
+#                return ccfile_path_list
+#        else:
+#            # cfg_parser could not read this file, therefore the list must be returned without this item
+#            return ccfile_path_list[:-1]
+
+
+    def parse_conf(self, ccfile_path_list):
+
         pass
 
     def parse_args(self, custom_arg_list = None):
@@ -45,61 +108,67 @@ class Settings:
         :param custom_arg_list: parse_args will parse this list instead of command line arguments, if specified
         :returns: parsed arguments in dictionary structure
         """
-        # argparser reads given arguments and presents help on wrong input
-        argparser = argparse.ArgumentParser(
+        # arg_parser reads given arguments and presents help on wrong input
+        arg_parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=__doc__)
 
-        # -d sets parameter "TargetLocations" => List of files and/or directories to be checked
-        argparser.add_argument('-d', nargs='+', metavar='DIR',
-                               help="Directories or files to be checked")
-        # -dd sets parameter "RecursiveTargetLocations" => List of Directories to be checked including sub-directories
-        argparser.add_argument('-dd', nargs='+', metavar='DIR',
-                               help="Directories to be checked including sub-directories")
-        # -f sets parameter "Filters" => List of filters to be used
-        argparser.add_argument('-f', nargs='+', metavar='FILTER',
-                               help="Filters to be applied")
-        # -ff sets parameter "FilterMatches" => List of Regular Expressions, matching Filters are used
-        argparser.add_argument('-ff', nargs='+', metavar='REGEX',
-                               help="regular expressions matching filters to apply")
-        # -t sets parameter "CheckedFileTypes" => List of file types that will be checked
-        argparser.add_argument('-t', nargs='+', metavar='FILETYPE',
-                               help="filetypes to be checked")
-        # -i sets parameter "IgnoredFileTypes" => List of file types that will be ignored
-        argparser.add_argument('-i', nargs='+', metavar='FILETYPE',
-                               help="filetypes to be ignored")
-        # -c sets parameter "ConfigLocation" => Location of configuration file, defaults to "ccfile"
-        argparser.add_argument('-c', nargs='?', metavar='FILE',
-                               help="Configuration file")
-        # -s sets parameter "SaveSettings" => Bool that defines whether or not to save changes to ccfile
-        argparser.add_argument('-s', action='store_true', help="save settings to local ccfile")
-        # -v sets parameter "Verbosity" => Bool that defines whether or not to give verbose output
-        argparser.add_argument('-v', action='store_true', help="enable verbosity")
+        # -d sets parameter "TargetDirectories" => List of paths to files and/or directories to be (recursively) checked
+        arg_parser.add_argument('-d', '--dirs', nargs='+', metavar='DIR', dest='TargetDirectories',
+                                help='List of paths to files and/or directories to be (recursively) checked')
+        # -id sets parameter "IgnoredDirectories" => List of paths to files and/or directories to be ignored
+        arg_parser.add_argument('-id', '--ignored-dirs', nargs='+', metavar='DIR', dest='IgnoredDirectories',
+                                help='List of paths to files and/or directories to be ignored')
+        # -fd sets parameter "FlatDirectories" => List of paths to directories to be checked excluding sub-directories
+        arg_parser.add_argument('-fd', '--flat-dirs', nargs='+', metavar='DIR', dest='FlatDirectories',
+                                help='List of paths to directories to be checked excluding sub-directories')
+        # -t sets parameter "TargetFileTypes" => List of file endings of files to be checked
+        arg_parser.add_argument('-t', '--types', nargs='+', metavar='TYPE', dest='TargetFileTypes',
+                                help='List of file endings of files to be checked')
+        # -it sets parameter "IgnoredFileTypes" => List of file endings of files to be ignored
+        arg_parser.add_argument('-it', '--ignored-types', nargs='+', metavar='TYPE', dest='IgnoredFileTypes',
+                                help='List of file endings of files to be ignored')
+        # -f sets parameter "Filters" => Names of filters that should be used
+        arg_parser.add_argument('-f', '--filters', nargs='+', metavar='FILE', dest='Filters',
+                                help='Names of filters that should be used')
+        # -if sets parameter "IgnoredFilters" => Names of filters that should be ignored
+        arg_parser.add_argument('-if', '--ignored-filters', nargs='+', metavar='FILE', dest='IgnoredFilters',
+                                help='Names of filters that should be ignored')
+        # -rf sets parameter "RegexFilters" => List of regular expressions for matching filters to be used
+        arg_parser.add_argument('-rf', '--regex-filters', nargs='+', metavar='REGEX', dest='RegexFilters',
+                                help='List of regular expressions for matching filters to be used')
+        # -l sets parameter "LogType" => Enum (CONSOLE/TXT/HTML) to choose type of logging
+        arg_parser.add_argument('-l', '--log', nargs=1, choices=['CONSOLE', 'TXT', 'HTML'], metavar='LEVEL',
+                                dest='LogType', help='Enum (CONSOLE/TXT/HTML) to choose type of logging')
+        # -o sets parameter "LogOutput" => File path to where logging output should be saved
+        arg_parser.add_argument('-o', '--output', nargs=1, metavar='FILE', dest='LogOutput',
+                                help='File path to where logging output should be saved')
+        # -v sets parameter "Verbosity" => Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity
+        arg_parser.add_argument('-v', '--verbose', nargs=1, choices=['ERR', 'WARN', 'INFO', 'DEBUG'], metavar='LEVEL',
+                                dest='Verbosity', help='Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity')
+        # -c sets parameter "ConfigFile" => File path of configuration file to be used
+        arg_parser.add_argument('-c', '--config', nargs='?', const=True, metavar='FILE', dest='ConfigFile',
+                                help='File path of configuration file to be used')
+        # -s sets parameter "Save" => Filename of file to be saved to, defaults to config file
+        arg_parser.add_argument('-s', '--save', nargs='?', const=True, metavar='FILE', dest='Save',
+                                help='Filename of file to be saved to, defaults to config file')
+        # -j sets parameter "JobCount" => Number of processes to be allowed to run at once
+        arg_parser.add_argument('-j', '--jobs', nargs=1, type=int, metavar='INT', dest='JobCount',
+                                help='Number of processes to be allowed to run at once')
 
         # arg_vars stores parsed arguments in form of a dictionary.
         # it reads custom_arg_string instead of sys.args if custom_arg_string is given.
         if custom_arg_list:
-            arg_vars = vars(argparser.parse_args(custom_arg_list))
+            arg_vars = vars(arg_parser.parse_args(custom_arg_list))
         else:
-            arg_vars = vars(argparser.parse_args())
+            arg_vars = vars(arg_parser.parse_args())
 
-        # norm_arg_vars uses the keys of conf_vars and settings itself
-        norm_arg_vars = {}
-        norm_arg_vars['TargetLocations']=arg_vars['d']
-        norm_arg_vars['RecursiveTargetLocations']=arg_vars['dd']
-        norm_arg_vars['Filters']=arg_vars['f']
-        norm_arg_vars['FilterMatches']=arg_vars['ff']
-        norm_arg_vars['CheckedFileTypes']=arg_vars['t']
-        norm_arg_vars['IgnoredFileTypes']=arg_vars['i']
-        norm_arg_vars['ConfigLocation']=arg_vars['c']
-        norm_arg_vars['SaveSettings']=arg_vars['s']
-        norm_arg_vars['Verbosity']=arg_vars['v']
 
-        return norm_arg_vars
+        return arg_vars
 
     def save_conf(self, ccfile_path):
         pass
 
-    def parse_conf(self, ccfile_path):
-        pass
 
+if __name__=="__main__":
+    settings=Settings()
