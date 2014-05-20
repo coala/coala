@@ -112,7 +112,9 @@ class Settings(collections.OrderedDict):
             for line in codecfile:
 
                 # ignore line if it only contains a comment:
-                if not line.strip()[0] == '#':
+                # ignore line if it does not contain a '='
+                #TODO: #ignore line if it does not contain a key before '='
+                if (not line.strip()[0] == '#') and ('=' in line ) and (not line.strip()[0] == '='):
 
                     # key is left of '=' and lowercase in general and should not contain whitespace at the end.
                     key = line.split('=')[0].lower().strip()

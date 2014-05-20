@@ -266,7 +266,9 @@ save=/only/path/not/list
 configfile=second_file
 # this whole line is a comment...
 unknown1=this stays
-this is true = yup"""
+this is true = yup
+thisisjustsomeshitwithoutmeaning
+= now we have no key"""
         second_file = """configfile=first_file#no workerino
 targetdirectories = this,will,not,stay
 unknown2=all,of,these,will#this,not
@@ -293,6 +295,7 @@ int= 4"""
                                 }
 
         # now this is the interesting part
+        print(actual_result_dict)# TODO remove
         self.assertEqual(actual_result_dict, expected_result_dict)
 
 
