@@ -21,6 +21,7 @@ import collections
 import logging
 
 
+# noinspection PyUnreachableCode
 class Settings(collections.OrderedDict):
     def __init__(self, custom_arg_list=None):
         # derived from ordered Dict for cleaner configuration files
@@ -63,43 +64,144 @@ class Settings(collections.OrderedDict):
                        }
         return defaultValues
 
-# WHILE THIS CAN BE TAKEN AS A STARTING POINT FOR LATER WORK, IT IS NOW OBSOLETE BECAUSE CONFIGPARSER WILL NOT BE USED!
-#    def list_config_hierarchy(self, ccfile_path_list):
-#        """Config files may refer to other config files which are included for values that don't differ from defaults
-#        :param ccfile_path_list: list with already found config file paths
-#        :returns: List of config files that refer to each other, highest priority file first
-#        """
-#        ccfile_path_list = ccfile_path_list
-#        cfg_parser = configparser.ConfigParser()
-#        cfg_parser.optionxform = str # this makes options case sensitive:
-#
-#        # let cfg_parser try to read last item of that list
-#        # cfg_parser returns [] if it cannot read that file for any reason
-#        if cfg_parser.read(ccfile_path_list[len(ccfile_path_list)]):
-#            try:
-#                # this will raise KeyError if either key or sub-key is not in the config:
-#                next_config_path = cfg_parser['CODEC-SETTINGS']['ConfigLocation']
-#
-#                # the value can only be added to the list if it isn't None or already contained in the list:
-#                if next_config_path and (next_config_path not in ccfile_path_list):
-#                    ccfile_path_list.append(next_config_path)
-#                    # recursive call looks for even further delegation of configs
-#                    return self.list_config_hierarchy(ccfile_path_list)
-#                else:
-#                    # return list as is because 'ConfigLocation' had no value or to prevent infinite loop:
-#                    return ccfile_path_list
-#
-#            except KeyError:
-#                # another 'ConfigLocation' is not specified in this config, therefore the list can be returned as is
-#                return ccfile_path_list
-#        else:
-#            # cfg_parser could not read this file, therefore the list must be returned without this item
-#            return ccfile_path_list[:-1]
+    def read_conf(self, codecfile_path, history_list=None):
+
+        """
+        Reads config file and includes references config files
+        :param codecfile_path: path to configuration file
+        :param history_list; list of previously read config files to prevent infinite loops
+        :returns: dictionary containing values from config files
+        """
+
+        # this cannot be the default argument because it is mutable and would prevent a second run...
+        if not history_list: history_list = []
+
+        # this is the dict that saves settings read from configfiles
+        config_dict = {}
+
+        # return none if codecfile_path does not point to a file:
+        if not os.path.isfile(codecfile_path):
+            return {}
+
+        # return none if codecfile_path points to file that is contained in history_list already:
+        if history_list and (codecfile_path in history_list):
+            return {}
+
+        # open file if possible
+        with open(codecfile_path,'r') as codecfile:
+
+            # check if config refers to other config file
+            codecfile.seek(0)
+            for line in codecfile:
+                if line[:11].lower() == 'configfile=':
+                    # line[11:] slices first 11 characters that are 'configfile='
+                    # .split('#')[0] removes potential '#' and trailing comment
+                    # .strip() removes whitespace from front and back
+                    new_codecfile_path = line[11:].split('#')[0].strip()
+
+                    #append codecfile_path to history_list so it can't be called again:
+                    history_list.append(codecfile_path)
+
+                    #populate config_dict with data from inner config:
+                    config_dict = self.read_conf(new_codecfile_path, history_list)
 
 
-    def parse_conf(self, ccfile_path_list):
 
-        pass
+            # overwrite config_dict with values of current configuration file:
+            codecfile.seek(0)
+            for line in codecfile:
+
+                # ignore line if it only contains a comment:
+                if not line.strip()[0] == '#':
+
+                    # key is left of '=' and lowercase in general and should not contain whitespace at the end.
+                    key = line.split('=')[0].lower().strip()
+                    # adjust capital letters for standard settings
+                    if key == 'targetdirectories': key = 'TargetDirectories'
+                    if key == 'ignoreddirectories': key = 'IgnoredDirectories'
+                    if key == 'flatdirectories': key = 'FlatDirectories'
+                    if key == 'targetfiletypes': key = 'TargetFileTypes'
+                    if key == 'ignoredfiletypes': key = 'IgnoredFileTypes'
+                    if key == 'filters': key = 'Filters'
+                    if key == 'ignoredfilters': key = 'IgnoredFilters'
+                    if key == 'regexfilters': key = 'RegexFilters'
+                    if key == 'fileokcolor': key = 'FileOkColor'
+                    if key == 'filebadcolor': key = 'FileBadColor'
+                    if key == 'filtercolor': key = 'FilterColor'
+                    if key == 'errorresultcolor': key = 'ErrorResultColor'
+                    if key == 'warningresultcolor': key = 'WarningResultColor'
+                    if key == 'inforesultcolor': key = 'InfoResultColor'
+                    if key == 'debugresultcolor': key = 'DebugResultColor'
+                    if key == 'logtype': key = 'LogType'
+                    if key == 'logoutput': key = 'LogOutput'
+                    if key == 'verbosity': key = 'Verbosity'
+                    if key == 'configfile': key = 'ConfigFile'
+                    if key == 'save': key = 'Save'
+                    if key == 'jobcount': key = 'JobCount'
+
+                    # in these cases, the value will be a single value and not a list.
+                    # if several values are specified and comma-separated, the first on will be used.
+                    if key in ['Save','ConfigFile']:
+                        # left of '\n', right of first '=', left of first '#', no whitespace at borders, left of ','
+                        value = line.split('\n')[0].split('=')[1].split('#')[0].split(',')[0].strip()
+
+                        # make it an int if possible:
+                        try:
+                            value = int(value)
+                        except ValueError:
+                            pass
+
+                        # make it bool if possible:
+                        try:
+                            if value.lower() in ['y','yes','yeah','always','sure','definitely','yup','true']:
+                                value = True
+                            elif value.lower in ['n','no','nope','never','nah','false']:
+                                value = False
+                        except AttributeError:
+                            pass
+
+                    # in all other cases, the value will be a list of n values
+                    else:
+                        # left of '\n', right of first '=', left of first '#', separated by ',',no whitespace at borders
+                        value = line.split('\n')[0].split('=')[1].split('#')[0].split(',')
+
+                        for i in range(len(value)):
+                            value[i] = value[i].strip()
+
+                            # make it an int if possible:
+                            try:
+                                value[i] = int(value[i])
+                            except ValueError:
+                                pass
+
+                            # make it bool if possible:
+                            try:
+                                if value[i].lower() in ['y','yes','yeah','always','sure','definitely','yup','true']:
+                                    value[i] = True
+                                elif value[i].lower in ['n','no','nope','never','nah','false']:
+                                    value[i] = False
+                            except AttributeError:
+                                pass
+
+                            # actually pass changes back to the list:
+                            value[value.index(value[i])]=value[i]
+
+                    # key and value should now have the preferred format
+                    # config_dict should now contain no values, values from included config files or from above
+                    # they should be overwritten in any of these cases
+                    config_dict[key] = value
+
+            # all lines have been read. config_dict can be returned
+            codecfile.close()
+            return config_dict
+
+        # configuration file could not be read, probably because of missing permission or wrong file format
+        #TODO: log warning!
+        return {} # this is indeed reachable...
+
+
+
+
 
     def parse_args(self, custom_arg_list = None):
         """
@@ -167,6 +269,7 @@ class Settings(collections.OrderedDict):
         return arg_vars
 
     def save_conf(self, ccfile_path):
+        #TODO: write...
         pass
 
 

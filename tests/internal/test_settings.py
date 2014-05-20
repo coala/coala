@@ -24,8 +24,15 @@ class TestSettings(unittest.TestCase):
         # passing None will result in error because "test" from "setup.py test" will be interpreted
         self.Settings = settings.Settings()
 
+    def tearDown(self):
+        #cleanup test_configuration_parsing
+        if os.path.isfile('first_file'):
+            os.remove('first_file')
+        if os.path.isfile('second_file'):
+            os.remove('second_file')
+
     @unittest.skipIf(sys.version_info < (3, 4), "This test is not supported by python < 3.4")
-    def test_accept_possible_arguments(self):
+    def test_accept_possible_cli_arguments(self):
 
         argument_list = [
         "-d Hallo",
@@ -230,7 +237,7 @@ class TestSettings(unittest.TestCase):
                 self.assertEqual(self.Settings.parse_args(argument_list[i].split()), expected_result_list[i])
 
     @unittest.skipIf(sys.version_info < (3, 4), "This test is not supported by python < 3.4")
-    def test_reject_impossible_arguments(self):
+    def test_reject_impossible_cli_arguments(self):
 
         argument_list = [
         "-d",
@@ -249,6 +256,46 @@ class TestSettings(unittest.TestCase):
                 with self.assertRaises(SystemExit) as SE:
                     args = self.Settings.parse_args(argument_list[i].split())
                 self.assertEqual(SE.exception.code, 2)
+
+    def test_configuration_parsing(self):
+
+        # set up config files
+        first_file = """TaRgEtDiReCtOrIeS=first,second,third#comment
+      FILTERS     =      moar whitespace        #     comment
+save=/only/path/not/list
+configfile=second_file
+# this whole line is a comment...
+unknown1=this stays
+this is true = yup"""
+        second_file = """configfile=first_file#no workerino
+targetdirectories = this,will,not,stay
+unknown2=all,of,these,will#this,not
+int= 4"""
+        with open('first_file','w') as f:
+            f.write(first_file)
+            f.close()
+        with open('second_file','w') as f:
+            f.write(second_file)
+            f.close()
+
+        # test read_conf():
+        actual_result_dict = self.Settings.read_conf('first_file')
+
+        expected_result_dict = {
+                                "TargetDirectories":['first','second','third'],
+                                "Filters":['moar whitespace'],
+                                "Save":'/only/path/not/list',
+                                "ConfigFile":'second_file',
+                                "unknown1":['this stays'],
+                                "this is true":[True],
+                                "unknown2":['all','of','these','will'],
+                                "int":[4]
+                                }
+
+        # now this is the interesting part
+        self.assertEqual(actual_result_dict, expected_result_dict)
+
+
 
 if __name__ == "__main__":
     unittest.main()
