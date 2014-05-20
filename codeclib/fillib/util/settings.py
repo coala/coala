@@ -14,11 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
-import inspect
-import pkgutil
 import argparse
-import collections
-import logging
 
 
 # noinspection PyUnreachableCode
@@ -79,7 +75,7 @@ class Settings(dict):
                        'LogOutput': None,
                        'Verbosity': ['INFO'],
 
-                       'ConfigFile':['.codecfile'],
+                       'ConfigFile': ['.codecfile'],
                        'Save': None,
                        'JobCount': None
                        }
@@ -269,13 +265,44 @@ class Settings(dict):
         #make -s --save store arguments in a list or None as all parameters do:
         if arg_vars['Save']: arg_vars['Save'] = [arg_vars['Save']]
 
-
         return arg_vars
 
     def save_conf(self, ccfile_path):
         #TODO: write...
+
         pass
 
+    def fill_settings(self, key_list):
 
-if __name__=="__main__":
+        # remove duplicates
+        key_list = list(set(key_list))
+
+        #only do this if there are keys in the list
+        if key_list:
+
+            # ask for and add settings, that are not present
+            print("At least one filter needs settings that are not available!")
+            print("Please enter the values for the following settings:")
+            print("If you need several values for one settings, please separate then by commas")
+
+            for key in key_list:
+                if key not in self.keys():
+                    # this key is not available
+                    value_line = input("{}: ".format(key))
+                    value = value_line.split(',')
+                    for i in range(len(value)):
+                        value[i] = value[i].strip()
+
+                    self[key] = value
+
+            # offer to save settings if saving is not set
+            if not self['Save']:
+                save_now = input("Do you want to save the settings now? (y/n)")
+                if save_now.lower() in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                    self['Save'] = [True]
+                    #TODO: maybe ask for location in some cases?
+                    #TODO maybe even call save_conf right now?
+
+
+if __name__ == "__main__":
     settings=Settings()
