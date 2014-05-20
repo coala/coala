@@ -22,7 +22,7 @@ class TestSettings(unittest.TestCase):
 
     def setUp(self):
         # passing None will result in error because "test" from "setup.py test" will be interpreted
-        self.Settings = settings.Settings()
+        self.Settings = settings.Settings('-v DEBUG'.split())
 
     def tearDown(self):
         #cleanup test_configuration_parsing
@@ -30,6 +30,8 @@ class TestSettings(unittest.TestCase):
             os.remove('first_file')
         if os.path.isfile('second_file'):
             os.remove('second_file')
+        if os.path.isfile('sample_config'):
+            os.remove('sample_config')
 
     @unittest.skipIf(sys.version_info < (3, 4), "This test is not supported by python < 3.4")
     def test_accept_possible_cli_arguments(self):
@@ -166,7 +168,7 @@ class TestSettings(unittest.TestCase):
          'LogType':None,
          'LogOutput':None,
          'Verbosity':None,
-         'ConfigFile':"/home/fabian/codec.conf",
+         'ConfigFile':["/home/fabian/codec.conf"],
          'Save':None,
          'JobCount':None},
         # i=8
@@ -182,7 +184,7 @@ class TestSettings(unittest.TestCase):
          'LogOutput':None,
          'Verbosity':None,
          'ConfigFile':None,
-         'Save':True,
+         'Save':[True],
          'JobCount':None},
         # i=9
         {'TargetDirectories':None,
@@ -197,7 +199,7 @@ class TestSettings(unittest.TestCase):
          'LogOutput':None,
          'Verbosity':None,
          'ConfigFile':None,
-         'Save':'Hallo',
+         'Save':['Hallo'],
          'JobCount':None},
         # i=10
         {'TargetDirectories':None,
@@ -226,8 +228,8 @@ class TestSettings(unittest.TestCase):
          'LogType':['TXT'],
          'LogOutput':['j'],
          'Verbosity':['ERR'],
-         'ConfigFile':'k',
-         'Save':True,
+         'ConfigFile':['k'],
+         'Save':[True],
          'JobCount':[5]}
         ]
 
@@ -247,7 +249,8 @@ class TestSettings(unittest.TestCase):
         "-v SOMETHING",
         "-j h",
         " ",
-        "WEIRD"
+        "WEIRD",
+        "-c"
         ]
 
         # A SystemExit with code 2 should be raised in any of these cases
@@ -286,8 +289,8 @@ int= 4"""
         expected_result_dict = {
                                 "TargetDirectories":['first','second','third'],
                                 "Filters":['moar whitespace'],
-                                "Save":'/only/path/not/list',
-                                "ConfigFile":'second_file',
+                                "Save":['/only/path/not/list'],
+                                "ConfigFile":['second_file'],
                                 "unknown1":['this stays'],
                                 "this is true":[True],
                                 "unknown2":['all','of','these','will'],
@@ -295,8 +298,58 @@ int= 4"""
                                 }
 
         # now this is the interesting part
-        print(actual_result_dict)# TODO remove
         self.assertEqual(actual_result_dict, expected_result_dict)
+
+    def test_setting_class_creation(self):
+
+        # write config
+        with open('sample_config','w') as sample_config:
+            config_string = """TargetDirectories = from conf, will be overwritten
+IgnoredDirectories = from conf, will stay
+newfiltersetting = from conf, will stay"""
+            sample_config.write(config_string)
+            sample_config.close()
+
+        # create Settings
+        new_settings = settings.Settings("-c sample_config -d fromcli -t fromcli".split())
+
+        # get dict from Settings:
+        new_settings_dict = {}
+        for key, value in new_settings.items():
+            new_settings_dict[key]=value
+
+        # expected dict
+        expected_dict ={'TargetDirectories': ['fromcli'],  # set by conf, overwritten by cli
+                        'IgnoredDirectories': ['from conf','will stay'],
+                        'FlatDirectories': None,  # default value
+                        'TargetFileTypes': ['fromcli'],  # set by cli
+                        'IgnoredFileTypes': ['.gitignore'],
+
+                        'Filters': None,
+                        'IgnoredFilters': None,
+                        'RegexFilters': None,
+
+                        'FileOkColor': ['bright red'],
+                        'FileBadColor': ['bright green'],
+                        'FilterColor': ['grey'],
+                        'ErrorResultColor': ['red'],
+                        'WarningResultColor': ['yellow'],
+                        'InfoResultColor': ['normal'],
+                        'DebugResultColor': ['cyan'],
+
+                        'LogType': ['CONSOLE'],
+                        'LogOutput': None,
+                        'Verbosity': ['INFO'],
+
+                        'ConfigFile':['sample_config'],
+                        'Save': None,
+                        'JobCount': None,
+
+                        'newfiltersetting':['from conf','will stay']  # new value by conf
+                        }
+
+        # the fun part again.
+        self.assertEqual(new_settings_dict, expected_dict)
 
 
 

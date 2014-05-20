@@ -22,16 +22,37 @@ import logging
 
 
 # noinspection PyUnreachableCode
-class Settings(collections.OrderedDict):
+class Settings(dict):
     def __init__(self, custom_arg_list=None):
         # derived from ordered Dict for cleaner configuration files
-        collections.OrderedDict.__init__(self)
+        # noinspection PyTypeChecker
+        dict.__init__(self)
 
-        # TODO get settings:
-        # 1. set defaults
-        # 2. override with (earliest) conf
-        # 3. override with confs up to latest
-        # 4. override with cli args
+        # default Options dict
+        default_conf = self.defaultOptions()
+
+        # command line arguments dict
+        cli_conf = self.parse_args(custom_arg_list)
+
+        # configuration file options dict:
+        if cli_conf['ConfigFile']:
+            config_file_conf = self.read_conf(cli_conf['ConfigFile'][0])
+        else:
+            config_file_conf = self.read_conf(default_conf['ConfigFile'][0])
+
+        # generally importance: cli_conf > config_file_conf > default_conf
+        # default_conf has all keys and they are needed if not overwritten later
+        for setting_name, setting_value in default_conf.items():
+            self[setting_name] = setting_value
+
+        # config_file_conf is supposed to be minimal and all values can be taken
+        for setting_name, setting_value in config_file_conf.items():
+            self[setting_name] = setting_value
+
+        # cli_conf contains all settings, but only the ones that are not None should be taken
+        for setting_name, setting_value in cli_conf.items():
+            if setting_value:
+                self[setting_name] = setting_value
 
     def defaultOptions(self):
 
@@ -46,19 +67,19 @@ class Settings(collections.OrderedDict):
                        'IgnoredFilters': None,
                        'RegexFilters': None,
 
-                       'FileOkColor': 'bright red',
-                       'FileBadColor': 'bright green',
-                       'FilterColor': 'grey',
-                       'ErrorResultColor': 'red',
-                       'WarningResultColor': 'yellow',
-                       'InfoResultColor': 'normal',
-                       'DebugResultColor': 'cyan',
+                       'FileOkColor': ['bright red'],
+                       'FileBadColor': ['bright green'],
+                       'FilterColor': ['grey'],
+                       'ErrorResultColor': ['red'],
+                       'WarningResultColor': ['yellow'],
+                       'InfoResultColor': ['normal'],
+                       'DebugResultColor': ['cyan'],
 
-                       'LogType': 'CONSOLE',
+                       'LogType': ['CONSOLE'],
                        'LogOutput': None,
-                       'Verbosity': 'INFO',
+                       'Verbosity': ['INFO'],
 
-                       'ConfigFile': '.codecfile',
+                       'ConfigFile':['.codecfile'],
                        'Save': None,
                        'JobCount': None
                        }
@@ -113,7 +134,7 @@ class Settings(collections.OrderedDict):
 
                 # ignore line if it only contains a comment:
                 # ignore line if it does not contain a '='
-                #TODO: #ignore line if it does not contain a key before '='
+                # ignore line if it does not contain a key before '='
                 if (not line.strip()[0] == '#') and ('=' in line ) and (not line.strip()[0] == '='):
 
                     # key is left of '=' and lowercase in general and should not contain whitespace at the end.
@@ -141,52 +162,30 @@ class Settings(collections.OrderedDict):
                     if key == 'save': key = 'Save'
                     if key == 'jobcount': key = 'JobCount'
 
-                    # in these cases, the value will be a single value and not a list.
-                    # if several values are specified and comma-separated, the first on will be used.
-                    if key in ['Save','ConfigFile']:
-                        # left of '\n', right of first '=', left of first '#', no whitespace at borders, left of ','
-                        value = line.split('\n')[0].split('=')[1].split('#')[0].split(',')[0].strip()
+                    # Values:
+                    # left of '\n', right of first '=', left of first '#', separated by ',',no whitespace at borders
+                    value = line.split('\n')[0].split('=')[1].split('#')[0].split(',')
+
+                    for i in range(len(value)):
+                        value[i] = value[i].strip()
 
                         # make it an int if possible:
                         try:
-                            value = int(value)
+                            value[i] = int(value[i])
                         except ValueError:
                             pass
 
                         # make it bool if possible:
                         try:
-                            if value.lower() in ['y','yes','yeah','always','sure','definitely','yup','true']:
-                                value = True
-                            elif value.lower in ['n','no','nope','never','nah','false']:
-                                value = False
+                            if value[i].lower() in ['y','yes','yeah','always','sure','definitely','yup','true']:
+                                value[i] = True
+                            elif value[i].lower in ['n','no','nope','never','nah','false']:
+                                value[i] = False
                         except AttributeError:
                             pass
 
-                    # in all other cases, the value will be a list of n values
-                    else:
-                        # left of '\n', right of first '=', left of first '#', separated by ',',no whitespace at borders
-                        value = line.split('\n')[0].split('=')[1].split('#')[0].split(',')
-
-                        for i in range(len(value)):
-                            value[i] = value[i].strip()
-
-                            # make it an int if possible:
-                            try:
-                                value[i] = int(value[i])
-                            except ValueError:
-                                pass
-
-                            # make it bool if possible:
-                            try:
-                                if value[i].lower() in ['y','yes','yeah','always','sure','definitely','yup','true']:
-                                    value[i] = True
-                                elif value[i].lower in ['n','no','nope','never','nah','false']:
-                                    value[i] = False
-                            except AttributeError:
-                                pass
-
-                            # actually pass changes back to the list:
-                            value[value.index(value[i])]=value[i]
+                        # actually pass changes back to the list:
+                        value[value.index(value[i])]=value[i]
 
                     # key and value should now have the preferred format
                     # config_dict should now contain no values, values from included config files or from above
@@ -199,7 +198,7 @@ class Settings(collections.OrderedDict):
 
         # configuration file could not be read, probably because of missing permission or wrong file format
         #TODO: log warning!
-        return {} # this is indeed reachable...
+        return {}  # this is indeed reachable...
 
 
 
@@ -251,7 +250,7 @@ class Settings(collections.OrderedDict):
         arg_parser.add_argument('-v', '--verbose', nargs=1, choices=['ERR', 'WARN', 'INFO', 'DEBUG'], metavar='LEVEL',
                                 dest='Verbosity', help='Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity')
         # -c sets parameter "ConfigFile" => File path of configuration file to be used
-        arg_parser.add_argument('-c', '--config', nargs='?', const=True, metavar='FILE', dest='ConfigFile',
+        arg_parser.add_argument('-c', '--config', nargs=1, metavar='FILE', dest='ConfigFile',
                                 help='File path of configuration file to be used')
         # -s sets parameter "Save" => Filename of file to be saved to, defaults to config file
         arg_parser.add_argument('-s', '--save', nargs='?', const=True, metavar='FILE', dest='Save',
@@ -266,6 +265,9 @@ class Settings(collections.OrderedDict):
             arg_vars = vars(arg_parser.parse_args(custom_arg_list))
         else:
             arg_vars = vars(arg_parser.parse_args())
+
+        #make -s --save store arguments in a list or None as all parameters do:
+        if arg_vars['Save']: arg_vars['Save'] = [arg_vars['Save']]
 
 
         return arg_vars
