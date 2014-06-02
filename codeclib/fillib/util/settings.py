@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import argparse
+import shutil
 
 
 # noinspection PyUnreachableCode
@@ -267,10 +268,98 @@ class Settings(dict):
 
         return arg_vars
 
-    def save_conf(self, ccfile_path):
-        #TODO: write...
+    def save_conf(self):
 
-        pass
+        # sane default, mind that in some cases the config will be written to another directory
+        save_location = self['ConfigFile']
+
+        # In this case, the config file will be saved to a file different from the config file
+        # therefore the config file will be copied to that location if it exists
+        # the following routine is then always the same
+        if not (self['save'] is True or self['save'] is None or self['save'] == self['ConfigFile']):
+            try:
+                shutil.copyfile(self['ConfigLocation'],self['save'])
+                save_location = self['save']
+            except IOError:
+                # Possible errors:
+                # - there is no config file at self['ConfigFile']
+                # - It is not permitted to read self['ConfigFile']
+                # - It is not permitted to write self['save']
+                # If self['save'] exists, it will be overwritten without raising this error!
+                #TODO: find out what happened and log a warning?
+                pass
+
+        # the config should be minimal, none of these defaults should be written:
+        default_settings = self.defaultOptions()
+
+        # the config should be minimal, no setting should be written that is already defined through it
+        current_conf_settings = self.read_conf(save_location)
+
+        # list of settings that should be written to the config
+        # keep them lowercase to find matches!
+        settings_to_write = []
+
+        #list of settings that should be deleted from the config (before new values are written)
+        # keep them lowercase to find matches!
+        settings_to_delete = []
+
+        # make sure all settings get saved if not for one of the above reasons
+        for setting, value in self.items():
+
+            if self[setting] == default_settings[setting]:
+                # setting is a default and should not be written
+                # it should even be deleted from the config if it was spedified there
+                settings_to_delete.append(setting.lower())
+
+            elif self[setting] == current_conf_settings[setting]:
+                # setting is already specified as is
+                pass
+            else:
+                if not setting == 'ConfigFile':
+                    # configFile should never be overwritten because:
+                    # in config files this is only useful to chain configs
+                    # at runtime this is not useful
+                    # current chains should be kept, though.
+                    settings_to_write.append(setting.lower())
+                    settings_to_delete.append(setting.lower()) # should be deleted and re-added to prevent contradictions
+
+        # delete config settings that are not current settings:
+        for setting, value in current_conf_settings.items():
+            if setting not in self:
+                settings_to_delete.append(setting.lower())
+
+        # make new config
+        new_config = ""
+        with open(save_location,'r') as new_config_file:
+            new_config = new_config_file.readlines()
+            new_config_file.close()
+
+        new_config = list(new_config) # it was immutable an immutable tuple, it's a list now
+
+        with open(save_location,'w') as new_config_file:
+
+            # remove lines to be removed
+            for line in new_config:
+                if line.split('=')[0].lower().strip() in settings_to_delete:
+                    new_config.remove(line)
+
+            # add lines to be written
+            for setting in settings_to_write:
+
+                # values segregated by comma without quotation marks and brackets
+                value_string = ""
+                for value in self[setting]:
+                    if value_string: value_string += ','
+                    value_string += value
+                # add lines in the needed format
+                # '\n' is actually cross platform because file is opened in text mode
+                new_config.append("{} = {}\n".format(setting, value_string))
+
+            # let's finally write the config file:
+            for line in new_config:
+                new_config_file.write(line)
+                new_config_file.close()
+                #TODO: log successful save, catch failures?
 
     def fill_settings(self, key_list):
 
@@ -300,8 +389,9 @@ class Settings(dict):
                 save_now = input("Do you want to save the settings now? (y/n)")
                 if save_now.lower() in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
                     self['Save'] = [True]
-                    #TODO: maybe ask for location in some cases?
-                    #TODO maybe even call save_conf right now?
+
+            if self['save']:
+                self.save_conf()
 
 
 if __name__ == "__main__":
