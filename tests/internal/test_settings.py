@@ -357,6 +357,7 @@ newfiltersetting = from conf, will stay"""
         # the fun part again.
         self.assertEqual(new_settings_dict, expected_dict)
 
+    @unittest.skipIf(sys.version_info < (3, 3), "This test is not supported by python < 3.3")
     def test_saving_and_loading_of_configs(self):
 
         old_settings = settings.Settings("-s -c sample_config -d fromcli -t fromcli".split())
