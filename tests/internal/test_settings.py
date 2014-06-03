@@ -356,6 +356,9 @@ newfiltersetting = from conf, will stay"""
         old_settings = settings.Settings("-s -c sample_config -d fromcli -t fromcli".split())
         new_settings = settings.Settings("-c sample_config".split())
 
+        print("OLD_SETTINGS:", old_settings)
+        print("NEW_SETTINGS:", new_settings)
+
         self.assertEqual(old_settings, new_settings)
 
         old_settings2 = settings.Settings("-s second_file -c sample_config -d fromcli -t fromcli".split())
@@ -364,6 +367,9 @@ newfiltersetting = from conf, will stay"""
         # eliminate wanted difference:
         self.assertEqual(new_settings2['ConfigFile'], ['second_file'])
         new_settings2['ConfigFile'] = ['sample_config']
+
+        print("OLD_SETTINGS2:", old_settings2)
+        print("NEW_SETTINGS2:", new_settings2)
 
         self.assertEqual(old_settings2, new_settings2)
 
