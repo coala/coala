@@ -194,7 +194,6 @@ class Settings(dict):
                     config_dict[key] = value
 
             # all lines have been read. config_dict can be returned
-            codecfile.close()
             return config_dict
 
         # configuration file could not be read, probably because of missing permission or wrong file format
@@ -275,15 +274,15 @@ class Settings(dict):
     def save_conf(self):
 
         # sane default, mind that in some cases the config will be written to another directory
-        save_location = self['ConfigFile']
+        save_location = self['ConfigFile'][0]
 
         # In this case, the config file will be saved to a file different from the config file
         # therefore the config file will be copied to that location if it exists
         # the following routine is then always the same
-        if not (self['save'] is True or self['Save'] is None or self['save'] == self['ConfigFile']):
+        if not (self['Save'] == [True] or self['Save'] is None or self['Save'][0] == self['ConfigFile'][0]):
             try:
-                shutil.copyfile(self['ConfigLocation'],self['Save'])
-                save_location = self['Save']
+                shutil.copyfile(self['ConfigFile'][0],self['Save'][0]) # remember that self[*] contains lists
+                save_location = self['Save'][0]
             except IOError:
                 # Possible errors:
                 # - there is no config file at self['ConfigFile']
@@ -310,12 +309,12 @@ class Settings(dict):
         # make sure all settings get saved if not for one of the above reasons
         for setting, value in self.items():
 
-            if self[setting] == default_settings[setting]:
+            if setting in default_settings and self[setting] == default_settings[setting]:
                 # setting is a default and should not be written
                 # it should even be deleted from the config if it was spedified there
                 settings_to_delete.append(setting.lower())
 
-            elif self[setting] == current_conf_settings[setting]:
+            elif setting in current_conf_settings and self[setting] == current_conf_settings[setting]:
                 # setting is already specified as is
                 pass
             else:
@@ -334,9 +333,12 @@ class Settings(dict):
 
         # make new config
         new_config = ""
-        with open(save_location,'r') as new_config_file:
-            new_config = new_config_file.readlines()
-            new_config_file.close()
+        try:
+            with open(save_location,'r') as new_config_file:
+                new_config = new_config_file.readlines()
+
+        except FileNotFoundError:
+            pass
 
         new_config = list(new_config) # it was immutable an immutable tuple, it's a list now
 
@@ -357,14 +359,41 @@ class Settings(dict):
                     if setting not in settings_to_write:
                         settings_to_write.append(setting)
 
+            # since self[*] expects settings to be capitalized appropriately, this ugly thing is needed:
+            for i in range(len(settings_to_write)):
+                if settings_to_write[i] == 'targetdirectories': settings_to_write[i] = 'TargetDirectories'
+                if settings_to_write[i] == 'ignoreddirectories': settings_to_write[i] = 'IgnoredDirectories'
+                if settings_to_write[i] == 'flatdirectories': settings_to_write[i] = 'FlatDirectories'
+                if settings_to_write[i] == 'targetfiletypes': settings_to_write[i] = 'TargetFileTypes'
+                if settings_to_write[i] == 'ignoredfiletypes': settings_to_write[i] = 'IgnoredFileTypes'
+                if settings_to_write[i] == 'filters': settings_to_write[i] = 'Filters'
+                if settings_to_write[i] == 'ignoredfilters': settings_to_write[i] = 'IgnoredFilters'
+                if settings_to_write[i] == 'regexfilters': settings_to_write[i] = 'RegexFilters'
+                if settings_to_write[i] == 'fileokcolor': settings_to_write[i] = 'FileOkColor'
+                if settings_to_write[i] == 'filebadcolor': settings_to_write[i] = 'FileBadColor'
+                if settings_to_write[i] == 'filtercolor': settings_to_write[i] = 'FilterColor'
+                if settings_to_write[i] == 'errorresultcolor': settings_to_write[i] = 'ErrorResultColor'
+                if settings_to_write[i] == 'warningresultcolor': settings_to_write[i] = 'WarningResultColor'
+                if settings_to_write[i] == 'inforesultcolor': settings_to_write[i] = 'InfoResultColor'
+                if settings_to_write[i] == 'debugresultcolor': settings_to_write[i] = 'DebugResultColor'
+                if settings_to_write[i] == 'logtype': settings_to_write[i] = 'LogType'
+                if settings_to_write[i] == 'logoutput': settings_to_write[i] = 'LogOutput'
+                if settings_to_write[i] == 'verbosity': settings_to_write[i] = 'Verbosity'
+                if settings_to_write[i] == 'configfile': settings_to_write[i] = 'ConfigFile'
+                if settings_to_write[i] == 'save': settings_to_write[i] = 'Save'
+                if settings_to_write[i] == 'jobcount': settings_to_write[i] = 'JobCount'
+
             # add lines to be written
             for setting in settings_to_write:
 
                 # values segregated by comma without quotation marks and brackets
                 value_string = ""
-                for value in self[setting]:
-                    if value_string: value_string += ','
-                    value_string += value
+                if self[setting]:
+                    for value in self[setting]:
+                        if value_string: value_string += ','
+                        value_string += str(value)
+                else:
+                    value_string = str(self[setting])
                 # add lines in the needed format
                 # '\n' is actually cross platform because file is opened in text mode
                 new_config.append("{} = {}\n".format(setting, value_string))
@@ -372,7 +401,7 @@ class Settings(dict):
             # let's finally write the config file:
             for line in new_config:
                 new_config_file.write(line)
-                new_config_file.close()
+
                 #TODO: log successful save, catch failures?
 
     def fill_settings(self, key_list):

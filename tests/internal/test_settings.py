@@ -351,7 +351,21 @@ newfiltersetting = from conf, will stay"""
         # the fun part again.
         self.assertEqual(new_settings_dict, expected_dict)
 
+    def test_saving_and_loading_of_configs(self):
 
+        old_settings = settings.Settings("-s -c sample_config -d fromcli -t fromcli".split())
+        new_settings = settings.Settings("-c sample_config".split())
+
+        self.assertEqual(old_settings, new_settings)
+
+        old_settings2 = settings.Settings("-s second_file -c sample_config -d fromcli -t fromcli".split())
+        new_settings2 = settings.Settings("-c second_file".split())
+
+        # eliminate wanted difference:
+        self.assertEqual(new_settings2['ConfigFile'], ['second_file'])
+        new_settings2['ConfigFile'] = ['sample_config']
+
+        self.assertEqual(old_settings2, new_settings2)
 
 if __name__ == "__main__":
     unittest.main()
