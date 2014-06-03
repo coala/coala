@@ -51,6 +51,10 @@ class Settings(dict):
             if setting_value:
                 self[setting_name] = setting_value
 
+        # save settings if arguments say so
+        if self['Save']:
+            self.save_conf()
+
     def defaultOptions(self):
 
         # dict of default values:
@@ -276,10 +280,10 @@ class Settings(dict):
         # In this case, the config file will be saved to a file different from the config file
         # therefore the config file will be copied to that location if it exists
         # the following routine is then always the same
-        if not (self['save'] is True or self['save'] is None or self['save'] == self['ConfigFile']):
+        if not (self['save'] is True or self['Save'] is None or self['save'] == self['ConfigFile']):
             try:
-                shutil.copyfile(self['ConfigLocation'],self['save'])
-                save_location = self['save']
+                shutil.copyfile(self['ConfigLocation'],self['Save'])
+                save_location = self['Save']
             except IOError:
                 # Possible errors:
                 # - there is no config file at self['ConfigFile']
@@ -338,10 +342,20 @@ class Settings(dict):
 
         with open(save_location,'w') as new_config_file:
 
+            # this list saves which settings could actually be removed from the direct configuration file
+            removed_settings = []
             # remove lines to be removed
             for line in new_config:
                 if line.split('=')[0].lower().strip() in settings_to_delete:
                     new_config.remove(line)
+                    removed_settings.append(line.split('=')[0].lower().strip())
+
+            # settings that should be removed but were not, might be specified in a nested config
+            # they should be overwritten in this one - even if the settings is considered default
+            for setting in settings_to_delete:
+                if setting not in removed_settings:
+                    if setting not in settings_to_write:
+                        settings_to_write.append(setting)
 
             # add lines to be written
             for setting in settings_to_write:
@@ -390,7 +404,7 @@ class Settings(dict):
                 if save_now.lower() in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
                     self['Save'] = [True]
 
-            if self['save']:
+            if self['Save']:
                 self.save_conf()
 
 
