@@ -188,6 +188,10 @@ class Settings(dict):
                         # actually pass changes back to the list:
                         value[value.index(value[i])]=value[i]
 
+                    # None instead of List if None is wanted:
+                    if value == [''] or value ==  ['None'] or value == ['none']:
+                        value = None
+
                     # key and value should now have the preferred format
                     # config_dict should now contain no values, values from included config files or from above
                     # they should be overwritten in any of these cases
