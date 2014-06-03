@@ -341,7 +341,7 @@ class Settings(dict):
             with open(save_location,'r') as new_config_file:
                 new_config = new_config_file.readlines()
 
-        except FileNotFoundError:
+        except IOError:
             pass
 
         new_config = list(new_config) # it was immutable an immutable tuple, it's a list now
