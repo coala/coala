@@ -73,6 +73,7 @@ class Settings(dict):
         except ValueError:
             pass
 
+
         # make it bool if possible:
         try:
             if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
@@ -403,7 +404,7 @@ class Settings(dict):
                     value_list = value_line.split(',')
                     # Get values from strings
                     for i in range(len(value_list)):
-                        value_list[i] = settings.__make_value(value_list[i])
+                        value_list[i] = Settings.__make_value(value_list[i])
 
                     self[cap_key] = value_list
 
