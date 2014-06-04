@@ -404,7 +404,7 @@ class Settings(dict):
                     # Get values from strings
                     for i in range(len(value_list)):
                         value_list[i] = settings.__make_value(value_list[i])
-            
+
                     self[cap_key] = value_list
 
             # offer to save settings if saving is not set
