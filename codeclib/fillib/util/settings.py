@@ -21,7 +21,7 @@ import shutil
 # noinspection PyUnreachableCode
 class Settings(dict):
     @staticmethod
-    def defaultOptions():
+    def default_options():
         # default settings
         defaultValues = {
             'TargetDirectories': [os.getcwd()],
@@ -54,12 +54,34 @@ class Settings(dict):
 
     @staticmethod
     def __capitalize_setting(name):
-        defaultValues = Settings.defaultOptions()
+        defaultValues = Settings.default_options()
         for key in defaultValues.keys():
             if (key.lower() == name.lower()):
                 return key
         # capitalize first letter
         return name.title()
+
+    @staticmethod
+    def __make_value(input):
+        working = input.strip().lower()
+
+        # make it an int if possible:
+        try:
+            working = int(working)
+            return working
+        except ValueError:
+            pass
+
+        # make it bool if possible:
+        try:
+            if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                return True
+            elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
+                return False
+        except AttributeError:
+            pass
+
+        return input.strip()
 
     @staticmethod
     def parse_args(custom_arg_list = None):
@@ -135,7 +157,7 @@ class Settings(dict):
         dict.__init__(self)
 
         # default Options dict
-        default_conf = Settings.defaultOptions()
+        default_conf = Settings.default_options()
 
         # command line arguments dict
         cli_conf = Settings.parse_args(custom_arg_list)
@@ -174,7 +196,8 @@ class Settings(dict):
         """
 
         # this cannot be the default argument because it is mutable and would prevent a second run...
-        if not history_list: history_list = []
+        if not history_list:
+            history_list = []
 
         # this is the dict that saves settings read from configfiles
         config_dict = {}
@@ -205,8 +228,6 @@ class Settings(dict):
                     #populate config_dict with data from inner config:
                     config_dict = self.read_conf(new_codecfile_path, history_list)
 
-
-
             # overwrite config_dict with values of current configuration file:
             codecfile.seek(0)
             for line in codecfile:
@@ -226,28 +247,10 @@ class Settings(dict):
                     value = line.split('\n')[0].split('=')[1].split('#')[0].split(',')
 
                     for i in range(len(value)):
-                        value[i] = value[i].strip()
-
-                        # make it an int if possible:
-                        try:
-                            value[i] = int(value[i])
-                        except ValueError:
-                            pass
-
-                        # make it bool if possible:
-                        try:
-                            if value[i].lower() in ['y','yes','yeah','always','sure','definitely','yup','true']:
-                                value[i] = True
-                            elif value[i].lower in ['n','no','nope','never','nah','false']:
-                                value[i] = False
-                        except AttributeError:
-                            pass
-
-                        # actually pass changes back to the list:
-                        value[value.index(value[i])]=value[i]
+                        value[i]=Settings.__make_value(value[i])
 
                     # None instead of List if None is wanted:
-                    if value == [''] or value ==  ['None'] or value == ['none']:
+                    if value == [''] or value == ['None'] or value == ['none']:
                         value = None
 
                     # key and value should now have the preferred format
@@ -284,7 +287,7 @@ class Settings(dict):
                 pass
 
         # the config should be minimal, none of these defaults should be written:
-        default_settings = Settings.defaultOptions()
+        default_settings = Settings.default_options()
 
         # the config should be minimal, no setting should be written that is already defined through it
         current_conf_settings = self.read_conf(save_location)
@@ -401,7 +404,7 @@ class Settings(dict):
             # offer to save settings if saving is not set
             if not self['Save']:
                 save_now = input("Do you want to save the settings now? (y/n)")
-                if save_now.lower() in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                if Settings.__make_value(save_now) == True:
                     self['Save'] = [True]
 
             if self['Save']:
