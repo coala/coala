@@ -297,10 +297,10 @@ int= 4"""
                                 "Filters":['moar whitespace'],
                                 "Save":['/only/path/not/list'],
                                 "ConfigFile":['second_file'],
-                                "unknown1":['this stays'],
-                                "this is true":[True],
-                                "unknown2":['all','of','these','will'],
-                                "int":[4]
+                                "Unknown1":['this stays'],
+                                "This Is True":[True],
+                                "Unknown2":['all','of','these','will'],
+                                "Int":[4]
                                 }
 
         # now this is the interesting part
@@ -351,7 +351,7 @@ newfiltersetting = from conf, will stay"""
                         'Save': None,
                         'JobCount': None,
 
-                        'newfiltersetting':['from conf','will stay']  # new value by conf
+                        'Newfiltersetting':['from conf','will stay']  # new value by conf
                         }
 
         # the fun part again.

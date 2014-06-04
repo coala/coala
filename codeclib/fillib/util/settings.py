@@ -18,6 +18,36 @@ import argparse
 import shutil
 
 
+# default settings
+defaultValues = {
+    'TargetDirectories': [os.getcwd()],
+    'IgnoredDirectories': None,
+    'FlatDirectories': None,
+    'TargetFileTypes': None,
+    'IgnoredFileTypes': ['.gitignore'],
+
+    'Filters': None,
+    'IgnoredFilters': None,
+    'RegexFilters': None,
+
+    'FileOkColor': ['bright red'],
+    'FileBadColor': ['bright green'],
+    'FilterColor': ['grey'],
+    'ErrorResultColor': ['red'],
+    'WarningResultColor': ['yellow'],
+    'InfoResultColor': ['normal'],
+    'DebugResultColor': ['cyan'],
+
+    'LogType': ['CONSOLE'],
+    'LogOutput': None,
+    'Verbosity': ['INFO'],
+
+    'ConfigFile': ['.codecfile'],
+    'Save': None,
+    'JobCount': None
+}
+
+
 # noinspection PyUnreachableCode
 class Settings(dict):
     def __init__(self, custom_arg_list=None):
@@ -56,34 +86,6 @@ class Settings(dict):
             self.save_conf()
 
     def defaultOptions(self):
-
-        # dict of default values:
-        defaultValues={'TargetDirectories': [os.getcwd()],
-                       'IgnoredDirectories': None,
-                       'FlatDirectories': None,
-                       'TargetFileTypes': None,
-                       'IgnoredFileTypes': ['.gitignore'],
-
-                       'Filters': None,
-                       'IgnoredFilters': None,
-                       'RegexFilters': None,
-
-                       'FileOkColor': ['bright red'],
-                       'FileBadColor': ['bright green'],
-                       'FilterColor': ['grey'],
-                       'ErrorResultColor': ['red'],
-                       'WarningResultColor': ['yellow'],
-                       'InfoResultColor': ['normal'],
-                       'DebugResultColor': ['cyan'],
-
-                       'LogType': ['CONSOLE'],
-                       'LogOutput': None,
-                       'Verbosity': ['INFO'],
-
-                       'ConfigFile': ['.codecfile'],
-                       'Save': None,
-                       'JobCount': None
-                       }
         return defaultValues
 
     def read_conf(self, codecfile_path, history_list=None):
@@ -141,27 +143,7 @@ class Settings(dict):
                     # key is left of '=' and lowercase in general and should not contain whitespace at the end.
                     key = line.split('=')[0].lower().strip()
                     # adjust capital letters for standard settings
-                    if key == 'targetdirectories': key = 'TargetDirectories'
-                    if key == 'ignoreddirectories': key = 'IgnoredDirectories'
-                    if key == 'flatdirectories': key = 'FlatDirectories'
-                    if key == 'targetfiletypes': key = 'TargetFileTypes'
-                    if key == 'ignoredfiletypes': key = 'IgnoredFileTypes'
-                    if key == 'filters': key = 'Filters'
-                    if key == 'ignoredfilters': key = 'IgnoredFilters'
-                    if key == 'regexfilters': key = 'RegexFilters'
-                    if key == 'fileokcolor': key = 'FileOkColor'
-                    if key == 'filebadcolor': key = 'FileBadColor'
-                    if key == 'filtercolor': key = 'FilterColor'
-                    if key == 'errorresultcolor': key = 'ErrorResultColor'
-                    if key == 'warningresultcolor': key = 'WarningResultColor'
-                    if key == 'inforesultcolor': key = 'InfoResultColor'
-                    if key == 'debugresultcolor': key = 'DebugResultColor'
-                    if key == 'logtype': key = 'LogType'
-                    if key == 'logoutput': key = 'LogOutput'
-                    if key == 'verbosity': key = 'Verbosity'
-                    if key == 'configfile': key = 'ConfigFile'
-                    if key == 'save': key = 'Save'
-                    if key == 'jobcount': key = 'JobCount'
+                    key = self.__capitalize_setting(key)
 
                     # Values:
                     # left of '\n', right of first '=', left of first '#', separated by ',',no whitespace at borders
@@ -204,7 +186,12 @@ class Settings(dict):
         #TODO: log warning!
         return {}  # this is indeed reachable...
 
-
+    def __capitalize_setting(self, name):
+        for key in defaultValues.keys():
+            if (key.lower() == name.lower()):
+                return key
+        # capitalize first letter
+        return name.title()
 
 
 
