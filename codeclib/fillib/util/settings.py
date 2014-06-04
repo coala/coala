@@ -20,42 +20,8 @@ import shutil
 
 # noinspection PyUnreachableCode
 class Settings(dict):
-    def __init__(self, custom_arg_list=None):
-        # derived from ordered Dict for cleaner configuration files
-        # noinspection PyTypeChecker
-        dict.__init__(self)
-
-        # default Options dict
-        default_conf = self.defaultOptions()
-
-        # command line arguments dict
-        cli_conf = self.parse_args(custom_arg_list)
-
-        # configuration file options dict:
-        if cli_conf['ConfigFile']:
-            config_file_conf = self.read_conf(cli_conf['ConfigFile'][0])
-        else:
-            config_file_conf = self.read_conf(default_conf['ConfigFile'][0])
-
-        # generally importance: cli_conf > config_file_conf > default_conf
-        # default_conf has all keys and they are needed if not overwritten later
-        for setting_name, setting_value in default_conf.items():
-            self[setting_name] = setting_value
-
-        # config_file_conf is supposed to be minimal and all values can be taken
-        for setting_name, setting_value in config_file_conf.items():
-            self[setting_name] = setting_value
-
-        # cli_conf contains all settings, but only the ones that are not None should be taken
-        for setting_name, setting_value in cli_conf.items():
-            if setting_value:
-                self[setting_name] = setting_value
-
-        # save settings if arguments say so
-        if self['Save']:
-            self.save_conf()
-
-    def defaultOptions(self):
+    @staticmethod
+    def defaultOptions():
         # default settings
         defaultValues = {
             'TargetDirectories': [os.getcwd()],
@@ -85,6 +51,50 @@ class Settings(dict):
             'JobCount': None
         }
         return defaultValues
+
+    @staticmethod
+    def __capitalize_setting(name):
+        defaultValues = Settings.defaultOptions()
+        for key in defaultValues.keys():
+            if (key.lower() == name.lower()):
+                return key
+        # capitalize first letter
+        return name.title()
+
+    def __init__(self, custom_arg_list=None):
+        # derived from ordered Dict for cleaner configuration files
+        # noinspection PyTypeChecker
+        dict.__init__(self)
+
+        # default Options dict
+        default_conf = Settings.defaultOptions()
+
+        # command line arguments dict
+        cli_conf = self.parse_args(custom_arg_list)
+
+        # configuration file options dict:
+        if cli_conf['ConfigFile']:
+            config_file_conf = self.read_conf(cli_conf['ConfigFile'][0])
+        else:
+            config_file_conf = self.read_conf(default_conf['ConfigFile'][0])
+
+        # generally importance: cli_conf > config_file_conf > default_conf
+        # default_conf has all keys and they are needed if not overwritten later
+        for setting_name, setting_value in default_conf.items():
+            self[setting_name] = setting_value
+
+        # config_file_conf is supposed to be minimal and all values can be taken
+        for setting_name, setting_value in config_file_conf.items():
+            self[setting_name] = setting_value
+
+        # cli_conf contains all settings, but only the ones that are not None should be taken
+        for setting_name, setting_value in cli_conf.items():
+            if setting_value:
+                self[setting_name] = setting_value
+
+        # save settings if arguments say so
+        if self['Save']:
+            self.save_conf()
 
     def read_conf(self, codecfile_path, history_list=None):
 
@@ -184,16 +194,6 @@ class Settings(dict):
         #TODO: log warning!
         return {}  # this is indeed reachable...
 
-    def __capitalize_setting(self, name):
-        defaultValues = self.defaultOptions()
-        for key in defaultValues.keys():
-            if (key.lower() == name.lower()):
-                return key
-        # capitalize first letter
-        return name.title()
-
-
-
     def parse_args(self, custom_arg_list = None):
         """
         Parses command line arguments and configures help output.
@@ -283,7 +283,7 @@ class Settings(dict):
                 pass
 
         # the config should be minimal, none of these defaults should be written:
-        default_settings = self.defaultOptions()
+        default_settings = Settings.defaultOptions()
 
         # the config should be minimal, no setting should be written that is already defined through it
         current_conf_settings = self.read_conf(save_location)
@@ -351,27 +351,7 @@ class Settings(dict):
 
             # since self[*] expects settings to be capitalized appropriately, this ugly thing is needed:
             for i in range(len(settings_to_write)):
-                if settings_to_write[i] == 'targetdirectories': settings_to_write[i] = 'TargetDirectories'
-                if settings_to_write[i] == 'ignoreddirectories': settings_to_write[i] = 'IgnoredDirectories'
-                if settings_to_write[i] == 'flatdirectories': settings_to_write[i] = 'FlatDirectories'
-                if settings_to_write[i] == 'targetfiletypes': settings_to_write[i] = 'TargetFileTypes'
-                if settings_to_write[i] == 'ignoredfiletypes': settings_to_write[i] = 'IgnoredFileTypes'
-                if settings_to_write[i] == 'filters': settings_to_write[i] = 'Filters'
-                if settings_to_write[i] == 'ignoredfilters': settings_to_write[i] = 'IgnoredFilters'
-                if settings_to_write[i] == 'regexfilters': settings_to_write[i] = 'RegexFilters'
-                if settings_to_write[i] == 'fileokcolor': settings_to_write[i] = 'FileOkColor'
-                if settings_to_write[i] == 'filebadcolor': settings_to_write[i] = 'FileBadColor'
-                if settings_to_write[i] == 'filtercolor': settings_to_write[i] = 'FilterColor'
-                if settings_to_write[i] == 'errorresultcolor': settings_to_write[i] = 'ErrorResultColor'
-                if settings_to_write[i] == 'warningresultcolor': settings_to_write[i] = 'WarningResultColor'
-                if settings_to_write[i] == 'inforesultcolor': settings_to_write[i] = 'InfoResultColor'
-                if settings_to_write[i] == 'debugresultcolor': settings_to_write[i] = 'DebugResultColor'
-                if settings_to_write[i] == 'logtype': settings_to_write[i] = 'LogType'
-                if settings_to_write[i] == 'logoutput': settings_to_write[i] = 'LogOutput'
-                if settings_to_write[i] == 'verbosity': settings_to_write[i] = 'Verbosity'
-                if settings_to_write[i] == 'configfile': settings_to_write[i] = 'ConfigFile'
-                if settings_to_write[i] == 'save': settings_to_write[i] = 'Save'
-                if settings_to_write[i] == 'jobcount': settings_to_write[i] = 'JobCount'
+                settings_to_write[i] = self.__capitalize_setting(settings_to_write[i])
 
             # add lines to be written
             for setting in settings_to_write:
