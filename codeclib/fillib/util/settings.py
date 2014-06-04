@@ -68,18 +68,24 @@ class Settings(dict):
 
         # make it an int if possible:
         try:
-            working = int(working)
+            working = [int(working)]
             return working
         except ValueError:
             pass
 
+        list = working.replace(';', ',').split(',')
+        if len(list) > 1:
+            new_list = []
+            for elem in list:
+                new_list.append(Settings.__make_value(elem))
+            return new_list
 
         # make it bool if possible:
         try:
             if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
-                return True
+                return [True]
             elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
-                return False
+                return [False]
             elif working in ['', 'None', 'none']:
                 return None
         except AttributeError:
@@ -190,6 +196,21 @@ class Settings(dict):
         if self['Save']:
             self.save_conf()
 
+    def parse_line(self, line):
+        # remove comments - TODO allow \# as non-comment
+        line = line.split('#')[0]
+        # TODO allow \=!
+        parts = line.split('=')
+        if (len(parts) != 2):
+            # TODO logger, better message
+            print ("Invalid line!")
+            return ["", ""]
+
+        key = parts[0].strip().lower()
+        val = Settings.__make_value(parts[1])
+        return [key, val]
+
+
     def read_conf(self, codecfile_path, history_list=None):
 
         """
@@ -220,47 +241,19 @@ class Settings(dict):
             # check if config refers to other config file
             codecfile.seek(0)
             for line in codecfile:
-                if line[:11].lower() == 'configfile=':
-                    # line[11:] slices first 11 characters that are 'configfile='
-                    # .split('#')[0] removes potential '#' and trailing comment
-                    # .strip() removes whitespace from front and back
-                    new_codecfile_path = line[11:].split('#')[0].strip()
+                [key, value] = self.parse_line(line)
+                if key == "":
+                    continue
 
+                if key == 'configfile':
                     #append codecfile_path to history_list so it can't be called again:
-                    history_list.append(codecfile_path)
+                    history_list.append(value)
 
                     #populate config_dict with data from inner config:
-                    config_dict = self.read_conf(new_codecfile_path, history_list)
+                    config_dict = self.read_conf(value, history_list)
+                    continue
 
-            # overwrite config_dict with values of current configuration file:
-            codecfile.seek(0)
-            for line in codecfile:
-
-                # ignore line if it only contains a comment:
-                # ignore line if it does not contain a '='
-                # ignore line if it does not contain a key before '='
-                if (not line.strip()[0] == '#') and ('=' in line ) and (not line.strip()[0] == '='):
-
-                    # key is left of '=' and lowercase in general and should not contain whitespace at the end.
-                    key = line.split('=')[0].lower().strip()
-                    # adjust capital letters for standard settings
-                    key = self.__capitalize_setting(key)
-
-                    # Values:
-                    # left of '\n', right of first '=', left of first '#', separated by ',',no whitespace at borders
-                    value_list = line.split('\n')[0].split('=')[1].split('#')[0].split(',')
-
-                    for i in range(len(value_list)):
-                        value_list[i]=Settings.__make_value(value_list[i])
-
-                    # None instead of List if None is wanted:
-                    if value_list == [''] or value_list == ['None'] or value_list == ['none'] or value_list == [None]:
-                        value_list = None
-
-                    # key and value_list should now have the preferred format
-                    # config_dict should now contain no values, values from included config files or from above
-                    # they should be overwritten in any of these cases
-                    config_dict[key] = value_list
+                config_dict[key] = value
 
             # all lines have been read. config_dict can be returned
             return config_dict
