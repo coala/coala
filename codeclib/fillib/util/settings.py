@@ -18,36 +18,6 @@ import argparse
 import shutil
 
 
-# default settings
-defaultValues = {
-    'TargetDirectories': [os.getcwd()],
-    'IgnoredDirectories': None,
-    'FlatDirectories': None,
-    'TargetFileTypes': None,
-    'IgnoredFileTypes': ['.gitignore'],
-
-    'Filters': None,
-    'IgnoredFilters': None,
-    'RegexFilters': None,
-
-    'FileOkColor': ['bright red'],
-    'FileBadColor': ['bright green'],
-    'FilterColor': ['grey'],
-    'ErrorResultColor': ['red'],
-    'WarningResultColor': ['yellow'],
-    'InfoResultColor': ['normal'],
-    'DebugResultColor': ['cyan'],
-
-    'LogType': ['CONSOLE'],
-    'LogOutput': None,
-    'Verbosity': ['INFO'],
-
-    'ConfigFile': ['.codecfile'],
-    'Save': None,
-    'JobCount': None
-}
-
-
 # noinspection PyUnreachableCode
 class Settings(dict):
     def __init__(self, custom_arg_list=None):
@@ -86,6 +56,34 @@ class Settings(dict):
             self.save_conf()
 
     def defaultOptions(self):
+        # default settings
+        defaultValues = {
+            'TargetDirectories': [os.getcwd()],
+            'IgnoredDirectories': None,
+            'FlatDirectories': None,
+            'TargetFileTypes': None,
+            'IgnoredFileTypes': ['.gitignore'],
+
+            'Filters': None,
+            'IgnoredFilters': None,
+            'RegexFilters': None,
+
+            'FileOkColor': ['bright red'],
+            'FileBadColor': ['bright green'],
+            'FilterColor': ['grey'],
+            'ErrorResultColor': ['red'],
+            'WarningResultColor': ['yellow'],
+            'InfoResultColor': ['normal'],
+            'DebugResultColor': ['cyan'],
+
+            'LogType': ['CONSOLE'],
+            'LogOutput': None,
+            'Verbosity': ['INFO'],
+
+            'ConfigFile': ['.codecfile'],
+            'Save': None,
+            'JobCount': None
+        }
         return defaultValues
 
     def read_conf(self, codecfile_path, history_list=None):
@@ -187,6 +185,7 @@ class Settings(dict):
         return {}  # this is indeed reachable...
 
     def __capitalize_setting(self, name):
+        defaultValues = self.defaultOptions()
         for key in defaultValues.keys():
             if (key.lower() == name.lower()):
                 return key
