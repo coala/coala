@@ -13,13 +13,142 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from collections import OrderedDict
+from codeclib.fillib.util.setting import Setting
+
 import os
 import argparse
 import shutil
+import re
 
 
 # noinspection PyUnreachableCode
-class Settings(dict):
+class Settings(OrderedDict):
+    @staticmethod
+    def __make_value(original):
+        working = original.strip().lower()
+
+        # make it an int if possible:
+        try:
+            working = [int(working)]
+            return working
+        except ValueError:
+            pass
+
+        list = working.replace(';', ',').split(',')
+        if len(list) > 1:
+            new_list = []
+            for elem in list:
+                new_list.append(Settings.__make_value(elem))
+            return new_list
+
+        # make it bool if possible:
+        try:
+            if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                return [True]
+            elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
+                return [False]
+            elif working in ['', 'None', 'none']:
+                return None
+        except AttributeError:
+            pass
+
+        return [original.strip()]
+
+    def __init__(self, origin_file):
+        dict.__init__(self)
+        self.origin_file = origin_file
+        self.__import_file(origin_file)
+        pass
+
+    def __import_file(self, path, import_history=[]):
+        # prevent loops
+        if path in import_history:
+            # TODO log warning about circular dependency
+            return
+        import_history.append(path)
+
+        if not os.path.isfile(path):
+            # TODO log warning notafile
+            return
+
+        comments = []
+        with open(path, 'r') as lines:
+            for line in lines:
+                comments = self.__parse_line(line, comments, import_history)
+
+        if  comments != []:
+            # add empty comment-only object
+            self['comment'] = Setting('', '', import_history, comments)
+
+    def save_to_file(self, path):
+        for setting in self:
+            # TODO
+            # write setting only if its import_history is [origin_file] AND
+            # a) it is non-default
+            # b) it is default and overwrites a non-default setting with len(import_history) > 1 which does not
+            #    get overwritten by a default setting with len(import_history) > 1
+            new_lines = setting.generate_lines()
+            # TODO add these lines to the new config
+
+    def ensure_settings_available(self, keys):
+        for key in keys:
+            # since we save Setting objects, get() does not return None if it's set to None!
+            if self.get(key, None):
+                # TODO ask and store; parse also trailing comments after the value, import_history is [origin_file]
+                #      every time
+                pass
+
+
+    def __parse_line(self, line, comments, import_history=[]):
+        line = line.strip()
+        if line == '':
+            comments.append('')
+            return comments
+
+        # handle comments - TODO allow \# as non-comment
+        line = line.split('#')[0].strip()
+        trailing_comment = line[line.find('#')].strip()
+        # TODO allow \=!
+        parts = line.split('=')
+        if (len(parts) == 1):
+            comments.append(trailing_comment)
+            return comments
+
+        if (len(parts) != 2):
+            # TODO log a warning
+            return comments
+
+        key = parts[0].strip()
+        val = Setting(key,
+                      Settings.__make_value(parts[1]),
+                      import_history,
+                      comments,
+                      trailing_comment,
+                      self.get(key.lower, None)
+        )
+        self[key.lower()] = val
+
+        self.__execute_command(val)
+
+        return []
+
+    def __import_command(self, command):
+        for config_path in command.value:
+            self.__import_file(config_path, command.import_history)
+
+    def __execute_command(self, command):
+        return {
+            # Import a number of other configuration files
+            'configfile': self.__import_command(command)
+        }[command.key.lower()]
+
+
+
+
+# OLD STUFF
+
+
 
     @staticmethod
     def default_options():
@@ -53,45 +182,6 @@ class Settings(dict):
         }
         return defaultValues
 
-    @staticmethod
-    def __capitalize_setting(name):
-        defaultValues = Settings.default_options()
-        for key in defaultValues.keys():
-            if (key.lower() == name.lower()):
-                return key
-        # capitalize first letter
-        return name.title()
-
-    @staticmethod
-    def __make_value(input):
-        working = input.strip().lower()
-
-        # make it an int if possible:
-        try:
-            working = [int(working)]
-            return working
-        except ValueError:
-            pass
-
-        list = working.replace(';', ',').split(',')
-        if len(list) > 1:
-            new_list = []
-            for elem in list:
-                new_list.append(Settings.__make_value(elem))
-            return new_list
-
-        # make it bool if possible:
-        try:
-            if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
-                return [True]
-            elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
-                return [False]
-            elif working in ['', 'None', 'none']:
-                return None
-        except AttributeError:
-            pass
-
-        return input.strip()
 
     @staticmethod
     def parse_args(custom_arg_list = None):
@@ -196,44 +286,8 @@ class Settings(dict):
         if self['Save']:
             self.save_conf()
 
-    def parse_line(self, line):
-        # remove comments - TODO allow \# as non-comment
-        line = line.split('#')[0]
-        # TODO allow \=!
-        parts = line.split('=')
-        if (len(parts) != 2):
-            # TODO logger, better message
-            print ("Invalid line!")
-            return ["", ""]
-
-        key = parts[0].strip().lower()
-        val = Settings.__make_value(parts[1])
-        return [key, val]
-
 
     def read_conf(self, codecfile_path, history_list=None):
-
-        """
-        Reads config file and includes references config files
-        :param codecfile_path: path to configuration file
-        :param history_list; list of previously read config files to prevent infinite loops
-        :returns: dictionary containing values from config files
-        """
-
-        # this cannot be the default argument because it is mutable and would prevent a second run...
-        if not history_list:
-            history_list = []
-
-        # this is the dict that saves settings read from configfiles
-        config_dict = {}
-
-        # return none if codecfile_path does not point to a file:
-        if not os.path.isfile(codecfile_path):
-            return {}
-
-        # return none if codecfile_path points to file that is contained in history_list already:
-        if history_list and (codecfile_path in history_list):
-            return {}
 
         # open file if possible
         with open(codecfile_path,'r') as codecfile:
