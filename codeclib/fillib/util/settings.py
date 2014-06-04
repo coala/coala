@@ -20,6 +20,7 @@ import shutil
 
 # noinspection PyUnreachableCode
 class Settings(dict):
+
     @staticmethod
     def default_options():
         # default settings
@@ -78,6 +79,8 @@ class Settings(dict):
                 return True
             elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
                 return False
+            elif working in ['', 'None', 'none']:
+                return None
         except AttributeError:
             pass
 
@@ -244,19 +247,19 @@ class Settings(dict):
 
                     # Values:
                     # left of '\n', right of first '=', left of first '#', separated by ',',no whitespace at borders
-                    value = line.split('\n')[0].split('=')[1].split('#')[0].split(',')
+                    value_list = line.split('\n')[0].split('=')[1].split('#')[0].split(',')
 
-                    for i in range(len(value)):
-                        value[i]=Settings.__make_value(value[i])
+                    for i in range(len(value_list)):
+                        value_list[i]=Settings.__make_value(value_list[i])
 
                     # None instead of List if None is wanted:
-                    if value == [''] or value == ['None'] or value == ['none']:
-                        value = None
+                    if value_list == [''] or value_list == ['None'] or value_list == ['none'] or value_list == [None]:
+                        value_list = None
 
-                    # key and value should now have the preferred format
+                    # key and value_list should now have the preferred format
                     # config_dict should now contain no values, values from included config files or from above
                     # they should be overwritten in any of these cases
-                    config_dict[key] = value
+                    config_dict[key] = value_list
 
             # all lines have been read. config_dict can be returned
             return config_dict
@@ -392,14 +395,17 @@ class Settings(dict):
             print("If you need several values for one settings, please separate then by commas")
 
             for key in key_list:
-                if key not in self.keys():
+                # capitalize key to match self[*]
+                cap_key = self.__capitalize_setting(key)
+                if cap_key not in self.keys():
                     # this key is not available
                     value_line = input("{}: ".format(key))
-                    value = value_line.split(',')
-                    for i in range(len(value)):
-                        value[i] = value[i].strip()
-
-                    self[key] = value
+                    value_list = value_line.split(',')
+                    # Get values from strings
+                    for i in range(len(value_list)):
+                        value_list[i] = settings.__make_value(value_list[i])
+            
+                    self[cap_key] = value_list
 
             # offer to save settings if saving is not set
             if not self['Save']:
