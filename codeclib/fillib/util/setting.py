@@ -18,7 +18,7 @@ class Setting:
     def generate_lines(self):
         result = []
         for comment in self.comments_before:
-            result.append('#'+comment)
+            result.append('# '+comment)
 
         if self.key == '':
             return result

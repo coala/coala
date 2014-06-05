@@ -26,7 +26,8 @@ import re
 class Settings(OrderedDict):
     @staticmethod
     def __make_value(original):
-        working = original.strip().lower()
+        stripped = original.strip()
+        working = stripped.lower()
 
         # make it an int if possible:
         try:
@@ -35,10 +36,11 @@ class Settings(OrderedDict):
         except ValueError:
             pass
 
-        list = working.replace(';', ',').split(',')
-        if len(list) > 1:
+        # make list if possible
+        lst = stripped.replace(';', ',').split(',')
+        if len(lst) > 1:
             new_list = []
-            for elem in list:
+            for elem in lst:
                 new_list.append(Settings.__make_value(elem))
             return new_list
 
@@ -53,12 +55,14 @@ class Settings(OrderedDict):
         except AttributeError:
             pass
 
-        return [original.strip()]
+        return [stripped]
 
     def __init__(self, origin_file):
         dict.__init__(self)
         self.origin_file = origin_file
+        self.defaults = OrderedDict()
         self.__import_file(origin_file)
+        self.__set_default_settings()
         pass
 
     def __import_file(self, path, import_history=[]):
@@ -82,14 +86,14 @@ class Settings(OrderedDict):
             self['comment'] = Setting('', '', import_history, comments)
 
     def save_to_file(self, path):
-        for setting in self:
-            # TODO
-            # write setting only if its import_history is [origin_file] AND
-            # a) it is non-default
-            # b) it is default and overwrites a non-default setting with len(import_history) > 1 which does not
-            #    get overwritten by a default setting with len(import_history) > 1
-            new_lines = setting.generate_lines()
-            # TODO add these lines to the new config
+        with open(path, 'w+') as config_file:
+            for setting in self:
+                if self.__setting_is_implicit(setting):
+                    continue
+
+                lines = setting.generate_lines()
+                for line in lines:
+                    config_file.write(line)
 
     def ensure_settings_available(self, keys):
         for key in keys:
@@ -99,6 +103,32 @@ class Settings(OrderedDict):
                 #      every time
                 pass
 
+    def __setting_is_implicit(self, setting):
+        # write setting only if its import_history is [origin_file] AND
+        # a) it is non-default
+        # b) it is default and overwrites a non-default setting with len(import_history) > 1 which does not
+        #    get overwritten by a default setting with len(import_history) > 1
+        # Since every command is non-default they don't need extra handling.
+        if setting.import_history != [self.origin_file]:
+            return True
+
+        if setting.value != self.defaults[setting.key.lower()]:
+            return False
+
+        # it is a default value now
+
+        if self.__overrides_non_default(setting):
+            return False
+        return True
+
+    def __overrides_non_default(self, setting):
+        if setting.overwrites == None:
+            return False
+
+        if setting.overwrites.import_history == [self.origin_file]
+            return self.__overrides_non_default(setting.overwrites)
+
+        return setting.overwrites.value != self.defaults[setting.key.lower()]
 
     def __parse_line(self, line, comments, import_history=[]):
         line = line.strip()
@@ -127,33 +157,32 @@ class Settings(OrderedDict):
                       trailing_comment,
                       self.get(key.lower, None)
         )
-        self[key.lower()] = val
+        # commands may be there more than one time, use some other virtual keys
+        if self.__execute_command(val):
+            while key.lower() in self:
+                key += ' '
 
-        self.__execute_command(val)
+        # make sure the new value is at the end
+        if key.lower() in self:
+            del self[key.lower()]
+        self[key.lower()] = val
 
         return []
 
     def __import_command(self, command):
         for config_path in command.value:
             self.__import_file(config_path, command.import_history)
+        return True
 
     def __execute_command(self, command):
         return {
             # Import a number of other configuration files
             'configfile': self.__import_command(command)
-        }[command.key.lower()]
+        }.get(command.key.lower(), False)
 
-
-
-
-# OLD STUFF
-
-
-
-    @staticmethod
-    def default_options():
+    def __set_default_settings(self):
         # default settings
-        defaultValues = {
+        defaultValues = OrderedDict([
             'TargetDirectories': [os.getcwd()],
             'IgnoredDirectories': None,
             'FlatDirectories': None,
@@ -179,8 +208,15 @@ class Settings(OrderedDict):
             'ConfigFile': ['.codecfile'],
             'Save': None,
             'JobCount': None
-        }
-        return defaultValues
+        ])
+        for key in defaultValues.keys():
+            self.defaults[key.lower()] = Setting(key, defaultValues[key], ['default'])
+
+
+
+# OLD STUFF
+
+
 
 
     @staticmethod
@@ -285,149 +321,6 @@ class Settings(OrderedDict):
         # save settings if arguments say so
         if self['Save']:
             self.save_conf()
-
-
-    def read_conf(self, codecfile_path, history_list=None):
-
-        # open file if possible
-        with open(codecfile_path,'r') as codecfile:
-
-            # check if config refers to other config file
-            codecfile.seek(0)
-            for line in codecfile:
-                [key, value] = self.parse_line(line)
-                if key == "":
-                    continue
-
-                if key == 'configfile':
-                    #append codecfile_path to history_list so it can't be called again:
-                    history_list.append(value)
-
-                    #populate config_dict with data from inner config:
-                    config_dict = self.read_conf(value, history_list)
-                    continue
-
-                config_dict[key] = value
-
-            # all lines have been read. config_dict can be returned
-            return config_dict
-
-        # configuration file could not be read, probably because of missing permission or wrong file format
-        #TODO: log warning!
-        return {}  # this is indeed reachable...
-
-    def save_conf(self):
-
-        # sane default, mind that in some cases the config will be written to another directory
-        save_location = self['ConfigFile'][0]
-
-        # In this case, the config file will be saved to a file different from the config file
-        # therefore the config file will be copied to that location if it exists
-        # the following routine is then always the same
-        if not (self['Save'] == [True] or self['Save'] is None or self['Save'][0] == self['ConfigFile'][0]):
-            try:
-                shutil.copyfile(self['ConfigFile'][0],self['Save'][0]) # remember that self[*] contains lists
-                save_location = self['Save'][0]
-            except IOError:
-                # Possible errors:
-                # - there is no config file at self['ConfigFile']
-                # - It is not permitted to read self['ConfigFile']
-                # - It is not permitted to write self['save']
-                # If self['save'] exists, it will be overwritten without raising this error!
-                #TODO: find out what happened and log a warning?
-                pass
-
-        # the config should be minimal, none of these defaults should be written:
-        default_settings = Settings.default_options()
-
-        # the config should be minimal, no setting should be written that is already defined through it
-        current_conf_settings = self.read_conf(save_location)
-
-        # list of settings that should be written to the config
-        # keep them lowercase to find matches!
-        settings_to_write = []
-
-        #list of settings that should be deleted from the config (before new values are written)
-        # keep them lowercase to find matches!
-        settings_to_delete = []
-
-        # make sure all settings get saved if not for one of the above reasons
-        for setting, value in self.items():
-
-            if setting in default_settings and self[setting] == default_settings[setting]:
-                # setting is a default and should not be written
-                # it should even be deleted from the config if it was spedified there
-                settings_to_delete.append(setting.lower())
-
-            elif setting in current_conf_settings and self[setting] == current_conf_settings[setting]:
-                # setting is already specified as is
-                pass
-            else:
-                if not setting == 'ConfigFile':
-                    # configFile should never be overwritten because:
-                    # in config files this is only useful to chain configs
-                    # at runtime this is not useful
-                    # current chains should be kept, though.
-                    settings_to_write.append(setting.lower())
-                    settings_to_delete.append(setting.lower()) # should be deleted and re-added to prevent contradictions
-
-        # delete config settings that are not current settings:
-        for setting, value in current_conf_settings.items():
-            if setting not in self:
-                settings_to_delete.append(setting.lower())
-
-        # make new config
-        new_config = ""
-        try:
-            with open(save_location,'r') as new_config_file:
-                new_config = new_config_file.readlines()
-
-        except IOError:
-            pass
-
-        new_config = list(new_config) # it was immutable an immutable tuple, it's a list now
-
-        with open(save_location,'w') as new_config_file:
-
-            # this list saves which settings could actually be removed from the direct configuration file
-            removed_settings = []
-            # remove lines to be removed
-            for line in new_config:
-                if line.split('=')[0].lower().strip() in settings_to_delete:
-                    new_config.remove(line)
-                    removed_settings.append(line.split('=')[0].lower().strip())
-
-            # settings that should be removed but were not, might be specified in a nested config
-            # they should be overwritten in this one - even if the settings is considered default
-            for setting in settings_to_delete:
-                if setting not in removed_settings:
-                    if setting not in settings_to_write:
-                        settings_to_write.append(setting)
-
-            # since self[*] expects settings to be capitalized appropriately, this ugly thing is needed:
-            for i in range(len(settings_to_write)):
-                settings_to_write[i] = self.__capitalize_setting(settings_to_write[i])
-
-            # add lines to be written
-            for setting in settings_to_write:
-
-                # values segregated by comma without quotation marks and brackets
-                value_string = ""
-                if self[setting]:
-                    for value in self[setting]:
-                        if value_string: value_string += ','
-                        value_string += str(value)
-                else:
-                    value_string = str(self[setting])
-                # add lines in the needed format
-                # '\n' is actually cross platform because file is opened in text mode
-                new_config.append("{} = {}\n".format(setting, value_string))
-
-            # let's finally write the config file:
-            for line in new_config:
-                new_config_file.write(line)
-
-                #TODO: log successful save, catch failures?
 
     def fill_settings(self, key_list):
 
