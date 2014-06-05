@@ -11,9 +11,6 @@ class SettingTest(unittest.TestCase):
                                      trailing_comment="testcomment",
                                      comments_before=["beforecomment", ""])
 
-    def tearDown(self):
-        pass
-
     def test_line_generation(self):
         lines = self.test_instance.generate_lines()
         self.assertEqual(lines, [
