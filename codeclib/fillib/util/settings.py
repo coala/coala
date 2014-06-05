@@ -73,8 +73,8 @@ class Settings(OrderedDict):
         self.__import_dict(cmdargs)
 
         paths = self.get('save', Setting('', None)).value
-        if paths is not None:
-            for path in paths:
+        for path in paths:
+            if path is not None:
                 if path == True:
                     self.save_to_file(self.origin_file)
                 else:
