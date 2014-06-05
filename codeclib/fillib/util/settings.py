@@ -41,7 +41,7 @@ class Settings(OrderedDict):
         if len(lst) > 1:
             new_list = []
             for elem in lst:
-                new_list.append(Settings.__make_value(elem))
+                new_list.append(Settings.__make_value(elem)[0])
             return new_list
 
         # make it bool if possible:
@@ -51,7 +51,7 @@ class Settings(OrderedDict):
             elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
                 return [False]
             elif working in ['', 'None', 'none']:
-                return None
+                return [None]
         except AttributeError:
             pass
 
