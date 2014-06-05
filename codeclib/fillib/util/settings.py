@@ -58,7 +58,7 @@ class Settings(OrderedDict):
         return [stripped]
 
     def __init__(self):
-        dict.__init__(self)
+        OrderedDict.__init__(self)
         self.defaults = OrderedDict()
         self.__get_default_settings()
         cmdargs = Settings.__parse_cmdline_args()
@@ -68,17 +68,17 @@ class Settings(OrderedDict):
             # dont reimport later, dont write to config file
             del cmdargs['ConfigFile']
         else:
-            self.origin_file = self.defaults['configfile'].value
+            self.origin_file = self.defaults['configfile'].value[0]
 
-        self.__import_file(origin_file)
+        self.__import_file(self.origin_file)
         self.__import_dict(cmdargs)
 
         paths = self.get('save', Setting('', None)).value
         for path in paths:
             self.save_to_file(path)
 
-    def __import_dict(self, dict):
-        for key, value in cmdargs:
+    def __import_dict(self, dictionary):
+        for key, value in dictionary:
             self.__import_setting(key, Setting(key, value, ['cmdline']))
 
     def __import_file(self, path, import_history=[]):
@@ -194,6 +194,8 @@ class Settings(OrderedDict):
         self[key.lower()] = val
 
     def __import_command(self, command):
+        if command.value == None:
+            return True
         for config_path in command.value:
             self.__import_file(config_path, command.import_history)
         return True
