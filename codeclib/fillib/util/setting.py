@@ -2,23 +2,27 @@ __author__ = 'lasse'
 
 
 class Setting:
-    @staticmethod
-    def capitalize_key(name):
-        # TODO recognize default options
-        return name
+    def __init__(self, key, value, import_history=None, comments_before=None, trailing_comment='', overrides=None):
+        if import_history is None:
+            import_history = []
+        if comments_before is None:
+            comments_before = []
 
-    def __init__(self, key, value, import_history=[], comments_before=[], trailing_comment='', overwrites=None):
-        self.key = Setting.capitalize_key(key)
+        self.key = key
         self.value = value
         self.import_history = import_history
         self.comments_before = comments_before
         self.trailing_comment = trailing_comment
-        self.overwrites = overwrites
+        self.overrides = overrides
 
     def generate_lines(self):
         result = []
         for comment in self.comments_before:
-            result.append('# '+comment)
+            if comment is not None:
+                if comment:
+                    result.append('# '+comment)
+                else:
+                    result.append('')
 
         if self.key == '':
             return result
@@ -29,9 +33,10 @@ class Setting:
         else:
             delimiter = ''
             for elem in self.value:
-                line.append(delimiter + elem)
+                line += delimiter + str(elem)
                 delimiter = ", "
 
-        line.append(' # ' + self.trailing_comment)
+        if self.trailing_comment:
+            line += ' # ' + self.trailing_comment
         result.append(line)
         return result

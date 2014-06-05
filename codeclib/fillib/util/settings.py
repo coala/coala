@@ -37,7 +37,7 @@ class Settings(OrderedDict):
             pass
 
         # make list if possible
-        lst = stripped.replace(';', ',').split(',')
+        lst = stripped.split(',')
         if len(lst) > 1:
             new_list = []
             for elem in lst:
@@ -60,13 +60,12 @@ class Settings(OrderedDict):
     def __init__(self):
         OrderedDict.__init__(self)
         self.defaults = OrderedDict()
+
         self.__get_default_settings()
         cmdargs = Settings.__parse_cmdline_args()
 
         if cmdargs.get('ConfigFile', None) != None and os.path.isfile(cmdargs.get('ConfigFile', [None])[0]):
             self.origin_file = cmdargs.get('ConfigFile', None)
-            # dont reimport later, dont write to config file
-            del cmdargs['ConfigFile']
         else:
             self.origin_file = self.defaults['configfile'].value[0]
 
@@ -74,14 +73,27 @@ class Settings(OrderedDict):
         self.__import_dict(cmdargs)
 
         paths = self.get('save', Setting('', None)).value
-        for path in paths:
-            self.save_to_file(path)
+        if paths is not None:
+            for path in paths:
+                if path == True:
+                    self.save_to_file(self.origin_file)
+                else:
+                    self.save_to_file(path)
 
     def __import_dict(self, dictionary):
-        for key, value in dictionary:
-            self.__import_setting(key, Setting(key, value, ['cmdline']))
+        for key, value in dictionary.items():
+            if value is not None:
+                self.__import_setting(key, Setting(key, value, ['cmdline']))
 
-    def __import_file(self, path, import_history=[]):
+    def __capitalize_key(self, key):
+        if key.lower() in self.defaults:
+            return self.defaults.get(key.lower()).key
+
+        return key
+
+    def __import_file(self, path, import_history=None):
+        if import_history is None:
+            import_history = []
         # prevent loops
         if path in import_history:
             # TODO log warning about circular dependency
@@ -99,62 +111,78 @@ class Settings(OrderedDict):
 
         if  comments != []:
             # add empty comment-only object
-            self['comment'] = Setting('', '', import_history, comments)
+            self.__import_setting('comment', Setting('', '', import_history, comments))
 
     def save_to_file(self, path):
-        with open(path, 'w+') as config_file:
-            for setting in self:
-                if self.__setting_is_implicit(setting):
+        with open(path, 'w') as config_file:
+            for setting in self.values():
+                imp = self.__setting_is_implicit(setting)
+                if imp == True:
                     continue
 
-                lines = setting.generate_lines()
+                lines = imp.generate_lines()
                 for line in lines:
-                    config_file.write(line)
+                    config_file.write(line+'\n')
 
     def ensure_settings_available(self, keys):
         for key in keys:
             # since we save Setting objects, get() does not return None if it's set to None!
-            if self.get(key, None):
-                # TODO ask and store; parse also trailing comments after the value, import_history is [origin_file]
-                #      every time
-                pass
+            if self.get(key.lower(), None) is None:
+                print("Please enter the value for the setting {}.".format(key))
+                user_input = input("Value: ")
+                self.__parse_line(key + "=" + user_input, ['cmdline'])
 
     def __setting_is_implicit(self, setting):
         # write setting only if its import_history is [origin_file] AND
         # a) it is non-default
-        # b) it is default and overwrites a non-default setting with len(import_history) > 1 which does not
+        # b) it is default and overrides a non-default setting with len(import_history) > 1 which does not
         #    get overwritten by a default setting with len(import_history) > 1
         # Since every command is non-default they don't need extra handling.
-        if setting.import_history != [self.origin_file]:
+        if setting.import_history != [self.origin_file] and setting.import_history != ['cmdline']:
             return True
 
-        if setting.value != self.defaults[setting.key.lower()]:
-            return False
+        if setting.import_history == ['cmdline'] and setting.key.lower() == 'save':
+            if setting.overrides is None:
+                return True
+            else:
+                return self.__setting_is_implicit(setting.overrides)
+
+        if setting.key.lower() == "save" and setting.value == [False]:
+            return True
+
+        if setting.value != self.defaults.get(setting.key.lower(), Setting('', '')).value:
+            return setting
 
         # it is a default value now
 
         if self.__overrides_non_default(setting):
-            return False
+            return setting
         return True
 
     def __overrides_non_default(self, setting):
-        if setting.overwrites == None:
+        if setting.overrides == None:
             return False
 
-        if setting.overwrites.import_history == [self.origin_file]:
-            return self.__overrides_non_default(setting.overwrites)
+        if setting.overrides.import_history == [self.origin_file]:
+            return self.__overrides_non_default(setting.overrides)
 
-        return setting.overwrites.value != self.defaults[setting.key.lower()]
+        return setting.overrides.value != self.defaults[setting.key.lower()].value
 
-    def __parse_line(self, line, comments, import_history=[]):
+    def __parse_line(self, line, comments, import_history=None):
+        if import_history is None:
+            import_history = []
+
         line = line.strip()
-        if line == '':
+        if not line:
             comments.append('')
             return comments
 
+        trailing_comment = ''
+        if line.find('#') >= 0:
+            trailing_comment = line[line.find('#')+1:].strip()
+
         # handle comments - TODO allow \# as non-comment
         line = line.split('#')[0].strip()
-        trailing_comment = line[line.find('#')].strip()
         # TODO allow \=!
         parts = line.split('=')
         if (len(parts) == 1):
@@ -163,10 +191,11 @@ class Settings(OrderedDict):
 
         if (len(parts) != 2):
             # TODO log a warning
+            comments.append(trailing_comment)
             return comments
 
         key = parts[0].strip()
-        val = Setting(key,
+        val = Setting(self.__capitalize_key(key),
                       Settings.__make_value(parts[1]),
                       import_history,
                       comments,
@@ -181,16 +210,17 @@ class Settings(OrderedDict):
     def __import_setting(self, key, val):
 
         # commands may be there more than one time, use some other virtual keys
-        if self.__execute_command(val) or key.lower() == 'comment':
+        if self.__execute_command(val) or key.lower().strip() == 'comment':
             while key.lower() in self:
                 key += ' '
 
-        if val.overwrites == None:
-            val.overwrites = self.get(key.lower(), None)
+        if val.overrides is None:
+            val.overrides = self.get(key.lower(), None)
 
         # make sure the new value is at the end
         if key.lower() in self:
             del self[key.lower()]
+
         self[key.lower()] = val
 
     def __import_command(self, command):
@@ -201,47 +231,46 @@ class Settings(OrderedDict):
         return True
 
     def __execute_command(self, command):
-        return {
-            # Import a number of other configuration files
-            'configfile': self.__import_command(command)
-        }.get(command.key.lower(), False)
+        if command.key.lower() == 'import':
+            return self.__import_command(command)
+
+        return False
 
     def __get_default_settings(self):
         # default settings
         defaultValues = OrderedDict([
-            ('TargetDirectories', [os.getcwd()]),
-            ('IgnoredDirectories', None),
-            ('FlatDirectories', None),
-            ('TargetFileTypes', None),
-            ('IgnoredFileTypes', ['.gitignore']),
+            ('TargetDirectories', os.getcwd()),
+            ('IgnoredDirectories', "None"),
+            ('FlatDirectories', "None"),
+            ('TargetFileTypes', "None"),
+            ('IgnoredFileTypes', '.gitignore'),
 
-            ('Filters', None),
-            ('IgnoredFilters', None),
-            ('RegexFilters', None),
+            ('Filters', "None"),
+            ('IgnoredFilters', "None"),
+            ('RegexFilters', "None"),
 
-            ('FileOkColor', ['bright red']),
-            ('FileBadColor', ['bright green']),
-            ('FilterColor', ['grey']),
-            ('ErrorResultColor', ['red']),
-            ('WarningResultColor', ['yellow']),
-            ('InfoResultColor', ['normal']),
-            ('DebugResultColor', ['cyan']),
+            ('FileOkColor', 'bright red'),
+            ('FileBadColor', 'bright green'),
+            ('FilterColor', 'grey'),
+            ('ErrorResultColor', 'red'),
+            ('WarningResultColor', 'yellow'),
+            ('InfoResultColor', 'normal'),
+            ('DebugResultColor', 'cyan'),
 
-            ('LogType', ['CONSOLE']),
-            ('LogOutput', None),
-            ('Verbosity', ['INFO']),
+            ('LogType', 'CONSOLE'),
+            ('LogOutput', 'None'),
+            ('Verbosity', 'INFO'),
 
-            ('ConfigFile', ['.codecfile']),
-            ('Save', None),
-            ('JobCount', None)
+            ('ConfigFile', '.codecfile'),
+            ('Save', 'None'),
+            ('JobCount', 'None')
         ])
-        for key in defaultValues.keys():
-            val = Setting(key, defaultValues[key], ['default'])
-            self.defaults[key.lower()] = val
-            self.__import_setting(key, val)
+        for key, value in defaultValues.items():
+            self.defaults[key.lower()] = Setting(key, Settings.__make_value(value), ['default'])
+            self.__import_setting(key, Setting(key, Settings.__make_value(value), ['default']))
 
     @staticmethod
-    def __parse_cmdline_args(custom_arg_list = None):
+    def __parse_cmdline_args(custom_arg_list=None):
         """
         Parses command line arguments and configures help output.
 
@@ -307,45 +336,6 @@ class Settings(OrderedDict):
         if arg_vars['Save']: arg_vars['Save'] = [arg_vars['Save']]
 
         return arg_vars
-
-# OLD STUFF
-
-
-    def fill_settings(self, key_list):
-
-        # remove duplicates
-        key_list = list(set(key_list))
-
-        #only do this if there are keys in the list
-        if key_list:
-
-            # ask for and add settings, that are not present
-            print("At least one filter needs settings that are not available!")
-            print("Please enter the values for the following settings:")
-            print("If you need several values for one settings, please separate then by commas")
-
-            for key in key_list:
-                # capitalize key to match self[*]
-                cap_key = self.__capitalize_setting(key)
-                if cap_key not in self.keys():
-                    # this key is not available
-                    value_line = input("{}: ".format(key))
-                    value_list = value_line.split(',')
-                    # Get values from strings
-                    for i in range(len(value_list)):
-                        value_list[i] = Settings.__make_value(value_list[i])
-
-                    self[cap_key] = value_list
-
-            # offer to save settings if saving is not set
-            if not self['Save']:
-                save_now = input("Do you want to save the settings now? (y/n)")
-                if Settings.__make_value(save_now) == True:
-                    self['Save'] = [True]
-
-            if self['Save']:
-                self.save_conf()
-
 
 if __name__ == "__main__":
     settings=Settings()
