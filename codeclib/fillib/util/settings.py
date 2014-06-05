@@ -57,13 +57,29 @@ class Settings(OrderedDict):
 
         return [stripped]
 
-    def __init__(self, origin_file):
+    def __init__(self):
         dict.__init__(self)
-        self.origin_file = origin_file
         self.defaults = OrderedDict()
+        self.__get_default_settings()
+        cmdargs = Settings.__parse_cmdline_args()
+
+        if cmdargs.get('ConfigFile', None) != None and os.path.isfile(cmdargs.get('ConfigFile', [None])[0]):
+            self.origin_file = cmdargs.get('ConfigFile', None)
+            # dont reimport later, dont write to config file
+            del cmdargs['ConfigFile']
+        else:
+            self.origin_file = self.defaults['configfile'].value
+
         self.__import_file(origin_file)
-        self.__set_default_settings()
-        pass
+        self.__import_dict(cmdargs)
+
+        paths = self.get('save', Setting('', None)).value
+        for path in paths:
+            self.save_to_file(path)
+
+    def __import_dict(self, dict):
+        for key, value in cmdargs:
+            self.__import_setting(key, Setting(key, value, ['cmdline']))
 
     def __import_file(self, path, import_history=[]):
         # prevent loops
@@ -125,7 +141,7 @@ class Settings(OrderedDict):
         if setting.overwrites == None:
             return False
 
-        if setting.overwrites.import_history == [self.origin_file]
+        if setting.overwrites.import_history == [self.origin_file]:
             return self.__overrides_non_default(setting.overwrites)
 
         return setting.overwrites.value != self.defaults[setting.key.lower()]
@@ -155,19 +171,27 @@ class Settings(OrderedDict):
                       import_history,
                       comments,
                       trailing_comment,
-                      self.get(key.lower, None)
+                      self.get(key.lower(), None)
         )
+        
+        self.__import_setting(key, val)
+
+        return []
+    
+    def __import_setting(self, key, val):
+
         # commands may be there more than one time, use some other virtual keys
-        if self.__execute_command(val):
+        if self.__execute_command(val) or key.lower() == 'comment':
             while key.lower() in self:
                 key += ' '
+
+        if val.overwrites == None:
+            val.overwrites = self.get(key.lower(), None)
 
         # make sure the new value is at the end
         if key.lower() in self:
             del self[key.lower()]
         self[key.lower()] = val
-
-        return []
 
     def __import_command(self, command):
         for config_path in command.value:
@@ -180,52 +204,47 @@ class Settings(OrderedDict):
             'configfile': self.__import_command(command)
         }.get(command.key.lower(), False)
 
-    def __set_default_settings(self):
+    def __get_default_settings(self):
         # default settings
         defaultValues = OrderedDict([
-            'TargetDirectories': [os.getcwd()],
-            'IgnoredDirectories': None,
-            'FlatDirectories': None,
-            'TargetFileTypes': None,
-            'IgnoredFileTypes': ['.gitignore'],
+            ('TargetDirectories', [os.getcwd()]),
+            ('IgnoredDirectories', None),
+            ('FlatDirectories', None),
+            ('TargetFileTypes', None),
+            ('IgnoredFileTypes', ['.gitignore']),
 
-            'Filters': None,
-            'IgnoredFilters': None,
-            'RegexFilters': None,
+            ('Filters', None),
+            ('IgnoredFilters', None),
+            ('RegexFilters', None),
 
-            'FileOkColor': ['bright red'],
-            'FileBadColor': ['bright green'],
-            'FilterColor': ['grey'],
-            'ErrorResultColor': ['red'],
-            'WarningResultColor': ['yellow'],
-            'InfoResultColor': ['normal'],
-            'DebugResultColor': ['cyan'],
+            ('FileOkColor', ['bright red']),
+            ('FileBadColor', ['bright green']),
+            ('FilterColor', ['grey']),
+            ('ErrorResultColor', ['red']),
+            ('WarningResultColor', ['yellow']),
+            ('InfoResultColor', ['normal']),
+            ('DebugResultColor', ['cyan']),
 
-            'LogType': ['CONSOLE'],
-            'LogOutput': None,
-            'Verbosity': ['INFO'],
+            ('LogType', ['CONSOLE']),
+            ('LogOutput', None),
+            ('Verbosity', ['INFO']),
 
-            'ConfigFile': ['.codecfile'],
-            'Save': None,
-            'JobCount': None
+            ('ConfigFile', ['.codecfile']),
+            ('Save', None),
+            ('JobCount', None)
         ])
         for key in defaultValues.keys():
-            self.defaults[key.lower()] = Setting(key, defaultValues[key], ['default'])
-
-
-
-# OLD STUFF
-
-
-
+            val = Setting(key, defaultValues[key], ['default'])
+            self.defaults[key.lower()] = val
+            self.__import_setting(key, val)
 
     @staticmethod
-    def parse_args(custom_arg_list = None):
+    def __parse_cmdline_args(custom_arg_list = None):
         """
         Parses command line arguments and configures help output.
 
         :param custom_arg_list: parse_args will parse this list instead of command line arguments, if specified
-        :returns: parsed arguments in dictionary structure
+        :returns: a dictionary with the cmdline values
         """
         # arg_parser reads given arguments and presents help on wrong input
         arg_parser = argparse.ArgumentParser(
@@ -287,40 +306,8 @@ class Settings(OrderedDict):
 
         return arg_vars
 
-    def __init__(self, custom_arg_list=None):
-        # derived from ordered Dict for cleaner configuration files
-        # noinspection PyTypeChecker
-        dict.__init__(self)
+# OLD STUFF
 
-        # default Options dict
-        default_conf = Settings.default_options()
-
-        # command line arguments dict
-        cli_conf = Settings.parse_args(custom_arg_list)
-
-        # configuration file options dict:
-        if cli_conf['ConfigFile']:
-            config_file_conf = self.read_conf(cli_conf['ConfigFile'][0])
-        else:
-            config_file_conf = self.read_conf(default_conf['ConfigFile'][0])
-
-        # generally importance: cli_conf > config_file_conf > default_conf
-        # default_conf has all keys and they are needed if not overwritten later
-        for setting_name, setting_value in default_conf.items():
-            self[setting_name] = setting_value
-
-        # config_file_conf is supposed to be minimal and all values can be taken
-        for setting_name, setting_value in config_file_conf.items():
-            self[setting_name] = setting_value
-
-        # cli_conf contains all settings, but only the ones that are not None should be taken
-        for setting_name, setting_value in cli_conf.items():
-            if setting_value:
-                self[setting_name] = setting_value
-
-        # save settings if arguments say so
-        if self['Save']:
-            self.save_conf()
 
     def fill_settings(self, key_list):
 

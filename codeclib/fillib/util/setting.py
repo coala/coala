@@ -7,7 +7,7 @@ class Setting:
         # TODO recognize default options
         return name
 
-    def __init__(self, key, value, import_history='', comments_before='', trailing_comment='', overwrites=None):
+    def __init__(self, key, value, import_history=[], comments_before=[], trailing_comment='', overwrites=None):
         self.key = Setting.capitalize_key(key)
         self.value = value
         self.import_history = import_history
