@@ -8,16 +8,15 @@ class OutputFormatter:
         self.settings = settings
 
     def output_file_results(self, filename, result_list):
-        okcol = self.settings.get('fileokcolor').value
-        badcol = self.settings.get('filebadcolor').value
         if len(result_list) == 0:
+            okcol = self.settings.get('fileokcolor').value
             ColorPrinter.ColorPrinter.print(okcol, filename)
             return
 
         for val in result_list:
-            # TODO
-            ColorPrinter.ColorPrinter.print(badcol, "UNIMPLEMENTED")
+            self.__output_line_result(val)
 
     def __output_line_result(self, line_result):
+        badcol = self.settings.get('filebadcolor').value
         # TODO
-        pass
+        ColorPrinter.ColorPrinter.print(badcol, "UNIMPLEMENTED")
