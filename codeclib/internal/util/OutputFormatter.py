@@ -5,10 +5,10 @@ class OutputFormatter:
     def __init__(self, settings):
         self.settings = settings
 
-    def output_filename(self, filename, file_status):
-        # TODO output filename dependent on the status
+    def output_file_results(self, filename, result_list):
+        # TODO
         pass
 
-    def output_line_result(self, line_result):
+    def __output_line_result(self, line_result):
         # TODO
         pass
