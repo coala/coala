@@ -18,8 +18,6 @@ from codeclib.fillib.util.setting import Setting
 
 import os
 import argparse
-import shutil
-import re
 
 
 # noinspection PyUnreachableCode
