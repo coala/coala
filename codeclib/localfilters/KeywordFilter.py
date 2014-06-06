@@ -2,14 +2,15 @@ __author__ = 'lasse'
 
 from codeclib.fillib.results import LineResult
 from codeclib.fillib.util.settings import Settings
-from codeclib.fillib.filter_base import FilterBase
+from codeclib.fillib import LocalFilter
 
-class KeywordFilter(FilterBase):
-    def run(self, filename, file, settings):
+
+class KeywordFilter(LocalFilter):
+    def run(self, filename, file):
         results = []
-        assert isinstance(settings, Settings)
+        assert isinstance(self.settings, Settings)
 
-        keywords = settings.get("Keywords")
+        keywords = self.settings.get("Keywords")
         for i, line in enumerate(file):
             for keyword in keywords:
                 if line.find(keyword) > 0:
