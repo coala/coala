@@ -15,8 +15,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 class LineResult:
-    def __init__(self, file, line, error_message, original, replacement=None):
-        self.file = file
+    def __init__(self, filename, line, error_message, original, replacement=None):
+        self.filename = filename
         self.line = line
         self.error_message = error_message
         self.original = original
