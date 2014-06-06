@@ -2,9 +2,13 @@ __author__ = 'lasse'
 
 from codeclib.fillib import FilterBase
 
-class LocalFilter(FilterBase):
+class LocalFilter(FilterBase.FilterBase):
     def __init__(self, settings):
         FilterBase.__init__(settings)
+
+    @staticmethod
+    def kind():
+        return FilterBase.FILTER_KIND.LOCAL
 
     def run(self, filename, file):
         """

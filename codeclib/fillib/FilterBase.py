@@ -1,6 +1,12 @@
 __author__ = 'lasse'
 
 
+class FILTER_KIND:
+    UNKNOWN = 0
+    LOCAL   = 1
+    GLOBAL  = 2
+
+
 class FilterBase:
     def __init__(self, settings):
         self.settings = settings
@@ -10,6 +16,13 @@ class FilterBase:
 
     def tear_down(self):
         pass
+
+    @staticmethod
+    def kind():
+        """
+        :return: The kind of the filter
+        """
+        return FILTER_KIND.UNKNOWN
 
     @staticmethod
     def get_needed_settings():
