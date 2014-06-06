@@ -21,6 +21,9 @@ import argparse
 
 
 # noinspection PyUnreachableCode
+from codeclib.internal.util import CONSOLE_COLOR
+
+
 class Settings(OrderedDict):
     @staticmethod
     def __make_value(original):
@@ -33,6 +36,10 @@ class Settings(OrderedDict):
             return working
         except ValueError:
             pass
+
+        color = CONSOLE_COLOR.CONSOLE_COLOR.from_string(working)
+        if color != CONSOLE_COLOR.CONSOLE_COLOR.invalid:
+            return [color]
 
         # make list if possible
         lst = stripped.split(',')
