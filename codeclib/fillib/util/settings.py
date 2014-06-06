@@ -57,28 +57,30 @@ class Settings(OrderedDict):
 
         return [stripped]
 
-    def __init__(self):
+    def __init__(self, auto_load=True):
         OrderedDict.__init__(self)
-        self.defaults = OrderedDict()
 
-        self.__get_default_settings()
-        cmdargs = Settings.__parse_cmdline_args()
+        if auto_load:
+            self.defaults = OrderedDict()
 
-        if cmdargs.get('ConfigFile', None) != None and os.path.isfile(cmdargs.get('ConfigFile', [None])[0]):
-            self.origin_file = cmdargs.get('ConfigFile', None)
-        else:
-            self.origin_file = self.defaults['configfile'].value[0]
+            self.__get_default_settings()
+            cmdargs = Settings.__parse_cmdline_args()
 
-        self.__import_file(self.origin_file)
-        self.__import_dict(cmdargs)
+            if cmdargs.get('ConfigFile', None) != None and os.path.isfile(cmdargs.get('ConfigFile', [None])[0]):
+                self.origin_file = cmdargs.get('ConfigFile', None)
+            else:
+                self.origin_file = self.defaults['configfile'].value[0]
 
-        paths = self.get('save', Setting('', None)).value
-        for path in paths:
-            if path is not None:
-                if path == True:
-                    self.save_to_file(self.origin_file)
-                else:
-                    self.save_to_file(path)
+            self.__import_file(self.origin_file)
+            self.__import_dict(cmdargs)
+
+            paths = self.get('save', Setting('', None)).value
+            for path in paths:
+                if path is not None:
+                    if path == True:
+                        self.save_to_file(self.origin_file)
+                    else:
+                        self.save_to_file(path)
 
     def __import_dict(self, dictionary):
         for key, value in dictionary.items():
@@ -112,14 +114,6 @@ class Settings(OrderedDict):
         if  comments != []:
             # add empty comment-only object
             self.__import_setting('comment', Setting('', '', import_history, comments))
-
-    def __missing__(self, missing_key):
-        if missing_key.lower() in self.keys():
-            return self[missing_key.lower()]
-        else:
-            self.ensure_settings_available([missing_key.lower()])
-            return self[missing_key.lower()]
-
 
     def save_to_file(self, path):
         with open(path, 'w') as config_file:
