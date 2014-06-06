@@ -20,7 +20,10 @@ from codeclib.internal import FilterManager
 from codeclib.internal.Process import Process
 
 if __name__ == "__main__":
+    # Parse settings
     settings = Settings()
+    # Get filters
     manager = FilterManager.FilterManager()
-    Process.startProcesses(settings, manager.getFilters())
+    settings.ensure_settings_available(manager.get_needed_keys())
+    Process.startProcesses(settings, manager.get_filters())
     # were finished!

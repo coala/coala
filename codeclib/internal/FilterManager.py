@@ -19,5 +19,8 @@ class FilterManager:
         # TODO get filters
         pass
 
-    def getFilters(self):
+    def get_filters(self):
         pass
+
+    def get_needed_keys(self):
+        return []
