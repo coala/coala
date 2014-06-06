@@ -58,27 +58,27 @@ class Settings(OrderedDict):
     def __init__(self, auto_load=True):
         OrderedDict.__init__(self)
 
-        if auto_load:
-            self.defaults = OrderedDict()
+        self.defaults = OrderedDict()
 
-            self.__get_default_settings()
-            cmdargs = Settings.__parse_cmdline_args()
+        self.__get_default_settings()
+        cmdargs = Settings.__parse_cmdline_args()
 
-            if cmdargs.get('ConfigFile', None) != None and os.path.isfile(cmdargs.get('ConfigFile', [None])[0]):
-                self.origin_file = cmdargs.get('ConfigFile', None)
-            else:
-                self.origin_file = self.defaults['configfile'].value[0]
+        if cmdargs.get('ConfigFile', None) != None and os.path.isfile(cmdargs.get('ConfigFile', [None])[0]):
+            self.origin_file = cmdargs.get('ConfigFile', None)
+        else:
+            self.origin_file = self.defaults['configfile'].value[0]
 
-            self.__import_file(self.origin_file)
-            self.__import_dict(cmdargs)
+        self.__import_file(self.origin_file)
+        self.__import_dict(cmdargs)
 
-            paths = self.get('save', Setting('', None)).value
-            for path in paths:
-                if path is not None:
-                    if path == True:
-                        self.save_to_file(self.origin_file)
-                    else:
-                        self.save_to_file(path)
+    def save_if_necessary(self):
+        paths = self.get('save', Setting('', '')).value
+        for path in paths:
+            if path is not None:
+                if path == True:
+                    self.save_to_file(self.origin_file)
+                else:
+                    self.save_to_file(path)
 
     def __import_dict(self, dictionary):
         for key, value in dictionary.items():

@@ -25,5 +25,6 @@ if __name__ == "__main__":
     # Get filters
     manager = FilterManager.FilterManager()
     settings.ensure_settings_available(manager.get_needed_keys())
+    settings.save_if_necessary()
     Process.startProcesses(settings, manager.get_filters())
     # were finished!
