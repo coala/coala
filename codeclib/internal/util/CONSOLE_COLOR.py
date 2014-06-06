@@ -17,11 +17,11 @@ class CONSOLE_COLOR(Enum):
     red = '0;31'
     bright_cyan = '1;36'
     purple = '0;35'
-    bright_red = '1;31',
+    bright_red = '1;31'
     yellow = '0;33'
-    bright_purple = '1;35',
+    bright_purple = '1;35'
     dark_gray = '1;30'
-    bright_yellow = '1;33',
+    bright_yellow = '1;33'
     # TODO is that all?
 
     @staticmethod
