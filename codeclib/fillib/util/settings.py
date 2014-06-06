@@ -113,6 +113,14 @@ class Settings(OrderedDict):
             # add empty comment-only object
             self.__import_setting('comment', Setting('', '', import_history, comments))
 
+    def __missing__(self, missing_key):
+        if missing_key.lower() in self.keys():
+            return self[missing_key.lower()]
+        else:
+            self.ensure_settings_available([missing_key.lower()])
+            return self[missing_key.lower()]
+
+
     def save_to_file(self, path):
         with open(path, 'w') as config_file:
             for setting in self.values():
