@@ -17,14 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from codeclib.fillib.util.settings import Settings
 from codeclib.internal import FilterManager
-from codeclib.internal.Process import Process
 
 if __name__ == "__main__":
     # Parse settings
     settings = Settings()
     # Get filters
-    manager = FilterManager.FilterManager()
+    manager = FilterManager.FilterManager(settings)
     settings.ensure_settings_available(manager.get_needed_keys())
     settings.save_if_necessary()
-    Process.startProcesses(settings, manager.get_filters())
+    manager.run_processes()
     # were finished!
