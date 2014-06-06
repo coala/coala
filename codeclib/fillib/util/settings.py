@@ -252,6 +252,7 @@ class Settings(OrderedDict):
             ('TargetFileTypes', "None"),
             ('IgnoredFileTypes', '.gitignore'),
 
+            ('IncludedFilterDirectories', 'None'),
             ('Filters', "None"),
             ('IgnoredFilters', "None"),
             ('RegexFilters', "None"),
@@ -304,6 +305,9 @@ class Settings(OrderedDict):
         # -it sets parameter "IgnoredFileTypes" => List of file endings of files to be ignored
         arg_parser.add_argument('-it', '--ignored-types', nargs='+', metavar='TYPE', dest='IgnoredFileTypes',
                                 help='List of file endings of files to be ignored')
+        # -i sets parameter IncludedFilterDirectories => additional filter sources
+        arg_parser.add_argument('-i', '--include-filter-dirs', nargs='+', metavar='DIR', dest='IncludedFilterDirectories',
+                                help='List of directories that contain filters')
         # -f sets parameter "Filters" => Names of filters that should be used
         arg_parser.add_argument('-f', '--filters', nargs='+', metavar='FILE', dest='Filters',
                                 help='Names of filters that should be used')
