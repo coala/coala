@@ -6,7 +6,9 @@ class OutputFormatter:
         self.settings = settings
 
     def output_file_results(self, filename, result_list):
-        # TODO
+        if len(result_list) == 0:
+
+            return
         pass
 
     def __output_line_result(self, line_result):
