@@ -227,8 +227,13 @@ class FilterManager:
 
 
     def get_needed_keys(self):
-        #TODO
-        return []
+
+        filterclass_list = self.local_filters + self.global_filters
+        needed_keys = []
+
+        for filterclass in filterclass_list:
+            needed_keys.extend(filterclass.get_needed_settings())
+        return needed_keys
 
     def run_processes(self):
         #TODO

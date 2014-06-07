@@ -18,3 +18,14 @@ class KeywordFilter(LocalFilter.LocalFilter):
        #             results.append(LineResult(filename, i, msg, line))
 
         return results
+
+    @staticmethod
+    def get_needed_settings():
+        """
+        This method has to determine which settings are needed by this filter. The user will be prompted for needed
+        settings that are not available in the settings file so don't include settings where a default value would do.
+
+        :return: the list of setting keys needed for this filter
+        """
+        return (["Keywords"])
+
