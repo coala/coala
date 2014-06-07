@@ -142,7 +142,7 @@ class Settings(OrderedDict):
                         if self.get(setting.lower()) is None:
                             print("Please enter the value of the setting '{}' (needed by {})".format(setting, filter_name))
                             user_input = input("{}: ".format(help_text))
-                            self.__parse_line(setting + "=" + user_input, ['cmdline'])
+                            self.__parse_line(setting + "=" + user_input, '', ['cmdline'])
 
 #            if self.get(key_dict_dict[].lower(), None) is None:
 #                print("Please enter the value for the setting {}.".format(key))

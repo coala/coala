@@ -19,11 +19,14 @@ from codeclib.fillib.util.settings import Settings
 from codeclib.internal import FilterManager
 
 if __name__ == "__main__":
-    # Parse settings
-    settings = Settings()
-    # Get filters
-    manager = FilterManager.FilterManager(settings)
-    settings.ensure_settings_available(manager.get_needed_keys())
-    settings.save_if_necessary()
-    manager.run_processes()
-    # were finished!
+    try:
+        # Parse settings
+        settings = Settings()
+        # Get filters
+        manager = FilterManager.FilterManager(settings)
+        settings.ensure_settings_available(manager.get_needed_keys())
+        settings.save_if_necessary()
+        manager.run_processes()
+        # were finished!
+    except KeyboardInterrupt:
+        print("\nTerminated by user.");
