@@ -232,6 +232,12 @@ class FilterManager:
         needed_keys_dict_dict_list = []
 
         for filterclass in filterclass_list:
+            filter_answer = {filterclass.__name__: filterclass.get_needed_settings()}
+            try:
+                assert(type(filter_answer[filterclass.__name__]) == type(dict()))
+            except AssertionError:
+                print("Warning: expected instance of type {} from {} for needed settings, got instance of type {}!"\
+                      .format(type(dict()), filterclass.__name__, type(filter_answer[filterclass.__name__])))
             needed_keys_dict_dict_list.append({filterclass.__name__: filterclass.get_needed_settings()})
         return needed_keys_dict_dict_list
 

@@ -137,11 +137,12 @@ class Settings(OrderedDict):
             # since we save Setting objects, get() does not return None if it's set to None!
 
             for filter_name, key_dict in key_dict_dict.items():
-                for setting, help_text in key_dict.items():
-                    if self.get(setting.lower()) is None:
-                        print("Please enter the value of the setting '{}' (needed by {})".format(setting, filter_name))
-                        user_input = input("{}:".format(help_text))
-                        self.__parse_line(setting + "=" + user_input, ['cmdline'])
+                if key_dict:
+                    for setting, help_text in key_dict.items():
+                        if self.get(setting.lower()) is None:
+                            print("Please enter the value of the setting '{}' (needed by {})".format(setting, filter_name))
+                            user_input = input("{}: ".format(help_text))
+                            self.__parse_line(setting + "=" + user_input, ['cmdline'])
 
 #            if self.get(key_dict_dict[].lower(), None) is None:
 #                print("Please enter the value for the setting {}.".format(key))
