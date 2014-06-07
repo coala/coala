@@ -16,12 +16,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import multiprocessing
 import os
 import re
-
+import inspect
+import sys
+import pkgutil
+import importlib
 
 class FilterManager:
 
     @staticmethod
-    def sub_dirs(dir):
+    def get_sub_dirs(dir):
         """returns list of sub_dirs of a directory including that original directory
 
         :param dir: original directory
@@ -31,7 +34,7 @@ class FilterManager:
         try:
             for subdir in os.listdir(dir):
                 if os.path.isdir(os.path.join(dir, subdir)):
-                    dir_list.extend(FilterManager.sub_dirs(os.path.join(dir, subdir)))
+                    dir_list.extend(FilterManager.get_sub_dirs(os.path.join(dir, subdir)))
         except PermissionError:
             print("{} is not accessible and will be ignored!".format(dir))
             return None
@@ -72,16 +75,97 @@ class FilterManager:
 
     def __init__(self, settings):
         self.settings = settings
-        self.global_filters = self.get_filters(None) # GlobalBase
-        self.local_filters = self.get_filters(None) # LocalBase
+        self.local_filters, self.global_filters = self.get_filters()
         self.targets = self.get_targets()
         #TODO Process management
         pass
 
+    def get_filter_directories(self):
 
-    def get_filters(self, base_class):
-        #TODO
-        pass
+        filter_dirs = []
+
+        default_global_dir = os.path.abspath(os.path.join(
+            os.path.split(inspect.getfile(inspect.currentframe()))[0],
+            "../globalfilters")) #always codec/codeclib/globalfilters
+
+        default_local_dir = os.path.abspath(os.path.join(
+            os.path.split(inspect.getfile(inspect.currentframe()))[0],
+            "../localfilters")) #always codec/codeclib/globalfilters
+
+        filter_dirs.extend([default_global_dir, default_local_dir])
+
+        included_filter_dirs = FilterManager.get_abspaths_from_setting(self.settings['includedfilterdirectories'])
+        filter_dirs.extend(included_filter_dirs)
+
+        for dir in filter_dirs:
+            if not os.path.isdir(dir):
+                filter_dirs.remove(dir)
+
+        return filter_dirs
+
+
+    def get_filters(self):
+
+        local_filters = []
+        global_filters = []
+
+        filter_dirs = self.get_filter_directories()
+
+        potential_filter_files = []
+        for dir in filter_dirs:
+            potential_filter_files.extend(FilterManager.get_dir_files(dir))
+
+        filter_files = []
+
+        # if regexfilters are specified:
+        if self.settings['regexfilters'].value and self.settings['regexfilters'].value != [None]:
+            for file in potential_filter_files:
+                for regex in self.settings['regexfilters'].value:
+                    if re.search(regex, file):
+                        filter_files.append(file)
+            filter_files = list(set(filter_files))
+
+        # if filters are specified:
+        if self.settings['filters'].value and self.settings['filters'].value != [None]:
+            for file in potential_filter_files:
+                for name in self.settings['filters'].value:
+                    if name in [file, os.path.splitext(file)[0], os.path.basename(file), os.path.splitext(os.path.basename(file))[0]]:
+                        filter_files.append(file)
+
+        # neither regexfilters not filters are specified:
+        if not (self.settings['regexfilters'].value and self.settings['regexfilters'].value != [None]) \
+                and not (self.settings['filters'].value and self.settings['filters'].value != [None]):
+
+            filter_files = potential_filter_files
+
+        # if ignorefilters are specified:
+        if self.settings['ignoredfilters'].value and self.settings['ignoredfilters'].value != [None]:
+            for file in filter_files:
+                for name in self.settings['ignorefilters'].value:
+                    if name in [file, os.path.splitext(file)[0], os.path.basename(file), os.path.splitext(os.path.basename(file))[0]]:
+                        filter_files.remove(file)
+        filter_files = list(set(filter_files))
+
+        # filter files are ready, let's import those suckers
+
+        for dir in filter_dirs:
+            if dir not in sys.path:
+                sys.path.insert(0, dir)
+
+        for file in filter_files:
+            module_name = os.path.splitext(os.path.basename(file))[0]
+            module = importlib.import_module(module_name)
+            for name, object in inspect.getmembers(module):
+                if hasattr(object, "kind"):
+                    if object.kind() == 1:
+                        local_filters.append(object)
+                    elif object.kind() == 2:
+                        global_filters.append(object)
+                    else:
+                        print("Warning: Module '{}' is of a weird .kind(): {}".format(name, object.kind()))
+                        #TODO: proper warning
+
+        return [local_filters, global_filters]
 
     def get_targets(self):
 
@@ -100,7 +184,7 @@ class FilterManager:
 
         rich_target_dirs = []
         for dir in target_dirs:
-            rich_target_dirs.extend(FilterManager.sub_dirs(dir))
+            rich_target_dirs.extend(FilterManager.get_sub_dirs(dir))
 
         for item in flat_directories:
             if os.path.isfile(item) and item not in blacklist:
