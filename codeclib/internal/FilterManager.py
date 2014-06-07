@@ -141,7 +141,7 @@ class FilterManager:
         # if ignorefilters are specified:
         if self.settings['ignoredfilters'].value and self.settings['ignoredfilters'].value != [None]:
             for file in filter_files:
-                for name in self.settings['ignorefilters'].value:
+                for name in self.settings['ignoredfilters'].value:
                     if name in [file, os.path.splitext(file)[0], os.path.basename(file), os.path.splitext(os.path.basename(file))[0]]:
                         filter_files.remove(file)
         filter_files = list(set(filter_files))
@@ -229,11 +229,11 @@ class FilterManager:
     def get_needed_keys(self):
 
         filterclass_list = self.local_filters + self.global_filters
-        needed_keys = []
+        needed_keys_dict_dict_list = []
 
         for filterclass in filterclass_list:
-            needed_keys.extend(filterclass.get_needed_settings())
-        return needed_keys
+            needed_keys_dict_dict_list.append({filterclass.__name__: filterclass.get_needed_settings()})
+        return needed_keys_dict_dict_list
 
     def run_processes(self):
         #TODO

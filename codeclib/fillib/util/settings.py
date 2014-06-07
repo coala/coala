@@ -131,13 +131,22 @@ class Settings(OrderedDict):
                 for line in lines:
                     config_file.write(line+'\n')
 
-    def ensure_settings_available(self, keys):
-        for key in keys:
+    def ensure_settings_available(self, keys_dict_dict_list):
+        # keys_dict_dict_list is a list, entries are {filter_name:{setting:help_text}}
+        for key_dict_dict in keys_dict_dict_list:
             # since we save Setting objects, get() does not return None if it's set to None!
-            if self.get(key.lower(), None) is None:
-                print("Please enter the value for the setting {}.".format(key))
-                user_input = input("Value: ")
-                self.__parse_line(key + "=" + user_input, ['cmdline'])
+
+            for filter_name, key_dict in key_dict_dict.items():
+                for setting, help_text in key_dict.items():
+                    if self.get(setting.lower()) is None:
+                        print("Please enter the value of the setting '{}' (needed by {})".format(setting, filter_name))
+                        user_input = input("{} ({}):".format(setting, help_text))
+                        self.__parse_line(setting + "=" + user_input, ['cmdline'])
+
+#            if self.get(key_dict_dict[].lower(), None) is None:
+#                print("Please enter the value for the setting {}.".format(key))
+#                user_input = input("Value: ")
+#                self.__parse_line(key + "=" + user_input, ['cmdline'])
 
     def __setting_is_implicit(self, setting):
         # write setting only if its import_history is [origin_file] AND

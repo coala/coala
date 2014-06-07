@@ -30,6 +30,6 @@ class FilterBase:
         This method has to determine which settings are needed by this filter. The user will be prompted for needed
         settings that are not available in the settings file so don't include settings where a default value would do.
 
-        :return: the list of setting keys needed for this filter
+        :return: a dictionary of needed settings as keys and help texts as values
         """
-        return []
+        return {}
