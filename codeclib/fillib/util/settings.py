@@ -37,10 +37,6 @@ class Settings(OrderedDict):
         except ValueError:
             pass
 
-        color = CONSOLE_COLOR.CONSOLE_COLOR.from_string(working)
-        if color != CONSOLE_COLOR.CONSOLE_COLOR.invalid:
-            return [color]
-
         # make list if possible
         lst = stripped.split(',')
         if len(lst) > 1:
