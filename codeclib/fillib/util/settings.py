@@ -20,10 +20,6 @@ import os
 import argparse
 
 
-# noinspection PyUnreachableCode
-from codeclib.internal.util import CONSOLE_COLOR
-
-
 class Settings(OrderedDict):
     @staticmethod
     def __make_value(original):
@@ -36,10 +32,6 @@ class Settings(OrderedDict):
             return working
         except ValueError:
             pass
-
-        color = CONSOLE_COLOR.CONSOLE_COLOR.from_string(working)
-        if color != CONSOLE_COLOR.CONSOLE_COLOR.invalid:
-            return [color]
 
         # make list if possible
         lst = stripped.split(',')
@@ -142,7 +134,7 @@ class Settings(OrderedDict):
                         if self.get(setting.lower()) is None:
                             print("Please enter the value of the setting '{}' (needed by {})".format(setting, filter_name))
                             user_input = input("{}: ".format(help_text))
-                            self.__parse_line(setting + "=" + user_input, ['cmdline'])
+                            self.__parse_line(setting + "=" + user_input, '', ['cmdline'])
 
 #            if self.get(key_dict_dict[].lower(), None) is None:
 #                print("Please enter the value for the setting {}.".format(key))
