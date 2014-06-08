@@ -20,10 +20,6 @@ import os
 import argparse
 
 
-# noinspection PyUnreachableCode
-from codeclib.internal.util import CONSOLE_COLOR
-
-
 class Settings(OrderedDict):
     @staticmethod
     def __make_value(original):
