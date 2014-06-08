@@ -6,7 +6,8 @@ from codeclib.fillib import LocalFilter
 
 
 class KeywordFilter(LocalFilter.LocalFilter):
-    def run(self, filename, file):
+    def run(self, file):
+        filename = file.name
         results = []
         assert isinstance(self.settings, Settings)
 
@@ -16,6 +17,7 @@ class KeywordFilter(LocalFilter.LocalFilter):
                 if line.find(keyword) > 0:
                     msg = "Keyword " + keyword + " found."
        #             results.append(LineResult(filename, i, msg, line))
+                    results.append(msg) #TODO: LineResult!
 
         return results
 

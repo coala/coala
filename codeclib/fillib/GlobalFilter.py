@@ -10,11 +10,11 @@ class GlobalFilter(FilterBase.FilterBase):
     def kind():
         return FilterBase.FILTER_KIND.GLOBAL
 
-    def run(self, file_dict):
+    def run(self, file_list):
         """
         Checks the given files.
 
-        :param file_dict: an ordered dictionary that has the filename as key and the contents (string array) as value
+        :param file_list: a list of file objects
         :return: TODO ???
         """
         raise NotImplementedError("This function has to be implemented for a runnable filter.")

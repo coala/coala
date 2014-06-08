@@ -13,13 +13,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import multiprocessing
 import os
 import re
 import inspect
 import sys
-import pkgutil
 import importlib
+import multiprocessing
+from queue import Empty
 
 class FilterManager:
 
@@ -72,6 +72,45 @@ class FilterManager:
             return abspaths
         else:
             return[]
+
+    @staticmethod
+    def filter_process(settings, file_queue, global_filter_class_queue, local_filter_class_list, file_list, pipe_io):
+
+        """This is the method that actually runs on the processes
+
+        :param settings: Settings object
+        :param file_queue: multiprocessing.queue of actual file objects
+        :param global_filter_class_queue: multiprocessing.queue of global filter classes
+        :param local_filter_class_list: list of local filter classes
+        :param file_list: list of file objects
+        :param pipe_io: communication end of multiprocessing.pipe
+        """
+        something_to_do = True
+        while something_to_do:
+            try:  # run local filters
+                file = file_queue.get(timeout=0.3)
+                file_results = [] # TODO: LineResultWrapper!
+
+                for filter_class in local_filter_class_list:
+                    filter = filter_class(settings)
+                    result = filter.run(file)
+                    file_results.append(result)
+                if file_results: # TODO: LineResultWrapper!
+                    pipe_io.send(file_results)
+
+            except Empty:
+                try:
+                    filter_class = global_filter_class_queue.get(timeout=0.3)
+                    filter = filter_class(settings)
+                    filter_results = filter.run(file_list)
+                    if filter_results: # TODO: LineResultWrapper!
+                        pipe_io.send(filter_results)
+
+                except Empty:
+                    # all tasks done
+                    something_to_do = False
+                    pipe_io.send('DONE')
+                    pipe_io.close()
 
     def __init__(self, settings):
         self.settings = settings
@@ -235,10 +274,10 @@ class FilterManager:
             filter_answer = {filterclass.__name__: filterclass.get_needed_settings()}
             try:
                 assert(type(filter_answer[filterclass.__name__]) == type(dict()))
+                needed_keys_dict_dict_list.append(filter_answer)
             except AssertionError:
                 print("Warning: expected instance of type {} from {} for needed settings, got instance of type {}!"\
                       .format(type(dict()), filterclass.__name__, type(filter_answer[filterclass.__name__])))
-            needed_keys_dict_dict_list.append({filterclass.__name__: filterclass.get_needed_settings()})
         return needed_keys_dict_dict_list
 
     def run_processes(self):

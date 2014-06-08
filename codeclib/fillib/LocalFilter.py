@@ -10,7 +10,7 @@ class LocalFilter(FilterBase.FilterBase):
     def kind():
         return FilterBase.FILTER_KIND.LOCAL
 
-    def run(self, filename, file):
+    def run(self, file):
         """
         Checks the given file.
 
