@@ -6,12 +6,12 @@ from codeclib.fillib import LocalFilter
 
 
 class KeywordFilter(LocalFilter.LocalFilter):
-    def run(self, file):
-        filename = file.name
+
+    def run(self, filename, file):
         results = []
         assert isinstance(self.settings, Settings)
 
-        keywords = self.settings.get("Keywords")
+        keywords = self.settings["keywords"].value
         for i, line in enumerate(file):
             for keyword in keywords:
                 if line.find(keyword) > 0:

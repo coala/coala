@@ -74,43 +74,42 @@ class FilterManager:
             return[]
 
     @staticmethod
-    def filter_process(settings, file_queue, global_filter_class_queue, local_filter_class_list, file_list, pipe_io):
+    def filter_process(settings, file_name_queue, global_filter_class_queue, local_filter_class_list, file_dict, result_queue):
 
         """This is the method that actually runs on the processes
 
         :param settings: Settings object
-        :param file_queue: multiprocessing.queue of actual file objects
+        :param file_name_queue: multiprocessing.queue of file names (so save memory...)
         :param global_filter_class_queue: multiprocessing.queue of global filter classes
         :param local_filter_class_list: list of local filter classes
-        :param file_list: list of file objects
-        :param pipe_io: communication end of multiprocessing.pipe
+        :param file_dict: dict of all files as {filename:file}, file as in file.readlines()
+        :param result_queue: queue for results
         """
         something_to_do = True
         while something_to_do:
-            try:  # run local filters
-                file = file_queue.get(timeout=0.3)
+            try:  # run a local filter
+                file_name = file_name_queue.get(timeout=0.3)
                 file_results = [] # TODO: LineResultWrapper!
 
                 for filter_class in local_filter_class_list:
                     filter = filter_class(settings)
-                    result = filter.run(file)
+                    result = filter.run(file_name, file_dict[file_name])
                     file_results.append(result)
                 if file_results: # TODO: LineResultWrapper!
-                    pipe_io.send(file_results)
+                    result_queue.put(file_results)
 
             except Empty:
-                try:
+                try:  # run a global filter
                     filter_class = global_filter_class_queue.get(timeout=0.3)
                     filter = filter_class(settings)
-                    filter_results = filter.run(file_list)
+                    filter_results = filter.run(file_dict)
                     if filter_results: # TODO: LineResultWrapper!
-                        pipe_io.send(filter_results)
+                        result_queue.put(filter_results)
 
                 except Empty:
                     # all tasks done
                     something_to_do = False
-                    pipe_io.send('DONE')
-                    pipe_io.close()
+                    result_queue.put('DONE')
 
     def __init__(self, settings):
         self.settings = settings
@@ -244,8 +243,12 @@ class FilterManager:
             if self.settings['ignoredfiletypes'].value and self.settings['ignoredfiletypes'].value != [None]:
                 for file_name in target_files:
                     for good_ending in self.settings['targetfiletypes'].value:
-                        for bad_ending in self.settings['ignoredfiletypes'].value:
-                            if re.search(good_ending + '$', file_name) and not re.search(bad_ending + '$', file_name):
+                        if re.search(good_ending + '$', file_name):
+                            file_good = True
+                            for bad_ending in self.settings['ignoredfiletypes'].value:
+                                if re.search(bad_ending + '$', file_name):
+                                    file_good = False
+                            if file_good == True:
                                 targets.append(file_name)
             else:
                 for file_name in target_files:
@@ -255,9 +258,12 @@ class FilterManager:
         else:
             if self.settings['ignoredfiletypes'].value and self.settings['ignoredfiletypes'].value != [None]:
                 for file_name in target_files:
+                    file_good = True
                     for bad_ending in self.settings['ignoredfiletypes'].value:
-                        if not re.search(bad_ending + '$', file_name):
-                            targets.append(file_name)
+                        if re.search(bad_ending + '$', file_name):
+                            file_good = False
+                    if file_good == True:
+                        targets.append(file_name)
             else:
                 targets = target_files
 
@@ -281,5 +287,55 @@ class FilterManager:
         return needed_keys_dict_dict_list
 
     def run_processes(self):
-        #TODO
-        pass
+
+        process_count = 1
+        if self.settings['jobcount'].value and self.settings['jobcount'].value != [None]:
+            process_count = self.settings['jobcount'].value[0]
+        else:
+            process_count = multiprocessing.cpu_count()
+
+        ProcessManager = multiprocessing.Manager()
+
+        file_dict = ProcessManager.dict()
+        file_name_queue = ProcessManager.Queue()
+        for file_name in self.targets:
+            try:
+                with open(file_name,'r') as file:
+                    file_name_queue.put(file.name)
+                    file_dict[file.name] = file.readlines()
+            except:
+                print("can't open file:", file_name)
+                #TODO: ince warning/log
+
+        global_filter_class_queue = ProcessManager.Queue()
+        for global_filter_class in self.global_filters:
+            global_filter_class_queue.put(global_filter_class)
+
+        local_filter_class_list = ProcessManager.list()
+        for filter_class in self.local_filters:
+            local_filter_class_list.append(filter_class)
+
+        result_queue = ProcessManager.Queue()
+        processes = []
+
+        for i in range(process_count):
+            processes.append(multiprocessing.Process(
+                target=FilterManager.filter_process,
+                args=(self.settings, file_name_queue, global_filter_class_queue, local_filter_class_list, file_dict, result_queue,)))
+            processes[i].start()
+
+        processes_done = 0
+        while processes_done < process_count:
+            try:
+                result = result_queue.get(timeout = 0.3)
+                if result == 'DONE':
+                    processes_done += 1
+                else:
+                    print("RESULT:", result)
+                    # TODO: log, save, output result
+            except Empty:
+                pass
+
+
+
+

@@ -7,7 +7,7 @@ class FILTER_KIND:
     GLOBAL  = 2
 
 
-class FilterBase:
+class FilterBase(object):
     def __init__(self, settings):
         self.settings = settings
 

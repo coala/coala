@@ -252,7 +252,7 @@ class Settings(OrderedDict):
             ('IgnoredDirectories', "None"),
             ('FlatDirectories', "None"),
             ('TargetFileTypes', "None"),
-            ('IgnoredFileTypes', '.gitignore'),
+            ('IgnoredFileTypes', '.gitignore,~,a,s'),
 
             ('IncludedFilterDirectories', 'None'),
             ('Filters', "None"),
