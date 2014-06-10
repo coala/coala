@@ -26,12 +26,12 @@ class Settings(OrderedDict):
         stripped = original.strip()
         working = stripped.lower()
 
-        # make it an int if possible:
-        try:
-            working = [int(working)]
-            return working
-        except ValueError:
-            pass
+#        # make it an int if possible:
+#        try:
+#            working = [int(working)]
+#            return working
+#        except ValueError:
+#            pass
 
         # make list if possible
         lst = stripped.split(',')
@@ -42,16 +42,15 @@ class Settings(OrderedDict):
             return new_list
 
         # make it bool if possible:
-        try:
-            if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
-                return [True]
-            elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
-                return [False]
-            elif working in ['', 'None', 'none']:
-                return [None]
-        except AttributeError:
-            pass
-
+#        try:
+#            if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+#                return [True]
+#            elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
+#                return [False]
+#            elif working in ['', 'None', 'none']:
+#                return [None]
+#        except AttributeError:
+#            pass
         return [stripped]
 
     def __init__(self, auto_load=True):
@@ -252,16 +251,16 @@ class Settings(OrderedDict):
             ('IgnoredDirectories', "None"),
             ('FlatDirectories', "None"),
             ('TargetFileTypes', "None"),
-            ('IgnoredFileTypes', '.gitignore,~,a,s'),
+            ('IgnoredFileTypes', '.gitignore,~'),
 
             ('IncludedFilterDirectories', 'None'),
             ('Filters', "None"),
             ('IgnoredFilters', "None"),
             ('RegexFilters', "None"),
 
-            ('FileOkColor', 'bright red'),
-            ('FileBadColor', 'bright green'),
-            ('FilterColor', 'grey'),
+            ('FileOkColor', 'bright green'),
+            ('FileBadColor', 'bright red'),
+            ('FilterColor', 'dark gray'),
             ('ErrorResultColor', 'red'),
             ('WarningResultColor', 'yellow'),
             ('InfoResultColor', 'normal'),

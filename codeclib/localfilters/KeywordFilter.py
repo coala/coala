@@ -12,13 +12,12 @@ class KeywordFilter(LocalFilter.LocalFilter):
         assert isinstance(self.settings, Settings)
 
         keywords = self.settings["keywords"].value
-        for i, line in enumerate(file):
-            for keyword in keywords:
-                if line.find(keyword) > 0:
-                    msg = "Keyword " + keyword + " found."
-       #             results.append(LineResult(filename, i, msg, line))
-                    results.append(msg) #TODO: LineResult!
 
+        for i in range(len(file)):
+            for keyword in keywords:
+                if file[i].find(keyword) > 0:
+                    msg = "Keyword '" + keyword + "' found."
+                    results.append(LineResult.LineResult(filename, "KeywordFilter", msg, i+1, file[i]))
         return results
 
     @staticmethod

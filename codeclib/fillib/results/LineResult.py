@@ -12,12 +12,40 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+from functools import total_ordering
 
-
+@total_ordering
 class LineResult:
-    def __init__(self, filename, line, error_message, original, replacement=None):
+    def __init__(self, filename, filter_name, error_message, line_number, original, replacement=None):
         self.filename = filename
-        self.line = line
+        self.filter_name = filter_name
         self.error_message = error_message
+        self.line_number = line_number
         self.original = original
         self.replacement = replacement
+
+    def __lt__(self, other):
+        if self.filename == other.filename:
+            if self.line_number == other.line_number:
+                if self.filter_name == other.filter_name:
+                    return False
+                elif self.filter_name < other.filter_name:
+                    return True
+                else:
+                    return False
+            elif self.line_number < other.line_number:
+                return True
+            else:
+                return False
+        elif self.filename.lower() < other.filename.lower():
+            return True
+        elif self.filename.lower() > other.filename.lower():
+            return False
+        else:
+            if self.filename < other.filename:
+                return True
+            else:
+                return False
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.filename == other.filename and self.line_number == other.line_number and self.filter_name == other.filter_name

@@ -20,6 +20,7 @@ import sys
 import importlib
 import multiprocessing
 from queue import Empty
+from codeclib.fillib.results import ResultContainer
 
 class FilterManager:
 
@@ -60,7 +61,7 @@ class FilterManager:
     @staticmethod
     def get_abspaths_from_setting(setting):
         abspaths = []
-        if setting.value and setting.value != [None]:
+        if setting.value and setting.value != ['None']:
             for item in setting.value:
                 if item == os.path.abspath(item):
                     abspaths.append(item)
@@ -88,23 +89,22 @@ class FilterManager:
         something_to_do = True
         while something_to_do:
             try:  # run a local filter
-                file_name = file_name_queue.get(timeout=0.3)
-                file_results = [] # TODO: LineResultWrapper!
+                file_name = file_name_queue.get_nowait()
+                file_results = ResultContainer.ResultContainer(file_name, settings, type='file')
 
                 for filter_class in local_filter_class_list:
                     filter = filter_class(settings)
-                    result = filter.run(file_name, file_dict[file_name])
-                    file_results.append(result)
-                if file_results: # TODO: LineResultWrapper!
-                    result_queue.put(file_results)
+                    result_list = filter.run(file_name, file_dict[file_name])
+                    for result in result_list:
+                        file_results.add(result)
+                result_queue.put(file_results)
 
             except Empty:
                 try:  # run a global filter
-                    filter_class = global_filter_class_queue.get(timeout=0.3)
+                    filter_class = global_filter_class_queue.get_nowait()
                     filter = filter_class(settings)
                     filter_results = filter.run(file_dict)
-                    if filter_results: # TODO: LineResultWrapper!
-                        result_queue.put(filter_results)
+                    result_queue.put(filter_results)
 
                 except Empty:
                     # all tasks done
@@ -115,8 +115,6 @@ class FilterManager:
         self.settings = settings
         self.local_filters, self.global_filters = self.get_filters()
         self.targets = self.get_targets()
-        #TODO Process management
-        pass
 
     def get_filter_directories(self):
 
@@ -156,7 +154,7 @@ class FilterManager:
         filter_files = []
 
         # if regexfilters are specified:
-        if self.settings['regexfilters'].value and self.settings['regexfilters'].value != [None]:
+        if self.settings['regexfilters'].value and self.settings['regexfilters'].value != ['None']:
             for file in potential_filter_files:
                 for regex in self.settings['regexfilters'].value:
                     if re.search(regex, file):
@@ -164,20 +162,20 @@ class FilterManager:
             filter_files = list(set(filter_files))
 
         # if filters are specified:
-        if self.settings['filters'].value and self.settings['filters'].value != [None]:
+        if self.settings['filters'].value and self.settings['filters'].value != ['None']:
             for file in potential_filter_files:
                 for name in self.settings['filters'].value:
                     if name in [file, os.path.splitext(file)[0], os.path.basename(file), os.path.splitext(os.path.basename(file))[0]]:
                         filter_files.append(file)
 
         # neither regexfilters not filters are specified:
-        if not (self.settings['regexfilters'].value and self.settings['regexfilters'].value != [None]) \
-                and not (self.settings['filters'].value and self.settings['filters'].value != [None]):
+        if not (self.settings['regexfilters'].value and self.settings['regexfilters'].value != ['None']) \
+                and not (self.settings['filters'].value and self.settings['filters'].value != ['None']):
 
             filter_files = potential_filter_files
 
         # if ignorefilters are specified:
-        if self.settings['ignoredfilters'].value and self.settings['ignoredfilters'].value != [None]:
+        if self.settings['ignoredfilters'].value and self.settings['ignoredfilters'].value != ['None']:
             for file in filter_files:
                 for name in self.settings['ignoredfilters'].value:
                     if name in [file, os.path.splitext(file)[0], os.path.basename(file), os.path.splitext(os.path.basename(file))[0]]:
@@ -239,8 +237,10 @@ class FilterManager:
 
         # at this point we have all files together and need to sort.
         targets = []
-        if self.settings['targetfiletypes'].value and self.settings['targetfiletypes'].value != [None]:
-            if self.settings['ignoredfiletypes'].value and self.settings['ignoredfiletypes'].value != [None]:
+
+        if self.settings['targetfiletypes'].value and self.settings['targetfiletypes'].value != ['None']:
+            if self.settings['ignoredfiletypes'].value and self.settings['ignoredfiletypes'].value != ['None']:
+
                 for file_name in target_files:
                     for good_ending in self.settings['targetfiletypes'].value:
                         if re.search(good_ending + '$', file_name):
@@ -256,7 +256,7 @@ class FilterManager:
                         if re.search(good_ending + '$', file_name):
                             targets.append(file_name)
         else:
-            if self.settings['ignoredfiletypes'].value and self.settings['ignoredfiletypes'].value != [None]:
+            if self.settings['ignoredfiletypes'].value and self.settings['ignoredfiletypes'].value != ['None']:
                 for file_name in target_files:
                     file_good = True
                     for bad_ending in self.settings['ignoredfiletypes'].value:
@@ -267,7 +267,7 @@ class FilterManager:
             else:
                 targets = target_files
 
-        #print(targets)
+
         return targets
 
 
@@ -288,12 +288,9 @@ class FilterManager:
 
     def run_processes(self):
 
-        process_count = 1
-        if self.settings['jobcount'].value and self.settings['jobcount'].value != [None]:
-            process_count = self.settings['jobcount'].value[0]
-        else:
+        process_count = self.settings['jobcount'].to_int(index = 0)
+        if process_count == 0:
             process_count = multiprocessing.cpu_count()
-
         ProcessManager = multiprocessing.Manager()
 
         file_dict = ProcessManager.dict()
@@ -331,7 +328,7 @@ class FilterManager:
                 if result == 'DONE':
                     processes_done += 1
                 else:
-                    print("RESULT:", result)
+                    print(result)
                     # TODO: log, save, output result
             except Empty:
                 pass
