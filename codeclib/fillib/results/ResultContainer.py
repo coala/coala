@@ -1,9 +1,26 @@
 __author__ = 'fabian'
 from functools import total_ordering
-
+import os
 
 @total_ordering
 class ResultContainer:
+
+    @staticmethod
+    def fixed_length(str, length):
+        assert(length > 4)
+        if len(str) < length:
+            str += ' '*(length-len(str))
+            return str
+        elif len(str) == length:
+            return str
+        else:  # str longer than length
+            if length%2 == 0:  # is even
+                a = int((length/2)-2)
+                b = int((length/2)-1)
+            else:
+                a = b = int((length-3)/2)
+            str = str[:a]+'...'+str[-b:]
+            return str
 
     def __init__(self, caption, settings, line_result_list=None, type='file'):
         self.settings = settings
@@ -11,27 +28,17 @@ class ResultContainer:
             self.line_result_list = sorted(line_result_list)
         else:
             self.line_result_list = []
-        self.caption = caption
+        self.caption = ResultContainer.fixed_length(caption, 80)
         if type == 'filter':
             self.type = type
-            if self.__nonzero__():
-                self.caption = self.line_result_list[0].filter_name
         else:
             self.type = 'file'
-            if self.__nonzero__():
-                self.caption = self.line_result_list[0].filename
 
     def add(self, line_result):
-
         self.line_result_list.append(line_result)
         self.line_result_list = sorted(self.line_result_list)
-        if not self.caption:
-            if self.type == 'filter':
-                self.caption = self.line_result_list[0].filter_name
-            else:
-                self.caption = self.line_result_list[0].filename
 
-    def __nonzero__(self):
+    def __bool__(self):
         try:
             if len(self.line_result_list) > 0 and self.line_result_list != [None]:
                 return True
@@ -69,7 +76,7 @@ class ResultContainer:
 
         str = ""
 
-        if not self.__nonzero__():
+        if not bool(self):
             str += FileOkColor + self.caption + NormalColor
         else:
             str += FileBadColor + self.caption + NormalColor + '\n'

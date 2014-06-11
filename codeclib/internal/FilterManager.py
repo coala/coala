@@ -69,7 +69,7 @@ class FilterManager:
                     if setting.import_history == ['cmdline'] or setting.import_history == ['default']:
                         abspaths.append(os.path.join(os.getcwd(),item))
                     else:
-                        abspaths.append(os.path.join(setting.import_history[-1], item))
+                        abspaths.append(os.path.join(os.path.dirname(os.path.abspath(setting.import_history[-1])),item))
             return abspaths
         else:
             return[]
@@ -298,10 +298,10 @@ class FilterManager:
         for file_name in self.targets:
             try:
                 with open(file_name,'r') as file:
-                    file_name_queue.put(file.name)
                     file_dict[file.name] = file.readlines()
+                    file_name_queue.put(file.name)
             except:
-                print("can't open file:", file_name)
+                print("WARNING: can't open file:", file_name)
                 #TODO: ince warning/log
 
         global_filter_class_queue = ProcessManager.Queue()
@@ -328,11 +328,16 @@ class FilterManager:
                 if result == 'DONE':
                     processes_done += 1
                 else:
-                    print(result)
-                    # TODO: log, save, output result
+                    if self.settings['hidefinefiles'].to_bool(0):
+                        if result: print(result)
+                    else:
+                            print(result)
+                    self.process_changes(result)
             except Empty:
                 pass
 
+    def process_changes(self, result):
+        pass
 
 
 

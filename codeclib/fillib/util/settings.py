@@ -269,9 +269,10 @@ class Settings(OrderedDict):
             ('LogType', 'CONSOLE'),
             ('LogOutput', 'None'),
             ('Verbosity', 'INFO'),
-
+            ('HideFineFiles', "False"),
             ('ConfigFile', '.codecfile'),
             ('Save', 'None'),
+            ('ApplyChanges', 'ASK'),
             ('JobCount', 'None')
         ])
         for key, value in defaultValues.items():
@@ -336,6 +337,12 @@ class Settings(OrderedDict):
         # -j sets parameter "JobCount" => Number of processes to be allowed to run at once
         arg_parser.add_argument('-j', '--jobs', nargs=1, type=int, metavar='INT', dest='JobCount',
                                 help='Number of processes to be allowed to run at once')
+        # -a sets parameter "ApplyChanges" => Set once to ask for or twice to apply changes
+        arg_parser.add_argument('-a', '--apply-changes', nargs=1, choices=['YES','NO','ASK'], metavar='ENUM',
+                                dest='ApplyChanges', help="Enum('YES','NO','ASK') to set whether to apply changes")
+        # -hf sets parameter "HideFineFiles" => Set to not show files that are ok
+        arg_parser.add_argument('-hf', '--hide-fine-files', nargs=1, metavar='BOOL', dest='HideFineFiles',
+                                help='Set to hide Files from results that do not produce filter output')
 
         # arg_vars stores parsed arguments in form of a dictionary.
         # it reads custom_arg_string instead of sys.args if custom_arg_string is given.
@@ -344,10 +351,9 @@ class Settings(OrderedDict):
         else:
             arg_vars = vars(arg_parser.parse_args())
 
-        #make -s --save store arguments in a list or None as all parameters do:
+        #make arguments to list or None as all other parameters are:
         if arg_vars['Save']: arg_vars['Save'] = [arg_vars['Save']]
 
         return arg_vars
-
 if __name__ == "__main__":
     settings=Settings()

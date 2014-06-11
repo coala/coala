@@ -32,7 +32,7 @@ class Setting:
             line += "None"
         else:
             delimiter = ''
-            for elem in self.value:
+            for elem     in self.value:
                 line += delimiter + str(elem)
                 delimiter = ", "
 
@@ -78,13 +78,14 @@ class Setting:
                 return default
         else:  # index is set
             try:
-                if self.value[index] in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
-                    return [True]
-                elif self.value[index] in ['n', 'no', 'nope', 'never', 'nah', 'false']:
-                    return [False]
-                elif self.value[index] in ['', 'None', 'none']:
-                    return [None]
+                if self.value[index].lower() in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                    return True
+                elif self.value[index].lower() in ['n', 'no', 'nope', 'never', 'nah', 'false']:
+                    return False
+                elif self.value[index].lower() in ['', 'None', 'none']:
+                    return None
             except AttributeError:
+                print("Exception in to_bool with set index for setting:", self.key)
                 return default
 
     def to_color_code(self, index = None):
