@@ -74,7 +74,7 @@ class LineLengthFilter(LocalFilter.LocalFilter):
                 assert(max_line_length > 2)
                 last_space_index = str.rfind(' ',0,max_line_length-2)
                 if last_space_index > 0:
-                    str = str[:last_space_index+2-len(line_cont_char)]+line_cont_char+'\n'+LineLengthFilter.abbreviate(str[last_space_index+3-len(line_cont_char):],max_line_length, line_cont_char)
+                    str = str[:last_space_index+2-len(line_cont_char)]+line_cont_char+'\n'+LineLengthFilter.abbreviate(str[last_space_index+2-len(line_cont_char):],max_line_length, line_cont_char)
                 else:
                     str = str[:max_line_length-1-len(line_cont_char)]+line_cont_char+'\n'+LineLengthFilter.abbreviate(str[max_line_length-1-len(line_cont_char):],max_line_length, line_cont_char)
             else:

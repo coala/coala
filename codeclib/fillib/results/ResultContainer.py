@@ -34,6 +34,13 @@ class ResultContainer:
         else:
             self.type = 'file'
 
+    def get_replacement_line_results(self):
+        possible_changes = []
+        for LineResult in self.line_result_list:
+            if LineResult.replacement:
+                possible_changes.append(LineResult)
+        return possible_changes
+
     def add(self, line_result):
         self.line_result_list.append(line_result)
         self.line_result_list = sorted(self.line_result_list)

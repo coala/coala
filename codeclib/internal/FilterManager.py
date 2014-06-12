@@ -111,6 +111,63 @@ class FilterManager:
                     something_to_do = False
                     result_queue.put('DONE')
 
+    @staticmethod
+    def get_changes_answer(choices_number):
+        assert(type(choices_number) == type(2))
+        assert(choices_number > 0)
+        while True:
+            user_input = input("Please enter the numbers of changes to apply ('y'=all, 'n'=none): ")
+            if user_input.lower().strip() in ['y']:
+                return [i+1 for i in range(choices_number)]
+            elif user_input.lower().strip() in ['n']:
+                return []
+            else:
+                try:
+                    choices_list=[]
+                    user_input_list = re.sub(' +',' ',user_input.strip().replace(',',' ')).split(' ')
+                    for item in user_input_list:
+                        if item.isdigit():
+                            assert(0 < int(item) <= choices_number)
+                            choices_list.append(int(item))
+                        else:
+                            item_from, item_to = item.split('-')
+                            assert(int(item_to) > int(item_from))
+                            for i in range(int(item_from), int(item_to)+1):
+                                assert(0 < i <= choices_number)
+                                choices_list.append(i)
+                    choices_list = list(set(choices_list))
+                    return sorted(choices_list)
+                except:
+                    print("WARNING: incorrect input!")
+
+    @staticmethod
+    def do_change(line_result):
+        try:
+            line_list = []
+            try:
+                with open(line_result.filename, 'r') as file:
+                    line_list = file.readlines()
+            except:
+                return False, "WARNING: Could not read {}".format(line_result.filename)
+
+            try:
+                assert(line_list[line_result.line_number-1] == line_result.original)
+            except:
+                return False, "WARNING: Line {} of {} is different than expected".format(line_result.line_number, line_result.filename)
+
+            line_list[line_result.line_number-1] = line_result.replacement
+
+            try:
+                with open(line_result.filename, 'w') as file:
+                    for i in range(len(line_list)):
+                        file.write(line_list[i])
+            except:
+                return False, "WARNING: Changes could not be written to {}".format(line_result.filename)
+
+            return True, "Succesfully changed line {} of {} to {}".format(line_result.line_number, line_result.filename, line_result.replacement)
+
+        except:
+            return False, "WARNING: Could not change line {} of {}".format(line_result.line_number, line_result.filename)
     def __init__(self, settings):
         self.settings = settings
         self.local_filters, self.global_filters = self.get_filters()
@@ -337,7 +394,37 @@ class FilterManager:
                 pass
 
     def process_changes(self, result):
-        pass
+        possible_changes = result.get_replacement_line_results()
+        actual_changes=[]
+
+        if self.settings['applychanges'].value[0] == 'NO':
+            return None
+        elif self.settings['applychanges'].value[0] == 'ASK':
+            if possible_changes:
+                print("The following changes can be applied automagically:")
+                for i in range(len(possible_changes)):
+                    if result.type == 'file':
+                        print("({}):\tline {}:".format(i+1, possible_changes[i].line_number))
+                        print("\tfrom:\t{}".format(possible_changes[i].original))
+                        print("\tto:\t{}".format(possible_changes[i].replacement))
+                    else:
+                        print("({}):\tline {} in file {}:".format(i+1, possible_changes[i].line_number, possible_changes[i].filename))
+                        print("\tfrom:\t{}".format(possible_changes[i].original))
+                        print("\tto:\t{}".format(possible_changes[i].replacement))
+                actual_changes = FilterManager.get_changes_answer(len(possible_changes))
+        elif self.settings['applychanges'].value[0] == 'YES':
+            actual_changes = [i for i in range(1, len(possible_changes)+1)]
+        else:
+            print("WARNING: settings['applychanges'].value[0] not in ('YES','NO','ASK'):", self.settings['applychanges'].value[0])
+
+        # let's do it
+        for i0 in reversed(range(len(possible_changes))):
+            i1 = i0+1 # human_readable index
+            if i1 in actual_changes:
+                success, msg = FilterManager.do_change(possible_changes[i0])
+                if not success:
+                    print(msg)
+
 
 
 
