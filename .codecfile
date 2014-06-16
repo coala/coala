@@ -1,0 +1,4 @@
+TargetFileTypes = .py
+JobCount = 4
+MaxLineLength = 120
+Keywords = TODO, FIXME
