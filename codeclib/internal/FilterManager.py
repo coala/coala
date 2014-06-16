@@ -21,6 +21,7 @@ import importlib
 import multiprocessing
 from queue import Empty
 from codeclib.fillib.results import ResultContainer
+import webbrowser
 
 class FilterManager:
 
@@ -116,11 +117,13 @@ class FilterManager:
         assert(type(choices_number) == type(2))
         assert(choices_number > 0)
         while True:
-            user_input = input("Please enter the numbers of changes to apply ('y'=all, 'n'=none): ")
+            user_input = input("Please enter the numbers of changes to apply ('y'=all, 'n'=none, 'e'=edit manually): ")
             if user_input.lower().strip() in ['y']:
                 return [i+1 for i in range(choices_number)]
             elif user_input.lower().strip() in ['n']:
                 return []
+            elif user_input.lower().strip() in ['e']:
+                return ['EDIT']
             else:
                 try:
                     choices_list=[]
@@ -388,7 +391,7 @@ class FilterManager:
                     if self.settings['hidefinefiles'].to_bool(0):
                         if result: print(result)
                     else:
-                            print(result)
+                        print(result)
                     self.process_changes(result)
             except Empty:
                 pass
@@ -408,10 +411,20 @@ class FilterManager:
                         print("\tfrom:\t{}".format(possible_changes[i].original))
                         print("\tto:\t{}".format(possible_changes[i].replacement))
                     else:
-                        print("({}):\tline {} in file {}:".format(i+1, possible_changes[i].line_number, possible_changes[i].filename))
+                        print("({}):\tline {} in file {}:".format(i+1, possible_changes[i].line_number, ResultContainer.ResultContainer.fixed_length(possible_changes[i].filename,60)))
                         print("\tfrom:\t{}".format(possible_changes[i].original))
                         print("\tto:\t{}".format(possible_changes[i].replacement))
                 actual_changes = FilterManager.get_changes_answer(len(possible_changes))
+                if actual_changes == ['EDIT']:
+                    actual_changes = []
+
+                    files_to_edit = []
+                    for line_result in possible_changes:
+                        files_to_edit.append(line_result.filename)
+                    files_to_edit = set(files_to_edit)
+                    for file in files_to_edit:
+                        webbrowser.open(file)
+
         elif self.settings['applychanges'].value[0] == 'YES':
             actual_changes = [i for i in range(1, len(possible_changes)+1)]
         else:
