@@ -248,7 +248,7 @@ class Settings(OrderedDict):
         # default settings
         defaultValues = OrderedDict([
             ('TargetDirectories', os.getcwd()),
-            ('IgnoredDirectories', "None"),
+            ('IgnoredDirectories', ".git"),
             ('FlatDirectories', "None"),
             ('TargetFileTypes', "None"),
             ('IgnoredFileTypes', '.gitignore,~'),

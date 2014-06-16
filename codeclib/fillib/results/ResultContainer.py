@@ -9,7 +9,7 @@ class ResultContainer:
     def fixed_length(str, length):
         assert(length > 4)
         if len(str) < length:
-            str += ' '*(length-len(str))
+            #str += ' '*(length-len(str))
             return str
         elif len(str) == length:
             return str
@@ -95,11 +95,17 @@ class ResultContainer:
                     if i < len(self.line_result_list)-1:
                         str += '\n'
             else:  # type = 'filter'
-                for i in range(len(self.line_result_list)):
-                    str += "\t"+FilterColor+self.line_result_list[i].filename+': '+NormalColor\
-                           +"line {}: ".format(self.line_result_list[i].line_number)\
-                           +self.line_result_list[i].error_message
-                    if i < len(self.line_result_list)-1:
-                        str += '\n'
+                affected_files = []
+                for line_result in self.line_result_list:
+                    affected_files.append(line_result.filename)
+                affected_files = sorted(list(set(affected_files)))
+                for i in range(len(affected_files)):
+                    str += "\t"+FileBadColor+self.fixed_length(affected_files[i],60)+':\n'+NormalColor
+                    for ii in range(len(self.line_result_list)):
+                        if self.line_result_list[ii].filename == affected_files[i]:
+                            str += "\t\tline {}: ".format(self.line_result_list[ii].line_number)\
+                                   + self.line_result_list[ii].error_message+'\n'
+                    if i == len(affected_files)-1:
+                        str = str[:-1]  # remove last \n
 
         return str
