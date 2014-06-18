@@ -14,6 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from collections import OrderedDict
+import shutil
 from codeclib.fillib.util.setting import Setting
 
 import os
@@ -112,6 +113,8 @@ class Settings(OrderedDict):
             self.__import_setting('comment', Setting('', '', import_history, comments))
 
     def save_to_file(self, path):
+        # create backup file
+        shutil.copy2(path, path+'~')
         with open(path, 'w') as config_file:
             for setting in self.values():
                 imp = self.__setting_is_implicit(setting)
