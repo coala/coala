@@ -113,8 +113,9 @@ class Settings(OrderedDict):
             self.__import_setting('comment', Setting('', '', import_history, comments))
 
     def save_to_file(self, path):
-        # create backup file
-        shutil.copy2(path, path+'~')
+        if os.path.isfile(path):
+            # create backup file
+            shutil.copy2(path, path+'~')
         with open(path, 'w') as config_file:
             for setting in self.values():
                 imp = self.__setting_is_implicit(setting)
