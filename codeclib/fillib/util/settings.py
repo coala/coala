@@ -269,6 +269,7 @@ class Settings(OrderedDict):
             ('WarningResultColor', 'yellow'),
             ('InfoResultColor', 'normal'),
             ('DebugResultColor', 'cyan'),
+            ('NormalColor', 'normal'),
 
             ('LogType', 'CONSOLE'),
             ('LogOutput', 'None'),
