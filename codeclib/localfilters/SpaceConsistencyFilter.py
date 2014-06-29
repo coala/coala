@@ -19,26 +19,38 @@ from codeclib.fillib.util import IndentationHelper
 from codeclib.fillib.util.settings import Settings
 
 
-class SpaceConsistencyFilter(LocalFilter.LocalFilter):
+class IndentationConsistencyFilter(LocalFilter.LocalFilter):
 
     def run(self, filename, file):
         results = []
-        filtername = "SpaceConsistencyFilter"
+        filtername = self.__class__.__name__
         assert isinstance(self.settings, Settings)
 
-        use_spaces = bool(self.settings["usespaces"].value[0])
-        tab_width = int(self.settings["tabwidth"].value[0])
+        use_spaces = self.settings["usespaces"].to_bool()[0]
+        tab_width = self.settings["tabwidth"].to_int()[0]
         indent_helper = IndentationHelper.IndentationHelper(tab_width)
 
         for line_number, line in enumerate(file):
             indentation, rest, count = indent_helper.get_indentation(line)
-            if use_spaces and indentation.find("\t") >= 0:
+            if use_spaces:
+                if indentation.find("\t") >= 0:
+                    results.append(LineResult(filename,
+                                              filtername,
+                                              "Line contains one or more tabs",
+                                              line_number+1,
+                                              line,
+                                              ' '*count + rest))
+                continue
+            print ("Not using spaces")
+            if indentation.find(' '*tab_width) or indentation.find(" \t"):
+                tabs = int(count/tab_width)
+                spaces = count - tabs*tab_width
                 results.append(LineResult(filename,
                                           filtername,
-                                          "Line contains one or more tabs",
+                                          "Line does not use tabs consistently",
                                           line_number+1,
                                           line,
-                                          ' '*count + rest))
+                                          "\t"*tabs + ' '*spaces + rest))
 
         return results
 

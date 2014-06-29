@@ -31,7 +31,8 @@ class IndentationHelper:
                 continue
 
             if char == '\t':
-                count += self.tab_width
+                rest = count % self.tab_width
+                count += self.tab_width - rest
                 continue
 
             return line[0:i], line[i:], count

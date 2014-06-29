@@ -4,4 +4,3 @@ MaxLineLength = 120
 Keywords = TODO, FIXME
 ConfigFile = test
 TabWidth = 4
-UseSpaces = true
