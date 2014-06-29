@@ -14,6 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from functools import total_ordering
+from codeclib.fillib import ResultOutput
 import os
 
 @total_ordering
@@ -47,6 +48,7 @@ class ResultContainer:
             self.type = type
         else:
             self.type = 'file'
+        self.output = None
 
     def get_replacement_line_results(self):
         possible_changes = []
@@ -90,36 +92,42 @@ class ResultContainer:
 
 
     def __str__(self):
-        FileOkColor = self.settings['fileokcolor'].to_color_code(0)
-        FileBadColor = self.settings['filebadcolor'].to_color_code(0)
-        FilterColor = self.settings['filtercolor'].to_color_code(0)
-        NormalColor = '\033[0m'
 
-        str = ""
+        if not self.output:
+            FileOkColor = self.settings['fileokcolor'].to_color_code(0)
+            FileBadColor = self.settings['filebadcolor'].to_color_code(0)
+            FilterColor = self.settings['filtercolor'].to_color_code(0)
+            NormalColor = '\033[0m'
 
-        if not bool(self):
-            str += FileOkColor + self.caption + NormalColor
-        else:
-            str += FileBadColor + self.caption + NormalColor + '\n'
+            if not bool(self):
+                caption = FileOkColor + self.caption + NormalColor
+            else:
+                caption = FileBadColor + self.caption + NormalColor
+
+            Output = ResultOutput.OutputObject(caption)
+
             if self.type == 'file':
                 for i in range(len(self.line_result_list)):
-                    str += "\t"+FilterColor+self.line_result_list[i].filter_name+': '+NormalColor\
-                           +"line {}: ".format(self.line_result_list[i].line_number)\
-                           +self.line_result_list[i].error_message
-                    if i < len(self.line_result_list)-1:
-                        str += '\n'
-            else:  # type = 'filter'
+                    line = ResultOutput.OutputLine()
+                    line.add_elem(self.line_result_list[i].filter_name+': ', FilterColor)
+                    line.add_elem("line {}: ".format(self.line_result_list[i].line_number, NormalColor))
+                    line.add_elem(self.line_result_list[i].error_message, NormalColor)
+                    Output.add_line(line)
+            else:  # type = filter
                 affected_files = []
                 for line_result in self.line_result_list:
                     affected_files.append(line_result.filename)
                 affected_files = sorted(list(set(affected_files)))
                 for i in range(len(affected_files)):
-                    str += "\t"+FileBadColor+self.fixed_length(affected_files[i],60)+':\n'+NormalColor
+                    line = ResultOutput.OutputLine()
+                    line.add_elem(self.fixed_length(affected_files[i],60)+': ', FileBadColor)
                     for ii in range(len(self.line_result_list)):
+                        subline = ResultOutput.OutputLine
                         if self.line_result_list[ii].filename == affected_files[i]:
-                            str += "\t\tline {}: ".format(self.line_result_list[ii].line_number)\
-                                   + self.line_result_list[ii].error_message+'\n'
-                    if i == len(affected_files)-1:
-                        str = str[:-1]  # remove last \n
+                            subline.add_elem("line {}: ".format(self.line_result_list[ii].line_number, NormalColor))
+                            subline.add_elem(self.line_result_list[ii].error_message, NormalColor)
+                            line.append_line(subline)
+                        Output.add_line(line)
+            self.output = Output
+        return str(self.output)
 
-        return str
