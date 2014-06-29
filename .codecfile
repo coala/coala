@@ -1,4 +1,7 @@
-TargetFileTypes = .py
+TargetFileTypes = .c
 JobCount = 4
 MaxLineLength = 120
 Keywords = TODO, FIXME
+ConfigFile = test
+TabWidth = 4
+UseSpaces = true
