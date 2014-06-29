@@ -14,6 +14,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
+def get_bool_setting(settings, name, default=None):
+    res = settings.get(name.lower(), None);
+    if res is None:
+        return default
+    return res.to_bool()[0]
+
+
+def get_int_setting(settings, name, default=None):
+    res = settings.get(name.lower(), None);
+    if res is None:
+        return default
+    return res.to_int()[0]
+
+
+def get_color_setting(settings, name, default=None):
+    res = settings.get(name.lower(), None);
+    if res is None:
+        return default
+    return res.to_color()[0]
+
+
 class Setting:
     def __init__(self, key, value, import_history=None, comments_before=None, trailing_comment='', overrides=None):
         if import_history is None:

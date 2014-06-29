@@ -15,22 +15,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from codeclib.fillib import LocalFilter
 from codeclib.fillib.results.LineResult import LineResult
-from codeclib.fillib.util import IndentationHelper
+from codeclib.fillib.util import SpacingHelper
+from codeclib.fillib.util.setting import get_bool_setting, get_int_setting
 from codeclib.fillib.util.settings import Settings
 
 
-class IndentationConsistencyFilter(LocalFilter.LocalFilter):
+class SpaceConsistencyFilter(LocalFilter.LocalFilter):
 
     def run(self, filename, file):
         results = []
         filtername = self.__class__.__name__
         assert isinstance(self.settings, Settings)
 
-        use_spaces = self.settings["usespaces"].to_bool()[0]
-        tab_width = self.settings["tabwidth"].to_int()[0]
-        indent_helper = IndentationHelper.IndentationHelper(tab_width)
+        use_spaces = get_bool_setting(self.settings, "UseSpaces")
+        tab_width = get_int_setting(self.settings, "TabWidth")
+        allow_trailing_spaces = get_bool_setting(self.settings, "AllowTrailingSpaces", False)
+        indent_helper = SpacingHelper.SpacingHelper(tab_width)
 
         for line_number, line in enumerate(file):
+            line = line
+            if not allow_trailing_spaces:
+                replacement = line.rstrip(" \t\n") + "\n"
+                if replacement != line:
+                    results.append(LineResult(filename,
+                                              filtername,
+                                              "Line has trailing whitespace characters",
+                                              line_number+1,
+                                              line,
+                                              replacement))
+                    line = replacement
+
             indentation, rest, count = indent_helper.get_indentation(line)
             if use_spaces:
                 if indentation.find("\t") >= 0:
@@ -41,16 +55,16 @@ class IndentationConsistencyFilter(LocalFilter.LocalFilter):
                                               line,
                                               ' '*count + rest))
                 continue
-            print ("Not using spaces")
-            if indentation.find(' '*tab_width) or indentation.find(" \t"):
-                tabs = int(count/tab_width)
-                spaces = count - tabs*tab_width
-                results.append(LineResult(filename,
-                                          filtername,
-                                          "Line does not use tabs consistently",
-                                          line_number+1,
-                                          line,
-                                          "\t"*tabs + ' '*spaces + rest))
+
+            if indentation.find(' '*tab_width) >= 0 or indentation.find(" \t") >= 0:
+                    tabs = int(count/tab_width)
+                    spaces = count - tabs*tab_width
+                    results.append(LineResult(filename,
+                                              filtername,
+                                              "Line does not use tabs consistently",
+                                              line_number+1,
+                                              line,
+                                              "\t"*tabs + ' '*spaces + rest))
 
         return results
 

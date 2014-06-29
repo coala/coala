@@ -14,7 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class IndentationHelper:
+class SpacingHelper:
     def __init__(self, tab_width):
         self.tab_width = tab_width
 
@@ -36,3 +36,4 @@ class IndentationHelper:
                 continue
 
             return line[0:i], line[i:], count
+        return line, "", count
