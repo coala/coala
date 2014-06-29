@@ -73,7 +73,7 @@ class Settings(OrderedDict):
     def save_if_necessary(self):
         paths = self.get('save', Setting('', '')).value
         for path in paths:
-            if path is not None:
+            if path is not None and not 'None':
                 if path == True:
                     self.save_to_file(self.origin_file)
                 else:

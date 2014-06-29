@@ -102,7 +102,7 @@ class ResultContainer:
             if not bool(self):
                 caption = FileOkColor + self.caption + NormalColor
             else:
-                caption = FileBadColor + self.caption + NormalColor + '\n'
+                caption = FileBadColor + self.caption + NormalColor
 
             Output = ResultOutput.OutputObject(caption)
 
@@ -128,6 +128,6 @@ class ResultContainer:
                             subline.add_elem(self.line_result_list[ii].error_message, NormalColor)
                             line.append_line(subline)
                         Output.add_line(line)
-
+            self.output = Output
         return str(self.output)
 
