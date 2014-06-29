@@ -33,7 +33,6 @@ class SpaceConsistencyFilter(LocalFilter.LocalFilter):
         indent_helper = SpacingHelper.SpacingHelper(tab_width)
 
         for line_number, line in enumerate(file):
-            line = line
             if not allow_trailing_spaces:
                 replacement = line.rstrip(" \t\n") + "\n"
                 if replacement != line:
