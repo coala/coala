@@ -25,16 +25,7 @@ class Settings(OrderedDict):
     @staticmethod
     def __make_value(original):
         stripped = original.strip()
-        working = stripped.lower()
 
-#        # make it an int if possible:
-#        try:
-#            working = [int(working)]
-#            return working
-#        except ValueError:
-#            pass
-
-        # make list if possible
         lst = stripped.split(',')
         if len(lst) > 1:
             new_list = []
@@ -42,16 +33,6 @@ class Settings(OrderedDict):
                 new_list.append(Settings.__make_value(elem)[0])
             return new_list
 
-        # make it bool if possible:
-#        try:
-#            if working in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
-#                return [True]
-#            elif working in ['n', 'no', 'nope', 'never', 'nah', 'false']:
-#                return [False]
-#            elif working in ['', 'None', 'none']:
-#                return [None]
-#        except AttributeError:
-#            pass
         return [stripped]
 
     def __init__(self, auto_load=True):
