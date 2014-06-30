@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from codeclib.fillib import LocalFilter
 from codeclib.fillib.results.LineResult import LineResult
 from codeclib.fillib.util import SpacingHelper
-from codeclib.fillib.util.setting import get_bool_setting, get_int_setting
 from codeclib.fillib.util.settings import Settings
 
 
@@ -27,9 +26,9 @@ class SpaceConsistencyFilter(LocalFilter.LocalFilter):
         filtername = self.__class__.__name__
         assert isinstance(self.settings, Settings)
 
-        use_spaces = get_bool_setting(self.settings, "UseSpaces")
-        tab_width = get_int_setting(self.settings, "TabWidth")
-        allow_trailing_spaces = get_bool_setting(self.settings, "AllowTrailingSpaces", False)
+        use_spaces = self.settings.get_bool_setting("UseSpaces")
+        tab_width = self.settings.get_int_setting("TabWidth")
+        allow_trailing_spaces = self.settings.get_bool_setting("AllowTrailingSpaces", False)
         indent_helper = SpacingHelper.SpacingHelper(tab_width)
 
         for line_number, line in enumerate(file):
