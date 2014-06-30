@@ -30,6 +30,18 @@ class FilterBase(object):
     def tear_down(self):
         pass
 
+    def debug_msg(self, *args, delimiter=' '):
+        # TODO
+        pass
+
+    def warn_msg(self, *args, delimiter=' '):
+        # TODO throw warning into warning queue
+        pass
+
+    def fail_msg(self, *args, delimiter=' '):
+        # TODO throw error into error queue
+        pass
+
     @staticmethod
     def kind():
         """

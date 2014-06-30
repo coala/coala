@@ -13,18 +13,31 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import multiprocessing
+from codeclib.internal.process_managing.Process import Process
 
 
 class ProcessManager:
-    def __init__(self, settings, filenames, local_filter_classes, global_filter_classes):
-        """
-        :param settings: Settings object
-        :param filenames: Filenames to check
-        :param local_filter_classes: list of localfilter classes
-        :param global_filter_classes: list of globalfilter classes
-        """
-        self.job_count = multiprocessing.cpu_count()
-        # retrieve job_count from settings
+    def __init__(self, process, job_count=0):
+        assert(type(process) == Process)
+        if job_count == 0:
+            self.__job_count = multiprocessing.cpu_count()
+        else:
+            self.__job_count = job_count
+        self.__process = process
+        self.__processes = []
 
     def run(self):
-        raise NotImplementedError
+        if self.__processes != []:
+            return
+
+        for i in range(self.__job_count):
+            self.__processes.append(multiprocessing.Process(target=self.__process.run()))
+            self.__processes[i].start()
+
+    def num_active_processes(self):
+        sum(int(process.exitcode == None) for process in self.__processes)
+
+    def join(self):
+        for p in self.__processes:
+            p.join()
+        self.__processes = []

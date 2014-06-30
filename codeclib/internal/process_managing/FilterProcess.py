@@ -12,9 +12,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from codeclib.internal.process_managing.Process import Process
 
 
-class FilterProcess:
+class FilterProcess(Process):
     def __init__(self, settings, file_name_queue, result_queue):
         """
         This is the object that actually runs on the processes
@@ -23,13 +24,15 @@ class FilterProcess:
         :param file_name_queue: multiprocessing.queue of file names to check
         :param result_queue: queue for results
         """
+        Process.__init__(self)
         self.settings = settings
+        # TODO
 
     def run(self):
         raise NotImplementedError
 
-    def run_local_filter(self, local_filter_class):
+    def __run_local_filter(self, local_filter_class):
         raise NotImplementedError
 
-    def run_global_filter(self, global_filter_class):
+    def __run_global_filter(self, global_filter_class):
         raise NotImplementedError
