@@ -95,15 +95,18 @@ class Setting:
 
 
     def to_bool(self, index = None, default = None):
+        true_strings = ['1', 'y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']
+        false_strings = ['0', 'n', 'no', 'nope', 'never', 'nah', 'false']
+        none_strings = ['', 'None', 'none']
         if index is None:
             if self.value and self.value != [None]:
                 bool_list = []
                 for str in self.value:
-                    if str in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                    if str in true_strings:
                         bool_list.append(True)
-                    elif str in ['n', 'no', 'nope', 'never', 'nah', 'false']:
+                    elif str in false_strings:
                         bool_list.append(False)
-                    elif str in ['', 'None', 'none']:
+                    elif str in none_strings:
                         bool_list.append(None)
                     else:
                         bool_list.append(default)
@@ -112,11 +115,11 @@ class Setting:
                 return default
         else:  # index is set
             try:
-                if self.value[index].lower() in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                if self.value[index].lower() in true_strings:
                     return True
-                elif self.value[index].lower() in ['n', 'no', 'nope', 'never', 'nah', 'false']:
+                elif self.value[index].lower() in false_strings:
                     return False
-                elif self.value[index].lower() in ['', 'None', 'none']:
+                elif self.value[index].lower() in none_strings:
                     return None
             except AttributeError:
                 print("Exception in to_bool with set index for setting:", self.key)
