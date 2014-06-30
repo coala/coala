@@ -434,6 +434,7 @@ class FilterManager:
             return None
         elif self.settings['applychanges'].value[0] == 'ASK':
             if possible_changes:
+                print("The following changes can be applied automagically:")
                 for i in range(len(possible_changes)):
                     if result.type == 'file':
                         print("({}):\tline {}:".format(i+1, possible_changes[i].line_number))
