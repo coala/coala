@@ -415,6 +415,8 @@ class FilterManager:
         while processes_done < process_count:
             try:
                 result = result_queue.get(timeout = 0.3)
+                if not result:
+                    continue
                 if result == 'DONE':
                     processes_done += 1
                 else:
