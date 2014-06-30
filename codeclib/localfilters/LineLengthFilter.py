@@ -18,6 +18,7 @@ from codeclib.fillib.util.settings import Settings
 from codeclib.fillib import LocalFilter
 import os
 
+
 class LineLengthFilter(LocalFilter.LocalFilter):
 
     def run(self, filename, file):
@@ -66,7 +67,12 @@ class LineLengthFilter(LocalFilter.LocalFilter):
         for i in range(len(file)):
             if len(file[i]) > max_line_length:
                 msg = "Line length exceeds {} characters".format(max_line_length)
-                results.append(LineResult.LineResult(filename, "LineLengthFilter", msg, i+1, file[i], LineLengthFilter.abbreviate(file[i], max_line_length, line_cont_char)))
+                results.append(LineResult.LineResult(filename,
+                                                     "LineLengthFilter",
+                                                     msg,
+                                                     i+1,
+                                                     file[i],
+                                                     LineLengthFilter.abbreviate(file[i], max_line_length, line_cont_char)))
         return results
 
     @staticmethod

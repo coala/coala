@@ -49,4 +49,7 @@ class LineResult:
                 return False
 
     def __eq__(self, other):
-        return type(self) == type(other) and self.filename == other.filename and self.line_number == other.line_number and self.filter_name == other.filter_name
+        return type(self)       == type(other)       and \
+               self.filename    == other.filename    and \
+               self.line_number == other.line_number and \
+               self.filter_name == other.filter_name
