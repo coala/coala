@@ -49,6 +49,7 @@ class ResultContainer:
         else:
             self.type = 'file'
         self.output = None
+        self.LineResultCounter = 0
 
     def get_replacement_line_results(self):
         possible_changes = []
@@ -58,6 +59,8 @@ class ResultContainer:
         return possible_changes
 
     def add(self, line_result):
+        self.LineResultCounter += 1
+        line_result.counter = self.LineResultCounter
         self.line_result_list.append(line_result)
         self.line_result_list = sorted(self.line_result_list)
 
