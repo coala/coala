@@ -10,11 +10,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
 
 
-class FlatSettings(OrderedDict):
+class Settings:
     def __init__(self):
-        OrderedDict.__init__(self)
+        self.contents = OrderedDict()
