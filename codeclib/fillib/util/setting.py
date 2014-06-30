@@ -99,9 +99,9 @@ class Setting:
             if self.value and self.value != [None]:
                 bool_list = []
                 for str in self.value:
-                    if str in ['y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
+                    if str in ['1', 'y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']:
                         bool_list.append(True)
-                    elif str in ['n', 'no', 'nope', 'never', 'nah', 'false']:
+                    elif str in ['0', 'n', 'no', 'nope', 'never', 'nah', 'false']:
                         bool_list.append(False)
                     elif str in ['', 'None', 'none']:
                         bool_list.append(None)
