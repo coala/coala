@@ -24,12 +24,16 @@ class LineResult:
         self.line_number = line_number
         self.original = original
         self.replacement = replacement
+        self.counter = 0
 
     def __lt__(self, other):
         if self.filename == other.filename:
             if self.line_number == other.line_number:
                 if self.filter_name == other.filter_name:
-                    return False
+                    if self.counter < other.counter:
+                        return True
+                    else:
+                        return False
                 elif self.filter_name < other.filter_name:
                     return True
                 else:
@@ -49,4 +53,8 @@ class LineResult:
                 return False
 
     def __eq__(self, other):
-        return type(self) == type(other) and self.filename == other.filename and self.line_number == other.line_number and self.filter_name == other.filter_name
+        return type(self)       == type(other)       and \
+               self.filename    == other.filename    and \
+               self.line_number == other.line_number and \
+               self.filter_name == other.filter_name and \
+               self.counter == other.counter
