@@ -171,6 +171,15 @@ class FilterManager:
 
         except:
             return False, "WARNING: Could not change line {} of {}".format(line_result.line_number, line_result.filename)
+
+    @staticmethod
+    def file_name_ends_in(file_name, ending):
+
+        n = len(ending)
+        ends_in = (file_name[-1*n:] == ending)
+
+        return ends_in
+
     def __init__(self, settings):
         self.settings = settings
         self.local_filters, self.global_filters = self.get_filters()
@@ -303,24 +312,24 @@ class FilterManager:
 
                 for file_name in target_files:
                     for good_ending in self.settings['targetfiletypes'].value:
-                        if re.search(good_ending + '$', file_name):
+                        if FilterManager.file_name_ends_in(file_name, good_ending):
                             file_good = True
                             for bad_ending in self.settings['ignoredfiletypes'].value:
-                                if re.search(bad_ending + '$', file_name):
+                                if FilterManager.file_name_ends_in(file_name, bad_ending):
                                     file_good = False
                             if file_good == True:
                                 targets.append(file_name)
             else:
                 for file_name in target_files:
                     for good_ending in self.settings['targetfiletypes'].value:
-                        if re.search(good_ending + '$', file_name):
+                        if FilterManager.file_name_ends_in(file_name, good_ending):
                             targets.append(file_name)
         else:
             if self.settings['ignoredfiletypes'].value and self.settings['ignoredfiletypes'].value != ['None']:
                 for file_name in target_files:
                     file_good = True
                     for bad_ending in self.settings['ignoredfiletypes'].value:
-                        if re.search(bad_ending + '$', file_name):
+                        if FilterManager.file_name_ends_in(file_name, bad_ending):
                             file_good = False
                     if file_good == True:
                         targets.append(file_name)
