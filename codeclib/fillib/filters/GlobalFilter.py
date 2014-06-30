@@ -1,5 +1,3 @@
-#! /bin/python3
-
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -12,11 +10,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-if __name__ == "__main__":
-    try:
-        pass
-    except:
-        pass
+from codeclib.fillib.filters import FilterBase
+
+
+class GlobalFilter(FilterBase.FilterBase):
+
+    @staticmethod
+    def kind():
+        return FilterBase.FILTER_KIND.GLOBAL
+
+    def run(self, file_dict):
+        """
+        Checks the given files.
+
+        :param file_dict: a dictionary of name: file
+        :return: TODO ???
+        """
+        raise NotImplementedError("This function has to be implemented for a runnable filter.")

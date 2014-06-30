@@ -1,5 +1,3 @@
-#! /bin/python3
-
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,9 +12,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import multiprocessing
 
-if __name__ == "__main__":
-    try:
-        pass
-    except:
-        pass
+
+class ProcessManager:
+    def __init__(self, settings, filenames, local_filter_classes, global_filter_classes):
+        """
+        :param settings: Settings object
+        :param filenames: Filenames to check
+        :param local_filter_classes: list of localfilter classes
+        :param global_filter_classes: list of globalfilter classes
+        """
+        self.job_count = multiprocessing.cpu_count()
+        # retrieve job_count from settings
+
+    def run(self):
+        raise NotImplementedError
