@@ -229,6 +229,32 @@ class Settings(OrderedDict):
 
         return False
 
+    def get_bool_setting(self, name, default=None):
+        res = self.get(name.lower(), None)
+        if res is None:
+            return default
+        return res.to_bool()[0]
+
+
+    def get_int_setting(self, name, default=None):
+        res = self.get(name.lower(), None)
+        if res is None:
+            return default
+        return res.to_int()[0]
+
+
+    def get_color_setting(self, name, default=None):
+        res = self.get(name.lower(), None)
+        if res is None:
+            return default
+        return res.to_color_code()[0]
+
+    def get_string_setting(self, name, default=None):
+        res = self.get(name.lower(), None)
+        if res is None:
+            return default
+        return str(res[0])
+
     def __get_default_settings(self):
         # default settings
         defaultValues = OrderedDict([
@@ -251,6 +277,9 @@ class Settings(OrderedDict):
             ('InfoResultColor', 'normal'),
             ('DebugResultColor', 'cyan'),
             ('NormalColor', 'normal'),
+            ('NonPrintableCharsColor', 'dark gray'),
+
+            ('TabWidth', '4'),
 
             ('LogType', 'CONSOLE'),
             ('LogOutput', 'None'),

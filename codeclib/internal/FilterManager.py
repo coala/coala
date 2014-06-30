@@ -180,6 +180,27 @@ class FilterManager:
 
         return ends_in
 
+    @staticmethod
+    def show_whitespace(line_string, tab_width=4, color=None):
+        result = str()
+        for char in line_string:
+            if char == ' ':
+                if color:
+                    result += color + '\u00B7' + '\033[0m'
+                else:
+                    result += '\u00B7'
+            elif char == '\t':
+                if color:
+                    result += color + '\u2192' + '\033[0m'
+                else:
+                    result += '\u2192'
+                while (len(result) % tab_width != 0):
+                    result += ' '
+            else:
+                result += char
+
+        return result
+
     def __init__(self, settings):
         self.settings = settings
         self.local_filters, self.global_filters = self.get_filters()
@@ -413,16 +434,23 @@ class FilterManager:
             return None
         elif self.settings['applychanges'].value[0] == 'ASK':
             if possible_changes:
-                print("The following changes can be applied automagically:")
                 for i in range(len(possible_changes)):
                     if result.type == 'file':
                         print("({}):\tline {}:".format(i+1, possible_changes[i].line_number))
-                        print("\tfrom:\t{}".format(possible_changes[i].original))
-                        print("\tto:\t{}".format(possible_changes[i].replacement))
+                        print("\tfrom:\t{}".format(FilterManager.show_whitespace(possible_changes[i].original,
+                              self.settings.get_int_setting('tabwidth'),
+                              self.settings.get_color_setting('nonprintablecharscolor'))))
+                        print("\tto:\t{}".format(FilterManager.show_whitespace(possible_changes[i].replacement,
+                              self.settings.get_int_setting('tabwidth'),
+                              self.settings.get_color_setting('nonprintablecharscolor'))))
                     else:
                         print("({}):\tline {} in file {}:".format(i+1, possible_changes[i].line_number, ResultContainer.ResultContainer.fixed_length(possible_changes[i].filename,60)))
-                        print("\tfrom:\t{}".format(possible_changes[i].original))
-                        print("\tto:\t{}".format(possible_changes[i].replacement))
+                        print("\tfrom:\t{}".format(FilterManager.show_whitespace(possible_changes[i].original,
+                              self.settings.get_int_setting('tabwidth'),
+                              self.settings.get_color_setting('nonprintablecharscolor'))))
+                        print("\tto:\t{}".format(FilterManager.show_whitespace(possible_changes[i].replacement,
+                              self.settings.get_int_setting('tabwidth'),
+                              self.settings.get_color_setting('nonprintablecharscolor'))))
                 actual_changes = FilterManager.get_changes_answer(len(possible_changes))
                 if actual_changes == ['EDIT']:
                     actual_changes = []
