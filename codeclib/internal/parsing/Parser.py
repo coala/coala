@@ -18,8 +18,24 @@ class Parser:
     def __init__(self):
         pass
 
-    def parse(self):
+    def parse(self, input_data):
         """
-        Parses the input into a DeepSettings object
+        Parses the input and adds the new data to the existing
+
+        :param input_data: filename or other input
+        """
+        raise NotImplementedError
+
+    def reparse(self, input_data):
+        """
+        Parses the input and overwrites all existent data
+
+        :param input_data: filename or other input
+        """
+        raise NotImplementedError
+
+    def export_to_settings(self):
+        """
+        :return a list of Settings objects representing the current parsed things
         """
         raise NotImplementedError

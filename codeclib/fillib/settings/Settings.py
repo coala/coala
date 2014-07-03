@@ -16,8 +16,12 @@ from collections import OrderedDict
 
 
 class Settings:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.contents = OrderedDict()
 
-    def import_section(self, section):
+    def import_section(self, config_parser, section_name=None):
+        if section_name is not None:
+            self.name = section_name
+
         raise NotImplementedError

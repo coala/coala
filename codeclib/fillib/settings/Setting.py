@@ -21,15 +21,17 @@ def path(obj):
 
 
 class Setting:
-    def __init__(self, value, origin):
+    def __init__(self, key, value, origin):
+        self.key = key
         self.value = value
+        self.origin = origin
 
     def __str__(self):
         return str(self.value)
 
     def __bool__(self):
-        true_strings = ['1', 'y', 'yes', 'yeah', 'always', 'sure', 'definitely', 'yup', 'true']
-        false_strings = ['0', 'n', 'no', 'nope', 'never', 'nah', 'false']
+        true_strings  = ['1', 'on',  'y', 'yes', 'yeah', 'always', 'sure', 'true', 'definitely', 'yup']
+        false_strings = ['0', 'off', 'n', 'no',  'nope', 'never',  'nah',  'false']
         if self.value in true_strings:
             return True
         if self.value in false_strings:
