@@ -78,8 +78,8 @@ class FilterProcess(Process):
             exception = sys.exc_info()
             self.__debug("Unknown failure in worker process.\n"
                          "Exception: {}\nTraceback:\n{}".format(str(exception[0]), traceback.extract_tb(exception[2])))
-            self.__err(_("An unknown failure occurred and a process is aborted. "
-                         "Please contact developers for assistance and try out starting codec with -j1."))
+            self.__warn(_("An unknown failure occurred and a process is aborted. "
+                          "Please contact developers for assistance and try out starting codec with -j1."))
 
 
     def __run_on_elems_until_queue_empty(self, q, function):
@@ -91,8 +91,15 @@ class FilterProcess(Process):
         try:
             while True:
                 elem = q.get(timeout=self.TIMEOUT)
-                function(elem)
-                q.task_done()
+                try:
+                    function(elem)
+                except:
+                    self.__debug(_("Failed to handle queue element {}. If you are testing filters, make sure they"
+                                   " inherit from GlobalFilter or LocalFilter and don't"
+                                   " overwrite the kind() method.").format(elem))
+                    self.__err(_("Failed to handle queue element {}.").format(elem))
+                finally:
+                    q.task_done()
         except queue.Empty:
             self.__debug(_("Queue timeout reached. Assuming no tasks are left."))
 
