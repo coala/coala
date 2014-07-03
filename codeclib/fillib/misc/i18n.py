@@ -15,28 +15,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import os
-import locale
 import gettext
+import builtins
 
-APP_NAME = "Codec"
-LOCALE_DIR = os.path.join(os.path.curdir, 'i18n')
 
-DEFAULT_LANGUAGES = os.environ.get('LANG', '').split(':')
-DEFAULT_LANGUAGES += ['en_US']
+def untranslated(msg):
+    return msg
 
-languages = []
-lc, encoding = locale.getdefaultlocale()
-if lc:
-    languages.append(lc)
+builtins.__dict__['_'] = untranslated
+langs = os.environ.get('LANG', '').split(':')
+langs += ['en_US']
 
-languages += DEFAULT_LANGUAGES
-
-gettext.install(True, localedir=None)
-
-gettext.find(APP_NAME, LOCALE_DIR)
-
-gettext.textdomain(APP_NAME)
-
-gettext.bind_textdomain_codeset(APP_NAME, "UTF-8")
-
-language = gettext.translation(APP_NAME, LOCALE_DIR, languages=languages, fallback=True)
+for lang in langs:
+    filename = "i18n/{}.mo".format(lang[0:5])
+    try:
+        # overwrite our _ definition
+        gettext.GNUTranslations(open(filename, "rb")).install()
+        break
+    except IOError:
+        continue

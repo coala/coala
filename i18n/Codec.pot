@@ -1,0 +1,67 @@
+# Codec - Translations
+#
+# Copyright (C) 2014 by Lasse Schuirmann
+# This file is distributed under the same license as the Codec package.
+# Lasse Schuirmann <lasse.schuirmann@gmail.com>, 2014
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Codec 0.1\n"
+"Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
+"POT-Creation-Date: 2014-07-03 19:51+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <lasse.schuirmann@gmail.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: codeclib/internal/process_managing/FilterProcess.py:77
+msgid ""
+"Unknown failure in worker process.\n"
+"Exception: {}\n"
+"Traceback:\n"
+"{}"
+msgstr ""
+
+#: codeclib/internal/process_managing/FilterProcess.py:79
+msgid ""
+"An unknown failure occurred and a process is aborted. Please contact "
+"developers for assistance and try out starting codec with -j1."
+msgstr ""
+
+#: codeclib/internal/process_managing/FilterProcess.py:97
+msgid ""
+"Failed to handle queue element {}. If you are testing filters, make sure "
+"they inherit from GlobalFilter or LocalFilter and don't overwrite the kind() "
+"method."
+msgstr ""
+
+#: codeclib/internal/process_managing/FilterProcess.py:100
+msgid "Failed to handle queue element {}."
+msgstr ""
+
+#: codeclib/internal/process_managing/FilterProcess.py:104
+msgid "Queue timeout reached. Assuming no tasks are left."
+msgstr ""
+
+#: codeclib/internal/process_managing/FilterProcess.py:117
+msgid ""
+"Local filter {} raised an exception of type {}. If you are the writer of "
+"this filter, please catch all exceptions. If not and this error keeps "
+"occurring you might want to get in contact with the writer of this filter."
+msgstr ""
+
+#: codeclib/internal/process_managing/FilterProcess.py:121
+msgid "Filter {} failed to run."
+msgstr ""
+
+#: codec:24
+msgid "Codec is started."
+msgstr ""
+
+#: codec:26
+msgid "Some error occurred."
+msgstr ""

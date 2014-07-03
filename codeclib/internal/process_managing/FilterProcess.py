@@ -14,7 +14,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from codeclib.fillib.misc import i18n
-_ = i18n.language.gettext
 import queue
 import sys
 import traceback
