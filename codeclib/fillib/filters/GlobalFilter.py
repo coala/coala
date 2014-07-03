@@ -17,7 +17,6 @@ from codeclib.fillib.filters import FilterBase
 
 
 class GlobalFilter(FilterBase.FilterBase):
-
     @staticmethod
     def kind():
         return FilterBase.FILTER_KIND.GLOBAL

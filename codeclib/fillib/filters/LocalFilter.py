@@ -16,7 +16,6 @@ from codeclib.fillib.filters import FilterBase
 
 
 class LocalFilter(FilterBase.FilterBase):
-
     @staticmethod
     def kind():
         return FilterBase.FILTER_KIND.LOCAL
