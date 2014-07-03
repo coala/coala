@@ -33,14 +33,19 @@ class ConfParser(Parser):
             # add new data to the existing
             tmpparser = self.__get_config_parser()
             tmpparser.read(input_data)
-            # import all sections
-            for section_name in tmpparser:
-                section = tmpparser[section_name]
-                if section_name not in self.parser:
-                    self.parser.add_section(section)
-                for key in section:
-                    self.parser[section_name][key] = section[key]
-                    pass
+            self.__import_data_from_configparser(tmpparser)
+
+    def __import_data_from_configparser(self, configparser):
+        assert self.parsed
+
+        for section_name in configparser:
+            section = configparser[section_name]
+            if section_name not in self.parser:
+                self.parser.add_section(section)
+
+            for key in section:
+                self.parser[section_name][key] = section[key]
+                pass
 
     def reparse(self, input_data):
         """
