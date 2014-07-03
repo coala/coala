@@ -35,18 +35,6 @@ class ConfParser(Parser):
             tmpparser.read(input_data)
             self.__import_data_from_configparser(tmpparser)
 
-    def __import_data_from_configparser(self, configparser):
-        assert self.parsed
-
-        for section_name in configparser:
-            section = configparser[section_name]
-            if section_name not in self.parser:
-                self.parser.add_section(section)
-
-            for key in section:
-                self.parser[section_name][key] = section[key]
-                pass
-
     def reparse(self, input_data):
         """
         :param input_data: the filename of the config file to read
@@ -64,6 +52,18 @@ class ConfParser(Parser):
             result.append(settings)
 
         return result
+
+    def __import_data_from_configparser(self, configparser):
+        assert self.parsed
+
+        for section_name in configparser:
+            section = configparser[section_name]
+            if section_name not in self.parser:
+                self.parser.add_section(section)
+
+            for key in section:
+                self.parser[section_name][key] = section[key]
+                pass
 
     @staticmethod
     def __get_config_parser():
