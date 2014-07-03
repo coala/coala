@@ -31,10 +31,9 @@ class Merger:
         self.modifications = []
         self.default_on_conflict = default_on_conflict
         self.result = ""
-        self.conflict = False
+        self.conflicts = False
 
     def three_way_merge(self, a, b):
-
         merge_result = ""
         index_a = 0
         index_b = 0
@@ -72,7 +71,7 @@ class Merger:
                 continue
 
             # conflict!
-            self.conflict = True
+            self.conflicts = True
             if self. default_on_conflict >= 0:
                 while (index_a < len(xa)) and not xa[index_a].startswith('  '):
                     merge_result += xa[index_a][2:]
@@ -94,12 +93,11 @@ class Merger:
 
         return merge_result
 
-    def merge(self, *args):
-
+    def merge(self, original, *args):
+        self.original = original
         arg_list = list(args)
-        self.original = arg_list.pop(0)
         self.modifications = arg_list
-        self.conflict = False
+        self.conflicts = False
 
         if len(self.modifications) == 0:
             self.result = self.original
@@ -111,19 +109,7 @@ class Merger:
                 interim_result = self.three_way_merge(interim_result, self.modifications[i])
             self.result = interim_result
 
-        if self.default_on_conflict == 0 and self.conflict:
+        if self.default_on_conflict == 0 and self.conflicts:
             return None
         else:
             return self.result
-
-    def conflicts(self):
-        return self.conflict
-
-    def set_default_on_conflict(self, default_on_conflict):
-        self.default_on_conflict = default_on_conflict
-
-    def get_default_on_conflict(self):
-        return self.default_on_conflict
-
-    def get_original(self):
-        return self.original
