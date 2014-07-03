@@ -80,6 +80,8 @@ class FilterProcess(Process):
                          "Exception: {}\nTraceback:\n{}".format(str(exception[0]), traceback.extract_tb(exception[2])))
             self.__warn(_("An unknown failure occurred and a process is aborted. "
                           "Please contact developers for assistance and try out starting codec with -j1."))
+            exit(1)
+        exit(0)
 
 
     def __run_on_elems_until_queue_empty(self, q, function):
