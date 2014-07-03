@@ -64,6 +64,7 @@ class FilterProcess(Process):
             while True:
                 elem = q.get(timeout=self.TIMEOUT)
                 function(elem)
+                q.task_done()
         except queue.Empty:
             return
 
