@@ -19,7 +19,13 @@ from codeclib.internal.process_managing.ResultContainer import ResultContainer
 
 
 class FilterProcess(Process):
-    def __init__(self, settings, file_name_queue, local_filter_list, global_filter_queue, file_dict, result_queue):
+    def __init__(self,
+                 settings,
+                 file_name_queue,
+                 local_filter_list,
+                 global_filter_queue,
+                 file_dict,
+                 result_queue):
         """
         This is the object that actually runs on the processes
 
@@ -37,6 +43,7 @@ class FilterProcess(Process):
         self.global_filter_queue = global_filter_queue
         self.file_dict = file_dict
         self.result_queue = result_queue
+        self.TIMEOUT = 2
 
     def run(self):
         """
@@ -55,7 +62,7 @@ class FilterProcess(Process):
         """
         try:
             while True:
-                elem = q.get_nowait()
+                elem = q.get(timeout=self.TIMEOUT)
                 function(elem)
         except queue.Empty:
             return
