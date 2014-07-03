@@ -12,17 +12,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import sys
 from codeclib.internal.output.Outputter import Outputter
 
 
 class ConsoleOutputter(Outputter):
-    def __init__(self):
+    def __init__(self, output=sys.stdout):
         Outputter.__init__(self)
+        self.output = output
 
     def print(self, *args, delimiter=' ', end='\n'):
         for arg in args:
-            print(arg, end=delimiter)
-        print(end=end)
+            print(arg, end=delimiter, file=self.output)
+        print(end=end, file=self.output)
 
     def color_print(self, color, *args, delimiter=' ', end='\n'):
         color_code_dict = {
@@ -37,9 +39,9 @@ class ConsoleOutputter(Outputter):
             'normal': '0',
         }
         try:
-            print('\033[' + color_code_dict.get(color, '0') + 'm', end='')
+            print('\033[' + color_code_dict.get(color, '0') + 'm', end='', file=self.output)
             for arg in args:
-                print(arg, end=delimiter)
-            print('\033[0m', end=end)
+                print(arg, end=delimiter, file=self.output)
+            print('\033[0m', end=end, file=self.output)
         except:
             self.print(args, delimiter=delimiter, end=end)
