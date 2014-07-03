@@ -76,8 +76,8 @@ class FilterProcess(Process):
             self.__run_on_elems_until_queue_empty(self.global_filter_queue, self.__run_global_filter)
         except:
             exception = sys.exc_info()
-            self.__debug("Unknown failure in worker process.\n"
-                         "Exception: {}\nTraceback:\n{}".format(str(exception[0]), traceback.extract_tb(exception[2])))
+            self.__debug(_("Unknown failure in worker process.\n"
+                           "Exception: {}\nTraceback:\n{}").format(str(exception[0]), traceback.extract_tb(exception[2])))
             self.__warn(_("An unknown failure occurred and a process is aborted. "
                           "Please contact developers for assistance and try out starting codec with -j1."))
             exit(1)
