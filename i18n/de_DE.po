@@ -8,18 +8,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Codec 0.1\n"
 "Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
-"POT-Creation-Date: 2014-07-03 19:51+0200\n"
-"PO-Revision-Date: 2014-07-03 20:32+0100\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2014-07-03 20:58+0100\n"
 "Last-Translator: Lasse Schuirmann <lasse.schuirmann@gmail.com>\n"
 "Language-Team: German <lasse.schuirmann@gmail.com>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: de_DE\n"
 
-#: codeclib/internal/process_managing/FilterProcess.py:77
+#: codeclib/internal/process_managing/FilterProcess.py:76
 msgid ""
 "Unknown failure in worker process.\n"
 "Exception: {}\n"
@@ -27,42 +27,42 @@ msgid ""
 "{}"
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:79
+#: codeclib/internal/process_managing/FilterProcess.py:78
 msgid ""
 "An unknown failure occurred and a process is aborted. Please contact "
 "developers for assistance and try out starting codec with -j1."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:97
+#: codeclib/internal/process_managing/FilterProcess.py:96
 msgid ""
 "Failed to handle queue element {}. If you are testing filters, make sure "
 "they inherit from GlobalFilter or LocalFilter and don't overwrite the kind() "
 "method."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:100
+#: codeclib/internal/process_managing/FilterProcess.py:99
 msgid "Failed to handle queue element {}."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:104
+#: codeclib/internal/process_managing/FilterProcess.py:103
 msgid "Queue timeout reached. Assuming no tasks are left."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:117
+#: codeclib/internal/process_managing/FilterProcess.py:116
 msgid ""
 "Local filter {} raised an exception of type {}. If you are the writer of "
 "this filter, please catch all exceptions. If not and this error keeps "
 "occurring you might want to get in contact with the writer of this filter."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:121
+#: codeclib/internal/process_managing/FilterProcess.py:120
 msgid "Filter {} failed to run."
 msgstr ""
 
-#: codec:24
+#: codec:23
 msgid "Codec is started."
 msgstr "Codec ist gestartet."
 
-#: codec:26
+#: codec:25
 msgid "Some error occurred."
-msgstr ""
+msgstr "Ein Fehler ist aufgetreten."
