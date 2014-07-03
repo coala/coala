@@ -20,7 +20,7 @@ def path(obj):
     obj.__path__()
 
 
-class Setting:
+class Setting: #TODO: maybe have to_string(), to_path() in addition to __bool__() etc? I'm at least not happy with having to import the path function to get a path.
     def __init__(self, key, value, origin):
         self.key = key
         self.value = value
