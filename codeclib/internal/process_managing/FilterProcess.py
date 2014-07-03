@@ -12,17 +12,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+
+from codeclib.fillib.misc import i18n
+_ = i18n.language.ugettext
 import queue
 import sys
 import traceback
 from codeclib.fillib.filters.FilterBase import FILTER_KIND
 from codeclib.internal.process_managing.Process import Process
 from codeclib.internal.process_managing.ResultContainer import ResultContainer
-
-
-# dummy until translations are working
-def _(val):
-    return val
 
 
 class FilterProcess(Process):

@@ -15,15 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import gettext
-
-trans = gettext.translation("codec", "locale", ["de"])
-trans.install()
+from codeclib.fillib.misc import i18n
+_ = i18n.language.ugettext
 
 
 if __name__ == "__main__":
     try:
         print(_("Codec is started."))
-        pass
     except:
-        pass
+        print(_("Some error occurred."))
