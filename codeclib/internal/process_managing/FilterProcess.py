@@ -13,9 +13,16 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import queue
+import sys
+import traceback
 from codeclib.fillib.filters.FilterBase import FILTER_KIND
 from codeclib.internal.process_managing.Process import Process
 from codeclib.internal.process_managing.ResultContainer import ResultContainer
+
+
+# dummy until translations are working
+def _(val):
+    return val
 
 
 class FilterProcess(Process):
@@ -25,7 +32,10 @@ class FilterProcess(Process):
                  local_filter_list,
                  global_filter_queue,
                  file_dict,
-                 result_queue):
+                 result_queue,
+                 debug_queue,
+                 warning_queue,
+                 error_queue):
         """
         This is the object that actually runs on the processes
 
@@ -35,15 +45,25 @@ class FilterProcess(Process):
         :param global_filter_queue: multiprocessing.queue of global filter instances
         :param file_dict: dict of all files as {filename:file}, file as in file.readlines()
         :param result_queue: queue for results
+        :param debug_queue: for debug messages
+        :param warning_queue: for warnings
+        :param error_queue: for errors
         """
         Process.__init__(self)
         self.settings = settings
+
         self.file_name_queue = file_name_queue
         self.local_filter_list = local_filter_list
         self.global_filter_queue = global_filter_queue
+
         self.file_dict = file_dict
+
         self.result_queue = result_queue
-        self.TIMEOUT = 2
+        self.debug_queue = debug_queue
+        self.warning_queue = warning_queue
+        self.error_queue = error_queue
+
+        self.TIMEOUT = 0.2
 
     def run(self):
         """
@@ -51,8 +71,16 @@ class FilterProcess(Process):
         2. Takes global filters from the queue and runs them on all files
         :return:
         """
-        self.__run_on_elems_until_queue_empty(self.file_name_queue, self.__run_local_filters)
-        self.__run_on_elems_until_queue_empty(self.global_filter_queue, self.__run_global_filter)
+        try:
+            self.__run_on_elems_until_queue_empty(self.file_name_queue, self.__run_local_filters)
+            self.__run_on_elems_until_queue_empty(self.global_filter_queue, self.__run_global_filter)
+        except:
+            exception = sys.exc_info()
+            self.__debug("Unknown failure in worker process.\n"
+                         "Exception: {}\nTraceback:\n{}".format(str(exception[0]), traceback.extract_tb(exception[2])))
+            self.__err(_("An unknown failure occurred and a process is aborted. "
+                         "Please contact developers for assistance and try out starting codec with -j1."))
+
 
     def __run_on_elems_until_queue_empty(self, q, function):
         """
@@ -66,15 +94,24 @@ class FilterProcess(Process):
                 function(elem)
                 q.task_done()
         except queue.Empty:
-            return
+            self.__debug(_("Queue timeout reached. Assuming no tasks are left."))
 
     def __run_local_filters(self, filename):
         for filter_instance in self.local_filter_list:
             self.__run_local_filter(filter_instance, filename)
 
-    def __run_filter(self, filter_instance, filename):
+    def __run_local_filter(self, filter_instance, filename):
         assert filter_instance.kind() == FILTER_KIND.LOCAL
-        results = filter_instance.run(filename, self.file_dict[filename])
+        try:
+            results = filter_instance.run(filename, self.file_dict[filename])
+        except:
+            exception = sys.exc_info()
+            filter_name = filter_instance.__class__.__name__
+            msg = _("Local filter {} raised an exception of type {}. If you are the writer of this filter, "
+                    "please catch all exceptions. If not and this error keeps occurring you might want to get "
+                    "in contact with the writer of this filter.").format(filter_name, str(exception[0]))
+            self.__debug(msg)
+            self.__warn(_("Filter {} failed to run.").format(filter_name))
 
         contained_results = ResultContainer()
         for result in results:
@@ -84,3 +121,12 @@ class FilterProcess(Process):
 
     def __run_global_filter(self, global_filter_instance):
         raise NotImplementedError
+
+    def __warn(self, message):
+        self.warning_queue.put(message, timeout=self.TIMEOUT)
+
+    def __err(self, message):
+        self.error_queue.put(message, timeout=self.TIMEOUT)
+
+    def __debug(self, message):
+        self.debug_queue.put(message, timeout=self.TIMEOUT)
