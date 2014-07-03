@@ -31,7 +31,7 @@ if lc:
 
 languages += DEFAULT_LANGUAGES
 
-gettext.install(True, localedir=None, unicode=1)
+gettext.install(True, localedir=None)
 
 gettext.find(APP_NAME, LOCALE_DIR)
 
