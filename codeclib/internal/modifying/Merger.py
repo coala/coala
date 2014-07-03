@@ -27,21 +27,18 @@ class Merger:
         return result
 
     def __init__(self, default_on_conflict=1):
-        self.original = ""
-        self.modifications = []
         self.default_on_conflict = default_on_conflict
-        self.result = ""
-        self.conflicts = False
 
-    def three_way_merge(self, a, b):
+    def __three_way_merge(self, original, a, b):
         merge_result = ""
         index_a = 0
         index_b = 0
+        conflicts = False
 
         dxa = difflib.Differ()
         dxb = difflib.Differ()
-        xa = Merger.drop_deltas(dxa.compare(self.original, a))
-        xb = Merger.drop_deltas(dxb.compare(self.original, b))
+        xa = Merger.drop_deltas(dxa.compare(original, a))
+        xb = Merger.drop_deltas(dxb.compare(original, b))
 
         while (index_a < len(xa)) and (index_b < len(xb)):
 
@@ -71,8 +68,8 @@ class Merger:
                 continue
 
             # conflict!
-            self.conflicts = True
-            if self. default_on_conflict >= 0:
+            conflicts = True
+            if self.default_on_conflict >= 0:
                 while (index_a < len(xa)) and not xa[index_a].startswith('  '):
                     merge_result += xa[index_a][2:]
                     index_a += 1
@@ -91,25 +88,25 @@ class Merger:
         for i in range(len(xb) - index_b):
             merge_result += xb[index_b + i][2:]
 
-        return merge_result
+        return merge_result, conflicts
 
     def merge(self, original, *args):
-        self.original = original
         arg_list = list(args)
-        self.modifications = arg_list
-        self.conflicts = False
+        modifications = arg_list
+        conflicts = False
 
-        if len(self.modifications) == 0:
-            self.result = self.original
-        elif len(self.modifications) == 1:
-            self.result = self.modifications[0]
+        if len(modifications) == 0:
+            result = original
+        elif len(modifications) == 1:
+            result = modifications[0]
         else:
-            interim_result = self.modifications[0]
-            for i in range(1, len(self.modifications)):
-                interim_result = self.three_way_merge(interim_result, self.modifications[i])
-            self.result = interim_result
+            interim_result = modifications[0]
+            for i in range(1, len(modifications)):
+                interim_result, interim_conflicts = self.__three_way_merge(original, interim_result, modifications[i])
+                conflicts = conflicts or interim_conflicts
+            result = interim_result
 
-        if self.default_on_conflict == 0 and self.conflicts:
-            return None
+        if self.default_on_conflict == 0 and conflicts:
+            return None, conflicts
         else:
-            return self.result
+            return result, conflicts
