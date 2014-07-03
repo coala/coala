@@ -26,46 +26,23 @@ class Merger:
                 result.append(item)
         return result
 
-    @staticmethod
-    def merge(original, modifications=None, default_on_conflict=1):
-        """
-        recursively 3-way-merges different modifications of one original
+    def __init__(self, default_on_conflict=1):
+        self.original = ""
+        self.modifications = []
+        self.default_on_conflict = default_on_conflict
+        self.result = ""
+        self.conflict = False
 
-        :param original: original string
-        :param modifications: list of modified strings
-        :param default_on_conflict: value specifies behavior on conflict:
-                                    -> positive value: trust version or merge of versions earlier in modification list
-                                    -> zero          : return None
-                                    -> negative value: trust version later in modification list
-        """
-
-        if modifications is None:
-            modifications = []
+    def three_way_merge(self, a, b):
 
         merge_result = ""
-        had_conflict = False
         index_a = 0
         index_b = 0
 
-        if len(modifications) == 0:
-            merge_result = original
-            return merge_result, had_conflict
-        elif len(modifications) == 1:
-            merge_result = modifications[0]
-            return merge_result, had_conflict
-        elif len(modifications) == 2:
-            a = modifications[0]
-            b = modifications[1]
-        else:
-            b = modifications.pop()
-            a, had_conflict = Merger.merge(original, modifications, default_on_conflict)
-            if default_on_conflict == 0 and had_conflict is True:
-                return None, True
-
         dxa = difflib.Differ()
         dxb = difflib.Differ()
-        xa = Merger.drop_deltas(dxa.compare(original, a))
-        xb = Merger.drop_deltas(dxb.compare(original, b))
+        xa = Merger.drop_deltas(dxa.compare(self.original, a))
+        xb = Merger.drop_deltas(dxb.compare(self.original, b))
 
         while (index_a < len(xa)) and (index_b < len(xb)):
 
@@ -95,10 +72,8 @@ class Merger:
                 continue
 
             # conflict!
-            had_conflict = True
-            if default_on_conflict == 0:
-                return None, had_conflict
-            elif default_on_conflict > 0:
+            self.conflict = True
+            if self. default_on_conflict >= 0:
                 while (index_a < len(xa)) and not xa[index_a].startswith('  '):
                     merge_result += xa[index_a][2:]
                     index_a += 1
@@ -117,14 +92,38 @@ class Merger:
         for i in range(len(xb) - index_b):
             merge_result += xb[index_b + i][2:]
 
-        return merge_result, had_conflict
+        return merge_result
 
-    @staticmethod
-    def is_mergeable(original, modifications):
-        """
-        checks if merge is possible without conflicts
-        """
-        return not Merger.merge(original, modifications)[1]
+    def merge(self, *args):
 
-    def __init__(self):
-        pass
+        arg_list = list(args)
+        self.original = arg_list.pop(0)
+        self.modifications = arg_list
+        self.conflict = False
+
+        if len(self.modifications) == 0:
+            self.result = self.original
+        elif len(self.modifications) == 1:
+            self.result = self.modifications[0]
+        else:
+            interim_result = self.modifications[0]
+            for i in range(1, len(self.modifications)):
+                interim_result = self.three_way_merge(interim_result, self.modifications[i])
+            self.result = interim_result
+
+        if self.default_on_conflict == 0 and self.conflict:
+            return None
+        else:
+            return self.result
+
+    def conflicts(self):
+        return self.conflict
+
+    def set_default_on_conflict(self, default_on_conflict):
+        self.default_on_conflict = default_on_conflict
+
+    def get_default_on_conflict(self):
+        return self.default_on_conflict
+
+    def get_original(self):
+        return self.original
