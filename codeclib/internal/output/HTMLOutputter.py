@@ -28,20 +28,28 @@ class HTMLOutputter(Outputter):
 
         self.writer = HTMLWriter(filename, indentation_per_tag)
 
-    def print(self, *args, delimiter=' ', end=''):
+    def print(self, *args, delimiter=' ', end='\n'):
         output = ""
         for arg in args:
             if output != "":
                 output += delimiter
             output += arg
 
-        self.writer.write_tags(p=output+end)
+        if end == '\n':
+            self.writer.write_tags(p=output)
+            return
 
-    def color_print(self, color, *args, delimiter=' ', end=''):
+        self.writer.write_tags(span=output+end)
+
+    def color_print(self, color, *args, delimiter=' ', end='\n'):
         output = ""
         for arg in args:
             if output != "":
                 output += delimiter
             output += arg
 
-        self.writer.write_tag("p", output+end, style="color:{}".format(color))
+        if end == '\n':
+            self.writer.write_tag("p", output, style="color:{}".format(color))
+            return
+
+        self.writer.write_tags(span=output+end)
