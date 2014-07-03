@@ -38,10 +38,6 @@ msgstr ""
 msgid "Filter {} failed to run."
 msgstr ""
 
-#: codec:23
-msgid "Codec is started."
-msgstr ""
-
 #: codec:25
-msgid "Some error occurred."
+msgid "Program terminated by user."
 msgstr ""

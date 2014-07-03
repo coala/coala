@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Codec 0.1\n"
 "Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-07-03 20:58+0100\n"
+"PO-Revision-Date: 2014-07-03 21:07+0100\n"
 "Last-Translator: Lasse Schuirmann <lasse.schuirmann@gmail.com>\n"
 "Language-Team: German <lasse.schuirmann@gmail.com>\n"
 "Language: de_DE\n"
@@ -59,10 +59,12 @@ msgstr ""
 msgid "Filter {} failed to run."
 msgstr ""
 
-#: codec:23
-msgid "Codec is started."
-msgstr "Codec ist gestartet."
-
 #: codec:25
-msgid "Some error occurred."
-msgstr "Ein Fehler ist aufgetreten."
+msgid "Program terminated by user."
+msgstr "Das Programm wurde durch den Benutzer beendet."
+
+#~ msgid "Some error occurred. Terminating program..."
+#~ msgstr "Ein Fehler ist aufgetreten. Das Programm wird beendet..."
+
+#~ msgid "Codec is started."
+#~ msgstr "Codec ist gestartet."

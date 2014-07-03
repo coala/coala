@@ -20,6 +20,6 @@ from codeclib.fillib.misc import i18n
 
 if __name__ == "__main__":
     try:
-        print(_("Codec is started."))
-    except:
-        print(_("Some error occurred."))
+        pass
+    except KeyboardInterrupt:
+        print(_("Program terminated by user."))
