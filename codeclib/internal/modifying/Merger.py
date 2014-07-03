@@ -29,6 +29,27 @@ class Merger:
     def __init__(self, default_on_conflict=1):
         self.default_on_conflict = default_on_conflict
 
+    def merge(self, original, *args):
+        arg_list = list(args)
+        modifications = arg_list
+        conflicts = False
+
+        if len(modifications) == 0:
+            result = original
+        elif len(modifications) == 1:
+            result = modifications[0]
+        else:
+            interim_result = modifications[0]
+            for i in range(1, len(modifications)):
+                interim_result, interim_conflicts = self.__three_way_merge(original, interim_result, modifications[i])
+                conflicts = conflicts or interim_conflicts
+            result = interim_result
+
+        if self.default_on_conflict == 0 and conflicts:
+            return None, conflicts
+        else:
+            return result, conflicts
+
     def __three_way_merge(self, original, a, b):
         merge_result = ""
         index_a = 0
@@ -89,24 +110,3 @@ class Merger:
             merge_result += xb[index_b + i][2:]
 
         return merge_result, conflicts
-
-    def merge(self, original, *args):
-        arg_list = list(args)
-        modifications = arg_list
-        conflicts = False
-
-        if len(modifications) == 0:
-            result = original
-        elif len(modifications) == 1:
-            result = modifications[0]
-        else:
-            interim_result = modifications[0]
-            for i in range(1, len(modifications)):
-                interim_result, interim_conflicts = self.__three_way_merge(original, interim_result, modifications[i])
-                conflicts = conflicts or interim_conflicts
-            result = interim_result
-
-        if self.default_on_conflict == 0 and conflicts:
-            return None, conflicts
-        else:
-            return result, conflicts
