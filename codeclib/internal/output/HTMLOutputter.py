@@ -12,16 +12,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import os
+import shutil
+from codeclib.internal.output.HTMLWriter import HTMLWriter
 from codeclib.internal.output.Outputter import Outputter
 
 
 class HTMLOutputter(Outputter):
-    def __init__(self, filename):
+    def __init__(self, filename, indentation_per_tag=2):
         Outputter.__init__(self)
-        self.filename = filename
 
-    def print(self, *args, delimiter=' ', end='\n'):
-        raise NotImplementedError
+        # backup old logfile, don't backup old backup
+        if os.path.exists(filename):
+            shutil.copy2(filename, filename+"~")
 
-    def color_print(self, color, *args, delimiter=' ', end='\n'):
-        raise NotImplementedError
+        self.writer = HTMLWriter(filename, indentation_per_tag)
+
+    def print(self, *args, delimiter=' ', end=''):
+        output = ""
+        for arg in args:
+            if output != "":
+                output += delimiter
+            output += arg
+
+        self.writer.write_tags(p=output+end)
+
+    def color_print(self, color, *args, delimiter=' ', end=''):
+        output = ""
+        for arg in args:
+            if output != "":
+                output += delimiter
+            output += arg
+
+        self.writer.write_tag("p", output+end, style="color:{}".format(color))
