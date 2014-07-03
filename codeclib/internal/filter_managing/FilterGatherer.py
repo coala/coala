@@ -15,7 +15,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 class FilterGatherer:
-    @staticmethod
-    def gather_filters():
-        # TODO
-        pass
+    def __init__(self, *directories):
+        self.dirs = list(directories)
+
+    def gather_filters(self):
+        raise NotImplementedError
