@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
+from codeclib.fillib.settings.Setting import Setting
 
 
 class Settings:
@@ -20,8 +21,10 @@ class Settings:
         self.name = name
         self.contents = OrderedDict()
 
-    def import_section(self, config_parser, section_name=None):
+    def import_section(self, config_parser, origin, section_name=None):
         if section_name is not None:
             self.name = section_name
 
-        raise NotImplementedError
+        section = config_parser[self.name]
+        for key in section:
+            self.contents[key] = Setting(key, section[key], origin)

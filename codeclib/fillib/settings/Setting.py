@@ -30,7 +30,7 @@ class Setting: #TODO: maybe have to_string(), to_path() in addition to __bool__(
         return str(self.value)
 
     def __bool__(self):
-        true_strings  = ['1', 'on',  'y', 'yes', 'yeah', 'always', 'sure', 'true', 'definitely', 'yup']
+        true_strings = ['1', 'on',  'y', 'yes', 'yeah', 'always', 'sure', 'true', 'definitely', 'yup']
         false_strings = ['0', 'off', 'n', 'no',  'nope', 'never',  'nah',  'false']
         if self.value in true_strings:
             return True
