@@ -12,18 +12,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+
 import os
+import subprocess
 
 
 class TestHelper:
     @staticmethod
     def execute_python_file(filename):
-        os.system("python {}".format(filename))
+        return subprocess.call(["python", filename])
 
     @staticmethod
     def execute_python_files(filenames):
+        retval = 0
         for file in filenames:
-            TestHelper.execute_python_file(file)
+            retval = max(TestHelper.execute_python_file(file), retval)
+        return retval
 
     @staticmethod
     def join_paths(prefix, paths):

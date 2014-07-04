@@ -19,4 +19,4 @@ from tests.TestHelper import TestHelper
 
 if __name__ == '__main__':
     files = TestHelper.join_paths("tests", tests.gather_files())
-    TestHelper.execute_python_files(files)
+    exit(TestHelper.execute_python_files(files))
