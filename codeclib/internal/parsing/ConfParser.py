@@ -26,12 +26,17 @@ class ConfParser(Parser):
         :param input_data: the filename of the config file to read
         """
         raise NotImplementedError
+        self.parsed = True
 
     def reparse(self, input_data):
         """
         :param input_data: the filename of the config file to read
         """
         raise NotImplementedError
+        self.parsed = True
 
     def export_to_settings(self):
+        assert self.parsed
         raise NotImplementedError
+
+    def __parse_settings

@@ -21,10 +21,12 @@ class Settings:
         self.name = name
         self.contents = OrderedDict()
 
-    def import_section(self, config_parser, origin, section_name=None):
-        if section_name is not None:
+    def import_dict(self, dict, origin, section_name=None):
+        """
+        Imports a dict.
+        :param dict: key: value
+        :return:
+        """
+        if section_name:
             self.name = section_name
-
-        section = config_parser[self.name]
-        for key in section:
-            self.contents[key] = Setting(key, section[key], origin)
+        raise NotImplementedError
