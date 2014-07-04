@@ -12,10 +12,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from tests import internal
+
+import tests
 from tests.TestHelper import TestHelper
 
 
-def gather_files():
-    internalfiles = TestHelper.join_paths("internal", internal.gather_files())
-    return internalfiles
+if __name__ == '__main__':
+    files = TestHelper.join_paths("tests", tests.gather_files())
+    TestHelper.execute_python_files(files)

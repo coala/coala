@@ -12,10 +12,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from tests import internal
-from tests.TestHelper import TestHelper
+import os
 
 
-def gather_files():
-    internalfiles = TestHelper.join_paths("internal", internal.gather_files())
-    return internalfiles
+class TestHelper:
+    @staticmethod
+    def execute_python_file(filename):
+        os.system("python {}".format(filename))
+
+    @staticmethod
+    def execute_python_files(filenames):
+        for file in filenames:
+            TestHelper.execute_python_file(file)
+
+    @staticmethod
+    def join_paths(prefix, paths):
+        result = []
+        for path in paths:
+            result.append(os.path.join(prefix, path))
+        return result
