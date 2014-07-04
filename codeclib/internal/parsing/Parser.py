@@ -38,6 +38,6 @@ class Parser:
 
     def export_to_settings(self):
         """
-        :return a list of Settings objects representing the current parsed things
+        :return a dict of Settings objects representing the current parsed things
         """
         raise NotImplementedError
