@@ -18,3 +18,12 @@ from codeclib.internal.parsing.Parser import Parser
 class CLIParser(Parser):
     def __init__(self):
         pass
+
+    def parse(self, input_data):
+        raise NotImplementedError
+
+    def reparse(self, input_data):
+        raise NotImplementedError
+
+    def export_to_settings(self):
+        raise NotImplementedError

@@ -20,51 +20,18 @@ from codeclib.internal.parsing.Parser import Parser
 class ConfParser(Parser):
     def __init__(self):
         self.parsed = False
-        # ignore comments and keep them as keys without value
-        self.parser = self.__get_config_parser()
 
     def parse(self, input_data):
         """
         :param input_data: the filename of the config file to read
         """
-        if not self.parsed:
-            self.reparse(input_data)
-        else:
-            # add new data to the existing
-            tmpparser = self.__get_config_parser()
-            tmpparser.read(input_data)
-            self.__import_data_from_configparser(tmpparser)
+        raise NotImplementedError
 
     def reparse(self, input_data):
         """
         :param input_data: the filename of the config file to read
         """
-        self.parser.read(input_data)
-        self.parsed = True
+        raise NotImplementedError
 
     def export_to_settings(self):
-        assert self.parsed
-
-        result = []
-        for section in self.parser:
-            settings = Settings(section)
-            settings.import_section(self.parser)
-            result.append(settings)
-
-        return result
-
-    def __import_data_from_configparser(self, configparser):
-        assert self.parsed
-
-        for section_name in configparser:
-            section = configparser[section_name]
-            if section_name not in self.parser:
-                self.parser.add_section(section)
-
-            for key in section:
-                self.parser[section_name][key] = section[key]
-                pass
-
-    @staticmethod
-    def __get_config_parser():
-        return ConfigParser(allow_no_value=True, comment_prefixes='', empty_lines_in_values=False)
+        raise NotImplementedError
