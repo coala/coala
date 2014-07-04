@@ -31,12 +31,12 @@ class LineParser:
         :return section_name (empty string if it's no section name), keys, value, comment
         """
         line, comment = self.__extract_comment(line)
-        if comment == "":
+        if line == "":
             return '', [], '', comment
 
         section_name = self.__get_section_name(line)
         if section_name != '':
-            return section_name, [], '', ''
+            return section_name, [], '', comment
 
         keys, value = self.__extract_keys_and_value(line)
 
@@ -46,7 +46,7 @@ class LineParser:
         for begin, end in self.section_name_surroundings.items():
             if line[0:len(begin)] == begin and \
                line[len(line)-len(end):len(line)] == end:
-                return line[len(begin):-len(end)].lower()
+                return line[len(begin):-len(end)].lower().strip(" \n")
 
         return ''
 

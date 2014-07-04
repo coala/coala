@@ -36,11 +36,18 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(comment, '; comment only')
 
     def test_multi_value_parsing(self):
-        section_name, keys, value, comment = self.uut.parse("a, b c= :()&/#heres a comment ")
+        section_name, keys, value, comment = self.uut.parse("a, b c= :()&/ #heres a comment ")
         self.assertEqual(section_name, '')
         self.assertEqual(keys, ['a', 'b', 'c'])
         self.assertEqual(value, ':()&/')
         self.assertEqual(comment, '#heres a comment')
+
+    def test_section_name_parsing(self):
+        section_name, keys, value, comment = self.uut.parse(" [   a section name   ]      # with comment   ")
+        self.assertEqual(section_name, 'a section name')
+        self.assertEqual(keys, [])
+        self.assertEqual(value, '')
+        self.assertEqual(comment, '# with comment')
 
 if __name__ == '__main__':
     unittest.main()
