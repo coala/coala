@@ -125,5 +125,5 @@ class CLIParser(Parser):
         """
         :return a list of Settings objects representing the current parsed things
         """
-        return [self.parsed_settings]
+        return {"default": self.parsed_settings}
 

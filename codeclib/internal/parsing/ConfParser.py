@@ -70,7 +70,7 @@ class ConfParser(Parser):
 
     def export_to_settings(self):
         assert self.parsed
-        raise NotImplementedError
+        return self.sections
 
     def __line_is_section_name(self, line):
         for begin, end in self.section_name_surroundings.items():
