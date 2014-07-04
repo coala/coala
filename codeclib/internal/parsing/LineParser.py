@@ -13,17 +13,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-# noinspection PyUnresolvedReferences
-from codeclib.fillib.misc import i18n
-from codeclib.fillib.settings.Settings import Settings
-from codeclib.internal.parsing.Parser import Parser
-
 
 class LineParser:
     def __init__(self,
                  key_value_delimiters=['=', ':'],
                  comment_seperators=['#', ';', '//'],
-                 key_delimiters=', ',# only one char per delimiter allowed, so just pass a string with all delimiters
+                 key_delimiters=[',',' '],
                  section_name_surroundings={'[':"]"}):
         self.key_value_delimiters = key_value_delimiters
         self.comment_seperators = comment_seperators
@@ -36,9 +31,12 @@ class LineParser:
         :return section_name (empty string if it's no section name), keys, value, comment
         """
         line, comment = self.__extract_comment(line)
+        if comment == "":
+            return '', [], '', comment
+
         section_name = self.__get_section_name(line)
         if section_name != '':
-            return section_name, '', '', ''
+            return section_name, [], '', ''
 
         keys, value = self.__extract_keys_and_value(line)
 
@@ -56,7 +54,7 @@ class LineParser:
         comment_begin = len(line)
         for seperator in self.comment_seperators:
             pos = line.find(seperator)
-            if 0 < pos < comment_begin:
+            if 0 <= pos < comment_begin:
                 comment_begin = pos
 
         return line[:comment_begin].strip(" \n"), line[comment_begin:].strip(" \n")
@@ -70,8 +68,16 @@ class LineParser:
                 value_begin = pos
                 value_delimiter = delimiter
 
-        keys = line[:value_begin].split(self.key_delimiters)
-        for i, key in enumerate(keys):
-            keys[i] = key.strip(" \n")
+        tmp_keys = [line[:value_begin]]
+        for delim in self.key_delimiters:
+            new = []
+            for key in tmp_keys:
+                new += key.split(delim)
+            tmp_keys = new
+
+        keys=[]
+        for i, key in enumerate(tmp_keys):
+            if key.strip(" \n") != "":
+                keys.append(key.strip(" \n"))
 
         return keys, line[value_begin+len(value_delimiter):].strip(" \n")

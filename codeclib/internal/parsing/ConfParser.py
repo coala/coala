@@ -23,7 +23,7 @@ class ConfParser(Parser):
     def __init__(self,
                  key_value_delimiters=['=', ':'],
                  comment_seperators=['#', ';', '//'],
-                 key_delimiters=', ',# only one char per delimiter allowed, so just pass a string with all delimiters
+                 key_delimiters=[',',' '],
                  section_name_surroundings={'[':"]"}):
         Parser.__init__(self)
         self.parsed = False
