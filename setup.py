@@ -14,3 +14,34 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+
+from setuptools import setup
+
+
+setup(name='Codec',
+      version='0.1',
+      description='Dynamic Code File Checker',
+      maintainer='Lasse Schuirmann, Fabian Neuschmidt',
+      maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de',
+      url='www.schuirmann.eu',
+      scripts=['codec'],
+      packages=['codeclib',
+
+                'codeclib.fillib',
+                    'codeclib.fillib.filters',
+                    'codeclib.fillib.misc',
+                    'codeclib.fillib.results',
+                    'codeclib.fillib.settings',
+
+                'codeclib.filters',
+
+                'codeclib.internal',
+                    'codeclib.internal.filter_managing',
+                    'codeclib.internal.misc',
+                    'codeclib.internal.modifying',
+                    'codeclib.internal.output',
+                    'codeclib.internal.parsing',
+                    'codeclib.internal.process_managing',
+                ],
+      license = "GPL v3"
+      )
