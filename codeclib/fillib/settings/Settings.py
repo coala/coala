@@ -21,6 +21,9 @@ class Settings:
         self.name = name
         self.contents = OrderedDict()
 
+    def append(self, key, value, origin):
+        self.contents[str(key).lower()] = Setting(key, value, origin)
+
     def import_dict(self, dict, origin, section_name=None):
         """
         Imports a dict.
