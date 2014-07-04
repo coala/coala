@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 # noinspection PyUnresolvedReferences
 from codeclib.fillib.misc import i18n
 from codeclib.fillib.settings.Settings import Settings
+from codeclib.internal.parsing.LineParser import LineParser
 from codeclib.internal.parsing.Parser import Parser
 
 
@@ -27,10 +28,10 @@ class ConfParser(Parser):
                  section_name_surroundings={'[':"]"}):
         Parser.__init__(self)
         self.parsed = False
-        self.key_value_delimiters = key_value_delimiters
-        self.comment_seperators = comment_seperators
-        self.key_delimiters = key_delimiters
-        self.section_name_surroundings = section_name_surroundings
+        self.line_parser = LineParser(key_value_delimiters,
+                                      comment_seperators,
+                                      key_delimiters,
+                                      section_name_surroundings)
         self.sections = {}
 
     def parse(self, input_data, overwrite=False):
@@ -41,22 +42,25 @@ class ConfParser(Parser):
         try:
             f = open(input_data, "r")
             lines = f.readlines()
-            name = "default"
-            i=0
+
             if overwrite:
                 self.sections = {}
-            while True:
-                print(name)
-                settings = self.sections.get(name.lower(), Settings(name))
 
-                print(i, settings.name)
-                i, name = self.__parse_section(settings, lines, input_data)
-                lines = lines[i+1:]
-                self.sections[name.lower()] = settings
-                if i == -1:
-                    f.close()
-                    self.parsed = True
-                    return ''
+            section_name = "default"
+            settings = self.sections.get(section_name.lower(), Settings(section_name))
+            self.sections[section_name] = settings
+            for line in lines:
+                section_name, keys, value, comment = self.line_parser.parse(line)
+                if section_name != '':
+                    settings = self.sections.get(section_name.lower(), Settings(section_name))
+                    self.sections[section_name] = settings
+                else:
+                    if comment != '':
+                        settings.append(comment, '', input_data)
+                    for key in keys:
+                        settings.append(key, value, input_data)
+
+            return ''
         except IOError:
             return _("Failed reading file. Please make sure to provide a file that is existent and "
                      "you have the permission to read it.")
@@ -71,59 +75,3 @@ class ConfParser(Parser):
     def export_to_settings(self):
         assert self.parsed
         return self.sections
-
-    def __line_is_section_name(self, line):
-        for begin, end in self.section_name_surroundings.items():
-            if line[0:len(begin)] == begin and line[len(line)-len(end):len(line)] == end:
-                return True, line[len(begin):-len(end)]
-
-        return False, ''
-
-    def __parse_section(self, settings, lines, origin):
-        """
-        :param settings: the object to store the settings into
-        :param lines: the lines to parse
-        :param origin: origin for the settings
-        :return: -1, '' if all lines are parsed, if not index of line which is the next section plus name of section
-        """
-        for i, line in enumerate(lines):
-            line = line.strip(" \n")
-            # extract comments
-            comment, rest = self.__extract_comment(line)
-            if comment:
-                settings.append(comment.strip(), '', origin)
-
-            # is it the next section?
-            is_name, name = self.__line_is_section_name(rest)
-            if is_name:
-                print(name)
-                return i, name
-
-            # extract values
-            keys, value = self.__extract_keys_and_value(rest)
-            for key in keys:
-                settings.append(key.strip(), value.strip(), origin)
-
-        return -1, ''
-
-    def __extract_comment(self, line):
-        comment_begin = len(line)
-        for seperator in self.comment_seperators:
-            pos = line.find(seperator)
-            if 0 < pos < comment_begin:
-                comment_begin = pos
-
-        return line[comment_begin:], line[:comment_begin]
-
-    def __extract_keys_and_value(self, line):
-        value_begin = len(line)
-        value_delimiter = ''
-        for delimiter in self.key_value_delimiters:
-            pos = line.find(delimiter)
-            if 0 < pos < value_begin:
-                value_begin = pos
-                value_delimiter = delimiter
-
-        keys = line[:value_begin].strip().split(self.key_delimiters)
-
-        return keys, line[value_begin+len(value_delimiter):]
