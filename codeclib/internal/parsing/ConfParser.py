@@ -13,8 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-# noinspection PyUnresolvedReferences
-from codeclib.fillib.misc import i18n
+from codeclib.fillib.misc.i18n import _
 from codeclib.fillib.settings.Settings import Settings
 from codeclib.internal.parsing.LineParser import LineParser
 from codeclib.internal.parsing.Parser import Parser

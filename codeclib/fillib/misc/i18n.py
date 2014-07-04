@@ -19,18 +19,24 @@ import gettext
 import builtins
 
 
-def untranslated(msg):
+def __untranslated(msg):
     return msg
 
-builtins.__dict__['_'] = untranslated
-langs = os.environ.get('LANG', '').split(':')
-langs += ['en_US']
+builtins.__dict__['_'] = __untranslated
+__langs = os.environ.get('LANG', '').split(':')
+__langs += ['en_US']
 
-for lang in langs:
-    filename = "i18n/{}.mo".format(lang[0:5])
+for __lang in __langs:
+    __filename = "i18n/{}.mo".format(__lang[0:5])
     try:
         # overwrite our _ definition
-        gettext.GNUTranslations(open(filename, "rb")).install()
+        gettext.GNUTranslations(open(__filename, "rb")).install()
         break
     except IOError:
         continue
+
+__gettext = builtins.__dict__['_']
+
+
+def _(s):
+    return __gettext(s)
