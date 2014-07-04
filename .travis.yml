@@ -16,3 +16,5 @@ python:
 script:
   - sudo python setup.py install
   - python ./execute_all_tests.py
+  - ./generate_pot.sh
+  - if git diff|grep diff>/dev/null; then echo "Please update POT file";return 1; else return 0; fi
