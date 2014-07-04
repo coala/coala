@@ -23,8 +23,9 @@ class ConfParser(Parser):
     def __init__(self,
                  key_value_delimiters=['=', ':'],
                  comment_seperators=['#', ';', '//'],
-                 key_delimiters=[','],
+                 key_delimiters=', ',# only one char per delimiter allowed, so just pass a string with all delimiters
                  section_name_surroundings={'[':"]"}):
+        Parser.__init__(self)
         self.parsed = False
         self.key_value_delimiters = key_value_delimiters
         self.comment_seperators = comment_seperators
@@ -41,17 +42,21 @@ class ConfParser(Parser):
             f = open(input_data, "r")
             lines = f.readlines()
             name = "default"
+            i=0
+            if overwrite:
+                self.sections = {}
             while True:
-                if not overwrite:
-                    settings = self.sections.get(name.lower(), Settings(name))
-                else:
-                    settings = Settings(name.lower())
-                i, name = self.__parse_section(settings, lines)
-                lines = lines[i:]
+                print(name)
+                settings = self.sections.get(name.lower(), Settings(name))
+
+                print(i, settings.name)
+                i, name = self.__parse_section(settings, lines, input_data)
+                lines = lines[i+1:]
                 self.sections[name.lower()] = settings
-            f.close()
-            self.parsed = True
-            return ''
+                if i == -1:
+                    f.close()
+                    self.parsed = True
+                    return ''
         except IOError:
             return _("Failed reading file. Please make sure to provide a file that is existent and "
                      "you have the permission to read it.")
@@ -71,6 +76,7 @@ class ConfParser(Parser):
         for begin, end in self.section_name_surroundings.items():
             if line[0:len(begin)] == begin and line[len(line)-len(end):len(line)] == end:
                 return True, line[len(begin):-len(end)]
+
         return False, ''
 
     def __parse_section(self, settings, lines, origin):
@@ -90,6 +96,7 @@ class ConfParser(Parser):
             # is it the next section?
             is_name, name = self.__line_is_section_name(rest)
             if is_name:
+                print(name)
                 return i, name
 
             # extract values
@@ -118,4 +125,5 @@ class ConfParser(Parser):
                 value_delimiter = delimiter
 
         keys = line[:value_begin].strip().split(self.key_delimiters)
+
         return keys, line[value_begin+len(value_delimiter):]
