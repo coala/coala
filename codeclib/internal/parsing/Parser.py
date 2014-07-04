@@ -23,6 +23,7 @@ class Parser:
         Parses the input and adds the new data to the existing
 
         :param input_data: filename or other input
+        :return a non empty string containing an error message on failure
         """
         raise NotImplementedError
 
@@ -31,6 +32,7 @@ class Parser:
         Parses the input and overwrites all existent data
 
         :param input_data: filename or other input
+        :return a non empty string containing an error message on failure
         """
         raise NotImplementedError
 
