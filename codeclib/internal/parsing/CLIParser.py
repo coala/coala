@@ -96,8 +96,11 @@ class CLIParser(Parser):
     def make_value_string(value_list):
         if value_list is None:
             return None
-        value = ",".join(value_list)
-        return value
+        value_string = ""
+        for value in value_list:
+            value_string += str(value) + ','
+        value_string = value_string[:-1]
+        return value_string
 
     def __init__(self):
         super().__init__()
