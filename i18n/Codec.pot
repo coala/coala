@@ -1,3 +1,9 @@
+#: codeclib/internal/parsing/ConfParser.py:64
+msgid ""
+"Failed reading file. Please make sure to provide a file that is existent and "
+"you have the permission to read it."
+msgstr ""
+
 #: codeclib/internal/process_managing/FilterProcess.py:76
 msgid ""
 "Unknown failure in worker process.\n"
@@ -38,6 +44,6 @@ msgstr ""
 msgid "Filter {} failed to run."
 msgstr ""
 
-#: codec:25
+#: codec:26
 msgid "Program terminated by user."
 msgstr ""
