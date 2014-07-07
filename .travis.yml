@@ -14,6 +14,8 @@ python:
   - "3.4"
 
 script:
-  - sudo python setup.py install
   - python ./execute_all_tests.py
+  - sh ./tests/potupdatetest.sh
+# TODO test installation with a bash script
+#  - sudo python setup.py install
 
