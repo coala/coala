@@ -24,7 +24,7 @@ Lasse Schuirmann  <lasse@schuirmann.net>
 Fabian Neuschmidt <fabian@neuschmidt.de>
 
 Build status:
-[![Build Status](https://travis-ci.org/sils1297/codec.svg?branch=new)](https://travis-ci.org/sils1297/coala)
+[![Build Status](https://travis-ci.org/sils1297/coala.svg?branch=new)](https://travis-ci.org/sils1297/coala)
 
 INSTALLATION
 ------------
