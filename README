@@ -29,6 +29,7 @@ INSTALLATION
 Python:
 coala requires a version of Python3 >= 3.2 from http://www.python.org.
 Installation of Python differs slightly by operating system
+
 coala:
 coala can be installed afterwards by executing the file setup.py through the python interpreter
 
