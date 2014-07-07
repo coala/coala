@@ -44,6 +44,7 @@ msgstr ""
 msgid "Filter {} failed to run."
 msgstr ""
 
-#: codec:26
+#. Something's gone wrong
+#: codec:27
 msgid "Program terminated by user."
 msgstr ""

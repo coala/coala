@@ -30,6 +30,8 @@ class Setting:
         return str(self.value)
 
     def __bool__(self):
+        # TODO mark some of these for translation and add them. In addition make sure the comment above is
+        # seen by translators.
         true_strings = ['1', 'on',  'y', 'yes', 'yeah', 'always', 'sure', 'true', 'definitely', 'yup']
         false_strings = ['0', 'off', 'n', 'no',  'nope', 'never',  'nah',  'false']
         if self.value in true_strings:

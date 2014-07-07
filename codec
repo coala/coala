@@ -23,4 +23,5 @@ if __name__ == "__main__":
         raise KeyboardInterrupt
         pass
     except KeyboardInterrupt:
+        # Something's gone wrong
         print(_("Program terminated by user."))
