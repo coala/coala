@@ -1,6 +1,8 @@
+README
+======
 ```
-README                                                  .o88Oo._
-======                                                 d8P         .ooOO8bo._
+                                                        .o88Oo._
+                                                       d8P         .ooOO8bo._
                                                        88                  '*Y8bo.
                                          __            YA                      '*Y8b   __
                                        ,dPYb,           YA                        68o68**8Oo.
@@ -16,31 +18,34 @@ README                                                  .o88Oo._
 ```
 
 ABOUT
------
+=====
 coala is a simple COde AnaLysis Application.
 
-Authors:
-Lasse Schuirmann  <lasse@schuirmann.net>
-Fabian Neuschmidt <fabian@neuschmidt.de>
+Authors
+-------
+Lasse Schuirmann  <lasse@schuirmann.net>, Fabian Neuschmidt <fabian@neuschmidt.de>
 
-Build status:
+Build status
+------------
 [![Build Status](https://travis-ci.org/sils1297/coala.svg?branch=new)](https://travis-ci.org/sils1297/coala)
 
 INSTALLATION
-------------
-Python:
+============
+Python
+------
 coala requires a version of Python3 >= 3.2 from http://www.python.org.
 Installation of Python differs slightly by operating system
 
-coala:
+coala
+-----
 coala can be installed afterwards by executing the file setup.py through the python interpreter
 
 FUNCTION REFERENCE
-------------------
+==================
 coming soon...
 
 LICENSE
--------
+=======
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
