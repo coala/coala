@@ -17,6 +17,7 @@ import argparse
 import os
 from codeclib.internal.parsing.Parser import Parser
 from codeclib.fillib.settings.Settings import Settings
+from codeclib.fillib.misc.i18n import _
 
 
 class CLIParser(Parser):
@@ -29,55 +30,55 @@ class CLIParser(Parser):
 
         # -d sets parameter "TargetDirectories" => List of paths to files and/or directories to be (recursively) checked
         arg_parser.add_argument('-d', '--dirs', nargs='+', metavar='DIR', dest='TargetDirectories',
-                                help='List of paths to files and/or directories to be (recursively) checked')
+                                help=_('List of paths to files and/or directories to be (recursively) checked'))
         # -id sets parameter "IgnoredDirectories" => List of paths to files and/or directories to be ignored
         arg_parser.add_argument('-id', '--ignored-dirs', nargs='+', metavar='DIR', dest='IgnoredDirectories',
-                                help='List of paths to files and/or directories to be ignored')
+                                help=_('List of paths to files and/or directories to be ignored'))
         # -fd sets parameter "FlatDirectories" => List of paths to directories to be checked excluding sub-directories
         arg_parser.add_argument('-fd', '--flat-dirs', nargs='+', metavar='DIR', dest='FlatDirectories',
-                                help='List of paths to directories to be checked excluding sub-directories')
+                                help=_('List of paths to directories to be checked excluding sub-directories'))
         # -t sets parameter "TargetFileTypes" => List of file endings of files to be checked
         arg_parser.add_argument('-t', '--types', nargs='+', metavar='TYPE', dest='TargetFileTypes',
-                                help='List of file endings of files to be checked')
+                                help=_('List of file endings of files to be checked'))
         # -it sets parameter "IgnoredFileTypes" => List of file endings of files to be ignored
         arg_parser.add_argument('-it', '--ignored-types', nargs='+', metavar='TYPE', dest='IgnoredFileTypes',
-                                help='List of file endings of files to be ignored')
+                                help=_('List of file endings of files to be ignored'))
         # -i sets parameter IncludedFilterDirectories => additional filter sources
         arg_parser.add_argument('-i', '--include-filter-dirs', nargs='+', metavar='DIR',
-                                dest='IncludedFilterDirectories', help='List of directories that contain filters')
+                                dest='IncludedFilterDirectories', help=_('List of directories that contain filters'))
         # -f sets parameter "Filters" => Names of filters that should be used
         arg_parser.add_argument('-f', '--filters', nargs='+', metavar='FILE', dest='Filters',
-                                help='Names of filters that should be used')
+                                help=_('Names of filters that should be used'))
         # -if sets parameter "IgnoredFilters" => Names of filters that should be ignored
         arg_parser.add_argument('-if', '--ignored-filters', nargs='+', metavar='FILE', dest='IgnoredFilters',
-                                help='Names of filters that should be ignored')
+                                help=_('Names of filters that should be ignored'))
         # -rf sets parameter "RegexFilters" => List of regular expressions for matching filters to be used
         arg_parser.add_argument('-rf', '--regex-filters', nargs='+', metavar='REGEX', dest='RegexFilters',
-                                help='List of regular expressions for matching filters to be used')
+                                help=_('List of regular expressions for matching filters to be used'))
         # -l sets parameter "LogType" => Enum (CONSOLE/TXT/HTML) to choose type of logging
         arg_parser.add_argument('-l', '--log', nargs=1, choices=['CONSOLE', 'TXT', 'HTML'], metavar='LEVEL',
-                                dest='LogType', help='Enum (CONSOLE/TXT/HTML) to choose type of logging')
+                                dest='LogType', help=_('Enum (CONSOLE/TXT/HTML) to choose type of logging'))
         # -o sets parameter "LogOutput" => File path to where logging output should be saved
         arg_parser.add_argument('-o', '--output', nargs=1, metavar='FILE', dest='LogOutput',
-                                help='File path to where logging output should be saved')
+                                help=_('File path to where logging output should be saved'))
         # -v sets parameter "Verbosity" => Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity
         arg_parser.add_argument('-v', '--verbose', nargs=1, choices=['ERR', 'WARN', 'INFO', 'DEBUG'], metavar='LEVEL',
-                                dest='Verbosity', help='Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity')
+                                dest='Verbosity', help=_('Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity'))
         # -c sets parameter "ConfigFile" => File path of configuration file to be used
         arg_parser.add_argument('-c', '--config', nargs=1, metavar='FILE', dest='ConfigFile',
-                                help='File path of configuration file to be used')
+                                help=_('File path of configuration file to be used'))
         # -s sets parameter "Save" => Filename of file to be saved to, defaults to config file
         arg_parser.add_argument('-s', '--save', nargs='?', const=True, metavar='FILE', dest='Save',
-                                help='Filename of file to be saved to, defaults to config file')
+                                help=_('Filename of file to be saved to, defaults to config file'))
         # -j sets parameter "JobCount" => Number of processes to be allowed to run at once
         arg_parser.add_argument('-j', '--jobs', nargs=1, type=int, metavar='INT', dest='JobCount',
-                                help='Number of processes to be allowed to run at once')
+                                help=_('Number of processes to be allowed to run at once'))
         # -a sets parameter "ApplyChanges" => Set once to ask for or twice to apply changes
         arg_parser.add_argument('-a', '--apply-changes', nargs=1, choices=['YES', 'NO', 'ASK'], metavar='ENUM',
-                                dest='ApplyChanges', help="Enum('YES','NO','ASK') to set whether to apply changes")
+                                dest='ApplyChanges', help=_("Enum('YES','NO','ASK') to set whether to apply changes"))
         # -hf sets parameter "HideFineFiles" => Set to not show files that are ok
         arg_parser.add_argument('-hf', '--hide-fine-files', nargs=1, metavar='BOOL', dest='HideFineFiles',
-                                help='Set to hide Files from results that do not produce filter output')
+                                help=_('Set to hide Files from results that do not produce filter output'))
 
         # arg_vars stores parsed arguments in form of a dictionary.
         # it reads custom_arg_string instead of sys.args if custom_arg_string is given.

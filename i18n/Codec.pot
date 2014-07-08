@@ -4,6 +4,74 @@ msgid ""
 "you have the permission to read it."
 msgstr ""
 
+#: codeclib/internal/parsing/CLIParser.py:33
+msgid "List of paths to files and/or directories to be (recursively) checked"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:36
+msgid "List of paths to files and/or directories to be ignored"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:39
+msgid "List of paths to directories to be checked excluding sub-directories"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:42
+msgid "List of file endings of files to be checked"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:45
+msgid "List of file endings of files to be ignored"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:48
+msgid "List of directories that contain filters"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:51
+msgid "Names of filters that should be used"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:54
+msgid "Names of filters that should be ignored"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:57
+msgid "List of regular expressions for matching filters to be used"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:60
+msgid "Enum (CONSOLE/TXT/HTML) to choose type of logging"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:63
+msgid "File path to where logging output should be saved"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:66
+msgid "Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:69
+msgid "File path of configuration file to be used"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:72
+msgid "Filename of file to be saved to, defaults to config file"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:75
+msgid "Number of processes to be allowed to run at once"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:78
+msgid "Enum('YES','NO','ASK') to set whether to apply changes"
+msgstr ""
+
+#: codeclib/internal/parsing/CLIParser.py:81
+msgid "Set to hide Files from results that do not produce filter output"
+msgstr ""
+
 #: codeclib/internal/process_managing/FilterProcess.py:76
 msgid ""
 "Unknown failure in worker process.\n"
