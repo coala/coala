@@ -18,9 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from distutils.core import setup
 
 
-setup(name='Codec',
+setup(name='coala',
       version='0.1',
-      description='Dynamic Code File Checker',
+      description='Code Analysis Application',
       maintainer='Lasse Schuirmann, Fabian Neuschmidt',
       maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de',
       url='www.schuirmann.eu',
