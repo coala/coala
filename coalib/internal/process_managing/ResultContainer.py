@@ -13,8 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import queue
-from codeclib.fillib.filters.FilterBase import FILTER_KIND
-from codeclib.internal.process_managing.Process import Process
+from coalib.fillib.filters.FilterBase import FILTER_KIND
+from coalib.internal.process_managing.Process import Process
 
 
 class ResultContainer:

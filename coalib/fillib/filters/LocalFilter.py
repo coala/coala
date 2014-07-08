@@ -12,20 +12,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.fillib.filters import FilterBase
 
-from codeclib.fillib.filters import FilterBase
 
-
-class GlobalFilter(FilterBase.FilterBase):
+class LocalFilter(FilterBase.FilterBase):
     @staticmethod
     def kind():
-        return FilterBase.FILTER_KIND.GLOBAL
+        return FilterBase.FILTER_KIND.LOCAL
 
-    def run(self, file_dict):
+    def run(self, filename, file):
         """
-        Checks the given files.
+        Checks the given file.
 
-        :param file_dict: a dictionary of name: file
-        :return: TODO ???
+        :param filename: The filename of the file
+        :param file: The file contents as string array
+        :return: A list of LineResult
         """
         raise NotImplementedError("This function has to be implemented for a runnable filter.")

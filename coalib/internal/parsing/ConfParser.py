@@ -13,10 +13,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from codeclib.fillib.misc.i18n import _
-from codeclib.fillib.settings.Settings import Settings
-from codeclib.internal.parsing.LineParser import LineParser
-from codeclib.internal.parsing.Parser import Parser
+from coalib.fillib.misc.i18n import _
+from coalib.fillib.settings.Settings import Settings
+from coalib.internal.parsing.LineParser import LineParser
+from coalib.internal.parsing.Parser import Parser
 
 
 class ConfParser(Parser):

@@ -14,8 +14,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
 import shutil
-from codeclib.internal.output.HTMLWriter import HTMLWriter
-from codeclib.internal.output.Outputter import Outputter
+from coalib.internal.output.HTMLWriter import HTMLWriter
+from coalib.internal.output.Outputter import Outputter
 
 
 class HTMLOutputter(Outputter):

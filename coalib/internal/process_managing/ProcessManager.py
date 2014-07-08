@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import multiprocessing
-from codeclib.internal.process_managing.Process import Process
+from coalib.internal.process_managing.Process import Process
 
 
 class ProcessManager:

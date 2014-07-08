@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import sys
-from codeclib.internal.output.Outputter import Outputter
+from coalib.internal.output.Outputter import Outputter
 
 
 class ConsoleOutputter(Outputter):

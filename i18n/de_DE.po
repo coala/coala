@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Codec 0.1\n"
 "Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-07-08 08:29+0100\n"
+"PO-Revision-Date: 2014-07-08 08:43+0100\n"
 "Last-Translator: Lasse Schuirmann <lasse.schuirmann@gmail.com>\n"
 "Language-Team: German <lasse.schuirmann@gmail.com>\n"
 "Language: de_DE\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Poedit 1.6.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: codeclib/internal/parsing/ConfParser.py:64
+#: coalib/internal/parsing/ConfParser.py:64
 msgid ""
 "Failed reading file. Please make sure to provide a file that is existent and "
 "you have the permission to read it."
@@ -27,76 +27,76 @@ msgstr ""
 "Fehler beim lesen der Datei. Bitte stellen Sie sicher dass die Datei "
 "existiert und Leserechte vorhanden sind."
 
-#: codeclib/internal/parsing/CLIParser.py:33
+#: coalib/internal/parsing/CLIParser.py:33
 msgid "List of paths to files and/or directories to be (recursively) checked"
 msgstr ""
 "Liste der Datei- und/oder Ordnerpfade die rekursiv geprüft werden sollen"
 
-#: codeclib/internal/parsing/CLIParser.py:36
+#: coalib/internal/parsing/CLIParser.py:36
 msgid "List of paths to files and/or directories to be ignored"
 msgstr "Liste der Datei- und/oder Ordnerpfade die ignoriert werden sollen"
 
-#: codeclib/internal/parsing/CLIParser.py:39
+#: coalib/internal/parsing/CLIParser.py:39
 msgid "List of paths to directories to be checked excluding sub-directories"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:42
+#: coalib/internal/parsing/CLIParser.py:42
 msgid "List of file endings of files to be checked"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:45
+#: coalib/internal/parsing/CLIParser.py:45
 msgid "List of file endings of files to be ignored"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:48
+#: coalib/internal/parsing/CLIParser.py:48
 msgid "List of directories that contain filters"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:51
+#: coalib/internal/parsing/CLIParser.py:51
 msgid "Names of filters that should be used"
 msgstr "Namen der zu benutzenden Filter"
 
-#: codeclib/internal/parsing/CLIParser.py:54
+#: coalib/internal/parsing/CLIParser.py:54
 msgid "Names of filters that should be ignored"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:57
+#: coalib/internal/parsing/CLIParser.py:57
 msgid "List of regular expressions for matching filters to be used"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:60
+#: coalib/internal/parsing/CLIParser.py:60
 msgid "Enum (CONSOLE/TXT/HTML) to choose type of logging"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:63
+#: coalib/internal/parsing/CLIParser.py:63
 msgid "File path to where logging output should be saved"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:66
+#: coalib/internal/parsing/CLIParser.py:66
 msgid "Enum (ERR/WARN/INFO/DEBUG) to choose level of verbosity"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:69
+#: coalib/internal/parsing/CLIParser.py:69
 msgid "File path of configuration file to be used"
 msgstr "Dateipfad der zu benutzenden Konfigurationsdatei"
 
-#: codeclib/internal/parsing/CLIParser.py:72
+#: coalib/internal/parsing/CLIParser.py:72
 msgid "Filename of file to be saved to, defaults to config file"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:75
+#: coalib/internal/parsing/CLIParser.py:75
 msgid "Number of processes to be allowed to run at once"
 msgstr "Maximale Anzahl der laufenden Prozesse"
 
-#: codeclib/internal/parsing/CLIParser.py:78
+#: coalib/internal/parsing/CLIParser.py:78
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr ""
 
-#: codeclib/internal/parsing/CLIParser.py:81
+#: coalib/internal/parsing/CLIParser.py:81
 msgid "Set to hide Files from results that do not produce filter output"
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:76
+#: coalib/internal/process_managing/FilterProcess.py:76
 msgid ""
 "Unknown failure in worker process.\n"
 "Exception: {}\n"
@@ -108,40 +108,40 @@ msgstr ""
 "Traceback:\n"
 "{}"
 
-#: codeclib/internal/process_managing/FilterProcess.py:78
+#: coalib/internal/process_managing/FilterProcess.py:78
 msgid ""
 "An unknown failure occurred and a process is aborted. Please contact "
-"developers for assistance and try out starting codec with -j1."
+"developers for assistance and try out starting coala with -j1."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:96
+#: coalib/internal/process_managing/FilterProcess.py:96
 msgid ""
 "Failed to handle queue element {}. If you are testing filters, make sure "
 "they inherit from GlobalFilter or LocalFilter and don't overwrite the kind() "
 "method."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:99
+#: coalib/internal/process_managing/FilterProcess.py:99
 msgid "Failed to handle queue element {}."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:103
+#: coalib/internal/process_managing/FilterProcess.py:103
 msgid "Queue timeout reached. Assuming no tasks are left."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:116
+#: coalib/internal/process_managing/FilterProcess.py:116
 msgid ""
 "Local filter {} raised an exception of type {}. If you are the writer of "
 "this filter, please catch all exceptions. If not and this error keeps "
 "occurring you might want to get in contact with the writer of this filter."
 msgstr ""
 
-#: codeclib/internal/process_managing/FilterProcess.py:120
+#: coalib/internal/process_managing/FilterProcess.py:120
 msgid "Filter {} failed to run."
 msgstr "Der Filter {} konnte nicht ausgeführt werden."
 
 #. Something's gone wrong
-#: codec:27
+#: coala:27
 msgid "Program terminated by user."
 msgstr "Das Programm wurde durch den Benutzer beendet."
 

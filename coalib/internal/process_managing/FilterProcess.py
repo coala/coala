@@ -13,13 +13,13 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from codeclib.fillib.misc.i18n import _
+from coalib.fillib.misc.i18n import _
 import queue
 import sys
 import traceback
-from codeclib.fillib.filters.FilterBase import FILTER_KIND
-from codeclib.internal.process_managing.Process import Process
-from codeclib.internal.process_managing.ResultContainer import ResultContainer
+from coalib.fillib.filters.FilterBase import FILTER_KIND
+from coalib.internal.process_managing.Process import Process
+from coalib.internal.process_managing.ResultContainer import ResultContainer
 
 
 class FilterProcess(Process):
@@ -76,7 +76,7 @@ class FilterProcess(Process):
             self.__debug(_("Unknown failure in worker process.\n"
                            "Exception: {}\nTraceback:\n{}").format(str(exception[0]), traceback.extract_tb(exception[2])))
             self.__warn(_("An unknown failure occurred and a process is aborted. "
-                          "Please contact developers for assistance and try out starting codec with -j1."))
+                          "Please contact developers for assistance and try out starting coala with -j1."))
             exit(1)
         exit(0)
 

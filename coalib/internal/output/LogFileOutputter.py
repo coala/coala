@@ -14,7 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
 import shutil
-from codeclib.internal.output.Outputter import Outputter
+from coalib.internal.output.Outputter import Outputter
 
 
 class LogFileOutputter(Outputter):

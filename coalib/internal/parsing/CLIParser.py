@@ -15,9 +15,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
 import os
-from codeclib.internal.parsing.Parser import Parser
-from codeclib.fillib.settings.Settings import Settings
-from codeclib.fillib.misc.i18n import _
+from coalib.internal.parsing.Parser import Parser
+from coalib.fillib.settings.Settings import Settings
+from coalib.fillib.misc.i18n import _
 
 
 class CLIParser(Parser):

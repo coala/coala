@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
-from codeclib.fillib.settings.Setting import Setting
+from coalib.fillib.settings.Setting import Setting
 
 
 class Settings:
