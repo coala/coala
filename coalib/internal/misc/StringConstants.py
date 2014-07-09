@@ -1,5 +1,3 @@
-#! /bin/python3
-
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,17 +12,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-
 from coalib.fillib.misc.i18n import _
-from coalib.internal.output import VoiceOutputter
 
 
-if __name__ == "__main__":
-    outputter = VoiceOutputter.VoiceOutputter()
-    outputter.print(_("Do you want to replace the following line with another?"))
-    try:
-        raise KeyboardInterrupt
-        pass
-    except KeyboardInterrupt:
-        # Something's gone wrong
-        print(_("Program terminated by user."))
+class StringConstants:
+    ThisIsABug = _("This is a bug. We are sorry for the inconvenience. "
+                   "Please contact the developers if this happens more than once.")

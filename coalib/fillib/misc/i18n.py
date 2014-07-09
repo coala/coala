@@ -26,16 +26,22 @@ builtins.__dict__['_'] = __untranslated
 __langs = os.environ.get('LANG', '').split(':')
 __langs += ['en_US']
 
+__language = "en_US"
 for __lang in __langs:
     __filename = "i18n/{}.mo".format(__lang[0:5])
     try:
         # overwrite our _ definition
         gettext.GNUTranslations(open(__filename, "rb")).install()
+        __language = __lang[0:5]
         break
     except IOError:
         continue
 
 __gettext = builtins.__dict__['_']
+
+
+def get_locale():
+    return __language
 
 
 def _(s):
