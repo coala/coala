@@ -21,12 +21,15 @@ class ConsoleOutputter(Outputter):
         Outputter.__init__(self)
         self.output = output
 
-    def print(self, *args, delimiter=' ', end='\n'):
-        for arg in args:
-            print(arg, end=delimiter, file=self.output)
-        print(end=end, file=self.output)
+    def print(self, *args, delimiter=' ', end='\n', color=None, log_date=True):
+        if color is None:
+            for arg in args:
+                print(arg, end=delimiter, file=self.output)
+            print(end=end, file=self.output)
+        else:
+            self.__print_colored(color, *args, delimiter=delimiter, end=end)
 
-    def color_print(self, color, *args, delimiter=' ', end='\n'):
+    def __print_colored(self, color, *args, delimiter=' ', end='\n'):
         color_code_dict = {
             'black': '0;30', 'bright gray': '0;37',
             'blue': '0;34', 'white': '1;37',

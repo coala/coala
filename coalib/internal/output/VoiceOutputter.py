@@ -24,7 +24,7 @@ class VoiceOutputter(Outputter):
         Outputter.__init__(self)
         # TODO retrieve language from get_locale and select appropriate voice
 
-    def print(self, *args, delimiter=' ', end='\n'):
+    def print(self, *args, delimiter=' ', end='\n', color=None, log_date=True):
         output = ""
         for arg in args:
             if output != "":
@@ -40,6 +40,3 @@ class VoiceOutputter(Outputter):
                     "repositories."))
         except:
             print(_("Failed to execute espeak. An unknown error occurred."), StringConstants.ThisIsABug)
-
-    def color_print(self, color, *args, delimiter=' ', end='\n'):
-        self.print(args, delimiter=delimiter, end=end)

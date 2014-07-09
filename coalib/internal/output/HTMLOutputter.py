@@ -28,7 +28,13 @@ class HTMLOutputter(Outputter):
 
         self.writer = HTMLWriter(filename, indentation_per_tag)
 
-    def print(self, *args, delimiter=' ', end='\n'):
+    def print(self, *args, delimiter=' ', end='\n', color=None, log_date=True):
+        if color is None:
+            self.__print_without_color(*args, delimiter=delimiter, end=end)
+        else:
+            self.__print_with_color(color, *args, delimiter=delimiter, end=end)
+
+    def __print_without_color(self, *args, delimiter, end):
         output = ""
         for arg in args:
             if output != "":
@@ -41,7 +47,7 @@ class HTMLOutputter(Outputter):
 
         self.writer.write_tags(span=output+end)
 
-    def color_print(self, color, *args, delimiter=' ', end='\n'):
+    def __print_with_color(self, color, *args, delimiter, end):
         output = ""
         for arg in args:
             if output != "":

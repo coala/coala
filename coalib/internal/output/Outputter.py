@@ -15,8 +15,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 class Outputter:
-    def print(self, *args, delimiter=' ', end='\n'):
+    def print(self, *args, delimiter=' ', end='\n', color=None, log_date=True):
+        """
+        Some outputters may choose to ignore certain parameters (color, log_date)
+        """
         raise NotImplementedError
 
-    def color_print(self, color, *args, delimiter=' ', end='\n'):
+    def ask_bool_question(self, *args, delimiter=' ', colored=True):
+        """
+        Asks the user to decide a bool question.
+
+        :return: An answer already converted to bool
+        """
         raise NotImplementedError

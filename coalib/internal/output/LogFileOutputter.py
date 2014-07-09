@@ -30,7 +30,8 @@ class LogFileOutputter(Outputter):
     def __del__(self):
         self.file.close()
 
-    def print(self, *args, delimiter=' ', end='\n', log_date=True):
+    def print(self, *args, delimiter=' ', end='\n', color=None, log_date=True):
+        # TODO place log date in front of message, search for \n's in message
         output = ""
         for arg in args:
             if output != "":
@@ -38,6 +39,3 @@ class LogFileOutputter(Outputter):
             output += arg
 
         self.file.write(output + end)
-
-    def color_print(self, color, *args, delimiter=' ', end='\n', log_date=True):
-        self.print(args, delimiter=delimiter, end=end, log_date=log_date)
