@@ -19,7 +19,7 @@ class LineParser:
                  key_value_delimiters=['=', ':'],
                  comment_seperators=['#', ';', '//'],
                  key_delimiters=[',',' '],
-                 section_name_surroundings={'[':"]"}):
+                 section_name_surroundings={'[': "]"}):
         self.key_value_delimiters = key_value_delimiters
         self.comment_seperators = comment_seperators
         self.key_delimiters = key_delimiters
@@ -46,7 +46,7 @@ class LineParser:
         for begin, end in self.section_name_surroundings.items():
             if line[0:len(begin)] == begin and \
                line[len(line)-len(end):len(line)] == end:
-                return line[len(begin):-len(end)].lower().strip(" \n")
+                return line[len(begin):len(line)-len(end)].lower().strip(" \n")
 
         return ''
 

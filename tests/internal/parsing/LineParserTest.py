@@ -22,33 +22,41 @@ class MyTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = LineParser()
 
+    def test_empty_line(self):
+        self.check_data_set("")
+
     def test_comment_parsing(self):
-        section_name, keys, value, comment = self.uut.parse("# comment only\n")
-        self.assertEqual(section_name, '')
-        self.assertEqual(keys, [])
-        self.assertEqual(value, '')
-        self.assertEqual(comment, '# comment only')
-
-
-        section_name, keys, value, comment = self.uut.parse("   ; comment only  \n")
-        self.assertEqual(section_name, '')
-        self.assertEqual(keys, [])
-        self.assertEqual(value, '')
-        self.assertEqual(comment, '; comment only')
+        self.check_data_set("# comment only$§\n", output_comment="# comment only$§")
+        self.check_data_set("   ; comment only  \n", output_comment="; comment only")
 
     def test_multi_value_parsing(self):
-        section_name, keys, value, comment = self.uut.parse("a, b c= = :()&/ #heres a comment \n")
-        self.assertEqual(section_name, '')
-        self.assertEqual(keys, ['a', 'b', 'c'])
-        self.assertEqual(value, '= :()&/')
-        self.assertEqual(comment, '#heres a comment')
+        self.check_data_set("a, b c= = :()&/ #heres a comment \n",
+                            '',
+                            ['a', 'b', 'c'],
+                            '= :()&/',
+                            '#heres a comment')
 
     def test_section_name_parsing(self):
-        section_name, keys, value, comment = self.uut.parse(" [   a section name   ]      # with comment   \n")
-        self.assertEqual(section_name, 'a section name')
-        self.assertEqual(keys, [])
-        self.assertEqual(value, '')
-        self.assertEqual(comment, '# with comment')
+        self.check_data_set(" [   a section name   ]      # with comment   \n",
+                            'a section name',
+                            output_comment="# with comment")
+
+        self.uut.section_name_surroundings["Section:"] = ''
+        self.check_data_set("[  sec]; thats a normal section",
+                            "sec",
+                            output_comment="; thats a normal section")
+        self.check_data_set("  Section:  sec]; thats a new section",
+                            "sec]",
+                            output_comment="; thats a new section")
+
+    def check_data_set(self, line, output_section="", output_keys=[], output_value='', output_comment=''):
+        section_name, keys, value, comment = self.uut.parse(line)
+
+        self.assertEqual(section_name, output_section)
+        self.assertEqual(keys, output_keys)
+        self.assertEqual(value, output_value)
+        self.assertEqual(comment, output_comment)
+
 
 if __name__ == '__main__':
     unittest.main()
