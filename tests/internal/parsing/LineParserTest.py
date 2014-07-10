@@ -23,28 +23,28 @@ class MyTestCase(unittest.TestCase):
         self.uut = LineParser()
 
     def test_comment_parsing(self):
-        section_name, keys, value, comment = self.uut.parse("# comment only")
+        section_name, keys, value, comment = self.uut.parse("# comment only\n")
         self.assertEqual(section_name, '')
         self.assertEqual(keys, [])
         self.assertEqual(value, '')
         self.assertEqual(comment, '# comment only')
 
 
-        section_name, keys, value, comment = self.uut.parse("   ; comment only  ")
+        section_name, keys, value, comment = self.uut.parse("   ; comment only  \n")
         self.assertEqual(section_name, '')
         self.assertEqual(keys, [])
         self.assertEqual(value, '')
         self.assertEqual(comment, '; comment only')
 
     def test_multi_value_parsing(self):
-        section_name, keys, value, comment = self.uut.parse("a, b c= :()&/ #heres a comment ")
+        section_name, keys, value, comment = self.uut.parse("a, b c= = :()&/ #heres a comment \n")
         self.assertEqual(section_name, '')
         self.assertEqual(keys, ['a', 'b', 'c'])
-        self.assertEqual(value, ':()&/')
+        self.assertEqual(value, '= :()&/')
         self.assertEqual(comment, '#heres a comment')
 
     def test_section_name_parsing(self):
-        section_name, keys, value, comment = self.uut.parse(" [   a section name   ]      # with comment   ")
+        section_name, keys, value, comment = self.uut.parse(" [   a section name   ]      # with comment   \n")
         self.assertEqual(section_name, 'a section name')
         self.assertEqual(keys, [])
         self.assertEqual(value, '')
