@@ -18,7 +18,7 @@ import unittest
 from coalib.internal.parsing.LineParser import LineParser
 
 
-class MyTestCase(unittest.TestCase):
+class LineParserTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = LineParser()
 
