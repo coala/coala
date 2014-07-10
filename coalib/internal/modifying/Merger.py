@@ -92,7 +92,8 @@ class Merger:
             conflicts = True
             if self.default_on_conflict >= 0:
                 while (index_a < len(xa)) and not xa[index_a].startswith('  '):
-                    merge_result += xa[index_a][2:]
+                    if not xa[index_a].startswith('- '):
+                        merge_result += xa[index_a][2:]
                     index_a += 1
                 while (index_b < len(xb)) and not xb[index_b].startswith('  '):
                     index_b += 1
@@ -100,13 +101,16 @@ class Merger:
                 while (index_a < len(xa)) and not xa[index_a].startswith('  '):
                     index_a += 1
                 while (index_b < len(xb)) and not xb[index_b].startswith('  '):
-                    merge_result += xb[index_b][2:]
+                    if not xb[index_b].startswith('- '):
+                        merge_result += xb[index_b][2:]
                     index_b += 1
 
         # remaining chars - there is only either a or b left
         for i in range(len(xa) - index_a):
-            merge_result += xa[index_a + i][2:]
+            if not xa[index_a + i].startswith('- '):
+                merge_result += xa[index_a + i][2:]
         for i in range(len(xb) - index_b):
-            merge_result += xb[index_b + i][2:]
+            if not xb[index_b + i].startswith('- '):
+                merge_result += xb[index_b + i][2:]
 
         return merge_result, conflicts
