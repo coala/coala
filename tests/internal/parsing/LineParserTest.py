@@ -22,6 +22,9 @@ class MyTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = LineParser()
 
+    def test_empty_line(self):
+        self.check_data_set("")
+
     def test_comment_parsing(self):
         self.check_data_set("# comment only$§\n", output_comment="# comment only$§")
         self.check_data_set("   ; comment only  \n", output_comment="; comment only")
