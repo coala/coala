@@ -1,3 +1,5 @@
+#! /bin/python3
+
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,5 +22,6 @@ import sys
 
 
 if __name__ == '__main__':
-    files = TestHelper.join_paths("tests", tests.gather_files())
-    exit(TestHelper.execute_python_files(files))
+    test_dir = os.path.abspath("tests")
+    files = TestHelper.get_test_files(test_dir)
+    exit(TestHelper.execute_python3_files(files))

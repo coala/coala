@@ -19,19 +19,28 @@ import subprocess
 
 class TestHelper:
     @staticmethod
-    def execute_python_file(filename):
-        return subprocess.call(["python", filename])
+    def execute_python3_file(filename):
+        return subprocess.call(["python3", filename])
 
     @staticmethod
-    def execute_python_files(filenames):
+    def execute_python3_files(filenames):
+        number = len(filenames)
+        failures = 0
         retval = 0
         for file in filenames:
-            retval = max(TestHelper.execute_python_file(file), retval)
+            print("\nRunning: {} ({})\n".format(os.path.splitext(os.path.basename(file))[0], file), end='')
+            result = TestHelper.execute_python3_file(file)  # either 0 or 1
+            failures += result
+            retval = max(result, retval)
+
+        print("\nTests finished: failures in {} of {} test modules".format(failures, number))
         return retval
 
     @staticmethod
-    def join_paths(prefix, paths):
-        result = []
-        for path in paths:
-            result.append(os.path.join(prefix, path))
-        return result
+    def get_test_files(testdir):
+        test_files = []
+        for (dirpath, dirnames, filenames) in os.walk(testdir):
+            for filename in filenames:
+                if filename.endswith("Test.py"):
+                    test_files.append(os.path.join(dirpath, filename))
+        return test_files

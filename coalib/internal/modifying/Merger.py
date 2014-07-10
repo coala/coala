@@ -41,7 +41,7 @@ class Merger:
         else:
             interim_result = modifications[0]
             for i in range(1, len(modifications)):
-                interim_result, interim_conflicts = self.__three_way_merge(original, interim_result, modifications[i])
+                interim_result, interim_conflicts = self.three_way_merge(original, interim_result, modifications[i])
                 conflicts = conflicts or interim_conflicts
             result = interim_result
 
@@ -50,7 +50,7 @@ class Merger:
         else:
             return result, conflicts
 
-    def __three_way_merge(self, original, a, b):
+    def three_way_merge(self, original, a, b):
         merge_result = ""
         index_a = 0
         index_b = 0
@@ -70,21 +70,21 @@ class Merger:
                 index_b += 1
                 continue
 
-            # subtraction on matching character from either side or both
-            if (xa[index_a][2:] == xb[index_b][2:]) and (xa[index_a].startswith('- ') or xb[index_b].startswith('- ')):
-                index_a += 1
-                index_b += 1
-                continue
-
             # addition in a only
-            if xa[index_a].startswith('+ ') and xb[index_b].startswith('  '):
+            if xa[index_a].startswith('+ ') and not xb[index_b].startswith('+ '):
                 merge_result += xa[index_a][2:]
                 index_a += 1
                 continue
 
             # addition in b only
-            if xb[index_b].startswith('+ ') and xa[index_a].startswith('  '):
+            if xb[index_b].startswith('+ ') and not xa[index_a].startswith('+ '):
                 merge_result += xb[index_b][2:]
+                index_b += 1
+                continue
+
+            # subtraction on matching character from either side or both
+            if (xa[index_a][2:] == xb[index_b][2:]) and (xa[index_a].startswith('- ') or xb[index_b].startswith('- ')):
+                index_a += 1
                 index_b += 1
                 continue
 
