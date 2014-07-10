@@ -24,9 +24,16 @@ class TestHelper:
 
     @staticmethod
     def execute_python_files(filenames):
+        number = len(filenames)
+        failures = 0
         retval = 0
         for file in filenames:
-            retval = max(TestHelper.execute_python_file(file), retval)
+            print("\nRunning: {} ({})\n".format(os.path.splitext(os.path.basename(file))[0], file), end='')
+            result = TestHelper.execute_python_file(file)  # either 0 or 1
+            failures += result
+            retval = max(result, retval)
+
+        print("\nTests finished: failures in {} of {} test modules".format(failures, number))
         return retval
 
     @staticmethod  # TODO: might be obsolete now
