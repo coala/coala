@@ -35,8 +35,16 @@ class MyTestCase(unittest.TestCase):
 
     def test_section_name_parsing(self):
         self.check_data_set(" [   a section name   ]      # with comment   \n",
-                           'a section name',
-                           output_comment="# with comment")
+                            'a section name',
+                            output_comment="# with comment")
+
+        self.uut.section_name_surroundings["Section:"] = ''
+        self.check_data_set("[  sec]; thats a normal section",
+                            "sec",
+                            output_comment="; thats a normal section")
+        self.check_data_set("  Section:  sec]; thats a new section",
+                            "sec]",
+                            output_comment="; thats a new section")
 
     def check_data_set(self, line, output_section="", output_keys=[], output_value='', output_comment=''):
         section_name, keys, value, comment = self.uut.parse(line)
