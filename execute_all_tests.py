@@ -20,5 +20,7 @@ import sys
 
 
 if __name__ == '__main__':
-    files = TestHelper.join_paths("tests", tests.gather_files())
+    test_dir = os.path.abspath("tests")
+#    files = TestHelper.join_paths("tests", tests.gather_files())
+    files = TestHelper.get_test_files(test_dir)
     exit(TestHelper.execute_python_files(files))

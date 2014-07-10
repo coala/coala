@@ -20,7 +20,7 @@ import subprocess
 class TestHelper:
     @staticmethod
     def execute_python_file(filename):
-        return subprocess.call(["python", filename])
+        return subprocess.call(["python3", filename])
 
     @staticmethod
     def execute_python_files(filenames):
@@ -29,9 +29,18 @@ class TestHelper:
             retval = max(TestHelper.execute_python_file(file), retval)
         return retval
 
-    @staticmethod
+    @staticmethod  # TODO: might be obsolete now
     def join_paths(prefix, paths):
         result = []
         for path in paths:
             result.append(os.path.join(prefix, path))
         return result
+
+    @staticmethod
+    def get_test_files(testdir):
+        test_files = []
+        for (dirpath, dirnames, filenames) in os.walk(testdir):
+            for filename in filenames:
+                if filename.endswith("Test.py"):
+                    test_files.append(os.path.join(dirpath, filename))
+        return test_files
