@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from build.lib.coalib.fillib.misc.LogMessage import LogMessage, LOG_LEVEL
 
 from coalib.fillib.misc.i18n import _
 import queue
@@ -30,9 +31,7 @@ class FilterProcess(Process):
                  global_filter_queue,
                  file_dict,
                  result_queue,
-                 debug_queue,
-                 warning_queue,
-                 error_queue,
+                 message_queue,
                  TIMEOUT=0.2):
         """
         This is the object that actually runs on the processes
@@ -43,9 +42,7 @@ class FilterProcess(Process):
         :param global_filter_queue: multiprocessing.queue of global filter instances
         :param file_dict: dict of all files as {filename:file}, file as in file.readlines()
         :param result_queue: queue for results
-        :param debug_queue: for debug messages
-        :param warning_queue: for warnings
-        :param error_queue: for errors
+        :param message_queue: queue for debug/warning/error messages (type LogMessage)
         :param TIMEOUT: in seconds for all queue actions
         """
         Process.__init__(self)
@@ -58,9 +55,7 @@ class FilterProcess(Process):
         self.file_dict = file_dict
 
         self.result_queue = result_queue
-        self.debug_queue = debug_queue
-        self.warning_queue = warning_queue
-        self.error_queue = error_queue
+        self.message_queue = message_queue
 
         self.TIMEOUT = TIMEOUT
 
@@ -131,10 +126,10 @@ class FilterProcess(Process):
         raise NotImplementedError
 
     def __warn(self, message):
-        self.warning_queue.put(message, timeout=self.TIMEOUT)
+        self.message_queue.put(LogMessage(LOG_LEVEL.WARNING, message), timeout=self.TIMEOUT)
 
     def __err(self, message):
-        self.error_queue.put(message, timeout=self.TIMEOUT)
+        self.message_queue.put(LogMessage(LOG_LEVEL.ERROR, message), timeout=self.TIMEOUT)
 
     def __debug(self, message):
-        self.debug_queue.put(message, timeout=self.TIMEOUT)
+        self.message_queue.put(LogMessage(LOG_LEVEL.DEBUG, message), timeout=self.TIMEOUT)
