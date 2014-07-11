@@ -17,8 +17,9 @@ from coalib.fillib.settings.Setting import Setting
 
 
 class Settings:
-    def __init__(self, name):
+    def __init__(self, name, defaults=None):
         self.name = name
+        self.defaults = defaults
         self.contents = OrderedDict()
 
     def append(self, key, value, origin):

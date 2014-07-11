@@ -27,7 +27,7 @@ class TestProcess(Process):
 
     def run(self):
         self.state += 1
-        sys.exit(self.state)
+        exit(self.state)
 
 
 class ProcessManagerTestCase(unittest.TestCase):
