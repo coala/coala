@@ -32,7 +32,8 @@ class FilterProcess(Process):
                  result_queue,
                  debug_queue,
                  warning_queue,
-                 error_queue):
+                 error_queue,
+                 TIMEOUT=0.2):
         """
         This is the object that actually runs on the processes
 
@@ -45,6 +46,7 @@ class FilterProcess(Process):
         :param debug_queue: for debug messages
         :param warning_queue: for warnings
         :param error_queue: for errors
+        :param TIMEOUT: in seconds for all queue actions
         """
         Process.__init__(self)
         self.settings = settings
@@ -60,7 +62,7 @@ class FilterProcess(Process):
         self.warning_queue = warning_queue
         self.error_queue = error_queue
 
-        self.TIMEOUT = 0.2
+        self.TIMEOUT = TIMEOUT
 
     def run(self):
         """
