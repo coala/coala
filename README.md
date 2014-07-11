@@ -19,7 +19,9 @@ README
 
 ABOUT
 =====
-coala is a simple COde AnaLysis Application.
+coala is a simple COde AnaLysis Application. Its goal is to make static
+code analysis easy while remaining completely modular and therefore
+extendable.
 
 Authors
 -------
@@ -33,12 +35,13 @@ INSTALLATION
 ============
 Python
 ------
-coala requires a version of Python3 >= 3.2 from http://www.python.org.
-Installation of Python differs slightly by operating system
+coala requires an installation of Python3 >= 3.2 from http://www.python.org.
 
 coala
 -----
-coala can be installed afterwards by executing the file setup.py through the python interpreter
+coala can be installed afterwards by executing the file setup.py through
+the python interpreter (root access necessary):
+```python3 setup.py install```
 
 FUNCTION REFERENCE
 ==================
