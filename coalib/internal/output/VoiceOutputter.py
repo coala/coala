@@ -12,7 +12,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-import os
 import subprocess
 from coalib.internal.misc.StringConstants import StringConstants
 from coalib.internal.output.Outputter import Outputter
@@ -21,8 +20,25 @@ from coalib.fillib.misc.i18n import get_locale, _
 
 class VoiceOutputter(Outputter):
     def __init__(self):
+        """
+        Raises EnvironmentError if VoiceOutput is impossible.
+        """
         Outputter.__init__(self)
         # TODO retrieve language from get_locale and select appropriate voice
+
+        try:
+            self.espeak = subprocess.Popen(['espeak'], stdin=subprocess.PIPE)
+        except OSError:
+            print(_("Espeak doesn't seem to be installed. You cannot use the voice output feature without espeak. "
+                    "It can be downloaded from http://espeak.sourceforge.net/ or installed via your usual package "
+                    "repositories."))
+            raise EnvironmentError
+        except:
+            print(_("Failed to execute espeak. An unknown error occurred."), StringConstants.ThisIsABug)
+            raise EnvironmentError
+
+    def __del__(self):
+        self.espeak.stdin.close()
 
     def print(self, *args, delimiter=' ', end='\n', color=None, log_date=True):
         output = ""
@@ -31,12 +47,5 @@ class VoiceOutputter(Outputter):
                 output += delimiter
             output += arg
 
-        try:
-            if subprocess.call(["espeak", output]) != 0:
-                print(_("Failed to invoke espeak. Output was: {}").format(output))
-        except FileNotFoundError:
-            print(_("Espeak is not installed. You cannot use the voice output feature without espeak. "
-                    "It can be downloaded from http://espeak.sourceforge.net/ or installed via your usual package "
-                    "repositories."))
-        except:
-            print(_("Failed to execute espeak. An unknown error occurred."), StringConstants.ThisIsABug)
+        self.espeak.stdin.write(output.encode())
+        self.espeak.stdin.flush()
