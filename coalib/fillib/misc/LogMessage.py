@@ -20,8 +20,7 @@ class LOG_LEVEL:
 
 
 class LogMessage:
-    def __init__(self, log_level, message):
-        assert(isinstance(LOG_LEVEL, log_level))
+    def __init__(self, log_level=LOG_LEVEL.DEBUG, message=""):
         self.log_level = log_level
         self.message = message
 
