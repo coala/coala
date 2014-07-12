@@ -17,18 +17,27 @@ from coalib.fillib.misc.StringConstants import StringConstants
 
 class StringConverter:
     def __init__(self, value, strip_whitespaces=True):
-        self.value = value
+        self.__value = value
         self.strip_whitespaces = strip_whitespaces
 
-    def __str__(self):
-        if self.strip_whitespaces:
-            return self.value.strip()
+        self.__prepare_string()
 
-        return self.value
+    def __str__(self):
+        return self.__value
 
     def __bool__(self):
-        if self.value in StringConstants.TRUE_STRINGS:
+        if self.__value in StringConstants.TRUE_STRINGS:
             return True
-        if self.value in StringConstants.FALSE_STRINGS:
+        if self.__value in StringConstants.FALSE_STRINGS:
             return False
         raise AttributeError
+
+    def __len__(self):
+        return len(self.__value)
+
+    def __int__(self):
+        return int(self.__value)
+
+    def __prepare_string(self):
+        if self.strip_whitespaces:
+            self.__value = self.__value.strip()
