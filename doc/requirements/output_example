@@ -23,7 +23,7 @@
 |0066|0066|                wizard_source.page = wizard_source.page;
 |0067|0067|                cleanup (); 
 |0067|0067|                cleanup ();
-|    |    |                                ^
+|    |    |                           ^
 |    |    | SpaceConsistencyFilter: Trailing spaces in codefiles are redundant. (Change applied automatically.)
 |0068|0068|                break;
 |0069|0069|            }
