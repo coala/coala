@@ -29,6 +29,8 @@ class SettingTestCase(unittest.TestCase):
         self.assertEqual(int(self.uut), 7)
         self.uut.set_value(" tRuE ")
         self.assertEqual(bool(self.uut), True)
+        self.uut.set_value(" fALSE ")
+        self.assertEqual(bool(self.uut), False)
 
 
 if __name__ == '__main__':
