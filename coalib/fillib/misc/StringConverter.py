@@ -13,32 +13,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 from coalib.fillib.misc.StringConstants import StringConstants
-from coalib.fillib.misc.StringConverter import StringConverter
 
 
-def path(obj):
-    assert (type(obj) == Setting)
-    obj.__path__()
-
-
-class Setting:
-    def __init__(self, key, value, origin):
-        self.key = key
+class StringConverter:
+    def __init__(self, value, strip_whitespaces=True):
         self.value = value
-        self.origin = origin
-        self.string_converter = StringConverter(value)
+        self.strip_whitespaces = strip_whitespaces
 
     def __str__(self):
-        return str(self.string_converter)
+        if self.strip_whitespaces:
+            return self.value.strip()
+
+        return self.value
 
     def __bool__(self):
-        return bool(self.string_converter)
-
-    def __int__(self):
-        return int(self.string_converter)
-
-    def __len__(self):
-        return len(self.string_converter)
-
-    def __path__(self):
-        raise NotImplementedError
+        if self.value in StringConstants.TRUE_STRINGS:
+            return True
+        if self.value in StringConstants.FALSE_STRINGS:
+            return False
+        raise AttributeError
