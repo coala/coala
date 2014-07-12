@@ -21,7 +21,7 @@ from coalib.internal.output import VoiceOutputter
 
 if __name__ == "__main__":
     outputter = VoiceOutputter.VoiceOutputter()
-    outputter.print(_("Do you want to replace the following line with another?"))
+    outputter.print(_("Welcome to koala! Hello World, I'm here and understandable."))
     try:
         raise KeyboardInterrupt
         pass
