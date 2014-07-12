@@ -17,3 +17,5 @@ Example of a user interaction: (a bit more verbose than reality to show what hap
 |    |    |     Creates a patch for all corrections you apply. You will be asked for each following change if you want it to go into the patch.
 |    |    | single patch (s):
 |    |    |     Generates a patch for this correction. Annotation will be logged. User will be prompted for filename.
+|    |    | comment (c):
+|    |    |     Drop FIXME comment above the line.
