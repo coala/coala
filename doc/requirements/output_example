@@ -1,72 +1,73 @@
 ./src/wizard.vala
-   .
-   .
-   .
- 0015|    private const double download_progress_scale = 0.95;
-     |                         ^
-     | VariableNameFilter: Name of variable does not comply to your constant naming pattern.
-     |                     Please suggest a new name for this variable (leave empty to decline
-     |                     the change suggestion): DOWNLOAD_PROGRESS_SCALE
--0015|    private const double download_progress_scale = 0.95;
-+0015|    private const double DOWNLOAD_PROGRESS_SCALE = 0.95;
-   .
-   .
-   .
--0598|        var download_progress = progress.add_child_activity (download_progress_scale);
-+0598|        var download_progress = progress.add_child_activity (DOWNLOAD_PROGRESS_SCALE);
-     | Do you want to apply the Proposal from VariableNameFilter? [yes/no/all of this filter/generate patch/show more context] rather not...
-   .
-   .
-   .
- 0065|                // reset page to notify deeply widgets states
- 0066|               wizard_source.page = wizard_source.page;
- 0067|               cleanup (); 
- 0067|               cleanup ();
-     |                          ^
-     | SpaceConsistencyFilter: Trailing spaces in codefiles are redundant. (Change applied automatically.)
- 0068|               break;
- 0069|           }
-   .
-   .
-   .
- 0118|                    });
--0119|                    return;  
-+0119|                    return;
-     |                           ^
-     | SpaceConsistencyFilter: Trailing spaces in codefiles are redundant. (Change applied automatically.)
- 0120|                }
--0121|            }
-+0121|            } else {
--0122|            else {
-     | ValaBracketFilter: It is recommended to write the else in the same line as the closing bracket.
-     | Do want to apply the Proposal from ValaBracketFilter? [yes/no/all of this filter/generate patch/show more context] ok
-   .
-   .
-   .
- 0270|        if (wizard_source.download_required) {
- 0271|            var basename = file.get_basename ();
- 0272|            if (basename == null || basename == "") {
- 0273|                debug ("URI '%s' has no basename.", uri);
- 0274|
- 0275|                throw new Boxes.Error.INVALID (_("Invalid URI"));
- 0276|            }
--0277|        } else {
--0278|             var path = file.get_path ();
-+0277|            return;
-+0278|        }
-+0279|        var path = file.get_path ();
- 0279/280|
--0280|            if (path != null && (file.has_uri_scheme ("file") || file.has_uri_scheme ("smb"))) {
--0281|                if (!probing)
--0282|                    prepare_for_installer (path, progress);
-+0281|        if (path != null && (file.has_uri_scheme ("file") || file.has_uri_scheme ("smb"))) {
-+0282|            if (!probing)
-+0283|                prepare_for_installer (path, progress);
- 0283/284|
--0284|                return;
-+0284|            return;
--0285|            }
- 0286|        }
- 0287|    }
-     | IndentationFilter: You can reduce indentation by returning in different condition branches.
-     | Do want to apply the Proposal from IndentationFilter? [yes/no/all of this filter/generate patch/show more context]
+|    .    |
+|    .    |
+|    .    |
+|0015|0015|     private const double download_progress_scale = 0.95;
+|    |    |                          ^
+|    |    | VariableNameFilter: Name of variable does not comply to your constant naming pattern.
+|    |    |                     Please suggest a new name for this variable (leave empty to decline
+|    |    |                     the change suggestion): DOWNLOAD_PROGRESS_SCALE
+|0015|    |-    private const double download_progress_scale = 0.95;
+|    |0015|+    private const double DOWNLOAD_PROGRESS_SCALE = 0.95;
+|    .    |
+|    .    |
+|    .    |
+|0598|    |-        var download_progress = progress.add_child_activity (download_progress_scale);
+|    |0598|+        var download_progress = progress.add_child_activity (DOWNLOAD_PROGRESS_SCALE);
+|    |    | VariableNameFilter: Name of variable does not comply to your constant naming pattern. Renaming to DOWNLOAD_PROGRESS_SCALE.
+|    |    | Do you want to apply the Proposal from VariableNameFilter? [yes/no/all of this filter/generate patch/show more context] nope
+|    .    |
+|    .    |
+|    .    |
+|0065|0065|                 // reset page to notify deeply widgets states
+|0066|0066|                wizard_source.page = wizard_source.page;
+|0067|0067|                cleanup (); 
+|0067|0067|                cleanup ();
+|    |    |                                ^
+|    |    | SpaceConsistencyFilter: Trailing spaces in codefiles are redundant. (Change applied automatically.)
+|0068|0068|                break;
+|0069|0069|            }
+|    .    |
+|    .    |
+|    .    |
+|0118|0118|                     });
+|0119|    |-                    return;  
+|    |0119|+                    return;
+|    |    |                            ^
+|    |    | SpaceConsistencyFilter: Trailing spaces in codefiles are redundant. (Change applied automatically.)
+|0120|0120|                 }
+|0121|    |-            }
+|0122|    |-            else {
+|    |0121|+            } else {
+|    |    | ValaBracketFilter: It is recommended to write the else in the same line as the closing bracket.
+|    |    | Do want to apply the Proposal from ValaBracketFilter? [yes/no/all of this filter/generate patch/show more context] ok
+|    .    |
+|    .    |
+|    .    |
+|0269|0270|         if (wizard_source.download_required) {
+|0270|0271|             var basename = file.get_basename ();
+|0271|0272|             if (basename == null || basename == "") {
+|0272|0273|                 debug ("URI '%s' has no basename.", uri);
+|0273|0274|
+|0274|0275|                 throw new Boxes.Error.INVALID (_("Invalid URI"));
+|0275|0276|             }
+|0276|    |-        } else {
+|0277|    |-            var path = file.get_path ();
+|    |0277|+            return;
+|    |0278|+        }
+|    |0279|+        var path = file.get_path ();
+|0278|0280|
+|0279|    |-            if (path != null && (file.has_uri_scheme ("file") || file.has_uri_scheme ("smb"))) {
+|0280|    |-                if (!probing)
+|0281|    |-                    prepare_for_installer (path, progress);
+|    |0281|+        if (path != null && (file.has_uri_scheme ("file") || file.has_uri_scheme ("smb"))) {
+|    |0282|+            if (!probing)
+|    |0283|+                prepare_for_installer (path, progress);
+|0282|0284|
+|0283|    |-                return;
+|    |0285|+            return;
+|0284|0286|             }
+|0285|0287|         }
+|0286|0288|     }
+|    |    | IndentationFilter: You can reduce indentation by returning in different condition branches.
+|    |    | Do want to apply the Proposal from IndentationFilter? [yes/no/all of this filter/generate patch/show more context]
