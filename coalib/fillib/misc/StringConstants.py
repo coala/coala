@@ -25,7 +25,7 @@ class StringConstants:
     strings here have to be lower case!
     """
     TRUE_STRINGS = ['1', _("on"), 'y', _("y"), 'yes', _("yes"), _("yeah"), _("sure"), 'true', _("true"),
-                    _('definitely'), _('yup')]
+                    _('definitely'), _('yup'), _("right")]
 
     """
     Strings which may be interpreted as 'False' (some english values will be accepted in addition to the translated
@@ -33,4 +33,4 @@ class StringConstants:
     the value will be ignored. It is irrelevant which original is translated witch witch translation. Mind that all
     strings here have to be lower case!
     """
-    FALSE_STRINGS = ['0', _('off'), 'n', _("n"), 'no', _("no"),  _('nope'), _('nah'),  'false', _("false")]
+    FALSE_STRINGS = ['0', _('off'), 'n', _("n"), 'no', _("no"),  _('nope'), _('nah'),  'false', _("false"), _("wrong")]
