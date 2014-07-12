@@ -26,9 +26,9 @@ class StringConverter:
         return self.__value
 
     def __bool__(self):
-        if self.__value in StringConstants.TRUE_STRINGS:
+        if self.__value.lower() in StringConstants.TRUE_STRINGS:
             return True
-        if self.__value in StringConstants.FALSE_STRINGS:
+        if self.__value.lower() in StringConstants.FALSE_STRINGS:
             return False
         raise AttributeError
 

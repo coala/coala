@@ -21,7 +21,8 @@ class StringConstants:
     """
     Strings which may be interpreted as 'True' (some english values will be accepted in addition to the translated
     ones since they are quite usual.) If there is no suitable translation, repeat one of the previous translations and
-    the value will be ignored. It is irrelevant which original is translated witch witch translation.
+    the value will be ignored. It is irrelevant which original is translated witch witch translation. Mind that all
+    strings here have to be lower case!
     """
     TRUE_STRINGS = ['1', _("on"), 'y', _("y"), 'yes', _("yes"), _("yeah"), _("sure"), 'true', _("true"),
                     _('definitely'), _('yup')]
@@ -29,6 +30,7 @@ class StringConstants:
     """
     Strings which may be interpreted as 'False' (some english values will be accepted in addition to the translated
     ones since they are quite usual.) If there is no suitable translation, repeat one of the previous translations and
-    the value will be ignored. It is irrelevant which original is translated witch witch translation.
+    the value will be ignored. It is irrelevant which original is translated witch witch translation. Mind that all
+    strings here have to be lower case!
     """
     FALSE_STRINGS = ['0', _('off'), 'n', _("n"), 'no', _("no"),  _('nope'), _('nah'),  'false', _("false")]

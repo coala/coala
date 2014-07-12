@@ -24,21 +24,23 @@ def path(obj):
 class Setting:
     def __init__(self, key, value, origin):
         self.key = key
-        self.value = value
         self.origin = origin
-        self.string_converter = StringConverter(value)
+        self.__value = StringConverter(value)
+
+    def set_value(self, value):
+        self.__value = StringConverter(value)
 
     def __str__(self):
-        return str(self.string_converter)
+        return str(self.__value)
 
     def __bool__(self):
-        return bool(self.string_converter)
+        return bool(self.__value)
 
     def __int__(self):
-        return int(self.string_converter)
+        return int(self.__value)
 
     def __len__(self):
-        return len(self.string_converter)
+        return len(self.__value)
 
     def __path__(self):
         raise NotImplementedError
