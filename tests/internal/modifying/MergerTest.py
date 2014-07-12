@@ -27,6 +27,7 @@ class MergerTestCase(unittest.TestCase):
 
     def test_conflictless_three_way_merge(self):
         merge_sets = [
+            [["a", "b", "c"], ["a", "X", "b", "c"], ["a", "b", "c", "Y"]],
             ["abc", "abc", "abc"],
             ["abc", "aabc", "aabc"],
             ["abc", "aabc", "abbc"],
@@ -46,6 +47,7 @@ class MergerTestCase(unittest.TestCase):
         ]
 
         results = [
+            ["a", "X", "b", "c", "Y"],
             "abc",
             "aabc",
             "aabbc",
@@ -102,7 +104,8 @@ class MergerTestCase(unittest.TestCase):
     def test_conflicting_three_way_merge(self):
         merge_sets = [
             ["abc", "d", "e"],
-            ["abc", "adc", "aec"]
+            ["abc", "adc", "aec"],
+            [["Dies", "ist", "Datei"], ["Dies", "ist", "Pferd"], ["Dies", "ist", "Schaf"]]
         ]
 
         for i in range(len(merge_sets)):
@@ -127,6 +130,7 @@ class MergerTestCase(unittest.TestCase):
 
     def test_conflictless_merge(self):
         merge_sets = [
+            [["a", "b", "c"], ["a", "X", "b", "c"], ["a", "b", "c", "Y"]],
             ["a"],
             ["a", "b"],
             ["abc", "abc", "abc"],
@@ -149,6 +153,7 @@ class MergerTestCase(unittest.TestCase):
         ]
 
         results = [
+            ["a", "X", "b", "c", "Y"],
             "a",
             "b",
             "abc",
