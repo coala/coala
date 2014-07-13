@@ -19,7 +19,7 @@
 |    .    |
 |    .    |
 |    .    |
-|0065|0065|                 // reset page to notify deeply widgets states
+|0065|0065|                // reset page to notify deeply widgets states
 |0066|0066|                wizard_source.page = wizard_source.page;
 |0067|0067|                cleanup (); 
 |0067|0067|                cleanup ();
