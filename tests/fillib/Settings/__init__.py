@@ -12,9 +12,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.fillib.misc.i18n import _
-
-
-class StringConstants:
-    ThisIsABug = _("This is a bug. We are sorry for the inconvenience. "
-                   "Please contact the developers if this happens more than once.")

@@ -28,3 +28,6 @@ class Outputter:
         :return: An answer already converted to bool
         """
         raise NotImplementedError
+
+    def show_annotations(self, file, annotations):
+        raise NotImplementedError

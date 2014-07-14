@@ -1,5 +1,3 @@
-#! /bin/python3
-
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -12,19 +10,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
-from coalib.fillib.misc.i18n import _
-from coalib.internal.output import VoiceOutputter
+from coalib.fillib.results.Result import Result
 
 
-if __name__ == "__main__":
-    outputter = VoiceOutputter.VoiceOutputter()
-    outputter.print(_("Welcome to koala! Hello World, I'm here and understandable."))
-    try:
-        raise KeyboardInterrupt
-        pass
-    except KeyboardInterrupt:
-        # Something's gone wrong
-        outputter.print(_("Program terminated by user."))
+class AnnotationResult(Result):
+    def __init__(self, filename, line_number, line, annotation, filter_name):
+        self.filename=filename
+        self.line_number = line_number
+        self.line = line
+        self.annotation = annotation
+        self.filter_name = filter_name

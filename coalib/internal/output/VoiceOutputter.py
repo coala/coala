@@ -13,9 +13,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import subprocess
-from coalib.internal.misc.StringConstants import StringConstants
+
+from coalib.fillib.misc.StringConstants import StringConstants
 from coalib.internal.output.Outputter import Outputter
-from coalib.fillib.misc.i18n import get_locale, _
+from coalib.fillib.misc.i18n import _
 
 
 class VoiceOutputter(Outputter):
@@ -34,7 +35,7 @@ class VoiceOutputter(Outputter):
                     "repositories."))
             raise EnvironmentError
         except:
-            print(_("Failed to execute espeak. An unknown error occurred."), StringConstants.ThisIsABug)
+            print(_("Failed to execute espeak. An unknown error occurred."), StringConstants.THIS_IS_A_BUG)
             raise EnvironmentError
 
     def __del__(self):
