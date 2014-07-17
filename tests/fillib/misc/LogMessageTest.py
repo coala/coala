@@ -10,21 +10,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import sys
+sys.path.append(".")
+from coalib.fillib.misc.LogMessage import LogMessage, LOG_LEVEL
+import unittest
 
-class LOG_LEVEL:
-    DEBUG = 0
-    WARNING = 1
-    ERROR = 2
+
+class LogMessageTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = LogMessage()
+
+    def test_to_str(self):
+        self.uut.message = "test message änd umlauts!"
+        self.uut.log_level = LOG_LEVEL.ERROR
+        self.assertEqual(str(self.uut), "[ERROR] test message änd umlauts!")
 
 
-class LogMessage:
-    def __init__(self, log_level=LOG_LEVEL.DEBUG, message=""):
-        self.log_level = log_level
-        self.message = message
-
-    def __str__(self):
-        return '[{}] {}'.format({LOG_LEVEL.DEBUG: "DEBUG",
-                                 LOG_LEVEL.WARNING: "WARNING",
-                                 LOG_LEVEL.ERROR: "ERROR"}.get(self.log_level, "ERROR"), self.message)
+if __name__ == '__main__':
+    unittest.main()

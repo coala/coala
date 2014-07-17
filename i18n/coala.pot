@@ -72,7 +72,24 @@ msgstr ""
 msgid "Set to hide Files from results that do not produce filter output"
 msgstr ""
 
-#: coalib/internal/process_managing/FilterProcess.py:76
+#: coalib/internal/misc/StringConstants.py:19
+msgid ""
+"This is a bug. We are sorry for the inconvenience. Please contact the "
+"developers if this happens more than once."
+msgstr ""
+
+#: coalib/internal/output/VoiceOutputter.py:32
+msgid ""
+"Espeak doesn't seem to be installed. You cannot use the voice output feature "
+"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
+"installed via your usual package repositories."
+msgstr ""
+
+#: coalib/internal/output/VoiceOutputter.py:37
+msgid "Failed to execute espeak. An unknown error occurred."
+msgstr ""
+
+#: coalib/internal/process_managing/FilterProcess.py:73
 msgid ""
 "Unknown failure in worker process.\n"
 "Exception: {}\n"
@@ -80,39 +97,43 @@ msgid ""
 "{}"
 msgstr ""
 
-#: coalib/internal/process_managing/FilterProcess.py:78
+#: coalib/internal/process_managing/FilterProcess.py:75
 msgid ""
 "An unknown failure occurred and a process is aborted. Please contact "
 "developers for assistance and try out starting coala with -j1."
 msgstr ""
 
-#: coalib/internal/process_managing/FilterProcess.py:96
+#: coalib/internal/process_managing/FilterProcess.py:93
 msgid ""
 "Failed to handle queue element {}. If you are testing filters, make sure "
 "they inherit from GlobalFilter or LocalFilter and don't overwrite the kind() "
 "method."
 msgstr ""
 
-#: coalib/internal/process_managing/FilterProcess.py:99
+#: coalib/internal/process_managing/FilterProcess.py:96
 msgid "Failed to handle queue element {}."
 msgstr ""
 
-#: coalib/internal/process_managing/FilterProcess.py:103
+#: coalib/internal/process_managing/FilterProcess.py:100
 msgid "Queue timeout reached. Assuming no tasks are left."
 msgstr ""
 
-#: coalib/internal/process_managing/FilterProcess.py:116
+#: coalib/internal/process_managing/FilterProcess.py:113
 msgid ""
 "Local filter {} raised an exception of type {}. If you are the writer of "
 "this filter, please catch all exceptions. If not and this error keeps "
 "occurring you might want to get in contact with the writer of this filter."
 msgstr ""
 
-#: coalib/internal/process_managing/FilterProcess.py:120
+#: coalib/internal/process_managing/FilterProcess.py:117
 msgid "Filter {} failed to run."
 msgstr ""
 
+#: coala:24
+msgid "Do you want to replace the following line with another?"
+msgstr ""
+
 #. Something's gone wrong
-#: coala:27
+#: coala:30
 msgid "Program terminated by user."
 msgstr ""

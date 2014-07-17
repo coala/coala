@@ -1,0 +1,21 @@
+Example of a user interaction: (a bit more verbose than reality to show what happens)
+
+|    |    | Do you want to apply the proposal of <FilterName>? Type help (or h) for a list of your options. h
+|    |    |
+|    |    | You can do the following things in this context:
+|    |    | yes (y):
+|    |    |     Applies the correction.
+|    |    | no (n):
+|    |    |     Discards the correction. Annotation will be logged.
+|    |    | never (e):
+|    |    |     Discards all corrections of this type. Annotations will be logged.
+|    |    | always (a):
+|    |    |     Applies this correction and all following of this type without asking further.
+|    |    | manual (m):
+|    |    |     Opens an editor for manual correction. File will be rechecked by the filter after edit.
+|    |    | patch (p):
+|    |    |     Creates a patch for all corrections you apply. You will be asked for each following change if you want it to go into the patch.
+|    |    | single patch (s):
+|    |    |     Generates a patch for this correction. Annotation will be logged. User will be prompted for filename.
+|    |    | comment (c):
+|    |    |     Drop FIXME comment above the line.

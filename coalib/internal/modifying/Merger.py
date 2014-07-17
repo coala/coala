@@ -26,6 +26,16 @@ class Merger:
                 result.append(item)
         return result
 
+    @staticmethod
+    def addelem(result, elem):
+        if type(result) == list:
+            result.append(elem)
+        elif type(result) == str:
+            result += str(elem)
+        else:
+            raise NotImplementedError
+        return result
+
     def __init__(self, default_on_conflict=1):
         self.default_on_conflict = default_on_conflict
 
@@ -51,7 +61,10 @@ class Merger:
             return result, conflicts
 
     def three_way_merge(self, original, a, b):
-        merge_result = ""
+        if type(original) == str:
+            merge_result = ""
+        else:
+            merge_result = []
         index_a = 0
         index_b = 0
         conflicts = False
@@ -65,20 +78,21 @@ class Merger:
 
             # no change on either side or addition on both
             if xa[index_a] == xb[index_b] and (xa[index_a].startswith(' ') or xa[index_a].startswith('+ ')):
-                merge_result += xa[index_a][2:]
+
+                merge_result = Merger.addelem(merge_result, xa[index_a][2:])
                 index_a += 1
                 index_b += 1
                 continue
 
             # addition in a only
             if xa[index_a].startswith('+ ') and not xb[index_b].startswith('+ '):
-                merge_result += xa[index_a][2:]
+                merge_result = Merger.addelem(merge_result, xa[index_a][2:])
                 index_a += 1
                 continue
 
             # addition in b only
             if xb[index_b].startswith('+ ') and not xa[index_a].startswith('+ '):
-                merge_result += xb[index_b][2:]
+                merge_result = Merger.addelem(merge_result, xb[index_b][2:])
                 index_b += 1
                 continue
 
@@ -93,7 +107,7 @@ class Merger:
             if self.default_on_conflict >= 0:
                 while (index_a < len(xa)) and not xa[index_a].startswith('  '):
                     if not xa[index_a].startswith('- '):
-                        merge_result += xa[index_a][2:]
+                        merge_result = Merger.addelem(merge_result, xa[index_a][2:])
                     index_a += 1
                 while (index_b < len(xb)) and not xb[index_b].startswith('  '):
                     index_b += 1
@@ -102,15 +116,15 @@ class Merger:
                     index_a += 1
                 while (index_b < len(xb)) and not xb[index_b].startswith('  '):
                     if not xb[index_b].startswith('- '):
-                        merge_result += xb[index_b][2:]
+                        merge_result = Merger.addelem(merge_result, xb[index_b][2:])
                     index_b += 1
 
         # remaining chars - there is only either a or b left
         for i in range(len(xa) - index_a):
             if not xa[index_a + i].startswith('- '):
-                merge_result += xa[index_a + i][2:]
+                merge_result = Merger.addelem(merge_result, xa[index_a][2:])
         for i in range(len(xb) - index_b):
             if not xb[index_b + i].startswith('- '):
-                merge_result += xb[index_b + i][2:]
+                merge_result = Merger.addelem(merge_result, xb[index_b][2:])
 
         return merge_result, conflicts
