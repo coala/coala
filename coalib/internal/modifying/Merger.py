@@ -75,6 +75,9 @@ class Merger:
         xb = Merger.drop_deltas(dxb.compare(original, b))
 
         while (index_a < len(xa)) and (index_b < len(xb)):
+            assert(not xa[index_a].startswith('  ') or
+                   not xb[index_b].startswith('  ') or
+                   xa[index_a][2:] == xb[index_b][2:])
 
             # no change on either side or addition on both
             if xa[index_a] == xb[index_b] and (xa[index_a].startswith(' ') or xa[index_a].startswith('+ ')):
