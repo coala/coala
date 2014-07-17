@@ -21,10 +21,18 @@
 |    .    |
 |0065|0065|                // reset page to notify deeply widgets states
 |0066|0066|                wizard_source.page = wizard_source.page;
-|0067|0067|                cleanup (); 
-|0067|0067|                cleanup ();
+|0067|0067|-           cleanup(); 
+|0067|0067|+               cleanup ();
 |    |    |                           ^
-|    |    | SpaceConsistencyFilter: Trailing spaces in codefiles are redundant. (Change applied automatically.)
+|    |    | (1) SpaceConsistencyFilter: Trailing spaces in codefiles are redundant.
+|    |    | (2) IndentationFilter: Indentation for this statement is incorrect. Please add 4 preceeding spaces.
+|    |    | (3) FunctionCallFilter: You should have a space for brackets when calling functions.
+|    |    | Do you want to apply the merged proposal of SpaceConsistencyFilter, IndentationFilter and FunctionCallFilter? [y/n/o] o
+|    |    | You have the following options:
+|    |    |     n#: Discard changes of filters # (e.g. d2,4-6) omit # to discard all.
+|    |    |     s#: Show changes of filters # only (e.g. d2,4-6)
+|    |    |     y#: Apply changes of filters # only without review (e.g. d2,4-6) omit # to apply all.
+|    |    | TODO patch options and so on
 |0068|0068|                break;
 |0069|0069|            }
 |    .    |
@@ -40,11 +48,26 @@
 |0122|    |-            else {
 |    |0121|+            } else {
 |    |    | ValaBracketFilter: It is recommended to write the else in the same line as the closing bracket.
-|    |    | Do want to apply the Proposal from ValaBracketFilter? [yes/no/all of this filter/generate patch/show more context] ok
+|    |    | Do you want to apply the Proposal from ValaBracketFilter? [yes/no/all of this filter/generate patch/show more context] ok
 |    .    |
 |    .    |
 |    .    |
-|0269|0270|         if (wizard_source.download_required) {
+| 269|    |CONFLICT in this line!
+|Option 01|
+|0269|0270|-         if (wizard_source.download_required) {
+|0269|0270|+         if (wizard_source.XXXX_required) {
+|    |    | ValaXxxFilter: There should be X
+|Option 02|
+|0269|0270|-         if (wizard_source.download_required) {
+|0269|0270|+         if (wizard_source.YYYY_required) {
+|    |    | ValaYyyFilter: There should be Y
+|    |    | You have the following options:
+|    |    |     n#: Discard changes of filters # (e.g. d2,4-6) omit # to discard all.
+|    |    |     s#: Show changes of filters # only (e.g. d2,4-6)
+|    |    |     y#: Apply changes of filters # only without review (e.g. d2,4-6) omit # to apply all.
+|    .    |
+|    .    |
+|    .    |
 |0270|0271|             var basename = file.get_basename ();
 |0271|0272|             if (basename == null || basename == "") {
 |0272|0273|                 debug ("URI '%s' has no basename.", uri);
