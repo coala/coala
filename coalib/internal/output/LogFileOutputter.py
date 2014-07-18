@@ -14,10 +14,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
 import shutil
-from coalib.internal.output.Outputter import Outputter
+from coalib.internal.output.LogOutputter import LogOutputter
 
 
-class LogFileOutputter(Outputter):
+class LogFileOutputter(LogOutputter):
     def __init__(self, filename):
         Outputter.__init__(self)
 
