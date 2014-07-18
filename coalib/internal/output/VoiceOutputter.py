@@ -15,11 +15,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import subprocess
 
 from coalib.fillib.misc.StringConstants import StringConstants
+from coalib.internal.output.InteractiveOutputter import InteractiveOutputter
 from coalib.internal.output.Outputter import Outputter
 from coalib.fillib.misc.i18n import _
 
 
-class VoiceOutputter(Outputter):
+class VoiceOutputter(InteractiveOutputter):
     def __init__(self):
         """
         Raises EnvironmentError if VoiceOutput is impossible.
