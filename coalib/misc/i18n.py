@@ -32,8 +32,12 @@ for __lang in __langs:
     __pofile = os.path.abspath("locale/{}.po".format(__lang[0:5]))
     __filename = os.path.abspath("locale/{}.mo".format(__lang[0:5]))
     # try generating mo file if possible
-    if not os.path.exists(__filename) and os.path.exists(__pofile):
-        subprocess.call(["msgfmt", __pofile, "--output-file", __filename])
+    if (not os.path.exists(__filename)) and os.path.exists(__pofile):
+        try:
+            subprocess.call(["msgfmt", __pofile, "--output-file", __filename])
+        except:
+            # we can't do anything about this here
+            pass
 
     if os.path.exists(__filename):
         try:
