@@ -14,7 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from coalib.misc.i18n import _
-from coalib.filters import FILTER_KIND
+from coalib.filters.FILTER_KIND import FILTER_KIND
 from coalib.processes.Process import Process
 from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
