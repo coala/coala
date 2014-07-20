@@ -26,6 +26,11 @@ class LogMessageTestCase(unittest.TestCase):
         self.uut = LogMessage()
 
     def test_construction(self):
+        # take a look if defaults are good
+        self.assertEqual(self.uut.log_level, LOG_LEVEL.DEBUG)
+        self.assertEqual(self.uut.message, "")
+
+        # see that arguments are processed right
         self.uut = LogMessage(LOG_LEVEL.WARNING, "a msg")
         self.assertEqual(self.uut.log_level, LOG_LEVEL.WARNING)
         self.assertEqual(self.uut.message, "a msg")
