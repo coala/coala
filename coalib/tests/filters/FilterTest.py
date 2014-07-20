@@ -14,12 +14,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
+if sys.version_info < (3, 4):
+    import imp
+else:
+    import importlib
 sys.path.append(".")
+from coalib.misc import i18n
+from coalib.filters.Filter import Filter
 import unittest
 
 
-class FilterTestCase(unittest.TestCase):
+class TestFilter(Filter):
     pass
+
+
+class FilterTestCase(unittest.TestCase):
+    @staticmethod
+    def reload_i18n_lib():
+        if sys.version_info < (3, 4):
+            imp.reload(i18n)
+        else:
+            importlib.reload(i18n)
+
+    def setUp(self):
+        self.uut = TestFilter()
 
 
 if __name__ == '__main__':
