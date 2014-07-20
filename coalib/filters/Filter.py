@@ -19,8 +19,25 @@ from coalib.processes.Process import Process
 
 
 class Filter(Process):
+    """
+    This is the base class for every filter. If you want to write a filter, inherit from this class and overwrite at
+    least the run_filter method. You can send debug/warning/error messages through the debug_msg(), warn_msg(),
+    fail_msg() functions. These will send the appropriate messages so that they are outputted. Be aware that if you
+    use fail_msg() you are expected to terminate the filter run immediately at this point.
+
+    If you need some tearup or teardown for your filter feel free to overwrite the tear_up() and tear_down() functions.
+    They will be invoced before/after every run_filter invocation.
+
+    Settings are available at every time through self.settings. You can access to the translation database through the
+    self._() function, it will be routed to the usual gettext _(). Be aware that the strings you use are not necessarily
+    in the database, especially if your filter is not shipped with coala. Feel free to use your own translation database
+    in this case or consider moving your filter into the coala project.
+    """
     def __init__(self, settings):
         self.settings = settings
+
+    def _(self, msg):
+        return _(msg)
 
     def tear_up(self):
         pass
