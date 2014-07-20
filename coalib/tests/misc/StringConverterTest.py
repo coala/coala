@@ -37,6 +37,9 @@ class ProcessTestCase(unittest.TestCase):
         self.uut = StringConverter(_(" nope "))
         self.assertEqual(bool(self.uut), False)
 
+        self.uut = StringConverter(_(" i dont know "))
+        self.assertRaises(AttributeError, bool, self.uut)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
