@@ -1,0 +1,17 @@
+language: python
+
+notifications:
+  recipients:
+    - lasse@schuirmann.net
+    - fabian@neuschmidt.de
+  email:
+    on_failure: always
+    on_success: change
+
+python:
+  - "3.2"
+  - "3.3"
+  - "3.4"
+
+script:
+  - python ./execute_all_tests.py
