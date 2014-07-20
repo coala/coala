@@ -16,6 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from coalib.misc.i18n import _
 from coalib.filters import FILTER_KIND
 from coalib.processes.Process import Process
+from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
+from coalib.processes.communication.LogMessage import LogMessage
 
 
 class Filter(Process):
@@ -33,8 +35,12 @@ class Filter(Process):
     in the database, especially if your filter is not shipped with coala. Feel free to use your own translation database
     in this case or consider moving your filter into the coala project.
     """
-    def __init__(self, settings):
+    def __init__(self, settings,
+                 message_queue,
+                 TIMEOUT=0.2):
         self.settings = settings
+        self.message_queue = message_queue
+        self.TIMEOUT = TIMEOUT
 
     def _(self, msg):
         return _(msg)
@@ -46,16 +52,22 @@ class Filter(Process):
         pass
 
     def debug_msg(self, *args, delimiter=' '):
-        # TODO throw message into queue
-        pass
+        self.__send_msg(LOG_LEVEL.DEBUG, delimiter, *args)
 
     def warn_msg(self, *args, delimiter=' '):
-        # TODO throw warning into queue
-        pass
+        self.__send_msg(LOG_LEVEL.WARNING, delimiter, *args)
 
     def fail_msg(self, *args, delimiter=' '):
-        # TODO throw error into queue
-        pass
+        self.__send_msg(LOG_LEVEL.ERROR, delimiter, *args)
+
+    def __send_msg(self, log_level, delimiter, *args):
+        msg = ""
+        delim = ""
+        for arg in args:
+            msg += str(arg) + str(delim)
+            delim = delimiter
+
+        self.message_queue.put(LogMessage(log_level, msg), timeout=self.TIMEOUT)
 
     def run_filter(self):
         raise NotImplementedError
