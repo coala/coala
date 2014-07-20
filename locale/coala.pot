@@ -112,3 +112,8 @@ msgstr ""
 #: coalib/processes/communication/LogMessage.py:26
 msgid "DEBUG"
 msgstr ""
+
+#. Something's gone wrong
+#: coala:26
+msgid "Program terminated by user."
+msgstr ""
