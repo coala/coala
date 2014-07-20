@@ -1,0 +1,20 @@
+#. Do not change this translation without changing it in the code also!
+#: coalib/tests/processes/misc/i18nTest.py:27
+#: coalib/tests/processes/misc/i18nTest.py:32
+msgid "A string to test translations."
+msgstr ""
+
+#: coalib/tests/processes/communication/LogMessageTest.py:41
+#: coalib/processes/communication/LogMessage.py:28
+msgid "ERROR"
+msgstr ""
+
+#: coalib/tests/processes/communication/LogMessageTest.py:43
+#: coalib/processes/communication/LogMessage.py:27
+msgid "WARNING"
+msgstr ""
+
+#: coalib/tests/processes/communication/LogMessageTest.py:45
+#: coalib/processes/communication/LogMessage.py:26
+msgid "DEBUG"
+msgstr ""
