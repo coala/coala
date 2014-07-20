@@ -1,7 +1,101 @@
+#: coalib/filters/Filter.py:76 coalib/tests/filters/FilterTest.py:57
+msgid "Tearing up filter..."
+msgstr ""
+
+#: coalib/filters/Filter.py:78 coalib/tests/filters/FilterTest.py:59
+msgid "Running filter..."
+msgstr ""
+
+#: coalib/filters/Filter.py:80 coalib/tests/filters/FilterTest.py:61
+msgid "Tearing down filter..."
+msgstr ""
+
+#: coalib/misc/StringConstants.py:19
+msgid ""
+"This is a bug. We are sorry for the inconvenience. Please contact the "
+"developers if this happens more than once."
+msgstr ""
+
+#: coalib/misc/StringConstants.py:28
+msgid "on"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:28
+msgid "y"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:28
+msgid "yes"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:28
+msgid "yeah"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:28
+msgid "sure"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:28
+msgid "true"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:29
+msgid "definitely"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:29
+msgid "yup"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:29
+msgid "right"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:37
+msgid "off"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:37
+msgid "n"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:37
+msgid "no"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:37
+msgid "nope"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:37
+msgid "nah"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:37
+msgid "false"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:37
+msgid "wrong"
+msgstr ""
+
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/processes/misc/i18nTest.py:27
-#: coalib/tests/processes/misc/i18nTest.py:32
+#: coalib/tests/filters/FilterTest.py:38 coalib/tests/filters/FilterTest.py:60
+#: coalib/tests/misc/i18nTest.py:40 coalib/tests/misc/i18nTest.py:45
 msgid "A string to test translations."
+msgstr ""
+
+#: coalib/tests/misc/StringConverterTest.py:35
+msgid " yeah "
+msgstr ""
+
+#: coalib/tests/misc/StringConverterTest.py:37
+msgid " nope "
+msgstr ""
+
+#: coalib/tests/misc/StringConverterTest.py:40
+msgid " i dont know "
 msgstr ""
 
 #: coalib/tests/processes/communication/LogMessageTest.py:41
