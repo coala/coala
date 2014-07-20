@@ -7,7 +7,7 @@ xgettext -j -c --language=Python --output=tmp/messages.po --keyword=_ --from-cod
 echo Merging with existent pot file...
 msgmerge -N locale/coala.pot tmp/messages.po > locale/coala.pot 2> /dev/null
 echo Removing temporary files...
-#rm -rf tmp
+rm -rf tmp
 echo Done.
 echo
 echo Please update the po files accordingly.
