@@ -21,11 +21,6 @@ from coalib.tests.TestHelper import TestHelper
 
 
 if __name__ == '__main__':
-    # install first
-    print(_("Installing coala..."))
-    subprocess.call(["sudo", "python3", "setup.py", "install"])
-    # execute tests
-    print(_("Checking coala installation..."))
     test_dir = os.path.abspath("coalib/tests")
     files = TestHelper.get_test_files(test_dir)
     exit(TestHelper.execute_python3_files(files))

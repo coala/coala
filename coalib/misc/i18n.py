@@ -31,6 +31,7 @@ def compile_translations(verbose=True):
                 src = os.path.join(path, filename)
                 dest_path = os.path.join("build", "locale", lang, "LC_MESSAGES")
                 dest = os.path.join(dest_path, "coala.mo")
+                install_dir = os.path.join(trans_install_dir_prefix, lang, "LC_MESSAGES")
 
                 if not os.path.exists(dest_path):
                     os.makedirs(dest_path)
@@ -39,13 +40,13 @@ def compile_translations(verbose=True):
                         src_mtime = os.stat(src)[8]
                         dest_mtime = os.stat(dest)[8]
                         if src_mtime <= dest_mtime:
+                            translations.append((install_dir, [dest]))
                             continue
 
                 try:
                     if verbose:
                         print("Compiling {}...".format(lang))
                     subprocess.call(["msgfmt", src, "--output-file", dest])
-                    install_dir = os.path.join(trans_install_dir_prefix, lang, "LC_MESSAGES")
                     translations.append((install_dir, [dest]))
                 except:
                     print("WARNING: Failed building translation for {}. "
