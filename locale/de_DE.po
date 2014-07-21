@@ -12,23 +12,124 @@ msgstr ""
 "X-Generator: Poedit 1.6.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: coalib/filters/Filter.py:76 coalib/tests/filters/FilterTest.py:57
+msgid "Tearing up filter..."
+msgstr "Bereite Filter vor..."
+
+#: coalib/filters/Filter.py:78 coalib/tests/filters/FilterTest.py:59
+msgid "Running filter..."
+msgstr "Führe Filter aus..."
+
+#: coalib/filters/Filter.py:80 coalib/tests/filters/FilterTest.py:61
+msgid "Tearing down filter..."
+msgstr "Bereite Filter nach..."
+
+#: coalib/misc/StringConstants.py:19
+msgid ""
+"This is a bug. We are sorry for the inconvenience. Please contact the "
+"developers if this happens more than once."
+msgstr ""
+"Dies ist ein Bug. Wir möchten uns für die Unannehmlichkeiten entschuldigen. "
+"Wenn dies mehr als einmal passiert, kontaktieren Sie bitte die Entwickler."
+
+#: coalib/misc/StringConstants.py:28
+msgid "on"
+msgstr "an"
+
+#: coalib/misc/StringConstants.py:28
+msgid "y"
+msgstr "j"
+
+#: coalib/misc/StringConstants.py:28
+msgid "yes"
+msgstr "ja"
+
+#: coalib/misc/StringConstants.py:28
+msgid "yeah"
+msgstr "klar"
+
+#: coalib/misc/StringConstants.py:28
+msgid "sure"
+msgstr "sicher"
+
+#: coalib/misc/StringConstants.py:28
+msgid "true"
+msgstr "wahr"
+
+#: coalib/misc/StringConstants.py:29
+msgid "definitely"
+msgstr "definitiv"
+
+#: coalib/misc/StringConstants.py:29
+msgid "yup"
+msgstr "jup"
+
+#: coalib/misc/StringConstants.py:29
+msgid "right"
+msgstr "richtig"
+
+#: coalib/misc/StringConstants.py:37
+msgid "off"
+msgstr "aus"
+
+#: coalib/misc/StringConstants.py:37
+msgid "n"
+msgstr "n"
+
+#: coalib/misc/StringConstants.py:37
+msgid "no"
+msgstr "nein"
+
+#: coalib/misc/StringConstants.py:37
+msgid "nope"
+msgstr "ne"
+
+#: coalib/misc/StringConstants.py:37
+msgid "nah"
+msgstr "neh"
+
+#: coalib/misc/StringConstants.py:37
+msgid "false"
+msgstr "falsch"
+
+#: coalib/misc/StringConstants.py:37
+msgid "wrong"
+msgstr "unwahr"
+
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/processes/misc/i18nTest.py:27
-#: coalib/tests/processes/misc/i18nTest.py:32
+#: coalib/tests/filters/FilterTest.py:38 coalib/tests/filters/FilterTest.py:60
+#: coalib/tests/misc/i18nTest.py:39 coalib/tests/misc/i18nTest.py:43 coala:24
 msgid "A string to test translations."
 msgstr "Eine Zeichenkette um Übersetzungen zu testen."
+
+#: coalib/tests/misc/StringConverterTest.py:35
+msgid " yeah "
+msgstr "jep"
+
+#: coalib/tests/misc/StringConverterTest.py:37
+msgid " nope "
+msgstr "nö"
+
+#: coalib/tests/misc/StringConverterTest.py:40
+msgid " i dont know "
+msgstr ""
 
 #: coalib/tests/processes/communication/LogMessageTest.py:41
 #: coalib/processes/communication/LogMessage.py:28
 msgid "ERROR"
-msgstr ""
+msgstr "FEHLER"
 
 #: coalib/tests/processes/communication/LogMessageTest.py:43
 #: coalib/processes/communication/LogMessage.py:27
 msgid "WARNING"
-msgstr ""
+msgstr "WARNUNG"
 
 #: coalib/tests/processes/communication/LogMessageTest.py:45
 #: coalib/processes/communication/LogMessage.py:26
 msgid "DEBUG"
-msgstr ""
+msgstr "DEBUG"
+
+#. Something's gone wrong
+#: coala:27
+msgid "Program terminated by user."
+msgstr "Das Programm wurde durch den Benutzer beendet."
