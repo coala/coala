@@ -110,10 +110,6 @@ msgstr "jep"
 msgid " nope "
 msgstr "nö"
 
-#: coalib/tests/misc/StringConverterTest.py:40
-msgid " i dont know "
-msgstr ""
-
 #: coalib/tests/processes/communication/LogMessageTest.py:41
 #: coalib/processes/communication/LogMessage.py:28
 msgid "ERROR"
