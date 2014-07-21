@@ -54,33 +54,11 @@ def compile_translations(verbose=True):
     return translations
 
 
-def __untranslated(msg):
-    return msg
+def get_translation_function(app_name):
+    try:
+        gettext.textdomain(app_name)
+        return gettext.gettext
+    except:
+        return lambda x:x
 
-builtins.__dict__['_'] = __untranslated
-__langs = os.environ.get('LANG', '').split(':')
-__langs += ['en_US']
-
-__language = "en_US"
-__mopath = os.path.join(sys.prefix, "share", "locale")
-for __lang in __langs:
-    __filename = os.path.join(__mopath, __lang[0:5], "LC_MESSAGES", "coala.mo")
-
-    if os.path.exists(__filename):
-        try:
-            # overwrite our _ definition
-            gettext.GNUTranslations(open(__filename, "rb")).install()
-            __language = __lang[0:5]
-            break
-        except IOError:
-            continue
-
-__gettext = builtins.__dict__['_']
-
-
-def get_locale():
-    return __language
-
-
-def _(s):
-    return __gettext(s)
+_ = get_translation_function('coala')
