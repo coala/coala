@@ -17,6 +17,41 @@ import os
 import gettext
 import builtins
 import subprocess
+import sys
+
+
+def compile_translations(verbose=True):
+    if verbose:
+        print("Compiling translations...")
+    translations = []
+    trans_install_dir_prefix = os.path.join(sys.prefix, "share", "locale")
+    for (path, dirnames, filenames) in os.walk("locale"):
+        for filename in filenames:
+            if filename.endswith(".po"):
+                lang = filename[:-3]
+                src = os.path.join(path, filename)
+                dest_path = os.path.join("build", "locale", lang, "LC_MESSAGES")
+                dest = os.path.join(dest_path, "coala.mo")
+
+                if not os.path.exists(dest_path):
+                    os.makedirs(dest_path)
+                else:
+                    if os.path.exists(dest):
+                        src_mtime = os.stat(src)[8]
+                        dest_mtime = os.stat(dest)[8]
+                        if src_mtime <= dest_mtime:
+                            continue
+
+                try:
+                    if verbose:
+                        print("Compiling {}...".format(lang))
+                    subprocess.call(["msgfmt", src, "--output-file", dest])
+                    install_dir = os.path.join(trans_install_dir_prefix, lang, "LC_MESSAGES")
+                    translations.append((install_dir, [dest]))
+                except:
+                    print("WARNING: Failed building translation for {}. "
+                          "Please make sure msgfmt is installed and in PATH.".format(lang))
+    return translations
 
 
 def __untranslated(msg):
@@ -27,17 +62,9 @@ __langs = os.environ.get('LANG', '').split(':')
 __langs += ['en_US']
 
 __language = "en_US"
-# FIXME this will not work with installed versions later
+__mopath = os.path.join(sys.prefix, "share", "locale")
 for __lang in __langs:
-    __pofile = os.path.abspath("locale/{}.po".format(__lang[0:5]))
-    __filename = os.path.abspath("locale/{}.mo".format(__lang[0:5]))
-    # try generating mo file if possible
-    if (not os.path.exists(__filename)) and os.path.exists(__pofile):
-        try:
-            subprocess.call(["msgfmt", __pofile, "--output-file", __filename])
-        except:
-            # we can't do anything about this here
-            pass
+    __filename = os.path.join(__mopath, __lang[0:5], "LC_MESSAGES", "coala.mo")
 
     if os.path.exists(__filename):
         try:

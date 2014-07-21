@@ -14,8 +14,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import multiprocessing
-import sys
-sys.path.append(".")
 from coalib.filters import FILTER_KIND
 from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
