@@ -25,21 +25,20 @@ from coalib.misc import i18n
 
 class i18nTestCase(unittest.TestCase):
     @staticmethod
-    def reload_i18n_lib():
+    def set_lang(lang):
+        os.environ["LANG"] = lang
         if sys.version_info < (3, 4):
             imp.reload(i18n)
         else:
             importlib.reload(i18n)
 
     def test_de(self):
-        os.environ["LANG"] = "de_DE.UTF8"
-        self.reload_i18n_lib()
+        self.set_lang("de_DE.UTF8")
         # Do not change this translation without changing it in the code also!
         self.assertEqual(i18n._("A string to test translations."), "Eine Zeichenkette um Übersetzungen zu testen.")
 
     def test_unknown(self):
-        os.environ["LANG"] = "unknown_language.UTF8"
-        self.reload_i18n_lib()
+        self.set_lang("unknown_language.UTF8")
         self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
 
 
