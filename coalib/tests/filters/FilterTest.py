@@ -28,8 +28,8 @@ class TestFilter(Filter):
     def __init__(self, settings, queue):
         Filter.__init__(self, settings, queue)
 
-    def tear_up(self):
-        self.debug_msg("tearup")
+    def set_up(self):
+        self.debug_msg("setup")
 
     def tear_down(self):
         self.fail_msg("teardown")
@@ -54,8 +54,8 @@ class FilterTestCase(unittest.TestCase):
 
     def test_message_queue(self):
         self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing up filter..."))
-        self.check_message(LOG_LEVEL.DEBUG, "tearup")
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up filter..."))
+        self.check_message(LOG_LEVEL.DEBUG, "setup")
         self.check_message(LOG_LEVEL.DEBUG, _("Running filter..."))
         self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
         self.check_message(LOG_LEVEL.DEBUG, _("Tearing down filter..."))
