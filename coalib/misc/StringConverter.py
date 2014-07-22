@@ -24,7 +24,7 @@ class StringConverter:
     - __path__() creates an absolute path for a string
     """
     def __init__(self, value, strip_whitespaces=True):
-        self.__value = value
+        self.__value = str(value)
         self.strip_whitespaces = strip_whitespaces
 
         self.__prepare_string()
