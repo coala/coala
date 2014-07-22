@@ -39,7 +39,7 @@ class ProcessTestCase(unittest.TestCase):
         self.uut = StringConverter(_(" nope "))
         self.assertEqual(bool(self.uut), False)
 
-        self.uut = StringConverter(_(" i dont know "))
+        self.uut = StringConverter(" i dont know ")
         self.assertRaises(AttributeError, bool, self.uut)
 
 

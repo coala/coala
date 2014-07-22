@@ -1,22 +1,12 @@
-#. install first
-#: execute_all_tests.py:25
-msgid "Installing coala..."
-msgstr ""
-
-#. execute tests
-#: execute_all_tests.py:28
-msgid "Checking coala installation..."
-msgstr ""
-
-#: coalib/filters/Filter.py:76 coalib/tests/filters/FilterTest.py:55
+#: coalib/filters/Filter.py:76 coalib/tests/filters/FilterTest.py:57
 msgid "Tearing up filter..."
 msgstr ""
 
-#: coalib/filters/Filter.py:78 coalib/tests/filters/FilterTest.py:57
+#: coalib/filters/Filter.py:78 coalib/tests/filters/FilterTest.py:59
 msgid "Running filter..."
 msgstr ""
 
-#: coalib/filters/Filter.py:80 coalib/tests/filters/FilterTest.py:59
+#: coalib/filters/Filter.py:80 coalib/tests/filters/FilterTest.py:61
 msgid "Tearing down filter..."
 msgstr ""
 
@@ -91,34 +81,30 @@ msgid "wrong"
 msgstr ""
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/filters/FilterTest.py:36 coalib/tests/filters/FilterTest.py:58
-#: coalib/tests/misc/i18nTest.py:38 coalib/tests/misc/i18nTest.py:42 coala:24
+#: coalib/tests/filters/FilterTest.py:38 coalib/tests/filters/FilterTest.py:60
+#: coalib/tests/misc/i18nTest.py:39 coalib/tests/misc/i18nTest.py:43 coala:24
 msgid "A string to test translations."
 msgstr ""
 
-#: coalib/tests/misc/StringConverterTest.py:33
+#: coalib/tests/misc/StringConverterTest.py:35
 msgid " yeah "
 msgstr ""
 
-#: coalib/tests/misc/StringConverterTest.py:35
+#: coalib/tests/misc/StringConverterTest.py:37
 msgid " nope "
 msgstr ""
 
-#: coalib/tests/misc/StringConverterTest.py:38
-msgid " i dont know "
-msgstr ""
-
-#: coalib/tests/processes/communication/LogMessageTest.py:39
+#: coalib/tests/processes/communication/LogMessageTest.py:41
 #: coalib/processes/communication/LogMessage.py:28
 msgid "ERROR"
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:41
+#: coalib/tests/processes/communication/LogMessageTest.py:43
 #: coalib/processes/communication/LogMessage.py:27
 msgid "WARNING"
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:43
+#: coalib/tests/processes/communication/LogMessageTest.py:45
 #: coalib/processes/communication/LogMessage.py:26
 msgid "DEBUG"
 msgstr ""

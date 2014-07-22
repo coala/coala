@@ -5,3 +5,4 @@ build
 *.mo
 dist
 MANIFEST
+*.pyc
