@@ -46,4 +46,8 @@ class i18nTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    # When we reload the i18n module we'll reopen the .mo file and therefore get an error that it is already opened.
+    # This is no problem for the test. In real life scenarios you'd never load the i18n lib for several languages
+    # so it seems okay for me.
+    print("This test will print some warnings about unclosed files. This is no error.")
     unittest.main(verbosity=2)
