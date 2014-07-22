@@ -36,13 +36,16 @@ class LogMessageTestCase(unittest.TestCase):
         self.assertEqual(self.uut.message, "a msg")
 
     def test_to_str(self):
-        self.uut.message = "test message änd umlauts!"
+        self.uut.message = "4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ ĦŊħ ß°^ \\\n\u2192"
         self.uut.log_level = LOG_LEVEL.ERROR
-        self.assertEqual(str(self.uut), "[{}] test message änd umlauts!".format(_("ERROR")))
+        self.assertEqual(str(self.uut), "[{}] 4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {{[( ←↓→↑ ĦŊħ ß°^ \\\n\u2192"
+                         .format(_("ERROR")))                                     # ^ needed for .format() syntax ;)
         self.uut.log_level = LOG_LEVEL.WARNING
-        self.assertEqual(str(self.uut), "[{}] test message änd umlauts!".format(_("WARNING")))
+        self.assertEqual(str(self.uut), "[{}] 4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {{[( ←↓→↑ ĦŊħ ß°^ \\\n\u2192"
+                         .format(_("WARNING")))
         self.uut.log_level = LOG_LEVEL.DEBUG
-        self.assertEqual(str(self.uut), "[{}] test message änd umlauts!".format(_("DEBUG")))
+        self.assertEqual(str(self.uut), "[{}] 4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {{[( ←↓→↑ ĦŊħ ß°^ \\\n\u2192"
+                         .format(_("DEBUG")))
 
 
 if __name__ == '__main__':
