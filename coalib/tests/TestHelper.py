@@ -32,7 +32,7 @@ class TestHelper:
             result = TestHelper.execute_python3_file(file)  # either 0 or 1
             failures += result
             retval = max(result, retval)
-            print("\n======================================================================")
+            print("\n"+"#"*70)
 
         print("\nTests finished: failures in {} of {} test modules".format(failures, number))
         return retval
