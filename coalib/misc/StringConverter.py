@@ -43,7 +43,10 @@ class StringConverter:
         return len(self.__value)
 
     def __int__(self):
-        return int(self.__value)
+        try:
+            return int(self.__value)
+        except:
+            raise AttributeError
 
     def __prepare_string(self):
         if self.strip_whitespaces:
