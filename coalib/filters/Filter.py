@@ -25,15 +25,15 @@ class Filter(Process):
     This is the base class for every filter. If you want to write a filter, inherit from this class and overwrite at
     least the run_filter method. You can send debug/warning/error messages through the debug_msg(), warn_msg(),
     fail_msg() functions. These will send the appropriate messages so that they are outputted. Be aware that if you
-    use fail_msg() you are expected to terminate the filter run immediately at this point.
+    use fail_msg(), you are expected to also terminate the filter run-through immediately.
 
-    If you need some setup or teardown for your filter feel free to overwrite the set_up() and tear_down() functions.
-    They will be invoced before/after every run_filter invocation.
+    If you need some setup or teardown for your filter, feel free to overwrite the set_up() and tear_down() functions.
+    They will be invoked before/after every run_filter invocation.
 
-    Settings are available at every time through self.settings. You can access to the translation database through the
-    self._() function, it will be routed to the usual gettext _(). Be aware that the strings you use are not necessarily
-    in the database, especially if your filter is not shipped with coala. Feel free to use your own translation database
-    in this case or consider moving your filter into the coala project.
+    Settings are available at all times through self.settings. You can access the translation database with the self._()
+    function, it will be routed to the usual gettext _(). Be aware that the strings you use are not necessarily in the
+    database, especially if your filter is not shipped with coala. Feel free to use your own translation database in
+    this case or consider make your filter available to the coala project.
     """
     def __init__(self, settings,
                  message_queue,
