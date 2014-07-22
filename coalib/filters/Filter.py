@@ -62,10 +62,9 @@ class Filter(Process):
 
     def __send_msg(self, log_level, delimiter, *args):
         msg = ""
-        delim = ""
-        for arg in args:
-            msg += str(arg) + str(delim)
-            delim = delimiter
+        for i in range(len(args) - 1):
+            msg += str(args[i]) + str(delimiter)
+        msg += str(args[-1])
 
         self.message_queue.put(LogMessage(log_level, msg), timeout=self.TIMEOUT)
 
