@@ -14,7 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
-sys.path.append(".")
+sys.path.insert(0, ".")
 from coalib.output.LogOutputter import LogOutputter
 from coalib.output.Outputter import Outputter
 import unittest

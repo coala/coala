@@ -14,7 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
-sys.path.append(".")
+sys.path.insert(0, ".")
 from coalib.misc.StringConverter import StringConverter
 from coalib.misc.i18n import _
 import unittest
@@ -33,6 +33,8 @@ class ProcessTestCase(unittest.TestCase):
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
         self.uut = StringConverter(_(" yeah "))
+        self.assertEqual(bool(self.uut), True)
+        self.uut = StringConverter(" y ")
         self.assertEqual(bool(self.uut), True)
         self.uut = StringConverter(_(" nope "))
         self.assertEqual(bool(self.uut), False)

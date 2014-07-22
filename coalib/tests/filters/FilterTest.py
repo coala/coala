@@ -13,9 +13,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import multiprocessing
 import sys
-sys.path.append(".")
+sys.path.insert(0, ".")
+import multiprocessing
 from coalib.filters import FILTER_KIND
 from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
