@@ -34,6 +34,8 @@ class ProcessTestCase(unittest.TestCase):
         self.assertEqual(bool(self.uut), True)
         self.uut = StringConverter(_(" yeah "))
         self.assertEqual(bool(self.uut), True)
+        self.uut = StringConverter(" y ")
+        self.assertEqual(bool(self.uut), True)
         self.uut = StringConverter(_(" nope "))
         self.assertEqual(bool(self.uut), False)
 
