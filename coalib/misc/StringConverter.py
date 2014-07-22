@@ -46,5 +46,6 @@ class StringConverter:
         return int(self.__value)
 
     def __prepare_string(self):
+        self.__value = str(self.__value)
         if self.strip_whitespaces:
             self.__value = self.__value.strip()
