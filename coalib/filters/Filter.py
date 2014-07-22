@@ -27,7 +27,7 @@ class Filter(Process):
     fail_msg() functions. These will send the appropriate messages so that they are outputted. Be aware that if you
     use fail_msg() you are expected to terminate the filter run immediately at this point.
 
-    If you need some tearup or teardown for your filter feel free to overwrite the tear_up() and tear_down() functions.
+    If you need some setup or teardown for your filter feel free to overwrite the set_up() and tear_down() functions.
     They will be invoced before/after every run_filter invocation.
 
     Settings are available at every time through self.settings. You can access to the translation database through the
@@ -45,7 +45,7 @@ class Filter(Process):
     def _(self, msg):
         return _(msg)
 
-    def tear_up(self):
+    def set_up(self):
         pass
 
     def tear_down(self):
@@ -73,8 +73,8 @@ class Filter(Process):
         raise NotImplementedError
 
     def run(self):
-        self.debug_msg(_("Tearing up filter..."))
-        self.tear_up()
+        self.debug_msg(_("Setting up filter..."))
+        self.set_up()
         self.debug_msg(_("Running filter..."))
         self.run_filter()
         self.debug_msg(_("Tearing down filter..."))
