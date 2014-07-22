@@ -29,6 +29,9 @@ class ProcessTestCase(unittest.TestCase):
 
     def test_int_conversion(self):
         self.assertEqual(int(self.uut), 1)
+        self.uut = StringConverter(" not an int ")
+        self.assertRaises(AttributeError, int, self.uut)
+
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
