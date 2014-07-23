@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 sys.path.insert(0, ".")
 from coalib.misc.i18n import _
+from coalib.misc.StringConstants import StringConstants
 from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 import unittest
@@ -36,13 +37,13 @@ class LogMessageTestCase(unittest.TestCase):
         self.assertEqual(self.uut.message, "a msg")
 
     def test_to_str(self):
-        self.uut.message = "test message änd umlauts!"
+        self.uut.message = StringConstants.COMPLEX_TEST_STRING
         self.uut.log_level = LOG_LEVEL.ERROR
-        self.assertEqual(str(self.uut), "[{}] test message änd umlauts!".format(_("ERROR")))
+        self.assertEqual(str(self.uut), "[{}] {}".format(_("ERROR"), StringConstants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.WARNING
-        self.assertEqual(str(self.uut), "[{}] test message änd umlauts!".format(_("WARNING")))
+        self.assertEqual(str(self.uut), "[{}] {}".format(_("WARNING"), StringConstants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.DEBUG
-        self.assertEqual(str(self.uut), "[{}] test message änd umlauts!".format(_("DEBUG")))
+        self.assertEqual(str(self.uut), "[{}] {}".format(_("DEBUG"), StringConstants.COMPLEX_TEST_STRING))
 
 
 if __name__ == '__main__':
