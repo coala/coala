@@ -15,10 +15,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import shutil
 from coalib.internal.output.HTMLWriter import HTMLWriter
+from coalib.internal.output.LogOutputter import LogOutputter
 from coalib.internal.output.Outputter import Outputter
 
 
-class HTMLOutputter(Outputter):
+class HTMLOutputter(LogOutputter):
     def __init__(self, filename, indentation_per_tag=2):
         Outputter.__init__(self)
 

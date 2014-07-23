@@ -13,10 +13,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import sys
+from coalib.internal.output.InteractiveOutputter import InteractiveOutputter
+from coalib.internal.output.LogOutputter import LogOutputter
 from coalib.internal.output.Outputter import Outputter
 
 
-class ConsoleOutputter(Outputter):
+class ConsoleOutputter(InteractiveOutputter, LogOutputter):
     def __init__(self, output=sys.stdout):
         Outputter.__init__(self)
         self.output = output
