@@ -1,15 +1,3 @@
-#: coalib/filters/Filter.py:76 coalib/tests/filters/FilterTest.py:57
-msgid "Tearing up filter..."
-msgstr ""
-
-#: coalib/filters/Filter.py:78 coalib/tests/filters/FilterTest.py:59
-msgid "Running filter..."
-msgstr ""
-
-#: coalib/filters/Filter.py:80 coalib/tests/filters/FilterTest.py:61
-msgid "Tearing down filter..."
-msgstr ""
-
 #: coalib/misc/StringConstants.py:19
 msgid ""
 "This is a bug. We are sorry for the inconvenience. Please contact the "
@@ -29,6 +17,7 @@ msgid "yes"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:28
+#: coalib/tests/misc/StringConverterTest.py:38
 msgid "yeah"
 msgstr ""
 
@@ -65,6 +54,7 @@ msgid "no"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:37
+#: coalib/tests/misc/StringConverterTest.py:42
 msgid "nope"
 msgstr ""
 
@@ -81,32 +71,37 @@ msgid "wrong"
 msgstr ""
 
 #. Do not change this translation without changing it in the code also!
+#: coalib/tests/misc/i18nTest.py:39 coalib/tests/misc/i18nTest.py:43
 #: coalib/tests/filters/FilterTest.py:38 coalib/tests/filters/FilterTest.py:60
-#: coalib/tests/misc/i18nTest.py:39 coalib/tests/misc/i18nTest.py:43 coala:24
+#: coala:24
 msgid "A string to test translations."
 msgstr ""
 
-#: coalib/tests/misc/StringConverterTest.py:35
-msgid " yeah "
-msgstr ""
-
-#: coalib/tests/misc/StringConverterTest.py:37
-msgid " nope "
-msgstr ""
-
-#: coalib/tests/processes/communication/LogMessageTest.py:41
+#: coalib/tests/processes/communication/LogMessageTest.py:42
 #: coalib/processes/communication/LogMessage.py:28
 msgid "ERROR"
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:43
+#: coalib/tests/processes/communication/LogMessageTest.py:44
 #: coalib/processes/communication/LogMessage.py:27
 msgid "WARNING"
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:45
+#: coalib/tests/processes/communication/LogMessageTest.py:46
 #: coalib/processes/communication/LogMessage.py:26
 msgid "DEBUG"
+msgstr ""
+
+#: coalib/tests/filters/FilterTest.py:57 coalib/filters/Filter.py:75
+msgid "Setting up filter..."
+msgstr ""
+
+#: coalib/tests/filters/FilterTest.py:59 coalib/filters/Filter.py:77
+msgid "Running filter..."
+msgstr ""
+
+#: coalib/tests/filters/FilterTest.py:61 coalib/filters/Filter.py:79
+msgid "Tearing down filter..."
 msgstr ""
 
 #. Something's gone wrong

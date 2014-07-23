@@ -40,3 +40,8 @@ class StringConstants:
     This string contains many unicode characters and is intended to challenge tests.
     """
     COMPLEX_TEST_STRING = "4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ ĦŊħ ß°^ \\\n\u2192"
+
+    """
+    This is the directory where results from coverage for unittests are stored.
+    """
+    COVERAGE_DIR = "./.coverageresults"
