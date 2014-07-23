@@ -30,7 +30,13 @@ class TestHelper:
     @staticmethod
     def execute_python3_file(filename):
         try:
-            return subprocess.call(["coverage", "run", "-p", "--branch", filename])
+            return subprocess.call(["coverage",
+                                    "run",
+                                    "-p",  # make it collectable later
+                                    "--branch",  # check branch AND statement coverage
+                                    "--omit",  # dont check coverage of test file itself
+                                    filename,
+                                    filename])
         except:
             print("Coverage failed. Falling back to standard unit tests.")
             return subprocess.call(["python3", filename])
