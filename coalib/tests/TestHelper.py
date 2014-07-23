@@ -15,12 +15,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import subprocess
+from coalib.misc.StringConstants import StringConstants
 
 
 class TestHelper:
     @staticmethod
+    def __show_coverage_results():
+        try:
+            subprocess.call(["coverage", "combine"])
+            subprocess.call(["coverage", "report", "-m"])
+        except:
+            pass
+
+    @staticmethod
     def execute_python3_file(filename):
-        return subprocess.call(["python3", filename])
+        try:
+            return subprocess.call(["coverage", "run", "-p", "--branch", filename])
+        except:
+            print("Coverage failed. Falling back to standard unit tests.")
+            return subprocess.call(["python3", filename])
 
     @staticmethod
     def execute_python3_files(filenames):
@@ -35,6 +48,8 @@ class TestHelper:
             print("\n"+"#"*70)
 
         print("\nTests finished: failures in {} of {} test modules".format(failures, number))
+
+        TestHelper.__show_coverage_results()
         return retval
 
     @staticmethod
