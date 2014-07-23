@@ -37,6 +37,10 @@ class StringConverter:
 
     def __set_value_delims(self, val):
         self.__list_delimiters = val
+        if len(self.__list_delimiters) == 0:
+            self.__delim_regex = ""
+            return
+
         self.__delim_regex = "("
         for i in range(len(val) - 1):
             self.__delim_regex += re.escape(str(val[i])) + "|"

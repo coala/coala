@@ -61,6 +61,9 @@ class Filter(Process):
         self.__send_msg(LOG_LEVEL.ERROR, delimiter, *args)
 
     def __send_msg(self, log_level, delimiter, *args):
+        if len(args) == 0:
+            return
+
         msg = ""
         for i in range(len(args) - 1):
             msg += str(args[i]) + str(delimiter)

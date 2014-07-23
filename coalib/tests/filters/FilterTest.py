@@ -33,6 +33,7 @@ class TestFilter(Filter):
 
     def tear_down(self):
         self.fail_msg("teardown")
+        self.fail_msg()
 
     def run_filter(self):
         self.warn_msg(self._("A string to test translations."))

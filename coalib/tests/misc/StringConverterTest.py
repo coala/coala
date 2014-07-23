@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 sys.path.insert(0, ".")
+from coalib.misc.StringConstants import StringConstants
 from coalib.misc.StringConverter import StringConverter
 from coalib.misc.i18n import _
 import unittest
@@ -52,6 +53,9 @@ class ProcessTestCase(unittest.TestCase):
 
         self.assertTrue("bug" in self.uut)
         self.assertFalse("but" in self.uut)
+
+        self.uut = StringConverter(StringConstants.COMPLEX_TEST_STRING, strip_whitespaces=False, list_delimiters="")
+        self.assertEqual(list(self.uut), [StringConstants.COMPLEX_TEST_STRING])
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
