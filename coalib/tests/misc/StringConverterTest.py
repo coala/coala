@@ -27,11 +27,16 @@ class ProcessTestCase(unittest.TestCase):
     def test_whitespace_stripping(self):
         self.assertEqual(str(self.uut), "1")
 
+        self.uut = StringConverter("\n 1 \n", strip_whitespaces=False)
+        self.assertEqual(str(self.uut), "\n 1 \n")
+
     def test_int_conversion(self):
         self.assertEqual(int(self.uut), 1)
         self.uut = StringConverter(" not an int ")
         self.assertRaises(ValueError, int, self.uut)
 
+    def test_len(self):
+        self.assertEqual(len(self.uut), 1)
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
