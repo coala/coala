@@ -77,7 +77,8 @@ for __lang in __langs:
             gettext.GNUTranslations(open(__filename, "rb")).install()
             __language = __lang[0:5]
             break
-        except IOError:
+        except IOError:  # pragma: no cover
+            # I cant think of a situation where this should happen we could create in a unit test
             continue
 
 __gettext = builtins.__dict__['_']

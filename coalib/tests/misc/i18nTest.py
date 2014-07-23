@@ -42,6 +42,10 @@ class i18nTestCase(unittest.TestCase):
         self.set_lang("unknown_language.UTF8")
         self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
 
+    def test_get_locale(self):
+        self.set_lang("unknown_language")
+        self.assertEqual(i18n.get_locale(), "en_US")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
