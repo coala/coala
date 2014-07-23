@@ -37,7 +37,7 @@ class StringConverter:
             return True
         if self.__value.lower() in StringConstants.FALSE_STRINGS:
             return False
-        raise AttributeError
+        raise ValueError
 
     def __len__(self):
         return len(self.__value)

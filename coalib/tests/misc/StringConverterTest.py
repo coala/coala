@@ -40,7 +40,7 @@ class ProcessTestCase(unittest.TestCase):
         self.assertEqual(bool(self.uut), False)
 
         self.uut = StringConverter(" i dont know ")
-        self.assertRaises(AttributeError, bool, self.uut)
+        self.assertRaises(ValueError, bool, self.uut)
 
 
 if __name__ == '__main__':
