@@ -24,17 +24,19 @@ import unittest
 
 class LogMessageTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = LogMessage()
+        self.uut = LogMessage(LOG_LEVEL.DEBUG, "test message")
 
     def test_construction(self):
         # take a look if defaults are good
         self.assertEqual(self.uut.log_level, LOG_LEVEL.DEBUG)
-        self.assertEqual(self.uut.message, "")
+        self.assertEqual(self.uut.message, "test message")
 
         # see that arguments are processed right
-        self.uut = LogMessage(LOG_LEVEL.WARNING, "a msg")
+        self.uut = LogMessage(LOG_LEVEL.WARNING, "   a msg  ")
         self.assertEqual(self.uut.log_level, LOG_LEVEL.WARNING)
         self.assertEqual(self.uut.message, "a msg")
+
+        self.assertRaises(ValueError, LogMessage, LOG_LEVEL.DEBUG, "")
 
     def test_to_str(self):
         self.uut.message = StringConstants.COMPLEX_TEST_STRING
@@ -44,6 +46,8 @@ class LogMessageTestCase(unittest.TestCase):
         self.assertEqual(str(self.uut), "[{}] {}".format(_("WARNING"), StringConstants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.DEBUG
         self.assertEqual(str(self.uut), "[{}] {}".format(_("DEBUG"), StringConstants.COMPLEX_TEST_STRING))
+        self.uut.log_level = 5
+        self.assertEqual(str(self.uut), "[{}] {}".format(_("ERROR"), StringConstants.COMPLEX_TEST_STRING))
 
 
 if __name__ == '__main__':

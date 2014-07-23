@@ -18,9 +18,11 @@ from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 
 
 class LogMessage:
-    def __init__(self, log_level=LOG_LEVEL.DEBUG, message=""):
+    def __init__(self, log_level, message):
         self.log_level = log_level
-        self.message = str(message)
+        self.message = str(message).strip()
+        if self.message == "":
+            raise ValueError("Empty log messages are not allowed.")
 
     def __str__(self):
         return '[{}] {}'.format({LOG_LEVEL.DEBUG: _("DEBUG"),

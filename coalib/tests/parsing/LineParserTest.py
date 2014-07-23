@@ -25,10 +25,12 @@ class LineParserTestCase(unittest.TestCase):
 
     def test_empty_line(self):
         self.check_data_set("")
+        self.check_data_set("\n \n \n")
 
     def test_comment_parsing(self):
         self.check_data_set("# comment only$§\n", output_comment="# comment only$§")
         self.check_data_set("   ; comment only  \n", output_comment="; comment only")
+        self.check_data_set("#", output_comment="#")
 
     def test_multi_value_parsing(self):
         self.check_data_set("a, b c= = :()&/ #heres a comment \n",
