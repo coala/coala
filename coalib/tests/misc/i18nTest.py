@@ -21,9 +21,12 @@ else:
 
 import unittest
 import os
+import shutil
 from coalib.misc import i18n
-i18n.compile_translations(False)
+print("Testing translation building...")
+shutil.rmtree("build", ignore_errors=True)
 i18n.compile_translations(True)
+i18n.compile_translations(False)
 
 
 class i18nTestCase(unittest.TestCase):

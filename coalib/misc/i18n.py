@@ -49,7 +49,7 @@ def compile_translations(verbose=True):
                         print("Compiling {}...".format(lang))
                     subprocess.call(["msgfmt", src, "--output-file", dest])
                     translations.append((install_dir, [dest]))
-                except:
+                except:  # pragma: no cover
                     print("WARNING: Failed building translation for {}. "
                           "Please make sure msgfmt is installed and in PATH.".format(lang))
     return translations
