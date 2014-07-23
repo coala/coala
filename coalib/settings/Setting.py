@@ -20,10 +20,14 @@ def path(obj):
     return obj.__path__()
 
 class Setting(StringConverter):
-    def __init__(self, key, value, origin, strip_whitespaces=True):
+    def __init__(self, key, value, origin="", strip_whitespaces=True):
         StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces)
         self.key = str(key)
+        if self.key == "":
+            raise ValueError("An empty key is not allowed for a setting.")
         self.origin = str(origin)
 
     def __path__(self):
+        if self.origin == "":
+            raise ValueError("Cannot determine path without origin.")
         return os.path.join(self.origin, str(self))

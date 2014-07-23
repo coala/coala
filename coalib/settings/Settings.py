@@ -35,6 +35,7 @@ class Settings:
         if not isinstance(setting, Setting):
             raise TypeError
 
+        # Setting asserts key != "" for us
         self.contents[self.__prepare_key(setting.key)] = setting
 
     def __iter__(self):
@@ -44,11 +45,14 @@ class Settings:
 
     def __getitem__(self, item):
         key = self.__prepare_key(item)
+        if key == "":
+            raise ValueError("Empty keys are of no use.")
+
         res = self.contents.get(key, None)
         if res is not None:
             return res
 
         if self.defaults is None:
-            raise IndexError
+            raise IndexError("Required index is unavailable.")
 
         return self.defaults[key]

@@ -25,8 +25,14 @@ class SettingTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = Setting("key", " 22\n", ".", True)
 
+    def test_construction(self):
+        self.assertRaises(ValueError, Setting, "", 2, 2)
+
     def test_path(self):
         self.assertEqual(path(self.uut), os.path.join(".", "22"))
+
+        self.uut = Setting("key", " 22", "")
+        self.assertRaises(ValueError, path, self.uut)
 
     def test_inherited_conversions(self):
         self.assertEqual(str(self.uut), "22")
