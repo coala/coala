@@ -32,11 +32,11 @@ class ProcessTestCase(unittest.TestCase):
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
-        self.uut = StringConverter(_(" yeah "))
+        self.uut = StringConverter(_("yeah"))
         self.assertEqual(bool(self.uut), True)
-        self.uut = StringConverter(" y ")
+        self.uut = StringConverter("y")
         self.assertEqual(bool(self.uut), True)
-        self.uut = StringConverter(_(" nope "))
+        self.uut = StringConverter(_("nope"))
         self.assertEqual(bool(self.uut), False)
 
         self.uut = StringConverter(" i dont know ")
