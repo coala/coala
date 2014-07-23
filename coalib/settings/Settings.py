@@ -12,18 +12,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-import os
-from coalib.misc.StringConverter import StringConverter
+from collections import OrderedDict
+from coalib.settings.Setting import Setting
 
 
-def path(obj):
-    return obj.__path__()
+class Settings:
+    """
+    This class holds a set of settings.
+    """
+    def __init__(self, name, defaults=None):
+        if defaults is not None and not isinstance(defaults, Settings):
+            raise TypeError
 
-class Setting(StringConverter):
-    def __init__(self, key, value, origin, strip_whitespaces=True):
-        StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces)
-        self.key = str(key)
-        self.origin = str(origin)
+        self.name = str(name)
+        self.defaults = defaults
+        self.contents = OrderedDict()
 
-    def __path__(self):
-        return os.path.join(self.origin, str(self))
+    def append(self, setting):
+        if not isinstance(setting, Setting):
+            raise TypeError
+
+        self.contents[setting.key.lower()] = setting
