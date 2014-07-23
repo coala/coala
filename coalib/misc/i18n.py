@@ -20,11 +20,7 @@ import sys
 import builtins
 
 
-def compile_translations(verbose=True):  # pragma: no cover
-    """
-    This will be used only for setup.py and we dont have anything to compare the results with. For this reason this
-    function is not unit tested.
-    """
+def compile_translations(verbose=True):
     if verbose:
         print("Compiling translations...")
     translations = []

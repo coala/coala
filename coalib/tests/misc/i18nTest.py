@@ -22,6 +22,8 @@ else:
 import unittest
 import os
 from coalib.misc import i18n
+i18n.compile_translations(False)
+i18n.compile_translations(True)
 
 
 class i18nTestCase(unittest.TestCase):
