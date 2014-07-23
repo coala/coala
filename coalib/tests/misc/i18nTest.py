@@ -21,7 +21,12 @@ else:
 
 import unittest
 import os
+import shutil
 from coalib.misc import i18n
+print("Testing translation building...")
+shutil.rmtree("build", ignore_errors=True)
+i18n.compile_translations(True)
+i18n.compile_translations(False)
 
 
 class i18nTestCase(unittest.TestCase):
@@ -41,6 +46,10 @@ class i18nTestCase(unittest.TestCase):
     def test_unknown(self):
         self.set_lang("unknown_language.UTF8")
         self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
+
+    def test_get_locale(self):
+        self.set_lang("unknown_language")
+        self.assertEqual(i18n.get_locale(), "en_US")
 
 
 if __name__ == '__main__':

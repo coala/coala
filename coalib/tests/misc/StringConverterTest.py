@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 sys.path.insert(0, ".")
+from coalib.misc.StringConstants import StringConstants
 from coalib.misc.StringConverter import StringConverter
 from coalib.misc.i18n import _
 import unittest
@@ -23,6 +24,10 @@ import unittest
 class ProcessTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = StringConverter("\n 1 \n ")
+
+    def test_construction(self):
+        self.assertRaises(TypeError, StringConverter, "test", strip_whitespaces=5)
+        self.assertRaises(TypeError, StringConverter, "test", list_delimiters=5)
 
     def test_whitespace_stripping(self):
         self.assertEqual(str(self.uut), "1")
@@ -37,6 +42,20 @@ class ProcessTestCase(unittest.TestCase):
 
     def test_len(self):
         self.assertEqual(len(self.uut), 1)
+
+    def test_iterator(self):
+        self.uut = StringConverter("a, test with!!some challenge", list_delimiters=[",", " ", "!!"])
+        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
+        self.uut = StringConverter("a, test with!some challenge", list_delimiters=", !")
+        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
+        self.uut = StringConverter("a\\n,bug¸g", list_delimiters=["\\", ",", "¸"])
+        self.assertEqual(list(self.uut), ["a", "n", "bug", "g"])
+
+        self.assertTrue("bug" in self.uut)
+        self.assertFalse("but" in self.uut)
+
+        self.uut = StringConverter(StringConstants.COMPLEX_TEST_STRING, strip_whitespaces=False, list_delimiters="")
+        self.assertEqual(list(self.uut), [StringConstants.COMPLEX_TEST_STRING])
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)

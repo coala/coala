@@ -29,10 +29,11 @@ class TestFilter(Filter):
         Filter.__init__(self, settings, queue)
 
     def set_up(self):
-        self.debug_msg("setup")
+        self.debug_msg("set", "up", delimiter="=")
 
     def tear_down(self):
         self.fail_msg("teardown")
+        self.fail_msg()
 
     def run_filter(self):
         self.warn_msg(self._("A string to test translations."))
@@ -46,20 +47,30 @@ class FilterTestCase(unittest.TestCase):
     def test_kind(self):
         self.assertEqual(self.uut.kind(), FILTER_KIND.FILTER_KIND.UNKNOWN)
 
+    def test_methods_available(self):
+        # these should be available and not throw anything
+        base = Filter(None, None)
+        base.set_up()
+        base.tear_down()
+
+        self.assertRaises(NotImplementedError, base.run_filter)
+
+        self.assertEqual(base.get_needed_settings(), {})
+
+    def test_message_queue(self):
+        self.uut.run()
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up filter..."))
+        self.check_message(LOG_LEVEL.DEBUG, "set=up")
+        self.check_message(LOG_LEVEL.DEBUG, _("Running filter..."))
+        self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down filter..."))
+        self.check_message(LOG_LEVEL.ERROR, "teardown")
+
     def check_message(self, log_level, message):
         msg = self.queue.get()
         self.assertIsInstance(msg, LogMessage)
         self.assertEqual(msg.message, message)
         self.assertEqual(msg.log_level, log_level)
-
-    def test_message_queue(self):
-        self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up filter..."))
-        self.check_message(LOG_LEVEL.DEBUG, "setup")
-        self.check_message(LOG_LEVEL.DEBUG, _("Running filter..."))
-        self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down filter..."))
-        self.check_message(LOG_LEVEL.ERROR, "teardown")
 
 
 if __name__ == '__main__':

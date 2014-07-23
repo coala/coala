@@ -20,11 +20,7 @@ import sys
 import builtins
 
 
-def compile_translations(verbose=True):  # pragma: no cover
-    """
-    This will be used only for setup.py and we dont have anything to compare the results with. For this reason this
-    function is not unit tested.
-    """
+def compile_translations(verbose=True):
     if verbose:
         print("Compiling translations...")
     translations = []
@@ -53,7 +49,7 @@ def compile_translations(verbose=True):  # pragma: no cover
                         print("Compiling {}...".format(lang))
                     subprocess.call(["msgfmt", src, "--output-file", dest])
                     translations.append((install_dir, [dest]))
-                except:
+                except:  # pragma: no cover
                     print("WARNING: Failed building translation for {}. "
                           "Please make sure msgfmt is installed and in PATH.".format(lang))
     return translations
@@ -77,7 +73,8 @@ for __lang in __langs:
             gettext.GNUTranslations(open(__filename, "rb")).install()
             __language = __lang[0:5]
             break
-        except IOError:
+        except IOError:  # pragma: no cover
+            # I cant think of a situation where this should happen we could create in a unit test
             continue
 
 __gettext = builtins.__dict__['_']
