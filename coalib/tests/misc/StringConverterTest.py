@@ -48,7 +48,8 @@ class ProcessTestCase(unittest.TestCase):
         self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
         self.uut = StringConverter("a, test with!some challenge", list_delimiters=", !")
         self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
-        self.uut = StringConverter("a\\n,bug¸g", list_delimiters=["\\", ",", "¸"])
+        self.uut = StringConverter("testval", list_delimiters=["\\", ",", "¸"])
+        self.uut.value = "a\\n,bug¸g"
         self.assertEqual(list(self.uut), ["a", "n", "bug", "g"])
 
         self.assertTrue("bug" in self.uut)
@@ -59,7 +60,7 @@ class ProcessTestCase(unittest.TestCase):
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
-        self.uut = StringConverter(_("yeah"))
+        self.uut.value = _("yeah")
         self.assertEqual(bool(self.uut), True)
         self.uut = StringConverter("y")
         self.assertEqual(bool(self.uut), True)
