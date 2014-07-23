@@ -10,7 +10,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from coalib.misc.i18n import _
@@ -20,7 +20,7 @@ from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 class LogMessage:
     def __init__(self, log_level=LOG_LEVEL.DEBUG, message=""):
         self.log_level = log_level
-        self.message = message
+        self.message = str(message)
 
     def __str__(self):
         return '[{}] {}'.format({LOG_LEVEL.DEBUG: _("DEBUG"),

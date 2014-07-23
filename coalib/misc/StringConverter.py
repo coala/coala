@@ -10,7 +10,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from coalib.misc.StringConstants import StringConstants
 
@@ -24,7 +24,7 @@ class StringConverter:
     - __path__() creates an absolute path for a string
     """
     def __init__(self, value, strip_whitespaces=True):
-        self.__value = value
+        self.__value = str(value)
         self.strip_whitespaces = strip_whitespaces
 
         self.__prepare_string()
@@ -43,7 +43,10 @@ class StringConverter:
         return len(self.__value)
 
     def __int__(self):
-        return int(self.__value)
+        try:
+            return int(self.__value)
+        except:
+            raise AttributeError
 
     def __prepare_string(self):
         if self.strip_whitespaces:
