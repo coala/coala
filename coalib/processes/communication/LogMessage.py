@@ -20,7 +20,7 @@ from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 class LogMessage:
     def __init__(self, log_level=LOG_LEVEL.DEBUG, message=""):
         self.log_level = log_level
-        self.message = message
+        self.message = str(message)
 
     def __str__(self):
         return '[{}] {}'.format({LOG_LEVEL.DEBUG: _("DEBUG"),
