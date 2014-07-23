@@ -12,18 +12,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+
 import os
-from coalib.misc.StringConverter import StringConverter
+import sys
+import unittest
+sys.path.insert(0, ".")
+
+from coalib.settings.Setting import Setting, path
 
 
-def path(obj):
-    return obj.__path__()
+class SettingTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = Setting("key", " 22\n", ".", True)
 
-class Setting(StringConverter):
-    def __init__(self, key, value, origin, strip_whitespaces=True):
-        StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces)
-        self.key = key
-        self.origin = origin
+    def test_path(self):
+        self.assertEqual(path(self.uut), os.path.join(".", "22"))
 
-    def __path__(self):
-        return os.path.join(self.origin, str(self))
+    def test_inherited_conversions(self):
+        self.assertEqual(str(self.uut), "22")
+        self.assertEqual(int(self.uut), 22)
+        self.assertRaises(ValueError, bool, self.uut)
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
