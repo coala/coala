@@ -6,3 +6,4 @@ build
 dist
 MANIFEST
 *.pyc
+.coverage
