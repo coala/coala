@@ -68,6 +68,10 @@ class LineParser:
                 value_begin = pos
                 value_delimiter = delimiter
 
+        # if we didnt find any delimiter we have values only which belong to the previous line
+        if value_begin == len(line):
+            value_begin = 0
+
         tmp_keys = [line[:value_begin]]
         for delim in self.key_delimiters:
             new = []
