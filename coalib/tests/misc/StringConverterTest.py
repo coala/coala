@@ -24,6 +24,10 @@ class ProcessTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = StringConverter("\n 1 \n ")
 
+    def test_construction(self):
+        self.assertRaises(TypeError, StringConverter, "test", strip_whitespaces=5)
+        self.assertRaises(TypeError, StringConverter, "test", list_delimiters=5)
+
     def test_whitespace_stripping(self):
         self.assertEqual(str(self.uut), "1")
 
@@ -37,6 +41,17 @@ class ProcessTestCase(unittest.TestCase):
 
     def test_len(self):
         self.assertEqual(len(self.uut), 1)
+
+    def test_iterator(self):
+        self.uut = StringConverter("a, test with!!some challenge", list_delimiters=[",", " ", "!!"])
+        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
+        self.uut = StringConverter("a, test with!some challenge", list_delimiters=", !")
+        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
+        self.uut = StringConverter("a\\n,bug¸g", list_delimiters=["\\", ",", "¸"])
+        self.assertEqual(list(self.uut), ["a", "n", "bug", "g"])
+
+        self.assertTrue("bug" in self.uut)
+        self.assertFalse("but" in self.uut)
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
