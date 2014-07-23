@@ -32,6 +32,24 @@ class SettingsTestCase(unittest.TestCase):
         self.assertRaises(TypeError, uut.append, 5)
         uut.append(Setting(5, 5, 5))
 
+    def test_iter(self):
+        defaults = Settings("default", None)
+        uut = Settings("name", defaults)
+        uut.append(Setting(5,5,5))
+        uut.append(Setting("TEsT",4,5))
+        defaults.append(Setting("tEsT", 1,3))
+        defaults.append(Setting(" great   ", 3, 8))
+        self.assertEqual(list(uut), ["5", "test", "great"])
+
+        for index in uut:
+            t = uut[index]
+            self.assertNotEqual(t, None)
+
+        self.assertEqual(int(uut["teSt "]), 4)
+        self.assertEqual(int(uut["GREAT "]), 3)
+        self.assertRaises(IndexError, uut.__getitem__, "doesnotexist")
+
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

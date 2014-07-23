@@ -17,6 +17,9 @@ from coalib.settings.Setting import Setting
 
 
 class Settings:
+    @staticmethod
+    def __prepare_key(key):
+        return str(key).lower().strip()
     """
     This class holds a set of settings.
     """
@@ -32,4 +35,20 @@ class Settings:
         if not isinstance(setting, Setting):
             raise TypeError
 
-        self.contents[setting.key.lower()] = setting
+        self.contents[self.__prepare_key(setting.key)] = setting
+
+    def __iter__(self):
+        joined = self.contents.copy()
+        joined.update(self.defaults.contents)
+        return iter(joined)
+
+    def __getitem__(self, item):
+        key = self.__prepare_key(item)
+        res = self.contents.get(key, None)
+        if res is not None:
+            return res
+
+        if self.defaults is None:
+            raise IndexError
+
+        return self.defaults[key]
