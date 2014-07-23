@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.misc.StringConverter import StringConverter
 
 
 class LineParser:
@@ -72,16 +73,6 @@ class LineParser:
         if value_begin == len(line):
             value_begin = 0
 
-        tmp_keys = [line[:value_begin]]
-        for delim in self.key_delimiters:
-            new = []
-            for key in tmp_keys:
-                new += key.split(delim)
-            tmp_keys = new
-
-        keys=[]
-        for i, key in enumerate(tmp_keys):
-            if key.strip(" \n") != "":
-                keys.append(key.strip(" \n"))
+        keys = list(StringConverter(line[:value_begin], list_delimiters=self.key_delimiters))
 
         return keys, line[value_begin+len(value_delimiter):].strip(" \n")
