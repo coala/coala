@@ -14,7 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class FILTER_KIND:
+class ANALYSER_KIND:
     UNKNOWN = 0
     LOCAL = 1
     GLOBAL = 2

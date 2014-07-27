@@ -28,7 +28,7 @@ if __name__ == "__main__":
           url='http://www.schuirmann.net/',
           scripts=['coala'],
           packages=['coalib',
-                        'coalib.filters',
+                        'coalib.analysers',
                         'coalib.misc',
                         'coalib.output',
                         'coalib.processes',
