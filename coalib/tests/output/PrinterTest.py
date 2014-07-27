@@ -13,7 +13,21 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import sys
+sys.path.insert(0, ".")
+from coalib.output.LogPrinter import LogPrinter
+from coalib.output.Printer import Printer
+import unittest
 
-class Outputter:
-    def print(self, *args, delimiter=' ', end='\n'):
-        raise NotImplementedError
+
+class PrinterTestCase(unittest.TestCase):
+    def test_run_available(self):
+        self.uut = Printer()
+        self.assertRaises(NotImplementedError, self.uut.print, "test")
+
+        self.uut = LogPrinter()
+        self.assertRaises(NotImplementedError, self.uut.print, "test")
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
