@@ -15,6 +15,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from coalib.output.Printer import Printer
 
 
-class LogPrinter(Printer):
-    def print(self, *args, delimiter=' ', end='\n', log_date=True):
+class ColorPrinter(Printer):
+    def print(self, *args, delimiter=' ', end='\n', color=None):
         raise NotImplementedError
