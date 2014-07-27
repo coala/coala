@@ -14,6 +14,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class Outputter:
+class Printer:
     def print(self, *args, delimiter=' ', end='\n'):
         raise NotImplementedError

@@ -19,6 +19,7 @@ from coalib.misc.StringConverter import StringConverter
 def path(obj):
     return obj.__path__()
 
+
 class Setting(StringConverter):
     def __init__(self, key, value, origin="", strip_whitespaces=True):
         StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces)

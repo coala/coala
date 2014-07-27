@@ -26,6 +26,7 @@ class SettingsTestCase(unittest.TestCase):
         uut = Settings(StringConstants.COMPLEX_TEST_STRING, None)
         uut = Settings(StringConstants.COMPLEX_TEST_STRING, uut)
         self.assertRaises(TypeError, Settings, "irrelevant", 5)
+        self.assertRaises(ValueError, uut.__init__, "name", uut)
 
     def test_append(self):
         uut = Settings(StringConstants.COMPLEX_TEST_STRING, None)
@@ -48,7 +49,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertEqual(int(uut["teSt "]), 4)
         self.assertEqual(int(uut["GREAT "]), 3)
         self.assertRaises(IndexError, uut.__getitem__, "doesnotexist")
-        self.assertRaises(ValueError, uut.__getitem__, " ")
+        self.assertRaises(IndexError, uut.__getitem__, " ")
 
 
 

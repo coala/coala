@@ -12,10 +12,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.output.Outputter import Outputter
+from coalib.output.Printer import Printer
 
 
-class LogOutputter(Outputter):
+class LogPrinter(Printer):
     def print(self, *args, delimiter=' ', end='\n', log_date=True):
         """
         Some outputters may choose to ignore certain parameters (color, log_date)

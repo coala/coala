@@ -33,7 +33,11 @@ class StringConverter:
         self.__strip_whitespaces = strip_whitespaces
         self.__set_value_delims(list_delimiters)
 
-        self.__prepare_string(value)
+        # Just declare it here so it exists from the __init__ method
+        self.__value = None
+        self.value = value
+        self.__list = None
+        self.__value_changed = True
 
     def __set_value_delims(self, val):
         self.__list_delimiters = val
@@ -47,9 +51,13 @@ class StringConverter:
         self.__delim_regex += re.escape(str(val[-1])) + ")"
 
     def __str__(self):
+        self.__prepare_value()
+
         return self.__value
 
     def __bool__(self):
+        self.__prepare_value()
+
         if self.__value.lower() in StringConstants.TRUE_STRINGS:
             return True
         if self.__value.lower() in StringConstants.FALSE_STRINGS:
@@ -57,20 +65,28 @@ class StringConverter:
         raise ValueError
 
     def __len__(self):
+        self.__prepare_value()
+
         return len(self.__value)
 
     def __int__(self):
+        self.__prepare_value()
         return int(self.__value)
 
     def __iter__(self):
+        self.__prepare_list()
+
         return iter(self.__list)
 
-    def __prepare_string(self, val):
-        self.__value = str(val)
+    def __prepare_list(self):
+        self.__prepare_value()
+
+        if not self.__value_changed:
+            return
+
         list = re.split(self.__delim_regex, self.__value)
 
         if self.__strip_whitespaces:
-            self.__value = self.__value.strip()
             for i in range(len(list)):
                 list[i] = list[i].strip()
 
@@ -78,3 +94,16 @@ class StringConverter:
         for elem in list:
             if not elem in self.__list_delimiters and not elem == "":
                 self.__list.append(elem)
+
+        self.__value_changed = False
+
+    def __prepare_value(self):
+        newval = str(self.value)
+        if self.__strip_whitespaces:
+            newval = newval.strip()
+
+        if newval == self.__value:
+            return
+
+        self.__value = newval
+        self.__value_changed = True

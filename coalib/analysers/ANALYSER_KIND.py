@@ -13,21 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys
-sys.path.insert(0, ".")
-from coalib.output.LogOutputter import LogOutputter
-from coalib.output.Outputter import Outputter
-import unittest
 
-
-class OutputterTestCase(unittest.TestCase):
-    def test_run_available(self):
-        self.uut = Outputter()
-        self.assertRaises(NotImplementedError, self.uut.print, "test")
-
-        self.uut = LogOutputter()
-        self.assertRaises(NotImplementedError, self.uut.print, "test")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+class ANALYSER_KIND:
+    UNKNOWN = 0
+    LOCAL = 1
+    GLOBAL = 2
