@@ -48,7 +48,7 @@ class Settings:
     def __getitem__(self, item):
         key = self.__prepare_key(item)
         if key == "":
-            raise ValueError("Empty keys are of no use.")
+            raise IndexError("Empty keys are of no use.")
 
         res = self.contents.get(key, None)
         if res is not None:
