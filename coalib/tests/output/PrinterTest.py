@@ -16,23 +16,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 sys.path.insert(0, ".")
 from coalib.output.Printer import Printer
-from coalib.output.ColorPrinter import ColorPrinter
-from coalib.output.LogPrinter import LogPrinter
 import unittest
 
 
+class TestPrinter(Printer):
+    def _print(self, output, somearg=""):
+        return output+somearg
+
+
 class PrinterTestCase(unittest.TestCase):
-    def test_printer(self):
+    def test_printer_interface(self):
         self.uut = Printer()
         self.assertRaises(NotImplementedError, self.uut.print, "test")
 
-    def test_log_printer(self):
-        self.uut = LogPrinter()
-        self.assertRaises(NotImplementedError, self.uut.print, "test")
-
-    def test_color_printer(self):
-        self.uut = ColorPrinter()
-        self.assertRaises(NotImplementedError, self.uut.print, "test")
+    def test_printer_concatenation(self):
+        self.uut = TestPrinter()
+        self.assertEqual(self.uut.print("hello", "world", delimiter=" ", end="-", somearg="then"), "hello world-then")
 
 
 if __name__ == '__main__':

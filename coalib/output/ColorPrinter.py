@@ -16,5 +16,19 @@ from coalib.output.Printer import Printer
 
 
 class ColorPrinter(Printer):
-    def print(self, *args, delimiter=' ', end='\n', color=None):
+    """
+    Just use
+    p = AnyColorPrinter()
+    p.print("some", "output", delimiter=" ", end="", color="green");
+    """
+    def _print(self, output, **kwargs):
+        try:
+            return self._print_colored(output, **kwargs)
+        except:
+            return self._print_uncolored(output, **kwargs)
+
+    def _print_colored(self, output, color=None):
+        raise NotImplementedError
+
+    def _print_uncolored(self, output):
         raise NotImplementedError

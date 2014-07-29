@@ -15,5 +15,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 class Printer:
-    def print(self, *args, delimiter=' ', end='\n'):
+    def _print(self, output, **kwargs):
         raise NotImplementedError
+
+    def print(self, *args, delimiter=' ', end='\n', **kwargs):
+        output = ""
+        delim = ""
+        for arg in args:
+            output += delim + arg
+            delim = delimiter
+        output += end
+
+        return self._print(output, **kwargs)
