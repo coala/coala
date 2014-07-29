@@ -19,13 +19,17 @@ README
 
 ABOUT
 =====
-coala is a simple COde AnaLysis Application. Its goal is to make static
-code analysis easy while remaining completely modular and therefore
-extendable.
+coala is a simple COde AnaLysis Application. Its goal is to make static code
+analysis easy while remaining completely modular and therefore extendable.
+Code analysis happens in python scripts while coala mainly manages these.
+
+This project is not finished and does not provide any real functionality. We
+are currently working hard to make it reality.
 
 Authors
 -------
-Lasse Schuirmann  <lasse@schuirmann.net>, Fabian Neuschmidt <fabian@neuschmidt.de>
+Current maintainers and creators are:
+Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt <fabian@neuschmidt.de>
 
 Build status
 ------------
@@ -43,9 +47,22 @@ coala can be installed afterwards by executing the file setup.py through
 the python interpreter (root access necessary):
 ```python3 setup.py install```
 
+You can then use coala from the commandline everywhere. Be aware that the
+coala script is not yet exposing any functionality.
+
 FUNCTION REFERENCE
 ==================
 coming soon...
+
+GETTING INVOLVED
+================
+We are working hard to make coala reality. If you want to help us you can do
+the following things:
+- send us an email (see authors above)
+- give us feedback
+- report bugs
+- send pull requests (write objects, tests)
+- provide translations
 
 LICENSE
 =======
