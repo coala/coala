@@ -1,3 +1,15 @@
+#: coalib/analysers/Analyser.py:78 coalib/tests/analysers/AnalyserTest.py:62
+msgid "Setting up analyser..."
+msgstr ""
+
+#: coalib/analysers/Analyser.py:80 coalib/tests/analysers/AnalyserTest.py:64
+msgid "Running analyser..."
+msgstr ""
+
+#: coalib/analysers/Analyser.py:82 coalib/tests/analysers/AnalyserTest.py:66
+msgid "Tearing down analyser..."
+msgstr ""
+
 #: coalib/misc/StringConstants.py:19
 msgid ""
 "This is a bug. We are sorry for the inconvenience. Please contact the "
@@ -17,7 +29,7 @@ msgid "yes"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:28
-#: coalib/tests/misc/StringConverterTest.py:38
+#: coalib/tests/misc/StringConverterTest.py:63
 msgid "yeah"
 msgstr ""
 
@@ -54,7 +66,7 @@ msgid "no"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:37
-#: coalib/tests/misc/StringConverterTest.py:42
+#: coalib/tests/misc/StringConverterTest.py:67
 msgid "nope"
 msgstr ""
 
@@ -71,37 +83,26 @@ msgid "wrong"
 msgstr ""
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/misc/i18nTest.py:39 coalib/tests/misc/i18nTest.py:43
-#: coalib/tests/filters/FilterTest.py:38 coalib/tests/filters/FilterTest.py:60
-#: coala:24
+#: coalib/tests/analysers/AnalyserTest.py:39
+#: coalib/tests/analysers/AnalyserTest.py:65 coalib/tests/misc/i18nTest.py:44
+#: coalib/tests/misc/i18nTest.py:48 coala:24
 msgid "A string to test translations."
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:42
-#: coalib/processes/communication/LogMessage.py:28
+#: coalib/tests/processes/communication/LogMessageTest.py:44
+#: coalib/tests/processes/communication/LogMessageTest.py:50
+#: coalib/processes/communication/LogMessage.py:30
 msgid "ERROR"
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:44
-#: coalib/processes/communication/LogMessage.py:27
+#: coalib/tests/processes/communication/LogMessageTest.py:46
+#: coalib/processes/communication/LogMessage.py:29
 msgid "WARNING"
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:46
-#: coalib/processes/communication/LogMessage.py:26
+#: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/processes/communication/LogMessage.py:28
 msgid "DEBUG"
-msgstr ""
-
-#: coalib/tests/filters/FilterTest.py:57 coalib/filters/Filter.py:75
-msgid "Setting up filter..."
-msgstr ""
-
-#: coalib/tests/filters/FilterTest.py:59 coalib/filters/Filter.py:77
-msgid "Running filter..."
-msgstr ""
-
-#: coalib/tests/filters/FilterTest.py:61 coalib/filters/Filter.py:79
-msgid "Tearing down filter..."
 msgstr ""
 
 #. Something's gone wrong
