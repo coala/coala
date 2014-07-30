@@ -12,6 +12,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import sys
+import traceback
+from coalib.misc.StringConstants import StringConstants
 
 from coalib.misc.i18n import _
 from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
@@ -75,12 +78,20 @@ class Analyser(Process):
         raise NotImplementedError
 
     def run(self):
-        self.debug_msg(_("Setting up analyser..."))
-        self.set_up()
-        self.debug_msg(_("Running analyser..."))
-        self.run_analyser()
-        self.debug_msg(_("Tearing down analyser..."))
-        self.tear_down()
+        try:
+            self.debug_msg(_("Setting up analyser..."))
+            self.set_up()
+            self.debug_msg(_("Running analyser..."))
+            self.run_analyser()
+            self.debug_msg(_("Tearing down analyser..."))
+            self.tear_down()
+        except:
+            exception = sys.exc_info()
+            self.debug_msg(_("Unknown failure in worker process.\n"
+                             "Exception: {}\nTraceback:\n{}").format(str(exception[0]),
+                                                                     traceback.extract_tb(exception[2])))
+            self.warn_msg(_("An unknown failure occurred and a analyzer run is aborted."),
+                          StringConstants.THIS_IS_A_BUG)
 
     @staticmethod
     def kind():
