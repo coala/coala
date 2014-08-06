@@ -51,7 +51,7 @@ class ConfParser(Parser):
             if overwrite:
                 self.__init_sections()
 
-            self.__parse_lines(lines)
+            self.__parse_lines(lines, input_data)
         except FileNotFoundError:
             return _("Failed reading file. Please make sure to provide a file that is existent and "
                      "you have the permission to read it.")
@@ -92,8 +92,29 @@ class ConfParser(Parser):
         self.__rand_helper += 1
         section._add_or_create_setting(Setting(comment, comment, origin), custom_key=key)
 
-    def __parse_lines(self, lines):
-        raise NotImplementedError
+    def __parse_lines(self, lines, origin):
+        current_section_name = "default"
+        current_section = self.get_section(current_section_name)
+        current_keys = []
+
+        for line in lines:
+            section_name, keys, value, comment = self.line_parser.parse(line)
+
+            if comment is not "":
+                self.__add_comment(current_section, comment, origin)
+
+            if section_name != "":
+                current_section_name = section_name
+                current_section = self.get_section(current_section_name, True)
+                current_keys = []
+                continue
+
+            if keys != []:
+                current_keys = keys
+
+            for key in current_keys:
+                current_section._add_or_create_setting(Setting(key, value, origin),
+                                                       allow_appending=(keys == []))
 
     def __init_sections(self):
         self.sections = OrderedDict()
