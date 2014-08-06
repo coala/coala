@@ -51,6 +51,13 @@ class Settings:
             joined.update(self.defaults.contents)
         return iter(joined)
 
+    def __contains__(self, item, ignore_defaults=False):
+        try:
+            self.__getitem__(item, ignore_defaults)
+            return True
+        except:
+            return False
+
     def __getitem__(self, item, ignore_defaults=False):
         key = self.__prepare_key(item)
         if key == "":
