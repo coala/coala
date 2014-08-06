@@ -53,6 +53,12 @@ class ConfParser(Parser):
         """
         return self.parse(input_data, overwrite=True)
 
+    def export_to_settings(self):
+        """
+        :return a dict of Settings objects representing the current parsed things
+        """
+        return self.sections
+
     def __parse_lines(self, lines):
         raise NotImplementedError
 
