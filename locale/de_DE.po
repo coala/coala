@@ -12,17 +12,66 @@ msgstr ""
 "X-Generator: Poedit 1.6.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: coalib/analysers/Analyser.py:78 coalib/tests/analysers/AnalyserTest.py:62
+#: coalib/output/LogPrinter.py:32
+#: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/processes/communication/LogMessage.py:28
+msgid "DEBUG"
+msgstr "DEBUG"
+
+#: coalib/output/LogPrinter.py:33
+#: coalib/tests/processes/communication/LogMessageTest.py:46
+#: coalib/processes/communication/LogMessage.py:29
+msgid "WARNING"
+msgstr "WARNUNG"
+
+#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:44
+#: coalib/tests/processes/communication/LogMessageTest.py:44
+#: coalib/tests/processes/communication/LogMessageTest.py:50
+#: coalib/processes/communication/LogMessage.py:30
+msgid "ERROR"
+msgstr "FEHLER"
+
+#: coalib/parsing/ConfParser.py:62
+msgid ""
+"Failed reading file. Please make sure to provide a file that is existent and "
+"you have the permission to read it."
+msgstr ""
+"Das Lesen der Datei ist gescheitert. Bitte stellen Sie sicher dass die Datei "
+"existiert und Leserechte vorhanden sind."
+
+#: coalib/analysers/Analyser.py:82 coalib/tests/analysers/AnalyserTest.py:74
+#: coalib/tests/analysers/AnalyserTest.py:84
 msgid "Setting up analyser..."
 msgstr "Bereite Analyseroutine vor..."
 
-#: coalib/analysers/Analyser.py:80 coalib/tests/analysers/AnalyserTest.py:64
+#: coalib/analysers/Analyser.py:84 coalib/tests/analysers/AnalyserTest.py:76
+#: coalib/tests/analysers/AnalyserTest.py:85
 msgid "Running analyser..."
 msgstr "Führe Analyseroutine aus..."
 
-#: coalib/analysers/Analyser.py:82 coalib/tests/analysers/AnalyserTest.py:66
+#: coalib/analysers/Analyser.py:86 coalib/tests/analysers/AnalyserTest.py:78
+#: coalib/tests/analysers/AnalyserTest.py:86
 msgid "Tearing down analyser..."
 msgstr "Beende Analyseroutine nach..."
+
+#: coalib/analysers/Analyser.py:90
+msgid ""
+"Unknown failure in worker process.\n"
+"Exception: {}\n"
+"Traceback:\n"
+"{}"
+msgstr ""
+"Unbekannter Fehler im Arbeitsprozess.\n"
+"Exception: {}\n"
+"Traceback:\n"
+"{}"
+
+#. debug message contains custom content, dont test this here
+#: coalib/analysers/Analyser.py:93 coalib/tests/analysers/AnalyserTest.py:88
+msgid "An unknown failure occurred and an analyzer run is aborted."
+msgstr ""
+"Ein Unbekannter Fehler ist aufgetreten und eine Ausführung einer "
+"Analyseroutine wurde abgebrochen."
 
 #: coalib/misc/StringConstants.py:19
 msgid ""
@@ -99,31 +148,27 @@ msgid "wrong"
 msgstr "unwahr"
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/analysers/AnalyserTest.py:39
-#: coalib/tests/analysers/AnalyserTest.py:65 coalib/tests/misc/i18nTest.py:44
+#: coalib/tests/analysers/AnalyserTest.py:40
+#: coalib/tests/analysers/AnalyserTest.py:77 coalib/tests/misc/i18nTest.py:44
 #: coalib/tests/misc/i18nTest.py:48 coala:24
 msgid "A string to test translations."
 msgstr "Eine Zeichenkette um Übersetzungen zu testen."
 
-#: coalib/tests/output/LogPrinterTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:50
-#: coalib/output/LogPrinter.py:34
-#: coalib/processes/communication/LogMessage.py:30
-msgid "ERROR"
-msgstr "FEHLER"
+#: coalib/settings/Settings.py:31
+msgid "defaults has to be a Settings object or None."
+msgstr "defaults muss ein Settings Objekt oder None sein."
 
-#: coalib/tests/processes/communication/LogMessageTest.py:46
-#: coalib/output/LogPrinter.py:33
-#: coalib/processes/communication/LogMessage.py:29
-msgid "WARNING"
-msgstr "WARNUNG"
+#: coalib/settings/Settings.py:33
+msgid "defaults may not be self for non-recursivity."
+msgstr "defaults darf nicht self sein um Rekursivität zu vermeiden."
 
-#: coalib/tests/processes/communication/LogMessageTest.py:48
-#: coalib/output/LogPrinter.py:32
-#: coalib/processes/communication/LogMessage.py:28
-msgid "DEBUG"
-msgstr "DEBUG"
+#: coalib/settings/Settings.py:78
+msgid "Empty keys are invalid."
+msgstr "Leere Schlüssel sind ungültig."
+
+#: coalib/settings/Settings.py:85
+msgid "Required index is unavailable."
+msgstr "Der angeforderte Index ist nicht verfügbar."
 
 #. Something's gone wrong
 #: coala:27

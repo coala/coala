@@ -17,7 +17,7 @@ msgstr ""
 msgid "ERROR"
 msgstr ""
 
-#: coalib/parsing/ConfParser.py:69
+#: coalib/parsing/ConfParser.py:62
 msgid ""
 "Failed reading file. Please make sure to provide a file that is existent and "
 "you have the permission to read it."
@@ -130,19 +130,19 @@ msgstr ""
 msgid "A string to test translations."
 msgstr ""
 
-#: coalib/settings/Settings.py:29
+#: coalib/settings/Settings.py:31
 msgid "defaults has to be a Settings object or None."
 msgstr ""
 
-#: coalib/settings/Settings.py:31
+#: coalib/settings/Settings.py:33
 msgid "defaults may not be self for non-recursivity."
 msgstr ""
 
-#: coalib/settings/Settings.py:64
+#: coalib/settings/Settings.py:78
 msgid "Empty keys are invalid."
 msgstr ""
 
-#: coalib/settings/Settings.py:71
+#: coalib/settings/Settings.py:85
 msgid "Required index is unavailable."
 msgstr ""
 
