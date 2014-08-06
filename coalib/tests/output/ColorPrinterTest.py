@@ -15,24 +15,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 sys.path.insert(0, ".")
-from coalib.output.Printer import Printer
+from coalib.output.ColorPrinter import ColorPrinter
 import unittest
 
 
-class TestPrinter(Printer):
-    def _print(self, output, somearg=""):
-        return output+somearg
-
-
-class PrinterTestCase(unittest.TestCase):
+class ColorPrinterTestCase(unittest.TestCase):
     def test_printer_interface(self):
-        self.uut = Printer()
+        self.uut = ColorPrinter()
         self.assertRaises(NotImplementedError, self.uut.print, "test")
-
-    def test_printer_concatenation(self):
-        self.uut = TestPrinter()
-        self.assertEqual(self.uut.print("hello", "world", delimiter=" ", end="-", somearg="then"), "hello world-then")
-        self.assertEqual(self.uut.print(end=""), "")
 
 
 if __name__ == '__main__':

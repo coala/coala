@@ -17,10 +17,11 @@ import sys
 sys.path.insert(0, ".")
 import multiprocessing
 from coalib.analysers import ANALYSER_KIND
-from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
+from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.analysers.Analyser import Analyser
+from coalib.output.LOG_LEVEL import LOG_LEVEL
 import unittest
 
 
@@ -37,6 +38,17 @@ class TestAnalyser(Analyser):
 
     def run_analyser(self):
         self.warn_msg(self._("A string to test translations."))
+
+
+class BadTestAnalyzer(Analyser):
+    def __init__(self, settings, queue):
+        Analyser.__init__(self, settings, queue)
+
+    def tear_down(self):
+        raise NotImplementedError
+
+    def run_analyser(self):
+        pass
 
 
 class AnalyserTestCase(unittest.TestCase):
@@ -65,6 +77,16 @@ class AnalyserTestCase(unittest.TestCase):
         self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
         self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser..."))
         self.check_message(LOG_LEVEL.ERROR, "teardown")
+
+    def test_bad_analyzer(self):
+        self.uut = BadTestAnalyzer(None, self.queue)
+        self.uut.run()
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser..."))
+        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser..."))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser..."))
+        self.queue.get()  # debug message contains custom content, dont test this here
+        self.check_message(LOG_LEVEL.WARNING, _("An unknown failure occurred and an analyzer run is aborted.") + " " +
+                           StringConstants.THIS_IS_A_BUG)
 
     def check_message(self, log_level, message):
         msg = self.queue.get()

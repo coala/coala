@@ -37,18 +37,29 @@ class SettingsTestCase(unittest.TestCase):
         defaults = Settings("default", None)
         uut = Settings("name", defaults)
         uut.append(Setting(5,5,5))
-        uut.append(Setting("TEsT",4,5))
+        uut._add_or_create_setting(Setting("TEsT",4,5))
         defaults.append(Setting("tEsT", 1,3))
         defaults.append(Setting(" great   ", 3, 8))
-        self.assertEqual(list(uut), ["5", "test", "great"])
+        defaults.append(Setting(" great   ", 3, 8), custom_key="custom")
+        uut._add_or_create_setting(Setting(" NEW   ", "val", 8))
+        uut._add_or_create_setting(Setting(" NEW   ", "vl", 8), allow_appending=False)
+        uut._add_or_create_setting(Setting("new", "val", 9),
+                                   custom_key="teSt ",
+                                   allow_appending=True)
+        self.assertEqual(list(uut), ["5", "test", "new", "great", "custom"])
 
         for index in uut:
             t = uut[index]
             self.assertNotEqual(t, None)
 
-        self.assertEqual(int(uut["teSt "]), 4)
+        self.assertEqual(True, "teST" in defaults)
+        self.assertEqual(True, "       GREAT" in defaults)
+        self.assertEqual(False, "       GrEAT !" in defaults)
+        self.assertEqual(False, "" in defaults)
+        self.assertEqual(str(uut['test']), "4\nval")
         self.assertEqual(int(uut["GREAT "]), 3)
         self.assertRaises(IndexError, uut.__getitem__, "doesnotexist")
+        self.assertRaises(IndexError, uut.__getitem__, "great", True)
         self.assertRaises(IndexError, uut.__getitem__, " ")
 
 

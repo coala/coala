@@ -36,12 +36,8 @@ class StringConstants:
     """
     FALSE_STRINGS = ['0', _('off'), 'n', _("n"), 'no', _("no"),  _('nope'), _('nah'),  'false', _("false"), _("wrong")]
 
-    """
-    This string contains many unicode characters and is intended to challenge tests.
-    """
+    # This string contains many unicode characters and is intended to challenge tests.
     COMPLEX_TEST_STRING = "4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ ĦŊħ ß°^ \\\n\u2192"
 
-    """
-    This is the directory where results from coverage for unittests are stored.
-    """
+    # This is the directory where results from coverage for unittests are stored.
     COVERAGE_DIR = "./.coverageresults"

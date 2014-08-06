@@ -14,7 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from coalib.misc.i18n import _
-from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
+from coalib.output.LOG_LEVEL import LOG_LEVEL
 
 
 class LogMessage:
