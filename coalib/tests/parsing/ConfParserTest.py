@@ -18,7 +18,6 @@ import os
 import sys
 sys.path.insert(0, ".")
 from coalib.parsing.ConfParser import ConfParser
-from coalib.settings.Setting import Setting
 from coalib.settings.Settings import Settings
 import unittest
 import tempfile
@@ -44,9 +43,13 @@ class LineParserTestCase(unittest.TestCase):
         filehandler.write(self.example_file)
         filehandler.close()
         self.uut = ConfParser()
+        if sys.version_info < (3, 3):
+            err = OSError
+        else:
+            err = FileNotFoundError
         try:
             os.remove(self.nonexistentfile)
-        except FileNotFoundError:
+        except err:
             pass
 
     def tearDown(self):
