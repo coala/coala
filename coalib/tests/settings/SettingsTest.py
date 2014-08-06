@@ -47,6 +47,10 @@ class SettingsTestCase(unittest.TestCase):
             t = uut[index]
             self.assertNotEqual(t, None)
 
+        self.assertEqual(True, "teST" in defaults)
+        self.assertEqual(True, "       GREAT" in defaults)
+        self.assertEqual(False, "       GrEAT !" in defaults)
+        self.assertEqual(False, "" in defaults)
         self.assertEqual(int(uut["teSt "]), 4)
         self.assertEqual(int(uut["GREAT "]), 3)
         self.assertRaises(IndexError, uut.__getitem__, "doesnotexist")
