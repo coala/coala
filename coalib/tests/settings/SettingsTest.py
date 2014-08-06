@@ -50,6 +50,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertEqual(int(uut["teSt "]), 4)
         self.assertEqual(int(uut["GREAT "]), 3)
         self.assertRaises(IndexError, uut.__getitem__, "doesnotexist")
+        self.assertRaises(IndexError, uut.__getitem__, "great", True)
         self.assertRaises(IndexError, uut.__getitem__, " ")
 
 
