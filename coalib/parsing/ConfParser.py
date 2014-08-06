@@ -12,3 +12,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.parsing.Parser import Parser
+
+
+class ConfParser(Parser):
+    def parse(self, input_data, overwrite=False):
+        """
+        Parses the input and adds the new data to the existing
+
+        :param input_data: filename
+        :param overwrite: behaves like reparse if this is True
+        :return a non empty string containing an error message on failure
+        """
+        raise NotImplementedError
+
+    def reparse(self, input_data):
+        """
+        Parses the input and overwrites all existent data
+
+        :param input_data: filename
+        :return a non empty string containing an error message on failure
+        """
+        return self.parse(input_data, overwrite=True)
