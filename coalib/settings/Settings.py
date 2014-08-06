@@ -45,12 +45,13 @@ class Settings:
         # Setting asserts key != "" for us
         self.contents[key] = setting
 
-    def __iter__(self):
+    def __iter__(self, ignore_defaults=False):
         joined = self.contents.copy()
-        joined.update(self.defaults.contents)
+        if self.defaults is not None and not ignore_defaults:
+            joined.update(self.defaults.contents)
         return iter(joined)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item, ignore_defaults=False):
         key = self.__prepare_key(item)
         if key == "":
             raise IndexError(_("Empty keys are invalid."))
@@ -59,7 +60,7 @@ class Settings:
         if res is not None:
             return res
 
-        if self.defaults is None:
+        if self.defaults is None or ignore_defaults:
             raise IndexError(_("Required index is unavailable."))
 
         return self.defaults[key]
