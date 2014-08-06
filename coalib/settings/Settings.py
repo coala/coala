@@ -47,6 +47,18 @@ class Settings:
         # Setting asserts key != "" for us
         self.contents[key] = setting
 
+    def _add_or_create_setting(self, setting, custom_key=None, allow_appending=True):
+        if custom_key is None:
+            key = setting.key
+        else:
+            key = custom_key
+
+        if self.__contains__(key, ignore_defaults=True) and allow_appending:
+            val = self[key]
+            val.value += "\n"+setting.value
+        else:
+            self.append(setting, custom_key=key)
+
     def __iter__(self, ignore_defaults=False):
         joined = self.contents.copy()
         if self.defaults is not None and not ignore_defaults:
