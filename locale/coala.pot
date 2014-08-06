@@ -89,18 +89,22 @@ msgstr ""
 msgid "A string to test translations."
 msgstr ""
 
+#: coalib/tests/output/LogPrinterTest.py:44
 #: coalib/tests/processes/communication/LogMessageTest.py:44
 #: coalib/tests/processes/communication/LogMessageTest.py:50
+#: coalib/output/LogPrinter.py:34
 #: coalib/processes/communication/LogMessage.py:30
 msgid "ERROR"
 msgstr ""
 
 #: coalib/tests/processes/communication/LogMessageTest.py:46
+#: coalib/output/LogPrinter.py:33
 #: coalib/processes/communication/LogMessage.py:29
 msgid "WARNING"
 msgstr ""
 
 #: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/output/LogPrinter.py:32
 #: coalib/processes/communication/LogMessage.py:28
 msgid "DEBUG"
 msgstr ""

@@ -17,10 +17,10 @@ import sys
 sys.path.insert(0, ".")
 import multiprocessing
 from coalib.analysers import ANALYSER_KIND
-from coalib.processes.communication.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.misc.i18n import _
 from coalib.analysers.Analyser import Analyser
+from coalib.output.LOG_LEVEL import LOG_LEVEL
 import unittest
 
 

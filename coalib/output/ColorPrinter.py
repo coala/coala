@@ -12,27 +12,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-
-import sys
-sys.path.insert(0, ".")
 from coalib.output.Printer import Printer
-import unittest
 
 
-class TestPrinter(Printer):
-    def _print(self, output, somearg=""):
-        return output+somearg
+class ColorPrinter(Printer):
+    """
+    Just use
+    p = AnyColorPrinter()
+    p.print("some", "output", delimiter=" ", end="", color="green");
+    """
+    def _print(self, output, **kwargs):
+        try:
+            return self._print_colored(output, **kwargs)
+        except:
+            return self._print_uncolored(output, **kwargs)
 
+    def _print_colored(self, output, color=None):
+        raise NotImplementedError
 
-class PrinterTestCase(unittest.TestCase):
-    def test_printer_interface(self):
-        self.uut = Printer()
-        self.assertRaises(NotImplementedError, self.uut.print, "test")
-
-    def test_printer_concatenation(self):
-        self.uut = TestPrinter()
-        self.assertEqual(self.uut.print("hello", "world", delimiter=" ", end="-", somearg="then"), "hello world-then")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+    def _print_uncolored(self, output):
+        raise NotImplementedError
