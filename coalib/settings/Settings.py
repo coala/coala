@@ -18,12 +18,14 @@ from coalib.misc.i18n import _
 
 
 class Settings:
-    @staticmethod
-    def __prepare_key(key):
-        return str(key).lower().strip()
     """
     This class holds a set of settings.
     """
+
+    @staticmethod
+    def __prepare_key(key):
+        return str(key).lower().strip()
+
     def __init__(self, name, defaults=None):
         if defaults is not None and not isinstance(defaults, Settings):
             raise TypeError(_("defaults has to be a Settings object or None."))
