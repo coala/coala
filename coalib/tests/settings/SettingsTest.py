@@ -40,7 +40,8 @@ class SettingsTestCase(unittest.TestCase):
         uut.append(Setting("TEsT",4,5))
         defaults.append(Setting("tEsT", 1,3))
         defaults.append(Setting(" great   ", 3, 8))
-        self.assertEqual(list(uut), ["5", "test", "great"])
+        defaults.append(Setting(" great   ", 3, 8), custom_key="custom")
+        self.assertEqual(list(uut), ["5", "test", "great", "custom"])
 
         for index in uut:
             t = uut[index]
