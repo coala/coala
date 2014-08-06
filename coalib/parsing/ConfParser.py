@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from collections import OrderedDict
 from coalib.parsing.LineParser import LineParser
 from coalib.parsing.Parser import Parser
+from coalib.settings.Setting import Setting
 from coalib.settings.Settings import Settings
 from coalib.misc.i18n import _
 
@@ -32,6 +33,7 @@ class ConfParser(Parser):
                                       section_name_surroundings)
         # Declare it
         self.sections = None
+        self.__rand_helper = None
         self.__init_sections()
 
     def parse(self, input_data, overwrite=False):
@@ -85,9 +87,15 @@ class ConfParser(Parser):
     def __refine_key(key):
         return str(key).lower().strip()
 
+    def __add_comment(self, section, comment, origin):
+        key = "COMMENT"+str(self.__rand_helper)
+        self.__rand_helper += 1
+        section._add_or_create_setting(Setting(comment, comment, origin), custom_key=key)
+
     def __parse_lines(self, lines):
         raise NotImplementedError
 
     def __init_sections(self):
         self.sections = OrderedDict()
         self.sections["default"] = Settings("Default")
+        self.__rand_helper = 0
