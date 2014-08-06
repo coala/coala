@@ -48,7 +48,7 @@ msgstr ""
 
 #. debug message contains custom content, dont test this here
 #: coalib/analysers/Analyser.py:93 coalib/tests/analysers/AnalyserTest.py:88
-msgid "An unknown failure occurred and a analyzer run is aborted."
+msgid "An unknown failure occurred and an analyzer run is aborted."
 msgstr ""
 
 #: coalib/misc/StringConstants.py:19
