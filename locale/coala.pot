@@ -1,13 +1,54 @@
-#: coalib/analysers/Analyser.py:78 coalib/tests/analysers/AnalyserTest.py:62
+#: coalib/output/LogPrinter.py:32
+#: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/processes/communication/LogMessage.py:28
+msgid "DEBUG"
+msgstr ""
+
+#: coalib/output/LogPrinter.py:33
+#: coalib/tests/processes/communication/LogMessageTest.py:46
+#: coalib/processes/communication/LogMessage.py:29
+msgid "WARNING"
+msgstr ""
+
+#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:44
+#: coalib/tests/processes/communication/LogMessageTest.py:44
+#: coalib/tests/processes/communication/LogMessageTest.py:50
+#: coalib/processes/communication/LogMessage.py:30
+msgid "ERROR"
+msgstr ""
+
+#: coalib/parsing/ConfParser.py:69
+msgid ""
+"Failed reading file. Please make sure to provide a file that is existent and "
+"you have the permission to read it."
+msgstr ""
+
+#: coalib/analysers/Analyser.py:82 coalib/tests/analysers/AnalyserTest.py:74
+#: coalib/tests/analysers/AnalyserTest.py:84
 msgid "Setting up analyser..."
 msgstr ""
 
-#: coalib/analysers/Analyser.py:80 coalib/tests/analysers/AnalyserTest.py:64
+#: coalib/analysers/Analyser.py:84 coalib/tests/analysers/AnalyserTest.py:76
+#: coalib/tests/analysers/AnalyserTest.py:85
 msgid "Running analyser..."
 msgstr ""
 
-#: coalib/analysers/Analyser.py:82 coalib/tests/analysers/AnalyserTest.py:66
+#: coalib/analysers/Analyser.py:86 coalib/tests/analysers/AnalyserTest.py:78
+#: coalib/tests/analysers/AnalyserTest.py:86
 msgid "Tearing down analyser..."
+msgstr ""
+
+#: coalib/analysers/Analyser.py:90
+msgid ""
+"Unknown failure in worker process.\n"
+"Exception: {}\n"
+"Traceback:\n"
+"{}"
+msgstr ""
+
+#. debug message contains custom content, dont test this here
+#: coalib/analysers/Analyser.py:93 coalib/tests/analysers/AnalyserTest.py:88
+msgid "An unknown failure occurred and a analyzer run is aborted."
 msgstr ""
 
 #: coalib/misc/StringConstants.py:19
@@ -83,30 +124,26 @@ msgid "wrong"
 msgstr ""
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/analysers/AnalyserTest.py:39
-#: coalib/tests/analysers/AnalyserTest.py:65 coalib/tests/misc/i18nTest.py:44
+#: coalib/tests/analysers/AnalyserTest.py:40
+#: coalib/tests/analysers/AnalyserTest.py:77 coalib/tests/misc/i18nTest.py:44
 #: coalib/tests/misc/i18nTest.py:48 coala:24
 msgid "A string to test translations."
 msgstr ""
 
-#: coalib/tests/output/LogPrinterTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:50
-#: coalib/output/LogPrinter.py:34
-#: coalib/processes/communication/LogMessage.py:30
-msgid "ERROR"
+#: coalib/settings/Settings.py:29
+msgid "defaults has to be a Settings object or None."
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:46
-#: coalib/output/LogPrinter.py:33
-#: coalib/processes/communication/LogMessage.py:29
-msgid "WARNING"
+#: coalib/settings/Settings.py:31
+msgid "defaults may not be self for non-recursivity."
 msgstr ""
 
-#: coalib/tests/processes/communication/LogMessageTest.py:48
-#: coalib/output/LogPrinter.py:32
-#: coalib/processes/communication/LogMessage.py:28
-msgid "DEBUG"
+#: coalib/settings/Settings.py:64
+msgid "Empty keys are invalid."
+msgstr ""
+
+#: coalib/settings/Settings.py:71
+msgid "Required index is unavailable."
 msgstr ""
 
 #. Something's gone wrong
