@@ -34,12 +34,16 @@ class Settings:
         self.defaults = defaults
         self.contents = OrderedDict()
 
-    def append(self, setting):
+    def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):
             raise TypeError
+        if custom_key is None:
+            key = self.__prepare_key(setting.key)
+        else:
+            key = self.__prepare_key(custom_key)
 
         # Setting asserts key != "" for us
-        self.contents[self.__prepare_key(setting.key)] = setting
+        self.contents[key] = setting
 
     def __iter__(self):
         joined = self.contents.copy()
