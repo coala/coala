@@ -85,7 +85,7 @@ class AnalyserTestCase(unittest.TestCase):
         self.check_message(LOG_LEVEL.DEBUG, _("Running analyser..."))
         self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser..."))
         self.queue.get()  # debug message contains custom content, dont test this here
-        self.check_message(LOG_LEVEL.WARNING, _("An unknown failure occurred and a analyzer run is aborted.") + " " +
+        self.check_message(LOG_LEVEL.WARNING, _("An unknown failure occurred and an analyzer run is aborted.") + " " +
                            StringConstants.THIS_IS_A_BUG)
 
     def check_message(self, log_level, message):

@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
 from coalib.settings.Setting import Setting
+from coalib.misc.i18n import _
 
 
 class Settings:
@@ -25,36 +26,48 @@ class Settings:
     """
     def __init__(self, name, defaults=None):
         if defaults is not None and not isinstance(defaults, Settings):
-            raise TypeError("defaults has to be a Settings object or None.")
+            raise TypeError(_("defaults has to be a Settings object or None."))
         if defaults is self:
-            raise ValueError("defaults may not be self for non-recursivity.")
+            raise ValueError(_("defaults may not be self for non-recursivity."))
 
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
 
-    def append(self, setting):
+    def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):
             raise TypeError
+        if custom_key is None:
+            key = self.__prepare_key(setting.key)
+        else:
+            key = self.__prepare_key(custom_key)
 
         # Setting asserts key != "" for us
-        self.contents[self.__prepare_key(setting.key)] = setting
+        self.contents[key] = setting
 
-    def __iter__(self):
+    def __iter__(self, ignore_defaults=False):
         joined = self.contents.copy()
-        joined.update(self.defaults.contents)
+        if self.defaults is not None and not ignore_defaults:
+            joined.update(self.defaults.contents)
         return iter(joined)
 
-    def __getitem__(self, item):
+    def __contains__(self, item, ignore_defaults=False):
+        try:
+            self.__getitem__(item, ignore_defaults)
+            return True
+        except:
+            return False
+
+    def __getitem__(self, item, ignore_defaults=False):
         key = self.__prepare_key(item)
         if key == "":
-            raise IndexError("Empty keys are of no use.")
+            raise IndexError(_("Empty keys are invalid."))
 
         res = self.contents.get(key, None)
         if res is not None:
             return res
 
-        if self.defaults is None:
-            raise IndexError("Required index is unavailable.")
+        if self.defaults is None or ignore_defaults:
+            raise IndexError(_("Required index is unavailable."))
 
         return self.defaults[key]

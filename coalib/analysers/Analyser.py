@@ -25,8 +25,8 @@ from coalib.processes.communication.LogMessage import LogMessage
 
 class Analyser(Process):
     """
-    This is the base class for every analyser. If you want to write a analyser, inherit from this class and overwrite at
-    least the run_analyser method. You can send debug/warning/error messages through the debug_msg(), warn_msg(),
+    This is the base class for every analyser. If you want to write an analyser, inherit from this class and overwrite
+    at least the run_analyser method. You can send debug/warning/error messages through the debug_msg(), warn_msg(),
     fail_msg() functions. These will send the appropriate messages so that they are outputted. Be aware that if you
     use fail_msg(), you are expected to also terminate the analyser run-through immediately.
 
@@ -90,7 +90,7 @@ class Analyser(Process):
             self.debug_msg(_("Unknown failure in worker process.\n"
                              "Exception: {}\nTraceback:\n{}").format(str(exception[0]),
                                                                      traceback.extract_tb(exception[2])))
-            self.warn_msg(_("An unknown failure occurred and a analyzer run is aborted."),
+            self.warn_msg(_("An unknown failure occurred and an analyzer run is aborted."),
                           StringConstants.THIS_IS_A_BUG)
 
     @staticmethod

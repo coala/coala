@@ -40,15 +40,21 @@ class SettingsTestCase(unittest.TestCase):
         uut.append(Setting("TEsT",4,5))
         defaults.append(Setting("tEsT", 1,3))
         defaults.append(Setting(" great   ", 3, 8))
-        self.assertEqual(list(uut), ["5", "test", "great"])
+        defaults.append(Setting(" great   ", 3, 8), custom_key="custom")
+        self.assertEqual(list(uut), ["5", "test", "great", "custom"])
 
         for index in uut:
             t = uut[index]
             self.assertNotEqual(t, None)
 
+        self.assertEqual(True, "teST" in defaults)
+        self.assertEqual(True, "       GREAT" in defaults)
+        self.assertEqual(False, "       GrEAT !" in defaults)
+        self.assertEqual(False, "" in defaults)
         self.assertEqual(int(uut["teSt "]), 4)
         self.assertEqual(int(uut["GREAT "]), 3)
         self.assertRaises(IndexError, uut.__getitem__, "doesnotexist")
+        self.assertRaises(IndexError, uut.__getitem__, "great", True)
         self.assertRaises(IndexError, uut.__getitem__, " ")
 
 
