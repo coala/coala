@@ -15,9 +15,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 class Parser:
-    def __init__(self):
-        pass
-
     def parse(self, input_data):
         """
         Parses the input and adds the new data to the existing
