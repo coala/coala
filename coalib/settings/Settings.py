@@ -55,7 +55,7 @@ class Settings:
 
         if self.__contains__(key, ignore_defaults=True) and allow_appending:
             val = self[key]
-            val.value += "\n"+setting.value
+            val.value = str(val.value) + "\n" + setting.value
         else:
             self.append(setting, custom_key=key)
 
