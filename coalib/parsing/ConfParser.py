@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
+import sys
 from coalib.parsing.LineParser import LineParser
 from coalib.parsing.Parser import Parser
 from coalib.settings.Setting import Setting
@@ -44,6 +45,11 @@ class ConfParser(Parser):
         :param overwrite: behaves like reparse if this is True
         :return a non empty string containing an error message on failure
         """
+        if sys.version_info < (3, 3):  # pragma: no cover
+            err = IOError
+        else:  # pragma: no cover
+            err = FileNotFoundError
+
         try:
             f = open(input_data, "r", encoding='utf-8')
             lines = f.readlines()
@@ -52,7 +58,7 @@ class ConfParser(Parser):
                 self.__init_sections()
 
             self.__parse_lines(lines, input_data)
-        except FileNotFoundError:
+        except err:
             return _("Failed reading file. Please make sure to provide a file that is existent and "
                      "you have the permission to read it.")
 
