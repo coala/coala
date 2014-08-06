@@ -59,6 +59,22 @@ class ConfParser(Parser):
         """
         return self.sections
 
+    def get_section(self, name, create_if_not_exists=False):
+        key = self.__refine_key(name)
+        sec = self.sections.get(key, None)
+        if sec is not None:
+            return sec
+
+        if not create_if_not_exists:
+            raise IndexError
+
+        retval = self.sections[key] = Settings(str(name), self.sections["default"])
+        return retval
+
+    @staticmethod
+    def __refine_key(key):
+        return str(key).lower().strip()
+
     def __parse_lines(self, lines):
         raise NotImplementedError
 
