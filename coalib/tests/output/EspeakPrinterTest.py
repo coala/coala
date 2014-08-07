@@ -15,15 +15,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 sys.path.insert(0, ".")
-from coalib.output.ColorPrinter import ColorPrinter
+from coalib.output.EspeakPrinter import EspeakPrinter
 import unittest
 
 
-class ColorPrinterTestCase(unittest.TestCase):
-    def test_printer_interface(self):
-        self.uut = ColorPrinter()
-        self.assertRaises(NotImplementedError, self.uut.print, "test")
-        self.assertRaises(NotImplementedError, self.uut.print, "test", color='green')
+class EspeakPrinterTestCase(unittest.TestCase):
+    def test_voice_printer(self):
+        self.uut = EspeakPrinter()
+        self.uut.print("The", "espeak", "printer", "works!")
 
 
 if __name__ == '__main__':

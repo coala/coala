@@ -41,7 +41,7 @@ class LogPrinterTestCase(unittest.TestCase):
 
         uut = TestLogPrinter()
         ts = datetime.today()
-        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%x")+"] "+StringConstants.COMPLEX_TEST_STRING,
+        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING,
                           "test"),
                          uut.log(self.log_message, timestamp=ts, end=""))
 

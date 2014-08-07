@@ -14,5 +14,6 @@ python:
   - "3.4"
 
 script:
+  - sudo apt-get install espeak
   - python3 setup.py install
   - python3 ./execute_all_tests.py
