@@ -20,7 +20,8 @@ from coalib.processes.communication.LogMessage import LogMessage
 
 
 class LogPrinter(Printer):
-    def __init__(self, timestamp_format="%x"):
+    def __init__(self, timestamp_format="%X"):
+        Printer.__init__(self)
         self.timestamp_format = timestamp_format
 
     def _get_log_prefix(self, log_level, timestamp):

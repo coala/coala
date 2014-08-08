@@ -21,6 +21,9 @@ class ColorPrinter(Printer):
     p = AnyColorPrinter()
     p.print("some", "output", delimiter=" ", end="", color="green");
     """
+    def __init__(self):
+        Printer.__init__(self)
+
     def _print(self, output, **kwargs):
         if kwargs.get("color") is None:
             return self._print_uncolored(output, **kwargs)

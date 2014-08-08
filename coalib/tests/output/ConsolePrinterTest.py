@@ -15,6 +15,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 sys.path.insert(0, ".")
+from coalib.output.LOG_LEVEL import LOG_LEVEL
+from coalib.processes.communication.LogMessage import LogMessage
 from coalib.output.ConsolePrinter import ConsolePrinter
 import unittest
 
@@ -25,6 +27,7 @@ class ConsolePrinterTestCase(unittest.TestCase):
         uut.print("\ntest", "message", color="green")
         uut.print("\ntest", "message", color="greeeeen")
         uut.print("\ntest", "message")
+        uut.log(LogMessage(LOG_LEVEL.DEBUG, "debug message"))
 
 
 if __name__ == '__main__':

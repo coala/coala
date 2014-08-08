@@ -20,7 +20,8 @@ from coalib.output.Printer import Printer
 
 class ConsolePrinter(LogPrinter, ColorPrinter):
     def __init__(self, output=sys.stdout):
-        Printer.__init__(self)
+        ColorPrinter.__init__(self)
+        LogPrinter.__init__(self)
         self.output = output
 
     def _print_uncolored(self, output, **kwargs):
