@@ -27,6 +27,9 @@ class ConsolePrinter(LogPrinter, ColorPrinter):
         print(output, file=self.output)
 
     def _print_colored(self, output, color=None, **kwargs):
+        if color is None:
+            return self._print_uncolored(output, **kwargs)
+
         color_code_dict = {
             'black': '0;30', 'bright gray': '0;37',
             'blue': '0;34', 'white': '1;37',

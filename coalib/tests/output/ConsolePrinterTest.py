@@ -24,6 +24,7 @@ class ConsolePrinterTestCase(unittest.TestCase):
         uut = ConsolePrinter()
         uut.print("\ntest", "message", color="green")
         uut.print("\ntest", "message", color="greeeeen")
+        uut.print("\ntest", "message")
 
 
 if __name__ == '__main__':
