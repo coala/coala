@@ -24,10 +24,5 @@ class AnnotationResult(Result):
                  line,
                  relevant_lines_before=1,
                  severity=ANNOTATION_SEVERITY.NORMAL):
-        Result.__init__(self)
+        Result.__init__(self, file_name, line_nr, line, relevant_lines_before, severity)
         self.message = message
-        self.file_name = file_name
-        self.line_nr = line_nr
-        self.line = line
-        self.relevant_lines_before = relevant_lines_before
-        self.severity = severity
