@@ -53,6 +53,7 @@ class ConfParser(Parser):
         try:
             f = open(input_data, "r", encoding='utf-8')
             lines = f.readlines()
+            f.close()
 
             if overwrite:
                 self.__init_sections()
