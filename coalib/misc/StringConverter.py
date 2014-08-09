@@ -33,7 +33,7 @@ class StringConverter:
         self.__strip_whitespaces = strip_whitespaces
         self.__set_value_delims(list_delimiters)
 
-        # Just declare it here so it exists from the __init__ method
+        # Just declare it here
         self.__value = None
         self.value = value
         self.__list = None
