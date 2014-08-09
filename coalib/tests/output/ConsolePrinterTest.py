@@ -27,7 +27,7 @@ class ConsolePrinterTestCase(unittest.TestCase):
         uut.print("\ntest", "message", color="green")
         uut.print("\ntest", "message", color="greeeeen")
         uut.print("\ntest", "message")
-        uut.log(LogMessage(LOG_LEVEL.DEBUG, "debug message"))
+        uut.log_message(LogMessage(LOG_LEVEL.DEBUG, "debug message"))
 
 
 if __name__ == '__main__':
