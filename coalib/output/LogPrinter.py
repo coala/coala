@@ -35,7 +35,19 @@ class LogPrinter(Printer):
                                  LOG_LEVEL.ERROR: _("ERROR")}.get(log_level, _("ERROR")),
                                 datetime_string)
 
-    def log(self, log_message, timestamp=None, **kwargs):
+    def debug(self, log_message, timestamp=None, **kwargs):
+        self.log_message(LogMessage(LOG_LEVEL.DEBUG, log_message), timestamp=timestamp, **kwargs)
+
+    def warn(self, log_message, timestamp=None, **kwargs):
+        self.log_message(LogMessage(LOG_LEVEL.WARNING, log_message), timestamp=timestamp, **kwargs)
+
+    def err(self, log_message, timestamp=None, **kwargs):
+        self.log_message(LogMessage(LOG_LEVEL.ERROR, log_message), timestamp=timestamp, **kwargs)
+
+    def log(self, log_level, log_message, timestamp=None, **kwargs):
+        self.log_message(LogMessage(log_level, log_message), timestamp=timestamp, **kwargs)
+
+    def log_message(self, log_message, timestamp=None, **kwargs):
         if not isinstance(log_message, LogMessage):
             raise TypeError("log_message should be of type LogMessage.")
         if not isinstance(timestamp, datetime):
