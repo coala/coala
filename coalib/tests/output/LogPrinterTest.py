@@ -33,11 +33,11 @@ class LogPrinterTestCase(unittest.TestCase):
 
     def test_interface(self):
         uut = LogPrinter()
-        self.assertRaises(NotImplementedError, uut.log, self.log_message)
+        self.assertRaises(NotImplementedError, uut.log_message, self.log_message)
 
     def test_logging(self):
         uut = TestLogPrinter("")
-        self.assertEqual((str(self.log_message), "special"), uut.log(self.log_message, end="", special_arg="special"))
+        self.assertEqual((str(self.log_message), "special"), uut.log_message(self.log_message, end="", special_arg="special"))
 
         uut = TestLogPrinter()
         ts = datetime.today()
