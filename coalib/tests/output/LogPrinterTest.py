@@ -43,7 +43,7 @@ class LogPrinterTestCase(unittest.TestCase):
         ts = datetime.today()
         self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING,
                           "test"),
-                         uut.log(self.log_message, timestamp=ts, end=""))
+                         uut.log_message(self.log_message, timestamp=ts, end=""))
 
     def test_raises(self):
         uut = LogPrinter()
