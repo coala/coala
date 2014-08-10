@@ -60,5 +60,4 @@ class LogPrinter(Printer):
             timestamp = datetime.today()
 
         prefix = self._get_log_prefix(log_message.log_level, timestamp)
-
         return self.print(prefix, log_message.message, delimiter="", **kwargs)
