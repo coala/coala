@@ -37,6 +37,7 @@ class LogMessageTestCase(unittest.TestCase):
         self.assertEqual(self.uut.message, "a msg")
 
         self.assertRaises(ValueError, LogMessage, LOG_LEVEL.DEBUG, "")
+        self.assertRaises(ValueError, LogMessage, 5, "test")
 
     def test_to_str(self):
         self.uut.message = StringConstants.COMPLEX_TEST_STRING

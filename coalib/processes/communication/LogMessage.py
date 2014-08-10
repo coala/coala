@@ -19,10 +19,13 @@ from coalib.output.LOG_LEVEL import LOG_LEVEL
 
 class LogMessage:
     def __init__(self, log_level, message):
+        if not log_level in [LOG_LEVEL.DEBUG, LOG_LEVEL.WARNING, LOG_LEVEL.ERROR]:
+            raise ValueError(_("log_level has to be a valid LOG_LEVEL."))
+        if message == "":
+            raise ValueError(_("Empty log messages are not allowed."))
+
         self.log_level = log_level
         self.message = str(message).strip()
-        if self.message == "":
-            raise ValueError("Empty log messages are not allowed.")
 
     def __str__(self):
         return '[{}] {}'.format({LOG_LEVEL.DEBUG: _("DEBUG"),
