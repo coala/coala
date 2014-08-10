@@ -36,22 +36,22 @@ class LogPrinter(Printer):
                                 datetime_string)
 
     def debug(self, message, timestamp=None, **kwargs):
-        self.log_message(LogMessage(LOG_LEVEL.DEBUG, message), timestamp=timestamp, **kwargs)
+        return self.log_message(LogMessage(LOG_LEVEL.DEBUG, message), timestamp=timestamp, **kwargs)
 
     def warn(self, message, timestamp=None, **kwargs):
-        self.log_message(LogMessage(LOG_LEVEL.WARNING, message), timestamp=timestamp, **kwargs)
+        return self.log_message(LogMessage(LOG_LEVEL.WARNING, message), timestamp=timestamp, **kwargs)
 
     def err(self, message, timestamp=None, **kwargs):
-        self.log_message(LogMessage(LOG_LEVEL.ERROR, message), timestamp=timestamp, **kwargs)
+        return self.log_message(LogMessage(LOG_LEVEL.ERROR, message), timestamp=timestamp, **kwargs)
 
     def log(self, log_level, message, timestamp=None, **kwargs):
-        self.log_message(LogMessage(log_level, message), timestamp=timestamp, **kwargs)
+        return self.log_message(LogMessage(log_level, message), timestamp=timestamp, **kwargs)
 
     def log_exception(self, exception, log_level=LOG_LEVEL.ERROR, timestamp=None, **kwargs):
         if not isinstance(exception, BaseException):
             raise TypeError(_("log_exception can only log derivatives of BaseException."))
 
-        self.log_message(LogMessage(log_level, str(exception)), timestamp=timestamp, **kwargs)
+        return self.log_message(LogMessage(log_level, str(exception)), timestamp=timestamp, **kwargs)
 
     def log_message(self, log_message, timestamp=None, **kwargs):
         if not isinstance(log_message, LogMessage):
