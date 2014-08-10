@@ -15,9 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 import traceback
 from coalib.misc.StringConstants import StringConstants
-
 from coalib.misc.i18n import _
-from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage
@@ -38,7 +36,8 @@ class Analyser(Process):
     database, especially if your analyser is not shipped with coala. Feel free to use your own translation database in
     this case or consider make your analyser available to the coala project.
     """
-    def __init__(self, settings,
+    def __init__(self,
+                 settings,
                  message_queue,
                  TIMEOUT=0.2):
         self.settings = settings
@@ -82,9 +81,11 @@ class Analyser(Process):
             self.debug_msg(_("Setting up analyser..."))
             self.set_up()
             self.debug_msg(_("Running analyser..."))
-            self.run_analyser()
+            retval = self.run_analyser()
             self.debug_msg(_("Tearing down analyser..."))
             self.tear_down()
+
+            return retval
         except:
             exception = sys.exc_info()
             self.debug_msg(_("Unknown failure in worker process.\n"
@@ -98,7 +99,7 @@ class Analyser(Process):
         """
         :return: The kind of the analyser
         """
-        return ANALYSER_KIND.UNKNOWN
+        raise NotImplementedError
 
     @staticmethod
     def get_needed_settings():

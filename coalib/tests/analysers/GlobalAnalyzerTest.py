@@ -13,7 +13,19 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import sys
+sys.path.insert(0, ".")
+import unittest
+from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer, ANALYSER_KIND
 
-class ANALYSER_KIND:
-    LOCAL = 1
-    GLOBAL = 2
+
+class GlobalAnalyzerTestCase(unittest.TestCase):
+    def test_init(self):
+        test_object = GlobalAnalyzer(0, 0, 0)
+
+    def test_kind(self):
+        self.assertEqual(GlobalAnalyzer.kind(), ANALYSER_KIND.GLOBAL)
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

@@ -12,8 +12,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.analysers.helpers.ANNOTATION_SEVERITY import ANNOTATION_SEVERITY
+from coalib.analysers.helpers.Result import Result
 
 
-class ANALYSER_KIND:
-    LOCAL = 1
-    GLOBAL = 2
+class AnnotationResult(Result):
+    def __init__(self,
+                 message,
+                 file_name,
+                 line_nr,
+                 line,
+                 relevant_lines_before=1,
+                 severity=ANNOTATION_SEVERITY.NORMAL):
+        Result.__init__(self, file_name, line_nr, line, relevant_lines_before, severity)
+        self.message = message

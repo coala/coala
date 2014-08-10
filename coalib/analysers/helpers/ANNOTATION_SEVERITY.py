@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class ANALYSER_KIND:
-    LOCAL = 1
-    GLOBAL = 2
+class ANNOTATION_SEVERITY:
+    INFO = 0
+    NORMAL = 1
+    MAJOR = 2

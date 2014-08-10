@@ -57,7 +57,7 @@ class AnalyserTestCase(unittest.TestCase):
         self.uut = TestAnalyser(None, self.queue)
 
     def test_kind(self):
-        self.assertEqual(self.uut.kind(), ANALYSER_KIND.ANALYSER_KIND.UNKNOWN)
+        self.assertRaises(NotImplementedError, self.uut.kind)
 
     def test_methods_available(self):
         # these should be available and not throw anything

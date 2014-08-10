@@ -12,8 +12,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.output.Printer import Printer
 
 
-class ANALYSER_KIND:
-    LOCAL = 1
-    GLOBAL = 2
+class Outputter(Printer):
+    def __init__(self):
+        Printer.__init__(self)
