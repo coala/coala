@@ -36,7 +36,8 @@ class Analyser(Process):
     database, especially if your analyser is not shipped with coala. Feel free to use your own translation database in
     this case or consider make your analyser available to the coala project.
     """
-    def __init__(self, settings,
+    def __init__(self,
+                 settings,
                  message_queue,
                  TIMEOUT=0.2):
         self.settings = settings
