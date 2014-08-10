@@ -51,7 +51,7 @@ class LogPrinter(Printer):
         if not isinstance(exception, BaseException):
             raise TypeError(_("log_exception can only log derivatives of BaseException."))
 
-        self.log_message(LogMessage(log_level, str(exception)), timestamp=None, **kwargs)
+        self.log_message(LogMessage(log_level, str(exception)), timestamp=timestamp, **kwargs)
 
     def log_message(self, log_message, timestamp=None, **kwargs):
         if not isinstance(log_message, LogMessage):
