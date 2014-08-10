@@ -80,9 +80,11 @@ class Analyser(Process):
             self.debug_msg(_("Setting up analyser..."))
             self.set_up()
             self.debug_msg(_("Running analyser..."))
-            self.run_analyser()
+            retval = self.run_analyser()
             self.debug_msg(_("Tearing down analyser..."))
             self.tear_down()
+
+            return retval
         except:
             exception = sys.exc_info()
             self.debug_msg(_("Unknown failure in worker process.\n"
