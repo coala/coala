@@ -40,18 +40,23 @@ class TestInit(unittest.TestCase):
         self.assertEqual(uut.log_printer, self.lp)
         self.assertEqual(uut._flat_dirs, [])
         self.assertEqual(uut._rec_dirs, [])
-        self.assertEqual(uut._allowed, [])
+        self.assertEqual(uut._allowed, None)
         self.assertEqual(uut._forbidden, [])
         self.assertEqual(uut._ignored, [])
 
     def test_members_full(self):
-        uut = FileCollector(self.lp, [os.getcwd()], ["abc", "xyz"], [".py", ".c"], [".h"], None)
+        uut = FileCollector(self.lp, [os.getcwd()], ["abc", "xyz"], [".py", ".c"], [".h"], [])
         self.assertEqual(uut.log_printer, self.lp)
         self.assertEqual(uut._flat_dirs, [os.getcwd()])
         self.assertEqual(uut._rec_dirs, [os.path.abspath("abc"), os.path.abspath("xyz")])
         self.assertEqual(uut._allowed, [".py", ".c"])
         self.assertEqual(uut._forbidden, [".h"])
         self.assertEqual(uut._ignored, [])
+
+    def test_ignored_members(self):
+        uut = FileCollector(self.lp, ["flat"], ["rec"], [], [], ["flat", "rec"])
+        self.assertEqual(uut._flat_dirs, [])
+        self.assertEqual(uut._rec_dirs, [])
 
 
 class TestFileCollection(unittest.TestCase):

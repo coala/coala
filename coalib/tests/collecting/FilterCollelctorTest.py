@@ -57,6 +57,16 @@ class TestFilter(Analyser):
 
     def origin(self):
         return inspect.getfile(inspect.currentframe())
+
+
+class NoKind():
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def kind():
+        raise NotImplementedError
+
 """
         test_filter_file_string_two = """
 from {} import TestFilter as ImportedTestFilter
