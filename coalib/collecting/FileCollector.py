@@ -19,38 +19,29 @@ from coalib.output.LogPrinter import LogPrinter
 
 
 class FileCollector(Collector):
-    def __init__(self, log_printer, flat_dirs=None, rec_dirs=None, allowed=None, forbidden=None, ignored=None):
+    def __init__(self, log_printer, flat_dirs=[], rec_dirs=[], allowed=None, forbidden=[], ignored=[]):
         """
-        :param log_printer: LogPrinter to handel logging of debug, warning and error messages.
-        :param flat_dirs: list of strings: directories from which files should be collected excluding sub directories.
-        :param rec_dirs: list of strings: directories from which files should be collected including sub directories.
-        :param allowed: list of strings: file types that should be collected. Default is all.
-        :param forbidden: list of strings: file types that should not be collected. Default is none.
+        :param log_printer: LogPrinter to handle logging
+        :param flat_dirs: list of strings: directories from which files should be collected, excluding sub directories
+        :param rec_dirs: list of strings: directories from which files should be collected, including sub directories
+        :param allowed: list of strings: file types that should be collected. The default value of None will result in
+                        all file types being collected.
+        :param forbidden: list of strings: file types that should not be collected. This overwrites allowed file types.
         :param ignored: list of strings: directories or files that should be ignored.
         """
-        if flat_dirs is None:
-            flat_dirs = []
-        if rec_dirs is None:
-            rec_dirs = []
-        if allowed is None:
-            allowed = []
-        if forbidden is None:
-            forbidden = []
-        if ignored is None:
-            ignored = []
 
         if not isinstance(log_printer, LogPrinter):
-            raise(TypeError(_("log_printer should be an instance of LogPrinter")))
+            raise(TypeError("log_printer should be an instance of LogPrinter"))
         if not isinstance(flat_dirs, list):
-            raise(TypeError(_("flat_dirs should be of type list")))
+            raise(TypeError("flat_dirs should be of type list"))
         if not isinstance(rec_dirs, list):
-            raise(TypeError(_("rec_dirs should be of type list")))
-        if not isinstance(allowed, list):
-            raise(TypeError(_("allowed should be of type list")))
+            raise(TypeError("rec_dirs should be of type list"))
+        if not (isinstance(allowed, list) or allowed is None):
+            raise(TypeError("allowed should be of type list or None"))
         if not isinstance(forbidden, list):
-            raise(TypeError(_("forbidden should be of type list")))
+            raise(TypeError("forbidden should be of type list"))
         if not isinstance(ignored, list):
-            raise(TypeError(_("ignored should be of type list")))
+            raise(TypeError("ignored should be of type list"))
 
         Collector.__init__(self)
         self.log_printer = log_printer
@@ -60,26 +51,35 @@ class FileCollector(Collector):
         self._forbidden = forbidden
         self._ignored = [os.path.abspath(path) for path in ignored]
 
-    def _is_target(self, file_name):
+        for ignored_dir in self._ignored:
+            for f_dir in self._flat_dirs:
+                if ignored_dir in f_dir:
+                    self._flat_dirs.remove(f_dir)
+            for r_dir in self._rec_dirs:
+                if ignored_dir in r_dir:
+                    self._rec_dirs.remove(r_dir)
+
+    def _is_target(self, file_path):
         """
-        :param file_name: absolute path to a file
+        :param file_path: absolute path to a file
         :return: Bool value to determine if the file should be collected
         """
-        if file_name in self._ignored:
-            return False
+        for ignored_path in self._ignored:
+            if ignored_path in file_path:
+                return False
 
-        file_type = os.path.splitext(os.path.basename(file_name))[1]
-        if file_type in self._allowed:
-            return True
-        elif (not self._allowed) and (file_type not in self._forbidden):
+        file_type = os.path.splitext(os.path.basename(file_path))[1]
+        if file_type in self._forbidden:
+            return False
+        elif self._allowed is None or file_type in self._allowed:
             return True
         else:
             return False
 
-    def _dir_tree(self, directory):
+    def _nonignored_dir_tree(self, directory):
         """
         :param directory: absolute path to a directory
-        :return: list of absolute paths to this directory and all sub directories
+        :return: list of absolute paths of this directory and all subdirectories that are not ignored
         """
         dir_list = [directory]
         try:
@@ -87,8 +87,10 @@ class FileCollector(Collector):
                 abs_sub_dir = os.path.join(directory, sub_dir)
                 if os.path.isdir(abs_sub_dir):
                     if not abs_sub_dir in self._ignored:
-                        dir_list.extend(self._dir_tree(abs_sub_dir))
+                        dir_list.extend(self._nonignored_dir_tree(abs_sub_dir))
+
             return dir_list
+        
         except OSError:
             self.log_printer.warn(_("{} is not accessible and will be ignored!").format(directory))
             return []
@@ -96,15 +98,15 @@ class FileCollector(Collector):
     def _dir_files(self, directory):
         """
         :param directory: absolute path to a directory
-        :return: list of absolute paths to all files in that directory
+        :return: list of absolute paths to all target files in that directory
         """
         file_list = []
         try:
             for file in os.listdir(directory):
                 abs_file = os.path.join(directory, file)
-                if os.path.isfile(abs_file):
-                    if self._is_target(abs_file):
-                        file_list.append(abs_file)
+                if os.path.isfile(abs_file) and self._is_target(abs_file):
+                    file_list.append(abs_file)
+
         except OSError:
             self.log_printer.warn(_("{} is not accessible and will be ignored!").format(directory))
             return []
@@ -117,7 +119,7 @@ class FileCollector(Collector):
         """
         all_dirs = self._flat_dirs
         for rec_dir in self._rec_dirs:
-            all_dirs.extend(self._dir_tree(rec_dir))
+            all_dirs.extend(self._nonignored_dir_tree(rec_dir))
         files = []
         for a_dir in all_dirs:
             files.extend(self._dir_files(a_dir))
