@@ -19,6 +19,8 @@ class StringConstants:
     THIS_IS_A_BUG = _("This is a bug. We are sorry for the inconvenience. "
                       "Please contact the developers if this happens more than once.")
 
+    OBJ_NOT_ACCESSIBLE = _("{} is not accessible and will be ignored!")
+
     """
     Strings which may be interpreted as 'True' (some english values will be accepted in addition to the translated
     ones since they are quite usual.) If there is no suitable translation, repeat one of the previous translations and
