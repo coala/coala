@@ -126,7 +126,10 @@ class TestFileCollection(unittest.TestCase):
 
     @unittest.skipIf(sys.version_info < (3, 3), "Mocks are not supported in Python 3.2")
     def test_unreadable_directory(self):
-        import importlib
+        if sys.version_info < (3,4):
+            import imp as importlib
+        else:
+            import importlib
         from unittest.mock import MagicMock
         os.listdir = MagicMock(side_effect=OSError)
         self.assertEqual(FileCollector(log_printer=QuietPrinter(), flat_dirs=[os.getcwd()]).collect(), [])
