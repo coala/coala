@@ -1,44 +1,54 @@
-#: coalib/output/LogPrinter.py:32
-#: coalib/tests/processes/communication/LogMessageTest.py:48
-#: coalib/processes/communication/LogMessage.py:28
+#: coalib/output/LogPrinter.py:33 coalib/tests/output/LogPrinterTest.py:49
+#: coalib/tests/processes/communication/LogMessageTest.py:49
+#: coalib/processes/communication/LogMessage.py:31
 msgid "DEBUG"
 msgstr ""
 
-#: coalib/output/LogPrinter.py:33
-#: coalib/tests/processes/communication/LogMessageTest.py:46
-#: coalib/processes/communication/LogMessage.py:29
+#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:51
+#: coalib/tests/processes/communication/LogMessageTest.py:47
+#: coalib/processes/communication/LogMessage.py:32
 msgid "WARNING"
 msgstr ""
 
-#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:50
-#: coalib/processes/communication/LogMessage.py:30
+#: coalib/output/LogPrinter.py:35 coalib/tests/output/LogPrinterTest.py:44
+#: coalib/tests/output/LogPrinterTest.py:46
+#: coalib/tests/output/LogPrinterTest.py:53
+#: coalib/tests/output/LogPrinterTest.py:56
+#: coalib/tests/processes/communication/LogMessageTest.py:45
+#: coalib/tests/processes/communication/LogMessageTest.py:51
+#: coalib/processes/communication/LogMessage.py:33
 msgid "ERROR"
 msgstr ""
 
-#: coalib/parsing/ConfParser.py:62
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:32
 msgid ""
-"Failed reading file. Please make sure to provide a file that is existent and "
-"you have the permission to read it."
+"Espeak doesn't seem to be installed. You cannot use the voice output feature "
+"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
+"installed via your usual package repositories."
 msgstr ""
 
-#: coalib/analysers/Analyser.py:82 coalib/tests/analysers/AnalyserTest.py:74
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:37
+msgid "Failed to execute espeak. An unknown error occurred."
+msgstr ""
+
+#: coalib/analysers/Analyser.py:81 coalib/tests/analysers/AnalyserTest.py:74
 #: coalib/tests/analysers/AnalyserTest.py:84
 msgid "Setting up analyser..."
 msgstr ""
 
-#: coalib/analysers/Analyser.py:84 coalib/tests/analysers/AnalyserTest.py:76
+#: coalib/analysers/Analyser.py:83 coalib/tests/analysers/AnalyserTest.py:76
 #: coalib/tests/analysers/AnalyserTest.py:85
 msgid "Running analyser..."
 msgstr ""
 
-#: coalib/analysers/Analyser.py:86 coalib/tests/analysers/AnalyserTest.py:78
+#: coalib/analysers/Analyser.py:85 coalib/tests/analysers/AnalyserTest.py:78
 #: coalib/tests/analysers/AnalyserTest.py:86
 msgid "Tearing down analyser..."
 msgstr ""
 
-#: coalib/analysers/Analyser.py:90
+#: coalib/analysers/Analyser.py:91
 msgid ""
 "Unknown failure in worker process.\n"
 "Exception: {}\n"
@@ -47,8 +57,16 @@ msgid ""
 msgstr ""
 
 #. debug message contains custom content, dont test this here
-#: coalib/analysers/Analyser.py:93 coalib/tests/analysers/AnalyserTest.py:88
+#: coalib/analysers/Analyser.py:94 coalib/tests/analysers/AnalyserTest.py:88
 msgid "An unknown failure occurred and an analyzer run is aborted."
+msgstr ""
+
+#: coalib/analysers/helpers/OldResult.py:68
+msgid "Comparision of a Result with a non-Result is impossible."
+msgstr ""
+
+#: coalib/analysers/helpers/OldResult.py:71
+msgid "Comparision of results affecting different files is impossible."
 msgstr ""
 
 #: coalib/misc/StringConstants.py:19
@@ -128,22 +146,6 @@ msgstr ""
 #: coalib/tests/analysers/AnalyserTest.py:77 coalib/tests/misc/i18nTest.py:44
 #: coalib/tests/misc/i18nTest.py:48 coala:24
 msgid "A string to test translations."
-msgstr ""
-
-#: coalib/settings/Settings.py:31
-msgid "defaults has to be a Settings object or None."
-msgstr ""
-
-#: coalib/settings/Settings.py:33
-msgid "defaults may not be self for non-recursivity."
-msgstr ""
-
-#: coalib/settings/Settings.py:78
-msgid "Empty keys are invalid."
-msgstr ""
-
-#: coalib/settings/Settings.py:85
-msgid "Required index is unavailable."
 msgstr ""
 
 #. Something's gone wrong
