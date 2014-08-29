@@ -63,9 +63,7 @@ class LineParserTestCase(unittest.TestCase):
                        "multiline\n",
                        "value\n",
                        "; just a omment\n"]
-        self.assertEqual(self.conf_parser.reparse(self.file), None)
-
-        self.uut.write_sections(self.conf_parser.export_to_settings())
+        self.uut.write_sections(self.conf_parser.reparse(self.file))
         del self.uut
 
         f = open(self.write_file_name, "r")
