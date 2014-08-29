@@ -16,12 +16,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 sys.path.insert(0, ".")
 import unittest
+from coalib.settings.Settings import Settings
 from coalib.analysers.LocalAnalyzer import LocalAnalyzer, ANALYSER_KIND
 
 
 class LocalAnalyzerTestCase(unittest.TestCase):
     def test_init(self):
-        test_object = LocalAnalyzer(0, 0, 0, 0)
+        test_object = LocalAnalyzer(0, 0, Settings("name"), None)
 
     def test_kind(self):
         self.assertEqual(LocalAnalyzer.kind(), ANALYSER_KIND.LOCAL)

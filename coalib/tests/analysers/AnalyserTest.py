@@ -16,6 +16,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 sys.path.insert(0, ".")
 import multiprocessing
+
+from coalib.settings.Settings import Settings
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
@@ -53,14 +55,17 @@ class BadTestAnalyzer(Analyser):
 class AnalyserTestCase(unittest.TestCase):
     def setUp(self):
         self.queue = multiprocessing.Queue()
-        self.uut = TestAnalyser(None, self.queue)
+        self.settings = Settings("test_settings")
+        self.uut = TestAnalyser(self.settings, self.queue)
 
-    def test_kind(self):
+    def test_raises(self):
+        self.assertRaises(TypeError, TestAnalyser, self.settings, 2)
+        self.assertRaises(TypeError, TestAnalyser, None, self.queue)
         self.assertRaises(NotImplementedError, self.uut.kind)
 
     def test_methods_available(self):
         # these should be available and not throw anything
-        base = Analyser(None, None)
+        base = Analyser(self.settings, None)
         base.set_up()
         base.tear_down()
 
@@ -78,7 +83,7 @@ class AnalyserTestCase(unittest.TestCase):
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 
     def test_bad_analyzer(self):
-        self.uut = BadTestAnalyzer(None, self.queue)
+        self.uut = BadTestAnalyzer(self.settings, self.queue)
         self.uut.run()
         self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser..."))
         self.check_message(LOG_LEVEL.DEBUG, _("Running analyser..."))
