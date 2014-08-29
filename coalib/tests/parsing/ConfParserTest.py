@@ -75,11 +75,13 @@ class LineParserTestCase(unittest.TestCase):
             ('t', '')
         ])
 
-        self.assertNotEqual(self.uut.parse(self.nonexistentfile), None)
-        self.assertEqual(self.uut.parse(self.file), None)
-        self.assertEqual(self.uut.reparse(self.file), None)
-
-        sections = self.uut.export_to_settings()
+        if sys.version_info < (3, 3):
+            err = IOError
+        else:
+            err = FileNotFoundError
+        self.assertRaises(err, self.uut.parse, self.nonexistentfile)
+        sections = self.uut.parse(self.file);
+        self.assertNotEqual(self.uut.reparse(self.file), sections)
 
         key, val = sections.popitem(last=False)
         self.assertTrue(isinstance(val, Settings))

@@ -43,32 +43,30 @@ class ConfParser(Parser):
 
         :param input_data: filename
         :param overwrite: behaves like reparse if this is True
-        :return a non empty string containing an error message on failure
+        :return: the settings dictionary
         """
         if sys.version_info < (3, 3):  # pragma: no cover
             err = IOError
         else:  # pragma: no cover
             err = FileNotFoundError
 
-        try:
-            f = open(input_data, "r", encoding='utf-8')
-            lines = f.readlines()
-            f.close()
+        f = open(input_data, "r", encoding='utf-8')
+        lines = f.readlines()
+        f.close()
 
-            if overwrite:
-                self.__init_sections()
+        if overwrite:
+            self.__init_sections()
 
-            self.__parse_lines(lines, input_data)
-        except err:
-            return _("Failed reading file. Please make sure to provide a file that is existent and "
-                     "you have the permission to read it.")
+        self.__parse_lines(lines, input_data)
+
+        return self.export_to_settings()
 
     def reparse(self, input_data):
         """
         Parses the input and overwrites all existent data
 
         :param input_data: filename
-        :return a non empty string containing an error message on failure
+        :return: the settings dictionary
         """
         return self.parse(input_data, overwrite=True)
 
