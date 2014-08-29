@@ -23,7 +23,7 @@ class Outputter:
 
     def print_result(self, result):
         if not isinstance(result, Result):
-            raise TypeError(_("print_result can only handle objects which inherit from Result."))
+            raise TypeError("print_result can only handle objects which inherit from Result.")
 
         # TODO add API for special results as soon as they're there, if not fallback to:
         return self._print_result(result)

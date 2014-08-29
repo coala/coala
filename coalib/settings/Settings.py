@@ -28,9 +28,9 @@ class Settings:
 
     def __init__(self, name, defaults=None):
         if defaults is not None and not isinstance(defaults, Settings):
-            raise TypeError(_("defaults has to be a Settings object or None."))
+            raise TypeError("defaults has to be a Settings object or None.")
         if defaults is self:
-            raise ValueError(_("defaults may not be self for non-recursivity."))
+            raise ValueError("defaults may not be self for non-recursivity.")
 
         self.name = str(name)
         self.defaults = defaults
@@ -75,13 +75,13 @@ class Settings:
     def __getitem__(self, item, ignore_defaults=False):
         key = self.__prepare_key(item)
         if key == "":
-            raise IndexError(_("Empty keys are invalid."))
+            raise IndexError("Empty keys are invalid.")
 
         res = self.contents.get(key, None)
         if res is not None:
             return res
 
         if self.defaults is None or ignore_defaults:
-            raise IndexError(_("Required index is unavailable."))
+            raise IndexError("Required index is unavailable.")
 
         return self.defaults[key]
