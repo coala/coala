@@ -21,9 +21,6 @@ class StringConverter:
     """
     Converts strings to other things as needed. If you need a conversion for string that is not implemented here
     consider adding it so everyone gets something out of it.
-
-    Planned conversions to add: (TODOs)
-    - __path__() creates an absolute path for a string
     """
     def __init__(self, value, strip_whitespaces=True, list_delimiters=[",", ";"]):
         if not isinstance(list_delimiters, list) and not isinstance(list_delimiters, str):
