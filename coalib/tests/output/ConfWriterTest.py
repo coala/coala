@@ -36,6 +36,7 @@ class LineParserTestCase(unittest.TestCase):
     ; just a omment \n\
     ; just a omment \n\
     "
+
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
         filehandler = open(self.file, "w", encoding='utf-8')

@@ -37,7 +37,8 @@ class LogPrinterTestCase(unittest.TestCase):
 
     def test_logging(self):
         uut = TestLogPrinter("")
-        self.assertEqual((str(self.log_message), "special"), uut.log_message(self.log_message, end="", special_arg="special"))
+        self.assertEqual((str(self.log_message), "special"),
+                         uut.log_message(self.log_message, end="", special_arg="special"))
 
         uut = TestLogPrinter()
         ts = datetime.today()
@@ -55,7 +56,8 @@ class LogPrinterTestCase(unittest.TestCase):
 
         self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] Something failed.\n\n" +
                           _("Exception was:") + "\n" + StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.log_exception("Something failed.", NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
+                         uut.log_exception("Something failed.",
+                                           NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
                                            timestamp=ts,
                                            end=""))
 

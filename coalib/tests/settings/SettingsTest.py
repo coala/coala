@@ -36,9 +36,9 @@ class SettingsTestCase(unittest.TestCase):
     def test_iter(self):
         defaults = Settings("default", None)
         uut = Settings("name", defaults)
-        uut.append(Setting(5,5,5))
-        uut._add_or_create_setting(Setting("TEsT",4,5))
-        defaults.append(Setting("tEsT", 1,3))
+        uut.append(Setting(5, 5, 5))
+        uut._add_or_create_setting(Setting("TEsT", 4, 5))
+        defaults.append(Setting("tEsT", 1, 3))
         defaults.append(Setting(" great   ", 3, 8))
         defaults.append(Setting(" great   ", 3, 8), custom_key="custom")
         uut._add_or_create_setting(Setting(" NEW   ", "val", 8))
@@ -61,7 +61,6 @@ class SettingsTestCase(unittest.TestCase):
         self.assertRaises(IndexError, uut.__getitem__, "doesnotexist")
         self.assertRaises(IndexError, uut.__getitem__, "great", True)
         self.assertRaises(IndexError, uut.__getitem__, " ")
-
 
 
 if __name__ == '__main__':

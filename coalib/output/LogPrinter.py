@@ -56,7 +56,6 @@ class LogPrinter(Printer):
                                 timestamp=timestamp,
                                 **kwargs)
 
-
     def log_message(self, log_message, timestamp=None, **kwargs):
         if not isinstance(log_message, LogMessage):
             raise TypeError("log_message should be of type LogMessage.")
