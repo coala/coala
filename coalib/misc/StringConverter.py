@@ -20,9 +20,6 @@ class StringConverter:
     """
     Converts strings to other things as needed. If you need a conversion for string that is not implemented here
     consider adding it so everyone gets something out of it.
-
-    Planned conversions to add: (TODOs)
-    - __path__() creates an absolute path for a string
     """
     def __init__(self, value, strip_whitespaces=True, list_delimiters=[",", ";"]):
         if not isinstance(list_delimiters, list) and not isinstance(list_delimiters, str):
@@ -37,7 +34,7 @@ class StringConverter:
         self.__value = None
         self.value = value
         self.__list = None
-        self.__value_changed = True
+        self.__recreate_list = True
 
     def __set_value_delims(self, val):
         self.__list_delimiters = val
@@ -81,7 +78,7 @@ class StringConverter:
     def __prepare_list(self):
         self.__prepare_value()
 
-        if not self.__value_changed:
+        if not self.__recreate_list:
             return
 
         list = re.split(self.__delim_regex, self.__value)
@@ -95,7 +92,7 @@ class StringConverter:
             if not elem in self.__list_delimiters and not elem == "":
                 self.__list.append(elem)
 
-        self.__value_changed = False
+        self.__recreate_list = False
 
     def __prepare_value(self):
         newval = str(self.value)
@@ -106,4 +103,4 @@ class StringConverter:
             return
 
         self.__value = newval
-        self.__value_changed = True
+        self.__recreate_list = True

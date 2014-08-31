@@ -19,6 +19,7 @@ from coalib.misc.i18n import _
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage
+from coalib.settings.Settings import Settings
 
 
 class Analyser(Process):
@@ -40,6 +41,11 @@ class Analyser(Process):
                  settings,
                  message_queue,
                  TIMEOUT=0.2):
+        if not isinstance(settings, Settings):
+            raise TypeError("settings has to be of type Settings.")
+        if not hasattr(message_queue, "put") and message_queue is not None:
+            raise TypeError("message_queue has to be a Queue or None.")
+
         self.settings = settings
         self.message_queue = message_queue
         self.TIMEOUT = TIMEOUT
@@ -63,6 +69,9 @@ class Analyser(Process):
         self.__send_msg(LOG_LEVEL.ERROR, delimiter, *args)
 
     def __send_msg(self, log_level, delimiter, *args):
+        if self.message_queue is None:
+            return
+
         if len(args) == 0:
             return
 
