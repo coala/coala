@@ -53,15 +53,16 @@ class LogPrinterTestCase(unittest.TestCase):
         self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING, "test"),
                          uut.err(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
 
-        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.log_exception(NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
+        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] Something failed.\n\n" +
+                          _("Exception was:") + "\n" + StringConstants.COMPLEX_TEST_STRING, "test"),
+                         uut.log_exception("Something failed.", NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
                                            timestamp=ts,
                                            end=""))
 
     def test_raises(self):
         uut = LogPrinter()
         self.assertRaises(TypeError, uut.log, 5)
-        self.assertRaises(TypeError, uut.log_exception, 5)
+        self.assertRaises(TypeError, uut.log_exception, "message", 5)
         self.assertRaises(TypeError, uut.log_message, 5)
 
 if __name__ == '__main__':
