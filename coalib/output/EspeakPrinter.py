@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import subprocess
+
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.Printer import Printer
 from coalib.misc.i18n import _

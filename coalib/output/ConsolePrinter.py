@@ -13,9 +13,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import sys
+
 from coalib.output.ColorPrinter import ColorPrinter
 from coalib.output.LogPrinter import LogPrinter
-from coalib.output.Printer import Printer
 
 
 class ConsolePrinter(LogPrinter, ColorPrinter):

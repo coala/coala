@@ -16,7 +16,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 sys.path.insert(0, ".")
 import multiprocessing
-from coalib.analysers import ANALYSER_KIND
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _

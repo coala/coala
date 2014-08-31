@@ -15,7 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from distutils.core import setup
+
 from coalib.misc.i18n import compile_translations
+
 
 if __name__ == "__main__":
     translations = compile_translations()

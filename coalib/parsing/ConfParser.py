@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
 import sys
+
 from coalib.parsing.LineParser import LineParser
 from coalib.parsing.Parser import Parser
 from coalib.settings.Setting import Setting

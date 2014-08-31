@@ -12,9 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.helpers.AnnotationResult import AnnotationResult
 from coalib.analysers.helpers.Result import Result
-from coalib.misc.i18n import _
 
 
 class Outputter:

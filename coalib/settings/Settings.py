@@ -13,8 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
+
 from coalib.settings.Setting import Setting
-from coalib.misc.i18n import _
 
 
 class Settings:
