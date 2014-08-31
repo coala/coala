@@ -45,7 +45,8 @@ class Analyser(Process):
         self.message_queue = message_queue
         self.TIMEOUT = TIMEOUT
 
-    def _(self, msg):
+    @staticmethod
+    def _(msg):
         return _(msg)
 
     def set_up(self):
