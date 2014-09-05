@@ -34,7 +34,7 @@ class TestHelper:
                                     "-p",  # make it collectable later
                                     "--branch",  # check branch AND statement coverage
                                     "--omit",  # dont check coverage of test file itself
-                                    filename,
+                                    filename+",/tmp/*",
                                     filename])
         except:
             print("Coverage failed. Falling back to standard unit tests.")
