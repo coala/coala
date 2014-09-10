@@ -25,3 +25,13 @@ class Outputter:
 
         # TODO add API for special results as soon as they're there, if not fallback to:
         return self._print_result(result)
+
+    def require_settings(self, settings):
+        """
+        This method prompts the user for the given settings.
+
+        :param settings: a dictionary with the settings name as key and a description as value.
+
+        :return: a dictionary with the settings name as key and the given value as value.
+        """
+        raise NotImplementedError
