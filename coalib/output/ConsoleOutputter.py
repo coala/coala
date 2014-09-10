@@ -14,7 +14,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.output.Outputter import Outputter
+from coalib.misc.i18n import _
 
 
 class ConsoleOutputter(Outputter, ConsolePrinter):
-    pass
+    def require_settings(self, settings):
+        result = {}
+        for setting, helptext in settings.items():
+            result[setting] = self._require_setting(setting, helptext)
+
+        return result
+
+    def _require_setting(self, setting, helptext):
+        return input(_("Please enter a value for the needed setting \"{}\" ({}): ").format(setting, helptext))
