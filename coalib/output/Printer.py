@@ -22,8 +22,8 @@ class Printer:
         output = ""
         delim = ""
         for arg in args:
-            output += delim + arg
-            delim = delimiter
-        output += end
+            output += delim + str(arg)
+            delim = str(delimiter)
+        output += str(end)
 
         return self._print(output, **kwargs)
