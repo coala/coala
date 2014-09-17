@@ -33,6 +33,7 @@ class PrinterTestCase(unittest.TestCase):
         self.uut = TestPrinter()
         self.assertEqual(self.uut.print("hello", "world", delimiter=" ", end="-", somearg="then"), "hello world-then")
         self.assertEqual(self.uut.print(end=""), "")
+        self.assertEqual(self.uut.print(NotImplementedError, end=""), "<class 'NotImplementedError'>")
 
 
 if __name__ == '__main__':
