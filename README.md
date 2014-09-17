@@ -33,7 +33,7 @@ Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt <fabian@neuschmid
 
 Build status
 ------------
-[![Build Status](https://travis-ci.org/sils1297/coala.svg?branch=cleanup)](https://travis-ci.org/sils1297/coala)
+[![Build Status](https://travis-ci.org/sils1297/coala.svg?branch=master)](https://travis-ci.org/sils1297/coala)
 
 INSTALLATION
 ============
