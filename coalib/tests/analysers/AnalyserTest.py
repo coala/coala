@@ -98,6 +98,10 @@ class AnalyserTestCase(unittest.TestCase):
         self.assertEqual(msg.message, message)
         self.assertEqual(msg.log_level, log_level)
 
+    def test_no_queue(self):
+        uut = TestAnalyser(self.settings, None)
+        uut.run()  # No exceptions
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
