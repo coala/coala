@@ -14,6 +14,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
+import os
+import tempfile
+
 sys.path.insert(0, ".")
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
@@ -22,12 +25,25 @@ import unittest
 
 
 class ConsolePrinterTestCase(unittest.TestCase):
-    def test_printer_interface(self):
-        uut = ConsolePrinter()
-        uut.print("\ntest", "message", color="green")
-        uut.print("\ntest", "message", color="greeeeen")
-        uut.print("\ntest", "message")
-        uut.log_message(LogMessage(LOG_LEVEL.DEBUG, "debug message"))
+    def test_printing(self):
+        self.outputfile = os.path.join(tempfile.gettempdir(), "ConsolePrinterTestFile")
+        with open(self.outputfile, "w") as self.handle:
+            self.uut = ConsolePrinter(output=self.handle)
+
+            self.uut.print("\ntest", "message", color="green")
+            self.uut.print("\ntest", "message", color="greeeeen")
+            self.uut.print("\ntest", "message")
+
+        with open(self.outputfile, "r") as self.handle:
+            self.assertEqual(self.handle.readlines(),
+                             ['\033[0;32m\n',
+                              'test message\n',
+                              '\033[0m\n',
+                              'test message\n',
+                              '\n',
+                              'test message\n'])
+
+        os.remove(self.outputfile)
 
 
 if __name__ == '__main__':
