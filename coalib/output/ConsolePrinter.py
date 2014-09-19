@@ -43,4 +43,4 @@ class ConsolePrinter(LogPrinter, ColorPrinter):
         if color_code is None:
             raise ValueError("Invalid color value")
 
-        print('\033[' + color_code + 'm' + output + '\033[0m', end="")
+        print('\033[' + color_code + 'm' + output + '\033[0m', file=self.output, end="")
