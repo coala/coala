@@ -18,6 +18,10 @@ from coalib.misc.i18n import _
 
 
 class ConsoleOutputter(Outputter, ConsolePrinter):
+    def __init__(self):
+        Outputter.__init__(self)
+        ConsolePrinter.__init__(self)
+
     def require_settings(self, settings):
         result = {}
         for setting, helptext in settings.items():
