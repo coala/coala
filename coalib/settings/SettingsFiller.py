@@ -23,7 +23,7 @@ from coalib.misc.i18n import _
 class SettingsFiller:
     def __init__(self, settings, outputter, log_printer):
         """
-        A SettingsFiller object probes all filters for needed settings. It then prompts the user for those values and
+        A SettingsFiller object probes all analyzers for needed settings. It then prompts the user for those values and
         stores them in the original settings given.
 
         :param settings: The settings which are available. They will be modified if some are missing.
@@ -41,29 +41,29 @@ class SettingsFiller:
         self.outputter = outputter
         self.log_printer = log_printer
 
-    def fill_settings(self, filters):
+    def fill_settings(self, analyzers):
         """
-        Retrieves needed settings from given filters and asks the user for missing values.
+        Retrieves needed settings from given analyzers and asks the user for missing values.
 
-        If a setting is requested by several filters, the help text from the latest filter will be taken.
+        If a setting is requested by several analyzers, the help text from the latest analyzer will be taken.
 
-        :param filters: All filter classes or instances.
+        :param analyzers: All analyzer classes or instances.
         :return: self.settings
         """
-        if not isinstance(filters, list):
-            raise TypeError("The filter parameter has to be a list of filter classes or instances.")
+        if not isinstance(analyzers, list):
+            raise TypeError("The analyzers parameter has to be a list of analyzer classes or instances.")
 
         # Retrieve needed settings.
         prel_needed_settings = {}
-        for filter in filters:
-            if not hasattr(filter, "get_needed_settings"):
+        for analyzer in analyzers:
+            if not hasattr(analyzer, "get_needed_settings"):
                 self.log_printer.log(LOG_LEVEL.WARNING,
-                                     _("One of the given filters ({}) has no attribute get_needed_settings.")
-                                        .format(str(filter)))
+                                     _("One of the given analyzers ({}) has no attribute get_needed_settings.")
+                                        .format(str(analyzer)))
             else:
-                needed = filter.get_needed_settings()
+                needed = analyzer.get_needed_settings()
                 for key in needed:
-                    needed[key] = [needed[key], filter.__name__]
+                    needed[key] = [needed[key], analyzer.__name__]
 
                 prel_needed_settings.update(needed)
 
