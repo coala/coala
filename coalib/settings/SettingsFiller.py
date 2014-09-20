@@ -61,7 +61,11 @@ class SettingsFiller:
                                      _("One of the given filters ({}) has no attribute get_needed_settings.")
                                         .format(str(filter)))
             else:
-                prel_needed_settings.update(filter.get_needed_settings())
+                needed = filter.get_needed_settings()
+                for key in needed:
+                    needed[key] = [needed[key], filter.__name__]
+
+                prel_needed_settings.update(needed)
 
         # Strip away existent settings.
         needed_settings = {}
