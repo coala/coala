@@ -24,6 +24,9 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
         ConsolePrinter.__init__(self)
 
     def require_settings(self, settings):
+        if not isinstance(settings, dict):
+            raise TypeError("The settings parameter has to be a dictionary.")
+
         result = {}
         for setting, arr in settings.items():
             if not isinstance(arr, list) or len(arr) < 2:
