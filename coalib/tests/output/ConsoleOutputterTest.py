@@ -33,6 +33,7 @@ class ConsoleOutputterTestCase(unittest.TestCase):
                          _("Please enter a value for the "
                            "setting \"{}\" ({}) needed by SomeFilter: ").format("setting", "help text")})
         self.assertEqual(self.uut.require_settings({0: 0}), {})
+        self.assertRaises(TypeError, self.uut.require_settings, 0)
 
 
 if __name__ == '__main__':
