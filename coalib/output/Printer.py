@@ -19,11 +19,6 @@ class Printer:
         raise NotImplementedError
 
     def print(self, *args, delimiter=' ', end='\n', **kwargs):
-        output = ""
-        delim = ""
-        for arg in args:
-            output += delim + str(arg)
-            delim = str(delimiter)
-        output += str(end)
+        output = str(delimiter).join(str(arg) for arg in args) + str(end)
 
         return self._print(output, **kwargs)
