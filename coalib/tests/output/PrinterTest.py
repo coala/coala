@@ -32,6 +32,8 @@ class PrinterTestCase(unittest.TestCase):
     def test_printer_concatenation(self):
         self.uut = TestPrinter()
         self.assertEqual(self.uut.print("hello", "world", delimiter=" ", end="-", somearg="then"), "hello world-then")
+        self.assertEqual(self.uut.print("", "world", delimiter=" ", end="-", somearg="then"), " world-then")
+        self.assertEqual(self.uut.print("hello", "world", delimiter="", end="-", somearg="then"), "helloworld-then")
         self.assertEqual(self.uut.print(end=""), "")
         self.assertEqual(self.uut.print(NotImplementedError, end=""), "<class 'NotImplementedError'>")
 
