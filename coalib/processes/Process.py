@@ -15,5 +15,5 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 class Process:
-    def run(self):
+    def run(self, *args, **kwargs):
         raise NotImplementedError

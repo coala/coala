@@ -18,15 +18,21 @@ from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
 
 class LocalAnalyzer(Analyser):
     def __init__(self,
-                 filename,
-                 file,
                  settings,
                  message_queue,
                  TIMEOUT=0.2):
         Analyser.__init__(self, settings, message_queue, TIMEOUT)
-        self.filename = filename
-        self.file = file
 
     @staticmethod
     def kind():
         return ANALYSER_KIND.LOCAL
+
+    def run_analyser(self, filename, file):
+        """
+        Checks the given file.
+
+        :param filename: The filename of the file
+        :param file: The file contents as string array
+        :return: A list of Result
+        """
+        raise NotImplementedError("This function has to be implemented for a runnable filter.")

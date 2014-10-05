@@ -84,15 +84,15 @@ class Analyser(Process):
 
         self.message_queue.put(LogMessage(log_level, msg), timeout=self.TIMEOUT)
 
-    def run_analyser(self):
+    def run_analyser(self, *args, **kwargs):
         raise NotImplementedError
 
-    def run(self):
+    def run(self, *args, **kwargs):
         try:
             self.debug_msg(_("Setting up analyser..."))
             self.set_up()
             self.debug_msg(_("Running analyser..."))
-            retval = self.run_analyser()
+            retval = self.run_analyser(*args, **kwargs)
             self.debug_msg(_("Tearing down analyser..."))
             self.tear_down()
 

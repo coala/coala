@@ -28,3 +28,11 @@ class GlobalAnalyzer(Analyser):
     @staticmethod
     def kind():
         return ANALYSER_KIND.GLOBAL
+
+    def run_analyser(self):
+        """
+        Analyzes all files in file_dict.
+
+        :return: A list of Result type.
+        """
+        raise NotImplementedError("This function has to be implemented for a runnable filter.")
