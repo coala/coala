@@ -41,7 +41,7 @@ class Analyser(Process):
     def __init__(self,
                  settings,
                  message_queue,
-                 TIMEOUT=0.2):
+                 TIMEOUT=0):
         if not isinstance(settings, Settings):
             raise TypeError("settings has to be of type Settings.")
         if not hasattr(message_queue, "put") and message_queue is not None:

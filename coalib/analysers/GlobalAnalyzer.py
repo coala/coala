@@ -21,7 +21,7 @@ class GlobalAnalyzer(Analyser):
                  file_dict,  # filename : file contents
                  settings,
                  message_queue,
-                 TIMEOUT=0.2):
+                 TIMEOUT=0):
         Analyser.__init__(self, settings, message_queue, TIMEOUT)
         self.file_dict = file_dict
 

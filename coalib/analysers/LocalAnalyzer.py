@@ -20,7 +20,7 @@ class LocalAnalyzer(Analyser):
     def __init__(self,
                  settings,
                  message_queue,
-                 TIMEOUT=0.2):
+                 TIMEOUT=0):
         Analyser.__init__(self, settings, message_queue, TIMEOUT)
 
     @staticmethod
