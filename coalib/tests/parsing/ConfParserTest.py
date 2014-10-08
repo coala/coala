@@ -40,9 +40,9 @@ class LineParserTestCase(unittest.TestCase):
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
         self.nonexistentfile = os.path.join(tempfile.gettempdir(), "NonExistentTestFile")
-        filehandler = open(self.file, "w", encoding='utf-8')
-        filehandler.write(self.example_file)
-        filehandler.close()
+        with open(self.file, "w") as filehandler:
+            filehandler.write(self.example_file)
+
         self.uut = ConfParser()
         if sys.version_info < (3, 3):
             err = OSError
