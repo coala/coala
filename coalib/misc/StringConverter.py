@@ -24,9 +24,9 @@ class StringConverter:
     """
     def __init__(self, value, strip_whitespaces=True, list_delimiters=[",", ";"]):
         if not isinstance(list_delimiters, list) and not isinstance(list_delimiters, str):
-            raise TypeError
+            raise TypeError("list_delimiters has to be a string or a list")
         if not isinstance(strip_whitespaces, bool):
-            raise TypeError
+            raise TypeError("strip_whitespaces has to be a bool parameter")
 
         self.__strip_whitespaces = strip_whitespaces
         self.__set_value_delims(list_delimiters)
