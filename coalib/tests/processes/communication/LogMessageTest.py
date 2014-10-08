@@ -50,6 +50,12 @@ class LogMessageTestCase(unittest.TestCase):
         self.uut.log_level = 5
         self.assertEqual(str(self.uut), "[{}] {}".format(_("ERROR"), StringConstants.COMPLEX_TEST_STRING))
 
+    def test_equals(self):
+        self.assertEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), LogMessage(LOG_LEVEL.DEBUG, "test message"))
+        self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), LogMessage(LOG_LEVEL.WARNING, "test message"))
+        self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), LogMessage(LOG_LEVEL.DEBUG, "test"))
+        self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), 5)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

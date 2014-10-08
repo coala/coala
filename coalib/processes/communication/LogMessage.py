@@ -31,3 +31,9 @@ class LogMessage:
         return '[{}] {}'.format({LOG_LEVEL.DEBUG: _("DEBUG"),
                                  LOG_LEVEL.WARNING: _("WARNING"),
                                  LOG_LEVEL.ERROR: _("ERROR")}.get(self.log_level, _("ERROR")), self.message)
+
+    def __eq__(self, other):
+        return isinstance(other, LogMessage) and other.log_level == self.log_level and other.message == self.message
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
