@@ -31,8 +31,6 @@ class StringConverter:
         self.__strip_whitespaces = strip_whitespaces
         self.__set_value_delims(list_delimiters)
 
-        # Just declare it here
-        self.__value = None
         self.value = value
         self.__list = None
         self.__recreate_list = True
@@ -49,27 +47,20 @@ class StringConverter:
         self.__delim_regex += re.escape(str(val[-1])) + ")"
 
     def __str__(self):
-        self.__prepare_value()
-
-        return self.__value
+        return self.value
 
     def __bool__(self):
-        self.__prepare_value()
-
-        if self.__value.lower() in StringConstants.TRUE_STRINGS:
+        if self.value.lower() in StringConstants.TRUE_STRINGS:
             return True
-        if self.__value.lower() in StringConstants.FALSE_STRINGS:
+        if self.value.lower() in StringConstants.FALSE_STRINGS:
             return False
         raise ValueError
 
     def __len__(self):
-        self.__prepare_value()
-
-        return len(self.__value)
+        return len(self.value)
 
     def __int__(self):
-        self.__prepare_value()
-        return int(self.__value)
+        return int(self.value)
 
     def __iter__(self):
         self.__prepare_list()
@@ -77,12 +68,10 @@ class StringConverter:
         return iter(self.__list)
 
     def __prepare_list(self):
-        self.__prepare_value()
-
         if not self.__recreate_list:
             return
 
-        list = re.split(self.__delim_regex, self.__value)
+        list = re.split(self.__delim_regex, self.value)
 
         if self.__strip_whitespaces:
             for i in range(len(list)):
@@ -95,13 +84,14 @@ class StringConverter:
 
         self.__recreate_list = False
 
-    def __prepare_value(self):
-        newval = str(self.value)
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, newval):
+        self.__value = str(newval)
         if self.__strip_whitespaces:
-            newval = newval.strip()
+            self.__value = self.__value.strip()
 
-        if newval == self.__value:
-            return
-
-        self.__value = newval
         self.__recreate_list = True
