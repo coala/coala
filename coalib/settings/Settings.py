@@ -69,7 +69,7 @@ class Settings:
         try:
             self.__getitem__(item, ignore_defaults)
             return True
-        except:
+        except IndexError:
             return False
 
     def __getitem__(self, item, ignore_defaults=False):
