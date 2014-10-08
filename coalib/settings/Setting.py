@@ -24,12 +24,22 @@ def path(obj):
 class Setting(StringConverter):
     def __init__(self, key, value, origin="", strip_whitespaces=True):
         StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces)
-        self.key = str(key)
-        if self.key == "":
-            raise ValueError("An empty key is not allowed for a setting.")
+        self.key = key
         self.origin = str(origin)
 
     def __path__(self):
         if self.origin == "":
             raise ValueError("Cannot determine path without origin.")
         return os.path.join(self.origin, str(self))
+
+    @property
+    def key(self):
+        return self._key
+
+    @key.setter
+    def key(self, key):
+        newkey = str(key)
+        if newkey == "":
+            raise ValueError("An empty key is not allowed for a setting.")
+
+        self._key = newkey
