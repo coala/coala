@@ -75,22 +75,21 @@ class AnalyserTestCase(unittest.TestCase):
 
     def test_message_queue(self):
         self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser..."))
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser {}...").format("TestAnalyser"))
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
-        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser..."))
+        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser {}...").format("TestAnalyser"))
         self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser..."))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser {}...").format("TestAnalyser"))
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 
     def test_bad_analyzer(self):
         self.uut = BadTestAnalyzer(self.settings, self.queue)
         self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser..."))
-        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser..."))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser..."))
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser {}...".format("BadTestAnalyzer")))
+        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser {}...").format("BadTestAnalyzer"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser {}...").format("BadTestAnalyzer"))
         self.queue.get()  # debug message contains custom content, dont test this here
-        self.check_message(LOG_LEVEL.WARNING, _("An unknown failure occurred and an analyzer run is aborted.") + " " +
-                           StringConstants.THIS_IS_A_BUG)
+        self.check_message(LOG_LEVEL.WARNING, _("Analyzer {} failed to run").format("BadTestAnalyzer"))
 
     def check_message(self, log_level, message):
         msg = self.queue.get()

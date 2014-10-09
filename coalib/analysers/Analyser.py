@@ -89,21 +89,34 @@ class Analyser(Process):
 
     def run(self, *args, **kwargs):
         try:
-            self.debug_msg(_("Setting up analyser..."))
+            name = self.__class__.__name__
+            self.debug_msg(_("Setting up analyser {}...").format(name))
             self.set_up()
-            self.debug_msg(_("Running analyser..."))
-            retval = self.run_analyser(*args, **kwargs)
-            self.debug_msg(_("Tearing down analyser..."))
+            self.debug_msg(_("Running analyser {}...").format(name))
+            try:
+                retval = self.run_analyser(*args, **kwargs)
+            except:
+                exception = sys.exc_info()
+                self.warn_msg(_("Analyzer {} failed to run").format(self.__class__.__name__))
+                self.debug_msg(_("The analyzer {analyzer} raised an exception of type {exception}. If you are the "
+                                 "writer of this analyzer, please catch all exceptions. If not and this error annoys "
+                                 "you, you might want to get in contact with the writer of this analyzer.\n\n"
+                                 "Here is your traceback:\n\n{traceback}\n"
+                                 "").format(analyzer=self.__class__.__name__,
+                                           exception=str(exception[0].__name__),
+                                           traceback=traceback.extract_tb(exception[2])))
+                return None
+            self.debug_msg(_("Tearing down analyser {}...").format(name))
             self.tear_down()
 
             return retval
         except:
             exception = sys.exc_info()
-            self.debug_msg(_("Unknown failure in worker process.\n"
-                             "Exception: {}\nTraceback:\n{}").format(str(exception[0]),
-                                                                     traceback.extract_tb(exception[2])))
-            self.warn_msg(_("An unknown failure occurred and an analyzer run is aborted."),
-                          StringConstants.THIS_IS_A_BUG)
+            self.debug_msg(_("set_up() or tear_down() throwed an exception for analyzer {}.\n"
+                             "Exception: {}\nTraceback:\n{}").format(str(exception[0].__name__),
+                                                                     traceback.extract_tb(exception[2]),
+                                                                     self.__class__.__name__))
+            self.warn_msg(_("Analyzer {} failed to run").format(self.__class__.__name__))
 
     @staticmethod
     def kind():
