@@ -12,13 +12,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import unittest
+import sys
+sys.path.insert(0, ".")
+from coalib.output.NullPrinter import NullPrinter
 
 
-class Printer:
-    def _print(self, output, **kwargs):
-        raise NotImplementedError
+class NullPrinterTestCase(unittest.TestCase):
+    def test_non_printing(self):
+        self.uut = NullPrinter()
+        self.assertEqual(self.uut.print("anything"), None)
+        self.assertEqual(self.uut.print("anything", color="red"), None)
 
-    def print(self, *args, delimiter=' ', end='\n', **kwargs):
-        output = str(delimiter).join(str(arg) for arg in args) + str(end)
 
-        return self._print(output, **kwargs)
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

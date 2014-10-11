@@ -12,13 +12,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.output.ColorPrinter import ColorPrinter
+from coalib.output.LogPrinter import LogPrinter
 
 
-class Printer:
-    def _print(self, output, **kwargs):
-        raise NotImplementedError
+class NullPrinter(ColorPrinter, LogPrinter):
+    def __init__(self):
+        ColorPrinter.__init__(self)
+        LogPrinter.__init__(self)
 
-    def print(self, *args, delimiter=' ', end='\n', **kwargs):
-        output = str(delimiter).join(str(arg) for arg in args) + str(end)
+    def _print_colored(self, output, color=None, **kwargs):
+        return
 
-        return self._print(output, **kwargs)
+    def _print_uncolored(self, output, **kwargs):
+        return

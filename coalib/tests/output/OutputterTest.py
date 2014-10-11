@@ -12,13 +12,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import unittest
+import sys
+sys.path.insert(0, ".")
+from coalib.output.Outputter import Outputter, Result
 
 
-class Printer:
-    def _print(self, output, **kwargs):
-        raise NotImplementedError
+class OutputterTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = Outputter()
 
-    def print(self, *args, delimiter=' ', end='\n', **kwargs):
-        output = str(delimiter).join(str(arg) for arg in args) + str(end)
+    def test_api(self):
+        self.assertRaises(NotImplementedError, self.uut.require_settings, "anything")
+        self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"))
+        self.assertRaises(TypeError, self.uut.print_result, "anything")
 
-        return self._print(output, **kwargs)
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

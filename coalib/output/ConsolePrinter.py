@@ -25,7 +25,7 @@ class ConsolePrinter(LogPrinter, ColorPrinter):
         self.output = output
 
     def _print_uncolored(self, output, **kwargs):
-        print(output, file=self.output)
+        print(output, file=self.output, end="")
 
     def _print_colored(self, output, color=None, **kwargs):
         color_code_dict = {
@@ -43,4 +43,4 @@ class ConsolePrinter(LogPrinter, ColorPrinter):
         if color_code is None:
             raise ValueError("Invalid color value")
 
-        print('\033[' + color_code + 'm' + output + '\033[0m')
+        print('\033[' + color_code + 'm' + output + '\033[0m', file=self.output, end="")

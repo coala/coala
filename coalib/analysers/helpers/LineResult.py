@@ -12,13 +12,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.analysers.helpers.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.analysers.helpers.Result import Result
 
 
-class Printer:
-    def _print(self, output, **kwargs):
-        raise NotImplementedError
-
-    def print(self, *args, delimiter=' ', end='\n', **kwargs):
-        output = str(delimiter).join(str(arg) for arg in args) + str(end)
-
-        return self._print(output, **kwargs)
+class LineResult(Result):
+    """
+    This is a result that affects one specific line in a file.
+    """
+    def __init__(self, origin, line_nr, line, message, file, severity=RESULT_SEVERITY.NORMAL):
+        Result.__init__(self, origin=origin, message=message, file=file, severity=severity)
+        self.line_nr = line_nr
+        self.line = line
