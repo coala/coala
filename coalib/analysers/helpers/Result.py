@@ -21,3 +21,13 @@ class Result:
         self.message = message
         self.file = file
         self.severity = severity
+
+    def __eq__(self, other):
+        return isinstance(other, Result) and \
+            self.origin == other.origin and \
+            self.message == other.message and \
+            self.file == other.file and \
+            self.severity == other.severity
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
