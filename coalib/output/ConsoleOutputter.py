@@ -23,22 +23,22 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
         Outputter.__init__(self)
         ConsolePrinter.__init__(self)
 
-    def require_settings(self, settings):
-        if not isinstance(settings, dict):
+    def require_settings(self, settings_names_dict):
+        if not isinstance(settings_names_dict, dict):
             raise TypeError("The settings parameter has to be a dictionary.")
 
         result = {}
-        for setting, arr in settings.items():
+        for setting_name, arr in settings_names_dict.items():
             if not isinstance(arr, list) or len(arr) < 2:
                 self.log(LOG_LEVEL.WARNING,
-                         _("One of the given settings ({}) are not properly described.").format(str(setting)))
+                         _("One of the given settings ({}) are not properly described.").format(str(setting_name)))
                 continue
 
-            result[setting] = self._require_setting(setting, arr)
+            result[setting_name] = self._require_setting(setting_name, arr)
 
         return result
 
-    def _require_setting(self, setting, arr):
-        return input(_("Please enter a value for the setting \"{}\" ({}) needed by {}: ").format(str(setting),
+    def _require_setting(self, setting_name, arr):
+        return input(_("Please enter a value for the setting \"{}\" ({}) needed by {}: ").format(str(setting_name),
                                                                                                  str(arr[0]),
                                                                                                  str(arr[1])))
