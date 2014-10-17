@@ -26,7 +26,7 @@ class Outputter:
         # TODO add API for special results as soon as they're there, if not fallback to:
         return self._print_result(result)
 
-    def require_settings(self, settings):
+    def acquire_settings(self, settings):
         """
         This method prompts the user for the given settings.
 

@@ -75,7 +75,7 @@ class SettingsFiller:
 
         # Get missing ones.
         if len(needed_settings) > 0:
-            new_vals = self.outputter.require_settings(needed_settings)
+            new_vals = self.outputter.acquire_settings(needed_settings)
             for setting, help_text in new_vals.items():
                 self.settings.append(Setting(setting, help_text))
 
