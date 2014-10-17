@@ -23,7 +23,7 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
         Outputter.__init__(self)
         ConsolePrinter.__init__(self)
 
-    def require_settings(self, settings_names_dict):
+    def acquire_settings(self, settings_names_dict):
         if not isinstance(settings_names_dict, dict):
             raise TypeError("The settings parameter has to be a dictionary.")
 

@@ -28,12 +28,12 @@ class ConsoleOutputterTestCase(unittest.TestCase):
         self.uut = ConsoleOutputter()
 
     def test_require_settings(self):
-        self.assertEqual(self.uut.require_settings({"setting": ["help text", "SomeFilter"]}),
+        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeFilter"]}),
                          {"setting":
                          _("Please enter a value for the "
                            "setting \"{}\" ({}) needed by SomeFilter: ").format("setting", "help text")})
-        self.assertEqual(self.uut.require_settings({0: 0}), {})
-        self.assertRaises(TypeError, self.uut.require_settings, 0)
+        self.assertEqual(self.uut.acquire_settings({0: 0}), {})
+        self.assertRaises(TypeError, self.uut.acquire_settings, 0)
 
 
 if __name__ == '__main__':
