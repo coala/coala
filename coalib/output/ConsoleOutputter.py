@@ -29,16 +29,24 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
 
         result = {}
         for setting_name, arr in settings_names_dict.items():
-            if not isinstance(arr, list) or len(arr) < 2:
-                self.log(LOG_LEVEL.WARNING,
-                         _("One of the given settings ({}) are not properly described.").format(str(setting_name)))
-                continue
-
-            result[setting_name] = self._require_setting(setting_name, arr)
+            value = self._require_setting(setting_name, arr)
+            if value is not None:
+                result[setting_name] = value
 
         return result
 
     def _require_setting(self, setting_name, arr):
+        if not isinstance(arr, list) or len(arr) < 2:
+            self.log(LOG_LEVEL.WARNING,
+                     _("One of the given settings ({}) are not properly described.").format(str(setting_name)))
+
+            return None
+
+        if len(arr) == 2:
+            needed = arr[1]
+        else:
+            needed = ", ".join(arr[1:-1]) + " and " + arr[-1]
+
         return input(_("Please enter a value for the setting \"{}\" ({}) needed by {}: ").format(str(setting_name),
                                                                                                  str(arr[0]),
-                                                                                                 str(arr[1])))
+                                                                                                 needed))
