@@ -70,6 +70,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertTrue("local name" in new_settings)
         self.assertTrue("global name" in new_settings)
         self.assertEqual(new_settings["key"].value, "val")
+        self.assertEqual(len(new_settings.contents), 3)
 
         # Shouldnt change anything the second time
         new_settings = self.uut.fill_settings([LocalTestAnalyzer, GlobalTestAnalyzer])
@@ -77,6 +78,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertTrue("local name" in new_settings)
         self.assertTrue("global name" in new_settings)
         self.assertEqual(new_settings["key"].value, "val")
+        self.assertEqual(len(new_settings.contents), 3)
 
 
 if __name__ == '__main__':
