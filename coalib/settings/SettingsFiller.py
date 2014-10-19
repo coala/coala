@@ -63,9 +63,10 @@ class SettingsFiller:
             else:
                 needed = analyzer.get_needed_settings()
                 for key in needed:
-                    needed[key] = [needed[key], analyzer.__name__]
-
-                prel_needed_settings.update(needed)
+                    if key in prel_needed_settings:
+                        prel_needed_settings[key].append(analyzer.__name__)
+                    else:
+                        prel_needed_settings[key] = [needed[key], analyzer.__name__]
 
         # Strip away existent settings.
         needed_settings = {}
