@@ -45,7 +45,8 @@ class LocalTestAnalyzer(LocalAnalyzer):
 
     @staticmethod
     def get_needed_settings():
-        return {"local name": "local help text"}
+        return {"local name": "local help text",
+                "global name": "this setting is needed by two analyzers"}
 
 
 class SettingsTestCase(unittest.TestCase):
