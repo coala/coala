@@ -32,11 +32,11 @@ class FilterCollector(FileCollector):
         """
         This collector stores filter classes (not instances) in self._items
         :param filter_kinds: the KINDs of filters to be collected
-        :param log_printer: LogPrinter to handle logging of debug, warning and error messages
         :param filter_dirs: list of strings: directories from which filters should be collected
         :param filter_names: list of strings: names of filters that should be collected. Default is all.
         :param ignored_filters: list of strings: names of filters that should not be collected. Default is none.
         :param regexs: list of strings: regexs that match filters to be collected.
+        :param log_printer: LogPrinter to handle logging of debug, warning and error messages
         """
         if filter_names is None:
             filter_names = []
