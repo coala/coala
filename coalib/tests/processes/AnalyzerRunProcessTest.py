@@ -19,7 +19,7 @@ import tempfile
 
 sys.path.insert(0, ".")
 import unittest
-from coalib.analysers.helpers.Result import Result, RESULT_SEVERITY
+from coalib.analysers.results.Result import Result, RESULT_SEVERITY
 from coalib.analysers.LocalAnalyzer import LocalAnalyzer
 from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer
 from coalib.processes.AnalyzerRunProcess import AnalyzerRunProcess, LogMessage, LOG_LEVEL
