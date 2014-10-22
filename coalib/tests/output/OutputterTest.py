@@ -23,7 +23,7 @@ class OutputterTestCase(unittest.TestCase):
         self.uut = Outputter()
 
     def test_api(self):
-        self.assertRaises(NotImplementedError, self.uut.require_settings, "anything")
+        self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")
         self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"))
         self.assertRaises(TypeError, self.uut.print_result, "anything")
 
