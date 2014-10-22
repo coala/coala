@@ -12,22 +12,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.helpers.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.analysers.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.analysers.results.Result import Result
 
 
-class Result:
-    def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL):
-        self.origin = origin
-        self.message = message
-        self.file = file
-        self.severity = severity
-
-    def __eq__(self, other):
-        return isinstance(other, Result) and \
-            self.origin == other.origin and \
-            self.message == other.message and \
-            self.file == other.file and \
-            self.severity == other.severity
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
+class LineResult(Result):
+    """
+    This is a result that affects one specific line in a file.
+    """
+    def __init__(self, origin, line_nr, line, message, file, severity=RESULT_SEVERITY.NORMAL):
+        Result.__init__(self, origin=origin, message=message, file=file, severity=severity)
+        self.line_nr = line_nr
+        self.line = line
