@@ -25,3 +25,11 @@ class LineResult(Result):
         self.line_nr = line_nr
         self.line = line
         self.replacement = replacement
+
+    # Result's __ne__ uses __eq__ so no need to overwrite that too
+    def __eq__(self, other):
+        return Result.__eq__(self, other) and\
+            isinstance(other, LineResult) and\
+            self.line_nr == other.line_nr and\
+            self.line == other.line and\
+            self.replacement == other.replacement
