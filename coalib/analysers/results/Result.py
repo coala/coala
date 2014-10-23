@@ -16,7 +16,16 @@ from coalib.analysers.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 class Result:
+    """
+    A result is anything that has an origin and a message.
+
+    Optionally it might affect a file.
+    """
     def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL):
+        """
+        :param origin: Class name of the creator of this object
+        :param file: The path to the affected file
+        """
         self.origin = origin
         self.message = message
         self.file = file
