@@ -20,7 +20,8 @@ class LineResult(Result):
     """
     This is a result that affects one specific line in a file.
     """
-    def __init__(self, origin, line_nr, line, message, file, severity=RESULT_SEVERITY.NORMAL):
+    def __init__(self, origin, line_nr, line, message, file, replacement=None, severity=RESULT_SEVERITY.NORMAL):
         Result.__init__(self, origin=origin, message=message, file=file, severity=severity)
         self.line_nr = line_nr
         self.line = line
+        self.replacement = replacement
