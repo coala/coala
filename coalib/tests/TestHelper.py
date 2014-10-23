@@ -27,7 +27,10 @@ class TestHelper:
             pass
 
     @staticmethod
-    def execute_python3_file(filename):
+    def execute_python3_file(filename, use_coverage):
+        if not use_coverage:
+            return subprocess.call(["python3", filename])
+
         try:
             return subprocess.call(["coverage",
                                     "run",
@@ -41,20 +44,22 @@ class TestHelper:
             return subprocess.call(["python3", filename])
 
     @staticmethod
-    def execute_python3_files(filenames):
+    def execute_python3_files(filenames, use_coverage=False):
         number = len(filenames)
         failures = 0
         retval = 0
         for file in filenames:
             print("\nRunning: {} ({})\n".format(os.path.splitext(os.path.basename(file))[0], file), end='')
-            result = TestHelper.execute_python3_file(file)  # either 0 or 1
+            result = TestHelper.execute_python3_file(file, use_coverage)  # either 0 or 1
             failures += result
             retval = max(result, retval)
             print("\n"+"#"*70)
 
         print("\nTests finished: failures in {} of {} test modules".format(failures, number))
 
-        TestHelper.__show_coverage_results()
+        if use_coverage:
+            TestHelper.__show_coverage_results()
+
         return retval
 
     @staticmethod
