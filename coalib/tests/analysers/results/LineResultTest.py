@@ -1,5 +1,3 @@
-#! /bin/python3
-
 """
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,29 +12,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-import os
+
 import sys
+sys.path.insert(0, ".")
+from coalib.analysers.results.LineResult import Result, LineResult, RESULT_SEVERITY
+import unittest
 
-from coalib.tests.TestHelper import TestHelper
 
+class ResultTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = LineResult("origin", 1, "line", "message", "file")
 
-def show_help():
-    print("Usage: {name} [OPTIONS]".format(name=sys.argv[0]))
-    print()
-    print("--help  : Show this help text")
-    print("--cover : Use coverage to get statement and branch coverage of tests")
+    def test_equality(self):
+        cmp = LineResult("origin", 1, "line", "message", "file")
+        self.assertEqual(cmp, self.uut)
+        cmp = Result("origin", "message")
+        self.assertNotEqual(cmp, self.uut)
+        cmp = LineResult("origin", 1, "lineswrong", "message", "file")
+        self.assertNotEqual(cmp, self.uut)
 
 
 if __name__ == '__main__':
-    use_coverage = False
-    for arg in sys.argv[1:]:
-        arg = str(arg).strip().lower()
-        if arg == "--cover":
-            use_coverage = True
-        else:
-            show_help()
-            exit()
-
-    test_dir = os.path.abspath("coalib/tests")
-    files = TestHelper.get_test_files(test_dir)
-    exit(TestHelper.execute_python3_files(files, use_coverage))
+    unittest.main(verbosity=2)

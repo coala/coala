@@ -45,7 +45,8 @@ class LocalTestAnalyzer(LocalAnalyzer):
 
     @staticmethod
     def get_needed_settings():
-        return {"local name": "local help text"}
+        return {"local name": "local help text",
+                "global name": "this setting is needed by two analyzers"}
 
 
 class SettingsTestCase(unittest.TestCase):
@@ -70,6 +71,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertTrue("local name" in new_settings)
         self.assertTrue("global name" in new_settings)
         self.assertEqual(new_settings["key"].value, "val")
+        self.assertEqual(len(new_settings.contents), 3)
 
         # Shouldnt change anything the second time
         new_settings = self.uut.fill_settings([LocalTestAnalyzer, GlobalTestAnalyzer])
@@ -77,6 +79,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertTrue("local name" in new_settings)
         self.assertTrue("global name" in new_settings)
         self.assertEqual(new_settings["key"].value, "val")
+        self.assertEqual(len(new_settings.contents), 3)
 
 
 if __name__ == '__main__':

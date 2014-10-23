@@ -12,12 +12,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.helpers.RESULT_SEVERITY import RESULT_SEVERITY
+
+import sys
+sys.path.insert(0, ".")
+from coalib.analysers.results.Result import Result, RESULT_SEVERITY
+import unittest
 
 
-class Result:
-    def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL):
-        self.origin = origin
-        self.message = message
-        self.file = file
-        self.severity = severity
+class ResultTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = Result("origin", "message")
+
+    def test_equality(self):
+        cmp = Result("origin", "message")
+        self.assertEqual(cmp, self.uut)
+        cmp = Result("another origin", "message")
+        self.assertNotEqual(cmp, self.uut)
+        cmp = Result("origin", "another message")
+        self.assertNotEqual(cmp, self.uut)
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
