@@ -20,17 +20,17 @@ import tempfile
 sys.path.insert(0, ".")
 import unittest
 from coalib.analysers.results.Result import Result, RESULT_SEVERITY
-from coalib.analysers.LocalAnalyzer import LocalAnalyzer
+from coalib.analysers.LocalBear import LocalBear
 from coalib.analysers.GlobalBear import GlobalBear
 from coalib.processes.AnalyzerRunProcess import AnalyzerRunProcess, LogMessage, LOG_LEVEL
 from coalib.settings.Settings import Settings
 
 
-class LocalTestAnalyzer(LocalAnalyzer):
+class LocalTestBear(LocalBear):
     def run_bear(self, filename, file):
         if filename == "file1":
             raise Exception("Just to throw anything here.")
-        return [Result("LocalTestAnalyzer", "something went wrong", filename)]
+        return [Result("LocalTestBear", "something went wrong", filename)]
 
 
 class GlobalTestBear(GlobalBear):
@@ -109,7 +109,7 @@ d
         self.file_name_queue.put(self.file1)
         self.file_name_queue.put(self.file2)
         self.file_name_queue.put("invalid file")
-        self.local_analyzer_list.append(LocalTestAnalyzer(self.settings, self.message_queue))
+        self.local_analyzer_list.append(LocalTestBear(self.settings, self.message_queue))
         self.local_analyzer_list.append("not a valid analyzer")
         self.file_dict[self.file1] = self.example_file
         self.file_dict[self.file2] = self.example_file
@@ -138,7 +138,7 @@ d
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
 
         local_result_expected = [('file1', {}),
-                                 ('arbitrary', {'LocalTestAnalyzer': Result("LocalTestAnalyzer",
+                                 ('arbitrary', {'LocalTestBear': Result("LocalTestBear",
                                                                             "something went wrong",
                                                                             'arbitrary')})]
         for firste, seconde in local_result_expected:
