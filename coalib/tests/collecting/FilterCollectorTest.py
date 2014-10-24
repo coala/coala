@@ -42,14 +42,14 @@ class TestFileCollection(unittest.TestCase):
         (self.testfile3, self.testfile3_path) = tempfile.mkstemp(suffix='.c', prefix='testfile3_', dir=self.tmp_dir)
         first_file_name = os.path.splitext(os.path.basename(self.testfile1_path))[0]
         test_filter_file_string_one = """
-from coalib.analysers.Analyser import Analyser
+from coalib.analysers.Bear import Bear
 import inspect
 import multiprocessing
 from coalib.settings.Settings import Settings
 
-class TestFilter(Analyser):
+class TestFilter(Bear):
     def __init__(self):
-        Analyser.__init__(self, Settings("settings"), multiprocessing.Queue())
+        Bear.__init__(self, Settings("settings"), multiprocessing.Queue())
 
     @staticmethod
     def kind():
