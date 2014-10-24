@@ -16,7 +16,7 @@ from coalib.analysers.Bear import Bear
 from coalib.analysers.BEAR_KIND import BEAR_KIND
 
 
-class GlobalAnalyzer(Bear):
+class GlobalBear(Bear):
     def __init__(self,
                  file_dict,  # filename : file contents
                  settings,
@@ -31,7 +31,7 @@ class GlobalAnalyzer(Bear):
 
     def run_bear(self):
         """
-        Analyzes all files in file_dict.
+        Handles all files in file_dict.
 
         :return: A list of Result type.
         """

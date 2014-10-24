@@ -21,7 +21,7 @@ sys.path.insert(0, ".")
 import unittest
 from coalib.analysers.results.Result import Result, RESULT_SEVERITY
 from coalib.analysers.LocalAnalyzer import LocalAnalyzer
-from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer
+from coalib.analysers.GlobalBear import GlobalBear
 from coalib.processes.AnalyzerRunProcess import AnalyzerRunProcess, LogMessage, LOG_LEVEL
 from coalib.settings.Settings import Settings
 
@@ -33,11 +33,11 @@ class LocalTestAnalyzer(LocalAnalyzer):
         return [Result("LocalTestAnalyzer", "something went wrong", filename)]
 
 
-class GlobalTestAnalyzer(GlobalAnalyzer):
+class GlobalTestBear(GlobalBear):
     def run_bear(self):
         result = []
         for file, contents in self.file_dict.items():
-            result.append(Result("GlobalTestAnalyzer",
+            result.append(Result("GlobalTestBear",
                                  "Files are bad in general!",
                                  file,
                                  severity=RESULT_SEVERITY.INFO))
@@ -113,7 +113,7 @@ d
         self.local_analyzer_list.append("not a valid analyzer")
         self.file_dict[self.file1] = self.example_file
         self.file_dict[self.file2] = self.example_file
-        self.global_analyzer_queue.put(GlobalTestAnalyzer(self.file_dict, self.settings, self.message_queue))
+        self.global_analyzer_queue.put(GlobalTestBear(self.file_dict, self.settings, self.message_queue))
         self.global_analyzer_queue.put("not a valid analyzer")
 
     def test_run(self):
@@ -146,10 +146,10 @@ d
             self.assertEqual(first, firste)
             self.assertEqual(second.keys(), seconde.keys())
 
-        global_results_expected = [("GlobalTestAnalyzer",
-                                    [Result("GlobalTestAnalyzer", "Files are bad in general!", "file1",
+        global_results_expected = [("GlobalTestBear",
+                                    [Result("GlobalTestBear", "Files are bad in general!", "file1",
                                      severity=RESULT_SEVERITY.INFO),
-                                     Result("GlobalTestAnalyzer", "Files are bad in general!", "arbitrary",
+                                     Result("GlobalTestBear", "Files are bad in general!", "arbitrary",
                                      severity=RESULT_SEVERITY.INFO)]
                                    )]
         self.assertEqual(len(seconde), len(second))
