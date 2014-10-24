@@ -23,7 +23,7 @@ from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Settings import Settings
 
 
-class Analyser(Process):
+class Bear(Process):
     """
     This is the base class for every analyser. If you want to write an analyser, inherit from this class and overwrite
     at least the run_analyser method. You can send debug/warning/error messages through the debug_msg(), warn_msg(),
