@@ -19,19 +19,19 @@ import sys
 import tempfile
 sys.path.insert(0, ".")
 import unittest
-from coalib.collecting.FilterCollector import FilterCollector
+from coalib.collecting.BearCollector import BearCollector
 from coalib.output.LogPrinter import LogPrinter
 
 
 class TestInit(unittest.TestCase):
 
     def test_raises(self):
-        self.assertRaises(TypeError, FilterCollector, ["kind"], [], "string", [], [])
-        self.assertRaises(TypeError, FilterCollector, ["kind"], [], [], "string", [])
-        self.assertRaises(TypeError, FilterCollector, ["kind"], [], [], [], "string")
-        self.assertRaises(TypeError, FilterCollector, "kind", [], [], [], [])
+        self.assertRaises(TypeError, BearCollector, ["kind"], [], "string", [], [])
+        self.assertRaises(TypeError, BearCollector, ["kind"], [], [], "string", [])
+        self.assertRaises(TypeError, BearCollector, ["kind"], [], [], [], "string")
+        self.assertRaises(TypeError, BearCollector, "kind", [], [], [], [])
 
-        self.assertEqual(FilterCollector(["kind"], [])._regexs, [])
+        self.assertEqual(BearCollector(["kind"], [])._regexs, [])
 
 
 class TestFileCollection(unittest.TestCase):
@@ -94,7 +94,7 @@ class TestFilter(ImportedTestFilter):
         shutil.rmtree(self.tmp_dir)
 
     def test_filter_import(self):
-        uut = FilterCollector(["kind"],
+        uut = BearCollector(["kind"],
                               filter_dirs=[self.tmp_dir])
         filter_list = uut.collect()
         self.assertEqual(len(filter_list), 2)
@@ -103,7 +103,7 @@ class TestFilter(ImportedTestFilter):
                         [list(Tuple) for Tuple in itertools.permutations([self.testfile1_path, self.testfile2_path])])
 
     def test_filter_names(self):
-        uut = FilterCollector(["kind"],
+        uut = BearCollector(["kind"],
                               filter_dirs=[self.tmp_dir],
                               filter_names=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
         filter_list = uut.collect()
@@ -111,7 +111,7 @@ class TestFilter(ImportedTestFilter):
         self.assertEqual(filter_list[0]().origin(), self.testfile1_path)
 
     def test_ignored(self):
-        uut = FilterCollector(["kind"],
+        uut = BearCollector(["kind"],
                               filter_dirs=[self.tmp_dir],
                               ignored_filters=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
         filter_list = uut.collect()
@@ -119,7 +119,7 @@ class TestFilter(ImportedTestFilter):
         self.assertEqual(filter_list[0]().origin(), self.testfile2_path)
 
     def test_regexs(self):
-        uut = FilterCollector(["kind"],
+        uut = BearCollector(["kind"],
                               filter_dirs=[self.tmp_dir],
                               regexs=["testfile1"])
         filter_list = uut.collect()

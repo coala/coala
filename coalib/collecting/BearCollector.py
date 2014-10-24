@@ -21,7 +21,7 @@ from coalib.collecting.FileCollector import FileCollector
 from coalib.output.ConsolePrinter import ConsolePrinter
 
 
-class FilterCollector(FileCollector):
+class BearCollector(FileCollector):
     def __init__(self,
                  filter_kinds,
                  filter_dirs,
