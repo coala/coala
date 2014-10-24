@@ -17,7 +17,7 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Settings import Settings
-from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer, ANALYSER_KIND
+from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer, BEAR_KIND
 
 
 class GlobalAnalyzerTestCase(unittest.TestCase):
@@ -26,7 +26,7 @@ class GlobalAnalyzerTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError, test_object.run_bear)
 
     def test_kind(self):
-        self.assertEqual(GlobalAnalyzer.kind(), ANALYSER_KIND.GLOBAL)
+        self.assertEqual(GlobalAnalyzer.kind(), BEAR_KIND.GLOBAL)
 
 
 if __name__ == '__main__':
