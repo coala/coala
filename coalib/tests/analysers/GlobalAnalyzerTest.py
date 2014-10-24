@@ -23,7 +23,7 @@ from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer, ANALYSER_KIND
 class GlobalAnalyzerTestCase(unittest.TestCase):
     def test_api(self):
         test_object = GlobalAnalyzer(0, Settings("name"), None)
-        self.assertRaises(NotImplementedError, test_object.run_analyser)
+        self.assertRaises(NotImplementedError, test_object.run_bear)
 
     def test_kind(self):
         self.assertEqual(GlobalAnalyzer.kind(), ANALYSER_KIND.GLOBAL)

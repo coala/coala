@@ -27,14 +27,14 @@ from coalib.settings.Settings import Settings
 
 
 class LocalTestAnalyzer(LocalAnalyzer):
-    def run_analyser(self, filename, file):
+    def run_bear(self, filename, file):
         if filename == "file1":
             raise Exception("Just to throw anything here.")
         return [Result("LocalTestAnalyzer", "something went wrong", filename)]
 
 
 class GlobalTestAnalyzer(GlobalAnalyzer):
-    def run_analyser(self):
+    def run_bear(self):
         result = []
         for file, contents in self.file_dict.items():
             result.append(Result("GlobalTestAnalyzer",
