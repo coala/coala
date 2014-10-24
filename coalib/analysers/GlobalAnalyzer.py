@@ -12,17 +12,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.Analyser import Analyser
+from coalib.analysers.Bear import Bear
 from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
 
 
-class GlobalAnalyzer(Analyser):
+class GlobalAnalyzer(Bear):
     def __init__(self,
                  file_dict,  # filename : file contents
                  settings,
                  message_queue,
                  TIMEOUT=0):
-        Analyser.__init__(self, settings, message_queue, TIMEOUT)
+        Bear.__init__(self, settings, message_queue, TIMEOUT)
         self.file_dict = file_dict
 
     @staticmethod
