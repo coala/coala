@@ -25,16 +25,21 @@ from coalib.settings.Settings import Settings
 
 class Bear(Process):
     """
-    This is the base class for every bear. If you want to write an bear, inherit from this class and overwrite
-    at least the run_bear method. You can send debug/warning/error messages through the debug_msg(), warn_msg(),
-    fail_msg() functions. These will send the appropriate messages so that they are outputted. Be aware that if you
-    use fail_msg(), you are expected to also terminate the bear run-through immediately.
+    A bear contains the actual subroutine that is responsible for checking source code for certain specifications.
+    However it can actually do whatever it wants with the files it gets. If you are missing some Result type, feel free
+    to contact us and/or help us extending the coalib.
+
+    This is the base class for every bear. If you want to write an bear, you will probably want to look at the
+    GlobalBear and LocalBear classes that inherit from this class. In any case you'll want to overwrite at least the
+    run_bear method. You can send debug/warning/error messages through the debug_msg(), warn_msg(), fail_msg()
+    functions. These will send the appropriate messages so that they are outputted. Be aware that if you use fail_msg(),
+    you are expected to also terminate the bear run-through immediately.
 
     If you need some setup or teardown for your bear, feel free to overwrite the set_up() and tear_down() functions.
     They will be invoked before/after every run_bear invocation.
 
     Settings are available at all times through self.settings. You can access the translation database with the self._()
-    function, it will be routed to the usual gettext _(). Be aware that the strings you use are not necessarily in the
+    function, it will be routed to the usual gettext _(). Be aware that the strings you use are probably not in the
     database, especially if your bear is not shipped with coala. Feel free to use your own translation database in this
     case or consider make your bear available to the coala project.
     """
