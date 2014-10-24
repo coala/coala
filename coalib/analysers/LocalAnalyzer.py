@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from coalib.analysers.Bear import Bear
-from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
+from coalib.analysers.BEAR_KIND import BEAR_KIND
 
 
 class LocalAnalyzer(Bear):
@@ -25,7 +25,7 @@ class LocalAnalyzer(Bear):
 
     @staticmethod
     def kind():
-        return ANALYSER_KIND.LOCAL
+        return BEAR_KIND.LOCAL
 
     def run_bear(self, filename, file):
         """
