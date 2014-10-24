@@ -46,7 +46,7 @@ class LocalTestBear(LocalBear):
     @staticmethod
     def get_needed_settings():
         return {"local name": "local help text",
-                "global name": "this setting is needed by two analyzers"}
+                "global name": "this setting is needed by two bears"}
 
 
 class SettingsTestCase(unittest.TestCase):
