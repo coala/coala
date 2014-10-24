@@ -23,51 +23,51 @@ from coalib.output.ConsolePrinter import ConsolePrinter
 
 class BearCollector(FileCollector):
     def __init__(self,
-                 filter_kinds,
-                 filter_dirs,
-                 filter_names=None,
-                 ignored_filters=None,
+                 bear_kinds,
+                 bear_dirs,
+                 bear_names=None,
+                 ignored_bears=None,
                  regexs=None,
                  log_printer=ConsolePrinter()):
         """
-        This collector stores filter classes (not instances) in self._items
-        :param filter_kinds: the KINDs of filters to be collected
-        :param filter_dirs: list of strings: directories from which filters should be collected
-        :param filter_names: list of strings: names of filters that should be collected. Default is all.
-        :param ignored_filters: list of strings: names of filters that should not be collected. Default is none.
-        :param regexs: list of strings: regexs that match filters to be collected.
+        This collector stores bear classes (not instances) in self._items
+        :param bear_kinds: the KINDs of bears to be collected
+        :param bear_dirs: list of strings: directories from which bears should be collected
+        :param bear_names: list of strings: names of bears that should be collected. Default is all.
+        :param ignored_bears: list of strings: names of bears that should not be collected. Default is none.
+        :param regexs: list of strings: regexs that match bears to be collected.
         :param log_printer: LogPrinter to handle logging of debug, warning and error messages
         """
-        if filter_names is None:
-            filter_names = []
-        if ignored_filters is None:
-            ignored_filters = []
+        if bear_names is None:
+            bear_names = []
+        if ignored_bears is None:
+            ignored_bears = []
         if regexs is None:
             regexs = []
 
-        if not isinstance(filter_kinds, list):
-            raise TypeError("filter_kinds should be of type list")
-        if not isinstance(filter_names, list):
-            raise TypeError("filter_names should be of type list")
-        if not isinstance(ignored_filters, list):
+        if not isinstance(bear_kinds, list):
+            raise TypeError("bear_kinds should be of type list")
+        if not isinstance(bear_names, list):
+            raise TypeError("bear_names should be of type list")
+        if not isinstance(ignored_bears, list):
             raise TypeError("ignored should be of type list")
         if not isinstance(regexs, list):
             raise TypeError("regexs should be of type list")
 
         FileCollector.__init__(self,
-                               flat_dirs=filter_dirs,
+                               flat_dirs=bear_dirs,
                                allowed_types=["py"],
                                log_printer=log_printer)
 
-        self._filter_kinds = filter_kinds
-        self._filter_names = filter_names
-        self._ignored_filters = ignored_filters
+        self._bear_kinds = bear_kinds
+        self._bear_names = bear_names
+        self._ignored_bears = ignored_bears
         self._regexs = regexs
 
     def _is_target(self, file_path):
         """
         :param file_path: absolute path to a file
-        :return: Bool value to determine if filters should be imported from this file
+        :return: Bool value to determine if bears should be imported from this file
 
         This method assumes that the given path lies in a directory that should be collected. However it will check if
         the path is a subpath of an ignored directory.
@@ -76,34 +76,34 @@ class BearCollector(FileCollector):
         if not os.path.splitext(file_path)[1].lower().lstrip('.') in self._allowed_types:
             return False
 
-        filter_name = os.path.splitext(os.path.basename(file_path))[0]
+        bear_name = os.path.splitext(os.path.basename(file_path))[0]
 
-        # ignored filter
-        if filter_name in self._ignored_filters:
+        # ignored bear
+        if bear_name in self._ignored_bears:
             return False
 
         # explicitly included
-        if filter_name in self._filter_names:
+        if bear_name in self._bear_names:
             return True
 
         # regex included
-        if any(re.match(regex, filter_name) for regex in self._regexs):
+        if any(re.match(regex, bear_name) for regex in self._regexs):
             return True  # specifically called
 
         # dont include if not everything is to be included
-        if self._filter_names or self._regexs:
-            return False  # specific filters were called but not this one
+        if self._bear_names or self._regexs:
+            return False  # specific bears were called but not this one
 
         # include everything
         return True
 
     def collect(self):
         """
-        :return: list of classes (not instances) of all collected filters
+        :return: list of classes (not instances) of all collected bears
         """
 
         files = FileCollector.collect(self)  # needs to be upfront since it calls _unfold_params()
-        filters = []
+        bears = []
 
         for f_dir in self._flat_dirs:
             if f_dir not in sys.path:
@@ -115,13 +115,13 @@ class BearCollector(FileCollector):
             for name, p_object in inspect.getmembers(module):
                 if hasattr(p_object, "kind"):
                     if inspect.getfile(p_object) == file:
-                        filter_kind = None
+                        bear_kind = None
                         try:
-                            filter_kind = p_object.kind()
+                            bear_kind = p_object.kind()
                         except:
-                            pass  # Filter base class
-                        if filter_kind in self._filter_kinds:
-                            filters.append(p_object)
+                            pass  # Bear base class
+                        if bear_kind in self._bear_kinds:
+                            bears.append(p_object)
 
-        self._items = filters
-        return filters
+        self._items = bears
+        return bears
