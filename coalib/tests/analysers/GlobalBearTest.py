@@ -17,16 +17,16 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Settings import Settings
-from coalib.bears.LocalBear import LocalBear, BEAR_KIND
+from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 
 
-class LocalAnalyzerTestCase(unittest.TestCase):
+class GlobalBearTestCase(unittest.TestCase):
     def test_api(self):
-        test_object = LocalBear(Settings("name"), None)
-        self.assertRaises(NotImplementedError, test_object.run_bear, "filename", ["file\n"])
+        test_object = GlobalBear(0, Settings("name"), None)
+        self.assertRaises(NotImplementedError, test_object.run_bear)
 
     def test_kind(self):
-        self.assertEqual(LocalBear.kind(), BEAR_KIND.LOCAL)
+        self.assertEqual(GlobalBear.kind(), BEAR_KIND.GLOBAL)
 
 
 if __name__ == '__main__':
