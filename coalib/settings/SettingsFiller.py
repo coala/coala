@@ -23,7 +23,7 @@ from coalib.misc.i18n import _
 class SettingsFiller:
     def __init__(self, settings, outputter, log_printer):
         """
-        A SettingsFiller object probes all analyzers for needed settings. It then prompts the user for those values and
+        A SettingsFiller object probes all bears for needed settings. It then prompts the user for those values and
         stores them in the original settings given.
 
         :param settings: The settings which are available. They will be modified if some are missing.
@@ -41,32 +41,32 @@ class SettingsFiller:
         self.outputter = outputter
         self.log_printer = log_printer
 
-    def fill_settings(self, analyzers):
+    def fill_settings(self, bears):
         """
-        Retrieves needed settings from given analyzers and asks the user for missing values.
+        Retrieves needed settings from given bears and asks the user for missing values.
 
-        If a setting is requested by several analyzers, the help text from the latest analyzer will be taken.
+        If a setting is requested by several bears, the help text from the latest bear will be taken.
 
-        :param analyzers: All analyzer classes or instances.
+        :param bears: All bear classes or instances.
         :return: self.settings
         """
-        if not isinstance(analyzers, list):
-            raise TypeError("The analyzers parameter has to be a list of analyzer classes or instances.")
+        if not isinstance(bears, list):
+            raise TypeError("The bears parameter has to be a list of bear classes or instances.")
 
         # Retrieve needed settings.
         prel_needed_settings = {}
-        for analyzer in analyzers:
-            if not hasattr(analyzer, "get_needed_settings"):
+        for bear in bears:
+            if not hasattr(bear, "get_needed_settings"):
                 self.log_printer.log(LOG_LEVEL.WARNING,
-                                     _("One of the given analyzers ({}) has no attribute get_needed_settings.")
-                                        .format(str(analyzer)))
+                                     _("One of the given bears ({}) has no attribute get_needed_settings.")
+                                        .format(str(bear)))
             else:
-                needed = analyzer.get_needed_settings()
+                needed = bear.get_needed_settings()
                 for key in needed:
                     if key in prel_needed_settings:
-                        prel_needed_settings[key].append(analyzer.__name__)
+                        prel_needed_settings[key].append(bear.__name__)
                     else:
-                        prel_needed_settings[key] = [needed[key], analyzer.__name__]
+                        prel_needed_settings[key] = [needed[key], bear.__name__]
 
         # Strip away existent settings.
         needed_settings = {}
