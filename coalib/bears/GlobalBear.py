@@ -35,4 +35,4 @@ class GlobalBear(Bear):
 
         :return: A list of Result type.
         """
-        raise NotImplementedError("This function has to be implemented for a runnable filter.")
+        raise NotImplementedError("This function has to be implemented for a runnable bear.")
