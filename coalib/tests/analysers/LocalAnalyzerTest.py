@@ -17,7 +17,7 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Settings import Settings
-from coalib.analysers.LocalAnalyzer import LocalAnalyzer, ANALYSER_KIND
+from coalib.analysers.LocalAnalyzer import LocalAnalyzer, BEAR_KIND
 
 
 class LocalAnalyzerTestCase(unittest.TestCase):
@@ -26,7 +26,7 @@ class LocalAnalyzerTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError, test_object.run_bear, "filename", ["file\n"])
 
     def test_kind(self):
-        self.assertEqual(LocalAnalyzer.kind(), ANALYSER_KIND.LOCAL)
+        self.assertEqual(LocalAnalyzer.kind(), BEAR_KIND.LOCAL)
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import queue
 import sys
-from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
+from coalib.analysers.BEAR_KIND import BEAR_KIND
 from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer
 from coalib.analysers.LocalAnalyzer import LocalAnalyzer
 from coalib.misc.StringConstants import StringConstants
@@ -155,7 +155,7 @@ class AnalyzerRunProcess(Process):
         self.local_result_queue.put((filename, result_dict), timeout=self.TIMEOUT)
 
     def __run_local_analyzer(self, analyzer_instance, filename):
-        if not isinstance(analyzer_instance, LocalAnalyzer) or analyzer_instance.kind() != ANALYSER_KIND.LOCAL:
+        if not isinstance(analyzer_instance, LocalAnalyzer) or analyzer_instance.kind() != BEAR_KIND.LOCAL:
             self.warn(_("A given local analyzer ({}) is not valid. Leaving it out...")
                       .format(analyzer_instance.__class__.__name__), StringConstants.THIS_IS_A_BUG)
 
@@ -166,7 +166,7 @@ class AnalyzerRunProcess(Process):
     def __run_global_analyzer(self, global_analyzer_instance):
         name = global_analyzer_instance.__class__.__name__
         if not isinstance(global_analyzer_instance, GlobalAnalyzer)\
-           or global_analyzer_instance.kind() != ANALYSER_KIND.GLOBAL:
+           or global_analyzer_instance.kind() != BEAR_KIND.GLOBAL:
             self.warn(_("A given local analyzer ({}) is not valid. Leaving it out...")
                       .format(name), StringConstants.THIS_IS_A_BUG)
 
