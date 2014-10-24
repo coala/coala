@@ -19,8 +19,8 @@ import sys
 sys.path.insert(0, ".")
 
 from coalib.output.ConsolePrinter import ConsolePrinter
-from coalib.analysers.GlobalBear import GlobalBear
-from coalib.analysers.LocalBear import LocalBear
+from coalib.bears.GlobalBear import GlobalBear
+from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SettingsFiller import SettingsFiller, Outputter, Settings, Setting, LogPrinter
 
 import builtins

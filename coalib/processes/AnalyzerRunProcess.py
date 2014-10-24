@@ -14,9 +14,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import queue
 import sys
-from coalib.analysers.BEAR_KIND import BEAR_KIND
-from coalib.analysers.GlobalBear import GlobalBear
-from coalib.analysers.LocalBear import LocalBear
+from coalib.bears.BEAR_KIND import BEAR_KIND
+from coalib.bears.GlobalBear import GlobalBear
+from coalib.bears.LocalBear import LocalBear
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
