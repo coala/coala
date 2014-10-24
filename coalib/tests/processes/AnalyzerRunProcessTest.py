@@ -22,7 +22,7 @@ import unittest
 from coalib.bears.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.processes.AnalyzerRunProcess import AnalyzerRunProcess, LogMessage, LOG_LEVEL
+from coalib.processes.BearRunner import BearRunner, LogMessage, LOG_LEVEL
 from coalib.settings.Settings import Settings
 
 
@@ -53,19 +53,19 @@ class AnalyzerRunProcessConstructionTestCase(unittest.TestCase):
         local_result_queue = queue.Queue()
         global_result_queue = queue.Queue()
         message_queue = queue.Queue()
-        self.assertRaises(TypeError, AnalyzerRunProcess, 0, local_analyzer_list,
+        self.assertRaises(TypeError, BearRunner, 0, local_analyzer_list,
                           global_analyzer_queue, file_dict, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, AnalyzerRunProcess, file_name_queue, 0,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, 0,
                           global_analyzer_queue, file_dict, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, AnalyzerRunProcess, file_name_queue, local_analyzer_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
                           0, file_dict, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, AnalyzerRunProcess, file_name_queue, local_analyzer_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
                           global_analyzer_queue, 0, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, AnalyzerRunProcess, file_name_queue, local_analyzer_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
                           global_analyzer_queue, file_dict, 0, global_result_queue, message_queue)
-        self.assertRaises(TypeError, AnalyzerRunProcess, file_name_queue, local_analyzer_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
                           global_analyzer_queue, file_dict, local_result_queue, 0, message_queue)
-        self.assertRaises(TypeError, AnalyzerRunProcess, file_name_queue, local_analyzer_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
                           global_analyzer_queue, file_dict, local_result_queue, global_result_queue, 0)
 
 
@@ -78,7 +78,7 @@ class AnalyzerRunProcessUnitTestCase(unittest.TestCase):
         self.local_result_queue = queue.Queue()
         self.global_result_queue = queue.Queue()
         self.message_queue = queue.Queue()
-        self.uut = AnalyzerRunProcess(self.file_name_queue, self.local_analyzer_list, self.global_analyzer_queue,
+        self.uut = BearRunner(self.file_name_queue, self.local_analyzer_list, self.global_analyzer_queue,
                                       self.file_dict, self.local_result_queue, self.global_result_queue,
                                       self.message_queue)
 
