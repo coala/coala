@@ -41,13 +41,13 @@ class TestFileCollection(unittest.TestCase):
         (self.testfile2, self.testfile2_path) = tempfile.mkstemp(suffix='.py', prefix='testfile2_', dir=self.tmp_dir)
         (self.testfile3, self.testfile3_path) = tempfile.mkstemp(suffix='.c', prefix='testfile3_', dir=self.tmp_dir)
         first_file_name = os.path.splitext(os.path.basename(self.testfile1_path))[0]
-        test_filter_file_string_one = """
+        test_bear_file_string_one = """
 from coalib.bears.Bear import Bear
 import inspect
 import multiprocessing
 from coalib.settings.Settings import Settings
 
-class TestFilter(Bear):
+class TestBear(Bear):
     def __init__(self):
         Bear.__init__(self, Settings("settings"), multiprocessing.Queue())
 
@@ -68,13 +68,13 @@ class NoKind():
         raise NotImplementedError
 
 """
-        test_filter_file_string_two = """
-from {} import TestFilter as ImportedTestFilter
+        test_bear_file_string_two = """
+from {} import TestBear as ImportedTestBear
 import inspect
 
-class TestFilter(ImportedTestFilter):
+class TestBear(ImportedTestBear):
     def __init__(self):
-        ImportedTestFilter.__init__(self)
+        ImportedTestBear.__init__(self)
 
     @staticmethod
     def kind():
@@ -83,49 +83,49 @@ class TestFilter(ImportedTestFilter):
     def origin(self):
         return inspect.getfile(inspect.currentframe())
 """.format(first_file_name)
-        with open(self.testfile1_path, 'w') as test_filter_file:
-            test_filter_file.write(test_filter_file_string_one)
-        with open(self.testfile2_path, 'w') as test_filter_file:
-            test_filter_file.write(test_filter_file_string_two)
-        with open(self.testfile3_path, 'w') as test_filter_file:
-            test_filter_file.write(test_filter_file_string_one)
+        with open(self.testfile1_path, 'w') as test_bear_file:
+            test_bear_file.write(test_bear_file_string_one)
+        with open(self.testfile2_path, 'w') as test_bear_file:
+            test_bear_file.write(test_bear_file_string_two)
+        with open(self.testfile3_path, 'w') as test_bear_file:
+            test_bear_file.write(test_bear_file_string_one)
 
     def tearDown(self):
         shutil.rmtree(self.tmp_dir)
 
-    def test_filter_import(self):
+    def test_bear_import(self):
         uut = BearCollector(["kind"],
-                              filter_dirs=[self.tmp_dir])
-        filter_list = uut.collect()
-        self.assertEqual(len(filter_list), 2)
-        self.assertTrue([filter_class().origin() for filter_class in filter_list]
+                              bear_dirs=[self.tmp_dir])
+        bear_list = uut.collect()
+        self.assertEqual(len(bear_list), 2)
+        self.assertTrue([bear_class().origin() for bear_class in bear_list]
                         in
                         [list(Tuple) for Tuple in itertools.permutations([self.testfile1_path, self.testfile2_path])])
 
-    def test_filter_names(self):
+    def test_bear_names(self):
         uut = BearCollector(["kind"],
-                              filter_dirs=[self.tmp_dir],
-                              filter_names=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
-        filter_list = uut.collect()
-        self.assertEqual(len(filter_list), 1)
-        self.assertEqual(filter_list[0]().origin(), self.testfile1_path)
+                              bear_dirs=[self.tmp_dir],
+                              bear_names=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
+        bear_list = uut.collect()
+        self.assertEqual(len(bear_list), 1)
+        self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
 
     def test_ignored(self):
         uut = BearCollector(["kind"],
-                              filter_dirs=[self.tmp_dir],
-                              ignored_filters=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
-        filter_list = uut.collect()
-        self.assertEqual(len(filter_list), 1)
-        self.assertEqual(filter_list[0]().origin(), self.testfile2_path)
+                              bear_dirs=[self.tmp_dir],
+                              ignored_bears=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
+        bear_list = uut.collect()
+        self.assertEqual(len(bear_list), 1)
+        self.assertEqual(bear_list[0]().origin(), self.testfile2_path)
 
     def test_regexs(self):
         uut = BearCollector(["kind"],
-                              filter_dirs=[self.tmp_dir],
+                              bear_dirs=[self.tmp_dir],
                               regexs=["testfile1"])
-        filter_list = uut.collect()
-        print(filter_list)
-        self.assertEqual(len(filter_list), 1)
-        self.assertEqual(filter_list[0]().origin(), self.testfile1_path)
+        bear_list = uut.collect()
+        print(bear_list)
+        self.assertEqual(len(bear_list), 1)
+        self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
