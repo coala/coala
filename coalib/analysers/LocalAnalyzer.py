@@ -27,7 +27,7 @@ class LocalAnalyzer(Bear):
     def kind():
         return ANALYSER_KIND.LOCAL
 
-    def run_analyser(self, filename, file):
+    def run_bear(self, filename, file):
         """
         Checks the given file.
 
