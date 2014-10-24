@@ -24,7 +24,7 @@ from coalib.misc.i18n import _
 from coalib.settings.Settings import Settings
 
 
-class AnalyzerRunProcess(Process):
+class BearRunner(Process):
     def __init__(self,
                  file_name_queue,
                  local_analyzer_list,
@@ -39,14 +39,14 @@ class AnalyzerRunProcess(Process):
 
         If parameters type is 'queue (read)' this means it has to implement the get(timeout=TIMEOUT) method and it shall
         raise queue.Empty if the queue is empty up until the end of the timeout. If the queue has the (optional!)
-        task_done() attribute, AnalyzerRunProcess will call it after processing each item.
+        task_done() attribute, BearRunner will call it after processing each item.
 
         If parameters type is 'queue (write)' it shall implement the put(object, timeout=TIMEOUT) method.
 
         If the queues raise any exception not specified here the user will get an 'unknown error' message. So beware of
         that.
 
-        :param file_name_queue: queue (read) of file names to check with local analyzers. Every AnalyzerRunProcess takes
+        :param file_name_queue: queue (read) of file names to check with local analyzers. Every BearRunner takes
         one of those and checks it with all local analyzers. (Repeat until queue empty.)
         :param local_analyzer_list: list of local analyzer instances
         :param global_analyzer_queue: queue (read) of global analyzer instances
