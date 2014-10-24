@@ -19,16 +19,15 @@ import multiprocessing
 
 from coalib.settings.Settings import Settings
 from coalib.processes.communication.LogMessage import LogMessage
-from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
-from coalib.analysers.Analyser import Analyser
+from coalib.bears.Bear import Bear
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 import unittest
 
 
-class TestAnalyser(Analyser):
+class TestBear(Bear):
     def __init__(self, settings, queue):
-        Analyser.__init__(self, settings, queue)
+        Bear.__init__(self, settings, queue)
 
     def set_up(self):
         self.debug_msg("set", "up", delimiter="=")
@@ -37,59 +36,59 @@ class TestAnalyser(Analyser):
         self.fail_msg("teardown")
         self.fail_msg()
 
-    def run_analyser(self):
+    def run_bear(self):
         self.warn_msg(self._("A string to test translations."))
 
 
-class BadTestAnalyzer(Analyser):
+class BadTestBear(Bear):
     def __init__(self, settings, queue):
-        Analyser.__init__(self, settings, queue)
+        Bear.__init__(self, settings, queue)
 
     def tear_down(self):
         raise NotImplementedError
 
-    def run_analyser(self):
+    def run_bear(self):
         pass
 
 
-class AnalyserTestCase(unittest.TestCase):
+class BearTestCase(unittest.TestCase):
     def setUp(self):
         self.queue = multiprocessing.Queue()
         self.settings = Settings("test_settings")
-        self.uut = TestAnalyser(self.settings, self.queue)
+        self.uut = TestBear(self.settings, self.queue)
 
     def test_raises(self):
-        self.assertRaises(TypeError, TestAnalyser, self.settings, 2)
-        self.assertRaises(TypeError, TestAnalyser, None, self.queue)
+        self.assertRaises(TypeError, TestBear, self.settings, 2)
+        self.assertRaises(TypeError, TestBear, None, self.queue)
         self.assertRaises(NotImplementedError, self.uut.kind)
 
     def test_methods_available(self):
         # these should be available and not throw anything
-        base = Analyser(self.settings, None)
+        base = Bear(self.settings, None)
         base.set_up()
         base.tear_down()
 
-        self.assertRaises(NotImplementedError, base.run_analyser)
+        self.assertRaises(NotImplementedError, base.run_bear)
 
         self.assertEqual(base.get_needed_settings(), {})
 
     def test_message_queue(self):
         self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser {}...").format("TestAnalyser"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
-        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser {}...").format("TestAnalyser"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser {}...").format("TestAnalyser"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 
-    def test_bad_analyzer(self):
-        self.uut = BadTestAnalyzer(self.settings, self.queue)
+    def test_bad_bear(self):
+        self.uut = BadTestBear(self.settings, self.queue)
         self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser {}...".format("BadTestAnalyzer")))
-        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser {}...").format("BadTestAnalyzer"))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser {}...").format("BadTestAnalyzer"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...".format("BadTestBear")))
+        self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("BadTestBear"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("BadTestBear"))
         self.queue.get()  # debug message contains custom content, dont test this here
-        self.check_message(LOG_LEVEL.WARNING, _("Analyzer {} failed to run").format("BadTestAnalyzer"))
+        self.check_message(LOG_LEVEL.WARNING, _("Bear {} failed to run").format("BadTestBear"))
 
     def check_message(self, log_level, message):
         msg = self.queue.get()
@@ -98,7 +97,7 @@ class AnalyserTestCase(unittest.TestCase):
         self.assertEqual(msg.log_level, log_level)
 
     def test_no_queue(self):
-        uut = TestAnalyser(self.settings, None)
+        uut = TestBear(self.settings, None)
         uut.run()  # No exceptions
 
 

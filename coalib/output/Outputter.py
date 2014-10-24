@@ -12,7 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.helpers.Result import Result
+from coalib.bears.results.Result import Result
 
 
 class Outputter:
@@ -26,14 +26,15 @@ class Outputter:
         # TODO add API for special results as soon as they're there, if not fallback to:
         return self._print_result(result)
 
-    def require_settings(self, settings):
+    def acquire_settings(self, settings):
         """
         This method prompts the user for the given settings.
 
         :param settings: a dictionary with the settings name as key and a list containing a description in [0] and the
-                         name of the filter who needs this setting in [1]. Example:
+                         name of the bears who need this setting in [1] and following. Example:
         {"UseTabs": ["describes whether tabs should be used instead of spaces",
-                     "SpaceConsistencyFilter"]}
+                     "SpaceConsistencyBear",
+                     "SomeOtherBear"]}
 
         :return: a dictionary with the settings name as key and the given value as value.
         """

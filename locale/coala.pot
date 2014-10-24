@@ -1,72 +1,5 @@
-#: coalib/output/LogPrinter.py:33 coalib/tests/output/LogPrinterTest.py:49
-#: coalib/tests/processes/communication/LogMessageTest.py:49
-#: coalib/processes/communication/LogMessage.py:31
-msgid "DEBUG"
-msgstr ""
-
-#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:51
-#: coalib/tests/processes/communication/LogMessageTest.py:47
-#: coalib/processes/communication/LogMessage.py:32
-msgid "WARNING"
-msgstr ""
-
-#: coalib/output/LogPrinter.py:35 coalib/tests/output/LogPrinterTest.py:44
-#: coalib/tests/output/LogPrinterTest.py:46
-#: coalib/tests/output/LogPrinterTest.py:53
-#: coalib/tests/output/LogPrinterTest.py:56
-#: coalib/tests/processes/communication/LogMessageTest.py:45
-#: coalib/tests/processes/communication/LogMessageTest.py:51
-#: coalib/processes/communication/LogMessage.py:33
-msgid "ERROR"
-msgstr ""
-
-#. pragma: no cover
-#: coalib/output/EspeakPrinter.py:32
-msgid ""
-"Espeak doesn't seem to be installed. You cannot use the voice output feature "
-"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
-"installed via your usual package repositories."
-msgstr ""
-
-#. pragma: no cover
-#: coalib/output/EspeakPrinter.py:37
-msgid "Failed to execute espeak. An unknown error occurred."
-msgstr ""
-
-#: coalib/analysers/Analyser.py:81 coalib/tests/analysers/AnalyserTest.py:74
-#: coalib/tests/analysers/AnalyserTest.py:84
-msgid "Setting up analyser..."
-msgstr ""
-
-#: coalib/analysers/Analyser.py:83 coalib/tests/analysers/AnalyserTest.py:76
-#: coalib/tests/analysers/AnalyserTest.py:85
-msgid "Running analyser..."
-msgstr ""
-
-#: coalib/analysers/Analyser.py:85 coalib/tests/analysers/AnalyserTest.py:78
-#: coalib/tests/analysers/AnalyserTest.py:86
-msgid "Tearing down analyser..."
-msgstr ""
-
-#: coalib/analysers/Analyser.py:91
-msgid ""
-"Unknown failure in worker process.\n"
-"Exception: {}\n"
-"Traceback:\n"
-"{}"
-msgstr ""
-
-#. debug message contains custom content, dont test this here
-#: coalib/analysers/Analyser.py:94 coalib/tests/analysers/AnalyserTest.py:88
-msgid "An unknown failure occurred and an analyzer run is aborted."
-msgstr ""
-
-#: coalib/analysers/helpers/OldResult.py:68
-msgid "Comparision of a Result with a non-Result is impossible."
-msgstr ""
-
-#: coalib/analysers/helpers/OldResult.py:71
-msgid "Comparision of results affecting different files is impossible."
+#: coalib/settings/SettingsFiller.py:61
+msgid "One of the given bears ({}) has no attribute get_needed_settings."
 msgstr ""
 
 #: coalib/misc/StringConstants.py:19
@@ -75,77 +8,207 @@ msgid ""
 "developers if this happens more than once."
 msgstr ""
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:22
+msgid "{} is not accessible and will be ignored!"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:30
 msgid "on"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "y"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "yes"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 #: coalib/tests/misc/StringConverterTest.py:63
 msgid "yeah"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "sure"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "true"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:29
+#: coalib/misc/StringConstants.py:31
 msgid "definitely"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:29
+#: coalib/misc/StringConstants.py:31
 msgid "yup"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:29
+#: coalib/misc/StringConstants.py:31
 msgid "right"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "off"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "n"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "no"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 #: coalib/tests/misc/StringConverterTest.py:67
 msgid "nope"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "nah"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "false"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "wrong"
 msgstr ""
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/analysers/AnalyserTest.py:40
-#: coalib/tests/analysers/AnalyserTest.py:77 coalib/tests/misc/i18nTest.py:44
-#: coalib/tests/misc/i18nTest.py:48 coala:24
+#: coalib/tests/misc/i18nTest.py:44 coalib/tests/misc/i18nTest.py:48
+#: coalib/tests/bears/BearTest.py:40 coalib/tests/bears/BearTest.py:80
+#: coala:24
 msgid "A string to test translations."
+msgstr ""
+
+#: coalib/tests/output/LogPrinterTest.py:45
+#: coalib/tests/output/LogPrinterTest.py:47
+#: coalib/tests/output/LogPrinterTest.py:54
+#: coalib/tests/output/LogPrinterTest.py:57
+#: coalib/tests/processes/communication/LogMessageTest.py:45
+#: coalib/tests/processes/communication/LogMessageTest.py:51
+#: coalib/output/LogPrinter.py:36
+#: coalib/processes/communication/LogMessage.py:33
+msgid "ERROR"
+msgstr ""
+
+#: coalib/tests/output/LogPrinterTest.py:50
+#: coalib/tests/processes/communication/LogMessageTest.py:49
+#: coalib/output/LogPrinter.py:34
+#: coalib/processes/communication/LogMessage.py:31
+msgid "DEBUG"
+msgstr ""
+
+#: coalib/tests/output/LogPrinterTest.py:52
+#: coalib/tests/processes/communication/LogMessageTest.py:47
+#: coalib/output/LogPrinter.py:35
+#: coalib/processes/communication/LogMessage.py:32
+msgid "WARNING"
+msgstr ""
+
+#: coalib/tests/output/LogPrinterTest.py:58 coalib/output/LogPrinter.py:55
+msgid "Exception was:"
+msgstr ""
+
+#: coalib/tests/output/ConsoleOutputterTest.py:36
+#: coalib/tests/output/ConsoleOutputterTest.py:41
+#: coalib/tests/output/ConsoleOutputterTest.py:51
+#: coalib/output/ConsoleOutputter.py:50
+msgid "Please enter a value for the setting \"{}\" ({}) needed by {}: "
+msgstr ""
+
+#. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
+#: coalib/tests/output/ConsoleOutputterTest.py:44
+#: coalib/tests/output/ConsoleOutputterTest.py:54
+#: coalib/output/ConsoleOutputter.py:48
+msgid " and "
+msgstr ""
+
+#: coalib/tests/bears/BearTest.py:77 coalib/tests/bears/BearTest.py:87
+#: coalib/bears/Bear.py:98
+msgid "Setting up bear {}..."
+msgstr ""
+
+#: coalib/tests/bears/BearTest.py:79 coalib/tests/bears/BearTest.py:88
+#: coalib/bears/Bear.py:100
+msgid "Running bear {}..."
+msgstr ""
+
+#: coalib/tests/bears/BearTest.py:81 coalib/tests/bears/BearTest.py:89
+#: coalib/bears/Bear.py:114
+msgid "Tearing down bear {}..."
+msgstr ""
+
+#. debug message contains custom content, dont test this here
+#: coalib/tests/bears/BearTest.py:91 coalib/bears/Bear.py:105
+#: coalib/bears/Bear.py:124
+msgid "Bear {} failed to run"
+msgstr ""
+
+#: coalib/output/ConsoleOutputter.py:41
+msgid "One of the given settings ({}) are not properly described."
+msgstr ""
+
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:33
+msgid ""
+"Espeak doesn't seem to be installed. You cannot use the voice output feature "
+"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
+"installed via your usual package repositories."
+msgstr ""
+
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:38
+msgid "Failed to execute espeak. An unknown error occurred."
+msgstr ""
+
+#: coalib/bears/Bear.py:106
+#, python-brace-format
+msgid ""
+"The bear {bear} raised an exception of type {exception}. If you are the "
+"writer of this bear, please catch all exceptions. If not and this error "
+"annoys you, you might want to get in contact with the writer of this bear.\n"
+"\n"
+"Here is your traceback:\n"
+"\n"
+"{traceback}\n"
+msgstr ""
+
+#: coalib/bears/Bear.py:120
+msgid ""
+"set_up() or tear_down() throwed an exception for bear {}.\n"
+"Exception: {}\n"
+"Traceback:\n"
+"{}"
+msgstr ""
+
+#. pragma: no cover
+#: coalib/processes/BearRunner.py:113
+msgid ""
+"An unknown error occurred while running local bears for the file {}. "
+"Skipping file..."
+msgstr ""
+
+#. pragma: no cover
+#: coalib/processes/BearRunner.py:130
+msgid ""
+"An unknown error occurred while running global bear {}. Skipping bear..."
+msgstr ""
+
+#: coalib/processes/BearRunner.py:144
+msgid "An internal error occurred."
+msgstr ""
+
+#: coalib/processes/BearRunner.py:145
+msgid "The given file through the queue is not in the file dictionary."
+msgstr ""
+
+#: coalib/processes/BearRunner.py:159 coalib/processes/BearRunner.py:170
+msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
 #. Something's gone wrong

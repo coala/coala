@@ -23,20 +23,25 @@ from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Settings import Settings
 
 
-class Analyser(Process):
+class Bear(Process):
     """
-    This is the base class for every analyser. If you want to write an analyser, inherit from this class and overwrite
-    at least the run_analyser method. You can send debug/warning/error messages through the debug_msg(), warn_msg(),
-    fail_msg() functions. These will send the appropriate messages so that they are outputted. Be aware that if you
-    use fail_msg(), you are expected to also terminate the analyser run-through immediately.
+    A bear contains the actual subroutine that is responsible for checking source code for certain specifications.
+    However it can actually do whatever it wants with the files it gets. If you are missing some Result type, feel free
+    to contact us and/or help us extending the coalib.
 
-    If you need some setup or teardown for your analyser, feel free to overwrite the set_up() and tear_down() functions.
-    They will be invoked before/after every run_analyser invocation.
+    This is the base class for every bear. If you want to write an bear, you will probably want to look at the
+    GlobalBear and LocalBear classes that inherit from this class. In any case you'll want to overwrite at least the
+    run_bear method. You can send debug/warning/error messages through the debug_msg(), warn_msg(), fail_msg()
+    functions. These will send the appropriate messages so that they are outputted. Be aware that if you use fail_msg(),
+    you are expected to also terminate the bear run-through immediately.
+
+    If you need some setup or teardown for your bear, feel free to overwrite the set_up() and tear_down() functions.
+    They will be invoked before/after every run_bear invocation.
 
     Settings are available at all times through self.settings. You can access the translation database with the self._()
-    function, it will be routed to the usual gettext _(). Be aware that the strings you use are not necessarily in the
-    database, especially if your analyser is not shipped with coala. Feel free to use your own translation database in
-    this case or consider make your analyser available to the coala project.
+    function, it will be routed to the usual gettext _(). Be aware that the strings you use are probably not in the
+    database, especially if your bear is not shipped with coala. Feel free to use your own translation database in this
+    case or consider make your bear available to the coala project.
     """
     def __init__(self,
                  settings,
@@ -84,51 +89,51 @@ class Analyser(Process):
 
         self.message_queue.put(LogMessage(log_level, msg), timeout=self.TIMEOUT)
 
-    def run_analyser(self, *args, **kwargs):
+    def run_bear(self, *args, **kwargs):
         raise NotImplementedError
 
     def run(self, *args, **kwargs):
         try:
             name = self.__class__.__name__
-            self.debug_msg(_("Setting up analyser {}...").format(name))
+            self.debug_msg(_("Setting up bear {}...").format(name))
             self.set_up()
-            self.debug_msg(_("Running analyser {}...").format(name))
+            self.debug_msg(_("Running bear {}...").format(name))
             try:
-                retval = self.run_analyser(*args, **kwargs)
+                retval = self.run_bear(*args, **kwargs)
             except:
                 exception = sys.exc_info()
-                self.warn_msg(_("Analyzer {} failed to run").format(self.__class__.__name__))
-                self.debug_msg(_("The analyzer {analyzer} raised an exception of type {exception}. If you are the "
-                                 "writer of this analyzer, please catch all exceptions. If not and this error annoys "
-                                 "you, you might want to get in contact with the writer of this analyzer.\n\n"
+                self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))
+                self.debug_msg(_("The bear {bear} raised an exception of type {exception}. If you are the "
+                                 "writer of this bear, please catch all exceptions. If not and this error annoys "
+                                 "you, you might want to get in contact with the writer of this bear.\n\n"
                                  "Here is your traceback:\n\n{traceback}\n"
-                                 "").format(analyzer=self.__class__.__name__,
+                                 "").format(bear=self.__class__.__name__,
                                            exception=str(exception[0].__name__),
                                            traceback=traceback.extract_tb(exception[2])))
                 return None
-            self.debug_msg(_("Tearing down analyser {}...").format(name))
+            self.debug_msg(_("Tearing down bear {}...").format(name))
             self.tear_down()
 
             return retval
         except:
             exception = sys.exc_info()
-            self.debug_msg(_("set_up() or tear_down() throwed an exception for analyzer {}.\n"
+            self.debug_msg(_("set_up() or tear_down() throwed an exception for bear {}.\n"
                              "Exception: {}\nTraceback:\n{}").format(str(exception[0].__name__),
                                                                      traceback.extract_tb(exception[2]),
                                                                      self.__class__.__name__))
-            self.warn_msg(_("Analyzer {} failed to run").format(self.__class__.__name__))
+            self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))
 
     @staticmethod
     def kind():
         """
-        :return: The kind of the analyser
+        :return: The kind of the bear
         """
         raise NotImplementedError
 
     @staticmethod
     def get_needed_settings():
         """
-        This method has to determine which settings are needed by this analyser. The user will be prompted for needed
+        This method has to determine which settings are needed by this bear. The user will be prompted for needed
         settings that are not available in the settings file so don't include settings where a default value would do.
 
         :return: a dictionary of needed settings as keys and help texts as values

@@ -28,12 +28,31 @@ class ConsoleOutputterTestCase(unittest.TestCase):
         self.uut = ConsoleOutputter()
 
     def test_require_settings(self):
-        self.assertEqual(self.uut.require_settings({"setting": ["help text", "SomeFilter"]}),
+        self.assertRaises(TypeError, self.uut.acquire_settings, 0)
+        self.assertEqual(self.uut.acquire_settings({0: 0}), {})
+
+        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear"]}),
                          {"setting":
                          _("Please enter a value for the "
-                           "setting \"{}\" ({}) needed by SomeFilter: ").format("setting", "help text")})
-        self.assertEqual(self.uut.require_settings({0: 0}), {})
-        self.assertRaises(TypeError, self.uut.require_settings, 0)
+                           "setting \"{}\" ({}) needed by {}: ").format("setting", "help text", "SomeBear")})
+
+        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear", "AnotherBear"]}),
+                         {"setting":
+                         _("Please enter a value for the "
+                           "setting \"{}\" ({}) needed by {}: ").format("setting",
+                                                                        "help text",
+                                                                        "SomeBear" + _(" and ") + "AnotherBear")})
+
+        self.assertEqual(self.uut.acquire_settings({"setting": ["help text",
+                                                                "SomeBear",
+                                                                "AnotherBear",
+                                                                "YetAnotherBear"]}),
+                         {"setting":
+                         _("Please enter a value for the "
+                           "setting \"{}\" ({}) needed by {}: ").format("setting",
+                                                                        "help text",
+                                                                        "SomeBear, AnotherBear" + _(" and ") +
+                                                                        "YetAnotherBear")})
 
 
 if __name__ == '__main__':

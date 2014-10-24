@@ -14,6 +14,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class ANALYSER_KIND:
+class BEAR_KIND:
     LOCAL = 1
     GLOBAL = 2
