@@ -16,7 +16,7 @@ from coalib.analysers.Bear import Bear
 from coalib.analysers.BEAR_KIND import BEAR_KIND
 
 
-class LocalAnalyzer(Bear):
+class LocalBear(Bear):
     def __init__(self,
                  settings,
                  message_queue,
@@ -29,7 +29,7 @@ class LocalAnalyzer(Bear):
 
     def run_bear(self, filename, file):
         """
-        Checks the given file.
+        Handles the given file.
 
         :param filename: The filename of the file
         :param file: The file contents as string array

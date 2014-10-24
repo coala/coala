@@ -16,7 +16,7 @@ import queue
 import sys
 from coalib.analysers.BEAR_KIND import BEAR_KIND
 from coalib.analysers.GlobalBear import GlobalBear
-from coalib.analysers.LocalAnalyzer import LocalAnalyzer
+from coalib.analysers.LocalBear import LocalBear
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
@@ -155,7 +155,7 @@ class AnalyzerRunProcess(Process):
         self.local_result_queue.put((filename, result_dict), timeout=self.TIMEOUT)
 
     def __run_local_analyzer(self, analyzer_instance, filename):
-        if not isinstance(analyzer_instance, LocalAnalyzer) or analyzer_instance.kind() != BEAR_KIND.LOCAL:
+        if not isinstance(analyzer_instance, LocalBear) or analyzer_instance.kind() != BEAR_KIND.LOCAL:
             self.warn(_("A given local analyzer ({}) is not valid. Leaving it out...")
                       .format(analyzer_instance.__class__.__name__), StringConstants.THIS_IS_A_BUG)
 
