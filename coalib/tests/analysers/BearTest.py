@@ -40,7 +40,7 @@ class TestBear(Bear):
         self.warn_msg(self._("A string to test translations."))
 
 
-class BadTestAnalyzer(Bear):
+class BadTestBear(Bear):
     def __init__(self, settings, queue):
         Bear.__init__(self, settings, queue)
 
@@ -51,7 +51,7 @@ class BadTestAnalyzer(Bear):
         pass
 
 
-class AnalyserTestCase(unittest.TestCase):
+class BearTestCase(unittest.TestCase):
     def setUp(self):
         self.queue = multiprocessing.Queue()
         self.settings = Settings("test_settings")
@@ -74,21 +74,21 @@ class AnalyserTestCase(unittest.TestCase):
 
     def test_message_queue(self):
         self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser {}...").format("TestBear"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
-        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser {}...").format("TestBear"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser {}...").format("TestBear"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 
-    def test_bad_analyzer(self):
-        self.uut = BadTestAnalyzer(self.settings, self.queue)
+    def test_bad_bear(self):
+        self.uut = BadTestBear(self.settings, self.queue)
         self.uut.run()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up analyser {}...".format("BadTestAnalyzer")))
-        self.check_message(LOG_LEVEL.DEBUG, _("Running analyser {}...").format("BadTestAnalyzer"))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down analyser {}...").format("BadTestAnalyzer"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...".format("BadTestBear")))
+        self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("BadTestBear"))
+        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("BadTestBear"))
         self.queue.get()  # debug message contains custom content, dont test this here
-        self.check_message(LOG_LEVEL.WARNING, _("Analyzer {} failed to run").format("BadTestAnalyzer"))
+        self.check_message(LOG_LEVEL.WARNING, _("Bear {} failed to run").format("BadTestBear"))
 
     def check_message(self, log_level, message):
         msg = self.queue.get()
