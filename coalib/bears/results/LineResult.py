@@ -12,8 +12,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.analysers.results.Result import Result
+from coalib.bears.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.bears.results.Result import Result
 
 
 class LineResult(Result):

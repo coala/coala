@@ -19,9 +19,9 @@ import tempfile
 
 sys.path.insert(0, ".")
 import unittest
-from coalib.analysers.results.Result import Result, RESULT_SEVERITY
-from coalib.analysers.LocalBear import LocalBear
-from coalib.analysers.GlobalBear import GlobalBear
+from coalib.bears.results.Result import Result, RESULT_SEVERITY
+from coalib.bears.LocalBear import LocalBear
+from coalib.bears.GlobalBear import GlobalBear
 from coalib.processes.AnalyzerRunProcess import AnalyzerRunProcess, LogMessage, LOG_LEVEL
 from coalib.settings.Settings import Settings
 

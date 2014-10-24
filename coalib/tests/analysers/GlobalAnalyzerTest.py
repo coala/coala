@@ -17,7 +17,7 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Settings import Settings
-from coalib.analysers.GlobalBear import GlobalBear, BEAR_KIND
+from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 
 
 class GlobalAnalyzerTestCase(unittest.TestCase):
