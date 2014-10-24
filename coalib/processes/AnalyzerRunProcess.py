@@ -15,7 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import queue
 import sys
 from coalib.analysers.BEAR_KIND import BEAR_KIND
-from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer
+from coalib.analysers.GlobalBear import GlobalBear
 from coalib.analysers.LocalAnalyzer import LocalAnalyzer
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Process import Process
@@ -165,7 +165,7 @@ class AnalyzerRunProcess(Process):
 
     def __run_global_analyzer(self, global_analyzer_instance):
         name = global_analyzer_instance.__class__.__name__
-        if not isinstance(global_analyzer_instance, GlobalAnalyzer)\
+        if not isinstance(global_analyzer_instance, GlobalBear)\
            or global_analyzer_instance.kind() != BEAR_KIND.GLOBAL:
             self.warn(_("A given local analyzer ({}) is not valid. Leaving it out...")
                       .format(name), StringConstants.THIS_IS_A_BUG)
