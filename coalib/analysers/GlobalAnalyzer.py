@@ -29,7 +29,7 @@ class GlobalAnalyzer(Bear):
     def kind():
         return ANALYSER_KIND.GLOBAL
 
-    def run_analyser(self):
+    def run_bear(self):
         """
         Analyzes all files in file_dict.
 

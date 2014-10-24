@@ -37,7 +37,7 @@ class TestBear(Bear):
         self.fail_msg("teardown")
         self.fail_msg()
 
-    def run_analyser(self):
+    def run_bear(self):
         self.warn_msg(self._("A string to test translations."))
 
 
@@ -48,7 +48,7 @@ class BadTestAnalyzer(Bear):
     def tear_down(self):
         raise NotImplementedError
 
-    def run_analyser(self):
+    def run_bear(self):
         pass
 
 
@@ -69,7 +69,7 @@ class AnalyserTestCase(unittest.TestCase):
         base.set_up()
         base.tear_down()
 
-        self.assertRaises(NotImplementedError, base.run_analyser)
+        self.assertRaises(NotImplementedError, base.run_bear)
 
         self.assertEqual(base.get_needed_settings(), {})
 
