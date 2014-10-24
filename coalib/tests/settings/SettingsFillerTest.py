@@ -20,7 +20,7 @@ sys.path.insert(0, ".")
 
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.analysers.GlobalBear import GlobalBear
-from coalib.analysers.LocalAnalyzer import LocalAnalyzer
+from coalib.analysers.LocalBear import LocalBear
 from coalib.settings.SettingsFiller import SettingsFiller, Outputter, Settings, Setting, LogPrinter
 
 import builtins
@@ -39,9 +39,9 @@ class GlobalTestBear(GlobalBear):
                 "key": "this setting does exist"}
 
 
-class LocalTestAnalyzer(LocalAnalyzer):
+class LocalTestBear(LocalBear):
     def __init__(self):
-        LocalAnalyzer.__init__(self, [], "", Settings("irrelevant"), None)
+        LocalBear.__init__(self, [], "", Settings("irrelevant"), None)
 
     @staticmethod
     def get_needed_settings():
@@ -65,7 +65,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertRaises(TypeError, self.uut.fill_settings, 0)
 
     def test_fill_settings(self):
-        new_settings = self.uut.fill_settings([LocalTestAnalyzer, GlobalTestBear,
+        new_settings = self.uut.fill_settings([LocalTestBear, GlobalTestBear,
                                                "an inappropriate string object here"])
 
         self.assertTrue("local name" in new_settings)
@@ -74,7 +74,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertEqual(len(new_settings.contents), 3)
 
         # Shouldnt change anything the second time
-        new_settings = self.uut.fill_settings([LocalTestAnalyzer, GlobalTestBear])
+        new_settings = self.uut.fill_settings([LocalTestBear, GlobalTestBear])
 
         self.assertTrue("local name" in new_settings)
         self.assertTrue("global name" in new_settings)
