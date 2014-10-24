@@ -27,8 +27,8 @@ from coalib.settings.Settings import Settings
 class BearRunner(Process):
     def __init__(self,
                  file_name_queue,
-                 local_analyzer_list,
-                 global_analyzer_queue,
+                 local_bear_list,
+                 global_bear_queue,
                  file_dict,
                  local_result_queue,
                  global_result_queue,
@@ -46,28 +46,28 @@ class BearRunner(Process):
         If the queues raise any exception not specified here the user will get an 'unknown error' message. So beware of
         that.
 
-        :param file_name_queue: queue (read) of file names to check with local analyzers. Every BearRunner takes
-        one of those and checks it with all local analyzers. (Repeat until queue empty.)
-        :param local_analyzer_list: list of local analyzer instances
-        :param global_analyzer_queue: queue (read) of global analyzer instances
+        :param file_name_queue: queue (read) of file names to check with local bears. Every BearRunner takes
+        one of those and checks it with all local bears. (Repeat until queue empty.)
+        :param local_bear_list: list of local bear instances
+        :param global_bear_queue: queue (read) of global bear instances
         :param file_dict: dict of all files as {filename:file}, file as in file.readlines()
-        :param local_result_queue: queue (write) for results from local analyzers (one item holds results of all
-        analyzers for one file, its a tuple with the filename first and then a dict with (analyzer_class_name:
+        :param local_result_queue: queue (write) for results from local bears (one item holds results of all
+        bears for one file, its a tuple with the filename first and then a dict with (bear_class_name:
         [result1, result2, ...]))
-        :param global_result_queue: queue (write) for results from global analyzers (one item holds a tuple with the
-        analyzer name first and then the results of one analyzer for all files)
+        :param global_result_queue: queue (write) for results from global bears (one item holds a tuple with the
+        bear name first and then the results of one bear for all files)
         :param message_queue: queue (write) for debug/warning/error messages (type LogMessage)
         :param TIMEOUT: in seconds for all queue actions
         """
-        if not isinstance(local_analyzer_list, list):
-            raise TypeError("local_analyzer_list should be a list")
+        if not isinstance(local_bear_list, list):
+            raise TypeError("local_bear_list should be a list")
         if not isinstance(file_dict, dict):
             raise TypeError("file_dict should be a dict")
         if not hasattr(file_name_queue, "get"):
             raise TypeError("file_name_queue should be a queue like thing "
                             "(reading possible via 'get', raises queue.Empty if empty)")
-        if not hasattr(global_analyzer_queue, "get"):
-            raise TypeError("global_analyzer_queue should be a queue like thing "
+        if not hasattr(global_bear_queue, "get"):
+            raise TypeError("global_bear_queue should be a queue like thing "
                             "(reading possible via 'get', raises queue.Empty if empty)")
         if not hasattr(local_result_queue, "put"):
             raise TypeError("local_result_queue should be a queue like thing (writing possible via 'put')")
@@ -79,8 +79,8 @@ class BearRunner(Process):
         Process.__init__(self)
 
         self.filename_queue = file_name_queue
-        self.local_analyzer_list = local_analyzer_list
-        self.global_analyzer_queue = global_analyzer_queue
+        self.local_bear_list = local_bear_list
+        self.global_bear_queue = global_bear_queue
 
         self.file_dict = file_dict
 
@@ -100,17 +100,17 @@ class BearRunner(Process):
         self.__send_msg(LOG_LEVEL.DEBUG, *args, delimiter=delimiter, end=end)
 
     def run(self):
-        self.run_local_analyzers()
-        self.run_global_analyzers()
+        self.run_local_bears()
+        self.run_global_bears()
 
-    def run_local_analyzers(self):
+    def run_local_bears(self):
         try:
             while True:
                 filename = self.filename_queue.get(timeout=self.TIMEOUT)
                 try:
-                    self.__run_local_analyzers(filename)
+                    self.__run_local_bears(filename)
                 except:  # pragma: no cover
-                    self.err(_("An unknown error occurred while running local analyzers for the file {}. "
+                    self.err(_("An unknown error occurred while running local bears for the file {}. "
                                "Skipping file...".format(filename)), StringConstants.THIS_IS_A_BUG)
                 finally:
                     if hasattr(self.filename_queue, "task_done"):
@@ -118,20 +118,20 @@ class BearRunner(Process):
         except queue.Empty:
             return
 
-    def run_global_analyzers(self):
+    def run_global_bears(self):
         try:
             while True:
-                ga = self.global_analyzer_queue.get(timeout=self.TIMEOUT)
+                ga = self.global_bear_queue.get(timeout=self.TIMEOUT)
                 try:
-                    result = self.__run_global_analyzer(ga)
+                    result = self.__run_global_bear(ga)
                     if result:
                         self.global_result_queue.put(result, timeout=self.TIMEOUT)
                 except:  # pragma: no cover
-                    self.err(_("An unknown error occurred while running global analyzer {}. "
-                               "Skipping analyzer...").format(ga.__class__.__name__), StringConstants.THIS_IS_A_BUG)
+                    self.err(_("An unknown error occurred while running global bear {}. "
+                               "Skipping bear...").format(ga.__class__.__name__), StringConstants.THIS_IS_A_BUG)
                 finally:
-                    if hasattr(self.global_analyzer_queue, "task_done"):
-                        self.global_analyzer_queue.task_done()
+                    if hasattr(self.global_bear_queue, "task_done"):
+                        self.global_bear_queue.task_done()
         except queue.Empty:
             return
 
@@ -139,7 +139,7 @@ class BearRunner(Process):
         output = str(delimiter).join(str(arg) for arg in args) + str(end)
         self.message_queue.put(LogMessage(log_level, output), timeout=self.TIMEOUT)
 
-    def __run_local_analyzers(self, filename):
+    def __run_local_bears(self, filename):
         if filename not in self.file_dict:
             self.err(_("An internal error occurred."), StringConstants.THIS_IS_A_BUG)
             self.debug(_("The given file through the queue is not in the file dictionary."))
@@ -147,29 +147,29 @@ class BearRunner(Process):
             return
 
         result_dict = {}
-        for analyzer_instance in self.local_analyzer_list:
-            r = self.__run_local_analyzer(analyzer_instance, filename)
+        for bear_instance in self.local_bear_list:
+            r = self.__run_local_bear(bear_instance, filename)
             if r is not None:
-                result_dict[analyzer_instance.__class__.__name__] = r
+                result_dict[bear_instance.__class__.__name__] = r
 
         self.local_result_queue.put((filename, result_dict), timeout=self.TIMEOUT)
 
-    def __run_local_analyzer(self, analyzer_instance, filename):
-        if not isinstance(analyzer_instance, LocalBear) or analyzer_instance.kind() != BEAR_KIND.LOCAL:
-            self.warn(_("A given local analyzer ({}) is not valid. Leaving it out...")
-                      .format(analyzer_instance.__class__.__name__), StringConstants.THIS_IS_A_BUG)
+    def __run_local_bear(self, bear_instance, filename):
+        if not isinstance(bear_instance, LocalBear) or bear_instance.kind() != BEAR_KIND.LOCAL:
+            self.warn(_("A given local bear ({}) is not valid. Leaving it out...")
+                      .format(bear_instance.__class__.__name__), StringConstants.THIS_IS_A_BUG)
 
             return None
 
-        return analyzer_instance.run(filename, self.file_dict[filename])
+        return bear_instance.run(filename, self.file_dict[filename])
 
-    def __run_global_analyzer(self, global_analyzer_instance):
-        name = global_analyzer_instance.__class__.__name__
-        if not isinstance(global_analyzer_instance, GlobalBear)\
-           or global_analyzer_instance.kind() != BEAR_KIND.GLOBAL:
-            self.warn(_("A given local analyzer ({}) is not valid. Leaving it out...")
+    def __run_global_bear(self, global_bear_instance):
+        name = global_bear_instance.__class__.__name__
+        if not isinstance(global_bear_instance, GlobalBear)\
+           or global_bear_instance.kind() != BEAR_KIND.GLOBAL:
+            self.warn(_("A given local bear ({}) is not valid. Leaving it out...")
                       .format(name), StringConstants.THIS_IS_A_BUG)
 
             return None
 
-        return name, global_analyzer_instance.run()
+        return name, global_bear_instance.run()
