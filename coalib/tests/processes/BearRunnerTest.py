@@ -44,41 +44,41 @@ class GlobalTestBear(GlobalBear):
         return result
 
 
-class AnalyzerRunProcessConstructionTestCase(unittest.TestCase):
+class BearRunnerConstructionTestCase(unittest.TestCase):
     def test_initialization(self):
         file_name_queue = queue.Queue()
-        local_analyzer_list = []
-        global_analyzer_queue = queue.Queue()
+        local_bear_list = []
+        global_bear_queue = queue.Queue()
         file_dict = {}
         local_result_queue = queue.Queue()
         global_result_queue = queue.Queue()
         message_queue = queue.Queue()
-        self.assertRaises(TypeError, BearRunner, 0, local_analyzer_list,
-                          global_analyzer_queue, file_dict, local_result_queue, global_result_queue, message_queue)
+        self.assertRaises(TypeError, BearRunner, 0, local_bear_list,
+                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue)
         self.assertRaises(TypeError, BearRunner, file_name_queue, 0,
-                          global_analyzer_queue, file_dict, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
+                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
                           0, file_dict, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
-                          global_analyzer_queue, 0, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
-                          global_analyzer_queue, file_dict, 0, global_result_queue, message_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
-                          global_analyzer_queue, file_dict, local_result_queue, 0, message_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_analyzer_list,
-                          global_analyzer_queue, file_dict, local_result_queue, global_result_queue, 0)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+                          global_bear_queue, 0, local_result_queue, global_result_queue, message_queue)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+                          global_bear_queue, file_dict, 0, global_result_queue, message_queue)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+                          global_bear_queue, file_dict, local_result_queue, 0, message_queue)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+                          global_bear_queue, file_dict, local_result_queue, global_result_queue, 0)
 
 
-class AnalyzerRunProcessUnitTestCase(unittest.TestCase):
+class BearRunnerUnitTestCase(unittest.TestCase):
     def setUp(self):
         self.file_name_queue = queue.Queue()
-        self.local_analyzer_list = []
-        self.global_analyzer_queue = queue.Queue()
+        self.local_bear_list = []
+        self.global_bear_queue = queue.Queue()
         self.file_dict = {}
         self.local_result_queue = queue.Queue()
         self.global_result_queue = queue.Queue()
         self.message_queue = queue.Queue()
-        self.uut = BearRunner(self.file_name_queue, self.local_analyzer_list, self.global_analyzer_queue,
+        self.uut = BearRunner(self.file_name_queue, self.local_bear_list, self.global_bear_queue,
                                       self.file_dict, self.local_result_queue, self.global_result_queue,
                                       self.message_queue)
 
@@ -92,14 +92,14 @@ class AnalyzerRunProcessUnitTestCase(unittest.TestCase):
         self.assertEqual(self.message_queue.get(), LogMessage(LOG_LEVEL.ERROR, "test-message"))
 
 
-class AnalyzerRunProcessIntegrationTestCase(AnalyzerRunProcessUnitTestCase):
+class BearRunnerIntegrationTestCase(BearRunnerUnitTestCase):
     example_file = """a
 b
 c
 d
 """
     def setUp(self):
-        AnalyzerRunProcessUnitTestCase.setUp(self)
+        BearRunnerUnitTestCase.setUp(self)
 
         self.file1 = "file1"
         self.file2 = "arbitrary"
@@ -109,12 +109,12 @@ d
         self.file_name_queue.put(self.file1)
         self.file_name_queue.put(self.file2)
         self.file_name_queue.put("invalid file")
-        self.local_analyzer_list.append(LocalTestBear(self.settings, self.message_queue))
-        self.local_analyzer_list.append("not a valid analyzer")
+        self.local_bear_list.append(LocalTestBear(self.settings, self.message_queue))
+        self.local_bear_list.append("not a valid bear")
         self.file_dict[self.file1] = self.example_file
         self.file_dict[self.file2] = self.example_file
-        self.global_analyzer_queue.put(GlobalTestBear(self.file_dict, self.settings, self.message_queue))
-        self.global_analyzer_queue.put("not a valid analyzer")
+        self.global_bear_queue.put(GlobalTestBear(self.file_dict, self.settings, self.message_queue))
+        self.global_bear_queue.put("not a valid bear")
 
     def test_run(self):
         self.uut.run()
