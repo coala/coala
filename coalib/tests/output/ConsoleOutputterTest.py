@@ -31,28 +31,28 @@ class ConsoleOutputterTestCase(unittest.TestCase):
         self.assertRaises(TypeError, self.uut.acquire_settings, 0)
         self.assertEqual(self.uut.acquire_settings({0: 0}), {})
 
-        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeFilter"]}),
+        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear"]}),
                          {"setting":
                          _("Please enter a value for the "
-                           "setting \"{}\" ({}) needed by {}: ").format("setting", "help text", "SomeFilter")})
+                           "setting \"{}\" ({}) needed by {}: ").format("setting", "help text", "SomeBear")})
 
-        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeFilter", "AnotherFilter"]}),
+        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear", "AnotherBear"]}),
                          {"setting":
                          _("Please enter a value for the "
                            "setting \"{}\" ({}) needed by {}: ").format("setting",
                                                                         "help text",
-                                                                        "SomeFilter" + _(" and ") + "AnotherFilter")})
+                                                                        "SomeBear" + _(" and ") + "AnotherBear")})
 
         self.assertEqual(self.uut.acquire_settings({"setting": ["help text",
-                                                                "SomeFilter",
-                                                                "AnotherFilter",
-                                                                "YetAnotherFilter"]}),
+                                                                "SomeBear",
+                                                                "AnotherBear",
+                                                                "YetAnotherBear"]}),
                          {"setting":
                          _("Please enter a value for the "
                            "setting \"{}\" ({}) needed by {}: ").format("setting",
                                                                         "help text",
-                                                                        "SomeFilter, AnotherFilter" + _(" and ") +
-                                                                        "YetAnotherFilter")})
+                                                                        "SomeBear, AnotherBear" + _(" and ") +
+                                                                        "YetAnotherBear")})
 
 
 if __name__ == '__main__':
