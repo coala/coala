@@ -20,7 +20,7 @@ class Outputter:
         raise NotImplementedError
 
     def _print_line_result(self, result):
-        raise NotImplementedError
+        return self._print_result(result)
 
     def print_result(self, result):
         if not isinstance(result, Result):
