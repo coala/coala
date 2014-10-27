@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.bears.results.LineResult import Result, RESULT_SEVERITY
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Outputter import Outputter
@@ -50,3 +51,11 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
         return input(_("Please enter a value for the setting \"{}\" ({}) needed by {}: ").format(str(setting_name),
                                                                                                  str(arr[0]),
                                                                                                  needed))
+
+    def _print_result(self, result):
+        assert(isinstance(result, Result))
+        return self.print("[{sev}] Annotation for file {file} from "
+                          "{bear}:\n{message}".format(sev=RESULT_SEVERITY.__str__(result.severity),
+                                                      file=result.file,
+                                                      bear=result.origin,
+                                                      message=result.message))
