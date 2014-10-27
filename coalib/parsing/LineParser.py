@@ -79,18 +79,7 @@ class LineParser:
         return ''
 
     def __extract_keys_and_value(self, line):
-        value_begin = len(line)
-        value_delimiter = ''
-        for delimiter in self.key_value_delimiters:
-            pos = line.find(delimiter)
-            if 0 < pos < value_begin:
-                value_begin = pos
-                value_delimiter = delimiter
+        key_part, value = self.__seperate_by_first_occurrence(line, self.key_value_delimiters, True, True)
+        keys = list(StringConverter(key_part, list_delimiters=self.key_delimiters))
 
-        # if we didnt find any delimiter we have values only which belong to the previous line
-        if value_begin == len(line):
-            value_begin = 0
-
-        keys = list(StringConverter(line[:value_begin], list_delimiters=self.key_delimiters))
-
-        return keys, line[value_begin+len(value_delimiter):].strip(" \n")
+        return keys, value
