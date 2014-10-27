@@ -95,3 +95,9 @@ class StringConverter:
             self.__value = self.__value.strip()
 
         self.__recreate_list = True
+
+    def __eq__(self, other):
+        return isinstance(other, StringConverter) and self.value == other.value
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
