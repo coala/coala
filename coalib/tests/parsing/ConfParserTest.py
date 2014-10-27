@@ -81,7 +81,7 @@ class ConfParserTestCase(unittest.TestCase):
         else:
             err = FileNotFoundError
         self.assertRaises(err, self.uut.parse, self.nonexistentfile)
-        sections = self.uut.parse(self.file);
+        sections = self.uut.parse(self.file)
         self.assertNotEqual(self.uut.reparse(self.file), sections)
 
         key, val = sections.popitem(last=False)
