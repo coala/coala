@@ -20,16 +20,18 @@ class LineParser:
                  key_value_delimiters=['=', ':'],
                  comment_seperators=['#', ';', '//'],
                  key_delimiters=[',', ' '],
-                 section_name_surroundings={'[': "]"}):
+                 section_name_surroundings={'[': "]"},
+                 section_override_delimiters=["."]):
         self.key_value_delimiters = key_value_delimiters
         self.comment_seperators = comment_seperators
         self.key_delimiters = key_delimiters
         self.section_name_surroundings = section_name_surroundings
+        self.section_override_delimiters = section_override_delimiters
 
     def parse(self, line):
         """
         :param line: the line to parse
-        :return section_name (empty string if it's no section name), keys, value, comment
+        :return section_name (empty string if it's no section name), [(section_overwrite, key), ...], value, comment
         """
         line, comment = self.__seperate_by_first_occurrence(line, self.comment_seperators)
         if line == "":
@@ -41,7 +43,11 @@ class LineParser:
 
         keys, value = self.__extract_keys_and_value(line)
 
-        return '', keys, value, comment
+        key_touples = []
+        for key in keys:
+            key_touples.append(self.__seperate_by_first_occurrence(key, self.section_override_delimiters, True, True))
+
+        return '', key_touples, value, comment
 
     @staticmethod
     def __seperate_by_first_occurrence(string, delimiters, strip_delim=False, return_second_part_nonempty=False):
