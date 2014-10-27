@@ -31,7 +31,7 @@ class LineParser:
         :param line: the line to parse
         :return section_name (empty string if it's no section name), keys, value, comment
         """
-        line, comment = self.__extract_comment(line)
+        line, comment = self.__seperate_by_first_occurrence(line, self.comment_seperators)
         if line == "":
             return '', [], '', comment
 
@@ -77,15 +77,6 @@ class LineParser:
                 return line[len(begin):len(line)-len(end)].lower().strip(" \n")
 
         return ''
-
-    def __extract_comment(self, line):
-        comment_begin = len(line)
-        for seperator in self.comment_seperators:
-            pos = line.find(seperator)
-            if 0 <= pos < comment_begin:
-                comment_begin = pos
-
-        return line[:comment_begin].strip(" \n"), line[comment_begin:].strip(" \n")
 
     def __extract_keys_and_value(self, line):
         value_begin = len(line)
