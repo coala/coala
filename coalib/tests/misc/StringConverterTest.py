@@ -70,6 +70,12 @@ class ProcessTestCase(unittest.TestCase):
         self.uut = StringConverter(" i dont know ")
         self.assertRaises(ValueError, bool, self.uut)
 
+    def test_equality_comparision(self):
+        self.assertEqual(StringConverter(" i dont know "), StringConverter("i dont know"))
+        self.assertNotEqual(StringConverter(" dont know "), StringConverter("i dont know "))
+        self.assertNotEqual(StringConverter(""), StringConverter("i dont know "))
+        self.assertNotEqual(5, StringConverter("i dont know "))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
