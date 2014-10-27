@@ -20,9 +20,15 @@ class Outputter:
         raise NotImplementedError
 
     def _print_line_result(self, result):
+        # You probably want to overwrite this method!
         return self._print_result(result)
 
     def print_result(self, result):
+        """
+        Prints the result appropriate to the output medium.
+
+        :param result: A derivative of Result.
+        """
         if not isinstance(result, Result):
             raise TypeError("print_result can only handle objects which inherit from Result.")
 
