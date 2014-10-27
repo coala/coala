@@ -31,7 +31,7 @@ class LineParser:
     def parse(self, line):
         """
         :param line: the line to parse
-        :return section_name (empty string if it's no section name), [(section_overwrite, key), ...], value, comment
+        :return section_name (empty string if it's no section name), [(section_override, key), ...], value, comment
         """
         line, comment = self.__seperate_by_first_occurrence(line, self.comment_seperators)
         if line == "":
