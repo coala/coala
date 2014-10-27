@@ -18,3 +18,9 @@ class RESULT_SEVERITY:
     INFO = 0
     NORMAL = 1
     MAJOR = 2
+
+    @staticmethod
+    def __str__(severity):
+        return {0: "INFO",
+                1: "NORMAL",
+                2: "MAJOR"}.get(severity, "NORMAL")
