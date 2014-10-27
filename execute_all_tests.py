@@ -31,7 +31,7 @@ if __name__ == '__main__':
     use_coverage = False
     for arg in sys.argv[1:]:
         arg = str(arg).strip().lower()
-        if arg == "--cover":
+        if arg == "--cover" and not use_coverage:
             use_coverage = True
         else:
             show_help()
