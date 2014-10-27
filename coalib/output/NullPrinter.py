@@ -21,8 +21,8 @@ class NullPrinter(ColorPrinter, LogPrinter):
         ColorPrinter.__init__(self)
         LogPrinter.__init__(self)
 
-    def _print_colored(self, output, color=None, **kwargs):
+    def print(self, *args, delimiter=' ', end='\n', **kwargs):
         return
 
-    def _print_uncolored(self, output, **kwargs):
+    def log_message(self, log_message, timestamp=None, **kwargs):
         return
