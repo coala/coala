@@ -27,7 +27,7 @@ class Outputter:
             raise TypeError("print_result can only handle objects which inherit from Result.")
 
         if type(result) == LineResult:
-            self._print_line_result(result)
+            return self._print_line_result(result)
 
         return self._print_result(result)
 
