@@ -85,3 +85,18 @@ class Settings:
             raise IndexError("Required index is unavailable.")
 
         return self.defaults[key]
+
+    def get(self, key, default="", ignore_defaults=False):
+        """
+        Retrieves the item without raising an exception. If the item is not available an appropriate Setting will be
+        generated from your provided default value.
+
+        :param key: The key of the setting to return.
+        :param default: The default value
+        :param ignore_defaults: Whether or not to ignore the default settings.
+        :return: The setting.
+        """
+        try:
+            return self.__getitem__(key, ignore_defaults)
+        except IndexError:
+            return Setting(key, str(default))

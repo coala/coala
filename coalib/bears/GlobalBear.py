@@ -12,27 +12,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.Analyser import Analyser
-from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
+from coalib.bears.Bear import Bear
+from coalib.bears.BEAR_KIND import BEAR_KIND
 
 
-class GlobalAnalyzer(Analyser):
+class GlobalBear(Bear):
     def __init__(self,
                  file_dict,  # filename : file contents
                  settings,
                  message_queue,
                  TIMEOUT=0):
-        Analyser.__init__(self, settings, message_queue, TIMEOUT)
+        Bear.__init__(self, settings, message_queue, TIMEOUT)
         self.file_dict = file_dict
 
     @staticmethod
     def kind():
-        return ANALYSER_KIND.GLOBAL
+        return BEAR_KIND.GLOBAL
 
-    def run_analyser(self):
+    def run_bear(self):
         """
-        Analyzes all files in file_dict.
+        Handles all files in file_dict.
 
         :return: A list of Result type.
         """
-        raise NotImplementedError("This function has to be implemented for a runnable filter.")
+        raise NotImplementedError("This function has to be implemented for a runnable bear.")
