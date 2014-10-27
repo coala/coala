@@ -23,7 +23,7 @@ import unittest
 import tempfile
 
 
-class LineParserTestCase(unittest.TestCase):
+class ConfParserTestCase(unittest.TestCase):
     example_file = """to be ignored
     a_default, another = val
     TEST = tobeignored  # do you know that thats a comment
