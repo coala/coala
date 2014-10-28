@@ -1,5 +1,58 @@
-#: coalib/settings/SettingsFiller.py:61
-msgid "One of the given bears ({}) has no attribute get_needed_settings."
+#: coalib/output/ConsoleOutputter.py:42
+msgid "One of the given settings ({}) are not properly described."
+msgstr ""
+
+#. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
+#: coalib/output/ConsoleOutputter.py:49
+#: coalib/tests/output/ConsoleOutputterTest.py:46
+#: coalib/tests/output/ConsoleOutputterTest.py:56
+msgid " and "
+msgstr ""
+
+#: coalib/output/ConsoleOutputter.py:51
+#: coalib/tests/output/ConsoleOutputterTest.py:38
+#: coalib/tests/output/ConsoleOutputterTest.py:43
+#: coalib/tests/output/ConsoleOutputterTest.py:53
+msgid "Please enter a value for the setting \"{}\" ({}) needed by {}: "
+msgstr ""
+
+#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:54
+#: coalib/tests/processes/communication/LogMessageTest.py:50
+#: coalib/processes/communication/LogMessage.py:31
+msgid "DEBUG"
+msgstr ""
+
+#: coalib/output/LogPrinter.py:35 coalib/tests/output/LogPrinterTest.py:57
+#: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/processes/communication/LogMessage.py:32
+msgid "WARNING"
+msgstr ""
+
+#: coalib/output/LogPrinter.py:36 coalib/tests/output/LogPrinterTest.py:47
+#: coalib/tests/output/LogPrinterTest.py:50
+#: coalib/tests/output/LogPrinterTest.py:60
+#: coalib/tests/output/LogPrinterTest.py:63
+#: coalib/tests/processes/communication/LogMessageTest.py:46
+#: coalib/tests/processes/communication/LogMessageTest.py:52
+#: coalib/processes/communication/LogMessage.py:33
+msgid "ERROR"
+msgstr ""
+
+#: coalib/output/LogPrinter.py:55 coalib/tests/output/LogPrinterTest.py:64
+msgid "Exception was:"
+msgstr ""
+
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:33
+msgid ""
+"Espeak doesn't seem to be installed. You cannot use the voice output feature "
+"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
+"installed via your usual package repositories."
+msgstr ""
+
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:38
+msgid "Failed to execute espeak. An unknown error occurred."
 msgstr ""
 
 #: coalib/misc/StringConstants.py:19
@@ -25,7 +78,7 @@ msgid "yes"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:30
-#: coalib/tests/misc/StringConverterTest.py:63
+#: coalib/tests/misc/StringConverterTest.py:64
 msgid "yeah"
 msgstr ""
 
@@ -62,7 +115,7 @@ msgid "no"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:39
-#: coalib/tests/misc/StringConverterTest.py:67
+#: coalib/tests/misc/StringConverterTest.py:68
 msgid "nope"
 msgstr ""
 
@@ -79,111 +132,31 @@ msgid "wrong"
 msgstr ""
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/misc/i18nTest.py:44 coalib/tests/misc/i18nTest.py:48
-#: coalib/tests/bears/BearTest.py:40 coalib/tests/bears/BearTest.py:80
-#: coala:24
+#: coalib/tests/misc/i18nTest.py:46 coalib/tests/misc/i18nTest.py:50
+#: coalib/tests/bears/BearTest.py:41 coalib/tests/bears/BearTest.py:81
+#: coala:25
 msgid "A string to test translations."
 msgstr ""
 
-#: coalib/tests/output/LogPrinterTest.py:45
-#: coalib/tests/output/LogPrinterTest.py:47
-#: coalib/tests/output/LogPrinterTest.py:54
-#: coalib/tests/output/LogPrinterTest.py:57
-#: coalib/tests/processes/communication/LogMessageTest.py:45
-#: coalib/tests/processes/communication/LogMessageTest.py:51
-#: coalib/output/LogPrinter.py:36
-#: coalib/processes/communication/LogMessage.py:33
-msgid "ERROR"
-msgstr ""
-
-#: coalib/tests/output/LogPrinterTest.py:50
-#: coalib/tests/processes/communication/LogMessageTest.py:49
-#: coalib/output/LogPrinter.py:34
-#: coalib/processes/communication/LogMessage.py:31
-msgid "DEBUG"
-msgstr ""
-
-#: coalib/tests/output/LogPrinterTest.py:52
-#: coalib/tests/processes/communication/LogMessageTest.py:47
-#: coalib/output/LogPrinter.py:35
-#: coalib/processes/communication/LogMessage.py:32
-msgid "WARNING"
-msgstr ""
-
-#: coalib/tests/output/LogPrinterTest.py:58 coalib/output/LogPrinter.py:55
-msgid "Exception was:"
-msgstr ""
-
-#: coalib/tests/output/ConsoleOutputterTest.py:36
-#: coalib/tests/output/ConsoleOutputterTest.py:41
-#: coalib/tests/output/ConsoleOutputterTest.py:51
-#: coalib/output/ConsoleOutputter.py:50
-msgid "Please enter a value for the setting \"{}\" ({}) needed by {}: "
-msgstr ""
-
-#. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
-#: coalib/tests/output/ConsoleOutputterTest.py:44
-#: coalib/tests/output/ConsoleOutputterTest.py:54
-#: coalib/output/ConsoleOutputter.py:48
-msgid " and "
-msgstr ""
-
-#: coalib/tests/bears/BearTest.py:77 coalib/tests/bears/BearTest.py:87
+#: coalib/tests/bears/BearTest.py:78 coalib/tests/bears/BearTest.py:88
 #: coalib/bears/Bear.py:98
 msgid "Setting up bear {}..."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:79 coalib/tests/bears/BearTest.py:88
+#: coalib/tests/bears/BearTest.py:80 coalib/tests/bears/BearTest.py:89
 #: coalib/bears/Bear.py:100
 msgid "Running bear {}..."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:81 coalib/tests/bears/BearTest.py:89
+#: coalib/tests/bears/BearTest.py:82 coalib/tests/bears/BearTest.py:90
 #: coalib/bears/Bear.py:114
 msgid "Tearing down bear {}..."
 msgstr ""
 
 #. debug message contains custom content, dont test this here
-#: coalib/tests/bears/BearTest.py:91 coalib/bears/Bear.py:105
+#: coalib/tests/bears/BearTest.py:92 coalib/bears/Bear.py:105
 #: coalib/bears/Bear.py:124
 msgid "Bear {} failed to run"
-msgstr ""
-
-#: coalib/output/ConsoleOutputter.py:41
-msgid "One of the given settings ({}) are not properly described."
-msgstr ""
-
-#. pragma: no cover
-#: coalib/output/EspeakPrinter.py:33
-msgid ""
-"Espeak doesn't seem to be installed. You cannot use the voice output feature "
-"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
-"installed via your usual package repositories."
-msgstr ""
-
-#. pragma: no cover
-#: coalib/output/EspeakPrinter.py:38
-msgid "Failed to execute espeak. An unknown error occurred."
-msgstr ""
-
-#: coalib/bears/Bear.py:106
-#, python-brace-format
-msgid ""
-"The bear {bear} raised an exception of type {exception}. If you are the "
-"writer of this bear, please catch all exceptions. If not and this error "
-"annoys you, you might want to get in contact with the writer of this bear.\n"
-"\n"
-"Here is your traceback:\n"
-"\n"
-"{traceback}\n"
-msgstr ""
-
-#: coalib/bears/Bear.py:120
-msgid ""
-"set_up() or tear_down() throwed an exception for bear {}.\n"
-"Exception: {}\n"
-"Traceback:\n"
-"{}"
 msgstr ""
 
 #. pragma: no cover
@@ -211,7 +184,31 @@ msgstr ""
 msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
+#: coalib/bears/Bear.py:106
+#, python-brace-format
+msgid ""
+"The bear {bear} raised an exception of type {exception}. If you are the "
+"writer of this bear, please catch all exceptions. If not and this error "
+"annoys you, you might want to get in contact with the writer of this bear.\n"
+"\n"
+"Here is your traceback:\n"
+"\n"
+"{traceback}\n"
+msgstr ""
+
+#: coalib/bears/Bear.py:120
+msgid ""
+"set_up() or tear_down() throwed an exception for bear {}.\n"
+"Exception: {}\n"
+"Traceback:\n"
+"{}"
+msgstr ""
+
+#: coalib/settings/SettingsFiller.py:61
+msgid "One of the given bears ({}) has no attribute get_needed_settings."
+msgstr ""
+
 #. Something's gone wrong
-#: coala:27
+#: coala:28
 msgid "Program terminated by user."
 msgstr ""
