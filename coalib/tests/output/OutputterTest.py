@@ -16,7 +16,7 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
-from coalib.output.Outputter import Outputter, Result
+from coalib.output.Outputter import Outputter, Result, LineResult
 
 
 class OutputterTestCase(unittest.TestCase):
@@ -26,6 +26,9 @@ class OutputterTestCase(unittest.TestCase):
     def test_api(self):
         self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")
         self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"))
+        self.assertRaises(NotImplementedError,
+                          self.uut.print_result,
+                          LineResult("origin", 1, "line", "message", "file"))
         self.assertRaises(TypeError, self.uut.print_result, "anything")
 
 
