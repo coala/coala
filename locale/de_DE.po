@@ -9,69 +9,66 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.10\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: coalib/output/LogPrinter.py:32
-#: coalib/tests/processes/communication/LogMessageTest.py:48
-#: coalib/processes/communication/LogMessage.py:28
+#: coalib/output/ConsoleOutputter.py:42
+msgid "One of the given settings ({}) are not properly described."
+msgstr ""
+
+#. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
+#: coalib/output/ConsoleOutputter.py:49
+#: coalib/tests/output/ConsoleOutputterTest.py:46
+#: coalib/tests/output/ConsoleOutputterTest.py:56
+msgid " and "
+msgstr " und "
+
+#: coalib/output/ConsoleOutputter.py:51
+#: coalib/tests/output/ConsoleOutputterTest.py:38
+#: coalib/tests/output/ConsoleOutputterTest.py:43
+#: coalib/tests/output/ConsoleOutputterTest.py:53
+msgid "Please enter a value for the setting \"{}\" ({}) needed by {}: "
+msgstr ""
+
+#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:54
+#: coalib/tests/processes/communication/LogMessageTest.py:50
+#: coalib/processes/communication/LogMessage.py:31
 msgid "DEBUG"
 msgstr "DEBUG"
 
-#: coalib/output/LogPrinter.py:33
-#: coalib/tests/processes/communication/LogMessageTest.py:46
-#: coalib/processes/communication/LogMessage.py:29
+#: coalib/output/LogPrinter.py:35 coalib/tests/output/LogPrinterTest.py:57
+#: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/processes/communication/LogMessage.py:32
 msgid "WARNING"
 msgstr "WARNUNG"
 
-#: coalib/output/LogPrinter.py:34 coalib/tests/output/LogPrinterTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:44
-#: coalib/tests/processes/communication/LogMessageTest.py:50
-#: coalib/processes/communication/LogMessage.py:30
+#: coalib/output/LogPrinter.py:36 coalib/tests/output/LogPrinterTest.py:47
+#: coalib/tests/output/LogPrinterTest.py:50
+#: coalib/tests/output/LogPrinterTest.py:60
+#: coalib/tests/output/LogPrinterTest.py:63
+#: coalib/tests/processes/communication/LogMessageTest.py:46
+#: coalib/tests/processes/communication/LogMessageTest.py:52
+#: coalib/processes/communication/LogMessage.py:33
 msgid "ERROR"
 msgstr "FEHLER"
 
-#: coalib/parsing/ConfParser.py:62
+#: coalib/output/LogPrinter.py:55 coalib/tests/output/LogPrinterTest.py:64
+msgid "Exception was:"
+msgstr "Die Exception war:"
+
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:33
 msgid ""
-"Failed reading file. Please make sure to provide a file that is existent and "
-"you have the permission to read it."
+"Espeak doesn't seem to be installed. You cannot use the voice output feature "
+"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
+"installed via your usual package repositories."
 msgstr ""
-"Das Lesen der Datei ist gescheitert. Bitte stellen Sie sicher dass die Datei "
-"existiert und Leserechte vorhanden sind."
 
-#: coalib/analysers/Analyser.py:82 coalib/tests/analysers/AnalyserTest.py:74
-#: coalib/tests/analysers/AnalyserTest.py:84
-msgid "Setting up analyser..."
-msgstr "Bereite Analyseroutine vor..."
-
-#: coalib/analysers/Analyser.py:84 coalib/tests/analysers/AnalyserTest.py:76
-#: coalib/tests/analysers/AnalyserTest.py:85
-msgid "Running analyser..."
-msgstr "Führe Analyseroutine aus..."
-
-#: coalib/analysers/Analyser.py:86 coalib/tests/analysers/AnalyserTest.py:78
-#: coalib/tests/analysers/AnalyserTest.py:86
-msgid "Tearing down analyser..."
-msgstr "Beende Analyseroutine nach..."
-
-#: coalib/analysers/Analyser.py:90
-msgid ""
-"Unknown failure in worker process.\n"
-"Exception: {}\n"
-"Traceback:\n"
-"{}"
+#. pragma: no cover
+#: coalib/output/EspeakPrinter.py:38
+msgid "Failed to execute espeak. An unknown error occurred."
 msgstr ""
-"Unbekannter Fehler im Arbeitsprozess.\n"
-"Exception: {}\n"
-"Traceback:\n"
-"{}"
-
-#. debug message contains custom content, dont test this here
-#: coalib/analysers/Analyser.py:93 coalib/tests/analysers/AnalyserTest.py:88
-msgid "An unknown failure occurred and an analyzer run is aborted."
-msgstr ""
-"Ein Unbekannter Fehler ist aufgetreten und eine Ausführung einer "
-"Analyseroutine wurde abgebrochen."
+"Espeak konnte nicht ausgeführt werden. Ein unbekannter Fehler trat auf."
 
 #: coalib/misc/StringConstants.py:19
 msgid ""
@@ -81,99 +78,192 @@ msgstr ""
 "Dies ist ein Bug. Wir möchten uns für die Unannehmlichkeiten entschuldigen. "
 "Wenn dies mehr als einmal passiert, kontaktieren Sie bitte die Entwickler."
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:22
+msgid "{} is not accessible and will be ignored!"
+msgstr "Auf {} konnte nicht zugegriffen werden. Es wird ignoriert."
+
+#: coalib/misc/StringConstants.py:30
 msgid "on"
 msgstr "an"
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "y"
 msgstr "j"
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "yes"
 msgstr "ja"
 
-#: coalib/misc/StringConstants.py:28
-#: coalib/tests/misc/StringConverterTest.py:63
+#: coalib/misc/StringConstants.py:30
+#: coalib/tests/misc/StringConverterTest.py:64
 msgid "yeah"
 msgstr "klar"
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "sure"
 msgstr "sicher"
 
-#: coalib/misc/StringConstants.py:28
+#: coalib/misc/StringConstants.py:30
 msgid "true"
 msgstr "wahr"
 
-#: coalib/misc/StringConstants.py:29
+#: coalib/misc/StringConstants.py:31
 msgid "definitely"
 msgstr "definitiv"
 
-#: coalib/misc/StringConstants.py:29
+#: coalib/misc/StringConstants.py:31
 msgid "yup"
 msgstr "jup"
 
-#: coalib/misc/StringConstants.py:29
+#: coalib/misc/StringConstants.py:31
 msgid "right"
 msgstr "richtig"
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "off"
 msgstr "aus"
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "n"
 msgstr "n"
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "no"
 msgstr "nein"
 
-#: coalib/misc/StringConstants.py:37
-#: coalib/tests/misc/StringConverterTest.py:67
+#: coalib/misc/StringConstants.py:39
+#: coalib/tests/misc/StringConverterTest.py:68
 msgid "nope"
 msgstr "ne"
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "nah"
 msgstr "neh"
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "false"
 msgstr "falsch"
 
-#: coalib/misc/StringConstants.py:37
+#: coalib/misc/StringConstants.py:39
 msgid "wrong"
 msgstr "unwahr"
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/analysers/AnalyserTest.py:40
-#: coalib/tests/analysers/AnalyserTest.py:77 coalib/tests/misc/i18nTest.py:44
-#: coalib/tests/misc/i18nTest.py:48 coala:24
+#: coalib/tests/misc/i18nTest.py:46 coalib/tests/misc/i18nTest.py:50
+#: coalib/tests/bears/BearTest.py:41 coalib/tests/bears/BearTest.py:81
+#: coala:25
 msgid "A string to test translations."
 msgstr "Eine Zeichenkette um Übersetzungen zu testen."
 
-#: coalib/settings/Settings.py:31
-msgid "defaults has to be a Settings object or None."
-msgstr "defaults muss ein Settings Objekt oder None sein."
+#: coalib/tests/bears/BearTest.py:78 coalib/tests/bears/BearTest.py:88
+#: coalib/bears/Bear.py:98
+msgid "Setting up bear {}..."
+msgstr "Bereite Bär {} vor..."
 
-#: coalib/settings/Settings.py:33
-msgid "defaults may not be self for non-recursivity."
-msgstr "defaults darf nicht self sein um Rekursivität zu vermeiden."
+#: coalib/tests/bears/BearTest.py:80 coalib/tests/bears/BearTest.py:89
+#: coalib/bears/Bear.py:100
+msgid "Running bear {}..."
+msgstr "Führe Bär {} aus..."
 
-#: coalib/settings/Settings.py:78
-msgid "Empty keys are invalid."
-msgstr "Leere Schlüssel sind ungültig."
+#: coalib/tests/bears/BearTest.py:82 coalib/tests/bears/BearTest.py:90
+#: coalib/bears/Bear.py:114
+msgid "Tearing down bear {}..."
+msgstr "Beende Bär {}..."
 
-#: coalib/settings/Settings.py:85
-msgid "Required index is unavailable."
-msgstr "Der angeforderte Index ist nicht verfügbar."
+#. debug message contains custom content, dont test this here
+#: coalib/tests/bears/BearTest.py:92 coalib/bears/Bear.py:105
+#: coalib/bears/Bear.py:124
+msgid "Bear {} failed to run"
+msgstr ""
+
+#. pragma: no cover
+#: coalib/processes/BearRunner.py:113
+msgid ""
+"An unknown error occurred while running local bears for the file {}. "
+"Skipping file..."
+msgstr ""
+
+#. pragma: no cover
+#: coalib/processes/BearRunner.py:130
+msgid ""
+"An unknown error occurred while running global bear {}. Skipping bear..."
+msgstr ""
+
+#: coalib/processes/BearRunner.py:144
+msgid "An internal error occurred."
+msgstr "Ein interner Fehler ist aufgetreten."
+
+#: coalib/processes/BearRunner.py:145
+msgid "The given file through the queue is not in the file dictionary."
+msgstr ""
+
+#: coalib/processes/BearRunner.py:159 coalib/processes/BearRunner.py:170
+msgid "A given local bear ({}) is not valid. Leaving it out..."
+msgstr ""
+
+#: coalib/bears/Bear.py:106
+#, python-brace-format
+msgid ""
+"The bear {bear} raised an exception of type {exception}. If you are the "
+"writer of this bear, please catch all exceptions. If not and this error "
+"annoys you, you might want to get in contact with the writer of this bear.\n"
+"\n"
+"Here is your traceback:\n"
+"\n"
+"{traceback}\n"
+msgstr ""
+
+#: coalib/bears/Bear.py:120
+msgid ""
+"set_up() or tear_down() throwed an exception for bear {}.\n"
+"Exception: {}\n"
+"Traceback:\n"
+"{}"
+msgstr ""
+
+#: coalib/settings/SettingsFiller.py:61
+msgid "One of the given bears ({}) has no attribute get_needed_settings."
+msgstr ""
 
 #. Something's gone wrong
-#: coala:27
+#: coala:28
 msgid "Program terminated by user."
 msgstr "Das Programm wurde durch den Benutzer beendet."
+
+#~ msgid ""
+#~ "Failed reading file. Please make sure to provide a file that is existent "
+#~ "and you have the permission to read it."
+#~ msgstr ""
+#~ "Das Lesen der Datei ist gescheitert. Bitte stellen Sie sicher dass die "
+#~ "Datei existiert und Leserechte vorhanden sind."
+
+#~ msgid ""
+#~ "Unknown failure in worker process.\n"
+#~ "Exception: {}\n"
+#~ "Traceback:\n"
+#~ "{}"
+#~ msgstr ""
+#~ "Unbekannter Fehler im Arbeitsprozess.\n"
+#~ "Exception: {}\n"
+#~ "Traceback:\n"
+#~ "{}"
+
+#~ msgid "An unknown failure occurred and an analyzer run is aborted."
+#~ msgstr ""
+#~ "Ein Unbekannter Fehler ist aufgetreten und eine Ausführung einer "
+#~ "Analyseroutine wurde abgebrochen."
+
+#~ msgid "defaults has to be a Settings object or None."
+#~ msgstr "defaults muss ein Settings Objekt oder None sein."
+
+#~ msgid "defaults may not be self for non-recursivity."
+#~ msgstr "defaults darf nicht self sein um Rekursivität zu vermeiden."
+
+#~ msgid "Empty keys are invalid."
+#~ msgstr "Leere Schlüssel sind ungültig."
+
+#~ msgid "Required index is unavailable."
+#~ msgstr "Der angeforderte Index ist nicht verfügbar."
 
 #~ msgid " yeah "
 #~ msgstr "jep"
