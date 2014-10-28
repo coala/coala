@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import sys
 from coalib.bears.results.LineResult import Result, RESULT_SEVERITY
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.output.LOG_LEVEL import LOG_LEVEL
@@ -20,9 +21,9 @@ from coalib.misc.i18n import _
 
 
 class ConsoleOutputter(Outputter, ConsolePrinter):
-    def __init__(self):
+    def __init__(self, output=sys.stdout):
         Outputter.__init__(self)
-        ConsolePrinter.__init__(self)
+        ConsolePrinter.__init__(self, output=output)
 
     def acquire_settings(self, settings_names_dict):
         if not isinstance(settings_names_dict, dict):
