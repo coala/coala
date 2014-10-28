@@ -13,7 +13,13 @@ python:
   - "3.3"
   - "3.4"
 
+install:
+  pip install coveralls
+
 script:
   - sudo apt-get install espeak
   - python3 setup.py install
-  - python3 ./execute_all_tests.py
+  - python3 ./execute_all_tests.py --cover
+
+after_success:
+  coveralls
