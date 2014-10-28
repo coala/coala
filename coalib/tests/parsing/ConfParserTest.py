@@ -16,6 +16,7 @@ from collections import OrderedDict
 import os
 
 import sys
+
 sys.path.insert(0, ".")
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Settings import Settings

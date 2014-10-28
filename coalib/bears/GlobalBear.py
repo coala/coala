@@ -26,6 +26,7 @@ class GlobalBear(Bear):
     If you only look at one file at once anyway a LocalBear is better for your needs. (And better for performance and
     usability for both user and developer.)
     """
+
     def __init__(self,
                  file_dict,  # filename : file contents
                  settings,

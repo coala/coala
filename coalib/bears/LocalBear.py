@@ -28,6 +28,7 @@ class LocalBear(Bear):
     - A SpaceConsistencyBear that checks every line for trailing whitespaces, tabs, ...
     - A VariableNameBear that checks variable names and constant names for certain conditions
     """
+
     def __init__(self,
                  settings,
                  message_queue,

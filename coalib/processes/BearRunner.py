@@ -165,8 +165,8 @@ class BearRunner(Process):
 
     def __run_global_bear(self, global_bear_instance):
         name = global_bear_instance.__class__.__name__
-        if not isinstance(global_bear_instance, GlobalBear)\
-           or global_bear_instance.kind() != BEAR_KIND.GLOBAL:
+        if not isinstance(global_bear_instance, GlobalBear) \
+                or global_bear_instance.kind() != BEAR_KIND.GLOBAL:
             self.warn(_("A given local bear ({}) is not valid. Leaving it out...")
                       .format(name), StringConstants.THIS_IS_A_BUG)
 

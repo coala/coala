@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import multiprocessing
 
 import sys
+
 sys.path.insert(0, ".")
 from coalib.processes.ProcessSpawner import Process, ProcessSpawner
 import unittest

@@ -29,7 +29,7 @@ class LogPrinter(Printer):
         datetime_string = timestamp.strftime(self.timestamp_format)
 
         if datetime_string != "":
-            datetime_string = "["+datetime_string+"]"
+            datetime_string = "[" + datetime_string + "]"
 
         return '[{}]{} '.format({LOG_LEVEL.DEBUG: _("DEBUG"),
                                  LOG_LEVEL.WARNING: _("WARNING"),

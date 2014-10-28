@@ -37,7 +37,7 @@ class TestHelper:
                                     "-p",  # make it collectable later
                                     "--branch",  # check branch AND statement coverage
                                     "--omit",  # dont check coverage of test file itself
-                                    filename+",/tmp/*",
+                                    filename + ",/tmp/*",
                                     filename])
         except:
             print("Coverage failed. Falling back to standard unit tests.")
@@ -53,7 +53,7 @@ class TestHelper:
             result = TestHelper.execute_python3_file(file, use_coverage)  # either 0 or 1
             failures += result
             retval = max(result, retval)
-            print("\n"+"#"*70)
+            print("\n" + "#" * 70)
 
         print("\nTests finished: failures in {} of {} test modules".format(failures, number))
 

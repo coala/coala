@@ -73,14 +73,14 @@ class LineParser:
         if return_second_part_nonempty and delim_pos == len(string):
             return "", string.strip(" \n")
 
-        return string[:delim_pos].strip(" \n"),\
+        return string[:delim_pos].strip(" \n"), \
                string[delim_pos + (len(used_delim) if strip_delim else 0):].strip(" \n")
 
     def __get_section_name(self, line):
         for begin, end in self.section_name_surroundings.items():
             if line[0:len(begin)] == begin and \
-               line[len(line)-len(end):len(line)] == end:
-                return line[len(begin):len(line)-len(end)].lower().strip(" \n")
+                            line[len(line) - len(end):len(line)] == end:
+                return line[len(begin):len(line) - len(end)].lower().strip(" \n")
 
         return ''
 

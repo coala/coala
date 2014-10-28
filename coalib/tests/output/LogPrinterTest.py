@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
+
 sys.path.insert(0, ".")
 from datetime import datetime
 import unittest
@@ -42,19 +43,24 @@ class LogPrinterTestCase(unittest.TestCase):
 
         uut = TestLogPrinter()
         ts = datetime.today()
-        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.log_message(self.log_message, timestamp=ts, end=""))
-        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.log(LOG_LEVEL.ERROR, StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
+        self.assertEqual(
+            ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
+            uut.log_message(self.log_message, timestamp=ts, end=""))
+        self.assertEqual(
+            ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
+            uut.log(LOG_LEVEL.ERROR, StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
 
-        self.assertEqual(("["+_("DEBUG")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.debug(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
-        self.assertEqual(("["+_("WARNING")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.warn(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
-        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] "+StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.err(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
+        self.assertEqual(
+            ("[" + _("DEBUG") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
+            uut.debug(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
+        self.assertEqual(
+            ("[" + _("WARNING") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
+            uut.warn(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
+        self.assertEqual(
+            ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
+            uut.err(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
 
-        self.assertEqual(("["+_("ERROR")+"]["+ts.strftime("%X")+"] Something failed.\n\n" +
+        self.assertEqual(("[" + _("ERROR") + "][" + ts.strftime("%X") + "] Something failed.\n\n" +
                           _("Exception was:") + "\n" + StringConstants.COMPLEX_TEST_STRING, "test"),
                          uut.log_exception("Something failed.",
                                            NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
@@ -66,6 +72,7 @@ class LogPrinterTestCase(unittest.TestCase):
         self.assertRaises(TypeError, uut.log, 5)
         self.assertRaises(TypeError, uut.log_exception, "message", 5)
         self.assertRaises(TypeError, uut.log_message, 5)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

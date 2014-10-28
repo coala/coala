@@ -30,12 +30,12 @@ if __name__ == "__main__":
           url='http://www.schuirmann.net/',
           scripts=['coala'],
           packages=['coalib',
-                        'coalib.bears',
-                        'coalib.misc',
-                        'coalib.output',
-                        'coalib.processes',
-                            'coalib.processes.communication',
-                    ],
+                    'coalib.bears',
+                    'coalib.misc',
+                    'coalib.output',
+                    'coalib.processes',
+                    'coalib.processes.communication',
+          ],
           license="GPL v3",
           data_files=translations
-          )
+    )

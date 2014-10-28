@@ -36,7 +36,7 @@ class StringConstants:
     the value will be ignored. It is irrelevant which original is translated witch witch translation. Mind that all
     strings here have to be lower case!
     """
-    FALSE_STRINGS = ['0', _('off'), 'n', _("n"), 'no', _("no"),  _('nope'), _('nah'),  'false', _("false"), _("wrong")]
+    FALSE_STRINGS = ['0', _('off'), 'n', _("n"), 'no', _("no"), _('nope'), _('nah'), 'false', _("false"), _("wrong")]
 
     # This string contains many unicode characters and is intended to challenge tests.
     COMPLEX_TEST_STRING = "4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ ĦŊħ ß°^ \\\n\u2192"

@@ -24,6 +24,7 @@ from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SettingsFiller import SettingsFiller, Outputter, Settings, Setting, LogPrinter
 
 import builtins
+
 _input = builtins.__dict__["input"]
 builtins.__dict__["input"] = lambda x: x
 from coalib.output.ConsoleOutputter import ConsoleOutputter
@@ -57,9 +58,9 @@ class SettingsTestCase(unittest.TestCase):
 
     def test_raises(self):
         # Construction
-        self.assertRaises(TypeError, SettingsFiller, 0               , Outputter(), LogPrinter())
-        self.assertRaises(TypeError, SettingsFiller, Settings("test"), 0          , LogPrinter())
-        self.assertRaises(TypeError, SettingsFiller, Settings("test"), Outputter(), 0           )
+        self.assertRaises(TypeError, SettingsFiller, 0, Outputter(), LogPrinter())
+        self.assertRaises(TypeError, SettingsFiller, Settings("test"), 0, LogPrinter())
+        self.assertRaises(TypeError, SettingsFiller, Settings("test"), Outputter(), 0)
 
         # Fill Settings
         self.assertRaises(TypeError, self.uut.fill_settings, 0)

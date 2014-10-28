@@ -21,6 +21,7 @@ class Result:
 
     Optionally it might affect a file.
     """
+
     def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL):
         """
         :param origin: Class name of the creator of this object
@@ -33,10 +34,10 @@ class Result:
 
     def __eq__(self, other):
         return isinstance(other, Result) and \
-            self.origin == other.origin and \
-            self.message == other.message and \
-            self.file == other.file and \
-            self.severity == other.severity
+               self.origin == other.origin and \
+               self.message == other.message and \
+               self.file == other.file and \
+               self.severity == other.severity
 
     def __ne__(self, other):
         return not self.__eq__(other)

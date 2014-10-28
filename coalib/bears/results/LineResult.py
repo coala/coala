@@ -20,6 +20,7 @@ class LineResult(Result):
     """
     This is a result that affects one specific line in a file.
     """
+
     def __init__(self, origin, line_nr, line, message, file, severity=RESULT_SEVERITY.NORMAL):
         Result.__init__(self, origin=origin, message=message, file=file, severity=severity)
         self.line_nr = line_nr
@@ -27,7 +28,7 @@ class LineResult(Result):
 
     # Result's __ne__ uses __eq__ so no need to overwrite that too
     def __eq__(self, other):
-        return Result.__eq__(self, other) and\
-            isinstance(other, LineResult) and\
-            self.line_nr == other.line_nr and\
-            self.line == other.line
+        return Result.__eq__(self, other) and \
+               isinstance(other, LineResult) and \
+               self.line_nr == other.line_nr and \
+               self.line == other.line

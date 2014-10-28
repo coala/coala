@@ -17,13 +17,13 @@ import os
 import shutil
 import sys
 import tempfile
+
 sys.path.insert(0, ".")
 import unittest
 from coalib.collecting.BearCollector import BearCollector
 
 
 class TestInit(unittest.TestCase):
-
     def test_raises(self):
         self.assertRaises(TypeError, BearCollector, ["kind"], [], "string", [], [])
         self.assertRaises(TypeError, BearCollector, ["kind"], [], [], "string", [])
@@ -94,7 +94,7 @@ class TestBear(ImportedTestBear):
 
     def test_bear_import(self):
         uut = BearCollector(["kind"],
-                              bear_dirs=[self.tmp_dir])
+                            bear_dirs=[self.tmp_dir])
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 2)
         self.assertTrue([bear_class().origin() for bear_class in bear_list]
@@ -103,28 +103,29 @@ class TestBear(ImportedTestBear):
 
     def test_bear_names(self):
         uut = BearCollector(["kind"],
-                              bear_dirs=[self.tmp_dir],
-                              bear_names=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
+                            bear_dirs=[self.tmp_dir],
+                            bear_names=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
 
     def test_ignored(self):
         uut = BearCollector(["kind"],
-                              bear_dirs=[self.tmp_dir],
-                              ignored_bears=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
+                            bear_dirs=[self.tmp_dir],
+                            ignored_bears=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile2_path)
 
     def test_regexs(self):
         uut = BearCollector(["kind"],
-                              bear_dirs=[self.tmp_dir],
-                              regexs=["testfile1"])
+                            bear_dirs=[self.tmp_dir],
+                            regexs=["testfile1"])
         bear_list = uut.collect()
         print(bear_list)
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

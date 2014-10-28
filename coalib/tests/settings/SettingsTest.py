@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
 import sys
+
 sys.path.insert(0, ".")
 
 from coalib.settings.Settings import Settings, Setting

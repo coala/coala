@@ -22,6 +22,7 @@ class StringConverter:
     Converts strings to other things as needed. If you need a conversion for string that is not implemented here
     consider adding it so everyone gets something out of it.
     """
+
     def __init__(self, value, strip_whitespaces=True, list_delimiters=[",", ";"]):
         if not isinstance(list_delimiters, list) and not isinstance(list_delimiters, str):
             raise TypeError("list_delimiters has to be a string or a list")

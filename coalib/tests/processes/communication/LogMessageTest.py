@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
+
 sys.path.insert(0, ".")
 from coalib.misc.i18n import _
 from coalib.output.LOG_LEVEL import LOG_LEVEL

@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
+
 sys.path.insert(0, ".")
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.StringConverter import StringConverter

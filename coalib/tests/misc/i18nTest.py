@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import sys
+
 sys.path.insert(0, ".")
 if sys.version_info < (3, 4):
     import imp
@@ -23,6 +24,7 @@ import unittest
 import os
 import shutil
 from coalib.misc import i18n
+
 print("Testing translation building...")
 shutil.rmtree("build", ignore_errors=True)
 i18n.compile_translations(True)

@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import sys
+
 sys.path.insert(0, ".")
 from coalib.output.Printer import Printer
 import unittest
@@ -21,7 +22,7 @@ import unittest
 
 class TestPrinter(Printer):
     def _print(self, output, somearg=""):
-        return output+somearg
+        return output + somearg
 
 
 class PrinterTestCase(unittest.TestCase):

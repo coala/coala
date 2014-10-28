@@ -59,7 +59,7 @@ class SettingsFiller:
             if not hasattr(bear, "get_needed_settings"):
                 self.log_printer.log(LOG_LEVEL.WARNING,
                                      _("One of the given bears ({}) has no attribute get_needed_settings.")
-                                        .format(str(bear)))
+                                     .format(str(bear)))
             else:
                 needed = bear.get_needed_settings()
                 for key in needed:

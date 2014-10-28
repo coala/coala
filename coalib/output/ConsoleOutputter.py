@@ -45,7 +45,7 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
 
         if len(arr) == 2:
             needed = arr[1]
-        else: # Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
+        else:  # Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
             needed = ", ".join(arr[1:-1]) + _(" and ") + arr[-1]
 
         return input(_("Please enter a value for the setting \"{}\" ({}) needed by {}: ").format(str(setting_name),
@@ -53,7 +53,7 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
                                                                                                  needed))
 
     def _print_result(self, result):
-        assert(isinstance(result, Result))
+        assert (isinstance(result, Result))
         return self.print("[{sev}] Annotation for file {file} from "
                           "{bear}:\n{message}".format(sev=RESULT_SEVERITY.__str__(result.severity),
                                                       file=result.file,

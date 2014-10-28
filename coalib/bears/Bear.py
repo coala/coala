@@ -42,6 +42,7 @@ class Bear(Process):
     database, especially if your bear is not shipped with coala. Feel free to use your own translation database in this
     case or consider make your bear available to the coala project.
     """
+
     def __init__(self,
                  settings,
                  message_queue,
@@ -107,8 +108,8 @@ class Bear(Process):
                                  "you, you might want to get in contact with the writer of this bear.\n\n"
                                  "Here is your traceback:\n\n{traceback}\n"
                                  "").format(bear=self.__class__.__name__,
-                                           exception=str(exception[0].__name__),
-                                           traceback=traceback.extract_tb(exception[2])))
+                                            exception=str(exception[0].__name__),
+                                            traceback=traceback.extract_tb(exception[2])))
                 return None
             self.debug_msg(_("Tearing down bear {}...").format(name))
             self.tear_down()

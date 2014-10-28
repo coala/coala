@@ -17,6 +17,7 @@ import os
 import shutil
 import sys
 import tempfile
+
 sys.path.insert(0, ".")
 import unittest
 from coalib.collecting.FileCollector import FileCollector
@@ -122,21 +123,25 @@ class TestFileCollection(unittest.TestCase):
         self.assertEqual(FileCollector(log_printer=QuietPrinter(), flat_dirs=["bullshit"]).collect(), [])
         self.assertEqual(FileCollector(log_printer=QuietPrinter(), recursive_dirs=["bullshit"]).collect(), [])
         self.assertRaises(ZeroDivisionError, FileCollector(log_printer=LoudPrinter(), flat_dirs=["bullshit"]).collect)
-        self.assertRaises(ZeroDivisionError, FileCollector(log_printer=LoudPrinter(), recursive_dirs=["bullshit"]).collect)
+        self.assertRaises(ZeroDivisionError,
+                          FileCollector(log_printer=LoudPrinter(), recursive_dirs=["bullshit"]).collect)
 
     @unittest.skipIf(sys.version_info < (3, 3), "Mocks are not supported in Python 3.2")
     def test_unreadable_directory(self):
-        if sys.version_info < (3,4):
+        if sys.version_info < (3, 4):
             import imp as importlib
         else:
             import importlib
         from unittest.mock import MagicMock
+
         os.listdir = MagicMock(side_effect=OSError)
         self.assertEqual(FileCollector(log_printer=QuietPrinter(), flat_dirs=[os.getcwd()]).collect(), [])
         self.assertEqual(FileCollector(log_printer=QuietPrinter(), recursive_dirs=[os.getcwd()]).collect(), [])
         self.assertRaises(ZeroDivisionError, FileCollector(log_printer=LoudPrinter(), flat_dirs=["bullshit"]).collect)
-        self.assertRaises(ZeroDivisionError, FileCollector(log_printer=LoudPrinter(), recursive_dirs=["bullshit"]).collect)
+        self.assertRaises(ZeroDivisionError,
+                          FileCollector(log_printer=LoudPrinter(), recursive_dirs=["bullshit"]).collect)
         importlib.reload(os)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

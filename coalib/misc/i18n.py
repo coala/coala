@@ -58,6 +58,7 @@ def compile_translations(verbose=True):
 def __untranslated(msg):
     return msg
 
+
 builtins.__dict__['_'] = __untranslated
 __langs = os.environ.get('LANG', '').split(':')
 __langs += ['en_US']

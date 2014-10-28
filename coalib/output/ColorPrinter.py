@@ -21,6 +21,7 @@ class ColorPrinter(Printer):
     p = AnyColorPrinter()
     p.print("some", "output", delimiter=" ", end="", color="green");
     """
+
     def __init__(self):
         Printer.__init__(self)
 

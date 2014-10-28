@@ -77,8 +77,8 @@ class BearRunnerUnitTestCase(unittest.TestCase):
         self.global_result_queue = queue.Queue()
         self.message_queue = queue.Queue()
         self.uut = BearRunner(self.file_name_queue, self.local_bear_list, self.global_bear_queue,
-                                      self.file_dict, self.local_result_queue, self.global_result_queue,
-                                      self.message_queue)
+                              self.file_dict, self.local_result_queue, self.global_result_queue,
+                              self.message_queue)
 
     def test_messaging(self):
         self.uut.debug("test", "messag", delimiter="-", end="e")
@@ -96,6 +96,7 @@ b
 c
 d
 """
+
     def setUp(self):
         BearRunnerUnitTestCase.setUp(self)
 
@@ -137,8 +138,8 @@ d
 
         local_result_expected = [('file1', {}),
                                  ('arbitrary', {'LocalTestBear': Result("LocalTestBear",
-                                                                            "something went wrong",
-                                                                            'arbitrary')})]
+                                                                        "something went wrong",
+                                                                        'arbitrary')})]
         for firste, seconde in local_result_expected:
             first, second = self.local_result_queue.get(timeout=0)
             self.assertEqual(first, firste)
@@ -146,9 +147,9 @@ d
 
         global_results_expected = [("GlobalTestBear",
                                     [Result("GlobalTestBear", "Files are bad in general!", "file1",
-                                     severity=RESULT_SEVERITY.INFO),
+                                            severity=RESULT_SEVERITY.INFO),
                                      Result("GlobalTestBear", "Files are bad in general!", "arbitrary",
-                                     severity=RESULT_SEVERITY.INFO)]
+                                            severity=RESULT_SEVERITY.INFO)]
                                    )]
         self.assertEqual(len(seconde), len(second))
         for firste, seconde in global_results_expected:

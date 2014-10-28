@@ -29,6 +29,7 @@ class ProcessSpawner(Process):
     """
     Spawns job_count processes each running the run method of one instance of a class derived from Process.
     """
+
     def __init__(self, process, job_count=get_cpu_count()):
         """
         :param process: An instance of a class derived from Process to run

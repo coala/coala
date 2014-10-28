@@ -27,6 +27,7 @@ class Printer:
     - EspeakPrinter for Voice output
     - NullPrinter for no output
     """
+
     def _print(self, output, **kwargs):
         raise NotImplementedError
 

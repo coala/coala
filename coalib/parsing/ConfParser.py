@@ -93,7 +93,7 @@ class ConfParser(Parser):
         return str(key).lower().strip()
 
     def __add_comment(self, section, comment, origin):
-        key = "COMMENT"+str(self.__rand_helper)
+        key = "COMMENT" + str(self.__rand_helper)
         self.__rand_helper += 1
         section._add_or_create_setting(Setting(comment, comment, origin), custom_key=key)
 
@@ -126,7 +126,7 @@ class ConfParser(Parser):
                                                            allow_appending=(keys == []))
                 else:
                     self.get_section(section_override, True)._add_or_create_setting(Setting(key, value, origin),
-                                                                                        allow_appending=(keys == []))
+                                                                                    allow_appending=(keys == []))
 
     def __init_sections(self):
         self.sections = OrderedDict()

@@ -14,10 +14,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import unittest
 import sys
+
 sys.path.insert(0, ".")
 import builtins
 
 from coalib.misc.i18n import _
+
 _input = builtins.__dict__["input"]
 builtins.__dict__["input"] = lambda x: x
 from coalib.output.ConsoleOutputter import ConsoleOutputter
@@ -33,26 +35,26 @@ class ConsoleOutputterTestCase(unittest.TestCase):
 
         self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear"]}),
                          {"setting":
-                         _("Please enter a value for the "
-                           "setting \"{}\" ({}) needed by {}: ").format("setting", "help text", "SomeBear")})
+                              _("Please enter a value for the "
+                                "setting \"{}\" ({}) needed by {}: ").format("setting", "help text", "SomeBear")})
 
         self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear", "AnotherBear"]}),
                          {"setting":
-                         _("Please enter a value for the "
-                           "setting \"{}\" ({}) needed by {}: ").format("setting",
-                                                                        "help text",
-                                                                        "SomeBear" + _(" and ") + "AnotherBear")})
+                              _("Please enter a value for the "
+                                "setting \"{}\" ({}) needed by {}: ").format("setting",
+                                                                             "help text",
+                                                                             "SomeBear" + _(" and ") + "AnotherBear")})
 
         self.assertEqual(self.uut.acquire_settings({"setting": ["help text",
                                                                 "SomeBear",
                                                                 "AnotherBear",
                                                                 "YetAnotherBear"]}),
                          {"setting":
-                         _("Please enter a value for the "
-                           "setting \"{}\" ({}) needed by {}: ").format("setting",
-                                                                        "help text",
-                                                                        "SomeBear, AnotherBear" + _(" and ") +
-                                                                        "YetAnotherBear")})
+                              _("Please enter a value for the "
+                                "setting \"{}\" ({}) needed by {}: ").format("setting",
+                                                                             "help text",
+                                                                             "SomeBear, AnotherBear" + _(" and ") +
+                                                                             "YetAnotherBear")})
 
 
 if __name__ == '__main__':
