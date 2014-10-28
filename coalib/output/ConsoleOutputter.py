@@ -55,6 +55,12 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
 
     def _print_result(self, result):
         assert (isinstance(result, Result))
+        if result.file is None:
+            return self.print(("[{sev}] " + _("Message from {bear}:") +
+                              "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
+                                                    bear=result.origin,
+                                                    message=result.message))
+
         return self.print(("[{sev}] " + _("Annotation for file {file} from {bear}:") +
                            "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
                                                  file=result.file,
