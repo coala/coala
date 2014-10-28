@@ -33,11 +33,11 @@ class LineParserTestCase(unittest.TestCase):
         self.check_data_set("#", output_comment="#")
 
     def test_multi_value_parsing(self):
-        self.check_data_set("a, b c= = :()&/ #heres a comment \n",
-                            '',
-                            ['a', 'b', 'c'],
-                            '= :()&/',
-                            '#heres a comment')
+        self.check_data_set("a, b section.c= = :()&/ #heres a comment \n",
+                            output_section='',
+                            output_keys=[("", 'a'), ("", 'b'), ("section", 'c')],
+                            output_value='= :()&/',
+                            output_comment='#heres a comment')
 
     def test_multi_line_parsing(self):
         self.check_data_set(" a,b,d another value ",

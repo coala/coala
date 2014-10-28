@@ -12,27 +12,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.Analyser import Analyser
-from coalib.analysers.ANALYSER_KIND import ANALYSER_KIND
+from coalib.bears.Bear import Bear
+from coalib.bears.BEAR_KIND import BEAR_KIND
 
 
-class GlobalAnalyzer(Analyser):
+class GlobalBear(Bear):
+    """
+    A GlobalBear is able to analyze semantical facts across several file.
+
+    The results of a GlobalBear will be presented grouped by the origin Bear. Therefore Results spanning above multiple
+    files are allowed and will be handled right.
+
+    If you only look at one file at once anyway a LocalBear is better for your needs. (And better for performance and
+    usability for both user and developer.)
+    """
     def __init__(self,
                  file_dict,  # filename : file contents
                  settings,
                  message_queue,
                  TIMEOUT=0):
-        Analyser.__init__(self, settings, message_queue, TIMEOUT)
+        Bear.__init__(self, settings, message_queue, TIMEOUT)
         self.file_dict = file_dict
 
     @staticmethod
     def kind():
-        return ANALYSER_KIND.GLOBAL
+        return BEAR_KIND.GLOBAL
 
-    def run_analyser(self):
+    def run_bear(self):
         """
-        Analyzes all files in file_dict.
+        Handles all files in file_dict.
 
         :return: A list of Result type.
         """
-        raise NotImplementedError("This function has to be implemented for a runnable filter.")
+        raise NotImplementedError("This function has to be implemented for a runnable bear.")

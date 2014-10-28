@@ -15,11 +15,28 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
+import sys
 
 from coalib.tests.TestHelper import TestHelper
 
 
+def show_help():
+    print("Usage: {name} [OPTIONS]".format(name=sys.argv[0]))
+    print()
+    print("--help  : Show this help text")
+    print("--cover : Use coverage to get statement and branch coverage of tests")
+
+
 if __name__ == '__main__':
+    use_coverage = False
+    for arg in sys.argv[1:]:
+        arg = str(arg).strip().lower()
+        if arg == "--cover" and not use_coverage:
+            use_coverage = True
+        else:
+            show_help()
+            exit()
+
     test_dir = os.path.abspath("coalib/tests")
     files = TestHelper.get_test_files(test_dir)
-    exit(TestHelper.execute_python3_files(files))
+    exit(TestHelper.execute_python3_files(files, use_coverage))

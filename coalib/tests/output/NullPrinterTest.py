@@ -23,6 +23,7 @@ class NullPrinterTestCase(unittest.TestCase):
         self.uut = NullPrinter()
         self.assertEqual(self.uut.print("anything"), None)
         self.assertEqual(self.uut.print("anything", color="red"), None)
+        self.assertEqual(self.uut.debug("message"), None)
 
 
 if __name__ == '__main__':

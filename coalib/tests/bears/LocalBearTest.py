@@ -12,17 +12,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.output.ColorPrinter import ColorPrinter
-from coalib.output.LogPrinter import LogPrinter
+
+import sys
+sys.path.insert(0, ".")
+import unittest
+from coalib.settings.Settings import Settings
+from coalib.bears.LocalBear import LocalBear, BEAR_KIND
 
 
-class NullPrinter(ColorPrinter, LogPrinter):
-    def __init__(self):
-        ColorPrinter.__init__(self)
-        LogPrinter.__init__(self)
+class LocalBearTestCase(unittest.TestCase):
+    def test_api(self):
+        test_object = LocalBear(Settings("name"), None)
+        self.assertRaises(NotImplementedError, test_object.run_bear, "filename", ["file\n"])
 
-    def print(self, *args, delimiter=' ', end='\n', **kwargs):
-        return
+    def test_kind(self):
+        self.assertEqual(LocalBear.kind(), BEAR_KIND.LOCAL)
 
-    def log_message(self, log_message, timestamp=None, **kwargs):
-        return
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

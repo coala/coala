@@ -19,8 +19,8 @@ import sys
 sys.path.insert(0, ".")
 
 from coalib.output.ConsolePrinter import ConsolePrinter
-from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer
-from coalib.analysers.LocalAnalyzer import LocalAnalyzer
+from coalib.bears.GlobalBear import GlobalBear
+from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SettingsFiller import SettingsFiller, Outputter, Settings, Setting, LogPrinter
 
 import builtins
@@ -29,9 +29,9 @@ builtins.__dict__["input"] = lambda x: x
 from coalib.output.ConsoleOutputter import ConsoleOutputter
 
 
-class GlobalTestAnalyzer(GlobalAnalyzer):
+class GlobalTestBear(GlobalBear):
     def __init__(self):
-        GlobalAnalyzer.__init__(self, {}, Settings("irrelevant"), None)
+        GlobalBear.__init__(self, {}, Settings("irrelevant"), None)
 
     @staticmethod
     def get_needed_settings():
@@ -39,13 +39,14 @@ class GlobalTestAnalyzer(GlobalAnalyzer):
                 "key": "this setting does exist"}
 
 
-class LocalTestAnalyzer(LocalAnalyzer):
+class LocalTestBear(LocalBear):
     def __init__(self):
-        LocalAnalyzer.__init__(self, [], "", Settings("irrelevant"), None)
+        LocalBear.__init__(self, [], "", Settings("irrelevant"), None)
 
     @staticmethod
     def get_needed_settings():
-        return {"local name": "local help text"}
+        return {"local name": "local help text",
+                "global name": "this setting is needed by two bears"}
 
 
 class SettingsTestCase(unittest.TestCase):
@@ -64,19 +65,21 @@ class SettingsTestCase(unittest.TestCase):
         self.assertRaises(TypeError, self.uut.fill_settings, 0)
 
     def test_fill_settings(self):
-        new_settings = self.uut.fill_settings([LocalTestAnalyzer, GlobalTestAnalyzer,
+        new_settings = self.uut.fill_settings([LocalTestBear, GlobalTestBear,
                                                "an inappropriate string object here"])
 
         self.assertTrue("local name" in new_settings)
         self.assertTrue("global name" in new_settings)
         self.assertEqual(new_settings["key"].value, "val")
+        self.assertEqual(len(new_settings.contents), 3)
 
         # Shouldnt change anything the second time
-        new_settings = self.uut.fill_settings([LocalTestAnalyzer, GlobalTestAnalyzer])
+        new_settings = self.uut.fill_settings([LocalTestBear, GlobalTestBear])
 
         self.assertTrue("local name" in new_settings)
         self.assertTrue("global name" in new_settings)
         self.assertEqual(new_settings["key"].value, "val")
+        self.assertEqual(len(new_settings.contents), 3)
 
 
 if __name__ == '__main__':

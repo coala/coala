@@ -14,7 +14,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class RESULT_SEVERITY:
-    INFO = 0
-    NORMAL = 1
-    MAJOR = 2
+class BEAR_KIND:
+    """
+    For more information on the kinds of the Bears look at the classes of them themselves.
+    """
+    LOCAL = 1
+    GLOBAL = 2

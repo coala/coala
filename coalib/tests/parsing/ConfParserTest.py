@@ -23,19 +23,20 @@ import unittest
 import tempfile
 
 
-class LineParserTestCase(unittest.TestCase):
-    example_file = "to be ignored \n\
-    a_default, another = val \n\
-    TEST = tobeignored  # do you know that thats a comment \n\
-    test = push \n\
-    t = \n\
-    [MakeFiles] \n\
-     j  , another = a \n\
-                   multiline \n\
-                   value \n\
-    ; just a omment \n\
-    ; just a omment \n\
-    "
+class ConfParserTestCase(unittest.TestCase):
+    example_file = """to be ignored
+    a_default, another = val
+    TEST = tobeignored  # do you know that thats a comment
+    test = push
+    t =
+    [MakeFiles]
+     j  , another = a
+                   multiline
+                   value
+    ; just a omment
+    ; just a omment
+    nokey. = value
+    default.test = content"""
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
@@ -61,7 +62,7 @@ class LineParserTestCase(unittest.TestCase):
             ('a_default', 'val'),
             ('another', 'val'),
             ('comment0', '# do you know that thats a comment'),
-            ('test', 'push'),
+            ('test', 'content'),
             ('t', '')
         ])
 
@@ -72,7 +73,7 @@ class LineParserTestCase(unittest.TestCase):
             ('comment2', '; just a omment'),
             ('a_default', 'val'),
             ('comment0', '# do you know that thats a comment'),
-            ('test', 'push'),
+            ('test', 'content'),
             ('t', '')
         ])
 
@@ -81,7 +82,7 @@ class LineParserTestCase(unittest.TestCase):
         else:
             err = FileNotFoundError
         self.assertRaises(err, self.uut.parse, self.nonexistentfile)
-        sections = self.uut.parse(self.file);
+        sections = self.uut.parse(self.file)
         self.assertNotEqual(self.uut.reparse(self.file), sections)
 
         key, val = sections.popitem(last=False)

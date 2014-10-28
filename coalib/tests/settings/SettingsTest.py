@@ -32,6 +32,8 @@ class SettingsTestCase(unittest.TestCase):
         uut = Settings(StringConstants.COMPLEX_TEST_STRING, None)
         self.assertRaises(TypeError, uut.append, 5)
         uut.append(Setting(5, 5, 5))
+        self.assertEqual(str(uut.get("5 ")), "5")
+        self.assertEqual(int(uut.get("nonexistent", 5)), 5)
 
     def test_iter(self):
         defaults = Settings("default", None)

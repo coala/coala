@@ -117,9 +117,16 @@ class ConfParser(Parser):
             if keys != []:
                 current_keys = keys
 
-            for key in current_keys:
-                current_section._add_or_create_setting(Setting(key, value, origin),
-                                                       allow_appending=(keys == []))
+            for section_override, key in current_keys:
+                if key == "":
+                    continue
+
+                if section_override == "":
+                    current_section._add_or_create_setting(Setting(key, value, origin),
+                                                           allow_appending=(keys == []))
+                else:
+                    self.get_section(section_override, True)._add_or_create_setting(Setting(key, value, origin),
+                                                                                        allow_appending=(keys == []))
 
     def __init_sections(self):
         self.sections = OrderedDict()

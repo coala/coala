@@ -12,12 +12,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.analysers.helpers.RESULT_SEVERITY import RESULT_SEVERITY
+
+import sys
+sys.path.insert(0, ".")
+import unittest
+from coalib.settings.Settings import Settings
+from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 
 
-class Result:
-    def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL):
-        self.origin = origin
-        self.message = message
-        self.file = file
-        self.severity = severity
+class GlobalBearTestCase(unittest.TestCase):
+    def test_api(self):
+        test_object = GlobalBear(0, Settings("name"), None)
+        self.assertRaises(NotImplementedError, test_object.run_bear)
+
+    def test_kind(self):
+        self.assertEqual(GlobalBear.kind(), BEAR_KIND.GLOBAL)
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

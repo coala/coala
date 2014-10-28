@@ -12,17 +12,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.output.ColorPrinter import ColorPrinter
-from coalib.output.LogPrinter import LogPrinter
+
+import sys
+sys.path.insert(0, ".")
+from coalib.bears.results.Result import Result, RESULT_SEVERITY
+import unittest
 
 
-class NullPrinter(ColorPrinter, LogPrinter):
-    def __init__(self):
-        ColorPrinter.__init__(self)
-        LogPrinter.__init__(self)
+class ResultTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = Result("origin", "message")
 
-    def print(self, *args, delimiter=' ', end='\n', **kwargs):
-        return
+    def test_equality(self):
+        cmp = Result("origin", "message")
+        self.assertEqual(cmp, self.uut)
+        cmp = Result("another origin", "message")
+        self.assertNotEqual(cmp, self.uut)
+        cmp = Result("origin", "another message")
+        self.assertNotEqual(cmp, self.uut)
 
-    def log_message(self, log_message, timestamp=None, **kwargs):
-        return
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

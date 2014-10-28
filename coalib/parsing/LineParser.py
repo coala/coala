@@ -20,18 +20,20 @@ class LineParser:
                  key_value_delimiters=['=', ':'],
                  comment_seperators=['#', ';', '//'],
                  key_delimiters=[',', ' '],
-                 section_name_surroundings={'[': "]"}):
+                 section_name_surroundings={'[': "]"},
+                 section_override_delimiters=["."]):
         self.key_value_delimiters = key_value_delimiters
         self.comment_seperators = comment_seperators
         self.key_delimiters = key_delimiters
         self.section_name_surroundings = section_name_surroundings
+        self.section_override_delimiters = section_override_delimiters
 
     def parse(self, line):
         """
         :param line: the line to parse
-        :return section_name (empty string if it's no section name), keys, value, comment
+        :return section_name (empty string if it's no section name), [(section_override, key), ...], value, comment
         """
-        line, comment = self.__extract_comment(line)
+        line, comment = self.__seperate_by_first_occurrence(line, self.comment_seperators)
         if line == "":
             return '', [], '', comment
 
@@ -41,7 +43,38 @@ class LineParser:
 
         keys, value = self.__extract_keys_and_value(line)
 
-        return '', keys, value, comment
+        key_touples = []
+        for key in keys:
+            key_touples.append(self.__seperate_by_first_occurrence(key, self.section_override_delimiters, True, True))
+
+        return '', key_touples, value, comment
+
+    @staticmethod
+    def __seperate_by_first_occurrence(string, delimiters, strip_delim=False, return_second_part_nonempty=False):
+        """
+        Seperates a string by the first of all given delimiters. Any whitespace characters will be stripped away from
+        the parts.
+
+        :param string: The string to seperate.
+        :param delimiters: The delimiters.
+        :param strip_delim: Strips the delimiter from the result if true.
+        :param return_second_part_nonempty: If no delimiter is found and this is true the contents of the string will be
+        returned in the second part of the touple instead of the first one.
+        :return: (first_part, second_part)
+        """
+        delim_pos = len(string)
+        used_delim = ""
+        for delim in delimiters:
+            pos = string.find(delim)
+            if 0 <= pos < delim_pos:
+                delim_pos = pos
+                used_delim = delim
+
+        if return_second_part_nonempty and delim_pos == len(string):
+            return "", string.strip(" \n")
+
+        return string[:delim_pos].strip(" \n"),\
+               string[delim_pos + (len(used_delim) if strip_delim else 0):].strip(" \n")
 
     def __get_section_name(self, line):
         for begin, end in self.section_name_surroundings.items():
@@ -51,28 +84,8 @@ class LineParser:
 
         return ''
 
-    def __extract_comment(self, line):
-        comment_begin = len(line)
-        for seperator in self.comment_seperators:
-            pos = line.find(seperator)
-            if 0 <= pos < comment_begin:
-                comment_begin = pos
-
-        return line[:comment_begin].strip(" \n"), line[comment_begin:].strip(" \n")
-
     def __extract_keys_and_value(self, line):
-        value_begin = len(line)
-        value_delimiter = ''
-        for delimiter in self.key_value_delimiters:
-            pos = line.find(delimiter)
-            if 0 < pos < value_begin:
-                value_begin = pos
-                value_delimiter = delimiter
+        key_part, value = self.__seperate_by_first_occurrence(line, self.key_value_delimiters, True, True)
+        keys = list(StringConverter(key_part, list_delimiters=self.key_delimiters))
 
-        # if we didnt find any delimiter we have values only which belong to the previous line
-        if value_begin == len(line):
-            value_begin = 0
-
-        keys = list(StringConverter(line[:value_begin], list_delimiters=self.key_delimiters))
-
-        return keys, line[value_begin+len(value_delimiter):].strip(" \n")
+        return keys, value

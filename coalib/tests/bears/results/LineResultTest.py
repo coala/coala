@@ -15,18 +15,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 sys.path.insert(0, ".")
+from coalib.bears.results.LineResult import Result, LineResult, RESULT_SEVERITY
 import unittest
-from coalib.settings.Settings import Settings
-from coalib.analysers.GlobalAnalyzer import GlobalAnalyzer, ANALYSER_KIND
 
 
-class GlobalAnalyzerTestCase(unittest.TestCase):
-    def test_api(self):
-        test_object = GlobalAnalyzer(0, Settings("name"), None)
-        self.assertRaises(NotImplementedError, test_object.run_analyser)
+class ResultTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = LineResult("origin", 1, "line", "message", "file")
 
-    def test_kind(self):
-        self.assertEqual(GlobalAnalyzer.kind(), ANALYSER_KIND.GLOBAL)
+    def test_equality(self):
+        cmp = LineResult("origin", 1, "line", "message", "file")
+        self.assertEqual(cmp, self.uut)
+        cmp = Result("origin", "message")
+        self.assertNotEqual(cmp, self.uut)
+        cmp = LineResult("origin", 1, "lineswrong", "message", "file")
+        self.assertNotEqual(cmp, self.uut)
 
 
 if __name__ == '__main__':

@@ -14,6 +14,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class ANALYSER_KIND:
-    LOCAL = 1
-    GLOBAL = 2
+class RESULT_SEVERITY:
+    INFO = 0
+    NORMAL = 1
+    MAJOR = 2
+
+    @staticmethod
+    def __str__(severity):
+        return {0: "INFO",
+                1: "NORMAL",
+                2: "MAJOR"}.get(severity, "NORMAL")
