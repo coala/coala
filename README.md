@@ -35,6 +35,7 @@ Build status
 ------------
 [![Build Status](https://travis-ci.org/sils1297/coala.svg?branch=master)](https://travis-ci.org/sils1297/coala)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sils1297/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sils1297/coala/?branch=master)
+[![Coverage Status](https://img.shields.io/coveralls/sils1297/coala.svg)](https://coveralls.io/r/sils1297/coala?branch=master)
 
 INSTALLATION
 ============
