@@ -35,6 +35,7 @@ class ConfParserTestCase(unittest.TestCase):
                    value
     ; just a omment
     ; just a omment
+    nokey. = value
     default.test = content"""
 
     def setUp(self):

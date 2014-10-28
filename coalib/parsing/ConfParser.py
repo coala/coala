@@ -118,6 +118,9 @@ class ConfParser(Parser):
                 current_keys = keys
 
             for section_override, key in current_keys:
+                if key == "":
+                    continue
+
                 if section_override == "":
                     current_section._add_or_create_setting(Setting(key, value, origin),
                                                            allow_appending=(keys == []))
