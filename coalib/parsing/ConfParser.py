@@ -18,8 +18,8 @@ import sys
 from coalib.parsing.LineParser import LineParser
 from coalib.parsing.Parser import Parser
 from coalib.settings.Setting import Setting
+
 from coalib.settings.Settings import Settings
-from coalib.misc.i18n import _
 
 
 class ConfParser(Parser):

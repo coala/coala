@@ -15,7 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 sys.path.insert(0, ".")
-from coalib.bears.results.Result import Result, RESULT_SEVERITY
+from coalib.bears.results.Result import Result
 import unittest
 
 

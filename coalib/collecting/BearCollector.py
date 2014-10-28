@@ -17,6 +17,7 @@ import inspect
 import os
 import re
 import sys
+
 from coalib.collecting.FileCollector import FileCollector
 from coalib.output.ConsolePrinter import ConsolePrinter
 

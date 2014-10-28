@@ -18,8 +18,6 @@ import os
 import tempfile
 
 sys.path.insert(0, ".")
-from coalib.output.LOG_LEVEL import LOG_LEVEL
-from coalib.processes.communication.LogMessage import LogMessage
 from coalib.output.ConsolePrinter import ConsolePrinter
 import unittest
 

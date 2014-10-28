@@ -20,7 +20,6 @@ import tempfile
 sys.path.insert(0, ".")
 import unittest
 from coalib.collecting.BearCollector import BearCollector
-from coalib.output.LogPrinter import LogPrinter
 
 
 class TestInit(unittest.TestCase):
