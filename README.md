@@ -16,7 +16,7 @@ README
      ,d8,_    _,d8,   ,d8' d8,   ,d8b,,d8b,_ ,d8,   ,d8b,       Y           ,o8P
    ooP""Y8888PP*"Y8888P"   "Y8888P"`Y88P'"Y88P"Y8888P"`Y8            oooo888P"
 ```
-
+ 
 ABOUT
 =====
 coala is a simple COde AnaLysis Application. Its goal is to make static code
