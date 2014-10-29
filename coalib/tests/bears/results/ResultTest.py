@@ -21,10 +21,8 @@ import unittest
 
 
 class ResultTestCase(unittest.TestCase):
-    def setUp(self):
-        self.uut = Result("origin", "message")
-
     def test_equality(self):
+        self.uut = Result("origin", "message")
         cmp = Result("origin", "message")
         self.assertEqual(cmp, self.uut)
         cmp = Result("another origin", "message")
