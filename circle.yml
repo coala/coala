@@ -1,0 +1,9 @@
+machine:
+  python:
+    version: 3.3.0
+
+test:
+  pre:
+    - sudo apt-get install espeak
+  override:
+    - python3 execute_all_tests.py --cover
