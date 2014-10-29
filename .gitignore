@@ -9,3 +9,4 @@ MANIFEST
 .coverage
 *.patch
 _build
+coverage.xml
