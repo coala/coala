@@ -45,21 +45,21 @@ class FileCollector(Collector):
         """
 
         if not isinstance(log_printer, LogPrinter):
-            raise (TypeError("log_printer should be an instance of LogPrinter"))
+            raise TypeError("log_printer should be an instance of LogPrinter")
         if not isinstance(allowed_files, list):
-            raise (TypeError("allowed_files should be of type list"))
+            raise TypeError("allowed_files should be of type list")
         if not isinstance(flat_dirs, list):
-            raise (TypeError("flat_dirs should be of type list"))
+            raise TypeError("flat_dirs should be of type list")
         if not isinstance(recursive_dirs, list):
-            raise (TypeError("rec_dirs should be of type list"))
+            raise TypeError("rec_dirs should be of type list")
         if not (isinstance(allowed_types, list) or allowed_types is None):
-            raise (TypeError("allowed should be of type list or None"))
+            raise TypeError("allowed should be of type list or None")
         if not isinstance(ignored_types, list):
-            raise (TypeError("forbidden should be of type list"))
+            raise TypeError("forbidden should be of type list")
         if not isinstance(ignored_files, list):
-            raise (TypeError("ignored should be of type list"))
+            raise TypeError("ignored should be of type list")
         if not isinstance(ignored_dirs, list):
-            raise (TypeError("ignored should be of type list"))
+            raise TypeError("ignored should be of type list")
 
         Collector.__init__(self)
         self.log_printer = log_printer
