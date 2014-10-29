@@ -144,6 +144,7 @@ d
             first, second = self.local_result_queue.get(timeout=0)
             self.assertEqual(first, firste)
             self.assertEqual(second.keys(), seconde.keys())
+            self.assertEqual(len(seconde), len(second))
 
         global_results_expected = [("GlobalTestBear",
                                     [Result("GlobalTestBear", "Files are bad in general!", "file1",
@@ -151,13 +152,14 @@ d
                                      Result("GlobalTestBear", "Files are bad in general!", "arbitrary",
                                             severity=RESULT_SEVERITY.INFO)]
                                    )]
-        self.assertEqual(len(seconde), len(second))
+
         for firste, seconde in global_results_expected:
             first, second = self.global_result_queue.get(timeout=0)
             self.assertEqual(first, firste)
             for elem in second:
                 if not elem in seconde:
                     self.assertTrue(False)
+            self.assertEqual(len(seconde), len(second))
 
         self.assertRaises(queue.Empty, self.message_queue.get, timeout=0)
         self.assertRaises(queue.Empty, self.local_result_queue.get, timeout=0)
