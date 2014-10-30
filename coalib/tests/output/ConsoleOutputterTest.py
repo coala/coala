@@ -18,6 +18,7 @@ import sys
 sys.path.insert(0, ".")
 import builtins
 
+from coalib.bears.results.Result import Result
 from coalib.misc.i18n import _
 
 _input = builtins.__dict__["input"]
@@ -55,6 +56,14 @@ class ConsoleOutputterTestCase(unittest.TestCase):
                                                                              "help text",
                                                                              "SomeBear, AnotherBear" + _(" and ") +
                                                                              "YetAnotherBear")})
+
+    def test_print_result(self):
+        self.uut.print = lambda x: x
+        self.assertEqual("[NORMAL] " + _("Message from {bear}:").format(bear="origin") + "\nmessage",
+                         self.uut.print_result(Result("origin", "message")))
+        self.assertEqual("[NORMAL] " + _("Annotation for file {file} from {bear}:").format(file="file", bear="origin")
+                         + "\nmessage",
+                         self.uut.print_result(Result("origin", "message", file="file")))
 
 
 if __name__ == '__main__':

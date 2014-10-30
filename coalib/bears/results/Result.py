@@ -20,6 +20,14 @@ class Result:
     A result is anything that has an origin and a message.
 
     Optionally it might affect a file.
+
+    When sorting a list of results with the implemented comparision routines you will get an ordering which follows the
+    following conditions, while the first condition has the highest priority, which descends to the last condition.
+    1. Results with no files will be shown first
+    2. Results will be sorted by files (ascending alphabetically)
+    3. Results will be sorted by severity (descending, major first, info last)
+    4. Results will be sorted by origin (ascending alphabetically)
+    5. Results will be sorted by message (ascending alphabetically)
     """
 
     def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL):
@@ -41,3 +49,34 @@ class Result:
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __lt__(self, other):
+        if not isinstance(other, Result):
+            raise TypeError("Comparision with non-result classes is not supported.")
+
+        # Show elements without files first
+        if (self.file is None) != (other.file is None):
+            return self.file is None
+
+        # Now either both .file members are None or both are set
+        if self.file != other.file:
+            return self.file < other.file
+
+        # Both files are equal
+        if self.severity != other.severity:
+            return self.severity > other.severity
+
+        # Severities are equal, files are equal
+        if self.origin != other.origin:
+            return self.origin < other.origin
+
+        return self.message < other.message
+
+    def __gt__(self, other):
+        return not self == other and not self < other
+
+    def __ge__(self, other):
+        return not self < other
+
+    def __le__(self, other):
+        return self < other or self == other

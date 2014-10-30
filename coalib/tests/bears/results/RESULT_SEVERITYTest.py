@@ -12,24 +12,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-import unittest
+
 import sys
 
 sys.path.insert(0, ".")
-from coalib.output.Outputter import Outputter, Result, LineResult
+from coalib.bears.results.RESULT_SEVERITY import RESULT_SEVERITY
+import unittest
 
 
-class OutputterTestCase(unittest.TestCase):
-    def setUp(self):
-        self.uut = Outputter()
-
-    def test_api(self):
-        self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")
-        self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"))
-        self.assertRaises(NotImplementedError,
-                          self.uut.print_result,
-                          LineResult("origin", 1, "line", "message", "file"))
-        self.assertRaises(TypeError, self.uut.print_result, "anything")
+class RESULT_SEVERITYTestCase(unittest.TestCase):
+    def test_str_conversion(self):
+        self.assertEqual("INFO", RESULT_SEVERITY.__str__(RESULT_SEVERITY.INFO))
+        self.assertEqual("NORMAL", RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL))
+        self.assertEqual("MAJOR", RESULT_SEVERITY.__str__(RESULT_SEVERITY.MAJOR))
 
 
 if __name__ == '__main__':
