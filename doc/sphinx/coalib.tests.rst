@@ -1,0 +1,30 @@
+coalib.tests package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    coalib.tests.bears
+    coalib.tests.collecting
+    coalib.tests.misc
+    coalib.tests.output
+    coalib.tests.parsing
+    coalib.tests.processes
+    coalib.tests.settings
+
+Submodules
+----------
+
+.. toctree::
+
+   coalib.tests.TestHelper
+
+Module contents
+---------------
+
+.. automodule:: coalib.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
