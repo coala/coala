@@ -16,7 +16,7 @@ import sys
 
 sys.path.insert(0, ".")
 if sys.version_info < (3, 4):
-    import imp
+    import imp as importlib
 else:
     import importlib
 
@@ -35,10 +35,7 @@ class i18nTestCase(unittest.TestCase):
     @staticmethod
     def set_lang(lang):
         os.environ["LANG"] = lang
-        if sys.version_info < (3, 4):
-            imp.reload(i18n)
-        else:
-            importlib.reload(i18n)
+        importlib.reload(i18n)
 
     def test_de(self):
         self.set_lang("de_DE.UTF8")
