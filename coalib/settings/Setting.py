@@ -22,8 +22,8 @@ def path(obj):
 
 
 class Setting(StringConverter):
-    def __init__(self, key, value, origin="", strip_whitespaces=True):
-        StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces)
+    def __init__(self, key, value, origin="", strip_whitespaces=True, list_delimiters=[",", ";"]):
+        StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces, list_delimiters=list_delimiters)
         self.key = key
         self.origin = str(origin)
 
