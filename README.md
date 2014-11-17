@@ -1,5 +1,6 @@
 README
 ======
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/sils1297/coala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ```
                                                      .o88Oo._
                                                     d8P         .ooOO8bo._
