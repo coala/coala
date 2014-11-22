@@ -50,7 +50,7 @@ coala can be installed afterwards by executing the file setup.py through
 the python interpreter (root access necessary):
 ```python3 setup.py install```
 
-You can then use ```coala``` from the commandline everywhere. Be aware that the
+You can then use `coala` from the commandline everywhere. Be aware that the
 coala script is not yet exposing any functionality.
 
 FUNCTION REFERENCE
