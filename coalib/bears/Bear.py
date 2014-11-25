@@ -19,7 +19,7 @@ from coalib.misc.i18n import _
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 
 
 class Bear(Process):
@@ -37,22 +37,22 @@ class Bear(Process):
     If you need some setup or teardown for your bear, feel free to overwrite the set_up() and tear_down() functions.
     They will be invoked before/after every run_bear invocation.
 
-    Settings are available at all times through self.settings. You can access the translation database with the self._()
+    Settings are available at all times through self.section. You can access the translation database with the self._()
     function, it will be routed to the usual gettext _(). Be aware that the strings you use are probably not in the
     database, especially if your bear is not shipped with coala. Feel free to use your own translation database in this
     case or consider make your bear available to the coala project.
     """
 
     def __init__(self,
-                 settings,
+                 section,
                  message_queue,
                  TIMEOUT=0):
-        if not isinstance(settings, Settings):
-            raise TypeError("settings has to be of type Settings.")
+        if not isinstance(section, Section):
+            raise TypeError("section has to be of type Section.")
         if not hasattr(message_queue, "put") and message_queue is not None:
             raise TypeError("message_queue has to be a Queue or None.")
 
-        self.settings = settings
+        self.section = section
         self.message_queue = message_queue
         self.TIMEOUT = TIMEOUT
 

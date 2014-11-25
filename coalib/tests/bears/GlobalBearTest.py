@@ -17,13 +17,13 @@ import sys
 
 sys.path.insert(0, ".")
 import unittest
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 
 
 class GlobalBearTestCase(unittest.TestCase):
     def test_api(self):
-        test_object = GlobalBear(0, Settings("name"), None)
+        test_object = GlobalBear(0, Section("name"), None)
         self.assertRaises(NotImplementedError, test_object.run_bear)
 
     def test_kind(self):

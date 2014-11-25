@@ -17,7 +17,7 @@ from collections import OrderedDict
 from coalib.settings.Setting import Setting
 
 
-class Settings:
+class Section:
     """
     This class holds a set of settings.
     """
@@ -27,8 +27,8 @@ class Settings:
         return str(key).lower().strip()
 
     def __init__(self, name, defaults=None):
-        if defaults is not None and not isinstance(defaults, Settings):
-            raise TypeError("defaults has to be a Settings object or None.")
+        if defaults is not None and not isinstance(defaults, Section):
+            raise TypeError("defaults has to be a Section object or None.")
         if defaults is self:
             raise ValueError("defaults may not be self for non-recursivity.")
 
@@ -96,7 +96,7 @@ class Settings:
 
         :param key: The key of the setting to return.
         :param default: The default value
-        :param ignore_defaults: Whether or not to ignore the default settings.
+        :param ignore_defaults: Whether or not to ignore the default section.
         :return: The setting.
         """
         try:
