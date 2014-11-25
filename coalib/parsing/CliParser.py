@@ -20,7 +20,7 @@ import sys
 from coalib.parsing.LineParser import LineParser
 from coalib.parsing.Parser import Parser
 from coalib.settings.Setting import Setting
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
@@ -56,7 +56,7 @@ class CliParser(Parser):
         self.__reset_sections()
 
     def __reset_sections(self):
-        self.sections = OrderedDict(default=Settings('default'))
+        self.sections = OrderedDict(default=Section('default'))
 
     def _update_sections(self, section_name, key, value, origin):
         if key == '' or value is None:
@@ -66,7 +66,7 @@ class CliParser(Parser):
             section_name = "default"
 
         if not section_name in self.sections:
-            self.sections[section_name] = Settings(section_name)
+            self.sections[section_name] = Section(section_name)
 
         self.sections[section_name].append(Setting(key, str(value), origin))
 

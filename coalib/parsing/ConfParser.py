@@ -19,7 +19,7 @@ from coalib.parsing.LineParser import LineParser
 from coalib.parsing.Parser import Parser
 from coalib.settings.Setting import Setting
 
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 
 
 class ConfParser(Parser):
@@ -85,7 +85,7 @@ class ConfParser(Parser):
         if not create_if_not_exists:
             raise IndexError
 
-        retval = self.sections[key] = Settings(str(name), self.sections["default"])
+        retval = self.sections[key] = Section(str(name), self.sections["default"])
         return retval
 
     @staticmethod
@@ -130,5 +130,5 @@ class ConfParser(Parser):
 
     def __init_sections(self):
         self.sections = OrderedDict()
-        self.sections["default"] = Settings("Default")
+        self.sections["default"] = Section("Default")
         self.__rand_helper = 0

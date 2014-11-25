@@ -21,7 +21,7 @@ sys.path.insert(0, ".")
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.SettingsFiller import SettingsFiller, Outputter, Settings, Setting, LogPrinter
+from coalib.settings.SectionFiller import SectionFiller, Outputter, Section, Setting, LogPrinter
 
 import builtins
 
@@ -32,7 +32,7 @@ from coalib.output.ConsoleOutputter import ConsoleOutputter
 
 class GlobalTestBear(GlobalBear):
     def __init__(self):
-        GlobalBear.__init__(self, {}, Settings("irrelevant"), None)
+        GlobalBear.__init__(self, {}, Section("irrelevant"), None)
 
     @staticmethod
     def get_needed_settings():
@@ -42,7 +42,7 @@ class GlobalTestBear(GlobalBear):
 
 class LocalTestBear(LocalBear):
     def __init__(self):
-        LocalBear.__init__(self, [], "", Settings("irrelevant"), None)
+        LocalBear.__init__(self, [], "", Section("irrelevant"), None)
 
     @staticmethod
     def get_needed_settings():
@@ -50,37 +50,37 @@ class LocalTestBear(LocalBear):
                 "global name": "this setting is needed by two bears"}
 
 
-class SettingsTestCase(unittest.TestCase):
+class SectionFillerTestCase(unittest.TestCase):
     def setUp(self):
-        settings = Settings("test")
-        settings.append(Setting("key", "val"))
-        self.uut = SettingsFiller(settings, ConsoleOutputter(), ConsolePrinter())
+        section = Section("test")
+        section.append(Setting("key", "val"))
+        self.uut = SectionFiller(section, ConsoleOutputter(), ConsolePrinter())
 
     def test_raises(self):
         # Construction
-        self.assertRaises(TypeError, SettingsFiller, 0, Outputter(), LogPrinter())
-        self.assertRaises(TypeError, SettingsFiller, Settings("test"), 0, LogPrinter())
-        self.assertRaises(TypeError, SettingsFiller, Settings("test"), Outputter(), 0)
+        self.assertRaises(TypeError, SectionFiller, 0, Outputter(), LogPrinter())
+        self.assertRaises(TypeError, SectionFiller, Section("test"), 0, LogPrinter())
+        self.assertRaises(TypeError, SectionFiller, Section("test"), Outputter(), 0)
 
-        # Fill Settings
-        self.assertRaises(TypeError, self.uut.fill_settings, 0)
+        # Fill section
+        self.assertRaises(TypeError, self.uut.fill_section, 0)
 
-    def test_fill_settings(self):
-        new_settings = self.uut.fill_settings([LocalTestBear, GlobalTestBear,
+    def test_fill_section(self):
+        new_section = self.uut.fill_section([LocalTestBear, GlobalTestBear,
                                                "an inappropriate string object here"])
 
-        self.assertTrue("local name" in new_settings)
-        self.assertTrue("global name" in new_settings)
-        self.assertEqual(new_settings["key"].value, "val")
-        self.assertEqual(len(new_settings.contents), 3)
+        self.assertTrue("local name" in new_section)
+        self.assertTrue("global name" in new_section)
+        self.assertEqual(new_section["key"].value, "val")
+        self.assertEqual(len(new_section.contents), 3)
 
         # Shouldnt change anything the second time
-        new_settings = self.uut.fill_settings([LocalTestBear, GlobalTestBear])
+        new_section = self.uut.fill_section([LocalTestBear, GlobalTestBear])
 
-        self.assertTrue("local name" in new_settings)
-        self.assertTrue("global name" in new_settings)
-        self.assertEqual(new_settings["key"].value, "val")
-        self.assertEqual(len(new_settings.contents), 3)
+        self.assertTrue("local name" in new_section)
+        self.assertTrue("global name" in new_section)
+        self.assertEqual(new_section["key"].value, "val")
+        self.assertEqual(len(new_section.contents), 3)
 
 
 if __name__ == '__main__':

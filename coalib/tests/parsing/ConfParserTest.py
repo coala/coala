@@ -19,7 +19,7 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.parsing.ConfParser import ConfParser
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 import unittest
 import tempfile
 
@@ -87,7 +87,7 @@ class ConfParserTestCase(unittest.TestCase):
         self.assertNotEqual(self.uut.reparse(self.file), sections)
 
         key, val = sections.popitem(last=False)
-        self.assertTrue(isinstance(val, Settings))
+        self.assertTrue(isinstance(val, Section))
         self.assertEqual(key, 'default')
 
         is_dict = OrderedDict()
@@ -96,7 +96,7 @@ class ConfParserTestCase(unittest.TestCase):
         self.assertEqual(is_dict, default_should)
 
         key, val = sections.popitem(last=False)
-        self.assertTrue(isinstance(val, Settings))
+        self.assertTrue(isinstance(val, Section))
         self.assertEqual(key, 'makefiles')
 
         is_dict = OrderedDict()

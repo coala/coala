@@ -44,11 +44,11 @@ class TestFileCollection(unittest.TestCase):
 from coalib.bears.Bear import Bear
 import inspect
 import multiprocessing
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 
 class TestBear(Bear):
     def __init__(self):
-        Bear.__init__(self, Settings("settings"), multiprocessing.Queue())
+        Bear.__init__(self, Section("settings"), multiprocessing.Queue())
 
     @staticmethod
     def kind():

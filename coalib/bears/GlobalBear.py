@@ -29,10 +29,10 @@ class GlobalBear(Bear):
 
     def __init__(self,
                  file_dict,  # filename : file contents
-                 settings,
+                 section,
                  message_queue,
                  TIMEOUT=0):
-        Bear.__init__(self, settings, message_queue, TIMEOUT)
+        Bear.__init__(self, section, message_queue, TIMEOUT)
         self.file_dict = file_dict
 
     @staticmethod

@@ -18,7 +18,7 @@ import sys
 sys.path.insert(0, ".")
 import multiprocessing
 
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.misc.i18n import _
 from coalib.bears.Bear import Bear
@@ -27,8 +27,8 @@ import unittest
 
 
 class TestBear(Bear):
-    def __init__(self, settings, queue):
-        Bear.__init__(self, settings, queue)
+    def __init__(self, section, queue):
+        Bear.__init__(self, section, queue)
 
     def set_up(self):
         self.debug_msg("set", "up", delimiter="=")
@@ -42,8 +42,8 @@ class TestBear(Bear):
 
 
 class BadTestBear(Bear):
-    def __init__(self, settings, queue):
-        Bear.__init__(self, settings, queue)
+    def __init__(self, section, queue):
+        Bear.__init__(self, section, queue)
 
     def tear_down(self):
         raise NotImplementedError
@@ -55,7 +55,7 @@ class BadTestBear(Bear):
 class BearTestCase(unittest.TestCase):
     def setUp(self):
         self.queue = multiprocessing.Queue()
-        self.settings = Settings("test_settings")
+        self.settings = Section("test_settings")
         self.uut = TestBear(self.settings, self.queue)
 
     def test_raises(self):

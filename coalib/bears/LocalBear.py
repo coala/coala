@@ -30,10 +30,10 @@ class LocalBear(Bear):
     """
 
     def __init__(self,
-                 settings,
+                 section,
                  message_queue,
                  TIMEOUT=0):
-        Bear.__init__(self, settings, message_queue, TIMEOUT)
+        Bear.__init__(self, section, message_queue, TIMEOUT)
 
     @staticmethod
     def kind():

@@ -21,7 +21,7 @@ from coalib.bears.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.processes.BearRunner import BearRunner, LogMessage, LOG_LEVEL
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 
 
 class LocalTestBear(LocalBear):
@@ -103,7 +103,7 @@ d
         self.file1 = "file1"
         self.file2 = "arbitrary"
 
-        self.settings = Settings("name")
+        self.settings = Section("name")
 
         self.file_name_queue.put(self.file1)
         self.file_name_queue.put(self.file2)

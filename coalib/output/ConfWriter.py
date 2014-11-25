@@ -12,7 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from coalib.settings.Settings import Settings
+from coalib.settings.Section import Section
 
 
 class ConfWriter:
@@ -39,7 +39,7 @@ class ConfWriter:
             self.write_section(sections[section])
 
     def write_section(self, section):
-        if not isinstance(section, Settings):
+        if not isinstance(section, Section):
             raise TypeError
 
         self.__write_section_name(section.name)

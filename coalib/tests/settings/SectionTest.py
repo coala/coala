@@ -18,27 +18,27 @@ import sys
 
 sys.path.insert(0, ".")
 
-from coalib.settings.Settings import Settings, Setting
+from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
 
 
-class SettingsTestCase(unittest.TestCase):
+class SectionTestCase(unittest.TestCase):
     def test_construction(self):
-        uut = Settings(StringConstants.COMPLEX_TEST_STRING, None)
-        uut = Settings(StringConstants.COMPLEX_TEST_STRING, uut)
-        self.assertRaises(TypeError, Settings, "irrelevant", 5)
+        uut = Section(StringConstants.COMPLEX_TEST_STRING, None)
+        uut = Section(StringConstants.COMPLEX_TEST_STRING, uut)
+        self.assertRaises(TypeError, Section, "irrelevant", 5)
         self.assertRaises(ValueError, uut.__init__, "name", uut)
 
     def test_append(self):
-        uut = Settings(StringConstants.COMPLEX_TEST_STRING, None)
+        uut = Section(StringConstants.COMPLEX_TEST_STRING, None)
         self.assertRaises(TypeError, uut.append, 5)
         uut.append(Setting(5, 5, 5))
         self.assertEqual(str(uut.get("5 ")), "5")
         self.assertEqual(int(uut.get("nonexistent", 5)), 5)
 
     def test_iter(self):
-        defaults = Settings("default", None)
-        uut = Settings("name", defaults)
+        defaults = Section("default", None)
+        uut = Section("name", defaults)
         uut.append(Setting(5, 5, 5))
         uut._add_or_create_setting(Setting("TEsT", 4, 5))
         defaults.append(Setting("tEsT", 1, 3))
@@ -66,7 +66,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertRaises(IndexError, uut.__getitem__, " ")
 
     def test_string_conversion(self):
-        uut = Settings("name")
+        uut = Section("name")
         self.assertEqual(str(uut), "name {}")
         uut.append(Setting("key", "value"))
         self.assertEqual(str(uut), "name {key : value}")
