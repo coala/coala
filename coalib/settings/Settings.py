@@ -86,6 +86,9 @@ class Settings:
 
         return self.defaults[key]
 
+    def __str__(self):
+        return self.name + " {" + ", ".join(key + " : " + str(self.contents[key]) for key in self.contents) + "}"
+
     def get(self, key, default="", ignore_defaults=False):
         """
         Retrieves the item without raising an exception. If the item is not available an appropriate Setting will be
