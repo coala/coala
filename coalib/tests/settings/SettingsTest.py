@@ -65,6 +65,14 @@ class SettingsTestCase(unittest.TestCase):
         self.assertRaises(IndexError, uut.__getitem__, "great", True)
         self.assertRaises(IndexError, uut.__getitem__, " ")
 
+    def test_string_conversion(self):
+        uut = Settings("name")
+        self.assertEqual(str(uut), "name {}")
+        uut.append(Setting("key", "value"))
+        self.assertEqual(str(uut), "name {key : value}")
+        uut.append(Setting("another_key", "another_value"))
+        self.assertEqual(str(uut), "name {key : value, another_key : another_value}")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
