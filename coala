@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
+from coalib.misc.StringConstants import StringConstants
 
 os.environ["LANG"] = "de_DE"
 from coalib.misc.i18n import _
@@ -22,7 +23,10 @@ from coalib.misc.i18n import _
 
 if __name__ == "__main__":
     try:
-        print(_("A string to test translations."))
+        pass
     except KeyboardInterrupt:
-        # Something's gone wrong
         print(_("Program terminated by user."))
+    except SystemExit:
+        pass
+    except:
+        print(_("An unknown error occurred.") + " " + StringConstants.THIS_IS_A_BUG)
