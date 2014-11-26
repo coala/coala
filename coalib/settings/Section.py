@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
+import copy
 
 from coalib.settings.Setting import Setting
 
@@ -106,3 +107,9 @@ class Section:
             return self.__getitem__(key, ignore_defaults)
         except IndexError:
             return Setting(key, str(default))
+
+    def copy(self):
+        """
+        :return: a deep copy of this object
+        """
+        return copy.deepcopy(self)
