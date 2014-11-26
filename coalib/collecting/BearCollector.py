@@ -19,13 +19,14 @@ import re
 import sys
 
 from coalib.collecting.FileCollector import FileCollector
+from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
 
 
 class BearCollector(FileCollector):
     def __init__(self,
                  bear_kinds,
-                 bear_dirs,
+                 bear_dirs=[StringConstants.coalib_bears_root],
                  bear_names=None,
                  ignored_bears=None,
                  regexs=None,
