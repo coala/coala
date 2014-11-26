@@ -88,6 +88,29 @@ class SectionTestCase(unittest.TestCase):
         uut.defaults.append(Setting("key", "quite_something_else"))
         self.assertNotEqual(str(uut.defaults), str(copy.defaults))
 
+    def test_update(self):
+        cli = Section("cli", None)
+        conf = Section("conf", None)
+
+        self.assertRaises(TypeError, cli.update, 4)
+
+        cli.append(Setting("key1", "value11"))
+        cli.append(Setting("key2", "value12"))
+        conf.append(Setting("key1", "value21"))
+        conf.append(Setting("key3", "value23"))
+
+        # Values are overwritten, new keys appended
+        self.assertEqual(str(conf.copy().update(cli)), "conf {key1 : value11, key3 : value23, key2 : value12}")
+
+        cli.defaults = Section("clidef", None)
+        cli.defaults.append(Setting("def1", "dval1"))
+
+        self.assertEqual(str(conf.copy().update(cli).defaults), "clidef {def1 : dval1}")
+
+        conf.defaults = Section("confdef", None)
+        conf.defaults.append(Setting("def2", "dval2"))
+
+        self.assertEqual(str(conf.copy().update(cli).defaults), "confdef {def2 : dval2, def1 : dval1}")
 
 
 if __name__ == '__main__':
