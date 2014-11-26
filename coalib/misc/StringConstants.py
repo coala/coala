@@ -12,6 +12,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import inspect
+import os
 from coalib.misc.i18n import _
 
 
@@ -43,3 +45,9 @@ class StringConstants:
 
     # This is the directory where results from coverage for unittests are stored.
     COVERAGE_DIR = "./.coverageresults"
+
+    # Path to the coalib directory
+    coalib_root = os.path.join(os.path.split(inspect.getfile(_))[0], os.path.pardir)
+
+    # Path to the directory containing the default bears
+    coalib_bears_root = os.path.join(coalib_root, os.path.pardir, "bears")
