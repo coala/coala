@@ -62,7 +62,9 @@ class Section:
     def __iter__(self, ignore_defaults=False):
         joined = self.contents.copy()
         if self.defaults is not None and not ignore_defaults:
+            # Since we only return the iterator of joined (which doesnt contain values) it's ok to override values here
             joined.update(self.defaults.contents)
+
         return iter(joined)
 
     def __contains__(self, item, ignore_defaults=False):
