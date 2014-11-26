@@ -70,6 +70,7 @@ class Section:
     def __contains__(self, item, ignore_defaults=False):
         try:
             self.__getitem__(item, ignore_defaults)
+
             return True
         except IndexError:
             return False
