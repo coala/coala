@@ -73,6 +73,22 @@ class SectionTestCase(unittest.TestCase):
         uut.append(Setting("another_key", "another_value"))
         self.assertEqual(str(uut), "name {key : value, another_key : another_value}")
 
+    def test_copy(self):
+        uut = Section("name")
+        uut.append(Setting("key", "value"))
+        self.assertEqual(str(uut["key"]), "value")
+        copy = uut.copy()
+        self.assertEqual(str(copy), str(uut))
+        uut.append(Setting("key", "another_value"))
+        self.assertNotEqual(str(copy), str(uut))
+
+        uut.defaults = copy
+        copy = uut.copy()
+        self.assertEqual(str(uut.defaults), str(copy.defaults))
+        uut.defaults.append(Setting("key", "quite_something_else"))
+        self.assertNotEqual(str(uut.defaults), str(copy.defaults))
+
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

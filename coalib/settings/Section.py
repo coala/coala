@@ -106,3 +106,15 @@ class Section:
             return self.__getitem__(key, ignore_defaults)
         except IndexError:
             return Setting(key, str(default))
+
+    def copy(self):
+        """
+        :return: a deep copy of this object
+        """
+        newobj = Section(name=self.name, defaults=None)
+        if self.defaults is not None:
+            newobj.defaults = self.defaults.copy()
+
+        newobj.contents = self.contents.copy()
+
+        return newobj
