@@ -121,14 +121,14 @@ class BearRunner(Process):
     def run_global_bears(self):
         try:
             while True:
-                ga = self.global_bear_queue.get(timeout=self.TIMEOUT)
+                bear = self.global_bear_queue.get(timeout=self.TIMEOUT)
                 try:
-                    result = self.__run_global_bear(ga)
+                    result = self.__run_global_bear(bear)
                     if result:
                         self.global_result_queue.put(result, timeout=self.TIMEOUT)
                 except:  # pragma: no cover
                     self.err(_("An unknown error occurred while running global bear {}. "
-                               "Skipping bear...").format(ga.__class__.__name__), StringConstants.THIS_IS_A_BUG)
+                               "Skipping bear...").format(bear.__class__.__name__), StringConstants.THIS_IS_A_BUG)
                 finally:
                     if hasattr(self.global_bear_queue, "task_done"):
                         self.global_bear_queue.task_done()
