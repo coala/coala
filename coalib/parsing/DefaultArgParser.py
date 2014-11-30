@@ -27,14 +27,14 @@ default_arg_parser.add_argument('-F', '--forbidden', nargs='+', metavar='TYPE', 
                                 help=_('File types not to be checked'))
 default_arg_parser.add_argument('-i', '--ignored', nargs='+', metavar='PATH', dest='ignored_paths',
                                 help=_('Files or directories that should be ignored'))
-default_arg_parser.add_argument('-A', '--analyzer-dirs', nargs='+', metavar='DIR', dest='analyzer-directories',
-                                help=_('Directories to look in for analyzers'))
-default_arg_parser.add_argument('-a', '--analyzers', nargs='+', metavar='NAME', dest='analyzers',
-                                help=_('Names of analyzers to use'))
-default_arg_parser.add_argument('-I', '--ignored_analyzers', nargs='+', metavar='REGEX', dest='ignored_analyzers',
-                                help=_('Names of analyzers not to use'))
-default_arg_parser.add_argument('-r', '--regex-analyzers', nargs='+', metavar='REGEX', dest='regex_analyzers',
-                                help=_('Regular expressions matching analyzers to use'))
+default_arg_parser.add_argument('-B', '--bear-dirs', nargs='+', metavar='DIR', dest='bear-directories',
+                                help=_('Directories to look in for bears'))
+default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest='bears',
+                                help=_('Names of bears to use'))
+default_arg_parser.add_argument('-I', '--ignored_bears', nargs='+', metavar='REGEX', dest='ignored_bears',
+                                help=_('Names of bears not to use'))
+default_arg_parser.add_argument('-r', '--regex-bears', nargs='+', metavar='REGEX', dest='regex_bears',
+                                help=_('Regular expressions matching bears to use'))
 default_arg_parser.add_argument('-l', '--log', nargs=1, choices=['CONSOLE', 'TXT', 'HTML'], metavar='ENUM',
                                 dest='log_type', help=_("Enum('CONSOLE','TXT','HTML') to determine type of logging"))
 default_arg_parser.add_argument('-L', '--log_level', nargs=1, choices=['ERR', 'WARN', 'INFO', 'DEBUG'],
