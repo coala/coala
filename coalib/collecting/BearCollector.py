@@ -21,6 +21,7 @@ import sys
 from coalib.collecting.FileCollector import FileCollector
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
+from coalib.settings.Section import Section
 
 
 class BearCollector(FileCollector):
@@ -67,6 +68,19 @@ class BearCollector(FileCollector):
         self._bear_names = bear_names
         self._ignored_bears = ignored_bears
         self._regexs = regexs
+
+    @classmethod
+    def from_section(cls, bear_kinds, section, log_printer=ConsolePrinter()):
+        if not isinstance(section, Section):
+            raise TypeError("section should be of type Section.")
+
+        return cls(bear_kinds=bear_kinds,
+                   flat_bear_dirs=list(section["flat_bear_directories"]),
+                   rec_bear_dirs=list(section["rec_bear_directories"]),
+                   bear_names=list(section["bears"]),
+                   ignored_bears=list(section["ignored_bears"]),
+                   regexs=list(section["regex_bears"]),
+                   log_printer=log_printer)
 
     def _is_target(self, file_path):
         """

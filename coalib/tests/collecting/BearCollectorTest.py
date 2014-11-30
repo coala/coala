@@ -20,6 +20,8 @@ import tempfile
 
 sys.path.insert(0, ".")
 import unittest
+from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 from coalib.collecting.BearCollector import BearCollector
 
 
@@ -34,6 +36,18 @@ class TestInit(unittest.TestCase):
         self.assertRaises(TypeError, BearCollector, bear_kinds=[], log_printer=5)
 
         self.assertEqual(BearCollector(["kind"])._regexs, [])
+
+    def test_from_section(self):
+        self.assertRaises(TypeError, BearCollector.from_section, ["kind"], 5)
+
+        test_section = Section("test")
+        test_section.append(Setting("flat_bear_directories", "test value"))
+        test_section.append(Setting("rec_bear_directories", "test value"))
+        test_section.append(Setting("bears", "test value"))
+        test_section.append(Setting("ignored_bears", "test value"))
+        test_section.append(Setting("regex_bears", "test value"))
+
+        uut = BearCollector.from_section(["kind"], test_section)
 
 
 class TestFileCollection(unittest.TestCase):
