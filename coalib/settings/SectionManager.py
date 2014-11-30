@@ -26,6 +26,20 @@ from coalib.settings.SectionFiller import SectionFiller
 
 
 class SectionManager:
+    """
+    The SectionManager does the following things:
+
+    - Reading all settings in sections from
+        - Default config
+        - CLI
+        - Configuration file
+    - Collecting all the bears
+    - Filling up all needed settings
+    - Write back the new sections to the configuration file if needed
+    - Give all information back to caller
+
+    This is done when the run() method is invoked. Anything else is just helper stuff and initialization.
+    """
     def __init__(self, outputter=ConsoleOutputter(), log_printer=ConsolePrinter()):
         if not isinstance(outputter, Outputter):
             raise TypeError("The outputter parameter has to be of type Outputter.")
