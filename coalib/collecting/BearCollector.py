@@ -26,7 +26,8 @@ from coalib.output.ConsolePrinter import ConsolePrinter
 class BearCollector(FileCollector):
     def __init__(self,
                  bear_kinds,
-                 bear_dirs=[StringConstants.coalib_bears_root],
+                 flat_bear_dirs=[],
+                 rec_bear_dirs=[StringConstants.coalib_bears_root],
                  bear_names=None,
                  ignored_bears=None,
                  regexs=None,
@@ -57,7 +58,8 @@ class BearCollector(FileCollector):
             raise TypeError("regexs should be of type list")
 
         FileCollector.__init__(self,
-                               flat_dirs=bear_dirs,
+                               flat_dirs=flat_bear_dirs,
+                               recursive_dirs=rec_bear_dirs,
                                allowed_types=["py"],
                                log_printer=log_printer)
 
@@ -107,12 +109,12 @@ class BearCollector(FileCollector):
         files = FileCollector.collect(self)  # needs to be upfront since it calls _unfold_params()
         bears = []
 
-        for f_dir in self._flat_dirs:
-            if f_dir not in sys.path:
-                sys.path.insert(0, f_dir)
-
         for file in files:
             module_name = os.path.splitext(os.path.basename(file))[0]
+            module_dir = os.path.split(file)[0]
+            if module_dir not in sys.path:
+                sys.path.insert(0, module_dir)
+
             module = importlib.import_module(module_name)
             for name, p_object in inspect.getmembers(module):
                 if hasattr(p_object, "kind"):

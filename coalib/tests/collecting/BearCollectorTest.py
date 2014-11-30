@@ -25,17 +25,21 @@ from coalib.collecting.BearCollector import BearCollector
 
 class TestInit(unittest.TestCase):
     def test_raises(self):
-        self.assertRaises(TypeError, BearCollector, ["kind"], [], "string", [], [])
-        self.assertRaises(TypeError, BearCollector, ["kind"], [], [], "string", [])
-        self.assertRaises(TypeError, BearCollector, ["kind"], [], [], [], "string")
-        self.assertRaises(TypeError, BearCollector, "kind", [], [], [], [])
+        self.assertRaises(TypeError, BearCollector, bear_kinds=5)
+        self.assertRaises(TypeError, BearCollector, bear_kinds=[], flat_bear_dirs=5)
+        self.assertRaises(TypeError, BearCollector, bear_kinds=[], rec_bear_dirs=5)
+        self.assertRaises(TypeError, BearCollector, bear_kinds=[], bear_names=5)
+        self.assertRaises(TypeError, BearCollector, bear_kinds=[], ignored_bears=5)
+        self.assertRaises(TypeError, BearCollector, bear_kinds=[], regexs=5)
+        self.assertRaises(TypeError, BearCollector, bear_kinds=[], log_printer=5)
 
-        self.assertEqual(BearCollector(["kind"], [])._regexs, [])
+        self.assertEqual(BearCollector(["kind"])._regexs, [])
 
 
 class TestFileCollection(unittest.TestCase):
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp(prefix='coala_import_test_dir_')
+        self.parent_from_tmp = os.path.abspath(os.path.join(self.tmp_dir, os.path.pardir))
         (self.testfile1, self.testfile1_path) = tempfile.mkstemp(suffix='.py', prefix='testfile1_', dir=self.tmp_dir)
         (self.testfile2, self.testfile2_path) = tempfile.mkstemp(suffix='.py', prefix='testfile2_', dir=self.tmp_dir)
         (self.testfile3, self.testfile3_path) = tempfile.mkstemp(suffix='.c', prefix='testfile3_', dir=self.tmp_dir)
@@ -94,7 +98,7 @@ class TestBear(ImportedTestBear):
 
     def test_bear_import(self):
         uut = BearCollector(["kind"],
-                            bear_dirs=[self.tmp_dir])
+                            flat_bear_dirs=[self.tmp_dir])
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 2)
         self.assertTrue([bear_class().origin() for bear_class in bear_list]
@@ -103,7 +107,7 @@ class TestBear(ImportedTestBear):
 
     def test_bear_names(self):
         uut = BearCollector(["kind"],
-                            bear_dirs=[self.tmp_dir],
+                            flat_bear_dirs=[self.tmp_dir],
                             bear_names=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
@@ -111,18 +115,24 @@ class TestBear(ImportedTestBear):
 
     def test_ignored(self):
         uut = BearCollector(["kind"],
-                            bear_dirs=[self.tmp_dir],
+                            flat_bear_dirs=[self.tmp_dir],
                             ignored_bears=[os.path.splitext(os.path.basename(self.testfile1_path))[0]])
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile2_path)
 
     def test_regexs(self):
-        uut = BearCollector(["kind"],
-                            bear_dirs=[self.tmp_dir],
+        uut = BearCollector(["k"
+                             "ind"],
+                            flat_bear_dirs=[self.parent_from_tmp],
                             regexs=["testfile1"])
         bear_list = uut.collect()
-        print(bear_list)
+        self.assertEqual(len(bear_list), 0)
+        uut = BearCollector(["k"
+                             "ind"],
+                            rec_bear_dirs=[self.parent_from_tmp],
+                            regexs=["testfile1"])
+        bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
 
