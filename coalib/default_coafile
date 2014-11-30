@@ -1,0 +1,7 @@
+save = false
+config = .coafile
+flat_directories =
+recursive_directories =
+allowed_files =
+ignored_bears =
+regex_bears =
