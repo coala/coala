@@ -20,6 +20,8 @@ import tempfile
 
 sys.path.insert(0, ".")
 import unittest
+from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 from coalib.collecting.FileCollector import FileCollector
 from coalib.output.LogPrinter import LogPrinter
 
@@ -81,6 +83,20 @@ class TestInit(unittest.TestCase):
         uut._unfold_params()
         self.assertEqual(uut._flat_dirs, [])
         self.assertEqual(uut._recursive_dirs, [])
+
+    def test_from_section(self):
+        self.assertRaises(TypeError, FileCollector.from_section, 5)
+
+        test_section = Section("test")
+        test_section.append(Setting("allowed_files", "test value"))
+        test_section.append(Setting("flat_directories", "test value"))
+        test_section.append(Setting("recursive_directories", "test value"))
+        test_section.append(Setting("allowed_file_types", "test value"))
+        test_section.append(Setting("forbidden_file_types", "test value"))
+        test_section.append(Setting("ignored_files", "test value"))
+        test_section.append(Setting("ignored_dirs", "test value"))
+
+        uut = FileCollector.from_section(test_section)
 
 
 class TestFileCollection(unittest.TestCase):
