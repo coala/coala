@@ -25,8 +25,10 @@ default_arg_parser.add_argument('-t', '--allowed', nargs='+', metavar='TYPE', de
                                 help=_('File types of files to be checked'))
 default_arg_parser.add_argument('-F', '--forbidden', nargs='+', metavar='TYPE', dest='forbidden_file_types',
                                 help=_('File types not to be checked'))
-default_arg_parser.add_argument('-i', '--ignored', nargs='+', metavar='PATH', dest='ignored_paths',
-                                help=_('Files or directories that should be ignored'))
+default_arg_parser.add_argument('-i', '--ignored-files', nargs='+', metavar='PATH', dest='ignored_files',
+                                help=_('Files that should be ignored'))
+default_arg_parser.add_argument('-p', '--ignored-dirs', nargs='+', metavar='PATH', dest='ignored_dirs',
+                                help=_('Directories that should be ignored'))
 default_arg_parser.add_argument('-B', '--bear-dirs', nargs='+', metavar='DIR', dest='bear-directories',
                                 help=_('Directories to look in for bears'))
 default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest='bears',
