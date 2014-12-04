@@ -17,6 +17,7 @@ import sys
 
 sys.path.insert(0, ".")
 import unittest
+from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.bears.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
@@ -51,20 +52,23 @@ class BearRunnerConstructionTestCase(unittest.TestCase):
         local_result_queue = queue.Queue()
         global_result_queue = queue.Queue()
         message_queue = queue.Queue()
-        self.assertRaises(TypeError, BearRunner, 0, local_bear_list,
-                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, 0,
-                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue)
+        control_queue = queue.Queue()
+        self.assertRaises(TypeError, BearRunner, 0, local_bear_list, global_bear_queue,
+                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, 0, global_bear_queue,
+                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
         self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
-                          0, file_dict, local_result_queue, global_result_queue, message_queue)
+                          0, file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
         self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
-                          global_bear_queue, 0, local_result_queue, global_result_queue, message_queue)
+                          global_bear_queue, 0, local_result_queue, global_result_queue, message_queue, control_queue)
         self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
-                          global_bear_queue, file_dict, 0, global_result_queue, message_queue)
+                          global_bear_queue, file_dict, 0, global_result_queue, message_queue, control_queue)
         self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
-                          global_bear_queue, file_dict, local_result_queue, 0, message_queue)
+                          global_bear_queue, file_dict, local_result_queue, 0, message_queue, control_queue)
         self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
-                          global_bear_queue, file_dict, local_result_queue, global_result_queue, 0)
+                          global_bear_queue, file_dict, local_result_queue, global_result_queue, 0, control_queue)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue, 0)
 
 
 class BearRunnerUnitTestCase(unittest.TestCase):
@@ -76,9 +80,10 @@ class BearRunnerUnitTestCase(unittest.TestCase):
         self.local_result_queue = queue.Queue()
         self.global_result_queue = queue.Queue()
         self.message_queue = queue.Queue()
+        self.control_queue = queue.Queue()
         self.uut = BearRunner(self.file_name_queue, self.local_bear_list, self.global_bear_queue,
                               self.file_dict, self.local_result_queue, self.global_result_queue,
-                              self.message_queue)
+                              self.message_queue, self.control_queue)
 
     def test_messaging(self):
         self.uut.debug("test", "messag", delimiter="-", end="e")
@@ -161,9 +166,16 @@ d
                     self.assertTrue(False)
             self.assertEqual(len(seconde), len(second))
 
+        control_queue_expected = [CONTROL_ELEMENT.LOCAL, CONTROL_ELEMENT.LOCAL,
+                                  CONTROL_ELEMENT.GLOBAL, CONTROL_ELEMENT.FINISHED]
+        for expected in control_queue_expected:
+            real = self.control_queue.get(timeout=0)
+            self.assertEqual(expected, real)
+
         self.assertRaises(queue.Empty, self.message_queue.get, timeout=0)
         self.assertRaises(queue.Empty, self.local_result_queue.get, timeout=0)
         self.assertRaises(queue.Empty, self.global_result_queue.get, timeout=0)
+        self.assertRaises(queue.Empty, self.control_queue.get, timeout=0)
 
 
 if __name__ == '__main__':
