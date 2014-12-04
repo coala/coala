@@ -18,6 +18,7 @@ from coalib.collecting.Collector import Collector
 from coalib.output.LogPrinter import LogPrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
+from coalib.settings.Section import Section
 
 
 class FileCollector(Collector):
@@ -80,6 +81,21 @@ class FileCollector(Collector):
         self._ignored_types = [t.lower().lstrip('.') for t in ignored_types]
         self._ignored_files = [os.path.abspath(path) for path in ignored_files]
         self._ignored_dirs = [os.path.abspath(path) for path in ignored_dirs]
+
+    @classmethod
+    def from_section(cls, section, log_printer=ConsolePrinter()):
+        if not isinstance(section, Section):
+            raise TypeError("section should be of type Section.")
+
+        return cls(allowed_files=list(section["allowed_files"]),
+                   flat_dirs=list(section["flat_directories"]),
+                   recursive_dirs=list(section["recursive_directories"]),
+                   allowed_types=list(section["allowed_file_types"]),
+                   ignored_types=list(section["forbidden_file_types"]),
+                   ignored_files=list(section["ignored_files"]),
+                   ignored_dirs=list(section["ignored_dirs"]),
+                   log_printer=log_printer)
+
 
     def _is_target(self, file_path):
         """

@@ -19,13 +19,16 @@ import re
 import sys
 
 from coalib.collecting.FileCollector import FileCollector
+from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
+from coalib.settings.Section import Section
 
 
 class BearCollector(FileCollector):
     def __init__(self,
                  bear_kinds,
-                 bear_dirs,
+                 flat_bear_dirs=[],
+                 rec_bear_dirs=[StringConstants.coalib_bears_root],
                  bear_names=None,
                  ignored_bears=None,
                  regexs=None,
@@ -56,7 +59,8 @@ class BearCollector(FileCollector):
             raise TypeError("regexs should be of type list")
 
         FileCollector.__init__(self,
-                               flat_dirs=bear_dirs,
+                               flat_dirs=flat_bear_dirs,
+                               recursive_dirs=rec_bear_dirs,
                                allowed_types=["py"],
                                log_printer=log_printer)
 
@@ -64,6 +68,19 @@ class BearCollector(FileCollector):
         self._bear_names = bear_names
         self._ignored_bears = ignored_bears
         self._regexs = regexs
+
+    @classmethod
+    def from_section(cls, bear_kinds, section, log_printer=ConsolePrinter()):
+        if not isinstance(section, Section):
+            raise TypeError("section should be of type Section.")
+
+        return cls(bear_kinds=bear_kinds,
+                   flat_bear_dirs=list(section["flat_bear_directories"]),
+                   rec_bear_dirs=list(section["rec_bear_directories"]),
+                   bear_names=list(section["bears"]),
+                   ignored_bears=list(section["ignored_bears"]),
+                   regexs=list(section["regex_bears"]),
+                   log_printer=log_printer)
 
     def _is_target(self, file_path):
         """
@@ -106,12 +123,12 @@ class BearCollector(FileCollector):
         files = FileCollector.collect(self)  # needs to be upfront since it calls _unfold_params()
         bears = []
 
-        for f_dir in self._flat_dirs:
-            if f_dir not in sys.path:
-                sys.path.insert(0, f_dir)
-
         for file in files:
             module_name = os.path.splitext(os.path.basename(file))[0]
+            module_dir = os.path.split(file)[0]
+            if module_dir not in sys.path:
+                sys.path.insert(0, module_dir)
+
             module = importlib.import_module(module_name)
             for name, p_object in inspect.getmembers(module):
                 if hasattr(p_object, "kind"):

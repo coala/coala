@@ -19,6 +19,7 @@ from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 
 from coalib.misc.StringConstants import StringConstants
+from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.misc.i18n import _
@@ -33,6 +34,7 @@ class BearRunner(Process):
                  local_result_queue,
                  global_result_queue,
                  message_queue,
+                 control_queue,
                  TIMEOUT=0):
         """
         This is the object that actually runs on the processes
@@ -57,6 +59,8 @@ class BearRunner(Process):
         :param global_result_queue: queue (write) for results from global bears (one item holds a tuple with the
         bear name first and then the results of one bear for all files)
         :param message_queue: queue (write) for debug/warning/error messages (type LogMessage)
+        :param control_queue: queue (write) which will get one element of type CONTROL_ELEMENT if any result gets into any
+        queue.
         :param TIMEOUT: in seconds for all queue actions
         """
         if not isinstance(local_bear_list, list):
@@ -75,6 +79,8 @@ class BearRunner(Process):
             raise TypeError("global_result_queue should be a queue like thing (writing possible via 'put')")
         if not hasattr(message_queue, "put"):
             raise TypeError("message_queue should be a queue like thing (writing possible via 'put')")
+        if not hasattr(control_queue, "put"):
+            raise TypeError("control_queue should be a queue like thing (writing possible via 'put')")
 
         Process.__init__(self)
 
@@ -87,6 +93,7 @@ class BearRunner(Process):
         self.local_result_queue = local_result_queue
         self.global_result_queue = global_result_queue
         self.message_queue = message_queue
+        self.control_queue = control_queue
 
         self.TIMEOUT = TIMEOUT
 
@@ -102,6 +109,8 @@ class BearRunner(Process):
     def run(self):
         self.run_local_bears()
         self.run_global_bears()
+
+        self.control_queue.put(CONTROL_ELEMENT.FINISHED)
 
     def run_local_bears(self):
         try:
@@ -121,14 +130,15 @@ class BearRunner(Process):
     def run_global_bears(self):
         try:
             while True:
-                ga = self.global_bear_queue.get(timeout=self.TIMEOUT)
+                bear = self.global_bear_queue.get(timeout=self.TIMEOUT)
                 try:
-                    result = self.__run_global_bear(ga)
+                    result = self.__run_global_bear(bear)
                     if result:
                         self.global_result_queue.put(result, timeout=self.TIMEOUT)
+                        self.control_queue.put(CONTROL_ELEMENT.GLOBAL)
                 except:  # pragma: no cover
                     self.err(_("An unknown error occurred while running global bear {}. "
-                               "Skipping bear...").format(ga.__class__.__name__), StringConstants.THIS_IS_A_BUG)
+                               "Skipping bear...").format(bear.__class__.__name__), StringConstants.THIS_IS_A_BUG)
                 finally:
                     if hasattr(self.global_bear_queue, "task_done"):
                         self.global_bear_queue.task_done()
@@ -153,6 +163,7 @@ class BearRunner(Process):
                 result_dict[bear_instance.__class__.__name__] = r
 
         self.local_result_queue.put((filename, result_dict), timeout=self.TIMEOUT)
+        self.control_queue.put(CONTROL_ELEMENT.LOCAL)
 
     def __run_local_bear(self, bear_instance, filename):
         if not isinstance(bear_instance, LocalBear) or bear_instance.kind() != BEAR_KIND.LOCAL:

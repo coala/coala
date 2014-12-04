@@ -62,12 +62,15 @@ class Section:
     def __iter__(self, ignore_defaults=False):
         joined = self.contents.copy()
         if self.defaults is not None and not ignore_defaults:
+            # Since we only return the iterator of joined (which doesnt contain values) it's ok to override values here
             joined.update(self.defaults.contents)
+
         return iter(joined)
 
     def __contains__(self, item, ignore_defaults=False):
         try:
             self.__getitem__(item, ignore_defaults)
+
             return True
         except IndexError:
             return False
@@ -103,3 +106,39 @@ class Section:
             return self.__getitem__(key, ignore_defaults)
         except IndexError:
             return Setting(key, str(default))
+
+    def copy(self):
+        """
+        :return: a deep copy of this object
+        """
+        newobj = Section(name=self.name, defaults=None)
+        if self.defaults is not None:
+            newobj.defaults = self.defaults.copy()
+
+        newobj.contents = self.contents.copy()
+
+        return newobj
+
+    def update(self, other, ignore_defaults=False):
+        """
+        Incorporates all keys and values from the other section into this one. Values from the other section override
+        the ones from this one.
+
+        Default values from the other section override the default values from this only.
+
+        :param other: Another Section
+        :param ignore_defaults: If set to true, do not take default values from other
+        :return: self
+        """
+        if not isinstance(other, Section):
+            raise TypeError("other has to be a Section")
+
+        self.contents.update(other.contents)
+
+        if not ignore_defaults and other.defaults is not None:
+            if self.defaults is None:
+                self.defaults = other.defaults.copy()
+            else:
+                self.defaults.update(other.defaults)
+
+        return self

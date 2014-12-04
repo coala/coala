@@ -96,7 +96,7 @@ class CliParser(Parser):
 
         return self.sections
 
-    def reparse(self, arg_list=sys.argv, origin=os.getcwd()):
+    def reparse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
         self.__reset_sections()
 
         return self.parse(arg_list, origin)
