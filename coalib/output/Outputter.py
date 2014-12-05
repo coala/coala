@@ -37,6 +37,15 @@ class Outputter:
 
         return self._print_result(result)
 
+    def print_local_results(self, local_result_list, file_dict):
+        """
+        Prints all given local results. They will be sorted.
+
+        :param local_result_list: List of the local results
+        :param file_dict: Dictionary containing filename: file_contents
+        """
+        raise NotImplementedError
+
     def acquire_settings(self, settings):
         """
         This method prompts the user for the given settings.
