@@ -29,6 +29,10 @@ class ResultTestCase(unittest.TestCase):
         self.assertRaises(TypeError, uut.__gt__, 0)
         self.assertRaises(TypeError, uut.__lt__, 0)
 
+    def test_string_conversion(self):
+        uut = Result('a', 'b', 'c')
+        self.assertEqual(str(uut), "Result:\n origin: 'a'\n file: 'c'\n severity: 1\n'b'")
+
     def test_ordering(self):
         """
         Tests the ordering routines of Result. This tests enough to have all branches covered. Not every case may be
