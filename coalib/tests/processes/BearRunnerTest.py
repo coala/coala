@@ -141,15 +141,13 @@ d
         for msg in expected_messages:
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
 
-        local_result_expected = [('file1', {}),
-                                 ('arbitrary', {'LocalTestBear': Result("LocalTestBear",
-                                                                        "something went wrong",
-                                                                        'arbitrary')})]
-        for firste, seconde in local_result_expected:
-            first, second = self.local_result_queue.get(timeout=0)
-            self.assertEqual(first, firste)
-            self.assertEqual(second.keys(), seconde.keys())
-            self.assertEqual(len(seconde), len(second))
+        local_result_expected = [[],
+                                 [Result("LocalTestBear", "something went wrong", 'arbitrary')]
+                                ]
+        for expected in local_result_expected:
+            real = self.local_result_queue.get(timeout=0)
+            for i in range(len(expected)):
+                self.assertEqual(real[i], expected[i])
 
         global_results_expected = [("GlobalTestBear",
                                     [Result("GlobalTestBear", "Files are bad in general!", "file1",
