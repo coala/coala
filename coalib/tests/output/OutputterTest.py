@@ -29,8 +29,12 @@ class OutputterTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError,
                           self.uut.print_result,
                           LineResult("origin", 1, "line", "message", "file"))
-        self.assertRaises(NotImplementedError, self.uut.print_results, "", "")
         self.assertRaises(TypeError, self.uut.print_result, "anything")
+
+        self.assertRaises(TypeError, self.uut.print_results, 5, {})
+        self.assertRaises(TypeError, self.uut.print_results, [], 5)
+        self.assertRaises(TypeError, self.uut.print_results, ["test"], {})
+        self.assertRaises(NotImplementedError, self.uut.print_results, [Result("message", "origin")], {})
 
 
 if __name__ == '__main__':

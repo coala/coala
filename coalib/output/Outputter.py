@@ -44,7 +44,14 @@ class Outputter:
         :param result_list: List of the results
         :param file_dict: Dictionary containing filename: file_contents
         """
-        raise NotImplementedError
+        if not isinstance(result_list, list):
+            raise TypeError("result_list should be of type list")
+        if not isinstance(file_dict, dict):
+            raise TypeError("file_dict should be of type dict")
+
+        sorted_results = sorted(result_list)
+        for result in sorted_results:
+            self.print_result(result)
 
     def acquire_settings(self, settings):
         """
