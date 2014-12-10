@@ -37,11 +37,11 @@ class Outputter:
 
         return self._print_result(result)
 
-    def print_local_results(self, local_result_list, file_dict):
+    def print_results(self, result_list, file_dict):
         """
-        Prints all given local results. They will be sorted.
+        Prints all given results. They will be sorted.
 
-        :param local_result_list: List of the local results
+        :param result_list: List of the results
         :param file_dict: Dictionary containing filename: file_contents
         """
         raise NotImplementedError

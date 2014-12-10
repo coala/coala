@@ -29,7 +29,7 @@ class OutputterTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError,
                           self.uut.print_result,
                           LineResult("origin", 1, "line", "message", "file"))
-        self.assertRaises(NotImplementedError, self.uut.print_local_results, "", "")
+        self.assertRaises(NotImplementedError, self.uut.print_results, "", "")
         self.assertRaises(TypeError, self.uut.print_result, "anything")
 
 
