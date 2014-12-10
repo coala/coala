@@ -55,8 +55,8 @@ class BearRunner(Process):
         :param file_dict: dict of all files as {filename:file}, file as in file.readlines()
         :param local_result_queue: queue (write) for results from local bears (one item holds results of all
         bears for one file, its a list of all results)
-        :param global_result_queue: queue (write) for results from global bears (one item holds a tuple with the
-        bear name first and then the results of one bear for all files)
+        :param global_result_queue: queue (write) for results from global bears (one item holds the results of one bear
+        for all files)
         :param message_queue: queue (write) for debug/warning/error messages (type LogMessage)
         :param control_queue: queue (write) which will get one element of type CONTROL_ELEMENT if any result gets into any
         queue.
@@ -174,12 +174,11 @@ class BearRunner(Process):
         return bear_instance.run(filename, self.file_dict[filename])
 
     def __run_global_bear(self, global_bear_instance):
-        name = global_bear_instance.__class__.__name__
         if not isinstance(global_bear_instance, GlobalBear) \
                 or global_bear_instance.kind() != BEAR_KIND.GLOBAL:
             self.warn(_("A given local bear ({}) is not valid. Leaving it out...")
-                      .format(name), StringConstants.THIS_IS_A_BUG)
+                      .format(global_bear_instance.__class__.__name__), StringConstants.THIS_IS_A_BUG)
 
             return None
 
-        return name, global_bear_instance.run()
+        return global_bear_instance.run()

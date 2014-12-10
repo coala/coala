@@ -149,20 +149,16 @@ d
             for i in range(len(expected)):
                 self.assertEqual(real[i], expected[i])
 
-        global_results_expected = [("GlobalTestBear",
-                                    [Result("GlobalTestBear", "Files are bad in general!", "file1",
-                                            severity=RESULT_SEVERITY.INFO),
-                                     Result("GlobalTestBear", "Files are bad in general!", "arbitrary",
-                                            severity=RESULT_SEVERITY.INFO)]
-                                   )]
+        global_results_expected = [Result("GlobalTestBear", "Files are bad in general!", "file1",
+                                          severity=RESULT_SEVERITY.INFO),
+                                   Result("GlobalTestBear", "Files are bad in general!", "arbitrary",
+                                          severity=RESULT_SEVERITY.INFO)]
 
-        for firste, seconde in global_results_expected:
-            first, second = self.global_result_queue.get(timeout=0)
-            self.assertEqual(first, firste)
-            for elem in second:
-                if not elem in seconde:
-                    self.assertTrue(False)
-            self.assertEqual(len(seconde), len(second))
+        real = self.global_result_queue.get(timeout=0)
+        for expected in global_results_expected:
+            self.assertTrue(expected in real)
+
+        self.assertEqual(len(real), len(global_results_expected))
 
         control_queue_expected = [CONTROL_ELEMENT.LOCAL, CONTROL_ELEMENT.LOCAL,
                                   CONTROL_ELEMENT.GLOBAL, CONTROL_ELEMENT.FINISHED]
