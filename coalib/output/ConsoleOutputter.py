@@ -57,12 +57,88 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
         assert (isinstance(result, Result))
         if result.file is None:
             return self.print(("[{sev}] " + _("Message from {bear}:") +
-                              "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
-                                                    bear=result.origin,
-                                                    message=result.message))
+                               "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
+                                                     bear=result.origin,
+                                                     message=result.message))
 
         return self.print(("[{sev}] " + _("Annotation for file {file} from {bear}:") +
                            "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
                                                  file=result.file,
                                                  bear=result.origin,
                                                  message=result.message))
+
+    def print_results(self, result_list, file_dict, padding_before=3, padding_after=3):
+        """
+        Prints all given results. They will be sorted.
+
+        :param result_list: List of the results
+        :param file_dict: Dictionary containing filename: file_contents
+        """
+        # TODO: DOES NOT YET USE A DAMN LINE PRINT FUNCTION
+        # todo: also not tested
+        if not isinstance(result_list, list):
+            raise TypeError("result_list should be of type list")
+        if not isinstance(file_dict, dict):
+            raise TypeError("file_dict should be of type dict")
+
+        sorted_result_list = sorted(result_list)
+        current_file = None
+        current_line = 0
+
+        for result in sorted_result_list:
+            # print file name if appropriate
+            if result.file != current_file:
+                current_file = result.file
+                current_line = 0
+                print("\n{}".format(current_file))
+
+            # print lines of file if appropriate
+            if hasattr(result, "line_nr"):
+                assert (current_file is not None), "A result with a line_nr should also have a file"
+                assert (result.line_nr >= current_line), "Results with higher line_nr should be sorted further back"
+
+                line_delta = result.line_nr - current_line
+                if line_delta <= (padding_before + padding_after):  # line_padding larger than space available
+                    for i in range(1, line_delta + 1):
+                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr=current_line + i,
+                                                                                       sign="|",
+                                                                                       mod_nr=current_line + i,
+                                                                                       symbol="",
+                                                                                       line=file_dict[result.file][
+                                                                                           current_line + i - 1]))
+                else:
+                    for i in range(1, padding_after + 1):
+                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr=current_line + i,
+                                                                                       sign="|",
+                                                                                       mod_nr=current_line + i,
+                                                                                       symbol="",
+                                                                                       line=file_dict[result.file][
+                                                                                           current_line + i - 1]))
+                    for i in range(3):
+                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr="",
+                                                                                       sign=".",
+                                                                                       mod_nr="",
+                                                                                       symbol="",
+                                                                                       line=""))
+                    for i in range(padding_before + 1):
+                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr=result.line_nr - i,
+                                                                                       sign="|",
+                                                                                       mod_nr=result.line_nr - i,
+                                                                                       symbol="",
+                                                                                       line=file_dict[result.file][
+                                                                                           result.line_nr - i - 1]))
+                    # at this point all needed lines including the current line should be shown
+                    current_line = result.line_nr
+
+                # now we just need to print the result
+                message_string = "[{sev}] {bear}:\n{message}".format(sev=RESULT_SEVERITY.__str__(result.severity),
+                                                                     bear=result.origin,
+                                                                     message=result.message)
+                message_string_list = message_string.split('\n')
+
+                for i in range(message_string_list):
+                    print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr="",
+                                                                                   sign="|",
+                                                                                   mod_nr="",
+                                                                                   symbol="",
+                                                                                   line=message_string_list[i]))
