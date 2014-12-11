@@ -36,7 +36,8 @@ class BearCollector(FileCollector):
         """
         This collector stores bear classes (not instances) in self._items
         :param bear_kinds: the KINDs of bears to be collected
-        :param bear_dirs: list of strings: directories from which bears should be collected
+        :param flat_bear_dirs: list of strings: directories from which bears should be collected (flat)
+        :param rec_bear_dirs: list of strings: directories from which bears should be collected (recursive)
         :param bear_names: list of strings: names of bears that should be collected. Default is all.
         :param ignored_bears: list of strings: names of bears that should not be collected. Default is none.
         :param regexs: list of strings: regexs that match bears to be collected.
