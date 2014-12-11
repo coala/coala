@@ -114,6 +114,8 @@ class TestFileCollection(unittest.TestCase):
     def test_allowed_files(self):
         uut = FileCollector(allowed_files=["not_a_file", self.testfile1_path])
         self.assertEqual(set(uut.collect()), {self.testfile1_path})
+        # Consecutive invocations shall be idempotent
+        self.assertEqual(set(uut.collect()), {self.testfile1_path})
 
     def test_flat(self):
         uut = FileCollector(flat_dirs=[self.tmp_dir], log_printer=self.lp)
