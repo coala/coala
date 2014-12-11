@@ -38,8 +38,9 @@ class BearCollector(FileCollector):
         :param bear_kinds: the KINDs of bears to be collected
         :param flat_bear_dirs: list of strings: directories from which bears should be collected (flat)
         :param rec_bear_dirs: list of strings: directories from which bears should be collected (recursive)
-        :param bear_names: list of strings: names of bears that should be collected. Default is all.
-        :param ignored_bears: list of strings: names of bears that should not be collected. Default is none.
+        :param bear_names: list of strings: names of bears that should be collected.
+        :param ignored_bears: list of strings: names of bears that should not be collected, even if they match a regex.
+        Default is none.
         :param regexs: list of strings: regexs that match bears to be collected.
         :param log_printer: LogPrinter to handle logging of debug, warning and error messages
         """
@@ -109,12 +110,8 @@ class BearCollector(FileCollector):
         if any(re.match(regex, bear_name) for regex in self._regexs):
             return True  # specifically called
 
-        # dont include if not everything is to be included
-        if self._bear_names or self._regexs:
-            return False  # specific bears were called but not this one
-
-        # include everything
-        return True
+        # exclude everything else
+        return False
 
     def collect(self):
         """
