@@ -37,7 +37,8 @@ class TestHelper:
                                     "-p",  # make it collectable later
                                     "--branch",  # check branch AND statement coverage
                                     "--omit",  # dont check coverage of test file itself
-                                    filename + ",/tmp/*",
+                                    filename + ",/tmp/*,./coalib/tests/**,./setup.py," +
+                                    "./execute_all_tests.py,/home/travis/virtualenv/*/lib/*/distutils/__init__",
                                     filename])
         except:
             print("Coverage failed. Falling back to standard unit tests.")

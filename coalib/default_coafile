@@ -1,9 +1,9 @@
 save = false
 config = .coafile
-flat_directories =
+flat_directories = .
 recursive_directories =
 allowed_files =
-flat_bear_directories =
+flat_bear_directories = .
 rec_bear_directories =
 bears =
 ignored_bears =
