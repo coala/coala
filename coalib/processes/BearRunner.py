@@ -58,8 +58,8 @@ class BearRunner(Process):
         :param global_result_queue: queue (write) for results from global bears (one item holds the results of one bear
         for all files)
         :param message_queue: queue (write) for debug/warning/error messages (type LogMessage)
-        :param control_queue: queue (write) which will get one element of type CONTROL_ELEMENT if any result gets into any
-        queue.
+        :param control_queue: queue (write) which will get one element of type CONTROL_ELEMENT if any result gets into
+        any queue.
         :param TIMEOUT: in seconds for all queue actions
         """
         if not isinstance(local_bear_list, list):
