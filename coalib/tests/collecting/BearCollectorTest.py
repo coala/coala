@@ -143,14 +143,12 @@ class TestBear(ImportedTestBear):
         self.assertEqual(bear_list[0]().origin(), self.testfile2_path)
 
     def test_regexs(self):
-        uut = BearCollector(["k"
-                             "ind"],
+        uut = BearCollector(["kind"],
                             flat_bear_dirs=[self.parent_from_tmp],
                             regexs=["testfile1"])
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 0)
-        uut = BearCollector(["k"
-                             "ind"],
+        uut = BearCollector(["kind"],
                             rec_bear_dirs=[self.parent_from_tmp],
                             regexs=["testfile1"])
         bear_list = uut.collect()
