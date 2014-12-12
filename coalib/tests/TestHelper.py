@@ -22,8 +22,8 @@ class TestHelper:
     @staticmethod
     def __show_coverage_results():
         try:
-            subprocess.call(["coverage", "combine"])
-            subprocess.call(["coverage", "report", "-m"])
+            subprocess.call(["coverage3", "combine"])
+            subprocess.call(["coverage3", "report", "-m"])
         except:
             pass
 
@@ -33,7 +33,7 @@ class TestHelper:
             return subprocess.call(["python3", filename])
 
         try:
-            return subprocess.call(["coverage",
+            return subprocess.call(["coverage3",
                                     "run",
                                     "-p",  # make it collectable later
                                     "--branch",  # check branch AND statement coverage
