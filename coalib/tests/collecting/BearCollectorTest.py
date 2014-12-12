@@ -47,7 +47,7 @@ class TestInit(unittest.TestCase):
         test_section.append(Setting("ignored_bears", "test value"))
         test_section.append(Setting("regex_bears", "test value"))
 
-        uut = BearCollector.from_section(["kind"], test_section)
+        BearCollector.from_section(["kind"], test_section)
 
 
 class TestFileCollection(unittest.TestCase):
