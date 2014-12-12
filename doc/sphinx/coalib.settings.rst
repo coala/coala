@@ -6,9 +6,10 @@ Submodules
 
 .. toctree::
 
+   coalib.settings.Section
+   coalib.settings.SectionFiller
+   coalib.settings.SectionManager
    coalib.settings.Setting
-   coalib.settings.Settings
-   coalib.settings.SettingsFiller
 
 Module contents
 ---------------

@@ -6,6 +6,7 @@ Submodules
 
 .. toctree::
 
+   coalib.tests.parsing.CliParserTest
    coalib.tests.parsing.ConfParserTest
    coalib.tests.parsing.LineParserTest
    coalib.tests.parsing.ParserTest
