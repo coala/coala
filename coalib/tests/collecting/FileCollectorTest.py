@@ -96,7 +96,7 @@ class TestInit(unittest.TestCase):
         test_section.append(Setting("ignored_files", "test value"))
         test_section.append(Setting("ignored_dirs", "test value"))
 
-        uut = FileCollector.from_section(test_section)
+        FileCollector.from_section(test_section)
 
 
 class TestFileCollection(unittest.TestCase):
