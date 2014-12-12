@@ -32,6 +32,10 @@ class SettingTestCase(unittest.TestCase):
     def test_path(self):
         self.assertEqual(path(self.uut), os.path.join(".", "22"))
 
+        abspath = os.path.abspath(".")
+        self.uut = Setting("key", abspath)
+        self.assertEqual(path(self.uut), abspath)
+
         self.uut = Setting("key", " 22", "")
         self.assertRaises(ValueError, path, self.uut)
 

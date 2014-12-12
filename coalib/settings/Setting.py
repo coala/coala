@@ -28,9 +28,14 @@ class Setting(StringConverter):
         self.origin = str(origin)
 
     def __path__(self):
+        strrep = str(self).strip()
+        if os.path.isabs(strrep):
+            return strrep
+
         if self.origin == "":
             raise ValueError("Cannot determine path without origin.")
-        return os.path.join(self.origin, str(self))
+
+        return os.path.join(self.origin, strrep)
 
     @property
     def key(self):
