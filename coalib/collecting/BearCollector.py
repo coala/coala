@@ -69,7 +69,14 @@ class BearCollector(FileCollector):
         self._bear_kinds = bear_kinds
         self._bear_names = bear_names
         self._ignored_bears = ignored_bears
-        self._regexs = regexs
+        self._regexs = [self.prepare_regex(regex) for regex in regexs]
+
+    @staticmethod
+    def prepare_regex(regex):
+        if regex.endswith("$"):
+            return regex
+
+        return regex + "$"
 
     @classmethod
     def from_section(cls, bear_kinds, section, log_printer=ConsolePrinter()):
