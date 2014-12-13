@@ -14,8 +14,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import multiprocessing
 
-from coalib.processes.Process import Process
-
 
 def get_cpu_count():
     try:
@@ -32,11 +30,11 @@ class ProcessSpawner:
 
     def __init__(self, process, job_count=get_cpu_count()):
         """
-        :param process: An instance of a class derived from Process to run
+        :param process: An instance of a class which has a run() method
         :param job_count: Number of processes to run
         """
-        if not isinstance(process, Process):
-            raise TypeError("process needs to be an instance of a derivative of Process.")
+        if not hasattr(process, "run"):
+            raise TypeError("process needs have a run method.")
         if not isinstance(job_count, int):
             raise TypeError("job_count needs to be an integer.")
 
