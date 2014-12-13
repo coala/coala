@@ -131,7 +131,7 @@ class BearCollector(FileCollector):
 
         for file in files:
             module_name = os.path.splitext(os.path.basename(file))[0]
-            module_dir = os.path.split(file)[0]
+            module_dir = os.path.dirname(file)
             if module_dir not in sys.path:
                 sys.path.insert(0, module_dir)
 
