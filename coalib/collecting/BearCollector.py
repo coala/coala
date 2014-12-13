@@ -22,6 +22,7 @@ from coalib.collecting.FileCollector import FileCollector
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.settings.Section import Section
+from coalib.settings.Setting import path_list
 
 
 class BearCollector(FileCollector):
@@ -84,8 +85,8 @@ class BearCollector(FileCollector):
             raise TypeError("section should be of type Section.")
 
         return cls(bear_kinds=bear_kinds,
-                   flat_bear_dirs=list(section["flat_bear_directories"]),
-                   rec_bear_dirs=list(section["rec_bear_directories"]),
+                   flat_bear_dirs=path_list(section["flat_bear_directories"]),
+                   rec_bear_dirs=path_list(section["rec_bear_directories"]),
                    bear_names=list(section["bears"]),
                    ignored_bears=list(section["ignored_bears"]),
                    regexs=list(section["regex_bears"]),
