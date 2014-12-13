@@ -77,6 +77,7 @@ class CliParser(Parser):
         :param origin: directory used to interpret relative paths given as argument
         :return: the settings dictionary
         """
+        origin += os.path.sep
         arg_parse_list = []
         for arg in arg_list:
             section_stub, key_touples, value, comment_stub = self._line_parser.parse(arg)
