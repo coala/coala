@@ -19,6 +19,7 @@ from coalib.output.LogPrinter import LogPrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.settings.Section import Section
+from coalib.settings.Setting import path_list
 
 
 class FileCollector(Collector):
@@ -32,7 +33,7 @@ class FileCollector(Collector):
                  ignored_dirs=[],
                  log_printer=ConsolePrinter()):
         """
-        :param allowed_files: Files that will always be collected if accessible
+        :param allowed_files: Absolute path to files that will always be collected if accessible
         :param flat_dirs: list of strings: directories from which files should be collected, excluding sub directories
         :param recursive_dirs: list of strings: directories from which files should be collected, including sub
                                directories
@@ -87,15 +88,14 @@ class FileCollector(Collector):
         if not isinstance(section, Section):
             raise TypeError("section should be of type Section.")
 
-        return cls(allowed_files=list(section["allowed_files"]),
-                   flat_dirs=list(section["flat_directories"]),
-                   recursive_dirs=list(section["recursive_directories"]),
+        return cls(allowed_files=path_list(section["allowed_files"]),
+                   flat_dirs=path_list(section["flat_directories"]),
+                   recursive_dirs=path_list(section["recursive_directories"]),
                    allowed_types=list(section["allowed_file_types"]),
                    ignored_types=list(section["forbidden_file_types"]),
-                   ignored_files=list(section["ignored_files"]),
-                   ignored_dirs=list(section["ignored_dirs"]),
+                   ignored_files=path_list(section["ignored_files"]),
+                   ignored_dirs=path_list(section["ignored_dirs"]),
                    log_printer=log_printer)
-
 
     def _is_target(self, file_path):
         """
