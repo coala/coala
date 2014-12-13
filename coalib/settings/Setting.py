@@ -60,7 +60,7 @@ class Setting(StringConverter):
         if origin is None:
             raise ValueError("Cannot determine path without origin.")
 
-        return os.path.join(os.path.dirname(origin), strrep)
+        return os.path.abspath(os.path.join(os.path.dirname(origin), strrep))
 
     def __path_list__(self):
         listrep = list(self)
