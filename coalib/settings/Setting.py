@@ -26,11 +26,31 @@ def path_list(obj, *args, **kwargs):
 
 class Setting(StringConverter):
     def __init__(self, key, value, origin="", strip_whitespaces=True, list_delimiters=[",", ";"]):
+        """
+        Initializes a new Setting,
+
+        :param key: The key of the Setting
+        :param value: The value, if you apply conversions to this object these will be applied to this value.
+        :param origin: The originating file. This will be used for path conversions and the last part will be stripped
+        of. If you want to specify a directory as origin be sure to end it with a directory seperator.
+        :param strip_whitespaces: Whether to strip whitespaces from the value or not
+        :param list_delimiters: Delimiters for list conversion
+        :return:
+        """
         StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces, list_delimiters=list_delimiters)
         self.key = key
         self.origin = str(origin)
 
     def __path__(self, origin=None):
+        """
+        Determines the path of this setting.
+
+        Note: You can also use this function on strings, in that case the origin argument will be taken in every case.
+
+        :param origin: the origin file to take if no origin is specified for the given setting. If you want to provide
+        a directory, make sure it ends with a directory seperator.
+        :return: An absolute path.
+        """
         strrep = str(self).strip()
         if os.path.isabs(strrep):
             return strrep
@@ -41,7 +61,7 @@ class Setting(StringConverter):
         if origin is None:
             raise ValueError("Cannot determine path without origin.")
 
-        return os.path.join(origin, strrep)
+        return os.path.join(os.path.dirname(origin), strrep)
 
     def __path_list__(self):
         listrep = list(self)
