@@ -17,8 +17,11 @@ import os
 from coalib.misc.StringConverter import StringConverter
 
 
-def path(obj):
-    return obj.__path__()
+def path(obj, *args, **kwargs):
+    return obj.__path__(*args, **kwargs)
+
+def path_list(obj, *args, **kwargs):
+    return obj.__path_list__(*args, **kwargs)
 
 
 class Setting(StringConverter):
@@ -27,15 +30,26 @@ class Setting(StringConverter):
         self.key = key
         self.origin = str(origin)
 
-    def __path__(self):
+    def __path__(self, origin=None):
         strrep = str(self).strip()
         if os.path.isabs(strrep):
             return strrep
 
-        if self.origin == "":
+        if hasattr(self, "origin") and self.origin != "":
+            origin = self.origin
+
+        if origin is None:
             raise ValueError("Cannot determine path without origin.")
 
-        return os.path.join(self.origin, strrep)
+        return os.path.join(origin, strrep)
+
+    def __path_list__(self):
+        listrep = list(self)
+
+        for i in range(len(listrep)):
+            listrep[i] = Setting.__path__(listrep[i], self.origin)
+
+        return listrep
 
     @property
     def key(self):
