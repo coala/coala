@@ -20,12 +20,11 @@ from coalib.bears.LocalBear import LocalBear
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.misc.i18n import _
 
 
-class BearRunner(Process):
+class BearRunner:
     def __init__(self,
                  file_name_queue,
                  local_bear_list,
@@ -80,8 +79,6 @@ class BearRunner(Process):
             raise TypeError("message_queue should be a queue like thing (writing possible via 'put')")
         if not hasattr(control_queue, "put"):
             raise TypeError("control_queue should be a queue like thing (writing possible via 'put')")
-
-        Process.__init__(self)
 
         self.filename_queue = file_name_queue
         self.local_bear_list = local_bear_list
