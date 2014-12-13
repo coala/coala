@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import copy
 import os
 import sys
 from coalib.bears.BEAR_KIND import BEAR_KIND
@@ -91,7 +92,7 @@ class SectionManager:
             filler = SectionFiller(section,
                                    outputter=self.outputter,
                                    log_printer=self.log_printer)
-            all_bears = local_bears
+            all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)
             filler.fill_section(all_bears)
 
