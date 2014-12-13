@@ -25,7 +25,7 @@ def get_cpu_count():
         return 2
 
 
-class ProcessSpawner(Process):
+class ProcessSpawner:
     """
     Spawns job_count processes each running the run method of one instance of a class derived from Process.
     """
