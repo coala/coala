@@ -96,7 +96,7 @@ class TestInit(unittest.TestCase):
         test_section.append(Setting("ignored_files", "test value"))
         test_section.append(Setting("ignored_dirs", "test value"))
 
-        uut = FileCollector.from_section(test_section)
+        FileCollector.from_section(test_section)
 
 
 class TestFileCollection(unittest.TestCase):
@@ -113,6 +113,8 @@ class TestFileCollection(unittest.TestCase):
 
     def test_allowed_files(self):
         uut = FileCollector(allowed_files=["not_a_file", self.testfile1_path])
+        self.assertEqual(set(uut.collect()), {self.testfile1_path})
+        # Consecutive invocations shall be idempotent
         self.assertEqual(set(uut.collect()), {self.testfile1_path})
 
     def test_flat(self):

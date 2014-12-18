@@ -47,7 +47,7 @@ class StringConstants:
     COVERAGE_DIR = "./.coverageresults"
 
     # Path to the coalib directory
-    coalib_root = os.path.join(os.path.split(inspect.getfile(_))[0], os.path.pardir)
+    coalib_root = os.path.join(os.path.dirname(inspect.getfile(_)), os.path.pardir)
 
     # Path to the directory containing the default bears
     coalib_bears_root = os.path.join(coalib_root, os.path.pardir, "bears")

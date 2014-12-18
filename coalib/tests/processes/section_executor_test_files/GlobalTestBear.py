@@ -12,8 +12,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.bears.GlobalBear import GlobalBear
+from coalib.bears.results.Result import Result
 
 
-class Process:
-    def run(self, *args, **kwargs):
-        raise NotImplementedError
+class GlobalTestBear(GlobalBear):
+    def run_bear(self):
+        for filename in self.file_dict:
+            return [Result("GlobalTestBear", "test message", filename)]

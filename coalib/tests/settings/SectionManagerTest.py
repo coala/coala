@@ -12,12 +12,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import inspect
 import os
 import sys
 import tempfile
 import unittest
-sys.path.insert(0, ".")
 
+sys.path.insert(0, ".")
+from coalib.tests.processes.section_executor_test_files.GlobalTestBear import GlobalTestBear
 from coalib.misc.StringConstants import StringConstants
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.SectionManager import SectionManager
@@ -57,6 +59,15 @@ class SectionManagerTestCase(unittest.TestCase):
                           "config = " + filename + "\n",
                           "[test]\n",
                           "value = 5\n"], lines)
+
+    def test_on_files(self):
+        config_path = os.path.abspath(os.path.join(os.path.dirname(inspect.getfile(GlobalTestBear)),
+                                                   "section_executor_test_files",
+                                                   ".coafile"))
+        section, local_bears, global_bears = SectionManager().run(["--config", config_path])
+
+        self.assertEqual(len(local_bears["default"]), 1)
+        self.assertEqual(len(global_bears["default"]), 1)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

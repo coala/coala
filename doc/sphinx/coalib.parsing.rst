@@ -6,7 +6,9 @@ Submodules
 
 .. toctree::
 
+   coalib.parsing.CliParser
    coalib.parsing.ConfParser
+   coalib.parsing.DefaultArgParser
    coalib.parsing.LineParser
    coalib.parsing.Parser
 

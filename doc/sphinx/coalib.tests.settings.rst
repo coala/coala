@@ -6,9 +6,10 @@ Submodules
 
 .. toctree::
 
+   coalib.tests.settings.SectionFillerTest
+   coalib.tests.settings.SectionManagerTest
+   coalib.tests.settings.SectionTest
    coalib.tests.settings.SettingTest
-   coalib.tests.settings.SettingsFillerTest
-   coalib.tests.settings.SettingsTest
 
 Module contents
 ---------------

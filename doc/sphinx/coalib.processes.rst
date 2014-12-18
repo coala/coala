@@ -14,6 +14,7 @@ Submodules
 .. toctree::
 
    coalib.processes.BearRunner
+   coalib.processes.CONTROL_ELEMENT
    coalib.processes.Process
    coalib.processes.ProcessSpawner
 

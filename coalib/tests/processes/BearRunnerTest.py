@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import queue
 import sys
+import multiprocessing
 
 sys.path.insert(0, ".")
 import unittest
@@ -84,6 +85,9 @@ class BearRunnerUnitTestCase(unittest.TestCase):
         self.uut = BearRunner(self.file_name_queue, self.local_bear_list, self.global_bear_queue,
                               self.file_dict, self.local_result_queue, self.global_result_queue,
                               self.message_queue, self.control_queue)
+
+    def test_inheritance(self):
+        self.assertIsInstance(self.uut, multiprocessing.Process)
 
     def test_messaging(self):
         self.uut.debug("test", "messag", delimiter="-", end="e")

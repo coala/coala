@@ -1,0 +1,3 @@
+bears = GlobalTestBear, LocalTestBear
+allowed_files = testcode.c
+flat_bear_directories = .

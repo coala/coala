@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import queue
+import multiprocessing
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -20,12 +21,11 @@ from coalib.bears.LocalBear import LocalBear
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.misc.i18n import _
 
 
-class BearRunner(Process):
+class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
                  local_bear_list,
@@ -58,8 +58,8 @@ class BearRunner(Process):
         :param global_result_queue: queue (write) for results from global bears (one item holds the results of one bear
         for all files)
         :param message_queue: queue (write) for debug/warning/error messages (type LogMessage)
-        :param control_queue: queue (write) which will get one element of type CONTROL_ELEMENT if any result gets into any
-        queue.
+        :param control_queue: queue (write) which will get one element of type CONTROL_ELEMENT if any result gets into
+        any queue.
         :param TIMEOUT: in seconds for all queue actions
         """
         if not isinstance(local_bear_list, list):
@@ -81,7 +81,7 @@ class BearRunner(Process):
         if not hasattr(control_queue, "put"):
             raise TypeError("control_queue should be a queue like thing (writing possible via 'put')")
 
-        Process.__init__(self)
+        multiprocessing.Process.__init__(self)
 
         self.filename_queue = file_name_queue
         self.local_bear_list = local_bear_list

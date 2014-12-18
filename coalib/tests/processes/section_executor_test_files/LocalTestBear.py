@@ -12,19 +12,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-
-import sys
-
-sys.path.insert(0, ".")
-from coalib.processes.Process import Process
-import unittest
+from coalib.bears.LocalBear import LocalBear
+from coalib.bears.results.Result import Result
 
 
-class ProcessTestCase(unittest.TestCase):
-    def test_run_available(self):
-        self.uut = Process()
-        self.assertRaises(NotImplementedError, self.uut.run)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+class LocalTestBear(LocalBear):
+    def run_bear(self, filename, file):
+        return [Result("LocalTestBear", "test message")]

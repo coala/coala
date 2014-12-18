@@ -17,12 +17,11 @@ import traceback
 
 from coalib.misc.i18n import _
 from coalib.output.LOG_LEVEL import LOG_LEVEL
-from coalib.processes.Process import Process
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Section import Section
 
 
-class Bear(Process):
+class Bear:
     """
     A bear contains the actual subroutine that is responsible for checking source code for certain specifications.
     However it can actually do whatever it wants with the files it gets. If you are missing some Result type, feel free

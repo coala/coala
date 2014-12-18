@@ -114,26 +114,26 @@ class Section:
         """
         return copy.deepcopy(self)
 
-    def update(self, other, ignore_defaults=False):
+    def update(self, other_section, ignore_defaults=False):
         """
         Incorporates all keys and values from the other section into this one. Values from the other section override
         the ones from this one.
 
         Default values from the other section override the default values from this only.
 
-        :param other: Another Section
+        :param other_section: Another Section
         :param ignore_defaults: If set to true, do not take default values from other
         :return: self
         """
-        if not isinstance(other, Section):
-            raise TypeError("'other' has to be a Section")
+        if not isinstance(other_section, Section):
+            raise TypeError("other_section has to be a Section")
 
-        self.contents.update(other.contents)
+        self.contents.update(other_section.contents)
 
-        if not ignore_defaults and other.defaults is not None:
+        if not ignore_defaults and other_section.defaults is not None:
             if self.defaults is None:
-                self.defaults = other.defaults.copy()
+                self.defaults = other_section.defaults.copy()
             else:
-                self.defaults.update(other.defaults)
+                self.defaults.update(other_section.defaults)
 
         return self
