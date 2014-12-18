@@ -54,21 +54,23 @@ class BearRunnerConstructionTestCase(unittest.TestCase):
         global_result_queue = queue.Queue()
         message_queue = queue.Queue()
         control_queue = queue.Queue()
-        self.assertRaises(TypeError, BearRunner, 0, local_bear_list, global_bear_queue,
+        self.assertRaises(TypeError, BearRunner, 0, local_bear_list, [], global_bear_queue,
                           file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, 0, global_bear_queue,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, 0, [], global_bear_queue,
                           file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, 0,
+                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
                           0, file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
                           global_bear_queue, 0, local_result_queue, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
                           global_bear_queue, file_dict, 0, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
                           global_bear_queue, file_dict, local_result_queue, 0, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
                           global_bear_queue, file_dict, local_result_queue, global_result_queue, 0, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list,
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
                           global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue, 0)
 
 
@@ -76,15 +78,16 @@ class BearRunnerUnitTestCase(unittest.TestCase):
     def setUp(self):
         self.file_name_queue = queue.Queue()
         self.local_bear_list = []
+        self.global_bear_list = []
         self.global_bear_queue = queue.Queue()
         self.file_dict = {}
         self.local_result_queue = queue.Queue()
         self.global_result_queue = queue.Queue()
         self.message_queue = queue.Queue()
         self.control_queue = queue.Queue()
-        self.uut = BearRunner(self.file_name_queue, self.local_bear_list, self.global_bear_queue,
-                              self.file_dict, self.local_result_queue, self.global_result_queue,
-                              self.message_queue, self.control_queue)
+        self.uut = BearRunner(self.file_name_queue, self.local_bear_list, self.global_bear_list,
+                              self.global_bear_queue, self.file_dict, self.local_result_queue,
+                              self.global_result_queue, self.message_queue, self.control_queue)
 
     def test_inheritance(self):
         self.assertIsInstance(self.uut, multiprocessing.Process)
@@ -121,8 +124,10 @@ d
         self.local_bear_list.append("not a valid bear")
         self.file_dict[self.file1] = self.example_file
         self.file_dict[self.file2] = self.example_file
-        self.global_bear_queue.put(GlobalTestBear(self.file_dict, self.settings, self.message_queue))
-        self.global_bear_queue.put("not a valid bear")
+        self.global_bear_list.append(GlobalTestBear(self.file_dict, self.settings, self.message_queue))
+        self.global_bear_list.append("not a valid bear")
+        self.global_bear_queue.put(0)
+        self.global_bear_queue.put(1)
 
     def test_run(self):
         self.uut.run()
