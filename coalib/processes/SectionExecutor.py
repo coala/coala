@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import multiprocessing
 import queue
+from multiprocessing import Process
 from coalib.collecting.FileCollector import FileCollector
 from coalib.output.ConsoleOutputter import ConsoleOutputter, Outputter
 from coalib.output.ConsolePrinter import ConsolePrinter, LogPrinter
@@ -28,6 +29,11 @@ def get_cpu_count():
         # cpu_count is not implemented for some CPU architectures/OSes
     except NotImplementedError:  # pragma: no cover
         return 2
+
+
+def run_bears(kwargs):
+    r = BearRunner(**kwargs)
+    r.run()
 
 
 class SectionExecutor:
@@ -89,7 +95,7 @@ class SectionExecutor:
                             "message_queue": message_queue,
                             "control_queue": control_queue,
                             "TIMEOUT": 0.1}
-        bear_runners = [BearRunner(**bear_runner_args) for i in range(get_cpu_count())]
+        bear_runners = [Process(target=run_bears, args=(bear_runner_args, )) for i in range(get_cpu_count())]
 
         self._fill_queue(filename_queue, filename_list)
         self._fill_queue(global_bear_queue, self.global_bear_list)
