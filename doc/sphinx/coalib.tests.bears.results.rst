@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    coalib.tests.bears.results.LineResultTest
+   coalib.tests.bears.results.RESULT_SEVERITYTest
    coalib.tests.bears.results.ResultTest
 
 Module contents

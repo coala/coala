@@ -22,6 +22,7 @@ from coalib.collecting.FileCollector import FileCollector
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.settings.Section import Section
+from coalib.settings.Setting import path_list
 
 
 class BearCollector(FileCollector):
@@ -36,9 +37,11 @@ class BearCollector(FileCollector):
         """
         This collector stores bear classes (not instances) in self._items
         :param bear_kinds: the KINDs of bears to be collected
-        :param bear_dirs: list of strings: directories from which bears should be collected
-        :param bear_names: list of strings: names of bears that should be collected. Default is all.
-        :param ignored_bears: list of strings: names of bears that should not be collected. Default is none.
+        :param flat_bear_dirs: list of strings: directories from which bears should be collected (flat)
+        :param rec_bear_dirs: list of strings: directories from which bears should be collected (recursive)
+        :param bear_names: list of strings: names of bears that should be collected.
+        :param ignored_bears: list of strings: names of bears that should not be collected, even if they match a regex.
+        Default is none.
         :param regexs: list of strings: regexs that match bears to be collected.
         :param log_printer: LogPrinter to handle logging of debug, warning and error messages
         """
@@ -67,7 +70,14 @@ class BearCollector(FileCollector):
         self._bear_kinds = bear_kinds
         self._bear_names = bear_names
         self._ignored_bears = ignored_bears
-        self._regexs = regexs
+        self._regexs = [self.prepare_regex(regex) for regex in regexs]
+
+    @staticmethod
+    def prepare_regex(regex):
+        if regex.endswith("$"):
+            return regex
+
+        return regex + "$"
 
     @classmethod
     def from_section(cls, bear_kinds, section, log_printer=ConsolePrinter()):
@@ -75,8 +85,8 @@ class BearCollector(FileCollector):
             raise TypeError("section should be of type Section.")
 
         return cls(bear_kinds=bear_kinds,
-                   flat_bear_dirs=list(section["flat_bear_directories"]),
-                   rec_bear_dirs=list(section["rec_bear_directories"]),
+                   flat_bear_dirs=path_list(section["flat_bear_directories"]),
+                   rec_bear_dirs=path_list(section["rec_bear_directories"]),
                    bear_names=list(section["bears"]),
                    ignored_bears=list(section["ignored_bears"]),
                    regexs=list(section["regex_bears"]),
@@ -108,12 +118,8 @@ class BearCollector(FileCollector):
         if any(re.match(regex, bear_name) for regex in self._regexs):
             return True  # specifically called
 
-        # dont include if not everything is to be included
-        if self._bear_names or self._regexs:
-            return False  # specific bears were called but not this one
-
-        # include everything
-        return True
+        # exclude everything else
+        return False
 
     def collect(self):
         """
@@ -125,7 +131,7 @@ class BearCollector(FileCollector):
 
         for file in files:
             module_name = os.path.splitext(os.path.basename(file))[0]
-            module_dir = os.path.split(file)[0]
+            module_dir = os.path.dirname(file)
             if module_dir not in sys.path:
                 sys.path.insert(0, module_dir)
 
