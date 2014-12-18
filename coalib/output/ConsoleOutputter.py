@@ -21,9 +21,11 @@ from coalib.misc.i18n import _
 
 
 class ConsoleOutputter(Outputter, ConsolePrinter):
-    def __init__(self, output=sys.stdout):
+    def __init__(self, output=sys.stdout, pre_padding=3):
         Outputter.__init__(self)
         ConsolePrinter.__init__(self, output=output)
+
+        self.pre_padding = pre_padding
 
     def acquire_settings(self, settings_names_dict):
         if not isinstance(settings_names_dict, dict):
@@ -53,92 +55,75 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
                                                                                                  str(arr[0]),
                                                                                                  needed))
 
+    def _print_formatted(self, line, real_nr="", sign="|", mod_nr="", symbol="", ):
+        print("|{:>4}{}{:>4}|{:1}{}".format(real_nr, sign, mod_nr, symbol, line))
+
+    def _print_line(self, line, real_nr, mod_nr, symbol=""):
+        self._print_formatted(line=line, real_nr=real_nr, mod_nr=mod_nr, symbol=symbol)
+
+    def _print_segregation(self):
+        for i in range(3):
+            self._print_formatted(line="", sign=".")
+
     def _print_result(self, result):
-        assert (isinstance(result, Result))
-        if result.file is None:
-            return self.print(("[{sev}] " + _("Message from {bear}:") +
-                               "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
-                                                     bear=result.origin,
-                                                     message=result.message))
+        message_string = "[{sev}] {bear}:\n{message}".format(sev=RESULT_SEVERITY.__str__(result.severity),
+                                                             bear=result.origin,
+                                                             message=result.message)
+        # todo: can we get width of output, at least through a setting? would make for nicer, indented line breaks!
+        message_string_list = message_string.split('\n')
+        for m_line in message_string_list:
+            self._print_formatted(m_line)
 
-        return self.print(("[{sev}] " + _("Annotation for file {file} from {bear}:") +
-                           "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
-                                                 file=result.file,
-                                                 bear=result.origin,
-                                                 message=result.message))
-
-    def print_results(self, result_list, file_dict, padding_before=3, padding_after=3):
+    def print_results(self, result_list, file_dict, current=[None, 0]):
         """
         Prints all given results. They will be sorted.
 
         :param result_list: List of the results
         :param file_dict: Dictionary containing filename: file_contents
+        :param current: List of filename and line number of the file for which results are currently outputted.
+                        This is cached to allow printing results together that get passed after each other.
         """
-        # TODO: DOES NOT YET USE A DAMN LINE PRINT FUNCTION
-        # todo: also not tested
+        # todo: does this even run?
+        # todo: make >current< two member variables? the outputter will have other jobs besides results...
+
         if not isinstance(result_list, list):
             raise TypeError("result_list should be of type list")
         if not isinstance(file_dict, dict):
             raise TypeError("file_dict should be of type dict")
 
         sorted_result_list = sorted(result_list)
-        current_file = None
-        current_line = 0
 
         for result in sorted_result_list:
             # print file name if appropriate
-            if result.file != current_file:
-                current_file = result.file
-                current_line = 0
-                print("\n{}".format(current_file))
+            if result.file != current[0]:
+                current[0] = result.file
+                current[1] = 0
+                if current[0] is not None:
+                    print("\n{}".format(current[0]))
+                else:
+                    print("\n{}".format(_("file independent")))
 
             # print lines of file if appropriate
             if hasattr(result, "line_nr"):
-                assert (current_file is not None), "A result with a line_nr should also have a file"
-                assert (result.line_nr >= current_line), "Results with higher line_nr should be sorted further back"
+                assert (current[0] is not None), "A result with a line_nr should also have a file"
+                assert (result.line_nr >= current[1]), "Results with higher line_nr should be sorted further back"
 
-                line_delta = result.line_nr - current_line
-                if line_delta <= (padding_before + padding_after):  # line_padding larger than space available
+                line_delta = result.line_nr - current[1]
+                if line_delta > self.pre_padding:  # show segregation and lines up to result.line
+                    self._print_segregation()
+
+                    for i in reversed(range(self.pre_padding + 1)):
+                        self._print_line(line=file_dict[result.file][result.line_nr - i - 1],
+                                         real_nr=result.line_nr - i,
+                                         mod_nr=result.line_nr - i)
+                else:  # show lines from current[0] to result.line
                     for i in range(1, line_delta + 1):
-                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr=current_line + i,
-                                                                                       sign="|",
-                                                                                       mod_nr=current_line + i,
-                                                                                       symbol="",
-                                                                                       line=file_dict[result.file][
-                                                                                           current_line + i - 1]))
-                else:
-                    for i in range(1, padding_after + 1):
-                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr=current_line + i,
-                                                                                       sign="|",
-                                                                                       mod_nr=current_line + i,
-                                                                                       symbol="",
-                                                                                       line=file_dict[result.file][
-                                                                                           current_line + i - 1]))
-                    for i in range(3):
-                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr="",
-                                                                                       sign=".",
-                                                                                       mod_nr="",
-                                                                                       symbol="",
-                                                                                       line=""))
-                    for i in range(padding_before + 1):
-                        print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr=result.line_nr - i,
-                                                                                       sign="|",
-                                                                                       mod_nr=result.line_nr - i,
-                                                                                       symbol="",
-                                                                                       line=file_dict[result.file][
-                                                                                           result.line_nr - i - 1]))
-                    # at this point all needed lines including the current line should be shown
-                    current_line = result.line_nr
+                        self._print_line(line=file_dict[result.file][current[0]+i-1],
+                                         real_nr=current_line+i,
+                                         mod_nr=current_line+i)
 
-                # now we just need to print the result
-                message_string = "[{sev}] {bear}:\n{message}".format(sev=RESULT_SEVERITY.__str__(result.severity),
-                                                                     bear=result.origin,
-                                                                     message=result.message)
-                message_string_list = message_string.split('\n')
+                # at this point all needed lines including the current line should be shown
+                current_line = result.line_nr
 
-                for i in range(message_string_list):
-                    print("|{real_nr:>4}{sign}{mod_nr:>4}|{symbol:1}{line}".format(real_nr="",
-                                                                                   sign="|",
-                                                                                   mod_nr="",
-                                                                                   symbol="",
-                                                                                   line=message_string_list[i]))
+            # now we just need to print the result
+            self._print_result(result)
