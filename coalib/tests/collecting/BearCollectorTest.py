@@ -42,7 +42,7 @@ class TestInit(unittest.TestCase):
 
         test_section = Section("test")
         test_section.append(Setting("flat_bear_dirs", ""))
-        test_section.append(Setting("rec_bear_directories", "test value"))
+        test_section.append(Setting("rec_bear_dirs", "test value"))
         test_section.append(Setting("bears", "test value"))
         test_section.append(Setting("ignored_bears", "test value"))
         test_section.append(Setting("regex_bears", "test value"))
