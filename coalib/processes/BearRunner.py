@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import queue
+import multiprocessing
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -24,7 +25,7 @@ from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.misc.i18n import _
 
 
-class BearRunner:
+class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
                  local_bear_list,
@@ -79,6 +80,8 @@ class BearRunner:
             raise TypeError("message_queue should be a queue like thing (writing possible via 'put')")
         if not hasattr(control_queue, "put"):
             raise TypeError("control_queue should be a queue like thing (writing possible via 'put')")
+
+        multiprocessing.Process.__init__(self)
 
         self.filename_queue = file_name_queue
         self.local_bear_list = local_bear_list
