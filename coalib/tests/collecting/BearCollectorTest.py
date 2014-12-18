@@ -17,9 +17,9 @@ import os
 import shutil
 import sys
 import tempfile
-
 sys.path.insert(0, ".")
 import unittest
+from coalib.misc.StringConstants import StringConstants
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.collecting.BearCollector import BearCollector
@@ -41,13 +41,15 @@ class TestInit(unittest.TestCase):
         self.assertRaises(TypeError, BearCollector.from_section, ["kind"], 5)
 
         test_section = Section("test")
-        test_section.append(Setting("flat_bear_directories", "test value"))
+        test_section.append(Setting("flat_bear_directories", ""))
         test_section.append(Setting("rec_bear_directories", "test value"))
         test_section.append(Setting("bears", "test value"))
         test_section.append(Setting("ignored_bears", "test value"))
         test_section.append(Setting("regex_bears", "test value"))
 
-        BearCollector.from_section(["kind"], test_section)
+        uut = BearCollector.from_section(["kind"], test_section)
+
+        uut._prelim_flat_dirs = [StringConstants.coalib_bears_root]
 
 
 class TestFileCollection(unittest.TestCase):
