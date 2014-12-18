@@ -29,7 +29,7 @@ default_arg_parser.add_argument('-i', '--ignored-files', nargs='+', metavar='PAT
                                 help=_('Files that should be ignored'))
 default_arg_parser.add_argument('-p', '--ignored-dirs', nargs='+', metavar='PATH', dest='ignored_dirs',
                                 help=_('Directories that should be ignored'))
-default_arg_parser.add_argument('-B', '--bear-dirs', nargs='+', metavar='DIR', dest='flat_bear_directories',
+default_arg_parser.add_argument('-B', '--bear-dirs', nargs='+', metavar='DIR', dest='flat_bear_dirs',
                                 help=_('Directories to look in for bears (flat)'))
 default_arg_parser.add_argument('-R', '--rec-bear-dirs', nargs='+', metavar='DIR', dest='rec_bear_directories',
                                 help=_('Directories to look in for bears (recursive)'))

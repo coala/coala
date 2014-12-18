@@ -85,7 +85,7 @@ class BearCollector(FileCollector):
             raise TypeError("section should be of type Section.")
 
         flat_bear_dirs = [StringConstants.coalib_bears_root]
-        flat_bear_dirs.extend(path_list(section["flat_bear_directories"]))
+        flat_bear_dirs.extend(path_list(section["flat_bear_dirs"]))
 
         return cls(bear_kinds=bear_kinds,
                    flat_bear_dirs=flat_bear_dirs,

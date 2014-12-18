@@ -41,7 +41,7 @@ class TestInit(unittest.TestCase):
         self.assertRaises(TypeError, BearCollector.from_section, ["kind"], 5)
 
         test_section = Section("test")
-        test_section.append(Setting("flat_bear_directories", ""))
+        test_section.append(Setting("flat_bear_dirs", ""))
         test_section.append(Setting("rec_bear_directories", "test value"))
         test_section.append(Setting("bears", "test value"))
         test_section.append(Setting("ignored_bears", "test value"))
