@@ -29,6 +29,7 @@ class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
                  local_bear_list,
+                 global_bear_list,
                  global_bear_queue,
                  file_dict,
                  local_result_queue,
@@ -51,7 +52,8 @@ class BearRunner(multiprocessing.Process):
         :param file_name_queue: queue (read) of file names to check with local bears. Every BearRunner takes
         one of those and checks it with all local bears. (Repeat until queue empty.)
         :param local_bear_list: list of local bear instances
-        :param global_bear_queue: queue (read) of global bear instances
+        :param global_bear_list: list of global bear instances
+        :param global_bear_queue: queue (read) of indexes of global bear instances in the global_bear_list
         :param file_dict: dict of all files as {filename:file}, file as in file.readlines()
         :param local_result_queue: queue (write) for results from local bears (one item holds results of all
         bears for one file, its a list of all results)
@@ -69,6 +71,8 @@ class BearRunner(multiprocessing.Process):
         if not hasattr(file_name_queue, "get"):
             raise TypeError("file_name_queue should be a queue like thing "
                             "(reading possible via 'get', raises queue.Empty if empty)")
+        if not isinstance(global_bear_list, list):
+            raise TypeError("global_bear_list should be a list")
         if not hasattr(global_bear_queue, "get"):
             raise TypeError("global_bear_queue should be a queue like thing "
                             "(reading possible via 'get', raises queue.Empty if empty)")
@@ -86,6 +90,7 @@ class BearRunner(multiprocessing.Process):
         self.filename_queue = file_name_queue
         self.local_bear_list = local_bear_list
         self.global_bear_queue = global_bear_queue
+        self.global_bear_list = global_bear_list
 
         self.file_dict = file_dict
 
@@ -129,7 +134,8 @@ class BearRunner(multiprocessing.Process):
     def run_global_bears(self):
         try:
             while True:
-                bear = self.global_bear_queue.get(timeout=self.TIMEOUT)
+                bear_id = self.global_bear_queue.get(timeout=self.TIMEOUT)
+                bear = self.global_bear_list[bear_id]
                 try:
                     result = self.__run_global_bear(bear)
                     if result:
