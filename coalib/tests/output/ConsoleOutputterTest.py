@@ -59,11 +59,10 @@ class ConsoleOutputterTestCase(unittest.TestCase):
 
     def test_print_result(self):
         self.uut.print = lambda x: x
-        self.assertEqual("[NORMAL] " + _("Message from {bear}:").format(bear="origin") + "\nmessage",
-                         self.uut.print_result(Result("origin", "message")))
-        self.assertEqual("[NORMAL] " + _("Annotation for file {file} from {bear}:").format(file="file", bear="origin")
-                         + "\nmessage",
-                         self.uut.print_result(Result("origin", "message", file="file")))
+        self.assertEqual("|    |    | [NORMAL] origin:\n|    |    | message",
+                         self.uut._print_result(Result("origin", "message")))
+        self.assertEqual("|    |    | [NORMAL] origin:\n|    |    | message",
+                         self.uut._print_result(Result("origin", "message", file="file")))
 
 
 if __name__ == '__main__':
