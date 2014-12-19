@@ -23,6 +23,7 @@ from coalib.bears.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.processes.BearRunner import BearRunner, LogMessage, LOG_LEVEL
+from coalib.processes.Barrier import Barrier
 from coalib.settings.Section import Section
 
 
@@ -54,24 +55,27 @@ class BearRunnerConstructionTestCase(unittest.TestCase):
         global_result_queue = queue.Queue()
         message_queue = queue.Queue()
         control_queue = queue.Queue()
+        barrier = Barrier(parties=1)
         self.assertRaises(TypeError, BearRunner, 0, local_bear_list, [], global_bear_queue,
-                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
+                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue, barrier)
         self.assertRaises(TypeError, BearRunner, file_name_queue, 0, [], global_bear_queue,
-                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, 0,
-                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
+                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue, barrier)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, 0, global_bear_queue,
+                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue, barrier)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [], 0,
+                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue, barrier)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [], global_bear_queue,
+                          0, local_result_queue, global_result_queue, message_queue, control_queue, barrier)
         self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
-                          0, file_dict, local_result_queue, global_result_queue, message_queue, control_queue)
+                          global_bear_queue, file_dict, 0, global_result_queue, message_queue, control_queue, barrier)
         self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
-                          global_bear_queue, 0, local_result_queue, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
-                          global_bear_queue, file_dict, 0, global_result_queue, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
-                          global_bear_queue, file_dict, local_result_queue, 0, message_queue, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
-                          global_bear_queue, file_dict, local_result_queue, global_result_queue, 0, control_queue)
-        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [],
-                          global_bear_queue, file_dict, local_result_queue, global_result_queue, message_queue, 0)
+                          global_bear_queue, file_dict, local_result_queue, 0, message_queue, control_queue, barrier)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [], global_bear_queue,
+                          file_dict, local_result_queue, global_result_queue, 0, control_queue, barrier)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [], global_bear_queue,
+                          file_dict, local_result_queue, global_result_queue, message_queue, 0, barrier)
+        self.assertRaises(TypeError, BearRunner, file_name_queue, local_bear_list, [], global_bear_queue,
+                          file_dict, local_result_queue, global_result_queue, message_queue, control_queue, 0)
 
 
 class BearRunnerUnitTestCase(unittest.TestCase):
@@ -85,9 +89,10 @@ class BearRunnerUnitTestCase(unittest.TestCase):
         self.global_result_queue = queue.Queue()
         self.message_queue = queue.Queue()
         self.control_queue = queue.Queue()
+        self.barrier = Barrier(parties=1)
         self.uut = BearRunner(self.file_name_queue, self.local_bear_list, self.global_bear_list,
                               self.global_bear_queue, self.file_dict, self.local_result_queue,
-                              self.global_result_queue, self.message_queue, self.control_queue)
+                              self.global_result_queue, self.message_queue, self.control_queue, self.barrier)
 
     def test_inheritance(self):
         self.assertIsInstance(self.uut, multiprocessing.Process)
