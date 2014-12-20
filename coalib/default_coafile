@@ -8,3 +8,4 @@ rec_bear_dirs           =
 bears                   =
 regex_bears             =
 ignored_dirs            =
+ignored_bear_dirs       =

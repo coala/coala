@@ -32,6 +32,7 @@ class BearCollector(FileCollector):
                  rec_bear_dirs=[StringConstants.coalib_bears_root],
                  bear_names=None,
                  ignored_bears=None,
+                 ignored_bear_dirs=None,
                  regexs=None,
                  log_printer=ConsolePrinter()):
         """
@@ -42,6 +43,8 @@ class BearCollector(FileCollector):
         :param bear_names: list of strings: names of bears that should be collected.
         :param ignored_bears: list of strings: names of bears that should not be collected, even if they match a regex.
         Default is none.
+        :param ignored_bear_dirs: list of strings: directories from which bears should not be collected. Overrides
+        anything else.
         :param regexs: list of strings: regexs that match bears to be collected.
         :param log_printer: LogPrinter to handle logging of debug, warning and error messages
         """
@@ -51,6 +54,8 @@ class BearCollector(FileCollector):
             ignored_bears = []
         if regexs is None:
             regexs = []
+        if ignored_bear_dirs is None:
+            ignored_bear_dirs = []
 
         if not isinstance(bear_kinds, list):
             raise TypeError("bear_kinds should be of type list")
@@ -65,6 +70,7 @@ class BearCollector(FileCollector):
                                flat_dirs=flat_bear_dirs,
                                rec_dirs=rec_bear_dirs,
                                allowed_types=["py"],
+                               ignored_dirs=ignored_bear_dirs,
                                log_printer=log_printer)
 
         self._bear_kinds = bear_kinds
@@ -92,6 +98,7 @@ class BearCollector(FileCollector):
                    rec_bear_dirs=path_list(section["rec_bear_dirs"]),
                    bear_names=list(section["bears"]),
                    regexs=list(section["regex_bears"]),
+                   ignored_bear_dirs=path_list(section["ignored_bear_dirs"]),
                    log_printer=log_printer)
 
     def _is_target(self, file_path):

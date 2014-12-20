@@ -45,6 +45,7 @@ class TestInit(unittest.TestCase):
         test_section.append(Setting("rec_bear_dirs", "test value"))
         test_section.append(Setting("bears", "test value"))
         test_section.append(Setting("regex_bears", "test value"))
+        test_section.append(Setting("ignored_bear_dirs", "test value"))
 
         uut = BearCollector.from_section(["kind"], test_section)
 
@@ -169,6 +170,21 @@ class TestBear(ImportedTestBear):
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
+
+    def test_bear_dir_ignoration(self):
+        uut = BearCollector(["kind"],
+                            rec_bear_dirs=[self.parent_from_tmp],
+                            ignored_bear_dirs=[self.tmp_dir],
+                            regexs=["testfile1.*"])
+        bear_list = uut.collect()
+        self.assertEqual(len(bear_list), 0)
+
+        uut = BearCollector(["kind"],
+                            rec_bear_dirs=[self.parent_from_tmp],
+                            ignored_bear_dirs=[self.parent_from_tmp],
+                            regexs=["testfile1.*"])
+        bear_list = uut.collect()
+        self.assertEqual(len(bear_list), 0)
 
 
 if __name__ == '__main__':

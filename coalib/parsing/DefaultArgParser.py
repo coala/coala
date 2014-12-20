@@ -29,6 +29,8 @@ default_arg_parser.add_argument('-F', '--flat-bear-dirs', nargs='+', metavar='DI
                                 help=_('Directories where bears may lie, excluding subdirectories'))
 default_arg_parser.add_argument('-B', '--rec-bear-dirs', nargs='+', metavar='DIR', dest='rec_bear_dirs',
                                 help=_('Directories where bears may lie, including subdirectories'))
+default_arg_parser.add_argument('-I', '--ignored-bear-dirs', nargs='+', metavar='DIR', dest='ignored_bear_dirs',
+                                help=_('Directories to ignore when searching for bears'))
 default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest='bears',
                                 help=_('Names of bears to use'))
 default_arg_parser.add_argument('-r', '--regex-bears', nargs='+', metavar='REGEX', dest='regex_bears',
