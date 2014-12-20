@@ -1,7 +1,7 @@
 save                    = false
 config                  = .coafile
 flat_dirs               = .
-recursive_directories   =
+rec_dirs                =
 files                   =
 flat_bear_dirs          = .
 rec_bear_dirs           =

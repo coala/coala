@@ -63,7 +63,7 @@ class BearCollector(FileCollector):
 
         FileCollector.__init__(self,
                                flat_dirs=flat_bear_dirs,
-                               recursive_dirs=rec_bear_dirs,
+                               rec_dirs=rec_bear_dirs,
                                allowed_types=["py"],
                                log_printer=log_printer)
 

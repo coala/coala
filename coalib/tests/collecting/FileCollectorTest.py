@@ -61,7 +61,7 @@ class TestInit(unittest.TestCase):
         uut._unfold_params()
         self.assertEqual(uut.log_printer, self.lp)
         self.assertEqual(uut._flat_dirs, [])
-        self.assertEqual(uut._recursive_dirs, [])
+        self.assertEqual(uut._rec_dirs, [])
         self.assertEqual(uut._allowed_types, None)
         self.assertEqual(uut._ignored_types, [])
         self.assertEqual(uut._ignored_dirs, [])
@@ -72,7 +72,7 @@ class TestInit(unittest.TestCase):
         uut._unfold_params()
         self.assertEqual(uut.log_printer, self.lp)
         self.assertEqual(uut._flat_dirs, [os.getcwd()])
-        self.assertEqual(uut._recursive_dirs, [os.path.abspath("abc"), os.path.abspath("xyz")])
+        self.assertEqual(uut._rec_dirs, [os.path.abspath("abc"), os.path.abspath("xyz")])
         self.assertEqual(uut._allowed_types, ["py", "c"])
         self.assertEqual(uut._ignored_types, ["h"])
         self.assertEqual(uut._ignored_files, [])
@@ -82,7 +82,7 @@ class TestInit(unittest.TestCase):
         uut = FileCollector([], ["flat"], ["rec"], [], [], [], ["flat", "rec"])
         uut._unfold_params()
         self.assertEqual(uut._flat_dirs, [])
-        self.assertEqual(uut._recursive_dirs, [])
+        self.assertEqual(uut._rec_dirs, [])
 
     def test_from_section(self):
         self.assertRaises(TypeError, FileCollector.from_section, 5)
@@ -90,7 +90,7 @@ class TestInit(unittest.TestCase):
         test_section = Section("test")
         test_section.append(Setting("files", "test value"))
         test_section.append(Setting("flat_dirs", "test value"))
-        test_section.append(Setting("recursive_directories", "test value"))
+        test_section.append(Setting("rec_dirs", "test value"))
         test_section.append(Setting("allowed_file_types", "test value"))
         test_section.append(Setting("forbidden_file_types", "test value"))
         test_section.append(Setting("ignored_files", "test value"))
@@ -122,27 +122,27 @@ class TestFileCollection(unittest.TestCase):
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile2_path})
 
     def test_recursive(self):
-        uut = FileCollector(recursive_dirs=[self.tmp_dir], log_printer=self.lp)
+        uut = FileCollector(rec_dirs=[self.tmp_dir], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile2_path, self.testfile3_path})
 
     def test_allowed(self):
-        uut = FileCollector(recursive_dirs=[self.tmp_dir], allowed_types=[".py"], log_printer=self.lp)
+        uut = FileCollector(rec_dirs=[self.tmp_dir], allowed_types=[".py"], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
 
     def test_forbidden(self):
-        uut = FileCollector(recursive_dirs=[self.tmp_dir], ignored_types=[".c"], log_printer=self.lp)
+        uut = FileCollector(rec_dirs=[self.tmp_dir], ignored_types=[".c"], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
 
     def test_ignored(self):
-        uut = FileCollector(recursive_dirs=[self.tmp_dir], ignored_files=[self.testfile2_path], log_printer=self.lp)
+        uut = FileCollector(rec_dirs=[self.tmp_dir], ignored_files=[self.testfile2_path], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
 
     def test_nonexistent_directory(self):
         self.assertEqual(FileCollector(log_printer=QuietPrinter(), flat_dirs=["bullshit"]).collect(), [])
-        self.assertEqual(FileCollector(log_printer=QuietPrinter(), recursive_dirs=["bullshit"]).collect(), [])
+        self.assertEqual(FileCollector(log_printer=QuietPrinter(), rec_dirs=["bullshit"]).collect(), [])
         self.assertRaises(ZeroDivisionError, FileCollector(log_printer=LoudPrinter(), flat_dirs=["bullshit"]).collect)
         self.assertRaises(ZeroDivisionError,
-                          FileCollector(log_printer=LoudPrinter(), recursive_dirs=["bullshit"]).collect)
+                          FileCollector(log_printer=LoudPrinter(), rec_dirs=["bullshit"]).collect)
 
     @unittest.skipIf(sys.version_info < (3, 3), "Mocks are not supported in Python 3.2")
     def test_unreadable_directory(self):
@@ -154,10 +154,10 @@ class TestFileCollection(unittest.TestCase):
 
         os.listdir = MagicMock(side_effect=OSError)
         self.assertEqual(FileCollector(log_printer=QuietPrinter(), flat_dirs=[os.getcwd()]).collect(), [])
-        self.assertEqual(FileCollector(log_printer=QuietPrinter(), recursive_dirs=[os.getcwd()]).collect(), [])
+        self.assertEqual(FileCollector(log_printer=QuietPrinter(), rec_dirs=[os.getcwd()]).collect(), [])
         self.assertRaises(ZeroDivisionError, FileCollector(log_printer=LoudPrinter(), flat_dirs=["bullshit"]).collect)
         self.assertRaises(ZeroDivisionError,
-                          FileCollector(log_printer=LoudPrinter(), recursive_dirs=["bullshit"]).collect)
+                          FileCollector(log_printer=LoudPrinter(), rec_dirs=["bullshit"]).collect)
         importlib.reload(os)
 
 

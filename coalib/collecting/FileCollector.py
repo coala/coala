@@ -26,7 +26,7 @@ class FileCollector(Collector):
     def __init__(self,
                  files=[],
                  flat_dirs=[],
-                 recursive_dirs=[],
+                 rec_dirs=[],
                  allowed_types=None,
                  ignored_types=[],
                  ignored_files=[],
@@ -35,7 +35,7 @@ class FileCollector(Collector):
         """
         :param files: Absolute path to files that will always be collected if accessible
         :param flat_dirs: list of strings: directories from which files should be collected, excluding sub directories
-        :param recursive_dirs: list of strings: directories from which files should be collected, including sub
+        :param rec_dirs: list of strings: directories from which files should be collected, including sub
                                directories
         :param allowed_types: list of strings: file types that should be collected. The default value of None will
                               result in all file types being collected.
@@ -52,7 +52,7 @@ class FileCollector(Collector):
             raise TypeError("files should be of type list")
         if not isinstance(flat_dirs, list):
             raise TypeError("flat_dirs should be of type list")
-        if not isinstance(recursive_dirs, list):
+        if not isinstance(rec_dirs, list):
             raise TypeError("rec_dirs should be of type list")
         if not (isinstance(allowed_types, list) or allowed_types is None):
             raise TypeError("allowed should be of type list or None")
@@ -68,12 +68,12 @@ class FileCollector(Collector):
 
         self._prelim_files = [os.path.abspath(a_file) for a_file in files]
         self._prelim_flat_dirs = [os.path.abspath(f_dir) for f_dir in flat_dirs]
-        self._prelim_recursive_dirs = [os.path.abspath(r_dir) for r_dir in recursive_dirs]
+        self._prelim_rec_dirs = [os.path.abspath(r_dir) for r_dir in rec_dirs]
         self.unfolded = False
 
         self._files = []
         self._flat_dirs = []
-        self._recursive_dirs = []
+        self._rec_dirs = []
 
         if allowed_types is not None:
             self._allowed_types = [t.lower().lstrip('.') for t in allowed_types]
@@ -90,7 +90,7 @@ class FileCollector(Collector):
 
         return cls(files=path_list(section["files"]),
                    flat_dirs=path_list(section["flat_dirs"]),
-                   recursive_dirs=path_list(section["recursive_directories"]),
+                   rec_dirs=path_list(section["rec_dirs"]),
                    allowed_types=list(section["allowed_file_types"]),
                    ignored_types=list(section["forbidden_file_types"]),
                    ignored_files=path_list(section["ignored_files"]),
@@ -168,18 +168,18 @@ class FileCollector(Collector):
         if not self.unfolded:
             # remove directories that are ignored
             flat_dirs = self._prelim_flat_dirs
-            recursive_dirs = self._prelim_recursive_dirs
+            rec_dirs = self._prelim_rec_dirs
 
             for ignored_dir in self._ignored_dirs:
                 for f_dir in flat_dirs:
                     if ignored_dir in f_dir:
                         flat_dirs.remove(f_dir)
-                for r_dir in recursive_dirs:
+                for r_dir in rec_dirs:
                     if ignored_dir in r_dir:
-                        recursive_dirs.remove(r_dir)
+                        rec_dirs.remove(r_dir)
 
             self._flat_dirs = flat_dirs
-            self._recursive_dirs = recursive_dirs
+            self._rec_dirs = rec_dirs
 
             self.unfolded = True
 
@@ -190,8 +190,8 @@ class FileCollector(Collector):
         self._unfold_params()
 
         all_dirs = self._flat_dirs
-        for recursive_dir in self._recursive_dirs:
-            all_dirs.extend(self._nonignored_dir_tree(recursive_dir))
+        for rec_dir in self._rec_dirs:
+            all_dirs.extend(self._nonignored_dir_tree(rec_dir))
 
         files = self._files
         for a_dir in all_dirs:
