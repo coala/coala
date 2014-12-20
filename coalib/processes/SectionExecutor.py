@@ -32,25 +32,6 @@ def get_cpu_count():
         return 2
 
 
-class LogPrinterThread(threading.Thread):
-    """
-    This is the Thread object that outputs all log messages it gets from its message_queue.
-    """
-    def __init__(self, message_queue, log_printer=ConsolePrinter()):
-        threading.Thread.__init__(self)
-        self.running = True
-        self.message_queue = message_queue
-        self.log_printer = log_printer
-
-    def run(self):
-        while self.running:
-            try:
-                elem = self.message_queue.get(timeout=0.1)
-                self.log_printer.log_message(elem)
-            except queue.Empty:
-                pass
-
-
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -62,6 +43,25 @@ class SectionExecutor:
     3. Output results from the BearRunner's
     4. Join all processes
     """
+
+    class LogPrinterThread(threading.Thread):
+        """
+        This is the Thread object that outputs all log messages it gets from its message_queue.
+        """
+        def __init__(self, message_queue, log_printer=ConsolePrinter()):
+            threading.Thread.__init__(self)
+            self.running = True
+            self.message_queue = message_queue
+            self.log_printer = log_printer
+
+        def run(self):
+            while self.running:
+                try:
+                    elem = self.message_queue.get(timeout=0.1)
+                    self.log_printer.log_message(elem)
+                except queue.Empty:
+                    pass
+
     def __init__(self,
                  section,
                  local_bear_list,
@@ -116,7 +116,7 @@ class SectionExecutor:
                             "barrier": barrier,
                             "TIMEOUT": 0.1}
         processes = [BearRunner(**bear_runner_args) for i in range(running_processes)]
-        logger_thread = LogPrinterThread(message_queue, self.log_printer)
+        logger_thread = self.LogPrinterThread(message_queue, self.log_printer)
         processes.append(logger_thread)  # Start and join the logger thread along with the BearRunner's
 
         self._fill_queue(filename_queue, filename_list)
