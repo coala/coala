@@ -23,7 +23,7 @@ default_arg_parser.add_argument('-d', '--flat-dirs', nargs='+', metavar='DIR', d
 default_arg_parser.add_argument('-D', '--rec-dirs', nargs='+', metavar='DIR', dest='rec_dirs',
                                 help=_('Directories where files may lie that will be checked, '
                                        'including sub directories'))
-default_arg_parser.add_argument('-p', '--ignored-dirs', nargs='+', metavar='PATH', dest='ignored_dirs',
+default_arg_parser.add_argument('-i', '--ignored-dirs', nargs='+', metavar='PATH', dest='ignored_dirs',
                                 help=_('Directories that should be ignored'))
 default_arg_parser.add_argument('-B', '--bear-dirs', nargs='+', metavar='DIR', dest='flat_bear_dirs',
                                 help=_('Directories to look in for bears (flat)'))
