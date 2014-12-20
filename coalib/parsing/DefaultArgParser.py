@@ -31,8 +31,6 @@ default_arg_parser.add_argument('-B', '--rec-bear-dirs', nargs='+', metavar='DIR
                                 help=_('Directories where bears may lie, including subdirectories'))
 default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest='bears',
                                 help=_('Names of bears to use'))
-default_arg_parser.add_argument('-I', '--ignored_bears', nargs='+', metavar='REGEX', dest='ignored_bears',
-                                help=_('Names of bears not to use'))
 default_arg_parser.add_argument('-r', '--regex-bears', nargs='+', metavar='REGEX', dest='regex_bears',
                                 help=_('Regular expressions matching bears to use'))
 default_arg_parser.add_argument('-l', '--log', nargs=1, choices=['CONSOLE', 'TXT', 'HTML'], metavar='ENUM',

@@ -6,6 +6,5 @@ files                   =
 flat_bear_dirs          = .
 rec_bear_dirs           =
 bears                   =
-ignored_bears           =
 regex_bears             =
 ignored_dirs            =

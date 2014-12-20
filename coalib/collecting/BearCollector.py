@@ -91,7 +91,6 @@ class BearCollector(FileCollector):
                    flat_bear_dirs=flat_bear_dirs,
                    rec_bear_dirs=path_list(section["rec_bear_dirs"]),
                    bear_names=list(section["bears"]),
-                   ignored_bears=list(section["ignored_bears"]),
                    regexs=list(section["regex_bears"]),
                    log_printer=log_printer)
 
