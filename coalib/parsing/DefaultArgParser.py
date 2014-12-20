@@ -15,7 +15,7 @@ from coalib.misc.i18n import _
 
 default_arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=__doc__)
 
-default_arg_parser.add_argument('-f', '--files', nargs='+', metavar='FILE', dest='allowed_files',
+default_arg_parser.add_argument('-f', '--files', nargs='+', metavar='FILE', dest='files',
                                 help=_('Files that should be checked'))
 default_arg_parser.add_argument('-D', '--flat-dirs', nargs='+', metavar='DIR', dest='flat_directories',
                                 help=_('Directories of files that should be checked, excluding sub directories'))

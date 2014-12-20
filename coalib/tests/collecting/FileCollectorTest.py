@@ -88,7 +88,7 @@ class TestInit(unittest.TestCase):
         self.assertRaises(TypeError, FileCollector.from_section, 5)
 
         test_section = Section("test")
-        test_section.append(Setting("allowed_files", "test value"))
+        test_section.append(Setting("files", "test value"))
         test_section.append(Setting("flat_directories", "test value"))
         test_section.append(Setting("recursive_directories", "test value"))
         test_section.append(Setting("allowed_file_types", "test value"))
@@ -111,8 +111,8 @@ class TestFileCollection(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_dir)
 
-    def test_allowed_files(self):
-        uut = FileCollector(allowed_files=["not_a_file", self.testfile1_path])
+    def test_files(self):
+        uut = FileCollector(files=["not_a_file", self.testfile1_path])
         self.assertEqual(set(uut.collect()), {self.testfile1_path})
         # Consecutive invocations shall be idempotent
         self.assertEqual(set(uut.collect()), {self.testfile1_path})
