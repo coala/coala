@@ -91,10 +91,10 @@ class FileCollector(Collector):
         return cls(files=path_list(section["files"]),
                    flat_dirs=path_list(section["flat_dirs"]),
                    rec_dirs=path_list(section["rec_dirs"]),
-                   allowed_types=list(section["allowed_file_types"]),
                    ignored_types=list(section["forbidden_file_types"]),
                    ignored_files=path_list(section["ignored_files"]),
                    ignored_dirs=path_list(section["ignored_dirs"]),
+                   allowed_types=[],
                    log_printer=log_printer)
 
     def _is_target(self, file_path):

@@ -23,8 +23,6 @@ default_arg_parser.add_argument('-d', '--flat-dirs', nargs='+', metavar='DIR', d
 default_arg_parser.add_argument('-D', '--rec-dirs', nargs='+', metavar='DIR', dest='rec_dirs',
                                 help=_('Directories where files may lie that will be checked, '
                                        'including sub directories'))
-default_arg_parser.add_argument('-t', '--allowed', nargs='+', metavar='TYPE', dest='allowed_file_types',
-                                help=_('File types of files to be checked'))
 default_arg_parser.add_argument('-F', '--forbidden', nargs='+', metavar='TYPE', dest='forbidden_file_types',
                                 help=_('File types not to be checked'))
 default_arg_parser.add_argument('-i', '--ignored-files', nargs='+', metavar='PATH', dest='ignored_files',
