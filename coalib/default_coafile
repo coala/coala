@@ -8,5 +8,4 @@ rec_bear_dirs           =
 bears                   =
 ignored_bears           =
 regex_bears             =
-ignored_files           =
 ignored_dirs            =
