@@ -91,7 +91,6 @@ class TestInit(unittest.TestCase):
         test_section.append(Setting("files", "test value"))
         test_section.append(Setting("flat_dirs", "test value"))
         test_section.append(Setting("rec_dirs", "test value"))
-        test_section.append(Setting("forbidden_file_types", "test value"))
         test_section.append(Setting("ignored_files", "test value"))
         test_section.append(Setting("ignored_dirs", "test value"))
 
@@ -128,11 +127,11 @@ class TestFileCollection(unittest.TestCase):
         uut = FileCollector(rec_dirs=[self.tmp_dir], allowed_types=[".py"], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
 
-    def test_forbidden(self):
+    def test_ignored_types(self):
         uut = FileCollector(rec_dirs=[self.tmp_dir], ignored_types=[".c"], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
 
-    def test_ignored(self):
+    def test_ignored_files(self):
         uut = FileCollector(rec_dirs=[self.tmp_dir], ignored_files=[self.testfile2_path], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
 

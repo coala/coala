@@ -57,7 +57,7 @@ class FileCollector(Collector):
         if not (isinstance(allowed_types, list) or allowed_types is None):
             raise TypeError("allowed should be of type list or None")
         if not isinstance(ignored_types, list):
-            raise TypeError("forbidden should be of type list")
+            raise TypeError("ignored_types should be of type list")
         if not isinstance(ignored_files, list):
             raise TypeError("ignored should be of type list")
         if not isinstance(ignored_dirs, list):
@@ -91,7 +91,6 @@ class FileCollector(Collector):
         return cls(files=path_list(section["files"]),
                    flat_dirs=path_list(section["flat_dirs"]),
                    rec_dirs=path_list(section["rec_dirs"]),
-                   ignored_types=list(section["forbidden_file_types"]),
                    ignored_files=path_list(section["ignored_files"]),
                    ignored_dirs=path_list(section["ignored_dirs"]),
                    allowed_types=[],

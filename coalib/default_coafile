@@ -8,6 +8,5 @@ rec_bear_dirs           =
 bears                   =
 ignored_bears           =
 regex_bears             =
-forbidden_file_types    =
 ignored_files           =
 ignored_dirs            =
