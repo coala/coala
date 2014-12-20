@@ -89,7 +89,7 @@ class FileCollector(Collector):
             raise TypeError("section should be of type Section.")
 
         return cls(files=path_list(section["files"]),
-                   flat_dirs=path_list(section["flat_directories"]),
+                   flat_dirs=path_list(section["flat_dirs"]),
                    recursive_dirs=path_list(section["recursive_directories"]),
                    allowed_types=list(section["allowed_file_types"]),
                    ignored_types=list(section["forbidden_file_types"]),

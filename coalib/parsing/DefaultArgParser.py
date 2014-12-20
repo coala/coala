@@ -17,8 +17,9 @@ default_arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescrip
 
 default_arg_parser.add_argument('-f', '--files', nargs='+', metavar='FILE', dest='files',
                                 help=_('Files that should be checked'))
-default_arg_parser.add_argument('-d', '--flat-dirs', nargs='+', metavar='DIR', dest='flat_directories',
-                                help=_('Directories of files that should be checked, excluding sub directories'))
+default_arg_parser.add_argument('-d', '--flat-dirs', nargs='+', metavar='DIR', dest='flat_dirs',
+                                help=_('Directories where files may lie that will be checked, '
+                                       'excluding sub directories'))
 default_arg_parser.add_argument('-D', '--rec-dirs', nargs='+', metavar='DIR', dest='recursive_directories',
                                 help=_('Directories of files that should be checked, including sub directories'))
 default_arg_parser.add_argument('-t', '--allowed', nargs='+', metavar='TYPE', dest='allowed_file_types',
