@@ -48,5 +48,5 @@ default_arg_parser.add_argument('-s', '--save', nargs='?', const=True, metavar='
                                 help=_('Filename of file to be saved to, defaults to config file'))
 default_arg_parser.add_argument('-j', '--job-count', nargs=1, type=int, metavar='INT', dest='job_count',
                                 help=_('Number of processes to be allowed to run at once'))
-default_arg_parser.add_argument('-C', '--apply-changes', nargs=1, choices=['YES', 'NO', 'ASK'], metavar='ENUM',
+default_arg_parser.add_argument('-a', '--apply-changes', nargs=1, choices=['YES', 'NO', 'ASK'], metavar='ENUM',
                                 dest='apply_changes', help=_("Enum('YES','NO','ASK') to set whether to apply changes"))
