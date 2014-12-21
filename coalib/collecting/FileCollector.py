@@ -24,18 +24,18 @@ from coalib.settings.Setting import path_list
 
 class FileCollector(Collector):
     def __init__(self,
-                 allowed_files=[],
+                 files=[],
                  flat_dirs=[],
-                 recursive_dirs=[],
+                 rec_dirs=[],
                  allowed_types=None,
                  ignored_types=[],
                  ignored_files=[],
                  ignored_dirs=[],
                  log_printer=ConsolePrinter()):
         """
-        :param allowed_files: Absolute path to files that will always be collected if accessible
+        :param files: Absolute path to files that will always be collected if accessible
         :param flat_dirs: list of strings: directories from which files should be collected, excluding sub directories
-        :param recursive_dirs: list of strings: directories from which files should be collected, including sub
+        :param rec_dirs: list of strings: directories from which files should be collected, including sub
                                directories
         :param allowed_types: list of strings: file types that should be collected. The default value of None will
                               result in all file types being collected.
@@ -48,16 +48,16 @@ class FileCollector(Collector):
 
         if not isinstance(log_printer, LogPrinter):
             raise TypeError("log_printer should be an instance of LogPrinter")
-        if not isinstance(allowed_files, list):
-            raise TypeError("allowed_files should be of type list")
+        if not isinstance(files, list):
+            raise TypeError("files should be of type list")
         if not isinstance(flat_dirs, list):
             raise TypeError("flat_dirs should be of type list")
-        if not isinstance(recursive_dirs, list):
+        if not isinstance(rec_dirs, list):
             raise TypeError("rec_dirs should be of type list")
         if not (isinstance(allowed_types, list) or allowed_types is None):
             raise TypeError("allowed should be of type list or None")
         if not isinstance(ignored_types, list):
-            raise TypeError("forbidden should be of type list")
+            raise TypeError("ignored_types should be of type list")
         if not isinstance(ignored_files, list):
             raise TypeError("ignored should be of type list")
         if not isinstance(ignored_dirs, list):
@@ -66,14 +66,14 @@ class FileCollector(Collector):
         Collector.__init__(self)
         self.log_printer = log_printer
 
-        self._prelim_allowed_files = [os.path.abspath(a_file) for a_file in allowed_files]
+        self._prelim_files = [os.path.abspath(a_file) for a_file in files]
         self._prelim_flat_dirs = [os.path.abspath(f_dir) for f_dir in flat_dirs]
-        self._prelim_recursive_dirs = [os.path.abspath(r_dir) for r_dir in recursive_dirs]
+        self._prelim_rec_dirs = [os.path.abspath(r_dir) for r_dir in rec_dirs]
         self.unfolded = False
 
-        self._allowed_files = []
+        self._files = []
         self._flat_dirs = []
-        self._recursive_dirs = []
+        self._rec_dirs = []
 
         if allowed_types is not None:
             self._allowed_types = [t.lower().lstrip('.') for t in allowed_types]
@@ -88,13 +88,11 @@ class FileCollector(Collector):
         if not isinstance(section, Section):
             raise TypeError("section should be of type Section.")
 
-        return cls(allowed_files=path_list(section["allowed_files"]),
-                   flat_dirs=path_list(section["flat_directories"]),
-                   recursive_dirs=path_list(section["recursive_directories"]),
-                   allowed_types=list(section["allowed_file_types"]),
-                   ignored_types=list(section["forbidden_file_types"]),
-                   ignored_files=path_list(section["ignored_files"]),
+        return cls(files=path_list(section["files"]),
+                   flat_dirs=path_list(section["flat_dirs"]),
+                   rec_dirs=path_list(section["rec_dirs"]),
                    ignored_dirs=path_list(section["ignored_dirs"]),
+                   allowed_types=[],
                    log_printer=log_printer)
 
     def _is_target(self, file_path):
@@ -157,10 +155,10 @@ class FileCollector(Collector):
     def _unfold_params(self):
         # remove allowed files that are not accessible
         # we do this every time because accessibility of files might change from one collect invocation to another
-        self._allowed_files = []
-        for a_file in self._prelim_allowed_files:
+        self._files = []
+        for a_file in self._prelim_files:
             if os.access(a_file, os.R_OK):
-                self._allowed_files.append(a_file)
+                self._files.append(a_file)
             else:
                 self.log_printer.warn(StringConstants.OBJ_NOT_ACCESSIBLE.format(a_file))
 
@@ -168,18 +166,18 @@ class FileCollector(Collector):
         if not self.unfolded:
             # remove directories that are ignored
             flat_dirs = self._prelim_flat_dirs
-            recursive_dirs = self._prelim_recursive_dirs
+            rec_dirs = self._prelim_rec_dirs
 
             for ignored_dir in self._ignored_dirs:
                 for f_dir in flat_dirs:
                     if ignored_dir in f_dir:
                         flat_dirs.remove(f_dir)
-                for r_dir in recursive_dirs:
+                for r_dir in rec_dirs:
                     if ignored_dir in r_dir:
-                        recursive_dirs.remove(r_dir)
+                        rec_dirs.remove(r_dir)
 
             self._flat_dirs = flat_dirs
-            self._recursive_dirs = recursive_dirs
+            self._rec_dirs = rec_dirs
 
             self.unfolded = True
 
@@ -190,10 +188,10 @@ class FileCollector(Collector):
         self._unfold_params()
 
         all_dirs = self._flat_dirs
-        for recursive_dir in self._recursive_dirs:
-            all_dirs.extend(self._nonignored_dir_tree(recursive_dir))
+        for rec_dir in self._rec_dirs:
+            all_dirs.extend(self._nonignored_dir_tree(rec_dir))
 
-        files = self._allowed_files
+        files = self._files
         for a_dir in all_dirs:
             files.extend(self._get_files_from_dir(a_dir))
 

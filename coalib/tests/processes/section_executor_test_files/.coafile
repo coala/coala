@@ -1,0 +1,3 @@
+bears = GlobalTestBear, LocalTestBear
+files = testcode.c
+flat_bear_dirs = .

@@ -36,6 +36,7 @@ class BearRunner(multiprocessing.Process):
                  global_result_queue,
                  message_queue,
                  control_queue,
+                 barrier,
                  TIMEOUT=0):
         """
         This is the object that actually runs on the processes
@@ -62,6 +63,8 @@ class BearRunner(multiprocessing.Process):
         :param message_queue: queue (write) for debug/warning/error messages (type LogMessage)
         :param control_queue: queue (write) which will get one element of type CONTROL_ELEMENT if any result gets into
         any queue.
+        :param barrier: a thing that has a wait() method. This will be invoked after running the local bears and may
+        serve as a barrier to avoid getting global results before local ones are processed.
         :param TIMEOUT: in seconds for all queue actions
         """
         if not isinstance(local_bear_list, list):
@@ -84,6 +87,8 @@ class BearRunner(multiprocessing.Process):
             raise TypeError("message_queue should be a queue like thing (writing possible via 'put')")
         if not hasattr(control_queue, "put"):
             raise TypeError("control_queue should be a queue like thing (writing possible via 'put')")
+        if not hasattr(barrier, "wait"):
+            raise TypeError("barrier should be a barrier like thing ('wait' method should be available)")
 
         multiprocessing.Process.__init__(self)
 
@@ -98,6 +103,7 @@ class BearRunner(multiprocessing.Process):
         self.global_result_queue = global_result_queue
         self.message_queue = message_queue
         self.control_queue = control_queue
+        self.barrier = barrier
 
         self.TIMEOUT = TIMEOUT
 
@@ -112,6 +118,7 @@ class BearRunner(multiprocessing.Process):
 
     def run(self):
         self.run_local_bears()
+        self.barrier.wait()
         self.run_global_bears()
 
         self.control_queue.put(CONTROL_ELEMENT.FINISHED)
