@@ -33,8 +33,8 @@ default_arg_parser.add_argument('-I', '--ignored-bear-dirs', nargs='+', metavar=
                                 help=_('Directories to ignore when searching for bears'))
 default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest='bears',
                                 help=_('Names of bears to use'))
-default_arg_parser.add_argument('-r', '--regex-bears', nargs='+', metavar='REGEX', dest='regex_bears',
-                                help=_('Regular expressions matching bears to use'))
+default_arg_parser.add_argument('-R', '--bears-regex', nargs='+', metavar='REGEX', dest='bears_regex',
+                                help=_('Regular expression for bears to use'))
 default_arg_parser.add_argument('-l', '--log', nargs=1, choices=['CONSOLE', 'TXT', 'HTML'], metavar='ENUM',
                                 dest='log_type', help=_("Enum('CONSOLE','TXT','HTML') to determine type of logging"))
 default_arg_parser.add_argument('-L', '--log_level', nargs=1, choices=['ERR', 'WARN', 'INFO', 'DEBUG'],

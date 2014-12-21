@@ -44,7 +44,7 @@ class TestInit(unittest.TestCase):
         test_section.append(Setting("flat_bear_dirs", ""))
         test_section.append(Setting("rec_bear_dirs", "test value"))
         test_section.append(Setting("bears", "test value"))
-        test_section.append(Setting("regex_bears", "test value"))
+        test_section.append(Setting("bears_regex", "test value"))
         test_section.append(Setting("ignored_bear_dirs", "test value"))
 
         uut = BearCollector.from_section(["kind"], test_section)
