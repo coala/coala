@@ -41,7 +41,7 @@ default_arg_parser.add_argument('-L', '--log_level', nargs=1, choices=['ERR', 'W
                                 metavar='ENUM', dest='log_level',
                                 help=_("Enum('ERR','WARN','INFO','DEBUG') to set level of log output"))
 default_arg_parser.add_argument('-o', '--output', nargs=1, metavar='FILE', dest='output',
-                                help=_('Location of lot output'))
+                                help=_('Location of log output'))
 default_arg_parser.add_argument('-c', '--config', nargs='+', metavar='FILE', dest='config',
                                 help=_('Configuration file to be used'))
 default_arg_parser.add_argument('-s', '--save', nargs='?', const=True, metavar='FILE', dest='save',
