@@ -77,6 +77,18 @@ class SpacingHelperTestCase(unittest.TestCase):
         self.assertEqual(self.uut.replace_tabs_with_spaces("  \t"), " "*self.uut.DEFAULT_TAB_WIDTH)
         self.assertEqual(self.uut.replace_tabs_with_spaces("d \t "), "d" + " "*self.uut.DEFAULT_TAB_WIDTH)
 
+    def test_replace_spaces_with_tabs(self):
+        self.assertRaises(TypeError, self.uut.replace_spaces_with_tabs, 5)
+
+        self.assertEqual(self.uut.replace_spaces_with_tabs(""), "")
+        self.assertEqual(self.uut.replace_spaces_with_tabs(" "), " ")
+        self.assertEqual(self.uut.replace_spaces_with_tabs("    "), "\t")
+        self.assertEqual(self.uut.replace_spaces_with_tabs("   \t"), "\t")
+        self.assertEqual(self.uut.replace_spaces_with_tabs("   dd  "), "   dd  ")
+        self.assertEqual(self.uut.replace_spaces_with_tabs("   dd d "), "   dd d ")  # One space shouldnt be replaced
+        self.assertEqual(self.uut.replace_spaces_with_tabs("   dd   "), "   dd\t")
+        self.assertEqual(self.uut.replace_spaces_with_tabs(" \t   a_text   another"), "\t   a_text\tanother")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

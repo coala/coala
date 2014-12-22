@@ -85,3 +85,46 @@ class SpacingHelper(SectionCreatable):
             result += char
 
         return result
+
+    def replace_spaces_with_tabs(self, line):
+        """
+        Replaces spaces with tabs where possible. However in no case only one space will be replaced by a tab.
+
+        Example: " \t   a_text   another" will be converted to "\t   a_text\tanother", assuming the tab_width is set to
+        4.
+
+        :param line: The string with spaces to replace.
+        :return: The converted string.
+        """
+        if not isinstance(line, str):
+            raise TypeError("The 'line' parameter should be a string.")
+
+        currspaces = 0
+        result = ""
+        # Tracking the index of the string isnt enough because tabs are spanning over multiple columns
+        tabless_position = 0
+        for char in line:
+            if char == " ":
+                currspaces += 1
+                tabless_position += 1
+            elif char == "\t":
+                space_count = self.tab_width - tabless_position % self.tab_width
+                currspaces += space_count
+                tabless_position += space_count
+            else:
+                result += currspaces*" " + char
+                currspaces = 0
+                tabless_position += 1
+
+            # tabless_position is now incremented to point _after_ the current char
+            if tabless_position % self.tab_width == 0:
+                if currspaces > 1:
+                    result += "\t"
+                else:
+                    result += currspaces*" "
+
+                currspaces = 0
+
+        result += currspaces*" "
+
+        return result
