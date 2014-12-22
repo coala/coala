@@ -63,3 +63,25 @@ class SpacingHelper(SectionCreatable):
             break
 
         return count
+
+    def replace_tabs_with_spaces(self, line):
+        """
+        Replaces tabs in this line with the appropriate number of spaces.
+
+        Example: " \t" will be converted to "    ", assuming the tab_width is set to 4.
+
+        :param line: The string with tabs to replace.
+        :return: A string with no tabs.
+        """
+        if not isinstance(line, str):
+            raise TypeError("The 'line' parameter should be a string.")
+
+        result = ""
+        for i, char in enumerate(line):
+            if char == '\t':
+                result += (self.tab_width - i % self.tab_width) * " "
+                continue
+
+            result += char
+
+        return result
