@@ -39,3 +39,27 @@ class SpacingHelper(SectionCreatable):
     @staticmethod
     def get_needed_settings():
         return {"tab_width": "The number of spaces which visually equals a tab."}
+
+    def get_indentation(self, line):
+        """
+        Checks the lines indentation.
+
+        :param line: A string to check for indentation.
+        :return: The indentation count in spaces.
+        """
+        if not isinstance(line, str):
+            raise TypeError("The 'line' parameter should be a string.")
+
+        count = 0
+        for char in line:
+            if char == ' ':
+                count += 1
+                continue
+
+            if char == '\t':
+                count += self.tab_width - (count % self.tab_width)
+                continue
+
+            break
+
+        return count
