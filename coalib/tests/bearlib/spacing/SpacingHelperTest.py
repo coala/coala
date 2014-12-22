@@ -44,6 +44,29 @@ class SpacingHelperTestCase(unittest.TestCase):
         section.append(Setting("tab_width", "invalid"))
         self.assertRaises(ValueError, self.uut.from_section, section)
 
+        # This is assumed in some tests. If you want to change this value, be sure to change the tests too
+        self.assertEqual(self.uut.DEFAULT_TAB_WIDTH, 4)
+        self.assertEqual(self.uut.tab_width, self.uut.DEFAULT_TAB_WIDTH)
+
+    def test_get_indentation(self):
+        self.assertRaises(TypeError, self.uut.get_indentation, 5)
+
+        self.assertEqual(self.uut.get_indentation("no indentation"), 0)
+        self.assertEqual(self.uut.get_indentation(" indentation"), 1)
+        self.assertEqual(self.uut.get_indentation("  indentation"), 2)
+        self.assertEqual(self.uut.get_indentation("\tindentation"), self.uut.DEFAULT_TAB_WIDTH)
+
+        # Having a space before the tab shouldn't make any difference
+        self.assertEqual(self.uut.get_indentation(" \tindentation"), self.uut.DEFAULT_TAB_WIDTH)
+        self.assertEqual(self.uut.get_indentation(" \t indentation"), self.uut.DEFAULT_TAB_WIDTH+1)
+        self.assertEqual(self.uut.get_indentation("\t indentation"), self.uut.DEFAULT_TAB_WIDTH+1)
+
+        # same tests but with indentation only
+        self.assertEqual(self.uut.get_indentation("\t"), self.uut.DEFAULT_TAB_WIDTH)
+        self.assertEqual(self.uut.get_indentation(" \t"), self.uut.DEFAULT_TAB_WIDTH)
+        self.assertEqual(self.uut.get_indentation(" \t "), self.uut.DEFAULT_TAB_WIDTH+1)
+        self.assertEqual(self.uut.get_indentation("\t "), self.uut.DEFAULT_TAB_WIDTH+1)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
