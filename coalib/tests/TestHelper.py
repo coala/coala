@@ -48,12 +48,10 @@ class TestHelper:
     def execute_python3_files(filenames, use_coverage=False):
         number = len(filenames)
         failures = 0
-        retval = 0
         for file in filenames:
             print("\nRunning: {} ({})\n".format(os.path.splitext(os.path.basename(file))[0], file), end='')
             result = TestHelper.execute_python3_file(file, use_coverage)  # either 0 or 1
             failures += result
-            retval = max(result, retval)
             print("\n" + "#" * 70)
 
         print("\nTests finished: failures in {} of {} test modules".format(failures, number))
@@ -61,7 +59,7 @@ class TestHelper:
         if use_coverage:
             TestHelper.__show_coverage_results()
 
-        return retval
+        return failures
 
     @staticmethod
     def get_test_files(testdir):
