@@ -39,13 +39,12 @@ def compile_translations(verbose=True):
 
                 if not os.path.exists(dest_path):
                     os.makedirs(dest_path)
-                else:
-                    if os.path.exists(dest):
-                        src_mtime = os.stat(src)[8]
-                        dest_mtime = os.stat(dest)[8]
-                        if src_mtime <= dest_mtime:
-                            translations.append((install_dir, [dest]))
-                            continue
+                elif os.path.exists(dest):
+                    src_mtime = os.stat(src)[8]
+                    dest_mtime = os.stat(dest)[8]
+                    if src_mtime <= dest_mtime:
+                        translations.append((install_dir, [dest]))
+                        continue
 
                 try:
                     if verbose:
