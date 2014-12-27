@@ -13,11 +13,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import locale
 import os
 import gettext
 import subprocess
 import sys
-import builtins
 
 
 def compile_translations(verbose=True):
@@ -55,35 +55,35 @@ def compile_translations(verbose=True):
     return translations
 
 
-def __untranslated(msg):
-    return msg
-
-
-builtins.__dict__['_'] = __untranslated
-__langs = os.environ.get('LANG', '').split(':')
-__langs += ['en_US']
-
-__language = "en_US"
-__mopath = os.path.join(sys.prefix, "share", "locale")
-for __lang in __langs:
-    __filename = os.path.join(__mopath, __lang[0:5], "LC_MESSAGES", "coala.mo")
-
-    if os.path.exists(__filename):
-        try:
-            # overwrite our _ definition
-            gettext.GNUTranslations(open(__filename, "rb")).install()
-            __language = __lang[0:5]
-            break
-        except IOError:  # pragma: no cover
-            # I cant think of a situation where this should happen we could create in a unit test
-            continue
-
-__gettext = builtins.__dict__['_']
-
-
 def get_locale():
-    return __language
+    """
+    :return: The current locale code. (The POSIX way, even on other systems.)
+    """
+    try:
+        language, encoding = locale.getdefaultlocale()
+    except ValueError:
+        language = None
+        encoding = None
+
+    if language is None:
+        language = 'C'
+    if encoding is None:
+        return language
+    else:
+        return language + '.' + encoding
+
+
+if os.getenv('LANGUAGE') is None \
+   and os.getenv('LC_ALL') is None \
+   and os.getenv('LC_MESSAGES') is None \
+   and os.getenv('LANG') is None:  # pragma: no cover
+    # This will succeed e.g. for windows, gettext only searches those four environment vars
+    # we run coverage on linux so we won't get this covered.
+    os.environ['LANG'] = get_locale()
+
+
+translation = gettext.translation("coala", fallback=True)
 
 
 def _(s):
-    return __gettext(s)
+    return translation.gettext(s)
