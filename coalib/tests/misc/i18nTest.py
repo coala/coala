@@ -34,21 +34,23 @@ i18n.compile_translations(False)
 class i18nTestCase(unittest.TestCase):
     @staticmethod
     def set_lang(lang):
+        os.environ["LANGUAGE"] = lang
+        os.environ["LC_ALL"] = lang
+        os.environ["LC_MESSAGES"] = lang
         os.environ["LANG"] = lang
+
         importlib.reload(i18n)
 
     def test_de(self):
         self.set_lang("de_DE.UTF8")
+        self.assertEqual(i18n.get_locale(), "de_DE.UTF-8")
         # Do not change this translation without changing it in the code also!
         self.assertEqual(i18n._("A string to test translations."), "Eine Zeichenkette um Übersetzungen zu testen.")
 
     def test_unknown(self):
-        self.set_lang("unknown_language.UTF8")
-        self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
-
-    def test_get_locale(self):
         self.set_lang("unknown_language")
-        self.assertEqual(i18n.get_locale(), "en_US")
+        self.assertEqual(i18n.get_locale(), "C")
+        self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
 
 
 if __name__ == '__main__':
