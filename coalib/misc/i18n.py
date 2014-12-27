@@ -20,6 +20,9 @@ import subprocess
 import sys
 
 
+COALA_DOMAIN = 'coala'
+
+
 def compile_translations(verbose=True):
     if verbose:
         print("Compiling translations...")
@@ -31,7 +34,7 @@ def compile_translations(verbose=True):
                 lang = filename[:-3]
                 src = os.path.join(path, filename)
                 dest_path = os.path.join("build", "locale", lang, "LC_MESSAGES")
-                dest = os.path.join(dest_path, "coala.mo")
+                dest = os.path.join(dest_path, COALA_DOMAIN + ".mo")
                 install_dir = os.path.join(trans_install_dir_prefix, lang, "LC_MESSAGES")
 
                 if not os.path.exists(dest_path):
@@ -82,7 +85,7 @@ if os.getenv('LANGUAGE') is None \
     os.environ['LANG'] = get_locale()
 
 
-translation = gettext.translation("coala", fallback=True)
+translation = gettext.translation(COALA_DOMAIN, fallback=True)
 
 
 def _(s):
