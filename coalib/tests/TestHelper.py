@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import subprocess
 import tempfile
+import sys
 
 
 class TestHelper:
@@ -29,6 +30,10 @@ class TestHelper:
 
     @staticmethod
     def execute_python3_file(filename, use_coverage):
+        if sys.platform.startswith("win"):
+            # On windows we won't find a python3 executable and we don't measure coverage
+            return subprocess.call(["python", filename])
+
         if not use_coverage:
             return subprocess.call(["python3", filename])
 
