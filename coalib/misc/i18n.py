@@ -57,9 +57,9 @@ def compile_translations(verbose=True):
     return translations
 
 
-def get_locale():
+def _get_locale():
     """
-    :return: The current locale code. (The POSIX way, even on other systems.)
+    :return: The current locale code. (The POSIX way.)
     """
     try:
         language, encoding = locale.getdefaultlocale()
@@ -81,7 +81,7 @@ if os.getenv('LANGUAGE') is None \
    and os.getenv('LANG') is None:  # pragma: no cover
     # This will succeed e.g. for windows, gettext only searches those four environment vars
     # we run coverage on linux so we won't get this covered.
-    os.environ['LANG'] = get_locale()
+    os.environ['LANG'] = _get_locale()
 
 
 translation = gettext.translation(COALA_DOMAIN, fallback=True)
