@@ -59,6 +59,10 @@ class TestFileCollection(unittest.TestCase):
         (self.testfile1, self.testfile1_path) = tempfile.mkstemp(suffix='.py', prefix='testfile1_', dir=self.tmp_dir)
         (self.testfile2, self.testfile2_path) = tempfile.mkstemp(suffix='.py', prefix='testfile2_', dir=self.tmp_dir)
         (self.testfile3, self.testfile3_path) = tempfile.mkstemp(suffix='.c', prefix='testfile3_', dir=self.tmp_dir)
+        # We don't use the file descriptors
+        os.close(self.testfile1)
+        os.close(self.testfile2)
+        os.close(self.testfile3)
         first_file_name = os.path.splitext(os.path.basename(self.testfile1_path))[0]
         test_bear_file_string_one = """
 from coalib.bears.Bear import Bear
