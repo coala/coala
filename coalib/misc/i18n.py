@@ -57,8 +57,11 @@ def compile_translations(verbose=True):
     return translations
 
 
-def _get_locale():
+def _get_locale():  # pragma: no cover
     """
+    This function will only be used if environment variables are unavailable. Therefore testing it while we cannot
+    reconstruct these conditions does not make sense.
+
     :return: The current locale code. (The POSIX way.)
     """
     try:
