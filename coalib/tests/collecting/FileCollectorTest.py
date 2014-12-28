@@ -104,6 +104,10 @@ class TestFileCollection(unittest.TestCase):
         (self.testfile1, self.testfile1_path) = tempfile.mkstemp(suffix='.py', prefix='testfile1_', dir=self.tmp_dir)
         (self.testfile2, self.testfile2_path) = tempfile.mkstemp(suffix='.c', prefix='testfile2_', dir=self.tmp_dir)
         (self.testfile3, self.testfile3_path) = tempfile.mkstemp(suffix='.py', prefix='testfile3_', dir=self.tmp_subdir)
+        # We don't need the file opened
+        os.close(self.testfile1)
+        os.close(self.testfile2)
+        os.close(self.testfile3)
 
     def tearDown(self):
         shutil.rmtree(self.tmp_dir)
