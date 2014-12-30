@@ -105,7 +105,7 @@ class ConfParser(Parser):
         for line in lines:
             section_name, keys, value, comment = self.line_parser.parse(line)
 
-            if comment is not "":
+            if comment != "":
                 self.__add_comment(current_section, comment, origin)
 
             if section_name != "":
