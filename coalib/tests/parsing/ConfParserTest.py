@@ -37,7 +37,8 @@ class ConfParserTestCase(unittest.TestCase):
     ; just a omment
     ; just a omment
     nokey. = value
-    default.test = content"""
+    default.test = content
+    """
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
@@ -72,6 +73,7 @@ class ConfParserTestCase(unittest.TestCase):
             ('another', 'a\nmultiline\nvalue'),
             ('comment1', '; just a omment'),
             ('comment2', '; just a omment'),
+            ('comment3', ''),
             ('a_default', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
