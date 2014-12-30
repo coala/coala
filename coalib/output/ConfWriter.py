@@ -51,7 +51,7 @@ class ConfWriter:
         try:
             while True:
                 setting = section[it.__next__()]
-                if str(setting) == val and not str(setting.key).lower().startswith("comment"):
+                if str(setting) == val and not self.is_comment(setting.key):
                     keys.append(setting.key)
                 else:
                     self.__write_key_val(keys, val)
@@ -68,10 +68,9 @@ class ConfWriter:
         if keys == []:
             return
 
-        for sep in self.__comment_seperators:
-            if val[0:len(sep)] == sep:
-                self.__file.write(val + "\n")
-                return
+        if all(self.is_comment(key) for key in keys):
+            self.__file.write(val + "\n")
+            return
 
         delim = ""
         for key in keys:
@@ -80,3 +79,7 @@ class ConfWriter:
                 delim = self.__key_delimiter + " "
 
         self.__file.write(" " + self.__key_value_delimiter + " " + val + "\n")
+
+    @staticmethod
+    def is_comment(key):
+        return key.lower().startswith("comment")
