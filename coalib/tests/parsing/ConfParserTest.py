@@ -104,6 +104,8 @@ class ConfParserTestCase(unittest.TestCase):
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, makefiles_should)
 
+        self.assertEqual(val["comment1"].key, "comment1")
+
         self.assertRaises(IndexError, self.uut.get_section, "inexistent section")
 
 
