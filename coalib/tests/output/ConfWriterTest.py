@@ -35,8 +35,7 @@ class ConfWriterTestCase(unittest.TestCase):
                    multiline \n\
                    value \n\
     ; just a omment \n\
-    ; just a omment \n\
-    "
+    ; just a omment \n"
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
@@ -59,6 +58,7 @@ class ConfWriterTestCase(unittest.TestCase):
                        "# do you know that thats a comment\n",
                        "test = push\n",
                        "t = \n",
+                       "\n",
                        "[makefiles]\n",
                        "j, another = a\n",
                        "multiline\n",

@@ -114,6 +114,10 @@ class ConfParser(Parser):
                 current_keys = []
                 continue
 
+            if comment == "" and keys == [] and value == "":
+                self.__add_comment(current_section, "", origin)
+                continue
+
             if keys != []:
                 current_keys = keys
 
