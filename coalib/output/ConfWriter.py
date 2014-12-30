@@ -51,7 +51,7 @@ class ConfWriter:
         try:
             while True:
                 setting = section[it.__next__()]
-                if str(setting) == val:
+                if str(setting) == val and not str(setting.key).lower().startswith("comment"):
                     keys.append(setting.key)
                 else:
                     self.__write_key_val(keys, val)

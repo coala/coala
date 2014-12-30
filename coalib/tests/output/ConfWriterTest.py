@@ -63,6 +63,7 @@ class ConfWriterTestCase(unittest.TestCase):
                        "j, another = a\n",
                        "multiline\n",
                        "value\n",
+                       "; just a omment\n",
                        "; just a omment\n"]
         self.uut.write_sections(self.conf_parser.reparse(self.file))
         del self.uut
