@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import locale
 import sys
 
 sys.path.insert(0, ".")
@@ -34,7 +35,11 @@ i18n.compile_translations(False)
 class i18nTestCase(unittest.TestCase):
     @staticmethod
     def set_lang(lang):
+        os.environ["LANGUAGE"] = lang
+        os.environ["LC_ALL"] = lang
+        os.environ["LC_MESSAGES"] = lang
         os.environ["LANG"] = lang
+
         importlib.reload(i18n)
 
     def test_de(self):
@@ -43,12 +48,8 @@ class i18nTestCase(unittest.TestCase):
         self.assertEqual(i18n._("A string to test translations."), "Eine Zeichenkette um Übersetzungen zu testen.")
 
     def test_unknown(self):
-        self.set_lang("unknown_language.UTF8")
-        self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
-
-    def test_get_locale(self):
         self.set_lang("unknown_language")
-        self.assertEqual(i18n.get_locale(), "en_US")
+        self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
 
 
 if __name__ == '__main__':

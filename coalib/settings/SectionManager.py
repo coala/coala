@@ -19,8 +19,6 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.BearCollector import BearCollector
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConfWriter import ConfWriter
-from coalib.output.ConsoleOutputter import ConsoleOutputter, ConsolePrinter, Outputter
-from coalib.output.LogPrinter import LogPrinter
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.SectionFiller import SectionFiller
@@ -41,15 +39,7 @@ class SectionManager:
 
     This is done when the run() method is invoked. Anything else is just helper stuff and initialization.
     """
-    def __init__(self, outputter=ConsoleOutputter(), log_printer=ConsolePrinter()):
-        if not isinstance(outputter, Outputter):
-            raise TypeError("The outputter parameter has to be of type Outputter.")
-        if not isinstance(log_printer, LogPrinter):
-            raise TypeError("The log_printer parameter has to be of type LogPrinter.")
-
-        self.outputter = outputter
-        self.log_printer = log_printer
-
+    def __init__(self):
         self.cli_sections = None
         self.default_section = None
         self.conf_sections = None
@@ -87,11 +77,9 @@ class SectionManager:
     def _fill_settings(self):
         for section_name in self.conf_sections:
             section = self.conf_sections[section_name]
-            local_bears = BearCollector.from_section([BEAR_KIND.LOCAL], section, self.log_printer).collect()
-            global_bears = BearCollector.from_section([BEAR_KIND.GLOBAL], section, self.log_printer).collect()
-            filler = SectionFiller(section,
-                                   outputter=self.outputter,
-                                   log_printer=self.log_printer)
+            local_bears = BearCollector.from_section([BEAR_KIND.LOCAL], section).collect()
+            global_bears = BearCollector.from_section([BEAR_KIND.GLOBAL], section).collect()
+            filler = SectionFiller(section)
             all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)
             filler.fill_section(all_bears)

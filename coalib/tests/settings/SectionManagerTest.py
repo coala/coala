@@ -24,10 +24,6 @@ from coalib.settings.SectionManager import SectionManager
 
 
 class SectionManagerTestCase(unittest.TestCase):
-    def test_raises(self):
-        self.assertRaises(TypeError, SectionManager, outputter=5)
-        self.assertRaises(TypeError, SectionManager, log_printer=5)
-
     def test_run(self):
         defaults = ConfParser().parse(os.path.abspath(os.path.join(StringConstants.coalib_root, "default_coafile")))
 

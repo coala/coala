@@ -93,9 +93,9 @@ class ConfParser(Parser):
         return str(key).lower().strip()
 
     def __add_comment(self, section, comment, origin):
-        key = "COMMENT" + str(self.__rand_helper)
+        key = "comment" + str(self.__rand_helper)
         self.__rand_helper += 1
-        section._add_or_create_setting(Setting(comment, comment, origin), custom_key=key)
+        section.append(Setting(key, comment, origin))
 
     def __parse_lines(self, lines, origin):
         current_section_name = "default"
@@ -105,13 +105,17 @@ class ConfParser(Parser):
         for line in lines:
             section_name, keys, value, comment = self.line_parser.parse(line)
 
-            if comment is not "":
+            if comment != "":
                 self.__add_comment(current_section, comment, origin)
 
             if section_name != "":
                 current_section_name = section_name
                 current_section = self.get_section(current_section_name, True)
                 current_keys = []
+                continue
+
+            if comment == "" and keys == [] and value == "":
+                self.__add_comment(current_section, "", origin)
                 continue
 
             if keys != []:

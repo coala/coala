@@ -27,7 +27,7 @@ if __name__ == "__main__":
           description='Code Analysis Application (coala)',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt',
           maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de',
-          url='http://www.schuirmann.net/',
+          url='http://www.coala.schuirmann.net/',
           scripts=['coala'],
           packages=['coalib',
                     'coalib.bears',

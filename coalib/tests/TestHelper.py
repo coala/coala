@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import subprocess
 import tempfile
+import sys
 
 
 class TestHelper:
@@ -29,6 +30,10 @@ class TestHelper:
 
     @staticmethod
     def execute_python3_file(filename, use_coverage):
+        if sys.platform.startswith("win"):
+            # On windows we won't find a python3 executable and we don't measure coverage
+            return subprocess.call(["python", filename])
+
         if not use_coverage:
             return subprocess.call(["python3", filename])
 
@@ -48,12 +53,10 @@ class TestHelper:
     def execute_python3_files(filenames, use_coverage=False):
         number = len(filenames)
         failures = 0
-        retval = 0
         for file in filenames:
             print("\nRunning: {} ({})\n".format(os.path.splitext(os.path.basename(file))[0], file), end='')
             result = TestHelper.execute_python3_file(file, use_coverage)  # either 0 or 1
             failures += result
-            retval = max(result, retval)
             print("\n" + "#" * 70)
 
         print("\nTests finished: failures in {} of {} test modules".format(failures, number))
@@ -61,7 +64,7 @@ class TestHelper:
         if use_coverage:
             TestHelper.__show_coverage_results()
 
-        return retval
+        return failures
 
     @staticmethod
     def get_test_files(testdir):

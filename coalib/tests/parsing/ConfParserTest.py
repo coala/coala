@@ -37,7 +37,8 @@ class ConfParserTestCase(unittest.TestCase):
     ; just a omment
     ; just a omment
     nokey. = value
-    default.test = content"""
+    default.test = content
+    """
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
@@ -72,6 +73,7 @@ class ConfParserTestCase(unittest.TestCase):
             ('another', 'a\nmultiline\nvalue'),
             ('comment1', '; just a omment'),
             ('comment2', '; just a omment'),
+            ('comment3', ''),
             ('a_default', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
@@ -103,6 +105,8 @@ class ConfParserTestCase(unittest.TestCase):
         for k in val:
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, makefiles_should)
+
+        self.assertEqual(val["comment1"].key, "comment1")
 
         self.assertRaises(IndexError, self.uut.get_section, "inexistent section")
 

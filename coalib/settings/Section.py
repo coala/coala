@@ -14,6 +14,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from collections import OrderedDict
 import copy
+from coalib.output.ConsoleOutputter import ConsoleOutputter, ConsolePrinter, Outputter
+from coalib.output.LogPrinter import LogPrinter
 
 from coalib.settings.Setting import Setting
 
@@ -27,15 +29,21 @@ class Section:
     def __prepare_key(key):
         return str(key).lower().strip()
 
-    def __init__(self, name, defaults=None):
+    def __init__(self, name, defaults=None, outputter=ConsoleOutputter(), log_printer=ConsolePrinter()):
         if defaults is not None and not isinstance(defaults, Section):
             raise TypeError("defaults has to be a Section object or None.")
         if defaults is self:
             raise ValueError("defaults may not be self for non-recursivity.")
+        if not isinstance(outputter, Outputter):
+            raise TypeError("The outputter parameter has to be of type Outputter.")
+        if not isinstance(log_printer, LogPrinter):
+            raise TypeError("The log_printer parameter has to be of type LogPrinter.")
 
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
+        self.outputter = outputter
+        self.log_printer = log_printer
 
     def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):
@@ -110,9 +118,14 @@ class Section:
 
     def copy(self):
         """
-        :return: a deep copy of this object
+        :return: a deep copy of this object, with the exception of the log_printer and the outputter
         """
-        return copy.deepcopy(self)
+        result = copy.copy(self)
+        result.contents = copy.deepcopy(self.contents)
+        if self.defaults is not None:
+            result.defaults = self.defaults.copy()
+
+        return result
 
     def update(self, other_section, ignore_defaults=False):
         """
