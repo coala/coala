@@ -80,7 +80,7 @@ class BearCollector(FileCollector):
         return regex + "$"
 
     @classmethod
-    def from_section(cls, bear_kinds, section, log_printer=ConsolePrinter()):
+    def from_section(cls, bear_kinds, section):
         if not isinstance(section, Section):
             raise TypeError("section should be of type Section.")
 
@@ -93,7 +93,7 @@ class BearCollector(FileCollector):
                    bear_names=list(section["bears"]),
                    ignored_bears=list(section["ignored_bears"]),
                    regexs=list(section["regex_bears"]),
-                   log_printer=log_printer)
+                   log_printer=section.log_printer)
 
     def _is_target(self, file_path):
         """
