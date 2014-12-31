@@ -18,16 +18,14 @@ import sys
 
 sys.path.insert(0, ".")
 
-from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.SectionFiller import SectionFiller, Outputter, Section, Setting, LogPrinter
+from coalib.settings.SectionFiller import SectionFiller, Section, Setting
 
 import builtins
 
 _input = builtins.__dict__["input"]
 builtins.__dict__["input"] = lambda x: x
-from coalib.output.ConsoleOutputter import ConsoleOutputter
 
 
 class GlobalTestBear(GlobalBear):
@@ -54,20 +52,18 @@ class SectionFillerTestCase(unittest.TestCase):
     def setUp(self):
         section = Section("test")
         section.append(Setting("key", "val"))
-        self.uut = SectionFiller(section, ConsoleOutputter(), ConsolePrinter())
+        self.uut = SectionFiller(section)
 
     def test_raises(self):
         # Construction
-        self.assertRaises(TypeError, SectionFiller, 0, Outputter(), LogPrinter())
-        self.assertRaises(TypeError, SectionFiller, Section("test"), 0, LogPrinter())
-        self.assertRaises(TypeError, SectionFiller, Section("test"), Outputter(), 0)
+        self.assertRaises(TypeError, SectionFiller, 0)
 
         # Fill section
         self.assertRaises(TypeError, self.uut.fill_section, 0)
 
     def test_fill_section(self):
         new_section = self.uut.fill_section([LocalTestBear, GlobalTestBear,
-                                               "an inappropriate string object here"])
+                                            "an inappropriate string object here"])
 
         self.assertTrue("local name" in new_section)
         self.assertTrue("global name" in new_section)
