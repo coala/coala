@@ -35,8 +35,8 @@ default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest
                                 help=_('Names of bears to use'))
 default_arg_parser.add_argument('-R', '--bears-regex', nargs='+', metavar='REGEX', dest='bears_regex',
                                 help=_('Regular expression for bears to use'))
-default_arg_parser.add_argument('-l', '--log', nargs=1, choices=['CONSOLE', 'TXT', 'HTML'], metavar='ENUM',
-                                dest='log_type', help=_("Enum('CONSOLE','TXT','HTML') to determine type of logging"))
+default_arg_parser.add_argument('-l', '--log', nargs=1, metavar='ENUM', dest='log_type',
+                                help=_("Type of logging (console or any filename)"))
 default_arg_parser.add_argument('-L', '--log-level', nargs=1, choices=['ERR', 'WARN', 'DEBUG'],
                                 metavar='ENUM', dest='log_level',
                                 help=_("Enum('ERR','WARN','DEBUG') to set level of log output"))
