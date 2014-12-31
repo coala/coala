@@ -21,25 +21,17 @@ from coalib.misc.i18n import _
 
 
 class SectionFiller:
-    def __init__(self, section, outputter, log_printer):
+    def __init__(self, section):
         """
         A SectionFiller object probes all bears for needed settings. It then prompts the user for those values and
         stores them in the original section given.
 
         :param section: A section containing available settings. Settings will be added if some are missing.
-        :param outputter: An outputter to ask the user things.
-        :param log_printer: A log printer for warning messages.
         """
         if not isinstance(section, Section):
             raise TypeError("The section parameter has to be of type Section.")
-        if not isinstance(outputter, Outputter):
-            raise TypeError("The outputter parameter has to be of type Outputter.")
-        if not isinstance(log_printer, LogPrinter):
-            raise TypeError("The outputter parameter has to be of type LogPrinter.")
 
         self.section = section
-        self.outputter = outputter
-        self.log_printer = log_printer
 
     def fill_section(self, bears):
         """
@@ -57,9 +49,9 @@ class SectionFiller:
         prel_needed_settings = {}
         for bear in bears:
             if not hasattr(bear, "get_needed_settings"):
-                self.log_printer.log(LOG_LEVEL.WARNING,
-                                     _("One of the given bears ({}) has no attribute get_needed_settings.")
-                                     .format(str(bear)))
+                self.section.log_printer.log(LOG_LEVEL.WARNING,
+                                             _("One of the given bears ({}) has no attribute get_needed_settings.")
+                                             .format(str(bear)))
             else:
                 needed = bear.get_needed_settings()
                 for key in needed:
@@ -76,7 +68,7 @@ class SectionFiller:
 
         # Get missing ones.
         if len(needed_settings) > 0:
-            new_vals = self.outputter.acquire_settings(needed_settings)
+            new_vals = self.section.outputter.acquire_settings(needed_settings)
             for setting, help_text in new_vals.items():
                 self.section.append(Setting(setting, help_text))
 

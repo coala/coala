@@ -89,9 +89,7 @@ class SectionManager:
             section = self.conf_sections[section_name]
             local_bears = BearCollector.from_section([BEAR_KIND.LOCAL], section, self.log_printer).collect()
             global_bears = BearCollector.from_section([BEAR_KIND.GLOBAL], section, self.log_printer).collect()
-            filler = SectionFiller(section,
-                                   outputter=self.outputter,
-                                   log_printer=self.log_printer)
+            filler = SectionFiller(section)
             all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)
             filler.fill_section(all_bears)
