@@ -125,7 +125,8 @@ class SectionExecutor:
         for runner in processes:
             runner.start()
 
-        while running_processes > 0:
+        # One process is the logger thread
+        while running_processes > 1:
             try:
                 elem = control_queue.get(timeout=0.1)
                 if elem == CONTROL_ELEMENT.LOCAL:
@@ -133,9 +134,9 @@ class SectionExecutor:
                 elif elem == CONTROL_ELEMENT.GLOBAL:
                     self.outputter.print_results(global_result_queue.get(), file_dict)
                 elif elem == CONTROL_ELEMENT.FINISHED:
-                    running_processes -= 1
+                    running_processes = sum((1 if process.is_alive() else 0) for process in processes)
             except queue.Empty:
-                pass
+                running_processes = sum((1 if process.is_alive() else 0) for process in processes)
 
         logger_thread.running = False
 
