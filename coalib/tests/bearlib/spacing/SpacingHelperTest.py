@@ -88,6 +88,7 @@ class SpacingHelperTestCase(unittest.TestCase):
         self.assertEqual(self.uut.replace_spaces_with_tabs("   dd d "), "   dd d ")  # One space shouldnt be replaced
         self.assertEqual(self.uut.replace_spaces_with_tabs("   dd   "), "   dd\t")
         self.assertEqual(self.uut.replace_spaces_with_tabs(" \t   a_text   another"), "\t   a_text\tanother")
+        self.assertEqual(self.uut.replace_spaces_with_tabs("d  d"), "d  d")
 
 
 if __name__ == '__main__':
