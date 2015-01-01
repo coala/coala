@@ -15,12 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from distutils.core import setup
+from distutils.sysconfig import get_python_lib
+import os
 
 from coalib.misc.i18n import compile_translations
 
 
 if __name__ == "__main__":
-    translations = compile_translations()
+    data_files = compile_translations()
+    data_files.append((os.path.join(get_python_lib(), "coalib"), ["coalib/default_coafile"]))
 
     setup(name='coala',
           version='0.2',
@@ -45,5 +48,5 @@ if __name__ == "__main__":
                     'coalib.settings',
           ],
           license="GPL v3",
-          data_files=translations
+          data_files=data_files
     )
