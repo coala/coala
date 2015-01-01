@@ -116,11 +116,11 @@ class Bear:
             return retval
         except:
             exception = sys.exc_info()
+            self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))
             self.debug_msg(_("set_up() or tear_down() throwed an exception for bear {}.\n"
                              "Exception: {}\nTraceback:\n{}").format(str(exception[0].__name__),
                                                                      traceback.extract_tb(exception[2]),
                                                                      self.__class__.__name__))
-            self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))
 
     @staticmethod
     def kind():
