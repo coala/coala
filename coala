@@ -25,13 +25,13 @@ from coalib.misc.i18n import _
 
 if __name__ == "__main__":
     try:
-        sections, all_global_bears, all_local_bears = SectionManager().run()
+        sections, all_local_bears, all_global_bears = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
             global_bears = all_global_bears[section_name]
             local_bears = all_local_bears[section_name]
 
-            SectionExecutor(section, local_bears, global_bears).run()
+            SectionExecutor(section=section, global_bear_list=global_bears, local_bear_list=local_bears).run()
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
     except SystemExit:
