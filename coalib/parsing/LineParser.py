@@ -22,6 +22,18 @@ class LineParser:
                  key_delimiters=[',', ' '],
                  section_name_surroundings={'[': "]"},
                  section_override_delimiters=["."]):
+        """
+        Creates a new line parser. Please note that no delimiter or seperator may be an "o" or you may encounter
+        undefined behaviour with the escapes.
+
+        :param key_value_delimiters: Delimiters that delimit a key from a value
+        :param comment_seperators: Used to initiate a comment
+        :param key_delimiters: Delimiters between several keys
+        :param section_name_surroundings: Dictionary, e.g. {"[", "]"} means a section name is surrounded by [ and ].
+        :param section_override_delimiters: Delimiter for a section override. E.g. "." would mean that section.key is a
+        possible key that puts the key into the section "section" despite of the current section.
+        :return:
+        """
         self.key_value_delimiters = key_value_delimiters
         self.comment_seperators = comment_seperators
         self.key_delimiters = key_delimiters
@@ -30,24 +42,38 @@ class LineParser:
 
     def parse(self, line):
         """
+        Note that every value in the returned touple _besides the value_ is escaped. This is so since the value is meant
+        to be put into a Setting later thus the escapes may be needed there.
+
         :param line: the line to parse
         :return section_name (empty string if it's no section name), [(section_override, key), ...], value, comment
         """
         line, comment = self.__seperate_by_first_occurrence(line, self.comment_seperators)
+        comment = self.remove_backslashes(comment)
         if line == "":
             return '', [], '', comment
 
-        section_name = self.__get_section_name(line)
+        section_name = self.remove_backslashes(self.__get_section_name(line))
         if section_name != '':
             return section_name, [], '', comment
 
-        keys, value = self.__extract_keys_and_value(line)
+        keys, value = self.__extract_keys_and_value(line)  # Escapes in value might be needed by the bears
 
         key_touples = []
         for key in keys:
-            key_touples.append(self.__seperate_by_first_occurrence(key, self.section_override_delimiters, True, True))
+            section, key = self.__seperate_by_first_occurrence(key, self.section_override_delimiters, True, True)
+            key_touples.append((self.remove_backslashes(section), self.remove_backslashes(key)))
 
         return '', key_touples, value, comment
+
+    @staticmethod
+    def remove_backslashes(string):
+        i = string.find("\\")
+        while i != -1:
+            string = string[:i] + string[i+1:]
+            i = string.find("\\", i+1)  # Dont check the next char
+
+        return string
 
     @staticmethod
     def __seperate_by_first_occurrence(string, delimiters, strip_delim=False, return_second_part_nonempty=False):
@@ -62,10 +88,16 @@ class LineParser:
         returned in the second part of the touple instead of the first one.
         :return: (first_part, second_part)
         """
+        temp_string = string.replace("\\\\", "oo")
+        i = temp_string.find("\\")
+        while i != -1:
+            temp_string = temp_string[:i] + "oo" + temp_string[i+2:]
+            i = temp_string.find("\\", i+2)
+
         delim_pos = len(string)
         used_delim = ""
         for delim in delimiters:
-            pos = string.find(delim)
+            pos = temp_string.find(delim)
             if 0 <= pos < delim_pos:
                 delim_pos = pos
                 used_delim = delim

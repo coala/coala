@@ -31,33 +31,49 @@ class LineParserTestCase(unittest.TestCase):
     def test_comment_parsing(self):
         self.check_data_set("# comment only$§\n", output_comment="# comment only$§")
         self.check_data_set("   ; comment only  \n", output_comment="; comment only")
+        self.check_data_set("   ; \\comment only  \n", output_comment="; comment only")
         self.check_data_set("#", output_comment="#")
 
+    def test_section_override(self):
+        self.check_data_set("a.b, \\a\\.\\b =",
+                            output_keys=[("a", "b"), ("", "a.b")])
+
     def test_multi_value_parsing(self):
-        self.check_data_set("a, b section.c= = :()&/ #heres a comment \n",
+        self.check_data_set("a, b\\= section.c= = :()&/ \\\\#heres a comment \n",
                             output_section='',
-                            output_keys=[("", 'a'), ("", 'b'), ("section", 'c')],
-                            output_value='= :()&/',
+                            output_keys=[("", 'a'), ("", 'b='), ("section", 'c')],
+                            output_value='= :()&/ \\\\',
                             output_comment='#heres a comment')
 
     def test_multi_line_parsing(self):
         self.check_data_set(" a,b,d another value ",
                             output_value="a,b,d another value")
+        self.check_data_set(" a,b,d\\= another value ",
+                            output_value="a,b,d\\= another value")
 
     def test_section_name_parsing(self):
         self.check_data_set(" [   a section name   ]      # with comment   \n",
                             'a section name',
                             output_comment="# with comment")
-        self.check_data_set(" [   a section name   ]         \n",
-                            'a section name')
+        self.check_data_set(" [   a section name]   ]         \n",
+                            'a section name]')
+        self.check_data_set(" [   a section name\\]   ]         \n",
+                            'a section name]')
+        self.check_data_set(" [   a section name\\;   ]         \n",
+                            'a section name;')
 
         self.uut.section_name_surroundings["Section:"] = ''
         self.check_data_set("[  sec]; thats a normal section",
                             output_section="sec",
                             output_comment="; thats a normal section")
-        self.check_data_set("  Section:  sec]; thats a new section",
-                            output_section="sec]",
+        self.check_data_set("  Section:  sec]\\\\; thats a new section",
+                            output_section="sec]\\",
                             output_comment="; thats a new section")
+        self.check_data_set("  Section:  sec]\\\\\\\\; thats a new section",
+                            output_section="sec]\\\\",
+                            output_comment="; thats a new section")
+        self.check_data_set("  Section:  sec]\\\\\\; thats a new section",
+                            output_section="sec]\\; thats a new section")
 
     def check_data_set(self, line, output_section="", output_keys=[], output_value='', output_comment=''):
         section_name, keys, value, comment = self.uut.parse(line)
