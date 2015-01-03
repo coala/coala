@@ -53,10 +53,10 @@ class LineParserTestCase(unittest.TestCase):
 
         self.uut.section_name_surroundings["Section:"] = ''
         self.check_data_set("[  sec]; thats a normal section",
-                            "sec",
+                            output_section="sec",
                             output_comment="; thats a normal section")
         self.check_data_set("  Section:  sec]; thats a new section",
-                            "sec]",
+                            output_section="sec]",
                             output_comment="; thats a new section")
 
     def check_data_set(self, line, output_section="", output_keys=[], output_value='', output_comment=''):
