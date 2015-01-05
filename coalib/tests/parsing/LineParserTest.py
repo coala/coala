@@ -35,13 +35,13 @@ class LineParserTestCase(unittest.TestCase):
         self.check_data_set("#", output_comment="#")
 
     def test_section_override(self):
-        self.check_data_set("a.b, \\a\\.\\b =",
-                            output_keys=[("a", "b"), ("", "a.b")])
+        self.check_data_set("a.b, \\a\\.\\b\\ c=",
+                            output_keys=[("a", "b"), ("", "a.b c")])
 
     def test_multi_value_parsing(self):
-        self.check_data_set("a, b\\= section.c= = :()&/ \\\\#heres a comment \n",
+        self.check_data_set("a, b\\ \\= section.c= = :()&/ \\\\#heres a comment \n",
                             output_section='',
-                            output_keys=[("", 'a'), ("", 'b='), ("section", 'c')],
+                            output_keys=[("", 'a'), ("", 'b ='), ("section", 'c')],
                             output_value='= :()&/ \\\\',
                             output_comment='#heres a comment')
 

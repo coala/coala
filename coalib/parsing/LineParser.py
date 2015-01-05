@@ -118,6 +118,6 @@ class LineParser:
 
     def __extract_keys_and_value(self, line):
         key_part, value = self.__seperate_by_first_occurrence(line, self.key_value_delimiters, True, True)
-        keys = list(StringConverter(key_part, list_delimiters=self.key_delimiters))
+        keys = list(StringConverter(key_part, list_delimiters=self.key_delimiters).__iter__(remove_backslashes=False))
 
         return keys, value

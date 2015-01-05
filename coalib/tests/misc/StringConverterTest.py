@@ -47,17 +47,22 @@ class ProcessTestCase(unittest.TestCase):
     def test_iterator(self):
         self.uut = StringConverter("a, test with!!some challenge", list_delimiters=[",", " ", "!!"])
         self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
-        self.uut = StringConverter("a, test with!some challenge", list_delimiters=", !")
-        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
-        self.uut = StringConverter("testval", list_delimiters=["\\", ",", "¸"])
+        self.uut = StringConverter("a\\ \\,\\\\ test with!!some challenge", list_delimiters=[",", " ", "!!"])
+        self.assertEqual(list(self.uut), ["a ,\\", "test", "with", "some", "challenge"])
+        self.uut = StringConverter("a, test with!some \\\\\\ challenge\\ ",
+                                   list_delimiters=", !",
+                                   strip_whitespaces=False)
+        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "\\ challenge "])
+        self.uut = StringConverter("a, test with!some \\\\\\ challenge\\ ",
+                                   list_delimiters=", !",
+                                   strip_whitespaces=True)
+        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "\\ challenge"])
+        self.uut = StringConverter("testval", list_delimiters=[",", "¸"])
         self.uut.value = "a\\n,bug¸g"
-        self.assertEqual(list(self.uut), ["a", "n", "bug", "g"])
+        self.assertEqual(list(self.uut), ["an", "bug", "g"])
 
         self.assertTrue("bug" in self.uut)
         self.assertFalse("but" in self.uut)
-
-        self.uut = StringConverter(StringConstants.COMPLEX_TEST_STRING, strip_whitespaces=False, list_delimiters="")
-        self.assertEqual(list(self.uut), [StringConstants.COMPLEX_TEST_STRING])
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
