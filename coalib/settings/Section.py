@@ -15,8 +15,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from collections import OrderedDict
 import copy
 from coalib.output.ConsoleOutputter import ConsoleOutputter, ConsolePrinter, Outputter
+from coalib.output.FilePrinter import FilePrinter
+from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.output.LogPrinter import LogPrinter
-
+from coalib.misc.i18n import _
+from coalib.output.NullPrinter import NullPrinter
 from coalib.settings.Setting import Setting
 
 
@@ -44,6 +47,27 @@ class Section:
         self.contents = OrderedDict()
         self.outputter = outputter
         self.log_printer = log_printer
+
+    def retrieve_log_printer(self):
+        """
+        Creates an appropriate log printer according to the 'log_type' setting.
+        """
+        log_type = str(self.get("log_type", "console")).lower()
+
+        if log_type == "console":
+            self.log_printer = ConsolePrinter()
+        else:
+            try:
+                # ConsolePrinter is the only printer which may not throw an exception (if we have no bugs though)
+                # so well fallback to him if some other printer fails
+                if log_type == "none":
+                    self.log_printer = NullPrinter()
+                else:
+                    self.log_printer = FilePrinter(log_type)
+            except:
+                self.log_printer = ConsolePrinter()
+                self.log_printer.log(LOG_LEVEL.WARNING, _("Failed to instantiate the logging method '{}'. Falling back "
+                                                          "to console output.").format(log_type))
 
     def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):

@@ -12,6 +12,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import os
+import tempfile
 
 import unittest
 import sys
@@ -20,6 +22,9 @@ sys.path.insert(0, ".")
 
 from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
+from coalib.output.ConsolePrinter import ConsolePrinter
+from coalib.output.FilePrinter import FilePrinter
+from coalib.output.NullPrinter import NullPrinter
 
 
 class SectionTestCase(unittest.TestCase):
@@ -113,6 +118,30 @@ class SectionTestCase(unittest.TestCase):
         conf.defaults.append(Setting("def2", "dval2"))
 
         self.assertEqual(str(conf.copy().update(cli).defaults), "confdef {def2 : dval2, def1 : dval1}")
+
+    def test_logging(self):
+        uut = Section("test", log_printer=NullPrinter())
+        uut.append(Setting(key="log_TYPE", value="conSole"))
+        uut.retrieve_log_printer()
+        self.assertIsInstance(uut.log_printer, ConsolePrinter)
+
+        uut = Section("test", log_printer=ConsolePrinter())
+        uut.append(Setting(key="log_TYPE", value="NONE"))
+        uut.retrieve_log_printer()
+        self.assertIsInstance(uut.log_printer, NullPrinter)
+
+        uut = Section("test", log_printer=NullPrinter())
+        uut.append(Setting(key="log_TYPE", value="./invalid path/@#$%^&*()_"))
+        uut.retrieve_log_printer()  # This should throw a warning
+        self.assertIsInstance(uut.log_printer, ConsolePrinter)
+
+        filename = tempfile.gettempdir() + os.path.sep + "testcoalasectiontestfile~"
+        uut = Section("test", log_printer=NullPrinter())
+        uut.append(Setting(key="log_TYPE", value=filename))
+        uut.retrieve_log_printer()
+        self.assertIsInstance(uut.log_printer, FilePrinter)
+        del uut
+        os.remove(filename)
 
 
 if __name__ == '__main__':
