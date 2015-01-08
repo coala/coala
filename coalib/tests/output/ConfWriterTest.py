@@ -39,9 +39,9 @@ class ConfWriterTestCase(unittest.TestCase):
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
-        filehandler = open(self.file, "w", encoding='utf-8')
-        filehandler.write(self.example_file)
-        filehandler.close()
+        with open(self.file, "w", encoding='utf-8') as filehandler:
+            filehandler.write(self.example_file)
+
         self.conf_parser = ConfParser()
         self.write_file_name = os.path.join(tempfile.gettempdir(), "ConfWriterTestFile")
         self.uut = ConfWriter(self.write_file_name)
@@ -68,9 +68,9 @@ class ConfWriterTestCase(unittest.TestCase):
         self.uut.write_sections(self.conf_parser.reparse(self.file))
         del self.uut
 
-        f = open(self.write_file_name, "r")
-        lines = f.readlines()
-        f.close()
+        with open(self.write_file_name, "r") as f:
+            lines = f.readlines()
+
         self.assertEqual(result_file, lines)
 
 
