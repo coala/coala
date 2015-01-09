@@ -53,9 +53,10 @@ class Section:
         Creates an appropriate log printer according to the 'log_type' setting.
         """
         log_type = str(self.get("log_type", "console")).lower()
+        log_level = LOG_LEVEL.from_str(str(self.get("log_level", "none")))
 
         if log_type == "console":
-            self.log_printer = ConsolePrinter()
+            self.log_printer = ConsolePrinter(log_level=log_level)
         else:
             try:
                 # ConsolePrinter is the only printer which may not throw an exception (if we have no bugs though)
@@ -63,9 +64,9 @@ class Section:
                 if log_type == "none":
                     self.log_printer = NullPrinter()
                 else:
-                    self.log_printer = FilePrinter(log_type)
+                    self.log_printer = FilePrinter(filename=log_type, log_level=log_level)
             except:
-                self.log_printer = ConsolePrinter()
+                self.log_printer = ConsolePrinter(log_level=log_level)
                 self.log_printer.log(LOG_LEVEL.WARNING, _("Failed to instantiate chosen logging method. The filename "
                                                           "may be incorrect or this might be a bug."))
 

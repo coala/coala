@@ -23,7 +23,7 @@ sys.path.insert(0, ".")
 from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
-from coalib.output.FilePrinter import FilePrinter
+from coalib.output.FilePrinter import FilePrinter, LOG_LEVEL
 from coalib.output.NullPrinter import NullPrinter
 
 
@@ -134,6 +134,10 @@ class SectionTestCase(unittest.TestCase):
         uut.append(Setting(key="log_TYPE", value="./invalid path/@#$%^&*()_"))
         uut.retrieve_log_printer()  # This should throw a warning
         self.assertIsInstance(uut.log_printer, ConsolePrinter)
+        self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.WARNING)
+        uut.append(Setting(key="LOG_LEVEL", value="DEBUG"))
+        uut.retrieve_log_printer()  # This should throw a warning
+        self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.DEBUG)
 
         filename = tempfile.gettempdir() + os.path.sep + "testcoalasectiontestfile~"
         uut = Section("test", log_printer=NullPrinter())
