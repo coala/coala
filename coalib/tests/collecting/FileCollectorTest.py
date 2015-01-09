@@ -47,13 +47,14 @@ class TestInit(unittest.TestCase):
         self.lp = LogPrinter()
 
     def test_raises(self):
+        self.assertRaises(TypeError, FileCollector, files="string")
+        self.assertRaises(TypeError, FileCollector, regex=5)
+        self.assertRaises(TypeError, FileCollector, flat_dirs="string")
+        self.assertRaises(TypeError, FileCollector, rec_dirs="string")
+        self.assertRaises(TypeError, FileCollector, allowed_types="string")
+        self.assertRaises(TypeError, FileCollector, ignored_files="string")
+        self.assertRaises(TypeError, FileCollector, ignored_dirs="string")
         self.assertRaises(TypeError, FileCollector, log_printer="not a log_printer")
-        self.assertRaises(TypeError, FileCollector, "string", [], [], [], [], [])
-        self.assertRaises(TypeError, FileCollector, [], "string", [], [], [], [])
-        self.assertRaises(TypeError, FileCollector, [], [], "string", [], [], [])
-        self.assertRaises(TypeError, FileCollector, [], [], [], "string", [], [])
-        self.assertRaises(TypeError, FileCollector, [], [], [], [], "string", [])
-        self.assertRaises(TypeError, FileCollector, [], [], [], [], [], "string")
 
     def test_members_empty(self):
         uut = FileCollector(log_printer=self.lp)
@@ -66,7 +67,7 @@ class TestInit(unittest.TestCase):
         self.assertEqual(uut._ignored_files, [])
 
     def test_members_full(self):
-        uut = FileCollector([], [os.getcwd()], ["abc", "xyz"], [".PY", "c"], [], [], log_printer=self.lp)
+        uut = FileCollector([], "", [os.getcwd()], ["abc", "xyz"], [".PY", "c"], [], [], log_printer=self.lp)
         uut._unfold_params()
         self.assertEqual(uut.log_printer, self.lp)
         self.assertEqual(uut._flat_dirs, [os.getcwd()])
@@ -76,7 +77,7 @@ class TestInit(unittest.TestCase):
         self.assertEqual(uut._ignored_dirs, [])
 
     def test_ignored_members(self):
-        uut = FileCollector([], ["flat"], ["rec"], [], [], ["flat", "rec"])
+        uut = FileCollector([], "", ["flat"], ["rec"], [], [], ["flat", "rec"])
         uut._unfold_params()
         self.assertEqual(uut._flat_dirs, [])
         self.assertEqual(uut._rec_dirs, [])
@@ -137,6 +138,17 @@ class TestFileCollection(unittest.TestCase):
         self.assertRaises(ZeroDivisionError, FileCollector(log_printer=LoudPrinter(), flat_dirs=["bullshit"]).collect)
         self.assertRaises(ZeroDivisionError,
                           FileCollector(log_printer=LoudPrinter(), rec_dirs=["bullshit"]).collect)
+
+    def test_regex(self):
+        self.assertEqual(FileCollector(log_printer=QuietPrinter(),
+                                       flat_dirs=[self.tmp_dir],
+                                       regex="testfile.*\.c",
+                                       allowed_types=[]).collect(), [self.testfile2_path])
+        self.assertEqual(FileCollector(log_printer=QuietPrinter(),
+                                       flat_dirs=[self.tmp_dir],
+                                       regex="tfile.*\.c",
+                                       allowed_types=[]).collect(), [])
+
 
     @unittest.skipIf(sys.version_info < (3, 3), "Mocks are not supported in Python 3.2")
     def test_unreadable_directory(self):

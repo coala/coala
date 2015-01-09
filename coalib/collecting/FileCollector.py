@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
+import re
 
 from coalib.collecting.Collector import Collector
 from coalib.output.LogPrinter import LogPrinter
@@ -25,6 +26,7 @@ from coalib.settings.Setting import path_list
 class FileCollector(Collector):
     def __init__(self,
                  files=[],
+                 regex="",
                  flat_dirs=[],
                  rec_dirs=[],
                  allowed_types=None,
@@ -33,6 +35,7 @@ class FileCollector(Collector):
                  log_printer=ConsolePrinter()):
         """
         :param files: Absolute path to files that will always be collected if accessible
+        :param regex: Regex to match with files to collect
         :param flat_dirs: list of strings: directories from which files should be collected, excluding sub directories
         :param rec_dirs: list of strings: directories from which files should be collected, including sub
                                directories
@@ -42,11 +45,12 @@ class FileCollector(Collector):
         :param ignored_dirs: list of strings: directories that should be ignored.
         :param log_printer: LogPrinter to handle logging
         """
-
         if not isinstance(log_printer, LogPrinter):
             raise TypeError("log_printer should be an instance of LogPrinter")
         if not isinstance(files, list):
             raise TypeError("files should be of type list")
+        if not isinstance(regex, str):
+            raise TypeError("regex should be of type string")
         if not isinstance(flat_dirs, list):
             raise TypeError("flat_dirs should be of type list")
         if not isinstance(rec_dirs, list):
@@ -60,6 +64,8 @@ class FileCollector(Collector):
 
         Collector.__init__(self)
         self.log_printer = log_printer
+
+        self._regex = self.prepare_regex(regex)
 
         self._prelim_files = [os.path.abspath(a_file) for a_file in files]
         self._prelim_flat_dirs = [os.path.abspath(f_dir) for f_dir in flat_dirs]
@@ -89,6 +95,13 @@ class FileCollector(Collector):
                    allowed_types=[],
                    log_printer=section.log_printer)
 
+    @staticmethod
+    def prepare_regex(regex):
+        if regex.endswith("$"):
+            return regex
+
+        return regex + "$"
+
     def _is_target(self, file_path):
         """
         :param file_path: absolute path to a file
@@ -100,6 +113,9 @@ class FileCollector(Collector):
         for ignored_path in self._ignored_files:
             if file_path.startswith(ignored_path):
                 return False
+
+        if self._regex != "$" and re.match(self._regex, os.path.split(file_path)[1]):
+            return True
 
         file_type = os.path.splitext(os.path.basename(file_path))[1].lower().lstrip('.')
         if self._allowed_types is None or file_type in self._allowed_types:
