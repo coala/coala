@@ -31,7 +31,14 @@ def show_help():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
+    parser.add_argument("-b", "--ignore-bear-tests", help="ignore bear tests", action="store_true")
+    parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
     args = parser.parse_args()
 
-    files = TestHelper.get_test_files(os.path.abspath("coalib/tests"))
+    files = []
+    if not args.ignore_main_tests:
+        files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests")))
+    if not args.ignore_bear_tests:
+        files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests")))
+
     exit(TestHelper.execute_python3_files(files, args.cover))
