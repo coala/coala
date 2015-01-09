@@ -76,13 +76,6 @@ class BearCollector(FileCollector):
         self._ignored_bears = ignored_bears
         self._regex = self.prepare_regex(regex)
 
-    @staticmethod
-    def prepare_regex(regex):
-        if regex.endswith("$"):
-            return regex
-
-        return regex + "$"
-
     @classmethod
     def from_section(cls, bear_kinds, section):
         if not isinstance(section, Section):
