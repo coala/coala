@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.output.LogPrinter import LogPrinter
 
 
@@ -19,7 +20,7 @@ class FilePrinter(LogPrinter):
     """
     This is a simple printer/logprinter that prints everything to a file. Note that everything will be appended.
     """
-    def __init__(self, filename):
+    def __init__(self, filename, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
         """
         Creates a new FilePrinter. If the directory of the given file doesn't exist or if there's any access problems,
         an exception will be thrown.
@@ -30,7 +31,7 @@ class FilePrinter(LogPrinter):
         if not isinstance(filename, str):
             raise TypeError("filename must be a string.")
 
-        LogPrinter.__init__(self)
+        LogPrinter.__init__(self, timestamp_format=timestamp_format, log_level=log_level)
 
         self.file = open(filename, 'a+')
 

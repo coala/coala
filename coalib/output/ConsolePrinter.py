@@ -15,13 +15,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 
 from coalib.output.ColorPrinter import ColorPrinter
+from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.output.LogPrinter import LogPrinter
 
 
 class ConsolePrinter(LogPrinter, ColorPrinter):
-    def __init__(self, output=sys.stdout):
+    def __init__(self, output=sys.stdout, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
         ColorPrinter.__init__(self)
-        LogPrinter.__init__(self)
+        LogPrinter.__init__(self, log_level=log_level, timestamp_format=timestamp_format)
         self.output = output
 
     def _print_uncolored(self, output, **kwargs):
