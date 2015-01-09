@@ -65,25 +65,17 @@ class SectionExecutor:
     def __init__(self,
                  section,
                  local_bear_list,
-                 global_bear_list,
-                 outputter=ConsoleOutputter(),
-                 log_printer=ConsolePrinter()):
+                 global_bear_list):
         if not isinstance(section, Section):
             raise TypeError("section has to be of type Section")
         if not isinstance(local_bear_list, list):
             raise TypeError("local_bear_list has to be of type list")
         if not isinstance(global_bear_list, list):
             raise TypeError("global_bear_list has to be of type list")
-        if not isinstance(outputter, Outputter):
-            raise TypeError("outputter has to be an Outputter")
-        if not isinstance(log_printer, LogPrinter):
-            raise TypeError("log_printer has to be a log_printer")
 
         self.section = section
         self.local_bear_list = local_bear_list
         self.global_bear_list = global_bear_list
-        self.log_printer = log_printer
-        self.outputter = outputter
 
     def run(self):
         filename_list = FileCollector.from_section(self.section).collect()
@@ -116,7 +108,7 @@ class SectionExecutor:
                             "barrier": barrier,
                             "TIMEOUT": 0.1}
         processes = [BearRunner(**bear_runner_args) for i in range(running_processes)]
-        logger_thread = self.LogPrinterThread(message_queue, self.log_printer)
+        logger_thread = self.LogPrinterThread(message_queue, self.section.log_printer)
         processes.append(logger_thread)  # Start and join the logger thread along with the BearRunner's
 
         self._fill_queue(filename_queue, filename_list)
@@ -130,9 +122,9 @@ class SectionExecutor:
             try:
                 elem = control_queue.get(timeout=0.1)
                 if elem == CONTROL_ELEMENT.LOCAL:
-                    self.outputter.print_results(local_result_queue.get(), file_dict)
+                    self.section.outputter.print_results(local_result_queue.get(), file_dict)
                 elif elem == CONTROL_ELEMENT.GLOBAL:
-                    self.outputter.print_results(global_result_queue.get(), file_dict)
+                    self.section.outputter.print_results(global_result_queue.get(), file_dict)
                 elif elem == CONTROL_ELEMENT.FINISHED:
                     running_processes = sum((1 if process.is_alive() else 0) for process in processes)
             except queue.Empty:

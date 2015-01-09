@@ -43,8 +43,6 @@ class SectionExecutorInitTestCase(unittest.TestCase):
         self.assertRaises(TypeError, SectionExecutor, 5,               [], [])
         self.assertRaises(TypeError, SectionExecutor, Section("test"), 5 , [])
         self.assertRaises(TypeError, SectionExecutor, Section("test"), [], 5 )
-        self.assertRaises(TypeError, SectionExecutor, Section("test"), [], [], outputter=5)
-        self.assertRaises(TypeError, SectionExecutor, Section("test"), [], [], log_printer=5)
         self.assertRaises(IndexError, SectionExecutor(Section("test"), [], []).run)
 
 
@@ -64,8 +62,9 @@ class SectionExecutorTestCase(unittest.TestCase):
 
         self.outputter = SectionExecutorTestOutputter(self.result_queue, self.log_queue)
 
-        self.uut = SectionExecutor(self.sections["default"], self.local_bears["default"], self.global_bears["default"],
-                                   outputter=self.outputter, log_printer=self.outputter)
+        self.sections["default"].outputter = self.outputter
+        self.sections["default"].log_printer = self.outputter
+        self.uut = SectionExecutor(self.sections["default"], self.local_bears["default"], self.global_bears["default"])
 
     def test_run(self):
         self.uut.run()
