@@ -28,7 +28,6 @@ class FileCollector(Collector):
                  flat_dirs=[],
                  rec_dirs=[],
                  allowed_types=None,
-                 ignored_types=[],
                  ignored_files=[],
                  ignored_dirs=[],
                  log_printer=ConsolePrinter()):
@@ -39,8 +38,6 @@ class FileCollector(Collector):
                                directories
         :param allowed_types: list of strings: file types that should be collected. The default value of None will
                               result in all file types being collected.
-        :param ignored_types: list of strings: file types that should not be collected. This overwrites allowed file
-                              types.
         :param ignored_files: list of strings: files that should be ignored.
         :param ignored_dirs: list of strings: directories that should be ignored.
         :param log_printer: LogPrinter to handle logging
@@ -56,8 +53,6 @@ class FileCollector(Collector):
             raise TypeError("rec_dirs should be of type list")
         if not (isinstance(allowed_types, list) or allowed_types is None):
             raise TypeError("allowed should be of type list or None")
-        if not isinstance(ignored_types, list):
-            raise TypeError("ignored_types should be of type list")
         if not isinstance(ignored_files, list):
             raise TypeError("ignored should be of type list")
         if not isinstance(ignored_dirs, list):
@@ -79,7 +74,6 @@ class FileCollector(Collector):
             self._allowed_types = [t.lower().lstrip('.') for t in allowed_types]
         else:
             self._allowed_types = None
-        self._ignored_types = [t.lower().lstrip('.') for t in ignored_types]
         self._ignored_files = [os.path.abspath(path) for path in ignored_files]
         self._ignored_dirs = [os.path.abspath(path) for path in ignored_dirs]
 
@@ -108,9 +102,7 @@ class FileCollector(Collector):
                 return False
 
         file_type = os.path.splitext(os.path.basename(file_path))[1].lower().lstrip('.')
-        if file_type in self._ignored_types:
-            return False
-        elif self._allowed_types is None or file_type in self._allowed_types:
+        if self._allowed_types is None or file_type in self._allowed_types:
             return True
         else:
             return False
