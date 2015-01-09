@@ -48,13 +48,12 @@ class TestInit(unittest.TestCase):
 
     def test_raises(self):
         self.assertRaises(TypeError, FileCollector, log_printer="not a log_printer")
-        self.assertRaises(TypeError, FileCollector, "string", [], [], [], [], [], [])
-        self.assertRaises(TypeError, FileCollector, [], "string", [], [], [], [], [])
-        self.assertRaises(TypeError, FileCollector, [], [], "string", [], [], [], [])
-        self.assertRaises(TypeError, FileCollector, [], [], [], "string", [], [], [])
-        self.assertRaises(TypeError, FileCollector, [], [], [], [], "string", [], [])
-        self.assertRaises(TypeError, FileCollector, [], [], [], [], [], "string", [])
-        self.assertRaises(TypeError, FileCollector, [], [], [], [], [], [], "string")
+        self.assertRaises(TypeError, FileCollector, "string", [], [], [], [], [])
+        self.assertRaises(TypeError, FileCollector, [], "string", [], [], [], [])
+        self.assertRaises(TypeError, FileCollector, [], [], "string", [], [], [])
+        self.assertRaises(TypeError, FileCollector, [], [], [], "string", [], [])
+        self.assertRaises(TypeError, FileCollector, [], [], [], [], "string", [])
+        self.assertRaises(TypeError, FileCollector, [], [], [], [], [], "string")
 
     def test_members_empty(self):
         uut = FileCollector(log_printer=self.lp)
@@ -63,23 +62,21 @@ class TestInit(unittest.TestCase):
         self.assertEqual(uut._flat_dirs, [])
         self.assertEqual(uut._rec_dirs, [])
         self.assertEqual(uut._allowed_types, None)
-        self.assertEqual(uut._ignored_types, [])
         self.assertEqual(uut._ignored_dirs, [])
         self.assertEqual(uut._ignored_files, [])
 
     def test_members_full(self):
-        uut = FileCollector([], [os.getcwd()], ["abc", "xyz"], [".PY", "c"], [".H"], [], [], log_printer=self.lp)
+        uut = FileCollector([], [os.getcwd()], ["abc", "xyz"], [".PY", "c"], [], [], log_printer=self.lp)
         uut._unfold_params()
         self.assertEqual(uut.log_printer, self.lp)
         self.assertEqual(uut._flat_dirs, [os.getcwd()])
         self.assertEqual(uut._rec_dirs, [os.path.abspath("abc"), os.path.abspath("xyz")])
         self.assertEqual(uut._allowed_types, ["py", "c"])
-        self.assertEqual(uut._ignored_types, ["h"])
         self.assertEqual(uut._ignored_files, [])
         self.assertEqual(uut._ignored_dirs, [])
 
     def test_ignored_members(self):
-        uut = FileCollector([], ["flat"], ["rec"], [], [], [], ["flat", "rec"])
+        uut = FileCollector([], ["flat"], ["rec"], [], [], ["flat", "rec"])
         uut._unfold_params()
         self.assertEqual(uut._flat_dirs, [])
         self.assertEqual(uut._rec_dirs, [])
@@ -128,10 +125,6 @@ class TestFileCollection(unittest.TestCase):
 
     def test_allowed(self):
         uut = FileCollector(rec_dirs=[self.tmp_dir], allowed_types=[".py"], log_printer=self.lp)
-        self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
-
-    def test_ignored_types(self):
-        uut = FileCollector(rec_dirs=[self.tmp_dir], ignored_types=[".c"], log_printer=self.lp)
         self.assertEqual(set(uut.collect()), {self.testfile1_path, self.testfile3_path})
 
     def test_ignored_files(self):
