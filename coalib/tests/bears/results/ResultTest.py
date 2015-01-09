@@ -32,6 +32,7 @@ class ResultTestCase(unittest.TestCase):
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')
         self.assertEqual(str(uut), "Result:\n origin: 'a'\n file: 'c'\n severity: 1\n'b'")
+        self.assertEqual(str(uut), repr(uut))
 
     def test_ordering(self):
         """
