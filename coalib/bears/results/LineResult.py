@@ -26,6 +26,11 @@ class LineResult(Result):
         self.line_nr = line_nr
         self.line = line
 
+    def __str__(self):
+        return "LineResult:\n origin: '{origin}'\n file: '{file}'\n severity: {severity}\n line: '{line}'\n line nr: " \
+               "{linenr}\n'{msg}'".format(origin=self.origin, file=self.file, severity=self.severity, msg=self.message,
+                                          line=self.line, linenr=self.line_nr)
+
     # Result's __ne__ uses __eq__ so no need to overwrite that too
     def __eq__(self, other):
         return Result.__eq__(self, other) and \
