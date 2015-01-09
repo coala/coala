@@ -29,7 +29,10 @@ def show_help():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Executes all tests for coala.",
+                                     epilog="Please note that the tests for coala are split into tests for the main "
+                                            "program and the bears. By default all these tests are executed, however "
+                                            "you can switch them off individually.")
     parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
     parser.add_argument("-b", "--ignore-bear-tests", help="ignore bear tests", action="store_true")
     parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
