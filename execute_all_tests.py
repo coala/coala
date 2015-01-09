@@ -37,6 +37,5 @@ if __name__ == '__main__':
             show_help()
             exit()
 
-    test_dir = os.path.abspath("coalib/tests")
-    files = TestHelper.get_test_files(test_dir)
+    files = TestHelper.get_test_files(os.path.abspath("coalib/tests"))
     exit(TestHelper.execute_python3_files(files, use_coverage))
