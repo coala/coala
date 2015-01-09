@@ -17,7 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
 import argparse
-
+import tempfile
+from distutils.sysconfig import get_python_lib
 from coalib.tests.TestHelper import TestHelper
 
 
@@ -44,4 +45,10 @@ if __name__ == '__main__':
     if not args.ignore_bear_tests:
         files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests")))
 
-    exit(TestHelper.execute_python3_files(files, args.cover))
+    ignore_list = files[:]
+    ignore_list.extend([
+        os.path.join(tempfile.gettempdir(), "*"),
+        os.path.join(get_python_lib(), "*")
+    ])
+
+    exit(TestHelper.execute_python3_files(files, args.cover, ignore_list))
