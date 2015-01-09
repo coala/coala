@@ -77,6 +77,7 @@ class SectionManager:
     def _fill_settings(self):
         for section_name in self.conf_sections:
             section = self.conf_sections[section_name]
+            section.retrieve_logging_objects()
             local_bears = BearCollector.from_section([BEAR_KIND.LOCAL], section).collect()
             global_bears = BearCollector.from_section([BEAR_KIND.GLOBAL], section).collect()
             filler = SectionFiller(section)
