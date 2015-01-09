@@ -33,7 +33,7 @@ class BearCollector(FileCollector):
                  bear_names=None,
                  ignored_bears=None,
                  ignored_bear_dirs=None,
-                 regexs=None,
+                 regex="",
                  log_printer=ConsolePrinter()):
         """
         This collector stores bear classes (not instances) in self._items
@@ -45,15 +45,13 @@ class BearCollector(FileCollector):
         Default is none.
         :param ignored_bear_dirs: list of strings: directories from which bears should not be collected. Overrides
         anything else.
-        :param regexs: list of strings: regexs that match bears to be collected.
+        :param regex: regex that match bears to be collected.
         :param log_printer: LogPrinter to handle logging of debug, warning and error messages
         """
         if bear_names is None:
             bear_names = []
         if ignored_bears is None:
             ignored_bears = []
-        if regexs is None:
-            regexs = []
         if ignored_bear_dirs is None:
             ignored_bear_dirs = []
 
@@ -63,8 +61,8 @@ class BearCollector(FileCollector):
             raise TypeError("bear_names should be of type list")
         if not isinstance(ignored_bears, list):
             raise TypeError("ignored should be of type list")
-        if not isinstance(regexs, list):
-            raise TypeError("regexs should be of type list")
+        if not isinstance(regex, str):
+            raise TypeError("regex should be of type string")
 
         FileCollector.__init__(self,
                                flat_dirs=flat_bear_dirs,
@@ -76,7 +74,7 @@ class BearCollector(FileCollector):
         self._bear_kinds = bear_kinds
         self._bear_names = bear_names
         self._ignored_bears = ignored_bears
-        self._regexs = [self.prepare_regex(regex) for regex in regexs]
+        self._regex = self.prepare_regex(regex)
 
     @staticmethod
     def prepare_regex(regex):
@@ -97,7 +95,7 @@ class BearCollector(FileCollector):
                    flat_bear_dirs=flat_bear_dirs,
                    rec_bear_dirs=path_list(section["rec_bear_dirs"]),
                    bear_names=list(section["bears"]),
-                   regexs=list(section["bears_regex"]),
+                   regex=str(section["bears_regex"]),
                    ignored_bear_dirs=path_list(section["ignored_bear_dirs"]),
                    log_printer=section.log_printer)
 
@@ -124,8 +122,8 @@ class BearCollector(FileCollector):
             return True
 
         # regex included
-        if any(re.match(regex, bear_name) for regex in self._regexs):
-            return True  # specifically called
+        if re.match(self._regex, bear_name) and self._regex != "$":
+            return True
 
         # exclude everything else
         return False

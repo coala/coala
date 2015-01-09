@@ -32,10 +32,10 @@ class TestInit(unittest.TestCase):
         self.assertRaises(TypeError, BearCollector, bear_kinds=[], rec_bear_dirs=5)
         self.assertRaises(TypeError, BearCollector, bear_kinds=[], bear_names=5)
         self.assertRaises(TypeError, BearCollector, bear_kinds=[], ignored_bears=5)
-        self.assertRaises(TypeError, BearCollector, bear_kinds=[], regexs=5)
+        self.assertRaises(TypeError, BearCollector, bear_kinds=[], regex=5)
         self.assertRaises(TypeError, BearCollector, bear_kinds=[], log_printer=5)
 
-        self.assertEqual(BearCollector(["kind"])._regexs, [])
+        self.assertEqual(BearCollector(["kind"])._regex, "$")
 
     def test_from_section(self):
         self.assertRaises(TypeError, BearCollector.from_section, ["kind"], 5)
@@ -119,7 +119,7 @@ class TestBear(ImportedTestBear):
     def test_bear_import(self):
         uut = BearCollector(["kind"],
                             flat_bear_dirs=[self.tmp_dir],
-                            regexs=[".*"])
+                            regex=".*")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 2)
         self.assertTrue([bear_class().origin() for bear_class in bear_list]
@@ -143,7 +143,7 @@ class TestBear(ImportedTestBear):
         uut = BearCollector(["kind"],
                             flat_bear_dirs=[self.tmp_dir],
                             ignored_bears=[os.path.splitext(os.path.basename(self.testfile1_path))[0]],
-                            regexs=[".*"])
+                            regex=".*")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile2_path)
@@ -151,26 +151,26 @@ class TestBear(ImportedTestBear):
     def test_regexs(self):
         uut = BearCollector(["kind"],
                             flat_bear_dirs=[self.parent_from_tmp],
-                            regexs=["testfile1.*"])
+                            regex="testfile1.*")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 0)
 
         uut = BearCollector(["kind"],
                             rec_bear_dirs=[self.parent_from_tmp],
-                            regexs=["testfile1"])
+                            regex="testfile1")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 0)
 
         uut = BearCollector(["kind"],
                             rec_bear_dirs=[self.parent_from_tmp],
-                            regexs=["testfile1.*"])
+                            regex="testfile1.*")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
 
         uut = BearCollector(["kind"],
                             rec_bear_dirs=[self.parent_from_tmp],
-                            regexs=["^testfile1.*$"])
+                            regex="^testfile1.*$")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
@@ -179,14 +179,14 @@ class TestBear(ImportedTestBear):
         uut = BearCollector(["kind"],
                             rec_bear_dirs=[self.parent_from_tmp],
                             ignored_bear_dirs=[self.tmp_dir],
-                            regexs=["testfile1.*"])
+                            regex="testfile1.*")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 0)
 
         uut = BearCollector(["kind"],
                             rec_bear_dirs=[self.parent_from_tmp],
                             ignored_bear_dirs=[self.parent_from_tmp],
-                            regexs=["testfile1.*"])
+                            regex="testfile1.*")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 0)
 
