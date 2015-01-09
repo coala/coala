@@ -17,7 +17,6 @@ import os
 import subprocess
 import tempfile
 import sys
-from distutils.sysconfig import get_python_lib
 
 
 class TestHelper:
@@ -30,7 +29,7 @@ class TestHelper:
             pass
 
     @staticmethod
-    def execute_python3_file(filename, use_coverage):
+    def execute_python3_file(filename, use_coverage, ignored_files):
         if sys.platform.startswith("win"):
             # On windows we won't find a python3 executable and we don't measure coverage
             return subprocess.call(["python", filename])
@@ -43,21 +42,20 @@ class TestHelper:
                                     "run",
                                     "-p",  # make it collectable later
                                     "--branch",  # check branch AND statement coverage
-                                    "--omit",  # dont check coverage of test file itself
-                                    filename + "," + os.path.join(tempfile.gettempdir(), "*") +
-                                    "," + os.path.join(get_python_lib(), "*"),
+                                    "--omit",
+                                    ignored_files,
                                     filename])
         except:
             print("Coverage failed. Falling back to standard unit tests.")
             return subprocess.call(["python3", filename])
 
     @staticmethod
-    def execute_python3_files(filenames, use_coverage=False):
+    def execute_python3_files(filenames, use_coverage, ignore_list):
         number = len(filenames)
         failures = 0
         for file in filenames:
             print("\nRunning: {} ({})\n".format(os.path.splitext(os.path.basename(file))[0], file), end='')
-            result = TestHelper.execute_python3_file(file, use_coverage)  # either 0 or 1
+            result = TestHelper.execute_python3_file(file, use_coverage, ",".join(ignore_list))  # either 0 or 1
             failures += result
             print("\n" + "#" * 70)
 
