@@ -93,6 +93,7 @@ class FileCollector(Collector):
                    rec_dirs=path_list(section["rec_dirs"]),
                    ignored_dirs=path_list(section["ignored_dirs"]),
                    allowed_types=[],
+                   regex=str(section["files_regex"]),
                    log_printer=section.log_printer)
 
     @staticmethod
