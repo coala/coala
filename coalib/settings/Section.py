@@ -48,12 +48,16 @@ class Section:
         self.outputter = outputter
         self.log_printer = log_printer
 
-    def retrieve_log_printer(self):
+    def retrieve_logging_objects(self):
         """
-        Creates an appropriate log printer according to the 'log_type' setting.
+        Creates an appropriate log printer and outputter according to the settings.
         """
         log_type = str(self.get("log_type", "console")).lower()
         log_level = LOG_LEVEL.from_str(str(self.get("log_level", "none")))
+
+        # We currently only offer console outputter, so we'll ignore the output setting for now
+        # Since the outputter needs to be interactive a NullOutputter isn't really possible
+        self.outputter = ConsoleOutputter()
 
         if log_type == "console":
             self.log_printer = ConsolePrinter(log_level=log_level)

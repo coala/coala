@@ -20,6 +20,7 @@ import sys
 
 sys.path.insert(0, ".")
 
+from coalib.output.ConsoleOutputter import ConsoleOutputter
 from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
@@ -122,27 +123,28 @@ class SectionTestCase(unittest.TestCase):
     def test_logging(self):
         uut = Section("test", log_printer=NullPrinter())
         uut.append(Setting(key="log_TYPE", value="conSole"))
-        uut.retrieve_log_printer()
+        uut.retrieve_logging_objects()
         self.assertIsInstance(uut.log_printer, ConsolePrinter)
+        self.assertIsInstance(uut.outputter, ConsoleOutputter)
 
         uut = Section("test", log_printer=ConsolePrinter())
         uut.append(Setting(key="log_TYPE", value="NONE"))
-        uut.retrieve_log_printer()
+        uut.retrieve_logging_objects()
         self.assertIsInstance(uut.log_printer, NullPrinter)
 
         uut = Section("test", log_printer=NullPrinter())
         uut.append(Setting(key="log_TYPE", value="./invalid path/@#$%^&*()_"))
-        uut.retrieve_log_printer()  # This should throw a warning
+        uut.retrieve_logging_objects()  # This should throw a warning
         self.assertIsInstance(uut.log_printer, ConsolePrinter)
         self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.WARNING)
         uut.append(Setting(key="LOG_LEVEL", value="DEBUG"))
-        uut.retrieve_log_printer()  # This should throw a warning
+        uut.retrieve_logging_objects()  # This should throw a warning
         self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.DEBUG)
 
         filename = tempfile.gettempdir() + os.path.sep + "testcoalasectiontestfile~"
         uut = Section("test", log_printer=NullPrinter())
         uut.append(Setting(key="log_TYPE", value=filename))
-        uut.retrieve_log_printer()
+        uut.retrieve_logging_objects()
         self.assertIsInstance(uut.log_printer, FilePrinter)
         del uut
         os.remove(filename)
