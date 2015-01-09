@@ -86,7 +86,7 @@ class SectionExecutor:
         self.outputter = outputter
 
     def run(self):
-        filename_list = FileCollector.from_section(self.section, log_printer=self.log_printer).collect()
+        filename_list = FileCollector.from_section(self.section).collect()
         file_dict = self._get_file_dict(filename_list)
 
         global_bear_queue = multiprocessing.Queue()
