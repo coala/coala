@@ -42,6 +42,9 @@ class Result:
         self.file = file
         self.severity = severity
 
+    def __repr__(self):
+        return str(self)
+
     def __str__(self):
         return "Result:\n origin: '{origin}'\n file: '{file}'\n severity: {severity}\n" \
                "'{msg}'".format(origin=self.origin, file=self.file, severity=self.severity, msg=self.message)
