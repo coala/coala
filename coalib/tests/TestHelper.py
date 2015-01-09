@@ -17,6 +17,7 @@ import os
 import subprocess
 import tempfile
 import sys
+from distutils.sysconfig import get_python_lib
 
 
 class TestHelper:
@@ -43,7 +44,8 @@ class TestHelper:
                                     "-p",  # make it collectable later
                                     "--branch",  # check branch AND statement coverage
                                     "--omit",  # dont check coverage of test file itself
-                                    filename + "," + tempfile.gettempdir() + "/*",
+                                    filename + "," + os.path.join(tempfile.gettempdir(), "*") +
+                                    "," + os.path.join(get_python_lib(), "*"),
                                     filename])
         except:
             print("Coverage failed. Falling back to standard unit tests.")
