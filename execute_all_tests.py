@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
 import sys
+import argparse
 
 from coalib.tests.TestHelper import TestHelper
 
@@ -28,14 +29,9 @@ def show_help():
 
 
 if __name__ == '__main__':
-    use_coverage = False
-    for arg in sys.argv[1:]:
-        arg = str(arg).strip().lower()
-        if arg == "--cover" and not use_coverage:
-            use_coverage = True
-        else:
-            show_help()
-            exit()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
+    args = parser.parse_args()
 
     files = TestHelper.get_test_files(os.path.abspath("coalib/tests"))
-    exit(TestHelper.execute_python3_files(files, use_coverage))
+    exit(TestHelper.execute_python3_files(files, args.cover))
