@@ -27,7 +27,7 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
 
     def acquire_settings(self, settings_names_dict):
         if not isinstance(settings_names_dict, dict):
-            raise TypeError("The settings parameter has to be a dictionary.")
+            raise TypeError("The settings_names_dict parameter has to be a dictionary.")
 
         result = {}
         for setting_name, arr in settings_names_dict.items():
