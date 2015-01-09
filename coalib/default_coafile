@@ -3,6 +3,7 @@ config                  = .coafile
 flat_dirs               = .
 rec_dirs                =
 files                   =
+files_regex             =
 flat_bear_dirs          = .
 rec_bear_dirs           =
 bears                   =

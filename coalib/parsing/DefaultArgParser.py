@@ -17,6 +17,8 @@ default_arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescrip
 
 default_arg_parser.add_argument('-f', '--files', nargs='+', metavar='FILE', dest='files',
                                 help=_('Files that should be checked'))
+default_arg_parser.add_argument('-r', '--files-regex', nargs='+', metavar='FILE', dest='files_regex',
+                                help=_('Regex for additional filenames (only the tail of the whole path)'))
 default_arg_parser.add_argument('-d', '--flat-dirs', nargs='+', metavar='DIR', dest='flat_dirs',
                                 help=_('Directories where files may lie that will be checked, '
                                        'excluding sub directories'))

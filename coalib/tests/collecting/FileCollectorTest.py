@@ -87,6 +87,7 @@ class TestInit(unittest.TestCase):
 
         test_section = Section("test")
         test_section.append(Setting("files", "test value"))
+        test_section.append(Setting("files_regex", "test value"))
         test_section.append(Setting("flat_dirs", "test value"))
         test_section.append(Setting("rec_dirs", "test value"))
         test_section.append(Setting("ignored_dirs", "test value"))
