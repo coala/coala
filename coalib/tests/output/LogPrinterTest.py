@@ -37,11 +37,11 @@ class LogPrinterTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError, uut.log_message, self.log_message)
 
     def test_logging(self):
-        uut = TestLogPrinter("")
+        uut = TestLogPrinter(timestamp_format="")
         self.assertEqual((str(self.log_message), "special"),
                          uut.log_message(self.log_message, end="", special_arg="special"))
 
-        uut = TestLogPrinter()
+        uut = TestLogPrinter(log_level=LOG_LEVEL.DEBUG)
         ts = datetime.today()
         self.assertEqual(
             ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
@@ -53,6 +53,8 @@ class LogPrinterTestCase(unittest.TestCase):
         self.assertEqual(
             ("[" + _("DEBUG") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
             uut.debug(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
+        uut.log_level = LOG_LEVEL.WARNING
+        self.assertEqual(None, uut.debug(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
         self.assertEqual(
             ("[" + _("WARNING") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
             uut.warn(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
