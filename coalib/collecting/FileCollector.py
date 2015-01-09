@@ -84,7 +84,7 @@ class FileCollector(Collector):
         self._ignored_dirs = [os.path.abspath(path) for path in ignored_dirs]
 
     @classmethod
-    def from_section(cls, section, log_printer=ConsolePrinter()):
+    def from_section(cls, section):
         if not isinstance(section, Section):
             raise TypeError("section should be of type Section.")
 
@@ -93,7 +93,7 @@ class FileCollector(Collector):
                    rec_dirs=path_list(section["rec_dirs"]),
                    ignored_dirs=path_list(section["ignored_dirs"]),
                    allowed_types=[],
-                   log_printer=log_printer)
+                   log_printer=section.log_printer)
 
     def _is_target(self, file_path):
         """
