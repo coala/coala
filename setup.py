@@ -33,6 +33,7 @@ if __name__ == "__main__":
           url='http://www.coala.schuirmann.net/',
           scripts=['coala'],
           packages=['bears',
+                    'bears.spacing',
                     'coalib',
                     'coalib.bearlib',
                     'coalib.bearlib.abstractions',
