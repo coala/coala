@@ -21,6 +21,7 @@ sys.path.insert(0, ".")
 from coalib.misc.StringConstants import StringConstants
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.SectionManager import SectionManager
+from coalib.output.NullPrinter import NullPrinter
 
 
 class SectionManagerTestCase(unittest.TestCase):
@@ -53,6 +54,11 @@ class SectionManagerTestCase(unittest.TestCase):
                           "config = " + filename + "\n",
                           "[test]\n",
                           "value = 5\n"], lines)
+
+    def test_logging_objects(self):
+        conf_sections, n, m = SectionManager().run(arg_list=["log_type=none"])
+        self.assertIsInstance(conf_sections["default"].log_printer, NullPrinter)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
