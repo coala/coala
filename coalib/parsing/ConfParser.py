@@ -46,11 +46,6 @@ class ConfParser(Parser):
         :param overwrite: behaves like reparse if this is True
         :return: the settings dictionary
         """
-        if sys.version_info < (3, 3):  # pragma: no cover
-            err = IOError
-        else:  # pragma: no cover
-            err = FileNotFoundError
-
         with open(input_data, "r", encoding='utf-8') as f:
             lines = f.readlines()
 
