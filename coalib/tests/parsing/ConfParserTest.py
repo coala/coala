@@ -80,11 +80,7 @@ class ConfParserTestCase(unittest.TestCase):
             ('t', '')
         ])
 
-        if sys.version_info < (3, 3):
-            err = IOError
-        else:
-            err = FileNotFoundError
-        self.assertRaises(err, self.uut.parse, self.nonexistentfile)
+        self.assertRaises(self.uut.FileNotFoundError, self.uut.parse, self.nonexistentfile)
         sections = self.uut.parse(self.file)
         self.assertNotEqual(self.uut.reparse(self.file), sections)
 

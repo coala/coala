@@ -38,9 +38,15 @@ class ConfParser(Parser):
         self.__rand_helper = None
         self.__init_sections()
 
+        if sys.version_info < (3, 3):  # pragma: no cover
+            self.FileNotFoundError = IOError
+        else:
+            self.FileNotFoundError = FileNotFoundError
+
     def parse(self, input_data, overwrite=False):
         """
-        Parses the input and adds the new data to the existing
+        Parses the input and adds the new data to the existing. If you want to catch the FileNotFoundError please take
+        the FileNotFoundError member of this object for catching for backwards compatability to python 3.2.
 
         :param input_data: filename
         :param overwrite: behaves like reparse if this is True
