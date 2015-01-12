@@ -50,5 +50,6 @@ if __name__ == '__main__':
         os.path.join(tempfile.gettempdir(), "*"),
         os.path.join(get_python_lib(), "*")
     ])
+    print("IGNORED FILES ARE", ignore_list)
 
     exit(TestHelper.execute_python3_files(files, args.cover, ignore_list))
