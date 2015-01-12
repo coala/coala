@@ -67,12 +67,19 @@ class SectionManager:
         for section in self.cli_sections:
             self.cli_sections[section].defaults = self.default_section
 
-        config = os.path.abspath(str(self.cli_sections["default"].get("config", "./coafile")))
-        self.conf_sections = self.conf_parser.reparse(config)
+        if sys.version_info < (3, 3):  # pragma: no cover
+            err = IOError
+        else:
+            err = FileNotFoundError
+        try:
+            config = os.path.abspath(str(self.cli_sections["default"].get("config", "./coafile")))
+            self.conf_sections = self.conf_parser.reparse(config)
 
-        # We'll get the default section as default section for every section in this dict with this
-        # Furthermore we will have the CLI Values take precedence over the conf values.
-        self._merge_section_dicts()
+            # We'll get the default section as default section for every section in this dict with this
+            # Furthermore we will have the CLI Values take precedence over the conf values.
+            self._merge_section_dicts()
+        except err:
+            self.conf_sections = self.cli_sections
 
     def _fill_settings(self):
         for section_name in self.conf_sections:

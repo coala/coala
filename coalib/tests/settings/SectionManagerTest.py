@@ -33,6 +33,10 @@ class SectionManagerTestCase(unittest.TestCase):
         self.assertEqual(str(conf_sections["default"]), "Default {test : 5}")
         self.assertEqual(str(conf_sections["default"].defaults), str(defaults["default"]))
 
+    def test_nonexistent_file(self):
+        filename = "bad.one/test\neven with bad chars in it"
+        SectionManager().run(arg_list=["config=" + filename])  # Shouldn't throw an exception
+
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(), "SectionManagerTestFile")
 
