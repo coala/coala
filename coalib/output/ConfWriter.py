@@ -72,13 +72,7 @@ class ConfWriter:
             self.__file.write(val + "\n")
             return
 
-        delim = ""
-        for key in keys:
-            self.__file.write(delim + key)
-            if delim == "":
-                delim = self.__key_delimiter + " "
-
-        self.__file.write(" " + self.__key_value_delimiter + " " + val + "\n")
+        self.__file.write((self.__key_delimiter + " ").join(keys) + " " + self.__key_value_delimiter + " " + val + "\n")
 
     @staticmethod
     def is_comment(key):
