@@ -41,8 +41,7 @@ class SectionManagerTestCase(unittest.TestCase):
 
         with open(filename, "r") as f:
             lines = f.readlines()
-        self.assertEqual(["[Default]\n",
-                          "save = " + filename + "\n"], lines)
+        self.assertEqual(["[Default]\n"], lines)
 
         SectionManager().run(arg_list=["save=true", "config=" + filename, "test.value=5"])
 
@@ -50,7 +49,6 @@ class SectionManagerTestCase(unittest.TestCase):
             lines = f.readlines()
         os.remove(filename)
         self.assertEqual(["[Default]\n",
-                          "save = true\n",
                           "config = " + filename + "\n",
                           "[test]\n",
                           "value = 5\n"], lines)
