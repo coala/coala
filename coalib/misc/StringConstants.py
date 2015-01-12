@@ -19,7 +19,7 @@ from coalib.misc.i18n import _
 
 class StringConstants:
     THIS_IS_A_BUG = _("This is a bug. We are sorry for the inconvenience. "
-                      "Please contact the developers if this happens more than once.")
+                      "Please contact the developers for assistance.")
 
     OBJ_NOT_ACCESSIBLE = _("{} is not accessible and will be ignored!")
 
