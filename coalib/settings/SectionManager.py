@@ -18,6 +18,7 @@ import sys
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.BearCollector import BearCollector
 from coalib.misc.StringConstants import StringConstants
+from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
@@ -59,10 +60,17 @@ class SectionManager:
         return self.conf_sections, self.local_bears, self.global_bears
 
     def _load_configuration(self, arg_list):
-        self.default_section = self.conf_parser.reparse(os.path.abspath(os.path.join(StringConstants.coalib_root,
-                                                                                     "default_coafile")))["default"]
-
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
+
+        try:
+            self.default_section = self.conf_parser.reparse(os.path.abspath(os.path.join(StringConstants.coalib_root,
+                                                                                         "default_coafile")))["default"]
+        except self.conf_parser.FileNotFoundError:
+            self.cli_sections["default"].retrieve_logging_objects()
+            self.cli_sections["default"].log_printer.err(_("The global default coafile for the settings was not found. "
+                                                           "It seems your installation is broken.") + " " +
+                                                         StringConstants.THIS_IS_A_BUG)
+            raise SystemExit
 
         for section in self.cli_sections:
             self.cli_sections[section].defaults = self.default_section
