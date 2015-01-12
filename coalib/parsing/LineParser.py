@@ -42,8 +42,8 @@ class LineParser:
 
     def parse(self, line):
         """
-        Note that every value in the returned touple _besides the value_ is escaped. This is so since the value is meant
-        to be put into a Setting later thus the escapes may be needed there.
+        Note that every value in the returned touple _besides the value_ is unescaped. This is so since the value is
+        meant to be put into a Setting later thus the escapes may be needed there.
 
         :param line: the line to parse
         :return section_name (empty string if it's no section name), [(section_override, key), ...], value, comment
