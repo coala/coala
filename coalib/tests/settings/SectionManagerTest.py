@@ -37,6 +37,11 @@ class SectionManagerTestCase(unittest.TestCase):
         filename = "bad.one/test\neven with bad chars in it"
         SectionManager().run(arg_list=["config=" + filename])  # Shouldn't throw an exception
 
+        tmp = StringConstants.coalib_root
+        StringConstants.coalib_root = "test"
+        self.assertRaises(SystemExit, SectionManager().run)
+        StringConstants.coalib_root = tmp
+
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(), "SectionManagerTestFile")
 
