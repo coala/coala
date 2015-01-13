@@ -18,6 +18,7 @@ import sys
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.BearCollector import BearCollector
 from coalib.misc.StringConstants import StringConstants
+from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
@@ -59,24 +60,35 @@ class SectionManager:
         return self.conf_sections, self.local_bears, self.global_bears
 
     def _load_configuration(self, arg_list):
-        self.default_section = self.conf_parser.reparse(os.path.abspath(os.path.join(StringConstants.coalib_root,
-                                                                                     "default_coafile")))["default"]
-
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
+
+        try:
+            self.default_section = self.conf_parser.reparse(os.path.abspath(os.path.join(StringConstants.coalib_root,
+                                                                                         "default_coafile")))["default"]
+        except self.conf_parser.FileNotFoundError:
+            self.cli_sections["default"].retrieve_logging_objects()
+            self.cli_sections["default"].log_printer.err(_("The global default coafile for the settings was not found. "
+                                                           "It seems your installation is broken.") + " " +
+                                                         StringConstants.THIS_IS_A_BUG)
+            raise SystemExit
 
         for section in self.cli_sections:
             self.cli_sections[section].defaults = self.default_section
 
-        config = os.path.abspath(str(self.cli_sections["default"].get("config", "./coafile")))
-        self.conf_sections = self.conf_parser.reparse(config)
+        try:
+            config = os.path.abspath(str(self.cli_sections["default"].get("config", "./coafile")))
+            self.conf_sections = self.conf_parser.reparse(config)
 
-        # We'll get the default section as default section for every section in this dict with this
-        # Furthermore we will have the CLI Values take precedence over the conf values.
-        self._merge_section_dicts()
+            # We'll get the default section as default section for every section in this dict with this
+            # Furthermore we will have the CLI Values take precedence over the conf values.
+            self._merge_section_dicts()
+        except self.conf_parser.FileNotFoundError:
+            self.conf_sections = self.cli_sections
 
     def _fill_settings(self):
         for section_name in self.conf_sections:
             section = self.conf_sections[section_name]
+            section.retrieve_logging_objects()
             local_bears = BearCollector.from_section([BEAR_KIND.LOCAL], section).collect()
             global_bears = BearCollector.from_section([BEAR_KIND.GLOBAL], section).collect()
             filler = SectionFiller(section)

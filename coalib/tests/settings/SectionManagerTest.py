@@ -33,6 +33,15 @@ class SectionManagerTestCase(unittest.TestCase):
         self.assertEqual(str(conf_sections["default"]), "Default {test : 5}")
         self.assertEqual(str(conf_sections["default"].defaults), str(defaults["default"]))
 
+    def test_nonexistent_file(self):
+        filename = "bad.one/test\neven with bad chars in it"
+        SectionManager().run(arg_list=["config=" + filename])  # Shouldn't throw an exception
+
+        tmp = StringConstants.coalib_root
+        StringConstants.coalib_root = filename
+        self.assertRaises(SystemExit, SectionManager().run)
+        StringConstants.coalib_root = tmp
+
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(), "SectionManagerTestFile")
 
@@ -40,8 +49,7 @@ class SectionManagerTestCase(unittest.TestCase):
 
         with open(filename, "r") as f:
             lines = f.readlines()
-        self.assertEqual(["[Default]\n",
-                          "save = " + filename + "\n"], lines)
+        self.assertEqual(["[Default]\n"], lines)
 
         SectionManager().run(arg_list=["save=true", "config=" + filename, "test.value=5"])
 
@@ -49,7 +57,6 @@ class SectionManagerTestCase(unittest.TestCase):
             lines = f.readlines()
         os.remove(filename)
         self.assertEqual(["[Default]\n",
-                          "save = true\n",
                           "config = " + filename + "\n",
                           "[test]\n",
                           "value = 5\n"], lines)

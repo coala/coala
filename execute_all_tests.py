@@ -16,7 +16,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
 import sys
-
+import argparse
+import tempfile
+from distutils.sysconfig import get_python_lib
 from coalib.tests.TestHelper import TestHelper
 
 
@@ -28,15 +30,26 @@ def show_help():
 
 
 if __name__ == '__main__':
-    use_coverage = False
-    for arg in sys.argv[1:]:
-        arg = str(arg).strip().lower()
-        if arg == "--cover" and not use_coverage:
-            use_coverage = True
-        else:
-            show_help()
-            exit()
+    parser = argparse.ArgumentParser(description="Executes all tests for coala.",
+                                     epilog="Please note that the tests for coala are split into tests for the main "
+                                            "program and the bears. By default all these tests are executed, however "
+                                            "you can switch them off individually.")
+    parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
+    parser.add_argument("-b", "--ignore-bear-tests", help="ignore bear tests", action="store_true")
+    parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
+    args = parser.parse_args()
 
-    test_dir = os.path.abspath("coalib/tests")
-    files = TestHelper.get_test_files(test_dir)
-    exit(TestHelper.execute_python3_files(files, use_coverage))
+    files = []
+    if not args.ignore_main_tests:
+        files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests")))
+    if not args.ignore_bear_tests:
+        files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests")))
+
+    ignore_list = files[:]
+    ignore_list.extend([
+        os.path.join(tempfile.gettempdir(), "*"),
+        os.path.join(get_python_lib(), "*")
+    ])
+    print("IGNORED FILES ARE", ignore_list)
+
+    exit(TestHelper.execute_python3_files(files, args.cover, ignore_list))

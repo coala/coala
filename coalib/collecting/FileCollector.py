@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import os
+import re
 
 from coalib.collecting.Collector import Collector
 from coalib.output.LogPrinter import LogPrinter
@@ -25,39 +26,37 @@ from coalib.settings.Setting import path_list
 class FileCollector(Collector):
     def __init__(self,
                  files=[],
+                 regex="",
                  flat_dirs=[],
                  rec_dirs=[],
                  allowed_types=None,
-                 ignored_types=[],
                  ignored_files=[],
                  ignored_dirs=[],
                  log_printer=ConsolePrinter()):
         """
         :param files: Absolute path to files that will always be collected if accessible
+        :param regex: Regex to match with files to collect
         :param flat_dirs: list of strings: directories from which files should be collected, excluding sub directories
         :param rec_dirs: list of strings: directories from which files should be collected, including sub
                                directories
         :param allowed_types: list of strings: file types that should be collected. The default value of None will
                               result in all file types being collected.
-        :param ignored_types: list of strings: file types that should not be collected. This overwrites allowed file
-                              types.
         :param ignored_files: list of strings: files that should be ignored.
         :param ignored_dirs: list of strings: directories that should be ignored.
         :param log_printer: LogPrinter to handle logging
         """
-
         if not isinstance(log_printer, LogPrinter):
             raise TypeError("log_printer should be an instance of LogPrinter")
         if not isinstance(files, list):
             raise TypeError("files should be of type list")
+        if not isinstance(regex, str):
+            raise TypeError("regex should be of type string")
         if not isinstance(flat_dirs, list):
             raise TypeError("flat_dirs should be of type list")
         if not isinstance(rec_dirs, list):
             raise TypeError("rec_dirs should be of type list")
         if not (isinstance(allowed_types, list) or allowed_types is None):
             raise TypeError("allowed should be of type list or None")
-        if not isinstance(ignored_types, list):
-            raise TypeError("ignored_types should be of type list")
         if not isinstance(ignored_files, list):
             raise TypeError("ignored should be of type list")
         if not isinstance(ignored_dirs, list):
@@ -65,6 +64,8 @@ class FileCollector(Collector):
 
         Collector.__init__(self)
         self.log_printer = log_printer
+
+        self._regex = self.prepare_regex(regex)
 
         self._prelim_files = [os.path.abspath(a_file) for a_file in files]
         self._prelim_flat_dirs = [os.path.abspath(f_dir) for f_dir in flat_dirs]
@@ -79,12 +80,11 @@ class FileCollector(Collector):
             self._allowed_types = [t.lower().lstrip('.') for t in allowed_types]
         else:
             self._allowed_types = None
-        self._ignored_types = [t.lower().lstrip('.') for t in ignored_types]
         self._ignored_files = [os.path.abspath(path) for path in ignored_files]
         self._ignored_dirs = [os.path.abspath(path) for path in ignored_dirs]
 
     @classmethod
-    def from_section(cls, section, log_printer=ConsolePrinter()):
+    def from_section(cls, section):
         if not isinstance(section, Section):
             raise TypeError("section should be of type Section.")
 
@@ -93,7 +93,15 @@ class FileCollector(Collector):
                    rec_dirs=path_list(section["rec_dirs"]),
                    ignored_dirs=path_list(section["ignored_dirs"]),
                    allowed_types=[],
-                   log_printer=log_printer)
+                   regex=str(section["files_regex"]),
+                   log_printer=section.log_printer)
+
+    @staticmethod
+    def prepare_regex(regex):
+        if regex.endswith("$"):
+            return regex
+
+        return regex + "$"
 
     def _is_target(self, file_path):
         """
@@ -107,10 +115,11 @@ class FileCollector(Collector):
             if file_path.startswith(ignored_path):
                 return False
 
+        if self._regex != "$" and re.match(self._regex, os.path.split(file_path)[1]):
+            return True
+
         file_type = os.path.splitext(os.path.basename(file_path))[1].lower().lstrip('.')
-        if file_type in self._ignored_types:
-            return False
-        elif self._allowed_types is None or file_type in self._allowed_types:
+        if self._allowed_types is None or file_type in self._allowed_types:
             return True
         else:
             return False

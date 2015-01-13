@@ -21,8 +21,17 @@ from coalib.processes.communication.LogMessage import LogMessage
 
 
 class LogPrinter(Printer):
-    def __init__(self, timestamp_format="%X"):
+    def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
+        """
+        Creates a new log printer. The log printer adds logging capabilities to any normal printer, just derive from
+        this class and you should have this logging capabilities for free. (Note: LogPrinter itself is abstract.)
+
+        :param log_level: The minimum log level, everything below will not be logged.
+        :param timestamp_format: The format string for the datetime.today().strftime(format) method.
+        """
         Printer.__init__(self)
+
+        self.log_level = log_level
         self.timestamp_format = timestamp_format
 
     def _get_log_prefix(self, log_level, timestamp):
@@ -59,6 +68,10 @@ class LogPrinter(Printer):
     def log_message(self, log_message, timestamp=None, **kwargs):
         if not isinstance(log_message, LogMessage):
             raise TypeError("log_message should be of type LogMessage.")
+
+        if log_message.log_level < self.log_level:
+            return
+
         if not isinstance(timestamp, datetime):
             timestamp = datetime.today()
 

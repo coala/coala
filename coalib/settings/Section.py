@@ -15,8 +15,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from collections import OrderedDict
 import copy
 from coalib.output.ConsoleOutputter import ConsoleOutputter, ConsolePrinter, Outputter
+from coalib.output.FilePrinter import FilePrinter
+from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.output.LogPrinter import LogPrinter
-
+from coalib.misc.i18n import _
+from coalib.output.NullPrinter import NullPrinter
 from coalib.settings.Setting import Setting
 
 
@@ -44,6 +47,32 @@ class Section:
         self.contents = OrderedDict()
         self.outputter = outputter
         self.log_printer = log_printer
+
+    def retrieve_logging_objects(self):
+        """
+        Creates an appropriate log printer and outputter according to the settings.
+        """
+        log_type = str(self.get("log_type", "console")).lower()
+        log_level = LOG_LEVEL.from_str(str(self.get("log_level", "none")))
+
+        # We currently only offer console outputter, so we'll ignore the output setting for now
+        # Since the outputter needs to be interactive a NullOutputter isn't really possible
+        self.outputter = ConsoleOutputter()
+
+        if log_type == "console":
+            self.log_printer = ConsolePrinter(log_level=log_level)
+        else:
+            try:
+                # ConsolePrinter is the only printer which may not throw an exception (if we have no bugs though)
+                # so well fallback to him if some other printer fails
+                if log_type == "none":
+                    self.log_printer = NullPrinter()
+                else:
+                    self.log_printer = FilePrinter(filename=log_type, log_level=log_level)
+            except:
+                self.log_printer = ConsolePrinter(log_level=log_level)
+                self.log_printer.log(LOG_LEVEL.WARNING, _("Failed to instantiate chosen logging method. The filename "
+                                                          "may be incorrect or this might be a bug."))
 
     def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):

@@ -32,6 +32,15 @@ class ResultTestCase(unittest.TestCase):
         cmp = LineResult("origin", 1, "lineswrong", "message", "file")
         self.assertNotEqual(cmp, self.uut)
 
+    def test_str_conversion(self):
+        self.assertEqual(self.uut.__str__(), """LineResult:
+ origin: 'origin'
+ file: 'file'
+ severity: 1
+ line: 'line'
+ line nr: 1
+'message'""")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

@@ -21,13 +21,13 @@ from coalib.misc.i18n import _
 
 
 class ConsoleOutputter(Outputter, ConsolePrinter):
-    def __init__(self, output=sys.stdout):
+    def __init__(self, output=sys.stdout, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
         Outputter.__init__(self)
-        ConsolePrinter.__init__(self, output=output)
+        ConsolePrinter.__init__(self, output=output, log_level=log_level, timestamp_format=timestamp_format)
 
     def acquire_settings(self, settings_names_dict):
         if not isinstance(settings_names_dict, dict):
-            raise TypeError("The settings parameter has to be a dictionary.")
+            raise TypeError("The settings_names_dict parameter has to be a dictionary.")
 
         result = {}
         for setting_name, arr in settings_names_dict.items():
