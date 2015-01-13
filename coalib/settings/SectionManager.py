@@ -70,7 +70,7 @@ class SectionManager:
             self.cli_sections["default"].log_printer.err(_("The global default coafile for the settings was not found. "
                                                            "It seems your installation is broken.") + " " +
                                                          StringConstants.THIS_IS_A_BUG)
-            exit(1)
+            raise SystemExit
 
         for section in self.cli_sections:
             self.cli_sections[section].defaults = self.default_section
