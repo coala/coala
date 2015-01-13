@@ -16,21 +16,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 
 sys.path.insert(0, ".")
-from coalib.parsing.Parser import Parser
+from coalib.parsing.SectionParser import SectionParser
 import unittest
 
 
 class ParserTestCase(unittest.TestCase):
     def test_parse_available(self):
-        self.uut = Parser()
+        self.uut = SectionParser()
         self.assertRaises(NotImplementedError, self.uut.parse, None)
 
     def test_reparse_available(self):
-        self.uut = Parser()
+        self.uut = SectionParser()
         self.assertRaises(NotImplementedError, self.uut.reparse, None)
 
     def test_export_available(self):
-        self.uut = Parser()
+        self.uut = SectionParser()
         self.assertRaises(NotImplementedError, self.uut.export_to_settings)
 
 

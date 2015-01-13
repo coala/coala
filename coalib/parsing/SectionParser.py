@@ -14,7 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-class Parser:
+class SectionParser:
     def parse(self, input_data):
         """
         Parses the input and adds the new data to the existing
@@ -30,7 +30,7 @@ class Parser:
         Parses the input and overwrites all existent data
 
         :param input_data: filename or other input
-        :return: the settings dictionary
+        :return: the section dictionary
         """
         raise NotImplementedError
 

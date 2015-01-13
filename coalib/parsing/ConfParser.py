@@ -16,19 +16,19 @@ from collections import OrderedDict
 import sys
 
 from coalib.parsing.LineParser import LineParser
-from coalib.parsing.Parser import Parser
+from coalib.parsing.SectionParser import SectionParser
 from coalib.settings.Setting import Setting
 
 from coalib.settings.Section import Section
 
 
-class ConfParser(Parser):
+class ConfParser(SectionParser):
     def __init__(self,
                  key_value_delimiters=['=', ':'],
                  comment_seperators=['#', ';', '//'],
                  key_delimiters=[',', ' '],
                  section_name_surroundings={'[': "]"}):
-        Parser.__init__(self)
+        SectionParser.__init__(self)
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
                                       key_delimiters,
