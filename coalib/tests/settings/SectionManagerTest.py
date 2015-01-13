@@ -38,7 +38,7 @@ class SectionManagerTestCase(unittest.TestCase):
         SectionManager().run(arg_list=["config=" + filename])  # Shouldn't throw an exception
 
         tmp = StringConstants.coalib_root
-        StringConstants.coalib_root = "test"
+        StringConstants.coalib_root = filename
         self.assertRaises(SystemExit, SectionManager().run)
         StringConstants.coalib_root = tmp
 
