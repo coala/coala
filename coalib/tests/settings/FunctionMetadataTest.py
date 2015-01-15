@@ -56,8 +56,8 @@ class FunctionMetadataTestCase(unittest.TestCase):
                                               },
                                               optional_params={
                                                   "param3": (uut.str_nodesc + " (" + uut.str_optional.format("5") + ")",
-                                                             None),
-                                                  "param4": ("p4 desc (" + uut.str_optional.format("6") + ")", int)
+                                                             None, 5),
+                                                  "param4": ("p4 desc (" + uut.str_optional.format("6") + ")", int, 6)
                                               })
 
     def check_function_metadata_data_set(self,

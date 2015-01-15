@@ -31,7 +31,7 @@ class FunctionMetadata:
         :param non_optional_params: A dict containing the name of non optional parameters as the key and
         a tuple of a description and the python annotation.
         :param optional_params: A dict containing the name of optional parameters as the key and a tuple
-        of a description and the python annotation.
+        of a description, the python annotation and the default value.
         """
         if not isinstance(name, str):
             raise TypeError("name should be a string")
@@ -85,7 +85,8 @@ class FunctionMetadata:
             else:
                 optional_params[arg] = (doc_comment.param_dict.get(arg, cls.str_nodesc) + \
                                         " (" + cls.str_optional.format(str(defaults[i-num_non_defaults])) + ")",
-                                        argspec.annotations.get(arg, None))
+                                        argspec.annotations.get(arg, None),
+                                        defaults[i-num_non_defaults])
 
         return cls(name=func.__name__,
                    desc=doc_comment.desc,
