@@ -36,7 +36,9 @@ class BearCollector(FileCollector):
                  regex="",
                  log_printer=ConsolePrinter()):
         """
-        This collector stores bear classes (not instances) in self._items
+        The BearCollector searches the filesystem for python files containing Bears. It extracts the Bear classes (not
+        instances) out of this files so the caller can instantiate them as he likes.
+
         :param bear_kinds: the KINDs of bears to be collected
         :param flat_bear_dirs: list of strings: directories from which bears should be collected (flat)
         :param rec_bear_dirs: list of strings: directories from which bears should be collected (recursive)
