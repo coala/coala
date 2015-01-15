@@ -58,7 +58,7 @@ class SectionFiller:
                     if key in prel_needed_settings:
                         prel_needed_settings[key].append(bear.__name__)
                     else:
-                        prel_needed_settings[key] = [needed[key], bear.__name__]
+                        prel_needed_settings[key] = [needed[key][0], bear.__name__]
 
         # Strip away existent settings.
         needed_settings = {}
