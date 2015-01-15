@@ -141,12 +141,12 @@ class Bear:
 
         return metadata
 
-    @staticmethod
-    def get_non_optional_settings():
+    @classmethod
+    def get_non_optional_settings(cls):
         """
         This method has to determine which settings are needed by this bear. The user will be prompted for needed
         settings that are not available in the settings file so don't include settings where a default value would do.
 
-        :return: a dictionary of needed settings as keys and help texts as values
+        :return: a dictionary of needed settings as keys and a tuple of help text and annotation as values
         """
-        return {}
+        return cls.get_metadata().non_optional_params
