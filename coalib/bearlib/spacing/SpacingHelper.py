@@ -19,7 +19,12 @@ from coalib.settings.Section import Section
 class SpacingHelper(SectionCreatable):
     DEFAULT_TAB_WIDTH = 4
 
-    def __init__(self, tab_width=DEFAULT_TAB_WIDTH):
+    def __init__(self, tab_width: int=DEFAULT_TAB_WIDTH):
+        """
+        Creates a helper object for spacing operations.
+
+        :param tab_width: The number of spaces which visually equals a tab.
+        """
         if not isinstance(tab_width, int):
             raise TypeError("The 'tab_width' parameter should be an integer.")
 
@@ -31,14 +36,6 @@ class SpacingHelper(SectionCreatable):
             raise TypeError("The 'section' parameter should be a coalib.settings.Section instance.")
 
         return cls(tab_width=int(section.get("tab_width", kwargs.get("tab_width", cls.DEFAULT_TAB_WIDTH))))
-
-    @staticmethod
-    def get_non_optional_settings():
-        return {}
-
-    @staticmethod
-    def get_optional_settings():
-        return {"tab_width": "The number of spaces which visually equals a tab."}
 
     def get_indentation(self, line):
         """

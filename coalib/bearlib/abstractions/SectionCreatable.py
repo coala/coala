@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
 class SectionCreatable:
@@ -25,8 +26,20 @@ class SectionCreatable:
         SpacingHelper.from_section(section, tabwidth=8)
     creates a SpacingHelper and if the "tabwidth" setting is needed and not contained in section, 8 will be taken.
 
-    In addition you might want to implement the get_non_optional_settings and get_optional_settings method of your bear.
+    It is recommended to write the prototype of the __init__ method according to this example:
+    def __init__(self, setting_one: int, setting_two: bool=False):
+        pass  # Implementation
+
+    This way the get_optional_settings and the get_non_optional_settings method will extract automatically that
+     * setting_one should be an integer
+     * setting_two should be a bool and defaults to False
+
+    If you write a documentation comment, you can use :param to add descriptions to your parameters. These will be
+    available too automatically.
     """
+    def __init__(self):
+        pass  # Method needs to be available
+
     @classmethod
     def from_section(cls, section, **kwargs):
         """
@@ -38,21 +51,28 @@ class SectionCreatable:
         """
         raise NotImplementedError
 
-    @staticmethod
-    def get_non_optional_settings():
+    @classmethod
+    def get_metadata(cls):
+        metadata = FunctionMetadata.from_function(cls.__init__)
+        metadata.non_optional_params.pop("self", None)
+
+        return metadata
+
+    @classmethod
+    def get_non_optional_settings(cls):
         """
         Retrieves the minimal set of settings that need to be defined in order to use this object.
 
         :return: a dictionary of needed settings as keys and help texts as values
         """
-        return {}
+        return cls.get_metadata().non_optional_params
 
-    @staticmethod
-    def get_optional_settings():
+    @classmethod
+    def get_optional_settings(cls):
         """
         Retrieves the settings needed IN ADDITION to the ones of get_non_optional_settings to use this object without
         internal defaults.
 
         :return: a dictionary of needed settings as keys and help texts as values
         """
-        return {}
+        return cls.get_metadata().optional_params
