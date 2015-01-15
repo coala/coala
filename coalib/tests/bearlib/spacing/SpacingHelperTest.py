@@ -33,14 +33,9 @@ class SpacingHelperTestCase(unittest.TestCase):
         section = Section("test section")
         self.assertRaises(TypeError, SpacingHelper, "no integer")
         self.assertRaises(TypeError, self.uut.from_section, 5)
-        self.assertRaises(ValueError, self.uut.from_section, section, tab_width="invalid")
 
         self.assertEqual(self.uut.tab_width, self.uut.from_section(section).tab_width)
-        self.assertEqual(3, self.uut.from_section(section, tab_width=3).tab_width)
-        self.assertEqual(3, self.uut.from_section(section, tab_width=3).tab_width)
 
-        section.append(Setting("tab_width", 5))
-        self.assertEqual(5, self.uut.from_section(section, tab_width=3).tab_width)
         section.append(Setting("tab_width", "invalid"))
         self.assertRaises(ValueError, self.uut.from_section, section)
 

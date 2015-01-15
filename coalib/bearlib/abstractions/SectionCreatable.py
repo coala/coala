@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from coalib.settings.FunctionMetadata import FunctionMetadata
+from coalib.settings.Section import Section
 
 
 class SectionCreatable:
@@ -41,15 +42,32 @@ class SectionCreatable:
         pass  # Method needs to be available
 
     @classmethod
-    def from_section(cls, section, **kwargs):
+    def from_section(cls, section):
         """
         Creates the object from a section object.
 
         :param section: A section object containing at least the settings specified by get_non_optional_settings()
-        :param kwargs: defaults for settings with the given key. If no setting with the specified key is needed it will
-                       be ignored.
         """
-        raise NotImplementedError
+        if not isinstance(section, Section):
+            raise TypeError("The 'section' parameter should be a coalib.settings.Section instance.")
+
+        params = {}
+        metadata = cls.get_metadata()
+
+        for param in metadata.non_optional_params:
+            desc, annotation = metadata.non_optional_params[param]
+            if annotation is None:
+                annotation = lambda x: x
+            params[param] = annotation(section.get(param))
+
+        for param in metadata.optional_params:
+            if param in section:
+                desc, annotation, default = metadata.optional_params[param]
+                if annotation is None:
+                    annotation = lambda x: x
+                params[param] = annotation(section[param])
+
+        return cls(**params)
 
     @classmethod
     def get_metadata(cls):

@@ -30,13 +30,6 @@ class SpacingHelper(SectionCreatable):
 
         self.tab_width = tab_width
 
-    @classmethod
-    def from_section(cls, section, **kwargs):
-        if not isinstance(section, Section):
-            raise TypeError("The 'section' parameter should be a coalib.settings.Section instance.")
-
-        return cls(tab_width=int(section.get("tab_width", kwargs.get("tab_width", cls.DEFAULT_TAB_WIDTH))))
-
     def get_indentation(self, line):
         """
         Checks the lines indentation.
