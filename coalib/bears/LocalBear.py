@@ -14,6 +14,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
+from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
 class LocalBear(Bear):
@@ -48,3 +49,12 @@ class LocalBear(Bear):
         :return: A list of Result
         """
         raise NotImplementedError("This function has to be implemented for a runnable bear.")
+
+    @classmethod
+    def get_metadata(cls):
+        metadata = FunctionMetadata.from_function(cls.run_bear)
+        metadata.non_optional_params.pop("self", None)
+        metadata.non_optional_params.pop("filename", None)
+        metadata.non_optional_params.pop("file", None)
+
+        return metadata

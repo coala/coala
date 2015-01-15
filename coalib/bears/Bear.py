@@ -18,6 +18,7 @@ import traceback
 from coalib.misc.i18n import _
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
+from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
 
@@ -128,6 +129,17 @@ class Bear:
         :return: The kind of the bear
         """
         raise NotImplementedError
+
+    @classmethod
+    def get_metadata(cls):
+        """
+        :return: Metadata for the run_bear function. However parameters like self or parameters implicitly used by
+        coala (e.g. filename for local bears) are already removed.
+        """
+        metadata = FunctionMetadata.from_function(cls.run_bear)
+        metadata.non_optional_params.pop("self", None)
+
+        return metadata
 
     @staticmethod
     def get_non_optional_settings():
