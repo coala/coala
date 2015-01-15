@@ -48,26 +48,7 @@ class SectionCreatable:
 
         :param section: A section object containing at least the settings specified by get_non_optional_settings()
         """
-        if not isinstance(section, Section):
-            raise TypeError("The 'section' parameter should be a coalib.settings.Section instance.")
-
-        params = {}
-        metadata = cls.get_metadata()
-
-        for param in metadata.non_optional_params:
-            desc, annotation = metadata.non_optional_params[param]
-            if annotation is None:
-                annotation = lambda x: x
-            params[param] = annotation(section.get(param))
-
-        for param in metadata.optional_params:
-            if param in section:
-                desc, annotation, default = metadata.optional_params[param]
-                if annotation is None:
-                    annotation = lambda x: x
-                params[param] = annotation(section[param])
-
-        return cls(**params)
+        return cls(**cls.get_metadata().create_params_from_section(section))
 
     @classmethod
     def get_metadata(cls):

@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 from inspect import isfunction, ismethod, getfullargspec
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.misc.i18n import _
+from coalib.settings.Section import Section
 
 
 class FunctionMetadata:
@@ -49,6 +50,34 @@ class FunctionMetadata:
         self.retval_desc = retval_desc
         self.non_optional_params = non_optional_params
         self.optional_params = optional_params
+
+    def create_params_from_section(self, section):
+        """
+        Create a params dictionary for this function that holds all values the function needs plus optional ones that
+        are available.
+
+        :param section: The section to retrieve the values from.
+        :return: A dictionary. Unfold it with ** to pass it to the function.
+        """
+        if not isinstance(section, Section):
+            raise TypeError("The 'section' parameter should be a coalib.settings.Section instance.")
+
+        params = {}
+
+        for param in self.non_optional_params:
+            desc, annotation = self.non_optional_params[param]
+            if annotation is None:
+                annotation = lambda x: x
+            params[param] = annotation(section.get(param))
+
+        for param in self.optional_params:
+            if param in section:
+                desc, annotation, default = self.optional_params[param]
+                if annotation is None:
+                    annotation = lambda x: x
+                params[param] = annotation(section[param])
+
+        return params
 
     @classmethod
     def from_function(cls, func):
