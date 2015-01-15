@@ -24,8 +24,8 @@ class SectionCreatableTestCase(unittest.TestCase):
     def test_api(self):
         uut = SectionCreatable()
         self.assertRaises(NotImplementedError, uut.from_section, 5)
-        self.assertRaises(NotImplementedError, uut.get_needed_settings)
-        self.assertEqual(uut.get_minimal_needed_settings(), {})
+        self.assertEqual(uut.get_non_optional_settings(), {})
+        self.assertEqual(uut.get_optional_settings(), {})
 
 
 if __name__ == '__main__':

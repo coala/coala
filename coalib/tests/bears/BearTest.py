@@ -71,7 +71,7 @@ class BearTestCase(unittest.TestCase):
 
         self.assertRaises(NotImplementedError, base.run_bear)
 
-        self.assertEqual(base.get_needed_settings(), {})
+        self.assertEqual(base.get_non_optional_settings(), {})
 
     def test_message_queue(self):
         self.uut.run()

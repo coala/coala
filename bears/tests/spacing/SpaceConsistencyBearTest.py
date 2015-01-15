@@ -32,8 +32,8 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.uut = SpaceConsistencyBear(self.section, Queue())
 
     def test_needed_settings(self):
-        needed_settings = self.uut.get_needed_settings()
-        self.assertEqual(len(needed_settings), 1 + len(SpacingHelper.get_minimal_needed_settings()))
+        needed_settings = self.uut.get_non_optional_settings()
+        self.assertEqual(len(needed_settings), 1 + len(SpacingHelper.get_non_optional_settings()))
         self.assertIn("UseSpaces", needed_settings)
 
     def test_data_sets_spaces(self):

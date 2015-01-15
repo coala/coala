@@ -33,7 +33,7 @@ class GlobalTestBear(GlobalBear):
         GlobalBear.__init__(self, {}, Section("irrelevant"), None)
 
     @staticmethod
-    def get_needed_settings():
+    def get_non_optional_settings():
         return {"global name": "global help text",
                 "key": "this setting does exist"}
 
@@ -43,7 +43,7 @@ class LocalTestBear(LocalBear):
         LocalBear.__init__(self, [], "", Section("irrelevant"), None)
 
     @staticmethod
-    def get_needed_settings():
+    def get_non_optional_settings():
         return {"local name": "local help text",
                 "global name": "this setting is needed by two bears"}
 

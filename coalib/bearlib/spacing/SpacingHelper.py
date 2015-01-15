@@ -33,11 +33,11 @@ class SpacingHelper(SectionCreatable):
         return cls(tab_width=int(section.get("tab_width", kwargs.get("tab_width", cls.DEFAULT_TAB_WIDTH))))
 
     @staticmethod
-    def get_minimal_needed_settings():
+    def get_non_optional_settings():
         return {}
 
     @staticmethod
-    def get_needed_settings():
+    def get_optional_settings():
         return {"tab_width": "The number of spaces which visually equals a tab."}
 
     def get_indentation(self, line):

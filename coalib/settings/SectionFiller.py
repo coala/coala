@@ -48,12 +48,12 @@ class SectionFiller:
         # Retrieve needed settings.
         prel_needed_settings = {}
         for bear in bears:
-            if not hasattr(bear, "get_needed_settings"):
+            if not hasattr(bear, "get_non_optional_settings"):
                 self.section.log_printer.log(LOG_LEVEL.WARNING,
-                                             _("One of the given bears ({}) has no attribute get_needed_settings.")
-                                             .format(str(bear)))
+                                             _("One of the given bears ({}) has no attribute "
+                                               "get_non_optional_settings.").format(str(bear)))
             else:
-                needed = bear.get_needed_settings()
+                needed = bear.get_non_optional_settings()
                 for key in needed:
                     if key in prel_needed_settings:
                         prel_needed_settings[key].append(bear.__name__)

@@ -26,8 +26,8 @@ class SpacingHelperTestCase(unittest.TestCase):
         self.uut = SpacingHelper()
 
     def test_needed_settings(self):
-        self.assertEqual(list(self.uut.get_needed_settings()), ["tab_width"])
-        self.assertEqual(list(self.uut.get_minimal_needed_settings()), [])
+        self.assertEqual(list(self.uut.get_optional_settings()), ["tab_width"])
+        self.assertEqual(list(self.uut.get_non_optional_settings()), [])
 
     def test_construction(self):
         section = Section("test section")

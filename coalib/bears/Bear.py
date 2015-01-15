@@ -130,7 +130,7 @@ class Bear:
         raise NotImplementedError
 
     @staticmethod
-    def get_needed_settings():
+    def get_non_optional_settings():
         """
         This method has to determine which settings are needed by this bear. The user will be prompted for needed
         settings that are not available in the settings file so don't include settings where a default value would do.

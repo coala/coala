@@ -60,8 +60,8 @@ class SpaceConsistencyBear(LocalBear):
         return results
 
     @staticmethod
-    def get_needed_settings():
-        needed_settings = SpacingHelper.get_minimal_needed_settings()
+    def get_non_optional_settings():
+        needed_settings = SpacingHelper.get_non_optional_settings()
         needed_settings.update({"UseSpaces": "True if spaces are to be used, false for tabs"})
 
         return needed_settings
