@@ -92,6 +92,12 @@ class Bear:
     def run_bear(self, *args, **kwargs):
         raise NotImplementedError
 
+    def run_bear_from_section(self, args, kwargs):
+        kwargs.update(self.get_metadata().create_params_from_section(self.section))
+
+        return self.run_bear(*args,
+                             **kwargs)
+
     def run(self, *args, **kwargs):
         try:
             name = self.__class__.__name__
@@ -99,7 +105,7 @@ class Bear:
             self.set_up()
             self.debug_msg(_("Running bear {}...").format(name))
             try:
-                retval = self.run_bear(*args, **kwargs)
+                retval = self.run_bear_from_section(args, kwargs)
             except:
                 exception = sys.exc_info()
                 self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))

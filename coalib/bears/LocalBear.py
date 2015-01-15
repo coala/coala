@@ -40,7 +40,7 @@ class LocalBear(Bear):
     def kind():
         return BEAR_KIND.LOCAL
 
-    def run_bear(self, filename, file):
+    def run_bear(self, filename, file, *args):
         """
         Handles the given file.
 
