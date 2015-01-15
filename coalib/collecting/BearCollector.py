@@ -81,12 +81,12 @@ class BearCollector(FileCollector):
         if not isinstance(section, Section):
             raise TypeError("section should be of type Section.")
 
-        flat_bear_dirs = [StringConstants.coalib_bears_root]
-        flat_bear_dirs.extend(path_list(section["flat_bear_dirs"]))
+        rec_bear_dirs = [StringConstants.coalib_bears_root]
+        rec_bear_dirs.extend(path_list(section["rec_bear_dirs"]))
 
         return cls(bear_kinds=bear_kinds,
-                   flat_bear_dirs=flat_bear_dirs,
-                   rec_bear_dirs=path_list(section["rec_bear_dirs"]),
+                   flat_bear_dirs=path_list(section["flat_bear_dirs"]),
+                   rec_bear_dirs=rec_bear_dirs,
                    bear_names=list(section["bears"]),
                    regex=str(section["bears_regex"]),
                    ignored_bear_dirs=path_list(section["ignored_bear_dirs"]),
