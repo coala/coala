@@ -21,10 +21,16 @@ ABOUT
 =====
 coala is a simple COde AnaLysis Application. Its goal is to make static code
 analysis easy while remaining completely modular and therefore extendable.
-Code analysis happens in python scripts while coala mainly manages these.
 
-This project is not finished and does not provide any real functionality. We
-are currently working hard to make it reality.
+Code analysis happens in python scripts while coala manages these, tries to
+provide helpful libraries and provides multiple user interfaces. (Currently
+we support only Console output but others will follow.)
+
+We are currently working hard to make this project reality. coala is currently
+in an alpha stage and provides the most basic features. If you want to see how
+the development progresses, check out
+
+https://github.com/coala-analyzer/coala
 
 Authors
 -------
@@ -43,19 +49,24 @@ INSTALLATION
 Python
 ------
 coala requires an installation of Python3 >= 3.2 from http://www.python.org.
+coala is fully tested against python versions 3.2, 3.3 and 3.4.
 
 coala
 -----
 coala can be installed afterwards by executing the file setup.py through
 the python interpreter (root access necessary):
+
 ```python3 setup.py install```
 
-You can then use `coala` from the commandline everywhere. Be aware that the
-coala script is not yet exposing any functionality.
+You will have coala installed into your python scripts directory. On a unix
+system it is probably already available on your command line globally.
 
 FUNCTION REFERENCE
 ==================
-coming soon...
+Try executing `coala -h` for information about the most common settings. You
+can also define settings via the .coafile in the current directory (try the
+`--save` option). If a bear needs a setting that is not provided, coala will
+explicitly ask you for it.
 
 GETTING INVOLVED
 ================
@@ -66,6 +77,11 @@ the following things:
 - report bugs
 - send pull requests (write objects, tests)
 - provide translations
+
+Modularity, clean good code as well as a high usability for both users and
+developers of analyse routines (called bears) stand in the foreground of the
+development. We will not speed up our development if it needs sacrificing
+any aspect of quality.
 
 LICENSE
 =======
