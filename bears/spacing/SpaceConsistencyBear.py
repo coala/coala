@@ -21,14 +21,14 @@ class SpaceConsistencyBear(LocalBear):
     def run_bear(self,
                  filename,
                  file,
-                 UseSpaces: bool,
-                 AllowTrailingSpaces: bool=False,
+                 use_spaces: bool,
+                 allow_trailing_whitespace: bool=False,
                  tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
         """
         Checks the space consistency for each line.
 
-        :param UseSpaces: True if spaces are to be used instead of tabs.
-        :param AllowTrailingSpaces: Wether to allow trailing whitespace or not.
+        :param use_spaces: True if spaces are to be used instead of tabs.
+        :param allow_trailing_whitespace: Whether to allow trailing whitespace or not.
         :param tab_width: Number of spaces representing one tab.
         """
         results = []
@@ -37,7 +37,7 @@ class SpaceConsistencyBear(LocalBear):
         spacing_helper = SpacingHelper(tab_width)
 
         for line_number, line in enumerate(file):
-            if not AllowTrailingSpaces:
+            if not allow_trailing_whitespace:
                 replacement = line.rstrip(" \t\n") + "\n"
                 if replacement != line:
                     results.append(LineResult(filtername,
@@ -47,7 +47,7 @@ class SpaceConsistencyBear(LocalBear):
                                               filename))
                     line = replacement
 
-            if UseSpaces:
+            if use_spaces:
                 replacement = spacing_helper.replace_tabs_with_spaces(line)
                 if replacement != line:
                     results.append(LineResult(filtername,

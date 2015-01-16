@@ -28,13 +28,13 @@ from coalib.misc.i18n import _
 class SpaceConsistencyBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
-        self.section.append(Setting("UseSpaces", "true"))
+        self.section.append(Setting("use_spaces", "true"))
         self.uut = SpaceConsistencyBear(self.section, Queue())
 
     def test_needed_settings(self):
         needed_settings = self.uut.get_non_optional_settings()
         self.assertEqual(len(needed_settings), 1 + len(SpacingHelper.get_non_optional_settings()))
-        self.assertIn("UseSpaces", needed_settings)
+        self.assertIn("use_spaces", needed_settings)
 
     def test_data_sets_spaces(self):
         self.assertLineValid(self.uut, "    t")
@@ -59,8 +59,8 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
 
     def test_data_sets_tabs(self):
         self.section = Section("test section")
-        self.section.append(Setting("UseSpaces", "false"))
-        self.section.append(Setting("allowtrailingspaces", "true"))
+        self.section.append(Setting("use_spaces", "false"))
+        self.section.append(Setting("allow_trailing_whitespace", "true"))
         self.uut = SpaceConsistencyBear(self.section, Queue())
 
         self.assertLineYieldsResult(self.uut,
