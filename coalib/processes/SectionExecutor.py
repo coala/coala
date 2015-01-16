@@ -16,8 +16,7 @@ import multiprocessing
 import queue
 import threading
 from coalib.collecting.FileCollector import FileCollector
-from coalib.output.ConsoleOutputter import ConsoleOutputter, Outputter
-from coalib.output.ConsolePrinter import ConsolePrinter, LogPrinter
+from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.processes.BearRunner import BearRunner
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Barrier import Barrier
