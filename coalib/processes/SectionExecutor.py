@@ -80,10 +80,11 @@ class SectionExecutor:
         filename_list = FileCollector.from_section(self.section).collect()
         file_dict = self._get_file_dict(filename_list)
 
+        manager = multiprocessing.Manager()
         global_bear_queue = multiprocessing.Queue()
         filename_queue = multiprocessing.Queue()
-        local_result_queue = multiprocessing.Queue()
-        global_result_queue = multiprocessing.Queue()
+        local_result_dict = manager.dict()
+        global_result_dict = manager.dict()
         message_queue = multiprocessing.Queue()
         control_queue = multiprocessing.Queue()
 
@@ -100,8 +101,8 @@ class SectionExecutor:
                             "global_bear_list": self.global_bear_list,
                             "global_bear_queue": global_bear_queue,
                             "file_dict": file_dict,
-                            "local_result_queue": local_result_queue,
-                            "global_result_queue": global_result_queue,
+                            "local_result_dict": local_result_dict,
+                            "global_result_dict": global_result_dict,
                             "message_queue": message_queue,
                             "control_queue": control_queue,
                             "barrier": barrier,
@@ -119,12 +120,12 @@ class SectionExecutor:
         # One process is the logger thread
         while running_processes > 1:
             try:
-                elem = control_queue.get(timeout=0.1)
-                if elem == CONTROL_ELEMENT.LOCAL:
-                    self.section.outputter.print_results(local_result_queue.get(), file_dict)
-                elif elem == CONTROL_ELEMENT.GLOBAL:
-                    self.section.outputter.print_results(global_result_queue.get(), file_dict)
-                elif elem == CONTROL_ELEMENT.FINISHED:
+                control_elem, index = control_queue.get(timeout=0.1)
+                if control_elem == CONTROL_ELEMENT.LOCAL:
+                    self.section.outputter.print_results(local_result_dict[index], file_dict)
+                elif control_elem == CONTROL_ELEMENT.GLOBAL:
+                    self.section.outputter.print_results(global_result_dict[index], file_dict)
+                elif control_elem == CONTROL_ELEMENT.FINISHED:
                     running_processes = sum((1 if process.is_alive() else 0) for process in processes)
             except queue.Empty:
                 running_processes = sum((1 if process.is_alive() else 0) for process in processes)
