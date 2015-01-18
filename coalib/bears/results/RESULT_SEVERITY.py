@@ -13,6 +13,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+from coalib.misc.i18n import _
+
 
 class RESULT_SEVERITY:
     INFO = 0
@@ -21,6 +23,6 @@ class RESULT_SEVERITY:
 
     @staticmethod
     def __str__(severity):
-        return {0: "INFO",
-                1: "NORMAL",
-                2: "MAJOR"}.get(severity, "NORMAL")
+        return {0: _("INFO"),
+                1: _("NORMAL"),
+                2: _("MAJOR")}.get(severity, _("NORMAL"))

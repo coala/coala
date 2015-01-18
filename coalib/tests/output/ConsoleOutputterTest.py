@@ -19,6 +19,7 @@ sys.path.insert(0, ".")
 import builtins
 
 from coalib.bears.results.Result import Result
+from coalib.bears.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.misc.i18n import _
 
 _input = builtins.__dict__["input"]
@@ -60,7 +61,8 @@ class ConsoleOutputterTestCase(unittest.TestCase):
     def test_print_result(self):
         self.assertRaises(TypeError, self.uut._print_result, 5)
         self.uut.print = lambda x: x
-        self.assertEqual("|    |    | [NORMAL] {bear}:".format(bear="origin") + "\n|    |    | message",
+        self.assertEqual("|    |    | [{normal}] {bear}:".format(normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
+                                                                 bear="origin") + "\n|    |    | message",
                          self.uut.print_result(Result("origin", "message")))
 
 
