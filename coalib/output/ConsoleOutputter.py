@@ -53,16 +53,15 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
                                                                                                  str(arr[0]),
                                                                                                  needed))
 
-    def _print_result(self, result):
-        assert (isinstance(result, Result))
-        if result.file is None:
-            return self.print(("[{sev}] " + _("Message from {bear}:") +
-                              "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
-                                                    bear=result.origin,
-                                                    message=result.message))
+    def _format_line(self, line, real_nr="", sign="|", mod_nr="", symbol="", ):
+        return "|{:>4}{}{:>4}|{:1}{}".format(real_nr, sign, mod_nr, symbol, line)
 
-        return self.print(("[{sev}] " + _("Annotation for file {file} from {bear}:") +
-                           "\n{message}").format(sev=RESULT_SEVERITY.__str__(result.severity),
-                                                 file=result.file,
-                                                 bear=result.origin,
-                                                 message=result.message))
+    def _print_result(self, result):
+        if not isinstance(result, Result):
+            raise TypeError("result has to be a Result descendant.")
+
+        message_string_list = "[{sev}] {bear}:\n{msg}".format(sev=RESULT_SEVERITY.__str__(result.severity),
+                                                              bear=result.origin,
+                                                              msg=result.message).split("\n")
+
+        return self.print("\n".join([self._format_line(line) for line in message_string_list]))
