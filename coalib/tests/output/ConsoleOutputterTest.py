@@ -36,14 +36,10 @@ class ConsoleOutputterTestCase(unittest.TestCase):
         self.assertEqual(self.uut.acquire_settings({0: 0}), {})
 
         self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear"]}),
-                         {"setting":
-                              _("Please enter a value for the "
-                                "setting \"{}\" ({}) needed by {}: ").format("setting", "help text", "SomeBear")})
+                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format("setting", "help text", "SomeBear")})
 
         self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear", "AnotherBear"]}),
-                         {"setting":
-                              _("Please enter a value for the "
-                                "setting \"{}\" ({}) needed by {}: ").format("setting",
+                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format("setting",
                                                                              "help text",
                                                                              "SomeBear" + _(" and ") + "AnotherBear")})
 
@@ -51,9 +47,7 @@ class ConsoleOutputterTestCase(unittest.TestCase):
                                                                 "SomeBear",
                                                                 "AnotherBear",
                                                                 "YetAnotherBear"]}),
-                         {"setting":
-                              _("Please enter a value for the "
-                                "setting \"{}\" ({}) needed by {}: ").format("setting",
+                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format("setting",
                                                                              "help text",
                                                                              "SomeBear, AnotherBear" + _(" and ") +
                                                                              "YetAnotherBear")})
