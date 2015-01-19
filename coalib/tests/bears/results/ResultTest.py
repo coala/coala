@@ -57,6 +57,10 @@ class ResultTestCase(unittest.TestCase):
         greater_origin = Result(origin='c', message='b', file='b', severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(greater_origin, medium)
 
+        medium.line_nr = 5
+        greater_origin.line_nr = 3
+        self.assert_ordering(medium, greater_origin)
+
     def assert_equal(self, first, second):
         self.assertGreaterEqual(first, second)
         self.assertEqual(first, second)

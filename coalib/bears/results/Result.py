@@ -68,6 +68,11 @@ class Result:
         if self.file != other.file:
             return self.file < other.file
 
+        # If we have a line result show results with a lesser line number first
+        if hasattr(self, "line_nr") and hasattr(other, "line_nr"):
+            if self.line_nr != other.line_nr:
+                return self.line_nr < other.line_nr
+
         # Both files are equal
         if self.severity != other.severity:
             return self.severity > other.severity
