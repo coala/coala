@@ -1,5 +1,8 @@
-import locale
+import gettext
 import sys
+import unittest
+import os
+import shutil
 
 sys.path.insert(0, ".")
 if sys.version_info < (3, 4):
@@ -7,9 +10,8 @@ if sys.version_info < (3, 4):
 else:
     import importlib
 
-import unittest
-import os
-import shutil
+# Only use non-installed locales, do this before importing i18n
+gettext._default_localedir = os.path.abspath(os.path.join("build", "locale"))
 from coalib.misc import i18n
 
 print("Testing translation building...")
