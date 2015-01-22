@@ -36,6 +36,8 @@ default_arg_parser.add_argument('-c', '--config', nargs='+', metavar='FILE', des
                                 help=_('Configuration file to be used'))
 default_arg_parser.add_argument('-s', '--save', nargs='?', const=True, metavar='FILE', dest='save',
                                 help=_('Filename of file to be saved to, defaults to config file'))
+default_arg_parser.add_argument('-S', '--settings', nargs='+', metavar='SETTING', dest='settings',
+                                help=_('Arbitrary settings in the form of section.key=value'))
 default_arg_parser.add_argument('-j', '--job-count', nargs=1, type=int, metavar='INT', dest='job_count',
                                 help=_('Number of processes to be allowed to run at once'))
 default_arg_parser.add_argument('-a', '--apply-changes', nargs=1, choices=['YES', 'NO', 'ASK'], metavar='ENUM',

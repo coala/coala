@@ -10,6 +10,7 @@ class CliParserTestCase(unittest.TestCase):
     def setUp(self):
         self.test_arg_parser = argparse.ArgumentParser()
         self.test_arg_parser.add_argument('-t', nargs='+', dest='test')
+        self.test_arg_parser.add_argument('-S', '--settings', nargs='+', dest='settings')
         self.uut = CliParser(self.test_arg_parser)
 
     def dict_from_sections(self, parsed_sections):
@@ -27,8 +28,10 @@ class CliParserTestCase(unittest.TestCase):
         # regular parse
         parsed_sections = self.uut.parse(['-t', 'ignored1', 'ignored2',
                                           '-t', 'taken',
-                                          'section1.key1,section2.key2=value1,value2', 'section2.key2=only_this_value',
-                                          'invalid.=shouldnt_be_shown', '.=not_either',
+                                          '-S', 'section1.key1,section2.key2=value1,value2',
+                                          'section2.key2=only_this_value',
+                                          'invalid.=shouldnt_be_shown',
+                                          '.=not_either',
                                           '.key=only_in_default',
                                           'default_key1,default_key2=single_value',
                                           'default_key3=first_value,second_value'])
@@ -41,7 +44,7 @@ class CliParserTestCase(unittest.TestCase):
         self.assertEqual(self.dict_from_sections(self.uut.export_to_settings()), expected_dict)
 
         # additional parse
-        add_parsed_sections = self.uut.parse(['additional.key=value'])
+        add_parsed_sections = self.uut.parse(['-S', 'additional.key=value'])
         add_expected_dict = {'default': {("test", "taken"),
                                          ("key", "only_in_default"),
                                          ("default_key1", "single_value"),
@@ -54,7 +57,7 @@ class CliParserTestCase(unittest.TestCase):
         self.assertEqual(self.dict_from_sections(add_parsed_sections), add_expected_dict)
 
         # reparse
-        new_parsed_sections = self.uut.reparse(['new_key=value'])
+        new_parsed_sections = self.uut.reparse(['-S', 'new_key=value'])
         new_expected_dict = {'default': {("new_key", "value")}}
         self.assertEqual(self.dict_from_sections(new_parsed_sections), new_expected_dict)
 

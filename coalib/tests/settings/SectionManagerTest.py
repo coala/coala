@@ -15,14 +15,14 @@ class SectionManagerTestCase(unittest.TestCase):
         defaults = ConfParser().parse(os.path.abspath(os.path.join(StringConstants.coalib_root, "default_coafile")))
 
         uut = SectionManager()
-        conf_sections = uut.run(arg_list=["test=5"])[0]
+        conf_sections = uut.run(arg_list=['-S', "test=5"])[0]
 
         self.assertEqual(str(conf_sections["default"]), "Default {test : 5}")
         self.assertEqual(str(conf_sections["default"].defaults), str(defaults["default"]))
 
     def test_nonexistent_file(self):
         filename = "bad.one/test\neven with bad chars in it"
-        SectionManager().run(arg_list=["config=" + filename])  # Shouldn't throw an exception
+        SectionManager().run(arg_list=['-S', "config=" + filename])  # Shouldn't throw an exception
 
         tmp = StringConstants.coalib_root
         StringConstants.coalib_root = filename
@@ -32,13 +32,13 @@ class SectionManagerTestCase(unittest.TestCase):
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(), "SectionManagerTestFile")
 
-        SectionManager().run(arg_list=["save=" + filename])
+        SectionManager().run(arg_list=['-S', "save=" + filename])
 
         with open(filename, "r") as f:
             lines = f.readlines()
         self.assertEqual(["[Default]\n"], lines)
 
-        SectionManager().run(arg_list=["save=true", "config=" + filename, "test.value=5"])
+        SectionManager().run(arg_list=['-S', "save=true", "config=" + filename, "test.value=5"])
 
         with open(filename, "r") as f:
             lines = f.readlines()
@@ -49,7 +49,7 @@ class SectionManagerTestCase(unittest.TestCase):
                           "value = 5\n"], lines)
 
     def test_logging_objects(self):
-        conf_sections, n, m = SectionManager().run(arg_list=["log_type=none"])
+        conf_sections, n, m = SectionManager().run(arg_list=['-S', "log_type=none"])
         self.assertIsInstance(conf_sections["default"].log_printer, NullPrinter)
 
 

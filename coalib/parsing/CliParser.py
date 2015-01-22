@@ -64,24 +64,22 @@ class CliParser(SectionParser):
         :return: the settings dictionary
         """
         origin += os.path.sep
-        arg_parse_list = []
-        for arg in arg_list:
-            section_stub, key_touples, value, comment_stub = self._line_parser.parse(arg)
+        for arg_key, arg_value in vars(self._arg_parser.parse_args(arg_list)).items():
+            if arg_key == 'settings' and arg_value is not None:
+                self._parse_custom_settings(arg_value, origin)
+            else:
+                if isinstance(arg_value, list):
+                    arg_value = ",".join([str(val) for val in arg_value])  # [1,2,3] -> "1,2,3"
 
-            if key_touples:  # this argument is to be parsed by line_parser
-                for key_touple in key_touples:
-                    self._update_sections(section_name=key_touple[0], key=key_touple[1], value=value, origin=origin)
-            else:  # this argument is to be parsed by arg_parser
-                arg_parse_list.append(arg)
-
-        arg_parse_dict = vars(self._arg_parser.parse_args(arg_parse_list))
-
-        for arg_key, arg_value in arg_parse_dict.items():
-            if isinstance(arg_value, list):
-                arg_value = ",".join([str(val) for val in arg_value])  # [1,2,3] -> "1,2,3"
-            self._update_sections("default", arg_key, arg_value, origin)
+                self._update_sections("default", arg_key, arg_value, origin)
 
         return self.sections
+
+    def _parse_custom_settings(self, custom_settings_list, origin):
+        for setting_definition in custom_settings_list:
+            section_stub, key_touples, value, comment_stub = self._line_parser.parse(setting_definition)
+            for key_touple in key_touples:
+                self._update_sections(section_name=key_touple[0], key=key_touple[1], value=value, origin=origin)
 
     def reparse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
         self.__reset_sections()
