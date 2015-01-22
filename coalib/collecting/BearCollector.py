@@ -115,6 +115,15 @@ class BearCollector(FileCollector):
         # exclude everything else
         return False
 
+    def _valid_bears_from_list(self, bear_class_list):
+        bears = []
+        for bear_class in bear_class_list:
+            if hasattr(bear_class, "kind"):
+                bear_name = os.path.splitext(os.path.basename(inspect.getfile(bear_class)))[0]
+                if bear_name not in self._ignored_bears:
+                    bears.append(bear_class)
+        return bears
+
     def collect(self):
         """
         :return: list of classes (not instances) of all collected bears
@@ -131,7 +140,10 @@ class BearCollector(FileCollector):
 
             module = importlib.import_module(module_name)
             for name, p_object in inspect.getmembers(module):
-                if hasattr(p_object, "kind"):
+                if name == "__additional_bears__" and isinstance(p_object, list):
+                    bears.extend(self._valid_bears_from_list(p_object))
+
+                elif hasattr(p_object, "kind"):
                     if inspect.getfile(p_object) == file:
                         bear_kind = None
                         try:
@@ -141,5 +153,6 @@ class BearCollector(FileCollector):
                         if bear_kind in self._bear_kinds:
                             bears.append(p_object)
 
+        bears = list(set(bears))
         self._items = bears
         return bears
