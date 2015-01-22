@@ -34,8 +34,7 @@ https://github.com/coala-analyzer/coala
 
 Authors
 -------
-Current maintainers and creators are:
-Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt <fabian@neuschmidt.de>
+Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt <fabian@neuschmidt.de> are the current maintainers of this project.
 
 Build status
 ------------
@@ -71,16 +70,24 @@ GETTING INVOLVED
 ================
 We are working hard to make coala reality. If you want to help us you can do
 the following things:
-- send us an email (see authors above)
-- give us feedback
-- report bugs
-- send pull requests (write objects, tests)
-- provide translations
+
+ * join our mailing list and/or write us an email
+ * give us feedback
+ * report bugs
+ * send pull requests (write objects, tests)
+ * provide translations
 
 Modularity, clean good code as well as a high usability for both users and
 developers of analyse routines (called bears) stand in the foreground of the
 development. We will not speed up our development if it needs sacrificing
 any aspect of quality.
+
+Feel free to join on our public mailing lists:
+
+ * https://groups.google.com/forum/#!forum/coala-devel
+   * coala-devel@googlegroups.com
+ * https://groups.google.com/forum/#!forum/coala-announcements
+   * coala-announcements@googlegroups.com
 
 LICENSE
 =======
