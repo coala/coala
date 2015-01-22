@@ -101,7 +101,7 @@ class Bear:
                                  "Here is your traceback:\n\n{traceback}\n"
                                  "").format(bear=self.__class__.__name__,
                                             exception=str(exception[0].__name__),
-                                            traceback=traceback.extract_tb(exception[2])))
+                                            traceback=str(traceback.extract_tb(exception[2]))))
                 return None
             self.debug_msg(_("Tearing down bear {}...").format(name))
             self.tear_down()
@@ -112,7 +112,7 @@ class Bear:
             self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))
             self.debug_msg(_("set_up() or tear_down() throwed an exception for bear {}.\n"
                              "Exception: {}\nTraceback:\n{}").format(str(exception[0].__name__),
-                                                                     traceback.extract_tb(exception[2]),
+                                                                     str(traceback.extract_tb(exception[2])),
                                                                      self.__class__.__name__))
 
     @staticmethod
