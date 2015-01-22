@@ -17,12 +17,11 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
                  log_level=LOG_LEVEL.WARNING,
                  timestamp_format="%X",
                  pre_padding=3,
-                 log_printer=None):
-        Outputter.__init__(self)
+                 log_printer=ConsolePrinter()):
+        Outputter.__init__(self, log_printer=log_printer)
         ConsolePrinter.__init__(self, output=output, log_level=log_level, timestamp_format=timestamp_format)
 
         self.pre_padding = pre_padding
-        self.log_printer = self if log_printer is None else log_printer
 
     def acquire_settings(self, settings_names_dict):
         if not isinstance(settings_names_dict, dict):
@@ -38,8 +37,8 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
 
     def _require_setting(self, setting_name, arr):
         if not isinstance(arr, list) or len(arr) < 2:
-            self.log(LOG_LEVEL.WARNING,
-                     _("One of the given settings ({}) are not properly described.").format(str(setting_name)))
+            self.log_printer.log(LOG_LEVEL.WARNING, _("One of the given settings ({}) are not properly "
+                                                      "described.").format(str(setting_name)))
 
             return None
 
