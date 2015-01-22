@@ -6,6 +6,7 @@ import sys
 
 from coalib.collecting.FileCollector import FileCollector
 from coalib.misc.StringConstants import StringConstants
+from coalib.misc.i18n import _
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.settings.Section import Section
 from coalib.settings.Setting import path_list
@@ -102,9 +103,14 @@ class BearCollector(FileCollector):
         if bear_name in self._bear_names:
             return True
 
-        # regex included
-        if re.match(self._regex, bear_name) and self._regex != "$":
-            return True
+        try:
+            # regex included
+            if re.match(self._regex, bear_name) and self._regex != "$":
+                return True
+        except re.error:
+            self.log_printer.warn(_("One of the given regexes ('{regex}') was not valid and will be ignored. The error "
+                                    "was '{error}'.").format(regex=self._regex, error=sys.exc_info()[1]))
+            self._regex = "$"  # Do not use this regex anymore
 
         # exclude everything else
         return False

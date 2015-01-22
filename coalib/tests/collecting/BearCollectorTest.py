@@ -161,6 +161,12 @@ class TestBear(ImportedTestBear):
         self.assertEqual(len(bear_list), 1)
         self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
 
+        uut = BearCollector(["kind"],
+                            rec_bear_dirs=[self.parent_from_tmp],
+                            regex="*^testfile1.*$")
+        bear_list = uut.collect()
+        self.assertEqual(len(bear_list), 0)
+
     def test_bear_dir_ignoration(self):
         uut = BearCollector(["kind"],
                             rec_bear_dirs=[self.parent_from_tmp],
