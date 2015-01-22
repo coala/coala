@@ -1,13 +1,14 @@
 from coalib.bears.results.LineResult import Result, LineResult
+from coalib.output.ConsolePrinter import ConsolePrinter
+from coalib.misc.i18n import _
 
 
 class Outputter:
+    def __init__(self, log_printer=ConsolePrinter()):
+        self.log_printer = log_printer
+
     def _print_result(self, result):
         raise NotImplementedError
-
-    def _print_line_result(self, result):
-        # You probably want to overwrite this method!
-        return self._print_result(result)
 
     def print_result(self, result):
         """
@@ -16,10 +17,9 @@ class Outputter:
         :param result: A derivative of Result.
         """
         if not isinstance(result, Result):
-            raise TypeError("print_result can only handle objects which inherit from Result.")
-
-        if type(result) == LineResult:
-            return self._print_line_result(result)
+            self.log_printer.warn(_("One of the results can not be printed since it is not a valid derivative of the "
+                                    "coala result class."))
+            return
 
         return self._print_result(result)
 
