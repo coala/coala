@@ -11,6 +11,7 @@ Submodules
    coalib.output.ConsoleOutputter
    coalib.output.ConsolePrinter
    coalib.output.EspeakPrinter
+   coalib.output.FilePrinter
    coalib.output.LOG_LEVEL
    coalib.output.LogPrinter
    coalib.output.NullPrinter

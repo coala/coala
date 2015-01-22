@@ -10,7 +10,7 @@ Submodules
    coalib.parsing.ConfParser
    coalib.parsing.DefaultArgParser
    coalib.parsing.LineParser
-   coalib.parsing.Parser
+   coalib.parsing.SectionParser
 
 Module contents
 ---------------

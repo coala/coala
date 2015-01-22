@@ -13,9 +13,9 @@ Submodules
 
 .. toctree::
 
+   coalib.tests.processes.BarrierTest
    coalib.tests.processes.BearRunnerTest
-   coalib.tests.processes.ProcessSpawnerTest
-   coalib.tests.processes.ProcessTest
+   coalib.tests.processes.SectionExecutorTest
 
 Module contents
 ---------------

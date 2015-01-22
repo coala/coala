@@ -6,6 +6,8 @@ Submodules
 
 .. toctree::
 
+   coalib.tests.settings.DocumentationCommentTest
+   coalib.tests.settings.FunctionMetadataTest
    coalib.tests.settings.SectionFillerTest
    coalib.tests.settings.SectionManagerTest
    coalib.tests.settings.SectionTest

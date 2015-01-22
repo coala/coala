@@ -11,6 +11,7 @@ Submodules
    coalib.tests.output.ConsoleOutputterTest
    coalib.tests.output.ConsolePrinterTest
    coalib.tests.output.EspeakPrinterTest
+   coalib.tests.output.FilePrinterTest
    coalib.tests.output.LogPrinterTest
    coalib.tests.output.NullPrinterTest
    coalib.tests.output.OutputterTest

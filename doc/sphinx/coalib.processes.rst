@@ -13,10 +13,10 @@ Submodules
 
 .. toctree::
 
+   coalib.processes.Barrier
    coalib.processes.BearRunner
    coalib.processes.CONTROL_ELEMENT
-   coalib.processes.Process
-   coalib.processes.ProcessSpawner
+   coalib.processes.SectionExecutor
 
 Module contents
 ---------------

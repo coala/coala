@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    coalib.bearlib
     coalib.bears
     coalib.collecting
     coalib.misc
