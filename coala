@@ -14,8 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
+import traceback
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
+from coalib.settings.Section import Section
 from coalib.settings.SectionManager import SectionManager
 
 os.environ["LANG"] = "de_DE"
@@ -23,6 +26,8 @@ from coalib.misc.i18n import _
 
 
 if __name__ == "__main__":
+    # Set default section so we have a log printer in case the SectionManager fails.
+    sections = {"default": Section("default")}
     try:
         sections, all_local_bears, all_global_bears = SectionManager().run()
         for section_name in sections:
@@ -36,4 +41,9 @@ if __name__ == "__main__":
     except SystemExit:
         pass
     except:
-        print(_("An unknown error occurred.") + " " + StringConstants.THIS_IS_A_BUG)
+        exception = sys.exc_info()
+        sections["default"].log_printer.err(_("An unknown error occurred.") + " " + StringConstants.THIS_IS_A_BUG)
+        sections["default"].log_printer.err(_("During execution of coala an exception of type {exception} was raised. "
+                                              "This should never happen. When asked for, the following information may "
+                                              "help investigating:").format(exception=str(exception[0].__name__)) +
+                                            "\n\n" + str(traceback.extract_tb(exception[2])))
