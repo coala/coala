@@ -39,7 +39,6 @@ class ConsoleOutputterTestCase(unittest.TestCase):
                                                                              "YetAnotherBear")})
 
     def test_print_result(self):
-        self.assertRaises(TypeError, self.uut._print_result, 5)
         self.uut.print = lambda x: x
         self.assertEqual("|    |    | [{normal}] {bear}:".format(normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
                                                                  bear="origin") + "\n|    |    | message",

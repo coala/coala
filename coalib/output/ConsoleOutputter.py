@@ -55,9 +55,6 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
         return "|{:>4}{}{:>4}|{:1}{}".format(real_nr, sign, mod_nr, symbol, line.rstrip("\n"))
 
     def _print_result(self, result):
-        if not isinstance(result, Result):
-            raise TypeError("result has to be a Result descendant.")
-
         message_string_list = "[{sev}] {bear}:\n{msg}".format(sev=RESULT_SEVERITY.__str__(result.severity),
                                                               bear=result.origin,
                                                               msg=result.message).split("\n")
@@ -117,4 +114,4 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
                     self._print_lines(file_dict, current_line, result.line_nr, result.file)
                     current_line = result.line_nr
 
-            self._print_result(result)
+            self.print_result(result)
