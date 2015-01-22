@@ -45,6 +45,7 @@ class TestFileCollection(unittest.TestCase):
         (self.testfile1, self.testfile1_path) = tempfile.mkstemp(suffix='.py', prefix='testfile1_', dir=self.tmp_dir)
         (self.testfile2, self.testfile2_path) = tempfile.mkstemp(suffix='.py', prefix='testfile2_', dir=self.tmp_dir)
         (self.testfile3, self.testfile3_path) = tempfile.mkstemp(suffix='.c', prefix='testfile3_', dir=self.tmp_dir)
+        (self.testfile4, self.testfile4_path) = tempfile.mkstemp(suffix='.py', prefix='testfile4_', dir=self.tmp_dir)
         # We don't use the file descriptors
         os.close(self.testfile1)
         os.close(self.testfile2)
@@ -92,12 +93,20 @@ class TestBear(ImportedTestBear):
     def origin(self):
         return inspect.getfile(inspect.currentframe())
 """.format(first_file_name)
+
+        import_bear_file_string = """
+from {} import TestBear as ImportedTestBear
+__additional_bears__ = [ImportedTestBear]
+""".format(first_file_name)
+
         with open(self.testfile1_path, 'w') as test_bear_file:
             test_bear_file.write(test_bear_file_string_one)
         with open(self.testfile2_path, 'w') as test_bear_file:
             test_bear_file.write(test_bear_file_string_two)
         with open(self.testfile3_path, 'w') as test_bear_file:
             test_bear_file.write(test_bear_file_string_one)
+        with open(self.testfile4_path, 'w') as test_bear_file:
+            test_bear_file.write(import_bear_file_string)
 
     def tearDown(self):
         shutil.rmtree(self.tmp_dir)
@@ -181,6 +190,15 @@ class TestBear(ImportedTestBear):
                             regex="testfile1.*")
         bear_list = uut.collect()
         self.assertEqual(len(bear_list), 0)
+
+    def test_bear_referenced_import(self):
+        uut = BearCollector(["kind"],
+                            flat_bear_dirs=[self.tmp_dir],
+                            bear_names=[os.path.splitext(os.path.basename(self.testfile4_path))[0]])
+        bear_list = uut.collect()
+        self.assertEqual(len(bear_list), 1)
+        self.assertEqual(bear_list[0]().origin(), self.testfile1_path)
+
 
 
 if __name__ == '__main__':
