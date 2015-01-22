@@ -145,7 +145,7 @@ class BearCollector(FileCollector):
                         try:
                             bear_kind = p_object.kind()
                         except:
-                            pass  # Bear base class
+                            pass
                         if bear_kind in self._bear_kinds:
                             bears.append(p_object)
 
