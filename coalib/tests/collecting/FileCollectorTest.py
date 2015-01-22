@@ -134,6 +134,11 @@ class TestFileCollection(unittest.TestCase):
                                        flat_dirs=[self.tmp_dir],
                                        regex="tfile.*\.c",
                                        allowed_types=[]).collect(), [])
+        # Bad regex
+        self.assertEqual(FileCollector(log_printer=QuietPrinter(),
+                                       flat_dirs=[self.tmp_dir],
+                                       regex="*testfile.*\.c",
+                                       allowed_types=[]).collect(), [])
 
 
     @unittest.skipIf(sys.version_info < (3, 3), "Mocks are not supported in Python 3.2")

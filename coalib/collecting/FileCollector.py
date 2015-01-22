@@ -1,9 +1,10 @@
 import os
 import re
-
+import sys
 
 from coalib.collecting.Collector import Collector
 from coalib.misc.StringConstants import StringConstants
+from coalib.misc.i18n import _
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
@@ -102,8 +103,13 @@ class FileCollector(Collector):
             if file_path.startswith(ignored_path):
                 return False
 
-        if self._regex != "$" and re.match(self._regex, os.path.split(file_path)[1]):
-            return True
+        try:
+            if self._regex != "$" and re.match(self._regex, os.path.split(file_path)[1]):
+                return True
+        except re.error:
+            self.log_printer.warn(_("One of the given regexes ('{regex}') was not valid and will be ignored. The error "
+                                    "was '{error}'.").format(regex=self._regex, error=sys.exc_info()[1]))
+            self._regex = "$"  # Do not use this regex anymore
 
         file_type = os.path.splitext(os.path.basename(file_path))[1].lower().lstrip('.')
         if self._allowed_types is None or file_type in self._allowed_types:
