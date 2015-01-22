@@ -48,6 +48,6 @@ if __name__ == "__main__":
                     'coalib.processes.communication',
                     'coalib.settings',
           ],
-          license="GPL v3",
+          license="AGPL v3",
           data_files=data_files
     )
