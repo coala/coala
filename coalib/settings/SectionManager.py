@@ -1,6 +1,7 @@
 import copy
 import os
 import sys
+
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.BearCollector import BearCollector
 from coalib.misc.StringConstants import StringConstants

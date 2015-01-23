@@ -1,7 +1,6 @@
 import sys
 
 sys.path.insert(0, ".")
-from coalib.misc.StringConstants import StringConstants
 from coalib.misc.StringConverter import StringConverter
 from coalib.misc.i18n import _
 import unittest

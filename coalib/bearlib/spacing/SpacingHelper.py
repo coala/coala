@@ -1,5 +1,4 @@
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
-from coalib.settings.Section import Section
 
 
 class SpacingHelper(SectionCreatable):

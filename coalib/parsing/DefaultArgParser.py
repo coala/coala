@@ -1,5 +1,7 @@
 import argparse
+
 from coalib.misc.i18n import _
+
 
 default_arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=__doc__)
 

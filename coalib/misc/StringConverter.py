@@ -1,5 +1,3 @@
-import re
-
 from coalib.misc.StringConstants import StringConstants
 
 

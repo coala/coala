@@ -1,5 +1,6 @@
 import inspect
 import os
+
 from coalib.misc.i18n import _
 
 

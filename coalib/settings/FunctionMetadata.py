@@ -1,4 +1,5 @@
 from inspect import isfunction, ismethod, getfullargspec
+
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.misc.i18n import _
 

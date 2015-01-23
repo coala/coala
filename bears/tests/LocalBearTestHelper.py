@@ -1,4 +1,5 @@
 import unittest
+
 from coalib.bears.LocalBear import LocalBear
 
 

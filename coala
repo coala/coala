@@ -16,10 +16,12 @@
 import os
 import sys
 import traceback
+
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.Section import Section
 from coalib.settings.SectionManager import SectionManager
+
 
 os.environ["LANG"] = "de_DE"
 from coalib.misc.i18n import _

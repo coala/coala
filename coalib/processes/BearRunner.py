@@ -4,7 +4,6 @@ import multiprocessing
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL

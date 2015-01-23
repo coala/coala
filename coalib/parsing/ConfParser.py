@@ -4,7 +4,6 @@ import sys
 from coalib.parsing.LineParser import LineParser
 from coalib.parsing.SectionParser import SectionParser
 from coalib.settings.Setting import Setting
-
 from coalib.settings.Section import Section
 
 

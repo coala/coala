@@ -5,6 +5,7 @@ import sys
 import argparse
 import tempfile
 from distutils.sysconfig import get_python_lib
+
 from coalib.tests.TestHelper import TestHelper
 
 
