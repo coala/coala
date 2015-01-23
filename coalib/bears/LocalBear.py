@@ -38,9 +38,4 @@ class LocalBear(Bear):
 
     @classmethod
     def get_metadata(cls):
-        metadata = FunctionMetadata.from_function(cls.run_bear)
-        metadata.non_optional_params.pop("self", None)
-        metadata.non_optional_params.pop("filename", None)
-        metadata.non_optional_params.pop("file", None)
-
-        return metadata
+        return FunctionMetadata.from_function(cls.run_bear, omit=["self", "filename", "file"])
