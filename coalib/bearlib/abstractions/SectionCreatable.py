@@ -38,10 +38,7 @@ class SectionCreatable:
 
     @classmethod
     def get_metadata(cls):
-        metadata = FunctionMetadata.from_function(cls.__init__)
-        metadata.non_optional_params.pop("self", None)
-
-        return metadata
+        return FunctionMetadata.from_function(cls.__init__, omit=["self"])
 
     @classmethod
     def get_non_optional_settings(cls):
