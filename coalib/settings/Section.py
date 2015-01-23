@@ -58,7 +58,7 @@ class Section:
 
         # We currently only offer console outputter, so we'll ignore the output setting for now
         # Since the outputter needs to be interactive a NullOutputter isn't really possible
-        self.outputter = ConsoleOutputter(log_printer=self.log_printer)
+        self.outputter = ConsoleOutputter.from_section(self, log_printer=self.log_printer)
 
     def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):

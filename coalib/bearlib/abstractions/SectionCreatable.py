@@ -27,13 +27,16 @@ class SectionCreatable:
         pass  # Method needs to be available
 
     @classmethod
-    def from_section(cls, section):
+    def from_section(cls, section, **kwargs):
         """
         Creates the object from a section object.
 
         :param section: A section object containing at least the settings specified by get_non_optional_settings()
+        :param kwargs: Additional keyword arguments
         """
-        return cls(**cls.get_metadata().create_params_from_section(section))
+        kwargs.update(cls.get_metadata().create_params_from_section(section))
+
+        return cls(**kwargs)
 
     @classmethod
     def get_metadata(cls):
