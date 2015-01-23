@@ -1,10 +1,13 @@
+from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.bears.results.Result import Result
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
+from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
-class Outputter:
+class Outputter(SectionCreatable):
     def __init__(self, log_printer=ConsolePrinter()):
+        SectionCreatable.__init__(self)
         self.log_printer = log_printer
 
     def _print_result(self, result):
@@ -52,3 +55,7 @@ class Outputter:
         :return: a dictionary with the settings name as key and the given value as value.
         """
         raise NotImplementedError
+
+    @classmethod
+    def get_metadata(cls):
+        return FunctionMetadata.from_function(cls.__init__, ["self", "log_printer"])

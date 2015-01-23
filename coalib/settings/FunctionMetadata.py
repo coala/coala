@@ -1,7 +1,6 @@
 from inspect import isfunction, ismethod, getfullargspec
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.misc.i18n import _
-from coalib.settings.Section import Section
 
 
 class FunctionMetadata:
@@ -45,6 +44,9 @@ class FunctionMetadata:
         :param section: The section to retrieve the values from.
         :return: A dictionary. Unfold it with ** to pass it to the function.
         """
+        # Import Section only as needed to avoid circular dependency with the Section class
+        from coalib.settings.Section import Section
+
         if not isinstance(section, Section):
             raise TypeError("The 'section' parameter should be a coalib.settings.Section instance.")
 
