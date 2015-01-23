@@ -7,7 +7,7 @@ from coalib.settings.Section import Section
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.misc.i18n import _
 from coalib.bears.Bear import Bear
-from coalib.output.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 import unittest
 
 

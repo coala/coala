@@ -1,7 +1,7 @@
 import sys
 
 sys.path.insert(0, ".")
-from coalib.output.ColorPrinter import ColorPrinter
+from coalib.output.printers.ColorPrinter import ColorPrinter
 import unittest
 
 

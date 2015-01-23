@@ -2,7 +2,7 @@ import sys
 import traceback
 
 from coalib.misc.i18n import _
-from coalib.output.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section

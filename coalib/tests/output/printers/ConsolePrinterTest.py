@@ -1,10 +1,10 @@
 import sys
 import os
 import tempfile
+import unittest
 
 sys.path.insert(0, ".")
-from coalib.output.ConsolePrinter import ConsolePrinter
-import unittest
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 
 class ConsolePrinterTestCase(unittest.TestCase):

@@ -8,7 +8,7 @@ import unittest
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.collecting.FileCollector import FileCollector
-from coalib.output.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 
 
 class QuietPrinter(LogPrinter):

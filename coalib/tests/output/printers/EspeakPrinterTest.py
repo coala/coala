@@ -1,7 +1,7 @@
 import sys
 
 sys.path.insert(0, ".")
-from coalib.output.EspeakPrinter import EspeakPrinter
+from coalib.output.printers.EspeakPrinter import EspeakPrinter
 import unittest
 
 

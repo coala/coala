@@ -1,11 +1,12 @@
 from collections import OrderedDict
 import copy
+
+from coalib.output.printers.FilePrinter import FilePrinter
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.ConsoleInteractor import ConsoleInteractor, ConsolePrinter, Interactor
-from coalib.output.FilePrinter import FilePrinter
-from coalib.output.LOG_LEVEL import LOG_LEVEL
-from coalib.output.LogPrinter import LogPrinter
 from coalib.misc.i18n import _
-from coalib.output.NullPrinter import NullPrinter
 from coalib.settings.Setting import Setting
 
 

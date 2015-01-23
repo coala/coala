@@ -1,6 +1,5 @@
 import os
 import tempfile
-
 import unittest
 import sys
 
@@ -9,9 +8,10 @@ sys.path.insert(0, ".")
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
-from coalib.output.ConsolePrinter import ConsolePrinter
-from coalib.output.FilePrinter import FilePrinter, LOG_LEVEL
-from coalib.output.NullPrinter import NullPrinter
+from coalib.output.printers.FilePrinter import LOG_LEVEL
+from coalib.output.printers.NullPrinter import NullPrinter
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.FilePrinter import FilePrinter
 
 
 class SectionTestCase(unittest.TestCase):

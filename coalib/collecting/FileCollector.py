@@ -1,10 +1,11 @@
 import os
 import re
 
+
 from coalib.collecting.Collector import Collector
-from coalib.output.LogPrinter import LogPrinter
 from coalib.misc.StringConstants import StringConstants
-from coalib.output.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
 from coalib.settings.Setting import path_list
 

@@ -7,7 +7,7 @@ sys.path.insert(0, ".")
 from coalib.misc.StringConstants import StringConstants
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.SectionManager import SectionManager
-from coalib.output.NullPrinter import NullPrinter
+from coalib.output.printers.NullPrinter import NullPrinter
 
 
 class SectionManagerTestCase(unittest.TestCase):

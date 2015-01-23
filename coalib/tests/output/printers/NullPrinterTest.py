@@ -2,7 +2,7 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
-from coalib.output.NullPrinter import NullPrinter
+from coalib.output.printers.NullPrinter import NullPrinter
 
 
 class NullPrinterTestCase(unittest.TestCase):

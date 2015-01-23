@@ -1,5 +1,5 @@
-from coalib.output.ColorPrinter import ColorPrinter
-from coalib.output.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.ColorPrinter import ColorPrinter
 
 
 class NullPrinter(ColorPrinter, LogPrinter):

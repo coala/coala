@@ -1,5 +1,5 @@
 from coalib.misc.i18n import _
-from coalib.output.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
 class LogMessage:

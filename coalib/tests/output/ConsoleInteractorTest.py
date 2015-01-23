@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 import builtins
 from coalib.bears.results.LineResult import LineResult, Result
 from coalib.bears.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.output.NullPrinter import NullPrinter
+from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 
 _input = builtins.__dict__["input"]

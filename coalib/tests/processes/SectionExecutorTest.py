@@ -6,7 +6,7 @@ sys.path.insert(0, ".")
 import unittest
 from coalib.settings.SectionManager import SectionManager
 from coalib.output.Interactor import Interactor
-from coalib.output.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.Section import Section
 

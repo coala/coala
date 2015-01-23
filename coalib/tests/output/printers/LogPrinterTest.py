@@ -1,11 +1,11 @@
 import sys
-
-sys.path.insert(0, ".")
 from datetime import datetime
 import unittest
+
+sys.path.insert(0, ".")
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
-from coalib.output.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.i18n import _
 
 

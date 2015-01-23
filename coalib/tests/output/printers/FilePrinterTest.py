@@ -1,10 +1,10 @@
 import sys
 import tempfile
 import os
+import unittest
 
 sys.path.insert(0, ".")
-import unittest
-from coalib.output.FilePrinter import FilePrinter
+from coalib.output.printers.FilePrinter import FilePrinter
 
 
 class FilePrinterTestCase(unittest.TestCase):

@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from coalib.output.LOG_LEVEL import LOG_LEVEL
-from coalib.output.Printer import Printer
+from coalib.output.printers.Printer import Printer
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.misc.i18n import _
 from coalib.processes.communication.LogMessage import LogMessage
 

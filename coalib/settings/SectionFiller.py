@@ -1,6 +1,4 @@
-from coalib.output.LOG_LEVEL import LOG_LEVEL
-from coalib.output.LogPrinter import LogPrinter
-from coalib.output.Interactor import Interactor
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
 from coalib.misc.i18n import _

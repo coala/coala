@@ -1,7 +1,7 @@
 import subprocess
 
 from coalib.misc.StringConstants import StringConstants
-from coalib.output.Printer import Printer
+from coalib.output.printers.Printer import Printer
 from coalib.misc.i18n import _
 
 

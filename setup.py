@@ -29,6 +29,7 @@ if __name__ == "__main__":
                     'coalib.collecting',
                     'coalib.misc',
                     'coalib.output',
+                    'coalib.output.printers',
                     'coalib.parsing',
                     'coalib.processes',
                     'coalib.processes.communication',

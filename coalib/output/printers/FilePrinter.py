@@ -1,5 +1,5 @@
-from coalib.output.LOG_LEVEL import LOG_LEVEL
-from coalib.output.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
 class FilePrinter(LogPrinter):
