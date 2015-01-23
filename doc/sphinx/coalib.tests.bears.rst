@@ -1,13 +1,6 @@
 coalib.tests.bears package
 ==========================
 
-Subpackages
------------
-
-.. toctree::
-
-    coalib.tests.bears.results
-
 Submodules
 ----------
 

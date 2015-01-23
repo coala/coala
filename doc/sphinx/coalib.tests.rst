@@ -13,6 +13,7 @@ Subpackages
     coalib.tests.output
     coalib.tests.parsing
     coalib.tests.processes
+    coalib.tests.results
     coalib.tests.settings
 
 Submodules

@@ -13,6 +13,7 @@ Subpackages
     coalib.output
     coalib.parsing
     coalib.processes
+    coalib.results
     coalib.settings
     coalib.tests
 

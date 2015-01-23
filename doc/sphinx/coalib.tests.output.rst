@@ -1,21 +1,21 @@
 coalib.tests.output package
 ===========================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    coalib.tests.output.printers
+
 Submodules
 ----------
 
 .. toctree::
 
-   coalib.tests.output.ColorPrinterTest
    coalib.tests.output.ConfWriterTest
-   coalib.tests.output.ConsoleOutputterTest
-   coalib.tests.output.ConsolePrinterTest
-   coalib.tests.output.EspeakPrinterTest
-   coalib.tests.output.FilePrinterTest
-   coalib.tests.output.LogPrinterTest
-   coalib.tests.output.NullPrinterTest
-   coalib.tests.output.OutputterTest
-   coalib.tests.output.PrinterTest
+   coalib.tests.output.ConsoleInteractorTest
+   coalib.tests.output.InteractorTest
 
 Module contents
 ---------------

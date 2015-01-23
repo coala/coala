@@ -1,13 +1,6 @@
 coalib.bears package
 ====================
 
-Subpackages
------------
-
-.. toctree::
-
-    coalib.bears.results
-
 Submodules
 ----------
 

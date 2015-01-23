@@ -1,22 +1,21 @@
 coalib.output package
 =====================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    coalib.output.printers
+
 Submodules
 ----------
 
 .. toctree::
 
-   coalib.output.ColorPrinter
    coalib.output.ConfWriter
-   coalib.output.ConsoleOutputter
-   coalib.output.ConsolePrinter
-   coalib.output.EspeakPrinter
-   coalib.output.FilePrinter
-   coalib.output.LOG_LEVEL
-   coalib.output.LogPrinter
-   coalib.output.NullPrinter
-   coalib.output.Outputter
-   coalib.output.Printer
+   coalib.output.ConsoleInteractor
+   coalib.output.Interactor
 
 Module contents
 ---------------
