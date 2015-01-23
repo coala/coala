@@ -1,4 +1,4 @@
-from coalib.bears.results.LineResult import Result, LineResult
+from coalib.bears.results.Result import Result
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
 

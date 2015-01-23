@@ -2,7 +2,8 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
-from coalib.output.Outputter import Outputter, Result, LineResult
+from coalib.output.Outputter import Outputter
+from coalib.bears.results.LineResult import Result, LineResult
 
 
 class OutputterTestCase(unittest.TestCase):
