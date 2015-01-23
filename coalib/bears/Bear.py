@@ -128,10 +128,7 @@ class Bear:
         :return: Metadata for the run_bear function. However parameters like self or parameters implicitly used by
         coala (e.g. filename for local bears) are already removed.
         """
-        metadata = FunctionMetadata.from_function(cls.run_bear)
-        metadata.non_optional_params.pop("self", None)
-
-        return metadata
+        return FunctionMetadata.from_function(cls.run_bear, omit=["self"])
 
     @classmethod
     def get_non_optional_settings(cls):
