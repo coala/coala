@@ -1,7 +1,7 @@
 import sys
 
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.bears.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _

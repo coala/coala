@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, ".")
 import unittest
-from coalib.bears.results.LineResult import LineResult
+from coalib.results.LineResult import LineResult
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.spacing.SpaceConsistencyBear import SpaceConsistencyBear, SpacingHelper

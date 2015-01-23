@@ -5,7 +5,7 @@ import multiprocessing
 sys.path.insert(0, ".")
 import unittest
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.bears.results.Result import Result, RESULT_SEVERITY
+from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.processes.BearRunner import BearRunner, LogMessage, LOG_LEVEL

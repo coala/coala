@@ -1,7 +1,7 @@
 import sys
 
 sys.path.insert(0, ".")
-from coalib.bears.results.Result import Result, RESULT_SEVERITY
+from coalib.results.Result import Result, RESULT_SEVERITY
 import unittest
 
 

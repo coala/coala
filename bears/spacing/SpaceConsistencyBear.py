@@ -1,5 +1,5 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
-from coalib.bears.results.LineResult import LineResult
+from coalib.results.LineResult import LineResult
 from coalib.bears.LocalBear import LocalBear
 
 

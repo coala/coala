@@ -1,6 +1,7 @@
 import time
+
 from coalib.bears.LocalBear import LocalBear
-from coalib.bears.results.Result import Result
+from coalib.results.Result import Result
 
 
 class LocalTestBear(LocalBear):  # pragma: no cover

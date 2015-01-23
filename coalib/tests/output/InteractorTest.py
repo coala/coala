@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.output.Interactor import Interactor
-from coalib.bears.results.LineResult import Result, LineResult
+from coalib.results.LineResult import Result, LineResult
 
 
 class InteractorTestCase(unittest.TestCase):

@@ -1,5 +1,5 @@
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
-from coalib.bears.results.Result import Result
+from coalib.results.Result import Result
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
 from coalib.settings.FunctionMetadata import FunctionMetadata

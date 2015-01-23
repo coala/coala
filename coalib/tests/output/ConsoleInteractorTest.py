@@ -3,8 +3,8 @@ import unittest
 import sys
 sys.path.insert(0, ".")
 import builtins
-from coalib.bears.results.LineResult import LineResult, Result
-from coalib.bears.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.LineResult import LineResult, Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 

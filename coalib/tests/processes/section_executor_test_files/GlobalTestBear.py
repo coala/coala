@@ -1,5 +1,5 @@
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.bears.results.Result import Result
+from coalib.results.Result import Result
 
 
 class GlobalTestBear(GlobalBear):  # pragma: no cover

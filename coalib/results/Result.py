@@ -1,5 +1,6 @@
 from functools import total_ordering
-from coalib.bears.results.RESULT_SEVERITY import RESULT_SEVERITY
+
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 @total_ordering
