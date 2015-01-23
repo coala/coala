@@ -14,12 +14,10 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
 
     def __init__(self,
                  output=sys.stdout,
-                 log_level=LOG_LEVEL.WARNING,
-                 timestamp_format="%X",
                  pre_padding=3,
                  log_printer=ConsolePrinter()):
         Outputter.__init__(self, log_printer=log_printer)
-        ConsolePrinter.__init__(self, output=output, log_level=log_level, timestamp_format=timestamp_format)
+        ConsolePrinter.__init__(self, output=output)
 
         self.pre_padding = pre_padding
 
