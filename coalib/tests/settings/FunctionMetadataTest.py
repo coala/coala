@@ -24,6 +24,7 @@ class FunctionMetadataTestCase(unittest.TestCase):
         self.assertRaises(TypeError, FunctionMetadata, "name", non_optional_params=5)
         self.assertRaises(TypeError, FunctionMetadata, "name", optional_params=5)
         self.assertRaises(TypeError, FunctionMetadata.from_function, 5)
+        self.assertRaises(TypeError, FunctionMetadata.from_function, self.test_construction, 5)
         self.check_function_metadata_data_set(FunctionMetadata("name"), "name")
 
     def test_from_function(self):
@@ -42,6 +43,18 @@ class FunctionMetadataTestCase(unittest.TestCase):
                                               optional_params={
                                                   "param3": (uut.str_nodesc + " (" + uut.str_optional.format("5") + ")",
                                                              None, 5),
+                                                  "param4": ("p4 desc (" + uut.str_optional.format("6") + ")", int, 6)
+                                              })
+
+        uut = FunctionMetadata.from_function(TestClass(5, 5).__init__, omit=["param3", "param2"])
+        self.check_function_metadata_data_set(uut,
+                                              "__init__",
+                                              desc="Description",
+                                              retval_desc="ret",
+                                              non_optional_params={
+                                                  "param1": (uut.str_nodesc, None)
+                                              },
+                                              optional_params={
                                                   "param4": ("p4 desc (" + uut.str_optional.format("6") + ")", int, 6)
                                               })
 

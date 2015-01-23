@@ -66,17 +66,21 @@ class FunctionMetadata:
         return params
 
     @classmethod
-    def from_function(cls, func):
+    def from_function(cls, func, omit=[]):
         """
         Creates a FunctionMetadata object from a function. Please note that any variable argument lists are not
-        supported. If you do not want the self argument to appear please pass the method of an actual INSTANCE of a
-        class; passing the method of the class isn't enough.
+        supported. If you do not want the first (usual named 'self') argument to appear please pass the method of an
+        actual INSTANCE of a class; passing the method of the class isn't enough. Alternatively you can add "self" to
+        the omit list.
 
         :param func: The function.
+        :param omit: A list of parameter names that are to be ignored.
         :return: The FunctionMetadata object corresponding to the given function.
         """
         if not isfunction(func) and not ismethod(func):
             raise TypeError("function has to be a function")
+        if not isinstance(omit, list):
+            raise TypeError("omit has to be a list")
 
         doc = func.__doc__
         if doc is None:
@@ -91,7 +95,7 @@ class FunctionMetadata:
         defaults = argspec.defaults if argspec.defaults is not None else ()
         num_non_defaults = len(args) - len(defaults)
         for i, arg in enumerate(args):
-            if i < 1 and ismethod(func):  # Implicit self argument
+            if (i < 1 and ismethod(func)) or arg in omit:  # Implicit self argument or omitted explicitly
                 continue
 
             if i < num_non_defaults:
