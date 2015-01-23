@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, ".")
 
-from coalib.output.ConsoleOutputter import ConsoleOutputter
+from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
 from coalib.output.ConsolePrinter import ConsolePrinter
@@ -20,7 +20,7 @@ class SectionTestCase(unittest.TestCase):
         uut = Section(StringConstants.COMPLEX_TEST_STRING, uut)
         self.assertRaises(TypeError, Section, "irrelevant", 5)
         self.assertRaises(ValueError, uut.__init__, "name", uut)
-        self.assertRaises(TypeError, uut.__init__, "name", outputter=5)
+        self.assertRaises(TypeError, uut.__init__, "name", interactor=5)
         self.assertRaises(TypeError, uut.__init__, "name", log_printer=5)
 
     def test_append(self):
@@ -111,7 +111,7 @@ class SectionTestCase(unittest.TestCase):
         uut.append(Setting(key="log_TYPE", value="conSole"))
         uut.retrieve_logging_objects()
         self.assertIsInstance(uut.log_printer, ConsolePrinter)
-        self.assertIsInstance(uut.outputter, ConsoleOutputter)
+        self.assertIsInstance(uut.interactor, ConsoleInteractor)
 
         uut = Section("test", log_printer=ConsolePrinter())
         uut.append(Setting(key="log_TYPE", value="NONE"))

@@ -1,6 +1,6 @@
 from collections import OrderedDict
 import copy
-from coalib.output.ConsoleOutputter import ConsoleOutputter, ConsolePrinter, Outputter
+from coalib.output.ConsoleInteractor import ConsoleInteractor, ConsolePrinter, Interactor
 from coalib.output.FilePrinter import FilePrinter
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.output.LogPrinter import LogPrinter
@@ -18,25 +18,25 @@ class Section:
     def __prepare_key(key):
         return str(key).lower().strip()
 
-    def __init__(self, name, defaults=None, outputter=ConsoleOutputter(), log_printer=ConsolePrinter()):
+    def __init__(self, name, defaults=None, interactor=ConsoleInteractor(), log_printer=ConsolePrinter()):
         if defaults is not None and not isinstance(defaults, Section):
             raise TypeError("defaults has to be a Section object or None.")
         if defaults is self:
             raise ValueError("defaults may not be self for non-recursivity.")
-        if not isinstance(outputter, Outputter):
-            raise TypeError("The outputter parameter has to be of type Outputter.")
+        if not isinstance(interactor, Interactor):
+            raise TypeError("The interactor parameter has to be of type Interactor.")
         if not isinstance(log_printer, LogPrinter):
             raise TypeError("The log_printer parameter has to be of type LogPrinter.")
 
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
-        self.outputter = outputter
+        self.interactor = interactor
         self.log_printer = log_printer
 
     def retrieve_logging_objects(self):
         """
-        Creates an appropriate log printer and outputter according to the settings.
+        Creates an appropriate log printer and interactor according to the settings.
         """
         log_type = str(self.get("log_type", "console")).lower()
         log_level = LOG_LEVEL.from_str(str(self.get("log_level", "none")))
@@ -56,9 +56,8 @@ class Section:
                 self.log_printer.log(LOG_LEVEL.WARNING, _("Failed to instantiate the logging method '{}'. Falling back "
                                                           "to console output.").format(log_type))
 
-        # We currently only offer console outputter, so we'll ignore the output setting for now
-        # Since the outputter needs to be interactive a NullOutputter isn't really possible
-        self.outputter = ConsoleOutputter.from_section(self, log_printer=self.log_printer)
+        # We currently only offer console interactor, so we'll ignore the output setting for now
+        self.interactor = ConsoleInteractor.from_section(self, log_printer=self.log_printer)
 
     def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):
@@ -133,7 +132,7 @@ class Section:
 
     def copy(self):
         """
-        :return: a deep copy of this object, with the exception of the log_printer and the outputter
+        :return: a deep copy of this object, with the exception of the log_printer and the interactor
         """
         result = copy.copy(self)
         result.contents = copy.deepcopy(self.contents)

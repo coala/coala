@@ -1,6 +1,6 @@
 from coalib.output.LOG_LEVEL import LOG_LEVEL
 from coalib.output.LogPrinter import LogPrinter
-from coalib.output.Outputter import Outputter
+from coalib.output.Interactor import Interactor
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
 from coalib.misc.i18n import _
@@ -54,7 +54,7 @@ class SectionFiller:
 
         # Get missing ones.
         if len(needed_settings) > 0:
-            new_vals = self.section.outputter.acquire_settings(needed_settings)
+            new_vals = self.section.interactor.acquire_settings(needed_settings)
             for setting, help_text in new_vals.items():
                 self.section.append(Setting(setting, help_text))
 

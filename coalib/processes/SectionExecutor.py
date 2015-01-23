@@ -108,9 +108,9 @@ class SectionExecutor:
             try:
                 control_elem, index = control_queue.get(timeout=0.1)
                 if control_elem == CONTROL_ELEMENT.LOCAL:
-                    self.section.outputter.print_results(local_result_dict[index], file_dict)
+                    self.section.interactor.print_results(local_result_dict[index], file_dict)
                 elif control_elem == CONTROL_ELEMENT.GLOBAL:
-                    self.section.outputter.print_results(global_result_dict[index], file_dict)
+                    self.section.interactor.print_results(global_result_dict[index], file_dict)
                 elif control_elem == CONTROL_ELEMENT.FINISHED:
                     running_processes = sum((1 if process.is_alive() else 0) for process in processes)
             except queue.Empty:

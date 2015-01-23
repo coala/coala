@@ -10,12 +10,12 @@ from coalib.misc.i18n import _
 
 _input = builtins.__dict__["input"]
 builtins.__dict__["input"] = lambda x: x
-from coalib.output.ConsoleOutputter import ConsoleOutputter
+from coalib.output.ConsoleInteractor import ConsoleInteractor
 
 
-class ConsoleOutputterTestCase(unittest.TestCase):
+class ConsoleInteractorTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = ConsoleOutputter()
+        self.uut = ConsoleInteractor()
 
     def test_require_settings(self):
         self.assertRaises(TypeError, self.uut.acquire_settings, 0)

@@ -5,7 +5,7 @@ from coalib.misc.i18n import _
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
-class Outputter(SectionCreatable):
+class Interactor(SectionCreatable):
     def __init__(self, log_printer=ConsolePrinter()):
         SectionCreatable.__init__(self)
         self.log_printer = log_printer

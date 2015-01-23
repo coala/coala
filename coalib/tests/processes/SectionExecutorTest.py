@@ -5,15 +5,15 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.SectionManager import SectionManager
-from coalib.output.Outputter import Outputter
+from coalib.output.Interactor import Interactor
 from coalib.output.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.Section import Section
 
 
-class SectionExecutorTestOutputter(Outputter, LogPrinter):
+class SectionExecutorTestInteractor(Interactor, LogPrinter):
     def __init__(self, result_queue, log_queue):
-        Outputter.__init__(self)
+        Interactor.__init__(self)
         self.result_queue = result_queue
         self.log_queue = log_queue
 
@@ -46,10 +46,10 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.result_queue = queue.Queue()
         self.log_queue = queue.Queue()
 
-        self.outputter = SectionExecutorTestOutputter(self.result_queue, self.log_queue)
+        self.interactor = SectionExecutorTestInteractor(self.result_queue, self.log_queue)
 
-        self.sections["default"].outputter = self.outputter
-        self.sections["default"].log_printer = self.outputter
+        self.sections["default"].interactor = self.interactor
+        self.sections["default"].log_printer = self.interactor
         self.uut = SectionExecutor(self.sections["default"], self.local_bears["default"], self.global_bears["default"])
 
     def test_run(self):

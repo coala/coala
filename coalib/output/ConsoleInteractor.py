@@ -2,11 +2,11 @@ import sys
 from coalib.bears.results.LineResult import Result, RESULT_SEVERITY
 from coalib.output.ConsolePrinter import ConsolePrinter
 from coalib.output.LOG_LEVEL import LOG_LEVEL
-from coalib.output.Outputter import Outputter
+from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _
 
 
-class ConsoleOutputter(Outputter, ConsolePrinter):
+class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) needed by {}: ")
     STR_LINE_DOESNT_EXIST = _("A the line belonging to the following result cannot be printed because it refers to a "
                               "line that doesn't seem to exist in the given file.")
@@ -16,7 +16,7 @@ class ConsoleOutputter(Outputter, ConsolePrinter):
                  output=sys.stdout,
                  pre_padding=3,
                  log_printer=ConsolePrinter()):
-        Outputter.__init__(self, log_printer=log_printer)
+        Interactor.__init__(self, log_printer=log_printer)
         ConsolePrinter.__init__(self, output=output)
 
         self.pre_padding = pre_padding

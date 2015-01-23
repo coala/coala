@@ -2,13 +2,13 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
-from coalib.output.Outputter import Outputter
+from coalib.output.Interactor import Interactor
 from coalib.bears.results.LineResult import Result, LineResult
 
 
-class OutputterTestCase(unittest.TestCase):
+class InteractorTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = Outputter()
+        self.uut = Interactor()
 
     def test_api(self):
         self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")
