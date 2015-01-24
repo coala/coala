@@ -57,7 +57,29 @@ class DiffTestCase(unittest.TestCase):
         del result_file[2]
         self.assertEqual(self.uut.apply(file), result_file)
 
+    def test_addition(self):
+        self.assertRaises(TypeError, self.uut.__add__, 5)
 
+        file = ["1",
+                "1",
+                "3",
+                "4"]
+
+        result_file = ["1",
+                       "2",
+                       "2"]
+
+        other = Diff()
+        other.delete_line(1)
+        other.change_line(2, "1", "2")
+        other.add_lines(0, ["1"])
+
+        self.uut.delete_line(1)
+        self.uut.delete_line(3)
+        self.uut.change_line(4, "4", "2")
+        self.uut += other
+
+        self.assertEqual(self.uut.apply(file), result_file)
 
 
 if __name__ == '__main__':

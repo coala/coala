@@ -48,6 +48,24 @@ class Diff:
 
         return result
 
+    def __add__(self, other):
+        """
+        Adds another diff to this one. Will throw an exception if this is not possible.
+        """
+        if not isinstance(other, Diff):
+            raise TypeError("Only diffs can be added to a diff.")
+
+        for line_nr in other._changes:
+            change = other._changes[line_nr]
+            if change.delete is True:
+                self.delete_line(line_nr)
+            if change.add_after is not False:
+                self.add_lines(line_nr, change.add_after)
+            if change.change is not False:
+                self.change_line(line_nr, change.change[0], change.change[1])
+
+        return self
+
     def delete_line(self, line_nr):
         """
         Mark the given line nr as deleted. The first line is line number 1.
