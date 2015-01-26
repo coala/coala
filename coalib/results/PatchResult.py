@@ -25,3 +25,20 @@ class PatchResult(Result):
 
         for filename in self.diffs:
             file_dict[filename] = self.diffs[filename].apply(file_dict[filename])
+
+    def __add__(self, other):
+        """
+        Joins those patches to one patch.
+
+        :param other: The other patch.
+        """
+        if not isinstance(other, PatchResult):
+            raise TypeError("Cannot add a non PatchResult object.")
+
+        for filename in other.diffs:
+            if filename in self.diffs:
+                self.diffs[filename] += other.diffs[filename]
+            else:
+                self.diffs[filename] = other.diffs[filename]
+
+        return self
