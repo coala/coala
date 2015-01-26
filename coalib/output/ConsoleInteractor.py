@@ -7,6 +7,13 @@ from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _
 
 
+def output_type(str_input):
+    return {
+        "stdout": sys.stdout,
+        "stderr": sys.stderr
+    }.get(str(str_input).lower(), sys.stdout)
+
+
 class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) needed by {}: ")
     STR_LINE_DOESNT_EXIST = _("A the line belonging to the following result cannot be printed because it refers to a "
@@ -14,9 +21,15 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_PROJECT_WIDE = _("Project wide:")
 
     def __init__(self,
-                 output=sys.stdout,
-                 pre_padding=3,
+                 output: output_type=sys.stdout,
+                 pre_padding: int=3,
                  log_printer=ConsolePrinter()):
+        _("""
+        A ConsoleInteractor uses the Console to interact with the user.
+
+        :param output: "stdout" or "stderr".
+        :param pre_padding: Number of code lines to show before a result as context.
+        """)
         Interactor.__init__(self, log_printer=log_printer)
         ConsolePrinter.__init__(self, output=output)
 

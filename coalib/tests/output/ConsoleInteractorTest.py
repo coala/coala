@@ -1,9 +1,11 @@
 import queue
 import unittest
 import sys
+
 sys.path.insert(0, ".")
 import builtins
 from coalib.results.LineResult import LineResult, Result
+from coalib.settings.Section import Section, Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
@@ -119,6 +121,12 @@ class ConsoleInteractorTestCase(unittest.TestCase):
                          self.get_str_from_queue(q))
 
         self.assertRaises(AssertionError, self.uut.print_results, [LineResult("t", 5, "", "msg", None)], {})
+
+    def test_from_section(self):
+        section = Section("test")
+        ConsoleInteractor.from_section(section)
+        section.append(Setting("output", "stderr"))
+        ConsoleInteractor.from_section(section)
 
     @staticmethod
     def get_str_from_queue(q):
