@@ -40,6 +40,7 @@ class CliParserTestCase(unittest.TestCase):
                          'section1': {("key1", "value1,value2")},
                          'section2': {("key2", "only_this_value")}
                          }
+        self.assertEqual(parsed_sections["default"].name, "Default")
         self.assertEqual(self.dict_from_sections(parsed_sections), expected_dict)
         self.assertEqual(self.dict_from_sections(self.uut.export_to_settings()), expected_dict)
 

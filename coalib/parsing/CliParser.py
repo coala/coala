@@ -42,7 +42,7 @@ class CliParser(SectionParser):
         self.__reset_sections()
 
     def __reset_sections(self):
-        self.sections = OrderedDict(default=Section('default'))
+        self.sections = OrderedDict(default=Section('Default'))
 
     def _update_sections(self, section_name, key, value, origin):
         if key == '' or value is None:
