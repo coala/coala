@@ -1,10 +1,15 @@
 import queue
+import tempfile
 import unittest
 import sys
+import os
+import builtins
 
 sys.path.insert(0, ".")
-import builtins
+from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.LineResult import LineResult, Result
+from coalib.results.PatchResult import PatchResult
+from coalib.results.Diff import Diff
 from coalib.settings.Section import Section, Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
@@ -13,6 +18,11 @@ from coalib.misc.i18n import _
 _input = builtins.__dict__["input"]
 builtins.__dict__["input"] = lambda x: x
 from coalib.output.ConsoleInteractor import ConsoleInteractor
+
+
+class TestAction(ResultAction):
+    def apply(self, result, original_file_dict, file_diff_dict, param):
+        pass
 
 
 class ConsoleInteractorTestCase(unittest.TestCase):
@@ -45,6 +55,44 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         self.assertEqual("|    |    | [{normal}] {bear}:".format(normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
                                                                  bear="origin") + "\n|    |    | message",
                          self.uut._print_result(Result("origin", "message")))
+
+        builtins.__dict__["input"] = lambda x: 0
+        self.uut.print_result(PatchResult("origin", "msg", {}), {})
+
+        (testfile, testfile_path) = tempfile.mkstemp()
+        os.close(testfile)
+        file_dict = {
+            testfile_path: ["1\n", "2\n", "3\n"],
+            "f_b": ["1", "2", "3"]
+        }
+        diff = Diff()
+        diff.delete_line(2)
+        diff.change_line(3, "3\n", "3_changed\n")
+        builtins.__dict__["input"] = self.generate_input  # To assure user can rechose if he didn't chose wisely
+        self.uut.print_result(PatchResult("origin", "msg", {testfile_path: diff}), file_dict)
+        self.assertEqual(self.curr, 1)
+        self.uut.finalize(file_dict)
+        with open(testfile_path) as f:
+            self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
+
+        os.remove(testfile_path)
+
+        name, section = self.uut._get_action_info(TestAction().get_metadata())
+        self.assertEqual(str(section), " {param : 3}")
+        self.assertEqual(name, "TestAction")
+
+        builtins.__dict__["input"] = lambda x: x
+
+
+    curr = -5
+
+    @staticmethod
+    def generate_input(x):
+        ConsoleInteractorTestCase.curr += 2
+        if ConsoleInteractorTestCase.curr == -3:
+            return "INVALID"
+
+        return ConsoleInteractorTestCase.curr
 
     def test_print_results(self):
         self.assertRaises(TypeError, self.uut.print_results, 5, {})

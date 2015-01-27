@@ -73,6 +73,47 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
         return self.print("\n".join([self._format_line(line) for line in message_string_list]))
 
+    def _print_actions(self, actions):
+        self.print(self._format_line(_("The following options are applicable to this result:")))
+
+        choice = self._choose_action(actions)
+
+        if choice == 0:
+            return None, None
+
+        return self._get_action_info(actions[choice - 1])
+
+    def _choose_action(self, actions):
+        while True:
+            for i, action in enumerate(actions):
+                self.print(self._format_line("{:>2}: {}".format(i + 1, action.desc)))
+
+            self.print(self._format_line("{:>2}: ".format(0) + _("No action.")))
+
+            try:
+                choice = int(input(self._format_line(_("Please enter the number of the action you want to execute."))))
+                if 0 <= choice <= len(actions):
+                    return choice
+            except ValueError:
+                pass
+
+            self.print(self._format_line(_("Please enter a valid number.")))
+
+    def _get_action_info(self, action):
+        # Otherwise we have a recursive import
+        from coalib.settings.Section import Section
+        from coalib.settings.Setting import Setting
+
+        params = action.non_optional_params
+        section = Section("")
+
+        for param_name in params:
+            section.append(Setting(param_name,
+                                   input(self._format_line(_("Please enter a value for the parameter "
+                                                             "'{}' ({}):").format(param_name, params[param_name][0])))))
+
+        return action.name, section
+
     def _print_segregation(self, n=3):
         self.print("\n".join(self._format_line(line="", sign=".") for i in range(n)))
 
