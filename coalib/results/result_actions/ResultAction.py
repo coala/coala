@@ -3,7 +3,6 @@ A ResultAction is an action that is applicable to at least some results. This fi
 actions, thus providing a unified interface for all actions.
 """
 from coalib.settings.FunctionMetadata import FunctionMetadata
-from coalib.misc.i18n import _
 from coalib.settings.Section import Section
 
 
