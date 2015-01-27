@@ -54,7 +54,7 @@ class CliParser(SectionParser):
         if not section_name in self.sections:
             self.sections[section_name] = Section(section_name)
 
-        self.sections[section_name].append(Setting(key, str(value), origin))
+        self.sections[section_name].append(Setting(key, str(value), origin, from_cli=True))
 
     def parse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
         """
