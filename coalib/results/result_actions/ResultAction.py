@@ -9,9 +9,9 @@ from coalib.settings.Section import Section
 
 class ResultAction:
     def apply(self, result, original_file_dict, file_diff_dict, **kwargs):
-        _("""
-          This action has no description although it should. Probably something went wrong.
-          """)
+        """
+        This action has no description although it should. Probably something went wrong.
+        """
         raise NotImplementedError
 
     def apply_from_section(self, result, original_file_dict, file_diff_dict, section):

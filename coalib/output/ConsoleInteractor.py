@@ -24,12 +24,12 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                  output: output_type=sys.stdout,
                  pre_padding: int=3,
                  log_printer=ConsolePrinter()):
-        _("""
+        """
         A ConsoleInteractor uses the Console to interact with the user.
 
         :param output: "stdout" or "stderr".
         :param pre_padding: Number of code lines to show before a result as context.
-        """)
+        """
         Interactor.__init__(self, log_printer=log_printer)
         ConsolePrinter.__init__(self, output=output)
 
