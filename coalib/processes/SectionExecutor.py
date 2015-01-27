@@ -118,6 +118,7 @@ class SectionExecutor:
                 running_processes = sum((1 if process.is_alive() else 0) for process in processes)
 
         logger_thread.running = False
+        self.section.interactor.finalize(file_dict)
 
         for runner in processes:
             runner.join()

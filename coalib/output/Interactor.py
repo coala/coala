@@ -9,6 +9,7 @@ class Interactor(SectionCreatable):
     def __init__(self, log_printer=ConsolePrinter()):
         SectionCreatable.__init__(self)
         self.log_printer = log_printer
+        self.file_diff_dict = {}
 
     def _print_result(self, result):
         raise NotImplementedError
@@ -55,6 +56,17 @@ class Interactor(SectionCreatable):
         :return: a dictionary with the settings name as key and the given value as value.
         """
         raise NotImplementedError
+
+    def finalize(self, file_dict):
+        """
+        To be called after all results are given to the interactor.
+        """
+        for filename in self.file_diff_dict:
+            diff = self.file_diff_dict[filename]
+            file_dict[filename] = diff.apply(file_dict[filename])
+
+            with open(filename, mode='w') as file:
+                file.writelines(file_dict[filename])
 
     @classmethod
     def get_metadata(cls):
