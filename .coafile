@@ -1,0 +1,7 @@
+[Default]
+files_regex = .*.py
+bears = KeywordBear, SpaceConsistencyBear
+rec_dirs = .
+cs_keywords = 
+use_spaces = True
+ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
