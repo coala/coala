@@ -12,6 +12,19 @@ class Interactor(SectionCreatable):
         self.file_diff_dict = {}
 
     def _print_result(self, result):
+        """
+        Prints the result.
+        """
+        raise NotImplementedError
+
+    def _print_actions(self, actions):
+        """
+        Prints the given actions and lets the user choose.
+
+        :param actions: A list of FunctionMetadata objects.
+        :return: A touple with the name member of the FunctionMetadata object chosen by the user and a Section
+        containing at least all needed values for the action. If the user did choose to do nothing, return (None, None).
+        """
         raise NotImplementedError
 
     def print_result(self, result, file_dict):
@@ -27,6 +40,24 @@ class Interactor(SectionCreatable):
             return
 
         self._print_result(result)
+
+        actions = result.get_actions()
+        if actions == []:
+            return
+
+        action_dict = {}
+        metadata_list = []
+        for action in actions:
+            metadata = action.get_metadata()
+            action_dict[metadata.name] = action
+            metadata_list.append(metadata)
+
+        action_name, section = self._print_actions(metadata_list)
+        if action_name is None:
+            return
+
+        chosen_action = action_dict[action_name]
+        chosen_action.apply_from_section(result, file_dict, self.file_diff_dict, section)
 
     def print_results(self, result_list, file_dict):
         """
