@@ -14,18 +14,19 @@ class Interactor(SectionCreatable):
     def _print_result(self, result):
         raise NotImplementedError
 
-    def print_result(self, result):
+    def print_result(self, result, file_dict):
         """
         Prints the result appropriate to the output medium.
 
         :param result: A derivative of Result.
+        :param file_dict: A dictionary containing all files with filename as key.
         """
         if not isinstance(result, Result):
             self.log_printer.warn(_("One of the results can not be printed since it is not a valid derivative of the "
                                     "coala result class."))
             return
 
-        return self._print_result(result)
+        self._print_result(result)
 
     def print_results(self, result_list, file_dict):
         """
@@ -41,7 +42,7 @@ class Interactor(SectionCreatable):
 
         sorted_results = sorted(result_list)
         for result in sorted_results:
-            self.print_result(result)
+            self.print_result(result, file_dict)
 
     def acquire_settings(self, settings):
         """

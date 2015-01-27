@@ -126,4 +126,4 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                     self._print_lines(file_dict, current_line, result.line_nr, result.file)
                     current_line = result.line_nr
 
-            self.print_result(result)
+            self.print_result(result, file_dict)

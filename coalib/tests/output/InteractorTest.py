@@ -12,10 +12,11 @@ class InteractorTestCase(unittest.TestCase):
 
     def test_api(self):
         self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")
-        self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"))
+        self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"), {})
         self.assertRaises(NotImplementedError,
                           self.uut.print_result,
-                          LineResult("origin", 1, "line", "message", "file"))
+                          LineResult("origin", 1, "line", "message", "file"),
+                          {})
         self.assertRaises(TypeError, self.uut.print_results, 5, {})
         self.assertRaises(TypeError, self.uut.print_results, [], 5)
         self.assertRaises(NotImplementedError, self.uut.print_results, [Result("message", "origin")], {})

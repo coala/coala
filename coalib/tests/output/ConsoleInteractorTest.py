@@ -44,7 +44,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         self.uut.print = lambda x: x
         self.assertEqual("|    |    | [{normal}] {bear}:".format(normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
                                                                  bear="origin") + "\n|    |    | message",
-                         self.uut.print_result(Result("origin", "message")))
+                         self.uut._print_result(Result("origin", "message")))
 
     def test_print_results(self):
         self.assertRaises(TypeError, self.uut.print_results, 5, {})
