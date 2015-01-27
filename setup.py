@@ -34,6 +34,7 @@ if __name__ == "__main__":
                     'coalib.processes',
                     'coalib.processes.communication',
                     'coalib.results',
+                    'coalib.results.result_actions',
                     'coalib.settings',
           ],
           license="AGPL v3",

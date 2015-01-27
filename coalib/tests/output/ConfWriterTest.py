@@ -41,6 +41,7 @@ class ConfWriterTestCase(unittest.TestCase):
 
     def test_write(self):
         result_file = ["[Default]\n",
+                       "save = true\n",
                        "a_default, another = val\n",
                        "# do you know that thats a comment\n",
                        "test = push\n",

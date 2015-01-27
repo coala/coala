@@ -1,0 +1,8 @@
+[Default]
+files_regex = .*.py
+bears = KeywordBear, SpaceConsistencyBear, LineLengthBear
+rec_dirs = .
+cs_keywords = 
+ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
+use_spaces = True
+max_line_length = 120

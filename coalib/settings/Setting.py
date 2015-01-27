@@ -11,7 +11,7 @@ def path_list(obj, *args, **kwargs):
 
 
 class Setting(StringConverter):
-    def __init__(self, key, value, origin="", strip_whitespaces=True, list_delimiters=[",", ";"]):
+    def __init__(self, key, value, origin="", strip_whitespaces=True, list_delimiters=[",", ";"], from_cli=False):
         """
         Initializes a new Setting,
 
@@ -21,9 +21,13 @@ class Setting(StringConverter):
         of. If you want to specify a directory as origin be sure to end it with a directory seperator.
         :param strip_whitespaces: Whether to strip whitespaces from the value or not
         :param list_delimiters: Delimiters for list conversion
-        :return:
+        :param from_cli: True of this setting was read by the CliParser.
         """
+        if not isinstance(from_cli, bool):
+            raise TypeError("from_cli needs to be a boolean value.")
+
         StringConverter.__init__(self, value, strip_whitespaces=strip_whitespaces, list_delimiters=list_delimiters)
+        self.from_cli = from_cli
         self.key = key
         self.origin = str(origin)
 

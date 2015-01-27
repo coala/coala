@@ -34,16 +34,6 @@ class ResultAction:
 
         return self.apply(result, original_file_dict, file_diff_dict, **self.get_metadata().create_params_from_section(section))
 
-    def is_applicable(self, result):
-        """
-        Determines if this action is applicable to a given object. Note that this function will yield False for every
-        non-Result object.
-
-        :param result: The object to test for applicability.
-        :return: True if this is applicable to this object, False otherwise.
-        """
-        return False
-
     @classmethod
     def get_metadata(cls):
         """

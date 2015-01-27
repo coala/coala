@@ -69,3 +69,10 @@ class Result:
             return self.origin < other.origin
 
         return self.message < other.message
+
+    @staticmethod
+    def get_actions():
+        """
+        :return: All ResultAction classes applicable to this result.
+        """
+        return []

@@ -54,7 +54,7 @@ class CliParser(SectionParser):
         if not section_name in self.sections:
             self.sections[section_name] = Section(section_name)
 
-        self.sections[section_name].append(Setting(key, str(value), origin))
+        self.sections[section_name].append(Setting(key, str(value), origin, from_cli=True))
 
     def parse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
         """
@@ -64,7 +64,7 @@ class CliParser(SectionParser):
         :return: the settings dictionary
         """
         origin += os.path.sep
-        for arg_key, arg_value in vars(self._arg_parser.parse_args(arg_list)).items():
+        for arg_key, arg_value in sorted(vars(self._arg_parser.parse_args(arg_list)).items()):
             if arg_key == 'settings' and arg_value is not None:
                 self._parse_custom_settings(arg_value, origin)
             else:

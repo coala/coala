@@ -15,9 +15,10 @@ class SectionManagerTestCase(unittest.TestCase):
         defaults = ConfParser().parse(os.path.abspath(os.path.join(StringConstants.coalib_root, "default_coafile")))
 
         uut = SectionManager()
-        conf_sections = uut.run(arg_list=['-S', "test=5"])[0]
+        # We need to use a bad filename or this will parse the .coafile we use for coala
+        conf_sections = uut.run(arg_list=['-S', "test=5", "-c", "some_bad_filename"])[0]
 
-        self.assertEqual(str(conf_sections["default"]), "Default {test : 5}")
+        self.assertEqual(str(conf_sections["default"]), "Default {config : some_bad_filename, test : 5}")
         self.assertEqual(str(conf_sections["default"].defaults), str(defaults["default"]))
 
     def test_nonexistent_file(self):
@@ -32,11 +33,12 @@ class SectionManagerTestCase(unittest.TestCase):
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(), "SectionManagerTestFile")
 
-        SectionManager().run(arg_list=['-S', "save=" + filename])
+        # We need to use a bad filename or this will parse the .coafile we use for coala
+        SectionManager().run(arg_list=['-S', "save=" + filename, "-c", "some_bad_filename"])
 
         with open(filename, "r") as f:
             lines = f.readlines()
-        self.assertEqual(["[Default]\n"], lines)
+        self.assertEqual(["[Default]\n", "config = some_bad_filename\n"], lines)
 
         SectionManager().run(arg_list=['-S', "save=true", "config=" + filename, "test.value=5"])
 
