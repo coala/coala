@@ -1,0 +1,3 @@
+"""
+Contains miscellaneous bears.
+"""
