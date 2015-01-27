@@ -23,10 +23,10 @@ class Bear:
     If you need some setup or teardown for your bear, feel free to overwrite the set_up() and tear_down() functions.
     They will be invoked before/after every run_bear invocation.
 
-    Settings are available at all times through self.section. You can access the translation database with the self._()
-    function, it will be routed to the usual gettext _(). Be aware that the strings you use are probably not in the
-    database, especially if your bear is not shipped with coala. Feel free to use your own translation database in this
-    case or consider make your bear available to the coala project.
+    Settings are available at all times through self.section. You can access coalas translation database with the _()
+    from coalib.misc.i18n. Be aware that the strings you use are probably not in the database, especially if your bear
+    is not shipped with coala. Feel free to use your own translation database in this case or consider make your bear
+    available to the coala project.
     """
 
     def __init__(self,
@@ -41,10 +41,6 @@ class Bear:
         self.section = section
         self.message_queue = message_queue
         self.TIMEOUT = TIMEOUT
-
-    @staticmethod
-    def _(msg):
-        return _(msg)
 
     def set_up(self):
         pass

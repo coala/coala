@@ -23,7 +23,7 @@ class TestBear(Bear):
         self.fail_msg()
 
     def run_bear(self):
-        self.warn_msg(self._("A string to test translations."))
+        self.warn_msg(_("A string to test translations."))
 
 
 class BadTestBear(Bear):

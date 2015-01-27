@@ -30,7 +30,7 @@ class SpaceConsistencyBear(LocalBear):
                     results.append(LineResult(filtername,
                                               line_number+1,
                                               line,
-                                              self._("Line has trailing whitespace characters"),
+                                              _("Line has trailing whitespace characters"),
                                               filename))
                     line = replacement
 
@@ -40,7 +40,7 @@ class SpaceConsistencyBear(LocalBear):
                     results.append(LineResult(filtername,
                                               line_number+1,
                                               line,
-                                              self._("Line contains one or more tabs"),
+                                              _("Line contains one or more tabs"),
                                               filename))
             else:
                 replacement = spacing_helper.replace_spaces_with_tabs(line)
@@ -48,7 +48,7 @@ class SpaceConsistencyBear(LocalBear):
                     results.append(LineResult(filtername,
                                               line_number+1,
                                               line,
-                                              self._("Line contains with tab replaceable spaces"),
+                                              _("Line contains with tab replaceable spaces"),
                                               filename))
 
         return results
