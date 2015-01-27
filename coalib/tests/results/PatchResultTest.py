@@ -30,6 +30,12 @@ class PatchResultTestCase(unittest.TestCase):
 
         self.assertEqual(file_dict, expected_file_dict)
 
+        uut = PatchResult("origin", "msg", {})
+        for action in uut.get_actions():
+            action.apply(uut, {}, {})  # All those actions should be able to apply this result
+
+        self.assertEqual(len(uut.get_actions()), 1)
+
     def test_add(self):
         file_dict = {
             "f_a": ["1", "2", "3"],
