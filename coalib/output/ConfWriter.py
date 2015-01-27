@@ -39,9 +39,11 @@ class ConfWriter:
         try:
             while True:
                 setting = section[it.__next__()]
-                if str(setting) == val and not self.is_comment(setting.key):
+                if str(setting) == val and\
+                   not self.is_comment(setting.key) and\
+                   ((setting.key not in self.__unsavable_keys) or (not setting.from_cli)):
                     keys.append(setting.key)
-                else:
+                elif (setting.key not in self.__unsavable_keys) or (not setting.from_cli):
                     self.__write_key_val(keys, val)
                     keys = [setting.key]
                     val = str(setting)
@@ -53,10 +55,6 @@ class ConfWriter:
                           self.__section_name_surrounding_end + '\n')
 
     def __write_key_val(self, keys, val):
-        for unsavable_key in self.__unsavable_keys:
-            if unsavable_key in keys:
-                keys.remove(unsavable_key)
-
         if keys == []:
             return
 
