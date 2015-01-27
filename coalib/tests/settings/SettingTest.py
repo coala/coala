@@ -10,6 +10,7 @@ from coalib.settings.Setting import Setting, path, path_list
 class SettingTestCase(unittest.TestCase):
     def test_construction(self):
         self.assertRaises(ValueError, Setting, "", 2, 2)
+        self.assertRaises(TypeError, Setting, "", "", "", from_cli=5)
 
     def test_path(self):
         self.uut = Setting("key", " 22\n", "." + os.path.sep, True)
