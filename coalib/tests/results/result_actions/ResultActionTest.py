@@ -17,8 +17,6 @@ class ResultActionTestCase(unittest.TestCase):
         self.assertRaises(TypeError, uut.apply_from_section, "", 5, {}, Section("name"))
         self.assertRaises(TypeError, uut.apply_from_section, "", {}, 5, Section("name"))
 
-        self.assertFalse(uut.is_applicable(5))
-
         self.assertEqual(len(uut.get_metadata().non_optional_params), 0)
         self.assertEqual(len(uut.get_metadata().optional_params), 0)
 
