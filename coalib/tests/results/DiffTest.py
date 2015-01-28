@@ -23,7 +23,9 @@ class DiffTestCase(unittest.TestCase):
         self.assertRaises(ValueError, self.uut.delete_line, 0)
 
     def test_change_line(self):
+        self.assertEqual(len(self.uut), 0)
         self.uut.change_line(2, "1", "2")
+        self.assertEqual(len(self.uut), 1)
         self.assertRaises(ConflictError, self.uut.change_line, 2, "1", "3")
         self.assertRaises(ValueError, self.uut.change_line, 0, "1", "2")
 

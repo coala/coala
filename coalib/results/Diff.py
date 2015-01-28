@@ -20,6 +20,9 @@ class Diff:
 
         return self._changes.get(line_nr, LineDiff())
 
+    def __len__(self):
+        return len(self._changes)
+
     def apply(self, file):
         """
         Applies this diff to the given file.
