@@ -1,7 +1,8 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
-from coalib.results.LineResult import LineResult
+from coalib.results.Diff import Diff
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.i18n import _
+from coalib.results.PatchResult import PatchResult
 
 
 class SpaceConsistencyBear(LocalBear):
@@ -19,36 +20,28 @@ class SpaceConsistencyBear(LocalBear):
         :param tab_width: Number of spaces representing one tab.
         """
         results = []
-        filtername = self.__class__.__name__
+        bearname = self.__class__.__name__
 
         spacing_helper = SpacingHelper(tab_width)
 
         for line_number, line in enumerate(file):
+            replacement = line
+
             if not allow_trailing_whitespace:
-                replacement = line.rstrip(" \t\n") + "\n"
-                if replacement != line:
-                    results.append(LineResult(filtername,
-                                              line_number+1,
-                                              line,
-                                              _("Line has trailing whitespace characters"),
-                                              filename))
-                    line = replacement
+                replacement = replacement.rstrip(" \t\n") + "\n"
 
             if use_spaces:
-                replacement = spacing_helper.replace_tabs_with_spaces(line)
-                if replacement != line:
-                    results.append(LineResult(filtername,
-                                              line_number+1,
-                                              line,
-                                              _("Line contains one or more tabs"),
-                                              filename))
+                replacement = spacing_helper.replace_tabs_with_spaces(replacement)
             else:
-                replacement = spacing_helper.replace_spaces_with_tabs(line)
-                if replacement != line:
-                    results.append(LineResult(filtername,
-                                              line_number+1,
-                                              line,
-                                              _("Line contains with tab replaceable spaces"),
-                                              filename))
+                replacement = spacing_helper.replace_spaces_with_tabs(replacement)
+
+            if replacement != line:
+                diff = Diff()
+                diff.change_line(line_number + 1, line, replacement)
+                results.append(PatchResult(bearname,
+                                           _("Line contains spacing inconsistencies."),
+                                           {filename: diff},
+                                           filename,
+                                           line_nr=line_number+1))
 
         return results

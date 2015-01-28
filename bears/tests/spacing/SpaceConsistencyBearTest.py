@@ -3,12 +3,10 @@ import sys
 
 sys.path.insert(0, ".")
 import unittest
-from coalib.results.LineResult import LineResult
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.spacing.SpaceConsistencyBear import SpaceConsistencyBear, SpacingHelper
 from coalib.settings.Section import Section
-from coalib.misc.i18n import _
 
 
 class SpaceConsistencyBearTest(LocalBearTestHelper):
@@ -24,24 +22,8 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
 
     def test_data_sets_spaces(self):
         self.assertLineValid(self.uut, "    t")
-
-        self.assertLineYieldsResult(self.uut,
-                                    "t \n",
-                                    LineResult("SpaceConsistencyBear",
-                                               1,
-                                               "t \n",
-                                               _("Line has trailing whitespace characters"),
-                                               "file"),
-                                    "file")
-
-        self.assertLineYieldsResult(self.uut,
-                                    "\tt\n",
-                                    LineResult("SpaceConsistencyBear",
-                                               1,
-                                               "\tt\n",
-                                               _("Line contains one or more tabs"),
-                                               "file"),
-                                    "file")
+        self.assertLineInvalid(self.uut, "t \n")
+        self.assertLineInvalid(self.uut, "\tt\n")
 
     def test_data_sets_tabs(self):
         self.section = Section("test section")
@@ -49,17 +31,8 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.section.append(Setting("allow_trailing_whitespace", "true"))
         self.uut = SpaceConsistencyBear(self.section, Queue())
 
-        self.assertLineYieldsResult(self.uut,
-                                    "    t",
-                                    LineResult("SpaceConsistencyBear",
-                                               1,
-                                               "    t\n",
-                                               _("Line contains with tab replaceable spaces"),
-                                               "file"),
-                                    "file")
-
+        self.assertLineInvalid(self.uut, "    t")
         self.assertLineValid(self.uut, "t \n")
-
         self.assertLineValid(self.uut, "\tt\n")
 
 
