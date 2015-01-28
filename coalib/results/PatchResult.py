@@ -7,10 +7,10 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 
 
 class PatchResult(Result):
-    def __init__(self, origin, message, diffs, file=None, severity=RESULT_SEVERITY.NORMAL):
+    def __init__(self, origin, message, diffs, file=None, line_nr=None, severity=RESULT_SEVERITY.NORMAL):
         if not isinstance(diffs, dict):
             raise TypeError("diffs needs to be a dict.")
-        Result.__init__(self, origin=origin, message=message, file=file, severity=severity)
+        Result.__init__(self, origin=origin, message=message, file=file, severity=severity, line_nr=line_nr)
 
         self.diffs = diffs
 
