@@ -7,14 +7,12 @@ import unittest
 
 class ResultTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = LineResult("origin", 1, "line", "message", "file")
+        self.uut = LineResult("origin", 1, "message", "file")
 
     def test_equality(self):
-        cmp = LineResult("origin", 1, "line", "message", "file")
+        cmp = LineResult("origin", 1, "message", "file")
         self.assertEqual(cmp, self.uut)
-        cmp = Result("origin", "message")
-        self.assertNotEqual(cmp, self.uut)
-        cmp = LineResult("origin", 1, "lineswrong", "message", "file")
+        cmp = Result("origin", "message", "file")
         self.assertNotEqual(cmp, self.uut)
 
     def test_str_conversion(self):
@@ -22,7 +20,6 @@ class ResultTestCase(unittest.TestCase):
  origin: 'origin'
  file: 'file'
  severity: 1
- line: 'line'
  line nr: 1
 'message'""")
 
