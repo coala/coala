@@ -1,20 +1,13 @@
-#: bears/tests/spacing/SpaceConsistencyBearTest.py:33
-#: bears/spacing/SpaceConsistencyBear.py:33
-msgid "Line has trailing whitespace characters"
-msgstr ""
-
-#: bears/tests/spacing/SpaceConsistencyBearTest.py:42
-#: bears/spacing/SpaceConsistencyBear.py:43
-msgid "Line contains one or more tabs"
-msgstr ""
-
-#: bears/tests/spacing/SpaceConsistencyBearTest.py:57
-#: bears/spacing/SpaceConsistencyBear.py:51
-msgid "Line contains with tab replaceable spaces"
-msgstr ""
-
-#: bears/misc/KeywordBear.py:38
+#: bears/misc/KeywordBear.py:36
 msgid "Line contains the following keywords:"
+msgstr ""
+
+#: bears/misc/LineLengthBear.py:27
+msgid "Line is longer than allowed."
+msgstr ""
+
+#: bears/spacing/SpaceConsistencyBear.py:42
+msgid "Line contains spacing inconsistencies."
 msgstr ""
 
 #. pragma: no cover
@@ -67,7 +60,7 @@ msgstr ""
 msgid "ERROR"
 msgstr ""
 
-#: coalib/output/Interactor.py:23
+#: coalib/output/Interactor.py:38
 msgid ""
 "One of the results can not be printed since it is not a valid derivative of "
 "the coala result class."
@@ -111,12 +104,32 @@ msgstr ""
 
 #. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
 #: coalib/output/ConsoleInteractor.py:60
-#: coalib/tests/output/ConsoleInteractorTest.py:32
-#: coalib/tests/output/ConsoleInteractorTest.py:40
+#: coalib/tests/output/ConsoleInteractorTest.py:41
+#: coalib/tests/output/ConsoleInteractorTest.py:49
 msgid " and "
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:114
+#: coalib/output/ConsoleInteractor.py:77
+msgid "The following options are applicable to this result:"
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:91
+msgid "No action."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:94
+msgid "Please enter the number of the action you want to execute."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:100
+msgid "Please enter a valid number."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:112
+msgid "Please enter a value for the parameter '{}' ({}):"
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:155
 msgid ""
 "A result ({}) cannot be printed because it refers to a file that doesn't "
 "seem to exist."
