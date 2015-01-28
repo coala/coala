@@ -13,6 +13,8 @@ Submodules
 
 .. toctree::
 
+   coalib.tests.results.DiffTest
+   coalib.tests.results.LineDiffTest
    coalib.tests.results.LineResultTest
    coalib.tests.results.RESULT_SEVERITYTest
    coalib.tests.results.ResultTest

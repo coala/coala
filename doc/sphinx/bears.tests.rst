@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    bears.tests.misc
     bears.tests.spacing
 
 Submodules
