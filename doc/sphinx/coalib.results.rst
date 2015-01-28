@@ -15,7 +15,7 @@ Submodules
 
    coalib.results.Diff
    coalib.results.LineDiff
-   coalib.results.LineResult
+   coalib.results.PatchResult
    coalib.results.RESULT_SEVERITY
    coalib.results.Result
 

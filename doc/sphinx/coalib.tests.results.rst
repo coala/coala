@@ -15,7 +15,7 @@ Submodules
 
    coalib.tests.results.DiffTest
    coalib.tests.results.LineDiffTest
-   coalib.tests.results.LineResultTest
+   coalib.tests.results.PatchResultTest
    coalib.tests.results.RESULT_SEVERITYTest
    coalib.tests.results.ResultTest
 

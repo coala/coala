@@ -6,6 +6,7 @@ Submodules
 
 .. toctree::
 
+   coalib.results.result_actions.ApplyPatchAction
    coalib.results.result_actions.ResultAction
 
 Module contents
