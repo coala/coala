@@ -7,8 +7,7 @@ import builtins
 
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
-from coalib.results.LineResult import LineResult, Result
-from coalib.results.PatchResult import PatchResult
+from coalib.results.PatchResult import PatchResult, Result
 from coalib.results.Diff import Diff
 from coalib.settings.Section import Section, Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
@@ -108,7 +107,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
                          "\n".format(self.uut.STR_PROJECT_WIDE, RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                          self.get_str_from_queue(q))
 
-        self.uut.print_results([LineResult("SpaceConsistencyBear", 2, "Trailing whitespace found", "proj/white")],
+        self.uut.print_results([Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=2)],
                                {"proj/white": ["test line\n",
                                                "line 2\n",
                                                "line 3\n"]})
@@ -118,7 +117,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 |    |    | Trailing whitespace found
 """.format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)), self.get_str_from_queue(q))
 
-        self.uut.print_results([LineResult("SpaceConsistencyBear", 5, "Trailing whitespace found", "proj/white")],
+        self.uut.print_results([Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=5)],
                                {"proj/white": ["test line\n",
                                                "line 2\n",
                                                "line 3\n",
@@ -134,8 +133,8 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 """.format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)), self.get_str_from_queue(q))
 
         # Check sorting and multi result output
-        self.uut.print_results([LineResult("SpaceConsistencyBear", 5, "Trailing whitespace found", "proj/white"),
-                                LineResult("SpaceConsistencyBear", 2, "Trailing whitespace found", "proj/white")],
+        self.uut.print_results([Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=5),
+                                Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=2)],
                                {"proj/white": ["test line\n",
                                                "line 2\n",
                                                "line 3\n",
@@ -158,17 +157,17 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         # File isn't in dict, shouldn't print but also shouldn't throw. This can occur if filter writers are doing
         # nonsense. If this happens twice the same should happen (whitebox testing: this is a potential bug.)
         self.uut.log_printer = NullPrinter()
-        self.uut.print_results([LineResult("t", 5, "msg", "file"), LineResult("t", 5, "msg", "file")], {})
+        self.uut.print_results([Result("t", "msg", "file", line_nr=5), Result("t", "msg", "file", line_nr=5)], {})
         self.assertEqual("", self.get_str_from_queue(q))
 
         # Line isn't in dict[file], shouldn't print but also shouldn't throw. This can occur if filter writers are doing
         # nonsense.
-        self.uut.print_results([LineResult("t", 5, "msg", "file")], {"file": []})
+        self.uut.print_results([Result("t", "msg", "file", line_nr=5)], {"file": []})
         self.assertEqual("""\n\nfile\n|    |    | {}\n|    |    | [{}] t:
 |    |    | msg\n""".format(self.uut.STR_LINE_DOESNT_EXIST, RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                          self.get_str_from_queue(q))
 
-        self.assertRaises(AssertionError, self.uut.print_results, [LineResult("t", 5, "msg", None)], {})
+        self.assertRaises(AssertionError, self.uut.print_results, [Result("t", "msg", None, line_nr=5)], {})
 
     def test_from_section(self):
         section = Section("test")

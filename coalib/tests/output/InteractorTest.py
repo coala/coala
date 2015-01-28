@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.output.Interactor import Interactor
-from coalib.results.LineResult import Result, LineResult
+from coalib.results.Result import Result
 
 
 class InteractorTestCase(unittest.TestCase):
@@ -15,7 +15,7 @@ class InteractorTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"), {})
         self.assertRaises(NotImplementedError,
                           self.uut.print_result,
-                          LineResult("origin", 1, "line", "message", "file"),
+                          Result("origin", "line", "message", "file", line_nr=1),
                           {})
         self.assertRaises(TypeError, self.uut.print_results, 5, {})
         self.assertRaises(TypeError, self.uut.print_results, [], 5)

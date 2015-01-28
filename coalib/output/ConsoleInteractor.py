@@ -156,7 +156,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                                             " seem to exist.").format(str(result)))
                     continue
 
-            if hasattr(result, "line_nr"):
+            if result.line_nr is not None:
                 if current_file is None:
                     raise AssertionError("A result with a line_nr should also have a file.")
                 if result.line_nr < current_line:  # pragma: no cover

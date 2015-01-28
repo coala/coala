@@ -19,7 +19,7 @@ class Result:
     5. Results will be sorted by message (ascending alphabetically)
     """
 
-    def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL):
+    def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL, line_nr=None):
         """
         :param origin: Class name of the creator of this object
         :param file: The path to the affected file
@@ -27,21 +27,24 @@ class Result:
         self.origin = origin
         self.message = message
         self.file = file
+        self.line_nr = line_nr
         self.severity = severity
 
     def __repr__(self):
         return str(self)
 
     def __str__(self):
-        return "Result:\n origin: '{origin}'\n file: '{file}'\n severity: {severity}\n" \
-               "'{msg}'".format(origin=self.origin, file=self.file, severity=self.severity, msg=self.message)
+        return "Result:\n origin: '{origin}'\n file: '{file}'\n line nr: {linenr}\n severity: {severity}\n" \
+               "'{msg}'".format(origin=self.origin, file=self.file,
+                                severity=self.severity, msg=self.message, linenr=self.line_nr)
 
     def __eq__(self, other):
         return isinstance(other, Result) and \
                self.origin == other.origin and \
                self.message == other.message and \
                self.file == other.file and \
-               self.severity == other.severity
+               self.severity == other.severity and\
+               self.line_nr == other.line_nr
 
     def __lt__(self, other):
         if not isinstance(other, Result):
@@ -56,7 +59,7 @@ class Result:
             return self.file < other.file
 
         # If we have a line result show results with a lesser line number first
-        if hasattr(self, "line_nr") and hasattr(other, "line_nr"):
+        if self.line_nr is not None and other.line_nr is not None:
             if self.line_nr != other.line_nr:
                 return self.line_nr < other.line_nr
 

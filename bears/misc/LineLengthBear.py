@@ -1,6 +1,6 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.LineResult import LineResult
+from coalib.results.Result import Result
 from coalib.misc.i18n import _
 
 
@@ -23,11 +23,11 @@ class LineLengthBear(LocalBear):
         for line_number, line in enumerate(file):
             line = spacing_helper.replace_tabs_with_spaces(line)
             if len(line) > max_line_length + 1:
-                results.append(LineResult(bearname,
-                                          line_number + 1,
-                                          line,
-                                          _("Line is longer than allowed.") +
-                                          " ({actual} > {maximum})".format(actual=len(line), maximum=max_line_length),
-                                          filename))
+                results.append(Result(origin=bearname,
+                                      message=_("Line is longer than allowed.") +
+                                                " ({actual} > {maximum})".format(actual=len(line),
+                                                                               maximum=max_line_length),
+                                      file=filename,
+                                      line_nr=line_number + 1))
 
         return results

@@ -66,10 +66,10 @@ class SectionExecutorTestCase(unittest.TestCase):
         global_result = global_results[0]
 
         self.assertEqual(str(local_result),
-                         "Result:\n origin: 'LocalTestBear'\n file: 'None'\n severity: 1\n'test message'")
+                         "Result:\n origin: 'LocalTestBear'\n file: 'None'\n line nr: None\n severity: 1\n'test msg'")
         self.assertEqual(str(global_result),
                          "Result:\n origin: 'GlobalTestBear'\n file: "
-                         "'{file}'\n severity: 1\n'test message'".format(file=self.testcode_c_path))
+                         "'{file}'\n line nr: None\n severity: 1\n'test message'".format(file=self.testcode_c_path))
 
         # Checking the content of those messages would mean checking hardcoded strings. I recall some other test already
         # does this so we shouldn't make maintenance so hard for us here.

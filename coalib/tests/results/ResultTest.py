@@ -6,6 +6,7 @@ import unittest
 
 
 class ResultTestCase(unittest.TestCase):
+
     def test_wrong_types(self):
         uut = Result('b', 'b')
         self.assertNotEqual(uut, 0)
@@ -19,8 +20,14 @@ class ResultTestCase(unittest.TestCase):
 
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')
-        self.assertEqual(str(uut), "Result:\n origin: 'a'\n file: 'c'\n severity: 1\n'b'")
+        self.assertEqual(str(uut), "Result:\n origin: 'a'\n file: 'c'\n line nr: None\n severity: 1\n'b'")
         self.assertEqual(str(uut), repr(uut))
+        self.assertEqual(Result("origin", "message", "file", line_nr=1).__str__(), """Result:
+ origin: 'origin'
+ file: 'file'
+ line nr: 1
+ severity: 1
+'message'""")
 
     def test_ordering(self):
         """
@@ -48,6 +55,12 @@ class ResultTestCase(unittest.TestCase):
         medium.line_nr = 5
         greater_origin.line_nr = 3
         self.assert_ordering(medium, greater_origin)
+
+        uut = Result("origin", "message", "file", line_nr=1)
+        cmp = Result("origin", "message", "file", line_nr=1)
+        self.assert_equal(cmp, uut)
+        cmp = Result("origin", "message", "file")
+        self.assertNotEqual(cmp, uut)
 
     def assert_equal(self, first, second):
         self.assertGreaterEqual(first, second)

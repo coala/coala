@@ -1,4 +1,4 @@
-from coalib.results.LineResult import LineResult
+from coalib.results.Result import Result
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.i18n import _
 
@@ -32,10 +32,9 @@ class KeywordBear(LocalBear):
                     found_kws.append(kw)
 
             if found_kws != []:
-                results.append(LineResult(bearname,
-                                          line_number + 1,
-                                          line,
-                                          _("Line contains the following keywords:") + "\n" + ", ".join(found_kws),
-                                          filename))
+                results.append(Result(origin=bearname,
+                                      message=_("Line contains the following keywords:") + "\n" + ", ".join(found_kws),
+                                      file=filename,
+                                      line_nr=line_number + 1))
 
         return results
