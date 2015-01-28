@@ -19,6 +19,7 @@ class ResultActionTestCase(unittest.TestCase):
 
         self.assertEqual(len(uut.get_metadata().non_optional_params), 0)
         self.assertEqual(len(uut.get_metadata().optional_params), 0)
+        self.assertEqual(uut.get_metadata().name, "ResultAction")
 
 
 if __name__ == '__main__':
