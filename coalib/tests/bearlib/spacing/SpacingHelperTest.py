@@ -46,6 +46,7 @@ class SpacingHelperTestCase(unittest.TestCase):
         self.assertEqual(self.uut.get_indentation(" \t"), self.uut.DEFAULT_TAB_WIDTH)
         self.assertEqual(self.uut.get_indentation(" \t "), self.uut.DEFAULT_TAB_WIDTH+1)
         self.assertEqual(self.uut.get_indentation("\t "), self.uut.DEFAULT_TAB_WIDTH+1)
+        self.assertEqual(self.uut.get_indentation("\t\t"), self.uut.DEFAULT_TAB_WIDTH*2)
 
     def test_replace_tabs_with_spaces(self):
         self.assertRaises(TypeError, self.uut.replace_tabs_with_spaces, 5)
@@ -53,6 +54,7 @@ class SpacingHelperTestCase(unittest.TestCase):
         self.assertEqual(self.uut.replace_tabs_with_spaces(""), "")
         self.assertEqual(self.uut.replace_tabs_with_spaces(" "), " ")
         self.assertEqual(self.uut.replace_tabs_with_spaces("\t"), " "*self.uut.DEFAULT_TAB_WIDTH)
+        self.assertEqual(self.uut.replace_tabs_with_spaces("\t\t"), " "*self.uut.DEFAULT_TAB_WIDTH*2)
         self.assertEqual(self.uut.replace_tabs_with_spaces(" \t"), " "*self.uut.DEFAULT_TAB_WIDTH)
         self.assertEqual(self.uut.replace_tabs_with_spaces("  \t"), " "*self.uut.DEFAULT_TAB_WIDTH)
         self.assertEqual(self.uut.replace_tabs_with_spaces("d \t "), "d" + " "*self.uut.DEFAULT_TAB_WIDTH)

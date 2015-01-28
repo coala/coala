@@ -52,12 +52,16 @@ class SpacingHelper(SectionCreatable):
             raise TypeError("The 'line' parameter should be a string.")
 
         result = ""
-        for i, char in enumerate(line):
+        tabless_position = 0
+        for char in line:
             if char == '\t':
-                result += (self.tab_width - i % self.tab_width) * " "
+                space_count = self.tab_width - tabless_position % self.tab_width
+                result += space_count * " "
+                tabless_position += space_count
                 continue
 
             result += char
+            tabless_position += 1
 
         return result
 
