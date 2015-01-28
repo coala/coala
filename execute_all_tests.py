@@ -24,6 +24,7 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
     parser.add_argument("-b", "--ignore-bear-tests", help="ignore bear tests", action="store_true")
     parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
+    parser.add_argument("-v", "--verbose", help="more verbose output", action="store_true")
     args = parser.parse_args()
 
     files = []
@@ -38,4 +39,4 @@ if __name__ == '__main__':
         os.path.join(get_python_lib(), "*")
     ])
 
-    exit(TestHelper.execute_python3_files(files, args.cover, ignore_list))
+    exit(TestHelper.execute_python3_files(files, args.cover, ignore_list, args.verbose))
