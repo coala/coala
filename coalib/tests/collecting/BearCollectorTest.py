@@ -50,6 +50,7 @@ class TestFileCollection(unittest.TestCase):
         os.close(self.testfile1)
         os.close(self.testfile2)
         os.close(self.testfile3)
+        os.close(self.testfile4)
         first_file_name = os.path.splitext(os.path.basename(self.testfile1_path))[0]
         test_bear_file_string_one = """
 from coalib.bears.Bear import Bear
