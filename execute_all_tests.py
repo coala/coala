@@ -25,13 +25,18 @@ if __name__ == '__main__':
     parser.add_argument("-b", "--ignore-bear-tests", help="ignore bear tests", action="store_true")
     parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
     parser.add_argument("-v", "--verbose", help="more verbose output", action="store_true")
+    parser.add_argument("-o", "--omit", help="base names of tests to omit", nargs="+")
     args = parser.parse_args()
+
+    omit = args.omit
+    if omit is None:
+        omit = []
 
     files = []
     if not args.ignore_main_tests:
-        files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests")))
+        files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests"), omit))
     if not args.ignore_bear_tests:
-        files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests")))
+        files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests"), omit))
 
     ignore_list = files[:]
     ignore_list.extend([

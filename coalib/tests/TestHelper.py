@@ -64,10 +64,10 @@ class TestHelper:
         return failures
 
     @staticmethod
-    def get_test_files(testdir):
+    def get_test_files(testdir, omit_names):
         test_files = []
         for (dirpath, dirnames, filenames) in os.walk(testdir):
             for filename in filenames:
-                if filename.endswith("Test.py"):
+                if filename.endswith("Test.py") and os.path.splitext(filename)[0] not in omit_names:
                     test_files.append(os.path.join(dirpath, filename))
         return test_files
