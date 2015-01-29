@@ -21,7 +21,6 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_PROJECT_WIDE = _("Project wide:")
 
     def __init__(self,
-                 output: output_type=sys.stdout,
                  pre_padding: int=3,
                  log_printer=ConsolePrinter()):
         """
@@ -31,7 +30,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         :param pre_padding: Number of code lines to show before a result as context.
         """
         Interactor.__init__(self, log_printer=log_printer)
-        ConsolePrinter.__init__(self, output=output)
+        ConsolePrinter.__init__(self)
 
         self.pre_padding = pre_padding
 

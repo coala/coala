@@ -11,23 +11,12 @@ class ConsolePrinter(LogPrinter, ColorPrinter):
 
     Note that pickling will not pickle the output member.
     """
-    def __init__(self, output=sys.stdout, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
+    def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
         ColorPrinter.__init__(self)
         LogPrinter.__init__(self, log_level=log_level, timestamp_format=timestamp_format)
-        self.output = output
-
-    def __getstate__(self):
-        var_dict = self.__dict__
-        var_dict.pop("output", None)  # Do not serialize output
-
-        return var_dict
-
-    def __setstate__(self, state):
-        self.__dict__ = state
-        self.output = sys.stdout
 
     def _print_uncolored(self, output, **kwargs):
-        print(output, file=self.output, end="")
+        print(output, end="")
 
     def _print_colored(self, output, color=None, **kwargs):
         color_code_dict = {
@@ -45,4 +34,4 @@ class ConsolePrinter(LogPrinter, ColorPrinter):
         if color_code is None:
             raise ValueError("Invalid color value")
 
-        print('\033[' + color_code + 'm' + output + '\033[0m', file=self.output, end="")
+        print('\033[' + color_code + 'm' + output + '\033[0m', end="")
