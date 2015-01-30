@@ -7,13 +7,6 @@ from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _
 
 
-def output_type(str_input):
-    return {
-        "stdout": sys.stdout,
-        "stderr": sys.stderr
-    }.get(str(str_input).lower(), sys.stdout)
-
-
 class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) needed by {}: ")
     STR_LINE_DOESNT_EXIST = _("A the line belonging to the following result cannot be printed because it refers to a "
