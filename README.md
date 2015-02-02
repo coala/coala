@@ -76,13 +76,15 @@ the following things:
      * coala-devel@googlegroups.com
    * coala announcement list: https://groups.google.com/forum/#!forum/coala-announcements
      * coala-announcements@googlegroups.com
+ * Run our tests. Just execute `./execute_all_tests.py`. Report back to us if
+   anything goes wrong unexpectedly.
  * Give us feedback. If you think we're doing something useless or useful with
    some specific things, please write us! We are interested in your needs and
    favors so you get the highest possible quality.
  * Drive bug discussions. Just state your opinion, everywhere!
  * Review code. Get a glance at what we're doing and say something if you
    don't understand something or think we're doing something wrong.
- * Write in-code documentation. If you need some additional information for
+ * Write documentation. If you need some additional information for
    documenting feel free to ask us!
  * Translate coala to your language, so everyone can use it comfortably.
  * Write code. Usually code we need is indicated through bug reports. Please
