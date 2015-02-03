@@ -8,26 +8,28 @@ import webbrowser
 class TestHelper:
     @staticmethod
     def __show_coverage_results(generate_html_coverage=False):
-        try:
-            subprocess.call(["coverage3", "combine"])
-            subprocess.call(["coverage3", "report", "-m"])
-            if generate_html_coverage:
-                shutil.rmtree(".htmlreport", ignore_errors=True)
-                print("Generating HTML report to .htmlreport...")
-                subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
-                try:
-                    webbrowser.open_new_tab(os.path.join(".htmlreport", "index.html"))
-                except webbrowser.Error:
-                    pass
-        except:
-            pass
+        subprocess.call(["coverage3", "combine"])
+        subprocess.call(["coverage3", "report", "-m"])
+        if generate_html_coverage:
+            shutil.rmtree(".htmlreport", ignore_errors=True)
+            print("Generating HTML report to .htmlreport...")
+            subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
+            try:
+                webbrowser.open_new_tab(os.path.join(".htmlreport", "index.html"))
+            except webbrowser.Error:
+                pass
 
     @staticmethod
     def __delete_previous_coverage():
+        """
+        :return: False if coverage3 cannot be executed.
+        """
         try:
             subprocess.call(["coverage3", "erase"])
+            return True
         except:
-            pass
+            print("Coverage failed. Falling back to standard unit tests.")
+            return False
 
     @staticmethod
     def print_output(command_array, verbose):
@@ -50,22 +52,19 @@ class TestHelper:
         if not use_coverage:
             return TestHelper.print_output(["python3", filename], verbose)
 
-        try:
-            return TestHelper.print_output(["coverage3",
-                                            "run",
-                                            "-p",  # make it collectable later
-                                            "--branch",  # check branch AND statement coverage
-                                            "--omit",
-                                            ignored_files,
-                                            filename], verbose)
-        except:
-            print("Coverage failed. Falling back to standard unit tests.")
-            return subprocess.call(["python3", filename])
+        return TestHelper.print_output(["coverage3",
+                                        "run",
+                                        "-p",  # make it collectable later
+                                        "--branch",  # check branch AND statement coverage
+                                        "--omit",
+                                        ignored_files,
+                                        filename], verbose)
 
     @staticmethod
     def execute_python3_files(filenames, use_coverage, ignore_list, verbose=False, generate_html_coverage=False):
         if use_coverage:
-            TestHelper.__delete_previous_coverage()
+            use_coverage = TestHelper.__delete_previous_coverage()  # Don't use coverage if this fails
+
         number = len(filenames)
         failures = 0
         for i, file in enumerate(filenames):
