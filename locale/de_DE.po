@@ -370,7 +370,7 @@ msgstr ""
 
 #: coalib/output/ConsoleInteractor.py:12
 msgid ""
-"A the line belonging to the following result cannot be printed because it "
+"The line belonging to the following result cannot be printed because it "
 "refers to a line that doesn't seem to exist in the given file."
 msgstr ""
 
@@ -415,21 +415,15 @@ msgstr ""
 #. pragma: no cover
 #: coalib/output/printers/EspeakPrinter.py:19
 msgid ""
-"Espeak doesn't seem to be installed. You cannot use the voice output feature "
-"without espeak. It can be downloaded from http://espeak.sourceforge.net/ or "
+"eSpeak doesn't seem to be installed. You cannot use the voice output feature "
+"without eSpeak. It can be downloaded from http://espeak.sourceforge.net/ or "
 "installed via your usual package repositories."
 msgstr ""
-"eSpeak scheint nicht installiert zu sein. Sie können die "
-"Sprachausgabefunktion nicht nutzen ohne eSpeak. eSpeak kann von http://"
-"espeak.sourceforge.net/ heruntergeladen oder über Ihre Paketrepositorys "
-"installiert werden."
 
 #. pragma: no cover
 #: coalib/output/printers/EspeakPrinter.py:24
-msgid "Failed to execute espeak. An unknown error occurred."
+msgid "Failed to execute eSpeak. An unknown error occurred."
 msgstr ""
-"eSpeak konnte nicht ausgeführt werden. Ein unbekannter Fehler ist "
-"aufgetreten."
 
 #: coalib/output/Interactor.py:38
 msgid ""
@@ -458,6 +452,21 @@ msgstr ""
 "aufgetreten. Das sollte niemals passieren. Wenn Sie danach gefragt werden, "
 "helfen die folgenden Informationen womöglich bei der Untersuchung der "
 "Ursache:"
+
+#~ msgid ""
+#~ "Espeak doesn't seem to be installed. You cannot use the voice output "
+#~ "feature without espeak. It can be downloaded from http://espeak."
+#~ "sourceforge.net/ or installed via your usual package repositories."
+#~ msgstr ""
+#~ "eSpeak scheint nicht installiert zu sein. Sie können die "
+#~ "Sprachausgabefunktion nicht nutzen ohne eSpeak. eSpeak kann von http://"
+#~ "espeak.sourceforge.net/ heruntergeladen oder über Ihre Paketrepositorys "
+#~ "installiert werden."
+
+#~ msgid "Failed to execute espeak. An unknown error occurred."
+#~ msgstr ""
+#~ "eSpeak konnte nicht ausgeführt werden. Ein unbekannter Fehler ist "
+#~ "aufgetreten."
 
 #~ msgid ""
 #~ "This is a bug. We are sorry for the inconvenience. Please contact the "
