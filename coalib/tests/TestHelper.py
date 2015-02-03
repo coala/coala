@@ -61,20 +61,39 @@ class TestHelper:
                                         filename], verbose)
 
     @staticmethod
+    def execute_test(filename, curr_nr, max_nr, use_coverage, ignored_files, verbose):
+        """
+        :param filename: Filename of test to execute
+        :param curr_nr: Number of current test
+        :param max_nr: Count of all tests
+        :param use_coverage: Wether to measure coverage or not
+        :param ignored_files: Files to ignore for coverage
+        :param verbose: Verbose output
+        :return: (failed (1 or 0), skipped (1 or 0))
+        """
+        print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, os.path.splitext(os.path.basename(filename))[0]))
+        result = TestHelper.execute_python3_file(filename, use_coverage, ignored_files, verbose)  # either 0 or 1
+        if verbose or result != 0:
+            print("#" * 70)
+
+        return result, 0
+
+
+    @staticmethod
     def execute_python3_files(filenames, use_coverage, ignore_list, verbose=False, generate_html_coverage=False):
         if use_coverage:
             use_coverage = TestHelper.__delete_previous_coverage()  # Don't use coverage if this fails
 
         number = len(filenames)
         failures = 0
+        skipped = 0
         for i, file in enumerate(filenames):
-            print(" {:>2}/{:<2} | {}".format(i+1, number, os.path.splitext(os.path.basename(file))[0]))
-            result = TestHelper.execute_python3_file(file, use_coverage, ",".join(ignore_list), verbose)  # either 0 or 1
-            failures += result
-            if verbose or result != 0:
-                print("#" * 70)
+            failed, _skipped = TestHelper.execute_test(file, i+1, number, use_coverage, ",".join(ignore_list), verbose)
+            failures += failed
+            skipped += _skipped
 
-        print("\nTests finished: failures in {} of {} test modules".format(failures, number))
+        print("\nTests finished: "
+              "failures in {} of {} test modules, skipped {} test modules.".format(failures, number, skipped))
 
         if use_coverage:
             TestHelper.__show_coverage_results(generate_html_coverage)
