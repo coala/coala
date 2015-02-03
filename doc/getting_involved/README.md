@@ -22,6 +22,9 @@ the following things:
  * Write code. Usually code we need is indicated through bug reports. Please
    get in contact with us so we can coordinate coding together.
 
+Please take a look at the other files in this directory for getting started
+with specific parts of coala.
+
 We appreciate any help. (Partially with words, partially with chocolate if you
 live near hamburg.)
 
