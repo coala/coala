@@ -1,8 +1,11 @@
+import importlib
+import inspect
 import os
 import subprocess
 import sys
 import shutil
 import webbrowser
+import builtins
 
 
 class TestHelper:
@@ -61,6 +64,22 @@ class TestHelper:
                                         filename], verbose)
 
     @staticmethod
+    def skip_module(filename):
+        module_dir = os.path.dirname(filename)
+        if module_dir not in sys.path:
+            sys.path.insert(0, module_dir)
+        _print = builtins.__dict__["print"]
+        builtins.__dict__["print"] = lambda x: x  # Don't allow module code printing
+        module = importlib.import_module(os.path.basename(os.path.splitext(filename)[0]))
+        builtins.__dict__["print"] = _print
+        for name, object in inspect.getmembers(module):
+            if inspect.isfunction(object) and name == "skip_test":
+                return object()
+
+        return False
+
+
+    @staticmethod
     def execute_test(filename, curr_nr, max_nr, use_coverage, ignored_files, verbose):
         """
         :param filename: Filename of test to execute
@@ -71,7 +90,13 @@ class TestHelper:
         :param verbose: Verbose output
         :return: (failed (1 or 0), skipped (1 or 0))
         """
-        print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, os.path.splitext(os.path.basename(filename))[0]))
+        basename = os.path.splitext(os.path.basename(filename))[0]
+        reason = TestHelper.skip_module(filename)
+        if reason is not False:
+            print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr, max_nr, basename, reason))
+            return 0, 1
+
+        print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
         result = TestHelper.execute_python3_file(filename, use_coverage, ignored_files, verbose)  # either 0 or 1
         if verbose or result != 0:
             print("#" * 70)
