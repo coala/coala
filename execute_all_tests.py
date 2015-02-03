@@ -21,16 +21,21 @@ if __name__ == '__main__':
                                      epilog="Please note that the tests for coala are split into tests for the main "
                                             "program and the bears. By default all these tests are executed, however "
                                             "you can switch them off individually.")
+    parser.add_argument("-t", "--test-only", help="execute only the tests with the given base name", nargs="+")
     parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
     parser.add_argument("-H", "--html", help="generate html code coverage, implies -c", action="store_true")
     parser.add_argument("-b", "--ignore-bear-tests", help="ignore bear tests", action="store_true")
     parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
     parser.add_argument("-v", "--verbose", help="more verbose output", action="store_true")
-    parser.add_argument("-o", "--omit", help="base names of tests to omit", nargs="+")
+    parser.add_argument("-o", "--omit", help="base names of tests to omit, overwrites -t", nargs="+")
     args = parser.parse_args()
     args.cover = args.cover or args.html
 
     omit = args.omit
+    test_only = args.test_only
+    if omit is not None and test_only is not None:
+        parser.error("Incompatible options.")
+
     if omit is None:
         omit = []
 
@@ -39,6 +44,13 @@ if __name__ == '__main__':
         files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests"), omit))
     if not args.ignore_bear_tests:
         files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests"), omit))
+
+    if test_only is not None:
+        new_files = []
+        for file in files:
+            if os.path.splitext(os.path.basename(file))[0] in test_only:
+                new_files.append(file)
+        files = new_files
 
     ignore_list = files[:]
     ignore_list.extend([
