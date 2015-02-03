@@ -23,6 +23,13 @@ class TestHelper:
             pass
 
     @staticmethod
+    def __delete_previous_coverage():
+        try:
+            subprocess.call(["coverage3", "erase"])
+        except:
+            pass
+
+    @staticmethod
     def print_output(command_array, verbose):
         p = subprocess.Popen(command_array, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         retval = p.wait()
@@ -57,6 +64,8 @@ class TestHelper:
 
     @staticmethod
     def execute_python3_files(filenames, use_coverage, ignore_list, verbose=False, generate_html_coverage=False):
+        if use_coverage:
+            TestHelper.__delete_previous_coverage()
         number = len(filenames)
         failures = 0
         for i, file in enumerate(filenames):
