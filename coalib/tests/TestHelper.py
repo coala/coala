@@ -1,14 +1,24 @@
 import os
 import subprocess
 import sys
+import shutil
+import webbrowser
 
 
 class TestHelper:
     @staticmethod
-    def __show_coverage_results():
+    def __show_coverage_results(generate_html_coverage=False):
         try:
             subprocess.call(["coverage3", "combine"])
             subprocess.call(["coverage3", "report", "-m"])
+            if generate_html_coverage:
+                shutil.rmtree(".htmlreport", ignore_errors=True)
+                print("Generating HTML report to .htmlreport...")
+                subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
+                try:
+                    webbrowser.open_new_tab(os.path.join(".htmlreport", "index.html"))
+                except webbrowser.Error:
+                    pass
         except:
             pass
 
@@ -46,7 +56,7 @@ class TestHelper:
             return subprocess.call(["python3", filename])
 
     @staticmethod
-    def execute_python3_files(filenames, use_coverage, ignore_list, verbose=False):
+    def execute_python3_files(filenames, use_coverage, ignore_list, verbose=False, generate_html_coverage=False):
         number = len(filenames)
         failures = 0
         for i, file in enumerate(filenames):
@@ -59,7 +69,7 @@ class TestHelper:
         print("\nTests finished: failures in {} of {} test modules".format(failures, number))
 
         if use_coverage:
-            TestHelper.__show_coverage_results()
+            TestHelper.__show_coverage_results(generate_html_coverage)
 
         return failures
 

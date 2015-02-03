@@ -22,11 +22,13 @@ if __name__ == '__main__':
                                             "program and the bears. By default all these tests are executed, however "
                                             "you can switch them off individually.")
     parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
+    parser.add_argument("-H", "--html", help="generate html code coverage, implies -c", action="store_true")
     parser.add_argument("-b", "--ignore-bear-tests", help="ignore bear tests", action="store_true")
     parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
     parser.add_argument("-v", "--verbose", help="more verbose output", action="store_true")
     parser.add_argument("-o", "--omit", help="base names of tests to omit", nargs="+")
     args = parser.parse_args()
+    args.cover = args.cover or args.html
 
     omit = args.omit
     if omit is None:
@@ -44,4 +46,4 @@ if __name__ == '__main__':
         os.path.join(get_python_lib(), "*")
     ])
 
-    exit(TestHelper.execute_python3_files(files, args.cover, ignore_list, args.verbose))
+    exit(TestHelper.execute_python3_files(files, args.cover, ignore_list, args.verbose, args.html))
