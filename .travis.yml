@@ -3,7 +3,7 @@ language: python
 notifications:
   recipients:
     - lasse@schuirmann.net
-    - fabian@neuschmidt.de
+    - coding@neuschmidt.de
   email:
     on_failure: always
     on_success: change
