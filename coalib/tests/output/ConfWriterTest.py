@@ -35,6 +35,7 @@ class ConfWriterTestCase(unittest.TestCase):
 
     def tearDown(self):
         os.remove(self.file)
+        os.remove(self.write_file_name)
 
     def test_exceptions(self):
         self.assertRaises(TypeError, self.uut.write_section, 5)
