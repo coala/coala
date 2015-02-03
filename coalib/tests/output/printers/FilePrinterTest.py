@@ -13,6 +13,9 @@ class FilePrinterTestCase(unittest.TestCase):
         os.close(handle)  # We don't need the handle provided by mkstemp
         self.uut = FilePrinter(self.filename)
 
+    def tearDown(self):
+        os.remove(self.filename)
+
     def test_construction(self):
         self.assertRaises(TypeError, FilePrinter, 5)
 
