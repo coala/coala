@@ -41,16 +41,9 @@ if __name__ == '__main__':
 
     files = []
     if not args.ignore_main_tests:
-        files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests"), omit))
+        files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests"), omit, test_only))
     if not args.ignore_bear_tests:
-        files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests"), omit))
-
-    if test_only is not None:
-        new_files = []
-        for file in files:
-            if os.path.splitext(os.path.basename(file))[0] in test_only:
-                new_files.append(file)
-        files = new_files
+        files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests"), omit, test_only))
 
     ignore_list = files[:]
     ignore_list.extend([

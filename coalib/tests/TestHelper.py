@@ -82,10 +82,22 @@ class TestHelper:
         return failures
 
     @staticmethod
-    def get_test_files(testdir, omit_names):
+    def get_test_files(testdir, omit_names, test_only):
         test_files = []
         for (dirpath, dirnames, filenames) in os.walk(testdir):
             for filename in filenames:
-                if filename.endswith("Test.py") and os.path.splitext(filename)[0] not in omit_names:
+                if TestHelper.is_eligible_test(filename, omit_names, test_only):
                     test_files.append(os.path.join(dirpath, filename))
         return test_files
+
+    @staticmethod
+    def is_eligible_test(filename, omit_names, test_only):
+        if not filename.endswith("Test.py"):
+            return False
+        name = os.path.splitext(os.path.basename(filename))[0]
+        if omit_names is not None and name in omit_names:
+            return False
+        if test_only is not None and name not in test_only:
+            return False
+
+        return True
