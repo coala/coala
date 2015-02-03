@@ -7,26 +7,10 @@ default_arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescrip
 
 default_arg_parser.add_argument('-f', '--files', nargs='+', metavar='FILE', dest='files',
                                 help=_('Files that should be checked'))
-default_arg_parser.add_argument('-r', '--files-regex', nargs='+', metavar='FILE', dest='files_regex',
-                                help=_('Regex for additional filenames (only the tail of the whole path)'))
-default_arg_parser.add_argument('-d', '--flat-dirs', nargs='+', metavar='DIR', dest='flat_dirs',
-                                help=_('Directories where files may lie that will be checked, '
-                                       'excluding sub directories'))
-default_arg_parser.add_argument('-D', '--rec-dirs', nargs='+', metavar='DIR', dest='rec_dirs',
-                                help=_('Directories where files may lie that will be checked, '
-                                       'including sub directories'))
-default_arg_parser.add_argument('-i', '--ignored-dirs', nargs='+', metavar='PATH', dest='ignored_dirs',
-                                help=_('Directories that should be ignored'))
-default_arg_parser.add_argument('-F', '--flat-bear-dirs', nargs='+', metavar='DIR', dest='flat_bear_dirs',
-                                help=_('Directories where bears may lie, excluding subdirectories'))
-default_arg_parser.add_argument('-B', '--rec-bear-dirs', nargs='+', metavar='DIR', dest='rec_bear_dirs',
-                                help=_('Directories where bears may lie, including subdirectories'))
-default_arg_parser.add_argument('-I', '--ignored-bear-dirs', nargs='+', metavar='DIR', dest='ignored_bear_dirs',
-                                help=_('Directories to ignore when searching for bears'))
+default_arg_parser.add_argument('-d', '--bear-dirs', nargs='+', metavar='DIR', dest='bear_dirs',
+                                help=_('Directories where bears may lie'))
 default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest='bears',
                                 help=_('Names of bears to use'))
-default_arg_parser.add_argument('-R', '--bears-regex', nargs='+', metavar='REGEX', dest='bears_regex',
-                                help=_('Regular expression for bears to use'))
 default_arg_parser.add_argument('-l', '--log', nargs=1, metavar='ENUM', dest='log_type',
                                 help=_("Type of logging (console or any filename)"))
 default_arg_parser.add_argument('-L', '--log-level', nargs=1, choices=['ERR', 'WARN', 'DEBUG'],

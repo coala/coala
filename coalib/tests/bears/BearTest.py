@@ -51,6 +51,8 @@ class BearTestCase(unittest.TestCase):
     def test_methods_available(self):
         # these should be available and not throw anything
         base = Bear(self.settings, None)
+        print("XXXXXXXXXXXXXXXXXXXXX:", type(base), isinstance(base, Bear))
+
         base.set_up()
         base.tear_down()
 

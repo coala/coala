@@ -1,30 +1,117 @@
-class Collector:
-    def __init__(self):
-        self._items = None
+import os
 
-    def collect(self):
-        raise NotImplementedError
+from coalib.collecting.Importer import iimport_object
+from coalib.misc.Decorators import cached_iterator
+from coalib.misc.StringConstants import StringConstants
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.parsing.Glob import iglob
+from coalib.misc.i18n import _
 
-    def __iter__(self):
-        self._assert_item_availability()
 
-        return iter(self._items)
+def _file_or_dir_is_accessible(file_path, log_printer):
+    if not os.access(file_path, os.R_OK):
+        log_printer.warn(StringConstants.OBJ_NOT_ACCESSIBLE.format(file_path))
+        return False
+    return True
 
-    def __len__(self):
-        self._assert_item_availability()
 
-        return len(self._items)
+def _yield_if_right_kind(bear_class, kinds):
+    try:
+        if bear_class.kind() in kinds:
+            yield bear_class
+    except NotImplementedError:
+        pass
 
-    def __getitem__(self, item):
-        self._assert_item_availability()
 
-        return self._items[item]
+def _import_bears(file_path, kinds):
+    # recursive imports:
+    for bear_list in iimport_object(file_path, names='__additional_bears__', types=list):
+        for bear_class in bear_list:
+            for valid_bear_class in _yield_if_right_kind(bear_class, kinds):
+                yield valid_bear_class
+    # normal import
+    for bear_class in iimport_object(file_path, attributes='kind', verbose=True):
+        print("Imported Object: {}".format(bear_class))
+        for valid_bear_class in _yield_if_right_kind(bear_class, kinds):
+            yield valid_bear_class
 
-    def __reversed__(self):
-        self._assert_item_availability()
 
-        return reversed(self._items)
+@cached_iterator
+def icollect_files(file_paths, log_printer=ConsolePrinter()):
+    """
+    Evaluate globs in file paths and return all matching files that are accessible on the system
+    :param file_paths: list of file paths that can include globs
+    :param log_printer: log_printer to handle logging
+    :return: iterator that yields paths of all matching files
+    """
+    for file_path in file_paths:
+        for match in iglob(file_path, dirs=False):
+            if _file_or_dir_is_accessible(match, log_printer):
+                yield match
 
-    def _assert_item_availability(self):
-        if self._items is None:
-            raise ValueError("Collector must collect items before they can be accessed")
+
+def collect_files(file_paths, log_printer=ConsolePrinter()):
+    """
+    Evaluate globs in file paths and return all matching files that are accessible on the system
+    :param file_paths: list of file paths that can include globs
+    :param log_printer: log_printer to handle logging
+    :return: list of paths of all matching files
+    """
+    return list(icollect_files(file_paths, log_printer))
+
+
+@cached_iterator
+def icollect_dirs(dir_paths, log_printer=ConsolePrinter()):
+    """
+    Evaluate globs in directory paths and return all matching directories that are accessible on the system
+    :param dir_paths: list of file paths that can include globs
+    :param log_printer: log_printer to handle logging
+    :return: iterator that yields paths of all matching directories
+    """
+    for file_path in dir_paths:
+        for match in iglob(file_path, files=False):
+            if _file_or_dir_is_accessible(match, log_printer):
+                yield match
+
+
+def collect_dirs(dir_paths, log_printer=ConsolePrinter()):
+    """
+    Evaluate globs in directory paths and return all matching directories that are accessible on the system
+    :param dir_paths: list of file paths that can include globs
+    :param log_printer: log_printer to handle logging
+    :return: list of paths of all matching directories
+    """
+    return list(icollect_files(dir_paths, log_printer))
+
+
+@cached_iterator
+def icollect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
+    """
+    Collect all bears from bear directories that have a matching kind.
+    :param bear_dirs: directories that can contain bears
+    :param bear_names: names of bears
+    :param kinds: list of bear kinds to be collected
+    :param log_printer: log_printer to handle logging
+    :return: iterator that yields bear classes
+    """
+    for bear_dir in icollect_dirs(bear_dirs, log_printer):
+        for bear_name in bear_names:
+            for matching_file in iglob(os.path.join(bear_dir, bear_name + '.py')):
+
+                try:
+                    for bear in _import_bears(matching_file, kinds):
+                        yield bear
+                except:
+                    log_printer.warn(_("unable to import bears from {}").format(matching_file))
+
+
+def collect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
+    """
+    Collect all bears from bear directories that have a matching kind.
+    :param bear_dirs: directories that can contain bears
+    :param bear_names: names of bears
+    :param kinds: list of bear kinds to be collected
+    :param log_printer: log_printer to handle logging
+    :return: list of matching bear classes
+    """
+    return list(icollect_bears(bear_dirs, bear_names, kinds, log_printer))

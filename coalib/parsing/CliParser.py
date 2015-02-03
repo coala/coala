@@ -8,9 +8,17 @@ from coalib.parsing.SectionParser import SectionParser
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
 from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.parsing.Glob import glob
 
 
 class CliParser(SectionParser):
+    @staticmethod
+    def to_string_if_list(item_list, sep=','):
+        if isinstance(item_list, list):
+            item_string = sep.join([str(val) for val in item_list])  # [1,2,3] -> "1,2,3"
+            return item_string
+        return item_list
+
     def __init__(self,
                  arg_parser=default_arg_parser,
                  key_value_delimiters=['=', ':'],
@@ -48,6 +56,8 @@ class CliParser(SectionParser):
         if key == '' or value is None:
             return
 
+        value = CliParser.to_string_if_list(value)
+
         if section_name == "" or section_name is None:
             section_name = "default"
 
@@ -63,14 +73,11 @@ class CliParser(SectionParser):
         :param origin: directory used to interpret relative paths given as argument
         :return: the settings dictionary
         """
-        origin += os.path.sep
+        origin += os.path.sep  # for setting path converter
         for arg_key, arg_value in sorted(vars(self._arg_parser.parse_args(arg_list)).items()):
             if arg_key == 'settings' and arg_value is not None:
                 self._parse_custom_settings(arg_value, origin)
             else:
-                if isinstance(arg_value, list):
-                    arg_value = ",".join([str(val) for val in arg_value])  # [1,2,3] -> "1,2,3"
-
                 self._update_sections("default", arg_key, arg_value, origin)
 
         return self.sections

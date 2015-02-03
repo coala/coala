@@ -1,6 +1,8 @@
 import fnmatch
 import os
 
+from coalib.misc.Decorators import cached_iterator
+
 
 def _make_selector(pattern_parts):
     pat = pattern_parts[0]
@@ -92,13 +94,30 @@ class _RecursiveWildcardSelector(_Selector):
                 yield result
 
 
+@cached_iterator
 def iglob(pattern, files=True, dirs=True):
+    """
+    Iterate over this subtree and yield all existing files matching the given patterns.
+    :param pattern: Unix style glob pattern or a list of patterns
+    :param files: Whether or not to include files
+    :param dirs: Whether or not to include directories
+    :return: Path names of files matching the pattern
+    """
+    if isinstance(pattern, list):
+        for pat in pattern:
+            for match in _iglob(pat, files, dirs):
+                yield match
+    else:
+        for match in _iglob(pattern, files, dirs):
+            yield match
+
+def _iglob(pattern, files=True, dirs=True):
     """
     Iterate over this subtree and yield all existing files matching the given pattern.
     :param pattern: Unix style glob pattern that matches paths
     :param files: Whether or not to include files
     :param dirs: Whether or not to include directories
-    :return: list of all files matching the pattern
+    :return: Path names of files matching the pattern
     """
     if pattern == "" or (not files and not dirs):
         raise StopIteration()
