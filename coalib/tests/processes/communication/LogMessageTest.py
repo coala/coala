@@ -20,7 +20,7 @@ class LogMessageTestCase(unittest.TestCase):
         # see that arguments are processed right
         self.uut = LogMessage(LOG_LEVEL.WARNING, "   a msg  ")
         self.assertEqual(self.uut.log_level, LOG_LEVEL.WARNING)
-        self.assertEqual(self.uut.message, "a msg")
+        self.assertEqual(self.uut.message, "   a msg")
 
         self.assertRaises(ValueError, LogMessage, LOG_LEVEL.DEBUG, "")
         self.assertRaises(ValueError, LogMessage, 5, "test")
