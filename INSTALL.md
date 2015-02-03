@@ -20,12 +20,17 @@ us so we will speed up development of our voice output module.
 coala
 -----
 coala can be installed afterwards by executing the file setup.py through
-the python interpreter (root access necessary):
+the python interpreter:
 
 ```python3 setup.py install```
 
 You will have coala installed into your python scripts directory. On an unixoid
 system it is probably already available on your command line globally.
+
+Note that the usual installation requires root access. On an unixoid system
+(Mac, Linux) this can be achieved by using `sudo`:
+
+```sudo python3 setup.py install```
 
 ### Alternate installation
 
