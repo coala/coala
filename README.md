@@ -68,34 +68,11 @@ explicitly ask you for it.
 
 GETTING INVOLVED
 ================
-We are working hard to make coala reality. If you want to help us you can do
-the following things:
 
- * Join us on our mailing list.
-   * coala developer list: https://groups.google.com/forum/#!forum/coala-devel
-     * coala-devel@googlegroups.com
-   * coala announcement list: https://groups.google.com/forum/#!forum/coala-announcements
-     * coala-announcements@googlegroups.com
- * Run our tests. Just execute `./execute_all_tests.py`. Report back to us if
-   anything goes wrong unexpectedly.
- * Give us feedback. If you think we're doing something useless or useful with
-   some specific things, please write us! We are interested in your needs and
-   favors so you get the highest possible quality.
- * Drive bug discussions. Just state your opinion, everywhere!
- * Review code. Get a glance at what we're doing and say something if you
-   don't understand something or think we're doing something wrong.
- * Write documentation. If you need some additional information for
-   documenting feel free to ask us!
- * Translate coala to your language, so everyone can use it comfortably.
- * Write code. Usually code we need is indicated through bug reports. Please
-   get in contact with us so we can coordinate coding together.
+If you want to contribute to coala, please take a look at the
+./doc/getting_involved directory.
 
-We appreciate any help.
-
-Modularity, clean good code as well as a high usability for both users and
-developers of analyse routines (called bears) stand in the foreground of the
-development. We will not speed up our development if it needs sacrificing
-any aspect of quality.
+We appreciate any help!
 
 LICENSE
 =======
