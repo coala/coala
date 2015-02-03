@@ -11,8 +11,8 @@ Dependencies
 coala requires an installation of Python3 >= 3.2 from http://www.python.org.
 coala is fully tested against python versions 3.2, 3.3 and 3.4.
 
-### espeak (*)
-If you want to use coalas voice outputter you need to install espeak from
+### eSpeak (*)
+If you want to use coalas voice outputter you need to install eSpeak from
 http://espeak.sourceforge.net/. Note that voice output is currently only
 possible when developing for coala. If you care for voice output, please contact
 us so we will speed up development of our voice output module.
