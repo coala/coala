@@ -48,7 +48,7 @@ Build status
 ------------
 [![Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
-[![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg)](https://coveralls.io/r/coala-analyzer/coala)
+[![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg?branch=master)](https://coveralls.io/r/coala-analyzer/coala?branch=master)
 
 FUNCTION REFERENCE
 ==================
