@@ -17,6 +17,13 @@ README
 ooP""Y8888PP*"Y8888P"   "Y8888P"`Y88P'"Y88P"Y8888P"`Y8            oooo888P"
 ```
 
+INSTALLATION
+============
+
+coala can be installed with `python3 setup.py install`. If you need more
+information about the installation and dependencies, take a look at our
+INSTALL.md.
+
 ABOUT
 =====
 coala is a simple COde AnaLysis Application. Its goal is to make static code
@@ -34,30 +41,14 @@ https://github.com/coala-analyzer/coala
 
 Authors
 -------
-Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt <fabian@neuschmidt.de> are the current maintainers of this project.
+Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt
+<fabian@neuschmidt.de> are the current maintainers of this project.
 
 Build status
 ------------
 [![Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg)](https://coveralls.io/r/coala-analyzer/coala)
-
-INSTALLATION
-============
-Python
-------
-coala requires an installation of Python3 >= 3.2 from http://www.python.org.
-coala is fully tested against python versions 3.2, 3.3 and 3.4.
-
-coala
------
-coala can be installed afterwards by executing the file setup.py through
-the python interpreter (root access necessary):
-
-```python3 setup.py install```
-
-You will have coala installed into your python scripts directory. On a unix
-system it is probably already available on your command line globally.
 
 FUNCTION REFERENCE
 ==================
