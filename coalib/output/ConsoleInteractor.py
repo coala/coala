@@ -9,7 +9,7 @@ from coalib.misc.i18n import _
 
 class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) needed by {}: ")
-    STR_LINE_DOESNT_EXIST = _("A the line belonging to the following result cannot be printed because it refers to a "
+    STR_LINE_DOESNT_EXIST = _("The line belonging to the following result cannot be printed because it refers to a "
                               "line that doesn't seem to exist in the given file.")
     STR_PROJECT_WIDE = _("Project wide:")
 
