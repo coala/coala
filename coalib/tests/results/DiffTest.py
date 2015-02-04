@@ -83,6 +83,13 @@ class DiffTestCase(unittest.TestCase):
 
         self.assertEqual(self.uut.apply(file), result_file)
 
+    def test_from_string_arrays(self):
+        a = ["q", "a", "b", "x", "c", "d"]
+        b = ["a", "b", "y", "c", "d", "f"]
+        self.uut = Diff.from_string_arrays(a, b)
+
+        self.assertEqual(self.uut.apply(a), b)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

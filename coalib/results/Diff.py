@@ -1,6 +1,7 @@
 """
 A Diff result represents a difference for one file.
 """
+import difflib
 from coalib.results.LineDiff import LineDiff
 
 
@@ -11,6 +12,33 @@ class ConflictError(Exception):
 class Diff:
     def __init__(self):
         self._changes = {}
+
+    @classmethod
+    def from_string_arrays(cls, file_array_1, file_array_2):
+        """
+        Creates a Diff object from two arrays containing strings.
+
+        If this Diff is applied to the original array, the second array will be
+        created.
+
+        :param file_array_1: Original array
+        :param file_array_2: Array to compare
+        """
+        result = cls()
+
+        matcher = difflib.SequenceMatcher(None, file_array_1, file_array_2)
+        # We use this because its faster (generator) and doesnt yield as much useless information as get_opcodes.
+        for change_group in matcher.get_grouped_opcodes(1):
+            for tag, a_index_1, a_index_2, b_index_1, b_index_2 in change_group:
+                if tag == "delete":
+                    result.delete_line(a_index_1+1)
+                elif tag == "insert":
+                    # We add after line, they add before, so dont add 1 here
+                    result.add_lines(a_index_1, [file_array_2[b_index_1]])
+                elif tag == "replace":
+                    result.change_line(a_index_1+1, b_index_1+1, file_array_2[b_index_1])
+
+        return result
 
     def _get_change(self, line_nr, min_line=1):
         if not isinstance(line_nr, int):
