@@ -1,5 +1,6 @@
 import os
 import tempfile
+
 from coalib.results.Diff import Diff
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 

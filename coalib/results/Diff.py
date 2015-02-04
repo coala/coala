@@ -2,6 +2,7 @@
 A Diff result represents a difference for one file.
 """
 import difflib
+
 from coalib.results.LineDiff import LineDiff
 
 
