@@ -28,6 +28,8 @@ if __name__ == '__main__':
     parser.add_argument("-m", "--ignore-main-tests", help="ignore main program tests", action="store_true")
     parser.add_argument("-v", "--verbose", help="more verbose output", action="store_true")
     parser.add_argument("-o", "--omit", help="base names of tests to omit, overwrites -t", nargs="+")
+    parser.add_argument("-s", "--disallow-test-skipping", help="return nonzero if any tests are skipped or fail",
+                        action="store_true")
     args = parser.parse_args()
     args.cover = args.cover or args.html
 
@@ -51,4 +53,9 @@ if __name__ == '__main__':
         os.path.join(get_python_lib(), "*")
     ])
 
-    exit(TestHelper.execute_python3_files(files, args.cover, ignore_list, args.verbose, args.html))
+    exit(TestHelper.execute_python3_files(files,
+                                          args.cover,
+                                          ignore_list,
+                                          args.verbose,
+                                          args.html,
+                                          args.disallow_test_skipping))

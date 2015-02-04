@@ -105,7 +105,12 @@ class TestHelper:
 
 
     @staticmethod
-    def execute_python3_files(filenames, use_coverage, ignore_list, verbose=False, generate_html_coverage=False):
+    def execute_python3_files(filenames,
+                              use_coverage,
+                              ignore_list,
+                              verbose=False,
+                              generate_html_coverage=False,
+                              disallow_test_skipping=False):
         if use_coverage:
             use_coverage = TestHelper.__delete_previous_coverage()  # Don't use coverage if this fails
 
@@ -123,7 +128,7 @@ class TestHelper:
         if use_coverage:
             TestHelper.__show_coverage_results(generate_html_coverage)
 
-        return failures
+        return failures if not disallow_test_skipping else failures + skipped
 
     @staticmethod
     def get_test_files(testdir, omit_names, test_only):
