@@ -69,7 +69,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         diff.change_line(3, "3\n", "3_changed\n")
         builtins.__dict__["input"] = self.generate_input  # To assure user can rechose if he didn't chose wisely
         self.uut.print_result(PatchResult("origin", "msg", {testfile_path: diff}), file_dict)
-        self.assertEqual(self.curr, 1)
+        self.assertEqual(self.curr, 2)
         self.uut.finalize(file_dict)
         with open(testfile_path) as f:
             self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
@@ -83,15 +83,13 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         builtins.__dict__["input"] = lambda x: x
 
 
-    curr = -5
+    curr = -1
 
     @staticmethod
     def generate_input(x):
-        ConsoleInteractorTestCase.curr += 2
-        if ConsoleInteractorTestCase.curr == -3:
-            return "INVALID"
+        ConsoleInteractorTestCase.curr += 1
 
-        return ConsoleInteractorTestCase.curr
+        return ["INVALID", -1, 1, 3][ConsoleInteractorTestCase.curr]
 
     def test_print_results(self):
         self.assertRaises(TypeError, self.uut.print_results, 5, {})
