@@ -71,7 +71,7 @@ class TestHelper:
             self.args.cover = False  # Don't use coverage if this fails
             return False
 
-    def print_output(self, command_array):
+    def __print_output(self, command_array):
         p = subprocess.Popen(command_array, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         retval = p.wait()
         if retval != 0 or self.args.verbose:
@@ -82,24 +82,24 @@ class TestHelper:
 
         return retval
 
-    def execute_python3_file(self, filename, ignored_files):
+    def __execute_python3_file(self, filename, ignored_files):
         if sys.platform.startswith("win"):
             # On windows we won't find a python3 executable and we don't measure coverage
-            return self.print_output(["python", filename])
+            return self.__print_output(["python", filename])
 
         if not self.args.cover:
-            return self.print_output(["python3", filename])
+            return self.__print_output(["python3", filename])
 
-        return self.print_output(["coverage3",
-                                  "run",
-                                  "-p",  # make it collectable later
-                                  "--branch",  # check branch AND statement coverage
-                                  "--omit",
-                                  ignored_files,
-                                  filename])
+        return self.__print_output(["coverage3",
+                                    "run",
+                                    "-p",  # make it collectable later
+                                    "--branch",  # check branch AND statement coverage
+                                    "--omit",
+                                    ignored_files,
+                                    filename])
 
     @staticmethod
-    def skip_module(filename):
+    def __skip_module(filename):
         module_dir = os.path.dirname(filename)
         if module_dir not in sys.path:
             sys.path.insert(0, module_dir)
@@ -113,7 +113,7 @@ class TestHelper:
 
         return False
 
-    def execute_test(self, filename, curr_nr, max_nr, ignored_files):
+    def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
         Executes the given test and counts up failed_tests or skipped_tests if needed.
 
@@ -123,13 +123,13 @@ class TestHelper:
         :param ignored_files: Files to ignore for coverage
         """
         basename = os.path.splitext(os.path.basename(filename))[0]
-        reason = self.skip_module(filename)
+        reason = self.__skip_module(filename)
         if reason is not False:
             print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr, max_nr, basename, reason))
             self.skipped_tests += 1
         else:
             print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
-            result = self.execute_python3_file(filename, ignored_files)  # either 0 or 1
+            result = self.__execute_python3_file(filename, ignored_files)  # either 0 or 1
             if self.args.verbose or result != 0:
                 print("#" * 70)
 
@@ -143,7 +143,7 @@ class TestHelper:
         failures = 0
         skipped = 0
         for i, file in enumerate(self.test_files):
-            self.execute_test(file, i+1, number, ",".join(ignore_list))
+            self.__execute_test(file, i+1, number, ",".join(ignore_list))
 
         print("\nTests finished: "
               "failures in {} of {} test modules, skipped {} test modules.".format(failures, number, skipped))
@@ -156,10 +156,10 @@ class TestHelper:
     def add_test_files(self, testdir):
         for (dirpath, dirnames, filenames) in os.walk(testdir):
             for filename in filenames:
-                if self.is_eligible_test(filename):
+                if self.__is_eligible_test(filename):
                     self.test_files.append(os.path.join(dirpath, filename))
 
-    def is_eligible_test(self, filename):
+    def __is_eligible_test(self, filename):
         if not filename.endswith("Test.py"):
             return False
         name = os.path.splitext(os.path.basename(filename))[0]
