@@ -43,15 +43,16 @@ if __name__ == '__main__':
 
     files = []
     if not args.ignore_main_tests:
-        files.extend(TestHelper.get_test_files(os.path.abspath("coalib/tests"), omit, test_only))
+        files.extend(TestHelper.get_test_files(os.path.abspath(os.path.join("coalib", "tests")), omit, test_only))
     if not args.ignore_bear_tests:
-        files.extend(TestHelper.get_test_files(os.path.abspath("bears/tests"), omit, test_only))
+        files.extend(TestHelper.get_test_files(os.path.abspath(os.path.join("bears", "tests")), omit, test_only))
 
-    ignore_list = files[:]
-    ignore_list.extend([
-        os.path.join(tempfile.gettempdir(), "*"),
-        os.path.join(get_python_lib(), "*")
-    ])
+    ignore_list = [
+        os.path.join(tempfile.gettempdir(), "**"),
+        os.path.join(get_python_lib(), "**"),
+        os.path.join("coalib", "tests", "**"),
+        os.path.join("bears", "tests", "**")
+    ]
 
     exit(TestHelper.execute_python3_files(files,
                                           args.cover,
