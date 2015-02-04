@@ -13,9 +13,6 @@ from coalib.settings.Section import Section, Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
-
-_input = builtins.__dict__["input"]
-builtins.__dict__["input"] = lambda x: x
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 
 
@@ -26,7 +23,12 @@ class TestAction(ResultAction):
 
 class ConsoleInteractorTestCase(unittest.TestCase):
     def setUp(self):
+        self._input = builtins.__dict__["input"]
+        builtins.__dict__["input"] = lambda x: x
         self.uut = ConsoleInteractor()
+
+    def tearDown(self):
+        builtins.__dict__["input"] = self._input
 
     def test_require_settings(self):
         self.assertRaises(TypeError, self.uut.acquire_settings, 0)
@@ -51,11 +53,12 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
     def test_print_result(self):
         self.uut.print = lambda x: x
+        builtins.__dict__["input"] = lambda x: 0
+
         self.assertEqual("|    |    | [{normal}] {bear}:".format(normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
                                                                  bear="origin") + "\n|    |    | message",
                          self.uut._print_result(Result("origin", "message")))
 
-        builtins.__dict__["input"] = lambda x: 0
         self.uut.print_result(PatchResult("origin", "msg", {}), {})
 
         (testfile, testfile_path) = tempfile.mkstemp()
@@ -80,9 +83,6 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         self.assertEqual(str(section), " {param : 3}")
         self.assertEqual(name, "TestAction")
 
-        builtins.__dict__["input"] = lambda x: x
-
-
     curr = -1
 
     @staticmethod
@@ -92,10 +92,11 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         return ["INVALID", -1, 1, 3][ConsoleInteractorTestCase.curr]
 
     def test_print_results(self):
+        self.uut._print = lambda string: q.put(string)
+
         self.assertRaises(TypeError, self.uut.print_results, 5, {})
         self.assertRaises(TypeError, self.uut.print_results, [], 5)
         q = queue.Queue()
-        self.uut._print = lambda string: q.put(string)
 
         self.uut.print_results([], {})
         self.assertRaises(queue.Empty, q.get, timeout=0)
@@ -187,5 +188,3 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-
-builtins.__dict__["input"] = _input
