@@ -6,7 +6,6 @@ import unittest
 
 
 class ResultTestCase(unittest.TestCase):
-
     def test_wrong_types(self):
         uut = Result('b', 'b')
         self.assertNotEqual(uut, 0)
@@ -16,7 +15,8 @@ class ResultTestCase(unittest.TestCase):
         self.assertRaises(TypeError, uut.__lt__, 0)
 
     def test_get_actions(self):
-        self.assertEqual(Result("origin", "msg").get_actions(), [])
+        self.assertEqual(len(Result("origin", "msg").get_actions()), 0)
+        self.assertEqual(len(Result("origin", "msg", file="file").get_actions()), 1)
 
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')

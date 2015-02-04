@@ -14,6 +14,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 
 
 class TestAction(ResultAction):
@@ -26,6 +27,11 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         self._input = builtins.__dict__["input"]
         builtins.__dict__["input"] = lambda x: x
         self.uut = ConsoleInteractor()
+
+        # All those tests assume that Result has no actions and PatchResult has one.
+        # This makes this test independent from the real number of actions applicable to those results.
+        Result.get_actions = lambda self: []
+        PatchResult.get_actions = lambda self: [ApplyPatchAction()]
 
     def tearDown(self):
         builtins.__dict__["input"] = self._input

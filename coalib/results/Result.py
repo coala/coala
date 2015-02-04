@@ -81,4 +81,9 @@ class Result:
         """
         :return: All ResultAction classes applicable to this result.
         """
-        return []
+        from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+        actions = []
+        if self.file is not None:
+            actions.append(OpenEditorAction())
+
+        return actions
