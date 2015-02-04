@@ -16,7 +16,7 @@ class ResultTestCase(unittest.TestCase):
         self.assertRaises(TypeError, uut.__lt__, 0)
 
     def test_get_actions(self):
-        self.assertEqual(Result.get_actions(), [])
+        self.assertEqual(Result("origin", "msg").get_actions(), [])
 
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')

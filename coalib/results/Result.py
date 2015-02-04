@@ -77,8 +77,7 @@ class Result:
 
         return self.message < other.message
 
-    @staticmethod
-    def get_actions():
+    def get_actions(self):
         """
         :return: All ResultAction classes applicable to this result.
         """
