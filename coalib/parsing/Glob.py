@@ -111,7 +111,7 @@ def iglob(pattern, files=True, dirs=True):
     for p in selector.collect():
         if os.path.isfile(p) and files is True:
             yield p
-        elif os.path.isdir(p) and dirs is True:
+        elif os.path.isdir(p) and dirs is True:  # pragma: nocover
             yield p
 
 
