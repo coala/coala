@@ -2,12 +2,12 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
-from coalib.misc.Decorators import unique_iterating, arguments_to_lists
+from coalib.misc.Decorators import yield_once, arguments_to_lists
 
 
-class CachedIteratorTestCase(unittest.TestCase):
-    def test_cached_iterator(self):
-        @unique_iterating
+class YieldOnceTestCase(unittest.TestCase):
+    def test_yield_once(self):
+        @yield_once
         def iterate_over_list(arg_list):
             for arg in arg_list:
                 yield arg
