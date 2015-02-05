@@ -1,11 +1,11 @@
-def unique_iterating(iterator):
+def yield_once(iterator):
     """
-    Decorator to make an iterator not yield duplications.
+    Decorator to make an iterator yield each result only once.
 
     :param iterator: Any iterator
     :return: An iterator that does not yield results more than one time.
     """
-    def unique_iterator(*args, **kwargs):
+    def yield_once_generator(*args, **kwargs):
         yielded = []
         for item in iterator(*args, **kwargs):
             if item in yielded:
@@ -14,7 +14,7 @@ def unique_iterating(iterator):
                 yielded.append(item)
                 yield item
 
-    return unique_iterator
+    return yield_once_generator
 
 
 def _to_list(var):
