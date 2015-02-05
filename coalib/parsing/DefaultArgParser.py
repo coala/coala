@@ -3,44 +3,74 @@ import argparse
 from coalib.misc.i18n import _
 
 
-default_arg_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=__doc__)
+default_arg_parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=__doc__
+)
 
-default_arg_parser.add_argument('-f', '--files', nargs='+', metavar='FILE', dest='files',
+default_arg_parser.add_argument('-f',
+                                '--files',
+                                nargs='+',
+                                metavar='FILE',
                                 help=_('Files that should be checked'))
-default_arg_parser.add_argument('-r', '--files-regex', nargs='+', metavar='FILE', dest='files_regex',
-                                help=_('Regex for additional filenames (only the tail of the whole path)'))
-default_arg_parser.add_argument('-d', '--flat-dirs', nargs='+', metavar='DIR', dest='flat_dirs',
-                                help=_('Directories where files may lie that will be checked, '
-                                       'excluding sub directories'))
-default_arg_parser.add_argument('-D', '--rec-dirs', nargs='+', metavar='DIR', dest='rec_dirs',
-                                help=_('Directories where files may lie that will be checked, '
-                                       'including sub directories'))
-default_arg_parser.add_argument('-i', '--ignored-dirs', nargs='+', metavar='PATH', dest='ignored_dirs',
-                                help=_('Directories that should be ignored'))
-default_arg_parser.add_argument('-F', '--flat-bear-dirs', nargs='+', metavar='DIR', dest='flat_bear_dirs',
-                                help=_('Directories where bears may lie, excluding subdirectories'))
-default_arg_parser.add_argument('-B', '--rec-bear-dirs', nargs='+', metavar='DIR', dest='rec_bear_dirs',
-                                help=_('Directories where bears may lie, including subdirectories'))
-default_arg_parser.add_argument('-I', '--ignored-bear-dirs', nargs='+', metavar='DIR', dest='ignored_bear_dirs',
-                                help=_('Directories to ignore when searching for bears'))
-default_arg_parser.add_argument('-b', '--bears', nargs='+', metavar='NAME', dest='bears',
+default_arg_parser.add_argument('-d',
+                                '--bear-dirs',
+                                nargs='+',
+                                metavar='DIR',
+                                help=_('Directories where bears may lie'))
+default_arg_parser.add_argument('-b',
+                                '--bears',
+                                nargs='+',
+                                metavar='NAME',
                                 help=_('Names of bears to use'))
-default_arg_parser.add_argument('-R', '--bears-regex', nargs='+', metavar='REGEX', dest='bears_regex',
-                                help=_('Regular expression for bears to use'))
-default_arg_parser.add_argument('-l', '--log', nargs=1, metavar='ENUM', dest='log_type',
-                                help=_("Type of logging (console or any filename)"))
-default_arg_parser.add_argument('-L', '--log-level', nargs=1, choices=['ERR', 'WARN', 'DEBUG'],
-                                metavar='ENUM', dest='log_level',
-                                help=_("Enum('ERR','WARN','DEBUG') to set level of log output"))
-default_arg_parser.add_argument('-o', '--output', nargs=1, metavar='FILE', dest='output',
-                                help=_('Type of output (console or any filename)'))
-default_arg_parser.add_argument('-c', '--config', nargs='+', metavar='FILE', dest='config',
+LOG_TYPE_HELP = _("Type of logging (console or any filename)")
+default_arg_parser.add_argument('-l',
+                                '--log-type',
+                                nargs=1,
+                                metavar='ENUM',
+                                help=LOG_TYPE_HELP)
+LOG_LEVEL_HELP = _("Enum('ERR','WARN','DEBUG') to set level of log output")
+default_arg_parser.add_argument('-L',
+                                '--log-level',
+                                nargs=1,
+                                choices=['ERR', 'WARN', 'DEBUG'],
+                                metavar='ENUM',
+                                help=LOG_LEVEL_HELP)
+OUTPUT_HELP = _('Type of output (console or any filename)')
+default_arg_parser.add_argument('-o',
+                                '--output',
+                                nargs=1,
+                                metavar='FILE',
+                                help=OUTPUT_HELP)
+default_arg_parser.add_argument('-c',
+                                '--config',
+                                nargs='+',
+                                metavar='FILE',
                                 help=_('Configuration file to be used'))
-default_arg_parser.add_argument('-s', '--save', nargs='?', const=True, metavar='FILE', dest='save',
-                                help=_('Filename of file to be saved to, defaults to config file'))
-default_arg_parser.add_argument('-S', '--settings', nargs='+', metavar='SETTING', dest='settings',
-                                help=_('Arbitrary settings in the form of section.key=value'))
-default_arg_parser.add_argument('-j', '--job-count', nargs=1, type=int, metavar='INT', dest='job_count',
-                                help=_('Number of processes to be allowed to run at once'))
-default_arg_parser.add_argument('-a', '--apply-changes', nargs=1, choices=['YES', 'NO', 'ASK'], metavar='ENUM',
-                                dest='apply_changes', help=_("Enum('YES','NO','ASK') to set whether to apply changes"))
+SAVE_HELP = _('Filename of file to be saved to, defaults to config file')
+default_arg_parser.add_argument('-s',
+                                '--save',
+                                nargs='?',
+                                const=True,
+                                metavar='FILE',
+                                help=SAVE_HELP)
+SETTINGS_HELP = _('Arbitrary settings in the form of section.key=value')
+default_arg_parser.add_argument('-S',
+                                '--settings',
+                                nargs='+',
+                                metavar='SETTING',
+                                help=SETTINGS_HELP)
+JOB_COUNT_HELP = _('Number of processes to be allowed to run at once')
+default_arg_parser.add_argument('-j',
+                                '--job-count',
+                                nargs=1,
+                                type=int,
+                                metavar='INT',
+                                help=JOB_COUNT_HELP)
+APPLY_HELP = _("Enum('YES','NO','ASK') to set whether to apply changes")
+default_arg_parser.add_argument('-a',
+                                '--apply-changes',
+                                nargs=1,
+                                choices=['YES', 'NO', 'ASK'],
+                                metavar='ENUM',
+                                help=APPLY_HELP)
