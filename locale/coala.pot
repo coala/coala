@@ -206,9 +206,13 @@ msgid "MAJOR"
 msgstr ""
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:40
+#: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:41
 #: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:66
 msgid "A string to test translations."
+msgstr ""
+
+#: coalib/tests/misc/i18nTest.py:46
+msgid "A not directly translated test string."
 msgstr ""
 
 #. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)

@@ -33,11 +33,21 @@ class i18nTestCase(unittest.TestCase):
     def test_de(self):
         self.set_lang("de_DE.UTF8")
         # Do not change this translation without changing it in the code also!
-        self.assertEqual(i18n._("A string to test translations."), "Eine Zeichenkette um Übersetzungen zu testen.")
+        self.assertEqual(i18n._("A string to test translations."),
+                         "Eine Zeichenkette um Übersetzungen zu testen.")
 
     def test_unknown(self):
         self.set_lang("unknown_language")
-        self.assertEqual(i18n._("A string to test translations."), "A string to test translations.")
+        self.assertEqual(i18n._("A string to test translations."),
+                         "A string to test translations.")
+
+    def test_translation_marking(self):
+        self.set_lang("de_DE.UTF8")
+        string = "A not directly translated test string."
+        self.assertEqual(i18n.N_("A not directly translated test string."),
+                         string)
+        self.assertEqual(i18n._(string),
+                         "Ein indirekt übersetzter test String.")
 
 
 if __name__ == '__main__':

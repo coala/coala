@@ -16,6 +16,12 @@ msgstr ""
 msgid "Line is longer than allowed."
 msgstr "Zeile ist länger als erlaubt."
 
+#: bears/misc/LineCountBear.py:14 bears/tests/misc/LineCountBearTest.py:21
+#: bears/tests/misc/LineCountBearTest.py:29
+#, python-brace-format
+msgid "This file has {count} lines."
+msgstr ""
+
 #: bears/misc/KeywordBear.py:36
 msgid "Line contains the following keywords:"
 msgstr "Zeile enthält die folgenden Schlüsselwörter:"
@@ -236,15 +242,19 @@ msgid "MAJOR"
 msgstr "WICHTIG"
 
 #. Do not change this translation without changing it in the code also!
-#: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:40
+#: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:41
 #: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:66
 msgid "A string to test translations."
 msgstr "Eine Zeichenkette um Übersetzungen zu testen."
 
+#: coalib/tests/misc/i18nTest.py:46
+msgid "A not directly translated test string."
+msgstr "Ein indirekt übersetzter test String."
+
 #. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
-#: coalib/tests/output/ConsoleInteractorTest.py:41
 #: coalib/tests/output/ConsoleInteractorTest.py:49
-#: coalib/output/ConsoleInteractor.py:52
+#: coalib/tests/output/ConsoleInteractorTest.py:57
+#: coalib/output/ConsoleInteractor.py:50
 msgid " and "
 msgstr " und "
 
@@ -362,13 +372,13 @@ msgstr "Anzahl an Prozessen, welche gleichzeitig ausgeführt werden dürfen"
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr "Legt fest ob Änderungen angewandt werden, Enum('YES','NO','ASK')"
 
-#: coalib/output/ConsoleInteractor.py:11
+#: coalib/output/ConsoleInteractor.py:9
 msgid "Please enter a value for the setting \"{}\" ({}) needed by {}: "
 msgstr ""
 "Bitte geben Sie einen Wert für die Einstellung \"{}\" ({}) ein, welche von "
 "{} benötigt wird: "
 
-#: coalib/output/ConsoleInteractor.py:12
+#: coalib/output/ConsoleInteractor.py:10
 msgid ""
 "The line belonging to the following result cannot be printed because it "
 "refers to a line that doesn't seem to exist in the given file."
@@ -376,37 +386,37 @@ msgstr ""
 "Die Zeile die von diesem Resultat referenziert wird kann nicht ausgegeben "
 "werden, da sie nicht existiert."
 
-#: coalib/output/ConsoleInteractor.py:14
+#: coalib/output/ConsoleInteractor.py:12
 msgid "Project wide:"
 msgstr "Projektweit:"
 
-#: coalib/output/ConsoleInteractor.py:44
+#: coalib/output/ConsoleInteractor.py:42
 msgid "One of the given settings ({}) are not properly described."
 msgstr ""
 "Eine der übergebenen Einstellungen ({}) wurde nicht ordentlich beschrieben."
 
-#: coalib/output/ConsoleInteractor.py:69
+#: coalib/output/ConsoleInteractor.py:67
 msgid "The following options are applicable to this result:"
 msgstr "Die folgenden Optionen sind für dieses Ergebnis zutreffend:"
 
-#: coalib/output/ConsoleInteractor.py:83
+#: coalib/output/ConsoleInteractor.py:81
 msgid "No action."
 msgstr "Keine Aktion."
 
-#: coalib/output/ConsoleInteractor.py:86
+#: coalib/output/ConsoleInteractor.py:84
 msgid "Please enter the number of the action you want to execute."
 msgstr ""
 "Bitte geben Sie die Nummer der Aktion ein, welche Sie ausführen möchten."
 
-#: coalib/output/ConsoleInteractor.py:92
+#: coalib/output/ConsoleInteractor.py:90
 msgid "Please enter a valid number."
 msgstr "Bitte geben Sie eine gültige Zahl ein."
 
-#: coalib/output/ConsoleInteractor.py:104
+#: coalib/output/ConsoleInteractor.py:102
 msgid "Please enter a value for the parameter '{}' ({}):"
 msgstr "Bitte geben Sie einen Wert für den Parameter '{}' ({}) ein:"
 
-#: coalib/output/ConsoleInteractor.py:147
+#: coalib/output/ConsoleInteractor.py:145
 msgid ""
 "A result ({}) cannot be printed because it refers to a file that doesn't "
 "seem to exist."

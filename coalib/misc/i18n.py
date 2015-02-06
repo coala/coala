@@ -76,4 +76,13 @@ translation = gettext.translation(COALA_DOMAIN, fallback=True)
 
 
 def _(s):
+    """
+    Marks the input string for translation and returns the translated string.
+    """
     return translation.gettext(s)
+
+def N_(s):
+    """
+    Marks the input string for translation and returns the untranslated string.
+    """
+    return s
