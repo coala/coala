@@ -19,7 +19,7 @@ install:
 
 script:
   - sudo apt-get install espeak
-  - python3 ./execute_all_tests.py --cover --disallow-test-skipping
+  - python3 ./run_tests.py --cover --disallow-test-skipping
   - python3 setup.py install
 
 after_success:
