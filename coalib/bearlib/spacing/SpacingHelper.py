@@ -10,6 +10,7 @@ class SpacingHelper(SectionCreatable):
 
         :param tab_width: The number of spaces which visually equals a tab.
         """
+        SectionCreatable.__init__(self)
         if not isinstance(tab_width, int):
             raise TypeError("The 'tab_width' parameter should be an integer.")
 
