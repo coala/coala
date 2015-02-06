@@ -1,13 +1,6 @@
-from coalib.misc.i18n import _
+from coalib.misc.Enum import enum
+from coalib.misc.i18n import _, N_
 
 
-class RESULT_SEVERITY:
-    INFO = 0
-    NORMAL = 1
-    MAJOR = 2
-
-    @staticmethod
-    def __str__(severity):
-        return {0: _("INFO"),
-                1: _("NORMAL"),
-                2: _("MAJOR")}.get(severity, _("NORMAL"))
+RESULT_SEVERITY = enum(N_("INFO"), N_("NORMAL"), N_("MAJOR"))
+RESULT_SEVERITY.__str__ = lambda x: _(RESULT_SEVERITY.reverse.get(x, "NORMAL"))
