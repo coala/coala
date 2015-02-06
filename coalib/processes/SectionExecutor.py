@@ -2,12 +2,13 @@ import multiprocessing
 import queue
 import threading
 
-from coalib.collecting.FileCollector import FileCollector
+from coalib.collecting.Collectors import collect_files
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.BearRunner import BearRunner
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Barrier import Barrier
 from coalib.settings.Section import Section
+from coalib.settings.Setting import path_list
 
 
 def get_cpu_count():
@@ -64,7 +65,7 @@ class SectionExecutor:
         self.global_bear_list = global_bear_list
 
     def run(self):
-        filename_list = FileCollector.from_section(self.section).collect()
+        filename_list = collect_files(path_list(self.section['files']))
         file_dict = self._get_file_dict(filename_list)
 
         manager = multiprocessing.Manager()

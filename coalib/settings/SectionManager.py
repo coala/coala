@@ -3,13 +3,14 @@ import os
 import sys
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
-from coalib.collecting.BearCollector import BearCollector
+from coalib.collecting.Collectors import collect_bears
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.SectionFiller import SectionFiller
+from coalib.settings.Setting import path_list
 
 
 class SectionManager:
@@ -82,10 +83,16 @@ class SectionManager:
         for section_name in self.conf_sections:
             section = self.conf_sections[section_name]
             section.retrieve_logging_objects()
-            local_bears = BearCollector.from_section([BEAR_KIND.LOCAL],
-                                                     section).collect()
-            global_bears = BearCollector.from_section([BEAR_KIND.GLOBAL],
-                                                      section).collect()
+
+            bear_dirs = path_list(section["bear_dirs"])
+            bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
+                                          "**"))
+            local_bears = collect_bears(bear_dirs,
+                                        list(section["bears"]),
+                                        [BEAR_KIND.LOCAL])
+            global_bears = collect_bears(bear_dirs,
+                                         list(section["bears"]),
+                                         [BEAR_KIND.GLOBAL])
             filler = SectionFiller(section)
             all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)
