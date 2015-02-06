@@ -10,7 +10,7 @@ class LogMessage:
             raise ValueError("Empty log messages are not allowed.")
 
         self.log_level = log_level
-        self.message = str(message).strip()
+        self.message = str(message).rstrip()
 
     def __str__(self):
         return '[{}] {}'.format({LOG_LEVEL.DEBUG: _("DEBUG"),

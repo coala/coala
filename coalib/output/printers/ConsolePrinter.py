@@ -1,5 +1,3 @@
-import sys
-
 from coalib.output.printers.ColorPrinter import ColorPrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL

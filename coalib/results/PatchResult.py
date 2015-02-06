@@ -44,6 +44,8 @@ class PatchResult(Result):
 
         return self
 
-    @staticmethod
-    def get_actions():
-        return [ApplyPatchAction()]
+    def get_actions(self):
+        actions = Result.get_actions(self)
+        actions.extend([ApplyPatchAction()])
+
+        return actions

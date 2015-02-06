@@ -14,15 +14,19 @@ class Result:
     following conditions, while the first condition has the highest priority, which descends to the last condition.
     1. Results with no files will be shown first
     2. Results will be sorted by files (ascending alphabetically)
-    3. Results will be sorted by severity (descending, major first, info last)
-    4. Results will be sorted by origin (ascending alphabetically)
-    5. Results will be sorted by message (ascending alphabetically)
+    3. Results will be sorted by lines (ascending)
+    4. Results will be sorted by severity (descending, major first, info last)
+    5. Results will be sorted by origin (ascending alphabetically)
+    6. Results will be sorted by message (ascending alphabetically)
     """
 
     def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL, line_nr=None):
         """
         :param origin: Class name of the creator of this object
+        :param message: Message to show with this result
         :param file: The path to the affected file
+        :param severity: Severity of this result
+        :param line_nr: Number of the line which is affected, first line is 1.
         """
         self.origin = origin
         self.message = message
@@ -73,9 +77,13 @@ class Result:
 
         return self.message < other.message
 
-    @staticmethod
-    def get_actions():
+    def get_actions(self):
         """
         :return: All ResultAction classes applicable to this result.
         """
-        return []
+        from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+        actions = []
+        if self.file is not None:
+            actions.append(OpenEditorAction())
+
+        return actions

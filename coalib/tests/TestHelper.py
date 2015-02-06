@@ -1,16 +1,54 @@
+import argparse
+import importlib
+import inspect
 import os
 import subprocess
 import sys
 import shutil
 import webbrowser
+import builtins
 
 
 class TestHelper:
     @staticmethod
-    def __show_coverage_results(generate_html_coverage=False):
+    def create_argparser(**kwargs):
+        parser = argparse.ArgumentParser(**kwargs)
+        parser.add_argument("-t", "--test-only", help="execute only the tests with the given base name", nargs="+")
+        parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
+        parser.add_argument("-H", "--html", help="generate html code coverage, implies -c", action="store_true")
+        parser.add_argument("-v", "--verbose", help="more verbose output", action="store_true")
+        parser.add_argument("-o", "--omit", help="base names of tests to omit", nargs="+")
+        parser.add_argument("-s", "--disallow-test-skipping", help="return nonzero if any tests are skipped or fail",
+                            action="store_true")
+
+        return parser
+
+    def __init__(self, parser):
+        """
+        Creates a new test helper and with it parses the CLI arguments.
+
+        :param parser: A argparse.ArgumentParser created with the create_argparser method of this class.
+        """
+        self.parser = parser
+        self.args = self.parser.parse_args()
+        self.__resolve_implicit_args()
+        self.test_files = []
+        self.failed_tests = 0
+        self.skipped_tests = 0
+
+    def __resolve_implicit_args(self):
+        self.args.cover = self.args.cover or self.args.html
+        if self.args.omit is not None and self.args.test_only is not None:
+            self.parser.error("Incompatible options: --omit and --test_only")
+        if self.args.omit is None:
+            self.args.omit = []
+        if self.args.test_only is None:
+            self.args.test_only = []
+
+    def __show_coverage_results(self):
         subprocess.call(["coverage3", "combine"])
         subprocess.call(["coverage3", "report", "-m"])
-        if generate_html_coverage:
+        if self.args.html:
             shutil.rmtree(".htmlreport", ignore_errors=True)
             print("Generating HTML report to .htmlreport...")
             subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
@@ -19,9 +57,10 @@ class TestHelper:
             except webbrowser.Error:
                 pass
 
-    @staticmethod
-    def __delete_previous_coverage():
+    def delete_coverage(self):
         """
+        Deletes previous coverage data and adjusts the args.cover member to False if coverage3 is unavailable.
+
         :return: False if coverage3 cannot be executed.
         """
         try:
@@ -29,13 +68,13 @@ class TestHelper:
             return True
         except:
             print("Coverage failed. Falling back to standard unit tests.")
+            self.args.cover = False  # Don't use coverage if this fails
             return False
 
-    @staticmethod
-    def print_output(command_array, verbose):
+    def __print_output(self, command_array):
         p = subprocess.Popen(command_array, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         retval = p.wait()
-        if retval != 0 or verbose:
+        if retval != 0 or self.args.verbose:
             for line in p.stderr:
                 print(line, end='')
             for line in p.stdout:
@@ -43,49 +82,90 @@ class TestHelper:
 
         return retval
 
-    @staticmethod
-    def execute_python3_file(filename, use_coverage, ignored_files, verbose):
+    def __execute_python3_file(self, filename, ignored_files):
         if sys.platform.startswith("win"):
             # On windows we won't find a python3 executable and we don't measure coverage
-            return TestHelper.print_output(["python", filename], verbose)
+            return self.__print_output(["python", filename])
 
-        if not use_coverage:
-            return TestHelper.print_output(["python3", filename], verbose)
+        if not self.args.cover:
+            return self.__print_output(["python3", filename])
 
-        return TestHelper.print_output(["coverage3",
-                                        "run",
-                                        "-p",  # make it collectable later
-                                        "--branch",  # check branch AND statement coverage
-                                        "--omit",
-                                        ignored_files,
-                                        filename], verbose)
+        return self.__print_output(["coverage3",
+                                    "run",
+                                    "-p",  # make it collectable later
+                                    "--branch",  # check branch AND statement coverage
+                                    "--omit",
+                                    ignored_files,
+                                    filename])
 
     @staticmethod
-    def execute_python3_files(filenames, use_coverage, ignore_list, verbose=False, generate_html_coverage=False):
-        if use_coverage:
-            use_coverage = TestHelper.__delete_previous_coverage()  # Don't use coverage if this fails
+    def __skip_module(filename):
+        module_dir = os.path.dirname(filename)
+        if module_dir not in sys.path:
+            sys.path.insert(0, module_dir)
+        _print = builtins.__dict__["print"]
+        builtins.__dict__["print"] = lambda x: x  # Don't allow module code printing
+        module = importlib.import_module(os.path.basename(os.path.splitext(filename)[0]))
+        builtins.__dict__["print"] = _print
+        for name, object in inspect.getmembers(module):
+            if inspect.isfunction(object) and name == "skip_test":
+                return object()
 
-        number = len(filenames)
-        failures = 0
-        for i, file in enumerate(filenames):
-            print(" {:>2}/{:<2} | {}".format(i+1, number, os.path.splitext(os.path.basename(file))[0]))
-            result = TestHelper.execute_python3_file(file, use_coverage, ",".join(ignore_list), verbose)  # either 0 or 1
-            failures += result
-            if verbose or result != 0:
+        return False
+
+    def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
+        """
+        Executes the given test and counts up failed_tests or skipped_tests if needed.
+
+        :param filename: Filename of test to execute
+        :param curr_nr: Number of current test
+        :param max_nr: Count of all tests
+        :param ignored_files: Files to ignore for coverage
+        """
+        basename = os.path.splitext(os.path.basename(filename))[0]
+        reason = self.__skip_module(filename)
+        if reason is not False:
+            print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr, max_nr, basename, reason))
+            self.skipped_tests += 1
+        else:
+            print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
+            result = self.__execute_python3_file(filename, ignored_files)  # either 0 or 1
+            if self.args.verbose or result != 0:
                 print("#" * 70)
 
-        print("\nTests finished: failures in {} of {} test modules".format(failures, number))
+            self.failed_tests += result
 
-        if use_coverage:
-            TestHelper.__show_coverage_results(generate_html_coverage)
+    def execute_python3_files(self, ignore_list):
+        if self.args.cover:
+            self.delete_coverage()
 
-        return failures
+        number = len(self.test_files)
+        failures = 0
+        skipped = 0
+        for i, file in enumerate(self.test_files):
+            self.__execute_test(file, i+1, number, ",".join(ignore_list))
 
-    @staticmethod
-    def get_test_files(testdir, omit_names):
-        test_files = []
+        print("\nTests finished: "
+              "failures in {} of {} test modules, skipped {} test modules.".format(failures, number, skipped))
+
+        if self.args.cover:
+            self.__show_coverage_results()
+
+        return failures if not self.args.disallow_test_skipping else failures + skipped
+
+    def add_test_files(self, testdir):
         for (dirpath, dirnames, filenames) in os.walk(testdir):
             for filename in filenames:
-                if filename.endswith("Test.py") and os.path.splitext(filename)[0] not in omit_names:
-                    test_files.append(os.path.join(dirpath, filename))
-        return test_files
+                if self.__is_eligible_test(filename):
+                    self.test_files.append(os.path.join(dirpath, filename))
+
+    def __is_eligible_test(self, filename):
+        if not filename.endswith("Test.py"):
+            return False
+        name = os.path.splitext(os.path.basename(filename))[0]
+        if name in self.args.omit:
+            return False
+        if (len(self.args.test_only) > 0) and (name not in self.args.test_only):
+            return False
+
+        return True

@@ -128,16 +128,16 @@ class TestFileCollection(unittest.TestCase):
     def test_regex(self):
         self.assertEqual(FileCollector(log_printer=QuietPrinter(),
                                        flat_dirs=[self.tmp_dir],
-                                       regex="testfile.*\.c",
+                                       regex="testfile.*\\.c",
                                        allowed_types=[]).collect(), [self.testfile2_path])
         self.assertEqual(FileCollector(log_printer=QuietPrinter(),
                                        flat_dirs=[self.tmp_dir],
-                                       regex="tfile.*\.c",
+                                       regex="tfile.*\\.c",
                                        allowed_types=[]).collect(), [])
         # Bad regex
         self.assertEqual(FileCollector(log_printer=QuietPrinter(),
                                        flat_dirs=[self.tmp_dir],
-                                       regex="*testfile.*\.c",
+                                       regex="*testfile.*\\.c",
                                        allowed_types=[]).collect(), [])
 
 
