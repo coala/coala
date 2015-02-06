@@ -1,5 +1,34 @@
+import os
+
+from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
+from coalib.misc.i18n import _
 from coalib.parsing.Glob import iglob
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
+
+
+def _yield_if_right_kind(bear_class, kinds):
+    try:
+        if bear_class.kind() in kinds:
+            yield bear_class
+    except NotImplementedError:
+        pass
+
+
+def _import_bears(file_path, kinds):
+    # recursive imports:
+    for bear_list in iimport_objects(file_path,
+                                     names='__additional_bears__',
+                                     types=list):
+        for bear_class in bear_list:
+            for valid_bear_class in _yield_if_right_kind(bear_class, kinds):
+                yield valid_bear_class
+    # normal import
+    for bear_class in iimport_objects(file_path,
+                                      attributes='kind',
+                                      local=True):
+        for valid_bear_class in _yield_if_right_kind(bear_class, kinds):
+            yield valid_bear_class
 
 
 @yield_once
@@ -41,7 +70,6 @@ def collect_dirs(dir_paths):
     :param dir_paths: list of file paths that can include globs
     :return: list of paths of all matching directories
     """
-
     return list(icollect_dirs(dir_paths))
 
 
