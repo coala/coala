@@ -140,18 +140,21 @@ class TestHelper:
             self.delete_coverage()
 
         number = len(self.test_files)
-        failures = 0
-        skipped = 0
         for i, file in enumerate(self.test_files):
             self.__execute_test(file, i+1, number, ",".join(ignore_list))
 
-        print("\nTests finished: "
-              "failures in {} of {} test modules, skipped {} test modules.".format(failures, number, skipped))
+        print("\nTests finished: failures in {} of {} test modules, skipped "
+              "{} test modules.".format(self.failed_tests,
+                                        number,
+                                        self.skipped_tests))
 
         if self.args.cover:
             self.__show_coverage_results()
 
-        return failures if not self.args.disallow_test_skipping else failures + skipped
+        if not self.args.disallow_test_skipping:
+            return self.failed_tests
+        else:
+            return self.failed_tests + self.skipped_tests
 
     def add_test_files(self, testdir):
         for (dirpath, dirnames, filenames) in os.walk(testdir):
