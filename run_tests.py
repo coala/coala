@@ -30,7 +30,7 @@ if __name__ == '__main__':
     print("\033[31;1m", get_python_lib(), "\033[0m")
     ignore_list = [
         os.path.join(tempfile.gettempdir(), "**"),
-        os.path.join(os.path.split(tempfile.gettempdir())[0], "**"),
+        os.path.join(get_python_lib(), "..", "**"),
         os.path.join(get_python_lib(), "**"),
         os.path.join("coalib", "tests", "**"),
         os.path.join("bears", "tests", "**")
