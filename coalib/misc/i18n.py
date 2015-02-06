@@ -18,9 +18,14 @@ def compile_translations(verbose=True):
             if filename.endswith(".po"):
                 lang = filename[:-3]
                 src = os.path.join(path, filename)
-                dest_path = os.path.join("build", "locale", lang, "LC_MESSAGES")
+                dest_path = os.path.join("build",
+                                         "locale",
+                                         lang,
+                                         "LC_MESSAGES")
                 dest = os.path.join(dest_path, COALA_DOMAIN + ".mo")
-                install_dir = os.path.join(trans_install_dir_prefix, lang, "LC_MESSAGES")
+                install_dir = os.path.join(trans_install_dir_prefix,
+                                           lang,
+                                           "LC_MESSAGES")
 
                 if not os.path.exists(dest_path):
                     os.makedirs(dest_path)
@@ -38,14 +43,16 @@ def compile_translations(verbose=True):
                     translations.append((install_dir, [dest]))
                 except:  # pragma: no cover
                     print("WARNING: Failed building translation for {}. "
-                          "Please make sure msgfmt is installed and in PATH.".format(lang))
+                          "Please make sure msgfmt is installed and in "
+                          "PATH.".format(lang))
     return translations
 
 
 def _get_locale():  # pragma: no cover
     """
-    This function will only be used if environment variables are unavailable. Therefore testing it while we cannot
-    reconstruct these conditions does not make sense.
+    This function will only be used if environment variables are unavailable.
+    Therefore testing it while we cannot reconstruct these conditions does
+    not make sense.
 
     :return: The current locale code. (The POSIX way.)
     """
@@ -67,8 +74,8 @@ if os.getenv('LANGUAGE') is None \
    and os.getenv('LC_ALL') is None \
    and os.getenv('LC_MESSAGES') is None \
    and os.getenv('LANG') is None:  # pragma: no cover
-    # This will succeed e.g. for windows, gettext only searches those four environment vars
-    # we run coverage on linux so we won't get this covered.
+    # This will succeed e.g. for windows, gettext only searches those four
+    # environment vars we run coverage on linux so we won't get this covered.
     os.environ['LANG'] = _get_locale()
 
 
