@@ -21,6 +21,11 @@ class SectionManagerTestCase(unittest.TestCase):
         self.assertEqual(str(conf_sections["default"]), "Default {config : some_bad_filename, test : 5}")
         self.assertEqual(str(conf_sections["default"].defaults), str(defaults["default"]))
 
+        local_bears = uut.run(arg_list=['-S test=5',
+                                        '-c bad_filename',
+                                        '-b LineCountBear'])[1]
+        self.assertEqual(len(local_bears["default"]), 1)
+
     def test_nonexistent_file(self):
         filename = "bad.one/test\neven with bad chars in it"
         SectionManager().run(arg_list=['-S', "config=" + filename])  # Shouldn't throw an exception
