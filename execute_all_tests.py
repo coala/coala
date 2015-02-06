@@ -1,18 +1,10 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 import tempfile
 from distutils.sysconfig import get_python_lib
 
 from coalib.tests.TestHelper import TestHelper
-
-
-def show_help():
-    print("Usage: {name} [OPTIONS]".format(name=sys.argv[0]))
-    print()
-    print("--help  : Show this help text")
-    print("--cover : Use coverage to get statement and branch coverage of tests")
 
 
 if __name__ == '__main__':
