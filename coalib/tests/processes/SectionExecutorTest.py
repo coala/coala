@@ -14,6 +14,7 @@ from coalib.settings.Section import Section
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
     def __init__(self, result_queue, log_queue):
         Interactor.__init__(self)
+        LogPrinter.__init__(self)
         self.result_queue = result_queue
         self.log_queue = log_queue
 
