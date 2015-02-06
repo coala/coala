@@ -1,0 +1,26 @@
+import sys
+
+sys.path.insert(0, ".")
+from coalib.misc.Enum import enum
+import unittest
+
+
+class ProcessTestCase(unittest.TestCase):
+    def setUp(self):
+        self.uut = enum("ZERO", "ONE", "TWO", THREE="val")
+
+    def test_sequentials(self):
+        self.assertEqual(self.uut.ZERO, 0)
+        self.assertEqual(self.uut.ONE, 1)
+        self.assertEqual(self.uut.TWO, 2)
+        self.assertEqual(self.uut.THREE, "val")
+
+    def test_reverse_mapping(self):
+        self.assertEqual(self.uut.reverse[self.uut.ZERO], "ZERO")
+        self.assertEqual(self.uut.reverse[self.uut.ONE], "ONE")
+        self.assertEqual(self.uut.reverse[self.uut.TWO], "TWO")
+        self.assertEqual(self.uut.reverse[self.uut.THREE], "THREE")
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
