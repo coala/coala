@@ -6,5 +6,5 @@
 
    bears
    coalib
-   execute_all_tests
+   run_tests
    setup

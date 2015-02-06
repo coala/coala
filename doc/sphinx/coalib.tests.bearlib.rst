@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     coalib.tests.bearlib.abstractions
+    coalib.tests.bearlib.parsing
     coalib.tests.bearlib.spacing
 
 Module contents

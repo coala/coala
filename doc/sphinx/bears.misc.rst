@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    bears.misc.KeywordBear
+   bears.misc.LineCountBear
    bears.misc.LineLengthBear
 
 Module contents

@@ -6,6 +6,7 @@ Submodules
 
 .. toctree::
 
+   coalib.misc.Enum
    coalib.misc.StringConstants
    coalib.misc.StringConverter
    coalib.misc.i18n

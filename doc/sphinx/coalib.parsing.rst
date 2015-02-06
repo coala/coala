@@ -9,6 +9,7 @@ Submodules
    coalib.parsing.CliParser
    coalib.parsing.ConfParser
    coalib.parsing.DefaultArgParser
+   coalib.parsing.Glob
    coalib.parsing.LineParser
    coalib.parsing.SectionParser
 

@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    coalib.tests.results.result_actions.ApplyPatchActionTest
+   coalib.tests.results.result_actions.OpenEditorActionTest
    coalib.tests.results.result_actions.ResultActionTest
 
 Module contents
