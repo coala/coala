@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     ignore_list = [
         os.path.join(tempfile.gettempdir(), "**"),
-        os.path.join(get_python_lib(), "**"),
+        os.path.join(os.path.dirname(get_python_lib()), "**"),
         os.path.join("coalib", "tests", "**"),
         os.path.join("bears", "tests", "**")
     ]
