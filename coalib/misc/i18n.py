@@ -75,14 +75,15 @@ if os.getenv('LANGUAGE') is None \
 translation = gettext.translation(COALA_DOMAIN, fallback=True)
 
 
-def _(s):
+def _(original):
     """
     Marks the input string for translation and returns the translated string.
     """
-    return translation.gettext(s)
+    return translation.gettext(original)
 
-def N_(s):
+
+def N_(original):
     """
     Marks the input string for translation and returns the untranslated string.
     """
-    return s
+    return original
