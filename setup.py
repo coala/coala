@@ -24,6 +24,7 @@ if __name__ == "__main__":
                     'coalib',
                     'coalib.bearlib',
                     'coalib.bearlib.abstractions',
+                    'coalib.bearlib.parsing',
                     'coalib.bearlib.spacing',
                     'coalib.bears',
                     'coalib.collecting',
