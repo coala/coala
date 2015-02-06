@@ -10,3 +10,7 @@ MANIFEST
 *.patch
 _build
 coverage.xml
+.htmlreport
+*.orig
+*.diff
+*.patch
