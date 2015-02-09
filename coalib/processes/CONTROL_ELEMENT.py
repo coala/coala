@@ -1,4 +1,3 @@
-class CONTROL_ELEMENT:
-    LOCAL = 0
-    GLOBAL = 1
-    FINISHED = 2
+from coalib.misc.Enum import enum
+
+CONTROL_ELEMENT = enum("LOCAL", "GLOBAL", "FINISHED")
