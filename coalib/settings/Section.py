@@ -37,10 +37,12 @@ class Section:
 
     def retrieve_logging_objects(self):
         """
-        Creates an appropriate log printer and interactor according to the settings.
+        Creates an appropriate log printer and interactor according to the
+        settings.
         """
         log_type = str(self.get("log_type", "console")).lower()
-        log_level = LOG_LEVEL.from_str(str(self.get("log_level", "none")))
+        str_log_level = str(self.get("log_level", "")).upper()
+        log_level = LOG_LEVEL.str_dict.get(str_log_level, LOG_LEVEL.WARNING)
 
         if log_type == "console":
             self.log_printer = ConsolePrinter(log_level=log_level)
