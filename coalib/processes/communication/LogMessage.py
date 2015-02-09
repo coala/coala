@@ -13,9 +13,8 @@ class LogMessage:
         self.message = str(message).rstrip()
 
     def __str__(self):
-        return '[{}] {}'.format({LOG_LEVEL.DEBUG: _("DEBUG"),
-                                 LOG_LEVEL.WARNING: _("WARNING"),
-                                 LOG_LEVEL.ERROR: _("ERROR")}.get(self.log_level, _("ERROR")), self.message)
+        log_level = _(LOG_LEVEL.reverse.get(self.log_level, "ERROR"))
+        return '[{}] {}'.format(log_level, self.message)
 
     def __eq__(self, other):
         return isinstance(other, LogMessage) and other.log_level == self.log_level and other.message == self.message
