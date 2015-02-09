@@ -1,12 +1,4 @@
-class LOG_LEVEL:
-    DEBUG = 0
-    WARNING = 1
-    ERROR = 2
+from coalib.misc.Enum import enum
+from coalib.misc.i18n import N_
 
-    @staticmethod
-    def from_str(string):
-        return {
-            "debug": LOG_LEVEL.DEBUG,
-            "warning": LOG_LEVEL.WARNING,
-            "error": LOG_LEVEL.ERROR
-        }.get(string.lower(), LOG_LEVEL.WARNING)
+LOG_LEVEL = enum(N_("DEBUG"), N_("WARNING"), N_("ERROR"))
