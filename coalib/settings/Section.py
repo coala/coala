@@ -144,13 +144,15 @@ class Section:
 
     def update(self, other_section, ignore_defaults=False):
         """
-        Incorporates all keys and values from the other section into this one. Values from the other section override
-        the ones from this one.
+        Incorporates all keys and values from the other section into this one.
+        Values from the other section override the ones from this one.
 
-        Default values from the other section override the default values from this only.
+        Default values from the other section override the default values from
+        this only.
 
         :param other_section: Another Section
-        :param ignore_defaults: If set to true, do not take default values from other
+        :param ignore_defaults: If set to true, do not take default values from
+        other
         :return: self
         """
         if not isinstance(other_section, Section):
