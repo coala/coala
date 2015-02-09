@@ -34,6 +34,9 @@ if __name__ == "__main__":
         sections, all_local_bears, all_global_bears = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
+            if not bool(section.get("enabled", "true")):
+                continue
+
             global_bears = all_global_bears[section_name]
             local_bears = all_local_bears[section_name]
 
