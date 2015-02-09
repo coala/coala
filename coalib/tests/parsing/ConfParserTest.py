@@ -24,6 +24,7 @@ class ConfParserTestCase(unittest.TestCase):
     ; just a omment
     nokey. = value
     default.test = content
+    makefiles.lastone = val
     """
 
     def setUp(self):
@@ -59,6 +60,7 @@ class ConfParserTestCase(unittest.TestCase):
             ('another', 'a\nmultiline\nvalue'),
             ('comment1', '; just a omment'),
             ('comment2', '; just a omment'),
+            ('lastone', 'val'),
             ('comment3', ''),
             ('a_default', 'val'),
             ('comment0', '# do you know that thats a comment'),
