@@ -24,11 +24,12 @@ class ConfParserTestCase(unittest.TestCase):
     ; just a omment
     nokey. = value
     default.test = content
+    makefiles.lastone = val
     """
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
-        self.nonexistentfile = os.path.join(tempfile.gettempdir(), "NonExistentTestFile")
+        self.nonexistentfile = os.path.join(tempfile.gettempdir(), "e81k7bd98t")
         with open(self.file, "w") as filehandler:
             filehandler.write(self.example_file)
 
@@ -59,6 +60,7 @@ class ConfParserTestCase(unittest.TestCase):
             ('another', 'a\nmultiline\nvalue'),
             ('comment1', '; just a omment'),
             ('comment2', '; just a omment'),
+            ('lastone', 'val'),
             ('comment3', ''),
             ('a_default', 'val'),
             ('comment0', '# do you know that thats a comment'),
@@ -66,7 +68,9 @@ class ConfParserTestCase(unittest.TestCase):
             ('t', '')
         ])
 
-        self.assertRaises(self.uut.FileNotFoundError, self.uut.parse, self.nonexistentfile)
+        self.assertRaises(self.uut.FileNotFoundError,
+                          self.uut.parse,
+                          self.nonexistentfile)
         sections = self.uut.parse(self.file)
         self.assertNotEqual(self.uut.reparse(self.file), sections)
 
@@ -90,7 +94,9 @@ class ConfParserTestCase(unittest.TestCase):
 
         self.assertEqual(val["comment1"].key, "comment1")
 
-        self.assertRaises(IndexError, self.uut.get_section, "inexistent section")
+        self.assertRaises(IndexError,
+                          self.uut.get_section,
+                          "inexistent section")
 
 
 if __name__ == '__main__':

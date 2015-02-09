@@ -14,6 +14,8 @@ class ProcessTestCase(unittest.TestCase):
         self.assertEqual(self.uut.ONE, 1)
         self.assertEqual(self.uut.TWO, 2)
         self.assertEqual(self.uut.THREE, "val")
+        self.assertEqual(self.uut.str_dict["ZERO"], 0)
+        self.assertRaises(KeyError, self.uut.str_dict.__getitem__, "reverse")
 
     def test_reverse_mapping(self):
         self.assertEqual(self.uut.reverse[self.uut.ZERO], "ZERO")

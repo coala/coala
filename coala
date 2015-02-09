@@ -28,24 +28,34 @@ from coalib.misc.i18n import _
 
 
 if __name__ == "__main__":
-    # Set default section so we have a log printer in case the SectionManager fails.
+    # Set default section so we have a loger in case the SectionManager fails.
     sections = {"default": Section("default")}
     try:
         sections, all_local_bears, all_global_bears = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
+            if not bool(section.get("enabled", "true")):
+                continue
+
             global_bears = all_global_bears[section_name]
             local_bears = all_local_bears[section_name]
 
-            SectionExecutor(section=section, global_bear_list=global_bears, local_bear_list=local_bears).run()
+            SectionExecutor(section=section,
+                            global_bear_list=global_bears,
+                            local_bear_list=local_bears).run()
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
     except SystemExit:
         pass
     except:
         exception = sys.exc_info()
-        sections["default"].log_printer.err(_("An unknown error occurred.") + " " + StringConstants.THIS_IS_A_BUG)
-        sections["default"].log_printer.err(_("During execution of coala an exception of type {exception} was raised. "
-                                              "This should never happen. When asked for, the following information may "
-                                              "help investigating:").format(exception=str(exception[0].__name__)) +
-                                            "\n\n" + str(traceback.extract_tb(exception[2])))
+        UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
+                        StringConstants.THIS_IS_A_BUG
+        exc_name = exception[0].__name__
+        DESCRIPTION = _("During execution of coala an exception of type "
+                        "{exception} was raised. This should never happen. "
+                        "When asked for, the following information may help "
+                        "investigating:").format(exception=str(exc_name)) + \
+                      "\n\n" + str(traceback.extract_tb(exception[2]))
+        sections["default"].log_printer.err(UNKNOWN_ERROR)
+        sections["default"].log_printer.err()
