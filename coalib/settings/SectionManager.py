@@ -109,7 +109,9 @@ class SectionManager:
     def _merge_section_dicts(self):
         for name in self.cli_sections:
             if name in self.conf_sections:
-                self.conf_sections[name].update(self.cli_sections[name])
+                self.conf_sections[name].update(
+                    self.cli_sections[name],
+                    ignore_defaults=(name != "default"))
             else:
                 # no deep copy needed
                 self.conf_sections[name] = self.cli_sections[name]
