@@ -13,16 +13,17 @@ default_arg_parser.add_argument('-f',
                                 nargs='+',
                                 metavar='FILE',
                                 help=_('Files that should be checked'))
-default_arg_parser.add_argument('-d',
-                                '--bear-dirs',
-                                nargs='+',
-                                metavar='DIR',
-                                help=_('Directories where bears may lie'))
 default_arg_parser.add_argument('-b',
                                 '--bears',
                                 nargs='+',
                                 metavar='NAME',
                                 help=_('Names of bears to use'))
+BEAR_DIRS_HELP = _('Additional directories where bears may lie')
+default_arg_parser.add_argument('-d',
+                                '--bear-dirs',
+                                nargs='+',
+                                metavar='DIR',
+                                help=BEAR_DIRS_HELP)
 LOG_TYPE_HELP = _("Type of logging (console or any filename)")
 default_arg_parser.add_argument('-l',
                                 '--log-type',
