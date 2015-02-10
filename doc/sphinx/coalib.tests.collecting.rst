@@ -6,9 +6,8 @@ Submodules
 
 .. toctree::
 
-   coalib.tests.collecting.BearCollectorTest
-   coalib.tests.collecting.CollectorTest
-   coalib.tests.collecting.FileCollectorTest
+   coalib.tests.collecting.CollectorsTest
+   coalib.tests.collecting.ImportersTest
 
 Module contents
 ---------------
