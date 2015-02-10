@@ -8,6 +8,9 @@ default_arg_parser = argparse.ArgumentParser(
     description=__doc__
 )
 
+default_arg_parser.add_argument('TARGETS',
+                                nargs='*',
+                                help=_("Sections to be executed exclusively."))
 default_arg_parser.add_argument('-f',
                                 '--files',
                                 nargs='+',
