@@ -121,17 +121,53 @@ class Bear:
     @classmethod
     def get_metadata(cls):
         """
-        :return: Metadata for the run_bear function. However parameters like self or parameters implicitly used by
-        coala (e.g. filename for local bears) are already removed.
+        :return: Metadata for the run_bear function. However parameters like
+        self or parameters implicitly used by coala (e.g. filename for local
+        bears) are already removed.
         """
-        return FunctionMetadata.from_function(cls.run_bear, omit=["self"])
+        return FunctionMetadata.from_function(
+            cls.run_bear,
+            omit=["self", "dependency_results"])
+
+    @classmethod
+    def missing_dependencies(cls, lst):
+        """
+        Checks if the given list contains all dependencies.
+
+        :param lst: A list of all already resolved bear classes (not
+        instances).
+        :return A list of missing dependencies.
+        """
+        dep_classes = cls.get_dependencies()
+
+        for item in lst:
+            if item in dep_classes:
+                dep_classes.remove(item)
+
+        return dep_classes
+
+    @staticmethod
+    def get_dependencies():
+        """
+        Retrieves bear classes that are to be executed before this bear gets
+        executed. The results of these bears will then be passed to the
+        run_bear method as a dict via the dependency_results argument. The dict
+        will have the name of the Bear as key and the list of its results as
+        results.
+
+        :return A list of bear classes.
+        """
+        return []
 
     @classmethod
     def get_non_optional_settings(cls):
         """
-        This method has to determine which settings are needed by this bear. The user will be prompted for needed
-        settings that are not available in the settings file so don't include settings where a default value would do.
+        This method has to determine which settings are needed by this bear.
+        The user will be prompted for needed settings that are not available
+        in the settings file so don't include settings where a default value
+        would do.
 
-        :return: a dictionary of needed settings as keys and a tuple of help text and annotation as values
+        :return: a dictionary of needed settings as keys and a tuple of help
+        text and annotation as values
         """
         return cls.get_metadata().non_optional_params
