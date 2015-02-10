@@ -6,6 +6,8 @@ Submodules
 
 .. toctree::
 
+   coalib.misc.ContextManagers
+   coalib.misc.Decorators
    coalib.misc.Enum
    coalib.misc.StringConstants
    coalib.misc.StringConverter
