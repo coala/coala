@@ -9,4 +9,4 @@ class test(list):
 a = [1, 2, 3]
 b = [1, 2, 4]
 
-name = True 
+name = True
