@@ -55,8 +55,8 @@ class SectionManager:
 
         try:
             self.default_section = self.conf_parser.reparse(os.path.abspath(
-                os.path.join(StringConstants.coalib_root, "default_coafile")
-            ))["default"]
+                os.path.join(StringConstants.coalib_root,
+                             "default_coafile")))["default"]
         except self.conf_parser.FileNotFoundError:
             self.cli_sections["default"].retrieve_logging_objects()
             self.cli_sections["default"].log_printer.err(
@@ -75,8 +75,7 @@ class SectionManager:
 
         try:
             config = os.path.abspath(
-                str(self.cli_sections["default"].get("config", "./coafile"))
-            )
+                str(self.cli_sections["default"].get("config", "./coafile")))
             self.sections = self.conf_parser.reparse(config)
 
             # We'll get the default section as default section for every
