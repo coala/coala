@@ -71,7 +71,7 @@ class Bear:
 
         self.message_queue.put(LogMessage(log_level, msg), timeout=self.TIMEOUT)
 
-    def run_bear(self, *args, **kwargs):
+    def run_bear(self, *args, dependency_results=None, **kwargs):
         raise NotImplementedError
 
     def run_bear_from_section(self, args, kwargs):
