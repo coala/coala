@@ -239,7 +239,7 @@ class BearRunner(multiprocessing.Process):
     def __run_global_bear(self, global_bear_instance):
         if not isinstance(global_bear_instance, GlobalBear) \
                 or global_bear_instance.kind() != BEAR_KIND.GLOBAL:
-            self.warn(_("A given local bear ({}) is not valid. "
+            self.warn(_("A given global bear ({}) is not valid. "
                         "Leaving it out...")
                       .format(global_bear_instance.__class__.__name__),
                       StringConstants.THIS_IS_A_BUG)
