@@ -44,6 +44,7 @@ class SectionExecutorTestCase(unittest.TestCase):
             SectionManager().run(["--config", config_path])
         self.assertEqual(len(self.local_bears["default"]), 1)
         self.assertEqual(len(self.global_bears["default"]), 1)
+        self.assertEqual(targets, [])
 
         self.result_queue = queue.Queue()
         self.log_queue = queue.Queue()
