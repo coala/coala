@@ -25,7 +25,10 @@ class GlobalBear(Bear):
     def kind():
         return BEAR_KIND.GLOBAL
 
-    def run_bear(self, *args):
+    def run_bear(self,
+                 *args,
+                 dependency_results=None,
+                 **kwargs):
         """
         Handles all files in file_dict.
 

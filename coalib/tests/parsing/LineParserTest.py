@@ -51,8 +51,8 @@ class LineParserTestCase(unittest.TestCase):
         self.check_data_set("[  sec]; thats a normal section",
                             output_section="sec",
                             output_comment="; thats a normal section")
-        self.check_data_set("  Section:  sec]\\\\; thats a new section",
-                            output_section="sec]\\",
+        self.check_data_set("  Section:  sEc]\\\\; thats a new section",
+                            output_section="sEc]\\",
                             output_comment="; thats a new section")
         self.check_data_set("  Section:  sec]\\\\\\\\; thats a new section",
                             output_section="sec]\\\\",

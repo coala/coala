@@ -20,6 +20,35 @@ class LocalTestBear(LocalBear):
         return [Result("LocalTestBear", "something went wrong", filename)]
 
 
+class SimpleBear(LocalBear):
+    def run_bear(self,
+                 filename,
+                 file,
+                 *args,
+                 dependency_results=None,
+                 **kwargs):
+        return [Result("SimpleBear", "something went wrong", filename),
+                # This result should not be passed to DependentBear
+                Result("FakeBear", "something went wrong", filename),
+                Result("SimpleBear", "another thing went wrong", filename)]
+
+
+class DependentBear(LocalBear):
+    def run_bear(self,
+                 filename,
+                 file,
+                 *args,
+                 dependency_results=None,
+                 **kwargs):
+        assert len(dependency_results["SimpleBear"]) == 2
+
+        return []
+
+    @staticmethod
+    def get_dependencies():
+        return [SimpleBear]
+
+
 class GlobalTestBear(GlobalBear):
     def run_bear(self):
         result = []
@@ -67,6 +96,8 @@ class BearRunnerConstructionTestCase(unittest.TestCase):
 
 class BearRunnerUnitTestCase(unittest.TestCase):
     def setUp(self):
+        self.settings = Section("name")
+
         self.file_name_queue = queue.Queue()
         self.local_bear_list = []
         self.global_bear_list = []
@@ -94,8 +125,25 @@ class BearRunnerUnitTestCase(unittest.TestCase):
         self.assertEqual(self.message_queue.get(), LogMessage(LOG_LEVEL.WARNING, "test-message"))
         self.assertEqual(self.message_queue.get(), LogMessage(LOG_LEVEL.ERROR, "test-message"))
 
+    def test_dependencies(self):
+        self.local_bear_list.append(SimpleBear(self.settings,
+                                               self.message_queue))
+        self.local_bear_list.append(DependentBear(self.settings,
+                                                  self.message_queue))
+        self.file_name_queue.put("t")
+        self.file_dict["t"] = []
 
-class BearRunnerIntegrationTestCase(BearRunnerUnitTestCase):
+        self.uut.run()
+
+        try:
+            while True:
+                msg = self.message_queue.get(timeout=0)
+                self.assertEqual(msg.log_level, LOG_LEVEL.DEBUG)
+        except queue.Empty:
+            pass
+
+
+class BearRunnerIntegrationTestCase(unittest.TestCase):
     example_file = """a
 b
 c
@@ -103,12 +151,32 @@ d
 """
 
     def setUp(self):
-        BearRunnerUnitTestCase.setUp(self)
+        self.settings = Section("name")
+
+        self.file_name_queue = queue.Queue()
+        self.local_bear_list = []
+        self.global_bear_list = []
+        self.global_bear_queue = queue.Queue()
+        self.file_dict = {}
+        manager = multiprocessing.Manager()
+        self.local_result_dict = manager.dict()
+        self.global_result_dict = manager.dict()
+        self.message_queue = queue.Queue()
+        self.control_queue = queue.Queue()
+        self.barrier = Barrier(parties=1)
+        self.uut = BearRunner(self.file_name_queue,
+                              self.local_bear_list,
+                              self.global_bear_list,
+                              self.global_bear_queue,
+                              self.file_dict,
+                              self.local_result_dict,
+                              self.global_result_dict,
+                              self.message_queue,
+                              self.control_queue,
+                              self.barrier)
 
         self.file1 = "file1"
         self.file2 = "arbitrary"
-
-        self.settings = Section("name")
 
         self.file_name_queue.put(self.file1)
         self.file_name_queue.put(self.file2)

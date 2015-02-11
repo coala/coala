@@ -9,7 +9,8 @@ from coalib.misc.i18n import compile_translations
 
 if __name__ == "__main__":
     data_files = compile_translations()
-    data_files.append((os.path.join(get_python_lib(), "coalib"), ["coalib/default_coafile"]))
+    data_files.append((os.path.join(get_python_lib(), "coalib"),
+                       ["coalib/default_coafile"]))
 
     setup(name='coala',
           version='0.2',
@@ -24,6 +25,7 @@ if __name__ == "__main__":
                     'coalib',
                     'coalib.bearlib',
                     'coalib.bearlib.abstractions',
+                    'coalib.bearlib.parsing',
                     'coalib.bearlib.spacing',
                     'coalib.bears',
                     'coalib.collecting',

@@ -98,7 +98,7 @@ class LineParser:
         for begin, end in self.section_name_surroundings.items():
             if line[0:len(begin)] == begin and \
                             line[len(line) - len(end):len(line)] == end:
-                return line[len(begin):len(line) - len(end)].lower().strip(" \n")
+                return line[len(begin):len(line) - len(end)].strip(" \n")
 
         return ''
 

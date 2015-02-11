@@ -41,21 +41,27 @@ msgstr ""
 msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
-#: coalib/processes/communication/LogMessage.py:16
+#: coalib/output/Interactor.py:38
+msgid ""
+"One of the results can not be printed since it is not a valid derivative of "
+"the coala result class."
+msgstr ""
+
+#: coalib/output/printers/LOG_LEVEL.py:4
 #: coalib/output/printers/LogPrinter.py:29
 #: coalib/tests/processes/communication/LogMessageTest.py:35
 #: coalib/tests/output/printers/LogPrinterTest.py:39
 msgid "DEBUG"
 msgstr ""
 
-#: coalib/processes/communication/LogMessage.py:17
+#: coalib/output/printers/LOG_LEVEL.py:4
 #: coalib/output/printers/LogPrinter.py:30
 #: coalib/tests/processes/communication/LogMessageTest.py:33
 #: coalib/tests/output/printers/LogPrinterTest.py:44
 msgid "WARNING"
 msgstr ""
 
-#: coalib/processes/communication/LogMessage.py:18
+#: coalib/output/printers/LOG_LEVEL.py:4
 #: coalib/output/printers/LogPrinter.py:31
 #: coalib/tests/processes/communication/LogMessageTest.py:31
 #: coalib/tests/processes/communication/LogMessageTest.py:37
@@ -64,12 +70,6 @@ msgstr ""
 #: coalib/tests/output/printers/LogPrinterTest.py:47
 #: coalib/tests/output/printers/LogPrinterTest.py:50
 msgid "ERROR"
-msgstr ""
-
-#: coalib/output/Interactor.py:38
-msgid ""
-"One of the results can not be printed since it is not a valid derivative of "
-"the coala result class."
 msgstr ""
 
 #: coalib/output/printers/LogPrinter.py:50
@@ -141,12 +141,8 @@ msgid ""
 "seem to exist."
 msgstr ""
 
-#: coalib/collecting/BearCollector.py:111
-#: coalib/collecting/FileCollector.py:110
-#, python-brace-format
-msgid ""
-"One of the given regexes ('{regex}') was not valid and will be ignored. The "
-"error was '{error}'."
+#: coalib/collecting/Collectors.py:85
+msgid "unable to import bears from {}"
 msgstr ""
 
 #: coalib/settings/SectionFiller.py:37
@@ -161,13 +157,13 @@ msgstr ""
 msgid "Optional, defaults to '{}'."
 msgstr ""
 
-#: coalib/settings/Section.py:57
+#: coalib/settings/Section.py:59
 msgid ""
 "Failed to instantiate the logging method '{}'. Falling back to console "
 "output."
 msgstr ""
 
-#: coalib/settings/SectionManager.py:57
+#: coalib/settings/SectionManager.py:63
 msgid ""
 "The global default coafile for the settings was not found. It seems your "
 "installation is broken."
@@ -314,91 +310,63 @@ msgid ""
 "{}"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:9
+#: coalib/parsing/DefaultArgParser.py:13
+msgid "Sections to be executed exclusively."
+msgstr ""
+
+#: coalib/parsing/DefaultArgParser.py:18
 msgid "Files that should be checked"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:11
-msgid "Regex for additional filenames (only the tail of the whole path)"
-msgstr ""
-
-#: coalib/parsing/DefaultArgParser.py:13
-msgid ""
-"Directories where files may lie that will be checked, excluding sub "
-"directories"
-msgstr ""
-
-#: coalib/parsing/DefaultArgParser.py:16
-msgid ""
-"Directories where files may lie that will be checked, including sub "
-"directories"
-msgstr ""
-
-#: coalib/parsing/DefaultArgParser.py:19
-msgid "Directories that should be ignored"
-msgstr ""
-
-#: coalib/parsing/DefaultArgParser.py:21
-msgid "Directories where bears may lie, excluding subdirectories"
-msgstr ""
-
 #: coalib/parsing/DefaultArgParser.py:23
-msgid "Directories where bears may lie, including subdirectories"
-msgstr ""
-
-#: coalib/parsing/DefaultArgParser.py:25
-msgid "Directories to ignore when searching for bears"
-msgstr ""
-
-#: coalib/parsing/DefaultArgParser.py:27
 msgid "Names of bears to use"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:29
-msgid "Regular expression for bears to use"
+#: coalib/parsing/DefaultArgParser.py:24
+msgid "Additional directories where bears may lie"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:31
+#: coalib/parsing/DefaultArgParser.py:30
 msgid "Type of logging (console or any filename)"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:34
+#: coalib/parsing/DefaultArgParser.py:36
 msgid "Enum('ERR','WARN','DEBUG') to set level of log output"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:36
+#: coalib/parsing/DefaultArgParser.py:43
 msgid "Type of output (console or any filename)"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:38
+#: coalib/parsing/DefaultArgParser.py:53
 msgid "Configuration file to be used"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:40
+#: coalib/parsing/DefaultArgParser.py:54
 msgid "Filename of file to be saved to, defaults to config file"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:42
+#: coalib/parsing/DefaultArgParser.py:61
 msgid "Arbitrary settings in the form of section.key=value"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:44
+#: coalib/parsing/DefaultArgParser.py:67
 msgid "Number of processes to be allowed to run at once"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:46
+#: coalib/parsing/DefaultArgParser.py:74
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr ""
 
-#: coala:42
+#: coala:50
 msgid "Program terminated by user."
 msgstr ""
 
-#: coala:47
+#: coala:55
 msgid "An unknown error occurred."
 msgstr ""
 
-#: coala:48
+#: coala:58
 #, python-brace-format
 msgid ""
 "During execution of coala an exception of type {exception} was raised. This "
