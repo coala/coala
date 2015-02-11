@@ -26,7 +26,12 @@ class LocalBear(Bear):
     def kind():
         return BEAR_KIND.LOCAL
 
-    def run_bear(self, filename, file, *args):
+    def run_bear(self,
+                 filename,
+                 file,
+                 *args,
+                 dependency_results=None,
+                 **kwargs):
         """
         Handles the given file.
 
