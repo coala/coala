@@ -3,6 +3,7 @@ import queue
 import threading
 
 from coalib.collecting.Collectors import collect_files
+from coalib.collecting import Dependencies
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.BearRunner import BearRunner
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
@@ -61,8 +62,8 @@ class SectionExecutor:
             raise TypeError("global_bear_list has to be of type list")
 
         self.section = section
-        self.local_bear_list = local_bear_list
-        self.global_bear_list = global_bear_list
+        self.local_bear_list = Dependencies.resolve(local_bear_list)
+        self.global_bear_list = Dependencies.resolve(global_bear_list)
 
     def run(self):
         filename_list = collect_files(path_list(self.section['files']))
