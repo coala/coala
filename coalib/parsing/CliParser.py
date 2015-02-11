@@ -51,10 +51,13 @@ class CliParser(SectionParser):
         if section_name == "" or section_name is None:
             section_name = "default"
 
-        if not section_name in self.sections:
-            self.sections[section_name] = Section(section_name)
+        if not section_name.lower() in self.sections:
+            self.sections[section_name.lower()] = Section(section_name)
 
-        self.sections[section_name].append(Setting(key, str(value), origin, from_cli=True))
+        self.sections[section_name.lower()].append(Setting(key,
+                                                           str(value),
+                                                           origin,
+                                                           from_cli=True))
 
     def parse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
         """

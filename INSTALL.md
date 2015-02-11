@@ -1,8 +1,8 @@
 coala Installation
 ==================
 
-This document contains information on how to install coala and its dependencies.
-Optional dependencies are marked with (*).
+This document contains information on how to install coala and its
+dependencies. Optional dependencies are marked with (*).
 
 Dependencies
 ------------
@@ -14,8 +14,8 @@ coala is fully tested against python versions 3.2, 3.3 and 3.4.
 ### eSpeak (*)
 If you want to use coalas voice outputter you need to install eSpeak from
 http://espeak.sourceforge.net/. Note that voice output is currently only
-possible when developing for coala. If you care for voice output, please contact
-us so we will speed up development of our voice output module.
+possible when developing for coala. If you care for voice output, please
+contact us so we will speed up development of our voice output module.
 
 coala
 -----
