@@ -116,6 +116,10 @@ class BearRunner(multiprocessing.Process):
 
         self.TIMEOUT = TIMEOUT
 
+        # Will be used to hold local results when they are not yet stored in
+        # the result dict
+        self._local_result_list = []
+
     def warn(self, *args, delimiter=' ', end=''):
         self.__send_msg(LOG_LEVEL.WARNING, *args, delimiter=delimiter, end=end)
 
@@ -185,14 +189,32 @@ class BearRunner(multiprocessing.Process):
 
             return
 
-        result_list = []
+        self._local_result_list = []
         for bear_instance in self.local_bear_list:
             r = self.__run_local_bear(bear_instance, filename)
             if r is not None:
-                result_list.extend(r)
+                self._local_result_list.extend(r)
 
-        self.local_result_dict[filename] = result_list
+        self.local_result_dict[filename] = self._local_result_list
         self.control_queue.put((CONTROL_ELEMENT.LOCAL, filename))
+
+    def _get_local_dependency_results(self, bear_instance):
+        deps = bear_instance.get_dependencies()
+        if deps == []:
+            return None
+
+        dependency_results = {}
+        dep_strings = []
+        for dep in deps:
+            dep_strings.append(dep.__name__)
+
+        for result in self._local_result_list:
+            if result.origin in dep_strings:
+                results = dependency_results.get(result.origin, [])
+                results.append(result)
+                dependency_results[result.origin] = results
+
+        return dependency_results
 
     def __run_local_bear(self, bear_instance, filename):
         if not isinstance(bear_instance, LocalBear) or \
@@ -204,7 +226,15 @@ class BearRunner(multiprocessing.Process):
 
             return None
 
-        return bear_instance.run(filename, self.file_dict[filename])
+        dependency_results = self._get_local_dependency_results(bear_instance)
+        kwargs = {}
+        # Only pass dependency results to bears who want it
+        if dependency_results is not None:
+            kwargs["dependency_results"] = dependency_results
+
+        return bear_instance.run(filename,
+                                 self.file_dict[filename],
+                                 **kwargs)
 
     def __run_global_bear(self, global_bear_instance):
         if not isinstance(global_bear_instance, GlobalBear) \
