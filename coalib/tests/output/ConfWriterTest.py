@@ -18,7 +18,7 @@ class ConfWriterTestCase(unittest.TestCase):
     t = \n\
     \n\
     [MakeFiles] \n\
-     j  , another = a \n\
+     j  , ANother = a \n\
                    multiline \n\
                    value \n\
     ; just a omment \n\
@@ -48,8 +48,8 @@ class ConfWriterTestCase(unittest.TestCase):
                        "test = push\n",
                        "t = \n",
                        "\n",
-                       "[makefiles]\n",
-                       "j, another = a\n",
+                       "[MakeFiles]\n",
+                       "j, ANother = a\n",
                        "multiline\n",
                        "value\n",
                        "; just a omment\n",

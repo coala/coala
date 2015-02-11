@@ -15,15 +15,24 @@ class SectionManagerTestCase(unittest.TestCase):
         defaults = ConfParser().parse(os.path.abspath(os.path.join(StringConstants.coalib_root, "default_coafile")))
 
         uut = SectionManager()
-        # We need to use a bad filename or this will parse the .coafile we use for coala
-        conf_sections = uut.run(arg_list=['-S', "test=5", "-c", "some_bad_filename"])[0]
+        # We need to use a bad filename or this will parse coalas .coafile
+        conf_sections = uut.run(
+            arg_list=['-S', "test=5", "-c", "some_bad_filename"])[0]
 
-        self.assertEqual(str(conf_sections["default"]), "Default {config : some_bad_filename, test : 5}")
-        self.assertEqual(str(conf_sections["default"].defaults), str(defaults["default"]))
+        self.assertEqual(str(conf_sections["default"]),
+                         "Default {config : some_bad_filename, test : 5}")
+        self.assertEqual(str(conf_sections["default"].defaults),
+                         str(defaults["default"]))
+
+        local_bears = uut.run(arg_list=['-S test=5',
+                                        '-c bad_filename',
+                                        '-b LineCountBear'])[1]
+        self.assertEqual(len(local_bears["default"]), 1)
 
     def test_nonexistent_file(self):
         filename = "bad.one/test\neven with bad chars in it"
-        SectionManager().run(arg_list=['-S', "config=" + filename])  # Shouldn't throw an exception
+        # Shouldn't throw an exception
+        SectionManager().run(arg_list=['-S', "config=" + filename])
 
         tmp = StringConstants.coalib_root
         StringConstants.coalib_root = filename
@@ -31,16 +40,20 @@ class SectionManagerTestCase(unittest.TestCase):
         StringConstants.coalib_root = tmp
 
     def test_back_saving(self):
-        filename = os.path.join(tempfile.gettempdir(), "SectionManagerTestFile")
+        filename = os.path.join(tempfile.gettempdir(),
+                                "SectionManagerTestFile")
 
-        # We need to use a bad filename or this will parse the .coafile we use for coala
-        SectionManager().run(arg_list=['-S', "save=" + filename, "-c", "some_bad_filename"])
+        # We need to use a bad filename or this will parse coalas .coafile
+        SectionManager().run(
+            arg_list=['-S', "save=" + filename, "-c", "some_bad_filename"])
 
         with open(filename, "r") as f:
             lines = f.readlines()
-        self.assertEqual(["[Default]\n", "config = some_bad_filename\n"], lines)
+        self.assertEqual(["[Default]\n", "config = some_bad_filename\n"],
+                         lines)
 
-        SectionManager().run(arg_list=['-S', "save=true", "config=" + filename, "test.value=5"])
+        SectionManager().run(
+            arg_list=['-S', "save=true", "config=" + filename, "test.value=5"])
 
         with open(filename, "r") as f:
             lines = f.readlines()
@@ -51,8 +64,14 @@ class SectionManagerTestCase(unittest.TestCase):
                           "value = 5\n"], lines)
 
     def test_logging_objects(self):
-        conf_sections, n, m = SectionManager().run(arg_list=['-S', "log_type=none"])
-        self.assertIsInstance(conf_sections["default"].log_printer, NullPrinter)
+        conf_sections = SectionManager().run(arg_list=['-S',
+                                                       "log_type=none"])[0]
+        self.assertIsInstance(conf_sections["default"].log_printer,
+                              NullPrinter)
+
+    def test_targets(self):
+        targets = SectionManager().run(arg_list=["test1", "test2"])[3]
+        self.assertEqual(targets, ["test1", "test2"])
 
 
 if __name__ == '__main__':

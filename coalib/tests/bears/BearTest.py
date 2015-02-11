@@ -25,6 +25,10 @@ class TestBear(Bear):
     def run_bear(self):
         self.warn_msg(_("A string to test translations."))
 
+    @staticmethod
+    def get_dependencies():
+        return [BadTestBear]
+
 
 class BadTestBear(Bear):
     def __init__(self, section, queue):
@@ -85,6 +89,19 @@ class BearTestCase(unittest.TestCase):
     def test_no_queue(self):
         uut = TestBear(self.settings, None)
         uut.run()  # No exceptions
+
+    def test_dependencies(self):
+        self.assertEqual(Bear.get_dependencies(), [])
+        self.assertEqual(Bear.missing_dependencies([]), [])
+        self.assertEqual(Bear.missing_dependencies([BadTestBear]), [])
+
+        self.assertEqual(TestBear.missing_dependencies([]), [BadTestBear])
+        self.assertEqual(TestBear.missing_dependencies([BadTestBear]), [])
+        self.assertEqual(TestBear.missing_dependencies([TestBear]),
+                         [BadTestBear])
+        self.assertEqual(TestBear.missing_dependencies([TestBear,
+                                                        BadTestBear]),
+                         [])
 
 
 if __name__ == '__main__':

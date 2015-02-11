@@ -3,13 +3,14 @@ import os
 import sys
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
-from coalib.collecting.BearCollector import BearCollector
+from coalib.collecting.Collectors import collect_bears
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.SectionFiller import SectionFiller
+from coalib.settings.Setting import path_list
 
 
 class SectionManager:
@@ -25,12 +26,13 @@ class SectionManager:
     - Write back the new sections to the configuration file if needed
     - Give all information back to caller
 
-    This is done when the run() method is invoked. Anything else is just helper stuff and initialization.
+    This is done when the run() method is invoked. Anything else is just helper
+    stuff and initialization.
     """
     def __init__(self):
         self.cli_sections = None
         self.default_section = None
-        self.conf_sections = None
+        self.sections = None
 
         self.cli_parser = CliParser()
         self.conf_parser = ConfParser()
@@ -39,45 +41,65 @@ class SectionManager:
         self.local_bears = {}
         self.global_bears = {}
 
+        self.targets = []
+
     def run(self, arg_list=sys.argv[1:]):
         self._load_configuration(arg_list)
         self._fill_settings()
         self._save_configuration()
 
-        return self.conf_sections, self.local_bears, self.global_bears
+        return self.sections, self.local_bears, self.global_bears, self.targets
 
     def _load_configuration(self, arg_list):
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
 
         try:
-            self.default_section = self.conf_parser.reparse(os.path.abspath(os.path.join(StringConstants.coalib_root,
-                                                                                         "default_coafile")))["default"]
+            self.default_section = self.conf_parser.reparse(os.path.abspath(
+                os.path.join(StringConstants.coalib_root, "default_coafile")
+            ))["default"]
         except self.conf_parser.FileNotFoundError:
             self.cli_sections["default"].retrieve_logging_objects()
-            self.cli_sections["default"].log_printer.err(_("The global default coafile for the settings was not found. "
-                                                           "It seems your installation is broken.") + " " +
-                                                         StringConstants.THIS_IS_A_BUG)
+            self.cli_sections["default"].log_printer.err(
+                _("The global default coafile for the settings was not found. "
+                  "It seems your installation is broken.") + " " +
+                StringConstants.THIS_IS_A_BUG)
             raise SystemExit
+
+        # We dont want to store targets argument back to file, thus remove it
+        for item in list(self.cli_sections["default"].contents.pop("targets",
+                                                                   "")):
+            self.targets.append(item.lower())
 
         for section in self.cli_sections:
             self.cli_sections[section].defaults = self.default_section
 
         try:
-            config = os.path.abspath(str(self.cli_sections["default"].get("config", "./coafile")))
-            self.conf_sections = self.conf_parser.reparse(config)
+            config = os.path.abspath(
+                str(self.cli_sections["default"].get("config", "./coafile"))
+            )
+            self.sections = self.conf_parser.reparse(config)
 
-            # We'll get the default section as default section for every section in this dict with this
-            # Furthermore we will have the CLI Values take precedence over the conf values.
+            # We'll get the default section as default section for every
+            # section in this dict with this. Furthermore we will have the
+            # CLI Values take precedence over the conf values.
             self._merge_section_dicts()
         except self.conf_parser.FileNotFoundError:
-            self.conf_sections = self.cli_sections
+            self.sections = self.cli_sections
 
     def _fill_settings(self):
-        for section_name in self.conf_sections:
-            section = self.conf_sections[section_name]
+        for section_name in self.sections:
+            section = self.sections[section_name]
             section.retrieve_logging_objects()
-            local_bears = BearCollector.from_section([BEAR_KIND.LOCAL], section).collect()
-            global_bears = BearCollector.from_section([BEAR_KIND.GLOBAL], section).collect()
+
+            bear_dirs = path_list(section["bear_dirs"])
+            bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
+                                          "**"))
+            local_bears = collect_bears(bear_dirs,
+                                        list(section["bears"]),
+                                        [BEAR_KIND.LOCAL])
+            global_bears = collect_bears(bear_dirs,
+                                         list(section["bears"]),
+                                         [BEAR_KIND.GLOBAL])
             filler = SectionFiller(section)
             all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)
@@ -88,18 +110,22 @@ class SectionManager:
 
     def _save_configuration(self):
         self.conf_writer = None
+        default_section = self.sections["default"]
         try:
-            if bool(self.conf_sections["default"]["save"]):
-                self.conf_writer = ConfWriter(str(self.conf_sections["default"]["config"]))
+            if bool(default_section["save"]):
+                self.conf_writer = ConfWriter(str(default_section["config"]))
         except ValueError:
-            self.conf_writer = ConfWriter(str(self.conf_sections["default"]["save"]))
+            self.conf_writer = ConfWriter(str(default_section["save"]))
 
         if self.conf_writer is not None:
-            self.conf_writer.write_sections(self.conf_sections)
+            self.conf_writer.write_sections(self.sections)
 
     def _merge_section_dicts(self):
-        for section_name in self.cli_sections:
-            if section_name in self.conf_sections:
-                self.conf_sections[section_name].update(self.cli_sections[section_name])
+        for name in self.cli_sections:
+            if name in self.sections:
+                self.sections[name].update(
+                    self.cli_sections[name],
+                    ignore_defaults=(name != "default"))
             else:
-                self.conf_sections[section_name] = self.cli_sections[section_name]  # no deep copy needed
+                # no deep copy needed
+                self.sections[name] = self.cli_sections[name]
