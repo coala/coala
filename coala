@@ -54,10 +54,10 @@ if __name__ == "__main__":
         exception = sys.exc_info()
         UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
                         StringConstants.THIS_IS_A_BUG
-        exc_name = exception[0].__name__
-        DESCRIPTION = _("During execution of coala an exception of type "
-                        "{exception} was raised. This should never happen. "
-                        "When asked for, the following information may help "
-                        "investigating:").format(exception=str(exc_name)) + \
-                      "\n\n" + str(traceback.extract_tb(exception[2]))
+        DESCRIPTION = _("During execution of coala an exception was raised. "
+                        "This should never happen. When asked for, the "
+                        "following information may help investigating:")
+
         sections["default"].log_printer.err(UNKNOWN_ERROR)
+        sections["default"].log_printer.err(DESCRIPTION)
+        sections["default"].log_printer.err(traceback.format_exc())
