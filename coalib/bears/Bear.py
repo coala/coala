@@ -63,12 +63,9 @@ class Bear:
         if len(args) == 0:
             return
 
-        msg = ""
-        for i in range(len(args) - 1):
-            msg += str(args[i]) + str(delimiter)
-        msg += str(args[-1])
-
-        self.message_queue.put(LogMessage(log_level, msg), timeout=self.TIMEOUT)
+        self.message_queue.put(LogMessage(log_level,
+                                          str(delimiter).join(args)),
+                               timeout=self.TIMEOUT)
 
     def run_bear(self, *args, dependency_results=None, **kwargs):
         raise NotImplementedError
