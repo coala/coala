@@ -1,5 +1,9 @@
-#: bears/tests/misc/LineCountBearTest.py:21
-#: bears/tests/misc/LineCountBearTest.py:29 bears/misc/LineCountBear.py:14
+#: bears/misc/LineLengthBear.py:27
+msgid "Line is longer than allowed."
+msgstr ""
+
+#: bears/misc/LineCountBear.py:14 bears/tests/misc/LineCountBearTest.py:21
+#: bears/tests/misc/LineCountBearTest.py:29
 #, python-brace-format
 msgid "This file has {count} lines."
 msgstr ""
@@ -8,220 +12,37 @@ msgstr ""
 msgid "Line contains the following keywords:"
 msgstr ""
 
-#: bears/misc/LineLengthBear.py:27
-msgid "Line is longer than allowed."
-msgstr ""
-
 #: bears/spacing/SpaceConsistencyBear.py:42
 msgid "Line contains spacing inconsistencies."
 msgstr ""
 
 #. pragma: no cover
-#: coalib/processes/BearRunner.py:120
+#: coalib/processes/BearRunner.py:146
 msgid ""
 "An unknown error occurred while running local bears for the file {}. "
 "Skipping file..."
 msgstr ""
 
 #. pragma: no cover
-#: coalib/processes/BearRunner.py:140
+#: coalib/processes/BearRunner.py:169
 msgid ""
 "An unknown error occurred while running global bear {}. Skipping bear..."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:154
+#: coalib/processes/BearRunner.py:185
 msgid "An internal error occurred."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:155
+#: coalib/processes/BearRunner.py:187
 msgid "The given file through the queue is not in the file dictionary."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:170 coalib/processes/BearRunner.py:180
+#: coalib/processes/BearRunner.py:222
 msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
-#: coalib/output/Interactor.py:38
-msgid ""
-"One of the results can not be printed since it is not a valid derivative of "
-"the coala result class."
-msgstr ""
-
-#: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/output/printers/LogPrinter.py:29
-#: coalib/tests/processes/communication/LogMessageTest.py:35
-#: coalib/tests/output/printers/LogPrinterTest.py:39
-msgid "DEBUG"
-msgstr ""
-
-#: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/output/printers/LogPrinter.py:30
-#: coalib/tests/processes/communication/LogMessageTest.py:33
-#: coalib/tests/output/printers/LogPrinterTest.py:44
-msgid "WARNING"
-msgstr ""
-
-#: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/output/printers/LogPrinter.py:31
-#: coalib/tests/processes/communication/LogMessageTest.py:31
-#: coalib/tests/processes/communication/LogMessageTest.py:37
-#: coalib/tests/output/printers/LogPrinterTest.py:32
-#: coalib/tests/output/printers/LogPrinterTest.py:35
-#: coalib/tests/output/printers/LogPrinterTest.py:47
-#: coalib/tests/output/printers/LogPrinterTest.py:50
-msgid "ERROR"
-msgstr ""
-
-#: coalib/output/printers/LogPrinter.py:50
-#: coalib/tests/output/printers/LogPrinterTest.py:51
-msgid "Exception was:"
-msgstr ""
-
-#. pragma: no cover
-#: coalib/output/printers/EspeakPrinter.py:19
-msgid ""
-"eSpeak doesn't seem to be installed. You cannot use the voice output feature "
-"without eSpeak. It can be downloaded from http://espeak.sourceforge.net/ or "
-"installed via your usual package repositories."
-msgstr ""
-
-#. pragma: no cover
-#: coalib/output/printers/EspeakPrinter.py:24
-msgid "Failed to execute eSpeak. An unknown error occurred."
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:9
-msgid "Please enter a value for the setting \"{}\" ({}) needed by {}: "
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:10
-msgid ""
-"The line belonging to the following result cannot be printed because it "
-"refers to a line that doesn't seem to exist in the given file."
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:12
-msgid "Project wide:"
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:42
-msgid "One of the given settings ({}) are not properly described."
-msgstr ""
-
-#. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
-#: coalib/output/ConsoleInteractor.py:50
-#: coalib/tests/output/ConsoleInteractorTest.py:49
-#: coalib/tests/output/ConsoleInteractorTest.py:57
-msgid " and "
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:67
-msgid "The following options are applicable to this result:"
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:81
-msgid "No action."
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:84
-msgid "Please enter the number of the action you want to execute."
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:90
-msgid "Please enter a valid number."
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:102
-msgid "Please enter a value for the parameter '{}' ({}):"
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:145
-msgid ""
-"A result ({}) cannot be printed because it refers to a file that doesn't "
-"seem to exist."
-msgstr ""
-
-#: coalib/collecting/Collectors.py:85
-msgid "unable to import bears from {}"
-msgstr ""
-
-#: coalib/settings/SectionFiller.py:37
-msgid "One of the given bears ({}) has no attribute get_non_optional_settings."
-msgstr ""
-
-#: coalib/settings/FunctionMetadata.py:8
-msgid "No description given."
-msgstr ""
-
-#: coalib/settings/FunctionMetadata.py:9
-msgid "Optional, defaults to '{}'."
-msgstr ""
-
-#: coalib/settings/Section.py:59
-msgid ""
-"Failed to instantiate the logging method '{}'. Falling back to console "
-"output."
-msgstr ""
-
-#: coalib/settings/SectionManager.py:63
-msgid ""
-"The global default coafile for the settings was not found. It seems your "
-"installation is broken."
-msgstr ""
-
-#. Do not change this translation without changing it in the code also!
-#: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:41
-#: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:66
-msgid "A string to test translations."
-msgstr ""
-
-#: coalib/tests/misc/i18nTest.py:47
-msgid "A not directly translated test string."
-msgstr ""
-
-#: coalib/tests/misc/StringConverterTest.py:53
-#: coalib/misc/StringConstants.py:19
-msgid "yeah"
-msgstr ""
-
-#: coalib/tests/misc/StringConverterTest.py:57
-#: coalib/misc/StringConstants.py:28
-msgid "nope"
-msgstr ""
-
-#: coalib/tests/bears/BearTest.py:63 coalib/tests/bears/BearTest.py:73
-#: coalib/bears/Bear.py:86
-msgid "Setting up bear {}..."
-msgstr ""
-
-#: coalib/tests/bears/BearTest.py:65 coalib/tests/bears/BearTest.py:74
-#: coalib/bears/Bear.py:88
-msgid "Running bear {}..."
-msgstr ""
-
-#: coalib/tests/bears/BearTest.py:67 coalib/tests/bears/BearTest.py:75
-#: coalib/bears/Bear.py:102
-msgid "Tearing down bear {}..."
-msgstr ""
-
-#: coalib/tests/bears/BearTest.py:76 coalib/bears/Bear.py:93
-#: coalib/bears/Bear.py:108
-msgid "Bear {} failed to run"
-msgstr ""
-
-#: coalib/tests/results/RESULT_SEVERITYTest.py:11
-#: coalib/results/RESULT_SEVERITY.py:5
-msgid "INFO"
-msgstr ""
-
-#: coalib/tests/results/RESULT_SEVERITYTest.py:12
-#: coalib/results/RESULT_SEVERITY.py:5
-msgid "NORMAL"
-msgstr ""
-
-#: coalib/tests/results/RESULT_SEVERITYTest.py:13
-#: coalib/results/RESULT_SEVERITY.py:5
-msgid "MAJOR"
+#: coalib/processes/BearRunner.py:242
+msgid "A given global bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
 #: coalib/misc/StringConstants.py:8
@@ -244,6 +65,11 @@ msgstr ""
 
 #: coalib/misc/StringConstants.py:19
 msgid "yes"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:19
+#: coalib/tests/misc/StringConverterTest.py:53
+msgid "yeah"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:19
@@ -279,6 +105,11 @@ msgid "no"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:28
+#: coalib/tests/misc/StringConverterTest.py:57
+msgid "nope"
+msgstr ""
+
+#: coalib/misc/StringConstants.py:28
 msgid "nah"
 msgstr ""
 
@@ -290,24 +121,123 @@ msgstr ""
 msgid "wrong"
 msgstr ""
 
-#: coalib/bears/Bear.py:94
+#: coalib/bears/Bear.py:83 coalib/tests/bears/BearTest.py:67
+#: coalib/tests/bears/BearTest.py:77
+msgid "Setting up bear {}..."
+msgstr ""
+
+#: coalib/bears/Bear.py:86 coalib/tests/bears/BearTest.py:69
+#: coalib/tests/bears/BearTest.py:78
+msgid "Running bear {}..."
+msgstr ""
+
+#: coalib/bears/Bear.py:89 coalib/tests/bears/BearTest.py:71
+#: coalib/tests/bears/BearTest.py:79
+msgid "Tearing down bear {}..."
+msgstr ""
+
+#: coalib/bears/Bear.py:96 coalib/tests/bears/BearTest.py:80
+msgid "Bear {} failed to run"
+msgstr ""
+
+#: coalib/bears/Bear.py:97
 #, python-brace-format
 msgid ""
-"The bear {bear} raised an exception of type {exception}. If you are the "
-"writer of this bear, please catch all exceptions. If not and this error "
-"annoys you, you might want to get in contact with the writer of this bear.\n"
+"The bear {bear} raised an exception. If you are the writer of this bear, "
+"please make sure to catch all exceptions. If not and this error annoys you, "
+"you might want to get in contact with the writer of this bear.\n"
 "\n"
-"Here is your traceback:\n"
+"Traceback information is provided below:\n"
 "\n"
 "{traceback}\n"
 msgstr ""
 
-#: coalib/bears/Bear.py:109
+#: coalib/collecting/Collectors.py:85
+msgid "unable to import bears from {}"
+msgstr ""
+
+#: coalib/results/RESULT_SEVERITY.py:5
+#: coalib/tests/results/RESULT_SEVERITYTest.py:11
+msgid "INFO"
+msgstr ""
+
+#: coalib/results/RESULT_SEVERITY.py:5
+#: coalib/tests/results/RESULT_SEVERITYTest.py:12
+msgid "NORMAL"
+msgstr ""
+
+#: coalib/results/RESULT_SEVERITY.py:5
+#: coalib/tests/results/RESULT_SEVERITYTest.py:13
+msgid "MAJOR"
+msgstr ""
+
+#: coalib/tests/processes/communication/LogMessageTest.py:31
+#: coalib/tests/processes/communication/LogMessageTest.py:37
+#: coalib/tests/output/printers/LogPrinterTest.py:32
+#: coalib/tests/output/printers/LogPrinterTest.py:35
+#: coalib/tests/output/printers/LogPrinterTest.py:47
+#: coalib/tests/output/printers/LogPrinterTest.py:56
+#: coalib/output/printers/LogPrinter.py:34
+#: coalib/output/printers/LOG_LEVEL.py:4
+msgid "ERROR"
+msgstr ""
+
+#: coalib/tests/processes/communication/LogMessageTest.py:33
+#: coalib/tests/output/printers/LogPrinterTest.py:44
+#: coalib/output/printers/LOG_LEVEL.py:4
+msgid "WARNING"
+msgstr ""
+
+#: coalib/tests/processes/communication/LogMessageTest.py:35
+#: coalib/tests/output/printers/LogPrinterTest.py:39
+#: coalib/output/printers/LOG_LEVEL.py:4
+msgid "DEBUG"
+msgstr ""
+
+#. Do not change this translation without changing it in the code also!
+#: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:41
+#: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:70
+msgid "A string to test translations."
+msgstr ""
+
+#: coalib/tests/misc/i18nTest.py:47
+msgid "A not directly translated test string."
+msgstr ""
+
+#. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
+#: coalib/tests/output/ConsoleInteractorTest.py:49
+#: coalib/tests/output/ConsoleInteractorTest.py:57
+#: coalib/output/ConsoleInteractor.py:50
+msgid " and "
+msgstr ""
+
+#: coalib/tests/output/printers/LogPrinterTest.py:57
+#: coalib/output/printers/LogPrinter.py:73
+msgid "Exception was:"
+msgstr ""
+
+#: coalib/settings/SectionFiller.py:37
+msgid "One of the given bears ({}) has no attribute get_non_optional_settings."
+msgstr ""
+
+#: coalib/settings/Section.py:59
 msgid ""
-"set_up() or tear_down() throwed an exception for bear {}.\n"
-"Exception: {}\n"
-"Traceback:\n"
-"{}"
+"Failed to instantiate the logging method '{}'. Falling back to console "
+"output."
+msgstr ""
+
+#: coalib/settings/FunctionMetadata.py:8
+msgid "No description given."
+msgstr ""
+
+#: coalib/settings/FunctionMetadata.py:9
+msgid "Optional, defaults to '{}'."
+msgstr ""
+
+#: coalib/settings/SectionManager.py:63
+msgid ""
+"The global default coafile for the settings was not found. It seems your "
+"installation is broken."
 msgstr ""
 
 #: coalib/parsing/DefaultArgParser.py:13
@@ -358,6 +288,69 @@ msgstr ""
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr ""
 
+#: coalib/output/ConsoleInteractor.py:9
+msgid "Please enter a value for the setting \"{}\" ({}) needed by {}: "
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:10
+msgid ""
+"The line belonging to the following result cannot be printed because it "
+"refers to a line that doesn't seem to exist in the given file."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:12
+msgid "Project wide:"
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:42
+msgid "One of the given settings ({}) are not properly described."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:67
+msgid "The following options are applicable to this result:"
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:81
+msgid "No action."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:84
+msgid "Please enter the number of the action you want to execute."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:90
+msgid "Please enter a valid number."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:102
+msgid "Please enter a value for the parameter '{}' ({}):"
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:145
+msgid ""
+"A result ({}) cannot be printed because it refers to a file that doesn't "
+"seem to exist."
+msgstr ""
+
+#. pragma: no cover
+#: coalib/output/printers/EspeakPrinter.py:19
+msgid ""
+"eSpeak doesn't seem to be installed. You cannot use the voice output feature "
+"without eSpeak. It can be downloaded from http://espeak.sourceforge.net/ or "
+"installed via your usual package repositories."
+msgstr ""
+
+#. pragma: no cover
+#: coalib/output/printers/EspeakPrinter.py:24
+msgid "Failed to execute eSpeak. An unknown error occurred."
+msgstr ""
+
+#: coalib/output/Interactor.py:38
+msgid ""
+"One of the results can not be printed since it is not a valid derivative of "
+"the coala result class."
+msgstr ""
+
 #: coala:50
 msgid "Program terminated by user."
 msgstr ""
@@ -366,10 +359,8 @@ msgstr ""
 msgid "An unknown error occurred."
 msgstr ""
 
-#: coala:58
-#, python-brace-format
+#: coala:57
 msgid ""
-"During execution of coala an exception of type {exception} was raised. This "
-"should never happen. When asked for, the following information may help "
-"investigating:"
+"During execution of coala an exception was raised. This should never happen. "
+"When asked for, the following information may help investigating:"
 msgstr ""
