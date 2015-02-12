@@ -51,13 +51,13 @@ if __name__ == "__main__":
     except SystemExit:
         pass
     except:
-        exception = sys.exc_info()
+        exception = sys.exc_info()[1]
         UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
                         StringConstants.THIS_IS_A_BUG
         DESCRIPTION = _("During execution of coala an exception was raised. "
                         "This should never happen. When asked for, the "
                         "following information may help investigating:")
 
-        sections["default"].log_printer.err(UNKNOWN_ERROR)
-        sections["default"].log_printer.err(DESCRIPTION)
-        sections["default"].log_printer.err(traceback.format_exc())
+        sections["default"].log_printer.log_exception(
+            UNKNOWN_ERROR + " " + DESCRIPTION,
+            exception)
