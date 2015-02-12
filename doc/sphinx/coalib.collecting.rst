@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    coalib.collecting.Collectors
+   coalib.collecting.Dependencies
    coalib.collecting.Importers
 
 Module contents

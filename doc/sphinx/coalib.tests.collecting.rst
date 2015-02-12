@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    coalib.tests.collecting.CollectorsTest
+   coalib.tests.collecting.DependenciesTest
    coalib.tests.collecting.ImportersTest
 
 Module contents
