@@ -4,7 +4,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 class LogMessage:
     def __init__(self, log_level, message):
-        if not log_level in [LOG_LEVEL.DEBUG, LOG_LEVEL.WARNING, LOG_LEVEL.ERROR]:
+        if log_level not in LOG_LEVEL.reverse:
             raise ValueError("log_level has to be a valid LOG_LEVEL.")
         if message == "":
             raise ValueError("Empty log messages are not allowed.")
