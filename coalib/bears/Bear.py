@@ -1,4 +1,3 @@
-import sys
 import traceback
 
 from coalib.misc.i18n import _
@@ -81,35 +80,30 @@ class Bear:
                              **kwargs)
 
     def run(self, *args, **kwargs):
+        name = self.__class__.__name__
         try:
-            name = self.__class__.__name__
             self.debug_msg(_("Setting up bear {}...").format(name))
             self.set_up()
+
             self.debug_msg(_("Running bear {}...").format(name))
-            try:
-                retval = self.run_bear_from_section(args, kwargs)
-            except:
-                exception = sys.exc_info()
-                self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))
-                self.debug_msg(_("The bear {bear} raised an exception of type {exception}. If you are the "
-                                 "writer of this bear, please catch all exceptions. If not and this error annoys "
-                                 "you, you might want to get in contact with the writer of this bear.\n\n"
-                                 "Here is your traceback:\n\n{traceback}\n"
-                                 "").format(bear=self.__class__.__name__,
-                                            exception=str(exception[0].__name__),
-                                            traceback=str(traceback.extract_tb(exception[2]))))
-                return None
+            retval = self.run_bear_from_section(args, kwargs)
+
             self.debug_msg(_("Tearing down bear {}...").format(name))
             self.tear_down()
 
             return retval
         except:
-            exception = sys.exc_info()
-            self.warn_msg(_("Bear {} failed to run").format(self.__class__.__name__))
-            self.debug_msg(_("set_up() or tear_down() throwed an exception for bear {}.\n"
-                             "Exception: {}\nTraceback:\n{}").format(str(exception[0].__name__),
-                                                                     str(traceback.extract_tb(exception[2])),
-                                                                     self.__class__.__name__))
+            self.warn_msg(
+                _("Bear {} failed to run").format(name))
+            self.debug_msg(_("The bear {bear} raised an exception. If you are "
+                             "the writer of this bear, please make sure "
+                             "to catch all exceptions. If not and this error "
+                             "annoys you, you might want to get in contact "
+                             "with the writer of this bear.\n\n"
+                             "Traceback information is provided below:\n\n"
+                             "{traceback}\n")
+                           .format(bear=name,
+                                   traceback=traceback.format_exc()))
 
     @staticmethod
     def kind():
