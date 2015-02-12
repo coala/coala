@@ -1,4 +1,5 @@
 from datetime import datetime
+import traceback
 
 from coalib.output.printers.Printer import Printer
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -66,10 +67,15 @@ class LogPrinter(Printer):
             raise TypeError("log_exception can only log derivatives of "
                             "BaseException.")
 
+        traceback_str = "\n".join(
+            traceback.format_exception(type(exception),
+                                       exception,
+                                       exception.__traceback__))
+
         return self.log_message(
             LogMessage(log_level,
-                       message + "\n\n" + _("Exception was:") + "\n" +
-                       str(exception)),
+                       message + "\n\n" +
+                       _("Exception was:") + "\n" + traceback_str),
             timestamp=timestamp,
             **kwargs)
 

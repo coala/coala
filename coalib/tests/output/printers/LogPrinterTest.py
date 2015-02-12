@@ -47,12 +47,14 @@ class LogPrinterTestCase(unittest.TestCase):
             ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " + StringConstants.COMPLEX_TEST_STRING, "test"),
             uut.err(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
 
-        self.assertEqual(("[" + _("ERROR") + "][" + ts.strftime("%X") + "] Something failed.\n\n" +
-                          _("Exception was:") + "\n" + StringConstants.COMPLEX_TEST_STRING, "test"),
-                         uut.log_exception("Something failed.",
-                                           NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
-                                           timestamp=ts,
-                                           end=""))
+        logged = uut.log_exception(
+            "Something failed.",
+            NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
+            timestamp=ts,
+            end="")
+        self.assertTrue(logged[0].startswith(
+            "[" + _("ERROR") + "][" + ts.strftime("%X") +
+            "] Something failed.\n\n" + _("Exception was:") + "\n"))
 
     def test_raises(self):
         uut = LogPrinter()
