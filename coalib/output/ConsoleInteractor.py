@@ -50,8 +50,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             needed = ", ".join(arr[1:-1]) + _(" and ") + arr[-1]
 
         return input(self.STR_GET_VAL_FOR_SETTING.format(str(setting_name),
-                                                                                                 str(arr[0]),
-                                                                                                 needed))
+                                                         str(arr[0]),
+                                                         needed))
 
     def _format_line(self, line, real_nr="", sign="|", mod_nr="", symbol="", ):
         return "|{:>4}{}{:>4}|{:1}{}".format(real_nr, sign, mod_nr, symbol, line.rstrip("\n"))
@@ -81,7 +81,9 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             self.print(self._format_line("{:>2}: ".format(0) + _("No action.")))
 
             try:
-                choice = int(input(self._format_line(_("Please enter the number of the action you want to execute."))))
+                line = self._format_line(_("Please enter the number of the "
+                                           "action you want to execute. "))
+                choice = int(input(line))
                 if 0 <= choice <= len(actions):
                     return choice
             except ValueError:
@@ -98,9 +100,10 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         section = Section("")
 
         for param_name in params:
-            section.append(Setting(param_name,
-                                   input(self._format_line(_("Please enter a value for the parameter "
-                                                             "'{}' ({}):").format(param_name, params[param_name][0])))))
+            question = self._format_line(
+                _("Please enter a value for the parameter '{}' ({}): ")
+                .format(param_name, params[param_name][0]))
+            section.append(Setting(param_name, input(question)))
 
         return action.name, section
 
