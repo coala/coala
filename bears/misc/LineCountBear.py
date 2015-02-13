@@ -10,7 +10,7 @@ class LineCountBear(LocalBear):
         Counts the lines of each file.
         """
         return [Result(
-            self.__class__.__name__,
-            _("This file has {count} lines.").format(count=len(file)),
-            RESULT_SEVERITY.INFO
-        )]
+            origin=self.__class__.__name__,
+            message=_("This file has {count} lines.").format(count=len(file)),
+            severity=RESULT_SEVERITY.INFO,
+            file=filename)]

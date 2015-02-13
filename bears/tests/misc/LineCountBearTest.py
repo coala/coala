@@ -19,16 +19,15 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
             ["1", "2", "3"],
             Result("LineCountBear",
                    _("This file has {count} lines.").format(count=3),
-                   RESULT_SEVERITY.INFO
-            )
-        )
+                   severity=RESULT_SEVERITY.INFO,
+                   file="default"))
         self.assertLinesYieldResult(
             self.uut,
             [],
             Result("LineCountBear",
                    _("This file has {count} lines.").format(count=0),
-                   RESULT_SEVERITY.INFO)
-        )
+                   severity=RESULT_SEVERITY.INFO,
+                   file="default"))
 
 
 if __name__ == '__main__':

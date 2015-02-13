@@ -24,8 +24,15 @@ coala can be installed with `python3 setup.py install`. If you need more
 information about the installation and dependencies, take a look at our
 INSTALL.md.
 
+USAGE
+=====
+
+If you want to learn more about coala, its functionality and its usage, please
+take a look at the TUTORIAL.md file.
+
 ABOUT
 =====
+
 coala is a simple COde AnaLysis Application. Its goal is to make static code
 analysis easy while remaining completely modular and therefore extendable.
 
@@ -41,21 +48,16 @@ https://github.com/coala-analyzer/coala
 
 Authors
 -------
+
 Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt
 <fabian@neuschmidt.de> are the current maintainers of this project.
 
 Build status
 ------------
+
 [![Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg?branch=master)](https://coveralls.io/r/coala-analyzer/coala?branch=master)
-
-FUNCTION REFERENCE
-==================
-Try executing `coala -h` for information about the most common settings. You
-can also define settings via the .coafile in the current directory (try the
-`--save` option). If a bear needs a setting that is not provided, coala will
-explicitly ask you for it.
 
 GETTING INVOLVED
 ================
@@ -67,6 +69,7 @@ We appreciate any help!
 
 LICENSE
 =======
+
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU Affero General Public License as published by the Free
 Software Foundation, either version 3 of the License, or (at your option) any
