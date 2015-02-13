@@ -210,14 +210,20 @@ class BearRunner(multiprocessing.Process):
 
         return dependency_results
 
-    def __run_local_bear(self, bear_instance, filename):
+    def _is_local_bear(self, bear_instance):
         if not isinstance(bear_instance, LocalBear) or \
-                bear_instance.kind() != BEAR_KIND.LOCAL:
+           bear_instance.kind() != BEAR_KIND.LOCAL:
             self.warn(_("A given local bear ({}) is not valid. "
                         "Leaving it out...")
                       .format(bear_instance.__class__.__name__),
                       StringConstants.THIS_IS_A_BUG)
 
+            return False
+        else:
+            return True
+
+    def __run_local_bear(self, bear_instance, filename):
+        if not self._is_local_bear(bear_instance):
             return None
 
         dependency_results = self._get_local_dependency_results(bear_instance)
