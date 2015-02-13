@@ -1,5 +1,6 @@
 import queue
 import multiprocessing
+import traceback
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -140,16 +141,9 @@ class BearRunner(multiprocessing.Process):
         try:
             while True:
                 filename = self.filename_queue.get(timeout=self.TIMEOUT)
-                try:
-                    self.__run_local_bears(filename)
-                except:  # pragma: no cover
-                    self.err(_("An unknown error occurred while running local "
-                               "bears for the file {}. Skipping file..."
-                               .format(filename)),
-                             StringConstants.THIS_IS_A_BUG)
-                finally:
-                    if hasattr(self.filename_queue, "task_done"):
-                        self.filename_queue.task_done()
+                self.__run_local_bears(filename)
+                if hasattr(self.filename_queue, "task_done"):
+                    self.filename_queue.task_done()
         except queue.Empty:
             return
 
@@ -232,9 +226,21 @@ class BearRunner(multiprocessing.Process):
         if dependency_results is not None:
             kwargs["dependency_results"] = dependency_results
 
-        return bear_instance.run(filename,
-                                 self.file_dict[filename],
-                                 **kwargs)
+        try:
+            return bear_instance.run(filename,
+                                     self.file_dict[filename],
+                                     **kwargs)
+        except:
+            tb = traceback.format_exc()
+            name = bear_instance.__class__.__name__
+            self.err(_("The bear {bear} failed to run for file {file}. "
+                       "Skipping bear...")
+                     .format(bear=name, file=filename),
+                     StringConstants.THIS_IS_A_BUG)
+            self.debug(_("Traceback for error in bear {bear}:")
+                       .format(bear=name), tb, delimiter="\n")
+
+            return None
 
     def __run_global_bear(self, global_bear_instance):
         if not isinstance(global_bear_instance, GlobalBear) \

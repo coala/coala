@@ -60,6 +60,11 @@ class GlobalTestBear(GlobalBear):
         return result
 
 
+class EvilBear(LocalBear):
+    def run(self, *args, **kwargs):
+        raise NotImplementedError
+
+
 class BearRunnerConstructionTestCase(unittest.TestCase):
     def test_initialization(self):
         file_name_queue = queue.Queue()
@@ -141,6 +146,14 @@ class BearRunnerUnitTestCase(unittest.TestCase):
                 self.assertEqual(msg.log_level, LOG_LEVEL.DEBUG)
         except queue.Empty:
             pass
+
+    def test_evil_bear(self):
+        self.local_bear_list.append(EvilBear(self.settings,
+                                             self.message_queue))
+        self.file_name_queue.put("t")
+        self.file_dict["t"] = []
+
+        self.uut.run()
 
 
 class BearRunnerIntegrationTestCase(unittest.TestCase):
