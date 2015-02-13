@@ -1,1 +1,2 @@
 include locale/*.po
+include coalib/default_coafile
