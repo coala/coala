@@ -175,6 +175,29 @@ several targets seperated by a space.
 
 What was that TODO again?
 
+## Integrating coala into Your Project
+
+It's easy to add coala to your project in a way that does not force your
+developers even to install coala using git submodules. This also has the
+advantage that all your developers are using exactly the same version of coala.
+You can try it out in the coala-tutorial repository:
+
+```
+git submodule add https://github.com/coala-analyzer/coala.git
+git commit -m 'Add coala submodule'
+git add .coafile
+git commit -m 'Add .coafile'
+```
+
+You can now use `coala/coala` as if it were the installed binary. Here's the
+instructions for your developers:
+
+```
+git submodule init
+git submodule update
+coala/coala
+```
+
 ## Continuing the Journey
 
 If you want to know about more options, take a look at our help with
