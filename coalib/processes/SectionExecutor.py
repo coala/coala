@@ -69,11 +69,6 @@ class SectionExecutor:
         running_processes = get_cpu_count()
         processes, arg_dict = self._instantiate_processes(running_processes)
 
-        file_dict = arg_dict["file_dict"]
-        control_queue = arg_dict["control_queue"]
-        local_result_dict = arg_dict["local_result_dict"]
-        global_result_dict = arg_dict["global_result_dict"]
-
         logger_thread = self.LogPrinterThread(arg_dict["message_queue"],
                                               self.section.log_printer)
         # Start and join the logger thread along with the BearRunner's
@@ -82,24 +77,45 @@ class SectionExecutor:
         for runner in processes:
             runner.start()
 
+        self._process_queues(processes,
+                             arg_dict["control_queue"],
+                             arg_dict["local_result_dict"],
+                             arg_dict["global_result_dict"],
+                             arg_dict["file_dict"])
+
+        logger_thread.running = False
+
+        for runner in processes:
+            runner.join()
+
+    @staticmethod
+    def _get_running_processes(processes):
+        return sum((1 if process.is_alive() else 0) for process in processes)
+
+    def _process_queues(self,
+                        processes,
+                        control_queue,
+                        local_result_dict,
+                        global_result_dict,
+                        file_dict):
+        running_processes = self._get_running_processes(processes)
+        interactor = self.section.interactor
         # One process is the logger thread
         while running_processes > 1:
             try:
                 control_elem, index = control_queue.get(timeout=0.1)
                 if control_elem == CONTROL_ELEMENT.LOCAL:
-                    self.section.interactor.print_results(local_result_dict[index], file_dict)
+                    interactor.print_results(local_result_dict[index],
+                                             file_dict)
                 elif control_elem == CONTROL_ELEMENT.GLOBAL:
-                    self.section.interactor.print_results(global_result_dict[index], file_dict)
+                    interactor.print_results(global_result_dict[index],
+                                             file_dict)
                 elif control_elem == CONTROL_ELEMENT.FINISHED:
-                    running_processes = sum((1 if process.is_alive() else 0) for process in processes)
+                    running_processes = self._get_running_processes(processes)
             except queue.Empty:
-                running_processes = sum((1 if process.is_alive() else 0) for process in processes)
+                running_processes = self._get_running_processes(processes)
 
-        logger_thread.running = False
         self.section.interactor.finalize(file_dict)
-
-        for runner in processes:
-            runner.join()
 
     def _instantiate_bears(self, file_dict, message_queue):
         for i in range(len(self.local_bear_list)):
