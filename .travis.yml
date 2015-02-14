@@ -15,6 +15,7 @@ python:
 
 install:
   - pip install coveralls
+  - pip install codecov
   - pip install scrutinizer-ocular
 
 script:
@@ -25,3 +26,4 @@ script:
 after_success:
   - coveralls
   - ocular
+  - codecov
