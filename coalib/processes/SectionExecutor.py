@@ -66,39 +66,18 @@ class SectionExecutor:
         self.global_bear_list = Dependencies.resolve(global_bear_list)
 
     def run(self):
-        filename_list = collect_files(path_list(self.section['files']))
-        file_dict = self._get_file_dict(filename_list)
-
-        manager = multiprocessing.Manager()
-        global_bear_queue = multiprocessing.Queue()
-        filename_queue = multiprocessing.Queue()
-        local_result_dict = manager.dict()
-        global_result_dict = manager.dict()
-        message_queue = multiprocessing.Queue()
-        control_queue = multiprocessing.Queue()
-
-        self._instantiate_bears(file_dict, message_queue)
-
         running_processes = get_cpu_count()
-        barrier = Barrier(parties=running_processes)
+        processes, arg_dict = self._instantiate_processes(running_processes)
 
-        bear_runner_args = {"file_name_queue": filename_queue,
-                            "local_bear_list": self.local_bear_list,
-                            "global_bear_list": self.global_bear_list,
-                            "global_bear_queue": global_bear_queue,
-                            "file_dict": file_dict,
-                            "local_result_dict": local_result_dict,
-                            "global_result_dict": global_result_dict,
-                            "message_queue": message_queue,
-                            "control_queue": control_queue,
-                            "barrier": barrier,
-                            "TIMEOUT": 0.1}
-        processes = [BearRunner(**bear_runner_args) for i in range(running_processes)]
-        logger_thread = self.LogPrinterThread(message_queue, self.section.log_printer)
-        processes.append(logger_thread)  # Start and join the logger thread along with the BearRunner's
+        file_dict = arg_dict["file_dict"]
+        control_queue = arg_dict["control_queue"]
+        local_result_dict = arg_dict["local_result_dict"]
+        global_result_dict = arg_dict["global_result_dict"]
 
-        self._fill_queue(filename_queue, filename_list)
-        self._fill_queue(global_bear_queue, range(len(self.global_bear_list)))
+        logger_thread = self.LogPrinterThread(arg_dict["message_queue"],
+                                              self.section.log_printer)
+        # Start and join the logger thread along with the BearRunner's
+        processes.append(logger_thread)
 
         for runner in processes:
             runner.start()
@@ -132,6 +111,40 @@ class SectionExecutor:
                                                                 self.section,
                                                                 message_queue,
                                                                 TIMEOUT=0.1)
+
+    def _instantiate_processes(self, job_count):
+        filename_list = collect_files(path_list(self.section['files']))
+        file_dict = self._get_file_dict(filename_list)
+
+        manager = multiprocessing.Manager()
+        global_bear_queue = multiprocessing.Queue()
+        filename_queue = multiprocessing.Queue()
+        local_result_dict = manager.dict()
+        global_result_dict = manager.dict()
+        message_queue = multiprocessing.Queue()
+        control_queue = multiprocessing.Queue()
+
+        barrier = Barrier(parties=job_count)
+
+        bear_runner_args = {"file_name_queue": filename_queue,
+                            "local_bear_list": self.local_bear_list,
+                            "global_bear_list": self.global_bear_list,
+                            "global_bear_queue": global_bear_queue,
+                            "file_dict": file_dict,
+                            "local_result_dict": local_result_dict,
+                            "global_result_dict": global_result_dict,
+                            "message_queue": message_queue,
+                            "control_queue": control_queue,
+                            "barrier": barrier,
+                            "TIMEOUT": 0.1}
+
+        self._instantiate_bears(file_dict,
+                                message_queue)
+        self._fill_queue(filename_queue, filename_list)
+        self._fill_queue(global_bear_queue, range(len(self.global_bear_list)))
+
+        return ([BearRunner(**bear_runner_args) for i in range(job_count)],
+                bear_runner_args)
 
     @staticmethod
     def _fill_queue(_queue, any_list):
