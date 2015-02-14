@@ -73,7 +73,14 @@ class Section:
         # Setting asserts key != "" for us
         self.contents[key] = setting
 
-    def _add_or_create_setting(self, setting, custom_key=None, allow_appending=True):
+    def add_or_create_setting(self,
+                              setting,
+                              custom_key=None,
+                              allow_appending=True):
+        """
+        Adds the value of the setting to an existing setting if there is
+        already a setting  with the key. Otherwise creates a new setting.
+        """
         if custom_key is None:
             key = setting.key
         else:
