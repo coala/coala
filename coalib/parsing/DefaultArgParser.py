@@ -52,7 +52,8 @@ default_arg_parser.add_argument('-c',
                                 nargs=1,
                                 metavar='FILE',
                                 help=CONFIG_HELP)
-SAVE_HELP = _('Filename of file to be saved to, defaults to config file')
+SAVE_HELP = _('Filename of file to be saved to, if provided with no '
+              'arguments, settings will be stored back to the config file')
 default_arg_parser.add_argument('-s',
                                 '--save',
                                 nargs='?',
