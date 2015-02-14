@@ -37,12 +37,9 @@ if __name__ == "__main__":
             if not section.is_enabled(targets):
                 continue
 
-            sec_global_bears = global_bears[section_name]
-            sec_local_bears = local_bears[section_name]
-
             SectionExecutor(section=section,
-                            global_bear_list=sec_global_bears,
-                            local_bear_list=sec_local_bears).run()
+                            global_bear_list=global_bears[section_name],
+                            local_bear_list=local_bears[section_name]).run()
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
     except SystemExit:
