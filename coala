@@ -34,10 +34,7 @@ if __name__ == "__main__":
         sections, local_bears, global_bears, targets = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
-            if len(targets) == 0:
-                if not bool(section.get("enabled", "true")):
-                    continue
-            elif section_name not in targets:
+            if not section.is_enabled(targets):
                 continue
 
             sec_global_bears = global_bears[section_name]

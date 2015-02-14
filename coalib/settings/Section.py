@@ -42,6 +42,19 @@ class Section:
         self.interactor = interactor
         self.log_printer = log_printer
 
+    def is_enabled(self, targets):
+        """
+        Checks if this section is enabled or, if targets is not empty, if it is
+        included in the targets list.
+
+        :param targets: List of target section names, all lower case.
+        :return: True or False
+        """
+        if len(targets) == 0:
+            return bool(self.get("enabled", "true"))
+
+        return self.name.lower() in targets
+
     def retrieve_logging_objects(self):
         """
         Creates an appropriate log printer and interactor according to the

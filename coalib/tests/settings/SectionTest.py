@@ -30,6 +30,17 @@ class SectionTestCase(unittest.TestCase):
         self.assertEqual(str(uut.get("5 ")), "5")
         self.assertEqual(int(uut.get("nonexistent", 5)), 5)
 
+    def test_enabled(self):
+        uut = Section("name")
+        self.assertTrue(uut.is_enabled([]))
+        self.assertTrue(uut.is_enabled(["name", "wrongname"]))
+        self.assertFalse(uut.is_enabled(["wrongname"]))
+
+        uut.append(Setting("enabled", "false"))
+        self.assertFalse(uut.is_enabled([]))
+        self.assertFalse(uut.is_enabled(["wrong_name"]))
+        self.assertTrue(uut.is_enabled(["name", "wrongname"]))
+
     def test_iter(self):
         defaults = Section("default", None)
         uut = Section("name", defaults)
