@@ -16,7 +16,6 @@ python:
 install:
   - pip install coveralls
   - pip install codecov
-  - pip install scrutinizer-ocular
 
 script:
   - sudo apt-get install espeak
@@ -25,5 +24,4 @@ script:
 
 after_success:
   - coveralls
-  - ocular
   - codecov
