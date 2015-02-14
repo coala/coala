@@ -31,6 +31,7 @@ if __name__ == "__main__":
     # Set default section so we have a log printer if the SectionManager fails.
     sections = {"default": Section("default")}
     try:
+        did_nothing = True
         sections, local_bears, global_bears, targets = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
@@ -40,6 +41,10 @@ if __name__ == "__main__":
             SectionExecutor(section=section,
                             global_bear_list=global_bears[section_name],
                             local_bear_list=local_bears[section_name]).run()
+            did_nothing = False
+
+        if did_nothing:
+            sections["default"].interactor.did_nothing()
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
     except SystemExit:
