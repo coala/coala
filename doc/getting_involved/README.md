@@ -32,3 +32,8 @@ Modularity, clean good code as well as a high usability for both users and
 developers of analyse routines (called bears) stand in the foreground of the
 development. We will not speed up our development if it needs sacrificing
 any aspect of quality.
+
+We currently have more information on the following topics:
+
+ * [Testing](TESTING.md)
+ * [Translating](TRANSLATING.md)
