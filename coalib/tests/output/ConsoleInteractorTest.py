@@ -97,12 +97,20 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
         return ["INVALID", -1, 1, 3][ConsoleInteractorTestCase.curr]
 
+    def test_begin_section(self):
+        q = queue.Queue()
+        # 0:-1 to strip of the trailing newline character
+        self.uut._print = lambda string: q.put(string[0:-1])
+        self.uut.begin_section("name")
+        self.assertEqual(q.get(timeout=0), _("Executing section "
+                                             "{name}...").format(name="name"))
+
     def test_print_results(self):
+        q = queue.Queue()
         self.uut._print = lambda string: q.put(string)
 
         self.assertRaises(TypeError, self.uut.print_results, 5, {})
         self.assertRaises(TypeError, self.uut.print_results, [], 5)
-        q = queue.Queue()
 
         self.uut.print_results([], {})
         self.assertRaises(queue.Empty, q.get, timeout=0)

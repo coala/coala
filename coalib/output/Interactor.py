@@ -103,3 +103,12 @@ class Interactor(SectionCreatable):
     @classmethod
     def get_metadata(cls):
         return FunctionMetadata.from_function(cls.__init__, ["self", "log_printer"])
+
+    def begin_section(self, name):
+        """
+        Will be called before the results for a section come in (via
+        print_results).
+
+        :param name: The name of the section that will get executed now.
+        """
+        raise NotImplementedError

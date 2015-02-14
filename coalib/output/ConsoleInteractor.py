@@ -161,3 +161,6 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                     current_line = result.line_nr
 
             self.print_result(result, file_dict)
+
+    def begin_section(self, name):
+        self.print(_("Executing section {name}...").format(name=name))
