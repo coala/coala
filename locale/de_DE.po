@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: coala 0.2\n"
+"Project-Id-Version: coala 0.1\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Lasse Schuirmann <lasse.schuirmann@gmail.com>\n"

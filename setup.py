@@ -11,7 +11,7 @@ if __name__ == "__main__":
     data_files = compile_translations()
 
     setup(name='coala',
-          version='0.2',
+          version='0.1',
           description='Code Analysis Application (coala)',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt',
           maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de',
