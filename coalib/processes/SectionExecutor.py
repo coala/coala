@@ -77,10 +77,7 @@ class SectionExecutor:
         message_queue = multiprocessing.Queue()
         control_queue = multiprocessing.Queue()
 
-        for i in range(len(self.local_bear_list)):
-            self.local_bear_list[i] = self.local_bear_list[i](self.section, message_queue, TIMEOUT=0.1)
-        for i in range(len(self.global_bear_list)):
-            self.global_bear_list[i] = self.global_bear_list[i](file_dict, self.section, message_queue, TIMEOUT=0.1)
+        self._instantiate_bears(file_dict, message_queue)
 
         running_processes = get_cpu_count()
         barrier = Barrier(parties=running_processes)
@@ -124,6 +121,17 @@ class SectionExecutor:
 
         for runner in processes:
             runner.join()
+
+    def _instantiate_bears(self, file_dict, message_queue):
+        for i in range(len(self.local_bear_list)):
+            self.local_bear_list[i] = self.local_bear_list[i](self.section,
+                                                              message_queue,
+                                                              TIMEOUT=0.1)
+        for i in range(len(self.global_bear_list)):
+            self.global_bear_list[i] = self.global_bear_list[i](file_dict,
+                                                                self.section,
+                                                                message_queue,
+                                                                TIMEOUT=0.1)
 
     @staticmethod
     def _fill_queue(_queue, any_list):
