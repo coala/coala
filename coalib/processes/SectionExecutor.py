@@ -77,16 +77,17 @@ class SectionExecutor:
         for runner in processes:
             runner.start()
 
-        self._process_queues(processes,
-                             arg_dict["control_queue"],
-                             arg_dict["local_result_dict"],
-                             arg_dict["global_result_dict"],
-                             arg_dict["file_dict"])
+        try:
+            self._process_queues(processes,
+                                 arg_dict["control_queue"],
+                                 arg_dict["local_result_dict"],
+                                 arg_dict["global_result_dict"],
+                                 arg_dict["file_dict"])
+        finally:
+            logger_thread.running = False
 
-        logger_thread.running = False
-
-        for runner in processes:
-            runner.join()
+            for runner in processes:
+                runner.join()
 
     @staticmethod
     def _get_running_processes(processes):
