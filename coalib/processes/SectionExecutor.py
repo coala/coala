@@ -66,6 +66,8 @@ class SectionExecutor:
         self.global_bear_list = Dependencies.resolve(global_bear_list)
 
     def run(self):
+        self.section.interactor.begin_section(self.section.name)
+
         running_processes = get_cpu_count()
         processes, arg_dict = self._instantiate_processes(running_processes)
 
