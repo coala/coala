@@ -16,33 +16,32 @@ msgstr ""
 msgid "Line contains spacing inconsistencies."
 msgstr ""
 
-#. pragma: no cover
-#: coalib/processes/BearRunner.py:146
-msgid ""
-"An unknown error occurred while running local bears for the file {}. "
-"Skipping file..."
-msgstr ""
-
-#. pragma: no cover
-#: coalib/processes/BearRunner.py:169
-msgid ""
-"An unknown error occurred while running global bear {}. Skipping bear..."
-msgstr ""
-
-#: coalib/processes/BearRunner.py:185
+#: coalib/processes/BearRunner.py:173
 msgid "An internal error occurred."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:187
+#: coalib/processes/BearRunner.py:175
 msgid "The given file through the queue is not in the file dictionary."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:222
+#: coalib/processes/BearRunner.py:210
 msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:242
+#: coalib/processes/BearRunner.py:237
 msgid "A given global bear ({}) is not valid. Leaving it out..."
+msgstr ""
+
+#: coalib/processes/BearRunner.py:252
+#, python-brace-format
+msgid ""
+"The bear {bear} failed to run with the arguments {arglist}, {kwarglist}. "
+"Skipping bear..."
+msgstr ""
+
+#: coalib/processes/BearRunner.py:255
+#, python-brace-format
+msgid "Traceback for error in bear {bear}:"
 msgstr ""
 
 #: coalib/misc/StringConstants.py:8
@@ -121,26 +120,26 @@ msgstr ""
 msgid "wrong"
 msgstr ""
 
-#: coalib/bears/Bear.py:83 coalib/tests/bears/BearTest.py:67
+#: coalib/bears/Bear.py:82 coalib/tests/bears/BearTest.py:67
 #: coalib/tests/bears/BearTest.py:77
 msgid "Setting up bear {}..."
 msgstr ""
 
-#: coalib/bears/Bear.py:86 coalib/tests/bears/BearTest.py:69
+#: coalib/bears/Bear.py:85 coalib/tests/bears/BearTest.py:69
 #: coalib/tests/bears/BearTest.py:78
 msgid "Running bear {}..."
 msgstr ""
 
-#: coalib/bears/Bear.py:89 coalib/tests/bears/BearTest.py:71
+#: coalib/bears/Bear.py:88 coalib/tests/bears/BearTest.py:71
 #: coalib/tests/bears/BearTest.py:79
 msgid "Tearing down bear {}..."
 msgstr ""
 
-#: coalib/bears/Bear.py:96 coalib/tests/bears/BearTest.py:80
+#: coalib/bears/Bear.py:94 coalib/tests/bears/BearTest.py:80
 msgid "Bear {} failed to run"
 msgstr ""
 
-#: coalib/bears/Bear.py:97
+#: coalib/bears/Bear.py:95
 #, python-brace-format
 msgid ""
 "The bear {bear} raised an exception. If you are the writer of this bear, "
@@ -211,8 +210,14 @@ msgstr ""
 msgid " and "
 msgstr ""
 
+#: coalib/tests/output/ConsoleInteractorTest.py:105
+#: coalib/output/ConsoleInteractor.py:166
+#, python-brace-format
+msgid "Executing section {name}..."
+msgstr ""
+
 #: coalib/tests/output/printers/LogPrinterTest.py:57
-#: coalib/output/printers/LogPrinter.py:73
+#: coalib/output/printers/LogPrinter.py:75
 msgid "Exception was:"
 msgstr ""
 
@@ -268,23 +273,25 @@ msgstr ""
 msgid "Type of output (console or any filename)"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:53
-msgid "Configuration file to be used"
+#: coalib/parsing/DefaultArgParser.py:49
+msgid "Configuration file to be used, defaults to .coafile"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:54
-msgid "Filename of file to be saved to, defaults to config file"
+#: coalib/parsing/DefaultArgParser.py:55
+msgid ""
+"Filename of file to be saved to, if provided with no arguments, settings "
+"will be stored back to the config file"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:61
+#: coalib/parsing/DefaultArgParser.py:63
 msgid "Arbitrary settings in the form of section.key=value"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:67
+#: coalib/parsing/DefaultArgParser.py:69
 msgid "Number of processes to be allowed to run at once"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:74
+#: coalib/parsing/DefaultArgParser.py:76
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr ""
 
@@ -306,27 +313,24 @@ msgstr ""
 msgid "One of the given settings ({}) are not properly described."
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:67
-msgid "The following options are applicable to this result:"
-msgstr ""
-
-#: coalib/output/ConsoleInteractor.py:81
-msgid "No action."
+#: coalib/output/ConsoleInteractor.py:68
+msgid ""
+"The following options are applicable to this result (choose 0 for no action):"
 msgstr ""
 
 #: coalib/output/ConsoleInteractor.py:84
-msgid "Please enter the number of the action you want to execute."
+msgid "Please enter the number of the action you want to execute. "
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:90
+#: coalib/output/ConsoleInteractor.py:92
 msgid "Please enter a valid number."
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:102
-msgid "Please enter a value for the parameter '{}' ({}):"
+#: coalib/output/ConsoleInteractor.py:104
+msgid "Please enter a value for the parameter '{}' ({}): "
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:145
+#: coalib/output/ConsoleInteractor.py:148
 msgid ""
 "A result ({}) cannot be printed because it refers to a file that doesn't "
 "seem to exist."
