@@ -164,3 +164,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
     def begin_section(self, name):
         self.print(_("Executing section {name}...").format(name=name))
+
+    def did_nothing(self):
+        self.print(_("No existent section was targeted nor enabled. Nothing to"
+                     "do."))
