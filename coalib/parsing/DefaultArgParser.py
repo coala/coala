@@ -46,11 +46,12 @@ default_arg_parser.add_argument('-o',
                                 nargs=1,
                                 metavar='FILE',
                                 help=OUTPUT_HELP)
+CONFIG_HELP = _('Configuration file to be used, defaults to .coafile')
 default_arg_parser.add_argument('-c',
                                 '--config',
                                 nargs=1,
                                 metavar='FILE',
-                                help=_('Configuration file to be used'))
+                                help=CONFIG_HELP)
 SAVE_HELP = _('Filename of file to be saved to, defaults to config file')
 default_arg_parser.add_argument('-s',
                                 '--save',
