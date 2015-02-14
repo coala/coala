@@ -48,7 +48,7 @@ default_arg_parser.add_argument('-o',
                                 help=OUTPUT_HELP)
 default_arg_parser.add_argument('-c',
                                 '--config',
-                                nargs='+',
+                                nargs=1,
                                 metavar='FILE',
                                 help=_('Configuration file to be used'))
 SAVE_HELP = _('Filename of file to be saved to, defaults to config file')
