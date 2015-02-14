@@ -22,13 +22,13 @@ INSTALLATION
 
 coala can be installed with `python3 setup.py install`. If you need more
 information about the installation and dependencies, take a look at our
-INSTALL.md.
+[INSTALL.md](INSTALL.md).
 
 USAGE
 =====
 
 If you want to learn more about coala, its functionality and its usage, please
-take a look at the TUTORIAL.md file.
+take a look at the [TUTORIAL.md](TUTORIAL.md) file.
 
 ABOUT
 =====
@@ -63,7 +63,7 @@ GETTING INVOLVED
 ================
 
 If you want to contribute to coala, please take a look at the
-./doc/getting_involved directory.
+[doc/getting_involved](doc/getting_involved) directory.
 
 We appreciate any help!
 
