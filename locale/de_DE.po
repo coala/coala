@@ -20,7 +20,7 @@ msgstr "Zeile ist länger als erlaubt."
 #: bears/tests/misc/LineCountBearTest.py:29
 #, python-brace-format
 msgid "This file has {count} lines."
-msgstr ""
+msgstr "Die Datei hat {count} Zeilen."
 
 #: bears/misc/KeywordBear.py:36
 msgid "Line contains the following keywords:"
@@ -46,7 +46,7 @@ msgstr "Der lokale Bär ({}) ist nicht korrekt.  Er wird ausgelassen..."
 
 #: coalib/processes/BearRunner.py:237
 msgid "A given global bear ({}) is not valid. Leaving it out..."
-msgstr ""
+msgstr "Der globale Bär ({}) ist nicht korrekt.  Er wird ausgelassen..."
 
 #: coalib/processes/BearRunner.py:252
 #, python-brace-format
@@ -232,7 +232,7 @@ msgstr " und "
 #: coalib/output/ConsoleInteractor.py:166
 #, python-brace-format
 msgid "Executing section {name}..."
-msgstr ""
+msgstr "Sektion {name} wird ausgeführt..."
 
 #: coalib/tests/output/printers/LogPrinterTest.py:57
 #: coalib/output/printers/LogPrinter.py:75
@@ -298,7 +298,7 @@ msgstr "Art der Ausgabe (console oder ein Dateiname)"
 
 #: coalib/parsing/DefaultArgParser.py:49
 msgid "Configuration file to be used, defaults to .coafile"
-msgstr ""
+msgstr "Zu benutzende Konfigurationsdatei, .coafile wenn nicht gegeben."
 
 #: coalib/parsing/DefaultArgParser.py:55
 msgid ""
@@ -356,7 +356,7 @@ msgstr "Bitte geben Sie eine gültige Zahl ein."
 
 #: coalib/output/ConsoleInteractor.py:104
 msgid "Please enter a value for the parameter '{}' ({}): "
-msgstr ""
+msgstr "Bitte geben Sie einen Wert für den Parameter '{}' ({}) ein: "
 
 #: coalib/output/ConsoleInteractor.py:148
 msgid ""
