@@ -112,3 +112,10 @@ class Interactor(SectionCreatable):
         :param name: The name of the section that will get executed now.
         """
         raise NotImplementedError
+
+    def did_nothing(self):
+        """
+        Will be called after processing a coafile when nothing had to be done,
+        i.e. no section was enabled/targeted.
+        """
+        raise NotImplementedError

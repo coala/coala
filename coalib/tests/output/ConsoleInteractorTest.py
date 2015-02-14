@@ -97,13 +97,18 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
         return ["INVALID", -1, 1, 3][ConsoleInteractorTestCase.curr]
 
-    def test_begin_section(self):
+    def test_static_functions(self):
         q = queue.Queue()
         # 0:-1 to strip of the trailing newline character
         self.uut._print = lambda string: q.put(string[0:-1])
         self.uut.begin_section("name")
         self.assertEqual(q.get(timeout=0), _("Executing section "
                                              "{name}...").format(name="name"))
+
+        self.uut.did_nothing()
+        self.assertEqual(q.get(timeout=0),
+                         _("No existent section was targeted nor enabled. "
+                           "Nothing todo."))
 
     def test_print_results(self):
         q = queue.Queue()
