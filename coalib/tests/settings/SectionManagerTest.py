@@ -70,8 +70,10 @@ class SectionManagerTestCase(unittest.TestCase):
                               NullPrinter)
 
     def test_targets(self):
-        targets = SectionManager().run(arg_list=["test1", "test2"])[3]
-        self.assertEqual(targets, ["test1", "test2"])
+        targets = SectionManager().run(arg_list=["default",
+                                                 "test1",
+                                                 "test2"])[3]
+        self.assertEqual(targets, ["default", "test1", "test2"])
 
 
 if __name__ == '__main__':
