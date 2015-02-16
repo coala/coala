@@ -3,6 +3,8 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.FunctionMetadata import FunctionMetadata
+from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 class TestClass:
@@ -15,16 +17,28 @@ class TestClass:
         :return: ret
         """
 
+    def bad_function(self, bad_param: "no function"):
+        pass
+
 
 class FunctionMetadataTestCase(unittest.TestCase):
     def test_construction(self):
         self.assertRaises(TypeError, FunctionMetadata, 5)
         self.assertRaises(TypeError, FunctionMetadata, "name", desc=5)
         self.assertRaises(TypeError, FunctionMetadata, "name", retval_desc=5)
-        self.assertRaises(TypeError, FunctionMetadata, "name", non_optional_params=5)
-        self.assertRaises(TypeError, FunctionMetadata, "name", optional_params=5)
+        self.assertRaises(TypeError,
+                          FunctionMetadata,
+                          "name",
+                          non_optional_params=5)
+        self.assertRaises(TypeError,
+                          FunctionMetadata,
+                          "name",
+                          optional_params=5)
         self.assertRaises(TypeError, FunctionMetadata.from_function, 5)
-        self.assertRaises(TypeError, FunctionMetadata.from_function, self.test_construction, 5)
+        self.assertRaises(TypeError,
+                          FunctionMetadata.from_function,
+                          self.test_construction,
+                          5)
         self.check_function_metadata_data_set(FunctionMetadata("name"), "name")
 
     def test_from_function(self):
@@ -58,6 +72,13 @@ class FunctionMetadataTestCase(unittest.TestCase):
                                                   "param4": ("p4 desc (" + uut.str_optional.format("6") + ")", int, 6)
                                               })
 
+    def test_create_params_from_section(self):
+        section = Section("name")
+        section.append(Setting("bad_param", "value"))
+        uut = FunctionMetadata.from_function(TestClass(5, 5).bad_function)
+        params = uut.create_params_from_section(section)
+        self.assertIsInstance(params["bad_param"], Setting)
+
     def check_function_metadata_data_set(self,
                                          metadata,
                                          name,
@@ -70,7 +91,6 @@ class FunctionMetadataTestCase(unittest.TestCase):
         self.assertEqual(metadata.retval_desc, retval_desc)
         self.assertEqual(metadata.non_optional_params, non_optional_params)
         self.assertEqual(metadata.optional_params, optional_params)
-
 
 
 if __name__ == '__main__':
