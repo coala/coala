@@ -12,8 +12,8 @@ class FunctionMetadata:
                  name,
                  desc="",
                  retval_desc="",
-                 non_optional_params={},
-                 optional_params={}):
+                 non_optional_params=None,
+                 optional_params=None):
         """
         Creates the FunctionMetadata object.
 
@@ -27,6 +27,11 @@ class FunctionMetadata:
         parameters as the key and a tuple
         of a description, the python annotation and the default value.
         """
+        if non_optional_params is None:
+            non_optional_params = {}
+        if optional_params is None:
+            optional_params = {}
+
         if not isinstance(name, str):
             raise TypeError("name should be a string")
         if not isinstance(desc, str):
