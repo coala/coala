@@ -68,18 +68,20 @@ class FunctionMetadata:
 
         for param in self.non_optional_params:
             desc, annotation = self.non_optional_params[param]
-            if annotation is None:
-                annotation = lambda x: x
-            params[param] = annotation(section.get(param))
+            params[param] = self.get_param(param, section, annotation)
 
         for param in self.optional_params:
             if param in section:
                 desc, annotation, default = self.optional_params[param]
-                if annotation is None:
-                    annotation = lambda x: x
-                params[param] = annotation(section[param])
+                params[param] = self.get_param(param, section, annotation)
 
         return params
+
+    @staticmethod
+    def get_param(param, section, annotation):
+        if annotation is None:
+            annotation = lambda x: x
+        return annotation(section[param])
 
     @classmethod
     def from_function(cls, func, omit=[]):
