@@ -1,6 +1,7 @@
 from inspect import isfunction, ismethod, getfullargspec
 
 from coalib.settings.DocumentationComment import DocumentationComment
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
 
 
@@ -49,7 +50,9 @@ class FunctionMetadata:
         self.non_optional_params = non_optional_params
         self.optional_params = optional_params
 
-    def create_params_from_section(self, section):
+    def create_params_from_section(self,
+                                   section,
+                                   log_printer=ConsolePrinter()):
         """
         Create a params dictionary for this function that holds all values the
         function needs plus optional ones that are available.
@@ -68,20 +71,31 @@ class FunctionMetadata:
 
         for param in self.non_optional_params:
             desc, annotation = self.non_optional_params[param]
-            params[param] = self.get_param(param, section, annotation)
+            params[param] = self._get_param(param,
+                                            section,
+                                            annotation,
+                                            log_printer)
 
         for param in self.optional_params:
             if param in section:
                 desc, annotation, default = self.optional_params[param]
-                params[param] = self.get_param(param, section, annotation)
+                params[param] = self._get_param(param,
+                                                section,
+                                                annotation,
+                                                log_printer)
 
         return params
 
     @staticmethod
-    def get_param(param, section, annotation):
+    def _get_param(param, section, annotation, log_printer):
         if annotation is None:
             annotation = lambda x: x
-        return annotation(section[param])
+        try:
+            return annotation(section[param])
+        except:
+            log_printer.warn(_("Unable to convert {param} to the desired "
+                               "data type.").format(param=param))
+            return section[param]
 
     @classmethod
     def from_function(cls, func, omit=[]):
