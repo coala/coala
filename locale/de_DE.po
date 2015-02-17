@@ -54,11 +54,13 @@ msgid ""
 "The bear {bear} failed to run with the arguments {arglist}, {kwarglist}. "
 "Skipping bear..."
 msgstr ""
+"Der Bär {bear} konnte mit den argumenten {arglist}, {kwarglist} nicht "
+"ausgeführt werden und wird übersprungen."
 
 #: coalib/processes/BearRunner.py:294
 #, python-brace-format
 msgid "Traceback for error in bear {bear}:"
-msgstr ""
+msgstr "Rückverfolgung für Bär {bear}:"
 
 #: coalib/misc/StringConstants.py:8
 msgid ""
@@ -168,6 +170,14 @@ msgid ""
 "\n"
 "{traceback}\n"
 msgstr ""
+"Der Bär {bear} hat eine Ausnahme geworfen. Wenn Sie der Autor dieses Bären "
+"sind, stellen Sie bitte sicher, alle Ausnahmen zu fangen. Sollte dies nicht "
+"der Fall sein und dieser Fehler sie stören, kontaktieren Sie am besten den "
+"Autoren dieses Bären.\n"
+"\n"
+"Rückverfolgungsinformationen sind unten gegeben:\n"
+"\n"
+"{traceback}\n"
 
 #: coalib/collecting/Collectors.py:85
 msgid "unable to import bears from {}"
@@ -237,6 +247,8 @@ msgstr "Sektion {name} wird ausgeführt..."
 #: coalib/output/ConsoleInteractor.py:169
 msgid "No existent section was targeted nor enabled. Nothing todo."
 msgstr ""
+"Es wurde keine existierende Sektion ausgewählt (target) oder aktiviert. "
+"Nichts zu tun."
 
 #: coalib/tests/output/printers/LogPrinterTest.py:57
 #: coalib/output/printers/LogPrinter.py:75
@@ -267,7 +279,7 @@ msgstr "Optional, standardmäßig '{}'."
 #: coalib/settings/FunctionMetadata.py:96
 #, python-brace-format
 msgid "Unable to convert {param} to the desired data type."
-msgstr ""
+msgstr "{param} kann nicht in den gewünschten Datentypen konvertiert werden."
 
 #: coalib/settings/SectionManager.py:64
 msgid ""
@@ -281,10 +293,12 @@ msgstr ""
 #, python-brace-format
 msgid "No section matches the target '{target}'. Thus it cannot be executed."
 msgstr ""
+"Da keine Sektion dem Ziel '{target}' entspricht kann es nicht ausgeführt "
+"werden."
 
 #: coalib/parsing/DefaultArgParser.py:13
 msgid "Sections to be executed exclusively."
-msgstr ""
+msgstr "Sektionen die ausschliesslich ausgeführt werden sollen."
 
 #: coalib/parsing/DefaultArgParser.py:18
 msgid "Files that should be checked"
@@ -296,7 +310,7 @@ msgstr "Namen der zu benutzenden Bären"
 
 #: coalib/parsing/DefaultArgParser.py:24
 msgid "Additional directories where bears may lie"
-msgstr ""
+msgstr "Zusätzliche Ordner in denen Bären liegen können"
 
 #: coalib/parsing/DefaultArgParser.py:30
 msgid "Type of logging (console or any filename)"
@@ -319,6 +333,9 @@ msgid ""
 "Filename of file to be saved to, if provided with no arguments, settings "
 "will be stored back to the config file"
 msgstr ""
+"Dateiname der Datei in die gespeichert werden soll. Wenn die Option mit "
+"keinen Argumenten gegeben wird, werden die Einstellungen zurück in die "
+"Konfigurationsdatei gespeichert."
 
 #: coalib/parsing/DefaultArgParser.py:63
 msgid "Arbitrary settings in the form of section.key=value"
@@ -359,10 +376,12 @@ msgstr ""
 msgid ""
 "The following options are applicable to this result (choose 0 for no action):"
 msgstr ""
+"Die folgenden Aktionen sind auf dieses Resultat anwendbar (wählen Sie 0 um "
+"nichts zu tun):"
 
 #: coalib/output/ConsoleInteractor.py:84
 msgid "Please enter the number of the action you want to execute. "
-msgstr ""
+msgstr "Bitte geben Sie die Nummer der Aktion die Sie ausführen wollen ein. "
 
 #: coalib/output/ConsoleInteractor.py:92
 msgid "Please enter a valid number."
@@ -420,6 +439,9 @@ msgid ""
 "During execution of coala an exception was raised. This should never happen. "
 "When asked for, the following information may help investigating:"
 msgstr ""
+"Während der Ausführung von coala ist eine Ausnahme aufgetreten. Das sollte "
+"niemals passieren. Wenn Sie danach gefragt werden, helfen die folgenden "
+"Informationen womöglich bei der Untersuchung der Ursache:"
 
 #~ msgid ""
 #~ "An unknown error occurred while running local bears for the file {}. "
