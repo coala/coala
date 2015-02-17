@@ -82,8 +82,10 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
                     for bear in _import_bears(matching_file, kinds):
                         yield bear
                 except:
-                    log_printer.warn(_("unable to import bears from {}")
-                                     .format(matching_file))
+                    log_printer.warn(_("Unable to collect bears from {file}. "
+                                       "Probably the file is malformed or the"
+                                       " module code raises an exception.")
+                                     .format(file=matching_file))
 
 
 def collect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
