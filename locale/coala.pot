@@ -152,7 +152,10 @@ msgid ""
 msgstr ""
 
 #: coalib/collecting/Collectors.py:85
-msgid "unable to import bears from {}"
+#, python-brace-format
+msgid ""
+"Unable to collect bears from {file}. Probably the file is malformed or the "
+"module code raises an exception."
 msgstr ""
 
 #: coalib/results/RESULT_SEVERITY.py:5
@@ -259,53 +262,53 @@ msgstr ""
 msgid "No section matches the target '{target}'. Thus it cannot be executed."
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:13
+#: coalib/parsing/DefaultArgParser.py:12
 msgid "Sections to be executed exclusively."
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:18
+#: coalib/parsing/DefaultArgParser.py:17
 msgid "Files that should be checked"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:23
+#: coalib/parsing/DefaultArgParser.py:22
 msgid "Names of bears to use"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:24
+#: coalib/parsing/DefaultArgParser.py:23
 msgid "Additional directories where bears may lie"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:30
+#: coalib/parsing/DefaultArgParser.py:29
 msgid "Type of logging (console or any filename)"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:36
+#: coalib/parsing/DefaultArgParser.py:35
 msgid "Enum('ERR','WARN','DEBUG') to set level of log output"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:43
+#: coalib/parsing/DefaultArgParser.py:42
 msgid "Type of output (console or any filename)"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:49
+#: coalib/parsing/DefaultArgParser.py:48
 msgid "Configuration file to be used, defaults to .coafile"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:55
+#: coalib/parsing/DefaultArgParser.py:54
 msgid ""
 "Filename of file to be saved to, if provided with no arguments, settings "
 "will be stored back to the config file"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:63
+#: coalib/parsing/DefaultArgParser.py:62
 msgid "Arbitrary settings in the form of section.key=value"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:69
+#: coalib/parsing/DefaultArgParser.py:68
 msgid "Number of processes to be allowed to run at once"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:76
+#: coalib/parsing/DefaultArgParser.py:75
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr ""
 

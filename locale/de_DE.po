@@ -180,7 +180,10 @@ msgstr ""
 "{traceback}\n"
 
 #: coalib/collecting/Collectors.py:85
-msgid "unable to import bears from {}"
+#, python-brace-format
+msgid ""
+"Unable to collect bears from {file}. Probably the file is malformed or the "
+"module code raises an exception."
 msgstr ""
 
 #: coalib/results/RESULT_SEVERITY.py:5
@@ -296,39 +299,39 @@ msgstr ""
 "Da keine Sektion dem Ziel '{target}' entspricht kann es nicht ausgeführt "
 "werden."
 
-#: coalib/parsing/DefaultArgParser.py:13
+#: coalib/parsing/DefaultArgParser.py:12
 msgid "Sections to be executed exclusively."
 msgstr "Sektionen die ausschliesslich ausgeführt werden sollen."
 
-#: coalib/parsing/DefaultArgParser.py:18
+#: coalib/parsing/DefaultArgParser.py:17
 msgid "Files that should be checked"
 msgstr "Dateien die überprüft werden sollen"
 
-#: coalib/parsing/DefaultArgParser.py:23
+#: coalib/parsing/DefaultArgParser.py:22
 msgid "Names of bears to use"
 msgstr "Namen der zu benutzenden Bären"
 
-#: coalib/parsing/DefaultArgParser.py:24
+#: coalib/parsing/DefaultArgParser.py:23
 msgid "Additional directories where bears may lie"
 msgstr "Zusätzliche Ordner in denen Bären liegen können"
 
-#: coalib/parsing/DefaultArgParser.py:30
+#: coalib/parsing/DefaultArgParser.py:29
 msgid "Type of logging (console or any filename)"
 msgstr "Art der Protokollierung (console oder ein Dateiname)"
 
-#: coalib/parsing/DefaultArgParser.py:36
+#: coalib/parsing/DefaultArgParser.py:35
 msgid "Enum('ERR','WARN','DEBUG') to set level of log output"
 msgstr "Setzt die Art der Prokollierung fest, Enum('ERR','WARN','DEBUG')"
 
-#: coalib/parsing/DefaultArgParser.py:43
+#: coalib/parsing/DefaultArgParser.py:42
 msgid "Type of output (console or any filename)"
 msgstr "Art der Ausgabe (console oder ein Dateiname)"
 
-#: coalib/parsing/DefaultArgParser.py:49
+#: coalib/parsing/DefaultArgParser.py:48
 msgid "Configuration file to be used, defaults to .coafile"
 msgstr "Zu benutzende Konfigurationsdatei, .coafile wenn nicht gegeben."
 
-#: coalib/parsing/DefaultArgParser.py:55
+#: coalib/parsing/DefaultArgParser.py:54
 msgid ""
 "Filename of file to be saved to, if provided with no arguments, settings "
 "will be stored back to the config file"
@@ -337,15 +340,15 @@ msgstr ""
 "keinen Argumenten gegeben wird, werden die Einstellungen zurück in die "
 "Konfigurationsdatei gespeichert."
 
-#: coalib/parsing/DefaultArgParser.py:63
+#: coalib/parsing/DefaultArgParser.py:62
 msgid "Arbitrary settings in the form of section.key=value"
 msgstr "Beliebige Einstellung in der Form section.key=value"
 
-#: coalib/parsing/DefaultArgParser.py:69
+#: coalib/parsing/DefaultArgParser.py:68
 msgid "Number of processes to be allowed to run at once"
 msgstr "Anzahl an Prozessen, welche gleichzeitig ausgeführt werden dürfen"
 
-#: coalib/parsing/DefaultArgParser.py:76
+#: coalib/parsing/DefaultArgParser.py:75
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr "Legt fest ob Änderungen angewandt werden, Enum('YES','NO','ASK')"
 
