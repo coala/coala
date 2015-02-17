@@ -5,8 +5,7 @@ from coalib.misc.i18n import _
 
 default_arg_parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
-    description=__doc__
-)
+    description=__doc__)
 
 default_arg_parser.add_argument('TARGETS',
                                 nargs='*',
