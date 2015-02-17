@@ -259,12 +259,8 @@ class BearRunner(multiprocessing.Process):
 
             return None
 
-        dependency_results = self._get_local_dependency_results(bear_instance)
-        kwargs = {}
-        # Only pass dependency results to bears who want it
-        if dependency_results is not None:
-            kwargs["dependency_results"] = dependency_results
-
+        kwargs = {"dependency_results":
+                      self._get_local_dependency_results(bear_instance)}
         return self._run_bear(bear_instance,
                               filename,
                               self.file_dict[filename],
@@ -280,14 +276,13 @@ class BearRunner(multiprocessing.Process):
 
             return None
 
-        kwargs = {}
-        # Only pass dependency results to bears who want it
-        if dependency_results is not None:
-            kwargs["dependency_results"] = dependency_results
-
+        kwargs = {"dependency_results": dependency_results}
         return self._run_bear(global_bear_instance, **kwargs)
 
     def _run_bear(self, bear_instance, *args, **kwargs):
+        if kwargs.get("dependency_results", True) is None:
+            del kwargs["dependency_results"]
+
         try:
             return bear_instance.run(*args,
                                      **kwargs)
