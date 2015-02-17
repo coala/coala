@@ -74,72 +74,6 @@ msgstr ""
 msgid "{} is not accessible and will be ignored!"
 msgstr "Auf {} konnte nicht zugegriffen werden. Es wird ignoriert!"
 
-#: coalib/misc/StringConstants.py:19
-msgid "on"
-msgstr "an"
-
-#: coalib/misc/StringConstants.py:19
-msgid "y"
-msgstr "j"
-
-#: coalib/misc/StringConstants.py:19
-msgid "yes"
-msgstr "ja"
-
-#: coalib/misc/StringConstants.py:19
-#: coalib/tests/misc/StringConverterTest.py:53
-msgid "yeah"
-msgstr "klar"
-
-#: coalib/misc/StringConstants.py:19
-msgid "sure"
-msgstr "sicher"
-
-#: coalib/misc/StringConstants.py:19
-msgid "true"
-msgstr "wahr"
-
-#: coalib/misc/StringConstants.py:20
-msgid "definitely"
-msgstr "definitiv"
-
-#: coalib/misc/StringConstants.py:20
-msgid "yup"
-msgstr "jup"
-
-#: coalib/misc/StringConstants.py:20
-msgid "right"
-msgstr "richtig"
-
-#: coalib/misc/StringConstants.py:28
-msgid "off"
-msgstr "aus"
-
-#: coalib/misc/StringConstants.py:28
-msgid "n"
-msgstr "n"
-
-#: coalib/misc/StringConstants.py:28
-msgid "no"
-msgstr "nein"
-
-#: coalib/misc/StringConstants.py:28
-#: coalib/tests/misc/StringConverterTest.py:57
-msgid "nope"
-msgstr "ne"
-
-#: coalib/misc/StringConstants.py:28
-msgid "nah"
-msgstr "neh"
-
-#: coalib/misc/StringConstants.py:28
-msgid "false"
-msgstr "falsch"
-
-#: coalib/misc/StringConstants.py:28
-msgid "wrong"
-msgstr "unwahr"
-
 #: coalib/bears/Bear.py:82 coalib/tests/bears/BearTest.py:67
 #: coalib/tests/bears/BearTest.py:77
 msgid "Setting up bear {}..."
@@ -447,6 +381,54 @@ msgstr ""
 "Während der Ausführung von coala ist eine Ausnahme aufgetreten. Das sollte "
 "niemals passieren. Wenn Sie danach gefragt werden, helfen die folgenden "
 "Informationen womöglich bei der Untersuchung der Ursache:"
+
+#~ msgid "on"
+#~ msgstr "an"
+
+#~ msgid "y"
+#~ msgstr "j"
+
+#~ msgid "yes"
+#~ msgstr "ja"
+
+#~ msgid "yeah"
+#~ msgstr "klar"
+
+#~ msgid "sure"
+#~ msgstr "sicher"
+
+#~ msgid "true"
+#~ msgstr "wahr"
+
+#~ msgid "definitely"
+#~ msgstr "definitiv"
+
+#~ msgid "yup"
+#~ msgstr "jup"
+
+#~ msgid "right"
+#~ msgstr "richtig"
+
+#~ msgid "off"
+#~ msgstr "aus"
+
+#~ msgid "n"
+#~ msgstr "n"
+
+#~ msgid "no"
+#~ msgstr "nein"
+
+#~ msgid "nope"
+#~ msgstr "ne"
+
+#~ msgid "nah"
+#~ msgstr "neh"
+
+#~ msgid "false"
+#~ msgstr "falsch"
+
+#~ msgid "wrong"
+#~ msgstr "unwahr"
 
 #~ msgid ""
 #~ "An unknown error occurred while running local bears for the file {}. "
