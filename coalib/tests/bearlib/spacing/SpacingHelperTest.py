@@ -22,9 +22,12 @@ class SpacingHelperTestCase(unittest.TestCase):
         self.assertEqual(self.uut.tab_width, self.uut.from_section(section).tab_width)
 
         section.append(Setting("tab_width", "invalid"))
-        self.assertRaises(ValueError, self.uut.from_section, section)
+        # Setting won't be converted since it's not possible, SpacingHelper
+        # will then complain with TypeError
+        self.assertRaises(TypeError, self.uut.from_section, section)
 
-        # This is assumed in some tests. If you want to change this value, be sure to change the tests too
+        # This is assumed in some tests. If you want to change this value, be
+        # sure to change the tests too
         self.assertEqual(self.uut.DEFAULT_TAB_WIDTH, 4)
         self.assertEqual(self.uut.tab_width, self.uut.DEFAULT_TAB_WIDTH)
 

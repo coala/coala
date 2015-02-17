@@ -47,6 +47,7 @@ class SectionManager:
         self._load_configuration(arg_list)
         self._fill_settings()
         self._save_configuration()
+        self._warn_nonexistent_targets()
 
         return self.sections, self.local_bears, self.global_bears, self.targets
 
@@ -128,3 +129,10 @@ class SectionManager:
             else:
                 # no deep copy needed
                 self.sections[name] = self.cli_sections[name]
+
+    def _warn_nonexistent_targets(self):
+        for target in self.targets:
+            if target not in self.sections:
+                self.sections["default"].log_printer.warn(
+                    _("No section matches the target '{target}'. Thus it "
+                      "cannot be executed.").format(target=target))

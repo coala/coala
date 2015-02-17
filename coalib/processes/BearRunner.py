@@ -153,19 +153,13 @@ class BearRunner(multiprocessing.Process):
                 bear_id = self.global_bear_queue.get(timeout=self.TIMEOUT)
                 bear = self.global_bear_list[bear_id]
                 bearname = bear.__class__.__name__
-                try:
-                    result = self.__run_global_bear(bear)
-                    if result:
-                        self.global_result_dict[bearname] = result
-                        self.control_queue.put((CONTROL_ELEMENT.GLOBAL,
-                                                bearname))
-                except:  # pragma: no cover
-                    self.err(_("An unknown error occurred while running global"
-                               " bear {}. Skipping bear...").format(bearname),
-                             StringConstants.THIS_IS_A_BUG)
-                finally:
-                    if hasattr(self.global_bear_queue, "task_done"):
-                        self.global_bear_queue.task_done()
+                result = self.__run_global_bear(bear)
+                if result:
+                    self.global_result_dict[bearname] = result
+                    self.control_queue.put((CONTROL_ELEMENT.GLOBAL,
+                                            bearname))
+                if hasattr(self.global_bear_queue, "task_done"):
+                    self.global_bear_queue.task_done()
         except queue.Empty:
             return
 
@@ -210,14 +204,20 @@ class BearRunner(multiprocessing.Process):
 
         return dependency_results
 
-    def __run_local_bear(self, bear_instance, filename):
+    def _is_local_bear(self, bear_instance):
         if not isinstance(bear_instance, LocalBear) or \
-                bear_instance.kind() != BEAR_KIND.LOCAL:
+           bear_instance.kind() != BEAR_KIND.LOCAL:
             self.warn(_("A given local bear ({}) is not valid. "
                         "Leaving it out...")
                       .format(bear_instance.__class__.__name__),
                       StringConstants.THIS_IS_A_BUG)
 
+            return False
+        else:
+            return True
+
+    def __run_local_bear(self, bear_instance, filename):
+        if not self._is_local_bear(bear_instance):
             return None
 
         dependency_results = self._get_local_dependency_results(bear_instance)
@@ -226,21 +226,10 @@ class BearRunner(multiprocessing.Process):
         if dependency_results is not None:
             kwargs["dependency_results"] = dependency_results
 
-        try:
-            return bear_instance.run(filename,
-                                     self.file_dict[filename],
-                                     **kwargs)
-        except:
-            tb = traceback.format_exc()
-            name = bear_instance.__class__.__name__
-            self.err(_("The bear {bear} failed to run for file {file}. "
-                       "Skipping bear...")
-                     .format(bear=name, file=filename),
-                     StringConstants.THIS_IS_A_BUG)
-            self.debug(_("Traceback for error in bear {bear}:")
-                       .format(bear=name), tb, delimiter="\n")
-
-            return None
+        return self._run_bear(bear_instance,
+                              filename,
+                              self.file_dict[filename],
+                              **kwargs)
 
     def __run_global_bear(self, global_bear_instance):
         if not isinstance(global_bear_instance, GlobalBear) \
@@ -252,4 +241,20 @@ class BearRunner(multiprocessing.Process):
 
             return None
 
-        return global_bear_instance.run()
+        return self._run_bear(global_bear_instance)
+
+    def _run_bear(self, bear_instance, *args, **kwargs):
+        try:
+            return bear_instance.run(*args,
+                                     **kwargs)
+        except:
+            name = bear_instance.__class__.__name__
+            self.err(_("The bear {bear} failed to run with the arguments "
+                       "{arglist}, {kwarglist}. Skipping bear...")
+                     .format(bear=name, arglist=args, kwarglist=kwargs))
+            self.debug(_("Traceback for error in bear {bear}:")
+                       .format(bear=name),
+                       traceback.format_exc(),
+                       delimiter="\n")
+
+            return None

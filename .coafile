@@ -1,16 +1,19 @@
+# So all sections are disabled by default
 Default.enabled = false
 PythonCheck.enabled = true
-# LineCounting is disabled because of inherited value from Default
 
 [Default]
 files = **/*.py
 
 [PythonCheck]
-bears = KeywordBear, SpaceConsistencyBear, LineLengthBear
-cs_keywords = 
-ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
+bears = SpaceConsistencyBear, LineLengthBear
 use_spaces = True
 max_line_length = 120
 
 [LineCounting]
 bears = LineCountBear
+
+[TODOS]
+bears = KeywordBear
+ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
+cs_keywords =

@@ -31,21 +31,20 @@ if __name__ == "__main__":
     # Set default section so we have a log printer if the SectionManager fails.
     sections = {"default": Section("default")}
     try:
+        did_nothing = True
         sections, local_bears, global_bears, targets = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
-            if len(targets) == 0:
-                if not bool(section.get("enabled", "true")):
-                    continue
-            elif section_name not in targets:
+            if not section.is_enabled(targets):
                 continue
 
-            sec_global_bears = global_bears[section_name]
-            sec_local_bears = local_bears[section_name]
-
             SectionExecutor(section=section,
-                            global_bear_list=sec_global_bears,
-                            local_bear_list=sec_local_bears).run()
+                            global_bear_list=global_bears[section_name],
+                            local_bear_list=local_bears[section_name]).run()
+            did_nothing = False
+
+        if did_nothing:
+            sections["default"].interactor.did_nothing()
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
     except SystemExit:

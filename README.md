@@ -56,8 +56,16 @@ Build status
 ------------
 
 [![Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
+(Test and build)
+
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
+(Code quality)
+
 [![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg?branch=master)](https://coveralls.io/r/coala-analyzer/coala?branch=master)
+(Statement coverage)
+
+[![codecov.io](https://codecov.io/github/coala-analyzer/coala/coverage.svg?branch=master)](https://codecov.io/github/coala-analyzer/coala?branch=master)
+(Branch coverage)
 
 GETTING INVOLVED
 ================

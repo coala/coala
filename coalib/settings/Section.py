@@ -5,7 +5,8 @@ from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.NullPrinter import NullPrinter
-from coalib.output.ConsoleInteractor import ConsoleInteractor, ConsolePrinter, Interactor
+from coalib.output.ConsoleInteractor import ConsoleInteractor, ConsolePrinter
+from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _
 from coalib.settings.Setting import Setting
 
@@ -19,21 +20,40 @@ class Section:
     def __prepare_key(key):
         return str(key).lower().strip()
 
-    def __init__(self, name, defaults=None, interactor=ConsoleInteractor(), log_printer=ConsolePrinter()):
+    def __init__(self,
+                 name,
+                 defaults=None,
+                 interactor=ConsoleInteractor(),
+                 log_printer=ConsolePrinter()):
         if defaults is not None and not isinstance(defaults, Section):
             raise TypeError("defaults has to be a Section object or None.")
         if defaults is self:
             raise ValueError("defaults may not be self for non-recursivity.")
         if not isinstance(interactor, Interactor):
-            raise TypeError("The interactor parameter has to be of type Interactor.")
+            raise TypeError("The interactor parameter has to be of type "
+                            "Interactor.")
         if not isinstance(log_printer, LogPrinter):
-            raise TypeError("The log_printer parameter has to be of type LogPrinter.")
+            raise TypeError("The log_printer parameter has to be of type "
+                            "LogPrinter.")
 
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
         self.interactor = interactor
         self.log_printer = log_printer
+
+    def is_enabled(self, targets):
+        """
+        Checks if this section is enabled or, if targets is not empty, if it is
+        included in the targets list.
+
+        :param targets: List of target section names, all lower case.
+        :return: True or False
+        """
+        if len(targets) == 0:
+            return bool(self.get("enabled", "true"))
+
+        return self.name.lower() in targets
 
     def retrieve_logging_objects(self):
         """
@@ -48,19 +68,26 @@ class Section:
             self.log_printer = ConsolePrinter(log_level=log_level)
         else:
             try:
-                # ConsolePrinter is the only printer which may not throw an exception (if we have no bugs though)
-                # so well fallback to him if some other printer fails
+                # ConsolePrinter is the only printer which may not throw an
+                # exception (if we have no bugs though) so well fallback to him
+                # if some other printer fails
                 if log_type == "none":
                     self.log_printer = NullPrinter()
                 else:
-                    self.log_printer = FilePrinter(filename=log_type, log_level=log_level)
+                    self.log_printer = FilePrinter(filename=log_type,
+                                                   log_level=log_level)
             except:
                 self.log_printer = ConsolePrinter(log_level=log_level)
-                self.log_printer.log(LOG_LEVEL.WARNING, _("Failed to instantiate the logging method '{}'. Falling back "
-                                                          "to console output.").format(log_type))
+                self.log_printer.log(
+                    LOG_LEVEL.WARNING,
+                    _("Failed to instantiate the logging method '{}'. Falling "
+                      "back to console output.").format(log_type))
 
-        # We currently only offer console interactor, so we'll ignore the output setting for now
-        self.interactor = ConsoleInteractor.from_section(self, log_printer=self.log_printer)
+        # We currently only offer console interactor, so we'll ignore the
+        # output setting for now
+        self.interactor = ConsoleInteractor.from_section(
+            self,
+            log_printer=self.log_printer)
 
     def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):
@@ -73,7 +100,14 @@ class Section:
         # Setting asserts key != "" for us
         self.contents[key] = setting
 
-    def _add_or_create_setting(self, setting, custom_key=None, allow_appending=True):
+    def add_or_create_setting(self,
+                              setting,
+                              custom_key=None,
+                              allow_appending=True):
+        """
+        Adds the value of the setting to an existing setting if there is
+        already a setting  with the key. Otherwise creates a new setting.
+        """
         if custom_key is None:
             key = setting.key
         else:
@@ -88,7 +122,8 @@ class Section:
     def __iter__(self, ignore_defaults=False):
         joined = self.contents.copy()
         if self.defaults is not None and not ignore_defaults:
-            # Since we only return the iterator of joined (which doesnt contain values) it's ok to override values here
+            # Since we only return the iterator of joined (which doesnt contain
+            # values) it's ok to override values here
             joined.update(self.defaults.contents)
 
         return iter(joined)
@@ -116,12 +151,15 @@ class Section:
         return self.defaults[key]
 
     def __str__(self):
-        return self.name + " {" + ", ".join(key + " : " + str(self.contents[key]) for key in self.contents) + "}"
+        value_list = ", ".join(key + " : " + str(self.contents[key])
+                               for key in self.contents)
+        return self.name + " {" + value_list + "}"
 
     def get(self, key, default="", ignore_defaults=False):
         """
-        Retrieves the item without raising an exception. If the item is not available an appropriate Setting will be
-        generated from your provided default value.
+        Retrieves the item without raising an exception. If the item is not
+        available an appropriate Setting will be generated from your provided
+        default value.
 
         :param key: The key of the setting to return.
         :param default: The default value
@@ -135,7 +173,8 @@ class Section:
 
     def copy(self):
         """
-        :return: a deep copy of this object, with the exception of the log_printer and the interactor
+        :return: a deep copy of this object, with the exception of the
+        log_printer and the interactor
         """
         result = copy.copy(self)
         result.contents = copy.deepcopy(self.contents)
