@@ -158,6 +158,8 @@ class BearRunner(multiprocessing.Process):
                     self.global_result_dict[bearname] = result
                     self.control_queue.put((CONTROL_ELEMENT.GLOBAL,
                                             bearname))
+                else:
+                    self.global_result_dict[bearname] = None
                 if hasattr(self.global_bear_queue, "task_done"):
                     self.global_bear_queue.task_done()
         except queue.Empty:

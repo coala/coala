@@ -248,8 +248,10 @@ d
         self.assertEqual(control_elem, CONTROL_ELEMENT.FINISHED)
         self.assertEqual(none, None)
 
-        self.assertEqual(len(self.global_result_dict), 1)
-        self.assertEqual(len(self.local_result_dict), len(local_result_expected))
+        # The invalid bear gets a None in that dict for dependency resolution
+        self.assertEqual(len(self.global_result_dict), 2)
+        self.assertEqual(len(self.local_result_dict),
+                         len(local_result_expected))
         self.assertRaises(queue.Empty, self.message_queue.get, timeout=0)
         self.assertRaises(queue.Empty, self.control_queue.get, timeout=0)
 
