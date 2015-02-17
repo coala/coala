@@ -147,12 +147,22 @@ class BearRunner(multiprocessing.Process):
         except queue.Empty:
             return
 
+    def _get_next_global_bear(self):
+        """
+        Retrieves the next global bear.
+
+        :return: (bear, bearname)
+        """
+        bear_id = self.global_bear_queue.get(timeout=self.TIMEOUT)
+        bear = self.global_bear_list[bear_id]
+        bearname = bear.__class__.__name__
+
+        return bear, bearname
+
     def run_global_bears(self):
         try:
             while True:
-                bear_id = self.global_bear_queue.get(timeout=self.TIMEOUT)
-                bear = self.global_bear_list[bear_id]
-                bearname = bear.__class__.__name__
+                bear, bearname = self._get_next_global_bear()
                 result = self.__run_global_bear(bear)
                 if result:
                     self.global_result_dict[bearname] = result
