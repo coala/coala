@@ -185,6 +185,8 @@ msgid ""
 "Unable to collect bears from {file}. Probably the file is malformed or the "
 "module code raises an exception."
 msgstr ""
+"Bären aus der Datei {file} können nicht eingesammelt werden. Wahrscheinlich "
+"enthält die Datei keinen gültigen Code oder der Code wirft eine Ausnahme."
 
 #: coalib/results/RESULT_SEVERITY.py:5
 #: coalib/tests/results/RESULT_SEVERITYTest.py:11
