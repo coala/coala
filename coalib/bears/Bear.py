@@ -67,6 +67,11 @@ class Bear:
                                           str(delimiter).join(args)),
                                timeout=self.TIMEOUT)
 
+    def create_result(self, result_class, *args, **kwargs):
+        return result_class(*args,
+                            origin=self.__class__.__name__,
+                            **kwargs)
+
     def run_bear(self, *args, dependency_results=None, **kwargs):
         raise NotImplementedError
 
