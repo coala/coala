@@ -3,7 +3,7 @@ Default.enabled = false
 PythonCheck.enabled = true
 
 [Default]
-files = **/*.py
+files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
 
 [PythonCheck]
 bears = SpaceConsistencyBear, LineLengthBear
