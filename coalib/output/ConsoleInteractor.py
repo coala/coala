@@ -166,5 +166,5 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         self.print(_("Executing section {name}...").format(name=name))
 
     def did_nothing(self):
-        self.print(_("No existent section was targeted nor enabled. Nothing to"
-                     "do."))
+        self.print(_("No existent section was targeted or enabled. Nothing "
+                     "to do."))

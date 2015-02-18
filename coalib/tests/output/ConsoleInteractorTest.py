@@ -107,8 +107,8 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
         self.uut.did_nothing()
         self.assertEqual(q.get(timeout=0),
-                         _("No existent section was targeted nor enabled. "
-                           "Nothing todo."))
+                         _("No existent section was targeted or enabled. "
+                           "Nothing to do."))
 
     def test_print_results(self):
         q = queue.Queue()
