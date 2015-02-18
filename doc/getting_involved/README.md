@@ -35,5 +35,8 @@ any aspect of quality.
 
 We currently have more information on the following topics:
 
+ * [Writing good commit messages](COMMIT_MESSAGES.md)
+ * [coala's review process](REVIEWING.md)
+ * [Python codestyle](CODESTYLE.md)
  * [Testing](TESTING.md)
  * [Translating](TRANSLATING.md)
