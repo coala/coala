@@ -186,6 +186,7 @@ msgstr "Sektion {name} wird ausgeführt..."
 #: coalib/output/ConsoleInteractor.py:169
 msgid "No existent section was targeted or enabled. Nothing todo."
 msgstr ""
+"Es wurde keine existierende Sektion ausgewählt oder aktiviert. Nichts zu tun."
 
 #: coalib/tests/output/printers/LogPrinterTest.py:57
 #: coalib/output/printers/LogPrinter.py:75
@@ -231,6 +232,8 @@ msgstr ""
 msgid ""
 "The requested section '{section}' is unavailable. Thus it cannot be executed."
 msgstr ""
+"Die angeforderte Sektion '{section}' ist nicht verfügbar und kann daher "
+"nicht ausgeführt werden."
 
 #: coalib/parsing/DefaultArgParser.py:12
 msgid "Sections to be executed exclusively."
@@ -269,6 +272,9 @@ msgid ""
 "Filename of file to be saved to, if provided with no arguments, settings "
 "will be stored back to the file given by -c"
 msgstr ""
+"Dateiname der Datei in die gespeichert werden soll. Wenn die Option mit "
+"keinen Argumenten gegeben wird, werden die Einstellungen zurück in die mit -"
+"c gegebene Datei gespeichert."
 
 #: coalib/parsing/DefaultArgParser.py:62
 msgid "Arbitrary settings in the form of section.key=value"
