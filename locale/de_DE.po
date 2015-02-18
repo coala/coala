@@ -17,7 +17,7 @@ msgid "Line is longer than allowed."
 msgstr "Zeile ist länger als erlaubt."
 
 #: bears/misc/LineCountBear.py:14 bears/tests/misc/LineCountBearTest.py:21
-#: bears/tests/misc/LineCountBearTest.py:29
+#: bears/tests/misc/LineCountBearTest.py:28
 #, python-brace-format
 msgid "This file has {count} lines."
 msgstr "Die Datei hat {count} Zeilen."
@@ -30,32 +30,32 @@ msgstr "Zeile enthält die folgenden Schlüsselwörter:"
 msgid "Line contains spacing inconsistencies."
 msgstr "Zeile enthält uneinheitliche Leerzeichen."
 
-#: coalib/processes/BearRunner.py:173
+#: coalib/processes/BearRunner.py:218
 msgid "An internal error occurred."
 msgstr "Ein interner Fehler ist aufgetreten."
 
-#: coalib/processes/BearRunner.py:175
+#: coalib/processes/BearRunner.py:220
 msgid "The given file through the queue is not in the file dictionary."
 msgstr ""
 "Die durch die Warteschlange übergebene Datei befindet sich nicht in dem "
 "Dateiordner."
 
-#: coalib/processes/BearRunner.py:210
+#: coalib/processes/BearRunner.py:255
 msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr "Der lokale Bär ({}) ist nicht korrekt.  Er wird ausgelassen..."
 
-#: coalib/processes/BearRunner.py:237
+#: coalib/processes/BearRunner.py:272
 msgid "A given global bear ({}) is not valid. Leaving it out..."
 msgstr "Der globale Bär ({}) ist nicht korrekt.  Er wird ausgelassen..."
 
-#: coalib/processes/BearRunner.py:252
+#: coalib/processes/BearRunner.py:291
 #, python-brace-format
 msgid ""
 "The bear {bear} failed to run with the arguments {arglist}, {kwarglist}. "
 "Skipping bear..."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:255
+#: coalib/processes/BearRunner.py:294
 #, python-brace-format
 msgid "Traceback for error in bear {bear}:"
 msgstr ""
@@ -194,7 +194,6 @@ msgstr "WICHTIG"
 #: coalib/tests/output/printers/LogPrinterTest.py:35
 #: coalib/tests/output/printers/LogPrinterTest.py:47
 #: coalib/tests/output/printers/LogPrinterTest.py:56
-#: coalib/output/printers/LogPrinter.py:34
 #: coalib/output/printers/LOG_LEVEL.py:4
 msgid "ERROR"
 msgstr "FEHLER"
@@ -234,6 +233,11 @@ msgstr " und "
 msgid "Executing section {name}..."
 msgstr "Sektion {name} wird ausgeführt..."
 
+#: coalib/tests/output/ConsoleInteractorTest.py:110
+#: coalib/output/ConsoleInteractor.py:169
+msgid "No existent section was targeted nor enabled. Nothing todo."
+msgstr ""
+
 #: coalib/tests/output/printers/LogPrinterTest.py:57
 #: coalib/output/printers/LogPrinter.py:75
 msgid "Exception was:"
@@ -244,7 +248,7 @@ msgid "One of the given bears ({}) has no attribute get_non_optional_settings."
 msgstr ""
 "Einem der gegebenen Bären ({}) fehlt das Attribut get_non_optional_settings."
 
-#: coalib/settings/Section.py:59
+#: coalib/settings/Section.py:83
 msgid ""
 "Failed to instantiate the logging method '{}'. Falling back to console "
 "output."
@@ -252,21 +256,31 @@ msgstr ""
 "Fehler beim instanziieren der Protokollmethode '{}'. Schalte auf "
 "Konsolenausgabe zurück."
 
-#: coalib/settings/FunctionMetadata.py:8
+#: coalib/settings/FunctionMetadata.py:9
 msgid "No description given."
 msgstr "Keine Beschreibung vorhanden."
 
-#: coalib/settings/FunctionMetadata.py:9
+#: coalib/settings/FunctionMetadata.py:10
 msgid "Optional, defaults to '{}'."
 msgstr "Optional, standardmäßig '{}'."
 
-#: coalib/settings/SectionManager.py:63
+#: coalib/settings/FunctionMetadata.py:96
+#, python-brace-format
+msgid "Unable to convert {param} to the desired data type."
+msgstr ""
+
+#: coalib/settings/SectionManager.py:64
 msgid ""
 "The global default coafile for the settings was not found. It seems your "
 "installation is broken."
 msgstr ""
 "Das globale standard coafile für die Einstellungen wurde nicht gefunden. Es "
 "scheint, als ob Ihre Installation kaputt ist."
+
+#: coalib/settings/SectionManager.py:137
+#, python-brace-format
+msgid "No section matches the target '{target}'. Thus it cannot be executed."
+msgstr ""
 
 #: coalib/parsing/DefaultArgParser.py:13
 msgid "Sections to be executed exclusively."
@@ -393,15 +407,15 @@ msgstr ""
 "Eines der Ergebnisse kann nicht ausgegeben werden, da es keine korrekte "
 "Ableitung der coala result Klasse ist."
 
-#: coala:50
+#: coala:49
 msgid "Program terminated by user."
 msgstr "Das Programm wurde durch den Benutzer beendet."
 
-#: coala:55
+#: coala:54
 msgid "An unknown error occurred."
 msgstr "Ein unbekannter Fehler ist aufgetreten."
 
-#: coala:57
+#: coala:56
 msgid ""
 "During execution of coala an exception was raised. This should never happen. "
 "When asked for, the following information may help investigating:"
