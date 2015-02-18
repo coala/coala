@@ -134,5 +134,5 @@ class SectionManager:
         for target in self.targets:
             if target not in self.sections:
                 self.sections["default"].log_printer.warn(
-                    _("No section matches the target '{target}'. Thus it "
-                      "cannot be executed.").format(target=target))
+                    _("The requested section '{section}' is not existent. "
+                      "Thus it cannot be executed.").format(section=target))
