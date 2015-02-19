@@ -40,3 +40,4 @@ We currently have more information on the following topics:
  * [Python codestyle](CODESTYLE.md)
  * [Testing](TESTING.md)
  * [Translating](TRANSLATING.md)
+ * [Writing Bears](WRITING_BEARS.md)
