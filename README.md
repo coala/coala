@@ -1,5 +1,7 @@
 README
 ======
+
+[![Join the chat at https://gitter.im/coala-analyzer/coala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/coala-analyzer/coala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ```
                                                      .o88Oo._
                                                     d8P         .ooOO8bo._
@@ -17,66 +19,76 @@ README
 ooP""Y8888PP*"Y8888P"   "Y8888P"`Y88P'"Y88P"Y8888P"`Y8            oooo888P"
 ```
 
+INSTALLATION
+============
+
+coala can be installed with `python3 setup.py install`. If you need more
+information about the installation and dependencies, take a look at our
+[INSTALL.md](INSTALL.md).
+
+USAGE
+=====
+
+If you want to learn more about coala, its functionality and its usage, please
+take a look at the [TUTORIAL.md](TUTORIAL.md) file.
+
 ABOUT
 =====
+
 coala is a simple COde AnaLysis Application. Its goal is to make static code
 analysis easy while remaining completely modular and therefore extendable.
-Code analysis happens in python scripts while coala mainly manages these.
 
-This project is not finished and does not provide any real functionality. We
-are currently working hard to make it reality.
+Code analysis happens in python scripts while coala manages these, tries to
+provide helpful libraries and provides multiple user interfaces. (Currently
+we support only Console output but others will follow.)
+
+We are currently working hard to make this project reality. coala is currently
+in an alpha stage and provides the most basic features. If you want to see how
+the development progresses, check out
+
+https://github.com/coala-analyzer/coala
 
 Authors
 -------
-Current maintainers and creators are:
-Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt <fabian@neuschmidt.de>
+
+Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt
+<fabian@neuschmidt.de> are the current maintainers of this project.
 
 Build status
 ------------
-[![Build Status](https://travis-ci.org/sils1297/coala.svg?branch=master)](https://travis-ci.org/sils1297/coala)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sils1297/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sils1297/coala/?branch=master)
-[![Coverage Status](https://img.shields.io/coveralls/sils1297/coala.svg)](https://coveralls.io/r/sils1297/coala?branch=master)
 
-INSTALLATION
-============
-Python
-------
-coala requires an installation of Python3 >= 3.2 from http://www.python.org.
+[![Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
+(Test and build)
 
-coala
------
-coala can be installed afterwards by executing the file setup.py through
-the python interpreter (root access necessary):
-```python3 setup.py install```
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
+(Code quality)
 
-You can then use ```coala``` from the commandline everywhere. Be aware that the
-coala script is not yet exposing any functionality.
+[![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg?branch=master)](https://coveralls.io/r/coala-analyzer/coala?branch=master)
+(Statement coverage)
 
-FUNCTION REFERENCE
-==================
-coming soon...
+[![codecov.io](https://codecov.io/github/coala-analyzer/coala/coverage.svg?branch=master)](https://codecov.io/github/coala-analyzer/coala?branch=master)
+(Branch coverage)
 
 GETTING INVOLVED
 ================
-We are working hard to make coala reality. If you want to help us you can do
-the following things:
-- send us an email (see authors above)
-- give us feedback
-- report bugs
-- send pull requests (write objects, tests)
-- provide translations
+
+If you want to contribute to coala, please take a look at the
+[doc/getting_involved](doc/getting_involved) directory.
+
+We appreciate any help!
 
 LICENSE
 =======
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
+details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program.  If not, see <http://www.gnu.org/licenses/>.
