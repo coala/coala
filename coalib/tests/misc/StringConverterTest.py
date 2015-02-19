@@ -2,7 +2,6 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.misc.StringConverter import StringConverter
-from coalib.misc.i18n import _
 import unittest
 
 
@@ -50,11 +49,11 @@ class ProcessTestCase(unittest.TestCase):
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
-        self.uut.value = _("yeah")
+        self.uut.value = "yeah"
         self.assertEqual(bool(self.uut), True)
         self.uut = StringConverter("y")
         self.assertEqual(bool(self.uut), True)
-        self.uut = StringConverter(_("nope"))
+        self.uut = StringConverter("nope")
         self.assertEqual(bool(self.uut), False)
 
         self.uut = StringConverter(" i dont know ")

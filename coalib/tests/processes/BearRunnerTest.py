@@ -49,6 +49,29 @@ class DependentBear(LocalBear):
         return [SimpleBear]
 
 
+class SimpleGlobalBear(GlobalBear):
+    def run_bear(self,
+                 *args,
+                 dependency_results=None,
+                 **kwargs):
+        return [Result("SimpleGlobalBear", "something went wrong"),
+                # This result should not be passed to DependentBear
+                Result("FakeBear", "something went wrong"),
+                Result("SimpleGlobalBear", "another thing went wrong")]
+
+
+class DependentGlobalBear(GlobalBear):
+    def run_bear(self,
+                 *args,
+                 dependency_results=None,
+                 **kwargs):
+        assert len(dependency_results["SimpleGlobalBear"]) == 3
+
+    @staticmethod
+    def get_dependencies():
+        return [SimpleGlobalBear]
+
+
 class GlobalTestBear(GlobalBear):
     def run_bear(self):
         result = []
@@ -135,6 +158,14 @@ class BearRunnerUnitTestCase(unittest.TestCase):
                                                self.message_queue))
         self.local_bear_list.append(DependentBear(self.settings,
                                                   self.message_queue))
+        self.global_bear_list.append(SimpleGlobalBear({},
+                                                      self.settings,
+                                                      self.message_queue))
+        self.global_bear_list.append(DependentGlobalBear({},
+                                                         self.settings,
+                                                         self.message_queue))
+        self.global_bear_queue.put(1)
+        self.global_bear_queue.put(0)
         self.file_name_queue.put("t")
         self.file_dict["t"] = []
 

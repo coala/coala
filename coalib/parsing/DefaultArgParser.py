@@ -5,8 +5,7 @@ from coalib.misc.i18n import _
 
 default_arg_parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
-    description=__doc__
-)
+    description=__doc__)
 
 default_arg_parser.add_argument('TARGETS',
                                 nargs='*',
@@ -52,8 +51,8 @@ default_arg_parser.add_argument('-c',
                                 nargs=1,
                                 metavar='FILE',
                                 help=CONFIG_HELP)
-SAVE_HELP = _('Filename of file to be saved to, if provided with no '
-              'arguments, settings will be stored back to the config file')
+SAVE_HELP = _('Filename of file to be saved to, if provided with no arguments,'
+              ' settings will be stored back to the file given by -c')
 default_arg_parser.add_argument('-s',
                                 '--save',
                                 nargs='?',

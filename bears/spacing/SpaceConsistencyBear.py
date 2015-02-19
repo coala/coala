@@ -16,11 +16,11 @@ class SpaceConsistencyBear(LocalBear):
         Checks the space consistency for each line.
 
         :param use_spaces: True if spaces are to be used instead of tabs.
-        :param allow_trailing_whitespace: Whether to allow trailing whitespace or not.
+        :param allow_trailing_whitespace: Whether to allow trailing whitespace
+        or not.
         :param tab_width: Number of spaces representing one tab.
         """
         results = []
-        bearname = self.__class__.__name__
 
         spacing_helper = SpacingHelper(tab_width)
 
@@ -31,17 +31,20 @@ class SpaceConsistencyBear(LocalBear):
                 replacement = replacement.rstrip(" \t\n") + "\n"
 
             if use_spaces:
-                replacement = spacing_helper.replace_tabs_with_spaces(replacement)
+                replacement = spacing_helper.replace_tabs_with_spaces(
+                    replacement)
             else:
-                replacement = spacing_helper.replace_spaces_with_tabs(replacement)
+                replacement = spacing_helper.replace_spaces_with_tabs(
+                    replacement)
 
             if replacement != line:
                 diff = Diff()
                 diff.change_line(line_number + 1, line, replacement)
-                results.append(PatchResult(bearname,
-                                           _("Line contains spacing inconsistencies."),
-                                           {filename: diff},
-                                           filename,
-                                           line_nr=line_number+1))
+                results.append(self.create_result(
+                    PatchResult,
+                    message=_("Line contains spacing inconsistencies."),
+                    diffs={filename: diff},
+                    file=filename,
+                    line_nr=line_number+1))
 
         return results
