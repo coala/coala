@@ -22,12 +22,15 @@ class Result:
 
     def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL, line_nr=None):
         """
-        :param origin: Class name of the creator of this object
+        :param origin: Class name or class of the creator of this object
         :param message: Message to show with this result
         :param file: The path to the affected file
         :param severity: Severity of this result
         :param line_nr: Number of the line which is affected, first line is 1.
         """
+        if not isinstance(origin, str):
+            origin = origin.__class__.__name__
+
         self.origin = origin
         self.message = message
         self.file = file

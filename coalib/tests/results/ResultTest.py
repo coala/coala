@@ -14,6 +14,13 @@ class ResultTestCase(unittest.TestCase):
         self.assertRaises(TypeError, uut.__gt__, 0)
         self.assertRaises(TypeError, uut.__lt__, 0)
 
+    def test_origin(self):
+        uut = Result("origin", "msg")
+        self.assertEqual(uut.origin, "origin")
+
+        uut = Result(self, "msg")
+        self.assertEqual(uut.origin, "ResultTestCase")
+
     def test_get_actions(self):
         self.assertEqual(len(Result("origin", "msg").get_actions()), 0)
         self.assertEqual(len(Result("origin", "msg", file="file").get_actions()), 1)
