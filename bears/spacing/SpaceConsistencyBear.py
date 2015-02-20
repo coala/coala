@@ -20,7 +20,6 @@ class SpaceConsistencyBear(LocalBear):
         :param tab_width: Number of spaces representing one tab.
         """
         results = []
-        bearname = self.__class__.__name__
 
         spacing_helper = SpacingHelper(tab_width)
 
@@ -38,7 +37,7 @@ class SpaceConsistencyBear(LocalBear):
             if replacement != line:
                 diff = Diff()
                 diff.change_line(line_number + 1, line, replacement)
-                results.append(PatchResult(bearname,
+                results.append(PatchResult(self,
                                            _("Line contains spacing inconsistencies."),
                                            {filename: diff},
                                            filename,
