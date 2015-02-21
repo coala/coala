@@ -64,22 +64,30 @@ class BearTestCase(unittest.TestCase):
 
     def test_message_queue(self):
         self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("TestBear"))
+        self.check_message(LOG_LEVEL.DEBUG,
+                           _("Setting up bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
-        self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("TestBear"))
-        self.check_message(LOG_LEVEL.WARNING, _("A string to test translations."))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("TestBear"))
+        self.check_message(LOG_LEVEL.DEBUG,
+                           _("Running bear {}...").format("TestBear"))
+        self.check_message(LOG_LEVEL.WARNING,
+                           _("A string to test translations."))
+        self.check_message(LOG_LEVEL.DEBUG,
+                           _("Tearing down bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 
     def test_bad_bear(self):
         self.uut = BadTestBear(self.settings, self.queue)
         self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("BadTestBear"))
-        self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("BadTestBear"))
-        self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("BadTestBear"))
+        self.check_message(LOG_LEVEL.DEBUG,
+                           _("Setting up bear {}...").format("BadTestBear"))
+        self.check_message(LOG_LEVEL.DEBUG,
+                           _("Running bear {}...").format("BadTestBear"))
+        self.check_message(LOG_LEVEL.DEBUG,
+                           _("Tearing down bear {}...").format("BadTestBear"))
         self.check_message(LOG_LEVEL.WARNING,
                            _("Bear {} failed to run.").format("BadTestBear"))
-        self.queue.get()  # debug message contains custom content, dont test this here
+        # debug message contains custom content, dont test this here
+        self.queue.get()
 
     def check_message(self, log_level, message):
         msg = self.queue.get()
