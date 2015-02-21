@@ -1,18 +1,18 @@
 #: bears/tests/misc/LineCountBearTest.py:21
-#: bears/tests/misc/LineCountBearTest.py:28 bears/misc/LineCountBear.py:15
+#: bears/tests/misc/LineCountBearTest.py:28 bears/misc/LineCountBear.py:14
 #, python-brace-format
 msgid "This file has {count} lines."
 msgstr ""
 
-#: bears/misc/KeywordBear.py:38
+#: bears/misc/KeywordBear.py:35
 msgid "Line contains the following keywords:"
 msgstr ""
 
-#: bears/misc/LineLengthBear.py:27
+#: bears/misc/LineLengthBear.py:26
 msgid "Line is longer than allowed."
 msgstr ""
 
-#: bears/spacing/SpaceConsistencyBear.py:45
+#: bears/spacing/SpaceConsistencyBear.py:41
 msgid "Line contains spacing inconsistencies."
 msgstr ""
 
@@ -203,21 +203,21 @@ msgid "A not directly translated test string."
 msgstr ""
 
 #: coalib/tests/bears/BearTest.py:67 coalib/tests/bears/BearTest.py:77
-#: coalib/bears/Bear.py:87
+#: coalib/bears/Bear.py:82
 msgid "Setting up bear {}..."
 msgstr ""
 
 #: coalib/tests/bears/BearTest.py:69 coalib/tests/bears/BearTest.py:78
-#: coalib/bears/Bear.py:90
+#: coalib/bears/Bear.py:85
 msgid "Running bear {}..."
 msgstr ""
 
 #: coalib/tests/bears/BearTest.py:71 coalib/tests/bears/BearTest.py:79
-#: coalib/bears/Bear.py:93
+#: coalib/bears/Bear.py:88
 msgid "Tearing down bear {}..."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:80 coalib/bears/Bear.py:99
+#: coalib/tests/bears/BearTest.py:80 coalib/bears/Bear.py:94
 msgid "Bear {} failed to run"
 msgstr ""
 
@@ -246,7 +246,7 @@ msgstr ""
 msgid "{} is not accessible and will be ignored!"
 msgstr ""
 
-#: coalib/bears/Bear.py:100
+#: coalib/bears/Bear.py:95
 #, python-brace-format
 msgid ""
 "The bear {bear} raised an exception. If you are the writer of this bear, "
@@ -308,15 +308,15 @@ msgstr ""
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr ""
 
-#: coala:49
+#: coala:48
 msgid "Program terminated by user."
 msgstr ""
 
-#: coala:54
+#: coala:53
 msgid "An unknown error occurred."
 msgstr ""
 
-#: coala:56
+#: coala:55
 msgid ""
 "During execution of coala an exception was raised. This should never happen. "
 "When asked for, the following information may help investigating:"
