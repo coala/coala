@@ -26,12 +26,12 @@ class LocalBear(Bear):
     def kind():
         return BEAR_KIND.LOCAL
 
-    def run_bear(self,
-                 filename,
-                 file,
-                 *args,
-                 dependency_results=None,
-                 **kwargs):
+    def run(self,
+            filename,
+            file,
+            *args,
+            dependency_results=None,
+            **kwargs):
         """
         Handles the given file.
 
@@ -44,5 +44,5 @@ class LocalBear(Bear):
     @classmethod
     def get_metadata(cls):
         return FunctionMetadata.from_function(
-            cls.run_bear,
+            cls.run,
             omit=["self", "filename", "file", "dependency_results"])

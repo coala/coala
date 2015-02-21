@@ -22,7 +22,7 @@ class TestBear(Bear):
         self.fail_msg("teardown")
         self.fail_msg()
 
-    def run_bear(self):
+    def run(self):
         self.warn_msg(_("A string to test translations."))
 
     @staticmethod
@@ -37,7 +37,7 @@ class BadTestBear(Bear):
     def tear_down(self):
         raise NotImplementedError
 
-    def run_bear(self):
+    def run(self):
         pass
 
 
@@ -58,12 +58,12 @@ class BearTestCase(unittest.TestCase):
         base.set_up()
         base.tear_down()
 
-        self.assertRaises(NotImplementedError, base.run_bear)
+        self.assertRaises(NotImplementedError, base.run)
 
         self.assertEqual(base.get_non_optional_settings(), {})
 
     def test_message_queue(self):
-        self.uut.run()
+        self.uut.run_main()
         self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
         self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("TestBear"))
@@ -73,7 +73,7 @@ class BearTestCase(unittest.TestCase):
 
     def test_bad_bear(self):
         self.uut = BadTestBear(self.settings, self.queue)
-        self.uut.run()
+        self.uut.run_main()
         self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("BadTestBear"))
         self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("BadTestBear"))
         self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("BadTestBear"))
@@ -84,11 +84,13 @@ class BearTestCase(unittest.TestCase):
         msg = self.queue.get()
         self.assertIsInstance(msg, LogMessage)
         self.assertEqual(msg.message, message)
+        print (message)
+        print (msg.message)
         self.assertEqual(msg.log_level, log_level)
 
     def test_no_queue(self):
         uut = TestBear(self.settings, None)
-        uut.run()  # No exceptions
+        uut.run_main()  # No exceptions
 
     def test_dependencies(self):
         self.assertEqual(Bear.get_dependencies(), [])
