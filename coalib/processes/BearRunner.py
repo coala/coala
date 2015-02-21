@@ -227,9 +227,9 @@ class BearRunner(multiprocessing.Process):
             kwargs["dependency_results"] = dependency_results
 
         try:
-            return bear_instance.run(filename,
-                                     self.file_dict[filename],
-                                     **kwargs)
+            return bear_instance.run_main(filename,
+                                         self.file_dict[filename],
+                                         **kwargs)
         except:
             tb = traceback.format_exc()
             name = bear_instance.__class__.__name__
@@ -252,4 +252,4 @@ class BearRunner(multiprocessing.Process):
 
             return None
 
-        return global_bear_instance.run()
+        return global_bear_instance.run_main()

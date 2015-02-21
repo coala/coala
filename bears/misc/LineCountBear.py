@@ -5,7 +5,7 @@ from coalib.misc.i18n import _
 
 
 class LineCountBear(LocalBear):
-    def run_bear(self, filename, file, *args):
+    def run(self, filename, file, *args):
         """
         Counts the lines of each file.
         """

@@ -14,14 +14,14 @@ from coalib.settings.Section import Section
 
 
 class LocalTestBear(LocalBear):
-    def run_bear(self, filename, file):
+    def run(self, filename, file):
         if filename == "file1":
             raise Exception("Just to throw anything here.")
         return [Result("LocalTestBear", "something went wrong", filename)]
 
 
 class SimpleBear(LocalBear):
-    def run_bear(self,
+    def run(self,
                  filename,
                  file,
                  *args,
@@ -34,7 +34,7 @@ class SimpleBear(LocalBear):
 
 
 class DependentBear(LocalBear):
-    def run_bear(self,
+    def run(self,
                  filename,
                  file,
                  *args,
@@ -50,7 +50,7 @@ class DependentBear(LocalBear):
 
 
 class GlobalTestBear(GlobalBear):
-    def run_bear(self):
+    def run(self):
         result = []
         for file, contents in self.file_dict.items():
             result.append(Result("GlobalTestBear",
@@ -61,7 +61,7 @@ class GlobalTestBear(GlobalBear):
 
 
 class EvilBear(LocalBear):
-    def run(self, *args, **kwargs):
+    def run_main(self, *args, **kwargs):
         raise NotImplementedError
 
 

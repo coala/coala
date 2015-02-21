@@ -6,12 +6,12 @@ from coalib.results.PatchResult import PatchResult
 
 
 class SpaceConsistencyBear(LocalBear):
-    def run_bear(self,
-                 filename,
-                 file,
-                 use_spaces: bool,
-                 allow_trailing_whitespace: bool=False,
-                 tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
+    def run(self,
+           filename,
+           file,
+           use_spaces: bool,
+           allow_trailing_whitespace: bool=False,
+           tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
         """
         Checks the space consistency for each line.
 
