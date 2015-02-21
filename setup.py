@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 from distutils.core import setup
-from distutils.sysconfig import get_python_lib
-import os
 
 from coalib.misc.i18n import compile_translations
 
