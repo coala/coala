@@ -1,2 +1,5 @@
 include locale/*.po
 include coalib/default_coafile
+include README.md
+include INSTALL.md
+include doc/getting_involved/*.md
