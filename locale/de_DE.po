@@ -137,6 +137,7 @@ msgstr "Projektweit:"
 #: coalib/output/ConsoleInteractor.py:43
 msgid "One of the given settings ({}) is not properly described."
 msgstr ""
+"Eine der übergebenen Einstellungen ({}) wurde nicht ordentlich beschrieben."
 
 #. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
 #: coalib/output/ConsoleInteractor.py:52
@@ -149,10 +150,12 @@ msgstr " und "
 msgid ""
 "The following options are applicable to this result (choose 0 for no action):"
 msgstr ""
+"Die folgenden Aktionen können auf dieses Resultat angewendet werden (wählen "
+"Sie 0, um nichts zu tun):"
 
 #: coalib/output/ConsoleInteractor.py:86
 msgid "Please enter the number of the action you want to execute. "
-msgstr ""
+msgstr "Bitte geben Sie die Nummer der Aktion ein, die Sie ausführen wollen: "
 
 #: coalib/output/ConsoleInteractor.py:94
 msgid "Please enter a valid number."
@@ -180,6 +183,7 @@ msgstr "Sektion {name} wird ausgeführt..."
 #: coalib/tests/output/ConsoleInteractorTest.py:110
 msgid "No existent section was targeted or enabled. Nothing to do."
 msgstr ""
+"Es wurde keine existierende Sektion ausgewählt oder aktiviert. Nichts zu tun."
 
 #: coalib/collecting/Collectors.py:85
 #, python-brace-format
@@ -187,6 +191,8 @@ msgid ""
 "Unable to collect bears from {file}. Probably the file is malformed or the "
 "module code raises an exception."
 msgstr ""
+"Aus {file} können keine Bären importiert werden. Die Datei ist "
+"wahrscheinlich inkorrekt oder der Modulcode wirft eine Ausnahme."
 
 #: coalib/settings/SectionFiller.py:37
 msgid "One of the given bears ({}) has no attribute get_non_optional_settings."
@@ -204,7 +210,7 @@ msgstr "Optional, standardmäßig '{}'."
 #: coalib/settings/FunctionMetadata.py:96
 #, python-brace-format
 msgid "Unable to convert {param} to the desired data type."
-msgstr ""
+msgstr "{param} kann nicht in den gewünschten Datentyp konvertiert werden."
 
 #: coalib/settings/Section.py:83
 msgid ""
@@ -228,6 +234,8 @@ msgid ""
 "The requested section '{section}' is not existent. Thus it cannot be "
 "executed."
 msgstr ""
+"Die angeforderte Sektion '{section}' kann nicht ausgeführt werden, da sie "
+"nicht existiert."
 
 #. Do not change this translation without changing it in the code also!
 #: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:41
@@ -256,7 +264,7 @@ msgstr "Beende Bär {}..."
 
 #: coalib/tests/bears/BearTest.py:88 coalib/bears/Bear.py:94
 msgid "Bear {} failed to run."
-msgstr ""
+msgstr "Der Bär {} konnte nicht ausgeführt werden."
 
 #: coalib/tests/results/RESULT_SEVERITYTest.py:11
 #: coalib/results/RESULT_SEVERITY.py:5
@@ -296,10 +304,18 @@ msgid ""
 "\n"
 "{traceback}\n"
 msgstr ""
+"Der Bär {bear} hat eine Ausnahme geworfen. Wenn Sie der Autor dieses Bären "
+"sind, stellen Sie bitte sicher, dass Sie alle Ausnahmen fangen. Falls dies "
+"nicht der Fall sein sollte und dieser Fehler Sie stört, nehmen Sie am besten "
+"Kontakt mit dem Autoren dieses Bären auf.\n"
+"\n"
+"Rückverfolgungsinformationen sind im folgenden gegeben:\n"
+"\n"
+"{traceback}\n"
 
 #: coalib/parsing/DefaultArgParser.py:12
 msgid "Sections to be executed exclusively."
-msgstr ""
+msgstr "Sektionen die ausschließlich ausgeführt werden sollen."
 
 #: coalib/parsing/DefaultArgParser.py:17
 msgid "Files that should be checked"
@@ -311,7 +327,7 @@ msgstr "Namen der zu benutzenden Bären"
 
 #: coalib/parsing/DefaultArgParser.py:23
 msgid "Additional directories where bears may lie"
-msgstr ""
+msgstr "Zusätzliche Ordner in denen Bären liegen können."
 
 #: coalib/parsing/DefaultArgParser.py:29
 msgid "Type of logging (console or any filename)"
@@ -334,6 +350,8 @@ msgid ""
 "Filename of file to be saved to, if provided with no arguments, settings "
 "will be stored back to the file given by -c"
 msgstr ""
+"Datei in die gespeichert werden soll. Wenn keine Argumente gegeben sind, "
+"werden die Einstellungen zurück in die durch -c gegebene Datei gespeichert."
 
 #: coalib/parsing/DefaultArgParser.py:62
 msgid "Arbitrary settings in the form of section.key=value"
@@ -360,6 +378,9 @@ msgid ""
 "During execution of coala an exception was raised. This should never happen. "
 "When asked for, the following information may help investigating:"
 msgstr ""
+"Während der Ausführung von coala ist eine Ausname geworfen worden. Dies "
+"sollte nie passieren. Falls Sie gefragt werden, könnten die folgenden "
+"Informationen bei der Untersuchung des Fehlers helfen:"
 
 #~ msgid "One of the given settings ({}) are not properly described."
 #~ msgstr ""
