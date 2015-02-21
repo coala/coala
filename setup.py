@@ -36,5 +36,11 @@ if __name__ == "__main__":
                     'coalib.settings'],
           package_data={'coalib': ['default_coafile']},
           license="AGPL v3",
-          data_files=data_files
-    )
+          data_files=data_files,
+          long_description="coala is a simple COde AnaLysis Application. Its "
+                           "goal is to make static code analysis easy while "
+                           "remaining completely modular and therefore "
+                           "extendable and language independent. Code analysis"
+                           " happens in python scripts while coala manages "
+                           "these, tries to provide helpful libraries and "
+                           "provides a user interface.")
