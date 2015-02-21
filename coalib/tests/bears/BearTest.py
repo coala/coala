@@ -63,7 +63,7 @@ class BearTestCase(unittest.TestCase):
         self.assertEqual(base.get_non_optional_settings(), {})
 
     def test_message_queue(self):
-        self.uut.run()
+        self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
         self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("TestBear"))
@@ -73,7 +73,7 @@ class BearTestCase(unittest.TestCase):
 
     def test_bad_bear(self):
         self.uut = BadTestBear(self.settings, self.queue)
-        self.uut.run()
+        self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG, _("Setting up bear {}...").format("BadTestBear"))
         self.check_message(LOG_LEVEL.DEBUG, _("Running bear {}...").format("BadTestBear"))
         self.check_message(LOG_LEVEL.DEBUG, _("Tearing down bear {}...").format("BadTestBear"))
@@ -88,7 +88,7 @@ class BearTestCase(unittest.TestCase):
 
     def test_no_queue(self):
         uut = TestBear(self.settings, None)
-        uut.run()  # No exceptions
+        uut.execute()  # No exceptions
 
     def test_dependencies(self):
         self.assertEqual(Bear.get_dependencies(), [])

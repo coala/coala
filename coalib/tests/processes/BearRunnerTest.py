@@ -84,7 +84,7 @@ class GlobalTestBear(GlobalBear):
 
 
 class EvilBear(LocalBear):
-    def run(self, *args, **kwargs):
+    def execute(self, *args, **kwargs):
         raise NotImplementedError
 
 

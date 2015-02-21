@@ -76,7 +76,7 @@ class Bear:
         return self.run_bear(*args,
                              **kwargs)
 
-    def run(self, *args, **kwargs):
+    def execute(self, *args, **kwargs):
         name = self.__class__.__name__
         try:
             self.debug_msg(_("Setting up bear {}...").format(name))

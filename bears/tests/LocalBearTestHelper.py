@@ -36,7 +36,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear, LocalBear, msg="The given bear is no local bear.")
         self.assertIsInstance(lines, list, msg="The given lines are not a list.")
-        self.assertEqual(local_bear.run(filename, LocalBearTestHelper.prepare_lines(lines)),
+        self.assertEqual(local_bear.execute(filename, LocalBearTestHelper.prepare_lines(lines)),
                          [],
                          msg="The local bear '{}' yields a result "
                              "although it shouldn't.".format(local_bear.__class__.__name__))
@@ -62,7 +62,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear, LocalBear, msg="The given bear is no local bear.")
         self.assertIsInstance(lines, list, msg="The given lines are not a list.")
-        self.assertNotEqual(len(local_bear.run(filename, LocalBearTestHelper.prepare_lines(lines))),
+        self.assertNotEqual(len(local_bear.execute(filename, LocalBearTestHelper.prepare_lines(lines))),
                             0,
                             msg="The local bear '{}' yields no result "
                                 "although it should.".format(local_bear.__class__.__name__))
@@ -94,12 +94,12 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         self.assertIsInstance(results, list, msg="The given results are not a list.")
 
         if not check_order:
-            self.assertEqual(sorted(local_bear.run(filename, LocalBearTestHelper.prepare_lines(lines))),
+            self.assertEqual(sorted(local_bear.execute(filename, LocalBearTestHelper.prepare_lines(lines))),
                              sorted(results),
                              msg="The local bear '{}' yields not the right "
                                  "results or the order may be wrong.".format(local_bear.__class__.__name__))
         else:
-            self.assertEqual(local_bear.run(filename, LocalBearTestHelper.prepare_lines(lines)),
+            self.assertEqual(local_bear.execute(filename, LocalBearTestHelper.prepare_lines(lines)),
                              results,
                              msg="The local bear '{}' yields not the right "
                                  "results or the order may be wrong.".format(local_bear.__class__.__name__))

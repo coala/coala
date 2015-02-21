@@ -284,8 +284,8 @@ class BearRunner(multiprocessing.Process):
             del kwargs["dependency_results"]
 
         try:
-            return bear_instance.run(*args,
-                                     **kwargs)
+            return bear_instance.execute(*args,
+                                         **kwargs)
         except:
             name = bear_instance.__class__.__name__
             self.err(_("The bear {bear} failed to run with the arguments "
