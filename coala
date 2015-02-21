@@ -15,7 +15,6 @@
 
 import os
 import sys
-import traceback
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
