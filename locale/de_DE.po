@@ -54,11 +54,13 @@ msgid ""
 "The bear {bear} failed to run with the arguments {arglist}, {kwarglist}. "
 "Skipping bear..."
 msgstr ""
+"Der Bär {bear} konnte mit den Argumenten {arglist}, {kwarglist} nicht "
+"ausgeführt werden und wird übersprungen."
 
 #: coalib/processes/BearRunner.py:294
 #, python-brace-format
 msgid "Traceback for error in bear {bear}:"
-msgstr ""
+msgstr "Rückverfolgung für den Fehler in Bär {bear}:"
 
 #: coalib/output/Interactor.py:38
 msgid ""
