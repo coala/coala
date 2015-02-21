@@ -104,47 +104,47 @@ msgstr ""
 msgid "Project wide:"
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:42
-msgid "One of the given settings ({}) are not properly described."
+#: coalib/output/ConsoleInteractor.py:43
+msgid "One of the given settings ({}) is not properly described."
 msgstr ""
 
 #. Translators: this is the and that connects the last two items of an enumeration (1st, 2nd AND 3rd)
-#: coalib/output/ConsoleInteractor.py:50
+#: coalib/output/ConsoleInteractor.py:52
 #: coalib/tests/output/ConsoleInteractorTest.py:49
 #: coalib/tests/output/ConsoleInteractorTest.py:57
 msgid " and "
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:68
+#: coalib/output/ConsoleInteractor.py:70
 msgid ""
 "The following options are applicable to this result (choose 0 for no action):"
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:84
+#: coalib/output/ConsoleInteractor.py:86
 msgid "Please enter the number of the action you want to execute. "
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:92
+#: coalib/output/ConsoleInteractor.py:94
 msgid "Please enter a valid number."
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:104
+#: coalib/output/ConsoleInteractor.py:106
 msgid "Please enter a value for the parameter '{}' ({}): "
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:148
+#: coalib/output/ConsoleInteractor.py:150
 msgid ""
 "A result ({}) cannot be printed because it refers to a file that doesn't "
 "seem to exist."
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:166
+#: coalib/output/ConsoleInteractor.py:168
 #: coalib/tests/output/ConsoleInteractorTest.py:105
 #, python-brace-format
 msgid "Executing section {name}..."
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:169
+#: coalib/output/ConsoleInteractor.py:171
 #: coalib/tests/output/ConsoleInteractorTest.py:110
 msgid "No existent section was targeted or enabled. Nothing to do."
 msgstr ""
@@ -194,7 +194,7 @@ msgstr ""
 
 #. Do not change this translation without changing it in the code also!
 #: coalib/tests/misc/i18nTest.py:36 coalib/tests/misc/i18nTest.py:41
-#: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:70
+#: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:73
 msgid "A string to test translations."
 msgstr ""
 
@@ -202,23 +202,23 @@ msgstr ""
 msgid "A not directly translated test string."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:67 coalib/tests/bears/BearTest.py:77
+#: coalib/tests/bears/BearTest.py:68 coalib/tests/bears/BearTest.py:82
 #: coalib/bears/Bear.py:82
 msgid "Setting up bear {}..."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:69 coalib/tests/bears/BearTest.py:78
+#: coalib/tests/bears/BearTest.py:71 coalib/tests/bears/BearTest.py:84
 #: coalib/bears/Bear.py:85
 msgid "Running bear {}..."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:71 coalib/tests/bears/BearTest.py:79
+#: coalib/tests/bears/BearTest.py:75 coalib/tests/bears/BearTest.py:86
 #: coalib/bears/Bear.py:88
 msgid "Tearing down bear {}..."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:80 coalib/bears/Bear.py:94
-msgid "Bear {} failed to run"
+#: coalib/tests/bears/BearTest.py:88 coalib/bears/Bear.py:94
+msgid "Bear {} failed to run."
 msgstr ""
 
 #: coalib/tests/results/RESULT_SEVERITYTest.py:11
