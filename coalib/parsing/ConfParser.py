@@ -112,10 +112,10 @@ class ConfParser(SectionParser):
                     continue
 
                 if section_override == "":
-                    current_section._add_or_create_setting(Setting(key, value, origin),
+                    current_section.add_or_create_setting(Setting(key, value, origin),
                                                            allow_appending=(keys == []))
                 else:
-                    self.get_section(section_override, True)._add_or_create_setting(Setting(key, value, origin),
+                    self.get_section(section_override, True).add_or_create_setting(Setting(key, value, origin),
                                                                                     allow_appending=(keys == []))
 
     def __init_sections(self):

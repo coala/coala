@@ -30,17 +30,28 @@ class SectionTestCase(unittest.TestCase):
         self.assertEqual(str(uut.get("5 ")), "5")
         self.assertEqual(int(uut.get("nonexistent", 5)), 5)
 
+    def test_enabled(self):
+        uut = Section("name")
+        self.assertTrue(uut.is_enabled([]))
+        self.assertTrue(uut.is_enabled(["name", "wrongname"]))
+        self.assertFalse(uut.is_enabled(["wrongname"]))
+
+        uut.append(Setting("enabled", "false"))
+        self.assertFalse(uut.is_enabled([]))
+        self.assertFalse(uut.is_enabled(["wrong_name"]))
+        self.assertTrue(uut.is_enabled(["name", "wrongname"]))
+
     def test_iter(self):
         defaults = Section("default", None)
         uut = Section("name", defaults)
         uut.append(Setting(5, 5, 5))
-        uut._add_or_create_setting(Setting("TEsT", 4, 5))
+        uut.add_or_create_setting(Setting("TEsT", 4, 5))
         defaults.append(Setting("tEsT", 1, 3))
         defaults.append(Setting(" great   ", 3, 8))
         defaults.append(Setting(" great   ", 3, 8), custom_key="custom")
-        uut._add_or_create_setting(Setting(" NEW   ", "val", 8))
-        uut._add_or_create_setting(Setting(" NEW   ", "vl", 8), allow_appending=False)
-        uut._add_or_create_setting(Setting("new", "val", 9),
+        uut.add_or_create_setting(Setting(" NEW   ", "val", 8))
+        uut.add_or_create_setting(Setting(" NEW   ", "vl", 8), allow_appending=False)
+        uut.add_or_create_setting(Setting("new", "val", 9),
                                    custom_key="teSt ",
                                    allow_appending=True)
         self.assertEqual(list(uut), ["5", "test", "new", "great", "custom"])

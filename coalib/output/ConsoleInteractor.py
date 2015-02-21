@@ -50,8 +50,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             needed = ", ".join(arr[1:-1]) + _(" and ") + arr[-1]
 
         return input(self.STR_GET_VAL_FOR_SETTING.format(str(setting_name),
-                                                                                                 str(arr[0]),
-                                                                                                 needed))
+                                                         str(arr[0]),
+                                                         needed))
 
     def _format_line(self, line, real_nr="", sign="|", mod_nr="", symbol="", ):
         return "|{:>4}{}{:>4}|{:1}{}".format(real_nr, sign, mod_nr, symbol, line.rstrip("\n"))
@@ -64,7 +64,9 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         return self.print("\n".join([self._format_line(line) for line in message_string_list]))
 
     def _print_actions(self, actions):
-        self.print(self._format_line(_("The following options are applicable to this result:")))
+        self.print(self._format_line(
+            _("The following options are applicable to this result (choose "
+              "0 for no action):")))
 
         choice = self._choose_action(actions)
 
@@ -78,10 +80,10 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             for i, action in enumerate(actions):
                 self.print(self._format_line("{:>2}: {}".format(i + 1, action.desc)))
 
-            self.print(self._format_line("{:>2}: ".format(0) + _("No action.")))
-
             try:
-                choice = int(input(self._format_line(_("Please enter the number of the action you want to execute."))))
+                line = self._format_line(_("Please enter the number of the "
+                                           "action you want to execute. "))
+                choice = int(input(line))
                 if 0 <= choice <= len(actions):
                     return choice
             except ValueError:
@@ -98,9 +100,10 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         section = Section("")
 
         for param_name in params:
-            section.append(Setting(param_name,
-                                   input(self._format_line(_("Please enter a value for the parameter "
-                                                             "'{}' ({}):").format(param_name, params[param_name][0])))))
+            question = self._format_line(
+                _("Please enter a value for the parameter '{}' ({}): ")
+                .format(param_name, params[param_name][0]))
+            section.append(Setting(param_name, input(question)))
 
         return action.name, section
 
@@ -158,3 +161,10 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                     current_line = result.line_nr
 
             self.print_result(result, file_dict)
+
+    def begin_section(self, name):
+        self.print(_("Executing section {name}...").format(name=name))
+
+    def did_nothing(self):
+        self.print(_("No existent section was targeted nor enabled. Nothing to"
+                     "do."))

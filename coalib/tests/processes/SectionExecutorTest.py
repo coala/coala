@@ -17,12 +17,17 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
         LogPrinter.__init__(self)
         self.result_queue = result_queue
         self.log_queue = log_queue
+        self.set_up = False
 
     def log_message(self, log_message, timestamp=None, **kwargs):
         self.log_queue.put(log_message)
 
     def print_results(self, result_list, file_dict):
+        assert self.set_up
         self.result_queue.put(result_list)
+
+    def begin_section(self, name):
+        self.set_up = True
 
 
 class SectionExecutorInitTestCase(unittest.TestCase):

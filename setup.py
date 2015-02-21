@@ -9,11 +9,9 @@ from coalib.misc.i18n import compile_translations
 
 if __name__ == "__main__":
     data_files = compile_translations()
-    data_files.append((os.path.join(get_python_lib(), "coalib"),
-                       ["coalib/default_coafile"]))
 
     setup(name='coala',
-          version='0.2',
+          version='0.1',
           description='Code Analysis Application (coala)',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt',
           maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de',
@@ -37,8 +35,8 @@ if __name__ == "__main__":
                     'coalib.processes.communication',
                     'coalib.results',
                     'coalib.results.result_actions',
-                    'coalib.settings',
-          ],
+                    'coalib.settings'],
+          package_data={'coalib': ['default_coafile']},
           license="AGPL v3",
           data_files=data_files
     )
