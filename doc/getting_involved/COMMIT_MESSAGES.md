@@ -21,12 +21,16 @@ There are a few things to consider when writing a commit message, namely:
    `Fixes: https://github.com/coala-analyzer/coala/issues/###`, this way the
    commit will appear at the bug and several revisions can be tracked this way.
 
-Structural example:
+Also see: https://wiki.gnome.org/Git/CommitMessages
+
+Example:
 ```
-tag: Short description
+setup: Install .coafile via package_data
 
-A more elaborate description. Optionally:
+When installing the .coafile to distutils.sysconfig.get_python_lib, we
+ignore that this is not the installation directory in every case. Thus
+it is easier, more reliable and platform independent to let distutils
+install it by itself.
 
-See: https://github.com/coala-analyzer/coala/issues/###
-Fixes: https://github.com/coala-analyzer/coala/issues/###
+Fixes: https://github.com/coala-analyzer/coala/issues/269
 ```
