@@ -9,7 +9,7 @@ from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 class GlobalBearTestCase(unittest.TestCase):
     def test_api(self):
         test_object = GlobalBear(0, Section("name"), None)
-        self.assertRaises(NotImplementedError, test_object.run_bear)
+        self.assertRaises(NotImplementedError, test_object.run)
 
     def test_kind(self):
         self.assertEqual(GlobalBear.kind(), BEAR_KIND.GLOBAL)

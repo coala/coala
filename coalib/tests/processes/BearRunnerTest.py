@@ -14,19 +14,19 @@ from coalib.settings.Section import Section
 
 
 class LocalTestBear(LocalBear):
-    def run_bear(self, filename, file):
+    def run(self, filename, file):
         if filename == "file1":
             raise Exception("Just to throw anything here.")
         return [Result("LocalTestBear", "something went wrong", filename)]
 
 
 class SimpleBear(LocalBear):
-    def run_bear(self,
-                 filename,
-                 file,
-                 *args,
-                 dependency_results=None,
-                 **kwargs):
+    def run(self,
+            filename,
+            file,
+            *args,
+            dependency_results=None,
+            **kwargs):
         return [Result("SimpleBear", "something went wrong", filename),
                 # This result should not be passed to DependentBear
                 Result("FakeBear", "something went wrong", filename),
@@ -34,12 +34,12 @@ class SimpleBear(LocalBear):
 
 
 class DependentBear(LocalBear):
-    def run_bear(self,
-                 filename,
-                 file,
-                 *args,
-                 dependency_results=None,
-                 **kwargs):
+    def run(self,
+            filename,
+            file,
+            *args,
+            dependency_results=None,
+            **kwargs):
         assert len(dependency_results["SimpleBear"]) == 2
 
         return []
@@ -50,10 +50,10 @@ class DependentBear(LocalBear):
 
 
 class SimpleGlobalBear(GlobalBear):
-    def run_bear(self,
-                 *args,
-                 dependency_results=None,
-                 **kwargs):
+    def run(self,
+            *args,
+            dependency_results=None,
+            **kwargs):
         return [Result("SimpleGlobalBear", "something went wrong"),
                 # This result should not be passed to DependentBear
                 Result("FakeBear", "something went wrong"),
@@ -61,10 +61,10 @@ class SimpleGlobalBear(GlobalBear):
 
 
 class DependentGlobalBear(GlobalBear):
-    def run_bear(self,
-                 *args,
-                 dependency_results=None,
-                 **kwargs):
+    def run(self,
+            *args,
+            dependency_results=None,
+            **kwargs):
         assert len(dependency_results["SimpleGlobalBear"]) == 3
 
     @staticmethod
@@ -73,7 +73,7 @@ class DependentGlobalBear(GlobalBear):
 
 
 class GlobalTestBear(GlobalBear):
-    def run_bear(self):
+    def run(self):
         result = []
         for file, contents in self.file_dict.items():
             result.append(Result("GlobalTestBear",

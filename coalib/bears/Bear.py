@@ -15,12 +15,12 @@ class Bear:
 
     This is the base class for every bear. If you want to write an bear, you will probably want to look at the
     GlobalBear and LocalBear classes that inherit from this class. In any case you'll want to overwrite at least the
-    run_bear method. You can send debug/warning/error messages through the debug_msg(), warn_msg(), fail_msg()
+    run method. You can send debug/warning/error messages through the debug_msg(), warn_msg(), fail_msg()
     functions. These will send the appropriate messages so that they are outputted. Be aware that if you use fail_msg(),
     you are expected to also terminate the bear run-through immediately.
 
     If you need some setup or teardown for your bear, feel free to overwrite the set_up() and tear_down() functions.
-    They will be invoked before/after every run_bear invocation.
+    They will be invoked before/after every run invocation.
 
     Settings are available at all times through self.section. You can access coalas translation database with the _()
     from coalib.misc.i18n. Be aware that the strings you use are probably not in the database, especially if your bear
@@ -67,14 +67,14 @@ class Bear:
                                           str(delimiter).join(args)),
                                timeout=self.TIMEOUT)
 
-    def run_bear(self, *args, dependency_results=None, **kwargs):
+    def run(self, *args, dependency_results=None, **kwargs):
         raise NotImplementedError
 
     def run_bear_from_section(self, args, kwargs):
         kwargs.update(self.get_metadata().create_params_from_section(self.section))
 
-        return self.run_bear(*args,
-                             **kwargs)
+        return self.run(*args,
+                        **kwargs)
 
     def execute(self, *args, **kwargs):
         name = self.__class__.__name__
@@ -112,12 +112,12 @@ class Bear:
     @classmethod
     def get_metadata(cls):
         """
-        :return: Metadata for the run_bear function. However parameters like
+        :return: Metadata for the run function. However parameters like
         self or parameters implicitly used by coala (e.g. filename for local
         bears) are already removed.
         """
         return FunctionMetadata.from_function(
-            cls.run_bear,
+            cls.run,
             omit=["self", "dependency_results"])
 
     @classmethod
@@ -142,7 +142,7 @@ class Bear:
         """
         Retrieves bear classes that are to be executed before this bear gets
         executed. The results of these bears will then be passed to the
-        run_bear method as a dict via the dependency_results argument. The dict
+        run method as a dict via the dependency_results argument. The dict
         will have the name of the Bear as key and the list of its results as
         results.
 

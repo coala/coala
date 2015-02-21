@@ -5,11 +5,11 @@ from coalib.misc.i18n import _
 
 
 class LineLengthBear(LocalBear):
-    def run_bear(self,
-                 filename,
-                 file,
-                 max_line_length: int,
-                 tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
+    def run(self,
+            filename,
+            file,
+            max_line_length: int,
+            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
         """
         Yields results for all lines longer than the given maximum line length.
 

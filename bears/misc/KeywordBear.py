@@ -4,11 +4,11 @@ from coalib.misc.i18n import _
 
 
 class KeywordBear(LocalBear):
-    def run_bear(self,
-                 filename,
-                 file,
-                 cs_keywords: list,
-                 ci_keywords: list):
+    def run(self,
+            filename,
+            file,
+            cs_keywords: list,
+            ci_keywords: list):
         """
         Checks the code files for given keywords.
 
