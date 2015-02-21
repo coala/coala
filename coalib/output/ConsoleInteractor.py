@@ -39,8 +39,10 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
     def _require_setting(self, setting_name, arr):
         if not isinstance(arr, list) or len(arr) < 2:
-            self.log_printer.log(LOG_LEVEL.WARNING, _("One of the given settings ({}) are not properly "
-                                                      "described.").format(str(setting_name)))
+            self.log_printer.log(LOG_LEVEL.WARNING,
+                                 _("One of the given settings ({}) is not "
+                                   "properly described.").
+                                 format(str(setting_name)))
 
             return None
 
