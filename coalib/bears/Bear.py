@@ -91,7 +91,7 @@ class Bear:
             return retval
         except:
             self.warn_msg(
-                _("Bear {} failed to run").format(name))
+                _("Bear {} failed to run.").format(name))
             self.debug_msg(_("The bear {bear} raised an exception. If you are "
                              "the writer of this bear, please make sure "
                              "to catch all exceptions. If not and this error "
