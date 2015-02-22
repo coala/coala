@@ -142,7 +142,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
                                                "line 4\n",
                                                "line 5\n"]})
         self.assertEqual("""\n\nproj/white
-|    .    | \n|    .    | \n|    .    | \n|   2|   2| line 2
+| ...| ...| \n|   2|   2| line 2
 |   3|   3| line 3
 |   4|   4| line 4
 |   5|   5| line 5

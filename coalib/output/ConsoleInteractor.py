@@ -109,8 +109,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
         return action.name, section
 
-    def _print_segregation(self, n=3):
-        self.print("\n".join(self._format_line(line="", sign=".") for i in range(n)))
+    def _print_segregation(self, n=1):
+        self.print("\n".join(self._format_line(line="", real_nr="...", sign="|", mod_nr="...") for i in range(n)))
 
     def _print_lines(self, file_dict, current_line, result_line, result_file):
         """
