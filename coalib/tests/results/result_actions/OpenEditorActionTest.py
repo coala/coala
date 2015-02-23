@@ -21,6 +21,10 @@ class ResultActionTestCase(unittest.TestCase):
         with open(filename, "w") as f:
             f.writelines(lines)
 
+    @staticmethod
+    def fake_edit_subl(command):
+        assert ("--wait" in command), "Did not wait for the editor to close"
+
     def test_apply(self):
         file_dict = {
             "f_a": ["1\n", "2\n", "3\n"],
@@ -47,6 +51,20 @@ class ResultActionTestCase(unittest.TestCase):
 
         self.assertEqual(file_dict, expected_file_dict)
 
+    def test_subl(self):
+        file_dict = {"f_a": []}
+        section = Section("")
+        section.append(Setting("editor", "subl"))
+        uut = OpenEditorAction()
+        os.system = self.fake_edit_subl
+        diff_dict = uut.apply_from_section(
+            Result("origin", "msg", "f_a"),
+            file_dict,
+            {},
+            section)
+        file_dict["f_a"] = diff_dict["f_a"].apply(file_dict["f_a"])
+
+        self.assertEqual(file_dict, file_dict)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
