@@ -45,6 +45,8 @@ class Diff:
                                        file_array_2[b_index_1])
                     result.add_lines(a_index_1+1,
                                      file_array_2[b_index_1+1:b_index_2])
+                    for index in range(a_index_1+2, a_index_2+1):
+                        result.delete_line(index)
 
         return result
 
