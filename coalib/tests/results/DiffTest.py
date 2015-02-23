@@ -99,6 +99,11 @@ class DiffTestCase(unittest.TestCase):
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.apply(a), b)
 
+        a = ["first", "second", "third", "fourth"]
+        b = ["first", "fourth"]
+        self.uut = Diff.from_string_arrays(a, b)
+        self.assertEqual(self.uut.apply(a), b)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
