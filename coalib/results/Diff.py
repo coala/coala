@@ -33,7 +33,8 @@ class Diff:
         for change_group in matcher.get_grouped_opcodes(1):
             for tag, a_index_1, a_index_2, b_index_1, b_index_2 in change_group:
                 if tag == "delete":
-                    result.delete_line(a_index_1+1)
+                    for index in range(a_index_1+1, a_index_2+1):
+                        result.delete_line(index)
                 elif tag == "insert":
                     # We add after line, they add before, so dont add 1 here
                     result.add_lines(a_index_1,
