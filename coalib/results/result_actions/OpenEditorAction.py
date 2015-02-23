@@ -8,7 +8,7 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 class OpenEditorAction(ApplyPatchAction):
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
-        Open the file in an editor.
+        Open a temporary clone of the file in an editor.
 
         :param editor: The editor to open the file with.
         """
