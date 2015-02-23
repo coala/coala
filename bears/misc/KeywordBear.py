@@ -22,13 +22,13 @@ class KeywordBear(LocalBear):
 
         for line_number, line in enumerate(file):
             found_kws = []
-            for kw in cs_keywords:
-                if kw in line:
-                    found_kws.append(kw)
+            for keyword in cs_keywords:
+                if keyword in line:
+                    found_kws.append(keyword)
 
-            for kw in ci_keywords:
-                if kw in line.lower():
-                    found_kws.append(kw)
+            for keyword in ci_keywords:
+                if keyword in line.lower():
+                    found_kws.append(keyword)
 
             if found_kws != []:
                 results.append(Result(origin=self,
