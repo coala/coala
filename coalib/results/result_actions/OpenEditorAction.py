@@ -4,6 +4,11 @@ import tempfile
 from coalib.results.Diff import Diff
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 
+EDITOR_ARGS = {
+    "subl" : "--wait",
+    "gedit" : "-s"
+}
+
 
 class OpenEditorAction(ApplyPatchAction):
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
@@ -23,6 +28,10 @@ class OpenEditorAction(ApplyPatchAction):
         os.close(temphandle)
         with open(tempname, "w") as temphandle:
             temphandle.writelines(current_file)
+
+        editor_arg = EDITOR_ARGS.get(editor.strip(), None)
+        if editor_arg:
+            editor = editor + " " + editor_arg
 
         # Dear user, you wanted an editor, so you get it. But do you really
         # think you can do better than we?
