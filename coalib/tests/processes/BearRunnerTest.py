@@ -88,6 +88,17 @@ class EvilBear(LocalBear):
         raise NotImplementedError
 
 
+class UnexpectedBear1(LocalBear):
+    def run(self, filename, file):
+        return [1,
+                Result("UnexpectedBear1", "test result")]
+
+
+class UnexpectedBear2(LocalBear):
+    def run(self, filename, file):
+        return 1
+
+
 class BearRunnerConstructionTestCase(unittest.TestCase):
     def test_initialization(self):
         file_name_queue = queue.Queue()
@@ -185,6 +196,30 @@ class BearRunnerUnitTestCase(unittest.TestCase):
         self.file_dict["t"] = []
 
         self.uut.run()
+
+    def test_strange_bear(self):
+        self.local_bear_list.append(UnexpectedBear1(self.settings,
+                                                    self.message_queue))
+        self.local_bear_list.append(UnexpectedBear2(self.settings,
+                                                    self.message_queue))
+        self.file_name_queue.put("t")
+        self.file_dict["t"] = []
+
+        self.uut.run()
+
+        expected_messages = [LOG_LEVEL.DEBUG,
+                             LOG_LEVEL.DEBUG,
+                             LOG_LEVEL.DEBUG,
+                             LOG_LEVEL.ERROR,
+                             LOG_LEVEL.DEBUG,
+                             LOG_LEVEL.DEBUG,
+                             LOG_LEVEL.DEBUG,
+                             LOG_LEVEL.DEBUG,
+                             LOG_LEVEL.ERROR,
+                             LOG_LEVEL.DEBUG]
+
+        for msg in expected_messages:
+            self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
 
 
 class BearRunnerIntegrationTestCase(unittest.TestCase):

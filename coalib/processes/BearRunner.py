@@ -9,6 +9,7 @@ from coalib.misc.StringConstants import StringConstants
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.misc.i18n import _
+from coalib.results.Result import Result
 
 
 class BearRunner(multiprocessing.Process):
@@ -283,11 +284,12 @@ class BearRunner(multiprocessing.Process):
         if kwargs.get("dependency_results", True) is None:
             del kwargs["dependency_results"]
 
+        name = bear_instance.__class__.__name__
+
         try:
-            return bear_instance.execute(*args,
-                                         **kwargs)
+            result_list = bear_instance.execute(*args,
+                                                **kwargs)
         except:
-            name = bear_instance.__class__.__name__
             self.err(_("The bear {bear} failed to run with the arguments "
                        "{arglist}, {kwarglist}. Skipping bear...")
                      .format(bear=name, arglist=args, kwarglist=kwargs))
@@ -297,3 +299,32 @@ class BearRunner(multiprocessing.Process):
                        delimiter="\n")
 
             return None
+
+        return self._validate_results(result_list, name, args, kwargs)
+
+    def _validate_results(self, result_list, name, args, kwargs):
+        if result_list is None:
+            return None
+
+        if not isinstance(result_list, list):
+            self.err(_("The results from the bear {bear} couldn't be processed"
+                       "with arguments {arglist}, {kwarglist}.")
+                     .format(bear=name, arglist=args, kwarglist=kwargs))
+            self.debug(_("The return value of the {bear} is an instance of"
+                         " {ret} but should be an instance of list.")
+                       .format(bear=name, ret=result_list.__class__))
+            return None
+
+        for result in result_list:
+            if not isinstance(result, Result):
+                self.err(_("The results from the bear {bear} could only be"
+                           "partially processed with arguments {arglist}, "
+                           "{kwarglist}")
+                         .format(bear=name, arglist=args, kwarglist=kwargs))
+                self.debug(_("One of the results in the list for the bear "
+                             "{bear} is an instance of {ret} but it should be "
+                             "an instance of Result")
+                           .format(bear=name, ret=result.__class__))
+                result_list.remove(result)
+
+        return result_list
