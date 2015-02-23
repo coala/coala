@@ -87,7 +87,11 @@ class DiffTestCase(unittest.TestCase):
         a = ["q", "a", "b", "x", "c", "d"]
         b = ["a", "b", "y", "c", "d", "f"]
         self.uut = Diff.from_string_arrays(a, b)
+        self.assertEqual(self.uut.apply(a), b)
 
+        a = ["first", "fourth"]
+        b = ["first", "second", "third", "fourth"]
+        self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.apply(a), b)
 
 

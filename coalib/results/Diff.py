@@ -36,7 +36,8 @@ class Diff:
                     result.delete_line(a_index_1+1)
                 elif tag == "insert":
                     # We add after line, they add before, so dont add 1 here
-                    result.add_lines(a_index_1, [file_array_2[b_index_1]])
+                    result.add_lines(a_index_1,
+                                     file_array_2[b_index_1:b_index_2])
                 elif tag == "replace":
                     result.change_line(a_index_1+1,
                                        b_index_1+1,
