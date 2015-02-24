@@ -56,8 +56,7 @@ class SectionManager:
 
         try:
             self.default_section = self.conf_parser.reparse(os.path.abspath(
-                os.path.join(StringConstants.coalib_root,
-                             "default_coafile")))["default"]
+                StringConstants.system_coafile))["default"]
         except self.conf_parser.FileNotFoundError:
             self.cli_sections["default"].retrieve_logging_objects()
             self.cli_sections["default"].log_printer.err(

@@ -43,3 +43,5 @@ class StringConstants:
 
     # Path to the directory containing the default bears
     coalib_bears_root = os.path.join(coalib_root, os.path.pardir, "bears")
+
+    system_coafile = os.path.join(coalib_root, "default_coafile")

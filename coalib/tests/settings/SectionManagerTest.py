@@ -12,7 +12,7 @@ from coalib.output.printers.NullPrinter import NullPrinter
 
 class SectionManagerTestCase(unittest.TestCase):
     def test_run(self):
-        defaults = ConfParser().parse(os.path.abspath(os.path.join(StringConstants.coalib_root, "default_coafile")))
+        defaults = ConfParser().parse(StringConstants.system_coafile)
 
         uut = SectionManager()
         # We need to use a bad filename or this will parse coalas .coafile
@@ -34,10 +34,10 @@ class SectionManagerTestCase(unittest.TestCase):
         # Shouldn't throw an exception
         SectionManager().run(arg_list=['-S', "config=" + filename])
 
-        tmp = StringConstants.coalib_root
-        StringConstants.coalib_root = filename
+        tmp = StringConstants.system_coafile
+        StringConstants.system_coafile = filename
         self.assertRaises(SystemExit, SectionManager().run)
-        StringConstants.coalib_root = tmp
+        StringConstants.system_coafile = tmp
 
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(),
