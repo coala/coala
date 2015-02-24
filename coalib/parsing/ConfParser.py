@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import sys
+import os
 
 from coalib.parsing.LineParser import LineParser
 from coalib.parsing.SectionParser import SectionParser
@@ -37,6 +38,9 @@ class ConfParser(SectionParser):
         :param overwrite: behaves like reparse if this is True
         :return: the settings dictionary
         """
+        if os.path.isdir(input_data):
+            input_data = os.path.join(input_data, ".coafile")
+
         with open(input_data, "r", encoding='utf-8') as f:
             lines = f.readlines()
 

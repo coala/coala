@@ -28,8 +28,9 @@ class ConfParserTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
-        self.nonexistentfile = os.path.join(tempfile.gettempdir(), "e81k7bd98t")
+        self.tempdir = tempfile.gettempdir()
+        self.file = os.path.join(self.tempdir, ".coafile")
+        self.nonexistentfile = os.path.join(self.tempdir, "e81k7bd98t")
         with open(self.file, "w") as filehandler:
             filehandler.write(self.example_file)
 
@@ -98,6 +99,8 @@ class ConfParserTestCase(unittest.TestCase):
                           self.uut.get_section,
                           "inexistent section")
 
+    def test_config_directory(self):
+        self.uut.parse(self.tempdir)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
