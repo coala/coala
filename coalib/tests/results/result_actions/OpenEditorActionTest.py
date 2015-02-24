@@ -43,8 +43,16 @@ class ResultActionTestCase(unittest.TestCase):
         section.append(Setting("editor", ""))
         uut = OpenEditorAction()
         os.system = self.fake_edit
-        diff_dict = uut.apply_from_section(Result("origin", "msg", "f_a"), file_dict, diff_dict, section)
-        diff_dict = uut.apply_from_section(Result("origin", "msg", "f_b"), file_dict, diff_dict, section)
+        diff_dict = uut.apply_from_section(
+            Result("origin", "msg", "f_a"),
+            file_dict,
+            diff_dict,
+            section)
+        diff_dict = uut.apply_from_section(
+            Result("origin", "msg", "f_b"),
+            file_dict,
+            diff_dict,
+            section)
 
         for filename in diff_dict:
             file_dict[filename] = diff_dict[filename].apply(file_dict[filename])
