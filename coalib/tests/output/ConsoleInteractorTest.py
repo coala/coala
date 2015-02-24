@@ -84,6 +84,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
             self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
 
         os.remove(testfile_path)
+        os.remove(testfile_path + ".orig")
 
         name, section = self.uut._get_action_info(TestAction().get_metadata())
         self.assertEqual(str(section), " {param : 3}")

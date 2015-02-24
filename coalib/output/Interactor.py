@@ -1,3 +1,5 @@
+import shutil
+
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.results.Result import Result
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
@@ -97,6 +99,10 @@ class Interactor(SectionCreatable):
             diff = self.file_diff_dict[filename]
             file_dict[filename] = diff.apply(file_dict[filename])
 
+            # Backup original file, override old backup if needed
+            shutil.copy2(filename, filename + ".orig")
+
+            # Write new contents
             with open(filename, mode='w') as file:
                 file.writelines(file_dict[filename])
 
