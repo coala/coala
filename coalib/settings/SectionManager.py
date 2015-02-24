@@ -119,7 +119,8 @@ class SectionManager:
         if self.conf_writer is not None:
             self.conf_writer.write_sections(self.sections)
 
-    def _merge_section_dicts(self, lower, higher):
+    @staticmethod
+    def _merge_section_dicts(lower, higher):
         """
         Merges the section dictionaries. The values of higher will take
         precedence over the ones of lower. Lower will hold the modified dict in
