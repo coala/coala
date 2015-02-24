@@ -83,6 +83,9 @@ class SectionManager:
             # CLI Values take precedence over the conf values.
             self._merge_section_dicts(self.sections, self.cli_sections)
         except self.conf_parser.FileNotFoundError:
+            self.cli_sections["default"].log_printer.warn(
+                    _("The requested coafile '{filename}' does not exist. "
+                      "Thus it will not be used.").format(filename=config))
             self.sections = self.cli_sections
 
     def _fill_settings(self):
