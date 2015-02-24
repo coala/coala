@@ -45,3 +45,5 @@ class StringConstants:
     coalib_bears_root = os.path.join(coalib_root, os.path.pardir, "bears")
 
     system_coafile = os.path.join(coalib_root, "default_coafile")
+
+    user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
