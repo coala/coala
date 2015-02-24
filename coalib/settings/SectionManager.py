@@ -75,7 +75,7 @@ class SectionManager:
 
         try:
             config = os.path.abspath(
-                str(self.cli_sections["default"].get("config", "./coafile")))
+                str(self.cli_sections["default"].get("config", ".coafile")))
             self.sections = self.conf_parser.reparse(config)
 
             # We'll get the default section as default section for every
