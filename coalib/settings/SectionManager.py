@@ -81,7 +81,7 @@ class SectionManager:
             # We'll get the default section as default section for every
             # section in this dict with this. Furthermore we will have the
             # CLI Values take precedence over the conf values.
-            self._merge_section_dicts()
+            self._merge_section_dicts(self.sections, self.cli_sections)
         except self.conf_parser.FileNotFoundError:
             self.sections = self.cli_sections
 
@@ -119,15 +119,19 @@ class SectionManager:
         if self.conf_writer is not None:
             self.conf_writer.write_sections(self.sections)
 
-    def _merge_section_dicts(self):
-        for name in self.cli_sections:
-            if name in self.sections:
-                self.sections[name].update(
-                    self.cli_sections[name],
-                    ignore_defaults=(name != "default"))
+    def _merge_section_dicts(self, lower, higher):
+        """
+        Merges the section dictionaries. The values of higher will take
+        precedence over the ones of lower. Lower will hold the modified dict in
+        the end.
+        """
+        for name in higher:
+            if name in lower:
+                lower[name].update(higher[name],
+                                   ignore_defaults=(name != "default"))
             else:
                 # no deep copy needed
-                self.sections[name] = self.cli_sections[name]
+                lower[name] = higher[name]
 
     def _warn_nonexistent_targets(self):
         for target in self.targets:
