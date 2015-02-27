@@ -13,7 +13,7 @@ Contents:
 
    bears
    coalib
-   run_tests
+   execute_all_tests
    setup
 
 
