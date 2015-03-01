@@ -5,8 +5,8 @@ from coalib.results.Diff import Diff
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 
 EDITOR_ARGS = {
-    "subl" : "--wait",
-    "gedit" : "-s"
+    "subl": "--wait",
+    "gedit": "-s"
 }
 
 
