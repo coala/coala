@@ -5,7 +5,8 @@ def unescaped_split(pattern,
                     max_split = 0,
                     remove_empty_matches = False):
     """
-    Splits the given string by the specified pattern.
+    Splits the given string by the specified pattern. The return character (\n)
+    is not a natural split pattern (if you don't specify it yourself).
     :param pattern:              The pattern that defines where to split.
                                  Providing regexes (and not only fixed strings)
                                  is allowed.
@@ -23,7 +24,7 @@ def unescaped_split(pattern,
     """
 
     # Split the string with the built-in function re.split().
-    match = re.split(pattern, string, max_split)
+    match = re.split(pattern, string, max_split, re.DOTALL)
 
     # If empty entries shall be removed, apply a filter and recollect all
     # non-empty values with the passed iterator.
