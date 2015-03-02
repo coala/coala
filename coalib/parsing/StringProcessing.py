@@ -36,6 +36,67 @@ def unescaped_split(pattern,
 
     return match
 
+def escaped_split(pattern,
+                  string,
+                  max_split = 0,
+                  remove_empty_matches = False):
+    """
+    Splits the given string by the specified pattern. The return character (\n)
+    is not a natural split pattern (if you don't specify it yourself).
+    This function handles escaped split-patterns.
+    :param pattern:              The pattern that defines where to split.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param string:               The string to split by the defined pattern.
+    :param max_split:            Optional. Defines the number of splits this
+                                 function performs. If 0 is provided, unlimited
+                                 splits are made. If a number bigger than 0 is
+                                 passed, this functions only splits
+                                 max_split-times and appends the unprocessed
+                                 rest of the string to the result. A negative
+                                 number won't perform any splits.
+    :param remove_empty_matches: Optional. defines whether empty entries should
+                                 be removed from the resulting list.
+    :return:                     A list containing the split up strings.
+    """
+
+    # Need to use re.search() since using splitting directly is not possible.
+    # We need to match the separator only if the number of escapes is even.
+    # The solution is to use lookbehind-assertions, but these don't support a
+    # variable number of letters (means quantifiers are not usable there). So
+    # if we try to match the escape sequences too, they would be replaced,
+    # because they are consumed then by the regex. That's not wanted.
+    match_strings = []
+    matches = search_for(r"(.*?)(?<!\\)((?:\\\\)*)" + pattern,
+                         string,
+                         max_split,
+                         re.DOTALL)
+
+    # Holds the end position of the last processed and matched string. Needed
+    # since matches is a callable_iterator and is not subscriptable, means the
+    # last element of the result is not accessible with [] on the fly.
+    last_pos = 0
+    # Process each returned MatchObject.
+    for item in matches:
+        if (not remove_empty_matches or len(item.group(1)) != 0):
+            # Return the first matching group. The pattern from parameter can't
+            # change the group order.
+            match_strings.append(item.group(1))
+            # Concat it with the second group, that contains all escapes that
+            # are escaped and would get consumed.
+            if (item.group(2) is not None):
+                match_strings[-1] += item.group(2)
+
+            # Update the end position.
+            last_pos = item.end()
+
+    # Append the rest of the string, since it's not in the result list (only
+    # matches are captured that have a leading separator).
+    if (not remove_empty_matches or len(string[last_pos : ]) != 0):
+        match_strings.append(string[last_pos : ])
+
+    return match_strings
+
 def search_for(pattern, string, max_matches = 0, flags = 0):
     """
     Searches for a given pattern in a string max_matches-times.

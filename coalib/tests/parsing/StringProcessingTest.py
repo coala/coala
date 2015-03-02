@@ -57,6 +57,34 @@ class StringProcessingTest(unittest.TestCase):
                                            self.test_strings[i])
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the basic escaped_split() functionality.
+    def test_escaped_split(self):
+        separator_pattern = "'"
+        expected_results = [
+            [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
+            [r"out1 ", r"escaped-quote:         \' ", r" out2"],
+            [r"out1 ", r"escaped-anything:      \X ", r" out2"],
+            [r"out1 ", r"two escaped escapes: \\\\ ", r" out2"],
+            [r"out1 ", r"escaped-quote at end:   \'", r" out2"],
+            [r"out1 ", r"escaped-escape at end:  " + 2 * self.bs, r" out2"],
+            [r"out1           ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1 \'        ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1 \\\'      ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1 \\        ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1 \\\\      ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1         " + 2 * self.bs, r"str1", r" out2 ", r"str2",
+                r" out2"],
+            [r"out1       " + 4 * self.bs, r"str1", r" out2 ", r"str2",
+                r" out2"],
+            [r"out1           ", r"str1", r"", r"str2", r"", r"str3", r" out2"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = escaped_split(separator_pattern,
+                                         self.test_strings[i])
+            self.assertEqual(expected_results[i], return_value)
+
     # Test the search_for() function.
     def test_search_for(self):
         # Match either "out1" or "out2".
