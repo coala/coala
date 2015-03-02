@@ -67,7 +67,7 @@ def escaped_split(pattern,
     # if we try to match the escape sequences too, they would be replaced,
     # because they are consumed then by the regex. That's not wanted.
     match_strings = []
-    matches = search_for(r"(.*?)(?<!\\)((?:\\\\)*)" + pattern,
+    matches = search_for(r"(.*?)(?<!\\)((?:\\\\)*)(?:" + pattern + ")",
                          string,
                          max_split,
                          re.DOTALL)
