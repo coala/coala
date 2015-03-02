@@ -240,3 +240,72 @@ def search_in_between(begin,
     for elem in matches:
         yield elem.group(compiled_begin_pattern.groups + 1)
 
+
+def unescaped_search_in_between(begin,
+                                end,
+                                string,
+                                max_matches = 0,
+                                remove_empty_matches = False):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Also enclosed \n are put into the result.
+    Handles escaped begin- and end-sequences (and so only patterns that are
+    unescaped).
+    This function is a generator.
+    CAUTION: Using the escaped character '\' in the begin- or end-sequences
+             the function can return strange results. The backslash can
+             interfere with the escaping regex-sequence used internally to
+             match the enclosed string.
+
+    :param begin:                The begin-sequence where to start matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param end:                  The end-sequence where to end matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param string:               The string where to search in.
+    :param max_matches           Defines the maximum number of matches. If 0 or
+                                 less is provided, the number of splits is not
+                                 limited.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the result.
+    :return:                     An iterator returning the matched strings.
+    """
+    # Compilation of the begin sequence is needed to get the number of
+    # capturing groups in it.
+    compiled_begin_pattern = re.compile(begin)
+
+    # Regex explanation:
+    # 1. (?<!\\)(?:\\\\)* Unescapes the following char. The first part of this
+    #                     regex is a look-behind assertion. Only match the
+    #                     following if no single backslash is before it.
+    #                     The second part matches all double backslashes.
+    #                     In fact this sequence matches all escapes that occur
+    #                     as a multiple of two, means the following statement
+    #                     is not escaped.
+    # 2. (?:begin)        A non-capturing group that matches the begin
+    # 3. (.*?)            sequence. Match any char unlimited times, as few
+    #                     times as possible. Save the match in the capturing
+    #                     group after all capturing groups that can appear in
+    #                     'begin'.
+    # 4. (?<!\\)(?:\\\\)* Again the unescaping regex.
+    # 5. (?:end)          A non-capturing group that matches the end sequence.
+    #                     Because the 3. group is lazy (matches as few times as
+    #                     possible) the next occurring end-sequence is matched.
+    regex = (r"(?<!\\)(?:\\\\)*(?:" + begin + r")(.*?)(?<!\\)((?:\\\\)*)(?:" +
+             end + r")")
+
+    matches = re.finditer(regex, string, re.DOTALL)
+
+    if remove_empty_matches:
+        matches = trim_empty_matches(
+            matches,
+            [compiled_begin_pattern.groups + 1,
+                compiled_begin_pattern.groups + 2])
+
+    matches = limit(matches, max_matches)
+
+    for elem in matches:
+        yield (elem.group(compiled_begin_pattern.groups + 1) +
+               elem.group(compiled_begin_pattern.groups + 2))
+
