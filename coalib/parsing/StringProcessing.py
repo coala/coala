@@ -36,3 +36,41 @@ def unescaped_split(pattern,
 
     return match
 
+def search_for(pattern, string, max_matches = 0, flags = 0):
+    """
+    Searches for a given pattern in a string max_matches-times.
+    :param pattern:     The pattern to search for. Providing regexes (and not
+                        only fixed strings) is allowed.
+    :param string:      The string to search in.
+    :param max_matches: Optional. The maximum number of matches to perform.
+    :param flags:       Optional. Additional flags to pass to the regex
+                        processor.
+    """
+    if (max_matches == 0):
+        # Use plain re.finditer() to find all matches.
+        return re.finditer(pattern, string, flags)
+    elif (max_matches > 0):
+        # Compile the regex expression to gain performance.
+        rxc = re.compile(pattern, flags)
+        # The in-string position that indicates the beginning of the regex
+        # processing.
+        pos = 0
+
+        matches = []
+        for x in range(0, max_matches):
+            current_match = rxc.search(string, pos)
+
+            if (current_match is None):
+                # Break out, no more matches found.
+                break
+            else:
+                # Else, append the found match to the match list.
+                matches.append(current_match)
+                # Update the in-string position.
+                pos = current_match.end()
+
+        return matches
+    else:
+        # Return the unprocessed string.
+        return string
+

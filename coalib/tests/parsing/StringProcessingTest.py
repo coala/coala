@@ -57,6 +57,41 @@ class StringProcessingTest(unittest.TestCase):
                                            self.test_strings[i])
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the search_for() function.
+    def test_search_for(self):
+        # Match either "out1" or "out2".
+        search_pattern = "out1|out2"
+        # These are the expected results for the zero-group of the
+        # returned MatchObject's.
+        expected_results = [
+            [r"out1", r"out2"],
+            [r"out1", r"out2"],
+            [r"out1", r"out2"],
+            [r"out1", r"out2"],
+            [r"out1", r"out2"],
+            [r"out1", r"out2"],
+            [r"out1", r"out2", r"out2"],
+            [r"out1", r"out2", r"out2"],
+            [r"out1", r"out2", r"out2"],
+            [r"out1", r"out2", r"out2"],
+            [r"out1", r"out2", r"out2"],
+            [r"out1", r"out2", r"out2"],
+            [r"out1", r"out2", r"out2"],
+            [r"out1", r"out2"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = search_for(search_pattern, self.test_strings[i])
+
+            # Check each MatchObject. Need to iterate over the return_value
+            # since the return value is an iterator object pointing to the
+            # MatchObject's.
+            n = 0
+            for x in return_value:
+                self.assertEqual(expected_results[i][n], x.group(0))
+                n += 1
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
 
