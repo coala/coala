@@ -189,3 +189,62 @@ def search_in_between(begin,
                 len(item.group(compiled_begin_pattern.groups + 1)) != 0):
             yield item.group(compiled_begin_pattern.groups + 1)
 
+
+def unescaped_search_in_between(begin,
+                                end,
+                                string,
+                                max_matches = 0,
+                                remove_empty_matches = False):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Also enclosed \n are put into the result.
+    Handles escaped begin- and end-sequences (and so only patterns that are
+    unescaped).
+    This function is a generator.
+    CAUTION: Using the escaped character '\' in the begin- or end-sequences
+             the function can return strange results. The backslash can
+             interfere with the escaping regex-sequence used internally to
+             match the enclosed string.
+
+    :param begin:                The begin-sequence where to start matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param end:                  The end-sequence where to end matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param string:               The string where to search in.
+    :param max_matches           Defines the maximum number of matches. If 0 is
+                                 provided, unlimited matches are made.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the resulting list.
+    :raises ValueError:          Raised when a negative number is provided for
+                                 max_matches.
+    :return:                     An iterator returning the matched strings.
+    """
+    # Compilation of the begin sequence is needed to get the number of
+    # capturing groups in it.
+    compiled_begin_pattern = re.compile(begin)
+
+    for item in search_for(r"(?<!\\)(?:\\\\)*(?:" + begin +
+                               r")(.*?)(?<!\\)((?:\\\\)*)(?:" + end + r")",
+                           string,
+                           max_matches,
+                           re.DOTALL):
+
+        # If a user provides a pattern with a matching group (concrete a
+        # pattern with a capturing group in parentheses "()"), we need to
+        # return the right one. That's why we compiled the begin-sequence
+        # before.
+        concat_string = item.group(compiled_begin_pattern.groups + 1)
+
+        if item.group(compiled_begin_pattern.groups + 2) is not None:
+            # Escaped escapes were consumed from the second group, append them
+            # too.
+            concat_string += item.group(compiled_begin_pattern.groups + 2)
+
+        # If our temporary concatenation string is empty and the
+        # remove_empty_matches flag is specified, don't append it to the
+        # result.
+        if not remove_empty_matches or len(concat_string) != 0:
+            yield concat_string
+
