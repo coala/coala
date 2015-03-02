@@ -144,6 +144,64 @@ def unescaped_search_in_between(begin,
             match_strings.append(item.group(rxc_begin.groups + 1))
     return match_strings
 
+def escaped_search_in_between(begin,
+                              end,
+                              string,
+                              max_matches = 0,
+                              remove_empty_matches = False):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Also enclosed \n are put into the result.
+    Handles escaped begin- and end-sequences.
+    :param begin:                The begin-sequence where to start matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param end:                  The end-sequence where to end matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param string:               The string where to search in.
+    :param max_matches           Optional. Defines the number of matches this
+                                 function performs. If 0 is provided, unlimited
+                                 matches are made. If a number bigger than 0 is
+                                 passed, this functions only matches
+                                 max_matches-times and appends the unprocessed
+                                 rest of the string to the result. A negative
+                                 number won't perform any matches.
+    :param remove_empty_matches: Optional. defines whether empty entries should
+                                 be removed from the resulting list.
+    :return:                     A list containing the matched strings.
+    """
+
+    # Compilation of the begin sequence is needed to get the number of
+    # capturing groups in it.
+    rxc_begin = re.compile(begin)
+
+    match_strings = []
+    for item in search_for(r"(?<!\\)(?:\\\\)*" + begin +
+                               r"(.*?)(?<!\\)((?:\\\\)*)" + end,
+                           string,
+                           max_matches,
+                           re.DOTALL):
+
+        # If a user provides a pattern with a matching group (concrete a
+        # pattern with a capturing group in parantheses "()"), we need to
+        # return the right one. That's why we compiled the begin-sequence
+        # before.
+        concat_string = item.group(rxc_begin.groups + 1)
+
+        if (item.group(rxc_begin.groups + 2) is not None):
+            # If escaped escapes were consumed from the second group, append
+            # them too.
+            concat_string += item.group(rxc_begin.groups + 2)
+
+        # If our temporary concatenation string is empty and the
+        # remove_empty_matches flag is specified, don't append it to the
+        # result.
+        if (not remove_empty_matches or len(concat_string) != 0):
+            match_strings.append(concat_string)
+
+    return match_strings
+
 def search_for(pattern, string, max_matches = 0, flags = 0):
     """
     Searches for a given pattern in a string max_matches-times.
