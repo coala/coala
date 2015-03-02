@@ -148,3 +148,44 @@ def unescaped_split(pattern,
     if not remove_empty_matches or len(string[last_pos : ]) != 0:
         yield string[last_pos : ]
 
+
+def search_in_between(begin,
+                      end,
+                      string,
+                      max_matches = 0,
+                      remove_empty_matches = False):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Also enclosed \n are put into the result. Doesn't handle escape sequences.
+    This function is a generator.
+
+    :param begin:                A regex pattern that defines where to start
+                                 matching.
+    :param end:                  A regex pattern that defines where to end
+                                 matching.
+    :param string:               The string where to search in.
+    :param max_matches           Defines the maximum number of matches. If 0 is
+                                 provided, unlimited matches are made.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the resulting list.
+    :raises ValueError:          Raised when a negative number is provided for
+                                 max_matches.
+    :return:                     An iterator returning the matched strings.
+    """
+
+    # Compilation of the begin sequence is needed to get the number of
+    # capturing groups in it.
+    compiled_begin_pattern = re.compile(begin)
+
+    for item in search_for("(?:" + begin + r")(.*?)(?:" + end + r")",
+                           string,
+                           max_matches,
+                           re.DOTALL):
+        # If a user provides a pattern with a matching group (concrete a
+        # pattern with a capturing group in parentheses "()"), we need to
+        # return the right one. That's why we compiled the begin-sequence
+        # before.
+        if (not remove_empty_matches or
+                len(item.group(compiled_begin_pattern.groups + 1)) != 0):
+            yield item.group(compiled_begin_pattern.groups + 1)
+
