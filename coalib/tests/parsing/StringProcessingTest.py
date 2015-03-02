@@ -85,6 +85,34 @@ class StringProcessingTest(unittest.TestCase):
                                          self.test_strings[i])
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the basic unescaped_search_in_between() functionality.
+    def test_unescaped_search_in_between(self):
+        begin_sequence = "'"
+        end_sequence = "'"
+        expected_results = [
+            [r"escaped-escape:        \\ "],
+            [r"escaped-quote:         " + self.bs],
+            [r"escaped-anything:      \X "],
+            [r"two escaped escapes: \\\\ "],
+            [r"escaped-quote at end:   " + self.bs],
+            [r"escaped-escape at end:  " + 2 * self.bs],
+            [r"str1", r"str2"],
+            [r"        ", r" out2 "],
+            [r"      ", r" out2 "],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2", r"str3"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = unescaped_search_in_between(begin_sequence,
+                                                       end_sequence,
+                                                       self.test_strings[i])
+            self.assertEqual(expected_results[i], return_value)
+
     # Test the search_for() function.
     def test_search_for(self):
         # Match either "out1" or "out2".

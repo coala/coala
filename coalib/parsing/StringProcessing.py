@@ -97,6 +97,47 @@ def escaped_split(pattern,
 
     return match_strings
 
+def unescaped_search_in_between(begin, end, string, max_matches = 0):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Also enclosed \n are put into the result. Doesn't handle escape sequences.
+    :param begin:                The begin-sequence where to start matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param end:                  The end-sequence where to end matching.
+                                 Providing regexes (and not only fixed strings)
+                                 is allowed.
+    :param string:               The string where to search in.
+    :param max_matches           Optional. Defines the number of matches this
+                                 function performs. If 0 is provided, unlimited
+                                 matches are made. If a number bigger than 0 is
+                                 passed, this functions only matches
+                                 max_matches-times and appends the unprocessed
+                                 rest of the string to the result. A negative
+                                 number won't perform any matches.
+    :param remove_empty_matches: Optional. defines whether empty entries should
+                                 be removed from the resulting list.
+    :return:                     A list containing the matched strings.
+    """
+
+    # Compilation of the begin sequence is needed to get the number of
+    # capturing groups in it.
+    rxc_begin = re.compile(begin)
+
+    # The found matches are placed inside this variable.
+    match_strings = []
+
+    for item in search_for(begin + r"(.*?)" + end,
+                           string,
+                           max_matches,
+                           re.DOTALL):
+        # If a user provides a pattern with a matching group (concrete a
+        # pattern with a capturing group in parantheses "()"), we need to
+        # return the right one. That's why we compiled the begin-sequence
+        # before.
+        match_strings.append(item.group(rxc_begin.groups + 1))
+    return match_strings
+
 def search_for(pattern, string, max_matches = 0, flags = 0):
     """
     Searches for a given pattern in a string max_matches-times.
