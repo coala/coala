@@ -6,6 +6,7 @@ from coalib.parsing.StringProcessing import search_for
 from coalib.parsing.StringProcessing import split
 from coalib.parsing.StringProcessing import unescaped_split
 from coalib.parsing.StringProcessing import search_in_between
+from coalib.parsing.StringProcessing import unescaped_search_in_between
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -67,6 +68,7 @@ class StringProcessingTest(unittest.TestCase):
         self.setUp_split()
         self.setUp_unescaped_split()
         self.setUp_search_in_between()
+        self.setUp_unescaped_search_in_between()
 
     def setUp_search_for(self):
         # Match either "out1" or "out2".
@@ -257,6 +259,55 @@ class StringProcessingTest(unittest.TestCase):
         self.test_search_in_between_auto_trim_expected_results = [
             [],
             [5 * self.bs, r"\\\'", self.bs, r"+ios"],
+            [r"2", r"4", r"6"],
+            [r"2", r"4", r"6"],
+            [],
+            [],
+            [],
+            [],
+            [r"a"]]
+
+    def setUp_unescaped_search_in_between(self):
+        self.test_unescaped_search_in_between_pattern = "'"
+        self.test_unescaped_search_in_between_expected_results = [
+            [r"escaped-escape:        \\ "],
+            [r"escaped-quote:         \' "],
+            [r"escaped-anything:      \X "],
+            [r"two escaped escapes: \\\\ "],
+            [r"escaped-quote at end:   \'"],
+            [r"escaped-escape at end:  " + 2 * self.bs],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2"],
+            [r"str1", r"str2", r"str3"],
+            [],
+            [],
+            [],
+            []]
+
+        self.test_unescaped_search_in_between_max_match_pattern = (
+            self.test_unescaped_search_in_between_pattern)
+        self.test_unescaped_search_in_between_max_match_expected_m_results = (
+            self.test_unescaped_search_in_between_expected_results)
+
+        self.test_unescaped_search_in_between_regex_pattern_expected = [
+            [r""],
+            [r"c"],
+            [r"c", r"bc\+'**'"],
+            [r"\13q4ujsabbc"],
+            [r"\\13q4ujsabbc\+'**'ac", r"."],
+            [r"", r"", r"", r"", r"", r"c\+'**'", r"", r"", r"-"],
+            [r"cba###\\13q4ujs"],
+            []]
+
+        self.test_unescaped_search_in_between_auto_trim_pattern = ";"
+        self.test_unescaped_search_in_between_auto_trim_expected_results = [
+            [],
+            [r"\\\\\;\\#", r"+ios"],
             [r"2", r"4", r"6"],
             [r"2", r"4", r"6"],
             [],
@@ -550,6 +601,78 @@ class StringProcessingTest(unittest.TestCase):
                                              self.auto_trim_test_strings[i],
                                              0,
                                              True)
+            self.assertIteratorElementsEqual(iter(expected_results[i]),
+                                             return_value)
+
+    # Test the basic unescaped_search_in_between() functionality.
+    def test_unescaped_search_in_between(self):
+        sequence = self.test_unescaped_search_in_between_pattern
+        expected_results = (
+            self.test_unescaped_search_in_between_expected_results)
+
+        self.assertEqual(len(expected_results), len(self.test_strings))
+        for i in range(0, len(expected_results)):
+            return_value = unescaped_search_in_between(sequence,
+                                                       sequence,
+                                                       self.test_strings[i])
+            self.assertIteratorElementsEqual(iter(expected_results[i]),
+                                             return_value)
+
+    # Test the unescaped_search_in_between() while varying the max_match
+    # parameter.
+    def test_unescaped_search_in_between_max_match(self):
+        sequence = self.test_unescaped_search_in_between_max_match_pattern
+
+        expected_master_results = (
+            self.test_unescaped_search_in_between_max_match_expected_m_results)
+
+        for max_match in [1, 2, 3, 4, 5, 67]:
+            expected_results = [
+                expected_master_results[j][0 : max_match]
+                for j in range(len(expected_master_results))]
+
+            self.assertEqual(len(expected_results), len(self.test_strings))
+            for x in range(0, len(expected_results)):
+                return_value = unescaped_search_in_between(
+                    sequence,
+                    sequence,
+                    self.test_strings[x],
+                    max_match)
+                self.assertIteratorElementsEqual(iter(expected_results[x]),
+                                                 return_value)
+
+    # Test the unescaped_search_in_between() function with different regex
+    # patterns.
+    def test_unescaped_search_in_between_regex_pattern(self):
+        expected_results = (
+            self.test_unescaped_search_in_between_regex_pattern_expected)
+
+        self.assertEqual(len(expected_results), len(self.multi_patterns))
+        for i in range(0, len(expected_results)):
+            # Use each pattern as begin and end sequence.
+            return_value = unescaped_search_in_between(
+                self.multi_patterns[i],
+                self.multi_patterns[i],
+                self.multi_pattern_test_string)
+            self.assertIteratorElementsEqual(iter(expected_results[i]),
+                                             return_value)
+
+    # Test the unescaped_search_in_between() function for its
+    # remove_empty_matches feature.
+    def test_unescaped_search_in_between_auto_trim(self):
+        sequence = self.test_unescaped_search_in_between_auto_trim_pattern
+        expected_results = (
+            self.test_unescaped_search_in_between_auto_trim_expected_results)
+
+        self.assertEqual(len(expected_results),
+                         len(self.auto_trim_test_strings))
+        for i in range(0, len(expected_results)):
+            return_value = unescaped_search_in_between(
+                sequence,
+                sequence,
+                self.auto_trim_test_strings[i],
+                0,
+                True)
             self.assertIteratorElementsEqual(iter(expected_results[i]),
                                              return_value)
 
