@@ -39,3 +39,59 @@ def limit(iterator, count):
             if i == count:
                 break
 
+
+def split(pattern,
+          string,
+          max_split = 0,
+          remove_empty_matches = False):
+    """
+    Splits the given string by the specified pattern. The return character (\n)
+    is not a natural split pattern (if you don't specify it yourself).
+    This function ignores escape sequences.
+
+    :param pattern:              A regex pattern that defines where to split.
+    :param string:               The string to split by the defined pattern.
+    :param max_split:            Defines the maximum number of splits. If 0 or
+                                 less is provided, the number of splits is not
+                                 limited.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the result.
+    :return:                     An iterator returning the split up strings.
+    """
+    # re.split() is not usable for this function. It has a bug when using too
+    # many capturing groups "()".
+
+    # Regex explanation:
+    # 1. (.*?)              Match any char unlimited times, as few times as
+    #                       possible. Save the match in the first capturing
+    #                       group (match.group(1)).
+    # 2. (?:pattern)        A non-capturing group that matches the
+    #                       split-pattern. Because the first group is lazy
+    #                       (matches as few times as possible) the next
+    #                       occurring split-sequence is matched.
+    regex = r"(.*?)(?:" + pattern + r")"
+
+    i = 0
+    item = None
+    for item in re.finditer(regex, string, re.DOTALL):
+        if not remove_empty_matches or len(item.group(1)) != 0:
+            # Return the first matching group. The pattern from parameter can't
+            # change the group order.
+            yield item.group(1)
+
+            i += 1
+            if i == max_split:
+                # Only if max_split > 0 this code is reachable, so
+                # max_split == 0 performs infinite splits.
+                break
+
+    if item is None:
+        last_pos = 0
+    else:
+        last_pos = item.end()
+
+    # Append the rest of the string, since it's not in the result list (only
+    # matches are captured that have a leading separator).
+    if not remove_empty_matches or len(string) > last_pos:
+        yield string[last_pos : ]
+
