@@ -24,8 +24,10 @@ class Interactor(SectionCreatable):
         Prints the given actions and lets the user choose.
 
         :param actions: A list of FunctionMetadata objects.
-        :return: A touple with the name member of the FunctionMetadata object chosen by the user and a Section
-        containing at least all needed values for the action. If the user did choose to do nothing, return (None, None).
+        :return: A touple with the name member of the FunctionMetadata object
+                 chosen by the user and a Section containing at least all
+                 needed values for the action. If the user did choose to do
+                 nothing, return (None, None).
         """
         raise NotImplementedError
 
@@ -34,11 +36,13 @@ class Interactor(SectionCreatable):
         Prints the result appropriate to the output medium.
 
         :param result: A derivative of Result.
-        :param file_dict: A dictionary containing all files with filename as key.
+        :param file_dict: A dictionary containing all files with filename as
+                          key.
         """
         if not isinstance(result, Result):
-            self.log_printer.warn(_("One of the results can not be printed since it is not a valid derivative of the "
-                                    "coala result class."))
+            self.log_printer.warn(_("One of the results can not be printed "
+                                    "since it is not a valid derivative of "
+                                    "the coala result class."))
             return
 
         self._print_result(result)
@@ -59,7 +63,10 @@ class Interactor(SectionCreatable):
             return
 
         chosen_action = action_dict[action_name]
-        chosen_action.apply_from_section(result, file_dict, self.file_diff_dict, section)
+        chosen_action.apply_from_section(result,
+                                         file_dict,
+                                         self.file_diff_dict,
+                                         section)
 
     def print_results(self, result_list, file_dict):
         """
@@ -81,13 +88,16 @@ class Interactor(SectionCreatable):
         """
         This method prompts the user for the given settings.
 
-        :param settings: a dictionary with the settings name as key and a list containing a description in [0] and the
-                         name of the bears who need this setting in [1] and following. Example:
+        :param settings: a dictionary with the settings name as key and a list
+                         containing a description in [0] and the name of the
+                         bears who need this setting in [1] and following.
+                         Example:
         {"UseTabs": ["describes whether tabs should be used instead of spaces",
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
 
-        :return: a dictionary with the settings name as key and the given value as value.
+        :return: a dictionary with the settings name as key and the given value
+                 as value.
         """
         raise NotImplementedError
 
@@ -108,7 +118,8 @@ class Interactor(SectionCreatable):
 
     @classmethod
     def get_metadata(cls):
-        return FunctionMetadata.from_function(cls.__init__, ["self", "log_printer"])
+        return FunctionMetadata.from_function(cls.__init__,
+                                              ["self", "log_printer"])
 
     def begin_section(self, name):
         """
