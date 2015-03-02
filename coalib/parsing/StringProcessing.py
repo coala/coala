@@ -67,7 +67,7 @@ def escaped_split(pattern,
     # if we try to match the escape sequences too, they would be replaced,
     # because they are consumed then by the regex. That's not wanted.
     match_strings = []
-    matches = search_for(r"(.*?)(?<!\\)((?:\\\\)*)(?:" + pattern + ")",
+    matches = search_for(r"(.*?)(?<!\\)((?:\\\\)*)(?:" + pattern + r")",
                          string,
                          max_split,
                          re.DOTALL)
@@ -131,7 +131,7 @@ def unescaped_search_in_between(begin,
     # The found matches are placed inside this variable.
     match_strings = []
 
-    for item in search_for(begin + r"(.*?)" + end,
+    for item in search_for("(?:" + begin + r")(.*?)(?:" + end + r")",
                            string,
                            max_matches,
                            re.DOTALL):
@@ -177,8 +177,8 @@ def escaped_search_in_between(begin,
     rxc_begin = re.compile(begin)
 
     match_strings = []
-    for item in search_for(r"(?<!\\)(?:\\\\)*" + begin +
-                               r"(.*?)(?<!\\)((?:\\\\)*)" + end,
+    for item in search_for(r"(?<!\\)(?:\\\\)*(?:" + begin +
+                               r")(.*?)(?<!\\)((?:\\\\)*)(?:" + end + r")",
                            string,
                            max_matches,
                            re.DOTALL):
