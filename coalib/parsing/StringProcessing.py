@@ -37,6 +37,26 @@ def limit(iterator, count):
                 break
 
 
+def trim_empty_matches(iterator, groups=[0]):
+    """
+    A filter that removes empty match strings. It can only operate on iterators
+    whose elements are of type MatchObject.
+
+    :param iterator: The iterator to be filtered.
+    :param groups:   An iteratable defining the groups to check for blankness.
+                     Only results are not yielded if all groups of the match
+                     are blank.
+                     You can not only pass numbers but also strings, if your
+                     MatchObject contains named groups.
+    """
+    for elem in iterator:
+        for group in groups:
+            if len(elem.group(group)) != 0:
+                yield elem
+
+                continue
+
+
 def split(pattern,
           string,
           max_split=0,
@@ -158,4 +178,52 @@ def unescaped_split(pattern,
     # matches are captured that have a leading separator).
     if not remove_empty_matches or len(string) > last_pos:
         yield string[last_pos:]
+
+
+def search_in_between(begin,
+                      end,
+                      string,
+                      max_matches=0,
+                      remove_empty_matches=False):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Also enclosed \n are put into the result. Doesn't handle escape sequences.
+
+    :param begin:                A regex pattern that defines where to start
+                                 matching.
+    :param end:                  A regex pattern that defines where to end
+                                 matching.
+    :param string:               The string where to search in.
+    :param max_matches           Defines the maximum number of matches. If 0 or
+                                 less is provided, the number of splits is not
+                                 limited.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the result.
+    :return:                     An iterator returning the matched strings.
+    """
+
+    # Compilation of the begin sequence is needed to get the number of
+    # capturing groups in it.
+    compiled_begin_pattern = re.compile(begin)
+
+    # Regex explanation:
+    # 1. (?:begin) A non-capturing group that matches the begin sequence.
+    # 2. (.*?)     Match any char unlimited times, as few times as possible.
+    #              Save the match in the first capturing group
+    #              (match.group(1)).
+    # 3. (?:end)   A non-capturing group that matches the end sequence.
+    #              Because the previous group is lazy (matches as few times as
+    #              possible) the next occurring end-sequence is matched.
+    regex = r"(?:" + begin + r")(.*?)(?:" + end + r")"
+
+    matches = re.finditer(regex, string, re.DOTALL)
+
+    if remove_empty_matches:
+        matches = trim_empty_matches(matches,
+                                     [compiled_begin_pattern.groups + 1])
+
+    matches = limit(matches, max_matches)
+
+    for elem in matches:
+        yield elem.group(compiled_begin_pattern.groups + 1)
 
