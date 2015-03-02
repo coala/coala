@@ -67,6 +67,11 @@ class SectionExecutor:
         self.global_bear_list = Dependencies.resolve(global_bear_list)
 
     def run(self):
+        """
+        Executes the section with the given bears.
+
+        :return: True if results were yielded, False otherwise.
+        """
         self.section.interactor.begin_section(self.section.name)
 
         running_processes = get_cpu_count()
@@ -81,11 +86,11 @@ class SectionExecutor:
             runner.start()
 
         try:
-            self._process_queues(processes,
-                                 arg_dict["control_queue"],
-                                 arg_dict["local_result_dict"],
-                                 arg_dict["global_result_dict"],
-                                 arg_dict["file_dict"])
+            return self._process_queues(processes,
+                                        arg_dict["control_queue"],
+                                        arg_dict["local_result_dict"],
+                                        arg_dict["global_result_dict"],
+                                        arg_dict["file_dict"])
         finally:
             logger_thread.running = False
 
@@ -104,6 +109,7 @@ class SectionExecutor:
                         file_dict):
         running_processes = self._get_running_processes(processes)
         interactor = self.section.interactor
+        retval = False
         # One process is the logger thread
         while running_processes > 1:
             try:
@@ -111,15 +117,18 @@ class SectionExecutor:
                 if control_elem == CONTROL_ELEMENT.LOCAL:
                     interactor.print_results(local_result_dict[index],
                                              file_dict)
+                    retval = retval or len(local_result_dict[index]) > 0
                 elif control_elem == CONTROL_ELEMENT.GLOBAL:
                     interactor.print_results(global_result_dict[index],
                                              file_dict)
+                    retval = retval or len(global_result_dict[index]) > 0
                 elif control_elem == CONTROL_ELEMENT.FINISHED:
                     running_processes = self._get_running_processes(processes)
             except queue.Empty:
                 running_processes = self._get_running_processes(processes)
 
         self.section.interactor.finalize(file_dict)
+        return retval
 
     def _instantiate_bears(self, file_dict, message_queue):
         for i in range(len(self.local_bear_list)):

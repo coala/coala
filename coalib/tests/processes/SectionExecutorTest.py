@@ -67,7 +67,7 @@ class SectionExecutorTestCase(unittest.TestCase):
                                    self.global_bears["default"])
 
     def test_run(self):
-        self.uut.run()
+        self.assertTrue(self.uut.run())
 
         local_results  = self.result_queue.get(timeout=0)
         global_results = self.result_queue.get(timeout=0)
@@ -92,6 +92,11 @@ class SectionExecutorTestCase(unittest.TestCase):
         # shouldn't make maintenance so hard for us here.
         # We'll get 3 log messages per bear (set up, run, tear down)
         self.assertEqual(self.log_queue.qsize(), 6)
+
+    def test_empty_run(self):
+        self.uut.global_bear_list = []
+        self.uut.local_bear_list = []
+        self.assertFalse(self.uut.run())
 
 
 if __name__ == '__main__':
