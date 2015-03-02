@@ -97,7 +97,11 @@ def escaped_split(pattern,
 
     return match_strings
 
-def unescaped_search_in_between(begin, end, string, max_matches = 0):
+def unescaped_search_in_between(begin,
+                                end,
+                                string,
+                                max_matches = 0,
+                                remove_empty_matches = False):
     """
     Searches for a string enclosed between a specified begin- and end-sequence.
     Also enclosed \n are put into the result. Doesn't handle escape sequences.
@@ -135,7 +139,9 @@ def unescaped_search_in_between(begin, end, string, max_matches = 0):
         # pattern with a capturing group in parantheses "()"), we need to
         # return the right one. That's why we compiled the begin-sequence
         # before.
-        match_strings.append(item.group(rxc_begin.groups + 1))
+        if (not remove_empty_matches or
+                len(item.group(rxc_begin.groups + 1)) != 0):
+            match_strings.append(item.group(rxc_begin.groups + 1))
     return match_strings
 
 def search_for(pattern, string, max_matches = 0, flags = 0):
