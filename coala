@@ -29,21 +29,24 @@ if __name__ == "__main__":
     sections = {"default": Section("default")}
     try:
         did_nothing = True
+        yielded_results = False
         sections, local_bears, global_bears, targets = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
             if not section.is_enabled(targets):
                 continue
 
-            SectionExecutor(section=section,
-                            global_bear_list=global_bears[section_name],
-                            local_bear_list=local_bears[section_name]).run()
+            yielded_results = yielded_results or SectionExecutor(
+                section=section,
+                global_bear_list=global_bears[section_name],
+                local_bear_list=local_bears[section_name]).run()
             did_nothing = False
 
         if did_nothing:
             sections["default"].interactor.did_nothing()
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
+        exit(255)
     except SystemExit:
         pass
     except:
@@ -57,3 +60,9 @@ if __name__ == "__main__":
         sections["default"].log_printer.log_exception(
             UNKNOWN_ERROR + " " + DESCRIPTION,
             exception)
+        exit(255)
+
+    if yielded_results:
+        exit(1)
+    else:
+        exit(0)
