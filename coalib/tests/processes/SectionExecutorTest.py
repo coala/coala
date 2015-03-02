@@ -35,15 +35,18 @@ class SectionExecutorInitTestCase(unittest.TestCase):
         self.assertRaises(TypeError, SectionExecutor, 5,               [], [])
         self.assertRaises(TypeError, SectionExecutor, Section("test"), 5 , [])
         self.assertRaises(TypeError, SectionExecutor, Section("test"), [], 5 )
-        self.assertRaises(IndexError, SectionExecutor(Section("test"), [], []).run)
+        self.assertRaises(IndexError,
+                          SectionExecutor(Section("test"), [], []).run)
 
 
 class SectionExecutorTestCase(unittest.TestCase):
     def setUp(self):
-        config_path = os.path.abspath(os.path.join(os.path.dirname(inspect.getfile(SectionExecutorTestCase)),
-                                                   "section_executor_test_files",
-                                                   ".coafile"))
-        self.testcode_c_path = os.path.join(os.path.dirname(config_path), "testcode.c")
+        config_path = os.path.abspath(os.path.join(
+            os.path.dirname(inspect.getfile(SectionExecutorTestCase)),
+            "section_executor_test_files",
+            ".coafile"))
+        self.testcode_c_path = os.path.join(os.path.dirname(config_path),
+                                            "testcode.c")
 
         self.sections, self.local_bears, self.global_bears, targets =\
             SectionManager().run(["--config", config_path])
@@ -54,11 +57,14 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.result_queue = queue.Queue()
         self.log_queue = queue.Queue()
 
-        self.interactor = SectionExecutorTestInteractor(self.result_queue, self.log_queue)
+        self.interactor = SectionExecutorTestInteractor(self.result_queue,
+                                                        self.log_queue)
 
         self.sections["default"].interactor = self.interactor
         self.sections["default"].log_printer = self.interactor
-        self.uut = SectionExecutor(self.sections["default"], self.local_bears["default"], self.global_bears["default"])
+        self.uut = SectionExecutor(self.sections["default"],
+                                   self.local_bears["default"],
+                                   self.global_bears["default"])
 
     def test_run(self):
         self.uut.run()
@@ -74,14 +80,18 @@ class SectionExecutorTestCase(unittest.TestCase):
         global_result = global_results[0]
 
         self.assertEqual(str(local_result),
-                         "Result:\n origin: 'LocalTestBear'\n file: 'None'\n line nr: None\n severity: 1\n'test msg'")
+                         "Result:\n origin: 'LocalTestBear'\n file: 'None'\n "
+                         "line nr: None\n severity: 1\n'test msg'")
         self.assertEqual(str(global_result),
-                         "Result:\n origin: 'GlobalTestBear'\n file: "
-                         "'{file}'\n line nr: None\n severity: 1\n'test message'".format(file=self.testcode_c_path))
+                         "Result:\n origin: 'GlobalTestBear'\n file: '{file}'"
+                         "\n line nr: None\n severity: 1\n'test "
+                         "message'".format(file=self.testcode_c_path))
 
-        # Checking the content of those messages would mean checking hardcoded strings. I recall some other test already
-        # does this so we shouldn't make maintenance so hard for us here.
-        self.assertEqual(self.log_queue.qsize(), 6)  # 3 log messages per bear (set up, run, tear down)
+        # Checking the content of those messages would mean checking hardcoded
+        # strings. I recall some other test already does this so we
+        # shouldn't make maintenance so hard for us here.
+        # We'll get 3 log messages per bear (set up, run, tear down)
+        self.assertEqual(self.log_queue.qsize(), 6)
 
 
 if __name__ == '__main__':

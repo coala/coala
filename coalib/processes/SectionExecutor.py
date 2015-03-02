@@ -34,7 +34,8 @@ class SectionExecutor:
 
     class LogPrinterThread(threading.Thread):
         """
-        This is the Thread object that outputs all log messages it gets from its message_queue.
+        This is the Thread object that outputs all log messages it gets from
+        its message_queue.
         """
         def __init__(self, message_queue, log_printer=ConsolePrinter()):
             threading.Thread.__init__(self)
