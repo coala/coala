@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import copy
+from coalib.output.NullInteractor import NullInteractor
 
 from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -61,6 +62,7 @@ class Section:
         settings.
         """
         log_type = str(self.get("log_type", "console")).lower()
+        output_type = str(self.get("output", "console")).lower()
         str_log_level = str(self.get("log_level", "")).upper()
         log_level = LOG_LEVEL.str_dict.get(str_log_level, LOG_LEVEL.WARNING)
 
@@ -83,11 +85,12 @@ class Section:
                     _("Failed to instantiate the logging method '{}'. Falling "
                       "back to console output.").format(log_type))
 
-        # We currently only offer console interactor, so we'll ignore the
-        # output setting for now
-        self.interactor = ConsoleInteractor.from_section(
-            self,
-            log_printer=self.log_printer)
+        if output_type == "none":
+            self.interactor = NullInteractor(log_printer=self.log_printer)
+        else:
+            self.interactor = ConsoleInteractor.from_section(
+                self,
+                log_printer=self.log_printer)
 
     def append(self, setting, custom_key=None):
         if not isinstance(setting, Setting):

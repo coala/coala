@@ -39,7 +39,7 @@ default_arg_parser.add_argument('-L',
                                 choices=['ERR', 'WARN', 'DEBUG'],
                                 metavar='ENUM',
                                 help=LOG_LEVEL_HELP)
-OUTPUT_HELP = _('Type of output (console or any filename)')
+OUTPUT_HELP = _('Type of output (console or none)')
 default_arg_parser.add_argument('-o',
                                 '--output',
                                 nargs=1,

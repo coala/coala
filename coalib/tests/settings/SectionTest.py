@@ -5,6 +5,7 @@ import sys
 
 sys.path.insert(0, ".")
 
+from coalib.output.NullInteractor import NullInteractor
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
@@ -117,12 +118,24 @@ class SectionTestCase(unittest.TestCase):
 
         self.assertEqual(str(conf.copy().update(cli).defaults), "confdef {def2 : dval2, def1 : dval1}")
 
+    def test_outputting(self):
+        uut = Section("test", log_printer=NullPrinter())
+        uut.retrieve_logging_objects()
+        self.assertIsInstance(uut.interactor, ConsoleInteractor)
+
+        uut.append(Setting(key="output", value="none"))
+        uut.retrieve_logging_objects()
+        self.assertIsInstance(uut.interactor, NullInteractor)
+
+        uut.append(Setting(key="output", value="anything else"))
+        uut.retrieve_logging_objects()
+        self.assertIsInstance(uut.interactor, ConsoleInteractor)
+
     def test_logging(self):
         uut = Section("test", log_printer=NullPrinter())
         uut.append(Setting(key="log_TYPE", value="conSole"))
         uut.retrieve_logging_objects()
         self.assertIsInstance(uut.log_printer, ConsolePrinter)
-        self.assertIsInstance(uut.interactor, ConsoleInteractor)
 
         uut = Section("test", log_printer=ConsolePrinter())
         uut.append(Setting(key="log_TYPE", value="NONE"))
