@@ -51,7 +51,7 @@ class StringProcessingTest(unittest.TestCase):
             [r"out1           ", r"str1", r"", r"str2", r"", r"str3", r" out2"]
         ]
 
-        for i in range(0, len(self.test_strings)):
+        for i in range(0, len(expected_results)):
             # Execute function under test.
             return_value = unescaped_split(separator_pattern,
                                            self.test_strings[i])
