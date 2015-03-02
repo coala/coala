@@ -57,6 +57,95 @@ class StringProcessingTest(unittest.TestCase):
                                            self.test_strings[i])
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the unescaped_split() function while variating the max_split
+    # parameter.
+    def test_unescaped_split_max_split(self):
+        separator_pattern = "'"
+
+        # Testing max_split = 1.
+        max_split = 1
+        expected_results = [
+            [r"out1 ", r"escaped-escape:        \\ ' out2"],
+            [r"out1 ", r"escaped-quote:         \' ' out2"],
+            [r"out1 ", r"escaped-anything:      \X ' out2"],
+            [r"out1 ", r"two escaped escapes: \\\\ ' out2"],
+            [r"out1 ", r"escaped-quote at end:   \'' out2"],
+            [r"out1 ", r"escaped-escape at end:  \\' out2"],
+            [r"out1           ", r"str1' out2 'str2' out2"],
+            [r"out1 " + self.bs, r"        'str1' out2 'str2' out2"],
+            [r"out1 " + 3 * self.bs, r"      'str1' out2 'str2' out2"],
+            [r"out1 \\        ", r"str1' out2 'str2' out2"],
+            [r"out1 \\\\      ", r"str1' out2 'str2' out2"],
+            [r"out1         " + 2 * self.bs, r"str1' out2 'str2' out2"],
+            [r"out1       " + 4 * self.bs, r"str1' out2 'str2' out2"],
+            [r"out1           ", r"str1''str2''str3' out2"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = unescaped_split(separator_pattern,
+                                           self.test_strings[i],
+                                           max_split)
+            self.assertEqual(expected_results[i], return_value)
+
+        # Testing max_split = 2.
+        max_split = 2
+        expected_results = [
+            [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
+            [r"out1 ", r"escaped-quote:         " + self.bs, r" ' out2"],
+            [r"out1 ", r"escaped-anything:      \X ", r" out2"],
+            [r"out1 ", r"two escaped escapes: \\\\ ", r" out2"],
+            [r"out1 ", r"escaped-quote at end:   " + self.bs, r"' out2"],
+            [r"out1 ", r"escaped-escape at end:  " + 2 * self.bs, r" out2"],
+            [r"out1           ", r"str1", r" out2 'str2' out2"],
+            [r"out1 " + self.bs, r"        ", r"str1' out2 'str2' out2"],
+            [r"out1 " + 3 * self.bs, r"      ", r"str1' out2 'str2' out2"],
+            [r"out1 \\        ", r"str1", r" out2 'str2' out2"],
+            [r"out1 \\\\      ", r"str1", r" out2 'str2' out2"],
+            [r"out1         " + 2 * self.bs, r"str1", r" out2 'str2' out2"],
+            [r"out1       " + 4 * self.bs, r"str1", r" out2 'str2' out2"],
+            [r"out1           ", r"str1", r"'str2''str3' out2"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = unescaped_split(separator_pattern,
+                                           self.test_strings[i],
+                                           max_split)
+            self.assertEqual(expected_results[i], return_value)
+
+        # Testing max_split = 10.
+        # For the given test string this result should be equal with defining
+        # max_split = 0, since we haven't 10 separators in a test string.
+        max_split = 10
+        expected_results = [
+            [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
+            [r"out1 ", r"escaped-quote:         " + self.bs, r" ", r" out2"],
+            [r"out1 ", r"escaped-anything:      \X ", r" out2"],
+            [r"out1 ", r"two escaped escapes: \\\\ ", r" out2"],
+            [r"out1 ", r"escaped-quote at end:   " + self.bs, r"", r" out2"],
+            [r"out1 ", r"escaped-escape at end:  " + 2 * self.bs, r" out2"],
+            [r"out1           ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1 " + self.bs, r"        ", r"str1", r" out2 ", r"str2",
+                r" out2"],
+            [r"out1 " + 3 * self.bs, r"      ", r"str1", r" out2 ", r"str2",
+                r" out2"],
+            [r"out1 \\        ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1 \\\\      ", r"str1", r" out2 ", r"str2", r" out2"],
+            [r"out1         " + 2 * self.bs, r"str1", r" out2 ", r"str2",
+                r" out2"],
+            [r"out1       " + 4 * self.bs, r"str1", r" out2 ", r"str2",
+                r" out2"],
+            [r"out1           ", r"str1", r"", r"str2", r"", r"str3", r" out2"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = unescaped_split(separator_pattern,
+                                           self.test_strings[i],
+                                           max_split)
+            self.assertEqual(expected_results[i], return_value)
+
     # Test the basic escaped_split() functionality.
     def test_escaped_split(self):
         separator_pattern = "'"
