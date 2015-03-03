@@ -95,17 +95,22 @@ def escaped_split(pattern,
     last_pos = 0
     # Process each returned MatchObject.
     for item in matches:
-        if (not remove_empty_matches or len(item.group(1)) != 0):
-            # Return the first matching group. The pattern from parameter can't
-            # change the group order.
-            match_strings.append(item.group(1))
-            # Concat it with the second group, that contains all escapes that
-            # are escaped and would get consumed.
-            if (item.group(2) is not None):
-                match_strings[-1] += item.group(2)
+        # Use a temporary concatenation string to check at last if it's empty.
+        concat_string = item.group(1)
 
-            # Update the end position.
-            last_pos = item.end()
+        if (item.group(2) is not None):
+            # If escaped escapes were consumed from the second group, append
+            # them too.
+            concat_string += item.group(2)
+
+        # If our temporary concatenation string is empty and the
+        # remove_empty_matches flag is specified, don't append it to the
+        # result.
+        if (not remove_empty_matches or len(concat_string) != 0):
+            match_strings.append(concat_string)
+
+        # Update the end position.
+        last_pos = item.end()
 
     # Append the rest of the string, since it's not in the result list (only
     # matches are captured that have a leading separator).
