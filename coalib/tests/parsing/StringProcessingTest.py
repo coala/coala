@@ -346,6 +346,24 @@ class StringProcessingTest(unittest.TestCase):
                                          self.multi_pattern_test_string)
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the escaped_split() function for its remove_empty_matches feature.
+    def test_escaped_split_auto_trim(self):
+        separator = ";"
+        expected_results = [
+            [],
+            [2 * self.bs, r"\\\\\;\\#", r"\\\'", r"\;\\\\", r"+ios"],
+            [r"1", r"2", r"3", r"4", r"5", r"6"],
+            [r"1", r"2", r"3", r"4", r"5", r"6", r"7"],
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = escaped_split(separator,
+                                         self.auto_trim_test_strings[i],
+                                         0,
+                                         True)
+            self.assertEqual(expected_results[i], return_value)
+
     # Test the basic unescaped_search_in_between() functionality.
     def test_unescaped_search_in_between(self):
         begin_sequence = "'"
