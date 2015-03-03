@@ -23,18 +23,35 @@ def unescaped_split(pattern,
     :return:                     A list containing the split up strings.
     """
 
-    # Split the string with the built-in function re.split().
-    match = re.split(pattern, string, max_split, re.DOTALL)
+    # re.split() is not usable any more for this function. It has a bug when
+    # using too much capturing groups "()". Using the same approach like
+    # escaped_split().
+    match_strings = []
+    matches = search_for(r"(.*?)(?:" + pattern + r")",
+                         string,
+                         max_split,
+                         re.DOTALL)
 
-    # If empty entries shall be removed, apply a filter and recollect all
-    # non-empty values with the passed iterator.
-    if (remove_empty_matches):
-        filtered_match = filter(bool, match)
-        match = []
-        for item in filtered_match:
-            match.append(item)
+    # Holds the end position of the last processed and matched string. Needed
+    # since matches is a callable_iterator and is not subscriptable, means the
+    # last element of the result is not accessible with [] on the fly.
+    last_pos = 0
+    # Process each returned MatchObject.
+    for item in matches:
+        if (not remove_empty_matches or len(item.group(1)) != 0):
+            # Return the first matching group. The pattern from parameter can't
+            # change the group order.
+            match_strings.append(item.group(1))
 
-    return match
+        # Update the end position.
+        last_pos = item.end()
+
+    # Append the rest of the string, since it's not in the result list (only
+    # matches are captured that have a leading separator).
+    if (not remove_empty_matches or len(string[last_pos : ]) != 0):
+        match_strings.append(string[last_pos : ])
+
+    return match_strings
 
 def escaped_split(pattern,
                   string,

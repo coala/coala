@@ -151,6 +151,32 @@ class StringProcessingTest(unittest.TestCase):
                                            max_split)
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the unescaped_split() function with different regex patterns.
+    def test_unescaped_split_regex_pattern(self):
+        test_patterns = [r"abc",
+                         r"ab",
+                         r"ab|ac",
+                         2 * self.bs,
+                         r"#+",
+                         r"(a)|(b)|(#.)",
+                         r"(?:a(b)*c)+"]
+        expected_results = [
+            [r"", r"", r"cba###\\13ß4ujsabbc\+'**'ac###.#.####-ba"],
+            [r"", r"c", r"ccba###\\13ß4ujs", r"bc\+'**'ac###.#.####-ba"],
+            [r"", r"c", r"ccba###\\13ß4ujs", r"bc\+'**'", r"###.#.####-ba"],
+            [r"abcabccba###", r"", r"13ß4ujsabbc", r"+'**'ac###.#.####-ba"],
+            [r"abcabccba", r"\\13ß4ujsabbc\+'**'ac", r".", r".", r"-ba"],
+            [r"", r"", r"c", r"", r"cc", r"", r"", r"", r"\13ß4ujs", r"", r"",
+                r"c\+'**'", r"c", r"", r"", r"", r"", r"-", r"", r""],
+            [r"", r"cba###\\13ß4ujs", r"\+'**'", r"###.#.####-ba"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = unescaped_split(test_patterns[i],
+                                           self.multi_pattern_test_string)
+            self.assertEqual(expected_results[i], return_value)
+
     # Test the basic escaped_split() functionality.
     def test_escaped_split(self):
         separator_pattern = "'"
