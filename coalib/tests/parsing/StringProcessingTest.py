@@ -27,6 +27,13 @@ class StringProcessingTest(unittest.TestCase):
         self.multi_pattern_test_string = (r"abcabccba###\\13ß4ujsabbc\+'**'ac"
                                           r"###.#.####-ba")
 
+        # Test strings for the remove_empty_matches feature (alias auto-trim).
+        self.auto_trim_test_strings = [
+            r";;;;;;;;;;;;;;;;",
+            r"\\;\\\\\;\\#;\\\';;\;\\\\;+ios;;",
+            r"1;2;3;4;5;6;",
+            r"1;2;3;4;5;6;7"]
+
         # The backslash character. Needed since there are limitations when
         # using backslashes at the end of raw-strings in front of the
         # terminating " or '.
@@ -175,6 +182,25 @@ class StringProcessingTest(unittest.TestCase):
             # Execute function under test.
             return_value = unescaped_split(test_patterns[i],
                                            self.multi_pattern_test_string)
+            self.assertEqual(expected_results[i], return_value)
+
+    # Test the unescaped_split() function for its remove_empty_matches feature.
+    def test_unescaped_split_auto_trim(self):
+        separator = ";"
+        expected_results = [
+            [],
+            [2 * self.bs, 5 * self.bs, r"\\#", r"\\\'", self.bs, 4 * self.bs,
+                r"+ios"],
+            [r"1", r"2", r"3", r"4", r"5", r"6"],
+            [r"1", r"2", r"3", r"4", r"5", r"6", r"7"],
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = unescaped_split(separator,
+                                           self.auto_trim_test_strings[i],
+                                           0,
+                                           True)
             self.assertEqual(expected_results[i], return_value)
 
     # Test the basic escaped_split() functionality.
