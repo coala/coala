@@ -31,7 +31,7 @@ class SectionManager:
     """
     def __init__(self):
         self.cli_sections = None
-        self.default_section = None
+        self.default_sections = None
         self.sections = None
 
         self.cli_parser = CliParser()
@@ -55,8 +55,8 @@ class SectionManager:
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
 
         try:
-            self.default_section = self.conf_parser.reparse(os.path.abspath(
-                StringConstants.system_coafile))["default"]
+            self.default_sections = self.conf_parser.reparse(os.path.abspath(
+                StringConstants.system_coafile))
         except self.conf_parser.FileNotFoundError:
             self.cli_sections["default"].retrieve_logging_objects()
             self.cli_sections["default"].log_printer.warn(
@@ -70,7 +70,10 @@ class SectionManager:
             self.targets.append(item.lower())
 
         for section in self.cli_sections:
-            self.cli_sections[section].defaults = self.default_section
+            if self.default_sections is not None:
+                self.cli_sections[section].defaults = self.default_sections["default"]
+            else:
+                self.cli_sections[section].defaults = None
 
         try:
             config = os.path.abspath(

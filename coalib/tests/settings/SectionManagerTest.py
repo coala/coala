@@ -1,3 +1,4 @@
+import inspect
 import os
 import sys
 import tempfile
@@ -28,6 +29,18 @@ class SectionManagerTestCase(unittest.TestCase):
                                         '-c bad_filename',
                                         '-b LineCountBear'])[1]
         self.assertEqual(len(local_bears["default"]), 1)
+
+    def test_default_coafile_parsing(self):
+        uut = SectionManager()
+        tmp = StringConstants.system_coafile
+        StringConstants.system_coafile=os.path.abspath(os.path.join(
+            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            "section_manager_test_files",
+            "default_coafile"))
+        uut.run()
+        conf_sections = uut.default_sections
+        self.assertEqual(str(conf_sections["test"]),"test {value : 1}")
+        StringConstants.system_coafile = tmp
 
     def test_nonexistent_file(self):
         filename = "bad.one/test\neven with bad chars in it"
