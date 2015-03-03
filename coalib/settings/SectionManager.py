@@ -59,11 +59,10 @@ class SectionManager:
                 StringConstants.system_coafile))["default"]
         except self.conf_parser.FileNotFoundError:
             self.cli_sections["default"].retrieve_logging_objects()
-            self.cli_sections["default"].log_printer.err(
+            self.cli_sections["default"].log_printer.warn(
                 _("The global default coafile for the settings was not found. "
                   "It seems your installation is broken.") + " " +
                 StringConstants.THIS_IS_A_BUG)
-            raise SystemExit
 
         # We dont want to store targets argument back to file, thus remove it
         for item in list(self.cli_sections["default"].contents.pop("targets",

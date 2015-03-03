@@ -36,7 +36,8 @@ class SectionManagerTestCase(unittest.TestCase):
 
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = filename
-        self.assertRaises(SystemExit, SectionManager().run)
+        # Shouldn't throw an exception
+        SectionManager().run()
         StringConstants.system_coafile = tmp
 
     def test_back_saving(self):
