@@ -499,6 +499,28 @@ class StringProcessingTest(unittest.TestCase):
                 self.multi_pattern_test_string)
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the unescaped_search_in_between() function for its
+    # remove_empty_matches feature.
+    def test_unescaped_search_in_between_auto_trim(self):
+        begin_sequence = ";"
+        end_sequence = ";"
+        expected_results = [
+            [],
+            [5 * self.bs, r"\\\'", self.bs, r"+ios"],
+            [r"2", r"4", r"6"],
+            [r"2", r"4", r"6"]
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            return_value = unescaped_search_in_between(
+                begin_sequence,
+                end_sequence,
+                self.auto_trim_test_strings[i],
+                0,
+                True)
+            self.assertEqual(expected_results[i], return_value)
+
     # Test the basic escaped_search_in_between() functionality.
     def test_escaped_search_in_between(self):
         begin_sequence = "'"
