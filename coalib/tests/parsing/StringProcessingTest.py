@@ -197,7 +197,7 @@ class StringProcessingTest(unittest.TestCase):
             [2 * self.bs, 5 * self.bs, r"\\#", r"\\\'", self.bs, 4 * self.bs,
                 r"+ios"],
             [r"1", r"2", r"3", r"4", r"5", r"6"],
-            [r"1", r"2", r"3", r"4", r"5", r"6", r"7"],
+            [r"1", r"2", r"3", r"4", r"5", r"6", r"7"]
         ]
 
         for i in range(0, len(expected_results)):
@@ -350,7 +350,7 @@ class StringProcessingTest(unittest.TestCase):
             [],
             [2 * self.bs, r"\\\\\;\\#", r"\\\'", r"\;\\\\", r"+ios"],
             [r"1", r"2", r"3", r"4", r"5", r"6"],
-            [r"1", r"2", r"3", r"4", r"5", r"6", r"7"],
+            [r"1", r"2", r"3", r"4", r"5", r"6", r"7"]
         ]
 
         for i in range(0, len(expected_results)):
