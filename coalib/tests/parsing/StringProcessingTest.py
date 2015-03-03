@@ -29,7 +29,7 @@ class StringProcessingTest(unittest.TestCase):
 
         # Test string for multi-pattern tests (since we want to variate the
         # pattern, not the test string).
-        self.multi_pattern_test_string = (r"abcabccba###\\13ß4ujsabbc\+'**'ac"
+        self.multi_pattern_test_string = (r"abcabccba###\\13q4ujsabbc\+'**'ac"
                                           r"###.#.####-ba")
 
         # Multiple patterns for the multi-pattern tests.
@@ -171,15 +171,15 @@ class StringProcessingTest(unittest.TestCase):
     # Test the unescaped_split() function with different regex patterns.
     def test_unescaped_split_regex_pattern(self):
         expected_results = [
-            [r"", r"", r"cba###\\13ß4ujsabbc\+'**'ac###.#.####-ba"],
-            [r"", r"c", r"ccba###\\13ß4ujs", r"bc\+'**'ac###.#.####-ba"],
-            [r"", r"c", r"ccba###\\13ß4ujs", r"bc\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###", r"", r"13ß4ujsabbc", r"+'**'ac###.#.####-ba"],
-            [r"abcabccba", r"\\13ß4ujsabbc\+'**'ac", r".", r".", r"-ba"],
-            [r"", r"", r"c", r"", r"cc", r"", r"", r"", r"\13ß4ujs", r"", r"",
+            [r"", r"", r"cba###\\13q4ujsabbc\+'**'ac###.#.####-ba"],
+            [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'ac###.#.####-ba"],
+            [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'", r"###.#.####-ba"],
+            [r"abcabccba###", r"", r"13q4ujsabbc", r"+'**'ac###.#.####-ba"],
+            [r"abcabccba", r"\\13q4ujsabbc\+'**'ac", r".", r".", r"-ba"],
+            [r"", r"", r"c", r"", r"cc", r"", r"", r"", r"\13q4ujs", r"", r"",
                 r"c\+'**'", r"c", r"", r"", r"", r"", r"-", r"", r""],
-            [r"", r"cba###\\13ß4ujs", r"\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###" + 2 * self.bs, r"3ß4ujsabbc" + self.bs,
+            [r"", r"cba###\\13q4ujs", r"\+'**'", r"###.#.####-ba"],
+            [r"abcabccba###" + 2 * self.bs, r"3q4ujsabbc" + self.bs,
                 r"'**'ac###.#.####-ba"]
         ]
 
@@ -326,15 +326,15 @@ class StringProcessingTest(unittest.TestCase):
     # Test the escaped_split() function with different regex patterns.
     def test_escaped_split_regex_pattern(self):
         expected_results = [
-            [r"", r"", r"cba###\\13ß4ujsabbc\+'**'ac###.#.####-ba"],
-            [r"", r"c", r"ccba###\\13ß4ujs", r"bc\+'**'ac###.#.####-ba"],
-            [r"", r"c", r"ccba###\\13ß4ujs", r"bc\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###", r"\13ß4ujsabbc", r"+'**'ac###.#.####-ba"],
-            [r"abcabccba", r"\\13ß4ujsabbc\+'**'ac", r".", r".", r"-ba"],
-            [r"", r"", r"c", r"", r"cc", r"", r"", r"", r"\13ß4ujs", r"", r"",
+            [r"", r"", r"cba###\\13q4ujsabbc\+'**'ac###.#.####-ba"],
+            [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'ac###.#.####-ba"],
+            [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'", r"###.#.####-ba"],
+            [r"abcabccba###", r"\13q4ujsabbc", r"+'**'ac###.#.####-ba"],
+            [r"abcabccba", r"\\13q4ujsabbc\+'**'ac", r".", r".", r"-ba"],
+            [r"", r"", r"c", r"", r"cc", r"", r"", r"", r"\13q4ujs", r"", r"",
                 r"c\+'**'", r"c", r"", r"", r"", r"", r"-", r"", r""],
-            [r"", r"cba###\\13ß4ujs", r"\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###" + 2 * self.bs, r"3ß4ujsabbc\+'**'ac###.#.####-ba"]
+            [r"", r"cba###\\13q4ujs", r"\+'**'", r"###.#.####-ba"],
+            [r"abcabccba###" + 2 * self.bs, r"3q4ujsabbc\+'**'ac###.#.####-ba"]
         ]
 
         for i in range(0, len(expected_results)):
@@ -484,10 +484,10 @@ class StringProcessingTest(unittest.TestCase):
             [r"c"],
             [r"c", r"bc\+'**'"],
             [r""],
-            [r"\\13ß4ujsabbc\+'**'ac", r"."],
+            [r"\\13q4ujsabbc\+'**'ac", r"."],
             [r"", r"", r"", r"", r"", r"c\+'**'", r"", r"", r"-"],
-            [r"cba###\\13ß4ujs"],
-            [r"3ß4ujsabbc" + self.bs]
+            [r"cba###\\13q4ujs"],
+            [r"3q4ujsabbc" + self.bs]
         ]
 
         for i in range(0, len(expected_results)):
