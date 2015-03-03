@@ -614,6 +614,29 @@ class StringProcessingTest(unittest.TestCase):
                                                      max_match)
             self.assertEqual(expected_results[i], return_value)
 
+    # Test the escaped_search_in_between() function with different regex
+    # patterns.
+    def test_escaped_search_in_between_regex_pattern(self):
+        expected_results = [
+            [r""],
+            [r"c"],
+            [r"c", r"bc\+'**'"],
+            [r"\13q4ujsabbc"],
+            [r"\\13q4ujsabbc\+'**'ac", r"."],
+            [r"", r"", r"", r"", r"", r"c\+'**'", r"", r"", r"-"],
+            [r"cba###\\13q4ujs"],
+            []
+        ]
+
+        for i in range(0, len(expected_results)):
+            # Execute function under test.
+            # Use each pattern as begin and end sequence.
+            return_value = escaped_search_in_between(
+                self.multi_patterns[i],
+                self.multi_patterns[i],
+                self.multi_pattern_test_string)
+            self.assertEqual(expected_results[i], return_value)
+
     # Test the search_for() function.
     def test_search_for(self):
         # Match either "out1" or "out2".
