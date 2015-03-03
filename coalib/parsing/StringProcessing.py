@@ -61,6 +61,9 @@ def escaped_split(pattern,
     Splits the given string by the specified pattern. The return character (\n)
     is not a natural split pattern (if you don't specify it yourself).
     This function handles escaped split-patterns.
+    CAUTION: Using the escaped character '\' itself in the pattern the function
+             can return strange results. The backslash can interfere with the
+             escaping regex-sequence used internally to split.
     :param pattern:              The pattern that defines where to split.
                                  Providing regexes (and not only fixed strings)
                                  is allowed.
@@ -175,6 +178,10 @@ def escaped_search_in_between(begin,
     Searches for a string enclosed between a specified begin- and end-sequence.
     Also enclosed \n are put into the result.
     Handles escaped begin- and end-sequences.
+    CAUTION: Using the escaped character '\' itself in the begin- or
+             end-sequences the function can return strange results. The
+             backslash can interfere with the escaping regex-sequence used
+             internally to match the enclosed string.
     :param begin:                The begin-sequence where to start matching.
                                  Providing regexes (and not only fixed strings)
                                  is allowed.
