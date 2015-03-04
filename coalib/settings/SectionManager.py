@@ -79,17 +79,15 @@ class SectionManager:
                                                                    "")):
             self.targets.append(item.lower())
 
-        for section in self.cli_sections:
-            if self.default_sections is not None:
-                self.cli_sections[section].defaults = self.default_sections["default"]
-            else:
-                self.cli_sections[section].defaults = None
-
         self.sections = self._merge_section_dicts(self.default_sections,
                                                   self.coafile_sections)
 
         self.sections = self._merge_section_dicts(self.sections,
                                                   self.cli_sections)
+
+        for section in self.sections:
+            if section != "default":
+                self.sections[section].defaults = self.sections["default"]
 
     def _fill_settings(self):
         for section_name in self.sections:
@@ -142,8 +140,7 @@ class SectionManager:
 
         for name in higher:
             if name in lower:
-                lower[name].update(higher[name],
-                                   ignore_defaults=(name != "default"))
+                lower[name].update(higher[name], ignore_defaults=True)
             else:
                 # no deep copy needed
                 lower[name] = higher[name]
