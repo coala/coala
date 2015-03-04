@@ -13,8 +13,6 @@ from coalib.output.printers.NullPrinter import NullPrinter
 
 class SectionManagerTestCase(unittest.TestCase):
     def test_run(self):
-        defaults = ConfParser().parse(StringConstants.system_coafile)
-
         uut = SectionManager()
         # We need to use a bad filename or this will parse coalas .coafile
         conf_sections = uut.run(
@@ -23,7 +21,7 @@ class SectionManagerTestCase(unittest.TestCase):
         self.assertEqual(str(conf_sections["default"]),
                          "Default {config : some_bad_filename, test : 5}")
         self.assertEqual(str(conf_sections["default"].defaults),
-                         str(defaults["default"]))
+                         str(conf_sections["default"]))
 
         local_bears = uut.run(arg_list=['-S test=5',
                                         '-c bad_filename',
@@ -51,6 +49,42 @@ class SectionManagerTestCase(unittest.TestCase):
         StringConstants.system_coafile = filename
         # Shouldn't throw an exception
         SectionManager().run()
+        StringConstants.system_coafile = tmp
+
+    def test_merge(self):
+        uut = SectionManager()
+        tmp = StringConstants.system_coafile
+        StringConstants.system_coafile=os.path.abspath(os.path.join(
+            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            "section_manager_test_files",
+            "default_coafile"))
+
+        config = os.path.abspath(os.path.join(
+            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            "section_manager_test_files",
+            ".coafile"))
+        # Check merging of default_coafile and .coafile
+        conf_sections = uut.run(arg_list=["-c", config])[0]
+        self.assertEqual(str(conf_sections["test"]),
+                         "test {value : 2}")
+        self.assertEqual(str(conf_sections["test-2"]),
+                         "test-2 {files : ., bears : LineCountBear}")
+        # Check merging of default_coafile, .coafile and cli
+        conf_sections = uut.run(arg_list=["-c",
+                                          config,
+                                          "-S",
+                                          "test.value=3",
+                                          "test-2.bears=",
+                                          "test-5.bears=TestBear2"])[0]
+        self.assertEqual(str(conf_sections["test"]), "test {value : 3}")
+        self.assertEqual(str(conf_sections["test-2"]),
+                         "test-2 {files : ., bears : }")
+        self.assertEqual(str(conf_sections["test-3"]),
+                         "test-3 {files : MakeFile}")
+        self.assertEqual(str(conf_sections["test-4"]),
+                         "test-4 {bears : TestBear}")
+        self.assertEqual(str(conf_sections["test-5"]),
+                         "test-5 {bears : TestBear2}")
         StringConstants.system_coafile = tmp
 
     def test_back_saving(self):

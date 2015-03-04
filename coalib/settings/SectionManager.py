@@ -32,6 +32,7 @@ class SectionManager:
     def __init__(self):
         self.cli_sections = None
         self.default_sections = None
+        self.coafile_sections = None
         self.sections = None
 
         self.cli_parser = CliParser()
@@ -64,6 +65,15 @@ class SectionManager:
                   "It seems your installation is broken.") + " " +
                 StringConstants.THIS_IS_A_BUG)
 
+        try:
+            config = os.path.abspath(
+                str(self.cli_sections["default"].get("config", ".coafile")))
+            self.coafile_sections = self.conf_parser.reparse(config)
+        except self.conf_parser.FileNotFoundError:
+            self.cli_sections["default"].log_printer.warn(
+                _("The requested coafile '{filename}' does not exist. "
+                  "Thus it will not be used.").format(filename=config))
+
         # We dont want to store targets argument back to file, thus remove it
         for item in list(self.cli_sections["default"].contents.pop("targets",
                                                                    "")):
@@ -75,20 +85,11 @@ class SectionManager:
             else:
                 self.cli_sections[section].defaults = None
 
-        try:
-            config = os.path.abspath(
-                str(self.cli_sections["default"].get("config", ".coafile")))
-            self.sections = self.conf_parser.reparse(config)
+        self.sections = self._merge_section_dicts(self.default_sections,
+                                                  self.coafile_sections)
 
-            # We'll get the default section as default section for every
-            # section in this dict with this. Furthermore we will have the
-            # CLI Values take precedence over the conf values.
-            self._merge_section_dicts(self.sections, self.cli_sections)
-        except self.conf_parser.FileNotFoundError:
-            self.cli_sections["default"].log_printer.warn(
-                    _("The requested coafile '{filename}' does not exist. "
-                      "Thus it will not be used.").format(filename=config))
-            self.sections = self.cli_sections
+        self.sections = self._merge_section_dicts(self.sections,
+                                                  self.cli_sections)
 
     def _fill_settings(self):
         for section_name in self.sections:
