@@ -41,9 +41,12 @@ class ConfWriter:
                 setting = section[it.__next__()]
                 if str(setting) == val and\
                    not self.is_comment(setting.key) and\
-                   ((setting.key not in self.__unsavable_keys) or (not setting.from_cli)):
+                   (
+                        (setting.key not in self.__unsavable_keys) or
+                        (not setting.from_cli)):
                     keys.append(setting.key)
-                elif (setting.key not in self.__unsavable_keys) or (not setting.from_cli):
+                elif ((setting.key not in self.__unsavable_keys) or
+                      (not setting.from_cli)):
                     self.__write_key_val(keys, val)
                     keys = [setting.key]
                     val = str(setting)
@@ -62,7 +65,8 @@ class ConfWriter:
             self.__file.write(val + "\n")
             return
 
-        self.__file.write((self.__key_delimiter + " ").join(keys) + " " + self.__key_value_delimiter + " " + val + "\n")
+        self.__file.write((self.__key_delimiter + " ").join(keys) + " " +
+                          self.__key_value_delimiter + " " + val + "\n")
 
     @staticmethod
     def is_comment(key):
