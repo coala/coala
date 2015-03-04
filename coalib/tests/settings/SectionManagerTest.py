@@ -20,8 +20,6 @@ class SectionManagerTestCase(unittest.TestCase):
 
         self.assertEqual(str(conf_sections["default"]),
                          "Default {config : some_bad_filename, test : 5}")
-        self.assertEqual(str(conf_sections["default"].defaults),
-                         str(conf_sections["default"]))
 
         local_bears = uut.run(arg_list=['-S test=5',
                                         '-c bad_filename',
@@ -86,6 +84,16 @@ class SectionManagerTestCase(unittest.TestCase):
         self.assertEqual(str(conf_sections["test-5"]),
                          "test-5 {bears : TestBear2}")
         StringConstants.system_coafile = tmp
+
+    def test_merge_defaults(self):
+        uut = SectionManager()
+        conf_sections = uut.run(arg_list=["-S",
+                                          "value=1",
+                                          "test.value=2",
+                                          "-c",
+                                          "some_bad_file_name"])[0]
+        self.assertEqual(conf_sections["default"],
+                         conf_sections["test"].defaults)
 
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(),
