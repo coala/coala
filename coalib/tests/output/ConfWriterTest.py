@@ -16,7 +16,6 @@ class ConfWriterTestCase(unittest.TestCase):
     TEST = tobeignored  # do you know that thats a comment \n\
     test = push \n\
     t = \n\
-    \n\
     [MakeFiles] \n\
      j  , ANother = a \n\
                    multiline \n\

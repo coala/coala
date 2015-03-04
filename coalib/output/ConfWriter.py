@@ -18,11 +18,13 @@ class ConfWriter:
         self.__section_name_surrounding_beg = section_name_surrounding_beg
         self.__section_name_surrounding_end = section_name_surrounding_end
         self.__unsavable_keys = unsavable_keys
+        self.__wrote_newline = True
 
     def __del__(self):
         self.__file.close()
 
     def write_sections(self, sections):
+        self.__wrote_newline = True
         for section in sections:
             self.write_section(sections[section])
 
@@ -54,8 +56,12 @@ class ConfWriter:
             self.__write_key_val(keys, val)
 
     def __write_section_name(self, name):
+        if not self.__wrote_newline:
+            self.__file.write("\n")
+
         self.__file.write(self.__section_name_surrounding_beg + name +
                           self.__section_name_surrounding_end + '\n')
+        self.__wrote_newline = False
 
     def __write_key_val(self, keys, val):
         if keys == []:
@@ -63,10 +69,12 @@ class ConfWriter:
 
         if all(self.is_comment(key) for key in keys):
             self.__file.write(val + "\n")
+            self.__wrote_newline = val == ""
             return
 
         self.__file.write((self.__key_delimiter + " ").join(keys) + " " +
                           self.__key_value_delimiter + " " + val + "\n")
+        self.__wrote_newline = False
 
     @staticmethod
     def is_comment(key):

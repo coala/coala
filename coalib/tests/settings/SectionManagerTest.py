@@ -60,6 +60,7 @@ class SectionManagerTestCase(unittest.TestCase):
         os.remove(filename)
         self.assertEqual(["[Default]\n",
                           "config = " + filename + "\n",
+                          "\n",
                           "[test]\n",
                           "value = 5\n"], lines)
 
