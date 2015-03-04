@@ -30,7 +30,8 @@ class ConfWriterTestCase(unittest.TestCase):
             filehandler.write(self.example_file)
 
         self.conf_parser = ConfParser()
-        self.write_file_name = os.path.join(tempfile.gettempdir(), "ConfWriterTestFile")
+        self.write_file_name = os.path.join(tempfile.gettempdir(),
+                                            "ConfWriterTestFile")
         self.uut = ConfWriter(self.write_file_name)
 
     def tearDown(self):
