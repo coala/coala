@@ -1,2 +1,7 @@
 [test]
 value = 1
+[test-2]
+files =
+bears = LineCountBear,testBear
+[test-3]
+files = MakeFile
