@@ -142,7 +142,7 @@ class SectionExecutor:
                                                                 TIMEOUT=0.1)
 
     def _instantiate_processes(self, job_count):
-        filename_list = collect_files(path_list(self.section['files']))
+        filename_list = collect_files(path_list(self.section.get('files', "")))
         file_dict = self._get_file_dict(filename_list)
 
         manager = multiprocessing.Manager()
