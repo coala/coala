@@ -93,14 +93,15 @@ class SectionManager:
             section = self.sections[section_name]
             section.retrieve_logging_objects()
 
-            bear_dirs = path_list(section["bear_dirs"])
+            bear_dirs = path_list(section.get("bear_dirs", ""))
             bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
                                           "**"))
+            bears = list(section.get("bears", ""))
             local_bears = collect_bears(bear_dirs,
-                                        list(section["bears"]),
+                                        bears,
                                         [BEAR_KIND.LOCAL])
             global_bears = collect_bears(bear_dirs,
-                                         list(section["bears"]),
+                                         bears,
                                          [BEAR_KIND.GLOBAL])
             filler = SectionFiller(section)
             all_bears = copy.deepcopy(local_bears)
@@ -114,10 +115,12 @@ class SectionManager:
         self.conf_writer = None
         default_section = self.sections["default"]
         try:
-            if bool(default_section["save"]):
-                self.conf_writer = ConfWriter(str(default_section["config"]))
+            if bool(default_section.get("save", "false")):
+                self.conf_writer = ConfWriter(str(
+                    default_section.get("config", ".coafile")))
         except ValueError:
-            self.conf_writer = ConfWriter(str(default_section["save"]))
+            self.conf_writer = ConfWriter(str(default_section.get("save",
+                                                                  ".coafile")))
 
         if self.conf_writer is not None:
             self.conf_writer.write_sections(self.sections)

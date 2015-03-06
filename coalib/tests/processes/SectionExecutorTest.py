@@ -35,8 +35,7 @@ class SectionExecutorInitTestCase(unittest.TestCase):
         self.assertRaises(TypeError, SectionExecutor, 5,               [], [])
         self.assertRaises(TypeError, SectionExecutor, Section("test"), 5 , [])
         self.assertRaises(TypeError, SectionExecutor, Section("test"), [], 5 )
-        self.assertRaises(IndexError,
-                          SectionExecutor(Section("test"), [], []).run)
+        SectionExecutor(Section("test"), [], []).run
 
 
 class SectionExecutorTestCase(unittest.TestCase):

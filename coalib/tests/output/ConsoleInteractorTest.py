@@ -28,8 +28,9 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         builtins.__dict__["input"] = lambda x: x
         self.uut = ConsoleInteractor()
 
-        # All those tests assume that Result has no actions and PatchResult has one.
-        # This makes this test independent from the real number of actions applicable to those results.
+        # All those tests assume that Result has no actions and PatchResult has
+        # one. This makes this test independent from the real number of actions
+        # applicable to those results.
         Result.get_actions = lambda self: []
         PatchResult.get_actions = lambda self: [ApplyPatchAction()]
 
@@ -40,30 +41,42 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         self.assertRaises(TypeError, self.uut.acquire_settings, 0)
         self.assertEqual(self.uut.acquire_settings({0: 0}), {})
 
-        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear"]}),
-                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format("setting", "help text", "SomeBear")})
-
-        self.assertEqual(self.uut.acquire_settings({"setting": ["help text", "SomeBear", "AnotherBear"]}),
-                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format("setting",
-                                                                             "help text",
-                                                                             "SomeBear" + _(" and ") + "AnotherBear")})
-
         self.assertEqual(self.uut.acquire_settings({"setting": ["help text",
-                                                                "SomeBear",
-                                                                "AnotherBear",
-                                                                "YetAnotherBear"]}),
-                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format("setting",
-                                                                             "help text",
-                                                                             "SomeBear, AnotherBear" + _(" and ") +
-                                                                             "YetAnotherBear")})
+                                                                "SomeBear"]}),
+                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format(
+                             "setting",
+                             "help text",
+                             "SomeBear")})
+
+        self.assertEqual(self.uut.acquire_settings({"setting":
+                                                        ["help text",
+                                                         "SomeBear",
+                                                         "AnotherBear"]}),
+                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format(
+                             "setting",
+                             "help text",
+                             "SomeBear" + _(" and ") + "AnotherBear")})
+
+        self.assertEqual(self.uut.acquire_settings({"setting":
+                                                        ["help text",
+                                                         "SomeBear",
+                                                         "AnotherBear",
+                                                         "YetAnotherBear"]}),
+                         {"setting": self.uut.STR_GET_VAL_FOR_SETTING.format(
+                             "setting",
+                             "help text",
+                             "SomeBear, AnotherBear" + _(" and ") +
+                             "YetAnotherBear")})
 
     def test_print_result(self):
         self.uut.print = lambda x: x
         builtins.__dict__["input"] = lambda x: 0
 
-        self.assertEqual("|    |    | [{normal}] {bear}:".format(normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
-                                                                 bear="origin") + "\n|    |    | message",
-                         self.uut._print_result(Result("origin", "message")))
+        self.assertEqual(
+            "|    |    | [{normal}] {bear}:".format(
+                normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
+                bear="origin") + "\n|    |    | message",
+            self.uut._print_result(Result("origin", "message")))
 
         self.uut.print_result(PatchResult("origin", "msg", {}), {})
 
@@ -76,8 +89,11 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         diff = Diff()
         diff.delete_line(2)
         diff.change_line(3, "3\n", "3_changed\n")
-        builtins.__dict__["input"] = self.generate_input  # To assure user can rechose if he didn't chose wisely
-        self.uut.print_result(PatchResult("origin", "msg", {testfile_path: diff}), file_dict)
+        # To assure user can rechose if he didn't chose wisely
+        builtins.__dict__["input"] = self.generate_input
+        self.uut.print_result(PatchResult("origin",
+                                          "msg",
+                                          {testfile_path: diff}), file_dict)
         self.assertEqual(self.curr, 2)
         self.uut.finalize(file_dict)
         with open(testfile_path) as f:
@@ -122,11 +138,16 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         self.assertRaises(queue.Empty, q.get, timeout=0)
 
         self.uut.print_results([Result("origin", "message")], {})
-        self.assertEqual("\n\n{}\n|    |    | [{}] origin:\n|    |    | message"
-                         "\n".format(self.uut.STR_PROJECT_WIDE, RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+        self.assertEqual("\n\n{}\n|    |    | [{}] origin:\n|    |    | "
+                         "message\n".format(
+                             self.uut.STR_PROJECT_WIDE,
+                             RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                          self.get_str_from_queue(q))
 
-        self.uut.print_results([Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=2)],
+        self.uut.print_results([Result("SpaceConsistencyBear",
+                                       "Trailing whitespace found",
+                                       "proj/white",
+                                       line_nr=2)],
                                {"proj/white": ["test line\n",
                                                "line 2\n",
                                                "line 3\n"]})
@@ -134,9 +155,13 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 |   1|   1| test line\n|   2|   2| line 2
 |    |    | [{}] SpaceConsistencyBear:
 |    |    | Trailing whitespace found
-""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)), self.get_str_from_queue(q))
+""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+                         self.get_str_from_queue(q))
 
-        self.uut.print_results([Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=5)],
+        self.uut.print_results([Result("SpaceConsistencyBear",
+                                       "Trailing whitespace found",
+                                       "proj/white",
+                                       line_nr=5)],
                                {"proj/white": ["test line\n",
                                                "line 2\n",
                                                "line 3\n",
@@ -149,11 +174,18 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 |   5|   5| line 5
 |    |    | [{}] SpaceConsistencyBear:
 |    |    | Trailing whitespace found
-""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)), self.get_str_from_queue(q))
+""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+                         self.get_str_from_queue(q))
 
         # Check sorting and multi result output
-        self.uut.print_results([Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=5),
-                                Result("SpaceConsistencyBear", "Trailing whitespace found", "proj/white", line_nr=2)],
+        self.uut.print_results([Result("SpaceConsistencyBear",
+                                       "Trailing whitespace found",
+                                       "proj/white",
+                                       line_nr=5),
+                                Result("SpaceConsistencyBear",
+                                       "Trailing whitespace found",
+                                       "proj/white",
+                                       line_nr=2)],
                                {"proj/white": ["test line\n",
                                                "line 2\n",
                                                "line 3\n",
@@ -171,22 +203,30 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 |    |    | [{}] SpaceConsistencyBear:
 |    |    | Trailing whitespace found
 """.format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
-           RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)), self.get_str_from_queue(q))
-
-        # File isn't in dict, shouldn't print but also shouldn't throw. This can occur if filter writers are doing
-        # nonsense. If this happens twice the same should happen (whitebox testing: this is a potential bug.)
-        self.uut.log_printer = NullPrinter()
-        self.uut.print_results([Result("t", "msg", "file", line_nr=5), Result("t", "msg", "file", line_nr=5)], {})
-        self.assertEqual("", self.get_str_from_queue(q))
-
-        # Line isn't in dict[file], shouldn't print but also shouldn't throw. This can occur if filter writers are doing
-        # nonsense.
-        self.uut.print_results([Result("t", "msg", "file", line_nr=5)], {"file": []})
-        self.assertEqual("""\n\nfile\n|    |    | {}\n|    |    | [{}] t:
-|    |    | msg\n""".format(self.uut.STR_LINE_DOESNT_EXIST, RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+           RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                          self.get_str_from_queue(q))
 
-        self.assertRaises(AssertionError, self.uut.print_results, [Result("t", "msg", None, line_nr=5)], {})
+        # File isn't in dict, shouldn't print but also shouldn't throw. This
+        # can occur if filter writers are doing nonsense. If this happens twice
+        # the same should happen (whitebox testing: this is a potential bug.)
+        self.uut.log_printer = NullPrinter()
+        self.uut.print_results([Result("t", "msg", "file", line_nr=5),
+                                Result("t", "msg", "file", line_nr=5)], {})
+        self.assertEqual("", self.get_str_from_queue(q))
+
+        # Line isn't in dict[file], shouldn't print but also shouldn't throw.
+        # This can occur if filter writers are doing nonsense.
+        self.uut.print_results([Result("t", "msg", "file", line_nr=5)],
+                               {"file": []})
+        self.assertEqual("""\n\nfile\n|    |    | {}\n|    |    | [{}] t:
+|    |    | msg\n""".format(self.uut.STR_LINE_DOESNT_EXIST,
+                            RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+                         self.get_str_from_queue(q))
+
+        self.assertRaises(AssertionError,
+                          self.uut.print_results,
+                          [Result("t", "msg", None, line_nr=5)],
+                          {})
 
     def test_from_section(self):
         section = Section("test")

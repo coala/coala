@@ -1,4 +1,5 @@
 import gettext
+import subprocess
 import sys
 import unittest
 import os
@@ -48,6 +49,16 @@ class i18nTestCase(unittest.TestCase):
                          string)
         self.assertEqual(i18n._(string),
                          "Ein indirekt übersetzter test String.")
+
+
+def skip_test():
+    try:
+        subprocess.Popen(['msgfmt'],
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+        return False
+    except OSError:
+        return "msgfmt is not installed."
 
 
 if __name__ == '__main__':
