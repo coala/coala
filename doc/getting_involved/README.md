@@ -39,6 +39,6 @@ We currently have more information on the following topics:
  * [Writing good commit messages](COMMIT_MESSAGES.md)
  * [coala's review process](REVIEWING.md)
  * [Python codestyle](CODESTYLE.md)
- * [Testing](TESTING.md)
+ * [Testing](TESTING.md) and [writing tests](WRITING_TESTS.md)
  * [Translating](TRANSLATING.md)
  * [Writing Bears](WRITING_BEARS.md)
