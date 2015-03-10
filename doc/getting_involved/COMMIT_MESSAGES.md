@@ -18,8 +18,11 @@ There are a few things to consider when writing a commit message, namely:
    is a bugfix, don't describe the bug but the _change_, especially in the
    shortlog.
  * If the commit fixes a bug, add the following line at the end:
-   `Fixes: https://github.com/coala-analyzer/coala/issues/###`, this way the
+   `Fixes https://github.com/coala-analyzer/coala/issues/###`, this way the
    commit will appear at the bug and several revisions can be tracked this way.
+   * Be sure to use the full URL, if we move from github, the links should
+     still work.
+   * This will automatically close the according bug when pushed to master.
 
 Also see: https://wiki.gnome.org/Git/CommitMessages
 
@@ -32,5 +35,5 @@ ignore that this is not the installation directory in every case. Thus
 it is easier, more reliable and platform independent to let distutils
 install it by itself.
 
-Fixes: https://github.com/coala-analyzer/coala/issues/269
+Fixes https://github.com/coala-analyzer/coala/issues/269
 ```
