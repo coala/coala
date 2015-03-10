@@ -146,6 +146,12 @@ if __name__ == '__main__':
 > statements will be executed from your component when invoking your test
 > cases. You should aim at a branch coverage of 100%.
 >
+> The branch coverage can be measured with the `./run_tests.py -c` command.
+> Even more information is available with the `-H` parameter. In order for this
+> to work you will need to have the coverage3 binary installed. It usually
+> comes with a package named `python-coverage3` or similar. Make sure that you
+> installed the version for python 3 and not the one for python 2!
+>
 > If some code is untestable, you need to mark your component code with
 > `# pragma: no cover`. Important: Provide a reason why your code is
 > untestable.
