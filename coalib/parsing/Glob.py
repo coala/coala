@@ -44,7 +44,8 @@ class _TerminatingSelector:
     """
     represents the end of a pattern.
     """
-    def collect(self, path):
+    @staticmethod
+    def collect(path):
         yield path
 
 
