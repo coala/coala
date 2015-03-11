@@ -6,7 +6,6 @@ import unittest
 sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
-from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.SectionManager import SectionManager
 from coalib.output.printers.NullPrinter import NullPrinter
 
