@@ -36,11 +36,10 @@ class ConfWriter:
 
         keys = []
         val = None
-        # Fixme: I dont think I handle the iterators the right way here
         it = section.__iter__(ignore_defaults=True)
         try:
             while True:
-                setting = section[it.__next__()]
+                setting = section[next(it)]
                 if str(setting) == val and\
                    not self.is_comment(setting.key) and\
                    (
