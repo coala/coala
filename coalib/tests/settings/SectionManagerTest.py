@@ -34,7 +34,8 @@ class SectionManagerTestCase(unittest.TestCase):
             "default_coafile"))
         uut.run()
         conf_sections = uut.default_sections
-        self.assertEqual(str(conf_sections["test"]), "test {value : 1}")
+        self.assertEqual(str(conf_sections["test"]), "test {value : 1, "
+                                                     "testval : 5}")
         StringConstants.system_coafile = tmp
 
     @staticmethod

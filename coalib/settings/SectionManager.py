@@ -9,6 +9,7 @@ from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
+from coalib.settings.Section import Section
 from coalib.settings.SectionFiller import SectionFiller
 from coalib.settings.Setting import path_list
 
@@ -31,8 +32,8 @@ class SectionManager:
     """
     def __init__(self):
         self.cli_sections = None
-        self.default_sections = None
-        self.coafile_sections = None
+        self.default_sections = {"default": Section("default")}
+        self.coafile_sections = {"default": Section("default")}
         self.sections = None
 
         self.cli_parser = CliParser()
@@ -71,7 +72,10 @@ class SectionManager:
 
         try:
             config = os.path.abspath(
-                str(self.cli_sections["default"].get("config", ".coafile")))
+                str(self.cli_sections["default"].get(
+                    "config",
+                    str(self.default_sections["default"].get("config",
+                                                             ".coafile")))))
             self.coafile_sections = self.conf_parser.reparse(config)
         except self.conf_parser.FileNotFoundError:
             self.cli_sections["default"].log_printer.warn(
