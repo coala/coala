@@ -8,7 +8,8 @@ def _make_selector(pattern_parts):
     if pat == '**':
         cls = _RecursiveWildcardSelector
     elif '**' in pat:
-        raise ValueError("Invalid pattern: '**' can only be an entire path component")
+        raise ValueError("Invalid pattern: '**' can only be "
+                         "an entire path component")
     elif _is_wildcard_pattern(pat):
         cls = _WildcardSelector
     else:
@@ -49,7 +50,8 @@ class _TerminatingSelector:
 
 class _PathSelector(_Selector):
     """
-    represents names of files and directories that do not need to be matched using fnmatch
+    represents names of files and directories that do not need to be matched
+    using fnmatch
     """
     def __init__(self, path, child_parts):
         self.path = path
@@ -64,7 +66,8 @@ class _PathSelector(_Selector):
 
 class _WildcardSelector(_Selector):
     """
-    represents names of files and directories that contain wildcards and need to be matched using fnmatch
+    represents names of files and directories that contain wildcards and need
+    to be matched using fnmatch
     """
     def __init__(self, pat, child_parts):
         self.pat = pat
@@ -94,7 +97,9 @@ class _RecursiveWildcardSelector(_Selector):
 
 def iglob(pattern, files=True, dirs=True):
     """
-    Iterate over this subtree and yield all existing files matching the given pattern.
+    Iterate over this subtree and yield all existing files matching the given
+    pattern.
+
     :param pattern: Unix style glob pattern that matches paths
     :param files: Whether or not to include files
     :param dirs: Whether or not to include directories
@@ -103,7 +108,7 @@ def iglob(pattern, files=True, dirs=True):
     if pattern == "" or (not files and not dirs):
         raise StopIteration()
 
-    pattern_parts = pattern.split(os.sep)  # "/a/b/c.py" -> ['', 'a', 'b', 'c.py']
+    pattern_parts = pattern.split(os.sep)  # "/a/b.py" -> ['', 'a', 'b.py']
     if pattern.startswith(os.sep):
         pattern_parts[0] = os.sep  # would be '' instead
     selector = _make_selector(pattern_parts)
@@ -117,7 +122,9 @@ def iglob(pattern, files=True, dirs=True):
 
 def glob(pattern, files=True, dirs=True):
     """
-    Iterate over this subtree and return a list of all existing files matching the given pattern.
+    Iterate over this subtree and return a list of all existing files matching
+    the given pattern.
+
     :param pattern: Unix style glob pattern that matches paths
     :param files: Whether or not to include files
     :param dirs: Whether or not to include directories
