@@ -5,9 +5,11 @@ extended soon.
 
 # Table of Contents
 
-* Introduction
-* Spacing
-* Maximum Line Length
+ * Introduction
+ * Spacing
+ * Maximum Line Length
+ * Source File Encoding
+ * Imports
 
 
 # Introduction
