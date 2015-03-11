@@ -8,8 +8,9 @@ There are a few things to consider when writing a commit message, namely:
  * The shortlog should have a tag and must have a short description:
    `tag: Short description`.
    * The tag is usually the affected class or package and not mandantory.
-   * The short description starts with a big letter and is written in present
-     tense.
+   * The short description starts with a big letter and is written in
+     imperative present tense (i.e. `Add something`, not `Adding something` or
+     `Added something`).
  * The second line must be empty.
  * All following lines may hold up to 72 chars excluding newline.
    * These lines are the long description. The long description is not
