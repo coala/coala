@@ -54,6 +54,10 @@ class SectionManager:
 
     def _load_configuration(self, arg_list):
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
+        # We dont want to store targets argument back to file, thus remove it
+        for item in list(self.cli_sections["default"].contents.pop("targets",
+                                                                   "")):
+            self.targets.append(item.lower())
 
         try:
             self.default_sections = self.conf_parser.reparse(os.path.abspath(
@@ -73,11 +77,6 @@ class SectionManager:
             self.cli_sections["default"].log_printer.warn(
                 _("The requested coafile '{filename}' does not exist. "
                   "Thus it will not be used.").format(filename=config))
-
-        # We dont want to store targets argument back to file, thus remove it
-        for item in list(self.cli_sections["default"].contents.pop("targets",
-                                                                   "")):
-            self.targets.append(item.lower())
 
         self.sections = self._merge_section_dicts(self.default_sections,
                                                   self.coafile_sections)
