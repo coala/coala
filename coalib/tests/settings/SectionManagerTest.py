@@ -38,7 +38,8 @@ class SectionManagerTestCase(unittest.TestCase):
         self.assertEqual(str(conf_sections["test"]), "test {value : 1}")
         StringConstants.system_coafile = tmp
 
-    def test_nonexistent_file(self):
+    @staticmethod
+    def test_nonexistent_file():
         filename = "bad.one/test\neven with bad chars in it"
         # Shouldn't throw an exception
         SectionManager().run(arg_list=['-S', "config=" + filename])
