@@ -6,6 +6,7 @@ This release features the following new features:
  * Save backup before applying actions to files.
  * Return nonzero when erroring or yielding results.
  * Write newlines before beginning new sections in coafiles when appropriate.
+ * The default_coafile can now be used for arbitrary system-wide settings.
 
 Additionally many bugfixes and code improvements have been done.
 
