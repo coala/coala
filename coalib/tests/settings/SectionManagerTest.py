@@ -29,13 +29,13 @@ class SectionManagerTestCase(unittest.TestCase):
     def test_default_coafile_parsing(self):
         uut = SectionManager()
         tmp = StringConstants.system_coafile
-        StringConstants.system_coafile=os.path.abspath(os.path.join(
+        StringConstants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(inspect.getfile(SectionManagerTestCase)),
             "section_manager_test_files",
             "default_coafile"))
         uut.run()
         conf_sections = uut.default_sections
-        self.assertEqual(str(conf_sections["test"]),"test {value : 1}")
+        self.assertEqual(str(conf_sections["test"]), "test {value : 1}")
         StringConstants.system_coafile = tmp
 
     def test_nonexistent_file(self):
