@@ -308,7 +308,7 @@ class BearRunner(multiprocessing.Process):
 
         if not isinstance(result_list, list):
             self.err(_("The results from the bear {bear} couldn't be processed"
-                       "with arguments {arglist}, {kwarglist}.")
+                       " with arguments {arglist}, {kwarglist}.")
                      .format(bear=name, arglist=args, kwarglist=kwargs))
             self.debug(_("The return value of the {bear} is an instance of"
                          " {ret} but should be an instance of list.")
