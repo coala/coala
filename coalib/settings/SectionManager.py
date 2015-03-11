@@ -136,11 +136,6 @@ class SectionManager:
         precedence over the ones of lower. Lower will hold the modified dict in
         the end.
         """
-        if lower is None:
-            return higher
-        if higher is None:
-            return lower
-
         for name in higher:
             if name in lower:
                 lower[name].update(higher[name], ignore_defaults=True)
