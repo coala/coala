@@ -7,6 +7,7 @@ import sys
 import shutil
 import webbrowser
 import builtins
+from coalib.misc.ContextManagers import suppress_stdout
 
 
 class TestHelper:
@@ -128,13 +129,12 @@ class TestHelper:
         module_dir = os.path.dirname(filename)
         if module_dir not in sys.path:
             sys.path.insert(0, module_dir)
-        _print = builtins.__dict__["print"]
 
         # Don't allow module code printing
-        builtins.__dict__["print"] = lambda x: x
-        module = importlib.import_module(
-            os.path.basename(os.path.splitext(filename)[0]))
-        builtins.__dict__["print"] = _print
+        with suppress_stdout():
+            module = importlib.import_module(
+                os.path.basename(os.path.splitext(filename)[0]))
+
         for name, object in inspect.getmembers(module):
             if inspect.isfunction(object) and name == "skip_test":
                 return object()
