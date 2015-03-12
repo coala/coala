@@ -13,12 +13,31 @@ class TestHelper:
     @staticmethod
     def create_argparser(**kwargs):
         parser = argparse.ArgumentParser(**kwargs)
-        parser.add_argument("-t", "--test-only", help="execute only the tests with the given base name", nargs="+")
-        parser.add_argument("-c", "--cover", help="measure code coverage", action="store_true")
-        parser.add_argument("-H", "--html", help="generate html code coverage, implies -c", action="store_true")
-        parser.add_argument("-v", "--verbose", help="more verbose output", action="store_true")
-        parser.add_argument("-o", "--omit", help="base names of tests to omit", nargs="+")
-        parser.add_argument("-s", "--disallow-test-skipping", help="return nonzero if any tests are skipped or fail",
+        parser.add_argument("-t",
+                            "--test-only",
+                            help="execute only the tests with the "
+                                 "given base name",
+                            nargs="+")
+        parser.add_argument("-c",
+                            "--cover",
+                            help="measure code coverage",
+                            action="store_true")
+        parser.add_argument("-H",
+                            "--html",
+                            help="generate html code coverage, implies -c",
+                            action="store_true")
+        parser.add_argument("-v",
+                            "--verbose",
+                            help="more verbose output",
+                            action="store_true")
+        parser.add_argument("-o",
+                            "--omit",
+                            help="base names of tests to omit",
+                            nargs="+")
+        parser.add_argument("-s",
+                            "--disallow-test-skipping",
+                            help="return nonzero if any tests are skipped "
+                                 "or fail",
                             action="store_true")
 
         return parser
@@ -27,7 +46,8 @@ class TestHelper:
         """
         Creates a new test helper and with it parses the CLI arguments.
 
-        :param parser: A argparse.ArgumentParser created with the create_argparser method of this class.
+        :param parser: A argparse.ArgumentParser created with the
+                       create_argparser method of this class.
         """
         self.parser = parser
         self.args = self.parser.parse_args()
@@ -53,13 +73,15 @@ class TestHelper:
             print("Generating HTML report to .htmlreport...")
             subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
             try:
-                webbrowser.open_new_tab(os.path.join(".htmlreport", "index.html"))
+                webbrowser.open_new_tab(os.path.join(".htmlreport",
+                                                     "index.html"))
             except webbrowser.Error:
                 pass
 
     def delete_coverage(self):
         """
-        Deletes previous coverage data and adjusts the args.cover member to False if coverage3 is unavailable.
+        Deletes previous coverage data and adjusts the args.cover member to
+        False if coverage3 is unavailable.
 
         :return: False if coverage3 cannot be executed.
         """
@@ -72,7 +94,10 @@ class TestHelper:
             return False
 
     def __print_output(self, command_array):
-        p = subprocess.Popen(command_array, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        p = subprocess.Popen(command_array,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             universal_newlines=True)
         retval = p.wait()
         if retval != 0 or self.args.verbose:
             for line in p.stderr:
@@ -83,8 +108,8 @@ class TestHelper:
         return retval
 
     def __execute_python3_file(self, filename, ignored_files):
+        # On windows we won't find a python3 executable and don't use coverage
         if sys.platform.startswith("win"):
-            # On windows we won't find a python3 executable and we don't measure coverage
             return self.__print_output(["python", filename])
 
         if not self.args.cover:
@@ -93,7 +118,7 @@ class TestHelper:
         return self.__print_output(["coverage3",
                                     "run",
                                     "-p",  # make it collectable later
-                                    "--branch",  # check branch AND statement coverage
+                                    "--branch",
                                     "--omit",
                                     ignored_files,
                                     filename])
@@ -104,8 +129,11 @@ class TestHelper:
         if module_dir not in sys.path:
             sys.path.insert(0, module_dir)
         _print = builtins.__dict__["print"]
-        builtins.__dict__["print"] = lambda x: x  # Don't allow module code printing
-        module = importlib.import_module(os.path.basename(os.path.splitext(filename)[0]))
+
+        # Don't allow module code printing
+        builtins.__dict__["print"] = lambda x: x
+        module = importlib.import_module(
+            os.path.basename(os.path.splitext(filename)[0]))
         builtins.__dict__["print"] = _print
         for name, object in inspect.getmembers(module):
             if inspect.isfunction(object) and name == "skip_test":
@@ -115,7 +143,8 @@ class TestHelper:
 
     def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
-        Executes the given test and counts up failed_tests or skipped_tests if needed.
+        Executes the given test and counts up failed_tests or skipped_tests if
+        needed.
 
         :param filename: Filename of test to execute
         :param curr_nr: Number of current test
@@ -125,11 +154,14 @@ class TestHelper:
         basename = os.path.splitext(os.path.basename(filename))[0]
         reason = self.__skip_module(filename)
         if reason is not False:
-            print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr, max_nr, basename, reason))
+            print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
+                                                           max_nr,
+                                                           basename,
+                                                           reason))
             self.skipped_tests += 1
         else:
             print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
-            result = self.__execute_python3_file(filename, ignored_files)  # either 0 or 1
+            result = self.__execute_python3_file(filename, ignored_files)
             if self.args.verbose or result != 0:
                 print("#" * 70)
 
@@ -168,7 +200,9 @@ class TestHelper:
         name = os.path.splitext(os.path.basename(filename))[0]
         if name in self.args.omit:
             return False
-        if (len(self.args.test_only) > 0) and (name not in self.args.test_only):
+        if (
+                (len(self.args.test_only) > 0) and
+                (name not in self.args.test_only)):
             return False
 
         return True
