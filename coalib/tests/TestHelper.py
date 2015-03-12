@@ -125,7 +125,7 @@ class TestHelper:
                                     filename])
 
     @staticmethod
-    def __skip_module(filename):
+    def __check_module_skip(filename):
         module_dir = os.path.dirname(filename)
         if module_dir not in sys.path:
             sys.path.insert(0, module_dir)
@@ -152,7 +152,7 @@ class TestHelper:
         :param ignored_files: Files to ignore for coverage
         """
         basename = os.path.splitext(os.path.basename(filename))[0]
-        reason = self.__skip_module(filename)
+        reason = self.__check_module_skip(filename)
         if reason is not False:
             print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
                                                            max_nr,
