@@ -33,6 +33,7 @@ class SectionManager:
     def __init__(self):
         self.cli_sections = None
         self.default_sections = None
+        self.user_sections = None
         self.coafile_sections = None
         self.sections = None
 
@@ -63,14 +64,22 @@ class SectionManager:
         self.default_sections = self._load_config_file(
             StringConstants.system_coafile)
 
-        config = os.path.abspath(
-            str(self.cli_sections["default"].get(
-                "config",
-                str(self.default_sections["default"].get("config",
-                                                         ".coafile")))))
+        self.user_sections = self._load_config_file(
+            StringConstants.user_coafile)
+
+        default_config = str(
+            self.default_sections["default"].get("config", ".coafile"))
+        user_config = str(
+            self.user_sections["default"].get("config", default_config))
+        config = os.path.abspath(str(
+            self.cli_sections["default"].get("config", user_config)))
+
         self.coafile_sections = self._load_config_file(config)
 
         self.sections = self._merge_section_dicts(self.default_sections,
+                                                  self.user_sections)
+
+        self.sections = self._merge_section_dicts(self.sections,
                                                   self.coafile_sections)
 
         self.sections = self._merge_section_dicts(self.sections,

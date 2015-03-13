@@ -38,6 +38,19 @@ class SectionManagerTestCase(unittest.TestCase):
                                                      "testval : 5}")
         StringConstants.system_coafile = tmp
 
+    def test_user_coafile_parsing(self):
+        uut = SectionManager()
+        tmp = StringConstants.user_coafile
+        StringConstants.user_coafile = os.path.abspath(os.path.join(
+            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            "section_manager_test_files",
+            "default_coafile"))
+        uut.run()
+        conf_sections = uut.default_sections
+        self.assertEqual(str(conf_sections["test"]),
+                         "test {value : 1, testval : 5}")
+        StringConstants.user_coafile = tmp
+
     @staticmethod
     def test_nonexistent_file():
         filename = "bad.one/test\neven with bad chars in it"
