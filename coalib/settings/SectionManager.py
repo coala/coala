@@ -65,7 +65,8 @@ class SectionManager:
             StringConstants.system_coafile)
 
         self.user_sections = self._load_config_file(
-            StringConstants.user_coafile)
+            StringConstants.user_coafile,
+            silent=True)
 
         default_config = str(
             self.default_sections["default"].get("config", ".coafile"))
@@ -89,23 +90,28 @@ class SectionManager:
             if section != "default":
                 self.sections[section].defaults = self.sections["default"]
 
-    def _load_config_file(self, filename):
+    def _load_config_file(self, filename, silent=False):
         """
         Loads sections from a config file. Prints an appropriate warning if
         it doesn't exist and returns a section dict containing an empty
         default section in that case.
 
         It assumes that the cli_sections are available.
+
+        :param filename: The file to load settings from.
+        :param silent:   Whether or not to warn the user if the file doesn't
+                         exist.
         """
         filename = os.path.abspath(filename)
 
         try:
             return self.conf_parser.reparse(filename)
         except self.conf_parser.FileNotFoundError:
-            self.cli_sections["default"].retrieve_logging_objects()
-            self.cli_sections["default"].log_printer.warn(
-                _("The requested coafile '{filename}' does not exist. "
-                  "Thus it will not be used.").format(filename=filename))
+            if not silent:
+                self.cli_sections["default"].retrieve_logging_objects()
+                self.cli_sections["default"].log_printer.warn(
+                    _("The requested coafile '{filename}' does not exist. "
+                      "Thus it will not be used.").format(filename=filename))
 
             return {"default": Section("default")}
 
