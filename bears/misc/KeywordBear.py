@@ -12,8 +12,10 @@ class KeywordBear(LocalBear):
         """
         Checks the code files for given keywords.
 
-        :param cs_keywords: A list of keywords to search for (case sensitive). Usual examples are TODO and FIXME.
-        :param ci_keywords: A list of keywords to search for (case insensitive).
+        :param cs_keywords: A list of keywords to search for (case sensitive).
+                            Usual examples are TODO and FIXME.
+        :param ci_keywords: A list of keywords to search for (case
+                            insensitive).
         """
         results = []
 
@@ -31,9 +33,11 @@ class KeywordBear(LocalBear):
                     found_kws.append(keyword)
 
             if found_kws != []:
-                results.append(Result(origin=self,
-                                      message=_("Line contains the following keywords:") + "\n" + ", ".join(found_kws),
-                                      file=filename,
-                                      line_nr=line_number + 1))
+                results.append(Result(
+                    origin=self,
+                    message=_("Line contains the following keywords:") +
+                            "\n" + ", ".join(found_kws),
+                    file=filename,
+                    line_nr=line_number + 1))
 
         return results
