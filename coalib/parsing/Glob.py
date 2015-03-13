@@ -1,8 +1,17 @@
 import fnmatch
 import os
 
+from coalib.misc.Decorators import yield_once
+
 
 def _make_selector(pattern_parts):
+    """
+    Creates an instance of the selector class that fits the first pattern part.
+
+    :param pattern_parts: List of strings representing a file system path that
+                          may contain wildcards
+    :return:              Selector class that represents the first pattern part
+    """
     pat = pattern_parts[0]
     child_parts = pattern_parts[1:]
     if pat == '**':
@@ -19,13 +28,82 @@ def _make_selector(pattern_parts):
 
 def _is_wildcard_pattern(pat):
     """
-    Whether this pattern needs actual matching using fnmatch, or can
+    Decides whether this pattern needs actual matching using fnmatch, or can
     be looked up directly as part of a path.
     """
     return "*" in pat or "?" in pat or "[" in pat
 
 
+@yield_once
+def _iter_or_combinations(pattern,
+                          opening_delimiter="(",
+                          closing_delimiter=")",
+                          separator="|"):
+    """
+    A pattern can contain an "or" in the form of (a|b|c). This function will
+    iterate through all possible combinations. Nesting is supported
+    for "(a(b|c)d|e)" it will yield the patterns "abd", "acd" and "e".
+
+    :param pattern:           A string that may contain an "or" representation
+                              following the syntax demonstrated above.
+    :param opening_delimiter: Character or sequence thereof that marks the
+                              beginning of an "or" representation
+    :param closing_delimiter: Character or sequence thereof that marks the
+                              end of an "or" representation
+    :param separator:         Character or sequence thereof that separates the
+                              alternatives
+    :returns:                 Iterator that yields the results originating from
+                              inserting all possible combinations of
+                              alternatives into the pattern.
+    """
+    # Taking the leftmost closing delimiter and the rightmost opening delimiter
+    # left of it ensures that the delimiters belong together and the pattern is
+    # parsed correctly from the most nested section outwards.
+    closing_pos = pattern.find(closing_delimiter)
+    opening_pos = pattern[:closing_pos].rfind(opening_delimiter)
+
+    if (
+            (closing_pos == -1) != (opening_pos == -1) or
+            # Special case that gets overlooked because opening_delimiter
+            # is only being looked for in pattern[:-1] when closing_pos == -1
+            (closing_pos == -1 and pattern.endswith(opening_delimiter))):
+        raise ValueError("Parentheses of pattern are not matching")
+
+    if -1 not in (opening_pos, closing_pos):  # parentheses in pattern
+        prefix = pattern[:opening_pos]
+        parenthesized = pattern[opening_pos+len(opening_delimiter):closing_pos]
+        postfix = pattern[closing_pos+len(closing_delimiter):]
+        # This loop iterates through all possible combinations that can be
+        # inserted in place of the first innermost pair of parentheses:
+        # "(a|b)(c|d)" yields "a", then "b"
+        for combination in _iter_or_combinations(parenthesized,
+                                                 opening_delimiter,
+                                                 closing_delimiter,
+                                                 separator):
+            new_pattern = prefix + combination + postfix
+            # This loop iterates through all possible combinations for the new
+            # whole pattern, which has it's first pair of parentheses replaced
+            # already:
+            # "a(cd)" (first call) yields "ac", then "ad",
+            # "b(cd)" (second call) yields "bc" and "bd"
+            for new_combination in _iter_or_combinations(new_pattern,
+                                                         opening_delimiter,
+                                                         closing_delimiter,
+                                                         separator):
+                yield new_combination
+    elif separator in pattern:
+        for choice in pattern.split(separator):
+            yield choice
+    else:
+        yield pattern
+
+
 class _Selector:
+    """
+    Every Selector class has a successor Selector class with the remaining
+    pattern parts. Together they represent the glob expression that gets
+    evaluated.
+    """
     def __init__(self, child_parts):
         self.child_parts = child_parts
         if child_parts:
@@ -42,7 +120,7 @@ class _Selector:
 
 class _TerminatingSelector:
     """
-    represents the end of a pattern.
+    Represents the end of a pattern.
     """
     @staticmethod
     def collect(path):
@@ -51,8 +129,8 @@ class _TerminatingSelector:
 
 class _PathSelector(_Selector):
     """
-    represents names of files and directories that do not need to be matched
-    using fnmatch
+    Represents names of files and directories that do not need to be matched
+    using fnmatch.
     """
     def __init__(self, path, child_parts):
         self.path = path
@@ -67,8 +145,8 @@ class _PathSelector(_Selector):
 
 class _WildcardSelector(_Selector):
     """
-    represents names of files and directories that contain wildcards and need
-    to be matched using fnmatch
+    Represents names of files and directories that contain wildcards and need
+    to be matched using fnmatch.
     """
     def __init__(self, pat, child_parts):
         self.pat = pat
@@ -85,7 +163,7 @@ class _WildcardSelector(_Selector):
 
 class _RecursiveWildcardSelector(_Selector):
     """
-    represents the '**' wildcard
+    Represents the '**' wildcard.
     """
     def __init__(self, pat, child_parts):
         _Selector.__init__(self, child_parts)
@@ -102,23 +180,24 @@ def iglob(pattern, files=True, dirs=True):
     pattern.
 
     :param pattern: Unix style glob pattern that matches paths
-    :param files: Whether or not to include files
-    :param dirs: Whether or not to include directories
-    :return: list of all files matching the pattern
+    :param files:   Whether or not to include files
+    :param dirs:    Whether or not to include directories
+    :return:        List of all files matching the pattern
     """
     if pattern == "" or (not files and not dirs):
         raise StopIteration()
 
-    pattern_parts = pattern.split(os.sep)  # "/a/b.py" -> ['', 'a', 'b.py']
-    if pattern.startswith(os.sep):
-        pattern_parts[0] = os.sep  # would be '' instead
-    selector = _make_selector(pattern_parts)
+    for pat in _iter_or_combinations(pattern):
+        pattern_parts = pat.split(os.sep)  # "/a/b.py" -> ['', 'a', 'b.py']
+        if pat.startswith(os.sep):
+            pattern_parts[0] = os.sep  # would be '' instead
+        selector = _make_selector(pattern_parts)
 
-    for p in selector.collect():
-        if os.path.isfile(p) and files is True:
-            yield p
-        elif os.path.isdir(p) and dirs is True:
-            yield p
+        for p in selector.collect():
+            if os.path.isfile(p) and files is True:
+                yield p
+            elif os.path.isdir(p) and dirs is True:
+                yield p
 
 
 def glob(pattern, files=True, dirs=True):
@@ -127,8 +206,8 @@ def glob(pattern, files=True, dirs=True):
     the given pattern.
 
     :param pattern: Unix style glob pattern that matches paths
-    :param files: Whether or not to include files
-    :param dirs: Whether or not to include directories
-    :return: list of all files matching the pattern
+    :param files:   Whether or not to include files
+    :param dirs:    Whether or not to include directories
+    :return:        List of all files matching the pattern
     """
     return list(iglob(pattern, files, dirs))

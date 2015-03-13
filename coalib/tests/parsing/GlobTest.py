@@ -6,7 +6,7 @@ import tempfile
 
 sys.path.insert(0, ".")
 import unittest
-from coalib.parsing.Glob import glob, iglob, _Selector
+from coalib.parsing.Glob import glob, iglob, _Selector, _iter_or_combinations
 
 
 class GlobTest(unittest.TestCase):
@@ -55,6 +55,21 @@ class GlobTest(unittest.TestCase):
         self.assertEqual(dir_name_list,
                          sorted([self.tmp_subdir2, self.tmp_subdir3]))
 
+    def test_no_dirs(self):
+        dir_name_list = sorted(glob(os.path.join(self.tmp_dir,
+                                                 "**",
+                                                 "random*"),
+                                    dirs=False))
+        self.assertEqual(dir_name_list, [])
+
+    def test_or(self):
+        file_name_list = sorted(glob(os.path.join(self.tmp_dir, "pref*", "**",
+                                                  "*(.py|.c)"), dirs=False))
+        self.assertEqual(file_name_list,
+                         sorted([self.testfile1_path,
+                                 self.testfile2_path,
+                                 self.testfile3_path]))
+
     def test_miss(self):
         dir_name_list = sorted(glob(os.path.join("*",
                                                  "something",
@@ -96,6 +111,73 @@ class GlobTest(unittest.TestCase):
         absolute_glob_list = [os.path.abspath(path) for path in glob_list]
         return file_list == sorted(absolute_glob_list)
 
+
+class IterOrCombinationTest(unittest.TestCase):
+
+    def test_correct_evaluation(self):
+        pattern_result_dict = {
+            "": [""],
+            "()": [""],
+            "()()()()()": [""],
+            "()((()))(())": [""],
+            "abc": ["abc"],
+            "(a)": ["a"],
+            "(|)": [""],
+            "(a|)": ["", "a"],
+            "(a|b)": ["a", "b"],
+            "(a)(b)(c)": ["abc"],
+            "a(b|c)d": ["abd", "acd"],
+            "(a(b|c)d)": ["abd", "acd"],
+            "((a|b)|c|d)": ["a", "b", "c", "d"],
+            "(a|b)(c|d)": ["ac", "ad", "bc", "bd"],
+            "a((b|c|d)|e(f|g))(h|i)j": ["abhj",
+                                        "abij",
+                                        "achj",
+                                        "acij",
+                                        "adhj",
+                                        "adij",
+                                        "aefhj",
+                                        "aefij",
+                                        "aeghj",
+                                        "aegij"]
+            }
+
+        for pattern, result_list in pattern_result_dict.items():
+            self.assertEqual(sorted(list(_iter_or_combinations(pattern))),
+                             result_list)
+
+    def test_parentheses_check(self):
+        pattern_list = ["(",
+                        ")",
+                        "())",
+                        "(()",
+                        "a(b|(c)d",
+                        "ab|(c)d(",
+                        ")(",
+                        "())("
+                        "a((b|c|d)|e)(f|g))(h|i)j"]
+
+        for pattern in pattern_list:
+            self.assertRaises(ValueError, list, _iter_or_combinations(pattern))
+
+    def test_long_delimiters(self):
+        pattern = "AAAAAAaBBBbCCCAAAcBBBdCCCBBBeCCC"  # ((a|b)(c|d)|e)
+        result_list = ["ac", "ad", "bc", "bd", "e"]
+        self.assertEqual(
+            sorted(list(_iter_or_combinations(pattern,
+                                              opening_delimiter="AAA",
+                                              closing_delimiter="CCC",
+                                              separator="BBB"))),
+            result_list)
+
+    def test_long_delimiter_check(self):
+        pattern = "AAAAAAaBBBbCCCAAAcBBBAAAdCCCBBBeCCC"  # ((a|b)(c|(d)|e)
+        self.assertRaises(ValueError,
+                          list,
+                          _iter_or_combinations(pattern,
+                                                opening_delimiter="AAA",
+                                                closing_delimiter="CCC",
+                                                separator="BBB"))
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
