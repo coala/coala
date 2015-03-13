@@ -56,8 +56,8 @@ class SectionManager:
     def _load_configuration(self, arg_list):
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
         # We dont want to store targets argument back to file, thus remove it
-        for item in list(self.cli_sections["default"].contents.pop("targets",
-                                                                   "")):
+        for item in list(
+                self.cli_sections["default"].contents.pop("targets", "")):
             self.targets.append(item.lower())
 
         try:
@@ -142,6 +142,7 @@ class SectionManager:
             else:
                 # no deep copy needed
                 lower[name] = higher[name]
+
         return lower
 
     def _warn_nonexistent_targets(self):
