@@ -32,8 +32,8 @@ class SectionManager:
     """
     def __init__(self):
         self.cli_sections = None
-        self.default_sections = {"default": Section("default")}
-        self.coafile_sections = {"default": Section("default")}
+        self.default_sections = None
+        self.coafile_sections = None
         self.sections = None
 
         self.cli_parser = CliParser()
@@ -60,27 +60,15 @@ class SectionManager:
                 self.cli_sections["default"].contents.pop("targets", "")):
             self.targets.append(item.lower())
 
-        try:
-            self.default_sections = self.conf_parser.reparse(os.path.abspath(
-                StringConstants.system_coafile))
-        except self.conf_parser.FileNotFoundError:
-            self.cli_sections["default"].retrieve_logging_objects()
-            self.cli_sections["default"].log_printer.warn(
-                _("The global default coafile for the settings was not found. "
-                  "It seems your installation is broken.") + " " +
-                StringConstants.THIS_IS_A_BUG)
+        self.default_sections = self._load_config_file(
+            StringConstants.system_coafile)
 
-        try:
-            config = os.path.abspath(
-                str(self.cli_sections["default"].get(
-                    "config",
-                    str(self.default_sections["default"].get("config",
-                                                             ".coafile")))))
-            self.coafile_sections = self.conf_parser.reparse(config)
-        except self.conf_parser.FileNotFoundError:
-            self.cli_sections["default"].log_printer.warn(
-                _("The requested coafile '{filename}' does not exist. "
-                  "Thus it will not be used.").format(filename=config))
+        config = os.path.abspath(
+            str(self.cli_sections["default"].get(
+                "config",
+                str(self.default_sections["default"].get("config",
+                                                         ".coafile")))))
+        self.coafile_sections = self._load_config_file(config)
 
         self.sections = self._merge_section_dicts(self.default_sections,
                                                   self.coafile_sections)
@@ -91,6 +79,26 @@ class SectionManager:
         for section in self.sections:
             if section != "default":
                 self.sections[section].defaults = self.sections["default"]
+
+    def _load_config_file(self, filename):
+        """
+        Loads sections from a config file. Prints an appropriate warning if
+        it doesn't exist and returns a section dict containing an empty
+        default section in that case.
+
+        It assumes that the cli_sections are available.
+        """
+        filename = os.path.abspath(filename)
+
+        try:
+            return self.conf_parser.reparse(filename)
+        except self.conf_parser.FileNotFoundError:
+            self.cli_sections["default"].retrieve_logging_objects()
+            self.cli_sections["default"].log_printer.warn(
+                _("The requested coafile '{filename}' does not exist. "
+                  "Thus it will not be used.").format(filename=filename))
+
+            return {"default": Section("default")}
 
     def _fill_settings(self):
         for section_name in self.sections:
