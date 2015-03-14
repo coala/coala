@@ -167,7 +167,7 @@ class TestHelper:
 
             self.failed_tests += result
 
-    def execute_python3_files(self, ignore_list):
+    def run_tests(self, ignore_list):
         if self.args.cover:
             self.delete_coverage()
 

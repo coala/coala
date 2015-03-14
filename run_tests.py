@@ -34,4 +34,4 @@ if __name__ == '__main__':
         os.path.join("bears", "tests", "**")
     ]
 
-    exit(testhelper.execute_python3_files(ignore_list))
+    exit(testhelper.run_tests(ignore_list))
