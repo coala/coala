@@ -3,12 +3,18 @@ from coalib.misc.StringConstants import StringConstants
 
 class StringConverter:
     """
-    Converts strings to other things as needed. If you need a conversion for string that is not implemented here
-    consider adding it so everyone gets something out of it.
+    Converts strings to other things as needed. If you need some kind of string
+    conversion that is not implemented here, consider adding it so everyone
+    gets something out of it.
     """
 
-    def __init__(self, value, strip_whitespaces=True, list_delimiters=[",", ";"]):
-        if not isinstance(list_delimiters, list) and not isinstance(list_delimiters, str):
+    def __init__(self,
+                 value,
+                 strip_whitespaces=True,
+                 list_delimiters=[",", ";"]):
+        if (
+                not isinstance(list_delimiters, list) and
+                not isinstance(list_delimiters, str)):
             raise TypeError("list_delimiters has to be a string or a list")
         if not isinstance(strip_whitespaces, bool):
             raise TypeError("strip_whitespaces has to be a bool parameter")
@@ -38,10 +44,12 @@ class StringConverter:
 
     def __iter__(self, remove_backslashes=True):
         """
-        Converts the value to a list using the delimiters given at construction time.
+        Converts the value to a list using the delimiters given at construction
+        time.
 
-        Note that escaped values will be unescaped and escaped list delimiters will be allowed in values. If you need
-        the escapes you should not use this routine.
+        Note that escaped values will be unescaped and escaped list delimiters
+        will be allowed in values. If you need the escapes you should not
+        use this routine.
 
         :return: A list with unescaped values.
         """
@@ -61,7 +69,8 @@ class StringConverter:
         Determines if the value begins with a valid delimiter.
 
         :param value: The value to check
-        :return: The length of the matched delimiter or False if it doesnt begin with one
+        :return:      The length of the matched delimiter or False if it doesnt
+                      begin with one.
         """
         for delim in self.__list_delimiters:
             if value.startswith(delim):
