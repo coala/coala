@@ -57,6 +57,48 @@ class TestHelper:
         self.failed_tests = 0
         self.skipped_tests = 0
 
+    def delete_coverage(self):
+        """
+        Deletes previous coverage data and adjusts the args.cover member to
+        False if coverage3 is unavailable.
+
+        :return: False if coverage3 cannot be executed.
+        """
+        try:
+            subprocess.call(["coverage3", "erase"])
+            return True
+        except:
+            print("Coverage failed. Falling back to standard unit tests.")
+            self.args.cover = False  # Don't use coverage if this fails
+            return False
+
+    def run_tests(self, ignore_list):
+        if self.args.cover:
+            self.delete_coverage()
+
+        number = len(self.test_files)
+        for i, file in enumerate(self.test_files):
+            self.__execute_test(file, i+1, number, ",".join(ignore_list))
+
+        print("\nTests finished: failures in {} of {} test modules, skipped "
+              "{} test modules.".format(self.failed_tests,
+                                        number,
+                                        self.skipped_tests))
+
+        if self.args.cover:
+            self.__show_coverage_results()
+
+        if not self.args.disallow_test_skipping:
+            return self.failed_tests
+        else:
+            return self.failed_tests + self.skipped_tests
+
+    def add_test_files(self, testdir):
+        for (dirpath, dirnames, filenames) in os.walk(testdir):
+            for filename in filenames:
+                if self.__is_eligible_test(filename):
+                    self.test_files.append(os.path.join(dirpath, filename))
+
     def __resolve_implicit_args(self):
         self.args.cover = self.args.cover or self.args.html
         if self.args.omit is not None and self.args.test_only is not None:
@@ -78,21 +120,6 @@ class TestHelper:
                                                      "index.html"))
             except webbrowser.Error:
                 pass
-
-    def delete_coverage(self):
-        """
-        Deletes previous coverage data and adjusts the args.cover member to
-        False if coverage3 is unavailable.
-
-        :return: False if coverage3 cannot be executed.
-        """
-        try:
-            subprocess.call(["coverage3", "erase"])
-            return True
-        except:
-            print("Coverage failed. Falling back to standard unit tests.")
-            self.args.cover = False  # Don't use coverage if this fails
-            return False
 
     def __print_output(self, command_array):
         p = subprocess.Popen(command_array,
@@ -166,33 +193,6 @@ class TestHelper:
                 print("#" * 70)
 
             self.failed_tests += result
-
-    def run_tests(self, ignore_list):
-        if self.args.cover:
-            self.delete_coverage()
-
-        number = len(self.test_files)
-        for i, file in enumerate(self.test_files):
-            self.__execute_test(file, i+1, number, ",".join(ignore_list))
-
-        print("\nTests finished: failures in {} of {} test modules, skipped "
-              "{} test modules.".format(self.failed_tests,
-                                        number,
-                                        self.skipped_tests))
-
-        if self.args.cover:
-            self.__show_coverage_results()
-
-        if not self.args.disallow_test_skipping:
-            return self.failed_tests
-        else:
-            return self.failed_tests + self.skipped_tests
-
-    def add_test_files(self, testdir):
-        for (dirpath, dirnames, filenames) in os.walk(testdir):
-            for filename in filenames:
-                if self.__is_eligible_test(filename):
-                    self.test_files.append(os.path.join(dirpath, filename))
 
     def __is_eligible_test(self, filename):
         if not filename.endswith("Test.py"):
