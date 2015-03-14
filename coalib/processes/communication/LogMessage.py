@@ -17,7 +17,9 @@ class LogMessage:
         return '[{}] {}'.format(log_level, self.message)
 
     def __eq__(self, other):
-        return isinstance(other, LogMessage) and other.log_level == self.log_level and other.message == self.message
+        return (isinstance(other, LogMessage) and
+                other.log_level == self.log_level and
+                other.message == self.message)
 
     def __ne__(self, other):
         return not self.__eq__(other)
