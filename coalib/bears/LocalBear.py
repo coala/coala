@@ -5,15 +5,18 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 
 class LocalBear(Bear):
     """
-    A LocalBear is a Bear that analyzes only one file at once. It therefore can not analyze semantical facts over
-    multiple files or so.
+    A LocalBear is a Bear that analyzes only one file at once. It therefore can
+    not analyze semantical facts over multiple files.
 
-    This has the advantage that it can be highly parrallelized. In addition the results from multiple bears for one
-    file can be shown together for that file which is better to grasp for the user. coala takes care of all that.
+    This has the advantage that it can be highly parrallelized. In addition,
+    the results from multiple bears for one file can be shown together for that
+    file, which is better to grasp for the user. coala takes care of all that.
 
     Examples for LocalBear's could be:
-    - A SpaceConsistencyBear that checks every line for trailing whitespaces, tabs, ...
-    - A VariableNameBear that checks variable names and constant names for certain conditions
+    - A SpaceConsistencyBear that checks every line for trailing whitespaces,
+      tabs, ...
+    - A VariableNameBear that checks variable names and constant names for
+      certain conditions
     """
 
     def __init__(self,
@@ -39,7 +42,8 @@ class LocalBear(Bear):
         :param file: The file contents as string array
         :return: A list of Result
         """
-        raise NotImplementedError("This function has to be implemented for a runnable bear.")
+        raise NotImplementedError("This function has to be implemented for a "
+                                  "runnable bear.")
 
     @classmethod
     def get_metadata(cls):
