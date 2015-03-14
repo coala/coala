@@ -5,7 +5,8 @@ sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.spacing.SpaceConsistencyBear import SpaceConsistencyBear, SpacingHelper
+from bears.spacing.SpaceConsistencyBear import (SpaceConsistencyBear,
+                                                SpacingHelper)
 from coalib.settings.Section import Section
 
 
@@ -17,7 +18,8 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
 
     def test_needed_settings(self):
         needed_settings = self.uut.get_non_optional_settings()
-        self.assertEqual(len(needed_settings), 1 + len(SpacingHelper.get_non_optional_settings()))
+        self.assertEqual(len(needed_settings),
+                         1 + len(SpacingHelper.get_non_optional_settings()))
         self.assertIn("use_spaces", needed_settings)
 
     def test_data_sets_spaces(self):
