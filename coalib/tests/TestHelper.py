@@ -68,7 +68,9 @@ class TestHelper:
             subprocess.call(["coverage3", "erase"])
             return True
         except:
-            print("Coverage failed. Falling back to standard unit tests.")
+            print("Coverage failed. Falling back to standard unit tests."
+                  "Install code coverage measurement for python3. Package"
+                  "name should be something like: python-coverage3/coverage")
             self.args.cover = False  # Don't use coverage if this fails
             return False
 
