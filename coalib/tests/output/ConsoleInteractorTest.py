@@ -15,6 +15,7 @@ from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 
 
 class TestAction(ResultAction):
@@ -89,12 +90,22 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         diff = Diff()
         diff.delete_line(2)
         diff.change_line(3, "3\n", "3_changed\n")
+
+        builtins.__dict__["input"] = lambda x: 1
+        with self.assertRaises(ValueError):
+            self.uut.print_result(PatchResult("origin",
+                                              "msg",
+                                              {testfile_path: diff}), file_dict)
+
         # To assure user can rechose if he didn't chose wisely
-        builtins.__dict__["input"] = self.generate_input
+        input_generator = InputGenerator(["INVALID", -1, 1, 3])
+        builtins.__dict__["input"] = input_generator.generate_input
+        # To load current_section in ConsoleInteractor object
+        self.uut.begin_section(Section(""))
         self.uut.print_result(PatchResult("origin",
                                           "msg",
                                           {testfile_path: diff}), file_dict)
-        self.assertEqual(self.curr, 2)
+        self.assertEqual(input_generator.current_input, 2)
         self.uut.finalize(file_dict)
         with open(testfile_path) as f:
             self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
@@ -106,13 +117,21 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         self.assertEqual(str(section), " {param : 3}")
         self.assertEqual(name, "TestAction")
 
-    curr = -1
+        # Check for asking the user for the paremeter just int the first time
+        # Use OpenEditorAction thats need parameter (editor command)
+        input_generator = InputGenerator([1, "test_editor", 1])
+        builtins.__dict__["input"] = input_generator.generate_input  # Choose open editor action
+        PatchResult.get_actions = lambda self: [OpenEditorAction()]
 
-    @staticmethod
-    def generate_input(x):
-        ConsoleInteractorTestCase.curr += 1
+        patch_result = PatchResult("origin", "msg", {testfile_path: diff})
+        patch_result.file = "f_b"
 
-        return ["INVALID", -1, 1, 3][ConsoleInteractorTestCase.curr]
+        self.uut.print_result(patch_result, file_dict)
+        self.assertEquals(input_generator.current_input, 1)  # Increase by 2 (-1 -> 1)
+
+        # Increase by 1, It shoudn't ask for parameter again
+        self.uut.print_result(patch_result, file_dict)
+        self.assertEquals(input_generator.current_input, 2)
 
     def test_static_functions(self):
         q = queue.Queue()
@@ -244,6 +263,16 @@ class ConsoleInteractorTestCase(unittest.TestCase):
             pass
 
         return result
+
+
+class InputGenerator:
+    def __init__(self, inputs):
+        self.current_input = -1
+        self.inputs = inputs
+
+    def generate_input(self, x):
+        self.current_input += 1
+        return self.inputs[self.current_input]
 
 
 if __name__ == '__main__':

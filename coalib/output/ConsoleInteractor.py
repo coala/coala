@@ -98,19 +98,21 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
     def _get_action_info(self, action):
         # Otherwise we have a recursive import
-        from coalib.settings.Section import Section
         from coalib.settings.Setting import Setting
 
         params = action.non_optional_params
-        section = Section("")
+
+        if self.current_section is None:
+            raise ValueError("current_section has to be intializied.")
 
         for param_name in params:
-            question = self._format_line(
-                _("Please enter a value for the parameter '{}' ({}): ")
-                .format(param_name, params[param_name][0]))
-            section.append(Setting(param_name, input(question)))
+            if param_name not in self.current_section:
+                question = self._format_line(
+                    _("Please enter a value for the parameter '{}' ({}): ")
+                    .format(param_name, params[param_name][0]))
+                self.current_section.append(Setting(param_name, input(question)))
 
-        return action.name, section
+        return action.name, self.current_section
 
     def _print_segregation(self):
         self.print(self._format_line(line="", real_nr="...", sign="|", mod_nr="..."))
