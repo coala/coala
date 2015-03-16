@@ -12,6 +12,7 @@ class Interactor(SectionCreatable):
         SectionCreatable.__init__(self)
         self.log_printer = log_printer
         self.file_diff_dict = {}
+        self.current_section = None
 
     def _print_result(self, result):
         """
@@ -128,6 +129,7 @@ class Interactor(SectionCreatable):
 
         :param section: The section that will get executed now.
         """
+        self.current_section = section
         self._print_section_beginning(section)
 
     def _print_section_beginning(self, section):
