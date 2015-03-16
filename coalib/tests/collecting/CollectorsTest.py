@@ -23,6 +23,9 @@ class CollectFilesTestCase(unittest.TestCase):
     def test_file_invalid(self):
         self.assertEqual(collect_files(["invalid_path"]), [])
 
+    def test_expression_invalid(self):
+        self.assertRaises(SystemExit, collect_files, ["**d"])
+
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
                                                      "others",
@@ -46,6 +49,9 @@ class CollectDirsTestCase(unittest.TestCase):
 
     def test_dir_invalid(self):
         self.assertEqual(collect_dirs(["invalid_path"]), [])
+
+    def test_expression_invalid(self):
+        self.assertRaises(SystemExit, collect_files, ["**d"])
 
     def test_dir_collection(self):
         self.assertEqual(
@@ -73,6 +79,9 @@ class CollectBearsTestCase(unittest.TestCase):
         self.assertEqual(collect_bears(["invalid_paths"],
                                        ["invalid_name"],
                                        ["invalid kind"]), [])
+
+    def test_expression_invalid(self):
+        self.assertRaises(SystemExit, collect_files, ["**d"])
 
     def test_simple_single(self):
         self.assertEqual(len(collect_bears([os.path.join(

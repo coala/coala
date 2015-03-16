@@ -32,17 +32,28 @@ def _import_bears(file_path, kinds):
 
 
 @yield_once
-def icollect(file_paths, files=True, dirs=True):
+def icollect(file_paths, files=True, dirs=True, log_printer=ConsolePrinter()):
     """
-    Evaluate globs in file paths and return all matching files
-    :param file_paths: list of file paths that can include globs
-    :param files: True if files are to be collected
-    :param dirs: True if dirs are to be collected
-    :return: iterator that yields paths of all matching files
+    Evaluate globs in file paths and return all matching files.
+
+    :param file_paths:  list of file paths that can include globs
+    :param files:       True if files are to be collected
+    :param dirs:        True if dirs are to be collected
+    :param log_printer: where to log things that go wrong
+    :return:            iterator that yields paths of all matching files
+    :raises SystemExit: when getting an invalid pattern
     """
     for file_path in file_paths:
-        for match in iglob(file_path, files=files, dirs=dirs):
-            yield match
+        try:
+            for match in iglob(file_path, files=files, dirs=dirs):
+                yield match
+        except ValueError as exception:
+            log_printer.err(
+                _("The given glob '{glob}' contains an invalid pattern. "
+                  "Detailed error is: {error_message}").format(
+                    glob=file_path,
+                    error_message=str(exception)))
+            raise SystemExit(-1)
 
 
 def collect_files(file_paths):
