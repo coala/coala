@@ -72,7 +72,7 @@ class SectionExecutor:
 
         :return: True if results were yielded, False otherwise.
         """
-        self.section.interactor.begin_section(self.section.name)
+        self.section.interactor.begin_section(self.section)
 
         running_processes = get_cpu_count()
         processes, arg_dict = self._instantiate_processes(running_processes)

@@ -11,7 +11,7 @@ class NullInteractor(Interactor):
     def did_nothing(self):
         pass
 
-    def begin_section(self, name):
+    def _print_section_beginning(self, section):
         pass
 
     def acquire_settings(self, settings):

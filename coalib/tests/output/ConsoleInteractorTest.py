@@ -118,7 +118,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         q = queue.Queue()
         # 0:-1 to strip of the trailing newline character
         self.uut._print = lambda string: q.put(string[0:-1])
-        self.uut.begin_section("name")
+        self.uut.begin_section(Section("name"))
         self.assertEqual(q.get(timeout=0), _("Executing section "
                                              "{name}...").format(name="name"))
 

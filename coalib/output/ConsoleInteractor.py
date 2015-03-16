@@ -167,8 +167,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
             self.print_result(result, file_dict)
 
-    def begin_section(self, name):
-        self.print(_("Executing section {name}...").format(name=name))
+    def _print_section_beginning(self, section):
+        self.print(_("Executing section {name}...").format(name=section.name))
 
     def did_nothing(self):
         self.print(_("No existent section was targeted or enabled. Nothing "
