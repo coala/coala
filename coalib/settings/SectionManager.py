@@ -62,7 +62,12 @@ class SectionManager:
         self._save_configuration()
         self._warn_nonexistent_targets()
 
-        return self.sections, self.local_bears, self.global_bears, self.targets
+        return (self.sections,
+                self.local_bears,
+                self.global_bears,
+                self.targets,
+                self.interactor,
+                self.log_printer)
 
     def _load_configuration(self, arg_list):
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
