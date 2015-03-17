@@ -47,8 +47,8 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.testcode_c_path = os.path.join(os.path.dirname(config_path),
                                             "testcode.c")
 
-        self.sections, self.local_bears, self.global_bears, targets =\
-            SectionManager().run(["--config", config_path])
+        self.sections, self.local_bears, self.global_bears, targets \
+            = SectionManager().run(["--config", config_path])[0:4]
         self.assertEqual(len(self.local_bears["default"]), 1)
         self.assertEqual(len(self.global_bears["default"]), 1)
         self.assertEqual(targets, [])

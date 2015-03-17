@@ -17,7 +17,6 @@ import sys
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
-from coalib.settings.Section import Section
 from coalib.settings.SectionManager import SectionManager
 
 
@@ -25,12 +24,11 @@ from coalib.misc.i18n import _
 
 
 if __name__ == "__main__":
-    # Set default section so we have a log printer if the SectionManager fails.
-    sections = {"default": Section("default")}
     try:
         did_nothing = True
         yielded_results = False
-        sections, local_bears, global_bears, targets = SectionManager().run()
+        sections, local_bears, global_bears, targets, interactor, log_printer \
+            = SectionManager().run()
         for section_name in sections:
             section = sections[section_name]
             if not section.is_enabled(targets):
@@ -43,7 +41,7 @@ if __name__ == "__main__":
             did_nothing = False
 
         if did_nothing:
-            sections["default"].interactor.did_nothing()
+            interactor.did_nothing()
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
         exit(255)
@@ -57,9 +55,8 @@ if __name__ == "__main__":
                         "This should never happen. When asked for, the "
                         "following information may help investigating:")
 
-        sections["default"].log_printer.log_exception(
-            UNKNOWN_ERROR + " " + DESCRIPTION,
-            exception)
+        log_printer.log_exception(UNKNOWN_ERROR + " " + DESCRIPTION,
+                                  exception)
         exit(255)
 
     if yielded_results:
