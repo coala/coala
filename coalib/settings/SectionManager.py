@@ -119,8 +119,7 @@ class SectionManager:
             return self.conf_parser.reparse(filename)
         except self.conf_parser.FileNotFoundError:
             if not silent:
-                self.cli_sections["default"].log_printer = self.log_printer
-                self.cli_sections["default"].log_printer.warn(
+                self.log_printer.warn(
                     _("The requested coafile '{filename}' does not exist. "
                       "Thus it will not be used.").format(filename=filename))
 
@@ -219,6 +218,6 @@ class SectionManager:
     def _warn_nonexistent_targets(self):
         for target in self.targets:
             if target not in self.sections:
-                self.sections["default"].log_printer.warn(
+                self.log_printer.warn(
                     _("The requested section '{section}' is not existent. "
                       "Thus it cannot be executed.").format(section=target))
