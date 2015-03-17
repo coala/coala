@@ -5,7 +5,7 @@ from coalib.misc.i18n import _
 
 
 class SectionFiller:
-    def __init__(self, section):
+    def __init__(self, section, interactor, log_printer):
         """
         A SectionFiller object probes all bears for needed settings. It then
         prompts the user for those values and stores them in the original
@@ -18,6 +18,8 @@ class SectionFiller:
             raise TypeError("The section parameter has to be of type Section.")
 
         self.section = section
+        self.interactor = interactor
+        self.log_printer = log_printer
 
     def fill_section(self, bears):
         """
@@ -38,7 +40,7 @@ class SectionFiller:
         prel_needed_settings = {}
         for bear in bears:
             if not hasattr(bear, "get_non_optional_settings"):
-                self.section.log_printer.log(
+                self.log_printer.log(
                     LOG_LEVEL.WARNING,
                     _("One of the given bears ({}) has no attribute "
                       "get_non_optional_settings.").format(str(bear)))
@@ -59,8 +61,7 @@ class SectionFiller:
 
         # Get missing ones.
         if len(needed_settings) > 0:
-            new_vals = self.section.interactor.acquire_settings(
-                needed_settings)
+            new_vals = self.interactor.acquire_settings(needed_settings)
             for setting, help_text in new_vals.items():
                 self.section.append(Setting(setting, help_text))
 

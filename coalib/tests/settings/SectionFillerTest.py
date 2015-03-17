@@ -6,6 +6,8 @@ sys.path.insert(0, ".")
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SectionFiller import SectionFiller, Section, Setting
+from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 import builtins
 
@@ -37,11 +39,17 @@ class SectionFillerTestCase(unittest.TestCase):
     def setUp(self):
         section = Section("test")
         section.append(Setting("key", "val"))
-        self.uut = SectionFiller(section)
+        self.uut = SectionFiller(section,
+                                 ConsoleInteractor(),
+                                 ConsolePrinter())
 
     def test_raises(self):
         # Construction
-        self.assertRaises(TypeError, SectionFiller, 0)
+        self.assertRaises(TypeError,
+                          SectionFiller,
+                          0,
+                          ConsoleInteractor(),
+                          ConsolePrinter())
 
         # Fill section
         self.assertRaises(TypeError, self.uut.fill_section, 0)

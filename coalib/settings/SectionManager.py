@@ -177,7 +177,7 @@ class SectionManager:
             global_bears = collect_bears(bear_dirs,
                                          bears,
                                          [BEAR_KIND.GLOBAL])
-            filler = SectionFiller(section)
+            filler = SectionFiller(section, self.interactor, self.log_printer)
             all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)
             filler.fill_section(all_bears)
