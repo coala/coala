@@ -2,6 +2,7 @@ import inspect
 import os
 import queue
 import sys
+
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.SectionManager import SectionManager
@@ -9,6 +10,8 @@ from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.Section import Section
+from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
@@ -32,10 +35,46 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
 
 class SectionExecutorInitTestCase(unittest.TestCase):
     def test_init(self):
-        self.assertRaises(TypeError, SectionExecutor, 5,               [], [])
-        self.assertRaises(TypeError, SectionExecutor, Section("test"), 5 , [])
-        self.assertRaises(TypeError, SectionExecutor, Section("test"), [], 5 )
-        SectionExecutor(Section("test"), [], []).run
+        self.assertRaises(TypeError,
+                          SectionExecutor,
+                          5,
+                          [],
+                          [],
+                          ConsoleInteractor(),
+                          ConsolePrinter())
+        self.assertRaises(TypeError,
+                          SectionExecutor,
+                          Section("test"),
+                          5,
+                          [],
+                          ConsoleInteractor(),
+                          ConsolePrinter())
+        self.assertRaises(TypeError,
+                          SectionExecutor,
+                          Section("test"),
+                          [],
+                          5,
+                          ConsoleInteractor(),
+                          ConsolePrinter())
+        self.assertRaises(TypeError,
+                          SectionExecutor,
+                          Section("test"),
+                          [],
+                          [],
+                          5,
+                          ConsolePrinter())
+        self.assertRaises(TypeError,
+                          SectionExecutor,
+                          Section("test"),
+                          [],
+                          [],
+                          ConsoleInteractor(),
+                          5)
+        SectionExecutor(Section("test"),
+                        [],
+                        [],
+                        ConsoleInteractor(),
+                        ConsolePrinter()).run
 
 
 class SectionExecutorTestCase(unittest.TestCase):
@@ -59,11 +98,11 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.interactor = SectionExecutorTestInteractor(self.result_queue,
                                                         self.log_queue)
 
-        self.sections["default"].interactor = self.interactor
-        self.sections["default"].log_printer = self.interactor
         self.uut = SectionExecutor(self.sections["default"],
                                    self.local_bears["default"],
-                                   self.global_bears["default"])
+                                   self.global_bears["default"],
+                                   self.interactor,
+                                   self.interactor)
 
     def test_run(self):
         self.assertTrue(self.uut.run())
