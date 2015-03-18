@@ -37,7 +37,9 @@ if __name__ == "__main__":
             yielded_results = yielded_results or SectionExecutor(
                 section=section,
                 global_bear_list=global_bears[section_name],
-                local_bear_list=local_bears[section_name]).run()
+                local_bear_list=local_bears[section_name],
+                interactor=interactor,
+                log_printer=log_printer).run()
             did_nothing = False
 
         if did_nothing:

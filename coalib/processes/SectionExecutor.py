@@ -10,6 +10,8 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Barrier import Barrier
 from coalib.settings.Section import Section
 from coalib.settings.Setting import path_list
+from coalib.output.Interactor import Interactor
+from coalib.output.printers.Printer import Printer
 
 
 def get_cpu_count():
@@ -54,17 +56,26 @@ class SectionExecutor:
     def __init__(self,
                  section,
                  local_bear_list,
-                 global_bear_list):
+                 global_bear_list,
+                 interactor,
+                 log_printer):
         if not isinstance(section, Section):
             raise TypeError("section has to be of type Section")
         if not isinstance(local_bear_list, list):
             raise TypeError("local_bear_list has to be of type list")
         if not isinstance(global_bear_list, list):
             raise TypeError("global_bear_list has to be of type list")
+        if not isinstance(interactor, Interactor):
+            raise TypeError("interactor has to be of type Interactor")
+        if not isinstance(log_printer, Printer):
+            raise TypeError("log_printer has to be of type Printer")
 
         self.section = section
         self.local_bear_list = Dependencies.resolve(local_bear_list)
         self.global_bear_list = Dependencies.resolve(global_bear_list)
+
+        self.interactor = interactor
+        self.log_printer = log_printer
 
     def run(self):
         """
@@ -72,13 +83,13 @@ class SectionExecutor:
 
         :return: True if results were yielded, False otherwise.
         """
-        self.section.interactor.begin_section(self.section)
+        self.interactor.begin_section(self.section)
 
         running_processes = get_cpu_count()
         processes, arg_dict = self._instantiate_processes(running_processes)
 
         logger_thread = self.LogPrinterThread(arg_dict["message_queue"],
-                                              self.section.log_printer)
+                                              self.log_printer)
         # Start and join the logger thread along with the BearRunner's
         processes.append(logger_thread)
 
@@ -108,26 +119,25 @@ class SectionExecutor:
                         global_result_dict,
                         file_dict):
         running_processes = self._get_running_processes(processes)
-        interactor = self.section.interactor
         retval = False
         # One process is the logger thread
         while running_processes > 1:
             try:
                 control_elem, index = control_queue.get(timeout=0.1)
                 if control_elem == CONTROL_ELEMENT.LOCAL:
-                    interactor.print_results(local_result_dict[index],
-                                             file_dict)
+                    self.interactor.print_results(local_result_dict[index],
+                                                  file_dict)
                     retval = retval or len(local_result_dict[index]) > 0
                 elif control_elem == CONTROL_ELEMENT.GLOBAL:
-                    interactor.print_results(global_result_dict[index],
-                                             file_dict)
+                    self.interactor.print_results(global_result_dict[index],
+                                                  file_dict)
                     retval = retval or len(global_result_dict[index]) > 0
                 elif control_elem == CONTROL_ELEMENT.FINISHED:
                     running_processes = self._get_running_processes(processes)
             except queue.Empty:
                 running_processes = self._get_running_processes(processes)
 
-        self.section.interactor.finalize(file_dict)
+        self.interactor.finalize(file_dict)
         return retval
 
     def _instantiate_bears(self, file_dict, message_queue):
