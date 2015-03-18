@@ -1,9 +1,6 @@
 from collections import OrderedDict
 import copy
 
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.ConsoleInteractor import ConsoleInteractor, ConsolePrinter
-from coalib.output.Interactor import Interactor
 from coalib.settings.Setting import Setting
 
 
@@ -18,25 +15,15 @@ class Section:
 
     def __init__(self,
                  name,
-                 defaults=None,
-                 interactor=ConsoleInteractor(),
-                 log_printer=ConsolePrinter()):
+                 defaults=None):
         if defaults is not None and not isinstance(defaults, Section):
             raise TypeError("defaults has to be a Section object or None.")
         if defaults is self:
             raise ValueError("defaults may not be self for non-recursivity.")
-        if not isinstance(interactor, Interactor):
-            raise TypeError("The interactor parameter has to be of type "
-                            "Interactor.")
-        if not isinstance(log_printer, LogPrinter):
-            raise TypeError("The log_printer parameter has to be of type "
-                            "LogPrinter.")
 
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
-        self.interactor = interactor
-        self.log_printer = log_printer
 
     def is_enabled(self, targets):
         """
@@ -135,8 +122,7 @@ class Section:
 
     def copy(self):
         """
-        :return: a deep copy of this object, with the exception of the
-        log_printer and the interactor
+        :return: a deep copy of this object
         """
         result = copy.copy(self)
         result.contents = copy.deepcopy(self.contents)

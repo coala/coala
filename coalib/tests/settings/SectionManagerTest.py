@@ -142,10 +142,13 @@ class SectionManagerTestCase(unittest.TestCase):
                           "value = 5\n"], lines)
 
     def test_logging_objects(self):
-        conf_sections = SectionManager().run(arg_list=['-S',
-                                                       "log_type=none"])[0]
-        self.assertIsInstance(conf_sections["default"].log_printer,
-                              NullPrinter)
+        log_printer = SectionManager().run(arg_list=['-S',
+                                                     "log_type=none"])[5]
+        self.assertIsInstance(log_printer,NullPrinter)
+
+        interactor = SectionManager().run(arg_list=['-S',
+                                                    "output=none"])[4]
+        self.assertIsInstance(interactor,NullInteractor)
 
     def test_targets(self):
         targets = SectionManager().run(arg_list=["default",

@@ -1,5 +1,3 @@
-import os
-import tempfile
 import unittest
 import sys
 
@@ -15,8 +13,6 @@ class SectionTestCase(unittest.TestCase):
         uut = Section(StringConstants.COMPLEX_TEST_STRING, uut)
         self.assertRaises(TypeError, Section, "irrelevant", 5)
         self.assertRaises(ValueError, uut.__init__, "name", uut)
-        self.assertRaises(TypeError, uut.__init__, "name", interactor=5)
-        self.assertRaises(TypeError, uut.__init__, "name", log_printer=5)
 
     def test_append(self):
         uut = Section(StringConstants.COMPLEX_TEST_STRING, None)

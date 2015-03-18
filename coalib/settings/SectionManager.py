@@ -169,8 +169,6 @@ class SectionManager:
     def _fill_settings(self):
         for section_name in self.sections:
             section = self.sections[section_name]
-            section.log_printer = self.log_printer
-            section.interactor = self.interactor
 
             bear_dirs = path_list(section.get("bear_dirs", ""))
             bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
