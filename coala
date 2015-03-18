@@ -50,7 +50,7 @@ if __name__ == "__main__":
         print(_("Program terminated by user."))
         exit(255)
     except SystemExit:
-        pass
+        exit(0)  # Showed help, graceful exit
     except:
         exception = sys.exc_info()[1]
         UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
