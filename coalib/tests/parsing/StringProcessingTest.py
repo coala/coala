@@ -64,13 +64,13 @@ class StringProcessingTest(unittest.TestCase):
             r"abc;a;;;;;asc"]
 
         # Set up test dependent variables.
-        self.setUp_search_for()
-        self.setUp_split()
-        self.setUp_unescaped_split()
-        self.setUp_search_in_between()
-        self.setUp_unescaped_search_in_between()
+        self.set_up_search_for()
+        self.set_up_split()
+        self.set_up_unescaped_split()
+        self.set_up_search_in_between()
+        self.set_up_unescaped_search_in_between()
 
-    def setUp_search_for(self):
+    def set_up_search_for(self):
         # Match either "out1" or "out2".
         self.test_search_for_pattern = "out1|out2"
         # These are the expected results for the zero-group of the
@@ -108,7 +108,7 @@ class StringProcessingTest(unittest.TestCase):
         self.test_search_for_max_match_expected_master_result = (
             self.test_search_for_expected_results)
 
-    def setUp_split(self):
+    def set_up_split(self):
         self.test_split_pattern = "'"
         self.test_split_expected_results = [
             [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
@@ -164,7 +164,7 @@ class StringProcessingTest(unittest.TestCase):
             [2 * self.bs],
             [r"abc", r"a", r"asc"]]
 
-    def setUp_unescaped_split(self):
+    def set_up_unescaped_split(self):
         self.test_unescaped_split_pattern = "'"
         self.test_unescaped_split_expected_results = [
             [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
@@ -218,7 +218,7 @@ class StringProcessingTest(unittest.TestCase):
             [2 * self.bs],
             [r"abc", r"a", r"asc"]]
 
-    def setUp_search_in_between(self):
+    def set_up_search_in_between(self):
         self.test_search_in_between_pattern = "'"
         self.test_search_in_between_expected_results = [
             [r"escaped-escape:        \\ "],
@@ -267,7 +267,7 @@ class StringProcessingTest(unittest.TestCase):
             [],
             [r"a"]]
 
-    def setUp_unescaped_search_in_between(self):
+    def set_up_unescaped_search_in_between(self):
         self.test_unescaped_search_in_between_pattern = "'"
         self.test_unescaped_search_in_between_expected_results = [
             [r"escaped-escape:        \\ "],
