@@ -7,6 +7,12 @@ from coalib.collecting.Collectors import collect_bears
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
+from coalib.output.NullInteractor import NullInteractor
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.FilePrinter import FilePrinter
+from coalib.output.printers.NullPrinter import NullPrinter
+from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
@@ -44,18 +50,28 @@ class SectionManager:
         self.local_bears = {}
         self.global_bears = {}
 
+        self.log_printer = None
+        self.interactor = None
+
         self.targets = []
 
     def run(self, arg_list=sys.argv[1:]):
         self._load_configuration(arg_list)
+        self.retrieve_logging_objects(self.sections["default"])
         self._fill_settings()
         self._save_configuration()
         self._warn_nonexistent_targets()
 
-        return self.sections, self.local_bears, self.global_bears, self.targets
+        return (self.sections,
+                self.local_bears,
+                self.global_bears,
+                self.targets,
+                self.interactor,
+                self.log_printer)
 
     def _load_configuration(self, arg_list):
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
+        self.retrieve_logging_objects(self.cli_sections["default"])
         # We dont want to store targets argument back to file, thus remove it
         for item in list(
                 self.cli_sections["default"].contents.pop("targets", "")):
@@ -108,17 +124,51 @@ class SectionManager:
             return self.conf_parser.reparse(filename)
         except self.conf_parser.FileNotFoundError:
             if not silent:
-                self.cli_sections["default"].retrieve_logging_objects()
-                self.cli_sections["default"].log_printer.warn(
+                self.log_printer.warn(
                     _("The requested coafile '{filename}' does not exist. "
                       "Thus it will not be used.").format(filename=filename))
 
             return {"default": Section("default")}
 
+    def retrieve_logging_objects(self, section):
+        """
+        Creates an appropriate log printer and interactor according to the
+        settings.
+        """
+        log_type = str(section.get("log_type", "console")).lower()
+        output_type = str(section.get("output", "console")).lower()
+        str_log_level = str(section.get("log_level", "")).upper()
+        log_level = LOG_LEVEL.str_dict.get(str_log_level, LOG_LEVEL.WARNING)
+
+        if log_type == "console":
+            self.log_printer = ConsolePrinter(log_level=log_level)
+        else:
+            try:
+                # ConsolePrinter is the only printer which may not throw an
+                # exception (if we have no bugs though) so well fallback to him
+                # if some other printer fails
+                if log_type == "none":
+                    self.log_printer = NullPrinter()
+                else:
+                    self.log_printer = FilePrinter(filename=log_type,
+                                                   log_level=log_level)
+            except:
+                self.log_printer = ConsolePrinter(log_level=log_level)
+                self.log_printer.log(
+                    LOG_LEVEL.WARNING,
+                    _("Failed to instantiate the logging method '{}'. Falling "
+                      "back to console output.").format(log_type))
+
+        if output_type == "none":
+            self.interactor = NullInteractor(log_printer=self.log_printer)
+        else:
+            self.interactor = ConsoleInteractor.from_section(
+                section,
+                log_printer=self.log_printer)
+
     def _fill_settings(self):
         for section_name in self.sections:
             section = self.sections[section_name]
-            section.retrieve_logging_objects()
 
             bear_dirs = path_list(section.get("bear_dirs", ""))
             bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
@@ -130,7 +180,7 @@ class SectionManager:
             global_bears = collect_bears(bear_dirs,
                                          bears,
                                          [BEAR_KIND.GLOBAL])
-            filler = SectionFiller(section)
+            filler = SectionFiller(section, self.interactor, self.log_printer)
             all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)
             filler.fill_section(all_bears)
@@ -171,6 +221,6 @@ class SectionManager:
     def _warn_nonexistent_targets(self):
         for target in self.targets:
             if target not in self.sections:
-                self.sections["default"].log_printer.warn(
+                self.log_printer.warn(
                     _("The requested section '{section}' is not existent. "
                       "Thus it cannot be executed.").format(section=target))

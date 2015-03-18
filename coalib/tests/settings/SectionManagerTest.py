@@ -7,7 +7,14 @@ sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.settings.SectionManager import SectionManager
+from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
+from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.NullInteractor import NullInteractor
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
 class SectionManagerTestCase(unittest.TestCase):
@@ -135,16 +142,63 @@ class SectionManagerTestCase(unittest.TestCase):
                           "value = 5\n"], lines)
 
     def test_logging_objects(self):
-        conf_sections = SectionManager().run(arg_list=['-S',
-                                                       "log_type=none"])[0]
-        self.assertIsInstance(conf_sections["default"].log_printer,
-                              NullPrinter)
+        log_printer = SectionManager().run(arg_list=['-S',
+                                                     "log_type=none"])[5]
+        self.assertIsInstance(log_printer,NullPrinter)
+
+        interactor = SectionManager().run(arg_list=['-S',
+                                                    "output=none"])[4]
+        self.assertIsInstance(interactor,NullInteractor)
 
     def test_targets(self):
         targets = SectionManager().run(arg_list=["default",
                                                  "test1",
                                                  "test2"])[3]
         self.assertEqual(targets, ["default", "test1", "test2"])
+
+    def test_outputting(self):
+        uut = SectionManager()
+        uut.retrieve_logging_objects(Section("default"))
+        self.assertIsInstance(uut.interactor, ConsoleInteractor)
+
+        test_section = Section("default")
+        test_section.append(Setting(key="output", value="none"))
+        uut.retrieve_logging_objects(test_section)
+        self.assertIsInstance(uut.interactor, NullInteractor)
+
+        test_section = Section("default")
+        test_section.append(Setting(key="output", value="anything else"))
+        uut.retrieve_logging_objects(test_section)
+        self.assertIsInstance(uut.interactor, ConsoleInteractor)
+
+    def test_logging(self):
+        uut = SectionManager()
+        test_section = Section("default")
+        test_section.append(Setting(key="log_TYPE", value="conSole"))
+        uut.retrieve_logging_objects(test_section)
+        self.assertIsInstance(uut.log_printer, ConsolePrinter)
+
+        test_section = Section("default")
+        test_section.append(Setting(key="log_TYPE", value="NONE"))
+        uut.retrieve_logging_objects(test_section)
+        self.assertIsInstance(uut.log_printer, NullPrinter)
+
+        test_section = Section("default")
+        test_section.append(Setting(key="log_TYPE",
+                                    value="./invalid path/@#$%^&*()_"))
+        uut.retrieve_logging_objects(test_section)  # This should throw a warning
+        self.assertIsInstance(uut.log_printer, ConsolePrinter)
+        self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.WARNING)
+        test_section.append(Setting(key="LOG_LEVEL", value="DEBUG"))
+        uut.retrieve_logging_objects(test_section)  # This should throw a warning
+        self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.DEBUG)
+
+        filename = tempfile.gettempdir() + os.path.sep + "testcoalasectiontestfile~"
+        test_section = Section("default")
+        test_section.append(Setting(key="log_TYPE", value=filename))
+        uut.retrieve_logging_objects(test_section)
+        self.assertIsInstance(uut.log_printer, FilePrinter)
+        os.remove(filename)
 
 
 if __name__ == '__main__':
