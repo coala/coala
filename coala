@@ -15,6 +15,7 @@
 
 import sys
 
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.SectionManager import SectionManager
@@ -24,6 +25,7 @@ from coalib.misc.i18n import _
 
 
 if __name__ == "__main__":
+    log_printer = ConsolePrinter()
     try:
         did_nothing = True
         yielded_results = False
@@ -44,11 +46,16 @@ if __name__ == "__main__":
 
         if did_nothing:
             interactor.did_nothing()
+
+        if yielded_results:
+            exit(1)
+        else:
+            exit(0)
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
         exit(255)
     except SystemExit:
-        pass
+        exit(0)
     except:
         exception = sys.exc_info()[1]
         UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
@@ -60,8 +67,3 @@ if __name__ == "__main__":
         log_printer.log_exception(UNKNOWN_ERROR + " " + DESCRIPTION,
                                   exception)
         exit(255)
-
-    if yielded_results:
-        exit(1)
-    else:
-        exit(0)

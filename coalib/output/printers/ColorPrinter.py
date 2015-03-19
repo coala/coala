@@ -3,9 +3,20 @@ from coalib.output.printers.Printer import Printer
 
 class ColorPrinter(Printer):
     """
-    Just use
-    p = AnyColorPrinter()
-    p.print("some", "output", delimiter=" ", end="", color="green");
+    Usage:
+
+        p = AnyColorPrinter()
+        p.print("some", "output", delimiter=" ", end="", color="green");
+
+    How to implement a color printer:
+
+        Just override the _print_colored() and _print_uncolored method.
+
+        Note that if _print_colored throws an exception, _print_uncolored
+        will be invoked.
+
+        Do not override _print() like usual printers do since the ColorPrinter
+        class handles this for you.
     """
 
     def __init__(self):
@@ -21,7 +32,20 @@ class ColorPrinter(Printer):
             return self._print_uncolored(output, **kwargs)
 
     def _print_colored(self, output, color=None, **kwargs):
+        """
+        Override this! Prints the output colored.
+
+        :param output: The string to print.
+        :param color:  The color to print the output in, as a string.
+        :param kwargs: Arbitrary additional keyword arguments you might need.
+        """
         raise NotImplementedError
 
     def _print_uncolored(self, output, **kwargs):
+        """
+        Override this! Prints the output uncolored.
+
+        :param output: The string to print.
+        :param kwargs: Arbitrary additional keyword arguments you might need.
+        """
         raise NotImplementedError
