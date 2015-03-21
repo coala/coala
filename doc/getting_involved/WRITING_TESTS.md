@@ -75,20 +75,20 @@ functionality of your component by invoking each test case.
 The basic declaration for a test suite class is as follows:
 
 ```python
-class YourComponentTest(unittest.Test):
+class YourComponentTest(unittest.TestCase):
     # Your test cases.
     pass
 ```
 
-You should derive your test suite from `unittest.Test` to have access to the
-`setUp()` and `tearDown()` functions (covered in section below: **`setUp()` and
-`tearDown()`**) and also to the assertion functions.
+You should derive your test suite from `unittest.TestCase` to have access to
+the `setUp()` and `tearDown()` functions (covered in section below: **`setUp()`
+and `tearDown()`**) and also to the assertion functions.
 
 Now to the test cases: To implement a test case, just declare a class member
 function without parameters, starting with `test_`. Easy, isn't it?
 
 ```python
-class YourComponentTest(unittest.Test):
+class YourComponentTest(unittest.TestCase):
     # Tests somethin'.
     def test_case1(self):
         pass
@@ -126,7 +126,7 @@ So an example test that succeeds would be:
 import unittest
 
 
-class YourComponentTest(unittest.Test):
+class YourComponentTest(unittest.TestCase):
     # Tests somethin'.
     def test_case1(self):
         # Does '1' equal '1'? Interestingly it does... mysterious...
@@ -172,7 +172,7 @@ For that purpose the function `setUp()` exists. Just declare it inside your
 test suite and it is invoked automatically once at test suite startup:
 
 ```python
-class YourComponentTest(unittest.Test):
+class YourComponentTest(unittest.TestCase):
     def setUp(self):
         # Your initialization of constants, operating system API calls etc.
         pass
@@ -182,7 +182,7 @@ The opposite from this is the `tearDown()` function. It gets invoked when the
 test suite finished running all test cases. Declare it like `setUp()` before:
 
 ```python
-class YourComponentTest(unittest.Test):
+class YourComponentTest(unittest.TestCase):
     def tearDown(self):
         # Deinitialization, release calls etc.
         pass
@@ -205,7 +205,7 @@ coala provides two methods to skip a test.
       # Add here your checks.
       return False
 
-  class YourComponentTest(unittest.Test):
+  class YourComponentTest(unittest.TestCase):
       pass
   ```
 
@@ -251,7 +251,7 @@ coala provides two methods to skip a test.
 ## Assertions
 
 Here follows a list of all available assertion functions supported when
-inheriting from `unittest.Test`:
+inheriting from `unittest.TestCase`:
 
 - `assertEqual(a, b)`
 
@@ -331,7 +331,7 @@ import unittest
 
 
 # Your test unit. The name of this class is displayed in the test evaluation.
-class YourTest(unittest.Test):
+class YourTest(unittest.TestCase):
     def setUp(self):
         # Here you can set up your stuff. For example constant values,
         # initializations etc.
