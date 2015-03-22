@@ -54,8 +54,8 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
         exit(255)
-    except SystemExit:
-        exit(0)  # Showed help, graceful exit
+    except SystemExit as e:
+        exit(e.code)
     except:
         exception = sys.exc_info()[1]
         UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
