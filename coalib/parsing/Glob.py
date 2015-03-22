@@ -2,6 +2,7 @@ import fnmatch
 import os
 
 from coalib.misc.Decorators import yield_once
+from coalib.misc.i18n import N_
 
 
 def _make_selector(pattern_parts):
@@ -11,14 +12,16 @@ def _make_selector(pattern_parts):
     :param pattern_parts: List of strings representing a file system path that
                           may contain wildcards
     :return:              Selector class that represents the first pattern part
+    :raises ValueError:   If the pattern is invalid. (Error message is marked
+                          for translation and can thus be used in the UI.)
     """
     pat = pattern_parts[0]
     child_parts = pattern_parts[1:]
     if pat == '**':
         cls = _RecursiveWildcardSelector
     elif '**' in pat:
-        raise ValueError("Invalid pattern: '**' can only be "
-                         "an entire path component")
+        raise ValueError(N_("Invalid pattern: '**' can only be "
+                            "an entire path component"))
     elif _is_wildcard_pattern(pat):
         cls = _WildcardSelector
     else:
@@ -55,6 +58,9 @@ def _iter_or_combinations(pattern,
     :returns:                 Iterator that yields the results originating from
                               inserting all possible combinations of
                               alternatives into the pattern.
+    :raises ValueError:       If the pattern is invalid. (Error message is
+                              marked for translation and can thus be used in
+                              the UI.)
     """
     # Taking the leftmost closing delimiter and the rightmost opening delimiter
     # left of it ensures that the delimiters belong together and the pattern is
@@ -67,7 +73,7 @@ def _iter_or_combinations(pattern,
             # Special case that gets overlooked because opening_delimiter
             # is only being looked for in pattern[:-1] when closing_pos == -1
             (closing_pos == -1 and pattern.endswith(opening_delimiter))):
-        raise ValueError("Parentheses of pattern are not matching")
+        raise ValueError(N_("Parentheses of pattern are not matching"))
 
     if -1 not in (opening_pos, closing_pos):  # parentheses in pattern
         prefix = pattern[:opening_pos]
@@ -179,10 +185,13 @@ def iglob(pattern, files=True, dirs=True):
     Iterate over this subtree and yield all existing files matching the given
     pattern.
 
-    :param pattern: Unix style glob pattern that matches paths
-    :param files:   Whether or not to include files
-    :param dirs:    Whether or not to include directories
-    :return:        List of all files matching the pattern
+    :param pattern:     Unix style glob pattern that matches paths
+    :param files:       Whether or not to include files
+    :param dirs:        Whether or not to include directories
+    :return:            List of all files matching the pattern
+    :raises ValueError: If an invalid pattern is found. The exception message
+                        is marked for translation, thus can be translated
+                        dynamically if needed.
     """
     if pattern == "" or (not files and not dirs):
         raise StopIteration()

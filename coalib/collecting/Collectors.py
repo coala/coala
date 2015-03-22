@@ -52,7 +52,7 @@ def icollect(file_paths, files=True, dirs=True, log_printer=ConsolePrinter()):
                 _("The given glob '{glob}' contains an invalid pattern. "
                   "Detailed error is: {error_message}").format(
                     glob=file_path,
-                    error_message=str(exception)))
+                    error_message=str(_(exception))))
             raise SystemExit(-1)
 
 
