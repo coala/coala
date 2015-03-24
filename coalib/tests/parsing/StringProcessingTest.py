@@ -403,6 +403,37 @@ class StringProcessingTest(unittest.TestCase):
             self.assertIteratorElementsEqual(iter(expected_results[i]),
                                              return_value)
 
+    def assertSearchInBetweenEquals(self,
+                                    test_strings,
+                                    expected_results,
+                                    begin,
+                                    end,
+                                    max_match=0,
+                                    remove_empty_matches=False):
+        """
+        Checks whether all supplied test strings are returned as expected from
+        search_in_between().
+
+        :param test_strings:         The list of test strings.
+        :param expected_results:     The list of the expected results.
+        :param begin:                The beginning pattern to invoke
+                                     search_in_between() with.
+        :param end:                  The ending pattern to invoke
+                                     search_in_between() with.
+        :param max_match:            The maximum number of matches to perform
+                                     when invoking search_in_between().
+        :param remove_empty_matches: Whether to remove empty entries or not.
+        """
+        self.assertEqual(len(expected_results), len(test_strings))
+        for i in range(0, len(expected_results)):
+            return_value = search_in_between(begin,
+                                             end,
+                                             test_strings[i],
+                                             max_match,
+                                             remove_empty_matches)
+            self.assertIteratorElementsEqual(iter(expected_results[i]),
+                                             return_value)
+
     def assertIteratorElementsEqual(self, iterator1, iterator2):
         """
         Checks whether each element in the iterators and their length do equal.
@@ -562,21 +593,16 @@ class StringProcessingTest(unittest.TestCase):
 
     # Test the basic search_in_between() functionality.
     def test_search_in_between(self):
-        sequence = self.test_search_in_between_pattern
-        expected_results = self.test_search_in_between_expected_results
-
-        self.assertEqual(len(expected_results), len(self.test_strings))
-        for i in range(0, len(expected_results)):
-            return_value = search_in_between(sequence,
-                                             sequence,
-                                             self.test_strings[i])
-            self.assertIteratorElementsEqual(iter(expected_results[i]),
-                                             return_value)
+        self.assertSearchInBetweenEquals(
+            self.test_strings,
+            self.test_search_in_between_expected_results,
+            self.test_search_in_between_pattern,
+            self.test_search_in_between_pattern)
 
     # Test the search_in_between() while varying the max_match
     # parameter.
+
     def test_search_in_between_max_match(self):
-        sequence = self.test_search_in_between_max_match_pattern
         expected_master_results = (
             self.test_search_in_between_max_match_expected_master_results)
 
@@ -585,14 +611,12 @@ class StringProcessingTest(unittest.TestCase):
                 expected_master_results[j][0 : max_match]
                 for j in range(len(expected_master_results))]
 
-            self.assertEqual(len(expected_results), len(self.test_strings))
-            for x in range(0, len(expected_results)):
-                return_value = search_in_between(sequence,
-                                                 sequence,
-                                                 self.test_strings[x],
-                                                 max_match)
-                self.assertIteratorElementsEqual(iter(expected_results[x]),
-                                                 return_value)
+            self.assertSearchInBetweenEquals(
+                self.test_strings,
+                expected_results,
+                self.test_search_in_between_max_match_pattern,
+                self.test_search_in_between_max_match_pattern,
+                max_match)
 
     # Test the search_in_between() function with different regex
     # patterns.
@@ -612,20 +636,13 @@ class StringProcessingTest(unittest.TestCase):
     # Test the search_in_between() function for its
     # remove_empty_matches feature.
     def test_search_in_between_auto_trim(self):
-        sequence = self.test_search_in_between_auto_trim_pattern
-        expected_results = (
-            self.test_search_in_between_auto_trim_expected_results)
-
-        self.assertEqual(len(expected_results),
-                         len(self.auto_trim_test_strings))
-        for i in range(0, len(expected_results)):
-            return_value = search_in_between(sequence,
-                                             sequence,
-                                             self.auto_trim_test_strings[i],
-                                             0,
-                                             True)
-            self.assertIteratorElementsEqual(iter(expected_results[i]),
-                                             return_value)
+        self.assertSearchInBetweenEquals(
+            self.auto_trim_test_strings,
+            self.test_search_in_between_auto_trim_expected_results,
+            self.test_search_in_between_auto_trim_pattern,
+            self.test_search_in_between_auto_trim_pattern,
+            0,
+            True)
 
     # Test the basic unescaped_search_in_between() functionality.
     def test_unescaped_search_in_between(self):
