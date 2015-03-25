@@ -47,6 +47,15 @@ class ProcessTestCase(unittest.TestCase):
         self.assertTrue("bug" in self.uut)
         self.assertFalse("but" in self.uut)
 
+        self.uut = StringConverter("a, test",
+                                   list_delimiters=[","],
+                                   strip_whitespaces=True)
+        self.assertEqual(list(self.uut), ["a", "test"])
+        self.uut = StringConverter("a, test",
+                                   list_delimiters=[","],
+                                   strip_whitespaces=False)
+        self.assertEqual(list(self.uut), ["a", " test"])
+
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
         self.uut.value = "yeah"
