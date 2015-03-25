@@ -35,9 +35,11 @@ class SectionCreatableTestCase(unittest.TestCase):
         self.assertEqual(uut.get_optional_settings(), {})
 
     def test_needed_settings(self):
-        self.assertEqual(sorted(list(TestObject.get_non_optional_settings())), sorted(["setting_one", "raw_setting"]))
-        self.assertEqual(sorted(list(TestObject.get_optional_settings())),
-                         sorted(["setting_two", "setting_three", "opt_raw_set"]))
+        self.assertEqual(sorted(list(TestObject.get_non_optional_settings())),
+                         sorted(["setting_one", "raw_setting"]))
+        self.assertEqual(
+            sorted(list(TestObject.get_optional_settings())),
+            sorted(["setting_two", "setting_three", "opt_raw_set"]))
 
     def test_from_section(self):
         section = Section("name")
