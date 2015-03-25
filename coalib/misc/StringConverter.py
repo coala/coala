@@ -64,21 +64,21 @@ class StringConverter:
             else:
                 lst.append(elem)
 
-    def __is_delimiter(self, value):
-        """
-        Determines if the value begins with a valid delimiter.
-
-        :param value: The value to check
-        :return:      The length of the matched delimiter or False if it doesnt
-                      begin with one.
-        """
-        for delim in self.__list_delimiters:
-            if value.startswith(delim):
-                return len(delim)
-
-        return False
-
     def __prepare_list(self, remove_backslashes):
+        def __is_delimiter(value):
+            """
+            Determines if the value begins with a valid delimiter.
+
+            :param value: The value to check
+            :return:      The length of the matched delimiter or False if it doesnt
+                          begin with one.
+            """
+            for delim in self.__list_delimiters:
+                if value.startswith(delim):
+                    return len(delim)
+
+            return False
+
         if not self.__recreate_list:
             return
 
@@ -98,7 +98,7 @@ class StringConverter:
                 backslash = True
                 continue
 
-            delim_len = self.__is_delimiter(self.value[i:])
+            delim_len = __is_delimiter(self.value[i:])
             if delim_len is not False:
                 self.__appendelem(self.__list, thiselem)
                 thiselem = ""
