@@ -1,4 +1,6 @@
+import re
 from coalib.misc.StringConstants import StringConstants
+from coalib.parsing import StringProcessing
 
 
 class StringConverter:
@@ -57,57 +59,36 @@ class StringConverter:
 
         return iter(self.__list)
 
-    def __appendelem(self, lst, elem):
-        if elem != "":
-            if self.__strip_whitespaces:
-                lst.append(elem.strip())
-            else:
-                lst.append(elem)
-
     def __prepare_list(self, remove_backslashes):
-        def __is_delimiter(value):
-            """
-            Determines if the value begins with a valid delimiter.
+        def unescape(string):
+            i = string.find("\\")
+            while i != -1:
+                string = string[:i] + string[i+1:]
+                i = string.find("\\", i+1)  # Dont check the next char
 
-            :param value: The value to check
-            :return:      The length of the matched delimiter or False if it doesnt
-                          begin with one.
-            """
-            for delim in self.__list_delimiters:
-                if value.startswith(delim):
-                    return len(delim)
-
-            return False
+            return string
 
         if not self.__recreate_list:
             return
 
-        self.__list = []
-        thiselem = ""
-        backslash = False
-        iterator = enumerate(self.value)
-        for i, char in iterator:
-            if backslash:
-                thiselem += char
-                backslash = False
-                continue
+        pattern = ("(?:" +
+                   "|".join(re.escape(v) for v in self.__list_delimiters) +
+                   ")")
 
-            if char == "\\":
-                if not remove_backslashes:
-                    thiselem += char
-                backslash = True
-                continue
+        self.__list = list(StringProcessing.unescaped_split(
+            pattern,
+            self.value))
 
-            delim_len = __is_delimiter(self.value[i:])
-            if delim_len is not False:
-                self.__appendelem(self.__list, thiselem)
-                thiselem = ""
-                [next(iterator) for j in range(delim_len - 1)]
-                continue
+        if remove_backslashes:
+            for i in range(len(self.__list)):
+                self.__list[i] = unescape(self.__list[i])
 
-            thiselem += char
+        if self.__strip_whitespaces:
+            self.__list = [elem.strip() for elem in self.__list]
 
-        self.__appendelem(self.__list, thiselem)
+        # Need to do after stripping, cant use builtin functionality of split
+        while "" in self.__list:
+            self.__list.remove("")
 
         self.__recreate_list = False
 
