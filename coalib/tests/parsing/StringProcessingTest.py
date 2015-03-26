@@ -633,7 +633,6 @@ class StringProcessingTest(unittest.TestCase):
 
     # Test the search_in_between() while varying the max_match
     # parameter.
-
     def test_search_in_between_max_match(self):
         expected_master_results = (
             self.test_search_in_between_max_match_expected_master_results)
