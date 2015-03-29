@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from distutils.core import setup
+from distutils.extension import Extension
 
 from coalib.misc.i18n import compile_translations
 
@@ -34,6 +35,7 @@ if __name__ == "__main__":
                     'coalib.results',
                     'coalib.results.result_actions',
                     'coalib.settings'],
+          ext_modules=[Extension("coalib.parsing.FastGlob", ["coalib/parsing/FastGlob.c"])],
           package_data={'coalib': ['default_coafile']},
           license="AGPL v3",
           data_files=data_files,
