@@ -8,6 +8,7 @@ from coalib.parsing.StringProcessing import unescaped_split
 from coalib.parsing.StringProcessing import search_in_between
 from coalib.parsing.StringProcessing import unescaped_search_in_between
 from coalib.parsing.StringProcessing import position_escaped
+from coalib.parsing.StringProcessing import unescaped_find
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -754,6 +755,18 @@ class StringProcessingTest(unittest.TestCase):
                           True,
                           False,
                           False])
+
+    def test_unescaped_find(self):
+        self.assertRaises(ValueError, unescaped_find, *(1, 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_find, *("s", 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_find, *("s", "s", "s", "1"))
+        self.assertRaises(ValueError, unescaped_find, *("s", "s", 0, "s"))
+
+        self.assertEqual(unescaped_find("abcde", "c"), 2)
+        self.assertEqual(unescaped_find("abcde", "c", 1, 3), 2)
+        self.assertEqual(unescaped_find("abcde", "c", 3, 4), -1)
+        self.assertEqual(unescaped_find("abcde", "z"), -1)
+        self.assertEqual(unescaped_find("ab\\cdec", "c"), 6)
 
 
 if __name__ == '__main__':

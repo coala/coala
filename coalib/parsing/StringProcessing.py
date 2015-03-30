@@ -311,3 +311,30 @@ def position_escaped(string, position):
     pat = re.compile(r"(?<!\\)(?:\\\\)*$")
     return not pat.search(string[:position])
 
+
+def unescaped_find(string, sub, start=None, end=None):
+    """
+    Return the lowest index in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       Position of sub in string, independent of slice borders!
+    """
+    if not isinstance(string, str):
+        raise ValueError("param string is not a string")
+    if not isinstance(sub, str):
+        raise ValueError("param sub is not a string")
+    if start is not None and not isinstance(start, int):
+        raise ValueError("param start is not an int")
+    if end is not None and not isinstance(end, int):
+        raise ValueError("param end is not an int")
+
+    while True:
+        position = string.find(sub, start, end)
+        if position >= 0 and position_escaped(string, position):
+            start = position + 1
+        else:
+            return position
