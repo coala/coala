@@ -388,3 +388,18 @@ def unescaped_finditer(string, sub, start=None, end=None):
             start = position + 1
         else:
             raise StopIteration
+
+
+def unescaped_findall(string, sub, start=None, end=None):
+    """
+    Lists all indices in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       List of all positions of sub in string, independent of
+                   slice borders!
+    """
+    return list(unescaped_finditer(string, sub, start, end))
