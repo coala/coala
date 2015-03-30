@@ -367,3 +367,24 @@ def unescaped_rfind(string, sub, start=None, end=None):
             end = position
         else:
             return position
+
+
+def unescaped_finditer(string, sub, start=None, end=None):
+    """
+    Yields all indices in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       Iterator that yields all positions of sub in string,
+                   independent of slice borders!
+    """
+    while True:
+        position = unescaped_find(string, sub, start, end)
+        if position >= 0:
+            yield position
+            start = position + 1
+        else:
+            raise StopIteration

@@ -10,6 +10,7 @@ from coalib.parsing.StringProcessing import unescaped_search_in_between
 from coalib.parsing.StringProcessing import position_escaped
 from coalib.parsing.StringProcessing import unescaped_find
 from coalib.parsing.StringProcessing import unescaped_rfind
+from coalib.parsing.StringProcessing import unescaped_finditer
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -781,6 +782,14 @@ class StringProcessingTest(unittest.TestCase):
         self.assertEqual(unescaped_rfind("abcde", "z"), -1)
         self.assertEqual(unescaped_rfind("acb\\cdec", "c"), 7)
         self.assertEqual(unescaped_rfind("acb\\cde\\c", "c"), 1)
+
+    def test_unescaped_finditer(self):
+        self.assertEqual(list(unescaped_finditer("abcde", "c")), [2])
+        self.assertEqual(list(unescaped_finditer("abcde", "c", 1, 3)), [2])
+        self.assertEqual(list(unescaped_finditer("abcde", "c", 3, 4)), [])
+        self.assertEqual(list(unescaped_finditer("abcde", "z")), [])
+        self.assertEqual(list(unescaped_finditer("acb\\cdec", "c")), [1, 7])
+        self.assertEqual(list(unescaped_finditer("acb\\cde\\c", "c")), [1])
 
 
 if __name__ == '__main__':
