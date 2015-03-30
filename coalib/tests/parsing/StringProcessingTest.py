@@ -7,6 +7,7 @@ from coalib.parsing.StringProcessing import split
 from coalib.parsing.StringProcessing import unescaped_split
 from coalib.parsing.StringProcessing import search_in_between
 from coalib.parsing.StringProcessing import unescaped_search_in_between
+from coalib.parsing.StringProcessing import position_escaped
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -727,6 +728,32 @@ class StringProcessingTest(unittest.TestCase):
             self.test_unescaped_search_in_between_auto_trim_pattern,
             0,
             True)
+
+    def test_position_escaped(self):
+        self.assertRaises(ValueError, position_escaped, *(1, 1))
+        self.assertRaises(ValueError, position_escaped, *("str", -1))
+        self.assertRaises(ValueError, position_escaped, *("str", 3))
+
+        test_string = "\\a\\\\b\\\\\\\\\\c\nx\n\\y\nz"
+        self.assertEqual([position_escaped(test_string, i) for i in range(18)],
+                         [False,
+                          True,
+                          False,
+                          True,
+                          False,
+                          False,
+                          True,
+                          False,
+                          True,
+                          False,
+                          True,
+                          False,
+                          False,
+                          False,
+                          False,
+                          True,
+                          False,
+                          False])
 
 
 if __name__ == '__main__':

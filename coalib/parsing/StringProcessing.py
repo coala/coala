@@ -292,3 +292,22 @@ def unescaped_search_in_between(begin,
     for elem in matches:
         yield (elem.group(compiled_begin_pattern.groups + 1) +
                elem.group(compiled_begin_pattern.groups + 2))
+
+
+def position_escaped(string, position):
+    """
+    Checks whether a char at a specific position of the string is escaped by an
+    odd number of backslashes.
+
+    :param string:   Arbitrary string
+    :param position: Position of character in string that should be checked
+    :return:         True if the character is escaped, False otherwise
+    """
+    if not isinstance(string, str):
+        raise ValueError("param string is not a string")
+    if not isinstance(position, int) or not 0 <= position < len(string):
+        raise ValueError("param position is not an int in the valid range")
+
+    pat = re.compile(r"(?<!\\)(?:\\\\)*$")
+    return not pat.search(string[:position])
+
