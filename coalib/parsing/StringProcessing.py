@@ -338,3 +338,32 @@ def unescaped_find(string, sub, start=None, end=None):
             start = position + 1
         else:
             return position
+
+
+def unescaped_rfind(string, sub, start=None, end=None):
+    """
+    Return the highest index in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       Last position of sub in string, independent of slice
+                   borders!
+    """
+    if not isinstance(string, str):
+        raise ValueError("param string is not a string")
+    if not isinstance(sub, str):
+        raise ValueError("param sub is not a string")
+    if start is not None and not isinstance(start, int):
+        raise ValueError("param start is not an int")
+    if end is not None and not isinstance(end, int):
+        raise ValueError("param end is not an int")
+
+    while True:
+        position = string.rfind(sub, start, end)
+        if position >= 0 and position_escaped(string, position):
+            end = position
+        else:
+            return position

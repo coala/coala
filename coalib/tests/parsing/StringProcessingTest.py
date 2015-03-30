@@ -9,6 +9,7 @@ from coalib.parsing.StringProcessing import search_in_between
 from coalib.parsing.StringProcessing import unescaped_search_in_between
 from coalib.parsing.StringProcessing import position_escaped
 from coalib.parsing.StringProcessing import unescaped_find
+from coalib.parsing.StringProcessing import unescaped_rfind
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -767,6 +768,19 @@ class StringProcessingTest(unittest.TestCase):
         self.assertEqual(unescaped_find("abcde", "c", 3, 4), -1)
         self.assertEqual(unescaped_find("abcde", "z"), -1)
         self.assertEqual(unescaped_find("ab\\cdec", "c"), 6)
+
+    def test_unescaped_rfind(self):
+        self.assertRaises(ValueError, unescaped_rfind, *(1, 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_rfind, *("s", 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_rfind, *("s", "s", "s", "1"))
+        self.assertRaises(ValueError, unescaped_rfind, *("s", "s", 0, "s"))
+
+        self.assertEqual(unescaped_rfind("abcde", "c"), 2)
+        self.assertEqual(unescaped_rfind("abcde", "c", 1, 3), 2)
+        self.assertEqual(unescaped_rfind("abcde", "c", 3, 4), -1)
+        self.assertEqual(unescaped_rfind("abcde", "z"), -1)
+        self.assertEqual(unescaped_rfind("acb\\cdec", "c"), 7)
+        self.assertEqual(unescaped_rfind("acb\\cde\\c", "c"), 1)
 
 
 if __name__ == '__main__':
