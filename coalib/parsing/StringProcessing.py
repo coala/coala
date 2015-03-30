@@ -294,6 +294,9 @@ def unescaped_search_in_between(begin,
                elem.group(compiled_begin_pattern.groups + 2))
 
 
+LAST_POSITION_UNESCAPED_PATTERN = re.compile(r"(?<!\\)(?:\\\\)*$")
+
+
 def position_escaped(string, position):
     """
     Checks whether a char at a specific position of the string is escaped by an
@@ -308,8 +311,7 @@ def position_escaped(string, position):
     if not isinstance(position, int) or not 0 <= position < len(string):
         raise ValueError("param position is not an int in the valid range")
 
-    pat = re.compile(r"(?<!\\)(?:\\\\)*$")
-    return not pat.search(string[:position])
+    return not LAST_POSITION_UNESCAPED_PATTERN.search(string[:position])
 
 
 def unescaped_find(string, sub, start=None, end=None):
