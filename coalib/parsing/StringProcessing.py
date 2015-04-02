@@ -242,12 +242,10 @@ def unescaped_search_in_between(begin,
              interfere with the escaping regex-sequence used internally to
              match the enclosed string.
 
-    :param begin:                The begin-sequence where to start matching.
-                                 Providing regexes (and not only fixed strings)
-                                 is allowed.
-    :param end:                  The end-sequence where to end matching.
-                                 Providing regexes (and not only fixed strings)
-                                 is allowed.
+    :param begin:                A regex pattern that defines where to start
+                                 matching.
+    :param end:                  A regex pattern that defines where to end
+                                 matching.
     :param string:               The string where to search in.
     :param max_matches           Defines the maximum number of matches. If 0 or
                                  less is provided, the number of splits is not
