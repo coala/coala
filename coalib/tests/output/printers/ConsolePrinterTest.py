@@ -14,22 +14,29 @@ class NullWriter:
 
 
 class ConsolePrinterTestCase(unittest.TestCase):
-    def test_printing(self):
+    def setUp(self):
         self.uut = ConsolePrinter()
+
+    def tearDown(self):
+        self.uut.close()
+
+    def test_printing(self):
         self.uut.print("\ntest", "message", color="green")
         self.uut.print("\ntest", "message", color="greeeeen")
         self.uut.print("\ntest", "message")
 
     def test_pickling(self):
-        outputfile = os.path.join(tempfile.gettempdir(), "ConsolePrinterPickleTestFile")
+        outputfile = os.path.join(tempfile.gettempdir(),
+                                  "ConsolePrinterPickleTestFile")
         with open(outputfile, "wb") as f:
-            pickle.dump(ConsolePrinter(), f)
+            pickle.dump(self.uut, f)
 
         with open(outputfile, "rb") as f:
             obj = pickle.load(f)
 
         self.assertIsInstance(obj, ConsolePrinter)
-        obj.print("test")  # print will use the output param, this will ensure that the printer is valid
+        # print uses the output param, this ensures that the printer is valid
+        obj.print("test")
 
         os.remove(outputfile)
 

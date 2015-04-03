@@ -12,6 +12,8 @@ class Printer:
     - EspeakPrinter for Voice output
     - NullPrinter for no output
     """
+    def __init__(self):
+        self.__closed = False
 
     def _print(self, output, **kwargs):
         """
@@ -37,6 +39,26 @@ class Printer:
         :param kwargs:    Will be passed through to the Printer derivative
                           handling the actual printing
         """
+        assert not self.__closed, "Cannot print after closing."
         output = str(delimiter).join(str(arg) for arg in args) + str(end)
 
         return self._print(output, **kwargs)
+
+    def __del__(self):
+        assert self.__closed, "A printer must be closed before the last " \
+                              "reference goes out of scope."
+
+    @staticmethod
+    def _close():
+        """
+        Can be used to clean up arbitrary things, e.g. closing files.
+        """
+        pass
+
+    def close(self):
+        """
+        Must be invoked before the last reference goes out of scope.
+        """
+        if not self.__closed:
+            self._close()
+            self.__closed = True
