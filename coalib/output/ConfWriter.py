@@ -19,16 +19,26 @@ class ConfWriter:
         self.__section_name_surrounding_end = section_name_surrounding_end
         self.__unsavable_keys = unsavable_keys
         self.__wrote_newline = True
+        self.__closed = False
+
+    def close(self):
+        if not self.__closed:
+            self.__file.close()
+            self.__closed = True
 
     def __del__(self):
-        self.__file.close()
+        assert self.__closed, "ConfWriter needs to be closed!"
 
     def write_sections(self, sections):
+        assert not self.__closed
+
         self.__wrote_newline = True
         for section in sections:
             self.write_section(sections[section])
 
     def write_section(self, section):
+        assert not self.__closed
+
         if not isinstance(section, Section):
             raise TypeError
 
@@ -55,6 +65,8 @@ class ConfWriter:
             self.__write_key_val(keys, val)
 
     def __write_section_name(self, name):
+        assert not self.__closed
+
         if not self.__wrote_newline:
             self.__file.write("\n")
 
@@ -63,6 +75,8 @@ class ConfWriter:
         self.__wrote_newline = False
 
     def __write_key_val(self, keys, val):
+        assert not self.__closed
+
         if keys == []:
             return
 
