@@ -39,17 +39,23 @@ class SectionFillerTestCase(unittest.TestCase):
     def setUp(self):
         section = Section("test")
         section.append(Setting("key", "val"))
+        self.interactor = ConsoleInteractor()
+        self.printer = ConsolePrinter()
         self.uut = SectionFiller(section,
-                                 ConsoleInteractor(),
-                                 ConsolePrinter())
+                                 self.interactor,
+                                 self.printer)
+
+    def tearDown(self):
+        self.interactor.close()
+        self.printer.close()
 
     def test_raises(self):
         # Construction
         self.assertRaises(TypeError,
                           SectionFiller,
                           0,
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          self.interactor,
+                          self.printer)
 
         # Fill section
         self.assertRaises(TypeError, self.uut.fill_section, 0)

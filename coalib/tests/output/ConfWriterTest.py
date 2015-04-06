@@ -34,6 +34,7 @@ class ConfWriterTestCase(unittest.TestCase):
         self.uut = ConfWriter(self.write_file_name)
 
     def tearDown(self):
+        self.uut.close()
         os.remove(self.file)
         os.remove(self.write_file_name)
 
@@ -55,7 +56,7 @@ class ConfWriterTestCase(unittest.TestCase):
                        "; just a omment\n",
                        "; just a omment\n"]
         self.uut.write_sections(self.conf_parser.reparse(self.file))
-        del self.uut
+        self.uut.close()
 
         with open(self.write_file_name, "r") as f:
             lines = f.readlines()
