@@ -3,13 +3,15 @@ import shutil
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.results.Result import Result
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.Printer import Printer
 from coalib.misc.i18n import _
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
-class Interactor(SectionCreatable):
+class Interactor(SectionCreatable, Printer):
     def __init__(self, log_printer=ConsolePrinter()):
         SectionCreatable.__init__(self)
+        Printer.__init__(self)
         self.log_printer = log_printer
         self.file_diff_dict = {}
         self.current_section = None

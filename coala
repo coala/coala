@@ -25,7 +25,7 @@ from coalib.misc.i18n import _
 
 
 if __name__ == "__main__":
-    log_printer = ConsolePrinter()
+    log_printer = None
     try:
         did_nothing = True
         yielded_results = False
@@ -63,6 +63,9 @@ if __name__ == "__main__":
         DESCRIPTION = _("During execution of coala an exception was raised. "
                         "This should never happen. When asked for, the "
                         "following information may help investigating:")
+
+        if log_printer is None:
+            log_printer = ConsolePrinter()
 
         log_printer.log_exception(UNKNOWN_ERROR + " " + DESCRIPTION,
                                   exception)

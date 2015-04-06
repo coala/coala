@@ -201,6 +201,8 @@ class SectionManager:
 
         if self.conf_writer is not None:
             self.conf_writer.write_sections(self.sections)
+            self.conf_writer.close()
+            self.conf_writer = None
 
     @staticmethod
     def _merge_section_dicts(lower, higher):
