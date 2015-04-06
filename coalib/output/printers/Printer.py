@@ -7,11 +7,16 @@ class Printer:
     implement a Printer you want to override the _print method which takes just
     one string which is ready to be outputted.
 
+    You must invoke close() before your last printer reference gets out of
+    scope.
+
     Examples for some printers are:
     - ConsolePrinter for console and file output
     - EspeakPrinter for Voice output
     - NullPrinter for no output
     """
+    def __init__(self):
+        self.__closed = False
 
     def _print(self, output, **kwargs):
         """
@@ -37,6 +42,29 @@ class Printer:
         :param kwargs:    Will be passed through to the Printer derivative
                           handling the actual printing
         """
+        assert not self.__closed, "Cannot print after closing."
         output = str(delimiter).join(str(arg) for arg in args) + str(end)
 
         return self._print(output, **kwargs)
+
+    def __del__(self):
+        if not self.__closed:
+            self.print("Usage of __del__ method is deprecated thus each "
+                       "printer needs to be closed manually now!")
+            self.close()
+
+    @staticmethod
+    def _close():
+        """
+        Override to clean up arbitrary things, e.g. closing files, writing
+        footers et cetera.
+        """
+        pass
+
+    def close(self):
+        """
+        Must be invoked before the last reference goes out of scope.
+        """
+        if not self.__closed:
+            self._close()
+            self.__closed = True
