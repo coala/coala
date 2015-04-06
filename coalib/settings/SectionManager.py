@@ -45,7 +45,6 @@ class SectionManager:
 
         self.cli_parser = CliParser()
         self.conf_parser = ConfParser()
-        self.conf_writer = None
 
         self.local_bears = {}
         self.global_bears = {}
@@ -189,20 +188,19 @@ class SectionManager:
             self.global_bears[section_name] = global_bears
 
     def _save_configuration(self):
-        self.conf_writer = None
+        conf_writer = None
         default_section = self.sections["default"]
         try:
             if bool(default_section.get("save", "false")):
-                self.conf_writer = ConfWriter(str(
+                conf_writer = ConfWriter(str(
                     default_section.get("config", ".coafile")))
         except ValueError:
-            self.conf_writer = ConfWriter(str(default_section.get("save",
-                                                                  ".coafile")))
+            conf_writer = ConfWriter(str(default_section.get("save",
+                                                             ".coafile")))
 
-        if self.conf_writer is not None:
-            self.conf_writer.write_sections(self.sections)
-            self.conf_writer.close()
-            self.conf_writer = None
+        if conf_writer is not None:
+            conf_writer.write_sections(self.sections)
+            conf_writer.close()
 
     @staticmethod
     def _merge_section_dicts(lower, higher):
