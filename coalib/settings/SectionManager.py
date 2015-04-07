@@ -134,6 +134,11 @@ class SectionManager:
         Creates an appropriate log printer and interactor according to the
         settings.
         """
+        if self.interactor is not None:
+            self.interactor.close()
+        if self.log_printer is not None:
+            self.log_printer.close()
+
         log_type = str(section.get("log_type", "console")).lower()
         output_type = str(section.get("output", "console")).lower()
         str_log_level = str(section.get("log_level", "")).upper()
