@@ -55,6 +55,19 @@ class SectionManager:
         self.targets = []
 
     def run(self, arg_list=sys.argv[1:]):
+        """
+        Loads all configuration files, retrieves bears and all needed
+        settings, saves back if needed and warns about non-existent targets.
+
+        :param arg_list: CLI args to use
+        :return:         A tuple with the following contents:
+                          * A dictionary with the sections
+                          * Dictionary of list of local bears for each section
+                          * Dictionary of list of global bears for each section
+                          * The targets list
+                          * The interactor (needs to be closed!)
+                          * The log printer (needs to be closed!)
+        """
         self._load_configuration(arg_list)
         self.retrieve_logging_objects(self.sections["default"])
         self._fill_settings()
