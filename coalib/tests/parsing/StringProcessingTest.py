@@ -260,6 +260,10 @@ class StringProcessingTest(unittest.TestCase):
             [2 * self.bs],
             [r"abc", r"a", r"asc"]]
 
+        self.test_unescaped_split_disabled_regex_pattern = r"'()"
+        self.test_unescaped_split_disabled_regex_expected_results = (
+            [[x] for x in self.test_strings])
+
     def set_up_search_in_between(self):
         self.test_search_in_between_pattern = "'"
         self.test_search_in_between_expected_results = [
@@ -741,6 +745,16 @@ class StringProcessingTest(unittest.TestCase):
                 0,
                 True,
                 use_regex)
+
+    # Test the unescaped_split() function while disabling regexes.
+    def test_unescaped_split_disabled_regex(self):
+        self.assertUnescapedSplitEquals(
+            self.test_strings,
+            self.test_unescaped_split_disabled_regex_expected_results,
+            self.test_unescaped_split_disabled_regex_pattern,
+            0,
+            False,
+            False)
 
     # Test the basic search_in_between() functionality.
     def test_search_in_between(self):
