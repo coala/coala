@@ -26,6 +26,7 @@ from coalib.misc.i18n import _
 
 if __name__ == "__main__":
     log_printer = None
+    interactor = None
     exitcode = 0
     try:
         did_nothing = True
@@ -69,5 +70,10 @@ if __name__ == "__main__":
         log_printer.log_exception(UNKNOWN_ERROR + " " + DESCRIPTION,
                                   exception)
         exitcode = 255
+
+    if log_printer is not None:
+        log_printer.close()
+    if interactor is not None:
+        interactor.close()
 
     exit(exitcode)
