@@ -10,6 +10,7 @@ class EspeakPrinterTestCase(unittest.TestCase):
     def test_voice_printer(self):
         self.uut = EspeakPrinter()
         self.uut.print("The", "espeak", "printer", "works!")
+        self.uut.close()
 
 
 def skip_test():
