@@ -54,6 +54,7 @@ class TestHelper:
         self.args = self.parser.parse_args()
         self.__resolve_implicit_args()
         self.test_files = []
+        self.test_file_names = []
         self.failed_tests = 0
         self.skipped_tests = 0
 
@@ -78,9 +79,17 @@ class TestHelper:
         if self.args.cover:
             self.delete_coverage()
 
-        number = len(self.test_files)
+        if len(self.args.test_only) > 0:
+            nonexistent_tests, number = self.show_nonexistent_test()
+        else:
+            number = len(self.test_files)
+            nonexistent_tests = 0
+
         for i, file in enumerate(self.test_files):
-            self.__execute_test(file, i+1, number, ",".join(ignore_list))
+            self.__execute_test(file,
+                                i+nonexistent_tests+1,
+                                number,
+                                ",".join(ignore_list))
 
         print("\nTests finished: failures in {} of {} test modules, skipped "
               "{} test modules.".format(self.failed_tests,
@@ -95,11 +104,24 @@ class TestHelper:
         else:
             return self.failed_tests + self.skipped_tests
 
+    def show_nonexistent_tests(self):
+        nonexistent_tests = 0
+        number = len(self.args.test_only)
+        for test in self.args.test_only:
+            if test not in self.test_file_names:
+                nonexistent_tests += 1
+                self.failed_tests += 1
+                print(" {:>2}/{:<2} | {}, Cannot execute: This test does "
+                      "not exist.".format(j, number, test))
+        return nonexistent_tests, number
+
     def add_test_files(self, testdir):
         for (dirpath, dirnames, filenames) in os.walk(testdir):
             for filename in filenames:
                 if self.__is_eligible_test(filename):
                     self.test_files.append(os.path.join(dirpath, filename))
+                    self.test_file_names.append(
+                        os.path.splitext(os.path.basename(filename))[0])
 
     def __resolve_implicit_args(self):
         self.args.cover = self.args.cover or self.args.html
