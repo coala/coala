@@ -374,9 +374,9 @@ class StringProcessingTest(unittest.TestCase):
                                    pattern,
                                    test_strings,
                                    expected_strings,
-                                   flags=0,
-                                   max_match=0,
-                                   use_regex=False):
+                                   flags,
+                                   max_match,
+                                   use_regex):
         """
         Checks whether the given test_strings do equal the expected_strings
         after feeding search_for() with them.
@@ -411,9 +411,9 @@ class StringProcessingTest(unittest.TestCase):
                           test_strings,
                           expected_results,
                           pattern,
-                          max_split=0,
-                          remove_empty_matches=False,
-                          use_regex=False):
+                          max_split,
+                          remove_empty_matches,
+                          use_regex):
         """
         Checks whether all supplied test strings are returned as expected from
         split().
@@ -441,9 +441,9 @@ class StringProcessingTest(unittest.TestCase):
                                    test_strings,
                                    expected_results,
                                    pattern,
-                                   max_split=0,
-                                   remove_empty_matches=False,
-                                   use_regex=False):
+                                   max_split,
+                                   remove_empty_matches,
+                                   use_regex):
         """
         Checks whether all supplied test strings are returned as expected from
         unescaped_split().
@@ -473,9 +473,9 @@ class StringProcessingTest(unittest.TestCase):
                                     expected_results,
                                     begin,
                                     end,
-                                    max_match=0,
-                                    remove_empty_matches=False,
-                                    use_regex=False):
+                                    max_match,
+                                    remove_empty_matches,
+                                    use_regex):
         """
         Checks whether all supplied test strings are returned as expected from
         search_in_between().
@@ -508,9 +508,9 @@ class StringProcessingTest(unittest.TestCase):
                                              expected_results,
                                              begin,
                                              end,
-                                             max_match=0,
-                                             remove_empty_matches=False,
-                                             use_regex=False):
+                                             max_match,
+                                             remove_empty_matches,
+                                             use_regex):
         """
         Checks whether all supplied test strings are returned as expected from
         unescaped_search_in_between().
