@@ -320,8 +320,8 @@ class StringProcessingTest(unittest.TestCase):
                                    pattern,
                                    test_strings,
                                    expected_strings,
-                                   flags = 0,
-                                   max_match = 0,
+                                   flags=0,
+                                   max_match=0,
                                    use_regex=False):
         """
         Checks whether the given test_strings do equal the expected_strings
