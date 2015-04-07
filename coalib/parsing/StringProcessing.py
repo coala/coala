@@ -64,21 +64,27 @@ def trim_empty_matches(iterator, groups=[0]):
 def split(pattern,
           string,
           max_split=0,
-          remove_empty_matches=False):
+          remove_empty_matches=False,
+          use_regex=False):
     """
     Splits the given string by the specified pattern. The return character (\n)
     is not a natural split pattern (if you don't specify it yourself).
     This function ignores escape sequences.
 
-    :param pattern:              A regex pattern that defines where to split.
+    :param pattern:              A pattern that defines where to split.
     :param string:               The string to split by the defined pattern.
     :param max_split:            Defines the maximum number of splits. If 0 or
                                  less is provided, the number of splits is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
                                  be removed from the result.
+    :param use_regex:            Specifies whether to treat the split pattern
+                                 as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
+    if not use_regex:
+        pattern = re.escape(pattern)
+
     # re.split() is not usable for this function. It has a bug when using too
     # many capturing groups "()".
 

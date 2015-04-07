@@ -379,7 +379,8 @@ class StringProcessingTest(unittest.TestCase):
                           expected_results,
                           pattern,
                           max_split=0,
-                          remove_empty_matches=False):
+                          remove_empty_matches=False,
+                          use_regex=False):
         """
         Checks whether all supplied test strings are returned as expected from
         split().
@@ -390,13 +391,16 @@ class StringProcessingTest(unittest.TestCase):
         :param max_split:            The maximum number of splits to perform
                                      when invoking split().
         :param remove_empty_matches: Whether to remove empty entries or not.
+        :param use_regex:            Whether to treat pattern as a regex or
+                                     not.
         """
         self.assertEqual(len(expected_results), len(test_strings))
         for i in range(0, len(expected_results)):
             return_value = split(pattern,
                                  test_strings[i],
                                  max_split,
-                                 remove_empty_matches)
+                                 remove_empty_matches,
+                                 use_regex)
             self.assertIteratorElementsEqual(iter(expected_results[i]),
                                              return_value)
 
@@ -572,9 +576,13 @@ class StringProcessingTest(unittest.TestCase):
 
     # Test the basic split() functionality.
     def test_split(self):
-        self.assertSplitEquals(self.test_strings,
-                               self.test_split_expected_results,
-                               self.test_split_pattern)
+        for use_regex in [True, False]:
+            self.assertSplitEquals(self.test_strings,
+                                   self.test_split_expected_results,
+                                   self.test_split_pattern,
+                                   0,
+                                   False,
+                                   use_regex)
 
     # Test the split() function while varying the max_split parameter.
     def test_split_max_split(self):
@@ -595,10 +603,13 @@ class StringProcessingTest(unittest.TestCase):
                         str.join(separator_pattern,
                                  expected_master_results[j][max_split : ]))
 
-            self.assertSplitEquals(self.test_strings,
-                                   expected_results,
-                                   separator_pattern,
-                                   max_split)
+            for use_regex in [True, False]:
+                self.assertSplitEquals(self.test_strings,
+                                       expected_results,
+                                       separator_pattern,
+                                       max_split,
+                                       False,
+                                       use_regex)
 
     # Test the split() function with different regex patterns.
     def test_split_regex_pattern(self):
@@ -607,17 +618,22 @@ class StringProcessingTest(unittest.TestCase):
         self.assertEqual(len(expected_results), len(self.multi_patterns))
         for i in range(0, len(expected_results)):
             return_value = split(self.multi_patterns[i],
-                                 self.multi_pattern_test_string)
+                                 self.multi_pattern_test_string,
+                                 0,
+                                 False,
+                                 True)
             self.assertIteratorElementsEqual(iter(expected_results[i]),
                                              return_value)
 
     # Test the split() function for its remove_empty_matches feature.
     def test_split_auto_trim(self):
-        self.assertSplitEquals(self.auto_trim_test_strings,
-                               self.test_split_auto_trim_expected_results,
-                               self.test_split_auto_trim_pattern,
-                               0,
-                               True)
+        for use_regex in [True, False]:
+            self.assertSplitEquals(self.auto_trim_test_strings,
+                                   self.test_split_auto_trim_expected_results,
+                                   self.test_split_auto_trim_pattern,
+                                   0,
+                                   True,
+                                   use_regex)
 
     # Test the basic unescaped_split() functionality.
     def test_unescaped_split(self):
