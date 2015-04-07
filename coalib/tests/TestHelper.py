@@ -80,7 +80,7 @@ class TestHelper:
             self.delete_coverage()
 
         if len(self.args.test_only) > 0:
-            nonexistent_tests, number = self.show_nonexistent_test()
+            nonexistent_tests, number = self.show_nonexistent_tests()
         else:
             number = len(self.test_files)
             nonexistent_tests = 0
@@ -113,6 +113,7 @@ class TestHelper:
                 self.failed_tests += 1
                 print(" {:>2}/{:<2} | {}, Cannot execute: This test does "
                       "not exist.".format(j, number, test))
+
         return nonexistent_tests, number
 
     def add_test_files(self, testdir):
