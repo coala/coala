@@ -77,7 +77,8 @@ class StringConverter:
 
         self.__list = list(StringProcessing.unescaped_split(
             pattern,
-            self.value))
+            self.value,
+            use_regex=True))
 
         if remove_backslashes:
             for i in range(len(self.__list)):

@@ -123,7 +123,8 @@ def split(pattern,
 def unescaped_split(pattern,
                     string,
                     max_split=0,
-                    remove_empty_matches=False):
+                    remove_empty_matches=False,
+                    use_regex=False):
     """
     Splits the given string by the specified pattern. The return character (\n)
     is not a natural split pattern (if you don't specify it yourself).
@@ -133,13 +134,15 @@ def unescaped_split(pattern,
              return strange results. The backslash can interfere with the
              escaping regex-sequence used internally to split.
 
-    :param pattern:              A regex pattern that defines where to split.
+    :param pattern:              A pattern that defines where to split.
     :param string:               The string to split by the defined pattern.
     :param max_split:            Defines the maximum number of splits. If 0 or
                                  less is provided, the number of splits is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
                                  be removed from the result.
+    :param use_regex:            Specifies whether to treat the split pattern
+                                 as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
     # Need to use re.search() since using splitting directly is not possible.
@@ -148,6 +151,9 @@ def unescaped_split(pattern,
     # variable number of letters (means quantifiers are not usable there). So
     # if we try to match the escape sequences too, they would be replaced,
     # because they are consumed then by the regex. That's not wanted.
+
+    if not use_regex:
+        pattern = re.escape(pattern)
 
     # Regex explanation:
     # 1. (.*?)              Match any char unlimited times, as few times as
