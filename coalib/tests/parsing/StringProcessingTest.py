@@ -108,6 +108,27 @@ class StringProcessingTest(unittest.TestCase):
         self.test_search_for_max_match_expected_master_result = (
             self.test_search_for_expected_results)
 
+        self.test_search_for_disabled_regex_pattern = r"\'"
+        self.test_search_for_disabled_regex_pattern_expected_results = [
+            [],
+            [self.test_search_for_disabled_regex_pattern],
+            [],
+            [],
+            [self.test_search_for_disabled_regex_pattern],
+            [self.test_search_for_disabled_regex_pattern],
+            [],
+            [self.test_search_for_disabled_regex_pattern],
+            [self.test_search_for_disabled_regex_pattern],
+            [],
+            [],
+            [self.test_search_for_disabled_regex_pattern],
+            [self.test_search_for_disabled_regex_pattern],
+            [],
+            [],
+            [],
+            [],
+            []]
+
     def set_up_split(self):
         self.test_split_pattern = "'"
         self.test_split_expected_results = [
@@ -535,6 +556,19 @@ class StringProcessingTest(unittest.TestCase):
                                             0,
                                             i,
                                             True)
+
+    # Test search_for() with regexes disabled.
+    def test_search_for_disabled_regex(self):
+        search_pattern = self.test_search_for_disabled_regex_pattern
+        expected_results = (
+            self.test_search_for_disabled_regex_pattern_expected_results)
+
+        self.assertSearchForResultEqual(search_pattern,
+                                        self.test_strings,
+                                        expected_results,
+                                        0,
+                                        0,
+                                        False)
 
     # Test the basic split() functionality.
     def test_split(self):
