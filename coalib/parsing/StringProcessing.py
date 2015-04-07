@@ -257,7 +257,8 @@ def unescaped_search_in_between(begin,
                                 end,
                                 string,
                                 max_matches=0,
-                                remove_empty_matches=False):
+                                remove_empty_matches=False,
+                                use_regex=False):
     """
     Searches for a string enclosed between a specified begin- and end-sequence.
     Also enclosed \n are put into the result.
@@ -278,11 +279,20 @@ def unescaped_search_in_between(begin,
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
                                  be removed from the result.
+    :param use_regex:            Specifies whether to treat the begin and end
+                                 patterns as regexes or simple strings.
     :return:                     An iterator returning the matched strings.
     """
-    # Compilation of the begin sequence is needed to get the number of
-    # capturing groups in it.
-    compiled_begin_pattern = re.compile(begin)
+    if not use_regex:
+        begin = re.escape(begin)
+        end = re.escape(end)
+        # No need to compile the begin sequence, capturing groups get escaped.
+        begin_pattern_groups = 0
+    else:
+        # Compilation of the begin sequence is needed to get the number of
+        # capturing groups in it.
+        compiled_begin_pattern = re.compile(begin)
+        begin_pattern_groups = compiled_begin_pattern.groups
 
     # Regex explanation:
     # 1. (?<!\\)(?:\\\\)* Unescapes the following char. The first part of this
@@ -308,11 +318,11 @@ def unescaped_search_in_between(begin,
 
     if remove_empty_matches:
         matches = trim_empty_matches(matches,
-                                     [compiled_begin_pattern.groups + 1,
-                                      compiled_begin_pattern.groups + 2])
+                                     [begin_pattern_groups + 1,
+                                      begin_pattern_groups + 2])
 
     matches = limit(matches, max_matches)
 
     for elem in matches:
-        yield (elem.group(compiled_begin_pattern.groups + 1) +
-               elem.group(compiled_begin_pattern.groups + 2))
+        yield (elem.group(begin_pattern_groups + 1) +
+               elem.group(begin_pattern_groups + 2))

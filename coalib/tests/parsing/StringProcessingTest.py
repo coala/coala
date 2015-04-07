@@ -497,7 +497,8 @@ class StringProcessingTest(unittest.TestCase):
                                              begin,
                                              end,
                                              max_match=0,
-                                             remove_empty_matches=False):
+                                             remove_empty_matches=False,
+                                             use_regex=False):
         """
         Checks whether all supplied test strings are returned as expected from
         unescaped_search_in_between().
@@ -512,6 +513,8 @@ class StringProcessingTest(unittest.TestCase):
                                      when invoking
                                      unescaped_search_in_between().
         :param remove_empty_matches: Whether to remove empty entries or not.
+        :param use_regex:            Whether to treat begin and end patterns as
+                                     regexes or not.
         """
         self.assertEqual(len(expected_results), len(test_strings))
         for i in range(0, len(expected_results)):
@@ -519,7 +522,8 @@ class StringProcessingTest(unittest.TestCase):
                                                        end,
                                                        test_strings[i],
                                                        max_match,
-                                                       remove_empty_matches)
+                                                       remove_empty_matches,
+                                                       use_regex)
             self.assertIteratorElementsEqual(iter(expected_results[i]),
                                              return_value)
 
@@ -804,11 +808,15 @@ class StringProcessingTest(unittest.TestCase):
 
     # Test the basic unescaped_search_in_between() functionality.
     def test_unescaped_search_in_between(self):
-        self.assertUnescapedSearchInBetweenEquals(
-            self.test_strings,
-            self.test_unescaped_search_in_between_expected_results,
-            self.test_unescaped_search_in_between_pattern,
-            self.test_unescaped_search_in_between_pattern)
+        for use_regex in [True, False]:
+            self.assertUnescapedSearchInBetweenEquals(
+                self.test_strings,
+                self.test_unescaped_search_in_between_expected_results,
+                self.test_unescaped_search_in_between_pattern,
+                self.test_unescaped_search_in_between_pattern,
+                0,
+                False,
+                use_regex)
 
     # Test the unescaped_search_in_between() while varying the max_match
     # parameter.
@@ -821,12 +829,15 @@ class StringProcessingTest(unittest.TestCase):
                 expected_master_results[j][0 : max_match]
                 for j in range(len(expected_master_results))]
 
-            self.assertUnescapedSearchInBetweenEquals(
-                self.test_strings,
-                expected_results,
-                self.test_unescaped_search_in_between_max_match_pattern,
-                self.test_unescaped_search_in_between_max_match_pattern,
-                max_match)
+            for use_regex in [True, False]:
+                self.assertUnescapedSearchInBetweenEquals(
+                    self.test_strings,
+                    expected_results,
+                    self.test_unescaped_search_in_between_max_match_pattern,
+                    self.test_unescaped_search_in_between_max_match_pattern,
+                    max_match,
+                    False,
+                    use_regex)
 
     # Test the unescaped_search_in_between() function with different regex
     # patterns.
@@ -840,20 +851,28 @@ class StringProcessingTest(unittest.TestCase):
             return_value = unescaped_search_in_between(
                 self.multi_patterns[i],
                 self.multi_patterns[i],
-                self.multi_pattern_test_string)
+                self.multi_pattern_test_string,
+                0,
+                False,
+                True)
             self.assertIteratorElementsEqual(iter(expected_results[i]),
                                              return_value)
 
     # Test the unescaped_search_in_between() function for its
     # remove_empty_matches feature.
     def test_unescaped_search_in_between_auto_trim(self):
-        self.assertUnescapedSearchInBetweenEquals(
-            self.auto_trim_test_strings,
-            self.test_unescaped_search_in_between_auto_trim_expected_results,
-            self.test_unescaped_search_in_between_auto_trim_pattern,
-            self.test_unescaped_search_in_between_auto_trim_pattern,
-            0,
-            True)
+        expected_results = (
+            self.test_unescaped_search_in_between_auto_trim_expected_results)
+
+        for use_regex in [True, False]:
+            self.assertUnescapedSearchInBetweenEquals(
+                self.auto_trim_test_strings,
+                expected_results,
+                self.test_unescaped_search_in_between_auto_trim_pattern,
+                self.test_unescaped_search_in_between_auto_trim_pattern,
+                0,
+                True,
+                use_regex)
 
 
 if __name__ == '__main__':
