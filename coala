@@ -26,6 +26,7 @@ from coalib.misc.i18n import _
 
 if __name__ == "__main__":
     log_printer = None
+    exitcode = 0
     try:
         did_nothing = True
         yielded_results = False
@@ -48,14 +49,12 @@ if __name__ == "__main__":
             interactor.did_nothing()
 
         if yielded_results:
-            exit(1)
-        else:
-            exit(0)
+            exitcode = 1
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
-        exit(255)
+        exitcode = 255
     except SystemExit as e:
-        exit(e.code)
+        exitcode = e.code
     except:
         exception = sys.exc_info()[1]
         UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
@@ -69,4 +68,6 @@ if __name__ == "__main__":
 
         log_printer.log_exception(UNKNOWN_ERROR + " " + DESCRIPTION,
                                   exception)
-        exit(255)
+        exitcode = 255
+
+    exit(exitcode)
