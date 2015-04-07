@@ -366,6 +366,10 @@ class StringProcessingTest(unittest.TestCase):
             [],
             [r"a"]]
 
+        self.test_unescaped_search_in_between_disabled_regex_pattern = r"'()?"
+        self.test_unescaped_search_in_between_disabled_regex_expected = (
+            [[] for x in range(len(self.test_strings))])
+
     def assertSearchForResultEqual(self,
                                    pattern,
                                    test_strings,
@@ -903,6 +907,17 @@ class StringProcessingTest(unittest.TestCase):
                 True,
                 use_regex)
 
+    # Test the unescaped_search_in_between() function for its use_regex
+    # parameter.
+    def test_unescaped_search_in_between_disabled_regex(self):
+        self.assertUnescapedSearchInBetweenEquals(
+            self.test_strings,
+            self.test_unescaped_search_in_between_disabled_regex_expected,
+            self.test_unescaped_search_in_between_disabled_regex_pattern,
+            self.test_unescaped_search_in_between_disabled_regex_pattern,
+            0,
+            True,
+            False)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
