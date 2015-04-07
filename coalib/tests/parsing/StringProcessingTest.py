@@ -185,6 +185,27 @@ class StringProcessingTest(unittest.TestCase):
             [2 * self.bs],
             [r"abc", r"a", r"asc"]]
 
+        self.test_split_disabled_regex_pattern = r"\'"
+        self.test_split_disabled_regex_expected_results = [
+            [r"out1 'escaped-escape:        \\ ' out2"],
+            [r"out1 'escaped-quote:         ", r" ' out2"],
+            [r"out1 'escaped-anything:      \X ' out2"],
+            [r"out1 'two escaped escapes: \\\\ ' out2"],
+            [r"out1 'escaped-quote at end:   ", r"' out2"],
+            [r"out1 'escaped-escape at end:  " + self.bs, r" out2"],
+            [r"out1           'str1' out2 'str2' out2"],
+            [r"out1 ", r"        'str1' out2 'str2' out2"],
+            [r"out1 \\", r"      'str1' out2 'str2' out2"],
+            [r"out1 \\        'str1' out2 'str2' out2"],
+            [r"out1 \\\\      'str1' out2 'str2' out2"],
+            [r"out1         " + self.bs, r"str1' out2 'str2' out2"],
+            [r"out1       " + 3 * self.bs, r"str1' out2 'str2' out2"],
+            [r"out1           'str1''str2''str3' out2"],
+            [r""],
+            [r"out1 out2 out3"],
+            [self.bs],
+            [2 * self.bs]]
+
     def set_up_unescaped_split(self):
         self.test_unescaped_split_pattern = "'"
         self.test_unescaped_split_expected_results = [
@@ -634,6 +655,15 @@ class StringProcessingTest(unittest.TestCase):
                                    0,
                                    True,
                                    use_regex)
+
+    # Test the split() function with regexes disabled.
+    def test_split_disabled_regex(self):
+        self.assertSplitEquals(self.test_strings,
+                               self.test_split_disabled_regex_expected_results,
+                               self.test_split_disabled_regex_pattern,
+                               0,
+                               False,
+                               False)
 
     # Test the basic unescaped_split() functionality.
     def test_unescaped_split(self):
