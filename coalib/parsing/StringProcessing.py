@@ -1,17 +1,22 @@
 import re
 
 
-def search_for(pattern, string, flags=0, max_match=0):
+def search_for(pattern, string, flags=0, max_match=0, use_regex=False):
     """
     Searches for a given pattern in a string.
 
-    :param pattern:   A regex pattern that defines what to match.
+    :param pattern:   A pattern that defines what to match.
     :param string:    The string to search in.
     :param flags:     Additional flags to pass to the regex processor.
     :param max_match: Defines the maximum number of matches to perform. If 0 or
                       less is provided, the number of splits is not limited.
+    :param use_regex: Specifies whether to treat the pattern as a regex or
+                      simple string.
     :return:          An iterator returning MatchObject's.
     """
+    if not use_regex:
+        pattern = re.escape(pattern)
+
     for elem in limit(re.finditer(pattern, string, flags), max_match):
         yield elem
 

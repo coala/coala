@@ -321,7 +321,8 @@ class StringProcessingTest(unittest.TestCase):
                                    test_strings,
                                    expected_strings,
                                    flags = 0,
-                                   max_match = 0):
+                                   max_match = 0,
+                                   use_regex=False):
         """
         Checks whether the given test_strings do equal the expected_strings
         after feeding search_for() with them.
@@ -332,13 +333,15 @@ class StringProcessingTest(unittest.TestCase):
         :param flags:            Passed to the parameter flags in search_for().
         :param max_match:        The number of matches to perform. 0 or
                                  less would not limit the number of matches.
+        :param use_regex:        Whether to treat pattern as a regex or not.
         """
         self.assertEqual(len(expected_strings), len(test_strings))
         for i in range(0, len(expected_strings)):
             return_value = search_for(pattern,
                                       test_strings[i],
                                       flags,
-                                      max_match)
+                                      max_match,
+                                      use_regex)
 
             # Check each MatchObject. Need to iterate over the return_value
             # since the return value is an iterator object pointing to the
@@ -485,25 +488,36 @@ class StringProcessingTest(unittest.TestCase):
 
         self.assertSearchForResultEqual(search_pattern,
                                         self.test_strings,
-                                        expected_results)
+                                        expected_results,
+                                        0,
+                                        0,
+                                        True)
 
     # Test search_for() with a simple pattern.
     def test_search_for_simple_pattern(self):
         search_pattern = self.test_search_for_simple_pattern_pattern
         expected_results = self.test_search_for_simple_pattern_expected_results
 
-        self.assertSearchForResultEqual(search_pattern,
-                                        self.test_strings,
-                                        expected_results)
+        for use_regex in [True, False]:
+            self.assertSearchForResultEqual(search_pattern,
+                                            self.test_strings,
+                                            expected_results,
+                                            0,
+                                            0,
+                                            use_regex)
 
     # Test search_for() with an empty pattern.
     def test_search_for_empty_pattern(self):
         search_pattern = self.test_search_for_empty_pattern_pattern
         expected_results = self.test_search_for_empty_pattern_expected_results
 
-        self.assertSearchForResultEqual(search_pattern,
-                                        self.test_strings,
-                                        expected_results)
+        for use_regex in [True, False]:
+            self.assertSearchForResultEqual(search_pattern,
+                                            self.test_strings,
+                                            expected_results,
+                                            0,
+                                            0,
+                                            use_regex)
 
     # Test search_for() for its max_match parameter.
     def test_search_for_max_match(self):
@@ -519,7 +533,8 @@ class StringProcessingTest(unittest.TestCase):
                                             self.test_strings,
                                             expected_results,
                                             0,
-                                            i)
+                                            i,
+                                            True)
 
     # Test the basic split() functionality.
     def test_split(self):
