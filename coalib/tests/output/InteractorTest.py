@@ -11,6 +11,9 @@ class InteractorTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = Interactor(ConsolePrinter())
 
+    def tearDown(self):
+        self.uut.close()
+
     def test_api(self):
         self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")
         self.assertRaises(NotImplementedError, self.uut.print_result, Result("message", "origin"), {})
