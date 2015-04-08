@@ -37,6 +37,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
     def tearDown(self):
         builtins.__dict__["input"] = self._input
+        self.uut.close()
 
     def test_require_settings(self):
         self.assertRaises(TypeError, self.uut.acquire_settings, 0)
@@ -252,9 +253,9 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
     def test_from_section(self):
         section = Section("test")
-        ConsoleInteractor.from_section(section)
+        ConsoleInteractor.from_section(section).close()
         section.append(Setting("output", "stderr"))
-        ConsoleInteractor.from_section(section)
+        ConsoleInteractor.from_section(section).close()
 
     @staticmethod
     def get_str_from_queue(q):
