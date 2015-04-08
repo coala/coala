@@ -1,7 +1,6 @@
 import inspect
 import os
 import sys
-
 import unittest
 
 sys.path.insert(0, ".")
@@ -11,7 +10,6 @@ from coalib.collecting.Collectors import collect_files, \
 
 
 class CollectFilesTestCase(unittest.TestCase):
-
     def setUp(self):
         current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
         self.collectors_test_dir = os.path.join(current_dir,
@@ -38,7 +36,6 @@ class CollectFilesTestCase(unittest.TestCase):
 
 
 class CollectDirsTestCase(unittest.TestCase):
-
     def setUp(self):
         current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
         self.collectors_test_dir = os.path.join(current_dir,
@@ -66,7 +63,6 @@ class CollectDirsTestCase(unittest.TestCase):
 
 
 class CollectBearsTestCase(unittest.TestCase):
-
     def setUp(self):
         current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
         self.collectors_test_dir = os.path.join(current_dir,
