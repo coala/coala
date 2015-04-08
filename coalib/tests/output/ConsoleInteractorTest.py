@@ -95,7 +95,8 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.uut.print_result(PatchResult("origin",
                                               "msg",
-                                              {testfile_path: diff}), file_dict)
+                                              {testfile_path: diff}),
+                                  file_dict)
 
         # To assure user can rechose if he didn't chose wisely
         input_generator = InputGenerator(["INVALID", -1, 1, 3])
@@ -120,18 +121,20 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         # Check for asking the user for the paremeter just int the first time
         # Use OpenEditorAction thats need parameter (editor command)
         input_generator = InputGenerator([1, "test_editor", 1])
-        builtins.__dict__["input"] = input_generator.generate_input  # Choose open editor action
+        # Choose open editor action
+        builtins.__dict__["input"] = input_generator.generate_input
         PatchResult.get_actions = lambda self: [OpenEditorAction()]
 
         patch_result = PatchResult("origin", "msg", {testfile_path: diff})
         patch_result.file = "f_b"
 
         self.uut.print_result(patch_result, file_dict)
-        self.assertEquals(input_generator.current_input, 1)  # Increase by 2 (-1 -> 1)
+        # Increase by 2 (-1 -> 1)
+        self.assertEqual(input_generator.current_input, 1)
 
         # Increase by 1, It shoudn't ask for parameter again
         self.uut.print_result(patch_result, file_dict)
-        self.assertEquals(input_generator.current_input, 2)
+        self.assertEqual(input_generator.current_input, 2)
 
     def test_static_functions(self):
         q = queue.Queue()
