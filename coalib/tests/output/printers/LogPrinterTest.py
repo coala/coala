@@ -23,6 +23,7 @@ class LogPrinterTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError,
                           uut.log_message,
                           self.log_message)
+        uut.close()
 
     def test_logging(self):
         uut = TestLogPrinter(timestamp_format="")
@@ -79,11 +80,14 @@ class LogPrinterTestCase(unittest.TestCase):
             "[" + _("ERROR") + "][" + ts.strftime("%X") +
             "] Something failed.\n\n" + _("Exception was:") + "\n"))
 
+        uut.close()
+
     def test_raises(self):
         uut = LogPrinter()
         self.assertRaises(TypeError, uut.log, 5)
         self.assertRaises(TypeError, uut.log_exception, "message", 5)
         self.assertRaises(TypeError, uut.log_message, 5)
+        uut.close()
 
 
 if __name__ == '__main__':
