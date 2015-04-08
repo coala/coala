@@ -35,46 +35,48 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
 
 class SectionExecutorInitTestCase(unittest.TestCase):
     def test_init(self):
+        interactor = ConsoleInteractor()
+        log_printer = ConsolePrinter()
         self.assertRaises(TypeError,
                           SectionExecutor,
                           5,
                           [],
                           [],
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          interactor,
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           5,
                           [],
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          interactor,
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           5,
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          interactor,
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           [],
                           5,
-                          ConsolePrinter())
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           [],
-                          ConsoleInteractor(),
+                          interactor,
                           5)
         SectionExecutor(Section("test"),
                         [],
                         [],
-                        ConsoleInteractor(),
-                        ConsolePrinter()).run
+                        interactor,
+                        log_printer)
 
 
 class SectionExecutorTestCase(unittest.TestCase):
@@ -103,6 +105,9 @@ class SectionExecutorTestCase(unittest.TestCase):
                                    self.global_bears["default"],
                                    self.interactor,
                                    self.interactor)
+
+    def tearDown(self):
+        self.interactor.close()
 
     def test_run(self):
         self.assertTrue(self.uut.run())
