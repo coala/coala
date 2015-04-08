@@ -10,6 +10,9 @@ class NullInteractorTestCase(unittest.TestCase):
     def setUp(self):
         self.uut = NullInteractor()
 
+    def tearDown(self):
+        self.uut.close()
+
     def test_api(self):
         self.uut.acquire_settings([])
         self.uut.print_result(Result("message", "origin"), {})
