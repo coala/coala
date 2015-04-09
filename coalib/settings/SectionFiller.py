@@ -11,8 +11,10 @@ class SectionFiller:
         prompts the user for those values and stores them in the original
         section given.
 
-        :param section: A section containing available settings. Settings will
-        be added if some are missing.
+        :param section:     A section containing available settings. Settings
+                            will be added if some are missing.
+        :param interactor:  The interactor to use for requesting settings.
+        :param log_printer: The log printer for logging.
         """
         if not isinstance(section, Section):
             raise TypeError("The section parameter has to be of type Section.")
@@ -30,7 +32,7 @@ class SectionFiller:
         latest bear will be taken.
 
         :param bears: All bear classes or instances.
-        :return: the new section
+        :return:      The new section
         """
         if not isinstance(bears, list):
             raise TypeError("The bears parameter has to be a list of bear "
