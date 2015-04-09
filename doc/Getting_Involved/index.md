@@ -33,12 +33,3 @@ Modularity, clean good code as well as a high usability for both users and
 developers of analyse routines (called bears) stand in the foreground of the
 development. We will not speed up our development if it needs sacrificing
 any aspect of quality.
-
-We currently have more information on the following topics:
-
- * [Writing good commit messages](COMMIT_MESSAGES.md)
- * [coala's review process](REVIEWING.md)
- * [Python codestyle](CODESTYLE.md)
- * [Testing](TESTING.md) and [writing tests](WRITING_TESTS.md)
- * [Translating](TRANSLATING.md)
- * [Writing Bears](WRITING_BEARS.md)
