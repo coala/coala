@@ -28,7 +28,7 @@ USAGE
 =====
 
 If you want to learn more about coala, its functionality and its usage, please
-take a look at the [TUTORIAL.md](TUTORIAL.md) file.
+take a look at the [TUTORIAL.md](doc/Tutorial.md) file.
 
 ABOUT
 =====
