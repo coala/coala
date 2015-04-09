@@ -22,7 +22,7 @@ INSTALLATION
 
 coala can be installed with `python3 setup.py install`. If you need more
 information about the installation and dependencies, take a look at our
-[INSTALL.md](INSTALL.md).
+[INSTALL.md](doc/Install.md).
 
 USAGE
 =====
