@@ -3,15 +3,6 @@
 Please note that these guidelines are currently work in progress. They will be
 extended soon.
 
-# Table of Contents
-
- * Introduction
- * Spacing
- * Maximum Line Length
- * Source File Encoding
- * Imports
-
-
 # Introduction
 
 The main programming language for coala is python 3. This document specifies
