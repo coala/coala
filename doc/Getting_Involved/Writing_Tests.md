@@ -195,58 +195,58 @@ either installed executables, packages, python versions etc.
 
 coala provides two methods to skip a test.
 
-- `skip_test()` function
+### `skip_test()` function
 
-  Just define this function in your test module and test the needed
-  prerequisites:
+Just define this function in your test module and test the needed
+prerequisites:
 
-  ```python
-  def skip_test(self):
-      # Add here your checks.
-      return False
+```python
+def skip_test(self):
+    # Add here your checks.
+    return False
 
-  class YourComponentTest(unittest.TestCase):
-      pass
-  ```
+class YourComponentTest(unittest.TestCase):
+    pass
+```
 
-  The function shall only return `False` (if everything is OK and test can run)
-  or a string with the reason why the test is skipped. But never return `True`!
+The function shall only return `False` (if everything is OK and test can run)
+or a string with the reason why the test is skipped. But never return `True`!
 
-  If your test skips, the `run_tests.py` script will show that. Note that the
-  whole test module will be skipped.
+If your test skips, the `run_tests.py` script will show that. Note that the
+whole test module will be skipped.
 
-  An example for skipping a test (used for the eSpeak printer test for real):
+An example for skipping a test (used for the eSpeak printer test for real):
 
-  ```python
-  def skip_test():
-      try:
-          subprocess.Popen(['espeak'])
-          return False
-      except OSError:
-          return "eSpeak is not installed."
-  ```
+```python
+def skip_test():
+    try:
+        subprocess.Popen(['espeak'])
+        return False
+    except OSError:
+        return "eSpeak is not installed."
+```
 
-- `unittest` built-in attributes
+### `unittest` built-in attributes
 
-  The `unittest` package from python defines attributes to handle skips for
-  specific test cases, not only the whole test suite.
+The `unittest` package from python defines attributes to handle skips for
+specific test cases, not only the whole test suite.
 
-  Skipping tests using attributes **is not shown** in the `run_tests.py`
-  script!
+Skipping tests using attributes **is not shown** in the `run_tests.py`
+script!
 
-  Since there are many ways to skip tests like this, here only a short example:
+Since there are many ways to skip tests like this, here only a short example:
 
-  ```python
-  @unittest.skipIf(mylib.__version__ < (1, 3),
-                   "Not supported in this library version.")
-  def test_format(self):
-      # Tests that work for only a certain version of the library.
-      pass
-  ```
+```python
+@unittest.skipIf(mylib.__version__ < (1, 3),
+                 "Not supported in this library version.")
+def test_format(self):
+    # Tests that work for only a certain version of the library.
+    pass
+```
 
-  For more information about the attribute usage, refer to the [documentation]
-  (https://docs.python.org/3.4/library/unittest.html) at paragraph
-  **26.3.6. Skipping tests and expected failures**.
+For more information about the attribute usage, refer to the [documentation]
+(https://docs.python.org/3.4/library/unittest.html) at paragraph
+**26.3.6. Skipping tests and expected failures**.
 
 ## Assertions
 
