@@ -1,4 +1,4 @@
-COMMIT MESSAGES
+Commit Messages
 ===============
 
 There are a few things to consider when writing a commit message, namely:

@@ -1,4 +1,4 @@
-REVIEWING
+Reviewing
 =========
 
 This document is a guide to coalas review process. It will be extended over
