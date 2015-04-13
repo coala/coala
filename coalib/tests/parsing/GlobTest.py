@@ -3,9 +3,9 @@ import os
 import shutil
 import sys
 import tempfile
+import unittest
 
 sys.path.insert(0, ".")
-import unittest
 from coalib.parsing.Glob import glob, iglob, _Selector, _iter_or_combinations
 
 
