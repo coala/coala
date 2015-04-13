@@ -17,3 +17,6 @@ pages:
    'Getting Involved',
    'Writing Commit Messages']
 - ['Getting_Involved/MAC_Hints.md', 'Getting Involved', 'MAC Hints']
+- ['General_Dev_Info/git_tutorial_1.md',
+   'General Developer Information',
+   'A Hitchhikers Guide To Git (1): Genesis']
