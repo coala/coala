@@ -4,7 +4,6 @@ import threading
 
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.BearRunner import BearRunner
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Barrier import Barrier
@@ -39,7 +38,7 @@ class SectionExecutor:
         This is the Thread object that outputs all log messages it gets from
         its message_queue.
         """
-        def __init__(self, message_queue, log_printer=ConsolePrinter()):
+        def __init__(self, message_queue, log_printer):
             threading.Thread.__init__(self)
             self.running = True
             self.message_queue = message_queue
