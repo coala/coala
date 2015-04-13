@@ -41,12 +41,13 @@ import re
 
 Note that you can't import coala components here now.
 
-After that these three lines follow:
+After that these lines follow:
 
 ```python
-import sys
-sys.path.insert(0, ".")
 import unittest
+import sys
+
+sys.path.insert(0, ".")
 ```
 
 These are necessary imports and setups to make tests working properly in the
@@ -322,9 +323,7 @@ modify it to let it test your stuff and run from the coala root folder
 
 ```python
 # Import here your needed system components.
-
 import sys
-sys.path.insert(0, ".")
 import unittest
 
 # Import here your needed coala components.
