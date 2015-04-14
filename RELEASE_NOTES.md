@@ -8,8 +8,9 @@ This release features the following new features:
  * Write newlines before beginning new sections in coafiles when appropriate.
  * The default_coafile can now be used for arbitrary system-wide settings.
  * coala can now be configured user-wide with a ~/.coarc configuration file.
+ * Manual written documentation is now hosted at http://coala.rtfd.org/.
 
-Additionally many bugfixes and code improvements have been done.
+Additionally many bugfixes and other code improvements have been done.
 
 # coala 0.1.1 alpha
 
