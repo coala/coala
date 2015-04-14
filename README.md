@@ -68,6 +68,9 @@ Build status
 [![codecov.io](https://codecov.io/github/coala-analyzer/coala/coverage.svg?branch=master)](https://codecov.io/github/coala-analyzer/coala?branch=master)
 (Branch coverage)
 
+[![Documentation Status](https://readthedocs.org/projects/coala/badge/?version=latest)](https://readthedocs.org/projects/coala/?badge=latest)
+(Documentation Status)
+
 GETTING INVOLVED
 ================
 
