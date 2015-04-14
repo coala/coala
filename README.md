@@ -22,13 +22,14 @@ INSTALLATION
 
 coala can be installed with `python3 setup.py install`. If you need more
 information about the installation and dependencies, take a look at our
-[INSTALL.md](doc/Install.md).
+[installation documentation](http://coala.rtfd.org/en/latest/Install/).
 
 USAGE
 =====
 
 If you want to learn more about coala, its functionality and its usage, please
-take a look at the [TUTORIAL.md](doc/Tutorial.md) file.
+take a look at our
+[tutorial](http://coala.rtfd.org/en/latest/Tutorial/).
 
 ABOUT
 =====
@@ -37,15 +38,7 @@ coala is a simple COde AnaLysis Application. Its goal is to make static code
 analysis easy while remaining completely modular and therefore extendable and
 language independent.
 
-Code analysis happens in python scripts while coala manages these, tries to
-provide helpful libraries and provides multiple user interfaces. (Currently
-we support only Console output but others will follow.)
-
-We are currently working hard to make this project reality. coala is currently
-in an alpha stage and provides the most basic features. If you want to see how
-the development progresses, check out
-
-https://github.com/coala-analyzer/coala
+Read more at our [documentation](http://coala.rtfd.org/en/latest/).
 
 Authors
 -------
@@ -75,7 +68,7 @@ GETTING INVOLVED
 ================
 
 If you want to contribute to coala, please take a look at the
-[doc/getting_involved](doc/getting_involved) directory.
+[Getting Involved Information](http://coala.rtfd.org/en/latest/Getting_Involved/).
 
 We appreciate any help!
 
