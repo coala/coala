@@ -112,7 +112,7 @@ class TestHelper:
                 nonexistent_tests += 1
                 self.failed_tests += 1
                 print(" {:>2}/{:<2} | {}, Cannot execute: This test does "
-                      "not exist.".format(j, number, test))
+                      "not exist.".format(nonexistent_tests, number, test))
 
         return nonexistent_tests, number
 
