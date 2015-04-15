@@ -47,7 +47,6 @@ class Bear(LogPrinter):
 
         self.section = section
         self.message_queue = message_queue
-        print(type(self.message_queue))
         self.TIMEOUT = TIMEOUT
 
     def set_up(self):
