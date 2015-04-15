@@ -17,7 +17,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_PROJECT_WIDE = _("Project wide:")
 
     def __init__(self,
-                 log_printer=ConsolePrinter(),
+                 log_printer,
                  pre_padding: int=3):
         """
         A ConsoleInteractor uses the Console to interact with the user.

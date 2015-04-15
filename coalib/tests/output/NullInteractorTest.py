@@ -3,12 +3,13 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.output.NullInteractor import NullInteractor
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.Result import Result
 
 
 class NullInteractorTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = NullInteractor()
+        self.uut = NullInteractor(ConsolePrinter())
 
     def test_api(self):
         self.uut.acquire_settings([])

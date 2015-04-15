@@ -3,12 +3,13 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.output.Interactor import Interactor
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.Result import Result
 
 
 class InteractorTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = Interactor()
+        self.uut = Interactor(ConsolePrinter())
 
     def test_api(self):
         self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")

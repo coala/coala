@@ -15,8 +15,8 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
-    def __init__(self, result_queue, log_queue):
-        Interactor.__init__(self)
+    def __init__(self, log_printer, result_queue, log_queue):
+        Interactor.__init__(self, log_printer)
         LogPrinter.__init__(self)
         self.result_queue = result_queue
         self.log_queue = log_queue
@@ -35,46 +35,48 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
 
 class SectionExecutorInitTestCase(unittest.TestCase):
     def test_init(self):
+        self.log_printer = ConsolePrinter()
+        self.interactor = ConsoleInteractor(self.log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           5,
                           [],
                           [],
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          self.interactor,
+                          self.log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           5,
                           [],
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          self.interactor,
+                          self.log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           5,
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          self.interactor,
+                          self.log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           [],
                           5,
-                          ConsolePrinter())
+                          self.log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           [],
-                          ConsoleInteractor(),
+                          self.interactor,
                           5)
         SectionExecutor(Section("test"),
                         [],
                         [],
-                        ConsoleInteractor(),
-                        ConsolePrinter()).run
+                        self.interactor,
+                        self.log_printer).run
 
 
 class SectionExecutorTestCase(unittest.TestCase):
@@ -95,7 +97,9 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.result_queue = queue.Queue()
         self.log_queue = queue.Queue()
 
-        self.interactor = SectionExecutorTestInteractor(self.result_queue,
+        log_printer = ConsolePrinter()
+        self.interactor = SectionExecutorTestInteractor(log_printer,
+                                                        self.result_queue,
                                                         self.log_queue)
 
         self.uut = SectionExecutor(self.sections["default"],

@@ -37,19 +37,21 @@ class LocalTestBear(LocalBear):
 
 class SectionFillerTestCase(unittest.TestCase):
     def setUp(self):
+        self.log_printer = ConsolePrinter()
+        self.interactor = ConsoleInteractor(self.log_printer)
         section = Section("test")
         section.append(Setting("key", "val"))
         self.uut = SectionFiller(section,
-                                 ConsoleInteractor(),
-                                 ConsolePrinter())
+                                 self.interactor,
+                                 self.log_printer)
 
     def test_raises(self):
         # Construction
         self.assertRaises(TypeError,
                           SectionFiller,
                           0,
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          self.interactor,
+                          self.log_printer)
 
         # Fill section
         self.assertRaises(TypeError, self.uut.fill_section, 0)

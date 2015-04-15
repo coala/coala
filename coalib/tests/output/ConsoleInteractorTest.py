@@ -14,6 +14,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 
@@ -27,7 +28,8 @@ class ConsoleInteractorTestCase(unittest.TestCase):
     def setUp(self):
         self._input = builtins.__dict__["input"]
         builtins.__dict__["input"] = lambda x: x
-        self.uut = ConsoleInteractor()
+        self.log_printer = ConsolePrinter()
+        self.uut = ConsoleInteractor(self.log_printer)
 
         # All those tests assume that Result has no actions and PatchResult has
         # one. This makes this test independent from the real number of actions
@@ -252,9 +254,9 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
     def test_from_section(self):
         section = Section("test")
-        ConsoleInteractor.from_section(section)
+        ConsoleInteractor.from_section(section, log_printer=self.log_printer)
         section.append(Setting("output", "stderr"))
-        ConsoleInteractor.from_section(section)
+        ConsoleInteractor.from_section(section, log_printer=self.log_printer)
 
     @staticmethod
     def get_str_from_queue(q):
