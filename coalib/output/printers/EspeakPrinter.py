@@ -16,12 +16,14 @@ class EspeakPrinter(Printer):
         try:
             self.espeak = subprocess.Popen(['espeak'], stdin=subprocess.PIPE)
         except OSError:  # pragma: no cover
-            print(_("eSpeak doesn't seem to be installed. You cannot use the voice output feature without eSpeak. "
-                    "It can be downloaded from http://espeak.sourceforge.net/ or installed via your usual package "
-                    "repositories."))
+            print(_("eSpeak doesn't seem to be installed. You cannot use the"
+                    "voice output feature without eSpeak. It can be downloaded"
+                    "from http://espeak.sourceforge.net/ or installed via your"
+                    "usual package repositories."))
             raise EnvironmentError
         except:  # pragma: no cover
-            print(_("Failed to execute eSpeak. An unknown error occurred."), StringConstants.THIS_IS_A_BUG)
+            print(_("Failed to execute eSpeak. An unknown error occurred."),
+                  StringConstants.THIS_IS_A_BUG)
             raise EnvironmentError
 
     def __del__(self):
