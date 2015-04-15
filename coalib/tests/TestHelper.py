@@ -198,9 +198,9 @@ class TestHelper:
         Executes the given test and counts up failed_tests or skipped_tests if
         needed.
 
-        :param filename: Filename of test to execute
-        :param curr_nr: Number of current test
-        :param max_nr: Count of all tests
+        :param filename:      Filename of test to execute
+        :param curr_nr:       Number of current test
+        :param max_nr:        Count of all tests
         :param ignored_files: Files to ignore for coverage
         """
         basename = os.path.splitext(os.path.basename(filename))[0]
