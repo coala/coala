@@ -1,4 +1,7 @@
-class Printer:
+from coalib.output.ClosableObject import ClosableObject
+
+
+class Printer(ClosableObject):
     """
     A Printer is an object that can output (usually unformatted) text.
 
@@ -12,17 +15,6 @@ class Printer:
     - EspeakPrinter for Voice output
     - NullPrinter for no output
     """
-    def __init__(self):
-        self._closed = False
-
-    def _close(self):
-        pass
-
-    def close(self):
-        if not self._closed:
-            self._close()
-            self._closed = True
-
     def _print(self, output, **kwargs):
         """
         Prints the output parameter. (Will be invoked via the print() method
