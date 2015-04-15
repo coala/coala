@@ -18,15 +18,16 @@ class FunctionMetadata:
         """
         Creates the FunctionMetadata object.
 
-        :param name: The name of the function.
-        :param desc: The description of the function.
-        :param retval_desc: The retval description of the function.
+        :param name:                The name of the function.
+        :param desc:                The description of the function.
+        :param retval_desc:         The retval description of the function.
         :param non_optional_params: A dict containing the name of non optional
-        parameters as the key and a tuple of a description and the python
-        annotation.
-        :param optional_params: A dict containing the name of optional
-        parameters as the key and a tuple
-        of a description, the python annotation and the default value.
+                                    parameters as the key and a tuple of a
+                                    description and the python annotation.
+        :param optional_params:     A dict containing the name of optional
+                                    parameters as the key and a tuple
+                                    of a description, the python annotation and
+                                    the default value.
         """
         if non_optional_params is None:
             non_optional_params = {}
@@ -58,7 +59,8 @@ class FunctionMetadata:
         function needs plus optional ones that are available.
 
         :param section: The section to retrieve the values from.
-        :return: A dictionary. Unfold it with ** to pass it to the function.
+        :return:        A dictionary. Unfold it with ** to pass it to the
+                        function.
         """
         # Import Section only as needed to avoid circular dependency
         from coalib.settings.Section import Section
@@ -108,8 +110,8 @@ class FunctionMetadata:
 
         :param func: The function.
         :param omit: A list of parameter names that are to be ignored.
-        :return: The FunctionMetadata object corresponding to the given
-        function.
+        :return:     The FunctionMetadata object corresponding to the given
+                     function.
         """
         if not isfunction(func) and not ismethod(func):
             raise TypeError("function has to be a function")

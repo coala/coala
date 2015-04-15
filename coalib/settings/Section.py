@@ -31,7 +31,7 @@ class Section:
         included in the targets list.
 
         :param targets: List of target section names, all lower case.
-        :return: True or False
+        :return:        True or False
         """
         if len(targets) == 0:
             return bool(self.get("enabled", "true"))
@@ -110,10 +110,10 @@ class Section:
         available an appropriate Setting will be generated from your provided
         default value.
 
-        :param key: The key of the setting to return.
-        :param default: The default value
+        :param key:             The key of the setting to return.
+        :param default:         The default value
         :param ignore_defaults: Whether or not to ignore the default section.
-        :return: The setting.
+        :return:                The setting.
         """
         try:
             return self.__getitem__(key, ignore_defaults)
@@ -139,10 +139,10 @@ class Section:
         Default values from the other section override the default values from
         this only.
 
-        :param other_section: Another Section
+        :param other_section:   Another Section
         :param ignore_defaults: If set to true, do not take default values from
-        other
-        :return: self
+                                other
+        :return:                self
         """
         if not isinstance(other_section, Section):
             raise TypeError("other_section has to be a Section")
