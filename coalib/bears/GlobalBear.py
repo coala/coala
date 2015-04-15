@@ -6,11 +6,13 @@ class GlobalBear(Bear):
     """
     A GlobalBear is able to analyze semantical facts across several file.
 
-    The results of a GlobalBear will be presented grouped by the origin Bear. Therefore Results spanning above multiple
-    files are allowed and will be handled right.
+    The results of a GlobalBear will be presented grouped by the origin Bear.
+    Therefore Results spanning above multiple files are allowed and will be
+    handled right.
 
-    If you only look at one file at once anyway a LocalBear is better for your needs. (And better for performance and
-    usability for both user and developer.)
+    If you only look at one file at once anyway a LocalBear is better for your
+    needs. (And better for performance and usability for both user and
+    developer.)
     """
 
     def __init__(self,
@@ -34,4 +36,5 @@ class GlobalBear(Bear):
 
         :return: A list of Result type.
         """
-        raise NotImplementedError("This function has to be implemented for a runnable bear.")
+        raise NotImplementedError(
+            "This function has to be implemented for a runnable bear.")
