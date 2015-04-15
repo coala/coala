@@ -12,6 +12,7 @@ from coalib.results.Diff import Diff
 from coalib.settings.Section import Section, Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -25,9 +26,10 @@ class TestAction(ResultAction):
 
 class ConsoleInteractorTestCase(unittest.TestCase):
     def setUp(self):
+        self.log_printer = ConsolePrinter()
         self._input = builtins.__dict__["input"]
         builtins.__dict__["input"] = lambda x: x
-        self.uut = ConsoleInteractor()
+        self.uut = ConsoleInteractor(self.log_printer)
 
         # All those tests assume that Result has no actions and PatchResult has
         # one. This makes this test independent from the real number of actions
@@ -37,6 +39,8 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
     def tearDown(self):
         builtins.__dict__["input"] = self._input
+        self.uut.close()
+        self.log_printer.close()
 
     def test_require_settings(self):
         self.assertRaises(TypeError, self.uut.acquire_settings, 0)
@@ -95,7 +99,8 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.uut.print_result(PatchResult("origin",
                                               "msg",
-                                              {testfile_path: diff}), file_dict)
+                                              {testfile_path: diff}),
+                                  file_dict)
 
         # To assure user can rechose if he didn't chose wisely
         input_generator = InputGenerator(["INVALID", -1, 1, 3])
@@ -120,18 +125,20 @@ class ConsoleInteractorTestCase(unittest.TestCase):
         # Check for asking the user for the paremeter just int the first time
         # Use OpenEditorAction thats need parameter (editor command)
         input_generator = InputGenerator([1, "test_editor", 1])
-        builtins.__dict__["input"] = input_generator.generate_input  # Choose open editor action
+        # Choose open editor action
+        builtins.__dict__["input"] = input_generator.generate_input
         PatchResult.get_actions = lambda self: [OpenEditorAction()]
 
         patch_result = PatchResult("origin", "msg", {testfile_path: diff})
         patch_result.file = "f_b"
 
         self.uut.print_result(patch_result, file_dict)
-        self.assertEquals(input_generator.current_input, 1)  # Increase by 2 (-1 -> 1)
+        # Increase by 2 (-1 -> 1)
+        self.assertEqual(input_generator.current_input, 1)
 
         # Increase by 1, It shoudn't ask for parameter again
         self.uut.print_result(patch_result, file_dict)
-        self.assertEquals(input_generator.current_input, 2)
+        self.assertEqual(input_generator.current_input, 2)
 
     def test_static_functions(self):
         q = queue.Queue()
@@ -249,9 +256,11 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
     def test_from_section(self):
         section = Section("test")
-        ConsoleInteractor.from_section(section)
+        ConsoleInteractor.from_section(section,
+                                       log_printer=self.log_printer).close()
         section.append(Setting("output", "stderr"))
-        ConsoleInteractor.from_section(section)
+        ConsoleInteractor.from_section(section,
+                                       log_printer=self.log_printer).close()
 
     @staticmethod
     def get_str_from_queue(q):

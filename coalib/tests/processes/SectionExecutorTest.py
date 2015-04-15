@@ -15,8 +15,8 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
-    def __init__(self, result_queue, log_queue):
-        Interactor.__init__(self)
+    def __init__(self, log_printer, result_queue, log_queue):
+        Interactor.__init__(self, log_printer)
         LogPrinter.__init__(self)
         self.result_queue = result_queue
         self.log_queue = log_queue
@@ -35,46 +35,51 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
 
 class SectionExecutorInitTestCase(unittest.TestCase):
     def test_init(self):
+        log_printer = ConsolePrinter()
+        interactor = ConsoleInteractor(log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           5,
                           [],
                           [],
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          interactor,
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           5,
                           [],
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          interactor,
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           5,
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          interactor,
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           [],
                           5,
-                          ConsolePrinter())
+                          log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           Section("test"),
                           [],
                           [],
-                          ConsoleInteractor(),
+                          interactor,
                           5)
         SectionExecutor(Section("test"),
                         [],
                         [],
-                        ConsoleInteractor(),
-                        ConsolePrinter()).run
+                        interactor,
+                        log_printer)
+
+        interactor.close()
+        log_printer.close()
 
 
 class SectionExecutorTestCase(unittest.TestCase):
@@ -86,8 +91,14 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.testcode_c_path = os.path.join(os.path.dirname(config_path),
                                             "testcode.c")
 
-        self.sections, self.local_bears, self.global_bears, targets \
-            = SectionManager().run(["--config", config_path])[0:4]
+        (self.sections,
+         self.local_bears,
+         self.global_bears,
+         targets,
+         interactor,
+         printer) = SectionManager().run(["--config", config_path])
+        interactor.close()
+        printer.close()
         self.assertEqual(len(self.local_bears["default"]), 1)
         self.assertEqual(len(self.global_bears["default"]), 1)
         self.assertEqual(targets, [])
@@ -95,7 +106,9 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.result_queue = queue.Queue()
         self.log_queue = queue.Queue()
 
-        self.interactor = SectionExecutorTestInteractor(self.result_queue,
+        self.log_printer = ConsolePrinter()
+        self.interactor = SectionExecutorTestInteractor(self.log_printer,
+                                                        self.result_queue,
                                                         self.log_queue)
 
         self.uut = SectionExecutor(self.sections["default"],
@@ -103,6 +116,10 @@ class SectionExecutorTestCase(unittest.TestCase):
                                    self.global_bears["default"],
                                    self.interactor,
                                    self.interactor)
+
+    def tearDown(self):
+        self.interactor.close()
+        self.log_printer.close()
 
     def test_run(self):
         self.assertTrue(self.uut.run())

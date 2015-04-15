@@ -23,13 +23,19 @@ class ResultTestCase(unittest.TestCase):
 
     def test_get_actions(self):
         self.assertEqual(len(Result("origin", "msg").get_actions()), 0)
-        self.assertEqual(len(Result("origin", "msg", file="file").get_actions()), 1)
+        self.assertEqual(
+            len(Result("origin", "msg", file="file").get_actions()),
+            1)
 
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')
-        self.assertEqual(str(uut), "Result:\n origin: 'a'\n file: 'c'\n line nr: None\n severity: 1\n'b'")
+        self.assertEqual(str(uut),
+                         "Result:\n origin: 'a'\n file: 'c'\n line nr: None\n"
+                         " severity: 1\n'b'")
         self.assertEqual(str(uut), repr(uut))
-        self.assertEqual(Result("origin", "message", "file", line_nr=1).__str__(), """Result:
+        self.assertEqual(
+            Result("origin", "message", "file", line_nr=1).__str__(),
+            """Result:
  origin: 'origin'
  file: 'file'
  line nr: 1
@@ -38,25 +44,45 @@ class ResultTestCase(unittest.TestCase):
 
     def test_ordering(self):
         """
-        Tests the ordering routines of Result. This tests enough to have all branches covered. Not every case may be
-        covered but I want to see the (wo)man who writes comparison routines that match these criteria and are wrong to
-        the specification. (Given he does not engineer the routine to trick the test explicitly.)
+        Tests the ordering routines of Result. This tests enough to have all
+        branches covered. Not every case may be covered but I want to see the
+        (wo)man who writes comparison routines that match these criteria and
+        are wrong to the specification. (Given he does not engineer the routine
+        to trick the test explicitly.)
         """
-        medium = Result(origin='b', message='b', file='b', severity=RESULT_SEVERITY.NORMAL)
-        medium_too = Result(origin='b', message='b', file='b', severity=RESULT_SEVERITY.NORMAL)
+        medium = Result(origin='b',
+                        message='b',
+                        file='b',
+                        severity=RESULT_SEVERITY.NORMAL)
+        medium_too = Result(origin='b',
+                            message='b',
+                            file='b',
+                            severity=RESULT_SEVERITY.NORMAL)
         self.assert_equal(medium, medium_too)
 
-        bigger_file = Result(origin='b', message='b', file='c', severity=RESULT_SEVERITY.NORMAL)
+        bigger_file = Result(origin='b',
+                             message='b',
+                             file='c',
+                             severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(bigger_file, medium)
 
-        no_file = Result(origin='b', message='b', file=None, severity=RESULT_SEVERITY.NORMAL)
+        no_file = Result(origin='b',
+                         message='b',
+                         file=None,
+                         severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(medium, no_file)
 
-        no_file_and_unsevere = Result(origin='b', message='b', file=None, severity=RESULT_SEVERITY.INFO)
+        no_file_and_unsevere = Result(origin='b',
+                                      message='b',
+                                      file=None,
+                                      severity=RESULT_SEVERITY.INFO)
         self.assert_ordering(no_file_and_unsevere, no_file)
         self.assert_ordering(medium, no_file_and_unsevere)
 
-        greater_origin = Result(origin='c', message='b', file='b', severity=RESULT_SEVERITY.NORMAL)
+        greater_origin = Result(origin='c',
+                                message='b',
+                                file='b',
+                                severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(greater_origin, medium)
 
         medium.line_nr = 5

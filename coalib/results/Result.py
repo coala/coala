@@ -1,6 +1,7 @@
 from functools import total_ordering
 
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 
 
 @total_ordering
@@ -10,8 +11,10 @@ class Result:
 
     Optionally it might affect a file.
 
-    When sorting a list of results with the implemented comparision routines you will get an ordering which follows the
-    following conditions, while the first condition has the highest priority, which descends to the last condition.
+    When sorting a list of results with the implemented comparision routines
+    you will get an ordering which follows the following conditions,
+    while the first condition has the highest priority, which descends to the
+    last condition.
     1. Results with no files will be shown first
     2. Results will be sorted by files (ascending alphabetically)
     3. Results will be sorted by lines (ascending)
@@ -20,13 +23,18 @@ class Result:
     6. Results will be sorted by message (ascending alphabetically)
     """
 
-    def __init__(self, origin, message, file=None, severity=RESULT_SEVERITY.NORMAL, line_nr=None):
+    def __init__(self,
+                 origin,
+                 message,
+                 file=None,
+                 severity=RESULT_SEVERITY.NORMAL,
+                 line_nr=None):
         """
-        :param origin: Class name or class of the creator of this object
-        :param message: Message to show with this result
-        :param file: The path to the affected file
+        :param origin:   Class name or class of the creator of this object
+        :param message:  Message to show with this result
+        :param file:     The path to the affected file
         :param severity: Severity of this result
-        :param line_nr: Number of the line which is affected, first line is 1.
+        :param line_nr:  Number of the line which is affected, first line is 1.
         """
         if not isinstance(origin, str):
             origin = origin.__class__.__name__
@@ -41,9 +49,13 @@ class Result:
         return str(self)
 
     def __str__(self):
-        return "Result:\n origin: '{origin}'\n file: '{file}'\n line nr: {linenr}\n severity: {severity}\n" \
-               "'{msg}'".format(origin=self.origin, file=self.file,
-                                severity=self.severity, msg=self.message, linenr=self.line_nr)
+        return "Result:\n origin: '{origin}'\n file: '{file}'\n line nr: " \
+               "{linenr}\n severity: {severity}\n" \
+               "'{msg}'".format(origin=self.origin,
+                                file=self.file,
+                                severity=self.severity,
+                                msg=self.message,
+                                linenr=self.line_nr)
 
     def __eq__(self, other):
         return isinstance(other, Result) and \
@@ -55,7 +67,8 @@ class Result:
 
     def __lt__(self, other):
         if not isinstance(other, Result):
-            raise TypeError("Comparision with non-result classes is not supported.")
+            raise TypeError("Comparision with non-result classes is not "
+                            "supported.")
 
         # Show elements without files first
         if (self.file is None) != (other.file is None):
@@ -84,7 +97,6 @@ class Result:
         """
         :return: All ResultAction classes applicable to this result.
         """
-        from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
         actions = []
         if self.file is not None:
             actions.append(OpenEditorAction())

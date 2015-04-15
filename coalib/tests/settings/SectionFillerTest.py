@@ -39,24 +39,32 @@ class SectionFillerTestCase(unittest.TestCase):
     def setUp(self):
         section = Section("test")
         section.append(Setting("key", "val"))
+        self.log_printer = ConsolePrinter()
+        self.interactor = ConsoleInteractor(self.log_printer)
         self.uut = SectionFiller(section,
-                                 ConsoleInteractor(),
-                                 ConsolePrinter())
+                                 self.interactor,
+                                 self.log_printer)
+
+    def tearDown(self):
+        self.interactor.close()
+        self.log_printer.close()
 
     def test_raises(self):
         # Construction
         self.assertRaises(TypeError,
                           SectionFiller,
                           0,
-                          ConsoleInteractor(),
-                          ConsolePrinter())
+                          self.interactor,
+                          self.log_printer)
 
         # Fill section
         self.assertRaises(TypeError, self.uut.fill_section, 0)
 
     def test_fill_section(self):
-        new_section = self.uut.fill_section([LocalTestBear, GlobalTestBear,
-                                            "an inappropriate string object here"])
+        new_section = self.uut.fill_section(
+            [LocalTestBear,
+             GlobalTestBear,
+             "an inappropriate string object here"])
 
         self.assertTrue("local name" in new_section)
         self.assertTrue("global name" in new_section)

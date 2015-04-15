@@ -34,18 +34,24 @@ class LogPrinter(Printer):
         return '[{}]{} '.format(_(LOG_LEVEL.reverse.get(log_level, "ERROR")),
                                 datetime_string)
 
-    def debug(self, message, timestamp=None, **kwargs):
-        return self.log_message(LogMessage(LOG_LEVEL.DEBUG, message),
+    def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+        return self.log_message(LogMessage(LOG_LEVEL.DEBUG,
+                                           *messages,
+                                           delimiter=delimiter),
                                 timestamp=timestamp,
                                 **kwargs)
 
-    def warn(self, message, timestamp=None, **kwargs):
-        return self.log_message(LogMessage(LOG_LEVEL.WARNING, message),
+    def warn(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+        return self.log_message(LogMessage(LOG_LEVEL.WARNING,
+                                           *messages,
+                                           delimiter=delimiter),
                                 timestamp=timestamp,
                                 **kwargs)
 
-    def err(self, message, timestamp=None, **kwargs):
-        return self.log_message(LogMessage(LOG_LEVEL.ERROR, message),
+    def err(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+        return self.log_message(LogMessage(LOG_LEVEL.ERROR,
+                                           *messages,
+                                           delimiter=delimiter),
                                 timestamp=timestamp,
                                 **kwargs)
 

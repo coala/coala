@@ -147,6 +147,11 @@ class SectionManager:
         Creates an appropriate log printer and interactor according to the
         settings.
         """
+        if self.interactor is not None:
+            self.interactor.close()
+        if self.log_printer is not None:
+            self.log_printer.close()
+
         log_type = str(section.get("log_type", "console")).lower()
         output_type = str(section.get("output", "console")).lower()
         str_log_level = str(section.get("log_level", "")).upper()
@@ -188,10 +193,12 @@ class SectionManager:
             bears = list(section.get("bears", ""))
             local_bears = collect_bears(bear_dirs,
                                         bears,
-                                        [BEAR_KIND.LOCAL])
+                                        [BEAR_KIND.LOCAL],
+                                        self.log_printer)
             global_bears = collect_bears(bear_dirs,
                                          bears,
-                                         [BEAR_KIND.GLOBAL])
+                                         [BEAR_KIND.GLOBAL],
+                                         self.log_printer)
             filler = SectionFiller(section, self.interactor, self.log_printer)
             all_bears = copy.deepcopy(local_bears)
             all_bears.extend(global_bears)

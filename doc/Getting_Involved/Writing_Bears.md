@@ -43,7 +43,7 @@ class HelloWorldBear(LocalBear):
     def run(self,
             filename,
             file):
-        self.debug_msg("Hello World! Checking file", filename, ".")
+        self.debug("Hello World! Checking file", filename, ".")
 ```
 
 This bear is stored at `./bears/HelloWorldBear`
@@ -55,7 +55,7 @@ find it. We can do that with the `-d` (`--bear-dirs`) argument:
 
 You should now see the debug message for our sample file.
 
-The Bear class also supports `warn_msg` and `fail_msg`.
+The Bear class also supports `warn` and `err`.
 
 ## Communicating with the User
 
@@ -85,7 +85,7 @@ class CommunicationBear(LocalBear):
 
         :param user_input: Arbitrary user input.
         """
-        self.debug_msg("Got '{ui}' as user input of type {type}.".format(
+        self.debug("Got '{ui}' as user input of type {type}.".format(
             ui=user_input,
             type=type(user_input)))
 
