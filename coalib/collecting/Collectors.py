@@ -32,14 +32,14 @@ def _import_bears(file_path, kinds):
 
 
 @yield_once
-def icollect(file_paths, files=True, dirs=True, log_printer=ConsolePrinter()):
+def icollect(file_paths, log_printer, files=True, dirs=True):
     """
     Evaluate globs in file paths and return all matching files.
 
     :param file_paths:  list of file paths that can include globs
+    :param log_printer: where to log things that go wrong
     :param files:       True if files are to be collected
     :param dirs:        True if dirs are to be collected
-    :param log_printer: where to log things that go wrong
     :return:            iterator that yields paths of all matching files
     :raises SystemExit: when getting an invalid pattern
     """
@@ -56,26 +56,26 @@ def icollect(file_paths, files=True, dirs=True, log_printer=ConsolePrinter()):
             raise SystemExit(-1)
 
 
-def collect_files(file_paths):
+def collect_files(file_paths, log_printer):
     """
     Evaluate globs in file paths and return all matching files
     :param file_paths: list of file paths that can include globs
     :return: list of paths of all matching files
     """
-    return list(icollect(file_paths, dirs=False))
+    return list(icollect(file_paths, log_printer, dirs=False))
 
 
-def collect_dirs(dir_paths):
+def collect_dirs(dir_paths, log_printer):
     """
     Evaluate globs in directory paths and return all matching directories
     :param dir_paths: list of file paths that can include globs
     :return: list of paths of all matching directories
     """
-    return list(icollect(dir_paths, files=False))
+    return list(icollect(dir_paths, log_printer, files=False))
 
 
 @yield_once
-def icollect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
+def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
     :param bear_dirs: directories that can contain bears
@@ -84,7 +84,7 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
     :param log_printer: log_printer to handle logging
     :return: iterator that yields bear classes
     """
-    for bear_dir in icollect(bear_dirs, files=False):
+    for bear_dir in icollect(bear_dirs, log_printer, files=False):
         for bear_name in bear_names:
             for matching_file in iglob(
                     os.path.join(bear_dir, bear_name + '.py')):
@@ -99,7 +99,7 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
                                      .format(file=matching_file))
 
 
-def collect_bears(bear_dirs, bear_names, kinds, log_printer=ConsolePrinter()):
+def collect_bears(bear_dirs, bear_names, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
     :param bear_dirs: directories that can contain bears
