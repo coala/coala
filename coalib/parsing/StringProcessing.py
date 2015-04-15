@@ -326,3 +326,23 @@ def unescaped_search_in_between(begin,
     for elem in matches:
         yield (elem.group(begin_pattern_groups + 1) +
                elem.group(begin_pattern_groups + 2))
+
+
+def position_is_escaped(string, position=None):
+    """
+    Checks whether a char at a specific position of the string is preceded by
+    an odd number of backslashes.
+
+    :param string:   Arbitrary string
+    :param position: Position of character in string that should be checked
+    :return:         True if the character is escaped, False otherwise
+    """
+    escapes_uneven = False
+    # iterate backwards, starting one left of position.
+    # Slicing provides a sane default behaviour and prevents IndexErrors
+    for i in range(len(string[:position]) - 1, -1, -1):
+        if string[i] == '\\':
+            escapes_uneven = not escapes_uneven
+        else:
+            break
+    return escapes_uneven

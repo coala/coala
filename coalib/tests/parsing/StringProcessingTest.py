@@ -7,6 +7,7 @@ from coalib.parsing.StringProcessing import split
 from coalib.parsing.StringProcessing import unescaped_split
 from coalib.parsing.StringProcessing import search_in_between
 from coalib.parsing.StringProcessing import unescaped_search_in_between
+from coalib.parsing.StringProcessing import position_is_escaped
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -918,6 +919,31 @@ class StringProcessingTest(unittest.TestCase):
             0,
             True,
             False)
+
+    def test_position_is_escaped(self):
+        test_string = r"\\\\\abcabccba###\\13q4ujsabbc\+'**'ac###.#.####-ba"
+        result_dict = {
+            0: False,
+            1: True,
+            2: False,
+            3: True,
+            4: False,
+            5: True,
+            6: False,
+            7: False,
+            17: False,
+            18: True,
+            19: False,
+            30: False,
+            31: True,
+            50: False,
+            51: False,
+            6666666: False,
+            -1: False,
+            -20: True,
+            -21: False}
+        for position, value in result_dict.items():
+            self.assertEqual(position_is_escaped(test_string, position), value)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
