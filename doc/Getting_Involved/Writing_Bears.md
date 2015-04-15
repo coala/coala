@@ -13,7 +13,7 @@ git clone https://github.com/coala-analyzer/coala-tutorial.git
 All paths and commands given here are meant to be executed from the root
 directory of the coala-tutorial repository.
 
-## What is a bear?
+# What is a bear?
 
 A bear is meant to do some analysis on source code. The source code will
 provided by coala so the bear doesn't have to care where it comes from or where
@@ -30,7 +30,7 @@ development related debug information since it will not be shown to the user by
 default. If error/failure messages are used, the bear is expected not to
 continue analysis.
 
-## A Hello World Bear
+# A Hello World Bear
 
 Below is the code given for a simple bear that sends a debug message for each
 file:
@@ -57,7 +57,7 @@ You should now see the debug message for our sample file.
 
 The Bear class also supports `warn` and `err`.
 
-## Communicating with the User
+# Communicating with the User
 
 Now we can send messages through the queue, we can do the real work. Lets say:
 
@@ -113,7 +113,7 @@ value into a string because we've provided the `str` annotation for this
 parameter. If no annotation is given or the value isn't convertible into the
 desired data type, you will get a `coalib.settings.Setting.Setting`.
 
-### What Data Types are Supported?
+## What Data Types are Supported?
 
 The Setting does support some very basic types:
 
