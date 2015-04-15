@@ -12,11 +12,11 @@ class NullInteractorTestCase(unittest.TestCase):
         self.uut = NullInteractor(ConsolePrinter())
 
     def test_api(self):
-        self.uut.acquire_settings([])
         self.uut.print_result(Result("message", "origin"), {})
+        self.uut.print_results([], {})
         self.uut.did_nothing()
         self.uut.begin_section("name")
-        self.assertEqual(self.uut._print_actions([]), (None, None))
+        self.uut.acquire_settings([])
 
 
 if __name__ == '__main__':
