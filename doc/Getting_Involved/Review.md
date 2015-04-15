@@ -1,11 +1,9 @@
-Reviewing
-=========
+# Reviewing
 
 This document is a guide to coalas review process. It will be extended over
 time.
 
-Review Process
---------------
+# Review Process
 
 The review process for coala is as follows:
 
@@ -21,8 +19,7 @@ The review process for coala is as follows:
    submitter may now _fast forward_ the master. Since linear fitting is a
    prerequisite merging is not going to happen nor allowed.
 
-Continous Integration
----------------------
+# Continous Integration
 
 It is not allowed to merge a pull request into master if one of the following
 applies:
