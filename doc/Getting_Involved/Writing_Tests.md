@@ -1,6 +1,4 @@
-# How to Write a Test
-
-## Introduction
+# Introduction
 
 Tests are an essential element to check if your written components in coala
 really do work like they should. Even when you think "I really looked over my
@@ -11,7 +9,7 @@ Try to test as much as possible! The more tests you write the more you can be
 sure you did everything correct. Especially if someone else modifies your
 component, he can be sure with your tests that he doesn't introduce a bug.
 
-## Actually Writing a Test
+# Actually Writing a Test
 
 So how do you implement a test in coala? First up, tests are placed into the
 `bears/tests` (if you want to write a test for a bear) or `coalib/tests` (if
@@ -166,7 +164,7 @@ if __name__ == '__main__':
 >
 > Code coverage is measured using python 3.4.
 
-## `setUp()` and `tearDown()`
+# `setUp()` and `tearDown()`
 
 Often you reuse components or need to make an inital setup for your tests.
 For that purpose the function `setUp()` exists. Just declare it inside your
@@ -189,14 +187,14 @@ class YourComponentTest(unittest.TestCase):
         pass
 ```
 
-## Skipping tests
+# Skipping tests
 
 Sometimes your test needs prerequisites the running platform lacks. That can be
 either installed executables, packages, python versions etc.
 
 coala provides two methods to skip a test.
 
-### `skip_test()` function
+## `skip_test()` function
 
 Just define this function in your test module and test the needed
 prerequisites:
@@ -227,7 +225,7 @@ def skip_test():
         return "eSpeak is not installed."
 ```
 
-### `unittest` built-in attributes
+## `unittest` built-in attributes
 
 The `unittest` package from python defines attributes to handle skips for
 specific test cases, not only the whole test suite.
@@ -249,7 +247,7 @@ For more information about the attribute usage, refer to the [documentation]
 (https://docs.python.org/3.4/library/unittest.html) at paragraph
 **26.3.6. Skipping tests and expected failures**.
 
-## Assertions
+# Assertions
 
 Here follows a list of all available assertion functions supported when
 inheriting from `unittest.TestCase`:
@@ -312,7 +310,7 @@ If you want more information about the python `unittest`-module, refer to the
 for asserts the subsection [assert-methods]
 (https://docs.python.org/3/library/unittest.html#assert-methods).
 
-## Kickstart
+# Kickstart
 
 This section contains a concluding and simple example that you can use as a
 kickstart for test-writing.
@@ -350,4 +348,3 @@ if __name__ == '__main__':
     unittest.main(verbosity=2)
 
 ```
-
