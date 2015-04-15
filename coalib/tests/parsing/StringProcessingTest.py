@@ -7,6 +7,11 @@ from coalib.parsing.StringProcessing import split
 from coalib.parsing.StringProcessing import unescaped_split
 from coalib.parsing.StringProcessing import search_in_between
 from coalib.parsing.StringProcessing import unescaped_search_in_between
+from coalib.parsing.StringProcessing import position_escaped
+from coalib.parsing.StringProcessing import unescaped_find
+from coalib.parsing.StringProcessing import unescaped_rfind
+from coalib.parsing.StringProcessing import unescaped_finditer
+from coalib.parsing.StringProcessing import unescaped_findall
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -728,7 +733,73 @@ class StringProcessingTest(unittest.TestCase):
             0,
             True)
 
+    def test_position_escaped(self):
+        self.assertRaises(ValueError, position_escaped, *(1, 1))
+        self.assertRaises(ValueError, position_escaped, *("str", -1))
+        self.assertRaises(ValueError, position_escaped, *("str", 3))
+
+        test_string = "\\a\\\\b\\\\\\\\\\c\nx\n\\y\nz"
+        self.assertEqual([position_escaped(test_string, i) for i in range(18)],
+                         [False,
+                          True,
+                          False,
+                          True,
+                          False,
+                          False,
+                          True,
+                          False,
+                          True,
+                          False,
+                          True,
+                          False,
+                          False,
+                          False,
+                          False,
+                          True,
+                          False,
+                          False])
+
+    def test_unescaped_find(self):
+        self.assertRaises(ValueError, unescaped_find, *(1, 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_find, *("s", 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_find, *("s", "s", "s", "1"))
+        self.assertRaises(ValueError, unescaped_find, *("s", "s", 0, "s"))
+
+        self.assertEqual(unescaped_find("abcde", "c"), 2)
+        self.assertEqual(unescaped_find("abcde", "c", 1, 3), 2)
+        self.assertEqual(unescaped_find("abcde", "c", 3, 4), -1)
+        self.assertEqual(unescaped_find("abcde", "z"), -1)
+        self.assertEqual(unescaped_find("ab\\cdec", "c"), 6)
+
+    def test_unescaped_rfind(self):
+        self.assertRaises(ValueError, unescaped_rfind, *(1, 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_rfind, *("s", 1, 1, 1))
+        self.assertRaises(ValueError, unescaped_rfind, *("s", "s", "s", "1"))
+        self.assertRaises(ValueError, unescaped_rfind, *("s", "s", 0, "s"))
+
+        self.assertEqual(unescaped_rfind("abcde", "c"), 2)
+        self.assertEqual(unescaped_rfind("abcde", "c", 1, 3), 2)
+        self.assertEqual(unescaped_rfind("abcde", "c", 3, 4), -1)
+        self.assertEqual(unescaped_rfind("abcde", "z"), -1)
+        self.assertEqual(unescaped_rfind("acb\\cdec", "c"), 7)
+        self.assertEqual(unescaped_rfind("acb\\cde\\c", "c"), 1)
+
+    def test_unescaped_finditer(self):
+        self.assertEqual(list(unescaped_finditer("abcde", "c")), [2])
+        self.assertEqual(list(unescaped_finditer("abcde", "c", 1, 3)), [2])
+        self.assertEqual(list(unescaped_finditer("abcde", "c", 3, 4)), [])
+        self.assertEqual(list(unescaped_finditer("abcde", "z")), [])
+        self.assertEqual(list(unescaped_finditer("acb\\cdec", "c")), [1, 7])
+        self.assertEqual(list(unescaped_finditer("acb\\cde\\c", "c")), [1])
+
+    def test_unescaped_findall(self):
+        self.assertEqual(unescaped_findall("abcde", "c"), [2])
+        self.assertEqual(unescaped_findall("abcde", "c", 1, 3), [2])
+        self.assertEqual(unescaped_findall("abcde", "c", 3, 4), [])
+        self.assertEqual(unescaped_findall("abcde", "z"), [])
+        self.assertEqual(unescaped_findall("acb\\cdec", "c"), [1, 7])
+        self.assertEqual(unescaped_findall("acb\\cde\\c", "c"), [1])
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-

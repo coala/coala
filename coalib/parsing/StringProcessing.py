@@ -290,3 +290,116 @@ def unescaped_search_in_between(begin,
     for elem in matches:
         yield (elem.group(compiled_begin_pattern.groups + 1) +
                elem.group(compiled_begin_pattern.groups + 2))
+
+
+LAST_POSITION_UNESCAPED_PATTERN = re.compile(r"(?<!\\)(?:\\\\)*$")
+
+
+def position_escaped(string, position):
+    """
+    Checks whether a char at a specific position of the string is escaped by an
+    odd number of backslashes.
+
+    :param string:   Arbitrary string
+    :param position: Position of character in string that should be checked
+    :return:         True if the character is escaped, False otherwise
+    """
+    if not isinstance(string, str):
+        raise ValueError("param string is not a string")
+    if not isinstance(position, int) or not 0 <= position < len(string):
+        raise ValueError("param position is not an int in the valid range")
+
+    return not LAST_POSITION_UNESCAPED_PATTERN.search(string[:position])
+
+
+def unescaped_find(string, sub, start=None, end=None):
+    """
+    Return the lowest index in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       Position of sub in string, independent of slice borders!
+    """
+    if not isinstance(string, str):
+        raise ValueError("param string is not a string")
+    if not isinstance(sub, str):
+        raise ValueError("param sub is not a string")
+    if start is not None and not isinstance(start, int):
+        raise ValueError("param start is not an int")
+    if end is not None and not isinstance(end, int):
+        raise ValueError("param end is not an int")
+
+    while True:
+        position = string.find(sub, start, end)
+        if position >= 0 and position_escaped(string, position):
+            start = position + 1
+        else:
+            return position
+
+
+def unescaped_rfind(string, sub, start=None, end=None):
+    """
+    Return the highest index in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       Last position of sub in string, independent of slice
+                   borders!
+    """
+    if not isinstance(string, str):
+        raise ValueError("param string is not a string")
+    if not isinstance(sub, str):
+        raise ValueError("param sub is not a string")
+    if start is not None and not isinstance(start, int):
+        raise ValueError("param start is not an int")
+    if end is not None and not isinstance(end, int):
+        raise ValueError("param end is not an int")
+
+    while True:
+        position = string.rfind(sub, start, end)
+        if position >= 0 and position_escaped(string, position):
+            end = position
+        else:
+            return position
+
+
+def unescaped_finditer(string, sub, start=None, end=None):
+    """
+    Yields all indices in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       Iterator that yields all positions of sub in string,
+                   independent of slice borders!
+    """
+    while True:
+        position = unescaped_find(string, sub, start, end)
+        if position >= 0:
+            yield position
+            start = position + 1
+        else:
+            raise StopIteration
+
+
+def unescaped_findall(string, sub, start=None, end=None):
+    """
+    Lists all indices in the string where substring sub is found
+    unescaped, such that sub is contained in the slice s[start:end].
+
+    :param string: Arbitrary String
+    :param sub:    Substring of which the position is to be found
+    :param start:  Begin of string slice that restricts search area
+    :param end:    End of string slice that restricts search area
+    :return:       List of all positions of sub in string, independent of
+                   slice borders!
+    """
+    return list(unescaped_finditer(string, sub, start, end))
