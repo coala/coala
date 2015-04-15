@@ -31,12 +31,13 @@ class ConfParser(SectionParser):
 
     def parse(self, input_data, overwrite=False):
         """
-        Parses the input and adds the new data to the existing. If you want to catch the FileNotFoundError please take
-        the FileNotFoundError member of this object for catching for backwards compatability to python 3.2.
+        Parses the input and adds the new data to the existing. If you want to
+        catch the FileNotFoundError please take the FileNotFoundError member of
+        this object for catching for backwards compatability to python 3.2.
 
         :param input_data: filename
-        :param overwrite: behaves like reparse if this is True
-        :return: the settings dictionary
+        :param overwrite:  behaves like reparse if this is True
+        :return:           the settings dictionary
         """
         if os.path.isdir(input_data):
             input_data = os.path.join(input_data, ".coafile")
@@ -56,13 +57,14 @@ class ConfParser(SectionParser):
         Parses the input and overwrites all existent data
 
         :param input_data: filename
-        :return: the settings dictionary
+        :return:           the settings dictionary
         """
         return self.parse(input_data, overwrite=True)
 
     def export_to_settings(self):
         """
-        :return a dict of Settings objects representing the current parsed things
+        :return a dict of Settings objects representing the current parsed
+        things
         """
         return self.sections
 
@@ -75,7 +77,8 @@ class ConfParser(SectionParser):
         if not create_if_not_exists:
             raise IndexError
 
-        retval = self.sections[key] = Section(str(name), self.sections["default"])
+        retval = self.sections[key] = Section(str(name),
+                                              self.sections["default"])
         return retval
 
     @staticmethod
@@ -116,11 +119,15 @@ class ConfParser(SectionParser):
                     continue
 
                 if section_override == "":
-                    current_section.add_or_create_setting(Setting(key, value, origin),
-                                                           allow_appending=(keys == []))
+                    current_section.add_or_create_setting(
+                        Setting(key, value, origin),
+                        allow_appending=(keys == []))
                 else:
-                    self.get_section(section_override, True).add_or_create_setting(Setting(key, value, origin),
-                                                                                    allow_appending=(keys == []))
+                    self.get_section(
+                        section_override,
+                        True).add_or_create_setting(
+                            Setting(key, value, origin),
+                            allow_appending=(keys == []))
 
     def __init_sections(self):
         self.sections = OrderedDict()
