@@ -13,7 +13,9 @@ class DiffTestCase(unittest.TestCase):
         self.uut.add_lines(0, [])
         self.uut.add_lines(0, ["t"])
         self.uut.add_lines(0, [])
-        self.assertRaises(ConflictError, self.uut.add_lines, 0, ["t"])  # No double addition allowed
+
+        # No double addition allowed
+        self.assertRaises(ConflictError, self.uut.add_lines, 0, ["t"])
         self.assertRaises(ValueError, self.uut.add_lines, -1, ["t"])
         self.assertRaises(TypeError, self.uut.add_lines, "str", ["t"])
 
@@ -30,7 +32,8 @@ class DiffTestCase(unittest.TestCase):
         self.assertRaises(ValueError, self.uut.change_line, 0, "1", "2")
 
         self.uut.delete_line(1)
-        self.assertRaises(AssertionError, self.uut.change_line, 1, "1", "2")  # Line was deleted, unchangeable
+        # Line was deleted, unchangeable
+        self.assertRaises(AssertionError, self.uut.change_line, 1, "1", "2")
 
     def test_apply(self):
         file = ["1",

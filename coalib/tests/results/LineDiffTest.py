@@ -12,7 +12,10 @@ class LineDiffTestCase(unittest.TestCase):
         self.assertRaises(TypeError, LineDiff, add_after=5)
         self.assertRaises(TypeError, LineDiff, change=True)
         self.assertRaises(TypeError, LineDiff, add_after=True)
-        self.assertRaises(AssertionError, LineDiff, change=("1", "2"), delete=True)
+        self.assertRaises(AssertionError,
+                          LineDiff,
+                          change=("1", "2"),
+                          delete=True)
 
         self.assertEqual(LineDiff(change=("1", "2")).change, ("1", "2"))
         self.assertEqual(LineDiff(delete=True).delete, True)

@@ -8,7 +8,11 @@ import unittest
 
 class PatchResultTestCase(unittest.TestCase):
     def test_raises(self):
-        self.assertRaises(TypeError, PatchResult, origin="test", message="test", diffs=5)
+        self.assertRaises(TypeError,
+                          PatchResult,
+                          origin="test",
+                          message="test",
+                          diffs=5)
         self.assertRaises(TypeError, PatchResult("t", "t", {}).apply, 5)
         self.assertRaises(TypeError, PatchResult("t", "t", {}).__add__, 5)
 
@@ -32,7 +36,8 @@ class PatchResultTestCase(unittest.TestCase):
 
         uut = PatchResult("origin", "msg", {})
         for action in uut.get_actions():
-            action.apply(uut, {}, {})  # All those actions should be able to apply this result
+            # All those actions should be able to apply this result
+            action.apply(uut, {}, {})
 
         self.assertEqual(len(uut.get_actions()), 1)
 
