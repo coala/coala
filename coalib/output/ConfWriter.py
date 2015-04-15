@@ -1,7 +1,8 @@
+from coalib.output.ClosableObject import ClosableObject
 from coalib.settings.Section import Section
 
 
-class ConfWriter:
+class ConfWriter(ClosableObject):
     def __init__(self,
                  file_name,
                  key_value_delimiter='=',
@@ -10,6 +11,7 @@ class ConfWriter:
                  section_name_surrounding_beg='[',
                  section_name_surrounding_end="]",
                  unsavable_keys=["save"]):
+        ClosableObject.__init__(self)
         self.__file_name = file_name
         self.__file = open(self.__file_name, "w")
         self.__key_value_delimiter = key_value_delimiter
@@ -21,13 +23,8 @@ class ConfWriter:
         self.__wrote_newline = True
         self.__closed = False
 
-    def close(self):
-        if not self.__closed:
-            self.__file.close()
-            self.__closed = True
-
-    def __del__(self):
-        assert self.__closed, "ConfWriter needs to be closed!"
+    def _close(self):
+        self.__file.close()
 
     def write_sections(self, sections):
         assert not self.__closed
