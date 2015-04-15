@@ -47,8 +47,9 @@ class LogPrinterTestCase(unittest.TestCase):
 
         self.assertEqual(
             ("[" + _("DEBUG") + "][" + ts.strftime("%X") + "] " +
-             StringConstants.COMPLEX_TEST_STRING, "test"),
+             StringConstants.COMPLEX_TEST_STRING + " d", "test"),
             uut.debug(StringConstants.COMPLEX_TEST_STRING,
+                      "d",
                       timestamp=ts,
                       end=""))
         uut.log_level = LOG_LEVEL.WARNING
@@ -57,14 +58,18 @@ class LogPrinterTestCase(unittest.TestCase):
                                          end=""))
         self.assertEqual(
             ("[" + _("WARNING") + "][" + ts.strftime("%X") + "] " +
-             StringConstants.COMPLEX_TEST_STRING, "test"),
+             StringConstants.COMPLEX_TEST_STRING + " d", "test"),
             uut.warn(StringConstants.COMPLEX_TEST_STRING,
+                     "d",
                      timestamp=ts,
                      end=""))
         self.assertEqual(
             ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " +
-             StringConstants.COMPLEX_TEST_STRING, "test"),
-            uut.err(StringConstants.COMPLEX_TEST_STRING, timestamp=ts, end=""))
+             StringConstants.COMPLEX_TEST_STRING + " d", "test"),
+            uut.err(StringConstants.COMPLEX_TEST_STRING,
+                    "d",
+                    timestamp=ts,
+                    end=""))
 
         logged = uut.log_exception(
             "Something failed.",
