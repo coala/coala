@@ -55,7 +55,7 @@ find it. We can do that with the `-d` (`--bear-dirs`) argument:
 
 You should now see the debug message for our sample file.
 
-The Bear class also supports `warn` and `fail_msg`.
+The Bear class also supports `warn` and `err`.
 
 ## Communicating with the User
 

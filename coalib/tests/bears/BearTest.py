@@ -19,8 +19,8 @@ class TestBear(Bear):
         self.debug("set", "up", delimiter="=")
 
     def tear_down(self):
-        self.fail_msg("teardown")
-        self.fail_msg()
+        self.err("teardown")
+        self.err()
 
     def run(self):
         self.warn(_("A string to test translations."))
