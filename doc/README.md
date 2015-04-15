@@ -17,8 +17,7 @@ ooP""Y8888PP*"Y8888P"   "Y8888P"`Y88P'"Y88P"Y8888P"`Y8            oooo888P"
 
 Welcome to the coala documentation!
 
-What is coala?
-==============
+# What is coala?
 
 coala is a simple COde AnaLysis Application. Its goal is to make static code
 analysis easy while remaining completely modular and therefore extendable and
