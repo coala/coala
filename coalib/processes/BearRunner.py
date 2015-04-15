@@ -40,34 +40,41 @@ class BearRunner(multiprocessing.Process):
         If the queues raise any exception not specified here the user will get
         an 'unknown error' message. So beware of that.
 
-        :param file_name_queue: queue (read) of file names to check with local
-        bears. Every BearRunner takes one of those and checks it with all local
-        bears. (Repeat until queue empty.)
-        :param local_bear_list: list of local bear instances
-        :param global_bear_list: list of global bear instances
-        :param global_bear_queue: queue (read, write) of indexes of global bear
-        instances in the global_bear_list
-        :param file_dict: dict of all files as {filename:file}, file as in
-        file.readlines()
-        :param local_result_dict: A Manager.dict that will be used to store
-        local results. A list of all local results will be stored with the
-        filename as key.
+        :param file_name_queue:    queue (read) of file names to check with
+                                   local bears. Every BearRunner takes one of
+                                   those and checks it with all local bears.
+                                   (Repeat until queue empty.)
+        :param local_bear_list:    list of local bear instances
+        :param global_bear_list:   list of global bear instances
+        :param global_bear_queue:  queue (read, write) of indexes of global
+                                   bear instances in the global_bear_list
+        :param file_dict:          dict of all files as {filename:file}, file
+                                   as in file.readlines()
+        :param local_result_dict:  A Manager.dict that will be used to store
+                                   local results. A list of all local results
+                                   will be stored with the filename as key.
         :param global_result_dict: A Manager.dict that will be used to store
-        global results. The list of results of one global bear will be stored
-        with the bear name as key.
-        :param message_queue: queue (write) for debug/warning/error messages
-        (type LogMessage)
-        :param control_queue: queue (write). If any result gets written to the
-        result_dict a tuple containing a
-        CONTROL_ELEMENT (to indicate what kind of event happened) and either a
-        filter name (for global results) or a
-        file name to indicate the result will be put to the queue. If this
-        BearRunner finished all its tasks it will put
-        (CONTROL_ELEMENT.FINISHED, None) to the queue.
-        :param barrier: a thing that has a wait() method. This will be invoked
-        after running the local bears and may serve as a barrier to avoid
-        getting global results before local ones are processed.
-        :param TIMEOUT: in seconds for all queue actions
+                                   global results. The list of results of one
+                                   global bear will be stored with the bear
+                                   name as key.
+        :param message_queue:      queue (write) for debug/warning/error
+                                   messages (type LogMessage)
+        :param control_queue:      queue (write). If any result gets written to
+                                   the result_dict a tuple containing a
+                                   CONTROL_ELEMENT (to indicate what kind of
+                                   event happened) and either a filter name
+                                   (for global results) or a file name to
+                                   indicate the result will be put to the
+                                   queue. If this BearRunner finished all its
+                                   tasks it will put
+                                   (CONTROL_ELEMENT.FINISHED, None) to the
+                                   queue.
+        :param barrier:            a thing that has a wait() method. This will
+                                   be invoked after running the local bears and
+                                   may serve as a barrier to avoid getting
+                                   global results before local ones are
+                                   processed.
+        :param TIMEOUT:            in seconds for all queue actions
         """
         if not isinstance(local_bear_list, list):
             raise TypeError("local_bear_list should be a list")
