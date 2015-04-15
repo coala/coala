@@ -2,7 +2,6 @@ import shutil
 
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.results.Result import Result
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.Printer import Printer
 from coalib.misc.i18n import _
 from coalib.settings.FunctionMetadata import FunctionMetadata
