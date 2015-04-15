@@ -15,10 +15,10 @@ class LogPrinter(Printer):
         this logging capabilities for free. (Note: LogPrinter itself is
         abstract.)
 
-        :param log_level: The minimum log level, everything below will not be
-        logged.
+        :param log_level:        The minimum log level, everything below will
+                                 not be logged.
         :param timestamp_format: The format string for the
-        datetime.today().strftime(format) method.
+                                 datetime.today().strftime(format) method.
         """
         Printer.__init__(self)
 

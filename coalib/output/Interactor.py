@@ -26,10 +26,10 @@ class Interactor(SectionCreatable, Printer):
         Prints the given actions and lets the user choose.
 
         :param actions: A list of FunctionMetadata objects.
-        :return: A touple with the name member of the FunctionMetadata object
-                 chosen by the user and a Section containing at least all
-                 needed values for the action. If the user did choose to do
-                 nothing, return (None, None).
+        :return:        A touple with the name member of the FunctionMetadata
+                        object chosen by the user and a Section containing at
+                        least all needed values for the action. If the user did
+                        choose to do nothing, return (None, None).
         """
         raise NotImplementedError
 
@@ -37,7 +37,7 @@ class Interactor(SectionCreatable, Printer):
         """
         Prints the result appropriate to the output medium.
 
-        :param result: A derivative of Result.
+        :param result:    A derivative of Result.
         :param file_dict: A dictionary containing all files with filename as
                           key.
         """
@@ -75,7 +75,7 @@ class Interactor(SectionCreatable, Printer):
         Prints all given results. They will be sorted.
 
         :param result_list: List of the results
-        :param file_dict: Dictionary containing filename: file_contents
+        :param file_dict:   Dictionary containing filename: file_contents
         """
         if not isinstance(result_list, list):
             raise TypeError("result_list should be of type list")
@@ -98,8 +98,8 @@ class Interactor(SectionCreatable, Printer):
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
 
-        :return: a dictionary with the settings name as key and the given value
-                 as value.
+        :return:         a dictionary with the settings name as key and the
+                         given value as value.
         """
         raise NotImplementedError
 

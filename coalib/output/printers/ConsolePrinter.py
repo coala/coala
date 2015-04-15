@@ -11,7 +11,9 @@ class ConsolePrinter(LogPrinter, ColorPrinter):
     """
     def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
         ColorPrinter.__init__(self)
-        LogPrinter.__init__(self, log_level=log_level, timestamp_format=timestamp_format)
+        LogPrinter.__init__(self,
+                            log_level=log_level,
+                            timestamp_format=timestamp_format)
 
     def _print_uncolored(self, output, **kwargs):
         print(output, end="")
