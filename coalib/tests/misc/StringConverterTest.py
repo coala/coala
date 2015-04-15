@@ -10,8 +10,14 @@ class ProcessTestCase(unittest.TestCase):
         self.uut = StringConverter("\n 1 \n ")
 
     def test_construction(self):
-        self.assertRaises(TypeError, StringConverter, "test", strip_whitespaces=5)
-        self.assertRaises(TypeError, StringConverter, "test", list_delimiters=5)
+        self.assertRaises(TypeError,
+                          StringConverter,
+                          "test",
+                          strip_whitespaces=5)
+        self.assertRaises(TypeError,
+                          StringConverter,
+                          "test",
+                          list_delimiters=5)
 
     def test_whitespace_stripping(self):
         self.assertEqual(str(self.uut), "1")
@@ -28,18 +34,24 @@ class ProcessTestCase(unittest.TestCase):
         self.assertEqual(len(self.uut), 1)
 
     def test_iterator(self):
-        self.uut = StringConverter("a, test with!!some challenge", list_delimiters=[",", " ", "!!"])
-        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "challenge"])
-        self.uut = StringConverter("a\\ \\,\\\\ test with!!some challenge", list_delimiters=[",", " ", "!!"])
-        self.assertEqual(list(self.uut), ["a ,\\", "test", "with", "some", "challenge"])
+        self.uut = StringConverter("a, test with!!some challenge",
+                                   list_delimiters=[",", " ", "!!"])
+        self.assertEqual(list(self.uut),
+                         ["a", "test", "with", "some", "challenge"])
+        self.uut = StringConverter("a\\ \\,\\\\ test with!!some challenge",
+                                   list_delimiters=[",", " ", "!!"])
+        self.assertEqual(list(self.uut),
+                         ["a ,\\", "test", "with", "some", "challenge"])
         self.uut = StringConverter("a, test with!some \\\\\\ challenge\\ ",
                                    list_delimiters=", !",
                                    strip_whitespaces=False)
-        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "\\ challenge "])
+        self.assertEqual(list(self.uut),
+                         ["a", "test", "with", "some", "\\ challenge "])
         self.uut = StringConverter("a, test with!some \\\\\\ challenge\\ ",
                                    list_delimiters=", !",
                                    strip_whitespaces=True)
-        self.assertEqual(list(self.uut), ["a", "test", "with", "some", "\\ challenge"])
+        self.assertEqual(list(self.uut),
+                         ["a", "test", "with", "some", "\\ challenge"])
         self.uut = StringConverter("testval", list_delimiters=[",", "¸"])
         self.uut.value = "a\\n,bug¸g"
         self.assertEqual(list(self.uut), ["an", "bug", "g"])
@@ -69,9 +81,12 @@ class ProcessTestCase(unittest.TestCase):
         self.assertRaises(ValueError, bool, self.uut)
 
     def test_equality_comparision(self):
-        self.assertEqual(StringConverter(" i dont know "), StringConverter("i dont know"))
-        self.assertNotEqual(StringConverter(" dont know "), StringConverter("i dont know "))
-        self.assertNotEqual(StringConverter(""), StringConverter("i dont know "))
+        self.assertEqual(StringConverter(" i dont know "),
+                         StringConverter("i dont know"))
+        self.assertNotEqual(StringConverter(" dont know "),
+                            StringConverter("i dont know "))
+        self.assertNotEqual(StringConverter(""),
+                            StringConverter("i dont know "))
         self.assertNotEqual(5, StringConverter("i dont know "))
 
 
