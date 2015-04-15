@@ -2,12 +2,12 @@ import traceback
 
 from coalib.misc.i18n import _
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.processes.communication.LogMessage import LogMessage
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
 
-class Bear:
+class Bear(LogPrinter):
     """
     A bear contains the actual subroutine that is responsible for checking
     source code for certain specifications. However it can actually do
@@ -39,6 +39,8 @@ class Bear:
                  section,
                  message_queue,
                  TIMEOUT=0):
+        LogPrinter.__init__(self)
+
         if not isinstance(section, Section):
             raise TypeError("section has to be of type Section.")
         if not hasattr(message_queue, "put") and message_queue is not None:
@@ -46,6 +48,7 @@ class Bear:
 
         self.section = section
         self.message_queue = message_queue
+        print(type(self.message_queue))
         self.TIMEOUT = TIMEOUT
 
     def set_up(self):
@@ -54,26 +57,9 @@ class Bear:
     def tear_down(self):
         pass
 
-    def debug(self, *args, delimiter=' '):
-        self.__send_msg(LOG_LEVEL.DEBUG, delimiter, *args)
-
-    def warn(self, *args, delimiter=' '):
-        self.__send_msg(LOG_LEVEL.WARNING, delimiter, *args)
-
-    def err(self, *args, delimiter=' '):
-        self.__send_msg(LOG_LEVEL.ERROR, delimiter, *args)
-
-    def __send_msg(self, log_level, delimiter, *args):
-        if self.message_queue is None:
-            return
-
-        if len(args) == 0:
-            return
-
-        self.message_queue.put(LogMessage(log_level,
-                                          *args,
-                                          delimiter=delimiter),
-                               timeout=self.TIMEOUT)
+    def log_message(self, log_message, timestamp=None, **kwargs):
+        if self.message_queue is not None:
+            self.message_queue.put(log_message)
 
     def run(self, *args, dependency_results=None, **kwargs):
         raise NotImplementedError
