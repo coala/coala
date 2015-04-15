@@ -21,7 +21,8 @@ class ConsolePrinterTestCase(unittest.TestCase):
         self.uut.print("\ntest", "message")
 
     def test_pickling(self):
-        outputfile = os.path.join(tempfile.gettempdir(), "ConsolePrinterPickleTestFile")
+        outputfile = os.path.join(tempfile.gettempdir(),
+            "ConsolePrinterPickleTestFile")
         with open(outputfile, "wb") as f:
             pickle.dump(ConsolePrinter(), f)
 
@@ -29,7 +30,8 @@ class ConsolePrinterTestCase(unittest.TestCase):
             obj = pickle.load(f)
 
         self.assertIsInstance(obj, ConsolePrinter)
-        obj.print("test")  # print will use the output param, this will ensure that the printer is valid
+        obj.print("test")  # print will use the output param,
+                        # this will ensure that the printer is valid
 
         os.remove(outputfile)
 
