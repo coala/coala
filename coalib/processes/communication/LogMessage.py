@@ -3,14 +3,15 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
 class LogMessage:
-    def __init__(self, log_level, message):
+    def __init__(self, log_level, *messages, delimiter=" "):
         if log_level not in LOG_LEVEL.reverse:
             raise ValueError("log_level has to be a valid LOG_LEVEL.")
-        if message == "":
+
+        self.message = str(delimiter).join(messages).rstrip()
+        if self.message == "":
             raise ValueError("Empty log messages are not allowed.")
 
         self.log_level = log_level
-        self.message = str(message).rstrip()
 
     def __str__(self):
         log_level = _(LOG_LEVEL.reverse.get(self.log_level, "ERROR"))
