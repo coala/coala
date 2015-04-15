@@ -21,7 +21,7 @@ script:
   - sudo apt-get install espeak
   - python3 ./run_tests.py --cover --disallow-test-skipping
   - python3 setup.py install
-  - coala travis
+  - coala -c .ci_coafile
 
 after_success:
   - coveralls
