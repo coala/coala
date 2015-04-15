@@ -2,4 +2,4 @@ files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
 output = none
 bears = SpaceConsistencyBear, LineLengthBear
 use_spaces = True
-max_line_length = 120
+max_line_length = 80
