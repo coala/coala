@@ -14,6 +14,7 @@ class FilePrinterTestCase(unittest.TestCase):
         self.uut = FilePrinter(self.filename)
 
     def tearDown(self):
+        self.uut.close()
         os.remove(self.filename)
 
     def test_construction(self):
@@ -21,9 +22,11 @@ class FilePrinterTestCase(unittest.TestCase):
 
     def test_printing(self):
         self.uut.print("Test value")
+        self.uut.close()
         del self.uut
         self.uut = FilePrinter(self.filename)
         self.uut.print("Test value2")
+        self.uut.close()
         del self.uut
 
         with open(self.filename) as file:
@@ -32,6 +35,9 @@ class FilePrinterTestCase(unittest.TestCase):
         self.assertEqual(lines,
                          ["Test value\n",
                           "Test value2\n"])
+
+        # tearDown needs that object present
+        self.uut = FilePrinter(self.filename)
 
 
 if __name__ == '__main__':
