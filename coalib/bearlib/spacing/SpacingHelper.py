@@ -21,7 +21,7 @@ class SpacingHelper(SectionCreatable):
         Checks the lines indentation.
 
         :param line: A string to check for indentation.
-        :return: The indentation count in spaces.
+        :return:     The indentation count in spaces.
         """
         if not isinstance(line, str):
             raise TypeError("The 'line' parameter should be a string.")
@@ -44,10 +44,11 @@ class SpacingHelper(SectionCreatable):
         """
         Replaces tabs in this line with the appropriate number of spaces.
 
-        Example: " \t" will be converted to "    ", assuming the tab_width is set to 4.
+        Example: " \t" will be converted to "    ", assuming the tab_width is
+        set to 4.
 
         :param line: The string with tabs to replace.
-        :return: A string with no tabs.
+        :return:     A string with no tabs.
         """
         if not isinstance(line, str):
             raise TypeError("The 'line' parameter should be a string.")
@@ -56,7 +57,8 @@ class SpacingHelper(SectionCreatable):
         tabless_position = 0
         for char in line:
             if char == '\t':
-                space_count = self.tab_width - tabless_position % self.tab_width
+                space_count = (self.tab_width - tabless_position
+                               % self.tab_width)
                 result += space_count * " "
                 tabless_position += space_count
                 continue
@@ -68,27 +70,30 @@ class SpacingHelper(SectionCreatable):
 
     def replace_spaces_with_tabs(self, line):
         """
-        Replaces spaces with tabs where possible. However in no case only one space will be replaced by a tab.
+        Replaces spaces with tabs where possible. However in no case only one
+        space will be replaced by a tab.
 
-        Example: " \t   a_text   another" will be converted to "\t   a_text\tanother", assuming the tab_width is set to
-        4.
+        Example: " \t   a_text   another" will be converted to
+        "\t   a_text\tanother", assuming the tab_width is set to 4.
 
         :param line: The string with spaces to replace.
-        :return: The converted string.
+        :return:     The converted string.
         """
         if not isinstance(line, str):
             raise TypeError("The 'line' parameter should be a string.")
 
         currspaces = 0
         result = ""
-        # Tracking the index of the string isnt enough because tabs are spanning over multiple columns
+        # Tracking the index of the string isnt enough because tabs are
+        # spanning over multiple columns
         tabless_position = 0
         for char in line:
             if char == " ":
                 currspaces += 1
                 tabless_position += 1
             elif char == "\t":
-                space_count = self.tab_width - tabless_position % self.tab_width
+                space_count = (self.tab_width - tabless_position
+                               % self.tab_width)
                 currspaces += space_count
                 tabless_position += space_count
             else:
@@ -96,7 +101,8 @@ class SpacingHelper(SectionCreatable):
                 currspaces = 0
                 tabless_position += 1
 
-            # tabless_position is now incremented to point _after_ the current char
+            # tabless_position is now incremented to point _after_ the current
+            # char
             if tabless_position % self.tab_width == 0:
                 if currspaces > 1:
                     result += "\t"
