@@ -30,8 +30,8 @@ class ConsolePrinterTestCase(unittest.TestCase):
             obj = pickle.load(f)
 
         self.assertIsInstance(obj, ConsolePrinter)
-        obj.print("test")  # print will use the output param,
-                        # this will ensure that the printer is valid
+        obj.print("test")  # print will use the output param, this will ensure
+                           # that the printer is valid
 
         os.remove(outputfile)
 
