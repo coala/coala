@@ -9,6 +9,7 @@ This release features the following new features:
  * The default_coafile can now be used for arbitrary system-wide settings.
  * coala can now be configured user-wide with a ~/.coarc configuration file.
  * Manual written documentation is now hosted at http://coala.rtfd.org/.
+ * Changed logging API in Bears (now: debug/warn/err)
 
 Additionally many bugfixes and other code improvements have been done.
 
