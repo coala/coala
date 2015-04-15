@@ -17,9 +17,3 @@ bears = LineCountBear
 bears = KeywordBear
 ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
-
-[TRAVIS]
-output = none
-bears = SpaceConsistencyBear, LineLengthBear
-use_spaces = True
-max_line_length = 120
