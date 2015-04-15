@@ -18,7 +18,7 @@ class Bear:
     will probably want to look at the GlobalBear and LocalBear classes that
     inherit from this class. In any case you'll want to overwrite at least the
     run method. You can send debug/warning/error messages through the
-    debug(), warn_msg(), fail_msg() functions. These will send the
+    debug(), warn(), fail_msg() functions. These will send the
     appropriate messages so that they are outputted. Be aware that if you use
     fail_msg(), you are expected to also terminate the bear run-through
     immediately.
@@ -57,7 +57,7 @@ class Bear:
     def debug(self, *args, delimiter=' '):
         self.__send_msg(LOG_LEVEL.DEBUG, delimiter, *args)
 
-    def warn_msg(self, *args, delimiter=' '):
+    def warn(self, *args, delimiter=' '):
         self.__send_msg(LOG_LEVEL.WARNING, delimiter, *args)
 
     def fail_msg(self, *args, delimiter=' '):
@@ -99,7 +99,7 @@ class Bear:
 
             return retval
         except:
-            self.warn_msg(
+            self.warn(
                 _("Bear {} failed to run.").format(name))
             self.debug(_("The bear {bear} raised an exception. If you are "
                              "the writer of this bear, please make sure "

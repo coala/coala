@@ -23,7 +23,7 @@ class TestBear(Bear):
         self.fail_msg()
 
     def run(self):
-        self.warn_msg(_("A string to test translations."))
+        self.warn(_("A string to test translations."))
 
     @staticmethod
     def get_dependencies():
