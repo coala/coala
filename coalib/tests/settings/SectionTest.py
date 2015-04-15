@@ -41,7 +41,8 @@ class SectionTestCase(unittest.TestCase):
         defaults.append(Setting(" great   ", 3, 8))
         defaults.append(Setting(" great   ", 3, 8), custom_key="custom")
         uut.add_or_create_setting(Setting(" NEW   ", "val", 8))
-        uut.add_or_create_setting(Setting(" NEW   ", "vl", 8), allow_appending=False)
+        uut.add_or_create_setting(Setting(" NEW   ", "vl", 8),
+                                  allow_appending=False)
         uut.add_or_create_setting(Setting("new", "val", 9),
                                    custom_key="teSt ",
                                    allow_appending=True)
@@ -67,7 +68,8 @@ class SectionTestCase(unittest.TestCase):
         uut.append(Setting("key", "value"))
         self.assertEqual(str(uut), "name {key : value}")
         uut.append(Setting("another_key", "another_value"))
-        self.assertEqual(str(uut), "name {key : value, another_key : another_value}")
+        self.assertEqual(str(uut),
+                         "name {key : value, another_key : another_value}")
 
     def test_copy(self):
         uut = Section("name")
@@ -96,17 +98,21 @@ class SectionTestCase(unittest.TestCase):
         conf.append(Setting("key3", "value23"))
 
         # Values are overwritten, new keys appended
-        self.assertEqual(str(conf.copy().update(cli)), "conf {key1 : value11, key3 : value23, key2 : value12}")
+        self.assertEqual(str(conf.copy().update(cli)),
+                         "conf {key1 : value11, key3 : value23, "
+                         "key2 : value12}")
 
         cli.defaults = Section("clidef", None)
         cli.defaults.append(Setting("def1", "dval1"))
 
-        self.assertEqual(str(conf.copy().update(cli).defaults), "clidef {def1 : dval1}")
+        self.assertEqual(str(conf.copy().update(cli).defaults),
+                         "clidef {def1 : dval1}")
 
         conf.defaults = Section("confdef", None)
         conf.defaults.append(Setting("def2", "dval2"))
 
-        self.assertEqual(str(conf.copy().update(cli).defaults), "confdef {def2 : dval2, def1 : dval1}")
+        self.assertEqual(str(conf.copy().update(cli).defaults),
+                         "confdef {def2 : dval2, def1 : dval1}")
 
 
 if __name__ == '__main__':

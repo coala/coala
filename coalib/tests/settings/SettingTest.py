@@ -14,7 +14,8 @@ class SettingTestCase(unittest.TestCase):
 
     def test_path(self):
         self.uut = Setting("key", " 22\n", "." + os.path.sep, True)
-        self.assertEqual(path(self.uut), os.path.abspath(os.path.join(".", "22")))
+        self.assertEqual(path(self.uut),
+                         os.path.abspath(os.path.join(".", "22")))
 
         abspath = os.path.abspath(".")
         self.uut = Setting("key", abspath)
@@ -22,13 +23,17 @@ class SettingTestCase(unittest.TestCase):
 
         self.uut = Setting("key", " 22", "")
         self.assertRaises(ValueError, path, self.uut)
-        self.assertEqual(path(self.uut, origin="test" + os.path.sep), os.path.abspath(os.path.join("test", "22")))
+        self.assertEqual(path(self.uut,
+                              origin="test" + os.path.sep),
+                         os.path.abspath(os.path.join("test", "22")))
 
     def test_path_list(self):
         abspath = os.path.abspath(".")
         # Need to escape backslashes since we use list conversion
-        self.uut = Setting("key", "., " + abspath.replace("\\", "\\\\"), origin="test" + os.path.sep + "somefile")
-        self.assertEqual(path_list(self.uut), [os.path.abspath(os.path.join("test", ".")), abspath])
+        self.uut = Setting("key", "., " + abspath.replace("\\", "\\\\"),
+                           origin="test" + os.path.sep + "somefile")
+        self.assertEqual(path_list(self.uut),
+                         [os.path.abspath(os.path.join("test", ".")), abspath])
 
     def test_inherited_conversions(self):
         self.uut = Setting("key", " 22\n", ".", True)

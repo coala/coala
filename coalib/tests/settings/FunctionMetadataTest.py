@@ -14,7 +14,7 @@ class TestClass:
 
         :param param2: d
         :param param4: p4 desc
-        :return: ret
+        :return:       ret
         """
 
     def bad_function(self, bad_param: "no function"):
@@ -46,31 +46,37 @@ class FunctionMetadataTestCase(unittest.TestCase):
         self.check_function_metadata_data_set(uut, "test_from_function")
 
         uut = FunctionMetadata.from_function(TestClass(5, 5).__init__)
-        self.check_function_metadata_data_set(uut,
-                                              "__init__",
-                                              desc="Description",
-                                              retval_desc="ret",
-                                              non_optional_params={
-                                                  "param1": (uut.str_nodesc, None),
-                                                  "param2": ("d", None)
-                                              },
-                                              optional_params={
-                                                  "param3": (uut.str_nodesc + " (" + uut.str_optional.format("5") + ")",
-                                                             None, 5),
-                                                  "param4": ("p4 desc (" + uut.str_optional.format("6") + ")", int, 6)
-                                              })
+        self.check_function_metadata_data_set(
+            uut,
+            "__init__",
+            desc="Description",
+            retval_desc="ret",
+            non_optional_params={
+                "param1": (uut.str_nodesc, None),
+                "param2": ("d", None)
+            },
+            optional_params={
+                "param3": (uut.str_nodesc + " ("
+                           + uut.str_optional.format("5") + ")",
+                           None, 5),
+                "param4": ("p4 desc ("
+                           + uut.str_optional.format("6") + ")", int, 6)})
 
-        uut = FunctionMetadata.from_function(TestClass(5, 5).__init__, omit=["param3", "param2"])
-        self.check_function_metadata_data_set(uut,
-                                              "__init__",
-                                              desc="Description",
-                                              retval_desc="ret",
-                                              non_optional_params={
-                                                  "param1": (uut.str_nodesc, None)
-                                              },
-                                              optional_params={
-                                                  "param4": ("p4 desc (" + uut.str_optional.format("6") + ")", int, 6)
-                                              })
+        uut = FunctionMetadata.from_function(TestClass(5, 5).__init__,
+                                             omit=["param3", "param2"])
+        self.check_function_metadata_data_set(
+            uut,
+            "__init__",
+            desc="Description",
+            retval_desc="ret",
+            non_optional_params={
+                "param1": (uut.str_nodesc,
+                           None)
+            },
+            optional_params={
+                "param4": ("p4 desc (" + uut.str_optional.format("6") + ")",
+                           int,
+                           6)})
 
     def test_create_params_from_section(self):
         section = Section("name")

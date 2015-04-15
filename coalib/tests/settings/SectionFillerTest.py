@@ -58,7 +58,8 @@ class SectionFillerTestCase(unittest.TestCase):
 
     def test_fill_section(self):
         new_section = self.uut.fill_section([LocalTestBear, GlobalTestBear,
-                                            "an inappropriate string object here"])
+                                            "an inappropriate string object "
+                                            "here"])
 
         self.assertTrue("local name" in new_section)
         self.assertTrue("global name" in new_section)

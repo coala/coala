@@ -7,22 +7,41 @@ from coalib.settings.DocumentationComment import DocumentationComment
 
 class DocumentationCommentParserTestCase(unittest.TestCase):
     def test_construction(self):
-        self.assertRaises(TypeError, DocumentationComment, desc=5, param_dict={}, retval_desc="")
-        self.assertRaises(TypeError, DocumentationComment, desc="", param_dict=5, retval_desc="")
-        self.assertRaises(TypeError, DocumentationComment, desc="", param_dict={}, retval_desc=5)
-        self.assertRaises(TypeError, DocumentationComment.from_docstring, docstring=5)
+        self.assertRaises(TypeError,
+                          DocumentationComment,
+                          desc=5,
+                          param_dict={},
+                          retval_desc="")
+        self.assertRaises(TypeError,
+                          DocumentationComment,
+                          desc="",
+                          param_dict=5,
+                          retval_desc="")
+        self.assertRaises(TypeError,
+                          DocumentationComment,
+                          desc="",
+                          param_dict={},
+                          retval_desc=5)
+        self.assertRaises(TypeError,
+                          DocumentationComment.from_docstring,
+                          docstring=5)
 
     def test_from_docstring(self):
         self.check_from_docstring_dataset("")
-        self.check_from_docstring_dataset(" description only ", desc="description only")
-        self.check_from_docstring_dataset(" :param test:  test description ", param_dict={
+        self.check_from_docstring_dataset(" description only ",
+                                          desc="description only")
+        self.check_from_docstring_dataset(" :param test:  test description ",
+                                          param_dict={
             "test": "test description"
         })
-        self.check_from_docstring_dataset(" @param test:  test description ", param_dict={
+        self.check_from_docstring_dataset(" @param test:  test description ",
+                                          param_dict={
             "test": "test description"
         })
-        self.check_from_docstring_dataset(" :return: something ", retval_desc="something")
-        self.check_from_docstring_dataset(" @return: something ", retval_desc="something")
+        self.check_from_docstring_dataset(" :return: something ",
+                                          retval_desc="something")
+        self.check_from_docstring_dataset(" @return: something ",
+                                          retval_desc="something")
         self.check_from_docstring_dataset("""
         Main description
 
@@ -40,8 +59,14 @@ class DocumentationCommentParserTestCase(unittest.TestCase):
             "p2": "p2 description"
         }, retval_desc="retval description override")
 
-    def check_from_docstring_dataset(self, docstring, desc="", param_dict={}, retval_desc=""):
-        self.assertIsInstance(docstring, str, "docstring needs to be a string for this test.")
+    def check_from_docstring_dataset(self,
+                                     docstring,
+                                     desc="",
+                                     param_dict={},
+                                     retval_desc=""):
+        self.assertIsInstance(docstring,
+                              str,
+                              "docstring needs to be a string for this test.")
         doc_comment = DocumentationComment.from_docstring(docstring)
         self.assertEqual(doc_comment.desc, desc)
         self.assertEqual(doc_comment.param_dict, param_dict)
