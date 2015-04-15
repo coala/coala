@@ -1,5 +1,4 @@
-Commit Messages
-===============
+# Commit Messages
 
 There are a few things to consider when writing a commit message, namely:
 
@@ -27,7 +26,8 @@ There are a few things to consider when writing a commit message, namely:
 
 Also see: https://wiki.gnome.org/Git/CommitMessages
 
-Example:
+## Example
+
 ```
 setup: Install .coafile via package_data
 

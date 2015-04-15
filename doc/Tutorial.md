@@ -3,12 +3,12 @@
 Welcome to this little tutorial. It is meant to be a gentle introduction to the
 usage of coala.
 
-## Prerequisites
+# Prerequisites
 
 In order to complete this tutorial you will need coala installed. (Installation
 is actually not required but it's more convenient and recommended.)
 
-## Get Some Code
+# Get Some Code
 
 In order to perform a static code analysis on your code you will need some code
 to check. If you do not have own code you want to check, you can retrieve our
@@ -21,12 +21,12 @@ git clone https://github.com/coala-analyzer/coala-tutorial.git
 Please note that the commands given in this tutorial are intended for use with
 this sample code and may need minor adjustments.
 
-## Let's Start!
+# Let's Start!
 
 There are two options how to let coala know what kind of analysis it should
 perform on which code.
 
-### Command Line Interface
+## Command Line Interface
 
 In order to specify the files to analyze, you can use the `--files` argument of
 coala like demonstrated below. For all file paths, you can specify (recursive)
@@ -53,7 +53,7 @@ that).
 Feel free to experiment a bit. You've successfully analysed some code! But
 don't stop reading - you don't have to enter all those values again!
 
-### Configuration Files
+## Configuration Files
 
 coala supports a very simple configuration file. If you've executed the
 instructions from the CLI section above, coala will already have such a file
@@ -80,7 +80,7 @@ Feel free to play around with this file. You can either edit it manually or
 add/edit settings via `coala --save ...` invocations. If you want coala to save
 settings every time, you can add `Save = True` manually into your `.coafile`.
 
-## Sections
+# Sections
 
 Thats all nice and well but we also have a Makefile for our project we want to
 check. So let me introduce another feature of our configuration syntax:
@@ -126,7 +126,7 @@ max_line_length = 80
 As you see, sections provide a way to have different configurations for
 possibly different languages in one file. They are executed sequentially.
 
-## Setting Inheritance
+# Setting Inheritance
 
 All settings in the default section are implicitly inherited to all other
 sections (if they do not override their values). We can use that to save a few
@@ -152,12 +152,12 @@ are already available in every other section implicitly. Thus the default
 section is a good point to set things like logging and output settings or
 specifying a default set of files to check.
 
-## Enabling/Disabling Sections
+# Enabling/Disabling Sections
 
 Now that we have sections we need some way to control, which sections are
 executed. coala provides two ways to do that:
 
-### Manual Enabling/Disabling
+## Manual Enabling/Disabling
 
 If you add the line `TODOS.enabled=False` to some arbitrary place to
 your `.coafile` or just `enabled=False` into the `TODOS` section, coala will
@@ -166,7 +166,7 @@ not show the TODOs on every run.
 Especially for those bears yielding informational messages which you might want
 to see from time to time this is a good way to silence them.
 
-### Specifying Targets
+## Specifying Targets
 
 If you provide positional arguments, like `coala Makefiles`, coala will execute
 exclusively those sections that are specified. This will not get stored in your
@@ -175,7 +175,7 @@ several targets seperated by a space.
 
 What was that TODO again?
 
-## Integrating coala into Your Project
+# Integrating coala into Your Project
 
 It's easy to add coala to your project in a way that does not force your
 developers even to install coala using git submodules. This also has the
@@ -198,7 +198,7 @@ git submodule update
 coala/coala
 ```
 
-## Continuing the Journey
+# Continuing the Journey
 
 If you want to know about more options, take a look at our help with
 `coala -h`. If you liked or disliked this tutorial, feel free to drop us a note

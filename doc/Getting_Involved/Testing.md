@@ -1,10 +1,8 @@
-Testing
-=======
+# Testing
 
 You can help us testing coala in several ways.
 
-Executing our Tests
--------------------
+# Executing our Tests
 
 coala has a big test suite. It is meant to work on every platform on every PC.
 If you just execute our tests you are doing us a favor. You can execute our
