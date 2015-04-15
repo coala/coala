@@ -1,16 +1,16 @@
 import subprocess
 
 from coalib.misc.StringConstants import StringConstants
-from coalib.output.printers.Printer import Printer
+from coalib.output.printers.ClosablePrinter import ClosablePrinter
 from coalib.misc.i18n import _
 
 
-class EspeakPrinter(Printer):
+class EspeakPrinter(ClosablePrinter):
     def __init__(self):
         """
         Raises EnvironmentError if VoiceOutput is impossible.
         """
-        Printer.__init__(self)
+        ClosablePrinter.__init__(self)
         # TODO retrieve language from get_locale and select appropriate voice
 
         try:
@@ -26,7 +26,7 @@ class EspeakPrinter(Printer):
                   StringConstants.THIS_IS_A_BUG)
             raise EnvironmentError
 
-    def __del__(self):
+    def _close(self):
         self.espeak.stdin.close()
 
     def _print(self, output, **kwargs):
