@@ -121,7 +121,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                 question = self._format_line(
                     _("Please enter a value for the parameter '{}' ({}): ")
                     .format(param_name, params[param_name][0]))
-                self.current_section.append(Setting(param_name, input(question)))
+                self.current_section.append(Setting(param_name,
+                                                    input(question)))
 
         return action.name, self.current_section
 
