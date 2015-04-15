@@ -1,24 +1,22 @@
-coala Installation
-==================
+# coala Installation
 
 This document contains information on how to install coala and its
 dependencies. Optional dependencies are marked with (*).
 
-Dependencies
-------------
+# Dependencies
 
-### Python
+## Python
 coala requires an installation of Python3 >= 3.2 from http://www.python.org.
 coala is fully tested against python versions 3.2, 3.3 and 3.4.
 
-### eSpeak (*)
+## eSpeak (*)
 If you want to use coalas voice outputter you need to install eSpeak from
 http://espeak.sourceforge.net/. Note that voice output is currently only
 possible when developing for coala. If you care for voice output, please
 contact us so we will speed up development of our voice output module.
 
-coala
------
+# coala
+
 coala can be installed afterwards by executing the file setup.py through
 the python interpreter:
 
@@ -32,7 +30,7 @@ Note that the usual installation requires root access. On an unixoid system
 
 ```sudo python3 setup.py install```
 
-### Alternate installation
+## Alternate installation
 
 If you want to install coala to an alternate location you can e.g. call
 `python3 setup.py install --prefix=/your/prefix/location`. Other options are
