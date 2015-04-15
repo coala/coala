@@ -14,9 +14,12 @@ class LineParserTestCase(unittest.TestCase):
         self.check_data_set("\n \n \n")
 
     def test_comment_parsing(self):
-        self.check_data_set("# comment only$§\n", output_comment="# comment only$§")
-        self.check_data_set("   ; comment only  \n", output_comment="; comment only")
-        self.check_data_set("   ; \\comment only  \n", output_comment="; comment only")
+        self.check_data_set("# comment only$§\n",
+                            output_comment="# comment only$§")
+        self.check_data_set("   ; comment only  \n",
+                            output_comment="; comment only")
+        self.check_data_set("   ; \\comment only  \n",
+                            output_comment="; comment only")
         self.check_data_set("#", output_comment="#")
 
     def test_section_override(self):
@@ -24,11 +27,12 @@ class LineParserTestCase(unittest.TestCase):
                             output_keys=[("a", "b"), ("", "a.b c")])
 
     def test_multi_value_parsing(self):
-        self.check_data_set("a, b\\ \\= section.c= = :()&/ \\\\#heres a comment \n",
-                            output_section='',
-                            output_keys=[("", 'a'), ("", 'b ='), ("section", 'c')],
-                            output_value='= :()&/ \\\\',
-                            output_comment='#heres a comment')
+        self.check_data_set(
+            "a, b\\ \\= section.c= = :()&/ \\\\#heres a comment \n",
+            output_section='',
+            output_keys=[("", 'a'), ("", 'b ='), ("section", 'c')],
+            output_value='= :()&/ \\\\',
+            output_comment='#heres a comment')
 
     def test_multi_line_parsing(self):
         self.check_data_set(" a,b,d another value ",
@@ -60,7 +64,12 @@ class LineParserTestCase(unittest.TestCase):
         self.check_data_set("  Section:  sec]\\\\\\; thats a new section",
                             output_section="sec]\\; thats a new section")
 
-    def check_data_set(self, line, output_section="", output_keys=[], output_value='', output_comment=''):
+    def check_data_set(self,
+                       line,
+                       output_section="",
+                       output_keys=[],
+                       output_value='',
+                       output_comment=''):
         section_name, keys, value, comment = self.uut.parse(line)
 
         self.assertEqual(section_name, output_section)
