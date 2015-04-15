@@ -71,7 +71,8 @@ class Bear:
             return
 
         self.message_queue.put(LogMessage(log_level,
-                                          str(delimiter).join(args)),
+                                          *args,
+                                          delimiter=delimiter),
                                timeout=self.TIMEOUT)
 
     def run(self, *args, dependency_results=None, **kwargs):
