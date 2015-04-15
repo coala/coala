@@ -10,7 +10,7 @@ import unittest
 
 class LogMessageTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = LogMessage(LOG_LEVEL.DEBUG, "test message")
+        self.uut = LogMessage(LOG_LEVEL.DEBUG, "test", "message")
 
     def test_construction(self):
         # take a look if defaults are good
