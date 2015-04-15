@@ -18,7 +18,7 @@ class Bear:
     will probably want to look at the GlobalBear and LocalBear classes that
     inherit from this class. In any case you'll want to overwrite at least the
     run method. You can send debug/warning/error messages through the
-    debug_msg(), warn_msg(), fail_msg() functions. These will send the
+    debug(), warn_msg(), fail_msg() functions. These will send the
     appropriate messages so that they are outputted. Be aware that if you use
     fail_msg(), you are expected to also terminate the bear run-through
     immediately.
@@ -54,7 +54,7 @@ class Bear:
     def tear_down(self):
         pass
 
-    def debug_msg(self, *args, delimiter=' '):
+    def debug(self, *args, delimiter=' '):
         self.__send_msg(LOG_LEVEL.DEBUG, delimiter, *args)
 
     def warn_msg(self, *args, delimiter=' '):
@@ -88,20 +88,20 @@ class Bear:
     def execute(self, *args, **kwargs):
         name = self.__class__.__name__
         try:
-            self.debug_msg(_("Setting up bear {}...").format(name))
+            self.debug(_("Setting up bear {}...").format(name))
             self.set_up()
 
-            self.debug_msg(_("Running bear {}...").format(name))
+            self.debug(_("Running bear {}...").format(name))
             retval = self.run_bear_from_section(args, kwargs)
 
-            self.debug_msg(_("Tearing down bear {}...").format(name))
+            self.debug(_("Tearing down bear {}...").format(name))
             self.tear_down()
 
             return retval
         except:
             self.warn_msg(
                 _("Bear {} failed to run.").format(name))
-            self.debug_msg(_("The bear {bear} raised an exception. If you are "
+            self.debug(_("The bear {bear} raised an exception. If you are "
                              "the writer of this bear, please make sure "
                              "to catch all exceptions. If not and this error "
                              "annoys you, you might want to get in contact "
