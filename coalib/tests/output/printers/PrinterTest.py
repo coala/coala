@@ -14,6 +14,7 @@ class PrinterTestCase(unittest.TestCase):
     def test_printer_interface(self):
         self.uut = Printer()
         self.assertRaises(NotImplementedError, self.uut.print, "test")
+        self.uut.close()
 
     def test_printer_concatenation(self):
         self.uut = TestPrinter()
@@ -40,6 +41,7 @@ class PrinterTestCase(unittest.TestCase):
             "<class 'NotImplementedError'>")
         self.assertEqual(self.uut.print("", end=NotImplementedError),
                          "<class 'NotImplementedError'>")
+        self.uut.close()
 
 
 if __name__ == '__main__':
