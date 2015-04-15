@@ -3,7 +3,7 @@ def yield_once(iterator):
     Decorator to make an iterator yield each result only once.
 
     :param iterator: Any iterator
-    :return: An iterator that does not yield results more than one time.
+    :return:         An iterator that yields every result only once at most.
     """
     def yield_once_generator(*args, **kwargs):
         yielded = []
@@ -22,7 +22,7 @@ def _to_list(var):
     Make variable to list.
 
     :param var: variable of any type
-    :return: list
+    :return:    list
     """
     if isinstance(var, list):
         return var
@@ -43,7 +43,7 @@ def arguments_to_lists(function):
     Decorator for a function that converts all arguments to lists.
 
     :param function: target function
-    :return: target function with only lists as parameters
+    :return:         target function with only lists as parameters
     """
     def l_function(*args, **kwargs):
         l_args = [_to_list(arg) for arg in args]
