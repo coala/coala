@@ -58,8 +58,9 @@ def icollect(file_paths, log_printer, files=True, dirs=True):
 def collect_files(file_paths, log_printer):
     """
     Evaluate globs in file paths and return all matching files
+
     :param file_paths: list of file paths that can include globs
-    :return: list of paths of all matching files
+    :return:           list of paths of all matching files
     """
     return list(icollect(file_paths, log_printer, dirs=False))
 
@@ -67,8 +68,9 @@ def collect_files(file_paths, log_printer):
 def collect_dirs(dir_paths, log_printer):
     """
     Evaluate globs in directory paths and return all matching directories
+
     :param dir_paths: list of file paths that can include globs
-    :return: list of paths of all matching directories
+    :return:          list of paths of all matching directories
     """
     return list(icollect(dir_paths, log_printer, files=False))
 
@@ -77,11 +79,12 @@ def collect_dirs(dir_paths, log_printer):
 def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
-    :param bear_dirs: directories that can contain bears
-    :param bear_names: names of bears
-    :param kinds: list of bear kinds to be collected
+
+    :param bear_dirs:   directories that can contain bears
+    :param bear_names:  names of bears
+    :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
-    :return: iterator that yields bear classes
+    :return:            iterator that yields bear classes
     """
     for bear_dir in icollect(bear_dirs, log_printer, files=False):
         for bear_name in bear_names:
@@ -101,10 +104,11 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
 def collect_bears(bear_dirs, bear_names, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
-    :param bear_dirs: directories that can contain bears
-    :param bear_names: names of bears
-    :param kinds: list of bear kinds to be collected
+
+    :param bear_dirs:   directories that can contain bears
+    :param bear_names:  names of bears
+    :param kinds: list  of bear kinds to be collected
     :param log_printer: log_printer to handle logging
-    :return: list of matching bear classes
+    :return:            list of matching bear classes
     """
     return list(icollect_bears(bear_dirs, bear_names, kinds, log_printer))

@@ -41,7 +41,7 @@ def resolve(bears):
     duplicates.
 
     :param bears: The given bears. Will not be modified.
-    :return: The new list of bears, sorted so that it can be executed
-    sequentially without dependency issues.
+    :return:      The new list of bears, sorted so that it can be executed
+                  sequentially without dependency issues.
     """
     return _resolve(bears, [], [])

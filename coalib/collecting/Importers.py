@@ -46,13 +46,15 @@ def _is_defined_in(obj, file_path):
 def _iimport_objects(file_paths, names, types, supers, attributes, local):
     """
     Import all objects from the given modules that fulfill the requirements
+
     :param file_paths: File path(s) from which objects will be imported
-    :param names: Name(s) an objects need to have one of
-    :param types: Type(s) an objects need to be out of
-    :param supers: Class(es) objects need to be a subclass of
+    :param names:      Name(s) an objects need to have one of
+    :param types:      Type(s) an objects need to be out of
+    :param supers:     Class(es) objects need to be a subclass of
     :param attributes: Attribute(s) an object needs to (all) have
-    :param local: Objects need to be defined in the file they appear in if True
-    :return: iterator that yields all matching python objects
+    :param local:      if True: Objects need to be defined in the file they
+                       appear in to be collected
+    :return:           iterator that yields all matching python objects
     """
     if file_paths == [] or \
             (names == [] and
@@ -79,13 +81,15 @@ def iimport_objects(file_paths, names=None, types=None, supers=None,
                     attributes=None, local=False, verbose=False):
     """
     Import all objects from the given modules that fulfill the requirements
+
     :param file_paths: File path(s) from which objects will be imported
-    :param names: Name(s) an objects need to have one of
-    :param types: Type(s) an objects need to be out of
-    :param supers: Class(es) objects need to be a subclass of
+    :param names:      Name(s) an objects need to have one of
+    :param types:      Type(s) an objects need to be out of
+    :param supers:     Class(es) objects need to be a subclass of
     :param attributes: Attribute(s) an object needs to (all) have
-    :param local: Objects need to be defined in the file they appear in if True
-    :return: iterator that yields all matching python objects
+    :param local:      if True: Objects need to be defined in the file they
+                       appear in to be collected
+    :return:           iterator that yields all matching python objects
     """
     if not verbose:
         with suppress_stdout():
@@ -102,13 +106,15 @@ def import_objects(file_paths, names=None, types=None, supers=None,
                    attributes=None, local=False, verbose=False):
     """
     Import all objects from the given modules that fulfill the requirements
+
     :param file_paths: File path(s) from which objects will be imported
-    :param names: Name(s) an objects need to have one of
-    :param types: Type(s) an objects need to be out of
-    :param supers: Class(es) objects need to be a subclass of
+    :param names:      Name(s) an objects need to have one of
+    :param types:      Type(s) an objects need to be out of
+    :param supers:     Class(es) objects need to be a subclass of
     :param attributes: Attribute(s) an object needs to (all) have
-    :param local: Objects need to be defined in the file they appear in if True
-    :return: list of all matching python objects
+    :param local:      if True: Objects need to be defined in the file they
+                       appear in to be collected
+    :return:           list of all matching python objects
     """
     return list(iimport_objects(file_paths, names, types, supers, attributes,
                                 local, verbose))
