@@ -15,13 +15,14 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
     STR_PROJECT_WIDE = _("Project wide:")
 
     def __init__(self,
-                 log_printer=ConsolePrinter(),
+                 log_printer,
                  pre_padding: int=3):
         """
         A ConsoleInteractor uses the Console to interact with the user.
 
-        :param output: "stdout" or "stderr".
-        :param pre_padding: Number of code lines to show before a result as context.
+        :param log_printer: The log printer to use.
+        :param pre_padding: Number of code lines to show before a result as
+                            context.
         """
         Interactor.__init__(self, log_printer=log_printer)
         ConsolePrinter.__init__(self)

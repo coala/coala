@@ -12,6 +12,7 @@ from coalib.results.Diff import Diff
 from coalib.settings.Section import Section, Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -25,9 +26,10 @@ class TestAction(ResultAction):
 
 class ConsoleInteractorTestCase(unittest.TestCase):
     def setUp(self):
+        self.log_printer = ConsolePrinter()
         self._input = builtins.__dict__["input"]
         builtins.__dict__["input"] = lambda x: x
-        self.uut = ConsoleInteractor()
+        self.uut = ConsoleInteractor(self.log_printer)
 
         # All those tests assume that Result has no actions and PatchResult has
         # one. This makes this test independent from the real number of actions
@@ -38,6 +40,7 @@ class ConsoleInteractorTestCase(unittest.TestCase):
     def tearDown(self):
         builtins.__dict__["input"] = self._input
         self.uut.close()
+        self.log_printer.close()
 
     def test_require_settings(self):
         self.assertRaises(TypeError, self.uut.acquire_settings, 0)
@@ -253,9 +256,11 @@ class ConsoleInteractorTestCase(unittest.TestCase):
 
     def test_from_section(self):
         section = Section("test")
-        ConsoleInteractor.from_section(section).close()
+        ConsoleInteractor.from_section(section,
+                                       log_printer=self.log_printer).close()
         section.append(Setting("output", "stderr"))
-        ConsoleInteractor.from_section(section).close()
+        ConsoleInteractor.from_section(section,
+                                       log_printer=self.log_printer).close()
 
     @staticmethod
     def get_str_from_queue(q):

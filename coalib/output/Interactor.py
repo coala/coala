@@ -9,7 +9,7 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
 class Interactor(SectionCreatable, Printer):
-    def __init__(self, log_printer=ConsolePrinter()):
+    def __init__(self, log_printer):
         SectionCreatable.__init__(self)
         Printer.__init__(self)
         self.log_printer = log_printer

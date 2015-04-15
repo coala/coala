@@ -2,16 +2,19 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
+from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.Interactor import Interactor
 from coalib.results.Result import Result
 
 
 class InteractorTestCase(unittest.TestCase):
     def setUp(self):
-        self.uut = Interactor()
+        self.log_printer = ConsolePrinter()
+        self.uut = Interactor(self.log_printer)
 
     def tearDown(self):
         self.uut.close()
+        self.log_printer.close()
 
     def test_api(self):
         self.assertRaises(NotImplementedError, self.uut.acquire_settings, "anything")

@@ -15,8 +15,8 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
-    def __init__(self, result_queue, log_queue):
-        Interactor.__init__(self)
+    def __init__(self, log_printer, result_queue, log_queue):
+        Interactor.__init__(self, log_printer)
         LogPrinter.__init__(self)
         self.result_queue = result_queue
         self.log_queue = log_queue
@@ -35,8 +35,8 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
 
 class SectionExecutorInitTestCase(unittest.TestCase):
     def test_init(self):
-        interactor = ConsoleInteractor()
         log_printer = ConsolePrinter()
+        interactor = ConsoleInteractor(log_printer)
         self.assertRaises(TypeError,
                           SectionExecutor,
                           5,
@@ -106,7 +106,9 @@ class SectionExecutorTestCase(unittest.TestCase):
         self.result_queue = queue.Queue()
         self.log_queue = queue.Queue()
 
-        self.interactor = SectionExecutorTestInteractor(self.result_queue,
+        self.log_printer = ConsolePrinter()
+        self.interactor = SectionExecutorTestInteractor(self.log_printer,
+                                                        self.result_queue,
                                                         self.log_queue)
 
         self.uut = SectionExecutor(self.sections["default"],
@@ -117,6 +119,7 @@ class SectionExecutorTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.interactor.close()
+        self.log_printer.close()
 
     def test_run(self):
         self.assertTrue(self.uut.run())

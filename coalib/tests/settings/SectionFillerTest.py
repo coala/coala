@@ -39,8 +39,8 @@ class SectionFillerTestCase(unittest.TestCase):
     def setUp(self):
         section = Section("test")
         section.append(Setting("key", "val"))
-        self.interactor = ConsoleInteractor()
         self.log_printer = ConsolePrinter()
+        self.interactor = ConsoleInteractor(self.log_printer)
         self.uut = SectionFiller(section,
                                  self.interactor,
                                  self.log_printer)
