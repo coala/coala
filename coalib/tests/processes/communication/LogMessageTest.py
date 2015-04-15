@@ -28,18 +28,29 @@ class LogMessageTestCase(unittest.TestCase):
     def test_to_str(self):
         self.uut.message = StringConstants.COMPLEX_TEST_STRING
         self.uut.log_level = LOG_LEVEL.ERROR
-        self.assertEqual(str(self.uut), "[{}] {}".format(_("ERROR"), StringConstants.COMPLEX_TEST_STRING))
+        self.assertEqual(str(self.uut),
+                         "[{}] {}".format(_("ERROR"),
+                                          StringConstants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.WARNING
-        self.assertEqual(str(self.uut), "[{}] {}".format(_("WARNING"), StringConstants.COMPLEX_TEST_STRING))
+        self.assertEqual(str(self.uut),
+                         "[{}] {}".format(_("WARNING"),
+                                          StringConstants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.DEBUG
-        self.assertEqual(str(self.uut), "[{}] {}".format(_("DEBUG"), StringConstants.COMPLEX_TEST_STRING))
+        self.assertEqual(str(self.uut),
+                         "[{}] {}".format(_("DEBUG"),
+                                          StringConstants.COMPLEX_TEST_STRING))
         self.uut.log_level = 5
-        self.assertEqual(str(self.uut), "[{}] {}".format(_("ERROR"), StringConstants.COMPLEX_TEST_STRING))
+        self.assertEqual(str(self.uut),
+                         "[{}] {}".format(_("ERROR"),
+                                          StringConstants.COMPLEX_TEST_STRING))
 
     def test_equals(self):
-        self.assertEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), LogMessage(LOG_LEVEL.DEBUG, "test message"))
-        self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), LogMessage(LOG_LEVEL.WARNING, "test message"))
-        self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), LogMessage(LOG_LEVEL.DEBUG, "test"))
+        self.assertEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"),
+                         LogMessage(LOG_LEVEL.DEBUG, "test message"))
+        self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"),
+                            LogMessage(LOG_LEVEL.WARNING, "test message"))
+        self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"),
+                            LogMessage(LOG_LEVEL.DEBUG, "test"))
         self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), 5)
 
 

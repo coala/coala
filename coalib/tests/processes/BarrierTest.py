@@ -24,8 +24,10 @@ class BarrierTestCase(unittest.TestCase):
     def test_barrier(self):
         uut = Barrier(parties=2)
         queue = multiprocessing.Queue()
-        processes = [multiprocessing.Process(target=proc_one, args=(queue, uut)),
-                     multiprocessing.Process(target=proc_two, args=(queue, uut))]
+        processes = [multiprocessing.Process(target=proc_one,
+                                             args=(queue, uut)),
+                     multiprocessing.Process(target=proc_two,
+                                             args=(queue, uut))]
         for proc in processes:
             proc.start()
         for proc in processes:
