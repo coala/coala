@@ -6,13 +6,15 @@ A LineDiff holds the difference between two strings.
 class LineDiff:
     def __init__(self, change=False, delete=False, add_after=False):
         """
-        Creates a new LineDiff object. Note that a line cannot be changed _and_ deleted at the same time.
+        Creates a new LineDiff object. Note that a line cannot be
+        changed _and_ deleted at the same time.
 
         :param change: False or a tuple (original, replacement)
         :param delete: True/False
         :param add_after: False or a list of lines to append after this ones
         """
-        self._delete = False  # change property setter will need this value for assertion
+        self._delete = False  # change property setter will need this value
+                              # for assertion
         self.change = change
         self.delete = delete
         self.add_after = add_after
@@ -24,9 +26,11 @@ class LineDiff:
     @change.setter
     def change(self, value):
         if value is not False and not isinstance(value, tuple):
-            raise TypeError("change must be False or a tuple with an original and a replacement string.")
+            raise TypeError("change must be False or a tuple with an original "
+                            "and a replacement string.")
         if value is not False and self.delete is not False:
-            raise AssertionError("A line cannot be changed and deleted at the same time.")
+            raise AssertionError("A line cannot be changed and deleted "
+                                 "at the same time.")
 
         self._change = value
 
@@ -39,7 +43,8 @@ class LineDiff:
         if not isinstance(value, bool):
             raise TypeError("delete can only be a boolean value.")
         if value is not False and self.change is not False:
-            raise AssertionError("A line cannot be changed and deleted at the same time.")
+            raise AssertionError("A line cannot be changed and deleted "
+                                 "at the same time.")
 
         self._delete = value
 
@@ -50,6 +55,7 @@ class LineDiff:
     @add_after.setter
     def add_after(self, value):
         if value is not False and not isinstance(value, list):
-            raise TypeError("add_after must be False or a list of lines to append.")
+            raise TypeError(
+                "add_after must be False or a list of lines to append.")
 
         self._add_after = value if value != [] else False

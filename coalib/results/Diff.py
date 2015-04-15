@@ -31,7 +31,11 @@ class Diff:
         # We use this because its faster (generator) and doesnt yield as much
         # useless information as get_opcodes.
         for change_group in matcher.get_grouped_opcodes(1):
-            for tag, a_index_1, a_index_2, b_index_1, b_index_2 in change_group:
+            for (tag,
+                 a_index_1,
+                 a_index_2,
+                 b_index_1,
+                 b_index_2) in change_group:
                 if tag == "delete":
                     for index in range(a_index_1+1, a_index_2+1):
                         result.delete_line(index)
@@ -66,8 +70,8 @@ class Diff:
         Applies this diff to the given file.
 
         :param file: A list of all lines in the file. (readlines) Will not be
-        modified.
-        :return: The modified file.
+                     modified.
+        :return:     The modified file.
         """
         result = []
         current_line = 0
@@ -123,8 +127,8 @@ class Diff:
         Adds lines after the given line number.
 
         :param line_nr_before: Line number of the line before the additions.
-        Use 0 for insert lines before everything.
-        :param lines: A list of lines to add.
+                               Use 0 for insert lines before everything.
+        :param lines:          A list of lines to add.
         """
         if lines == []:
             return  # No action
