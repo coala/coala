@@ -6,6 +6,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _
+from coalib.settings.Setting import Setting
 
 
 class ConsoleInteractor(Interactor, ConsolePrinter):
@@ -108,9 +109,6 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             self.print(self._format_line(_("Please enter a valid number.")))
 
     def _get_action_info(self, action):
-        # Otherwise we have a recursive import
-        from coalib.settings.Setting import Setting
-
         params = action.non_optional_params
 
         if self.current_section is None:
