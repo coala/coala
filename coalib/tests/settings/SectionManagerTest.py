@@ -183,6 +183,13 @@ class SectionManagerTestCase(unittest.TestCase):
         uut.retrieve_logging_objects(test_section)
         self.assertIsInstance(uut.log_printer, NullPrinter)
 
+        filename = tempfile.gettempdir() + os.path.sep + "log_test~"
+        test_section = Section("default")
+        test_section.append(Setting(key="log_TYPE", value=filename))
+        uut.retrieve_logging_objects(test_section)
+        self.assertIsInstance(uut.log_printer, FilePrinter)
+        os.remove(filename)
+
         test_section = Section("default")
         test_section.append(Setting(key="log_TYPE",
                                     value="./invalid path/@#$%^&*()_"))
@@ -192,13 +199,6 @@ class SectionManagerTestCase(unittest.TestCase):
         test_section.append(Setting(key="LOG_LEVEL", value="DEBUG"))
         uut.retrieve_logging_objects(test_section)  # Should throw a warning
         self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.DEBUG)
-
-        filename = tempfile.gettempdir() + os.path.sep + "log_test~"
-        test_section = Section("default")
-        test_section.append(Setting(key="log_TYPE", value=filename))
-        uut.retrieve_logging_objects(test_section)
-        self.assertIsInstance(uut.log_printer, FilePrinter)
-        os.remove(filename)
 
 
 if __name__ == '__main__':
