@@ -1,9 +1,9 @@
-from coalib.output.printers.ClosablePrinter import ClosablePrinter
+from coalib.output.ClosableObject import ClosableObject
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
-class FilePrinter(LogPrinter, ClosablePrinter):
+class FilePrinter(LogPrinter, ClosableObject):
     """
     This is a simple printer/logprinter that prints everything to a file. Note
     that everything will be appended.
@@ -18,7 +18,7 @@ class FilePrinter(LogPrinter, ClosablePrinter):
 
         :param filename: the name of the file to put the data into (string).
         """
-        ClosablePrinter.__init__(self)
+        ClosableObject.__init__(self)
         self.file = None
         if not isinstance(filename, str):
             raise TypeError("filename must be a string.")
