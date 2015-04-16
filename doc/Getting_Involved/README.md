@@ -1,5 +1,4 @@
-Getting Involved
-================
+# Getting Involved
 
 We are working hard to make coala reality. If you want to help us you can do
 the following things:

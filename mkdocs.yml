@@ -3,10 +3,10 @@ repo_url: https://github.com/coala-analyzer/coala
 docs_dir: doc
 theme: simplex
 pages:
-- ['index.md', 'Getting Started', 'Introduction']
+- ['README.md', 'Getting Started', 'Introduction']
 - ['Install.md', 'Getting Started', 'Installation']
 - ['Tutorial.md', 'Getting Started', 'Tutorial']
-- ['Getting_Involved/index.md', 'Getting Involved', 'Introduction']
+- ['Getting_Involved/README.md', 'Getting Involved', 'Introduction']
 - ['Getting_Involved/Writing_Bears.md', 'Getting Involved', 'Writing Bears']
 - ['Getting_Involved/Review.md', 'Getting Involved', 'Review']
 - ['Getting_Involved/Codestyle.md', 'Getting Involved', 'Codestyle']

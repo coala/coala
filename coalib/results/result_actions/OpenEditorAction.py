@@ -24,7 +24,8 @@ class OpenEditorAction(ApplyPatchAction):
 
         # Prefix is nice for the user so he has an indication that its the
         # right file he's editing
-        temphandle, tempname = tempfile.mkstemp(os.path.basename(filename))
+        temphandle, tempname = tempfile.mkstemp(
+            "_" + os.path.basename(filename))
         os.close(temphandle)
         with open(tempname, "w") as temphandle:
             temphandle.writelines(current_file)

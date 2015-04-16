@@ -12,16 +12,6 @@ class Printer:
     - EspeakPrinter for Voice output
     - NullPrinter for no output
     """
-    def __init__(self):
-        self._closed = False
-
-    def _close(self):
-        pass
-
-    def close(self):
-        if not self._closed:
-            self._close()
-            self._closed = True
 
     def _print(self, output, **kwargs):
         """
@@ -47,7 +37,6 @@ class Printer:
         :param kwargs:    Will be passed through to the Printer derivative
                           handling the actual printing
         """
-        assert not self._closed, "Cannot print after closing."
         output = str(delimiter).join(str(arg) for arg in args) + str(end)
 
         return self._print(output, **kwargs)

@@ -1,4 +1,7 @@
-class HTMLWriter:
+from coalib.output.ClosableObject import ClosableObject
+
+
+class HTMLWriter(ClosableObject):
     """
     Printer for outputting HTML Log files.
 
@@ -11,6 +14,8 @@ class HTMLWriter:
     """
 
     def __init__(self, filename, indentation_per_tag=2, indentation=0):
+        ClosableObject.__init__(self)
+
         self.indentation_per_tag = indentation_per_tag
         self.indentation = indentation
         self.file = None
@@ -22,7 +27,7 @@ class HTMLWriter:
         self.file = open(filename, 'w+')
         self.__write_header()
 
-    def __del__(self):
+    def _close(self):
         # Check if the file object is NoneType, trying to close a None object
         # does not make sense
         if self.file is not None:

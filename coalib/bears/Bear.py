@@ -55,6 +55,9 @@ class Bear(LogPrinter):
     def tear_down(self):
         pass
 
+    def _print(self, output, **kwargs):
+        self.debug(output)
+
     def log_message(self, log_message, timestamp=None, **kwargs):
         if self.message_queue is not None:
             self.message_queue.put(log_message)

@@ -20,7 +20,8 @@ class HTMLWriterTest(unittest.TestCase):
         self.assertRaises(TypeError, HTMLWriter, 5)
 
     def test_printing_header_footer(self):
-        del self.uut
+        self.uut.close()
+
         with open(self.filename) as file:
             lines = file.readlines()
             self.assertEqual(lines,
@@ -31,7 +32,8 @@ class HTMLWriterTest(unittest.TestCase):
     def test_write_comment(self):
         # Test for single comment
         self.uut.write_comment("testing comments")
-        del self.uut
+        self.uut.close()
+
         with open(self.filename) as file:
             lines = file.readlines()
 
@@ -45,7 +47,8 @@ class HTMLWriterTest(unittest.TestCase):
         self.uut = HTMLWriter(self.filename)
         self.uut.write_comment("test1")
         self.uut.write_comment("test2", "test3")
-        del self.uut
+        self.uut.close()
+
         with open(self.filename) as file:
             lines = file.readlines()
 
@@ -60,7 +63,8 @@ class HTMLWriterTest(unittest.TestCase):
         # Test for no comments
         self.uut = HTMLWriter(self.filename)
         self.uut.write_comment()
-        del self.uut
+        self.uut.close()
+
         with open(self.filename) as file:
             lines = file.readlines()
 
@@ -73,7 +77,7 @@ class HTMLWriterTest(unittest.TestCase):
         self.tag = "p"
         self.content = "test"
         self.uut.write_tag(self.tag, self.content, style="color:Yellow")
-        del self.uut
+        self.uut.close()
 
         with open(self.filename) as file:
             lines = file.readlines()
@@ -90,7 +94,7 @@ class HTMLWriterTest(unittest.TestCase):
         self.tag = "br"
         self.content = ""
         self.uut.write_tag(self.tag, self.content)
-        del self.uut
+        self.uut.close()
 
         with open(self.filename) as file:
             lines = file.readlines()
