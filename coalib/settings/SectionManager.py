@@ -150,7 +150,8 @@ class SectionManager:
         """
         if self.interactor is not None and isinstance(self.interactor,
                                                       ClosableObject):
-            self.interactor.close()
+            # Cannot be tested - we dont have an Interactor needing closing yet
+            self.interactor.close()  # pragma: no cover
         if self.log_printer is not None and isinstance(self.log_printer,
                                                        ClosableObject):
             self.log_printer.close()
