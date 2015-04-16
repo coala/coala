@@ -16,7 +16,7 @@ class TestBear(Bear):
         Bear.__init__(self, section, queue)
 
     def set_up(self):
-        self.debug("set", "up", delimiter="=")
+        self.print("set", "up", delimiter="=")
 
     def tear_down(self):
         self.err("teardown")
