@@ -81,9 +81,7 @@ class StringConverter:
             use_regex=True))
 
         if remove_backslashes:
-            for i in range(len(self.__list)):
-                self.__list[i] = unescape(self.__list[i])
-
+            self.__list = [unescape(elem) for elem in self.__list]
         if self.__strip_whitespaces:
             self.__list = [elem.strip() for elem in self.__list]
 
