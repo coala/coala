@@ -15,11 +15,6 @@ class PrinterTestCase(unittest.TestCase):
         self.uut = Printer()
         self.assertRaises(NotImplementedError, self.uut.print, "test")
 
-    def test_closed_printing(self):
-        self.uut = TestPrinter()
-        self.uut.close()
-        self.assertRaises(AssertionError, self.uut.print)
-
     def test_printer_concatenation(self):
         self.uut = TestPrinter()
         self.assertEqual(self.uut.print("hello",
@@ -29,6 +24,7 @@ class PrinterTestCase(unittest.TestCase):
                                         somearg="then"), "hello world-then")
         self.assertEqual(self.uut.print("",
                                         "world",
+
                                         delimiter=" ",
                                         end="-",
                                         somearg="then"), " world-then")
