@@ -8,6 +8,7 @@ from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.NullInteractor import NullInteractor
+from coalib.output.ClosableObject import ClosableObject
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
@@ -147,9 +148,11 @@ class SectionManager:
         Creates an appropriate log printer and interactor according to the
         settings.
         """
-        if self.interactor is not None:
+        if self.interactor is not None and isinstance(self.interactor,
+                                                      ClosableObject):
             self.interactor.close()
-        if self.log_printer is not None:
+        if self.log_printer is not None and isinstance(self.log_printer,
+                                                       ClosableObject):
             self.log_printer.close()
 
         log_type = str(section.get("log_type", "console")).lower()
