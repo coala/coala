@@ -2,6 +2,11 @@ from coalib.output.Interactor import Interactor
 
 
 class NullInteractor(Interactor):
+    """
+    This interactor can be used for headless setups, it requires no interaction
+    from the user.
+    """
+
     def print_result(self, result, file_dict):
         pass
 
