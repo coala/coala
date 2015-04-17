@@ -10,6 +10,7 @@ This release features the following new features:
  * coala can now be configured user-wide with a ~/.coarc configuration file.
  * Manual written documentation is now hosted at http://coala.rtfd.org/.
  * Changed logging API in Bears (now: debug/warn/err)
+ * clang python bindings were added to the bearlib
 
 Additionally many bugfixes and other code improvements have been done.
 
