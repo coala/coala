@@ -211,7 +211,7 @@ def search_in_between(begin,
     :param end:                  A pattern that defines where to end matching.
     :param string:               The string where to search in.
     :param max_matches           Defines the maximum number of matches. If 0 or
-                                 less is provided, the number of splits is not
+                                 less is provided, the number of matches is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
                                  be removed from the result.
@@ -275,7 +275,7 @@ def unescaped_search_in_between(begin,
                                  matching.
     :param string:               The string where to search in.
     :param max_matches           Defines the maximum number of matches. If 0 or
-                                 less is provided, the number of splits is not
+                                 less is provided, the number of matches is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
                                  be removed from the result.
