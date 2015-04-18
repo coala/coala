@@ -54,7 +54,7 @@ if __name__ == "__main__":
             exitcode = 1
     except KeyboardInterrupt:
         print(_("Program terminated by user."))
-        exitcode = 255
+        exitcode = 130
     except SystemExit as e:
         exitcode = e.code
     except:
