@@ -52,7 +52,7 @@ def icollect(file_paths, log_printer, files=True, dirs=True):
                   "Detailed error is: {error_message}").format(
                     glob=file_path,
                     error_message=str(_(exception))))
-            raise SystemExit(-1)
+            raise SystemExit(3)
 
 
 def collect_files(file_paths, log_printer):
