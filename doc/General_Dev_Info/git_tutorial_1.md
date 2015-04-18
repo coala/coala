@@ -135,7 +135,7 @@ vim is and how to operate it, let's **change the editor**:
 
 ```
 $ # Take an editor of your choice instead of nano
-$ git config --global core.editor nano 
+$ git config --global core.editor nano
 ```
 
 Please make sure that the **command** you give to git always **starts as an own
@@ -202,7 +202,7 @@ Initial commit
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
 
-	README
+    README
 
 nothing added to commit but untracked files present (use "git add" to track)
 $ git add README
@@ -214,7 +214,7 @@ Initial commit
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
 
-	new file:   README
+    new file:   README
 
 ```
 
@@ -359,7 +359,7 @@ We just saw the **ID** of the commit we made:
 Now let's see if we find it in the objects directory:
 
 ```
-$ ls .git/objects 
+$ ls .git/objects
 98/  b4/  ec/  info/  pack/
 $ ls .git/objects/ec
 6c903a0a18960cd73df18897e56738c4c6bb51
