@@ -3,7 +3,7 @@
 These are the clang bindings for python 3 taken from:
 These are from https://github.com/kennytm/clang-cindex-python3
 
-Only spacing modifications were done to comply with coalas codestyle.
+Minor modifications were done.
 
 # License
 
