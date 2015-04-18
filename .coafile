@@ -1,6 +1,7 @@
 # So all sections are disabled by default
 Default.enabled = false
 PythonCheck.enabled = true
+DOCS.enabled = true
 
 [Default]
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
@@ -17,3 +18,8 @@ bears = LineCountBear
 bears = KeywordBear
 ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
+
+[DOCS]
+bears = SpaceConsistencyBear
+files = doc/**/*.md
+use_spaces = True
