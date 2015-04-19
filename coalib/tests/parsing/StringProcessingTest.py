@@ -103,7 +103,6 @@ class StringProcessingTest(unittest.TestCase):
             i * [r"'"] for i in
                 [2, 3, 2, 2, 3, 2, 4, 5, 5, 4, 4, 4, 4, 6, 0, 0, 0, 0]]
 
-        self.test_search_for_empty_pattern_pattern = ""
         self.test_search_for_empty_pattern_expected_results = [
             (len(elem) + 1) * [r""] for elem in self.test_strings]
 
@@ -179,7 +178,6 @@ class StringProcessingTest(unittest.TestCase):
             [],
             []]
 
-        self.test_unescaped_search_for_empty_pattern_pattern = ""
         # Since an empty pattern can also be escaped, the result contains
         # special cases. Especially we check the completely matched string (and
         # not only the matched pattern itself) we need to place also the
@@ -720,11 +718,10 @@ class StringProcessingTest(unittest.TestCase):
 
     # Test search_for() with an empty pattern.
     def test_search_for_empty_pattern(self):
-        search_pattern = self.test_search_for_empty_pattern_pattern
         expected_results = self.test_search_for_empty_pattern_expected_results
 
         for use_regex in [True, False]:
-            self.assertSearchForResultEqual(search_pattern,
+            self.assertSearchForResultEqual("",
                                             self.test_strings,
                                             expected_results,
                                             0,
@@ -789,12 +786,11 @@ class StringProcessingTest(unittest.TestCase):
 
     # Test unescaped_search_for() with an empty pattern.
     def test_unescaped_search_for_empty_pattern(self):
-        search_pattern = self.test_unescaped_search_for_empty_pattern_pattern
         expected_results = (
             self.test_unescaped_search_for_empty_pattern_expected_results)
 
         for use_regex in [True, False]:
-            self.assertUnescapedSearchForResultEqual(search_pattern,
+            self.assertUnescapedSearchForResultEqual("",
                                                      self.test_strings,
                                                      expected_results,
                                                      0,
