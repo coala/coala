@@ -492,18 +492,18 @@ class StringProcessingTest(unittest.TestCase):
         """
         self.assertEqual(len(expected_strings), len(test_strings))
         for i in range(0, len(expected_strings)):
-            return_value = search_for(pattern,
-                                      test_strings[i],
-                                      flags,
-                                      max_match,
-                                      use_regex)
+            matches = search_for(pattern,
+                                 test_strings[i],
+                                 flags,
+                                 max_match,
+                                 use_regex)
 
             # Check each MatchObject. Need to iterate over the return_value
             # since the return value is an iterator object pointing to the
             # MatchObject's.
             n = 0
-            for x in return_value:
-                self.assertEqual(expected_strings[i][n], x.group(0))
+            for elem in matches:
+                self.assertEqual(expected_strings[i][n], elem.group(0))
                 n += 1
 
             self.assertEqual(n, len(expected_strings[i]))
