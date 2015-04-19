@@ -36,10 +36,8 @@ def unescaped_search_for(pattern,
                       less is provided, the number of splits is not limited.
     :param use_regex: Specifies whether to treat the pattern as a regex or
                       simple string.
-    :return:          An iterator returning MatchObject's. Every match object
-                      contains in its first group the backslashes that were
-                      consumed by the internal regex and so don't escape your
-                      pattern.
+    :return:          An iterator returning MatchObject's. The MatchObject
+                      contains the backslashes preceded by your pattern.
     """
     if not use_regex:
         pattern = re.escape(pattern)
