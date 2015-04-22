@@ -35,3 +35,6 @@ class CountVector:
 
     def __repr__(self):
         return str(self.count_vector)
+
+    def __len__(self):
+        return len(self.count_vector)

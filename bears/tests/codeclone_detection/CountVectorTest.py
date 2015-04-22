@@ -17,6 +17,13 @@ class CountVectorTest(unittest.TestCase):
                           [],
                           [2])
 
+    def test_len(self):
+        uut = CountVector("varname")
+        self.assertEqual(len(uut), 0)
+
+        uut = CountVector("varname", [lambda x: x])
+        self.assertEqual(len(uut), 1)
+
     def test_counting(self):
         uut = CountVector("varname", [lambda cursor, stack: cursor and stack])
         self.assertEqual(uut.count_vector, [0])
