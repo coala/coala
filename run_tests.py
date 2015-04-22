@@ -31,6 +31,7 @@ if __name__ == '__main__':
         os.path.join(tempfile.gettempdir(), "**"),
         os.path.join(os.path.dirname(get_python_lib()), "**"),
         os.path.join("coalib", "tests", "**"),
+        os.path.join("coalib", "bearlib", "parsing", "clang", "**"),
         os.path.join("bears", "tests", "**")
     ]
 
