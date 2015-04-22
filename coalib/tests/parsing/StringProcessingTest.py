@@ -8,6 +8,7 @@ from coalib.parsing.StringProcessing import split
 from coalib.parsing.StringProcessing import unescaped_split
 from coalib.parsing.StringProcessing import search_in_between
 from coalib.parsing.StringProcessing import unescaped_search_in_between
+from coalib.parsing.StringProcessing import unescape
 from coalib.parsing.StringProcessing import position_is_escaped
 
 
@@ -72,6 +73,7 @@ class StringProcessingTest(unittest.TestCase):
         self.set_up_unescaped_split()
         self.set_up_search_in_between()
         self.set_up_unescaped_search_in_between()
+        self.set_up_unescape()
 
     def set_up_search_for(self):
         # Match either "out1" or "out2".
@@ -470,6 +472,27 @@ class StringProcessingTest(unittest.TestCase):
         self.test_unescaped_search_in_between_disabled_regex_pattern = r"'()?"
         self.test_unescaped_search_in_between_disabled_regex_expected = (
             [[] for x in range(len(self.test_strings))])
+
+    def set_up_unescape(self):
+        self.test_unescape_expected_results = [
+            r"out1 'escaped-escape:        \ ' out2",
+            r"out1 'escaped-quote:         ' ' out2",
+            r"out1 'escaped-anything:      X ' out2",
+            r"out1 'two escaped escapes: \\ ' out2",
+            r"out1 'escaped-quote at end:   '' out2",
+            r"out1 'escaped-escape at end:  \' out2",
+            r"out1           'str1' out2 'str2' out2",
+            r"out1 '        'str1' out2 'str2' out2",
+            r"out1 \'      'str1' out2 'str2' out2",
+            r"out1 \        'str1' out2 'str2' out2",
+            r"out1 \\      'str1' out2 'str2' out2",
+            r"out1         \'str1' out2 'str2' out2",
+            r"out1       \\'str1' out2 'str2' out2",
+            r"out1           'str1''str2''str3' out2",
+            r"",
+            r"out1 out2 out3",
+            self.bs,
+            self.bs]
 
     def assertSearchForResultEqual(self,
                                    pattern,
@@ -1126,6 +1149,14 @@ class StringProcessingTest(unittest.TestCase):
             0,
             True,
             False)
+
+    # Test unescape() function.
+    def test_unescape(self):
+        results = [unescape(elem) for elem in self.test_strings]
+        compare = zip(self.test_unescape_expected_results, results)
+
+        for elem in compare:
+            self.assertEqual(elem[0], elem[1])
 
     def test_position_is_escaped(self):
         test_string = r"\\\\\abcabccba###\\13q4ujsabbc\+'**'ac###.#.####-ba"

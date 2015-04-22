@@ -359,6 +359,20 @@ def unescaped_search_in_between(begin,
                elem.group(begin_pattern_groups + 2))
 
 
+def unescape(string):
+    """
+    Trimms off all escape characters from the given string.
+
+    :param string: The string to unescape.
+    """
+    regex = r"\\(.)"
+
+    def replacement_function(match):
+        return match.group(1)
+
+    return re.sub(regex, replacement_function, string, 0, re.DOTALL)
+
+
 def position_is_escaped(string, position=None):
     """
     Checks whether a char at a specific position of the string is preceded by
