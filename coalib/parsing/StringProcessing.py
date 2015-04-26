@@ -365,7 +365,7 @@ def unescape(string):
 
     :param string: The string to unescape.
     """
-    regex = r"\\(.)"
+    regex = r"\\(.)|\\$"
 
     def replacement_function(match):
         return match.group(1)
