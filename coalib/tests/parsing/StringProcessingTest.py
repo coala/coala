@@ -491,7 +491,7 @@ class StringProcessingTest(unittest.TestCase):
             r"out1           'str1''str2''str3' out2",
             r"",
             r"out1 out2 out3",
-            self.bs,
+            r"",
             self.bs]
 
     def assertSearchForResultEqual(self,
@@ -1157,6 +1157,12 @@ class StringProcessingTest(unittest.TestCase):
 
         for elem in compare:
             self.assertEqual(elem[0], elem[1])
+
+    # Test unescape() for some special possible flaws.
+    def test_unescape_custom(self):
+        self.assertEqual(unescape("hello\\"), "hello")
+        self.assertEqual(unescape("te\st\\\\"), "test\\")
+        self.assertEqual(unescape("\\\\\\"), "\\")
 
     def test_position_is_escaped(self):
         test_string = r"\\\\\abcabccba###\\13q4ujsabbc\+'**'ac###.#.####-ba"
