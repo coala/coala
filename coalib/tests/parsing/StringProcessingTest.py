@@ -1164,6 +1164,7 @@ class StringProcessingTest(unittest.TestCase):
         self.assertEqual(unescape("te\st\\\\"), "test\\")
         self.assertEqual(unescape("\\\\\\"), "\\")
 
+    # Test the position_is_escaped() function with a basic test string.
     def test_position_is_escaped(self):
         test_string = r"\\\\\abcabccba###\\13q4ujsabbc\+'**'ac###.#.####-ba"
         result_dict = {
