@@ -1,6 +1,6 @@
 import re
 from coalib.misc.StringConstants import StringConstants
-from coalib.parsing import StringProcessing
+from coalib.parsing.StringProcessing import unescaped_split, unescape
 
 
 class StringConverter:
@@ -60,14 +60,6 @@ class StringConverter:
         return iter(self.__list)
 
     def __prepare_list(self, remove_backslashes):
-        def unescape(string):
-            i = string.find("\\")
-            while i != -1:
-                string = string[:i] + string[i+1:]
-                i = string.find("\\", i+1)  # Dont check the next char
-
-            return string
-
         if not self.__recreate_list:
             return
 
@@ -75,7 +67,7 @@ class StringConverter:
                    "|".join(re.escape(v) for v in self.__list_delimiters) +
                    ")")
 
-        self.__list = list(StringProcessing.unescaped_split(
+        self.__list = list(unescaped_split(
             pattern,
             self.value,
             use_regex=True))
