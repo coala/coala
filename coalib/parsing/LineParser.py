@@ -1,4 +1,5 @@
 from coalib.misc.StringConverter import StringConverter
+from coalib.parsing.StringProcessing import unescape
 
 
 class LineParser:
@@ -45,11 +46,11 @@ class LineParser:
         line, comment = self.__seperate_by_first_occurrence(
             line,
             self.comment_seperators)
-        comment = self.remove_backslashes(comment)
+        comment = unescape(comment)
         if line == "":
             return '', [], '', comment
 
-        section_name = self.remove_backslashes(self.__get_section_name(line))
+        section_name = unescape(self.__get_section_name(line))
         if section_name != '':
             return section_name, [], '', comment
 
@@ -63,19 +64,9 @@ class LineParser:
                 self.section_override_delimiters,
                 True,
                 True)
-            key_touples.append((self.remove_backslashes(section),
-                                self.remove_backslashes(key)))
+            key_touples.append((unescape(section), unescape(key)))
 
         return '', key_touples, value, comment
-
-    @staticmethod
-    def remove_backslashes(string):
-        i = string.find("\\")
-        while i != -1:
-            string = string[:i] + string[i+1:]
-            i = string.find("\\", i+1)  # Dont check the next char
-
-        return string
 
     @staticmethod
     def __seperate_by_first_occurrence(string,
