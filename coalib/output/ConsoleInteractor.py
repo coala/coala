@@ -80,10 +80,6 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                                      for line in message_string_list]))
 
     def _print_actions(self, actions):
-        self.print(self._format_line(
-            _("The following options are applicable to this result (choose "
-              "0 for no action):")))
-
         choice = self._choose_action(actions)
 
         if choice == 0:
@@ -92,6 +88,10 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         return self._get_action_info(actions[choice - 1])
 
     def _choose_action(self, actions):
+        self.print(self._format_line(
+            _("The following options are applicable to this result (choose "
+              "0 for no action):")))
+
         while True:
             for i, action in enumerate(actions):
                 self.print(self._format_line("{:>2}: {}".format(i + 1,
