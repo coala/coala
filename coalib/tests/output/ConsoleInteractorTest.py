@@ -37,6 +37,11 @@ class ConsoleInteractorTest(unittest.TestCase):
         Result.get_actions = lambda self: []
         PatchResult.get_actions = lambda self: [ApplyPatchAction()]
 
+        if sys.version_info < (3, 3):  # pragma: no cover
+            self.FileNotFoundError = OSError
+        else:
+            self.FileNotFoundError = FileNotFoundError
+
     def tearDown(self):
         builtins.__dict__["input"] = self._input
 
@@ -130,12 +135,14 @@ class ConsoleInteractorTest(unittest.TestCase):
         patch_result = PatchResult("origin", "msg", {testfile_path: diff})
         patch_result.file = "f_b"
 
-        self.uut.print_result(patch_result, file_dict)
+        with self.assertRaises(self.FileNotFoundError):
+            self.uut.print_result(patch_result, file_dict)
         # Increase by 2 (-1 -> 1)
         self.assertEqual(input_generator.current_input, 1)
 
         # Increase by 1, It shoudn't ask for parameter again
-        self.uut.print_result(patch_result, file_dict)
+        with self.assertRaises(self.FileNotFoundError):
+            self.uut.print_result(patch_result, file_dict)
         self.assertEqual(input_generator.current_input, 2)
 
     def test_static_functions(self):

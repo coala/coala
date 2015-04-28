@@ -1,5 +1,6 @@
 import os
 import tempfile
+import subprocess
 
 from coalib.results.Diff import Diff
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -30,13 +31,14 @@ class OpenEditorAction(ApplyPatchAction):
         with open(tempname, "w") as temphandle:
             temphandle.writelines(current_file)
 
-        editor_arg = EDITOR_ARGS.get(editor.strip(), None)
-        if editor_arg:
-            editor = editor + " " + editor_arg
+        editor_args = [editor, tempname]
+        arg = EDITOR_ARGS.get(editor.strip(), None)
+        if arg:
+            editor_args.append(arg)
 
         # Dear user, you wanted an editor, so you get it. But do you really
         # think you can do better than we?
-        os.system(editor + " " + tempname)
+        subprocess.call(editor_args)
 
         with open(tempname) as temphandle:
             new_file = temphandle.readlines()

@@ -1,4 +1,4 @@
-import os
+import subprocess
 import sys
 import unittest
 
@@ -11,8 +11,8 @@ from coalib.settings.Section import Section, Setting
 
 class ResultActionTest(unittest.TestCase):
     @staticmethod
-    def fake_edit(command):
-        filename = command.strip()
+    def fake_edit(commands):
+        filename = commands[1]
         with open(filename) as f:
             lines = f.readlines()
 
@@ -22,8 +22,8 @@ class ResultActionTest(unittest.TestCase):
             f.writelines(lines)
 
     @staticmethod
-    def fake_edit_subl(command):
-        assert ("--wait" in command), "Did not wait for the editor to close"
+    def fake_edit_subl(commands):
+        assert ("--wait" in commands), "Did not wait for the editor to close"
 
     def test_apply(self):
         file_dict = {
@@ -42,7 +42,7 @@ class ResultActionTest(unittest.TestCase):
         section = Section("")
         section.append(Setting("editor", ""))
         uut = OpenEditorAction()
-        os.system = self.fake_edit
+        subprocess.call = self.fake_edit
         diff_dict = uut.apply_from_section(
             Result("origin", "msg", "f_a"),
             file_dict,
@@ -65,7 +65,7 @@ class ResultActionTest(unittest.TestCase):
         section = Section("")
         section.append(Setting("editor", "subl"))
         uut = OpenEditorAction()
-        os.system = self.fake_edit_subl
+        subprocess.call = self.fake_edit_subl
         diff_dict = uut.apply_from_section(
             Result("origin", "msg", "f_a"),
             file_dict,
