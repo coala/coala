@@ -87,7 +87,8 @@ class Bear(LogPrinter):
             return retval
         except:
             self.warn(
-                _("Bear {} failed to run.").format(name))
+                _("Bear {} failed to run. Take a look at debug messages for "
+                  "further information.").format(name))
             self.debug(
                 _("The bear {bear} raised an exception. If you are the writer "
                   "of this bear, please make sure to catch all exceptions. If "

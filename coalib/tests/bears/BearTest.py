@@ -85,7 +85,9 @@ class BearTestCase(unittest.TestCase):
         self.check_message(LOG_LEVEL.DEBUG,
                            _("Tearing down bear {}...").format("BadTestBear"))
         self.check_message(LOG_LEVEL.WARNING,
-                           _("Bear {} failed to run.").format("BadTestBear"))
+                           _("Bear {} failed to run. Take a look at debug "
+                             "messages for further "
+                             "information.").format("BadTestBear"))
         # debug message contains custom content, dont test this here
         self.queue.get()
 
