@@ -89,8 +89,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
     def _choose_action(self, actions):
         self.print(self._format_line(
-            _("The following options are applicable to this result (choose "
-              "0 for no action):")))
+            _("The following options are applicable to this result:")))
 
         while True:
             for i, action in enumerate(actions):
@@ -99,7 +98,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
             try:
                 line = self._format_line(_("Please enter the number of the "
-                                           "action you want to execute. "))
+                                           "action you want to execute. (0 is "
+                                           "no action) "))
                 choice = int(input(line))
                 if 0 <= choice <= len(actions):
                     return choice
