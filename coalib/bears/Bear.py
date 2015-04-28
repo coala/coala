@@ -88,15 +88,13 @@ class Bear(LogPrinter):
         except:
             self.warn(
                 _("Bear {} failed to run.").format(name))
-            self.debug(_("The bear {bear} raised an exception. If you are "
-                             "the writer of this bear, please make sure "
-                             "to catch all exceptions. If not and this error "
-                             "annoys you, you might want to get in contact "
-                             "with the writer of this bear.\n\n"
-                             "Traceback information is provided below:\n\n"
-                             "{traceback}\n")
-                           .format(bear=name,
-                                   traceback=traceback.format_exc()))
+            self.debug(
+                _("The bear {bear} raised an exception. If you are the writer "
+                  "of this bear, please make sure to catch all exceptions. If "
+                  "not and this error annoys you, you might want to get in "
+                  "contact with the writer of this bear.\n\nTraceback "
+                  "information is provided below:\n\n{traceback}"
+                  "\n").format(bear=name, traceback=traceback.format_exc()))
 
     @staticmethod
     def kind():
