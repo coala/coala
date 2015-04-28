@@ -22,7 +22,10 @@ class ResultActionTest(unittest.TestCase):
             f.writelines(lines)
 
     @staticmethod
-    def fake_edit_subl(commands):
+    def fake_edit_subl(commands, stdout):
+        """
+        Solely the declaration raises an exception if stdout not provided.
+        """
         assert ("--wait" in commands), "Did not wait for the editor to close"
 
     def test_apply(self):

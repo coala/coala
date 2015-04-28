@@ -11,6 +11,9 @@ EDITOR_ARGS = {
 }
 
 
+GUI_EDITORS = ["kate", "gedit", "subl"]
+
+
 class OpenEditorAction(ApplyPatchAction):
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
@@ -38,7 +41,10 @@ class OpenEditorAction(ApplyPatchAction):
 
         # Dear user, you wanted an editor, so you get it. But do you really
         # think you can do better than we?
-        subprocess.call(editor_args)
+        if editor in GUI_EDITORS:
+            subprocess.call(editor_args, stdout=subprocess.PIPE)
+        else:
+            subprocess.call(editor_args)
 
         with open(tempname) as temphandle:
             new_file = temphandle.readlines()
