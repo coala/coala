@@ -52,9 +52,11 @@ if __name__ == "__main__":
 
         if yielded_results:
             exitcode = 1
-    except KeyboardInterrupt:
+    except KeyboardInterrupt:  # Ctrl+C
         print(_("Program terminated by user."))
         exitcode = 130
+    except EOFError:  # Ctrl+D
+        print(_("Found EOF. Exiting gracefully."))
     except SystemExit as e:
         exitcode = e.code
     except:
