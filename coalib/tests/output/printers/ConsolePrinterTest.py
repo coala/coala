@@ -13,7 +13,7 @@ class NullWriter:
         pass
 
 
-class ConsolePrinterTestCase(unittest.TestCase):
+class ConsolePrinterTest(unittest.TestCase):
     def test_printing(self):
         self.uut = ConsolePrinter()
         self.uut.print("\ntest", "message", color="green")

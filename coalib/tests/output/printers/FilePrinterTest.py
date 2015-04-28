@@ -7,7 +7,7 @@ sys.path.insert(0, ".")
 from coalib.output.printers.FilePrinter import FilePrinter
 
 
-class FilePrinterTestCase(unittest.TestCase):
+class FilePrinterTest(unittest.TestCase):
     def setUp(self):
         handle, self.filename = tempfile.mkstemp()
         os.close(handle)  # We don't need the handle provided by mkstemp

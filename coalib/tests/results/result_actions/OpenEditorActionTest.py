@@ -9,7 +9,7 @@ from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.settings.Section import Section, Setting
 
 
-class ResultActionTestCase(unittest.TestCase):
+class ResultActionTest(unittest.TestCase):
     @staticmethod
     def fake_edit(command):
         filename = command.strip()

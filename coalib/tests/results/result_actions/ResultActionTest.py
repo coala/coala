@@ -6,7 +6,7 @@ from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.settings.Section import Section
 
 
-class ResultActionTestCase(unittest.TestCase):
+class ResultActionTest(unittest.TestCase):
     def test_api(self):
         uut = ResultAction()
 

@@ -9,7 +9,7 @@ from coalib.collecting.Importers import import_objects
 from collections import OrderedDict
 
 
-class ImportObjectsTestCase(unittest.TestCase):
+class ImportObjectsTest(unittest.TestCase):
 
     def setUp(self):
         current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]

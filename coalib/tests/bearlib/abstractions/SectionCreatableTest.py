@@ -27,7 +27,7 @@ class TestObject(SectionCreatable):
         self.opt_raw_set = opt_raw_set
 
 
-class SectionCreatableTestCase(unittest.TestCase):
+class SectionCreatableTest(unittest.TestCase):
     def test_api(self):
         uut = SectionCreatable()
         self.assertRaises(TypeError, uut.from_section, 5)

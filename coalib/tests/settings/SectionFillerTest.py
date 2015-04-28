@@ -35,7 +35,7 @@ class LocalTestBear(LocalBear):
                 "global name": "this setting is needed by two bears"}
 
 
-class SectionFillerTestCase(unittest.TestCase):
+class SectionFillerTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ConsolePrinter()
         self.interactor = ConsoleInteractor(self.log_printer)

@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 from coalib.output.printers.NullPrinter import NullPrinter
 
 
-class NullPrinterTestCase(unittest.TestCase):
+class NullPrinterTest(unittest.TestCase):
     def test_non_printing(self):
         self.uut = NullPrinter()
         self.assertEqual(self.uut.print("anything"), None)

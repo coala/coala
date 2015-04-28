@@ -9,7 +9,7 @@ import unittest
 import tempfile
 
 
-class ConfWriterTestCase(unittest.TestCase):
+class ConfWriterTest(unittest.TestCase):
     example_file = "to be ignored \n\
     save=true\n\
     a_default, another = val \n\

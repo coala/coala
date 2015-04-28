@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 from coalib.misc.Decorators import yield_once, arguments_to_lists
 
 
-class YieldOnceTestCase(unittest.TestCase):
+class YieldOnceTest(unittest.TestCase):
     def test_yield_once(self):
         @yield_once
         def iterate_over_list(arg_list):
@@ -16,7 +16,7 @@ class YieldOnceTestCase(unittest.TestCase):
                          [1, 2, 3, 4])
 
 
-class ArgumentsToListsTestCase(unittest.TestCase):
+class ArgumentsToListsTest(unittest.TestCase):
     def test_arguments_to_lists(self):
         @arguments_to_lists
         def return_args(*args, **kwargs):

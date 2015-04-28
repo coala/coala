@@ -7,7 +7,7 @@ from coalib.settings.Section import Section, Setting
 from coalib.misc.StringConstants import StringConstants
 
 
-class SectionTestCase(unittest.TestCase):
+class SectionTest(unittest.TestCase):
     def test_construction(self):
         uut = Section(StringConstants.COMPLEX_TEST_STRING, None)
         uut = Section(StringConstants.COMPLEX_TEST_STRING, uut)

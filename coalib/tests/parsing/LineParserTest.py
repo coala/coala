@@ -5,7 +5,7 @@ from coalib.parsing.LineParser import LineParser
 import unittest
 
 
-class LineParserTestCase(unittest.TestCase):
+class LineParserTest(unittest.TestCase):
     def setUp(self):
         self.uut = LineParser()
 

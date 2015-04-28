@@ -7,7 +7,7 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.Result import Result
 
 
-class InteractorTestCase(unittest.TestCase):
+class InteractorTest(unittest.TestCase):
     def setUp(self):
         self.uut = Interactor(ConsolePrinter())
 

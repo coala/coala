@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import suppress_stdout
 
 
-class SuppressStdoutTestCase(unittest.TestCase):
+class SuppressStdoutTest(unittest.TestCase):
     def test_suppress_stdout(self):
         def print_func():
             print("func")

@@ -5,7 +5,7 @@ from coalib.misc.Enum import enum
 import unittest
 
 
-class ProcessTestCase(unittest.TestCase):
+class ProcessTest(unittest.TestCase):
     def setUp(self):
         self.uut = enum("ZERO", "ONE", "TWO", THREE="val")
 

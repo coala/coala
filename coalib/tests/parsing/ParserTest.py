@@ -5,7 +5,7 @@ from coalib.parsing.SectionParser import SectionParser
 import unittest
 
 
-class ParserTestCase(unittest.TestCase):
+class ParserTest(unittest.TestCase):
     def test_parse_available(self):
         self.uut = SectionParser()
         self.assertRaises(NotImplementedError, self.uut.parse, None)

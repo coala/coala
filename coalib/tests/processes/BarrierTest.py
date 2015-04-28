@@ -20,7 +20,7 @@ def proc_two(queue, barrier):
     queue.put(2)
 
 
-class BarrierTestCase(unittest.TestCase):
+class BarrierTest(unittest.TestCase):
     def test_barrier(self):
         uut = Barrier(parties=2)
         queue = multiprocessing.Queue()

@@ -5,7 +5,7 @@ import unittest
 from coalib.settings.DocumentationComment import DocumentationComment
 
 
-class DocumentationCommentParserTestCase(unittest.TestCase):
+class DocumentationCommentParserTest(unittest.TestCase):
     def test_construction(self):
         self.assertRaises(TypeError,
                           DocumentationComment,

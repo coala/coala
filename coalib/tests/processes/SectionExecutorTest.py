@@ -33,7 +33,7 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
         self.set_up = True
 
 
-class SectionExecutorInitTestCase(unittest.TestCase):
+class SectionExecutorInitTest(unittest.TestCase):
     def test_init(self):
         self.log_printer = ConsolePrinter()
         self.interactor = ConsoleInteractor(self.log_printer)
@@ -79,10 +79,10 @@ class SectionExecutorInitTestCase(unittest.TestCase):
                         self.log_printer).run
 
 
-class SectionExecutorTestCase(unittest.TestCase):
+class SectionExecutorTest(unittest.TestCase):
     def setUp(self):
         config_path = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionExecutorTestCase)),
+            os.path.dirname(inspect.getfile(SectionExecutorTest)),
             "section_executor_test_files",
             ".coafile"))
         self.testcode_c_path = os.path.join(os.path.dirname(config_path),

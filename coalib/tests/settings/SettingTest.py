@@ -7,7 +7,7 @@ sys.path.insert(0, ".")
 from coalib.settings.Setting import Setting, path, path_list
 
 
-class SettingTestCase(unittest.TestCase):
+class SettingTest(unittest.TestCase):
     def test_construction(self):
         self.assertRaises(ValueError, Setting, "", 2, 2)
         self.assertRaises(TypeError, Setting, "", "", "", from_cli=5)

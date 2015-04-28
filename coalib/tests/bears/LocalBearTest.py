@@ -6,7 +6,7 @@ from coalib.settings.Section import Section
 from coalib.bears.LocalBear import LocalBear, BEAR_KIND
 
 
-class LocalBearTestCase(unittest.TestCase):
+class LocalBearTest(unittest.TestCase):
     def test_api(self):
         test_object = LocalBear(Section("name"), None)
         self.assertRaises(NotImplementedError,

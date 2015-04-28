@@ -5,7 +5,7 @@ from coalib.output.printers.ColorPrinter import ColorPrinter
 import unittest
 
 
-class ColorPrinterTestCase(unittest.TestCase):
+class ColorPrinterTest(unittest.TestCase):
     def test_printer_interface(self):
         self.uut = ColorPrinter()
         self.assertRaises(NotImplementedError, self.uut.print, "test")

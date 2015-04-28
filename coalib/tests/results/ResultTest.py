@@ -5,7 +5,7 @@ from coalib.results.Result import Result, RESULT_SEVERITY
 import unittest
 
 
-class ResultTestCase(unittest.TestCase):
+class ResultTest(unittest.TestCase):
     def test_wrong_types(self):
         uut = Result('b', 'b')
         self.assertNotEqual(uut, 0)
@@ -19,7 +19,7 @@ class ResultTestCase(unittest.TestCase):
         self.assertEqual(uut.origin, "origin")
 
         uut = Result(self, "msg")
-        self.assertEqual(uut.origin, "ResultTestCase")
+        self.assertEqual(uut.origin, "ResultTest")
 
     def test_get_actions(self):
         self.assertEqual(len(Result("origin", "msg").get_actions()), 0)

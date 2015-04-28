@@ -6,7 +6,7 @@ from coalib.output.printers.EspeakPrinter import EspeakPrinter
 import unittest
 
 
-class EspeakPrinterTestCase(unittest.TestCase):
+class EspeakPrinterTest(unittest.TestCase):
     def test_voice_printer(self):
         self.uut = EspeakPrinter()
         self.uut.print("The", "espeak", "printer", "works!")

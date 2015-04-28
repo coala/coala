@@ -41,7 +41,7 @@ class BadTestBear(Bear):
         pass
 
 
-class BearTestCase(unittest.TestCase):
+class BearTest(unittest.TestCase):
     def setUp(self):
         self.queue = multiprocessing.Queue()
         self.settings = Section("test_settings")

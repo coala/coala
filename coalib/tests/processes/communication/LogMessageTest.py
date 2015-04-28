@@ -8,7 +8,7 @@ from coalib.processes.communication.LogMessage import LogMessage
 import unittest
 
 
-class LogMessageTestCase(unittest.TestCase):
+class LogMessageTest(unittest.TestCase):
     def setUp(self):
         self.uut = LogMessage(LOG_LEVEL.DEBUG, "test", "message")
 

@@ -42,7 +42,7 @@ class UnresolvableBear3(Bear):
         return [ResolvableBear1, BearWithoutDeps, UnresolvableBear2]
 
 
-class DependenciesTestCase(unittest.TestCase):
+class DependenciesTest(unittest.TestCase):
     def test_no_deps(self):
         self.assertEqual(
             len(Dependencies.resolve([BearWithoutDeps,

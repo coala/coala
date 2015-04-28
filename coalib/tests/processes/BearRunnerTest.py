@@ -99,7 +99,7 @@ class UnexpectedBear2(LocalBear):
         return 1
 
 
-class BearRunnerConstructionTestCase(unittest.TestCase):
+class BearRunnerConstructionTest(unittest.TestCase):
     def test_initialization(self):
         file_name_queue = queue.Queue()
         local_bear_list = []
@@ -233,7 +233,7 @@ class BearRunnerConstructionTestCase(unittest.TestCase):
                           0)
 
 
-class BearRunnerUnitTestCase(unittest.TestCase):
+class BearRunnerUnitTest(unittest.TestCase):
     def setUp(self):
         self.settings = Section("name")
 
@@ -332,7 +332,7 @@ class BearRunnerUnitTestCase(unittest.TestCase):
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
 
 
-class BearRunnerIntegrationTestCase(unittest.TestCase):
+class BearRunnerIntegrationTest(unittest.TestCase):
     example_file = """a
 b
 c

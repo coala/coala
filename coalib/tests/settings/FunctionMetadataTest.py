@@ -21,7 +21,7 @@ class TestClass:
         pass
 
 
-class FunctionMetadataTestCase(unittest.TestCase):
+class FunctionMetadataTest(unittest.TestCase):
     def test_construction(self):
         self.assertRaises(TypeError, FunctionMetadata, 5)
         self.assertRaises(TypeError, FunctionMetadata, "name", desc=5)

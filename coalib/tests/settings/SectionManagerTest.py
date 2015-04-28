@@ -17,7 +17,7 @@ from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
-class SectionManagerTestCase(unittest.TestCase):
+class SectionManagerTest(unittest.TestCase):
     def test_run(self):
         uut = SectionManager()
         # We need to use a bad filename or this will parse coalas .coafile
@@ -36,7 +36,7 @@ class SectionManagerTestCase(unittest.TestCase):
         uut = SectionManager()
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            os.path.dirname(inspect.getfile(SectionManagerTest)),
             "section_manager_test_files",
             "default_coafile"))
         uut.run()
@@ -49,7 +49,7 @@ class SectionManagerTestCase(unittest.TestCase):
         uut = SectionManager()
         tmp = StringConstants.user_coafile
         StringConstants.user_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            os.path.dirname(inspect.getfile(SectionManagerTest)),
             "section_manager_test_files",
             "default_coafile"))
         uut.run()
@@ -74,12 +74,12 @@ class SectionManagerTestCase(unittest.TestCase):
         uut = SectionManager()
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile=os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            os.path.dirname(inspect.getfile(SectionManagerTest)),
             "section_manager_test_files",
             "default_coafile"))
 
         config = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTestCase)),
+            os.path.dirname(inspect.getfile(SectionManagerTest)),
             "section_manager_test_files",
             ".coafile"))
         # Check merging of default_coafile and .coafile

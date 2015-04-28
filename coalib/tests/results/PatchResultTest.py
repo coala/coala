@@ -6,7 +6,7 @@ from coalib.results.PatchResult import PatchResult
 import unittest
 
 
-class PatchResultTestCase(unittest.TestCase):
+class PatchResultTest(unittest.TestCase):
     def test_raises(self):
         self.assertRaises(TypeError,
                           PatchResult,

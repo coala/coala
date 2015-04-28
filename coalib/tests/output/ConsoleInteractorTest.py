@@ -24,7 +24,7 @@ class TestAction(ResultAction):
         pass
 
 
-class ConsoleInteractorTestCase(unittest.TestCase):
+class ConsoleInteractorTest(unittest.TestCase):
     def setUp(self):
         self._input = builtins.__dict__["input"]
         builtins.__dict__["input"] = lambda x: x

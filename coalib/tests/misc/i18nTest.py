@@ -21,7 +21,7 @@ i18n.compile_translations(True)
 i18n.compile_translations(False)
 
 
-class i18nTestCase(unittest.TestCase):
+class i18nTest(unittest.TestCase):
     @staticmethod
     def set_lang(lang):
         os.environ["LANGUAGE"] = lang

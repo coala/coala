@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 from coalib.output.ClosableObject import ClosableObject
 
 
-class ClosablePrinterTestCase(unittest.TestCase):
+class ClosablePrinterTest(unittest.TestCase):
     def setUp(self):
         self.uut = ClosableObject()
 

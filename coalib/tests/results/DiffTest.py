@@ -5,7 +5,7 @@ from coalib.results.Diff import Diff, ConflictError
 import unittest
 
 
-class DiffTestCase(unittest.TestCase):
+class DiffTest(unittest.TestCase):
     def setUp(self):
         self.uut = Diff()
 

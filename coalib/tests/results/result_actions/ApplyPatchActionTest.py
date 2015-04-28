@@ -7,7 +7,7 @@ from coalib.results.Diff import Diff
 from coalib.results.PatchResult import PatchResult
 from coalib.settings.Section import Section
 
-class ApplyPatchActionTestCase(unittest.TestCase):
+class ApplyPatchActionTest(unittest.TestCase):
     def test_apply(self):
         uut = ApplyPatchAction()
         file_dict = {

@@ -14,7 +14,7 @@ class TestLogPrinter(LogPrinter):
         return output, special_arg
 
 
-class LogPrinterTestCase(unittest.TestCase):
+class LogPrinterTest(unittest.TestCase):
     log_message = LogMessage(LOG_LEVEL.ERROR,
                              StringConstants.COMPLEX_TEST_STRING)
 

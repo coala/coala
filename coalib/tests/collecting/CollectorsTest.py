@@ -10,7 +10,7 @@ from coalib.collecting.Collectors import collect_files, \
                                          collect_bears
 
 
-class CollectFilesTestCase(unittest.TestCase):
+class CollectFilesTest(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
         self.collectors_test_dir = os.path.join(current_dir,
@@ -38,7 +38,7 @@ class CollectFilesTestCase(unittest.TestCase):
                                        "file2.py")])
 
 
-class CollectDirsTestCase(unittest.TestCase):
+class CollectDirsTest(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
         self.collectors_test_dir = os.path.join(current_dir,
@@ -60,7 +60,8 @@ class CollectDirsTestCase(unittest.TestCase):
             sorted(collect_dirs([os.path.join(self.collectors_test_dir,
                                               "**")],
                                 self.log_printer)),
-            sorted([os.path.join(self.collectors_test_dir, "bears"),
+            sorted([
+                os.path.join(self.collectors_test_dir, "bears"),
                 os.path.join(self.collectors_test_dir, "bears", "__pycache__"),
                 os.path.join(self.collectors_test_dir, "others"),
                 os.path.join(self.collectors_test_dir, "others", "c_files"),
@@ -68,7 +69,7 @@ class CollectDirsTestCase(unittest.TestCase):
                 self.collectors_test_dir]))
 
 
-class CollectBearsTestCase(unittest.TestCase):
+class CollectBearsTest(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
         self.collectors_test_dir = os.path.join(current_dir,

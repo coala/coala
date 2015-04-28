@@ -10,7 +10,7 @@ class TestPrinter(Printer):
         return output + somearg
 
 
-class PrinterTestCase(unittest.TestCase):
+class PrinterTest(unittest.TestCase):
     def test_printer_interface(self):
         self.uut = Printer()
         self.assertRaises(NotImplementedError, self.uut.print, "test")
