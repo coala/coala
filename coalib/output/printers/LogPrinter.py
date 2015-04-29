@@ -92,5 +92,17 @@ class LogPrinter(Printer):
         if not isinstance(timestamp, datetime):
             timestamp = datetime.today()
 
-        prefix = self._get_log_prefix(log_message.log_level, timestamp)
+        return self._print_log_message(
+            self._get_log_prefix(log_message.log_level, timestamp),
+            log_message,
+            **kwargs)
+
+    def _print_log_message(self, prefix, log_message, **kwargs):
+        """
+        Override this if you want to influence how the log message is printed.
+
+        :param prefix:      The prefix to print (as string).
+        :param log_message: The LogMessage object to print.
+        :param kwargs:      Any other keyword arguments.
+        """
         return self.print(prefix, log_message.message, **kwargs)
