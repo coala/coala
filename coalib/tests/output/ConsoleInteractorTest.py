@@ -77,14 +77,7 @@ class ConsoleInteractorTest(unittest.TestCase):
                              "YetAnotherBear")})
 
     def test_print_result(self):
-        self.uut.print = lambda x: x
         builtins.__dict__["input"] = lambda x: 0
-
-        self.assertEqual(
-            "|    |    | [{normal}] {bear}:".format(
-                normal=RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
-                bear="origin") + "\n|    |    | message",
-            self.uut._print_result(Result("origin", "message")))
 
         self.uut.print_result(PatchResult("origin", "msg", {}), {})
 
@@ -160,7 +153,7 @@ class ConsoleInteractorTest(unittest.TestCase):
 
     def test_print_results(self):
         q = queue.Queue()
-        self.uut._print = lambda string: q.put(string)
+        self.uut._print = lambda string, color="": q.put(string)
 
         self.assertRaises(TypeError, self.uut.print_results, 5, {})
         self.assertRaises(TypeError, self.uut.print_results, [], 5)
