@@ -31,7 +31,7 @@ class LogPrinter(Printer):
         if datetime_string != "":
             datetime_string = "[" + datetime_string + "]"
 
-        return '[{}]{} '.format(_(LOG_LEVEL.reverse.get(log_level, "ERROR")),
+        return '[{}]{}'.format(_(LOG_LEVEL.reverse.get(log_level, "ERROR")),
                                 datetime_string)
 
     def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
@@ -93,4 +93,4 @@ class LogPrinter(Printer):
             timestamp = datetime.today()
 
         prefix = self._get_log_prefix(log_message.log_level, timestamp)
-        return self.print(prefix, log_message.message, delimiter="", **kwargs)
+        return self.print(prefix, log_message.message, **kwargs)
