@@ -30,3 +30,21 @@ applies:
 
 The coverage values may go down by a commit, however this is to be avoided.
 Tests must work for every commit.
+
+Continuous integration is always done for the last commit on a branch.
+
+# Reviewing Commits
+
+ * Generated code is not intended to be reviewed. Instead rather try to verify
+   that the generation was done right. The commit message should expose that.
+ * Every commit is reviewed independently from the other commits.
+ * Tests should pass for each commit. If you suspect that tests might not pass
+   and a commit is not checked by continuous integration, try running the tests
+   locally.
+ * Check the surroundings. In many cases people forget to remove the import when
+   removing the use of something or similar things. It is usually good to take
+   a look at the whole file to see if it's still consistent.
+ * Check the commit message.
+ * Take a look at continuous integration results in the end even if they pass:
+   * Coverage shall not fall.
+   * Scrutinizer oftentimes yields helpful results.
