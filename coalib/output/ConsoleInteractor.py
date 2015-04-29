@@ -23,7 +23,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         """
         A ConsoleInteractor uses the Console to interact with the user.
 
-        :param output:      "stdout" or "stderr".
+        :param log_printer: The LogPrinter to use for logging.
         :param pre_padding: Number of code lines to show before a result as
                             context.
         """
