@@ -38,3 +38,6 @@ class CountVector:
 
     def __len__(self):
         return len(self.count_vector)
+
+    def __iter__(self):
+        return iter(self.count_vector)

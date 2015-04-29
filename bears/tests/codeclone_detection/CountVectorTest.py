@@ -42,13 +42,14 @@ class CountVectorTest(unittest.TestCase):
         uut.count_reference(True, False)
         self.assertEqual(uut.count_vector, [2, 2])
 
-    def test_conversion(self):
+    def test_conversions(self):
         uut = CountVector("varname",
                           [lambda cursor, stack: cursor and stack],
                           [2])
         uut.count_reference(True, True)
         self.assertEqual(repr(uut), str(uut))
         self.assertEqual(repr(uut), "[2]")
+        self.assertEqual(list(uut), [2])
 
 
 if __name__ == '__main__':
