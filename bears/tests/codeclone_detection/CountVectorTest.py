@@ -51,6 +51,49 @@ class CountVectorTest(unittest.TestCase):
         self.assertEqual(repr(uut), "[2]")
         self.assertEqual(list(uut), [2])
 
+    def check_difference(self, cv1, cv2, expected_difference):
+        """
+        Checks the difference between the given count vectors.
+
+        :param cv1:                 List of counts to put in the first CV.
+        :param cv2:                 List of counts to put in the second CV.
+        :param expected_difference: The expected difference value.
+        """
+        # Create empty CountVector objects
+        count_vector1 = CountVector("", [lambda: False for i in cv1])
+        count_vector2 = CountVector("", [lambda: False for i in cv2])
+        # Manually hack in the test values
+        count_vector1.count_vector = cv1
+        count_vector2.count_vector = cv2
+
+        self.assertEqual(count_vector1.difference(count_vector2),
+                         expected_difference,
+                         "Difference value for vectors {} and {} doesnt match"
+                         ".".format(cv1, cv2))
+        self.assertEqual(count_vector2.difference(count_vector1),
+                         expected_difference,
+                         "The difference operation is not symmetric.")
+
+    def test_difference(self):
+        # For each tuple first two items are CVs to compare, third is dif value
+        count_vector_difference_matrix = [
+            ([], [], 0),
+            ([0], [0], 0),
+            ([1], [1], 0),
+            ([100], [100], 0),
+
+            ([0], [100], 1),
+            ([0], [1], 1),
+            ([0, 1], [1, 0], 1),
+
+            ([0, 1], [1, 1], 0.5),
+            ([0, 2], [1, 2], 0.2),  # Higher values get weighted more
+            ([4], [3], 1/16),
+            ([0, 4], [0, 3], 1/16)]  # Zeros are weighted zeroly
+
+        for elem in count_vector_difference_matrix:
+            self.check_difference(*elem)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
