@@ -1,3 +1,3 @@
 bears = GlobalTestBear, LocalTestBear
-files = testcode.c
+files = testcode.c, unreadable
 bear_dirs = .
