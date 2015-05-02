@@ -116,6 +116,11 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
             self.print(self._format_line(_("Please enter a valid number.")))
 
+    def _print_action_failed(self, action_name, exception):
+        self.log_printer.log_exception("Failed to execute the action "
+                                       "{}.".format(action_name),
+                                       exception)
+
     def _get_action_info(self, action):
         params = action.non_optional_params
 
