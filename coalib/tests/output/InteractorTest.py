@@ -34,6 +34,9 @@ class InteractorTest(unittest.TestCase):
                           self.uut.print_results,
                           [Result("message", "origin")], {})
         self.assertRaises(NotImplementedError, self.uut._print_actions, 5)
+        self.assertRaises(NotImplementedError,
+                          self.uut._print_action_failed,
+                          "t", Exception())
 
         self.uut.print_results([], {})
         self.uut.print_results(["illegal value"], {})
