@@ -14,16 +14,12 @@ python:
   - "3.2"
 
 install:
-  - pip install coveralls
-  - pip install codecov
+  - sh .install.sh
 
 script:
-  - sudo apt-get install espeak libclang1-3.4
-  - sudo ln -s /usr/lib/x86_64-linux-gnu/libclang.so.1 /usr/lib/x86_64-linux-gnu/libclang.so
   - python3 ./run_tests.py --cover --disallow-test-skipping
   - python3 setup.py install
   - coala -c .ci_coafile
 
 after_success:
-  - coveralls
-  - codecov
+  - sh .success.sh
