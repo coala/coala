@@ -120,7 +120,7 @@ class ConsoleInteractorTest(unittest.TestCase):
 
         # Check if the user is asked for the parameter only the first time.
         # Use OpenEditorAction that needs this parameter (editor command).
-        input_generator = InputGenerator([1, "test_editor", 1])
+        input_generator = InputGenerator([1, "test_editor", 0, 1, 0])
         # Choose open editor action
         builtins.__dict__["input"] = input_generator.generate_input
         PatchResult.get_actions = lambda self: [OpenEditorAction()]
@@ -128,15 +128,13 @@ class ConsoleInteractorTest(unittest.TestCase):
         patch_result = PatchResult("origin", "msg", {testfile_path: diff})
         patch_result.file = "f_b"
 
-        with self.assertRaises(self.FileNotFoundError):
-            self.uut.print_result(patch_result, file_dict)
-        # Increase by 2 (-1 -> 1)
-        self.assertEqual(input_generator.current_input, 1)
+        self.uut.print_result(patch_result, file_dict)
+        # choose action, choose editor, choose no action (-1 -> 2)
+        self.assertEqual(input_generator.current_input, 2)
 
         # Increase by 1, It shoudn't ask for parameter again
-        with self.assertRaises(self.FileNotFoundError):
-            self.uut.print_result(patch_result, file_dict)
-        self.assertEqual(input_generator.current_input, 2)
+        self.uut.print_result(patch_result, file_dict)
+        self.assertEqual(input_generator.current_input, 4)
 
     def test_static_functions(self):
         q = queue.Queue()
