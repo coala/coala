@@ -26,7 +26,7 @@ class StringConverter:
 
         self.value = value
         self.__list = None
-        self.__recreate_list = True
+        self.__update_needed = True
 
     def __str__(self):
         return unescape(self.value)
@@ -44,7 +44,7 @@ class StringConverter:
     def __int__(self):
         return int(str(self))
 
-    def __iter__(self, remove_backslashes=True):
+    def __iter__(self, unescape=True):
         """
         Converts the value to a list using the delimiters given at construction
         time.
@@ -53,26 +53,29 @@ class StringConverter:
         will be allowed in values. If you need the escapes you should not
         use this routine.
 
-        :return: A list with unescaped values.
+        :param unescape: Whether or not to remove the backslashes after
+                         conversion.
+        :return:         An iterator over all values.
         """
-        self.__prepare_list(remove_backslashes)
+        if self.__update_needed:
+            self.__prepare_list(unescape)
+            self.__update_needed = False
 
         return iter(self.__list)
 
-    def __prepare_list(self, remove_backslashes):
-        if not self.__recreate_list:
-            return
-
+    def __get_raw_list(self):
         pattern = ("(?:" +
                    "|".join(re.escape(v) for v in self.__list_delimiters) +
                    ")")
 
-        self.__list = list(unescaped_split(
-            pattern,
-            self.value,
-            use_regex=True))
+        return list(unescaped_split(pattern,
+                                    self.value,
+                                    use_regex=True))
 
-        if remove_backslashes:
+    def __prepare_list(self, unescape):
+        self.__list = self.__get_raw_list()
+
+        if unescape:
             self.__list = [unescape(elem) for elem in self.__list]
         if self.__strip_whitespaces:
             self.__list = [elem.strip() for elem in self.__list]
@@ -80,8 +83,6 @@ class StringConverter:
         # Need to do after stripping, cant use builtin functionality of split
         while "" in self.__list:
             self.__list.remove("")
-
-        self.__recreate_list = False
 
     @property
     def value(self):
@@ -93,7 +94,7 @@ class StringConverter:
         if self.__strip_whitespaces:
             self.__value = self.__value.strip()
 
-        self.__recreate_list = True
+        self.__update_needed = True
 
     def __eq__(self, other):
         return isinstance(other, StringConverter) and self.value == other.value
