@@ -98,7 +98,7 @@ class GlobTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             list(iglob(os.path.join("**", "a**b", "**")))
 
-    def test_Selector_Error(self):
+    def test_selector_error(self):
         with self.assertRaises(NotImplementedError):
             a = _Selector(False)
             a._collect("stuff")
@@ -113,7 +113,6 @@ class GlobTest(unittest.TestCase):
 
 
 class IterOrCombinationTest(unittest.TestCase):
-
     def test_correct_evaluation(self):
         pattern_result_dict = {
             "": [""],
