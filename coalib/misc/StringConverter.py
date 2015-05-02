@@ -13,8 +13,11 @@ class StringConverter:
     def __init__(self,
                  value,
                  strip_whitespaces=True,
-                 list_delimiters=[",", ";"],
+                 list_delimiters=None,
                  dict_delimiter=":"):
+        if list_delimiters is None:
+            list_delimiters = [",", ";"]
+
         if (
                 not isinstance(list_delimiters, list) and
                 not isinstance(list_delimiters, str)):
@@ -22,8 +25,8 @@ class StringConverter:
         if not isinstance(strip_whitespaces, bool):
             raise TypeError("strip_whitespaces has to be a bool parameter")
 
-        self.__strip_whitespaces = strip_whitespaces
         self.__list_delimiters = list_delimiters
+        self.__strip_whitespaces = strip_whitespaces
         self.__dict_delimiter = dict_delimiter
 
         self.__escaped_list = None
