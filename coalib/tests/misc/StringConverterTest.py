@@ -7,7 +7,7 @@ import unittest
 
 class ProcessTest(unittest.TestCase):
     def setUp(self):
-        self.uut = StringConverter("\n 1 \n ")
+        self.uut = StringConverter("\n \\1 \n ")
 
     def test_construction(self):
         self.assertRaises(TypeError,
