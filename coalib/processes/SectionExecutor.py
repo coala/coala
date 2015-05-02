@@ -180,7 +180,7 @@ class SectionExecutor:
 
         self._instantiate_bears(file_dict,
                                 message_queue)
-        self._fill_queue(filename_queue, filename_list)
+        self._fill_queue(filename_queue, file_dict.keys())
         self._fill_queue(global_bear_queue, range(len(self.global_bear_list)))
 
         return ([BearRunner(**bear_runner_args) for i in range(job_count)],
