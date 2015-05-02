@@ -24,9 +24,9 @@ class StringConverter:
         self.__strip_whitespaces = strip_whitespaces
         self.__list_delimiters = list_delimiters
 
+        self.__escaped_list = None
+        self.__unescaped_list = None
         self.value = value
-        self.__list = None
-        self.__update_needed = True
 
     def __str__(self):
         return unescape(self.value)
@@ -59,9 +59,10 @@ class StringConverter:
                                    dict syntax the list will contain (key,
                                    value) tuples.
         """
-        self.__prepare_list(remove_backslashes)
-
-        return iter(self.__list)
+        if remove_backslashes:
+            return iter(self.__unescaped_list)
+        else:
+            return iter(self.__escaped_list)
 
     def __get_raw_list(self):
         pattern = ("(?:" +
@@ -73,17 +74,21 @@ class StringConverter:
             self.value,
             use_regex=True))
 
-    def __prepare_list(self, remove_backslashes):
-        self.__list = self.__get_raw_list()
-
-        if remove_backslashes:
-            self.__list = [unescape(elem) for elem in self.__list]
+    def __prepare_list(self):
+        self.__escaped_list = self.__get_raw_list()
+        self.__unescaped_list = [unescape(elem)
+                                 for elem in self.__escaped_list]
         if self.__strip_whitespaces:
-            self.__list = [elem.strip() for elem in self.__list]
+            self.__unescaped_list = [elem.strip()
+                                     for elem in self.__unescaped_list]
+            self.__escaped_list = [elem.strip()
+                                   for elem in self.__escaped_list]
 
         # Need to do after stripping, cant use builtin functionality of split
-        while "" in self.__list:
-            self.__list.remove("")
+        while "" in self.__unescaped_list:
+            self.__unescaped_list.remove("")
+        while "" in self.__escaped_list:
+            self.__escaped_list.remove("")
 
     @property
     def value(self):
@@ -95,7 +100,7 @@ class StringConverter:
         if self.__strip_whitespaces:
             self.__value = self.__value.strip()
 
-        self.__update_needed = True
+        self.__prepare_list()
 
     def __eq__(self, other):
         return isinstance(other, StringConverter) and self.value == other.value
