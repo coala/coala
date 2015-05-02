@@ -13,8 +13,11 @@ class StringConverter:
     def __init__(self,
                  value,
                  strip_whitespaces=True,
-                 list_delimiters=[",", ";"],
+                 list_delimiters=None,
                  dict_delimiter=":"):
+        if list_delimiters is None:
+            list_delimiters = [",", ";"]
+
         if (
                 not isinstance(list_delimiters, list) and
                 not isinstance(list_delimiters, str)):
