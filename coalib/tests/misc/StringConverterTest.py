@@ -55,6 +55,7 @@ class ProcessTest(unittest.TestCase):
         self.uut = StringConverter("testval", list_delimiters=[",", "¸"])
         self.uut.value = "a\\n,bug¸g"
         self.assertEqual(list(self.uut), ["an", "bug", "g"])
+        self.assertEqual(list(self.uut.__iter__(False)), ["a\\n", "bug", "g"])
 
         self.assertTrue("bug" in self.uut)
         self.assertFalse("but" in self.uut)

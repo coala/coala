@@ -59,9 +59,7 @@ class StringConverter:
                                    dict syntax the list will contain (key,
                                    value) tuples.
         """
-        if self.__update_needed:
-            self.__prepare_list(remove_backslashes)
-            self.__update_needed = False
+        self.__prepare_list(remove_backslashes)
 
         return iter(self.__list)
 
