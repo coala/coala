@@ -13,7 +13,8 @@ class StringConverter:
     def __init__(self,
                  value,
                  strip_whitespaces=True,
-                 list_delimiters=[",", ";"]):
+                 list_delimiters=[",", ";"],
+                 dict_delimiter=":"):
         if (
                 not isinstance(list_delimiters, list) and
                 not isinstance(list_delimiters, str)):
@@ -23,9 +24,11 @@ class StringConverter:
 
         self.__strip_whitespaces = strip_whitespaces
         self.__list_delimiters = list_delimiters
+        self.__dict_delimiter = dict_delimiter
 
         self.__escaped_list = None
         self.__unescaped_list = None
+        self.__dict = None
         self.value = value
 
     def __str__(self):
@@ -62,6 +65,12 @@ class StringConverter:
         else:
             return iter(self.__escaped_list)
 
+    def __getitem__(self, item):
+        return self.__dict.__getitem__(item)
+
+    def keys(self):
+        return self.__dict.keys()
+
     def __get_raw_list(self):
         pattern = ("(?:" +
                    "|".join(re.escape(v) for v in self.__list_delimiters) +
@@ -87,6 +96,25 @@ class StringConverter:
         while "" in self.__escaped_list:
             self.__escaped_list.remove("")
 
+    def __prepare_dict(self):
+        self.__dict = {}
+        for elem in self.__get_raw_list():
+            key_val = [unescape(item)
+                       for item in unescaped_split(self.__dict_delimiter,
+                                                   elem,
+                                                   max_split=1)]
+
+            if self.__strip_whitespaces:
+                key_val = [item.strip() for item in key_val]
+
+            if not any(item != "" for item in key_val):
+                continue
+
+            if len(key_val) < 2:
+                self.__dict[key_val[0]] = ""
+            else:
+                self.__dict[key_val[0]] = key_val[1]
+
     @property
     def value(self):
         return self.__value
@@ -98,6 +126,7 @@ class StringConverter:
             self.__value = self.__value.strip()
 
         self.__prepare_list()
+        self.__prepare_dict()
 
     def __eq__(self, other):
         return isinstance(other, StringConverter) and self.value == other.value
