@@ -69,6 +69,27 @@ class ProcessTest(unittest.TestCase):
                                    strip_whitespaces=False)
         self.assertEqual(list(self.uut), ["a", " test", " \n"])
 
+    def test_dict_conversion(self):
+        self.uut = StringConverter("test")
+        self.assertEqual(dict(self.uut), {"test": ""})
+        self.uut = StringConverter("test, t")
+        self.assertEqual(dict(self.uut), {"test": "", "t": ""})
+        self.uut = StringConverter("test, t: v")
+        self.assertEqual(dict(self.uut), {"test": "", "t": "v"})
+
+        # Check escaping
+        self.uut = StringConverter("test, t\\: v")
+        self.assertEqual(dict(self.uut), {"test": "", "t: v": ""})
+        self.uut = StringConverter("test, t\\: v: t")
+        self.assertEqual(dict(self.uut), {"test": "", "t: v": "t"})
+        self.uut = StringConverter("test\\, t\\: v: t")
+        self.assertEqual(dict(self.uut), {"test, t: v": "t"})
+        self.uut = StringConverter("test\\, t\\: v: t\\,")
+        self.assertEqual(dict(self.uut), {"test, t: v": "t,"})
+
+        # Check that lists ignore colons
+        self.assertEqual(list(self.uut), ["test, t: v: t,"])
+
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)
         self.uut.value = "yeah"
