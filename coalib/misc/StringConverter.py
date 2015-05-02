@@ -29,20 +29,20 @@ class StringConverter:
         self.__recreate_list = True
 
     def __str__(self):
-        return self.value
+        return unescape(self.value)
 
     def __bool__(self):
-        if self.value.lower() in StringConstants.TRUE_STRINGS:
+        if str(self).lower() in StringConstants.TRUE_STRINGS:
             return True
-        if self.value.lower() in StringConstants.FALSE_STRINGS:
+        if str(self).lower() in StringConstants.FALSE_STRINGS:
             return False
         raise ValueError
 
     def __len__(self):
-        return len(self.value)
+        return len(str(self))
 
     def __int__(self):
-        return int(self.value)
+        return int(str(self))
 
     def __iter__(self, remove_backslashes=True):
         """
