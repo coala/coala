@@ -57,9 +57,7 @@ class StringConverter:
                          conversion.
         :return:         An iterator over all values.
         """
-        if self.__update_needed:
-            self.__prepare_list(unescape)
-            self.__update_needed = False
+        self.__prepare_list(unescape)
 
         return iter(self.__list)
 
