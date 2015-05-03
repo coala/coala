@@ -1,8 +1,11 @@
 import sys
+import unittest
+import subprocess
 
 sys.path.insert(0, ".")
-import unittest
+
 from coalib.settings.DocumentationComment import DocumentationComment
+from coalib.tests.misc.i18nTest import i18nTest
 
 
 class DocumentationCommentParserTest(unittest.TestCase):
@@ -59,6 +62,18 @@ class DocumentationCommentParserTest(unittest.TestCase):
             "p2": "p2 description"
         }, retval_desc="retval description override")
 
+    def test_translation(self):
+        i18nTest.set_lang("de_DE.UTF8")
+        self.check_from_docstring_dataset(
+            '''
+            Test description. Do not translate except german.
+
+            @param p1: A param.
+            ''',
+            desc="Testbeschreibung. Nicht in Sprachen außer Deutsch "
+                 "übersetzen.",
+            param_dict={"p1": "Ein parameter."})
+
     def check_from_docstring_dataset(self,
                                      docstring,
                                      desc="",
@@ -71,6 +86,16 @@ class DocumentationCommentParserTest(unittest.TestCase):
         self.assertEqual(doc_comment.desc, desc)
         self.assertEqual(doc_comment.param_dict, param_dict)
         self.assertEqual(doc_comment.retval_desc, retval_desc)
+
+
+def skip_test():
+    try:
+        subprocess.Popen(['msgfmt'],
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+        return False
+    except OSError:
+        return "msgfmt is not installed."
 
 
 if __name__ == '__main__':

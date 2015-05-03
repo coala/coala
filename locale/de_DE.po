@@ -502,6 +502,16 @@ msgstr ""
 ":param tab_width:                 Anzahl der Leerzeichen die einen Tab "
 "repräsentieren."
 
+#: tmp/doc_strings:32
+msgid ""
+"Test description. Do not translate except german.\n"
+"\n"
+"@param p1: A param."
+msgstr ""
+"Testbeschreibung. Nicht in Sprachen außer Deutsch übersetzen.\n"
+"\n"
+"@param p1: Ein parameter."
+
 #~ msgid "Bear {} failed to run."
 #~ msgstr "Der Bär {} konnte nicht ausgeführt werden."
 
