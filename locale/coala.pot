@@ -437,3 +437,10 @@ msgid ""
 ":param tab_width:                 Number of spaces representing one\n"
 "                                  tab."
 msgstr ""
+
+#: tmp/doc_strings:32
+msgid ""
+"Test description. Do not translate except german.\n"
+"\n"
+"@param p1: A param."
+msgstr ""
