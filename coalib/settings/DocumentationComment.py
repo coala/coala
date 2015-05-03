@@ -1,3 +1,8 @@
+import inspect
+
+from coalib.misc.i18n import _
+
+
 class DocumentationComment:
     class _ParseMode:
         DESCRIPTION = 0
@@ -31,7 +36,7 @@ class DocumentationComment:
         if not isinstance(docstring, str):
             raise TypeError("Parameter docstring has to be a string.")
 
-        lines = docstring.split("\n")
+        lines = _(inspect.cleandoc(docstring)).split("\n")
 
         parse_mode = cls._ParseMode.DESCRIPTION
         cur_param = ""
