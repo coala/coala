@@ -197,9 +197,14 @@ def iglob(pattern, files=True, dirs=True):
         raise StopIteration()
 
     for pat in _iter_or_combinations(pattern):
-        pattern_parts = pat.split(os.sep)  # "/a/b.py" -> ['', 'a', 'b.py']
+        # extract drive letter, if possible:
+        drive_letter, pat = os.path.splitdrive(pat)
+        # "/a/b.py" -> ['', 'a', 'b.py'] or \\a\\b.py -> ['', 'a', 'b.py']
+        pattern_parts = pat.split(os.sep)
+        # replace first pattern part with absolute path root if empty
         if pat.startswith(os.sep):
-            pattern_parts[0] = os.sep  # would be '' instead
+            pattern_parts[0] = drive_letter and drive_letter + "\\" or os.sep
+
         selector = _make_selector(pattern_parts)
 
         for p in selector.collect():
