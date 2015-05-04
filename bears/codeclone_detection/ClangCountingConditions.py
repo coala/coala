@@ -51,7 +51,7 @@ def _is_nth_child_of_kind(stack, allowed_nums, kind):
     return False
 
 
-FOR_POSITION = enum("NONE", "INIT", "COND", "INC", "BODY")
+FOR_POSITION = enum("UNKNOWN", "INIT", "COND", "INC", "BODY")
 
 
 def _get_position_in_for_tokens(tokens, position):
@@ -91,7 +91,13 @@ def _get_position_in_for_tokens(tokens, position):
 
             state = next_state
 
-    assert False, "This line shall not be reached."  # pragma: no cover
+    # We probably have a macro here, clang doesn't preprocess them. I don't see
+    # a chance of getting macros parsed right here in the limited time
+    # available. For our heuristic approach we'll just not count for loops
+    # realized through macros. FIXME: This is not covered in the tests because
+    # it contains a known bug that needs to be fixed, that is: macros destroy
+    # everything.
+    return FOR_POSITION.UNKNOWN  # pragma: no cover
 
 
 def _get_positions_in_for_loop(cursor, stack):
