@@ -1,13 +1,11 @@
 import inspect
 
 from coalib.misc.i18n import _
+from coalib.misc.Enum import enum
 
 
 class DocumentationComment:
-    class _ParseMode:
-        DESCRIPTION = 0
-        PARAM = 1
-        RETVAL = 2
+    _ParseMode = enum("DESCRIPTION", "PARAM", "RETVAL")
 
     def __init__(self, desc, param_dict, retval_desc):
         """
