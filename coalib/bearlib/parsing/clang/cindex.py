@@ -508,7 +508,7 @@ class CursorKind(object):
     @staticmethod
     def from_id(id):
         if id >= len(CursorKind._kinds) or CursorKind._kinds[id] is None:
-            raise ValueError('Unknown cursor kind')
+            raise ValueError('Unknown cursor kind "{id}"'.format(id=id))
         return CursorKind._kinds[id]
 
     @staticmethod
@@ -1096,8 +1096,16 @@ class Cursor(Structure):
 
     @property
     def kind(self):
-        """Return the kind of this cursor."""
-        return CursorKind.from_id(self._kind_id)
+        """
+        Retrieves the kind of this cursor. Note that some kinds are not mapped
+        to the python bindings and thus are reported unknown.
+
+        :return: A CursorKind object or None if unknown.
+        """
+        try:
+            return CursorKind.from_id(self._kind_id)
+        except ValueError:
+            return None
 
     @property
     def spelling(self):
