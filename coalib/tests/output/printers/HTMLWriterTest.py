@@ -14,6 +14,7 @@ class HTMLWriterTest(unittest.TestCase):
         self.uut = HTMLWriter(self.filename)
 
     def tearDown(self):
+        self.uut.close()
         os.remove(self.filename)
 
     def test_construction(self):
