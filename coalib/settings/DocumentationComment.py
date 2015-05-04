@@ -72,5 +72,5 @@ class DocumentationComment:
                 desc += " " + line
 
         return (cls(desc=desc.strip(),
-                param_dict=param_dict,
-                retval_desc=retval_desc.strip()))
+                    param_dict=param_dict,
+                    retval_desc=retval_desc.strip()))
