@@ -195,7 +195,7 @@ class SectionExecutor:
     def _get_file_dict(filename_list):
         file_dict = {}
         for filename in filename_list:
-            with open(filename, "r") as f:
+            with open(filename, "r", encoding="utf-8") as f:
                 file_dict[filename] = f.readlines()
 
         return file_dict
