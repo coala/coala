@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""
+This file filters the given standard input (assumed to be python code) thus
+that all ''' multiline comments are marked translatable for gettext. Any non
+relevant lines will not be outputted.
+"""
+import inspect
+import sys
+
+from coalib.parsing.StringProcessing import unescaped_search_in_between
+
+
+if __name__ == '__main__':
+    content = sys.stdin.read()
+    for comment in unescaped_search_in_between("'''",
+                                               "'''",
+                                               content,
+                                               remove_empty_matches=True):
+        # Removes indentation, let's not bother translators with that. The
+        # documentation comment parser will do the same before applying _()
+        clean_comment = inspect.cleandoc(comment)
+        print('N_("""' + clean_comment + '""")')

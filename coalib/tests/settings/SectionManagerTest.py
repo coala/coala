@@ -188,6 +188,7 @@ class SectionManagerTest(unittest.TestCase):
         test_section.append(Setting(key="log_TYPE", value=filename))
         uut.retrieve_logging_objects(test_section)
         self.assertIsInstance(uut.log_printer, FilePrinter)
+        uut.log_printer.close()
         os.remove(filename)
 
         test_section = Section("default")

@@ -33,6 +33,15 @@ class Interactor(SectionCreatable, Printer):
         """
         raise NotImplementedError
 
+    def _print_action_failed(self, action_name, exception):
+        """
+        Prints out the information that the chosen action failed.
+
+        :param action_name: The name of the action that failed.
+        :param exception:   The exception with which it failed.
+        """
+        raise NotImplementedError
+
     def print_result(self, result, file_dict):
         """
         Prints the result appropriate to the output medium.
@@ -60,15 +69,32 @@ class Interactor(SectionCreatable, Printer):
             action_dict[metadata.name] = action
             metadata_list.append(metadata)
 
+        while not self.apply_action(metadata_list,
+                                    action_dict,
+                                    result,
+                                    file_dict):
+            pass
+
+    def apply_action(self,
+                     metadata_list,
+                     action_dict,
+                     result,
+                     file_dict):
         action_name, section = self._print_actions(metadata_list)
         if action_name is None:
-            return
+            return True
 
         chosen_action = action_dict[action_name]
-        chosen_action.apply_from_section(result,
-                                         file_dict,
-                                         self.file_diff_dict,
-                                         section)
+        try:
+            chosen_action.apply_from_section(result,
+                                             file_dict,
+                                             self.file_diff_dict,
+                                             section)
+        except Exception as e:
+            self._print_action_failed(action_name, e)
+            return False
+
+        return True
 
     def print_results(self, result_list, file_dict):
         """

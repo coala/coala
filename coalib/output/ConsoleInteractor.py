@@ -1,5 +1,8 @@
-# This import has side effects and is needed to make input() behave nicely
-import readline
+try:
+    # This import has side effects and is needed to make input() behave nicely
+    import readline
+except ImportError: # pragma: no cover
+    pass
 
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.RESULT_SEVERITY import (
@@ -112,6 +115,11 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                 pass
 
             self.print(self._format_line(_("Please enter a valid number.")))
+
+    def _print_action_failed(self, action_name, exception):
+        self.log_printer.log_exception("Failed to execute the action "
+                                       "{}.".format(action_name),
+                                       exception)
 
     def _get_action_info(self, action):
         params = action.non_optional_params
