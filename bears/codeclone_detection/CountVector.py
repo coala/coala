@@ -41,3 +41,22 @@ class CountVector:
 
     def __iter__(self):
         return iter(self.count_vector)
+
+    def difference(self, other):
+        """
+        Calculates a normalized difference. This value can be used to indicate
+        the similarity of the associated variables, while 0 means no
+        difference, i.e. the count vectors are identical, and 1 means maximum
+        difference, i.e. they are not similar at all.
+
+        :param other: The CountVector to calculate the difference to.
+        :return:      A difference value in [0, 1].
+        """
+        assert isinstance(other, CountVector)
+        assert len(other) == len(self)
+
+        maxabs = sum(max(x, y)**2 for x, y in zip(self, other))
+        if maxabs == 0:
+            return 0
+
+        return sum((x-y)**2 for x, y in zip(self, other))/maxabs
