@@ -5,7 +5,7 @@ echo '' > tmp/messages.po
 echo Generating new pot file...
 cat `find . -name "*.py" \
  | grep -v build` coala \
-  | python3 .extract_doc_translations > tmp/doc_strings
+  | python3 .misc/.extract_doc_translations > tmp/doc_strings
 xgettext -j -c --language=Python --output=tmp/messages.po --keyword=_ \
  --keyword=N_ --from-code=UTF-8 \
  `find . -name "*.py" | grep -v build` coala tmp/doc_strings
