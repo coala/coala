@@ -14,12 +14,12 @@ python:
   - "3.2"
 
 install:
-  - sh .install.sh
+  - sh .misc/.install.sh
 
 script:
   - python3 ./run_tests.py --cover --disallow-test-skipping
   - python3 setup.py install
-  - coala -c .ci_coafile
+  - coala -c .misc/.ci_coafile
 
 after_success:
-  - sh .success.sh
+  - sh .misc/.success.sh
