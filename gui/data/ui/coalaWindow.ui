@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkHeaderBar" id="header-bar">
+    <property name="visible">true</property>
+    <property name="show_close_button">true</property>
+    <child>
+      <object class="GtkMenuButton" id="gear_menu_button">
+        <property name="visible">true</property>
+        <style>
+          <class name="image-button"/>
+        </style>
+        <child>
+          <object class="GtkImage">
+            <property name="icon_name">open-menu-symbolic</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+  </object>
+</interface>
