@@ -90,8 +90,8 @@ class Interactor(SectionCreatable, Printer):
                                              file_dict,
                                              self.file_diff_dict,
                                              section)
-        except Exception as e:
-            self._print_action_failed(action_name, e)
+        except Exception as exception:
+            self._print_action_failed(action_name, exception)
             return False
 
         return True
