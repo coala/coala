@@ -100,14 +100,14 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             _("The following options are applicable to this result:")))
 
         while True:
+            self.print(self._format_line(" 0: " + _("Do nothing.")))
             for i, action in enumerate(actions):
                 self.print(self._format_line("{:>2}: {}".format(i + 1,
                                                                 action.desc)))
 
             try:
                 line = self._format_line(_("Please enter the number of the "
-                                           "action you want to execute. (0 is "
-                                           "no action) "))
+                                           "action you want to execute. "))
                 choice = int(input(line))
                 if 0 <= choice <= len(actions):
                     return choice
