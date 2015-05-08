@@ -14,9 +14,9 @@ pages:
 - ['Getting_Involved/Testing.md', 'Getting Involved', 'Executing Tests']
 - ['Getting_Involved/Writing_Tests.md', 'Getting Involved', 'Writing Tests']
 - ['Getting_Involved/Translating.md', 'Getting Involved', 'Translating']
-- ['Getting_Involved/Writing_Commit_Messages.md',
+- ['Getting_Involved/Writing_Good_Commits.md',
    'Getting Involved',
-   'Writing Commit Messages']
+   'Writing Good Commits']
 - ['Getting_Involved/MAC_Hints.md', 'Getting Involved', 'MAC Hints']
 - ['General_Dev_Info/git_tutorial_1.md',
    'General Developer Information',
