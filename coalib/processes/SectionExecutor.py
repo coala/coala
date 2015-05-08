@@ -1,9 +1,11 @@
 import multiprocessing
 import queue
 import threading
+import sys
 
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
+from coalib.output.printers import LOG_LEVEL
 from coalib.processes.BearRunner import BearRunner
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Barrier import Barrier
@@ -11,6 +13,7 @@ from coalib.settings.Section import Section
 from coalib.settings.Setting import path_list
 from coalib.output.Interactor import Interactor
 from coalib.output.printers.Printer import Printer
+from coalib.misc.i18n import _
 
 
 def get_cpu_count():
@@ -191,11 +194,22 @@ class SectionExecutor:
         for elem in any_list:
             _queue.put(elem)
 
-    @staticmethod
-    def _get_file_dict(filename_list):
+    def _get_file_dict(self, filename_list):
         file_dict = {}
         for filename in filename_list:
-            with open(filename, "r", encoding="utf-8") as f:
-                file_dict[filename] = f.readlines()
+            try:
+                with open(filename, "r", encoding="utf-8") as f:
+                    file_dict[filename] = f.readlines()
+            except UnicodeDecodeError:
+                self.log_printer.warn(_("Failed to read file '{}'. It seems "
+                                        "to contain non-unicode characters. "
+                                        "Leaving it out.".format(filename)))
+            except:  # pragma: no cover
+                self.log_printer.log_exception(_("Failed to read file '{}' "
+                                                 "because of an unknown "
+                                                 "error. Leaving it "
+                                                 "out.").format(filename),
+                                               sys.exc_info()[1],
+                                               log_level=LOG_LEVEL.WARNING)
 
         return file_dict

@@ -4,7 +4,7 @@ from coalib.bearlib.parsing.clang.cindex import Index, TranslationUnit
 
 class ClangASTPrintBear(LocalBear):
     def print_node(self, cursor, filename, before="", spec_before=""):
-        """
+        '''
         Prints this node and all child nodes recursively in the style of:
 
         -node
@@ -17,7 +17,7 @@ class ClangASTPrintBear(LocalBear):
         :param before:      What to print before the node.
         :param spec_before: What to print before this node but to replace with
                             spaces for child nodes.
-        """
+        '''
         file = cursor.location.file
 
         if file is not None and file.name.decode() == filename:

@@ -42,14 +42,11 @@ class ClangASTPrintBearTest(LocalBearTestHelper):
 """
 
         self.uut.run(self.testfile, [])
-        self.maxDiff = None
 
         ast = "\n"
         # Only check beginning of AST
         for i in range(expected_ast.count("\n")-1):
             ast += self.queue.get(timeout=0).message + "\n"
-
-        print(ast)
 
         self.assertEqual(ast, expected_ast)
 

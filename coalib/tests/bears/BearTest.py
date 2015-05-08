@@ -15,15 +15,11 @@ class TestBear(Bear):
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
 
-    def set_up(self):
+    def run(self):
         self.print("set", "up", delimiter="=")
-
-    def tear_down(self):
+        self.warn(_("A string to test translations."))
         self.err("teardown")
         self.err()
-
-    def run(self):
-        self.warn(_("A string to test translations."))
 
     @staticmethod
     def get_dependencies():
@@ -34,11 +30,8 @@ class BadTestBear(Bear):
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
 
-    def tear_down(self):
-        raise NotImplementedError
-
     def run(self):
-        pass
+        raise NotImplementedError
 
 
 class BearTest(unittest.TestCase):
@@ -47,43 +40,29 @@ class BearTest(unittest.TestCase):
         self.settings = Section("test_settings")
         self.uut = TestBear(self.settings, self.queue)
 
-    def test_raises(self):
+    def test_simple_api(self):
         self.assertRaises(TypeError, TestBear, self.settings, 2)
         self.assertRaises(TypeError, TestBear, None, self.queue)
         self.assertRaises(NotImplementedError, self.uut.kind)
 
-    def test_methods_available(self):
-        # these should be available and not throw anything
         base = Bear(self.settings, None)
-        base.set_up()
-        base.tear_down()
-
         self.assertRaises(NotImplementedError, base.run)
-
         self.assertEqual(base.get_non_optional_settings(), {})
 
     def test_message_queue(self):
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG,
-                           _("Setting up bear {}...").format("TestBear"))
-        self.check_message(LOG_LEVEL.DEBUG, "set=up")
-        self.check_message(LOG_LEVEL.DEBUG,
                            _("Running bear {}...").format("TestBear"))
+        self.check_message(LOG_LEVEL.DEBUG, "set=up")
         self.check_message(LOG_LEVEL.WARNING,
                            _("A string to test translations."))
-        self.check_message(LOG_LEVEL.DEBUG,
-                           _("Tearing down bear {}...").format("TestBear"))
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 
     def test_bad_bear(self):
         self.uut = BadTestBear(self.settings, self.queue)
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG,
-                           _("Setting up bear {}...").format("BadTestBear"))
-        self.check_message(LOG_LEVEL.DEBUG,
                            _("Running bear {}...").format("BadTestBear"))
-        self.check_message(LOG_LEVEL.DEBUG,
-                           _("Tearing down bear {}...").format("BadTestBear"))
         self.check_message(LOG_LEVEL.WARNING,
                            _("Bear {} failed to run. Take a look at debug "
                              "messages for further "

@@ -9,14 +9,14 @@ class KeywordBear(LocalBear):
             file,
             cs_keywords: list,
             ci_keywords: list):
-        """
+        '''
         Checks the code files for given keywords.
 
         :param cs_keywords: A list of keywords to search for (case sensitive).
                             Usual examples are TODO and FIXME.
         :param ci_keywords: A list of keywords to search for (case
                             insensitive).
-        """
+        '''
         results = []
 
         for i in range(len(ci_keywords)):
