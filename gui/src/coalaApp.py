@@ -8,7 +8,7 @@ class coalaApp(Gtk.Application):
 
     def __init__(self):
         Gtk.Application.__init__(self,
-                                 application_id="coala",
+                                 application_id="org.coala",
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.resource = Gio.resource_load(os.getcwd()+"/data/coala.gresource")
         Gio.Resource._register(self.resource)
