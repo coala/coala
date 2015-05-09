@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkHeaderBar" id="header-bar">
+    <property name="visible">true</property>
+    <property name="show_close_button">true</property>
+    <child>
+      <object class="GtkButton">
+        <property name="label">New</property>
+        <property name="visible">true</property>
+      </object>
+    </child>
+    <child type="title">
+
+    </child>
+    <child>
+      <object class="GtkButton" id="accept-project-button">
+        <property name="visible">true</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">gtk-apply</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+  </object>
+</interface>

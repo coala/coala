@@ -16,5 +16,3 @@ class coalaWindow(Gtk.ApplicationWindow):
 
         self.window_stack = self._ui.get_object("coalaWindowStack")
         self.add(self.window_stack)
-
-        self.show_all()

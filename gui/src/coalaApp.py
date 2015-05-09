@@ -2,6 +2,7 @@ import os
 from gi.repository import Gtk, Gio
 
 from gui.src.workspace.coalaWindow import coalaWindow
+from gui.src.project.coalaProject import coalaProject
 
 
 class coalaApp(Gtk.Application):
@@ -17,4 +18,5 @@ class coalaApp(Gtk.Application):
 
     def activateCb(self, app):
         window = coalaWindow(app)
-        app.add_window(window)
+        window2 = coalaProject(app)
+        app.add_window(window2)
