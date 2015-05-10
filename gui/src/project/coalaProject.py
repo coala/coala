@@ -11,6 +11,10 @@ class coalaProject(Gtk.ApplicationWindow):
         self._ui = Gtk.Builder()
         self._ui.add_from_resource("/coala/coalaProject.ui")
 
+        self._setup_view()
+
+    def _setup_view(self):
         self.header_bar = self._ui.get_object("header-bar")
         self.set_titlebar(self.header_bar)
-        self.show_all()
+
+        self.accept_button = self._ui.get_object("accept-project-button")
