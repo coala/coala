@@ -118,8 +118,8 @@ class ConsoleInteractorTest(unittest.TestCase):
         self.assertEqual(str(section), " {param : 3}")
         self.assertEqual(name, "TestAction")
 
-        # Check for asking the user for the paremeter just int the first time
-        # Use OpenEditorAction thats need parameter (editor command)
+        # Check if the user is asked for the parameter only the first time.
+        # Use OpenEditorAction that needs this parameter (editor command).
         input_generator = InputGenerator([1, "test_editor", 1])
         # Choose open editor action
         builtins.__dict__["input"] = input_generator.generate_input
