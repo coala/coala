@@ -18,7 +18,7 @@ from coalib.misc.i18n import _
 def get_cpu_count():
     try:
         return multiprocessing.cpu_count()
-        # cpu_count is not implemented for some CPU architectures/OSes
+    # cpu_count is not implemented for some CPU architectures/OSes
     except NotImplementedError:  # pragma: no cover
         return 2
 
