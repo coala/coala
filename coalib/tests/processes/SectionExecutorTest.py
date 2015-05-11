@@ -109,7 +109,7 @@ class SectionExecutorTest(unittest.TestCase):
                                    self.interactor)
 
     def test_run(self):
-        self.assertTrue(self.uut.run())
+        self.assertTrue(self.uut.run()[0])
 
         local_results  = self.result_queue.get(timeout=0)
         global_results = self.result_queue.get(timeout=0)
@@ -139,7 +139,7 @@ class SectionExecutorTest(unittest.TestCase):
     def test_empty_run(self):
         self.uut.global_bear_list = []
         self.uut.local_bear_list = []
-        self.assertFalse(self.uut.run())
+        self.assertFalse(self.uut.run()[0])
 
 
 if __name__ == '__main__':
