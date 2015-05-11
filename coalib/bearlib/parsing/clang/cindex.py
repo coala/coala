@@ -1671,10 +1671,7 @@ class CompletionChunk:
         res = conf.lib.clang_getCompletionChunkCompletionString(self.cs,
                                                                 self.key)
 
-        if (res):
-          return CompletionString(res)
-        else:
-          None
+        return CompletionString(res) if res else None
 
     def isKindOptional(self):
       return self.kind == completionChunkKindMap[0]
@@ -1726,7 +1723,7 @@ class CompletionString(ClangObject):
             return "<Availability: %s>" % self
 
     def __len__(self):
-        self.num_chunks
+        return self.num_chunks
 
     @CachedProperty
     def num_chunks(self):
