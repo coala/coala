@@ -1,7 +1,6 @@
 import multiprocessing
 import queue
 import threading
-import sys
 
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
