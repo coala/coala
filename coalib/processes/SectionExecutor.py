@@ -82,7 +82,10 @@ class SectionExecutor:
         """
         Executes the section with the given bears.
 
-        :return: True if results were yielded, False otherwise.
+        :return: Tuple containing a bool (True if results were yielded, False
+                 otherwise), a Manager.dict containing all local results
+                 (filenames are key) and a Manager.dict containing all global
+                 bear results (bear names are key).
         """
         self.interactor.begin_section(self.section)
 
@@ -98,11 +101,13 @@ class SectionExecutor:
             runner.start()
 
         try:
-            return self._process_queues(processes,
-                                        arg_dict["control_queue"],
-                                        arg_dict["local_result_dict"],
-                                        arg_dict["global_result_dict"],
-                                        arg_dict["file_dict"])
+            return (self._process_queues(processes,
+                                         arg_dict["control_queue"],
+                                         arg_dict["local_result_dict"],
+                                         arg_dict["global_result_dict"],
+                                         arg_dict["file_dict"]),
+                    arg_dict["local_result_dict"],
+                    arg_dict["global_result_dict"])
         finally:
             logger_thread.running = False
 
