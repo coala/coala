@@ -17,4 +17,8 @@ class coalaProject(Gtk.ApplicationWindow):
         self.header_bar = self._ui.get_object("header-bar")
         self.set_titlebar(self.header_bar)
 
+        self.set_default_size(800, 600)
+
+        self.add(self._ui.get_object("project-box"))
+
         self.accept_button = self._ui.get_object("accept-project-button")

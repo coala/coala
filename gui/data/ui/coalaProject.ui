@@ -27,4 +27,15 @@
       </packing>
     </child>
   </object>
+  <object class="GtkBox" id="project-box">
+    <property name="vexpand">true</property>
+    <property name="orientation">vertical</property>
+    <property name="visible">true</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="expand">true</property>
+        <property name="visible">true</property>
+      </object>
+    </child>
+  </object>
 </interface>
