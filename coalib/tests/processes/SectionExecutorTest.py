@@ -111,14 +111,14 @@ class SectionExecutorTest(unittest.TestCase):
     def test_run(self):
         self.assertTrue(self.uut.run()[0])
 
-        local_results  = self.result_queue.get(timeout=0)
+        local_results = self.result_queue.get(timeout=0)
         global_results = self.result_queue.get(timeout=0)
         self.assertTrue(self.result_queue.empty())
 
         self.assertEqual(len(local_results), 1)
         self.assertEqual(len(global_results), 1)
 
-        local_result  = local_results[0]
+        local_result = local_results[0]
         global_result = global_results[0]
 
         self.assertEqual(str(local_result),
