@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     if log_printer is not None and isinstance(log_printer, ClosableObject):
         log_printer.close()
-    if interactor is not None and isinstance(log_printer, ClosableObject):
+    if interactor is not None and isinstance(interactor, ClosableObject):
         interactor.close()
 
     exit(exitcode)
