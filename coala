@@ -44,7 +44,7 @@ if __name__ == "__main__":
                 global_bear_list=global_bears[section_name],
                 local_bear_list=local_bears[section_name],
                 interactor=interactor,
-                log_printer=log_printer).run()
+                log_printer=log_printer).run()[0]
             did_nothing = False
 
         if did_nothing:

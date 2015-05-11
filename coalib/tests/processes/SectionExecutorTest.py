@@ -109,16 +109,22 @@ class SectionExecutorTest(unittest.TestCase):
                                    self.interactor)
 
     def test_run(self):
-        self.assertTrue(self.uut.run())
+        results = self.uut.run()
+        self.assertTrue(results[0])
 
-        local_results  = self.result_queue.get(timeout=0)
+        local_results = self.result_queue.get(timeout=0)
         global_results = self.result_queue.get(timeout=0)
         self.assertTrue(self.result_queue.empty())
 
         self.assertEqual(len(local_results), 1)
         self.assertEqual(len(global_results), 1)
+        # Result dict also returned
+        # One file
+        self.assertEqual(len(results[1]), 1)
+        # One global bear
+        self.assertEqual(len(results[2]), 1)
 
-        local_result  = local_results[0]
+        local_result = local_results[0]
         global_result = global_results[0]
 
         self.assertEqual(str(local_result),
@@ -139,7 +145,13 @@ class SectionExecutorTest(unittest.TestCase):
     def test_empty_run(self):
         self.uut.global_bear_list = []
         self.uut.local_bear_list = []
-        self.assertFalse(self.uut.run())
+        results = self.uut.run()
+        # No results
+        self.assertFalse(results[0])
+        # One file
+        self.assertEqual(len(results[1]), 1)
+        # No global bear
+        self.assertEqual(len(results[2]), 0)
 
 
 if __name__ == '__main__':
