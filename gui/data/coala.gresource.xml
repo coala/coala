@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-    <gresource prefix="/coala">
-        <file alias="coalaWindow.ui">ui/coalaWindow.ui</file>
-        <file alias="coalaProject.ui">ui/coalaProject.ui</file>
-    </gresource>
+  <gresource prefix="/coala">
+    <file alias="coalaWindow.ui">ui/coalaWindow.ui</file>
+    <file alias="coalaProject.ui">ui/coalaProject.ui</file>
+    <file alias="coalaRecentProjectRow.ui">ui/coalaRecentProjectRow.ui</file>
+  </gresource>
 </gresources>

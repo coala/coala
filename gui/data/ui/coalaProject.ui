@@ -35,6 +35,12 @@
       <object class="GtkScrolledWindow">
         <property name="expand">true</property>
         <property name="visible">true</property>
+        <child>
+          <object class="GtkListBox" id="listbox">
+            <property name="visible">true</property>
+            <property name="selection-mode">none</property>
+          </object>
+        </child>
       </object>
     </child>
   </object>
