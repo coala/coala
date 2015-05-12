@@ -508,7 +508,7 @@ class CursorKind(object):
     @staticmethod
     def from_id(id):
         if id >= len(CursorKind._kinds) or CursorKind._kinds[id] is None:
-            raise ValueError('Unknown cursor kind')
+            raise ValueError('Unknown cursor kind "{id}"'.format(id=id))
         return CursorKind._kinds[id]
 
     @staticmethod
@@ -1096,8 +1096,16 @@ class Cursor(Structure):
 
     @property
     def kind(self):
-        """Return the kind of this cursor."""
-        return CursorKind.from_id(self._kind_id)
+        """
+        Retrieves the kind of this cursor. Note that some kinds are not mapped
+        to the python bindings and thus are reported unknown.
+
+        :return: A CursorKind object or None if unknown.
+        """
+        try:
+            return CursorKind.from_id(self._kind_id)
+        except ValueError:
+            return None
 
     @property
     def spelling(self):
@@ -1671,10 +1679,7 @@ class CompletionChunk:
         res = conf.lib.clang_getCompletionChunkCompletionString(self.cs,
                                                                 self.key)
 
-        if (res):
-          return CompletionString(res)
-        else:
-          None
+        return CompletionString(res) if res else None
 
     def isKindOptional(self):
       return self.kind == completionChunkKindMap[0]
@@ -1726,7 +1731,7 @@ class CompletionString(ClangObject):
             return "<Availability: %s>" % self
 
     def __len__(self):
-        self.num_chunks
+        return self.num_chunks
 
     @CachedProperty
     def num_chunks(self):

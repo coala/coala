@@ -13,7 +13,11 @@ class StringConverter:
     def __init__(self,
                  value,
                  strip_whitespaces=True,
-                 list_delimiters=[",", ";"]):
+                 list_delimiters=None,
+                 dict_delimiter=":"):
+        if list_delimiters is None:
+            list_delimiters = [",", ";"]
+
         if (
                 not isinstance(list_delimiters, list) and
                 not isinstance(list_delimiters, str)):
@@ -21,30 +25,32 @@ class StringConverter:
         if not isinstance(strip_whitespaces, bool):
             raise TypeError("strip_whitespaces has to be a bool parameter")
 
-        self.__strip_whitespaces = strip_whitespaces
         self.__list_delimiters = list_delimiters
+        self.__strip_whitespaces = strip_whitespaces
+        self.__dict_delimiter = dict_delimiter
 
+        self.__escaped_list = None
+        self.__unescaped_list = None
+        self.__dict = None
         self.value = value
-        self.__list = None
-        self.__recreate_list = True
 
     def __str__(self):
-        return self.value
+        return unescape(self.value)
 
     def __bool__(self):
-        if self.value.lower() in StringConstants.TRUE_STRINGS:
+        if str(self).lower() in StringConstants.TRUE_STRINGS:
             return True
-        if self.value.lower() in StringConstants.FALSE_STRINGS:
+        if str(self).lower() in StringConstants.FALSE_STRINGS:
             return False
         raise ValueError
 
     def __len__(self):
-        return len(self.value)
+        return len(str(self))
 
     def __int__(self):
-        return int(self.value)
+        return int(str(self))
 
-    def __iter__(self, remove_backslashes=True):
+    def __iter__(self, unescape=True):
         """
         Converts the value to a list using the delimiters given at construction
         time.
@@ -53,35 +59,64 @@ class StringConverter:
         will be allowed in values. If you need the escapes you should not
         use this routine.
 
-        :return: A list with unescaped values.
+        :param unescape: Whether or not to remove the backslashes after
+                         conversion.
+        :return:         An iterator over all values.
         """
-        self.__prepare_list(remove_backslashes)
+        if unescape:
+            return iter(self.__unescaped_list)
+        else:
+            return iter(self.__escaped_list)
 
-        return iter(self.__list)
+    def __getitem__(self, item):
+        return self.__dict.__getitem__(item)
 
-    def __prepare_list(self, remove_backslashes):
-        if not self.__recreate_list:
-            return
+    def keys(self):
+        return self.__dict.keys()
 
+    def __get_raw_list(self):
         pattern = ("(?:" +
                    "|".join(re.escape(v) for v in self.__list_delimiters) +
                    ")")
 
-        self.__list = list(unescaped_split(
-            pattern,
-            self.value,
-            use_regex=True))
+        return list(unescaped_split(pattern,
+                                    self.value,
+                                    use_regex=True))
 
-        if remove_backslashes:
-            self.__list = [unescape(elem) for elem in self.__list]
+    def __prepare_list(self):
+        self.__escaped_list = self.__get_raw_list()
+        self.__unescaped_list = [unescape(elem)
+                                 for elem in self.__escaped_list]
         if self.__strip_whitespaces:
-            self.__list = [elem.strip() for elem in self.__list]
+            self.__unescaped_list = [elem.strip()
+                                     for elem in self.__unescaped_list]
+            self.__escaped_list = [elem.strip()
+                                   for elem in self.__escaped_list]
 
         # Need to do after stripping, cant use builtin functionality of split
-        while "" in self.__list:
-            self.__list.remove("")
+        while "" in self.__unescaped_list:
+            self.__unescaped_list.remove("")
+        while "" in self.__escaped_list:
+            self.__escaped_list.remove("")
 
-        self.__recreate_list = False
+    def __prepare_dict(self):
+        self.__dict = {}
+        for elem in self.__get_raw_list():
+            key_val = [unescape(item)
+                       for item in unescaped_split(self.__dict_delimiter,
+                                                   elem,
+                                                   max_split=1)]
+
+            if self.__strip_whitespaces:
+                key_val = [item.strip() for item in key_val]
+
+            if not any(item != "" for item in key_val):
+                continue
+
+            if len(key_val) < 2:
+                self.__dict[key_val[0]] = ""
+            else:
+                self.__dict[key_val[0]] = key_val[1]
 
     @property
     def value(self):
@@ -93,7 +128,8 @@ class StringConverter:
         if self.__strip_whitespaces:
             self.__value = self.__value.strip()
 
-        self.__recreate_list = True
+        self.__prepare_list()
+        self.__prepare_dict()
 
     def __eq__(self, other):
         return isinstance(other, StringConverter) and self.value == other.value

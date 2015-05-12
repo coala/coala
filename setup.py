@@ -14,7 +14,7 @@ if __name__ == "__main__":
           maintainer='Lasse Schuirmann, Fabian Neuschmidt',
           maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de',
           url='http://coala.schuirmann.net/',
-          scripts=['coala'],
+          scripts=['coala.py'],
           packages=['bears',
                     'bears.codeclone_detection',
                     'bears.misc',
