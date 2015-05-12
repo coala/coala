@@ -73,7 +73,7 @@ class SectionManagerTest(unittest.TestCase):
     def test_merge(self):
         uut = SectionManager()
         tmp = StringConstants.system_coafile
-        StringConstants.system_coafile=os.path.abspath(os.path.join(
+        StringConstants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(inspect.getfile(SectionManagerTest)),
             "section_manager_test_files",
             "default_coafile"))

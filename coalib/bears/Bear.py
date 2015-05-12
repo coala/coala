@@ -49,12 +49,6 @@ class Bear(LogPrinter):
         self.message_queue = message_queue
         self.TIMEOUT = TIMEOUT
 
-    def set_up(self):
-        pass
-
-    def tear_down(self):
-        pass
-
     def _print(self, output, **kwargs):
         self.debug(output)
 
@@ -75,16 +69,8 @@ class Bear(LogPrinter):
     def execute(self, *args, **kwargs):
         name = self.__class__.__name__
         try:
-            self.debug(_("Setting up bear {}...").format(name))
-            self.set_up()
-
             self.debug(_("Running bear {}...").format(name))
-            retval = self.run_bear_from_section(args, kwargs)
-
-            self.debug(_("Tearing down bear {}...").format(name))
-            self.tear_down()
-
-            return retval
+            return self.run_bear_from_section(args, kwargs)
         except:
             self.warn(
                 _("Bear {} failed to run. Take a look at debug messages for "

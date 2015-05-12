@@ -1,0 +1,11 @@
+[DEFAULT]
+extensions = .py
+
+comment delimiter = #
+multiline comment delimiters =
+string delimiters = ": ", ': '
+multiline string delimiters = """: """, ''': '''
+
+[PYTHON3]
+
+[PYTHON2]

@@ -12,7 +12,7 @@ class SpaceConsistencyBear(LocalBear):
             use_spaces: bool,
             allow_trailing_whitespace: bool=False,
             tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
-        """
+        '''
         Checks the space consistency for each line.
 
         :param use_spaces:                True if spaces are to be used
@@ -21,7 +21,7 @@ class SpaceConsistencyBear(LocalBear):
                                           or not.
         :param tab_width:                 Number of spaces representing one
                                           tab.
-        """
+        '''
         results = []
 
         spacing_helper = SpacingHelper(tab_width)

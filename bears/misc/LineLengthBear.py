@@ -10,12 +10,12 @@ class LineLengthBear(LocalBear):
             file,
             max_line_length: int,
             tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
-        """
+        '''
         Yields results for all lines longer than the given maximum line length.
 
         :param max_line_length: Maximum number of characters for a line.
         :param tab_width: Number of spaces to show for one tab.
-        """
+        '''
         results = []
         spacing_helper = SpacingHelper.from_section(section=self.section)
 

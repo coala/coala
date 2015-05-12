@@ -44,7 +44,7 @@ if __name__ == "__main__":
                 global_bear_list=global_bears[section_name],
                 local_bear_list=local_bears[section_name],
                 interactor=interactor,
-                log_printer=log_printer).run()
+                log_printer=log_printer).run()[0]
             did_nothing = False
 
         if did_nothing:
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     if log_printer is not None and isinstance(log_printer, ClosableObject):
         log_printer.close()
-    if interactor is not None and isinstance(log_printer, ClosableObject):
+    if interactor is not None and isinstance(interactor, ClosableObject):
         interactor.close()
 
     exit(exitcode)
