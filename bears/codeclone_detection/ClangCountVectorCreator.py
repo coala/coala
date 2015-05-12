@@ -75,6 +75,8 @@ class ClangCountVectorCreator:
         :param cursor: Clang cursor to iterate over.
         """
         assert isinstance(cursor, Cursor)
+        self.stack.append((cursor, child_num))
+
         identifier = self.get_identifier_name(cursor)
         if self.is_variable_declaration(cursor):
             self.count_vectors[identifier] = (
@@ -84,9 +86,9 @@ class ClangCountVectorCreator:
             self.count_vectors[identifier].count_reference(cursor,
                                                            self.stack)
 
-        self.stack.append((cursor, child_num))
         for i, child in enumerate(cursor.get_children()):
             self._get_vector_for_function(child, i)
+
         self.stack.pop()
 
     def _get_vectors_for_cursor(self, cursor, filename):
