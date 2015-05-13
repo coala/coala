@@ -86,12 +86,7 @@ class Setting(StringConverter):
 
         :return: A list of absolute paths.
         """
-        listrep = list(self)
-
-        for i in range(len(listrep)):
-            listrep[i] = Setting.__path__(listrep[i], self.origin)
-
-        return listrep
+        return [Setting.__path__(elem, self.origin) for elem in self]
 
     @property
     def key(self):
