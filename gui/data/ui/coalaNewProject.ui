@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+      <object class="GtkBox" id="page_new_project">
+        <property name="orientation">horizontal</property>
+        <property name="expand">true</property>
+        <property name="spacing">12</property>
+        <property name="visible">true</property>
+        <child type="center">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
+            <property name="halign">center</property>
+            <property name="hexpand">false</property>
+            <property name="valign">center</property>
+            <property name="vexpand">false</property>
+            <property name="visible">true</property>
+            <child>
+              <object class="GtkEntry" id="name_entry">
+                <property name="hexpand">true</property>
+                <property name="width-chars">35</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFileChooserButton" id="location_button">
+                <property name="action">select-folder</property>
+                <property name="width-chars">35</property>
+                <property name="hexpand">true</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="version_button">
+                <property name="hexpand">true</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="language_button">
+                <property name="hexpand">true</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="pattern_button">
+                <property name="hexpand">true</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
+            <property name="hexpand">true</property>
+            <property name="vexpand">true</property>
+            <property name="valign">center</property>
+            <property name="halign">end</property>
+            <property name="visible">true</property>
+            <child>
+              <object class="GtkLabel" id="name_label">
+                <property name="label" translatable="yes">Name</property>
+                <property name="visible">true</property>
+                <property name="xalign">1.0</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="location_label">
+                <property name="label" translatable="yes">Location</property>
+                <property name="visible">true</property>
+                <property name="xalign">1.0</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="version_label">
+                <property name="label" translatable="yes">GNOME Version</property>
+                <property name="visible">true</property>
+                <property name="xalign">1.0</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="language_label">
+                <property name="label" translatable="yes">Language</property>
+                <property name="visible">true</property>
+                <property name="xalign">1.0</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="pattern_label">
+                <property name="label" translatable="yes">Pattern</property>
+                <property name="visible">true</property>
+                <property name="xalign">1.0</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">start</property>
+          </packing>
+        </child>
+      </object>
+      <object class="GtkFileChooserWidget" id="file_chooser">
+        <property name="action">open</property>
+        <property name="local-only">false</property>
+        <property name="visible">true</property>
+        <property name="width-request">800</property>
+        <property name="height-request">500</property>
+      </object>
+</interface>

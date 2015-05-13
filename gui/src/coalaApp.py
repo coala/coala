@@ -21,11 +21,15 @@ class coalaApp(Gtk.Application):
 
     def _setup_project_window(self, app):
         self.project_window = coalaProject(app)
-        self.project_window.accept_button.connect("clicked",
-                                                  self._setup_and_show_workspace, app)
+        self.project_window.accept_button.connect(
+            "clicked", self._setup_and_show_workspace, app)
 
     def _setup_and_show_workspace(self, button, app):
         self.workspace_window = coalaWindow(app)
+        self.workspace_window.show_all()
+
+    def setup_and_show_workspace(self, app, src):
+        self.workspace_window = coalaWindow(app, src)
         self.workspace_window.show_all()
 
     def activateCb(self, app):

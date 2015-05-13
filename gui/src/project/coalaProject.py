@@ -1,12 +1,16 @@
+import time
+from gui.src.support.projectMetadata import ProjectMetadata
 from gi.repository import Gtk
 
 
 class coalaProject(Gtk.ApplicationWindow):
-
     def __init__(self, app):
         Gtk.ApplicationWindow.__init__(self,
                                        application=app,
                                        title="project")
+        self.application = self.get_application()
+
+        self.projectMetadata = ProjectMetadata()
 
         self._ui = Gtk.Builder()
         self._ui.add_from_resource("/coala/coalaProject.ui")
@@ -24,8 +28,14 @@ class coalaProject(Gtk.ApplicationWindow):
         self.add(self._ui.get_object("project-box"))
 
         self.list_box = self._ui.get_object("listbox")
+        projects = self.projectMetadata.get_projects_dict()
+        if projects is not None:
+            for key in projects:
+                self.create_project_row(key, projects[key][0], projects[key][1])
 
         self.accept_button = self._ui.get_object("accept-project-button")
+        self.new_button = self._ui.get_object("new-button")
+        self.new_button.connect("clicked", self.on_new_button_clicked)
 
     def create_project_row(self, name, date, loc):
         list_box_template = Gtk.Builder()
@@ -40,3 +50,28 @@ class coalaProject(Gtk.ApplicationWindow):
         list_box_row.add(box)
 
         self.list_box.add(list_box_row)
+
+    def on_new_button_clicked(self, button):
+        dialog = Gtk.FileChooserDialog("Please choose a project",
+                                       self,
+                                       Gtk.FileChooserAction.SELECT_FOLDER,
+                                       ("Cancel",
+                                        Gtk.ResponseType.CANCEL,
+                                        "Select",
+                                        Gtk.ResponseType.OK))
+        dialog.set_default_size(800, 400)
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            print("Select clicked")
+            print("Folder selected: " + dialog.get_filename())
+            self.projectMetadata.add_project_to_dict(str(dialog.get_filename()),
+                                                     str(time.time()),
+                                                     str(dialog.get_filename()))
+            self.hide()
+            self.application.setup_and_show_workspace(self.application,
+                                                      dialog.get_filename())
+        elif response == Gtk.ResponseType.CANCEL:
+            print("Cancel clicked")
+
+        dialog.destroy()
