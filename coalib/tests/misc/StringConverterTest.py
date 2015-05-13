@@ -7,7 +7,7 @@ import unittest
 
 class ProcessTest(unittest.TestCase):
     def setUp(self):
-        self.uut = StringConverter("\n 1 \n ")
+        self.uut = StringConverter("\n \\1 \n ")
 
     def test_construction(self):
         self.assertRaises(TypeError,
@@ -55,6 +55,7 @@ class ProcessTest(unittest.TestCase):
         self.uut = StringConverter("testval", list_delimiters=[",", "¸"])
         self.uut.value = "a\\n,bug¸g"
         self.assertEqual(list(self.uut), ["an", "bug", "g"])
+        self.assertEqual(list(self.uut.__iter__(False)), ["a\\n", "bug", "g"])
 
         self.assertTrue("bug" in self.uut)
         self.assertFalse("but" in self.uut)
@@ -67,6 +68,27 @@ class ProcessTest(unittest.TestCase):
                                    list_delimiters=[","],
                                    strip_whitespaces=False)
         self.assertEqual(list(self.uut), ["a", " test", " \n"])
+
+    def test_dict_conversion(self):
+        self.uut = StringConverter("test")
+        self.assertEqual(dict(self.uut), {"test": ""})
+        self.uut = StringConverter("test, t")
+        self.assertEqual(dict(self.uut), {"test": "", "t": ""})
+        self.uut = StringConverter("test, t: v")
+        self.assertEqual(dict(self.uut), {"test": "", "t": "v"})
+
+        # Check escaping
+        self.uut = StringConverter("test, t\\: v")
+        self.assertEqual(dict(self.uut), {"test": "", "t: v": ""})
+        self.uut = StringConverter("test, t\\: v: t")
+        self.assertEqual(dict(self.uut), {"test": "", "t: v": "t"})
+        self.uut = StringConverter("test\\, t\\: v: t")
+        self.assertEqual(dict(self.uut), {"test, t: v": "t"})
+        self.uut = StringConverter("test\\, t\\: v: t\\,")
+        self.assertEqual(dict(self.uut), {"test, t: v": "t,"})
+
+        # Check that lists ignore colons
+        self.assertEqual(list(self.uut), ["test, t: v: t,"])
 
     def test_bool_conversion(self):
         self.assertEqual(bool(self.uut), True)

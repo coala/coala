@@ -34,11 +34,12 @@ default_arg_parser.add_argument('-l',
                                 nargs=1,
                                 metavar='ENUM',
                                 help=LOG_TYPE_HELP)
-LOG_LEVEL_HELP = _("Enum('ERR','WARN','DEBUG') to set level of log output")
+LOG_LEVEL_HELP = _("Enum('ERROR','WARNING','DEBUG') to set level of log "
+                   "output")
 default_arg_parser.add_argument('-L',
                                 '--log-level',
                                 nargs=1,
-                                choices=['ERR', 'WARN', 'DEBUG'],
+                                choices=['ERROR', 'WARNING', 'DEBUG'],
                                 metavar='ENUM',
                                 help=LOG_LEVEL_HELP)
 OUTPUT_HELP = _('Type of output (console or none)')
