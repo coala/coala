@@ -11,6 +11,17 @@ def path_list(obj, *args, **kwargs):
     return obj.__path_list__(*args, **kwargs)
 
 
+def typed_list(typ):
+    """
+    Creates a function that converts a setting into a list of elements each
+    having the given type.
+
+    :param typ: The type each element should have.
+    :return:    A conversion function.
+    """
+    return lambda setting: [typ(elem) for elem in setting]
+
+
 class Setting(StringConverter):
     """
     A Setting consists mainly of a key and a value. It mainly offers many
