@@ -4,7 +4,7 @@ import unittest
 
 sys.path.insert(0, ".")
 
-from coalib.settings.Setting import Setting, path, path_list
+from coalib.settings.Setting import Setting, path, path_list, typed_list
 
 
 class SettingTest(unittest.TestCase):
@@ -34,6 +34,15 @@ class SettingTest(unittest.TestCase):
                            origin="test" + os.path.sep + "somefile")
         self.assertEqual(path_list(self.uut),
                          [os.path.abspath(os.path.join("test", ".")), abspath])
+
+    def test_typed_list(self):
+        self.uut = Setting("key", "1, 2, 3")
+        self.assertEqual(typed_list(int)(self.uut),
+                         [1, 2, 3])
+
+        with self.assertRaises(ValueError):
+            self.uut = Setting("key", "1, a, 3")
+            typed_list(int)(self.uut)
 
     def test_inherited_conversions(self):
         self.uut = Setting("key", " 22\n", ".", True)

@@ -6,11 +6,28 @@ from coalib.misc.StringConverter import StringConverter
 def path(obj, *args, **kwargs):
     return obj.__path__(*args, **kwargs)
 
+
 def path_list(obj, *args, **kwargs):
     return obj.__path_list__(*args, **kwargs)
 
 
+def typed_list(typ):
+    """
+    Creates a function that converts a setting into a list of elements each
+    having the given type.
+
+    :param typ: The type each element should have.
+    :return:    A conversion function.
+    """
+    return lambda setting: [typ(elem) for elem in setting]
+
+
 class Setting(StringConverter):
+    """
+    A Setting consists mainly of a key and a value. It mainly offers many
+    conversions into common data types.
+    """
+
     def __init__(self,
                  key,
                  value,
@@ -53,10 +70,13 @@ class Setting(StringConverter):
         Note: You can also use this function on strings, in that case the
         origin argument will be taken in every case.
 
-        :param origin: the origin file to take if no origin is specified for
-                       the given setting. If you want to provide a directory,
-                       make sure it ends with a directory seperator.
-        :return:       An absolute path.
+        :param origin:      the origin file to take if no origin is specified
+                            for the given setting. If you want to provide a
+                            directory, make sure it ends with a directory
+                            seperator.
+        :return:            An absolute path.
+        :raises ValueError: If no origin is specified in the setting nor the
+                            given origin parameter.
         """
         strrep = str(self).strip()
         if os.path.isabs(strrep):
@@ -71,12 +91,13 @@ class Setting(StringConverter):
         return os.path.abspath(os.path.join(os.path.dirname(origin), strrep))
 
     def __path_list__(self):
-        listrep = list(self)
+        """
+        Splits the value into a list and creates a path out of each item taking
+        the origin of the setting into account.
 
-        for i in range(len(listrep)):
-            listrep[i] = Setting.__path__(listrep[i], self.origin)
-
-        return listrep
+        :return: A list of absolute paths.
+        """
+        return [Setting.__path__(elem, self.origin) for elem in self]
 
     @property
     def key(self):

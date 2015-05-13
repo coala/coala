@@ -318,11 +318,7 @@ class BearRunnerUnitTest(unittest.TestCase):
         self.uut.run()
 
         expected_messages = [LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
                              LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.ERROR,
@@ -386,17 +382,12 @@ d
         self.uut.run()
 
         expected_messages = [LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING,
                              LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING]

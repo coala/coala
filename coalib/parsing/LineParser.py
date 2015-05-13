@@ -127,6 +127,6 @@ class LineParser:
         keys = list(StringConverter(
             key_part,
             list_delimiters=self.key_delimiters).__iter__(
-            unescape=False))
+            remove_backslashes=False))
 
         return keys, value

@@ -109,16 +109,16 @@ class SectionExecutorTest(unittest.TestCase):
                                    self.interactor)
 
     def test_run(self):
-        self.assertTrue(self.uut.run())
+        self.assertTrue(self.uut.run()[0])
 
-        local_results  = self.result_queue.get(timeout=0)
+        local_results = self.result_queue.get(timeout=0)
         global_results = self.result_queue.get(timeout=0)
         self.assertTrue(self.result_queue.empty())
 
         self.assertEqual(len(local_results), 1)
         self.assertEqual(len(global_results), 1)
 
-        local_result  = local_results[0]
+        local_result = local_results[0]
         global_result = global_results[0]
 
         self.assertEqual(str(local_result),
@@ -132,14 +132,14 @@ class SectionExecutorTest(unittest.TestCase):
         # Checking the content of those messages would mean checking hardcoded
         # strings. I recall some other test already does this so we
         # shouldn't make maintenance so hard for us here.
-        # We'll get 3 log messages per bear (set up, run, tear down) plus one
+        # We'll get 1 log message per bear (set up, run, tear down) plus one
         # for the unreadable file.
-        self.assertEqual(self.log_queue.qsize(), 7)
+        self.assertEqual(self.log_queue.qsize(), 3)
 
     def test_empty_run(self):
         self.uut.global_bear_list = []
         self.uut.local_bear_list = []
-        self.assertFalse(self.uut.run())
+        self.assertFalse(self.uut.run()[0])
 
 
 if __name__ == '__main__':
