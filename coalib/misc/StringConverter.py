@@ -50,7 +50,7 @@ class StringConverter:
     def __int__(self):
         return int(str(self))
 
-    def __iter__(self, unescape=True):
+    def __iter__(self, remove_backslashes=True):
         """
         Converts the value to a list using the delimiters given at construction
         time.
@@ -59,11 +59,11 @@ class StringConverter:
         will be allowed in values. If you need the escapes you should not
         use this routine.
 
-        :param unescape: Whether or not to remove the backslashes after
-                         conversion.
-        :return:         An iterator over all values.
+        :param remove_backslashes: Whether or not to remove the backslashes
+                                   after conversion.
+        :return:                   An iterator over all values.
         """
-        if unescape:
+        if remove_backslashes:
             return iter(self.__unescaped_list)
         else:
             return iter(self.__escaped_list)
