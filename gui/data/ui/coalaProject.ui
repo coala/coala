@@ -4,7 +4,7 @@
     <property name="visible">true</property>
     <property name="show_close_button">true</property>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="new-button">
         <property name="label">New</property>
         <property name="visible">true</property>
       </object>

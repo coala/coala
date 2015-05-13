@@ -3,7 +3,7 @@ from gi.repository import Gtk
 
 class coalaWindow(Gtk.ApplicationWindow):
 
-    def __init__(self,app):
+    def __init__(self, app, src):
         Gtk.ApplicationWindow.__init__(self,
                                        application=app,
                                        title="coala")

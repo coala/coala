@@ -19,3 +19,4 @@ coverage.xml
 *.patch
 *.sublime-project
 *.sublime-workspace
+*.metadata
