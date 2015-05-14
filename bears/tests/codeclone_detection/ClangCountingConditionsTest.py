@@ -43,7 +43,7 @@ class ClangCountingConditionsTest(unittest.TestCase):
                              "Variable '{}' doesnt match.".format(variable))
 
     def test_conversion(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             ClangCountingConditions.counting_condition(5)
 
         self.assertEqual(
