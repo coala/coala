@@ -1,0 +1,13 @@
+machine:
+  python:
+    version: 3.4.2
+
+dependencies:
+  override:
+    - sudo apt-get install espeak libclang1-3.4
+  post:
+    - sudo ln -s /usr/lib/x86_64-linux-gnu/libclang.so.1 /usr/lib/x86_64-linux-gnu/libclang.so
+
+test:
+  override:
+    - python run_tests.py -s
