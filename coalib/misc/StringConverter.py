@@ -50,6 +50,9 @@ class StringConverter:
     def __int__(self):
         return int(str(self))
 
+    def __float__(self):
+        return float(str(self))
+
     def __iter__(self, remove_backslashes=True):
         """
         Converts the value to a list using the delimiters given at construction

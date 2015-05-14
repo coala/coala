@@ -4,7 +4,11 @@ import unittest
 
 sys.path.insert(0, ".")
 
-from coalib.settings.Setting import Setting, path, path_list, typed_list
+from coalib.settings.Setting import (Setting,
+                                     path,
+                                     path_list,
+                                     typed_list,
+                                     typed_dict)
 
 
 class SettingTest(unittest.TestCase):
@@ -43,6 +47,15 @@ class SettingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.uut = Setting("key", "1, a, 3")
             typed_list(int)(self.uut)
+
+    def test_typed_dict(self):
+        self.uut = Setting("key", "1, 2: t, 3")
+        self.assertEqual(typed_dict(int, str, None)(self.uut),
+                         {1: None, 2: "t", 3: None})
+
+        with self.assertRaises(ValueError):
+            self.uut = Setting("key", "1, a, 3")
+            typed_dict(int, str, "")(self.uut)
 
     def test_inherited_conversions(self):
         self.uut = Setting("key", " 22\n", ".", True)

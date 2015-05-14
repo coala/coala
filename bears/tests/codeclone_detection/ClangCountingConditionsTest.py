@@ -43,7 +43,7 @@ class ClangCountingConditionsTest(unittest.TestCase):
                              "Variable '{}' doesnt match.".format(variable))
 
     def test_conversion(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             ClangCountingConditions.counting_condition(5)
 
         self.assertEqual(
@@ -55,28 +55,28 @@ class ClangCountingConditionsTest(unittest.TestCase):
     def test_used(self):
         self.check_counting_condition(
             "used",
-            "used(int, int)",
+            (1, "used(int, int)"),
             {"a": [5],
              "b": [6]})
 
     def test_returned(self):
         self.check_counting_condition(
             "returned",
-            "returned(int, int)",
+            (13, "returned(int, int)"),
             {"a": [3],
              "b": [2]})
 
     def test_is_condition(self):
         self.check_counting_condition(
             "is_condition",
-            "loopy(int, int)",
+            (22, "loopy(int, int)"),
             {"a": [2],
              "b": [1]})
 
     def test_in_condition(self):
         self.check_counting_condition(
             "in_condition",
-            "in_condition(int, int)",
+            (47, "in_condition(int, int)"),
             {"a": [1],
              "b": [1],
              "c": [1],
@@ -85,21 +85,21 @@ class ClangCountingConditionsTest(unittest.TestCase):
     def test_is_assignee(self):
         self.check_counting_condition(
             "is_assignee",
-            "assignation(int, int)",
+            (62, "assignation(int, int)"),
             {"a": [3],
              "b": [9]})
 
     def test_is_assigner(self):
         self.check_counting_condition(
             "is_assigner",
-            "assignation(int, int)",
+            (62, "assignation(int, int)"),
             {"a": [6],
              "b": [9]})
 
     def test_loop_content(self):
         self.check_counting_condition(
             "loop_content",
-            "loopy(int, int)",
+            (22, "loopy(int, int)"),
             {"a": [0],
              "b": [6]})
 
