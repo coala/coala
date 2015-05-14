@@ -7,7 +7,6 @@ algorithm.)
 
 from coalib.bearlib.parsing.clang.cindex import CursorKind
 from coalib.misc.Enum import enum
-from coalib.settings.Setting import Setting
 
 
 def _stack_contains_kind(stack, kind):
@@ -213,11 +212,9 @@ def counting_condition(value):
     This is a custom converter to convert a setting from coala into counting
     condition function objects for this bear only.
 
-    :param value: A Setting
+    :param value: An object that can be converted to a list.
     :return:      A list of functions (counting conditions)
     """
-    assert isinstance(value, Setting)
-
     str_list = list(value)
     result_list = []
     for elem in str_list:
