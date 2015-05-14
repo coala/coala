@@ -1,13 +1,5 @@
 language: python
 
-notifications:
-  recipients:
-    - lasse@schuirmann.net
-    - coding@neuschmidt.de
-  email:
-    on_failure: always
-    on_success: change
-
 python:
   - "3.4"
   - "3.3"
