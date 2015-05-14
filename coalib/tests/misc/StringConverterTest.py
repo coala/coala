@@ -30,6 +30,13 @@ class ProcessTest(unittest.TestCase):
         self.uut = StringConverter(" not an int ")
         self.assertRaises(ValueError, int, self.uut)
 
+    def test_float_conversion(self):
+        self.assertEqual(float(self.uut), 1)
+        self.uut.value = "0.5 "
+        self.assertEqual(float(self.uut), 0.5)
+        self.uut = StringConverter(" not a float ")
+        self.assertRaises(ValueError, float, self.uut)
+
     def test_len(self):
         self.assertEqual(len(self.uut), 1)
 
