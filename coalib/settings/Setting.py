@@ -22,6 +22,22 @@ def typed_list(typ):
     return lambda setting: [typ(StringConverter(elem)) for elem in setting]
 
 
+def typed_dict(key_type, value_type, default):
+    """
+    Creates a function that converts a setting into a dict with the given
+    types.
+
+    :param key_type:   The type conversion function for the keys.
+    :param value_type: The type conversion function for the values.
+    :param default:    The default value to use if no one is given by the user.
+    :return:           A conversion function.
+    """
+    return lambda setting: {
+        key_type(StringConverter(key)):
+        value_type(StringConverter(value)) if value != "" else default
+        for key, value in dict(setting).items()}
+
+
 class Setting(StringConverter):
     """
     A Setting consists mainly of a key and a value. It mainly offers many
