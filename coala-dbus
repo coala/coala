@@ -12,3 +12,21 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import dbus
+import dbus.mainloop.glib
+from gi.repository import GLib
+from coalib.output.dbus.DbusServer import DbusServer
+
+
+if __name__ == "__main__":
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+
+    session_bus = dbus.SessionBus()
+    # The BusName needs to be saved to a variable, if it is not saved - the
+    # Bus will be closed.
+    dbus_name = dbus.service.BusName("org.coala.v1", session_bus)
+    dbus_server = DbusServer(session_bus, '/org/coala/v1')
+
+    mainloop = GLib.MainLoop()
+    mainloop.run()
