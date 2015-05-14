@@ -52,8 +52,7 @@ Build status
 [![Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
 (Test and build)
 
-[![Codacy Code Quality](https://www.codacy
-.com/project/badge/f0ac979fa93f49509cba9086754a50d4)](https://www.codacy.com/app/lasse/coala)
+[![Codacy Code Quality](https://www.codacy.com/project/badge/f0ac979fa93f49509cba9086754a50d4)](https://www.codacy.com/app/lasse/coala)
 (Code quality 1)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
