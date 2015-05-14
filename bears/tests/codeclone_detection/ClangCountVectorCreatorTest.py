@@ -33,8 +33,8 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
 
     def test_empty_counting(self):
         expected_results = {
-            "test()": {},
-            "main(int, char *)": {
+            (6, "test()"): {},
+            (12, "main(int, char *)"): {
                 "i": [],
                 "asd": [],
                 "t": [],
@@ -59,8 +59,8 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
 
     def test_counting(self):
         expected_results = {
-            "test()": {},
-            "main(int, char *)": {
+            (6, "test()"): {},
+            (12, "main(int, char *)"): {
                 "i": [4, 1],
                 "asd": [1, 0],
                 "t": [4, 1],
