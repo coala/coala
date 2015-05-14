@@ -1,5 +1,5 @@
 if python --version | grep 3\.4 ; then
-  pip install coveralls codecov
+  pip install coveralls codecov munkres3
 fi
 
 sudo apt-get install espeak libclang1-3.4
