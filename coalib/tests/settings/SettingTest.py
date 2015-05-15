@@ -9,6 +9,7 @@ from coalib.settings.Setting import (Setting,
                                      path_list,
                                      typed_list,
                                      typed_dict)
+import re
 
 
 class SettingTest(unittest.TestCase):
@@ -22,7 +23,7 @@ class SettingTest(unittest.TestCase):
                          os.path.abspath(os.path.join(".", "22")))
 
         abspath = os.path.abspath(".")
-        self.uut = Setting("key", abspath)
+        self.uut = Setting("key", re.escape(abspath))
         self.assertEqual(path(self.uut), abspath)
 
         self.uut = Setting("key", " 22", "")

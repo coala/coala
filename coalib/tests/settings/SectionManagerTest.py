@@ -15,6 +15,7 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+import re
 
 
 class SectionManagerTest(unittest.TestCase):
@@ -83,14 +84,14 @@ class SectionManagerTest(unittest.TestCase):
             "section_manager_test_files",
             ".coafile"))
         # Check merging of default_coafile and .coafile
-        conf_sections = uut.run(arg_list=["-c", config])[0]
+        conf_sections = uut.run(arg_list=["-c", re.escape(config)])[0]
         self.assertEqual(str(conf_sections["test"]),
                          "test {value : 2}")
         self.assertEqual(str(conf_sections["test-2"]),
                          "test-2 {files : ., bears : LineCountBear}")
         # Check merging of default_coafile, .coafile and cli
         conf_sections = uut.run(arg_list=["-c",
-                                          config,
+                                          re.escape(config),
                                           "-S",
                                           "test.value=3",
                                           "test-2.bears=",
@@ -122,7 +123,9 @@ class SectionManagerTest(unittest.TestCase):
 
         # We need to use a bad filename or this will parse coalas .coafile
         SectionManager().run(
-            arg_list=['-S', "save=" + filename, "-c", "some_bad_filename"])
+            arg_list=['-S',
+                      "save=" + re.escape(filename),
+                      "-c=some_bad_filename"])
 
         with open(filename, "r") as f:
             lines = f.readlines()
@@ -130,7 +133,10 @@ class SectionManagerTest(unittest.TestCase):
                          lines)
 
         SectionManager().run(
-            arg_list=['-S', "save=true", "config=" + filename, "test.value=5"])
+            arg_list=['-S',
+                      "save=true",
+                      "config=" + re.escape(filename),
+                      "test.value=5"])
 
         with open(filename, "r") as f:
             lines = f.readlines()
@@ -185,7 +191,7 @@ class SectionManagerTest(unittest.TestCase):
 
         filename = tempfile.gettempdir() + os.path.sep + "log_test~"
         test_section = Section("default")
-        test_section.append(Setting(key="log_TYPE", value=filename))
+        test_section.append(Setting(key="log_TYPE", value=re.escape(filename)))
         uut.retrieve_logging_objects(test_section)
         self.assertIsInstance(uut.log_printer, FilePrinter)
         uut.log_printer.close()

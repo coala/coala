@@ -11,6 +11,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
+import re
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
@@ -94,7 +95,7 @@ class SectionExecutorTest(unittest.TestCase):
                                             "testcode.c")
 
         self.sections, self.local_bears, self.global_bears, targets \
-            = SectionManager().run(["--config", config_path])[0:4]
+            = SectionManager().run(["--config", re.escape(config_path)])[0:4]
         self.assertEqual(len(self.local_bears["default"]), 1)
         self.assertEqual(len(self.global_bears["default"]), 1)
         self.assertEqual(targets, [])
