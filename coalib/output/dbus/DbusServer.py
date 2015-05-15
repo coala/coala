@@ -20,6 +20,11 @@ class DbusServer(dbus.service.Object):
         self.apps = {}
         self.next_app_id = 0
 
+        bus.add_signal_receiver(self.on_name_lost,
+                                signal_name='NameOwnerChanged',
+                                dbus_interface='org.freedesktop.DBus',
+                                path='/org/freedesktop/DBus')
+
     @dbus.service.method(interface,
                          in_signature="s",
                          out_signature="o",
@@ -43,6 +48,17 @@ class DbusServer(dbus.service.Object):
 
         self.dispose_document(app, path)
 
+    def on_name_lost(self, name, oldowner, newowner):
+        if newowner != '':
+            return
+
+        try:
+            app = self.apps[oldowner]
+        except KeyError:
+            return
+
+        self.dispose_app(app)
+
     def make_app(self, appname):
         app = DbusApp(self.next_app_id, appname)
         self.apps[appname] = app
@@ -62,7 +78,8 @@ class DbusServer(dbus.service.Object):
         doc.path = path
         app.next_doc_id += 1
         app.docs[path] = doc
-        objpath = self._object_path + "/" + str(app.id) + "/documents/" + str(doc.id)
+        objpath = self._object_path + "/" + str(app.id) + \
+                  "/documents/" + str(doc.id)
 
         doc.add_to_connection(self._connection, objpath)
         return doc
