@@ -54,10 +54,9 @@ def main():
         exitcode = 130
     except EOFError:  # Ctrl+D
         print(_("Found EOF. Exiting gracefully."))
-    except SystemExit as e:
-        exitcode = e.code
-    except:
-        exception = sys.exc_info()[1]
+    except SystemExit as exception:
+        exitcode = exception.code
+    except Exception as exception:
         UNKNOWN_ERROR = _("An unknown error occurred.") + " " + \
                         StringConstants.THIS_IS_A_BUG
         DESCRIPTION = _("During execution of coala an exception was raised. "
