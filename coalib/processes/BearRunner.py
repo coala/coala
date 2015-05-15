@@ -62,7 +62,7 @@ class BearRunner(multiprocessing.Process):
         :param control_queue:      queue (write). If any result gets written to
                                    the result_dict a tuple containing a
                                    CONTROL_ELEMENT (to indicate what kind of
-                                   event happened) and either a filter name
+                                   event happened) and either a bear name
                                    (for global results) or a file name to
                                    indicate the result will be put to the
                                    queue. If this BearRunner finished all its
