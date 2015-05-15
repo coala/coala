@@ -10,6 +10,11 @@ class LanguageDefinition(SectionCreatable):
         """
         Creates a new LanguageDefinition object from file.
 
+        A Language Definition holds constants which may help parsing the
+        language. If you want to write a bear you'll probably want to use those
+        definitions to keep your bear independent of the semantics of each
+        language.
+
         :param language_family:               The language family. E.g. C for
                                               C++ and C and C# and so on.
         :param language:                      The actual language (e.g. C++).
