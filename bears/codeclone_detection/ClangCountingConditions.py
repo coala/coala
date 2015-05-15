@@ -198,13 +198,18 @@ def loop_content(cursor, stack):
             FOR_POSITION.BODY in positions_in_for)
 
 
+def is_param(cursor, stack):
+    return cursor.kind == CursorKind.PARM_DECL
+
+
 condition_dict = {"used": used,
                   "returned": returned,
                   "is_condition": is_condition,
                   "in_condition": in_condition,
                   "is_assignee": is_assignee,
                   "is_assigner": is_assigner,
-                  "loop_content": loop_content}
+                  "loop_content": loop_content,
+                  "is_param": is_param}
 
 
 def counting_condition(value):

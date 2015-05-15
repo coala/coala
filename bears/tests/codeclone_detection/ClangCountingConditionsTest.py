@@ -103,6 +103,15 @@ class ClangCountingConditionsTest(unittest.TestCase):
             {"a": [0],
              "b": [6]})
 
+    def test_is_param(self):
+        self.check_counting_condition(
+            "is_param",
+            (47, "in_condition(int, int)"),
+            {"a": [1],
+             "b": [1],
+             "c": [0],
+             "d": [0]})
+
 
 def skip_test():
     try:

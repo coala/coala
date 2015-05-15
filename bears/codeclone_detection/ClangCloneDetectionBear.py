@@ -48,7 +48,7 @@ def get_difference(args):  # pragma: no cover
 class ClangCloneDetectionBear(GlobalBear):
     def run(self,
             condition_list: counting_condition_dict,
-            max_clone_difference: float=0.2):
+            max_clone_difference: float=0.15):
         '''
         Checks the given code for similar functions that are probably
         redundant.
