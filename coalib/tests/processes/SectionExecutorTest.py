@@ -12,6 +12,7 @@ from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.Section import Section
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
@@ -31,6 +32,58 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
 
     def begin_section(self, name):
         self.set_up = True
+
+
+class ProcessQueuesTestSectionExecutor(SectionExecutor):
+    """
+    A SectionExecutor class designed to simply test _process_queues on its own.
+    """
+
+    def __init__(self,
+                 section,
+                 local_bear_list,
+                 global_bear_list,
+                 interactor,
+                 log_printer):
+        SectionExecutor.__init__(self,
+                                 section,
+                                 local_bear_list,
+                                 global_bear_list,
+                                 interactor,
+                                 log_printer)
+
+    def process_queues(self,
+                       control_queue,
+                       local_result_dict,
+                       global_result_dict):
+        # Pass control_queue as processes
+        self._process_queues(control_queue,
+                             control_queue,
+                             local_result_dict,
+                             global_result_dict,
+                             None)
+
+    @staticmethod
+    def _get_running_processes(processes):
+        # Two processes plus one logger process until no commands are left.
+        return 0 if processes.empty() else 3
+
+
+class MessageQueueingInteractor(Interactor):
+    """
+    A simple interactor that pushes all results it gets to a queue for
+    testing purposes.
+    """
+
+    def __init__(self):
+        Interactor.__init__(self, None)
+        self.queue = queue.Queue()
+
+    def print_results(self, *args):
+        self.queue.put(args)
+
+    def get(self):
+        return self.queue.get(timeout=0)
 
 
 class SectionExecutorInitTest(unittest.TestCase):
@@ -152,6 +205,45 @@ class SectionExecutorTest(unittest.TestCase):
         self.assertEqual(len(results[1]), 1)
         # No global bear
         self.assertEqual(len(results[2]), 0)
+
+    def test_process_queues(self):
+        mock_interactor = MessageQueueingInteractor()
+        uut = ProcessQueuesTestSectionExecutor(
+            self.sections["default"],
+            self.local_bears["default"],
+            self.global_bears["default"],
+            mock_interactor,
+            mock_interactor)
+        ctrlq = queue.Queue()
+
+        # Append custom controlling sequences.
+
+        # Simulated process 1
+        ctrlq.put((CONTROL_ELEMENT.LOCAL, 1))
+        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
+        ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
+
+        # Simulated process 2
+        ctrlq.put((CONTROL_ELEMENT.LOCAL, 2))
+
+        # Simulated process 1
+        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
+
+        # Simulated process 2
+        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
+        ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
+        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
+
+        uut.process_queues(ctrlq,
+                           {1: "The first result.", 2: "The second result."},
+                           {1: "The one and only global result."})
+
+        self.assertEqual(mock_interactor.get(), ("The first result.", None))
+        self.assertEqual(mock_interactor.get(), ("The second result.", None))
+        self.assertEqual(mock_interactor.get(),
+                         ("The one and only global result.", None))
+        self.assertEqual(mock_interactor.get(),
+                         ("The one and only global result.", None))
 
 
 if __name__ == '__main__':
