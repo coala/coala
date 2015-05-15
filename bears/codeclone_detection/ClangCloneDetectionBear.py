@@ -91,6 +91,18 @@ class ClangCloneDetectionBear(GlobalBear):
             [(f1, f2, count_matrices)
              for f1, f2 in combinations(count_matrices, 2)])
 
+        function_list = []
+        for f_1, f_2, diff in differences:
+            if diff < max_clone_difference:
+                if f_1 not in function_list:
+                    function_list.append(f_1)
+                if f_2 not in function_list:
+                    function_list.append(f_2)
+
+        self.debug("Found {} cloned functions out of {}.".format(
+            len(function_list),
+            len(count_matrices)))
+
         self.debug("Creating results...")
         results = []
         for function_1, function_2, difference in differences:
