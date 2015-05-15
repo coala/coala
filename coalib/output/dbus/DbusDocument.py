@@ -1,3 +1,4 @@
+import os
 import dbus.service
 
 
@@ -10,7 +11,11 @@ class DbusDocument(dbus.service.Object):
 
     def __init__(self, path=""):
         super(DbusDocument, self).__init__()
-        self.path = path
+        if path:
+            abs_path = os.path.abspath(path)
+            self._path = abs_path
+        else:
+            self._path = ""
 
     @dbus.service.method(interface,
                          in_signature="",
@@ -19,5 +24,13 @@ class DbusDocument(dbus.service.Object):
         """
         This method analyzes the document and sends back the result
         """
-        # TODO use SectionManager and SectionExecutor to analyze the document
         pass
+
+    @property
+    def path(self):
+        return self._path
+
+    @path.setter
+    def path(self, new_path):
+        new_abs_path = os.path.abspath(new_path)
+        self._path = new_abs_path
