@@ -23,7 +23,6 @@ class BearRunner(multiprocessing.Process):
                  global_result_dict,
                  message_queue,
                  control_queue,
-                 barrier,
                  TIMEOUT=0):
         """
         This is the object that actually runs on the processes
@@ -66,14 +65,11 @@ class BearRunner(multiprocessing.Process):
                                    (for global results) or a file name to
                                    indicate the result will be put to the
                                    queue. If this BearRunner finished all its
-                                   tasks it will put
-                                   (CONTROL_ELEMENT.FINISHED, None) to the
-                                   queue.
-        :param barrier:            a thing that has a wait() method. This will
-                                   be invoked after running the local bears and
-                                   may serve as a barrier to avoid getting
-                                   global results before local ones are
-                                   processed.
+                                   local bears it will put
+                                   (CONTROL_ELEMENT.LOCAL_FINISHED, None) to
+                                   the queue, if it finished all global ones,
+                                   (CONTROL_ELEMENT.GLOBAL_FINISHED, None) will
+                                   be put there.
         :param TIMEOUT:            in seconds for all queue actions
         """
         if not isinstance(local_bear_list, list):
@@ -105,10 +101,6 @@ class BearRunner(multiprocessing.Process):
         if not hasattr(control_queue, "put"):
             raise TypeError("control_queue should be a queue like thing "
                             "(writing possible via 'put')")
-        if not hasattr(barrier, "wait"):
-            raise TypeError("barrier should be a barrier like thing ('wait' "
-                            "method should be available)")
-
         multiprocessing.Process.__init__(self)
 
         self.filename_queue = file_name_queue
@@ -122,7 +114,6 @@ class BearRunner(multiprocessing.Process):
         self.global_result_dict = global_result_dict
         self.message_queue = message_queue
         self.control_queue = control_queue
-        self.barrier = barrier
 
         self.TIMEOUT = TIMEOUT
 
@@ -141,10 +132,10 @@ class BearRunner(multiprocessing.Process):
 
     def run(self):
         self.run_local_bears()
-        self.barrier.wait()
-        self.run_global_bears()
+        self.control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
-        self.control_queue.put((CONTROL_ELEMENT.FINISHED, None))
+        self.run_global_bears()
+        self.control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
     def run_local_bears(self):
         try:
