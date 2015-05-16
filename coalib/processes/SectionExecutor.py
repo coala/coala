@@ -7,10 +7,7 @@ from coalib.collecting import Dependencies
 from coalib.output.printers import LOG_LEVEL
 from coalib.processes.BearRunner import BearRunner
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.settings.Section import Section
 from coalib.settings.Setting import path_list
-from coalib.output.Interactor import Interactor
-from coalib.output.printers.Printer import Printer
 from coalib.misc.i18n import _
 
 
@@ -59,17 +56,6 @@ class SectionExecutor:
                  global_bear_list,
                  interactor,
                  log_printer):
-        if not isinstance(section, Section):
-            raise TypeError("section has to be of type Section")
-        if not isinstance(local_bear_list, list):
-            raise TypeError("local_bear_list has to be of type list")
-        if not isinstance(global_bear_list, list):
-            raise TypeError("global_bear_list has to be of type list")
-        if not isinstance(interactor, Interactor):
-            raise TypeError("interactor has to be of type Interactor")
-        if not isinstance(log_printer, Printer):
-            raise TypeError("log_printer has to be of type Printer")
-
         self.section = section
         self.local_bear_list = Dependencies.resolve(local_bear_list)
         self.global_bear_list = Dependencies.resolve(global_bear_list)

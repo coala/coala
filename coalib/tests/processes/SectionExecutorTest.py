@@ -9,8 +9,6 @@ from coalib.settings.SectionManager import SectionManager
 from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
-from coalib.settings.Section import Section
-from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 
@@ -84,52 +82,6 @@ class MessageQueueingInteractor(Interactor):
 
     def get(self):
         return self.queue.get(timeout=0)
-
-
-class SectionExecutorInitTest(unittest.TestCase):
-    def test_init(self):
-        self.log_printer = ConsolePrinter()
-        self.interactor = ConsoleInteractor(self.log_printer)
-        self.assertRaises(TypeError,
-                          SectionExecutor,
-                          5,
-                          [],
-                          [],
-                          self.interactor,
-                          self.log_printer)
-        self.assertRaises(TypeError,
-                          SectionExecutor,
-                          Section("test"),
-                          5,
-                          [],
-                          self.interactor,
-                          self.log_printer)
-        self.assertRaises(TypeError,
-                          SectionExecutor,
-                          Section("test"),
-                          [],
-                          5,
-                          self.interactor,
-                          self.log_printer)
-        self.assertRaises(TypeError,
-                          SectionExecutor,
-                          Section("test"),
-                          [],
-                          [],
-                          5,
-                          self.log_printer)
-        self.assertRaises(TypeError,
-                          SectionExecutor,
-                          Section("test"),
-                          [],
-                          [],
-                          self.interactor,
-                          5)
-        SectionExecutor(Section("test"),
-                        [],
-                        [],
-                        self.interactor,
-                        self.log_printer).run
 
 
 class SectionExecutorTest(unittest.TestCase):
