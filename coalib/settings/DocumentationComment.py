@@ -10,14 +10,12 @@ class DocumentationComment:
     def __init__(self, desc, param_dict, retval_desc):
         """
         Represents a documentation comment of a python class or function.
-        """
-        if not isinstance(desc, str):
-            raise TypeError("desc should be a string")
-        if not isinstance(param_dict, dict):
-            raise TypeError("param_dict should be a dict")
-        if not isinstance(retval_desc, str):
-            raise TypeError("retval_desc should be a string")
 
+        :param desc:        A description as string.
+        :param param_dict:  A dictionary containing parameter names as key and
+                            their description as value.
+        :param retval_desc: A string describing the return value.
+        """
         self.desc = desc
         self.param_dict = param_dict
         self.retval_desc = retval_desc

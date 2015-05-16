@@ -9,38 +9,16 @@ from coalib.tests.misc.i18nTest import i18nTest
 
 
 class DocumentationCommentParserTest(unittest.TestCase):
-    def test_construction(self):
-        self.assertRaises(TypeError,
-                          DocumentationComment,
-                          desc=5,
-                          param_dict={},
-                          retval_desc="")
-        self.assertRaises(TypeError,
-                          DocumentationComment,
-                          desc="",
-                          param_dict=5,
-                          retval_desc="")
-        self.assertRaises(TypeError,
-                          DocumentationComment,
-                          desc="",
-                          param_dict={},
-                          retval_desc=5)
-        self.assertRaises(TypeError,
-                          DocumentationComment.from_docstring,
-                          docstring=5)
-
     def test_from_docstring(self):
         self.check_from_docstring_dataset("")
         self.check_from_docstring_dataset(" description only ",
                                           desc="description only")
         self.check_from_docstring_dataset(" :param test:  test description ",
                                           param_dict={
-            "test": "test description"
-        })
+            "test": "test description"})
         self.check_from_docstring_dataset(" @param test:  test description ",
                                           param_dict={
-            "test": "test description"
-        })
+            "test": "test description"})
         self.check_from_docstring_dataset(" :return: something ",
                                           retval_desc="something")
         self.check_from_docstring_dataset(" @return: something ",
