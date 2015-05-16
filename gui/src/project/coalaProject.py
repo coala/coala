@@ -28,6 +28,7 @@ class coalaProject(Gtk.ApplicationWindow):
         self.add(self._ui.get_object("project-box"))
 
         self.list_box = self._ui.get_object("listbox")
+        self.list_box.set_selection_mode(Gtk.SelectionMode.SINGLE)
         projects = self.projectMetadata.get_projects_dict()
         if projects is not None:
             for key in projects:
@@ -47,9 +48,10 @@ class coalaProject(Gtk.ApplicationWindow):
         list_box_template.get_object("location_label").set_text(loc)
         list_box_template.get_object("date_label").set_text(date)
         box = list_box_template.get_object("row")
+        box.set_name(loc)
         list_box_row.add(box)
 
-        self.list_box.add(list_box_row)
+        self.list_box.insert(list_box_row, 0)
 
     def on_new_button_clicked(self, button):
         dialog = Gtk.FileChooserDialog("Please choose a project",

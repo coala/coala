@@ -3,6 +3,20 @@
   <object class="GtkHeaderBar" id="header-bar">
     <property name="visible">true</property>
     <property name="show_close_button">true</property>
+    <child>
+      <object class="GtkButton" id="add_section_button">
+        <property name="visible">true</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon_name">list-add-symbolic</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack_type">start</property>
+      </packing>
+    </child>
     <child type="title">
       <object class="GtkStackSwitcher">
         <property name="stack">coalaWindowStack</property>
@@ -31,9 +45,42 @@
     <property name="can_focus">True</property>
     <property name="transition-type">crossfade</property>
     <child>
-      <object class="GtkButton">
+      <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="label">Tab 1</property>
+        <child>
+          <object class="GtkStackSidebar" id="section_switcher">
+            <property name="hexpand">true</property>
+            <property name="visible">true</property>
+            <property name="stack">sections</property>
+          </object>
+          <packing>
+            <property name="pack_type">start</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStack" id="sections">
+            <property name="visible">true</property>
+            <property name="can_focus">True</property>
+            <property name="transition-type">crossfade</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">true</property>
+                <child>
+                  <object class="GtkButton">
+                    <property name="label">Bleh</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="name">default</property>
+                <property name="title" translatable="yes">Default</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="name">configuration</property>
@@ -50,5 +97,11 @@
         <property name="title" translatable="yes">Results</property>
       </packing>
     </child>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">GTK_SIZE_GROUP_HORIZONTAL</property>
+    <widgets>
+      <widget name="section_switcher"/>
+    </widgets>
   </object>
 </interface>
