@@ -23,22 +23,6 @@ class TestClass:
 
 class FunctionMetadataTest(unittest.TestCase):
     def test_construction(self):
-        self.assertRaises(TypeError, FunctionMetadata, 5)
-        self.assertRaises(TypeError, FunctionMetadata, "name", desc=5)
-        self.assertRaises(TypeError, FunctionMetadata, "name", retval_desc=5)
-        self.assertRaises(TypeError,
-                          FunctionMetadata,
-                          "name",
-                          non_optional_params=5)
-        self.assertRaises(TypeError,
-                          FunctionMetadata,
-                          "name",
-                          optional_params=5)
-        self.assertRaises(TypeError, FunctionMetadata.from_function, 5)
-        self.assertRaises(TypeError,
-                          FunctionMetadata.from_function,
-                          self.test_construction,
-                          5)
         self.check_function_metadata_data_set(FunctionMetadata("name"), "name")
 
     def test_from_function(self):

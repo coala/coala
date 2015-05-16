@@ -34,17 +34,6 @@ class FunctionMetadata:
         if optional_params is None:
             optional_params = {}
 
-        if not isinstance(name, str):
-            raise TypeError("name should be a string")
-        if not isinstance(desc, str):
-            raise TypeError("desc should be a string")
-        if not isinstance(retval_desc, str):
-            raise TypeError("retval_desc should be a string")
-        if not isinstance(non_optional_params, dict):
-            raise TypeError("non_optional_params should be a dict")
-        if not isinstance(optional_params, dict):
-            raise TypeError("optional_params should be a dict")
-
         self.name = name
         self.desc = desc
         self.retval_desc = retval_desc
