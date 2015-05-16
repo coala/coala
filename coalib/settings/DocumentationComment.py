@@ -29,9 +29,6 @@ class DocumentationComment:
         :return
         @return
         """
-        if not isinstance(docstring, str):
-            raise TypeError("Parameter docstring has to be a string.")
-
         lines = _(inspect.cleandoc(docstring)).split("\n")
 
         parse_mode = cls._ParseMode.DESCRIPTION
