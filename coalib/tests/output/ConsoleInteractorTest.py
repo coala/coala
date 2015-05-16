@@ -4,6 +4,7 @@ import unittest
 import sys
 import os
 import builtins
+from io import StringIO
 
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
@@ -17,11 +18,32 @@ from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from bears.misc.LineLengthBear import LineLengthBear
+from bears.misc.KeywordBear import KeywordBear
+from coalib.bears.Bear import Bear
 
 
 class TestAction(ResultAction):
     def apply(self, result, original_file_dict, file_diff_dict, param):
         pass
+
+
+class SomeBear(Bear):
+    def run(self):
+        '''
+        Some Description.
+        '''
+        return None
+
+
+class SomeOtherBear(Bear):
+    def run(self, setting: int=None):
+        '''
+        This is a Bear.
+        :param setting: This is an optional setting.
+        '''
+        setting = 1
+        return None
 
 
 class ConsoleInteractorTest(unittest.TestCase):
@@ -266,6 +288,95 @@ class ConsoleInteractorTest(unittest.TestCase):
             pass
 
         return result
+
+    def test_show_bears(self):
+        out = StringIO()
+        old_out = sys.stdout
+        sys.stdout = out
+
+        bears = {}
+        self.uut.show_bears(bears)
+        output = out.getvalue().strip()
+        self.assertEqual(output, _("No bears to show."))
+        out.close()
+        sys.stdout = old_out
+
+        out = StringIO()
+        sys.stdout = out
+        bears = {LineLengthBear: ("default", "docs")}
+        self.uut.show_bears(bears)
+        output = out.getvalue().strip()
+        self.assertEqual(output, _("""{bear}:
+  Yields results for all lines longer than the given maximum line length.
+
+  Used in:
+   * {section1}
+   * {section2}
+
+  Needed Settings:
+   * max_line_length: Maximum number of characters for a line.
+
+  Optional Settings:
+   * tab_width: Number of spaces to show for one tab. (Optional, defaults to"""
+                                   """ '4'.)""").format(bear="LineLengthBear",
+                                                       section1="default",
+                                                       section2="docs"))
+        out.close()
+        sys.stdout = old_out
+
+        out = StringIO()
+        sys.stdout = out
+        bears = {SomeBear: {"default"}}
+        self.uut.show_bears(bears)
+        output = out.getvalue().strip()
+        self.assertEqual(output, _("""{bear}:
+  Some Description.
+
+  Used in:
+   * {section}
+
+  No settings.""").format(bear="SomeBear", section="default"))
+        out.close()
+        sys.stdout = old_out
+
+        out = StringIO()
+        sys.stdout = out
+        bears = {SomeOtherBear: {"test"}}
+        self.uut.show_bears(bears)
+        output = out.getvalue().strip()
+        self.assertEqual(output, _("""{bear}:
+  This is a Bear.
+
+  Used in:
+   * {section}
+
+  No Needed Settings.
+
+  Optional Settings:
+   * setting: This is an optional setting. (Optional, defaults to 'None'.)""")
+                         .format(bear="SomeOtherBear", section="test"))
+        out.close()
+        sys.stdout = old_out
+
+        out = StringIO()
+        sys.stdout = out
+        bears = {KeywordBear: {"test"}}
+        self.uut.show_bears(bears)
+        output = out.getvalue().strip()
+        self.assertEqual(output, _("""{bear}:
+  Checks the code files for given keywords.
+
+  Used in:
+   * {section}
+
+  Needed Settings:
+   * cs_keywords: A list of keywords to search for (case sensitive). Usual """
+                                   """examples are TODO and FIXME."""
+                                   """\n   * ci_keywords: A list of keywords"""
+                                   """ to search for (case insensitive).""")
+                         .format(bear="KeywordBear", section="test"))
+        out.close()
+        sys.stdout = old_out
 
 
 class InputGenerator:

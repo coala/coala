@@ -220,6 +220,37 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
     def _print_section_beginning(self, section):
         self.print(_("Executing section {name}...").format(name=section.name))
 
+    def show_bears(self, bears):
+        if not bears:
+            self.print(_("No bears to show."))
+        else:
+            for key in bears:
+                self._show_bear(key, bears[key], key.get_metadata())
+
+    def _show_bear(self, bear, sections, metadata):
+        self.print("{bear}:".format(bear=bear.__name__))
+        self.print("  "+_(metadata.desc)+"\n")
+        self.print("  "+_("Used in:"))
+        for section in sections:
+            self.print("   * {}".format(section))
+        if not (bool(metadata.non_optional_params) or
+                bool(metadata.optional_params)):
+            self.print("\n  "+_("No settings."))
+        else:
+            if not bool(metadata.non_optional_params):
+                self.print("\n  "+_("No Needed Settings."))
+            else:
+                self.print("\n  "+_("Needed Settings:"))
+                for setting, data in metadata.non_optional_params.items():
+                    self.print("   * {setting}: {desc}"
+                               .format(setting=setting, desc=data[0]))
+            if bool(metadata.optional_params):
+                self.print("\n  "+_("Optional Settings:"))
+                for setting, data in metadata.optional_params.items():
+                    self.print("   "+_("* {setting}: {desc}"
+                               .format(setting=setting, desc=data[0])))
+        self.print("\n")
+
     def did_nothing(self):
         self.print(_("No existent section was targeted or enabled. Nothing "
                      "to do."))
