@@ -7,7 +7,6 @@ from coalib.collecting import Dependencies
 from coalib.output.printers import LOG_LEVEL
 from coalib.processes.BearRunner import BearRunner
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.Barrier import Barrier
 from coalib.settings.Section import Section
 from coalib.settings.Setting import path_list
 from coalib.output.Interactor import Interactor
@@ -126,20 +125,44 @@ class SectionExecutor:
                         file_dict):
         running_processes = self._get_running_processes(processes)
         retval = False
+        # Number of processes working on local bears
+        local_processes = running_processes
+        global_result_buffer = []
+
+        # One process is the logger thread
+        while local_processes > 1:
+            control_elem, index = control_queue.get(timeout=0.1)
+
+            if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
+                local_processes -= 1
+            elif control_elem == CONTROL_ELEMENT.LOCAL:
+                assert local_processes != 0
+                self.interactor.print_results(local_result_dict[index],
+                                              file_dict)
+                retval = retval or len(local_result_dict[index]) > 0
+            elif control_elem == CONTROL_ELEMENT.GLOBAL:
+                global_result_buffer.append(index)
+
+        # Flush global result buffer
+        for elem in global_result_buffer:
+            self.interactor.print_results(global_result_dict[elem],
+                                          file_dict)
+            retval = retval or len(global_result_dict[elem]) > 0
+
+        running_processes = self._get_running_processes(processes)
         # One process is the logger thread
         while running_processes > 1:
             try:
                 control_elem, index = control_queue.get(timeout=0.1)
-                if control_elem == CONTROL_ELEMENT.LOCAL:
-                    self.interactor.print_results(local_result_dict[index],
-                                                  file_dict)
-                    retval = retval or len(local_result_dict[index]) > 0
-                elif control_elem == CONTROL_ELEMENT.GLOBAL:
+
+                if control_elem == CONTROL_ELEMENT.GLOBAL:
                     self.interactor.print_results(global_result_dict[index],
                                                   file_dict)
                     retval = retval or len(global_result_dict[index]) > 0
-                elif control_elem == CONTROL_ELEMENT.FINISHED:
+                else:
+                    assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                     running_processes = self._get_running_processes(processes)
+
             except queue.Empty:
                 running_processes = self._get_running_processes(processes)
 
@@ -171,8 +194,6 @@ class SectionExecutor:
         message_queue = multiprocessing.Queue()
         control_queue = multiprocessing.Queue()
 
-        barrier = Barrier(parties=job_count)
-
         bear_runner_args = {"file_name_queue": filename_queue,
                             "local_bear_list": self.local_bear_list,
                             "global_bear_list": self.global_bear_list,
@@ -182,7 +203,6 @@ class SectionExecutor:
                             "global_result_dict": global_result_dict,
                             "message_queue": message_queue,
                             "control_queue": control_queue,
-                            "barrier": barrier,
                             "TIMEOUT": 0.1}
 
         self._instantiate_bears(file_dict,
