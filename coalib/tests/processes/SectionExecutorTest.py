@@ -197,6 +197,15 @@ class SectionExecutorTest(unittest.TestCase):
         self.assertEqual(mock_interactor.get(),
                          ("The one and only global result.", None))
 
+        # No valid FINISH element in the queue
+        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
+
+        uut.process_queues(ctrlq,
+                           {1: "The first result.", 2: "The second result."},
+                           {1: "The one and only global result."})
+        with self.assertRaises(queue.Empty):
+            mock_interactor.get()
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

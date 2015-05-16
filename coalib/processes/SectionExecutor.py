@@ -116,18 +116,21 @@ class SectionExecutor:
         global_result_buffer = []
 
         # One process is the logger thread
-        while local_processes > 1:
-            control_elem, index = control_queue.get(timeout=0.1)
+        while local_processes > 1 and running_processes > 1:
+            try:
+                control_elem, index = control_queue.get(timeout=0.1)
 
-            if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
-                local_processes -= 1
-            elif control_elem == CONTROL_ELEMENT.LOCAL:
-                assert local_processes != 0
-                self.interactor.print_results(local_result_dict[index],
-                                              file_dict)
-                retval = retval or len(local_result_dict[index]) > 0
-            elif control_elem == CONTROL_ELEMENT.GLOBAL:
-                global_result_buffer.append(index)
+                if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
+                    local_processes -= 1
+                elif control_elem == CONTROL_ELEMENT.LOCAL:
+                    assert local_processes != 0
+                    self.interactor.print_results(local_result_dict[index],
+                                                  file_dict)
+                    retval = retval or len(local_result_dict[index]) > 0
+                elif control_elem == CONTROL_ELEMENT.GLOBAL:
+                    global_result_buffer.append(index)
+            except queue.Empty:
+                running_processes = self._get_running_processes(processes)
 
         # Flush global result buffer
         for elem in global_result_buffer:
