@@ -72,35 +72,6 @@ class BearRunner(multiprocessing.Process):
                                    be put there.
         :param TIMEOUT:            in seconds for all queue actions
         """
-        if not isinstance(local_bear_list, list):
-            raise TypeError("local_bear_list should be a list")
-        if not isinstance(file_dict, dict):
-            raise TypeError("file_dict should be a dict")
-        if not hasattr(file_name_queue, "get"):
-            raise TypeError("file_name_queue should be a queue like thing "
-                            "(reading possible via 'get', raises queue.Empty "
-                            "if empty)")
-        if not isinstance(global_bear_list, list):
-            raise TypeError("global_bear_list should be a list")
-        if not hasattr(global_bear_queue, "get") or \
-                not hasattr(global_bear_queue, "put"):
-            raise TypeError("global_bear_queue should be a queue like thing "
-                            "(reading possible via 'get', raises queue.Empty "
-                            "if empty, writing possible via 'put')")
-        if not isinstance(local_result_dict,
-                          multiprocessing.managers.DictProxy):
-            raise TypeError("local_result_dict should be a "
-                            "multiprocessing.managers.DictProxy")
-        if not isinstance(global_result_dict,
-                          multiprocessing.managers.DictProxy):
-            raise TypeError("global_result_dict should be a "
-                            "multiprocessing.managers.DictProxy")
-        if not hasattr(message_queue, "put"):
-            raise TypeError("message_queue should be a queue like thing "
-                            "(writing possible via 'put')")
-        if not hasattr(control_queue, "put"):
-            raise TypeError("control_queue should be a queue like thing "
-                            "(writing possible via 'put')")
         multiprocessing.Process.__init__(self)
 
         self.filename_queue = file_name_queue
