@@ -14,6 +14,11 @@ class CliParserTest(unittest.TestCase):
                                           '--settings',
                                           nargs='+',
                                           dest='settings')
+        self.test_arg_parser.add_argument('-B',
+                                          '--show_bears',
+                                          nargs='?',
+                                          const=True,
+                                          metavar='BOOL')
         self.uut = CliParser(self.test_arg_parser)
 
     def dict_from_sections(self, parsed_sections):
@@ -32,7 +37,8 @@ class CliParserTest(unittest.TestCase):
     def test_parse(self):
         # regular parse
         parsed_sections = self.uut.parse(
-            ['-t', 'ignored1', 'ignored2',
+            ['--show_bears',
+             '-t', 'ignored1', 'ignored2',
              '-t', 'taken',
              '-S', 'section1.key1,section2.key2=value1,value2',
              'section2.key2=only_this_value',
@@ -45,6 +51,7 @@ class CliParserTest(unittest.TestCase):
         expected_dict = {
             'default': {
                 ("test", "taken"),
+                ("show_bears", "True"),
                 ("key", "only_in_default"),
                 ("default_key1", "single_value"),
                 ("default_key2", "single_value"),
@@ -66,6 +73,7 @@ class CliParserTest(unittest.TestCase):
         add_expected_dict = {
             'default': {
                 ("test", "taken"),
+                ("show_bears", "True"),
                 ("key", "only_in_default"),
                 ("default_key1", "single_value"),
                 ("default_key2", "single_value"),
