@@ -90,13 +90,13 @@ class RunningProcessSimulatingSectionExecutor(SectionExecutor):
 class MessageQueueingInteractor(Interactor):
     def __init__(self):
         Interactor.__init__(self, None)
-        self.queue = queue.Queue
+        self.queue = queue.Queue()
 
     def print_results(self, *args):
         self.queue.put(args)
 
     def get(self):
-        return queue.get()
+        return self.queue.get()
 
 
 class SectionExecutorInitTest(unittest.TestCase):
