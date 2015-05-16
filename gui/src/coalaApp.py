@@ -25,7 +25,9 @@ class coalaApp(Gtk.Application):
             "clicked", self._setup_and_show_workspace, app)
 
     def _setup_and_show_workspace(self, button, app):
-        self.workspace_window = coalaWindow(app)
+        row = self.project_window.list_box.get_selected_row()
+        self.workspace_window = coalaWindow(app, row.get_child().get_name())
+        self.project_window.destroy()
         self.workspace_window.show_all()
 
     def setup_and_show_workspace(self, app, src):
