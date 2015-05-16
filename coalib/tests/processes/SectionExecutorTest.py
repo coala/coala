@@ -187,8 +187,8 @@ class SectionExecutorTest(unittest.TestCase):
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
         uut.process_queues(ctrlq,
-                           {1: "The first result.", 2: "The second result."},
-                           {1: "The one and only global result."})
+                        {1: "The first result.", 2: "The second result."},
+                           {1:"The one and only global result."})
 
         self.assertEqual(mock_interactor.get(), ("The first result.", None))
         self.assertEqual(mock_interactor.get(), ("The second result.", None))
@@ -198,5 +198,5 @@ class SectionExecutorTest(unittest.TestCase):
                          ("The one and only global result.", None))
 
 
-if __name__ == '__main__':
+if __name__== '__main__':
     unittest.main(verbosity=2)
