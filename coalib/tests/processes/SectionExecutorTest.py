@@ -34,24 +34,6 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
         self.set_up = True
 
 
-class RunningProcessSimulatingQueue(queue.Queue):
-    def __init__(self):
-        queue.Queue.__init__(self)
-        self.length = 0
-
-    def __len__(self):
-        return self.length + 1
-
-    def put(self, item, block=False, timeout=None):
-        self.length += 1
-        queue.Queue.put(self, item, block, timeout)
-
-    def get(self, block=False, timeout=None):
-        retval = queue.Queue.get(self, block, timeout)
-        self.length -= 1
-        return retval
-
-
 class RunningProcessSimulatingSectionExecutor(SectionExecutor):
     def __init__(self,
                  section,
@@ -67,24 +49,19 @@ class RunningProcessSimulatingSectionExecutor(SectionExecutor):
                                  log_printer)
 
     def process_queues(self,
-                       processes,
                        control_queue,
                        local_result_dict,
-                       global_result_dict,
-                       file_dict):
-
-        # This test class is only intended to work with the custom
-        # RunningProcessSimulatingQueue.
-        assert isinstance(control_queue, RunningProcessSimulatingQueue)
-        self.ctrlq = control_queue
-        self._process_queues(processes,
+                       global_result_dict):
+        # Pass control_queue as processes
+        self._process_queues(control_queue,
                              control_queue,
                              local_result_dict,
                              global_result_dict,
-                             file_dict)
+                             None)
 
-    def _get_running_processes(self, processes):
-        return len(self.ctrlq)
+    @staticmethod
+    def _get_running_processes(processes):
+        return 0 if processes.empty() else 2
 
 
 class MessageQueueingInteractor(Interactor):
@@ -227,7 +204,7 @@ class SectionExecutorTest(unittest.TestCase):
             self.global_bears["default"],
             mock_interactor,
             mock_interactor)
-        ctrlq = RunningProcessSimulatingQueue()
+        ctrlq = queue.Queue()
 
         # Append custom controlling sequences.
         ctrlq.put((CONTROL_ELEMENT.LOCAL, 1))
@@ -236,16 +213,14 @@ class SectionExecutorTest(unittest.TestCase):
         ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
-        uut.process_queues(None,
-                           ctrlq,
-                           {1: "The first result.", 2: "The second result"},
-                           {1: "The one and only global result"},
-                           None)
+        uut.process_queues(ctrlq,
+                           {1: "The first result.", 2: "The second result."},
+                           {1: "The one and only global result."})
 
-        self.assertEqual(mock_interactor.get(), "The first result.")
-        self.assertEqual(mock_interactor.get(), "The second result.")
+        self.assertEqual(mock_interactor.get(), ("The first result.", None))
+        self.assertEqual(mock_interactor.get(), ("The second result.", None))
         self.assertEqual(mock_interactor.get(),
-                         "The one and only global result.")
+                         ("The one and only global result.", None))
 
 
 if __name__ == '__main__':
