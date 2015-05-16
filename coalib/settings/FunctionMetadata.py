@@ -102,11 +102,6 @@ class FunctionMetadata:
         :return:     The FunctionMetadata object corresponding to the given
                      function.
         """
-        if not isfunction(func) and not ismethod(func):
-            raise TypeError("function has to be a function")
-        if not isinstance(omit, list):
-            raise TypeError("omit has to be a list")
-
         doc = func.__doc__
         if doc is None:
             doc = ""
