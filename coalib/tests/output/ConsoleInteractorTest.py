@@ -378,6 +378,31 @@ class ConsoleInteractorTest(unittest.TestCase):
         out.close()
         sys.stdout = old_out
 
+    def test_process_bears(self):
+        bears = {}
+        local_bears = {"Default": [LineLengthBear, KeywordBear],
+                       "Test": [LineLengthBear]}
+        global_bears = {"Default": [SomeBear],
+                        "Test": [SomeOtherBear, SomeBear]}
+        bears = ConsoleInteractor.process_bears(bears,
+                                                local_bears,
+                                                global_bears,
+                                                "Default")
+        expected_dict = {LineLengthBear: ["Default"],
+                         KeywordBear: ["Default"],
+                         SomeBear: ["Default"]}
+        self.assertEqual(expected_dict, bears)
+
+        bears = ConsoleInteractor.process_bears(bears,
+                                                local_bears,
+                                                global_bears,
+                                                "Test")
+        expected_dict = {LineLengthBear: ["Default", "Test"],
+                         KeywordBear: ["Default"],
+                         SomeBear: ["Default", "Test"],
+                         SomeOtherBear: ["Test"]}
+        self.assertEqual(expected_dict, bears)
+
 
 class InputGenerator:
     def __init__(self, inputs):

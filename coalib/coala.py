@@ -31,10 +31,19 @@ def main():
         yielded_results = False
         sections, local_bears, global_bears, targets, interactor, log_printer \
             = SectionManager().run()
+        bears = {}
         for section_name in sections:
             section = sections[section_name]
             if not section.is_enabled(targets):
                 continue
+                
+            if sections["default"].__contains__("show_bears"):
+                if sections["default"]["show_bears"]:
+                    bears = interactor.process_bears(bears,
+                                                     local_bears,
+                                                     global_bears,
+                                                     section_name)
+                    continue
 
             yielded_results = yielded_results or SectionExecutor(
                 section=section,
@@ -43,6 +52,11 @@ def main():
                 interactor=interactor,
                 log_printer=log_printer).run()[0]
             did_nothing = False
+            
+        if sections["default"].__contains__("show_bears"):
+            if sections["default"]["show_bears"]:
+                interactor.show_bears(bears)
+                did_nothing = False
 
         if did_nothing:
             interactor.did_nothing()

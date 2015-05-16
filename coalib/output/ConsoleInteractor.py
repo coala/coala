@@ -220,6 +220,20 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
     def _print_section_beginning(self, section):
         self.print(_("Executing section {name}...").format(name=section.name))
 
+    @staticmethod
+    def process_bears(bears, local_bears, global_bears, section_name):
+        for bear in local_bears[section_name]:
+            if bear in bears:
+                bears[bear].append(section_name)
+            else:
+                bears[bear] = [section_name]
+        for bear in global_bears[section_name]:
+            if bear in bears:
+                bears[bear].append(section_name)
+            else:
+                bears[bear] = [section_name]
+        return bears
+
     def show_bears(self, bears):
         if not bears:
             self.print(_("No bears to show."))
