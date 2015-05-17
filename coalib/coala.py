@@ -75,8 +75,8 @@ def main():
     if interactor is not None and isinstance(interactor, ClosableObject):
         interactor.close()
 
-    exit(exitcode)
+    return exitcode
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
