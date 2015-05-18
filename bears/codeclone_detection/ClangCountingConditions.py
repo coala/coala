@@ -35,19 +35,20 @@ def _is_nth_child_of_kind(stack, allowed_nums, kind):
                          and the child number.
     :param allowed_nums: List/iterator of child numbers allowed.
     :param kind:         The kind of the parent element.
-    :return:             True if the described situation matches.
+    :return:             Number of matches.
     """
     is_kind_child = False
+    count = 0
     for elem, child_num in stack:
         if is_kind_child and child_num in allowed_nums:
-            return True
+            count += 1
 
         if elem.kind == kind:
             is_kind_child = True
         else:
             is_kind_child = False
 
-    return False
+    return count
 
 
 FOR_POSITION = enum("UNKNOWN", "INIT", "COND", "INC", "BODY")
@@ -190,15 +191,15 @@ def is_inc_or_dec(cursor, stack):
 
 
 def is_condition(cursor, stack):
-    return (_is_nth_child_of_kind(stack, [0], CursorKind.WHILE_STMT) or
-            _is_nth_child_of_kind(stack, [0], CursorKind.IF_STMT) or
+    return (_is_nth_child_of_kind(stack, [0], CursorKind.WHILE_STMT) != 0 or
+            _is_nth_child_of_kind(stack, [0], CursorKind.IF_STMT) != 0 or
             FOR_POSITION.COND in _get_positions_in_for_loop(cursor, stack))
 
 
 def in_condition(cursor, stack):
     # In every case the first child of IF_STMT is the condition itself
     # (non-NULL) so the second and third child are in the then/else branch
-    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT)
+    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) != 0
 
 
 def is_assignee(cursor, stack):
@@ -240,7 +241,7 @@ def is_assigner(cursor, stack):
 
 def loop_content(cursor, stack):
     positions_in_for = _get_positions_in_for_loop(cursor, stack)
-    return (_is_nth_child_of_kind(stack, [1], CursorKind.WHILE_STMT) or
+    return (_is_nth_child_of_kind(stack, [1], CursorKind.WHILE_STMT) != 0 or
             FOR_POSITION.INC in positions_in_for or
             FOR_POSITION.BODY in positions_in_for)
 
