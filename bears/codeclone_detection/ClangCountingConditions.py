@@ -199,7 +199,15 @@ def is_condition(cursor, stack):
 def in_condition(cursor, stack):
     # In every case the first child of IF_STMT is the condition itself
     # (non-NULL) so the second and third child are in the then/else branch
-    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) != 0
+    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 1
+
+
+def in_second_level_condition(cursor, stack):
+    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 2
+
+
+def in_third_level_condition(cursor, stack):
+    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) > 2
 
 
 def is_assignee(cursor, stack):
@@ -239,11 +247,23 @@ def is_assigner(cursor, stack):
     return is_inc_or_dec(cursor, stack)
 
 
-def loop_content(cursor, stack):
+def _loop_level(cursor, stack):
     positions_in_for = _get_positions_in_for_loop(cursor, stack)
-    return (_is_nth_child_of_kind(stack, [1], CursorKind.WHILE_STMT) != 0 or
-            FOR_POSITION.INC in positions_in_for or
-            FOR_POSITION.BODY in positions_in_for)
+    return (positions_in_for.count(FOR_POSITION.INC) +
+            positions_in_for.count(FOR_POSITION.BODY) +
+            _is_nth_child_of_kind(stack, [1], CursorKind.WHILE_STMT))
+
+
+def loop_content(cursor, stack):
+    return _loop_level(cursor, stack) == 1
+
+
+def second_level_loop_content(cursor, stack):
+    return _loop_level(cursor, stack) == 2
+
+
+def third_level_loop_content(cursor, stack):
+    return _loop_level(cursor, stack) > 2
 
 
 def is_param(cursor, stack):
@@ -254,9 +274,13 @@ condition_dict = {"used": used,
                   "returned": returned,
                   "is_condition": is_condition,
                   "in_condition": in_condition,
+                  "in_second_level_condition": in_second_level_condition,
+                  "in_third_level_condition": in_third_level_condition,
                   "is_assignee": is_assignee,
                   "is_assigner": is_assigner,
                   "loop_content": loop_content,
+                  "second_level_loop_content": second_level_loop_content,
+                  "third_level_loop_content": third_level_loop_content,
                   "is_param": is_param,
                   "in_sum": in_sum,
                   "in_product": in_product,

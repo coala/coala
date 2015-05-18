@@ -107,3 +107,37 @@ int arithmetics(int a, int b) {
     a &= a;
     a |= a;
 }
+
+int levels(int first, int second, int third) {
+    if (0)
+        first = 1;
+    else
+        if (2) {
+            second = 1;
+            if (3) {
+                third = 2;
+            } else
+                third = 3;
+        }
+
+    if (1) {
+        first = 1;
+    } else {
+        first = 2
+    }
+
+    while (1)
+        while (1) {
+            for(;;)
+                third = 3;
+
+            second = 2;
+            while (2) {
+                third = 5;
+            }
+        }
+
+    for (;;) {
+        first = 1;
+    }
+}
