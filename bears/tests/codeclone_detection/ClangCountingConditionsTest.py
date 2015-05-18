@@ -112,6 +112,25 @@ class ClangCountingConditionsTest(unittest.TestCase):
              "c": [0],
              "d": [0]})
 
+    def test_in_operation(self):
+        self.check_counting_condition(
+            "in_sum",
+            (89, "arithmetics(int, int)"),
+            {"a": [4],
+             "b": [3]})
+
+        self.check_counting_condition(
+            "in_product",
+            (89, "arithmetics(int, int)"),
+            {"a": [6],
+             "b": [6]})
+
+        self.check_counting_condition(
+            "in_binary_operation",
+            (89, "arithmetics(int, int)"),
+            {"a": [6],
+             "b": [2]})
+
 
 def skip_test():
     try:

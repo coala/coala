@@ -118,10 +118,57 @@ def _get_positions_in_for_loop(cursor, stack):
     return results
 
 
-ARITH_BINARY_OPERATORS = ['+', '-', '*', '/', '&', '|']
+def _get_binop_operator(cursor):
+    """
+    Returns the operator token of a binary operator cursor.
+
+    :param cursor: A cursor of kind BINARY_OPERATOR.
+    :return:       The Token object containing the actual operator or None.
+    """
+    children = list(cursor.get_children())
+    operator_min_begin = (children[0].location.line,
+                          children[0].location.column)
+    operator_max_end = (children[1].location.line,
+                        children[1].location.column)
+
+    for token in cursor.get_tokens():
+        if (operator_min_begin < (token.extent.start.line,
+                                  token.extent.start.column) and
+            operator_max_end >= (token.extent.end.line,
+                                token.extent.end.column)):
+            return token
+
+    return None  # pragma: no cover
+
+
+def _stack_contains_operators(stack, operators):
+    for elem, child_num in stack:
+        if elem.kind in [CursorKind.BINARY_OPERATOR,
+                         CursorKind.COMPOUND_ASSIGNMENT_OPERATOR]:
+            operator = _get_binop_operator(elem)
+
+            if operator.spelling.decode() in operators:
+                return True
+
+    return False
+
+
+ARITH_BINARY_OPERATORS = ['+', '-', '*', '/', '%', '&', '|']
 COMPARISION_OPERATORS = ["==", "<=", ">=", "<", ">", "!=", "&&", "||"]
 ADV_ASSIGNMENT_OPERATORS = [op + "=" for op in ARITH_BINARY_OPERATORS]
 ASSIGNMENT_OPERATORS = ["="] + ADV_ASSIGNMENT_OPERATORS
+
+
+def in_sum(cursor, stack):
+    return _stack_contains_operators(stack, ['+', '-', '+=', '-='])
+
+
+def in_product(cursor, stack):
+    return _stack_contains_operators(stack, ['*', '/', '%', '*=', '/=', '%='])
+
+
+def in_binary_operation(cursor, stack):
+    return _stack_contains_operators(stack, ['&', '|', '&=', '|='])
 
 
 def used(cursor, stack):
@@ -209,7 +256,10 @@ condition_dict = {"used": used,
                   "is_assignee": is_assignee,
                   "is_assigner": is_assigner,
                   "loop_content": loop_content,
-                  "is_param": is_param}
+                  "is_param": is_param,
+                  "in_sum": in_sum,
+                  "in_product": in_product,
+                  "in_binary_operation": in_binary_operation}
 
 
 def counting_condition(value):

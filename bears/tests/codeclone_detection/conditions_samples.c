@@ -85,3 +85,25 @@ int assignation(int a, int b) {
     __imag a;
     __extension__ a;
 }
+
+int arithmetics(int a, int b) {
+    // Sum
+    a = b + 4;
+    a = a + a;
+    a += a;
+    b -= b;
+
+    // Product
+    a = a * b;
+    a % b;
+    a / b;
+    a %= b;
+    a /= b;
+    a *= b;
+
+    // Binary
+    a & b;
+    a | b;
+    a &= a;
+    a |= a;
+}
