@@ -93,6 +93,13 @@ class Result:
 
         return self.message < other.message
 
+    def __iter__(self):
+        return iter([self.origin,
+                     self.message,
+                     self.file,
+                     self.severity,
+                     self.line_nr])
+
     def get_actions(self):
         """
         :return: All ResultAction classes applicable to this result.
