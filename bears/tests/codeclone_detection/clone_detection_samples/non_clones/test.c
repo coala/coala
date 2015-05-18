@@ -20,6 +20,10 @@ int add(int x, int y) {
     return x + y;
 }
 
+int divide(int x, int y) {
+    return x / y;
+}
+
 void *memcpy(void *restrict dst, const void *restrict src, int len) {
 	char *dt = (char*)dst;
 	char *sc = (char*)src;

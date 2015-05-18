@@ -22,7 +22,9 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
         self.section.append(Setting("condition_list",
                                     "used: 0.5, returned, is_condition, "
                                     "in_condition, is_assignee, is_assigner, "
-                                    "loop_content, is_param: 2"))
+                                    "loop_content, is_param, in_sum: 0.7, "
+                                    "in_product: 0.7, in_binary_operation: "
+                                    "0.7"))
         self.clone_files = [os.listdir(os.path.join(self.base_test_path,
                                                     "clones"))]
 
