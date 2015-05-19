@@ -1,4 +1,5 @@
 import inspect
+from collections import OrderedDict
 
 from coalib.misc.i18n import _
 from coalib.misc.Enum import enum
@@ -35,7 +36,7 @@ class DocumentationComment:
         cur_param = ""
 
         desc = ""
-        param_dict = {}
+        param_dict = OrderedDict()
         retval_desc = ""
         for line in lines:
             line = line.strip()
