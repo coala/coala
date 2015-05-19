@@ -141,3 +141,12 @@ int levels(int first, int second, int third) {
         first = 1;
     }
 }
+
+struct test_struct {
+    int a;
+}
+
+int structing(struct test_struct a, struct test_struct *b) {
+    a.a = 1 + b;
+    (b+2)->a = 2;
+}

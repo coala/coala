@@ -172,6 +172,10 @@ def in_binary_operation(cursor, stack):
     return _stack_contains_operators(stack, ['&', '|', '&=', '|='])
 
 
+def member_accessed(cursor, stack):
+    return _stack_contains_kind(stack, CursorKind.MEMBER_REF_EXPR)
+
+
 def used(cursor, stack):
     return True
 
@@ -284,7 +288,8 @@ condition_dict = {"used": used,
                   "is_param": is_param,
                   "in_sum": in_sum,
                   "in_product": in_product,
-                  "in_binary_operation": in_binary_operation}
+                  "in_binary_operation": in_binary_operation,
+                  "member_accessed": member_accessed}
 
 
 def counting_condition(value):

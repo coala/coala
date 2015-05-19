@@ -173,6 +173,13 @@ class ClangCountingConditionsTest(unittest.TestCase):
             {"a": [6],
              "b": [2]})
 
+    def test_member_accessed(self):
+        self.check_counting_condition(
+            "member_accessed",
+            (149, "structing(struct test_struct, struct test_struct *)"),
+            {"a": [1],
+             "b": [1]})
+
 
 def skip_test():
     try:
