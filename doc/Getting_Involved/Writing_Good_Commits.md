@@ -50,9 +50,11 @@ There are a few things to consider when writing a commit message, namely:
  * All following lines may hold up to 72 chars excluding newline.
    * These lines are the long description. The long description is not
      mandantory but may help expressing what you're doing.
- * The commit message shall describe the _change_ as exactly as possible. If it
-   is a bugfix, don't describe the bug but the _change_, especially in the
-   shortlog.
+ * The shortlog shall describe the _change_ as exactly as possible. If it
+   is a bugfix, don't describe the bug but the _change_.
+ * In the long description you can add reasoning for your changes. This is 
+   especially important for complex changes that are not self explanatory. This
+   is also the right place to explain related bugs.
  * If the commit fixes a bug, add the following line at the end:
    `Fixes https://github.com/coala-analyzer/coala/issues/###`, this way the
    commit will appear at the bug and several revisions can be tracked this way.
