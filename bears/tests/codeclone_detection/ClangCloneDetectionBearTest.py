@@ -34,7 +34,8 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                                     "is_param, "
                                     "in_sum: 0.7, "
                                     "in_product: 0.7, "
-                                    "in_binary_operation: 0.7"))
+                                    "in_binary_operation: 0.7,"
+                                    "member_accessed"))
         self.clone_files = [os.listdir(os.path.join(self.base_test_path,
                                                     "clones"))]
 

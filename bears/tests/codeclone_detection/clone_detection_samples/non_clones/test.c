@@ -82,3 +82,19 @@ int retval(int a, int b) {
         return a;
     }
 }
+
+struct test_struct {
+    int first;
+}
+
+void do_something(struct test_struct *a) {
+    do_something(a);
+    do_something(a);
+}
+
+void initialize(struct test_struct *a) {
+    a->first = 2;
+    a->second = 2;
+
+    do_something(a);
+}
