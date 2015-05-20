@@ -55,17 +55,18 @@ class ProcessQueuesTestSectionExecutor(SectionExecutor):
                        control_queue,
                        local_result_dict,
                        global_result_dict):
-        # Pass control_queue as processes
-        self._process_queues(control_queue,
+        self.control_queue = control_queue
+        # _process_queues() will only use len() to determine the number of
+        # processes. So just fill with an empty list with three elements.
+        self._process_queues([None for i in range(3)],
                              control_queue,
                              local_result_dict,
                              global_result_dict,
                              None)
 
-    @staticmethod
-    def _get_running_processes(processes):
+    def _get_running_processes(self, processes):
         # Two processes plus one logger process until no commands are left.
-        return 0 if processes.empty() else 3
+        return 0 if self.control_queue.empty() else 3
 
 
 class MessageQueueingInteractor(Interactor):

@@ -112,7 +112,7 @@ class SectionExecutor:
         running_processes = self._get_running_processes(processes)
         retval = False
         # Number of processes working on local bears
-        local_processes = running_processes
+        local_processes = len(processes)
         global_result_buffer = []
 
         # One process is the logger thread
