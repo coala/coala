@@ -21,7 +21,6 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
             "clone_detection_samples"))
         self.section = Section("default")
         self.section.append(Setting("condition_list",
-                                    "used: 0.5, "
                                     "returned, "
                                     "is_condition, "
                                     "in_condition, "
@@ -33,9 +32,9 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                                     "second_level_loop_content, "
                                     "third_level_loop_content, "
                                     "is_param, "
-                                    "in_sum: 0.7, "
-                                    "in_product: 0.7, "
-                                    "in_binary_operation: 0.7,"
+                                    "in_sum, "
+                                    "in_product, "
+                                    "in_binary_operation,"
                                     "member_accessed"))
         self.clone_files = [os.listdir(os.path.join(self.base_test_path,
                                                     "clones"))]
