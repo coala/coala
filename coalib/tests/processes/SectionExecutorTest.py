@@ -1,10 +1,11 @@
 import inspect
 import os
 import queue
+import unittest
 import sys
 
 sys.path.insert(0, ".")
-import unittest
+from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.SectionManager import SectionManager
 from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -189,15 +190,16 @@ class SectionExecutorTest(unittest.TestCase):
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
         uut.process_queues(ctrlq,
-                           {1: "The first result.", 2: "The second result."},
-                           {1: "The one and only global result."})
+                           {1: ["The first result."],
+                            2: ["The second result.", HiddenResult("t", "c")]},
+                           {1: ["The one and only global result."]})
 
-        self.assertEqual(mock_interactor.get(), ("The first result.", None))
-        self.assertEqual(mock_interactor.get(), ("The second result.", None))
+        self.assertEqual(mock_interactor.get(), (["The first result."], None))
+        self.assertEqual(mock_interactor.get(), (["The second result."], None))
         self.assertEqual(mock_interactor.get(),
-                         ("The one and only global result.", None))
+                         (["The one and only global result."], None))
         self.assertEqual(mock_interactor.get(),
-                         ("The one and only global result.", None))
+                         (["The one and only global result."], None))
 
         # No valid FINISH element in the queue
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
