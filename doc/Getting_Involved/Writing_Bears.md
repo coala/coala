@@ -118,17 +118,27 @@ desired data type, you will get a `coalib.settings.Setting.Setting`.
 The Setting does support some very basic types:
 
  * String (`str`)
- * List of strings (`list`, values will be split by comma)
+ * Float (`float`)
+ * Int (`int`)
  * Boolean (`bool`, will accept values like `true`, `yes`, `yeah`, `no`,
    `nope`, `false`)
+ * List of strings (`list`, values will be split by comma)
+ * Dict of strings (`dict`, values will be split by comma and colon)
 
 If you need another type, you can write the conversion function yourself and
-use this function as the annotation. We've provided e.g.:
+use this function as the annotation. We've provided a few advanced conversions
+for you:
 
  * `coalib.settings.Setting.path`, converts to an absolute file path relative
    to the file/command where the setting was set
  * `coalib.settings.Setting.path_list`, converts to a list of absolute file
    paths relative to the file/command where the setting was set
+ * `coalib.settings.Setting.typed_list(typ)`, converts to a list and applies
+   the given conversion (`typ`) to each element.
+ * `coalib.settings.Setting.typed_dict(key_type, value_type, default)`,
+   converts to a dict while applying the `key_type` conversion to all keys, the
+   `value_type` conversion to all values and uses the `default` value for all
+   unset keys.
 
 # Results
 
