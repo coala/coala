@@ -147,6 +147,10 @@ def _stack_contains_operators(stack, operators):
         if elem.kind in [CursorKind.BINARY_OPERATOR,
                          CursorKind.COMPOUND_ASSIGNMENT_OPERATOR]:
             operator = _get_binop_operator(elem)
+            # Not known how to reproduce but may be possible when evil macros
+            # join the game.
+            if operator is None:  # pragma: no cover
+                continue
 
             if operator.spelling.decode() in operators:
                 return True
