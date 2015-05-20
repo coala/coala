@@ -87,6 +87,14 @@ def _(original):
     """
     Marks the input string for translation and returns the translated string.
     """
+    # According to
+    # http://www.gnu.org/software/gettext/manual/gettext.html#MO-Files
+    # gettext returns some "system information" for empty strings. We don't
+    # want that for our usual translations (e.g. if we translate empty
+    # documentation comments or whatever).
+    if original == "":
+        return original
+
     return translation.gettext(original)
 
 

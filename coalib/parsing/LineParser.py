@@ -4,9 +4,9 @@ from coalib.parsing.StringProcessing import unescape
 
 class LineParser:
     def __init__(self,
-                 key_value_delimiters=['=', ':'],
+                 key_value_delimiters=['='],
                  comment_seperators=['#', ';', '//'],
-                 key_delimiters=[',', ' '],
+                 key_delimiters=[','],
                  section_name_surroundings={'[': "]"},
                  section_override_delimiters=["."]):
         """

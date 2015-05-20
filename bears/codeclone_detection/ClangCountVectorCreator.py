@@ -108,7 +108,9 @@ class ClangCountVectorCreator:
 
         if str(file) == str(filename) and self.is_function_declaration(cursor):
             self._get_vector_for_function(cursor)
-            result = {self.get_identifier_name(cursor): self.count_vectors}
+
+            result = {(cursor.extent.start.line,
+                       self.get_identifier_name(cursor)): self.count_vectors}
             # Reset local states
             self.count_vectors = {}
             self.stack = []
