@@ -82,6 +82,27 @@ class ClangCountingConditionsTest(unittest.TestCase):
              "c": [1],
              "d": [1]})
 
+        self.check_counting_condition(
+            "in_condition",
+            (111, "levels(int, int, int)"),
+            {"first": [3],
+             "second": [0],
+             "third": [0]})
+
+        self.check_counting_condition(
+            "in_second_level_condition",
+            (111, "levels(int, int, int)"),
+            {"first": [0],
+             "second": [1],
+             "third": [0]})
+
+        self.check_counting_condition(
+            "in_third_level_condition",
+            (111, "levels(int, int, int)"),
+            {"first": [0],
+             "second": [0],
+             "third": [2]})
+
     def test_is_assignee(self):
         self.check_counting_condition(
             "is_assignee",
@@ -102,6 +123,62 @@ class ClangCountingConditionsTest(unittest.TestCase):
             (22, "loopy(int, int)"),
             {"a": [0],
              "b": [6]})
+
+        self.check_counting_condition(
+            "loop_content",
+            (111, "levels(int, int, int)"),
+            {"first": [1],
+             "second": [0],
+             "third": [0]})
+
+        self.check_counting_condition(
+            "second_level_loop_content",
+            (111, "levels(int, int, int)"),
+            {"first": [0],
+             "second": [1],
+             "third": [0]})
+
+        self.check_counting_condition(
+            "third_level_loop_content",
+            (111, "levels(int, int, int)"),
+            {"first": [0],
+             "second": [0],
+             "third": [2]})
+
+    def test_is_param(self):
+        self.check_counting_condition(
+            "is_param",
+            (47, "in_condition(int, int)"),
+            {"a": [1],
+             "b": [1],
+             "c": [0],
+             "d": [0]})
+
+    def test_in_operation(self):
+        self.check_counting_condition(
+            "in_sum",
+            (89, "arithmetics(int, int)"),
+            {"a": [4],
+             "b": [3]})
+
+        self.check_counting_condition(
+            "in_product",
+            (89, "arithmetics(int, int)"),
+            {"a": [6],
+             "b": [6]})
+
+        self.check_counting_condition(
+            "in_binary_operation",
+            (89, "arithmetics(int, int)"),
+            {"a": [6],
+             "b": [2]})
+
+    def test_member_accessed(self):
+        self.check_counting_condition(
+            "member_accessed",
+            (149, "structing(struct test_struct, struct test_struct *)"),
+            {"a": [1],
+             "b": [1]})
 
 
 def skip_test():
