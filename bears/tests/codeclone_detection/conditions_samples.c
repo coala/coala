@@ -85,3 +85,68 @@ int assignation(int a, int b) {
     __imag a;
     __extension__ a;
 }
+
+int arithmetics(int a, int b) {
+    // Sum
+    a = b + 4;
+    a = a + a;
+    a += a;
+    b -= b;
+
+    // Product
+    a = a * b;
+    a % b;
+    a / b;
+    a %= b;
+    a /= b;
+    a *= b;
+
+    // Binary
+    a & b;
+    a | b;
+    a &= a;
+    a |= a;
+}
+
+int levels(int first, int second, int third) {
+    if (0)
+        first = 1;
+    else
+        if (2) {
+            second = 1;
+            if (3) {
+                third = 2;
+            } else
+                third = 3;
+        }
+
+    if (1) {
+        first = 1;
+    } else {
+        first = 2
+    }
+
+    while (1)
+        while (1) {
+            for(;;)
+                third = 3;
+
+            second = 2;
+            while (2) {
+                third = 5;
+            }
+        }
+
+    for (;;) {
+        first = 1;
+    }
+}
+
+struct test_struct {
+    int a;
+}
+
+int structing(struct test_struct a, struct test_struct *b) {
+    a.a = 1 + b;
+    (b+2)->a = 2;
+}
