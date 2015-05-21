@@ -10,7 +10,7 @@ from coalib.settings.Section import Section
 
 class ConfParser(SectionParser):
     def __init__(self,
-                 key_value_delimiters=['=', ':'],
+                 key_value_delimiters=['='],
                  comment_seperators=['#', ';', '//'],
                  key_delimiters=[',', ' '],
                  section_name_surroundings={'[': "]"}):

@@ -28,7 +28,7 @@ class LineParserTest(unittest.TestCase):
 
     def test_multi_value_parsing(self):
         self.check_data_set(
-            "a, b\\ \\= section.c= = :()&/ \\\\#heres a comment \n",
+            "a, b\\ \\=, section.c= = :()&/ \\\\#heres a comment \n",
             output_section='',
             output_keys=[("", 'a'), ("", 'b ='), ("section", 'c')],
             output_value='= :()&/ \\\\',

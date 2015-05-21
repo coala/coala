@@ -7,7 +7,6 @@ algorithm.)
 
 from coalib.bearlib.parsing.clang.cindex import CursorKind
 from coalib.misc.Enum import enum
-from coalib.settings.Setting import Setting
 
 
 def _stack_contains_kind(stack, kind):
@@ -36,19 +35,20 @@ def _is_nth_child_of_kind(stack, allowed_nums, kind):
                          and the child number.
     :param allowed_nums: List/iterator of child numbers allowed.
     :param kind:         The kind of the parent element.
-    :return:             True if the described situation matches.
+    :return:             Number of matches.
     """
     is_kind_child = False
+    count = 0
     for elem, child_num in stack:
         if is_kind_child and child_num in allowed_nums:
-            return True
+            count += 1
 
         if elem.kind == kind:
             is_kind_child = True
         else:
             is_kind_child = False
 
-    return False
+    return count
 
 
 FOR_POSITION = enum("UNKNOWN", "INIT", "COND", "INC", "BODY")
@@ -119,10 +119,65 @@ def _get_positions_in_for_loop(cursor, stack):
     return results
 
 
-ARITH_BINARY_OPERATORS = ['+', '-', '*', '/', '&', '|']
+def _get_binop_operator(cursor):
+    """
+    Returns the operator token of a binary operator cursor.
+
+    :param cursor: A cursor of kind BINARY_OPERATOR.
+    :return:       The token object containing the actual operator or None.
+    """
+    children = list(cursor.get_children())
+    operator_min_begin = (children[0].location.line,
+                          children[0].location.column)
+    operator_max_end = (children[1].location.line,
+                        children[1].location.column)
+
+    for token in cursor.get_tokens():
+        if (operator_min_begin < (token.extent.start.line,
+                                  token.extent.start.column) and
+            operator_max_end >= (token.extent.end.line,
+                                token.extent.end.column)):
+            return token
+
+    return None  # pragma: no cover
+
+
+def _stack_contains_operators(stack, operators):
+    for elem, child_num in stack:
+        if elem.kind in [CursorKind.BINARY_OPERATOR,
+                         CursorKind.COMPOUND_ASSIGNMENT_OPERATOR]:
+            operator = _get_binop_operator(elem)
+            # Not known how to reproduce but may be possible when evil macros
+            # join the game.
+            if operator is None:  # pragma: no cover
+                continue
+
+            if operator.spelling.decode() in operators:
+                return True
+
+    return False
+
+
+ARITH_BINARY_OPERATORS = ['+', '-', '*', '/', '%', '&', '|']
 COMPARISION_OPERATORS = ["==", "<=", ">=", "<", ">", "!=", "&&", "||"]
 ADV_ASSIGNMENT_OPERATORS = [op + "=" for op in ARITH_BINARY_OPERATORS]
 ASSIGNMENT_OPERATORS = ["="] + ADV_ASSIGNMENT_OPERATORS
+
+
+def in_sum(cursor, stack):
+    return _stack_contains_operators(stack, ['+', '-', '+=', '-='])
+
+
+def in_product(cursor, stack):
+    return _stack_contains_operators(stack, ['*', '/', '%', '*=', '/=', '%='])
+
+
+def in_binary_operation(cursor, stack):
+    return _stack_contains_operators(stack, ['&', '|', '&=', '|='])
+
+
+def member_accessed(cursor, stack):
+    return _stack_contains_kind(stack, CursorKind.MEMBER_REF_EXPR)
 
 
 def used(cursor, stack):
@@ -144,15 +199,23 @@ def is_inc_or_dec(cursor, stack):
 
 
 def is_condition(cursor, stack):
-    return (_is_nth_child_of_kind(stack, [0], CursorKind.WHILE_STMT) or
-            _is_nth_child_of_kind(stack, [0], CursorKind.IF_STMT) or
+    return (_is_nth_child_of_kind(stack, [0], CursorKind.WHILE_STMT) != 0 or
+            _is_nth_child_of_kind(stack, [0], CursorKind.IF_STMT) != 0 or
             FOR_POSITION.COND in _get_positions_in_for_loop(cursor, stack))
 
 
 def in_condition(cursor, stack):
     # In every case the first child of IF_STMT is the condition itself
     # (non-NULL) so the second and third child are in the then/else branch
-    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT)
+    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 1
+
+
+def in_second_level_condition(cursor, stack):
+    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 2
+
+
+def in_third_level_condition(cursor, stack):
+    return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) > 2
 
 
 def is_assignee(cursor, stack):
@@ -192,20 +255,45 @@ def is_assigner(cursor, stack):
     return is_inc_or_dec(cursor, stack)
 
 
-def loop_content(cursor, stack):
+def _loop_level(cursor, stack):
     positions_in_for = _get_positions_in_for_loop(cursor, stack)
-    return (_is_nth_child_of_kind(stack, [1], CursorKind.WHILE_STMT) or
-            FOR_POSITION.INC in positions_in_for or
-            FOR_POSITION.BODY in positions_in_for)
+    return (positions_in_for.count(FOR_POSITION.INC) +
+            positions_in_for.count(FOR_POSITION.BODY) +
+            _is_nth_child_of_kind(stack, [1], CursorKind.WHILE_STMT))
+
+
+def loop_content(cursor, stack):
+    return _loop_level(cursor, stack) == 1
+
+
+def second_level_loop_content(cursor, stack):
+    return _loop_level(cursor, stack) == 2
+
+
+def third_level_loop_content(cursor, stack):
+    return _loop_level(cursor, stack) > 2
+
+
+def is_param(cursor, stack):
+    return cursor.kind == CursorKind.PARM_DECL
 
 
 condition_dict = {"used": used,
                   "returned": returned,
                   "is_condition": is_condition,
                   "in_condition": in_condition,
+                  "in_second_level_condition": in_second_level_condition,
+                  "in_third_level_condition": in_third_level_condition,
                   "is_assignee": is_assignee,
                   "is_assigner": is_assigner,
-                  "loop_content": loop_content}
+                  "loop_content": loop_content,
+                  "second_level_loop_content": second_level_loop_content,
+                  "third_level_loop_content": third_level_loop_content,
+                  "is_param": is_param,
+                  "in_sum": in_sum,
+                  "in_product": in_product,
+                  "in_binary_operation": in_binary_operation,
+                  "member_accessed": member_accessed}
 
 
 def counting_condition(value):
@@ -213,11 +301,9 @@ def counting_condition(value):
     This is a custom converter to convert a setting from coala into counting
     condition function objects for this bear only.
 
-    :param value: A Setting
+    :param value: An object that can be converted to a list.
     :return:      A list of functions (counting conditions)
     """
-    assert isinstance(value, Setting)
-
     str_list = list(value)
     result_list = []
     for elem in str_list:

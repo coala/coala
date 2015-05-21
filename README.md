@@ -49,8 +49,11 @@ Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt
 Build status
 ------------
 
-[![Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
-(Test and build)
+[![Linux Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
+(Linux build and test, python 3.2, 3.3, 3.4)
+
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/jevcxfo48mc4e09p/branch/master?svg=true)](https://ci.appveyor.com/project/sils1297/coala/branch/master)
+(Windows build and test, python 3.3, 3.4)
 
 [![Codacy Code Quality](https://www.codacy.com/project/badge/f0ac979fa93f49509cba9086754a50d4)](https://www.codacy.com/app/lasse/coala)
 (Code quality 1)
@@ -59,10 +62,10 @@ Build status
 (Code quality 2)
 
 [![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg?branch=master)](https://coveralls.io/r/coala-analyzer/coala?branch=master)
-(Statement coverage)
+(Statement coverage, measured on linux with python 3.4)
 
 [![codecov.io](https://codecov.io/github/coala-analyzer/coala/coverage.svg?branch=master)](https://codecov.io/github/coala-analyzer/coala?branch=master)
-(Branch coverage)
+(Branch coverage, measured on linux with python 3.4)
 
 [![Documentation Status](https://readthedocs.org/projects/coala/badge/?version=latest)](https://readthedocs.org/projects/coala/?badge=latest)
 (Documentation Status)
