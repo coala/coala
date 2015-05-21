@@ -1,3 +1,5 @@
+import cProfile
+import pstats
 import traceback
 
 from coalib.misc.i18n import _
@@ -63,8 +65,17 @@ class Bear(LogPrinter):
         kwargs.update(
             self.get_metadata().create_params_from_section(self.section))
 
-        return self.run(*args,
-                        **kwargs)
+        if bool(self.section["profile"]):
+            prof = cProfile.Profile()
+            prof.enable()
+            retval = self.run(*args, **kwargs)
+            prof.disable()
+            ps = pstats.Stats(prof)
+            ps.print_stats()
+
+            return retval
+        else:
+            return self.run(*args, **kwargs)
 
     def execute(self, *args, **kwargs):
         name = self.__class__.__name__
