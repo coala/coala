@@ -182,14 +182,17 @@ class TestHelper:
         if module_dir not in sys.path:
             sys.path.insert(0, module_dir)
 
-        # Don't allow module code printing
-        with suppress_stdout():
-            module = importlib.import_module(
-                os.path.basename(os.path.splitext(filename)[0]))
+        try:
+            # Don't allow module code printing
+            with suppress_stdout():
+                module = importlib.import_module(
+                    os.path.basename(os.path.splitext(filename)[0]))
 
-        for name, object in inspect.getmembers(module):
-            if inspect.isfunction(object) and name == "skip_test":
-                return object()
+            for name, object in inspect.getmembers(module):
+                if inspect.isfunction(object) and name == "skip_test":
+                    return object()
+        except ImportError as exception:
+            return str(exception)
 
         return False
 
