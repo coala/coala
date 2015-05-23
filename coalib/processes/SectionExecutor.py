@@ -172,10 +172,10 @@ class SectionExecutor:
         return results
 
     def _print_result(self, result_dict, file_dict, index, retval):
-            results = self._non_hidden_results(result_dict[index])
-            self.interactor.print_results(results, file_dict)
+        results = self._non_hidden_results(result_dict[index])
+        self.interactor.print_results(results, file_dict)
 
-            return retval or len(results) > 0
+        return retval or len(results) > 0
 
     def _instantiate_bears(self, file_dict, message_queue):
         for i in range(len(self.local_bear_list)):
