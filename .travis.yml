@@ -5,6 +5,14 @@ python:
   - "3.3"
   - "3.2"
 
+os:
+  - linux
+  - osx
+
+matrix:
+  allow_failures:
+    - os: osx
+
 install:
   - sh .misc/.install.sh
 
