@@ -1,15 +1,17 @@
+# Lasse Schuirmann <lasse.schuirmann@gmail.com>, 2015. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: coala 0.1\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: Lasse Schuirmann <lasse.schuirmann@gmail.com>\n"
-"Language-Team: \n"
-"Language: de_DE\n"
+"Project-Id-Version: coala 0.2\n"
+"Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
+"POT-Creation-Date: 2015-05-24 17:11+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.5\n"
+"PO-Revision-Date: 2015-05-24 07:51-0400\n"
+"Last-Translator: Lasse Schuirmann <lasse.schuirmann@gmail.com>\n"
+"Language-Team: \n"
+"Language: de-DE\n"
+"X-Generator: Zanata 3.6.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: bears/tests/misc/LineCountBearTest.py:21
@@ -24,31 +26,31 @@ msgstr "Zeile enthält die folgenden Schlüsselwörter:"
 
 #: bears/misc/LineLengthBear.py:27
 msgid "Line is longer than allowed."
-msgstr "Zeile ist länger als erlaubt."
+msgstr "Die Zeile ist länger als erlaubt."
 
 #: bears/spacing/SpaceConsistencyBear.py:46
 msgid "Line contains spacing inconsistencies."
 msgstr "Zeile enthält uneinheitliche Leerzeichen."
 
-#: coalib/processes/BearRunner.py:226
+#: coalib/processes/BearRunner.py:188
 msgid "An internal error occurred."
 msgstr "Ein interner Fehler ist aufgetreten."
 
-#: coalib/processes/BearRunner.py:228
+#: coalib/processes/BearRunner.py:190
 msgid "The given file through the queue is not in the file dictionary."
 msgstr ""
 "Die durch die Warteschlange übergebene Datei befindet sich nicht in dem "
 "Dateiordner."
 
-#: coalib/processes/BearRunner.py:263
+#: coalib/processes/BearRunner.py:225
 msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr "Der lokale Bär ({}) ist nicht korrekt.  Er wird ausgelassen..."
 
-#: coalib/processes/BearRunner.py:280
+#: coalib/processes/BearRunner.py:242
 msgid "A given global bear ({}) is not valid. Leaving it out..."
 msgstr "Der globale Bär ({}) ist nicht korrekt.  Er wird ausgelassen..."
 
-#: coalib/processes/BearRunner.py:300
+#: coalib/processes/BearRunner.py:262
 #, python-brace-format
 msgid ""
 "The bear {bear} failed to run with the arguments {arglist}, {kwarglist}. "
@@ -57,47 +59,47 @@ msgstr ""
 "Der Bär {bear} konnte mit den Argumenten {arglist}, {kwarglist} nicht "
 "ausgeführt werden und wird übersprungen."
 
-#: coalib/processes/BearRunner.py:303
+#: coalib/processes/BearRunner.py:265
 #, python-brace-format
 msgid "Traceback for error in bear {bear}:"
 msgstr "Rückverfolgung für den Fehler in Bär {bear}:"
 
-#: coalib/processes/BearRunner.py:317
+#: coalib/processes/BearRunner.py:279
 #, python-brace-format
 msgid ""
 "The results from the bear {bear} couldn't be processed with arguments "
 "{arglist}, {kwarglist}."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:320
+#: coalib/processes/BearRunner.py:282
 #, python-brace-format
 msgid ""
 "The return value of the {bear} is an instance of {ret} but should be an "
 "instance of list."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:327
+#: coalib/processes/BearRunner.py:289
 #, python-brace-format
 msgid ""
 "The results from the bear {bear} could only bepartially processed with "
 "arguments {arglist}, {kwarglist}"
 msgstr ""
 
-#: coalib/processes/BearRunner.py:331
+#: coalib/processes/BearRunner.py:293
 #, python-brace-format
 msgid ""
 "One of the results in the list for the bear {bear} is an instance of {ret} "
 "but it should be an instance of Result"
 msgstr ""
 
-#: coalib/processes/SectionExecutor.py:203
+#: coalib/processes/SectionExecutor.py:236
 msgid ""
 "Failed to read file '{}'. It seems to contain non-unicode characters. "
 "Leaving it out."
 msgstr ""
 
 #. pragma: no cover
-#: coalib/processes/SectionExecutor.py:207
+#: coalib/processes/SectionExecutor.py:240
 msgid "Failed to read file '{}' because of an unknown error. Leaving it out."
 msgstr ""
 
@@ -188,10 +190,13 @@ msgstr " und "
 msgid "The following options are applicable to this result:"
 msgstr "Die folgenden Optionen sind für dieses Ergebnis zutreffend:"
 
-#: coalib/output/ConsoleInteractor.py:108
-msgid ""
-"Please enter the number of the action you want to execute. (0 is no action) "
+#: coalib/output/ConsoleInteractor.py:103
+msgid "Do nothing."
 msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:109
+msgid "Please enter the number of the action you want to execute. "
+msgstr "Bitte geben Sie die Nummer der Aktion ein die ausgeführt werden soll."
 
 #: coalib/output/ConsoleInteractor.py:117
 msgid "Please enter a valid number."
@@ -206,8 +211,6 @@ msgid ""
 "A result ({}) cannot be printed because it refers to a file that doesn't "
 "seem to exist."
 msgstr ""
-"Das Ergebnis ({}) kann nicht ausgegeben werden, da es auf eine Datei "
-"verweist, welche nicht zu existieren scheint."
 
 #: coalib/output/ConsoleInteractor.py:221
 #: coalib/tests/output/ConsoleInteractorTest.py:144
@@ -220,6 +223,7 @@ msgstr "Sektion {name} wird ausgeführt..."
 msgid "No existent section was targeted or enabled. Nothing to do."
 msgstr ""
 "Es wurde keine existierende Sektion ausgewählt oder aktiviert. Nichts zu tun."
+""
 
 #: coalib/collecting/Collectors.py:51
 #, python-brace-format
@@ -237,8 +241,33 @@ msgstr ""
 "Aus {file} können keine Bären importiert werden. Die Datei ist "
 "wahrscheinlich inkorrekt oder der Modulcode wirft eine Ausnahme."
 
+#. Ctrl+C
+#: coalib/coala.py:53
+msgid "Program terminated by user."
+msgstr "Das Programm wurde durch den Benutzer beendet."
+
+#. Ctrl+D
+#: coalib/coala.py:56
+#, fuzzy
+msgid "Found EOF. Exiting gracefully."
+msgstr "EOF gefunden."
+
+#: coalib/coala.py:60
+msgid "An unknown error occurred."
+msgstr "Ein unbekannter Fehler ist aufgetreten."
+
+#: coalib/coala.py:62
+msgid ""
+"During execution of coala an exception was raised. This should never happen. "
+"When asked for, the following information may help investigating:"
+msgstr ""
+"Während der Ausführung von coala ist eine Ausname geworfen worden. Dies "
+"sollte nie passieren. Falls Sie gefragt werden, könnten die folgenden "
+"Informationen bei der Untersuchung des Fehlers helfen:"
+
 #: coalib/settings/SectionFiller.py:47
-msgid "One of the given bears ({}) has no attribute get_non_optional_settings."
+msgid ""
+"One of the given bears ({}) has no attribute get_non_optional_settings."
 msgstr ""
 "Einem der gegebenen Bären ({}) fehlt das Attribut get_non_optional_settings."
 
@@ -250,7 +279,7 @@ msgstr "Keine Beschreibung vorhanden."
 msgid "Optional, defaults to '{}'."
 msgstr "Optional, standardmäßig '{}'."
 
-#: coalib/settings/FunctionMetadata.py:98
+#: coalib/settings/FunctionMetadata.py:87
 #, python-brace-format
 msgid "Unable to convert {param} to the desired data type."
 msgstr "{param} kann nicht in den gewünschten Datentyp konvertiert werden."
@@ -260,6 +289,8 @@ msgstr "{param} kann nicht in den gewünschten Datentyp konvertiert werden."
 msgid ""
 "The requested coafile '{filename}' does not exist. Thus it will not be used."
 msgstr ""
+"Das gewünschte coafile '{filename}' existiert nicht und kann daher nicht "
+"benutzt werden."
 
 #: coalib/settings/SectionManager.py:180
 msgid ""
@@ -280,7 +311,7 @@ msgstr ""
 
 #. Do not change this translation without changing it in the code also!
 #: coalib/tests/misc/i18nTest.py:37 coalib/tests/misc/i18nTest.py:42
-#: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:73
+#: coalib/tests/bears/BearTest.py:20 coalib/tests/bears/BearTest.py:58
 msgid "A string to test translations."
 msgstr "Eine Zeichenkette um Übersetzungen zu testen."
 
@@ -288,25 +319,18 @@ msgstr "Eine Zeichenkette um Übersetzungen zu testen."
 msgid "A not directly translated test string."
 msgstr "Ein indirekt übersetzter test String."
 
-#: coalib/tests/bears/BearTest.py:68 coalib/tests/bears/BearTest.py:82
-#: coalib/bears/Bear.py:78
-msgid "Setting up bear {}..."
-msgstr "Bereite Bär {} vor..."
-
-#: coalib/tests/bears/BearTest.py:71 coalib/tests/bears/BearTest.py:84
-#: coalib/bears/Bear.py:81
+#: coalib/tests/bears/BearTest.py:55 coalib/tests/bears/BearTest.py:65
+#: coalib/bears/Bear.py:72
 msgid "Running bear {}..."
 msgstr "Führe Bär {} aus..."
 
-#: coalib/tests/bears/BearTest.py:75 coalib/tests/bears/BearTest.py:86
-#: coalib/bears/Bear.py:84
-msgid "Tearing down bear {}..."
-msgstr "Beende Bär {}..."
-
-#: coalib/tests/bears/BearTest.py:88 coalib/bears/Bear.py:90
+#: coalib/tests/bears/BearTest.py:67 coalib/bears/Bear.py:76
 msgid ""
 "Bear {} failed to run. Take a look at debug messages for further information."
+""
 msgstr ""
+"Der Bär {} konnte nicht ausgeführt werden. Bitte sehen Sie sich die DEBUG "
+"logs an um weitere Informationen zu erhalten."
 
 #: coalib/tests/results/RESULT_SEVERITYTest.py:11
 #: coalib/results/RESULT_SEVERITY.py:5
@@ -335,7 +359,7 @@ msgstr ""
 msgid "{} is not accessible and will be ignored!"
 msgstr "Auf {} konnte nicht zugegriffen werden. Es wird ignoriert!"
 
-#: coalib/bears/Bear.py:93
+#: coalib/bears/Bear.py:79
 #, python-brace-format
 msgid ""
 "The bear {bear} raised an exception. If you are the writer of this bear, "
@@ -360,6 +384,8 @@ msgid ""
 "coala is a simple COde AnaLysis Application. Its goal is to make static code "
 "analysis easy and convenient for all languages."
 msgstr ""
+"coala ist eine einfache COdeAnaLyse Anwending. Unser Ziel ist es statische "
+"Codeanalyse für alle Sprachen konsistent und einfach zu machen."
 
 #: coalib/parsing/DefaultArgParser.py:14
 msgid "Sections to be executed exclusively."
@@ -382,18 +408,18 @@ msgid "Type of logging (console or any filename)"
 msgstr "Art der Protokollierung (console oder ein Dateiname)"
 
 #: coalib/parsing/DefaultArgParser.py:37
-msgid "Enum('ERR','WARN','DEBUG') to set level of log output"
-msgstr "Setzt die Art der Prokollierung fest, Enum('ERR','WARN','DEBUG')"
-
-#: coalib/parsing/DefaultArgParser.py:44
-msgid "Type of output (console or none)"
+msgid "Enum('ERROR','WARNING','DEBUG') to set level of log output"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:50
+#: coalib/parsing/DefaultArgParser.py:45
+msgid "Type of output (console or none)"
+msgstr "Typ der ausgabe ('console' oder 'none')"
+
+#: coalib/parsing/DefaultArgParser.py:51
 msgid "Configuration file to be used, defaults to .coafile"
 msgstr "Zu benutzende Konfigurationsdatei, .coafile wenn nicht gegeben."
 
-#: coalib/parsing/DefaultArgParser.py:56
+#: coalib/parsing/DefaultArgParser.py:57
 msgid ""
 "Filename of file to be saved to, if provided with no arguments, settings "
 "will be stored back to the file given by -c"
@@ -401,15 +427,15 @@ msgstr ""
 "Datei in die gespeichert werden soll. Wenn keine Argumente gegeben sind, "
 "werden die Einstellungen zurück in die durch -c gegebene Datei gespeichert."
 
-#: coalib/parsing/DefaultArgParser.py:64
+#: coalib/parsing/DefaultArgParser.py:65
 msgid "Arbitrary settings in the form of section.key=value"
 msgstr "Beliebige Einstellung in der Form section.key=value"
 
-#: coalib/parsing/DefaultArgParser.py:70
+#: coalib/parsing/DefaultArgParser.py:71
 msgid "Number of processes to be allowed to run at once"
 msgstr "Anzahl an Prozessen, welche gleichzeitig ausgeführt werden dürfen"
 
-#: coalib/parsing/DefaultArgParser.py:77
+#: coalib/parsing/DefaultArgParser.py:78
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr "Legt fest ob Änderungen angewandt werden, Enum('YES','NO','ASK')"
 
@@ -421,30 +447,7 @@ msgstr ""
 msgid "Parentheses of pattern are not matching"
 msgstr ""
 
-#. Ctrl+C
-#: coala:56
-msgid "Program terminated by user."
-msgstr "Das Programm wurde durch den Benutzer beendet."
-
-#. Ctrl+D
-#: coala:59
-msgid "Found EOF. Exiting gracefully."
-msgstr ""
-
-#: coala:64
-msgid "An unknown error occurred."
-msgstr "Ein unbekannter Fehler ist aufgetreten."
-
-#: coala:66
-msgid ""
-"During execution of coala an exception was raised. This should never happen. "
-"When asked for, the following information may help investigating:"
-msgstr ""
-"Während der Ausführung von coala ist eine Ausname geworfen worden. Dies "
-"sollte nie passieren. Falls Sie gefragt werden, könnten die folgenden "
-"Informationen bei der Untersuchung des Fehlers helfen:"
-
-#: tmp/doc_strings:1
+#: doc_strings:1
 msgid ""
 "Prints this node and all child nodes recursively in the style of:\n"
 "\n"
@@ -460,7 +463,7 @@ msgid ""
 "                    spaces for child nodes."
 msgstr ""
 
-#: tmp/doc_strings:13
+#: doc_strings:13
 msgid ""
 "Checks the code files for given keywords.\n"
 "\n"
@@ -470,7 +473,7 @@ msgid ""
 "                    insensitive)."
 msgstr ""
 
-#: tmp/doc_strings:19
+#: doc_strings:19
 msgid ""
 "Yields results for all lines longer than the given maximum line length.\n"
 "\n"
@@ -478,11 +481,11 @@ msgid ""
 ":param tab_width: Number of spaces to show for one tab."
 msgstr ""
 
-#: tmp/doc_strings:23
+#: doc_strings:23
 msgid "Counts the lines of each file."
 msgstr ""
 
-#: tmp/doc_strings:24
+#: doc_strings:24
 msgid ""
 "Checks the space consistency for each line.\n"
 "\n"
@@ -493,276 +496,12 @@ msgid ""
 ":param tab_width:                 Number of spaces representing one\n"
 "                                  tab."
 msgstr ""
-"Überprüft die Leerzeichenkonsistenz jeder Zeile.\n"
-"\n"
-":param use_spaces:                True wenn Leerzeichen anstelle von Tabs "
-"verwendet werden sollen.\n"
-":param allow_trailing_whitespace: True wenn Leerzeichen an Zeilenenden "
-"erlaubt sein sollen.\n"
-":param tab_width:                 Anzahl der Leerzeichen die einen Tab "
-"repräsentieren."
 
-#: tmp/doc_strings:32
-msgid ""
-"Test description. Do not translate except german.\n"
+#: doc_strings:32
+msgid "Test description. Do not translate except german.\n"
 "\n"
 "@param p1: A param."
 msgstr ""
 "Testbeschreibung. Nicht in Sprachen außer Deutsch übersetzen.\n"
 "\n"
 "@param p1: Ein parameter."
-
-#~ msgid "Bear {} failed to run."
-#~ msgstr "Der Bär {} konnte nicht ausgeführt werden."
-
-#~ msgid ""
-#~ "The global default coafile for the settings was not found. It seems your "
-#~ "installation is broken."
-#~ msgstr ""
-#~ "Das globale standard coafile für die Einstellungen wurde nicht gefunden. "
-#~ "Es scheint, als ob Ihre Installation kaputt ist."
-
-#~ msgid ""
-#~ "The following options are applicable to this result (choose 0 for no "
-#~ "action):"
-#~ msgstr ""
-#~ "Die folgenden Aktionen können auf dieses Resultat angewendet werden "
-#~ "(wählen Sie 0, um nichts zu tun):"
-
-#~ msgid "Please enter the number of the action you want to execute. "
-#~ msgstr ""
-#~ "Bitte geben Sie die Nummer der Aktion ein, die Sie ausführen wollen: "
-
-#~ msgid "Type of output (console or any filename)"
-#~ msgstr "Art der Ausgabe (console oder ein Dateiname)"
-
-#~ msgid "One of the given settings ({}) are not properly described."
-#~ msgstr ""
-#~ "Eine der übergebenen Einstellungen ({}) wurde nicht ordentlich "
-#~ "beschrieben."
-
-#~ msgid "Bear {} failed to run"
-#~ msgstr "Der Bär {} konnte nicht ausgeführt werden"
-
-#~ msgid "on"
-#~ msgstr "an"
-
-#~ msgid "y"
-#~ msgstr "j"
-
-#~ msgid "yes"
-#~ msgstr "ja"
-
-#~ msgid "yeah"
-#~ msgstr "klar"
-
-#~ msgid "sure"
-#~ msgstr "sicher"
-
-#~ msgid "true"
-#~ msgstr "wahr"
-
-#~ msgid "definitely"
-#~ msgstr "definitiv"
-
-#~ msgid "yup"
-#~ msgstr "jup"
-
-#~ msgid "right"
-#~ msgstr "richtig"
-
-#~ msgid "off"
-#~ msgstr "aus"
-
-#~ msgid "n"
-#~ msgstr "n"
-
-#~ msgid "no"
-#~ msgstr "nein"
-
-#~ msgid "nope"
-#~ msgstr "ne"
-
-#~ msgid "nah"
-#~ msgstr "neh"
-
-#~ msgid "false"
-#~ msgstr "falsch"
-
-#~ msgid "wrong"
-#~ msgstr "unwahr"
-
-#~ msgid ""
-#~ "An unknown error occurred while running local bears for the file {}. "
-#~ "Skipping file..."
-#~ msgstr ""
-#~ "Beim Ausführen des lokalen Bären für die Datei {} ist ein unbekannter "
-#~ "Fehler aufgetreten. Die Datei wird übersprungen..."
-
-#~ msgid ""
-#~ "An unknown error occurred while running global bear {}. Skipping bear..."
-#~ msgstr ""
-#~ "Ein unbekannter Fehler ist beim Ausführen des globalen Bären {} "
-#~ "aufgetreten. Der Bär wird übersprungen..."
-
-#~ msgid ""
-#~ "The bear {bear} raised an exception of type {exception}. If you are the "
-#~ "writer of this bear, please catch all exceptions. If not and this error "
-#~ "annoys you, you might want to get in contact with the writer of this "
-#~ "bear.\n"
-#~ "\n"
-#~ "Here is your traceback:\n"
-#~ "\n"
-#~ "{traceback}\n"
-#~ msgstr ""
-#~ "Der Bär {bear} hat eine Ausnahme vom Typ {exception} geworfen. Wenn Sie "
-#~ "der Entwickler dieses Bären sind, fangen Sie bitte alle Ausnahmen ab. "
-#~ "Wenn Sie es nicht sind und dieser Fehler Sie nervt, kontaktieren Sie "
-#~ "bitte den Entwickler dieses Bären.\n"
-#~ "\n"
-#~ "Hier ist Ihre Rückverfolgung:\n"
-#~ "\n"
-#~ "{traceback}\n"
-
-#~ msgid ""
-#~ "set_up() or tear_down() throwed an exception for bear {}.\n"
-#~ "Exception: {}\n"
-#~ "Traceback:\n"
-#~ "{}"
-#~ msgstr ""
-#~ "set_up() oder tear_down() hat eine Ausnahme beim Bären {} geworfen.\n"
-#~ "Ausnahme: {}\n"
-#~ "Rückverfolgung:\n"
-#~ "{}"
-
-#~ msgid ""
-#~ "One of the given regexes ('{regex}') was not valid and will be ignored. "
-#~ "The error was '{error}'."
-#~ msgstr ""
-#~ "Einer der übergebenen regulären Ausdrücke ('{regex}') ist ungültig und "
-#~ "wird ignoriert. Der Fehler war '{error}'."
-
-#~ msgid "Regex for additional filenames (only the tail of the whole path)"
-#~ msgstr ""
-#~ "Regulärer Ausdruck für weitere Dateinamen (nur das Ende des gesamten "
-#~ "Pfades)"
-
-#~ msgid ""
-#~ "Directories where files may lie that will be checked, excluding sub "
-#~ "directories"
-#~ msgstr ""
-#~ "Ordner in denen die zu überprüfenden Dateien liegen, ohne "
-#~ "Unterverzeichnisse"
-
-#~ msgid ""
-#~ "Directories where files may lie that will be checked, including sub "
-#~ "directories"
-#~ msgstr ""
-#~ "Ordner in denen die zu überprüfenden Dateien liegen, mit "
-#~ "Unterverzeichnissen"
-
-#~ msgid "Directories that should be ignored"
-#~ msgstr "Ordner, welche ignoriert werden sollen"
-
-#~ msgid "Directories where bears may lie, excluding subdirectories"
-#~ msgstr "Ordner in denen Bären liegen, ohne Unterverzeichnisse"
-
-#~ msgid "Directories where bears may lie, including subdirectories"
-#~ msgstr "Ordner in denen Bären liegen, mit Unterverzeichnissen"
-
-#~ msgid "Directories to ignore when searching for bears"
-#~ msgstr "Ordner, welche bei der Suche nach Bären ignoriert werden sollen"
-
-#~ msgid "Regular expression for bears to use"
-#~ msgstr "Regulärer Ausdruck für die zu benutzenden Bären"
-
-#~ msgid "Configuration file to be used"
-#~ msgstr "Zu benutzende Konfigurationsdatei"
-
-#~ msgid "Filename of file to be saved to, defaults to config file"
-#~ msgstr ""
-#~ "Datei in die gespeichert werden soll, Standard ist die Konfigurationsdatei"
-
-#~ msgid "No action."
-#~ msgstr "Keine Aktion."
-
-#~ msgid "Please enter the number of the action you want to execute."
-#~ msgstr ""
-#~ "Bitte geben Sie die Nummer der Aktion ein, welche Sie ausführen möchten."
-
-#~ msgid "Please enter a value for the parameter '{}' ({}):"
-#~ msgstr "Bitte geben Sie einen Wert für den Parameter '{}' ({}) ein:"
-
-#~ msgid ""
-#~ "During execution of coala an exception of type {exception} was raised. "
-#~ "This should never happen. When asked for, the following information may "
-#~ "help investigating:"
-#~ msgstr ""
-#~ "Während der Ausführung von coala ist eine Ausnahme vom Typ {exception} "
-#~ "aufgetreten. Das sollte niemals passieren. Wenn Sie danach gefragt "
-#~ "werden, helfen die folgenden Informationen womöglich bei der Untersuchung "
-#~ "der Ursache:"
-
-#~ msgid ""
-#~ "Espeak doesn't seem to be installed. You cannot use the voice output "
-#~ "feature without espeak. It can be downloaded from http://espeak."
-#~ "sourceforge.net/ or installed via your usual package repositories."
-#~ msgstr ""
-#~ "eSpeak scheint nicht installiert zu sein. Sie können die "
-#~ "Sprachausgabefunktion nicht nutzen ohne eSpeak. eSpeak kann von http://"
-#~ "espeak.sourceforge.net/ heruntergeladen oder über Ihre Paketrepositorys "
-#~ "installiert werden."
-
-#~ msgid "Failed to execute espeak. An unknown error occurred."
-#~ msgstr ""
-#~ "eSpeak konnte nicht ausgeführt werden. Ein unbekannter Fehler ist "
-#~ "aufgetreten."
-
-#~ msgid ""
-#~ "This is a bug. We are sorry for the inconvenience. Please contact the "
-#~ "developers if this happens more than once."
-#~ msgstr ""
-#~ "Dies ist ein Bug. Wir möchten uns für die Unannehmlichkeiten "
-#~ "entschuldigen. Wenn dies mehr als einmal passiert, kontaktieren Sie bitte "
-#~ "die Entwickler."
-
-#~ msgid ""
-#~ "Failed reading file. Please make sure to provide a file that is existent "
-#~ "and you have the permission to read it."
-#~ msgstr ""
-#~ "Das Lesen der Datei ist gescheitert. Bitte stellen Sie sicher dass die "
-#~ "Datei existiert und Leserechte vorhanden sind."
-
-#~ msgid ""
-#~ "Unknown failure in worker process.\n"
-#~ "Exception: {}\n"
-#~ "Traceback:\n"
-#~ "{}"
-#~ msgstr ""
-#~ "Unbekannter Fehler im Arbeitsprozess.\n"
-#~ "Exception: {}\n"
-#~ "Traceback:\n"
-#~ "{}"
-
-#~ msgid "An unknown failure occurred and an analyzer run is aborted."
-#~ msgstr ""
-#~ "Ein Unbekannter Fehler ist aufgetreten und eine Ausführung einer "
-#~ "Analyseroutine wurde abgebrochen."
-
-#~ msgid "defaults has to be a Settings object or None."
-#~ msgstr "defaults muss ein Settings Objekt oder None sein."
-
-#~ msgid "defaults may not be self for non-recursivity."
-#~ msgstr "defaults darf nicht self sein um Rekursivität zu vermeiden."
-
-#~ msgid "Empty keys are invalid."
-#~ msgstr "Leere Schlüssel sind ungültig."
-
-#~ msgid "Required index is unavailable."
-#~ msgstr "Der angeforderte Index ist nicht verfügbar."
-
-#~ msgid " yeah "
-#~ msgstr "jep"
-
-#~ msgid " nope "
-#~ msgstr "nö"
