@@ -1,4 +1,4 @@
-files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
+files = ../*.py, ../bears/**/*.py, ../coalib/**/*.py, ../coala
 output = none
 bears = SpaceConsistencyBear, LineLengthBear
 use_spaces = True
@@ -6,5 +6,5 @@ max_line_length = 80
 
 [DOCS]
 bears = SpaceConsistencyBear
-files = doc/**/*.md
+files = ../doc/**/*.md
 use_spaces = True
