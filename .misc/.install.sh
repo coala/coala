@@ -4,4 +4,3 @@ fi
 
 pip install munkres3
 sudo apt-get install espeak libclang1-3.4
-sudo ln -s /usr/lib/x86_64-linux-gnu/libclang.so.1 /usr/lib/x86_64-linux-gnu/libclang.so
