@@ -1,5 +1,7 @@
 from gi.repository import Gtk
 
+from gui.src.support.fileTree import coalaFileTree
+
 
 class coalaWindow(Gtk.ApplicationWindow):
 
@@ -22,6 +24,12 @@ class coalaWindow(Gtk.ApplicationWindow):
 
         self.section_stack = self._ui.get_object("sections")
         self.section_stack_switcher = self._ui.get_object("section_switcher")
+        self.section_stack_switcher.set_size_request(244, -1)
+
+        self.filetree = coalaFileTree(src)
+        self.filetreecontainer = self._ui.get_object("filetree")
+        self.filetreecontainer.add(self.filetree.fileTreeView)
+        self.filetreecontainer.set_size_request(244, -1)
 
         self.set_default_size(1000, 800)
 
@@ -54,5 +62,3 @@ class coalaWindow(Gtk.ApplicationWindow):
         box.add(button)
         self.section_stack.add_titled(box, section, section)
         self.section_stack_switcher.queue_draw()
-
-
