@@ -64,6 +64,7 @@ call is efficient.
 
 from ctypes import *
 import collections
+import os
 
 from coalib.bearlib.parsing.clang import enumerations
 
@@ -3108,35 +3109,46 @@ class Config:
         Config.loaded = True
         return lib
 
-    def get_filename(self):
+    def get_filenames(self):
+        """
+        Yields possible filenames to find libclang.
+        """
+        files = []
         if Config.library_file:
-            return Config.library_file
+            files.append(Config.library_file)
 
         import platform
         name = platform.system()
 
         if name == 'Darwin':
-            file = 'libclang.dylib'
+            files.append('libclang.dylib')
         elif name == 'Windows':
-            file = 'libclang.dll'
+            files.append('libclang.dll')
         else:
-            file = 'libclang.so'
+            files.append('libclang.so')
+            files.append('libclang.so.1')
 
         if Config.library_path:
-            file = Config.library_path + '/' + file
-
-        return file
+            for file in files:
+                yield os.path.join(Config.library_path, file)
+        else:
+            for file in files:
+                yield file
 
     def get_cindex_library(self):
-        try:
-            library = cdll.LoadLibrary(self.get_filename())
-        except OSError as e:
-            msg = str(e) + ". To provide a path to libclang use " \
-                           "Config.set_library_path() or " \
-                           "Config.set_library_file()."
-            raise LibclangError(msg)
+        msg = None
+        for filename in self.get_filenames():
+            try:
+                library = cdll.LoadLibrary(filename)
 
-        return library
+                return library
+            except OSError as e:
+                msg = str(e) + ". To provide a path to libclang use " \
+                               "Config.set_library_path() or " \
+                               "Config.set_library_file()."
+
+        raise LibclangError(msg)
+
 
     def function_exists(self, name):
         try:
