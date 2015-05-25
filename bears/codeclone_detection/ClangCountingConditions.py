@@ -143,6 +143,14 @@ def _get_binop_operator(cursor):
 
 
 def _stack_contains_operators(stack, operators):
+    """
+    Checks if one of the given operators is within the stack.
+
+    :param stack:     The stack holding a tuple holding the parent cursors
+                      and the child number.
+    :param operators: A list of strings. E.g. ["+", "-"]
+    :return:          True if the operator was found.
+    """
     for elem, child_num in stack:
         if elem.kind in [CursorKind.BINARY_OPERATOR,
                          CursorKind.COMPOUND_ASSIGNMENT_OPERATOR]:
@@ -165,14 +173,29 @@ ASSIGNMENT_OPERATORS = ["="] + ADV_ASSIGNMENT_OPERATORS
 
 
 def in_sum(cursor, stack):
+    """
+    A counting condition returning true if the variable is used in a sum
+    statement, i.e. within the operators +, - and their associated compound
+    operators.
+    """
     return _stack_contains_operators(stack, ['+', '-', '+=', '-='])
 
 
 def in_product(cursor, stack):
+    """
+    A counting condition returning true if the variable is used in a product
+    statement, i.e. within the operators *, /, % and their associated compound
+    operators.
+    """
     return _stack_contains_operators(stack, ['*', '/', '%', '*=', '/=', '%='])
 
 
 def in_binary_operation(cursor, stack):
+    """
+    A counting condition returning true if the variable is used in a binary
+    operation, i.e. within the operators |, & and their associated compound
+    operators.
+    """
     return _stack_contains_operators(stack, ['&', '|', '&=', '|='])
 
 
