@@ -7,8 +7,7 @@ dependencies:
     # Running tests without dependencies should work, this tests the skipping ability
     - python run_tests.py
   override:
-    - sudo apt-get install espeak libclang1-3.4
-    - pip install munkres3
+    - sh .misc/.install.sh
 
 test:
   override:
