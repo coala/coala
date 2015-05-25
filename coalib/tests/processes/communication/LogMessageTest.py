@@ -18,9 +18,9 @@ class LogMessageTest(unittest.TestCase):
         self.assertEqual(self.uut.message, "test message")
 
         # see that arguments are processed right
-        self.uut = LogMessage(LOG_LEVEL.WARNING, "   a msg  ")
+        self.uut = LogMessage(LOG_LEVEL.WARNING, "   a msg  ", 5, "  ")
         self.assertEqual(self.uut.log_level, LOG_LEVEL.WARNING)
-        self.assertEqual(self.uut.message, "   a msg")
+        self.assertEqual(self.uut.message, "   a msg   5")
 
         self.assertRaises(ValueError, LogMessage, LOG_LEVEL.DEBUG, "")
         self.assertRaises(ValueError, LogMessage, 5, "test")
