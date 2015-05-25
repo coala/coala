@@ -2,7 +2,7 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
-from coalib.misc.ContextManagers import suppress_stdout
+from coalib.misc.ContextManagers import suppress_stdout, retrieve_stdout
 
 
 class SuppressStdoutTest(unittest.TestCase):
@@ -23,6 +23,13 @@ class SuppressStdoutTest(unittest.TestCase):
         self.assertRaises(NotImplementedError, no_print_func)
 
         sys.stdout = old_stdout
+
+
+class RetrieveStdoutTest(unittest.TestCase):
+    def test_retrieve_stdout(self):
+        with retrieve_stdout() as sio:
+            print("test")
+            self.assertEqual(sio.getvalue(), "test\n")
 
 
 if __name__ == '__main__':
