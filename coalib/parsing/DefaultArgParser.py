@@ -1,6 +1,7 @@
 import argparse
 
 from coalib.misc.i18n import _
+from coalib import version_str
 
 
 default_arg_parser = argparse.ArgumentParser(
@@ -75,3 +76,7 @@ default_arg_parser.add_argument('-a',
                                 choices=['YES', 'NO', 'ASK'],
                                 metavar='ENUM',
                                 help=APPLY_HELP)
+default_arg_parser.add_argument('-v',
+                                '--version',
+                                action='version',
+                                version=version_str)
