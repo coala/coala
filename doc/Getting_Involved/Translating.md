@@ -1,25 +1,43 @@
 # Translating
 
-This document holds instructions to get you started with translating coala.
-coala uses gettext for translations so they are stored in `.po` files.
+This document holds instructions to get you started with translating coala. In
+order to make translating for coala easy we have set up a web UI with always up
+to date strings for you.
 
-# Getting a Translation Environment
+This document provides a tutorial so you can get started fast with translating
+coala. If you are already using Zanata, please go ahead and skip directly to
+the "Translating coala" section.
 
-You are free to use any translation environment you want.
+# Registering at Zanata
 
-We recomment to grab and install Poedit from http://poedit.net/.
+You can sign up for a free Zanata account here:
+
+https://translate.zanata.org/zanata/account/register
+
+Please follow the instructions to activate your account.
+
+# Joining a Language Team
+
+Please follow the instructions at http://zanata.org/help/adding-translators/
+to be added to a language team. If you are already a coala contributor you can
+also request maintainership access, just drop a message to
+<lasse.schuirmann@gmail.com>.
 
 # Translating coala
 
-Our translation files lie in our `locale` directory and are named as usual.
-(E.g. german is `de_DE.po`, binary `.mo` files do not lie in the repository and are
-generated at installation time.)
+Just navigate to
+https://translate.zanata.org/zanata/project/view/coala/versions and start
+translating.
 
-The translation process should be straightforward in Poedit or arbitrary other
-translation environments.
+If you need more information about the Zanata web UI, please consult
+http://zanata.org/help/preparing-for-translation/ and
+http://zanata.org/help/translating/ .
 
-# Submitting Translations
+Note that translations for coala are reviewed. Any translation you add will
+automatically added with the state "translated". If you have the right to
+review translations (either given to you by the language team for your language
+or by the coala maintainers) please take the time to review and approve
+pending translations from time to time.
 
-The easiest way to submit translations is via a GitHub pull request. However,
-if this is inconvenient to you, you can send us your `.po` file via email
-to <lasse.schuirmann@gmail.com> or any other coala developer.
+The coala maintainers will pull the translations into the main repository
+from time to time.
