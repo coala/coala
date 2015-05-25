@@ -68,13 +68,6 @@ default_arg_parser.add_argument('-S',
                                 nargs='+',
                                 metavar='SETTING',
                                 help=SETTINGS_HELP)
-JOB_COUNT_HELP = _('Number of processes to be allowed to run at once')
-default_arg_parser.add_argument('-j',
-                                '--job-count',
-                                nargs=1,
-                                type=int,
-                                metavar='INT',
-                                help=JOB_COUNT_HELP)
 APPLY_HELP = _("Enum('YES','NO','ASK') to set whether to apply changes")
 default_arg_parser.add_argument('-a',
                                 '--apply-changes',
