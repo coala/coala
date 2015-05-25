@@ -19,11 +19,19 @@ class ColorPrinter(Printer):
         class handles this for you.
     """
 
-    def __init__(self):
+    def __init__(self, print_colored=True):
+        """
+        Creates a new ColorPrinter.
+
+        :param print_colored: Can be set to False to use uncolored printing
+                              only.
+        """
         Printer.__init__(self)
 
+        self.print_colored = print_colored
+
     def _print(self, output, **kwargs):
-        if kwargs.get("color") is None:
+        if kwargs.get("color") is None or not self.print_colored:
             return self._print_uncolored(output, **kwargs)
 
         try:

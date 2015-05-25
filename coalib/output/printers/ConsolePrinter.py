@@ -8,10 +8,14 @@ class ConsolePrinter(ColoredLogPrinter):
 
     Note that pickling will not pickle the output member.
     """
-    def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
+    def __init__(self,
+                 log_level=LOG_LEVEL.WARNING,
+                 timestamp_format="%X",
+                 print_colored=True):
         ColoredLogPrinter.__init__(self,
                                    log_level=log_level,
-                                   timestamp_format=timestamp_format)
+                                   timestamp_format=timestamp_format,
+                                   print_colored=print_colored)
 
     def _print_uncolored(self, output, **kwargs):
         print(output, end="")

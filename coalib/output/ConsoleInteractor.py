@@ -26,7 +26,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
     def __init__(self,
                  log_printer,
-                 pre_padding: int=3):
+                 pre_padding: int=3,
+                 print_colored=True):
         """
         A ConsoleInteractor uses the Console to interact with the user.
 
@@ -35,7 +36,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                             context.
         """
         Interactor.__init__(self, log_printer=log_printer)
-        ConsolePrinter.__init__(self)
+        ConsolePrinter.__init__(self, print_colored=print_colored)
 
         self.pre_padding = pre_padding
 
