@@ -3,13 +3,14 @@
 from distutils.core import setup
 
 from coalib.misc.i18n import compile_translations
+from coalib import version_str
 
 
 if __name__ == "__main__":
     data_files = compile_translations()
 
     setup(name='coala',
-          version='0.1',
+          version=version_str,
           description='Code Analysis Application (coala)',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt',
           maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de',

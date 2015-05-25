@@ -12,13 +12,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from coalib.output.ClosableObject import ClosableObject
 
+from coalib.output.ClosableObject import ClosableObject
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.SectionManager import SectionManager
-
 from coalib.misc.i18n import _
 
 
