@@ -1,10 +1,12 @@
+import copy
 import unittest
 import sys
 
 sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          retrieve_stdout,
-                                         simulate_console_inputs)
+                                         simulate_console_inputs,
+                                         preserve_sys_path)
 
 
 class ContextManagersTest(unittest.TestCase):
@@ -40,6 +42,13 @@ class ContextManagersTest(unittest.TestCase):
             self.assertEqual(input(), 2)
             self.assertEqual(input(), 3)
             self.assertEqual(generator.last_input, 3)
+
+    def test_preserve_sys_path(self):
+        old_sys_path = copy.copy(sys.path)
+        with preserve_sys_path():
+            sys.path = 5
+
+        self.assertEqual(old_sys_path, sys.path)
 
 
 if __name__ == '__main__':
