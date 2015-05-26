@@ -19,19 +19,26 @@ The review process for coala is as follows:
    submitter may now _fast forward_ the master. Since linear fitting is a
    prerequisite merging is not going to happen nor allowed.
 
+> **Note**
+>
+> You might want to add the option `merge.ff = only` to your
+> gitconfig.
+
 # Continous Integration
 
 It is not allowed to merge a pull request into master if one of the following
 applies:
 
- * The travis build or any test in it fails or is skipped.
+ * The build/tests must pass on all services. (travis, scrutinizer,
+   circleci, appveyor)
+ * codacy may not yield any issues.
  * The branch coverage goes down. (codecov.io)
  * The statement coverage is not 100%. (coveralls)
 
 The coverage values may go down by a commit, however this is to be avoided.
 Tests must work for every commit.
 
-Continuous integration is always done for the last commit on a branch.
+Continuous integration is always done for the last commit on a pull request.
 
 # Reviewing Commits
 

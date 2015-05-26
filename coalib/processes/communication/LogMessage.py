@@ -7,7 +7,8 @@ class LogMessage:
         if log_level not in LOG_LEVEL.reverse:
             raise ValueError("log_level has to be a valid LOG_LEVEL.")
 
-        self.message = str(delimiter).join(messages).rstrip()
+        str_messages = [str(message) for message in messages]
+        self.message = str(delimiter).join(str_messages).rstrip()
         if self.message == "":
             raise ValueError("Empty log messages are not allowed.")
 

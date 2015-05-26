@@ -1,6 +1,7 @@
 import argparse
 
 from coalib.misc.i18n import _
+from coalib import version_str
 
 
 default_arg_parser = argparse.ArgumentParser(
@@ -68,13 +69,6 @@ default_arg_parser.add_argument('-S',
                                 nargs='+',
                                 metavar='SETTING',
                                 help=SETTINGS_HELP)
-JOB_COUNT_HELP = _('Number of processes to be allowed to run at once')
-default_arg_parser.add_argument('-j',
-                                '--job-count',
-                                nargs=1,
-                                type=int,
-                                metavar='INT',
-                                help=JOB_COUNT_HELP)
 APPLY_HELP = _("Enum('YES','NO','ASK') to set whether to apply changes")
 default_arg_parser.add_argument('-a',
                                 '--apply-changes',
@@ -82,3 +76,7 @@ default_arg_parser.add_argument('-a',
                                 choices=['YES', 'NO', 'ASK'],
                                 metavar='ENUM',
                                 help=APPLY_HELP)
+default_arg_parser.add_argument('-v',
+                                '--version',
+                                action='version',
+                                version=version_str)
