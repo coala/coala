@@ -8,7 +8,7 @@ import shutil
 import webbrowser
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          preserve_sys_path)
-
+from coalib.misc.StringConstants import StringConstants
 
 class TestHelper:
     @staticmethod
@@ -65,15 +65,19 @@ class TestHelper:
 
         :return: False if coverage3 cannot be executed.
         """
-        try:
-            subprocess.call(["coverage3", "erase"])
-            return True
-        except:
+        coverage_available = False
+        with suppress_stdout():
+            coverage_available = subprocess.call(
+                [StringConstants.python_executable,
+                 "-m",
+                 "coverage",
+                 "erase"]) == 0
+        if not coverage_available:
             print("Coverage failed. Falling back to standard unit tests."
                   "Install code coverage measurement for python3. Package"
                   "name should be something like: python-coverage3/coverage")
             self.args.cover = False  # Don't use coverage if this fails
-            return False
+        return coverage_available
 
     def run_tests(self, ignore_list):
         if self.args.cover:
@@ -134,12 +138,24 @@ class TestHelper:
             self.args.test_only = []
 
     def __show_coverage_results(self):
-        subprocess.call(["coverage3", "combine"])
-        subprocess.call(["coverage3", "report", "-m"])
+        subprocess.call([StringConstants.python_executable,
+                         "-m",
+                         "coverage",
+                         "combine"])
+        subprocess.call([StringConstants.python_executable,
+                         "-m",
+                         "coverage",
+                         "report",
+                         "-m"])
         if self.args.html:
             shutil.rmtree(".htmlreport", ignore_errors=True)
             print("Generating HTML report to .htmlreport...")
-            subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
+            subprocess.call([StringConstants.python_executable,
+                             "-m",
+                             "coverage",
+                             "html",
+                             "-d",
+                             ".htmlreport"])
             try:
                 webbrowser.open_new_tab(os.path.join(".htmlreport",
                                                      "index.html"))
@@ -161,14 +177,13 @@ class TestHelper:
         return retval
 
     def __execute_python3_file(self, filename, ignored_files):
-        # On windows we won't find a python3 executable and don't use coverage
-        if sys.platform.startswith("win"):
-            return self.__print_output(["python", filename])
-
         if not self.args.cover:
-            return self.__print_output(["python3", filename])
+            return self.__print_output([StringConstants.python_executable,
+                                        filename])
 
-        return self.__print_output(["coverage3",
+        return self.__print_output([StringConstants.python_executable,
+                                    "-m",
+                                    "coverage",
                                     "run",
                                     "-p",  # make it collectable later
                                     "--branch",
