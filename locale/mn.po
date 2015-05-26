@@ -1,3 +1,19 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: coala 0.2\n"
+"Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
+"POT-Creation-Date: 2015-05-24 17:11+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Mongolian\n"
+"Language: mn\n"
+"X-Generator: Zanata 3.6.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
 #: bears/tests/misc/LineCountBearTest.py:21
 #: bears/tests/misc/LineCountBearTest.py:28 bears/misc/LineCountBear.py:14
 #, python-brace-format
@@ -16,70 +32,70 @@ msgstr ""
 msgid "Line contains spacing inconsistencies."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:226
+#: coalib/processes/BearRunner.py:188
 msgid "An internal error occurred."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:228
+#: coalib/processes/BearRunner.py:190
 msgid "The given file through the queue is not in the file dictionary."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:263
+#: coalib/processes/BearRunner.py:225
 msgid "A given local bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:280
+#: coalib/processes/BearRunner.py:242
 msgid "A given global bear ({}) is not valid. Leaving it out..."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:300
+#: coalib/processes/BearRunner.py:262
 #, python-brace-format
 msgid ""
 "The bear {bear} failed to run with the arguments {arglist}, {kwarglist}. "
 "Skipping bear..."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:303
+#: coalib/processes/BearRunner.py:265
 #, python-brace-format
 msgid "Traceback for error in bear {bear}:"
 msgstr ""
 
-#: coalib/processes/BearRunner.py:317
+#: coalib/processes/BearRunner.py:279
 #, python-brace-format
 msgid ""
 "The results from the bear {bear} couldn't be processed with arguments "
 "{arglist}, {kwarglist}."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:320
+#: coalib/processes/BearRunner.py:282
 #, python-brace-format
 msgid ""
 "The return value of the {bear} is an instance of {ret} but should be an "
 "instance of list."
 msgstr ""
 
-#: coalib/processes/BearRunner.py:327
+#: coalib/processes/BearRunner.py:289
 #, python-brace-format
 msgid ""
 "The results from the bear {bear} could only bepartially processed with "
 "arguments {arglist}, {kwarglist}"
 msgstr ""
 
-#: coalib/processes/BearRunner.py:331
+#: coalib/processes/BearRunner.py:293
 #, python-brace-format
 msgid ""
 "One of the results in the list for the bear {bear} is an instance of {ret} "
 "but it should be an instance of Result"
 msgstr ""
 
-#: coalib/processes/SectionExecutor.py:203
+#: coalib/processes/SectionExecutor.py:236
 msgid ""
 "Failed to read file '{}'. It seems to contain non-unicode characters. "
 "Leaving it out."
 msgstr ""
 
 #. pragma: no cover
-#: coalib/processes/SectionExecutor.py:207
+#: coalib/processes/SectionExecutor.py:240
 msgid "Failed to read file '{}' because of an unknown error. Leaving it out."
 msgstr ""
 
@@ -95,11 +111,13 @@ msgstr ""
 msgid "DEBUG"
 msgstr ""
 
+# translation auto-copied from project DocBook locales, version 1, document locale
 #: coalib/output/printers/LOG_LEVEL.py:4
 #: coalib/tests/processes/communication/LogMessageTest.py:36
 #: coalib/tests/output/printers/LogPrinterTest.py:59
+#, fuzzy
 msgid "WARNING"
-msgstr ""
+msgstr "САНУУЛГА"
 
 #: coalib/output/printers/LOG_LEVEL.py:4
 #: coalib/tests/processes/communication/LogMessageTest.py:32
@@ -157,9 +175,12 @@ msgstr ""
 msgid "The following options are applicable to this result:"
 msgstr ""
 
-#: coalib/output/ConsoleInteractor.py:108
-msgid ""
-"Please enter the number of the action you want to execute. (0 is no action) "
+#: coalib/output/ConsoleInteractor.py:103
+msgid "Do nothing."
+msgstr ""
+
+#: coalib/output/ConsoleInteractor.py:109
+msgid "Please enter the number of the action you want to execute. "
 msgstr ""
 
 #: coalib/output/ConsoleInteractor.py:117
@@ -201,8 +222,29 @@ msgid ""
 "module code raises an exception."
 msgstr ""
 
+#. Ctrl+C
+#: coalib/coala.py:53
+msgid "Program terminated by user."
+msgstr ""
+
+#. Ctrl+D
+#: coalib/coala.py:56
+msgid "Found EOF. Exiting gracefully."
+msgstr ""
+
+#: coalib/coala.py:60
+msgid "An unknown error occurred."
+msgstr ""
+
+#: coalib/coala.py:62
+msgid ""
+"During execution of coala an exception was raised. This should never happen. "
+"When asked for, the following information may help investigating:"
+msgstr ""
+
 #: coalib/settings/SectionFiller.py:47
-msgid "One of the given bears ({}) has no attribute get_non_optional_settings."
+msgid ""
+"One of the given bears ({}) has no attribute get_non_optional_settings."
 msgstr ""
 
 #: coalib/settings/FunctionMetadata.py:9
@@ -213,7 +255,7 @@ msgstr ""
 msgid "Optional, defaults to '{}'."
 msgstr ""
 
-#: coalib/settings/FunctionMetadata.py:98
+#: coalib/settings/FunctionMetadata.py:87
 #, python-brace-format
 msgid "Unable to convert {param} to the desired data type."
 msgstr ""
@@ -239,7 +281,7 @@ msgstr ""
 
 #. Do not change this translation without changing it in the code also!
 #: coalib/tests/misc/i18nTest.py:37 coalib/tests/misc/i18nTest.py:42
-#: coalib/tests/bears/BearTest.py:26 coalib/tests/bears/BearTest.py:73
+#: coalib/tests/bears/BearTest.py:20 coalib/tests/bears/BearTest.py:58
 msgid "A string to test translations."
 msgstr ""
 
@@ -247,24 +289,15 @@ msgstr ""
 msgid "A not directly translated test string."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:68 coalib/tests/bears/BearTest.py:82
-#: coalib/bears/Bear.py:78
-msgid "Setting up bear {}..."
-msgstr ""
-
-#: coalib/tests/bears/BearTest.py:71 coalib/tests/bears/BearTest.py:84
-#: coalib/bears/Bear.py:81
+#: coalib/tests/bears/BearTest.py:55 coalib/tests/bears/BearTest.py:65
+#: coalib/bears/Bear.py:72
 msgid "Running bear {}..."
 msgstr ""
 
-#: coalib/tests/bears/BearTest.py:75 coalib/tests/bears/BearTest.py:86
-#: coalib/bears/Bear.py:84
-msgid "Tearing down bear {}..."
-msgstr ""
-
-#: coalib/tests/bears/BearTest.py:88 coalib/bears/Bear.py:90
+#: coalib/tests/bears/BearTest.py:67 coalib/bears/Bear.py:76
 msgid ""
 "Bear {} failed to run. Take a look at debug messages for further information."
+""
 msgstr ""
 
 #: coalib/tests/results/RESULT_SEVERITYTest.py:11
@@ -292,7 +325,7 @@ msgstr ""
 msgid "{} is not accessible and will be ignored!"
 msgstr ""
 
-#: coalib/bears/Bear.py:93
+#: coalib/bears/Bear.py:79
 #, python-brace-format
 msgid ""
 "The bear {bear} raised an exception. If you are the writer of this bear, "
@@ -331,32 +364,32 @@ msgid "Type of logging (console or any filename)"
 msgstr ""
 
 #: coalib/parsing/DefaultArgParser.py:37
-msgid "Enum('ERR','WARN','DEBUG') to set level of log output"
+msgid "Enum('ERROR','WARNING','DEBUG') to set level of log output"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:44
+#: coalib/parsing/DefaultArgParser.py:45
 msgid "Type of output (console or none)"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:50
+#: coalib/parsing/DefaultArgParser.py:51
 msgid "Configuration file to be used, defaults to .coafile"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:56
+#: coalib/parsing/DefaultArgParser.py:57
 msgid ""
 "Filename of file to be saved to, if provided with no arguments, settings "
 "will be stored back to the file given by -c"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:64
+#: coalib/parsing/DefaultArgParser.py:65
 msgid "Arbitrary settings in the form of section.key=value"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:70
+#: coalib/parsing/DefaultArgParser.py:71
 msgid "Number of processes to be allowed to run at once"
 msgstr ""
 
-#: coalib/parsing/DefaultArgParser.py:77
+#: coalib/parsing/DefaultArgParser.py:78
 msgid "Enum('YES','NO','ASK') to set whether to apply changes"
 msgstr ""
 
@@ -368,27 +401,7 @@ msgstr ""
 msgid "Parentheses of pattern are not matching"
 msgstr ""
 
-#. Ctrl+C
-#: coala:56
-msgid "Program terminated by user."
-msgstr ""
-
-#. Ctrl+D
-#: coala:59
-msgid "Found EOF. Exiting gracefully."
-msgstr ""
-
-#: coala:64
-msgid "An unknown error occurred."
-msgstr ""
-
-#: coala:66
-msgid ""
-"During execution of coala an exception was raised. This should never happen. "
-"When asked for, the following information may help investigating:"
-msgstr ""
-
-#: tmp/doc_strings:1
+#: doc_strings:1
 msgid ""
 "Prints this node and all child nodes recursively in the style of:\n"
 "\n"
@@ -404,7 +417,7 @@ msgid ""
 "                    spaces for child nodes."
 msgstr ""
 
-#: tmp/doc_strings:13
+#: doc_strings:13
 msgid ""
 "Checks the code files for given keywords.\n"
 "\n"
@@ -414,7 +427,7 @@ msgid ""
 "                    insensitive)."
 msgstr ""
 
-#: tmp/doc_strings:19
+#: doc_strings:19
 msgid ""
 "Yields results for all lines longer than the given maximum line length.\n"
 "\n"
@@ -422,11 +435,11 @@ msgid ""
 ":param tab_width: Number of spaces to show for one tab."
 msgstr ""
 
-#: tmp/doc_strings:23
+#: doc_strings:23
 msgid "Counts the lines of each file."
 msgstr ""
 
-#: tmp/doc_strings:24
+#: doc_strings:24
 msgid ""
 "Checks the space consistency for each line.\n"
 "\n"
@@ -438,9 +451,8 @@ msgid ""
 "                                  tab."
 msgstr ""
 
-#: tmp/doc_strings:32
-msgid ""
-"Test description. Do not translate except german.\n"
+#: doc_strings:32
+msgid "Test description. Do not translate except german.\n"
 "\n"
 "@param p1: A param."
 msgstr ""
