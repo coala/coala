@@ -65,15 +65,24 @@ class TestHelper:
 
         :return: False if coverage3 cannot be executed.
         """
+        coverage_error = False
         try:
-            subprocess.call(["coverage3", "erase"])
-            return True
+            with suppress_stdout():
+                if subprocess.call(["python3",
+                                    "-m",
+                                    "coverage",
+                                    "erase"]) != 0:
+                    coverage_error = True
         except:
+            coverage_error = True
+        if coverage_error:
             print("Coverage failed. Falling back to standard unit tests."
                   "Install code coverage measurement for python3. Package"
                   "name should be something like: python-coverage3/coverage")
             self.args.cover = False  # Don't use coverage if this fails
             return False
+        else:
+            return True
 
     def run_tests(self, ignore_list):
         if self.args.cover:
@@ -134,12 +143,17 @@ class TestHelper:
             self.args.test_only = []
 
     def __show_coverage_results(self):
-        subprocess.call(["coverage3", "combine"])
-        subprocess.call(["coverage3", "report", "-m"])
+        subprocess.call(["python3", "-m", "coverage", "combine"])
+        subprocess.call(["python3", "-m", "coverage", "report", "-m"])
         if self.args.html:
             shutil.rmtree(".htmlreport", ignore_errors=True)
             print("Generating HTML report to .htmlreport...")
-            subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
+            subprocess.call(["python3",
+                             "-m",
+                             "coverage",
+                             "html",
+                             "-d",
+                             ".htmlreport"])
             try:
                 webbrowser.open_new_tab(os.path.join(".htmlreport",
                                                      "index.html"))
@@ -168,7 +182,9 @@ class TestHelper:
         if not self.args.cover:
             return self.__print_output(["python3", filename])
 
-        return self.__print_output(["coverage3",
+        return self.__print_output(["python3",
+                                    "-m",
+                                    "coverage",
                                     "run",
                                     "-p",  # make it collectable later
                                     "--branch",
