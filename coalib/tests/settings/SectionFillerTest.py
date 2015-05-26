@@ -2,17 +2,12 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
-
+from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SectionFiller import SectionFiller, Section, Setting
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
-
-import builtins
-
-_input = builtins.__dict__["input"]
-builtins.__dict__["input"] = lambda x: x
 
 
 class GlobalTestBear(GlobalBear):
@@ -57,12 +52,16 @@ class SectionFillerTest(unittest.TestCase):
         self.assertRaises(TypeError, self.uut.fill_section, 0)
 
     def test_fill_section(self):
-        new_section = self.uut.fill_section([LocalTestBear, GlobalTestBear,
-                                            "an inappropriate string object "
-                                            "here"])
+        # Use the same value for both because order isn't predictable (uses
+        # dict)
+        with simulate_console_inputs(0, 0):
+            new_section = self.uut.fill_section([LocalTestBear,
+                                                 GlobalTestBear,
+                                                 "an inappropriate string "
+                                                 "object here"])
 
-        self.assertTrue("local name" in new_section)
-        self.assertTrue("global name" in new_section)
+        self.assertEqual(int(new_section["local name"]), 0)
+        self.assertEqual(int(new_section["global name"]), 0)
         self.assertEqual(new_section["key"].value, "val")
         self.assertEqual(len(new_section.contents), 3)
 
@@ -77,5 +76,3 @@ class SectionFillerTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-
-builtins.__dict__["input"] = _input

@@ -4,8 +4,11 @@ from coalib.output.printers.LogPrinter import LogPrinter
 
 
 class ColoredLogPrinter(ColorPrinter, LogPrinter):
-    def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
-        ColorPrinter.__init__(self)
+    def __init__(self,
+                 log_level=LOG_LEVEL.WARNING,
+                 timestamp_format="%X",
+                 print_colored=True):
+        ColorPrinter.__init__(self, print_colored=print_colored)
         LogPrinter.__init__(self, log_level, timestamp_format)
 
     def _print_log_message(self, prefix, log_message, **kwargs):
