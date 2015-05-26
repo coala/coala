@@ -82,3 +82,11 @@ default_arg_parser.add_argument('-a',
                                 choices=['YES', 'NO', 'ASK'],
                                 metavar='ENUM',
                                 help=APPLY_HELP)
+SHOW_BEARS_HELP = _("Display bears and its metadata with the sections that "
+                    "they belong to")
+default_arg_parser.add_argument('-B',
+                                '--show_bears',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                help=SHOW_BEARS_HELP)

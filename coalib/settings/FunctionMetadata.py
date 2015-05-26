@@ -1,4 +1,5 @@
 from inspect import isfunction, ismethod, getfullargspec
+from collections import OrderedDict
 
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
@@ -30,9 +31,9 @@ class FunctionMetadata:
                                     the default value.
         """
         if non_optional_params is None:
-            non_optional_params = {}
+            non_optional_params = OrderedDict()
         if optional_params is None:
-            optional_params = {}
+            optional_params = OrderedDict()
 
         self.name = name
         self.desc = desc
@@ -58,7 +59,7 @@ class FunctionMetadata:
             raise TypeError("The 'section' parameter should be a "
                             "coalib.settings.Section instance.")
 
-        params = {}
+        params = OrderedDict()
 
         for param in self.non_optional_params:
             desc, annotation = self.non_optional_params[param]
@@ -107,8 +108,8 @@ class FunctionMetadata:
             doc = ""
         doc_comment = DocumentationComment.from_docstring(doc)
 
-        non_optional_params = {}
-        optional_params = {}
+        non_optional_params = OrderedDict()
+        optional_params = OrderedDict()
 
         argspec = getfullargspec(func)
         args = argspec.args if argspec.args is not None else ()
