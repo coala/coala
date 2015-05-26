@@ -58,6 +58,19 @@ class StringProcessingTest(unittest.TestCase):
             r"\\;",
             r"abc;a;;;;;asc"]
 
+        # Test strings for search-in-between functions.
+        self.search_in_between_begin_pattern = r"("
+        self.search_in_between_end_pattern = r")"
+        self.search_in_between_test_strings = [
+            r"()assk(This is a word)and((in a word) another ) one anyway.",
+            r"bcc5(((((((((((((((((((1)2)3)))))))))))))))))",
+            r"Let's (do (it ) more ) complicated ) ) ) () (hello.)",
+            r"()assk\\(This\ is a word\)and((in a\\\ word\\\\\) another \)) " +
+                r"one anyway.",
+            r"bcc5\(\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)\)",
+            r"Let's \(do (it ) more ) \\ complicated ) ) ) () (hello.)\\z"]
+
+
     def assertResultsEqual(self,
                            func,
                            invocation_and_results,

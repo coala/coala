@@ -41,6 +41,18 @@ def trim_empty_matches(iterator, groups=[0]):
                 continue
 
 
+def trim_empty(iterator):
+    """
+    A filter that removes empty objects that support len() inside the passed
+    iterator.
+
+    :param iterator: The iterator to be filtered.
+    """
+    for elem in iterator:
+        if len(elem) != 0:
+            yield elem
+
+
 def search_for(pattern, string, flags=0, max_match=0, use_regex=False):
     """
     Searches for a given pattern in a string.
@@ -359,3 +371,92 @@ def position_is_escaped(string, position=None):
         else:
             break
     return escapes_uneven
+
+
+def _nested_search_in_between(begin, end, string):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Matches infinite times.
+
+    This is a function specifically designed to be invoked from
+    nested_search_in_between().
+
+    :param begin:  A regex pattern that defines where to start matching.
+    :param end:    A regex pattern that defines where to end matching.
+    :param string: The string where to search in.
+    :return:       An iterator returning the matched strings.
+    """
+    # Regex explanation:
+    # 1. (begin) A capturing group that matches the begin sequence.
+    # 2. (?:end) A non-capturing group that matches the end sequence. Because
+    #            the 1st group is lazy (matches as few times as possible) the
+    #            next occurring end-sequence is matched.
+    # The '|' in the regex matches either the first or the second part.
+    regex = r"(" + begin + r")|(?:" + end + r")"
+
+    left_match = None
+    nesting_level = 0
+    for match in re.finditer(regex, string, re.DOTALL):
+        if match.group(1) is not None:
+            if nesting_level == 0:
+                # Store the match of the first nesting level to be able to
+                # return the string until the next fitting end sequence.
+                left_match = match
+            nesting_level += 1
+        else:
+            # The second group matched. This is the only alternative if group 1
+            # didn't, otherwise no match would be performed. No need to compile
+            # the begin and end sequences to get the number of capturing groups
+            # in them.
+            if nesting_level > 0:
+                nesting_level -= 1
+
+            if nesting_level == 0 and left_match != None:
+                yield string[left_match.end() : match.start()]
+                left_match = None
+
+
+def nested_search_in_between(begin,
+                             end,
+                             string,
+                             max_matches=0,
+                             remove_empty_matches=False,
+                             use_regex=False):
+    """
+    Searches for a string enclosed between a specified begin- and end-sequence.
+    Also enclosed \n are put into the result. Doesn't handle escape sequences,
+    but supports nesting.
+
+    Nested sequences are ignored during the match. Means you get only the first
+    nesting level returned. If you want to acquire more levels, just reinvoke
+    this function again on the return value.
+
+    Using the same begin- and end-sequence won't match anything.
+
+    :param begin:                A pattern that defines where to start
+                                 matching.
+    :param end:                  A pattern that defines where to end matching.
+    :param string:               The string where to search in.
+    :param max_matches           Defines the maximum number of matches. If 0 or
+                                 less is provided, the number of splits is not
+                                 limited.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the result.
+    :param use_regex:            Specifies whether to treat the begin and end
+                                 patterns as regexes or simple strings.
+    :return:                     An iterator returning the matched strings.
+    """
+
+    if not use_regex:
+        begin = re.escape(begin)
+        end = re.escape(end)
+
+    strings = _nested_search_in_between(begin, end, string)
+
+    if remove_empty_matches:
+        strings = trim_empty(strings)
+
+    strings = limit(strings, max_matches)
+
+    for elem in strings:
+        yield elem
