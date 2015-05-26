@@ -3,6 +3,7 @@ import sys
 import os
 from io import StringIO
 import builtins
+import copy
 
 
 @contextmanager
@@ -81,3 +82,12 @@ def simulate_console_inputs(*inputs):
         yield input_generator
     finally:
         builtins.__dict__["input"] = _input
+
+
+@contextmanager
+def preserve_sys_path():
+    _path = copy.copy(sys.path)
+    try:
+        yield
+    finally:
+        sys.path = _path
