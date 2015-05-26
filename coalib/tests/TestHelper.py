@@ -6,7 +6,6 @@ import subprocess
 import sys
 import shutil
 import webbrowser
-import builtins
 from coalib.misc.ContextManagers import suppress_stdout
 
 
