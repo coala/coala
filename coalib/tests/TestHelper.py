@@ -6,7 +6,8 @@ import subprocess
 import sys
 import shutil
 import webbrowser
-from coalib.misc.ContextManagers import suppress_stdout
+from coalib.misc.ContextManagers import (suppress_stdout,
+                                        preserve_sys_path)
 
 
 class TestHelper:
@@ -64,15 +65,24 @@ class TestHelper:
 
         :return: False if coverage3 cannot be executed.
         """
+        coverage_error = False
         try:
-            subprocess.call(["coverage3", "erase"])
-            return True
+            with suppress_stdout():
+                if subprocess.call(["python3",
+                                    "-m",
+                                    "coverage",
+                                    "erase"]) != 0:
+                    coverage_error = True
         except:
+            coverage_error = True
+        if coverage_error:
             print("Coverage failed. Falling back to standard unit tests."
                   "Install code coverage measurement for python3. Package"
                   "name should be something like: python-coverage3/coverage")
             self.args.cover = False  # Don't use coverage if this fails
             return False
+        else:
+            return True
 
     def run_tests(self, ignore_list):
         if self.args.cover:
@@ -133,12 +143,17 @@ class TestHelper:
             self.args.test_only = []
 
     def __show_coverage_results(self):
-        subprocess.call(["coverage3", "combine"])
-        subprocess.call(["coverage3", "report", "-m"])
+        subprocess.call(["python3", "-m", "coverage", "combine"])
+        subprocess.call(["python3", "-m", "coverage", "report", "-m"])
         if self.args.html:
             shutil.rmtree(".htmlreport", ignore_errors=True)
             print("Generating HTML report to .htmlreport...")
-            subprocess.call(["coverage3", "html", "-d", ".htmlreport"])
+            subprocess.call(["python3",
+                             "-m",
+                             "coverage",
+                             "html",
+                             "-d",
+                             ".htmlreport"])
             try:
                 webbrowser.open_new_tab(os.path.join(".htmlreport",
                                                      "index.html"))
@@ -167,7 +182,9 @@ class TestHelper:
         if not self.args.cover:
             return self.__print_output(["python3", filename])
 
-        return self.__print_output(["coverage3",
+        return self.__print_output(["python3",
+                                    "-m",
+                                    "coverage",
                                     "run",
                                     "-p",  # make it collectable later
                                     "--branch",
@@ -177,23 +194,24 @@ class TestHelper:
 
     @staticmethod
     def __check_module_skip(filename):
-        module_dir = os.path.dirname(filename)
-        if module_dir not in sys.path:
-            sys.path.insert(0, module_dir)
+        with preserve_sys_path():
+            module_dir = os.path.dirname(filename)
+            if module_dir not in sys.path:
+                sys.path.insert(0, module_dir)
 
-        try:
-            # Don't allow module code printing
-            with suppress_stdout():
-                module = importlib.import_module(
-                    os.path.basename(os.path.splitext(filename)[0]))
+            try:
+                # Don't allow module code printing
+                with suppress_stdout():
+                    module = importlib.import_module(
+                        os.path.basename(os.path.splitext(filename)[0]))
 
-            for name, object in inspect.getmembers(module):
-                if inspect.isfunction(object) and name == "skip_test":
-                    return object()
-        except ImportError as exception:
-            return str(exception)
+                for name, object in inspect.getmembers(module):
+                    if inspect.isfunction(object) and name == "skip_test":
+                        return object()
+            except ImportError as exception:
+                return str(exception)
 
-        return False
+            return False
 
     def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
