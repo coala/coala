@@ -169,6 +169,15 @@ class Interactor(SectionCreatable, Printer):
         """
         raise NotImplementedError
 
+    def show_bears(self, bears):
+        """
+        It presents the bears to the user and information about each bear.
+
+        :param bears: A dictionary containing bears as keys and a list of
+                      sections which the bear belongs as the value.
+        """
+        raise NotImplementedError
+
     def did_nothing(self):
         """
         Will be called after processing a coafile when nothing had to be done,
