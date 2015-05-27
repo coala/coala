@@ -17,11 +17,32 @@ from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from bears.misc.LineLengthBear import LineLengthBear
+from bears.misc.KeywordBear import KeywordBear
+from coalib.bears.Bear import Bear
 
 
 class TestAction(ResultAction):
     def apply(self, result, original_file_dict, file_diff_dict, param):
         pass
+
+
+class SomeBear(Bear):
+    def run(self):
+        """
+        Some Description.
+        """
+        return None
+
+
+class SomeOtherBear(Bear):
+    def run(self, setting: int=None):
+        """
+        This is a Bear.
+        :param setting: This is an optional setting.
+        """
+        setting = 1
+        return None
 
 
 class ConsoleInteractorTest(unittest.TestCase):
@@ -254,6 +275,92 @@ class ConsoleInteractorTest(unittest.TestCase):
         ConsoleInteractor.from_section(section, log_printer=self.log_printer)
         section.append(Setting("output", "stderr"))
         ConsoleInteractor.from_section(section, log_printer=self.log_printer)
+
+    def test_show_bears_empty(self):
+        with retrieve_stdout() as stdout:
+            bears = {}
+            self.uut.show_bears(bears)
+            self.assertEqual(_("No bears to show.\n"), stdout.getvalue())
+
+    def test_show_bears(self):
+        with retrieve_stdout() as stdout:
+            bears = {LineLengthBear: ["default", "docs"]}
+            self.uut.show_bears(bears)
+            expected_string = "LineLengthBear:\n"
+            expected_string += ("  Yields results for all lines longer "
+                                "than the given maximum line length."
+                                "\n\n")
+            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "   * default\n"
+            expected_string += "   * docs\n\n"
+            expected_string += "  " + _("Needed Settings:") + "\n"
+            expected_string += ("   * max_line_length: Maximum number "
+                                "of characters for a line.\n\n")
+            expected_string += "  " + _("Optional Settings:") + "\n"
+            expected_string += ("   * tab_width: Number of spaces to "
+                                "show for one tab. (Optional, defaults to "
+                                "'4'.)\n\n")
+
+            self.assertEqual(expected_string, stdout.getvalue())
+
+    def test_show_bears_no_settings(self):
+        with retrieve_stdout() as stdout:
+            bears = {SomeBear: ["default"]}
+            self.uut.show_bears(bears)
+            expected_string = "SomeBear:\n"
+            expected_string += "  " + "Some Description." + "\n\n"
+            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "   * default\n\n"
+            expected_string += "  " + _("No needed settings.") + "\n\n"
+            expected_string += "  " + _("No optional settings.") + "\n\n"
+
+            self.assertEqual(expected_string, stdout.getvalue())
+
+    def test_show_bears_no_needed_settings(self):
+        with retrieve_stdout() as stdout:
+            bears = {SomeOtherBear: ["test"]}
+            self.uut.show_bears(bears)
+            expected_string = "SomeOtherBear:\n"
+            expected_string += "  " + "This is a Bear." + "\n\n"
+            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "   * test\n\n"
+            expected_string += "  " + _("No needed settings.") + "\n\n"
+            expected_string += "  " + _("Optional Settings:") + "\n"
+            expected_string += ("   * setting: This is an optional "
+                                "setting. (Optional, defaults to 'None'.)\n\n")
+
+            self.assertEqual(expected_string, stdout.getvalue())
+
+    def test_show_bears_no_optional_settings(self):
+        with retrieve_stdout() as stdout:
+            bears = {KeywordBear: ["test"]}
+            self.uut.show_bears(bears)
+            expected_string = "KeywordBear:\n"
+            expected_string += ("  Checks the code files for given keywords."
+                                "\n\n")
+            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "   * test\n\n"
+            expected_string += "  " + _("Needed Settings:") + "\n"
+            expected_string += ("   * cs_keywords: A list of keywords to "
+                                "search for (case sensitive). Usual examples "
+                                "are TODO and FIXME.\n")
+            expected_string += ("   * ci_keywords: A list of keywords to "
+                                "search for (case insensitive).\n\n")
+            expected_string += "  " + _("No optional settings.") + "\n\n"
+
+            self.assertEqual(expected_string, stdout.getvalue())
+
+    def test_show_bears_no_sections(self):
+        with retrieve_stdout() as stdout:
+            bears = {SomeBear: []}
+            self.uut.show_bears(bears)
+            expected_string = "SomeBear:\n"
+            expected_string += "  " + "Some Description." + "\n\n"
+            expected_string += "  " + _("No sections.") + "\n\n"
+            expected_string += "  " + _("No needed settings.") + "\n\n"
+            expected_string += "  " + _("No optional settings.") + "\n\n"
+
+            self.assertEqual(expected_string, stdout.getvalue())
 
 
 if __name__ == '__main__':
