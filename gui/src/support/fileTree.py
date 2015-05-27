@@ -25,6 +25,7 @@ class coalaFileTree(Gtk.TreeStore):
 
         self.fileTreeView.connect("row-expanded", self.onRowExpanded)
         self.fileTreeView.connect("row-collapsed", self.onRowCollapsed)
+        self.fileTreeView.set_headers_visible(False)
 
     def populateFileTree(self, path, parent=None):
         itemCounter = 0
