@@ -1,4 +1,5 @@
 from inspect import ismethod, getfullargspec
+from collections import OrderedDict
 
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
@@ -23,16 +24,18 @@ class FunctionMetadata:
         :param retval_desc:         The retval description of the function.
         :param non_optional_params: A dict containing the name of non optional
                                     parameters as the key and a tuple of a
-                                    description and the python annotation.
+                                    description and the python annotation. To
+                                    preserve the order, use OrderedDict.
         :param optional_params:     A dict containing the name of optional
                                     parameters as the key and a tuple
                                     of a description, the python annotation and
-                                    the default value.
+                                    the default value. To preserve the order,
+                                    use OrderedDict.
         """
         if non_optional_params is None:
-            non_optional_params = {}
+            non_optional_params = OrderedDict()
         if optional_params is None:
-            optional_params = {}
+            optional_params = OrderedDict()
 
         self.name = name
         self.desc = desc
@@ -107,8 +110,8 @@ class FunctionMetadata:
             doc = ""
         doc_comment = DocumentationComment.from_docstring(doc)
 
-        non_optional_params = {}
-        optional_params = {}
+        non_optional_params = OrderedDict()
+        optional_params = OrderedDict()
 
         argspec = getfullargspec(func)
         args = argspec.args if argspec.args is not None else ()
