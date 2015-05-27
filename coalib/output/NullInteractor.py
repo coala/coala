@@ -22,3 +22,6 @@ class NullInteractor(Interactor):
     def acquire_settings(self, settings):
         # We can't get settings here, if bears need them, they better fail.
         pass
+
+    def show_bears(self, bears):
+        pass

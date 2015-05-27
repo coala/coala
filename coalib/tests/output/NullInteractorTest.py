@@ -17,6 +17,7 @@ class NullInteractorTest(unittest.TestCase):
         self.uut.did_nothing()
         self.uut.begin_section("name")
         self.uut.acquire_settings([])
+        self.uut.show_bears({})
 
 
 if __name__ == '__main__':
