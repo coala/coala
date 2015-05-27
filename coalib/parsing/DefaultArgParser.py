@@ -80,3 +80,11 @@ default_arg_parser.add_argument('-v',
                                 '--version',
                                 action='version',
                                 version=version_str)
+SHOW_BEARS_HELP = _("Display bears and its metadata with the sections that "
+                    "they belong to")
+default_arg_parser.add_argument('-B',
+                                '--show-bears',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                help=SHOW_BEARS_HELP)
