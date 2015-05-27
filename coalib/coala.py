@@ -18,6 +18,7 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.ConfigurationGathering import gather_configuration
+from coalib.output.ShowBears import show_bears
 from coalib.misc.i18n import _
 
 
@@ -34,18 +35,26 @@ def main():
          targets,
          interactor,
          log_printer) = gather_configuration()
-        for section_name in sections:
-            section = sections[section_name]
-            if not section.is_enabled(targets):
-                continue
 
-            yielded_results = yielded_results or SectionExecutor(
-                section=section,
-                global_bear_list=global_bears[section_name],
-                local_bear_list=local_bears[section_name],
-                interactor=interactor,
-                log_printer=log_printer).run()[0]
+        if bool(sections["default"].get("show_bears", "False")):
+            show_bears(sections,
+                       local_bears,
+                       global_bears,
+                       interactor.show_bears)
             did_nothing = False
+        else:
+            for section_name in sections:
+                section = sections[section_name]
+                if not section.is_enabled(targets):
+                    continue
+
+                yielded_results = yielded_results or SectionExecutor(
+                    section=section,
+                    global_bear_list=global_bears[section_name],
+                    local_bear_list=local_bears[section_name],
+                    interactor=interactor,
+                    log_printer=log_printer).run()[0]
+                did_nothing = False
 
         if did_nothing:
             interactor.did_nothing()
