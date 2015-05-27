@@ -1,4 +1,5 @@
 import inspect
+from collections import OrderedDict
 
 from coalib.misc.i18n import _
 from coalib.misc.Enum import enum
@@ -13,7 +14,8 @@ class DocumentationComment:
 
         :param desc:        A description as string.
         :param param_dict:  A dictionary containing parameter names as key and
-                            their description as value.
+                            their description as value. To preserve the order,
+                            use OrderedDict.
         :param retval_desc: A string describing the return value.
         """
         self.desc = desc
@@ -35,7 +37,7 @@ class DocumentationComment:
         cur_param = ""
 
         desc = ""
-        param_dict = {}
+        param_dict = OrderedDict()
         retval_desc = ""
         for line in lines:
             line = line.strip()
