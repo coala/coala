@@ -1,6 +1,11 @@
+import os
+from collections import OrderedDict
 from gi.repository import Gtk
 
 from gui.src.support.fileTree import coalaFileTree
+from gui.src.support.settingTree import coalaSettingTree
+from coalib.settings.SectionManager import SectionManager
+from coalib.settings.Section import Section
 
 
 class coalaWindow(Gtk.ApplicationWindow):
@@ -9,6 +14,11 @@ class coalaWindow(Gtk.ApplicationWindow):
         Gtk.ApplicationWindow.__init__(self,
                                        application=app,
                                        title="coala")
+
+        self.path = src
+        os.chdir(self.path)
+        self.section_manager = SectionManager()
+        self.sections = {}
 
         self._ui = Gtk.Builder()
         self._ui.add_from_resource("/coala/coalaWindow.ui")
@@ -24,14 +34,31 @@ class coalaWindow(Gtk.ApplicationWindow):
 
         self.section_stack = self._ui.get_object("sections")
         self.section_stack_switcher = self._ui.get_object("section_switcher")
-        self.section_stack_switcher.set_size_request(244, -1)
+        self.section_stack_switcher.set_size_request(242, -1)
+        self.section_window = self._ui.get_object("section_window")
+        self.section_window.set_size_request(244, -1)
 
         self.filetree = coalaFileTree(src)
         self.filetreecontainer = self._ui.get_object("filetree")
         self.filetreecontainer.add(self.filetree.fileTreeView)
         self.filetreecontainer.set_size_request(244, -1)
 
+        self.setup_config_file()
+
         self.set_default_size(1000, 800)
+
+    def setup_config_file(self):
+        if os.path.isfile(self.path+'/.coafile'):
+            self.section_manager._load_configuration([])
+        else:
+            coafile = open(".coafile", "w")
+            coafile.close()
+            self.section_manager._load_configuration([])
+        self.setup_sections()
+
+    def setup_sections(self):
+        for key in self.section_manager.sections:
+            self.add_section(key)
 
     def add_section_dialog(self, button, message):
         dialogWindow = Gtk.MessageDialog(self,
@@ -56,9 +83,20 @@ class coalaWindow(Gtk.ApplicationWindow):
     def add_section(self, section):
         box = Gtk.Box()
         box.set_visible(True)
-        button = Gtk.Button()
-        button.set_label(section)
-        button.show_all()
-        box.add(button)
+        box.set_border_width(10)
+        box.set_hexpand(True)
+        sw = Gtk.ScrolledWindow()
+        sw.set_visible(True)
+        sw.set_hexpand(True)
+        settings = coalaSettingTree()
+        self.sections[section] = settings
+        sw.add(settings.treeView)
+        box.add(sw)
+        if section in self.section_manager.sections:
+            for key in self.section_manager.sections[section]:
+                settings.append([key,
+                                 str(self.section_manager.sections[section][key])])
+        else:
+            self.section_manager.sections[section] = Section(section)
         self.section_stack.add_titled(box, section, section)
         self.section_stack_switcher.queue_draw()

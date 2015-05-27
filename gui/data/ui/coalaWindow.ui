@@ -48,9 +48,15 @@
       <object class="GtkBox">
         <property name="visible">True</property>
         <child>
-          <object class="GtkStackSidebar" id="section_switcher">
+          <object class="GtkScrolledWindow" id="section_window">
             <property name="visible">true</property>
-            <property name="stack">sections</property>
+            <property name="shadow_type">4</property>
+            <child>
+              <object class="GtkStackSidebar" id="section_switcher">
+                <property name="visible">true</property>
+                <property name="stack">sections</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack_type">start</property>
@@ -61,20 +67,7 @@
             <property name="visible">true</property>
             <property name="can_focus">True</property>
             <property name="transition-type">crossfade</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">true</property>
-                <child>
-                  <object class="GtkButton">
-                    <property name="label">Bleh</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="name">default</property>
-                <property name="title" translatable="yes">Default</property>
-              </packing>
-            </child>
+            <property name="hexpand">True</property>
           </object>
           <packing>
             <property name="pack_type">end</property>
@@ -91,6 +84,7 @@
         <child>
           <object class="GtkScrolledWindow" id="filetree">
             <property name="visible">true</property>
+            <property name="shadow_type">4</property>
           </object>
         </child>
       </object>
