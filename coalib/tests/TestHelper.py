@@ -6,7 +6,8 @@ import subprocess
 import sys
 import shutil
 import webbrowser
-from coalib.misc.ContextManagers import suppress_stdout
+from coalib.misc.ContextManagers import (suppress_stdout,
+                                         preserve_sys_path)
 
 
 class TestHelper:
@@ -177,23 +178,22 @@ class TestHelper:
 
     @staticmethod
     def __check_module_skip(filename):
-        module_dir = os.path.dirname(filename)
-        if module_dir not in sys.path:
-            sys.path.insert(0, module_dir)
+        with preserve_sys_path(), suppress_stdout():
+            module_dir = os.path.dirname(filename)
+            if module_dir not in sys.path:
+                sys.path.insert(0, module_dir)
 
-        try:
-            # Don't allow module code printing
-            with suppress_stdout():
+            try:
                 module = importlib.import_module(
                     os.path.basename(os.path.splitext(filename)[0]))
 
-            for name, object in inspect.getmembers(module):
-                if inspect.isfunction(object) and name == "skip_test":
-                    return object()
-        except ImportError as exception:
-            return str(exception)
+                for name, object in inspect.getmembers(module):
+                    if inspect.isfunction(object) and name == "skip_test":
+                        return object()
+            except ImportError as exception:
+                return str(exception)
 
-        return False
+            return False
 
     def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
