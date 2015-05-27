@@ -221,6 +221,64 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
     def _print_section_beginning(self, section):
         self.print(_("Executing section {name}...").format(name=section.name))
 
+    def show_bears(self, bears):
+        """
+        Presents all bears being used in a stylized manner.
+
+        :param bears: Its a dictionary with bears as keys and list of sections
+                      containing those bears as values.
+        """
+        if not bears:
+            self.print(_("No bears to show."))
+        else:
+            for bear in sorted(bears.keys(),
+                               key=lambda bear: bear.__class__.__name__):
+                self._show_bear(bear, bears[bear], bear.get_metadata())
+
+    def _show_enumeration(self, title, items, indentation, no_items_text):
+        """
+        This function takes as input an iterable object (preferably a list or
+        a dict). And prints in a stylized format. If the iterable object is
+        empty, it prints a specific statement give by the user. An e.g :
+
+        <indentation>Title:
+        <indentation> * Item 1
+        <indentation> * Item 2
+
+        :param title:         Title of the text to be printed
+        :param items:         The iterable object.
+        :param indentation:   Number of spaces to indent every line by.
+        :param no_items_text: Text printed when iterable object is empty.
+        """
+        if not items:
+            self.print(indentation + no_items_text)
+        else:
+            self.print(indentation + title)
+            if isinstance(items, dict):
+                for key, value in items.items():
+                    self.print(indentation + " * " + key + ": " + value[0])
+            else:
+                for item in items:
+                    self.print(indentation + " * " + item)
+        self.print()
+
+    def _show_bear(self, bear, sections, metadata):
+        self.print("{bear}:".format(bear=bear.__name__))
+        self.print("  " + metadata.desc + "\n")
+
+        self._show_enumeration(_("Used in:"),
+                               sections,
+                               "  ",
+                               _("No sections."))
+        self._show_enumeration(_("Needed Settings:"),
+                               metadata.non_optional_params,
+                               "  ",
+                               _("No needed settings."))
+        self._show_enumeration(_("Optional Settings:"),
+                               metadata.optional_params,
+                               "  ",
+                               _("No optional settings."))
+
     def did_nothing(self):
         self.print(_("No existent section was targeted or enabled. Nothing "
                      "to do."))
