@@ -2,6 +2,7 @@ import os
 import dbus.service
 
 from coalib.output.dbus.DbusApp import DbusApp
+from coalib.output.dbus.DbusDocument import DbusDocument
 
 
 class DbusServer(dbus.service.Object):
@@ -55,3 +56,36 @@ class DbusServer(dbus.service.Object):
 
         if len(self.apps) == 0 and self.callback:
             self.callback()
+
+    def create_document(self, app, path):
+        doc = DbusDocument()
+
+        doc.id = app.next_doc_id
+        doc.path = path
+        app.next_doc_id += 1
+        app.docs[path] = doc
+        objpath = self._object_path + "/" + str(app.id) + \
+                  "/documents/" + str(doc.id)
+
+        doc.add_to_connection(self._connection, objpath)
+        return doc
+
+    def get_or_create_document(self, app, path):
+        npath = (path and os.path.normpath(path))
+        try:
+            doc = app.docs[npath]
+        except KeyError:
+            doc = self.create_document(app, npath)
+        doc.path = path
+
+        return doc
+
+    def dispose_document(self, app, path):
+        try:
+            app.docs[path].remove_from_connection()
+            app.docs.pop(path)
+        except KeyError:
+            pass
+
+        if len(app.docs) == 0:
+            self.dispose_app(app.name)
