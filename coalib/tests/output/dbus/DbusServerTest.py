@@ -55,6 +55,33 @@ class DbusServerTest(unittest.TestCase):
         uut.create_app("app1")
         self.assertRaises(AssertionError, uut.dispose_app, "app1")
 
+    def test_docs(self):
+        uut = DbusServer(self.session_bus, "/org/coala/v1/test_docs")
+        uut.create_app("app1")
+        self.assertIn("app1", uut.apps)
+
+        doc1 = __file__
+        doc2 = __file__ + ".txt"
+
+        uut.create_document(uut.apps["app1"], doc1)
+        self.assertIn(doc1, uut.apps["app1"].docs)
+
+        uut.get_or_create_document(uut.apps["app1"], doc1)
+        self.assertIn(doc1, uut.apps["app1"].docs)
+
+        uut.dispose_document(uut.apps["app1"], doc2)
+        self.assertIn("app1", uut.apps)
+        self.assertNotIn(doc2, uut.apps["app1"].docs)
+        self.assertIn(doc1, uut.apps["app1"].docs)
+
+        uut.get_or_create_document(uut.apps["app1"], doc2)
+        uut.dispose_document(uut.apps["app1"], doc1)
+        self.assertIn("app1", uut.apps)
+        self.assertIn(doc2, uut.apps["app1"].docs)
+
+        uut.dispose_document(uut.apps["app1"], doc2)
+        self.assertNotIn("app1", uut.apps)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
