@@ -23,6 +23,8 @@ commit message.
    the key to developing good software and finding its bug before they occur.
  * Good commit messages make it easy to check at a glance what happened in a
    time range.
+ * It is way easier to revert single changes without side effects. Reverting
+   multiple commits at a time is easy, reverting a part of a commit is not.
  * `git blame` will be much more effective. It is the best documentation you
    can get. The older your code is, the more documentation it has. The better
    the commit messages are, the better is your hidden documentation. Your
