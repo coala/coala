@@ -47,6 +47,7 @@ def main():
                 if not section.is_enabled(targets):
                     continue
 
+                interactor.begin_section(section)
                 yielded_results = yielded_results or SectionExecutor(
                     section=section,
                     global_bear_list=global_bears[section_name],

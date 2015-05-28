@@ -27,11 +27,7 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
         self.log_queue.put(log_message)
 
     def print_results(self, result_list, file_dict):
-        assert self.set_up
         self.result_queue.put(result_list)
-
-    def begin_section(self, name):
-        self.set_up = True
 
 
 class ProcessQueuesTestSectionExecutor(SectionExecutor):
