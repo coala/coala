@@ -24,6 +24,17 @@ class DbusServer(dbus.service.Object):
         self.__next_app_id = 0
         self.on_disconnected = on_disconnected
 
+        bus.add_signal_receiver(self._on_name_lost,
+                                signal_name='NameOwnerChanged',
+                                dbus_interface=None,
+                                path=None)
+
+    def _on_name_lost(self, name, oldowner, newowner):
+        if newowner != '':
+            return
+
+        self.dispose_app(oldowner)
+
     def _next_app_id(self):
         self.__next_app_id += 1
         return self.__next_app_id
