@@ -5,6 +5,8 @@ from coalib.output.dbus.DbusApp import DbusApp
 
 
 class DbusServer(dbus.service.Object):
+    interface = "org.coala.v1"
+
     def __init__(self, bus, path, on_disconnected=None):
         """
         Creates a new DbusServer class which handles the dynamic creation and
@@ -28,6 +30,45 @@ class DbusServer(dbus.service.Object):
                                 signal_name='NameOwnerChanged',
                                 dbus_interface=None,
                                 path=None)
+
+    @dbus.service.method(interface,
+                         in_signature="s",
+                         out_signature="o",
+                         sender_keyword="sender")
+    def CreateDocument(self, path, sender=None):
+        """
+        Creates a DbusDocument if it doesn't exist.
+
+        :param path:   The path to the document.
+        :param sender: The client who created the dbus request - this is used
+                       as the DbusApp's name.
+        :return:       a DbusDocument object.
+        """
+        app = self.get_or_create_app(sender)
+        doc = self.get_or_create_document(app, path)
+        return doc._object_path
+
+    @dbus.service.method(interface,
+                         in_signature="s",
+                         out_signature="",
+                         sender_keyword="sender")
+    def DisposeDocument(self, path, sender=None):
+        """
+        Disposes a DbusDocument if it exists. Fails silently if it does not
+        exist.
+
+        :param path:   The path to the document.
+        :param sender: The client who created the dbus request - this is used
+                       as the DbusApp's name to search for the document in.
+        """
+        path = os.path.normpath(path)
+
+        try:
+            app = self.apps[sender]
+        except KeyError:
+            return
+
+        self.dispose_document(app, path)
 
     def _on_name_lost(self, name, oldowner, newowner):
         if newowner != '':
