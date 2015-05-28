@@ -73,8 +73,6 @@ class SectionExecutor:
                  (filenames are key) and a Manager.dict containing all global
                  bear results (bear names are key).
         """
-        self.interactor.begin_section(self.section)
-
         running_processes = get_cpu_count()
         processes, arg_dict = self._instantiate_processes(running_processes)
 
