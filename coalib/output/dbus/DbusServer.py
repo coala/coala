@@ -2,6 +2,7 @@ import os
 import dbus.service
 
 from coalib.output.dbus.DbusApp import DbusApp
+from coalib.output.dbus.DbusDocument import DbusDocument
 
 
 class DbusServer(dbus.service.Object):
@@ -77,3 +78,62 @@ class DbusServer(dbus.service.Object):
 
         if len(self.apps) == 0 and self.callback:
             self.callback()
+
+    def create_document(self, app, path):
+        """
+        Create a new dbus document.
+
+        :param app:  The DbusApp the document is related to.
+        :param path: The path to the document to be created.
+        :return:     a DbusDocument object.
+        """
+        path = os.path.abspath(os.path.expanduser(path))
+        doc = DbusDocument()
+
+        doc.id = app.next_doc_id
+        doc.path = path
+        app.next_doc_id += 1
+        app.docs[path] = doc
+        objpath = self._object_path + "/" + str(app.id) + \
+                  "/documents/" + str(doc.id)
+
+        doc.add_to_connection(self._connection, objpath)
+        return doc
+
+    def get_or_create_document(self, app, path):
+        """
+        Get the dbus document with the given path. If there does not exist any
+        document under the DbusApp with the given path, a new document is
+        created and returned.
+
+        :param app:  The DbusApp the document is under.
+        :param path: The path to the document to be created.
+        :return:     A DbusApp object.
+        """
+        path = os.path.abspath(os.path.expanduser(path))
+        try:
+            doc = app.docs[path]
+        except KeyError:
+            doc = self.create_document(app, path)
+        doc.path = path
+
+        return doc
+
+    def dispose_document(self, app, path):
+        """
+        Dispose of the document with the given path. It fails silently if the
+        document does not exist. If there are no more documents in the app,
+        the app is disposed.
+
+        :param app:  The DbusApp the document is under.
+        :param path: The path to the document.
+        """
+        path = os.path.abspath(os.path.expanduser(path))
+        try:
+            app.docs[path].remove_from_connection()
+            app.docs.pop(path)
+        except KeyError:
+            pass
+
+        if len(app.docs) == 0:
+            self.dispose_app(app.name)
