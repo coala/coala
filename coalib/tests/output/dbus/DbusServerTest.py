@@ -82,6 +82,20 @@ class DbusServerTest(unittest.TestCase):
         uut.dispose_document(uut.apps["app1"], doc2)
         self.assertNotIn("app1", uut.apps)
 
+    def test_dbus_methods(self):
+        uut = DbusServer(self.session_bus, "/org/coala/v1/test_dbus_methods")
+        doc1 = __file__
+
+        uut.CreateDocument(doc1, sender="app1")
+        self.assertIn("app1", uut.apps)
+        self.assertIn(doc1, uut.apps["app1"].docs)
+
+        uut.DisposeDocument(doc1, sender="app1")
+        self.assertNotIn("app1", uut.apps)
+
+        uut.DisposeDocument(doc1, sender="app2")
+        self.assertEqual(len(uut.apps), 0)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
