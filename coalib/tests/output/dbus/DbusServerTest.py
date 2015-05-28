@@ -31,6 +31,19 @@ class DbusServerTest(unittest.TestCase):
         uut.dispose_app("app1")
         self.assertNotIn("app1", uut.apps)
 
+    def test_on_name_lost(self):
+        uut = DbusServer(self.session_bus, "/org/coala/v1/test_on_name_lost")
+        uut.create_app("app1")
+
+        uut._on_name_lost("", "", "a1")
+        self.assertIn("app1", uut.apps)
+
+        uut._on_name_lost("", "app2", "")
+        self.assertIn("app1", uut.apps)
+
+        uut._on_name_lost("", "app1", "")
+        self.assertNotIn("app1", uut.apps)
+
     @staticmethod
     def callback1():
         assert 1 == 2
