@@ -11,6 +11,8 @@ class DbusServer(dbus.service.Object):
         documents  and also handles information about the DbusApplication of
         the document.
     """
+    interface = "org.coala.v1"
+
     def __init__(self, bus, path, callback=None):
         """
         :param bus:      The dbus bus to which to connect this object path to
@@ -29,6 +31,29 @@ class DbusServer(dbus.service.Object):
                                 signal_name='NameOwnerChanged',
                                 dbus_interface='org.freedesktop.DBus',
                                 path='/org/freedesktop/DBus')
+
+    @dbus.service.method(interface,
+                         in_signature="s",
+                         out_signature="o",
+                         sender_keyword="sender")
+    def CreateDocument(self, path, sender=None):
+        app = self.get_or_create_app(sender)
+        doc = self.get_or_create_document(app, path)
+        return doc._object_path
+
+    @dbus.service.method(interface,
+                         in_signature="s",
+                         out_signature="",
+                         sender_keyword="sender")
+    def DisposeDocument(self, path, sender=None):
+        path = os.path.normpath(path)
+
+        try:
+            app = self.apps[sender]
+        except KeyError:
+            return
+
+        self.dispose_document(app, path)
 
     def _on_name_lost(self, name, oldowner, newowner):
         if newowner != '':
