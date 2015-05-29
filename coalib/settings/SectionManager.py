@@ -14,7 +14,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
-from coalib.settings.SectionFiller import fill_settings
+from coalib.settings.SectionFilling import fill_settings
 
 
 def merge_section_dicts(lower, higher):

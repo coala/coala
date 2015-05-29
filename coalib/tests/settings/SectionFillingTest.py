@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.SectionFiller import fill_section, Setting
+from coalib.settings.SectionFilling import fill_section, Setting
 from coalib.settings.Section import Section
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
@@ -31,7 +31,7 @@ class LocalTestBear(LocalBear):
                 "global name": "this setting is needed by two bears"}
 
 
-class SectionFillerTest(unittest.TestCase):
+class SectionFillingTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ConsolePrinter()
         self.interactor = ConsoleInteractor(self.log_printer)
