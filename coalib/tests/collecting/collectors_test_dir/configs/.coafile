@@ -1,0 +1,2 @@
+[Default]
+files = project/*.py, **/*.vala

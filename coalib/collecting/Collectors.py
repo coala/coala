@@ -4,7 +4,8 @@ from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import _
 from coalib.parsing.Glob import iglob
-
+from coalib.misc.StringConstants import StringConstants
+from coalib.parsing.ConfParser import ConfParser
 
 def _yield_if_right_kind(bear_class, kinds):
     try:
@@ -112,3 +113,74 @@ def collect_bears(bear_dirs, bear_names, kinds, log_printer):
     :return:            list of matching bear classes
     """
     return list(icollect_bears(bear_dirs, bear_names, kinds, log_printer))
+
+
+def _find_section_in_file(file_path, config_file):
+    file_path = os.path.normpath(os.path.expanduser(file_path))
+    config_file = os.path.normpath(os.path.expanduser(config_file))
+    base_dir = os.path.dirname(config_file)
+
+    conf_parser = ConfParser()
+    applicable_sections = []
+    try:
+        all_sections = conf_parser.reparse(config_file)
+    except conf_parser.FileNotFoundError:
+        return False
+
+    for section_name in all_sections:
+        section = all_sections[section_name]
+        if "files" in section:
+            for file_pattern in section["files"]:
+                abs_file_pattern = os.path.abspath(os.path.join(
+                    base_dir, file_pattern))
+                if file_path in iglob(abs_file_pattern):
+                    applicable_sections.append(section_name)
+
+    return applicable_sections
+
+
+def collect_config_files(file_path, base_dir=None):
+    """
+    Uses the filepath to find all suitable config files and sections that
+    can be used for the file, and gives it in the order of preference.
+
+    :param file_path: The path of the file whose configs need to be
+                      found
+    :param base_dir:  The path from which coala will handle relative
+                      paths
+    :return:          A list of tuples containing the config file's
+                      path and the Section which is applicable to
+                      the given file
+    """
+    file_path = os.path.abspath(os.path.expanduser(file_path))
+    possible_configs = []
+
+    if not base_dir:
+        base_dir = os.path.dirname(file_path)
+
+    # Project config - Find the closest config in the parent directories
+    old_dir = None
+    next_dir = os.path.dirname(file_path)
+
+    while not(next_dir == old_dir or old_dir == os.path.expanduser("~")):
+        config_file = os.path.join(next_dir, ".coafile")
+        sections = _find_section_in_file(file_path, config_file)
+        if sections:
+            possible_configs.append(config_file)
+
+        old_dir = next_dir
+        next_dir = os.path.dirname(next_dir)
+
+    # User config - Find the user coafile
+    config_file = StringConstants.user_coafile
+    sections = _find_section_in_file(file_path, config_file)
+    if sections:
+        possible_configs.append(config_file)
+
+    # System config - Find the system coafile
+    config_file = StringConstants.system_coafile
+    sections = _find_section_in_file(file_path, config_file)
+    if sections:
+        possible_configs.append(config_file)
+
+    return possible_configs
