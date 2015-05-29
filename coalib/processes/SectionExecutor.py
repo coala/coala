@@ -171,17 +171,10 @@ class SectionExecutor:
         self.interactor.finalize(file_dict)
         return retval
 
-    @staticmethod
-    def _non_hidden_results(result_list):
-        results = []
-        for result in result_list:
-            if not isinstance(result, HiddenResult):
-                results.append(result)
-
-        return results
-
     def _print_result(self, result_dict, file_dict, index, retval):
-        results = self._non_hidden_results(result_dict[index])
+        results = list(filter(lambda result: not isinstance(result,
+                                                            HiddenResult),
+                              result_dict[index]))
         self.interactor.print_results(results, file_dict)
 
         return retval or len(results) > 0
