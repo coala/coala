@@ -42,6 +42,33 @@ def merge_section_dicts(lower, higher):
     return lower
 
 
+def load_config_file(filename, log_printer, silent=False):
+    """
+    Loads sections from a config file. Prints an appropriate warning if
+    it doesn't exist and returns a section dict containing an empty
+    default section in that case.
+
+    It assumes that the cli_sections are available.
+
+    :param filename:    The file to load settings from.
+    :param log_printer: The log printer to log the warning to (in case).
+    :param silent:      Whether or not to warn the user if the file doesn't
+                        exist.
+    """
+    filename = os.path.abspath(filename)
+    conf_parser = ConfParser()
+
+    try:
+        return conf_parser.reparse(filename)
+    except conf_parser.FileNotFoundError:
+        if not silent:
+            log_printer.warn(
+                _("The requested coafile '{filename}' does not exist. "
+                  "Thus it will not be used.").format(filename=filename))
+
+        return {"default": Section("default")}
+
+
 class SectionManager:
     """
     The SectionManager does the following things:
@@ -111,11 +138,13 @@ class SectionManager:
                 self.cli_sections["default"].contents.pop("targets", "")):
             self.targets.append(item.lower())
 
-        self.default_sections = self._load_config_file(
-            StringConstants.system_coafile)
+        self.default_sections = load_config_file(
+            StringConstants.system_coafile,
+            self.log_printer)
 
-        self.user_sections = self._load_config_file(
+        self.user_sections = load_config_file(
             StringConstants.user_coafile,
+            self.log_printer,
             silent=True)
 
         default_config = str(
@@ -125,7 +154,7 @@ class SectionManager:
         config = os.path.abspath(str(
             self.cli_sections["default"].get("config", user_config)))
 
-        self.coafile_sections = self._load_config_file(config)
+        self.coafile_sections = load_config_file(config, self.log_printer)
 
         self.sections = merge_section_dicts(self.default_sections,
                                             self.user_sections)
@@ -139,30 +168,6 @@ class SectionManager:
         for section in self.sections:
             if section != "default":
                 self.sections[section].defaults = self.sections["default"]
-
-    def _load_config_file(self, filename, silent=False):
-        """
-        Loads sections from a config file. Prints an appropriate warning if
-        it doesn't exist and returns a section dict containing an empty
-        default section in that case.
-
-        It assumes that the cli_sections are available.
-
-        :param filename: The file to load settings from.
-        :param silent:   Whether or not to warn the user if the file doesn't
-                         exist.
-        """
-        filename = os.path.abspath(filename)
-
-        try:
-            return self.conf_parser.reparse(filename)
-        except self.conf_parser.FileNotFoundError:
-            if not silent:
-                self.log_printer.warn(
-                    _("The requested coafile '{filename}' does not exist. "
-                      "Thus it will not be used.").format(filename=filename))
-
-            return {"default": Section("default")}
 
     def retrieve_logging_objects(self, section):
         """
