@@ -142,6 +142,60 @@ def fill_settings(sections, interactor, log_printer):
     return local_bears, global_bears
 
 
+def close_objects(*objs):
+    """
+    Determines for all given objects if an object is closable and closes
+    it if possible.
+
+    :param objs: The objects to close.
+    """
+    for obj in objs:
+        if isinstance(obj, ClosableObject):
+            obj.close()
+
+
+def retrieve_logging_objects(section):
+    """
+    Creates an appropriate log printer and interactor according to the
+    settings.
+
+    :param section: The section to get the logging objects for.
+    :return:        A tuple holding (interactor, log_printer).
+    """
+    log_type = str(section.get("log_type", "console")).lower()
+    output_type = str(section.get("output", "console")).lower()
+    str_log_level = str(section.get("log_level", "")).upper()
+    log_level = LOG_LEVEL.str_dict.get(str_log_level, LOG_LEVEL.WARNING)
+
+    if log_type == "console":
+        log_printer = ConsolePrinter(log_level=log_level)
+    else:
+        try:
+            # ConsolePrinter is the only printer which may not throw an
+            # exception (if we have no bugs though) so well fallback to him
+            # if some other printer fails
+            if log_type == "none":
+                log_printer = NullPrinter()
+            else:
+                log_printer = FilePrinter(filename=log_type,
+                                          log_level=log_level)
+        except:
+            log_printer = ConsolePrinter(log_level=log_level)
+            log_printer.log(
+                LOG_LEVEL.WARNING,
+                _("Failed to instantiate the logging method '{}'. Falling "
+                  "back to console output.").format(log_type))
+
+    if output_type == "none":
+        interactor = NullInteractor(log_printer=log_printer)
+    else:
+        interactor = ConsoleInteractor.from_section(
+            section,
+            log_printer=log_printer)
+
+    return interactor, log_printer
+
+
 class SectionManager:
     """
     The SectionManager does the following things:
@@ -191,7 +245,9 @@ class SectionManager:
                           * The log printer (needs to be closed!)
         """
         self._load_configuration(arg_list)
-        self.retrieve_logging_objects(self.sections["default"])
+        close_objects(self.interactor, self.log_printer)
+        self.interactor, self.log_printer = retrieve_logging_objects(
+            self.sections["default"])
         self.local_bears, self.global_bears = fill_settings(self.sections,
                                                             self.interactor,
                                                             self.log_printer)
@@ -207,7 +263,9 @@ class SectionManager:
 
     def _load_configuration(self, arg_list):
         self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
-        self.retrieve_logging_objects(self.cli_sections["default"])
+        close_objects(self.interactor, self.log_printer)
+        self.interactor, self.log_printer = retrieve_logging_objects(
+            self.cli_sections["default"])
         # We dont want to store targets argument back to file, thus remove it
         for item in list(
                 self.cli_sections["default"].contents.pop("targets", "")):
@@ -243,47 +301,3 @@ class SectionManager:
         for section in self.sections:
             if section != "default":
                 self.sections[section].defaults = self.sections["default"]
-
-    def retrieve_logging_objects(self, section):
-        """
-        Creates an appropriate log printer and interactor according to the
-        settings.
-        """
-        if self.interactor is not None and isinstance(self.interactor,
-                                                      ClosableObject):
-            # Cannot be tested - we dont have an Interactor needing closing yet
-            self.interactor.close()  # pragma: no cover
-        if self.log_printer is not None and isinstance(self.log_printer,
-                                                       ClosableObject):
-            self.log_printer.close()
-
-        log_type = str(section.get("log_type", "console")).lower()
-        output_type = str(section.get("output", "console")).lower()
-        str_log_level = str(section.get("log_level", "")).upper()
-        log_level = LOG_LEVEL.str_dict.get(str_log_level, LOG_LEVEL.WARNING)
-
-        if log_type == "console":
-            self.log_printer = ConsolePrinter(log_level=log_level)
-        else:
-            try:
-                # ConsolePrinter is the only printer which may not throw an
-                # exception (if we have no bugs though) so well fallback to him
-                # if some other printer fails
-                if log_type == "none":
-                    self.log_printer = NullPrinter()
-                else:
-                    self.log_printer = FilePrinter(filename=log_type,
-                                                   log_level=log_level)
-            except:
-                self.log_printer = ConsolePrinter(log_level=log_level)
-                self.log_printer.log(
-                    LOG_LEVEL.WARNING,
-                    _("Failed to instantiate the logging method '{}'. Falling "
-                      "back to console output.").format(log_type))
-
-        if output_type == "none":
-            self.interactor = NullInteractor(log_printer=self.log_printer)
-        else:
-            self.interactor = ConsoleInteractor.from_section(
-                section,
-                log_printer=self.log_printer)

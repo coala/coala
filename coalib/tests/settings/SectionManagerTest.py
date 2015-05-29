@@ -6,7 +6,9 @@ import unittest
 sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
-from coalib.settings.SectionManager import SectionManager
+from coalib.settings.SectionManager import (SectionManager,
+                                            retrieve_logging_objects,
+                                            close_objects)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.output.ConsoleInteractor import ConsoleInteractor
@@ -163,49 +165,57 @@ class SectionManagerTest(unittest.TestCase):
         self.assertEqual(targets, ["default", "test1", "test2"])
 
     def test_outputting(self):
-        uut = SectionManager()
-        uut.retrieve_logging_objects(Section("default"))
-        self.assertIsInstance(uut.interactor, ConsoleInteractor)
+        interactor, log_printer = retrieve_logging_objects(Section("default"))
+        self.assertIsInstance(interactor, ConsoleInteractor)
+        close_objects(interactor, log_printer)
 
         test_section = Section("default")
         test_section.append(Setting(key="output", value="none"))
-        uut.retrieve_logging_objects(test_section)
-        self.assertIsInstance(uut.interactor, NullInteractor)
+        interactor, log_printer = retrieve_logging_objects(test_section)
+        self.assertIsInstance(interactor, NullInteractor)
+        close_objects(interactor, log_printer)
 
         test_section = Section("default")
         test_section.append(Setting(key="output", value="anything else"))
-        uut.retrieve_logging_objects(test_section)
-        self.assertIsInstance(uut.interactor, ConsoleInteractor)
+        interactor, log_printer = retrieve_logging_objects(test_section)
+        self.assertIsInstance(interactor, ConsoleInteractor)
+        close_objects(interactor, log_printer)
 
     def test_logging(self):
-        uut = SectionManager()
         test_section = Section("default")
         test_section.append(Setting(key="log_TYPE", value="conSole"))
-        uut.retrieve_logging_objects(test_section)
-        self.assertIsInstance(uut.log_printer, ConsolePrinter)
+        interactor, log_printer = retrieve_logging_objects(test_section)
+        self.assertIsInstance(log_printer, ConsolePrinter)
+        close_objects(interactor, log_printer)
 
         test_section = Section("default")
         test_section.append(Setting(key="log_TYPE", value="NONE"))
-        uut.retrieve_logging_objects(test_section)
-        self.assertIsInstance(uut.log_printer, NullPrinter)
+        interactor, log_printer = retrieve_logging_objects(test_section)
+        self.assertIsInstance(log_printer, NullPrinter)
+        close_objects(interactor, log_printer)
 
         filename = tempfile.gettempdir() + os.path.sep + "log_test~"
         test_section = Section("default")
         test_section.append(Setting(key="log_TYPE", value=re.escape(filename)))
-        uut.retrieve_logging_objects(test_section)
-        self.assertIsInstance(uut.log_printer, FilePrinter)
-        uut.log_printer.close()
+        interactor, log_printer = retrieve_logging_objects(test_section)
+        self.assertIsInstance(log_printer, FilePrinter)
+        close_objects(interactor, log_printer)
         os.remove(filename)
 
         test_section = Section("default")
         test_section.append(Setting(key="log_TYPE",
                                     value="./invalid path/@#$%^&*()_"))
-        uut.retrieve_logging_objects(test_section)  # Should throw a warning
-        self.assertIsInstance(uut.log_printer, ConsolePrinter)
-        self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.WARNING)
+        # Should throw a warning
+        interactor, log_printer = retrieve_logging_objects(test_section)
+        self.assertIsInstance(log_printer, ConsolePrinter)
+        self.assertEqual(log_printer.log_level, LOG_LEVEL.WARNING)
+        close_objects(interactor, log_printer)
+
         test_section.append(Setting(key="LOG_LEVEL", value="DEBUG"))
-        uut.retrieve_logging_objects(test_section)  # Should throw a warning
-        self.assertEqual(uut.log_printer.log_level, LOG_LEVEL.DEBUG)
+        # Should throw a warning
+        interactor, log_printer = retrieve_logging_objects(test_section)
+        self.assertEqual(log_printer.log_level, LOG_LEVEL.DEBUG)
+        close_objects(interactor, log_printer)
 
 
 if __name__ == '__main__':
