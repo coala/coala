@@ -75,18 +75,18 @@ def save_sections(sections):
 
     :param sections: A section dict.
     """
-    conf_writer = None
     default_section = sections["default"]
     try:
         if bool(default_section.get("save", "false")):
             conf_writer = ConfWriter(
                 str(default_section.get("config", ".coafile")))
+        else:
+            return
     except ValueError:
         conf_writer = ConfWriter(str(default_section.get("save", ".coafile")))
 
-    if conf_writer is not None:
-        conf_writer.write_sections(sections)
-        conf_writer.close()
+    conf_writer.write_sections(sections)
+    conf_writer.close()
 
 
 class SectionManager:
