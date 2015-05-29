@@ -21,6 +21,27 @@ from coalib.settings.SectionFiller import SectionFiller
 from coalib.settings.Setting import path_list
 
 
+def merge_section_dicts(lower, higher):
+    """
+    Merges the section dictionaries. The values of higher will take
+    precedence over the ones of lower. Lower will hold the modified dict in
+    the end.
+
+    :param lower:  A section.
+    :param higher: A section which values will take precedence over the ones
+                   from the other.
+    :return:       The merged dict.
+    """
+    for name in higher:
+        if name in lower:
+            lower[name].update(higher[name], ignore_defaults=True)
+        else:
+            # no deep copy needed
+            lower[name] = higher[name]
+
+    return lower
+
+
 class SectionManager:
     """
     The SectionManager does the following things:
@@ -106,14 +127,14 @@ class SectionManager:
 
         self.coafile_sections = self._load_config_file(config)
 
-        self.sections = self._merge_section_dicts(self.default_sections,
-                                                  self.user_sections)
+        self.sections = merge_section_dicts(self.default_sections,
+                                            self.user_sections)
 
-        self.sections = self._merge_section_dicts(self.sections,
-                                                  self.coafile_sections)
+        self.sections = merge_section_dicts(self.sections,
+                                            self.coafile_sections)
 
-        self.sections = self._merge_section_dicts(self.sections,
-                                                  self.cli_sections)
+        self.sections = merge_section_dicts(self.sections,
+                                            self.cli_sections)
 
         for section in self.sections:
             if section != "default":
@@ -225,22 +246,6 @@ class SectionManager:
         if conf_writer is not None:
             conf_writer.write_sections(self.sections)
             conf_writer.close()
-
-    @staticmethod
-    def _merge_section_dicts(lower, higher):
-        """
-        Merges the section dictionaries. The values of higher will take
-        precedence over the ones of lower. Lower will hold the modified dict in
-        the end.
-        """
-        for name in higher:
-            if name in lower:
-                lower[name].update(higher[name], ignore_defaults=True)
-            else:
-                # no deep copy needed
-                lower[name] = higher[name]
-
-        return lower
 
     def _warn_nonexistent_targets(self):
         for target in self.targets:
