@@ -7,8 +7,7 @@ sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.settings.SectionManager import (gather_configuration,
-                                            retrieve_logging_objects,
-                                            close_objects)
+                                            retrieve_logging_objects)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.output.ConsoleInteractor import ConsoleInteractor
@@ -17,6 +16,7 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.ClosableObject import close_objects
 import re
 
 

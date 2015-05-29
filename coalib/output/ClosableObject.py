@@ -1,3 +1,15 @@
+def close_objects(*objs):
+    """
+    Determines for all given objects if an object is closable and closes
+    it if possible.
+
+    :param objs: The objects to close.
+    """
+    for obj in objs:
+        if isinstance(obj, ClosableObject):
+            obj.close()
+
+
 class ClosableObject:
     """
     Any class deriving from ClosableObject needs to be closed.

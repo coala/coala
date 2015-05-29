@@ -8,7 +8,7 @@ from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.NullInteractor import NullInteractor
-from coalib.output.ClosableObject import ClosableObject
+from coalib.output.ClosableObject import close_objects
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
@@ -140,18 +140,6 @@ def fill_settings(sections, interactor, log_printer):
         global_bears[section_name] = section_global_bears
 
     return local_bears, global_bears
-
-
-def close_objects(*objs):
-    """
-    Determines for all given objects if an object is closable and closes
-    it if possible.
-
-    :param objs: The objects to close.
-    """
-    for obj in objs:
-        if isinstance(obj, ClosableObject):
-            obj.close()
 
 
 def retrieve_logging_objects(section):
