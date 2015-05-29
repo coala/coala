@@ -17,7 +17,7 @@ from coalib.output.ClosableObject import ClosableObject
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
-from coalib.settings.SectionManager import SectionManager
+from coalib.settings.SectionManager import gather_configuration
 from coalib.misc.i18n import _
 
 
@@ -28,8 +28,12 @@ def main():
     try:
         did_nothing = True
         yielded_results = False
-        sections, local_bears, global_bears, targets, interactor, log_printer \
-            = SectionManager().run()
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = gather_configuration()
         for section_name in sections:
             section = sections[section_name]
             if not section.is_enabled(targets):

@@ -245,47 +245,42 @@ def load_configuration(arg_list):
     return interactor, log_printer, sections, targets
 
 
-class SectionManager:
+def gather_configuration(arg_list=sys.argv[1:]):
     """
-    The SectionManager does the following things:
+    Loads all configuration files, retrieves bears and all needed
+    settings, saves back if needed and warns about non-existent targets.
 
-    - Reading all settings in sections from
+    This function:
+    - Reads and merges all settings in sections from
         - Default config
-        - CLI
+        - User config
         - Configuration file
-    - Collecting all the bears
-    - Filling up all needed settings
-    - Write back the new sections to the configuration file if needed
-    - Give all information back to caller
+        - CLI
+    - Collects all the bears
+    - Fills up all needed settings
+    - Writes back the new sections to the configuration file if needed
+    - Gives all information back to caller
 
-    This is done when the run() method is invoked. Anything else is just helper
-    stuff and initialization.
+    :param arg_list: CLI args to use
+    :return:         A tuple with the following contents:
+                      * A dictionary with the sections
+                      * Dictionary of list of local bears for each section
+                      * Dictionary of list of global bears for each section
+                      * The targets list
+                      * The interactor (needs to be closed!)
+                      * The log printer (needs to be closed!)
     """
-    def run(self, arg_list=sys.argv[1:]):
-        """
-        Loads all configuration files, retrieves bears and all needed
-        settings, saves back if needed and warns about non-existent targets.
+    interactor, log_printer, sections, targets = (
+        load_configuration(arg_list))
+    local_bears, global_bears = fill_settings(sections,
+                                              interactor,
+                                              log_printer)
+    save_sections(sections)
+    warn_nonexistent_targets(targets, sections, log_printer)
 
-        :param arg_list: CLI args to use
-        :return:         A tuple with the following contents:
-                          * A dictionary with the sections
-                          * Dictionary of list of local bears for each section
-                          * Dictionary of list of global bears for each section
-                          * The targets list
-                          * The interactor (needs to be closed!)
-                          * The log printer (needs to be closed!)
-        """
-        interactor, log_printer, sections, targets = (
-            load_configuration(arg_list))
-        local_bears, global_bears = fill_settings(sections,
-                                                  interactor,
-                                                  log_printer)
-        save_sections(sections)
-        warn_nonexistent_targets(targets, sections, log_printer)
-
-        return (sections,
-                local_bears,
-                global_bears,
-                targets,
-                interactor,
-                log_printer)
+    return (sections,
+            local_bears,
+            global_bears,
+            targets,
+            interactor,
+            log_printer)

@@ -6,7 +6,7 @@ import unittest
 sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
-from coalib.settings.SectionManager import (SectionManager,
+from coalib.settings.SectionManager import (gather_configuration,
                                             retrieve_logging_objects,
                                             close_objects)
 from coalib.settings.Section import Section
@@ -22,14 +22,13 @@ import re
 
 class SectionManagerTest(unittest.TestCase):
     def test_run(self):
-        uut = SectionManager()
         # We need to use a bad filename or this will parse coalas .coafile
         (sections,
          local_bears,
          global_bears,
          targets,
          interactor,
-         log_printer) = uut.run(
+         log_printer) = gather_configuration(
             arg_list=['-S', "test=5", "-c", "some_bad_filename"])
         close_objects(interactor, log_printer)
 
@@ -41,13 +40,12 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = uut.run(
+         log_printer) = gather_configuration(
             arg_list=['-S test=5', '-c bad_filename', '-b LineCountBear'])
         close_objects(interactor, log_printer)
         self.assertEqual(len(local_bears["default"]), 1)
 
     def test_default_coafile_parsing(self):
-        uut = SectionManager()
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(inspect.getfile(SectionManagerTest)),
@@ -58,14 +56,13 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = uut.run()
+         log_printer) = gather_configuration()
         close_objects(interactor, log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
         StringConstants.system_coafile = tmp
 
     def test_user_coafile_parsing(self):
-        uut = SectionManager()
         tmp = StringConstants.user_coafile
         StringConstants.user_coafile = os.path.abspath(os.path.join(
             os.path.dirname(inspect.getfile(SectionManagerTest)),
@@ -76,7 +73,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = uut.run()
+         log_printer) = gather_configuration()
         close_objects(interactor, log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
@@ -91,7 +88,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = SectionManager().run(arg_list=['-S',
+         log_printer) = gather_configuration(arg_list=['-S',
                                                        "config=" + filename])
         close_objects(interactor, log_printer)
 
@@ -103,12 +100,11 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = SectionManager().run()
+         log_printer) = gather_configuration()
         close_objects(interactor, log_printer)
         StringConstants.system_coafile = tmp
 
     def test_merge(self):
-        uut = SectionManager()
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(inspect.getfile(SectionManagerTest)),
@@ -125,7 +121,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = uut.run(arg_list=["-c", re.escape(config)])
+         log_printer) = gather_configuration(arg_list=["-c", re.escape(config)])
         close_objects(interactor, log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 2}")
@@ -137,7 +133,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = uut.run(arg_list=["-c",
+         log_printer) = gather_configuration(arg_list=["-c",
                                           re.escape(config),
                                           "-S",
                                           "test.value=3",
@@ -156,13 +152,12 @@ class SectionManagerTest(unittest.TestCase):
         StringConstants.system_coafile = tmp
 
     def test_merge_defaults(self):
-        uut = SectionManager()
         (sections,
          local_bears,
          global_bears,
          targets,
          interactor,
-         log_printer) = uut.run(arg_list=["-S",
+         log_printer) = gather_configuration(arg_list=["-S",
                                           "value=1",
                                           "test.value=2",
                                           "-c",
@@ -181,7 +176,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = SectionManager().run(
+         log_printer) = gather_configuration(
             arg_list=['-S',
                       "save=" + re.escape(filename),
                       "-c=some_bad_filename"])
@@ -197,7 +192,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = SectionManager().run(
+         log_printer) = gather_configuration(
             arg_list=['-S',
                       "save=true",
                       "config=" + re.escape(filename),
@@ -219,7 +214,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = SectionManager().run(arg_list=['-S', "log_type=none"])
+         log_printer) = gather_configuration(arg_list=['-S', "log_type=none"])
         close_objects(interactor, log_printer)
         self.assertIsInstance(log_printer, NullPrinter)
 
@@ -228,7 +223,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = SectionManager().run(arg_list=['-S', "output=none"])
+         log_printer) = gather_configuration(arg_list=['-S', "output=none"])
         close_objects(interactor, log_printer)
         self.assertIsInstance(interactor, NullInteractor)
 
@@ -238,7 +233,7 @@ class SectionManagerTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = SectionManager().run(arg_list=["default",
+         log_printer) = gather_configuration(arg_list=["default",
                                                        "test1",
                                                        "test2"])
         close_objects(interactor, log_printer)

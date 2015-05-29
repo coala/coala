@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
-from coalib.settings.SectionManager import SectionManager
+from coalib.settings.SectionManager import gather_configuration
 from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
@@ -97,7 +97,7 @@ class SectionExecutorTest(unittest.TestCase):
                                             "testcode.c")
 
         self.sections, self.local_bears, self.global_bears, targets = (
-            SectionManager().run(["--config", re.escape(config_path)])[0:4])
+            gather_configuration(["--config", re.escape(config_path)])[0:4])
         self.assertEqual(len(self.local_bears["default"]), 1)
         self.assertEqual(len(self.global_bears["default"]), 1)
         self.assertEqual(targets, [])
