@@ -1,9 +1,6 @@
-import copy
 import os
 import sys
 
-from coalib.bears.BEAR_KIND import BEAR_KIND
-from coalib.collecting.Collectors import collect_bears
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
@@ -17,8 +14,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParser import CliParser
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
-from coalib.settings.SectionFiller import SectionFiller
-from coalib.settings.Setting import path_list
+from coalib.settings.SectionFiller import fill_settings
 
 
 def merge_section_dicts(lower, higher):
@@ -103,43 +99,6 @@ def warn_nonexistent_targets(targets, sections, log_printer):
             log_printer.warn(
                 _("The requested section '{section}' is not existent. "
                   "Thus it cannot be executed.").format(section=target))
-
-
-def fill_settings(sections, interactor, log_printer):
-    """
-    Retrieves all bears and requests missing settings via the interactor.
-    :param sections:    The sections to fill up, will be modified in place.
-    :param interactor:  The interactor to request the missing settings from.
-    :param log_printer: The log printer to use for logging.
-    :return:            A tuple containing (local_bears, global_bears), each
-                        of them being a dictionary with the section name as
-                        key and as value the bears as a list.
-    """
-    local_bears = {}
-    global_bears = {}
-
-    for section_name, section in sections.items():
-        bear_dirs = path_list(section.get("bear_dirs", ""))
-        bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
-                                      "**"))
-        bears = list(section.get("bears", ""))
-        section_local_bears = collect_bears(bear_dirs,
-                                            bears,
-                                            [BEAR_KIND.LOCAL],
-                                            log_printer)
-        section_global_bears = collect_bears(bear_dirs,
-                                             bears,
-                                             [BEAR_KIND.GLOBAL],
-                                             log_printer)
-        filler = SectionFiller(section, interactor, log_printer)
-        all_bears = copy.deepcopy(section_local_bears)
-        all_bears.extend(section_global_bears)
-        filler.fill_section(all_bears)
-
-        local_bears[section_name] = section_local_bears
-        global_bears[section_name] = section_global_bears
-
-    return local_bears, global_bears
 
 
 def retrieve_logging_objects(section):
