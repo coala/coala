@@ -69,6 +69,26 @@ def load_config_file(filename, log_printer, silent=False):
         return {"default": Section("default")}
 
 
+def save_sections(sections):
+    """
+    Saves the given sections if they are to be saved.
+
+    :param sections: A section dict.
+    """
+    conf_writer = None
+    default_section = sections["default"]
+    try:
+        if bool(default_section.get("save", "false")):
+            conf_writer = ConfWriter(
+                str(default_section.get("config", ".coafile")))
+    except ValueError:
+        conf_writer = ConfWriter(str(default_section.get("save", ".coafile")))
+
+    if conf_writer is not None:
+        conf_writer.write_sections(sections)
+        conf_writer.close()
+
+
 class SectionManager:
     """
     The SectionManager does the following things:
@@ -120,7 +140,7 @@ class SectionManager:
         self._load_configuration(arg_list)
         self.retrieve_logging_objects(self.sections["default"])
         self._fill_settings()
-        self._save_configuration()
+        save_sections(self.sections)
         self._warn_nonexistent_targets()
 
         return (self.sections,
@@ -236,21 +256,6 @@ class SectionManager:
 
             self.local_bears[section_name] = local_bears
             self.global_bears[section_name] = global_bears
-
-    def _save_configuration(self):
-        conf_writer = None
-        default_section = self.sections["default"]
-        try:
-            if bool(default_section.get("save", "false")):
-                conf_writer = ConfWriter(str(
-                    default_section.get("config", ".coafile")))
-        except ValueError:
-            conf_writer = ConfWriter(str(default_section.get("save",
-                                                             ".coafile")))
-
-        if conf_writer is not None:
-            conf_writer.write_sections(self.sections)
-            conf_writer.close()
 
     def _warn_nonexistent_targets(self):
         for target in self.targets:
