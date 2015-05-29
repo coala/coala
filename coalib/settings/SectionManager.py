@@ -196,6 +196,55 @@ def retrieve_logging_objects(section):
     return interactor, log_printer
 
 
+def load_configuration(arg_list):
+    """
+    Parses the CLI args and loads the config file accordingly, taking
+    default_coafile and the users .coarc into account.
+
+    :param arg_list: The list of command line arguments.
+    :return:         A tuple holding (interactor: Interactor, log_printer:
+                     LogPrinter, sections: dict(str, Section),
+                     targets: list(str)). (Types indicated after colon.)
+    """
+    cli_sections = CliParser().reparse(arg_list=arg_list)
+    interactor, log_printer = retrieve_logging_objects(cli_sections["default"])
+
+    targets = []
+    # We don't want to store targets argument back to file, thus remove it
+    for item in list(cli_sections["default"].contents.pop("targets", "")):
+        targets.append(item.lower())
+
+    default_sections = load_config_file(StringConstants.system_coafile,
+                                        log_printer)
+
+    user_sections = load_config_file(
+        StringConstants.user_coafile,
+        log_printer,
+        silent=True)
+
+    default_config = str(default_sections["default"].get("config", ".coafile"))
+    user_config = str(user_sections["default"].get("config", default_config))
+    config = os.path.abspath(
+        str(cli_sections["default"].get("config", user_config)))
+
+    coafile_sections = load_config_file(config, log_printer)
+
+    sections = merge_section_dicts(default_sections, user_sections)
+
+    sections = merge_section_dicts(sections, coafile_sections)
+
+    sections = merge_section_dicts(sections, cli_sections)
+
+    for section in sections:
+        if section != "default":
+            sections[section].defaults = sections["default"]
+
+    close_objects(interactor, log_printer)
+    interactor, log_printer = retrieve_logging_objects(sections["default"])
+
+    return interactor, log_printer, sections, targets
+
+
 class SectionManager:
     """
     The SectionManager does the following things:
@@ -212,24 +261,6 @@ class SectionManager:
     This is done when the run() method is invoked. Anything else is just helper
     stuff and initialization.
     """
-    def __init__(self):
-        self.cli_sections = None
-        self.default_sections = None
-        self.user_sections = None
-        self.coafile_sections = None
-        self.sections = None
-
-        self.cli_parser = CliParser()
-        self.conf_parser = ConfParser()
-
-        self.local_bears = {}
-        self.global_bears = {}
-
-        self.log_printer = None
-        self.interactor = None
-
-        self.targets = []
-
     def run(self, arg_list=sys.argv[1:]):
         """
         Loads all configuration files, retrieves bears and all needed
@@ -244,60 +275,17 @@ class SectionManager:
                           * The interactor (needs to be closed!)
                           * The log printer (needs to be closed!)
         """
-        self._load_configuration(arg_list)
-        close_objects(self.interactor, self.log_printer)
-        self.interactor, self.log_printer = retrieve_logging_objects(
-            self.sections["default"])
-        self.local_bears, self.global_bears = fill_settings(self.sections,
-                                                            self.interactor,
-                                                            self.log_printer)
-        save_sections(self.sections)
-        warn_nonexistent_targets(self.targets, self.sections, self.log_printer)
+        interactor, log_printer, sections, targets = (
+            load_configuration(arg_list))
+        local_bears, global_bears = fill_settings(sections,
+                                                  interactor,
+                                                  log_printer)
+        save_sections(sections)
+        warn_nonexistent_targets(targets, sections, log_printer)
 
-        return (self.sections,
-                self.local_bears,
-                self.global_bears,
-                self.targets,
-                self.interactor,
-                self.log_printer)
-
-    def _load_configuration(self, arg_list):
-        self.cli_sections = self.cli_parser.reparse(arg_list=arg_list)
-        close_objects(self.interactor, self.log_printer)
-        self.interactor, self.log_printer = retrieve_logging_objects(
-            self.cli_sections["default"])
-        # We dont want to store targets argument back to file, thus remove it
-        for item in list(
-                self.cli_sections["default"].contents.pop("targets", "")):
-            self.targets.append(item.lower())
-
-        self.default_sections = load_config_file(
-            StringConstants.system_coafile,
-            self.log_printer)
-
-        self.user_sections = load_config_file(
-            StringConstants.user_coafile,
-            self.log_printer,
-            silent=True)
-
-        default_config = str(
-            self.default_sections["default"].get("config", ".coafile"))
-        user_config = str(
-            self.user_sections["default"].get("config", default_config))
-        config = os.path.abspath(str(
-            self.cli_sections["default"].get("config", user_config)))
-
-        self.coafile_sections = load_config_file(config, self.log_printer)
-
-        self.sections = merge_section_dicts(self.default_sections,
-                                            self.user_sections)
-
-        self.sections = merge_section_dicts(self.sections,
-                                            self.coafile_sections)
-
-        self.sections = merge_section_dicts(self.sections,
-                                            self.cli_sections)
-
-        for section in self.sections:
-            if section != "default":
-                self.sections[section].defaults = self.sections["default"]
+        return (sections,
+                local_bears,
+                global_bears,
+                targets,
+                interactor,
+                log_printer)

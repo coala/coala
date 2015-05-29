@@ -24,15 +24,26 @@ class SectionManagerTest(unittest.TestCase):
     def test_run(self):
         uut = SectionManager()
         # We need to use a bad filename or this will parse coalas .coafile
-        conf_sections = uut.run(
-            arg_list=['-S', "test=5", "-c", "some_bad_filename"])[0]
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = uut.run(
+            arg_list=['-S', "test=5", "-c", "some_bad_filename"])
+        close_objects(interactor, log_printer)
 
-        self.assertEqual(str(conf_sections["default"]),
+        self.assertEqual(str(sections["default"]),
                          "Default {config : some_bad_filename, test : 5}")
 
-        local_bears = uut.run(arg_list=['-S test=5',
-                                        '-c bad_filename',
-                                        '-b LineCountBear'])[1]
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = uut.run(
+            arg_list=['-S test=5', '-c bad_filename', '-b LineCountBear'])
+        close_objects(interactor, log_printer)
         self.assertEqual(len(local_bears["default"]), 1)
 
     def test_default_coafile_parsing(self):
@@ -42,10 +53,15 @@ class SectionManagerTest(unittest.TestCase):
             os.path.dirname(inspect.getfile(SectionManagerTest)),
             "section_manager_test_files",
             "default_coafile"))
-        uut.run()
-        conf_sections = uut.default_sections
-        self.assertEqual(str(conf_sections["test"]), "test {value : 1, "
-                                                     "testval : 5}")
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = uut.run()
+        close_objects(interactor, log_printer)
+        self.assertEqual(str(sections["test"]),
+                         "test {value : 1, testval : 5}")
         StringConstants.system_coafile = tmp
 
     def test_user_coafile_parsing(self):
@@ -55,9 +71,14 @@ class SectionManagerTest(unittest.TestCase):
             os.path.dirname(inspect.getfile(SectionManagerTest)),
             "section_manager_test_files",
             "default_coafile"))
-        uut.run()
-        conf_sections = uut.default_sections
-        self.assertEqual(str(conf_sections["test"]),
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = uut.run()
+        close_objects(interactor, log_printer)
+        self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
         StringConstants.user_coafile = tmp
 
@@ -65,12 +86,25 @@ class SectionManagerTest(unittest.TestCase):
     def test_nonexistent_file():
         filename = "bad.one/test\neven with bad chars in it"
         # Shouldn't throw an exception
-        SectionManager().run(arg_list=['-S', "config=" + filename])
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = SectionManager().run(arg_list=['-S',
+                                                       "config=" + filename])
+        close_objects(interactor, log_printer)
 
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = filename
         # Shouldn't throw an exception
-        SectionManager().run()
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = SectionManager().run()
+        close_objects(interactor, log_printer)
         StringConstants.system_coafile = tmp
 
     def test_merge(self):
@@ -86,59 +120,89 @@ class SectionManagerTest(unittest.TestCase):
             "section_manager_test_files",
             ".coafile"))
         # Check merging of default_coafile and .coafile
-        conf_sections = uut.run(arg_list=["-c", re.escape(config)])[0]
-        self.assertEqual(str(conf_sections["test"]),
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = uut.run(arg_list=["-c", re.escape(config)])
+        close_objects(interactor, log_printer)
+        self.assertEqual(str(sections["test"]),
                          "test {value : 2}")
-        self.assertEqual(str(conf_sections["test-2"]),
+        self.assertEqual(str(sections["test-2"]),
                          "test-2 {files : ., bears : LineCountBear}")
         # Check merging of default_coafile, .coafile and cli
-        conf_sections = uut.run(arg_list=["-c",
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = uut.run(arg_list=["-c",
                                           re.escape(config),
                                           "-S",
                                           "test.value=3",
                                           "test-2.bears=",
-                                          "test-5.bears=TestBear2"])[0]
-        self.assertEqual(str(conf_sections["test"]), "test {value : 3}")
-        self.assertEqual(str(conf_sections["test-2"]),
+                                          "test-5.bears=TestBear2"])
+        close_objects(interactor, log_printer)
+        self.assertEqual(str(sections["test"]), "test {value : 3}")
+        self.assertEqual(str(sections["test-2"]),
                          "test-2 {files : ., bears : }")
-        self.assertEqual(str(conf_sections["test-3"]),
+        self.assertEqual(str(sections["test-3"]),
                          "test-3 {files : MakeFile}")
-        self.assertEqual(str(conf_sections["test-4"]),
+        self.assertEqual(str(sections["test-4"]),
                          "test-4 {bears : TestBear}")
-        self.assertEqual(str(conf_sections["test-5"]),
+        self.assertEqual(str(sections["test-5"]),
                          "test-5 {bears : TestBear2}")
         StringConstants.system_coafile = tmp
 
     def test_merge_defaults(self):
         uut = SectionManager()
-        conf_sections = uut.run(arg_list=["-S",
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = uut.run(arg_list=["-S",
                                           "value=1",
                                           "test.value=2",
                                           "-c",
-                                          "some_bad_file_name"])[0]
-        self.assertEqual(conf_sections["default"],
-                         conf_sections["test"].defaults)
+                                          "some_bad_file_name"])
+        close_objects(interactor, log_printer)
+        self.assertEqual(sections["default"],
+                         sections["test"].defaults)
 
     def test_back_saving(self):
         filename = os.path.join(tempfile.gettempdir(),
                                 "SectionManagerTestFile")
 
         # We need to use a bad filename or this will parse coalas .coafile
-        SectionManager().run(
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = SectionManager().run(
             arg_list=['-S',
                       "save=" + re.escape(filename),
                       "-c=some_bad_filename"])
+        close_objects(interactor, log_printer)
 
         with open(filename, "r") as f:
             lines = f.readlines()
         self.assertEqual(["[Default]\n", "config = some_bad_filename\n"],
                          lines)
 
-        SectionManager().run(
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = SectionManager().run(
             arg_list=['-S',
                       "save=true",
                       "config=" + re.escape(filename),
                       "test.value=5"])
+        close_objects(interactor, log_printer)
 
         with open(filename, "r") as f:
             lines = f.readlines()
@@ -150,18 +214,34 @@ class SectionManagerTest(unittest.TestCase):
                           "value = 5\n"], lines)
 
     def test_logging_objects(self):
-        log_printer = SectionManager().run(arg_list=['-S',
-                                                     "log_type=none"])[5]
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = SectionManager().run(arg_list=['-S', "log_type=none"])
+        close_objects(interactor, log_printer)
         self.assertIsInstance(log_printer, NullPrinter)
 
-        interactor = SectionManager().run(arg_list=['-S',
-                                                    "output=none"])[4]
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = SectionManager().run(arg_list=['-S', "output=none"])
+        close_objects(interactor, log_printer)
         self.assertIsInstance(interactor, NullInteractor)
 
     def test_targets(self):
-        targets = SectionManager().run(arg_list=["default",
-                                                 "test1",
-                                                 "test2"])[3]
+        (sections,
+         local_bears,
+         global_bears,
+         targets,
+         interactor,
+         log_printer) = SectionManager().run(arg_list=["default",
+                                                       "test1",
+                                                       "test2"])
+        close_objects(interactor, log_printer)
         self.assertEqual(targets, ["default", "test1", "test2"])
 
     def test_outputting(self):
