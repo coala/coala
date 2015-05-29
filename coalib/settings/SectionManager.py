@@ -105,6 +105,43 @@ def warn_nonexistent_targets(targets, sections, log_printer):
                   "Thus it cannot be executed.").format(section=target))
 
 
+def fill_settings(sections, interactor, log_printer):
+    """
+    Retrieves all bears and requests missing settings via the interactor.
+    :param sections:    The sections to fill up, will be modified in place.
+    :param interactor:  The interactor to request the missing settings from.
+    :param log_printer: The log printer to use for logging.
+    :return:            A tuple containing (local_bears, global_bears), each
+                        of them being a dictionary with the section name as
+                        key and as value the bears as a list.
+    """
+    local_bears = {}
+    global_bears = {}
+
+    for section_name, section in sections.items():
+        bear_dirs = path_list(section.get("bear_dirs", ""))
+        bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
+                                      "**"))
+        bears = list(section.get("bears", ""))
+        section_local_bears = collect_bears(bear_dirs,
+                                            bears,
+                                            [BEAR_KIND.LOCAL],
+                                            log_printer)
+        section_global_bears = collect_bears(bear_dirs,
+                                             bears,
+                                             [BEAR_KIND.GLOBAL],
+                                             log_printer)
+        filler = SectionFiller(section, interactor, log_printer)
+        all_bears = copy.deepcopy(section_local_bears)
+        all_bears.extend(section_global_bears)
+        filler.fill_section(all_bears)
+
+        local_bears[section_name] = section_local_bears
+        global_bears[section_name] = section_global_bears
+
+    return local_bears, global_bears
+
+
 class SectionManager:
     """
     The SectionManager does the following things:
@@ -155,7 +192,9 @@ class SectionManager:
         """
         self._load_configuration(arg_list)
         self.retrieve_logging_objects(self.sections["default"])
-        self._fill_settings()
+        self.local_bears, self.global_bears = fill_settings(self.sections,
+                                                            self.interactor,
+                                                            self.log_printer)
         save_sections(self.sections)
         warn_nonexistent_targets(self.targets, self.sections, self.log_printer)
 
@@ -248,27 +287,3 @@ class SectionManager:
             self.interactor = ConsoleInteractor.from_section(
                 section,
                 log_printer=self.log_printer)
-
-    def _fill_settings(self):
-        for section_name in self.sections:
-            section = self.sections[section_name]
-
-            bear_dirs = path_list(section.get("bear_dirs", ""))
-            bear_dirs.append(os.path.join(StringConstants.coalib_bears_root,
-                                          "**"))
-            bears = list(section.get("bears", ""))
-            local_bears = collect_bears(bear_dirs,
-                                        bears,
-                                        [BEAR_KIND.LOCAL],
-                                        self.log_printer)
-            global_bears = collect_bears(bear_dirs,
-                                         bears,
-                                         [BEAR_KIND.GLOBAL],
-                                         self.log_printer)
-            filler = SectionFiller(section, self.interactor, self.log_printer)
-            all_bears = copy.deepcopy(local_bears)
-            all_bears.extend(global_bears)
-            filler.fill_section(all_bears)
-
-            self.local_bears[section_name] = local_bears
-            self.global_bears[section_name] = global_bears
