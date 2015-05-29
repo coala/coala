@@ -25,6 +25,15 @@ def fill_queue(_queue, any_list):
         _queue.put(elem)
 
 
+def non_hidden_results(result_list):
+    results = []
+    for result in result_list:
+        if not isinstance(result, HiddenResult):
+            results.append(result)
+
+    return results
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -165,17 +174,8 @@ class SectionExecutor:
         self.interactor.finalize(file_dict)
         return retval
 
-    @staticmethod
-    def _non_hidden_results(result_list):
-        results = []
-        for result in result_list:
-            if not isinstance(result, HiddenResult):
-                results.append(result)
-
-        return results
-
     def _print_result(self, result_dict, file_dict, index, retval):
-        results = self._non_hidden_results(result_dict[index])
+        results = non_hidden_results(result_dict[index])
         self.interactor.print_results(results, file_dict)
 
         return retval or len(results) > 0
