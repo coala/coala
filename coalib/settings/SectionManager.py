@@ -89,6 +89,22 @@ def save_sections(sections):
     conf_writer.close()
 
 
+def warn_nonexistent_targets(targets, sections, log_printer):
+    """
+    Prints out a warning on the given log printer for all targets that are
+    not existent within the given sections.
+
+    :param targets:     The targets to check.
+    :param sections:    The sections to search. (Dict.)
+    :param log_printer: The log printer to warn to.
+    """
+    for target in targets:
+        if target not in sections:
+            log_printer.warn(
+                _("The requested section '{section}' is not existent. "
+                  "Thus it cannot be executed.").format(section=target))
+
+
 class SectionManager:
     """
     The SectionManager does the following things:
@@ -141,7 +157,7 @@ class SectionManager:
         self.retrieve_logging_objects(self.sections["default"])
         self._fill_settings()
         save_sections(self.sections)
-        self._warn_nonexistent_targets()
+        warn_nonexistent_targets(self.targets, self.sections, self.log_printer)
 
         return (self.sections,
                 self.local_bears,
@@ -256,10 +272,3 @@ class SectionManager:
 
             self.local_bears[section_name] = local_bears
             self.global_bears[section_name] = global_bears
-
-    def _warn_nonexistent_targets(self):
-        for target in self.targets:
-            if target not in self.sections:
-                self.log_printer.warn(
-                    _("The requested section '{section}' is not existent. "
-                      "Thus it cannot be executed.").format(section=target))
