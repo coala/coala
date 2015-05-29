@@ -20,6 +20,17 @@ def get_cpu_count():
         return 2
 
 
+def fill_queue(queue_fill, any_list):
+    """
+    Takes element from a list and populates a queue with those elements.
+
+    :param queue_fill: The queue to be filled.
+    :param any_list:   List containing the elements.
+    """
+    for elem in any_list:
+        queue_fill.put(elem)
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -213,16 +224,11 @@ class SectionExecutor:
 
         self._instantiate_bears(file_dict,
                                 message_queue)
-        self._fill_queue(filename_queue, file_dict.keys())
-        self._fill_queue(global_bear_queue, range(len(self.global_bear_list)))
+        fill_queue(filename_queue, file_dict.keys())
+        fill_queue(global_bear_queue, range(len(self.global_bear_list)))
 
         return ([BearRunner(**bear_runner_args) for i in range(job_count)],
                 bear_runner_args)
-
-    @staticmethod
-    def _fill_queue(_queue, any_list):
-        for elem in any_list:
-            _queue.put(elem)
 
     def _get_file_dict(self, filename_list):
         file_dict = {}
