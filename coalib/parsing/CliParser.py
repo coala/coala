@@ -4,13 +4,12 @@ import os
 import sys
 
 from coalib.parsing.LineParser import LineParser
-from coalib.parsing.SectionParser import SectionParser
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
-class CliParser(SectionParser):
+class CliParser:
     def __init__(self,
                  arg_parser=default_arg_parser,
                  key_value_delimiters=['=', ':'],
@@ -36,8 +35,6 @@ class CliParser(SectionParser):
         """
         if not isinstance(arg_parser, argparse.ArgumentParser):
             raise TypeError("arg_parser must be an ArgumentParser")
-
-        SectionParser.__init__(self)
 
         self._arg_parser = arg_parser
         self._line_parser = LineParser(key_value_delimiters,

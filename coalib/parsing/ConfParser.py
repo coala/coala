@@ -3,18 +3,16 @@ import sys
 import os
 
 from coalib.parsing.LineParser import LineParser
-from coalib.parsing.SectionParser import SectionParser
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
 
 
-class ConfParser(SectionParser):
+class ConfParser:
     def __init__(self,
                  key_value_delimiters=['='],
                  comment_seperators=['#', ';', '//'],
                  key_delimiters=[',', ' '],
                  section_name_surroundings={'[': "]"}):
-        SectionParser.__init__(self)
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
                                       key_delimiters,
