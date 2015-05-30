@@ -73,7 +73,7 @@ class ConfParserTest(unittest.TestCase):
                           self.uut.parse,
                           self.nonexistentfile)
         sections = self.uut.parse(self.file)
-        self.assertNotEqual(self.uut.reparse(self.file), sections)
+        self.assertNotEqual(self.uut.parse(self.file, True), sections)
 
         key, val = sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
