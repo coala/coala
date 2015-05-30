@@ -48,13 +48,6 @@ class ConfParser:
 
         self.__parse_lines(lines, input_data)
 
-        return self.export_to_settings()
-
-    def export_to_settings(self):
-        """
-        :return a dict of Settings objects representing the current parsed
-        things
-        """
         return self.sections
 
     def get_section(self, name, create_if_not_exists=False):
