@@ -3,18 +3,21 @@ import sys
 import os
 
 from coalib.parsing.LineParser import LineParser
-from coalib.parsing.SectionParser import SectionParser
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
 
 
-class ConfParser(SectionParser):
+class ConfParser:
+    if sys.version_info < (3, 3):  # pragma: no cover
+        FileNotFoundError = IOError
+    else:
+        FileNotFoundError = FileNotFoundError
+
     def __init__(self,
                  key_value_delimiters=['='],
                  comment_seperators=['#', ';', '//'],
                  key_delimiters=[',', ' '],
                  section_name_surroundings={'[': "]"}):
-        SectionParser.__init__(self)
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
                                       key_delimiters,
@@ -23,11 +26,6 @@ class ConfParser(SectionParser):
         self.sections = None
         self.__rand_helper = None
         self.__init_sections()
-
-        if sys.version_info < (3, 3):  # pragma: no cover
-            self.FileNotFoundError = IOError
-        else:
-            self.FileNotFoundError = FileNotFoundError
 
     def parse(self, input_data, overwrite=False):
         """
@@ -50,22 +48,6 @@ class ConfParser(SectionParser):
 
         self.__parse_lines(lines, input_data)
 
-        return self.export_to_settings()
-
-    def reparse(self, input_data):
-        """
-        Parses the input and overwrites all existent data
-
-        :param input_data: filename
-        :return:           the settings dictionary
-        """
-        return self.parse(input_data, overwrite=True)
-
-    def export_to_settings(self):
-        """
-        :return a dict of Settings objects representing the current parsed
-        things
-        """
         return self.sections
 
     def get_section(self, name, create_if_not_exists=False):

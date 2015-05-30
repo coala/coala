@@ -1,4 +1,4 @@
-from inspect import isfunction, ismethod, getfullargspec
+from inspect import ismethod, getfullargspec
 
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.output.printers.ConsolePrinter import ConsolePrinter

@@ -5,7 +5,8 @@ sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.SectionFiller import SectionFiller, Section, Setting
+from coalib.settings.SectionFilling import fill_section, fill_settings, Setting
+from coalib.settings.Section import Section
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
@@ -30,35 +31,43 @@ class LocalTestBear(LocalBear):
                 "global name": "this setting is needed by two bears"}
 
 
-class SectionFillerTest(unittest.TestCase):
+class SectionFillingTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ConsolePrinter()
-        self.interactor = ConsoleInteractor(self.log_printer)
-        section = Section("test")
-        section.append(Setting("key", "val"))
-        self.uut = SectionFiller(section,
-                                 self.interactor,
-                                 self.log_printer)
+        self.acquire = ConsoleInteractor(self.log_printer).acquire_settings
+        self.section = Section("test")
+        self.section.append(Setting("key", "val"))
 
-    def test_raises(self):
-        # Construction
-        self.assertRaises(TypeError,
-                          SectionFiller,
-                          0,
-                          self.interactor,
+    def test_fill_settings(self):
+        sections = {"test": self.section}
+        with simulate_console_inputs() as generator:
+            fill_settings(sections,
+                          self.acquire,
                           self.log_printer)
+            self.assertEqual(generator.last_input, -1)
 
-        # Fill section
-        self.assertRaises(TypeError, self.uut.fill_section, 0)
+        self.section.append(Setting("bears", "SpaceConsistencyBear"))
+
+        with simulate_console_inputs("True"):
+            local_bears, global_bears = fill_settings(sections,
+                                                      self.acquire,
+                                                      self.log_printer)
+            self.assertEqual(len(local_bears["test"]), 1)
+            self.assertEqual(len(global_bears["test"]), 0)
+
+        self.assertEqual(bool(self.section["use_spaces"]), True)
+        self.assertEqual(len(self.section.contents), 3)
 
     def test_fill_section(self):
         # Use the same value for both because order isn't predictable (uses
         # dict)
         with simulate_console_inputs(0, 0):
-            new_section = self.uut.fill_section([LocalTestBear,
-                                                 GlobalTestBear,
-                                                 "an inappropriate string "
-                                                 "object here"])
+            new_section = fill_section(self.section,
+                                       self.acquire,
+                                       self.log_printer,
+                                       [LocalTestBear,
+                                        GlobalTestBear,
+                                        "an inappropriate string object here"])
 
         self.assertEqual(int(new_section["local name"]), 0)
         self.assertEqual(int(new_section["global name"]), 0)
@@ -66,7 +75,10 @@ class SectionFillerTest(unittest.TestCase):
         self.assertEqual(len(new_section.contents), 3)
 
         # Shouldnt change anything the second time
-        new_section = self.uut.fill_section([LocalTestBear, GlobalTestBear])
+        new_section = fill_section(self.section,
+                                   self.acquire,
+                                   self.log_printer,
+                                   [LocalTestBear, GlobalTestBear])
 
         self.assertTrue("local name" in new_section)
         self.assertTrue("global name" in new_section)
