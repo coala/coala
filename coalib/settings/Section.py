@@ -4,6 +4,36 @@ import copy
 from coalib.settings.Setting import Setting
 
 
+def append_to_sections(sections,
+                       key,
+                       value,
+                       origin,
+                       section_name=None,
+                       from_cli=False):
+    """
+    Appends the given data as a Setting to a Section with the given name. If
+    the Section does not exist before it will be created empty.
+
+    :param sections:     The sections dictionary to add to.
+    :param key:          The key of the setting to add.
+    :param value:        The value of the setting to add.
+    :param origin:       The origin value of the setting to add.
+    :param section_name: The name of the section to add to.
+    :param from_cli:     Whether or not this data comes from the CLI.
+    """
+    if key == '' or value is None:
+        return
+
+    if section_name == "" or section_name is None:
+        section_name = "default"
+
+    if not section_name.lower() in sections:
+        sections[section_name.lower()] = Section(section_name)
+
+    sections[section_name.lower()].append(
+        Setting(key, str(value), origin, from_cli=from_cli))
+
+
 class Section:
     """
     This class holds a set of settings.

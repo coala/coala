@@ -4,8 +4,7 @@ import os
 import sys
 
 from coalib.parsing.LineParser import LineParser
-from coalib.settings.Setting import Setting
-from coalib.settings.Section import Section
+from coalib.settings.Section import Section, append_to_sections
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
@@ -48,21 +47,6 @@ class CliParser:
     def __reset_sections(self):
         self.sections = OrderedDict(default=Section('Default'))
 
-    def _update_sections(self, section_name, key, value, origin):
-        if key == '' or value is None:
-            return
-
-        if section_name == "" or section_name is None:
-            section_name = "default"
-
-        if not section_name.lower() in self.sections:
-            self.sections[section_name.lower()] = Section(section_name)
-
-        self.sections[section_name.lower()].append(Setting(key,
-                                                           str(value),
-                                                           origin,
-                                                           from_cli=True))
-
     def parse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
         """
         parses the input and adds the new data to the existing
@@ -81,7 +65,11 @@ class CliParser:
                 if isinstance(arg_value, list):
                     arg_value = ",".join([str(val) for val in arg_value])
 
-                self._update_sections("default", arg_key, arg_value, origin)
+                append_to_sections(self.sections,
+                                   arg_key,
+                                   arg_value,
+                                   origin,
+                                   from_cli=True)
 
         return self.sections
 
@@ -90,10 +78,12 @@ class CliParser:
             section_stub, key_touples, value, comment_stub =\
                 self._line_parser.parse(setting_definition)
             for key_touple in key_touples:
-                self._update_sections(section_name=key_touple[0],
-                                      key=key_touple[1],
-                                      value=value,
-                                      origin=origin)
+                append_to_sections(self.sections,
+                                   key=key_touple[1],
+                                   value=value,
+                                   origin=origin,
+                                   section_name=key_touple[0],
+                                   from_cli=True)
 
     def reparse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
         self.__reset_sections()
