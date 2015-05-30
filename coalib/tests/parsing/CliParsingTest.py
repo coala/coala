@@ -1,7 +1,7 @@
 import sys
 
 sys.path.insert(0, ".")
-from coalib.parsing.CliParser import parse_cli
+from coalib.parsing.CliParsing import parse_cli
 import unittest
 import argparse
 
@@ -23,7 +23,7 @@ class CliParserTest(unittest.TestCase):
                       str(value)) for key, value in section.contents.items()])
         return parsed_dict
 
-    def test_parse(self):
+    def test_parse_cli(self):
         # regular parse
         parsed_sections = parse_cli(
             ['-t', 'ignored1', 'ignored2',
