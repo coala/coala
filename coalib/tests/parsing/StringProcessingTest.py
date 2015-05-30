@@ -702,6 +702,48 @@ class StringProcessingTest(unittest.TestCase):
             self.assertIteratorElementsEqual(iter(expected_results[i]),
                                              return_value)
 
+    def assertResultsEqual(self,
+                           func,
+                           invocation_and_results,
+                           postprocess=lambda result: result):
+        """
+        Tests each given invocation against the given results with the
+        specified function.
+
+        :param func:                   The function to test.
+        :param invocation_and_results: A dict containing the invocation tuple
+                                       as key and the result as value.
+        :param postprocess:            A function that shall process the
+                                       returned result from the tested
+                                       function. The function must accept only
+                                       one parameter as postprocessing input.
+                                       Performs no postprocessing by default.
+        """
+        for args, result in invocation_and_results.items():
+            self.assertEqual(postprocess(func(*args)), result)
+
+    def assertResultsEqualEx(self,
+                             func,
+                             invocation_and_results,
+                             postprocess=lambda result: result):
+        """
+        Tests each given invocation against the given results with the
+        specified function. This is an extended version of assertResultsEqual()
+        that supports also **kwargs.
+
+        :param func:                   The function to test.
+        :param invocation_and_results: A dict containing the invocation tuple
+                                       as key and the result as value. The
+                                       tuple contains (args, kwargs).
+        :param postprocess:            A function that shall process the
+                                       returned result from the tested
+                                       function. The function must accept only
+                                       one parameter as postprocessing input.
+                                       Performs no postprocessing by default.
+        """
+        for (args, kwargs), result in invocation_and_results.items():
+            self.assertEqual(postprocess(func(*args, **kwargs)), result)
+
     def assertIteratorElementsEqual(self, iterator1, iterator2):
         """
         Checks whether each element in the iterators and their length do equal.
