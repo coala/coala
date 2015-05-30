@@ -12,3 +12,4 @@ dependencies:
 test:
   override:
     - python run_tests.py -s
+    - ./coala -c .misc/.ci_coafile
