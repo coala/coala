@@ -2,7 +2,6 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 
-from coalib.parsing.StringProcessing import unescaped_split
 from coalib.parsing.StringProcessing import search_in_between
 from coalib.parsing.StringProcessing import unescaped_search_in_between
 from coalib.parsing.StringProcessing import unescape
@@ -65,68 +64,9 @@ class StringProcessingTest(unittest.TestCase):
             r"abc;a;;;;;asc"]
 
         # Set up test dependent variables.
-        self.set_up_unescaped_split()
         self.set_up_search_in_between()
         self.set_up_unescaped_search_in_between()
         self.set_up_unescape()
-
-    def set_up_unescaped_split(self):
-        self.test_unescaped_split_pattern = "'"
-        self.test_unescaped_split_expected_results = [
-            [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
-            [r"out1 ", r"escaped-quote:         \' ", r" out2"],
-            [r"out1 ", r"escaped-anything:      \X ", r" out2"],
-            [r"out1 ", r"two escaped escapes: \\\\ ", r" out2"],
-            [r"out1 ", r"escaped-quote at end:   \'", r" out2"],
-            [r"out1 ", r"escaped-escape at end:  " + 2 * self.bs, r" out2"],
-            [r"out1           ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \'        ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \\\'      ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \\        ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \\\\      ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1         " + 2 * self.bs, r"str1", r" out2 ", r"str2",
-                r" out2"],
-            [r"out1       " + 4 * self.bs, r"str1", r" out2 ", r"str2",
-                r" out2"],
-            [r"out1           ", r"str1", r"", r"str2", r"", r"str3",
-                r" out2"],
-            [r""],
-            [r"out1 out2 out3"],
-            [self.bs],
-            [2 * self.bs]]
-
-        self.test_unescaped_split_max_split_pattern = (
-            self.test_unescaped_split_pattern)
-        self.test_unescaped_split_max_split_expected_master_results = (
-            self.test_unescaped_split_expected_results)
-
-        self.test_unescaped_split_regex_pattern_expected_results = [
-            [r"", r"", r"cba###\\13q4ujsabbc\+'**'ac###.#.####-ba"],
-            [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'ac###.#.####-ba"],
-            [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###", r"\13q4ujsabbc", r"+'**'ac###.#.####-ba"],
-            [r"abcabccba", r"\\13q4ujsabbc\+'**'ac", r".", r".", r"-ba"],
-            [r"", r"", r"c", r"", r"cc", r"", r"", r"", r"\13q4ujs", r"", r"",
-                r"c\+'**'", r"c", r"", r"", r"", r"", r"-", r"", r""],
-            [r"", r"cba###\\13q4ujs", r"\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###" + 2 * self.bs,
-                r"3q4ujsabbc\+'**'ac###.#.####-ba"]]
-
-        self.test_unescaped_split_auto_trim_pattern = ";"
-        self.test_unescaped_split_auto_trim_expected_results = [
-            [],
-            [2 * self.bs, r"\\\\\;\\#", r"\\\'", r"\;\\\\", r"+ios"],
-            [r"1", r"2", r"3", r"4", r"5", r"6"],
-            [r"1", r"2", r"3", r"4", r"5", r"6", r"7"],
-            [],
-            [r"Hello world"],
-            [r"\;"],
-            [2 * self.bs],
-            [r"abc", r"a", r"asc"]]
-
-        self.test_unescaped_split_disabled_regex_pattern = r"'()"
-        self.test_unescaped_split_disabled_regex_expected_results = (
-            [[x] for x in self.test_strings])
 
     def set_up_search_in_between(self):
         self.test_search_in_between_pattern = "'"
@@ -255,37 +195,6 @@ class StringProcessingTest(unittest.TestCase):
             r"",
             self.bs]
 
-    def assertUnescapedSplitEquals(self,
-                                   test_strings,
-                                   expected_results,
-                                   pattern,
-                                   max_split,
-                                   remove_empty_matches,
-                                   use_regex):
-        """
-        Checks whether all supplied test strings are returned as expected from
-        unescaped_split().
-
-        :param test_strings:         The list of test strings.
-        :param expected_results:     The list of the expected results.
-        :param pattern:              The pattern to invoke unescaped_split()
-                                     with.
-        :param max_split:            The maximum number of splits to perform
-                                     when invoking unescaped_split().
-        :param remove_empty_matches: Whether to remove empty entries or not.
-        :param use_regex:            Whether to treat pattern as a regex or
-                                     not.
-        """
-        self.assertEqual(len(expected_results), len(test_strings))
-        for i in range(0, len(expected_results)):
-            return_value = unescaped_split(pattern,
-                                           test_strings[i],
-                                           max_split,
-                                           remove_empty_matches,
-                                           use_regex)
-            self.assertIteratorElementsEqual(iter(expected_results[i]),
-                                             return_value)
-
     def assertSearchInBetweenEquals(self,
                                     test_strings,
                                     expected_results,
@@ -410,81 +319,6 @@ class StringProcessingTest(unittest.TestCase):
             self.assertEqual(x, next(iterator2))
 
         self.assertRaises(StopIteration, next, iterator2)
-
-    # Test the basic unescaped_split() functionality.
-    def test_unescaped_split(self):
-        for use_regex in [True, False]:
-            self.assertUnescapedSplitEquals(
-                self.test_strings,
-                self.test_unescaped_split_expected_results,
-                self.test_unescaped_split_pattern,
-                0,
-                False,
-                use_regex)
-
-    # Test the unescaped_split() function while varying the max_split
-    # parameter.
-    def test_unescaped_split_max_split(self):
-        separator_pattern = self.test_unescaped_split_max_split_pattern
-        expected_master_results = (
-            self.test_unescaped_split_max_split_expected_master_results)
-
-        for max_split in [1, 2, 3, 4, 5, 6, 7, 8, 9, 99918829]:
-            expected_results = [
-                expected_master_results[j][0 : max_split]
-                for j in range(len(expected_master_results))]
-
-            for j in range(len(expected_master_results)):
-                if max_split < len(expected_master_results[j]):
-                    # max_split is less the length of our master result list,
-                    # need to append the rest as a joined string.
-                    expected_results[j].append(
-                        str.join(separator_pattern,
-                                 expected_master_results[j][max_split : ]))
-
-            for use_regex in [True, False]:
-                self.assertUnescapedSplitEquals(self.test_strings,
-                                                expected_results,
-                                                separator_pattern,
-                                                max_split,
-                                                False,
-                                                use_regex)
-
-    # Test the unescaped_split() function with different regex patterns.
-    def test_unescaped_split_regex_pattern(self):
-        expected_results = (
-            self.test_unescaped_split_regex_pattern_expected_results)
-
-        self.assertEqual(len(expected_results), len(self.multi_patterns))
-        for i in range(0, len(expected_results)):
-            return_value = unescaped_split(self.multi_patterns[i],
-                                           self.multi_pattern_test_string,
-                                           0,
-                                           False,
-                                           True)
-            self.assertIteratorElementsEqual(iter(expected_results[i]),
-                                             return_value)
-
-    # Test the unescaped_split() function for its remove_empty_matches feature.
-    def test_unescaped_split_auto_trim(self):
-        for use_regex in [True, False]:
-            self.assertUnescapedSplitEquals(
-                self.auto_trim_test_strings,
-                self.test_unescaped_split_auto_trim_expected_results,
-                self.test_unescaped_split_auto_trim_pattern,
-                0,
-                True,
-                use_regex)
-
-    # Test the unescaped_split() function while disabling regexes.
-    def test_unescaped_split_disabled_regex(self):
-        self.assertUnescapedSplitEquals(
-            self.test_strings,
-            self.test_unescaped_split_disabled_regex_expected_results,
-            self.test_unescaped_split_disabled_regex_pattern,
-            0,
-            False,
-            False)
 
     # Test the basic search_in_between() functionality.
     def test_search_in_between(self):
