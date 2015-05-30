@@ -8,6 +8,61 @@ from coalib.settings.Section import Section, append_to_sections
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
+def parse_cli(arg_list=sys.argv[1:],
+              origin=os.getcwd(),
+              arg_parser=default_arg_parser,
+              key_value_delimiters=['=', ':'],
+              comment_seperators=[],
+              key_delimiters=[','],
+              section_override_delimiters=["."]):
+    """
+    Parses the CLI arguments and creates a Section out of it.
+
+    :param arg_list:                    The CLI argument list.
+    :param origin:                      Directory used to interpret relative
+                                        paths given as argument.
+    :param arg_parser:                  Instance of ArgParser that is used to
+                                        parse none-setting arguments.
+    :param key_value_delimiters:        Delimiters to separate key and value
+                                        in setting arguments.
+    :param comment_seperators:          Allowed prefixes for comments.
+    :param key_delimiters:              Delimiter to separate multiple keys of
+                                        a setting argument.
+    :param section_override_delimiters: The delimiter to delimit the section
+                                        from the key name (e.g. the '.' in
+                                        sect.key = value).
+    :return:                            A dictionary holding section names
+                                        as keys and the sections themselves
+                                        as value.
+    """
+    origin += os.path.sep
+    sections = OrderedDict(default=Section('Default'))
+    line_parser = LineParser(key_value_delimiters,
+                             comment_seperators,
+                             key_delimiters,
+                             {},
+                             section_override_delimiters)
+
+    for arg_key, arg_value in sorted(
+            vars(arg_parser.parse_args(arg_list)).items()):
+        if arg_key == 'settings' and arg_value is not None:
+            parse_custom_settings(sections,
+                                  arg_value,
+                                  origin,
+                                  line_parser)
+        else:
+            if isinstance(arg_value, list):
+                arg_value = ",".join([str(val) for val in arg_value])
+
+            append_to_sections(sections,
+                               arg_key,
+                               arg_value,
+                               origin,
+                               from_cli=True)
+
+    return sections
+
+
 def parse_custom_settings(sections,
                           custom_settings_list,
                           origin,
@@ -24,69 +79,3 @@ def parse_custom_settings(sections,
                                origin=origin,
                                section_name=key_touple[0],
                                from_cli=True)
-
-
-class CliParser:
-    def __init__(self,
-                 arg_parser=default_arg_parser,
-                 key_value_delimiters=['=', ':'],
-                 comment_seperators=[],
-                 key_delimiters=[','],
-                 section_override_delimiters=["."]):
-        """
-        CliParser parses arguments from the command line or a custom list of
-        items that my look like this:
-        ['-p', 'q', 'r', '-s', 'setting=value', 'section.setting=other_value']
-
-        :param arg_parser:                  Instance of ArgParser() that is
-                                            used to parse none-setting
-                                            arguments
-        :param key_value_delimiters:        delimiters to separate key and
-                                            value in setting arguments
-        :param comment_seperators:          allowed prefixes for comments
-        :param key_delimiters:              delimiter to separate multiple keys
-                                            of a setting argument
-        :param section_override_delimiters: The delimiter to delimit the
-                                            section from the key name
-                                            (e.g. the '.' in sect.key = value)
-        """
-        if not isinstance(arg_parser, argparse.ArgumentParser):
-            raise TypeError("arg_parser must be an ArgumentParser")
-
-        self._arg_parser = arg_parser
-        self._line_parser = LineParser(key_value_delimiters,
-                                       comment_seperators,
-                                       key_delimiters,
-                                       {},
-                                       section_override_delimiters)
-
-        self.sections = OrderedDict(default=Section('Default'))
-
-    def parse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
-        """
-        parses the input and adds the new data to the existing
-
-        :param arg_list: list of arguments.
-        :param origin:   directory used to interpret relative paths given as
-                         argument
-        :return:         the settings dictionary
-        """
-        origin += os.path.sep
-        for arg_key, arg_value in sorted(
-                vars(self._arg_parser.parse_args(arg_list)).items()):
-            if arg_key == 'settings' and arg_value is not None:
-                parse_custom_settings(self.sections,
-                                      arg_value,
-                                      origin,
-                                      self._line_parser)
-            else:
-                if isinstance(arg_value, list):
-                    arg_value = ",".join([str(val) for val in arg_value])
-
-                append_to_sections(self.sections,
-                                   arg_key,
-                                   arg_value,
-                                   origin,
-                                   from_cli=True)
-
-        return self.sections

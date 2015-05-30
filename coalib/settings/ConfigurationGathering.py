@@ -11,7 +11,7 @@ from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.CliParser import CliParser
+from coalib.parsing.CliParser import parse_cli
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import fill_settings
@@ -152,7 +152,7 @@ def load_configuration(arg_list):
                      LogPrinter, sections: dict(str, Section),
                      targets: list(str)). (Types indicated after colon.)
     """
-    cli_sections = CliParser().parse(arg_list=arg_list)
+    cli_sections = parse_cli(arg_list=arg_list)
     interactor, log_printer = retrieve_logging_objects(cli_sections["default"])
 
     targets = []
