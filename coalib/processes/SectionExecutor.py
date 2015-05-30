@@ -86,6 +86,33 @@ def get_file_dict(log_printer, filename_list):
     return file_dict
 
 
+def instantiate_bears(section,
+                      local_bear_list,
+                      global_bear_list,
+                      file_dict,
+                      message_queue):
+    """
+    It instantiates each bears as objects so that they can be used later.
+
+    :param section:          The section the bears belong to.
+    :param local_bear_list:  List of local bears belonging to the section.
+    :param global_bear_list: List of global bears belonging to the section.
+    :param file_dict:        Dictionary containing filenames and their
+                             contents.
+    :param message_queue:    Queue responsible to maintain the messages
+                             delivered by the bears.
+    """
+    for i in range(len(local_bear_list)):
+        local_bear_list[i] = local_bear_list[i](section,
+                                                message_queue,
+                                                TIMEOUT=0.1)
+    for i in range(len(global_bear_list)):
+        global_bear_list[i] = global_bear_list[i](file_dict,
+                                                  section,
+                                                  message_queue,
+                                                  TIMEOUT=0.1)
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -206,17 +233,6 @@ class SectionExecutor:
         self.interactor.finalize(file_dict)
         return retval
 
-    def _instantiate_bears(self, file_dict, message_queue):
-        for i in range(len(self.local_bear_list)):
-            self.local_bear_list[i] = self.local_bear_list[i](self.section,
-                                                              message_queue,
-                                                              TIMEOUT=0.1)
-        for i in range(len(self.global_bear_list)):
-            self.global_bear_list[i] = self.global_bear_list[i](file_dict,
-                                                                self.section,
-                                                                message_queue,
-                                                                TIMEOUT=0.1)
-
     def _instantiate_processes(self, job_count):
         filename_list = collect_files(path_list(self.section.get('files',
                                                                  "")),
@@ -242,8 +258,11 @@ class SectionExecutor:
                             "control_queue": control_queue,
                             "TIMEOUT": 0.1}
 
-        self._instantiate_bears(file_dict,
-                                message_queue)
+        instantiate_bears(self.section,
+                          self.local_bear_list,
+                          self.global_bear_list,
+                          file_dict,
+                          message_queue)
         fill_queue(filename_queue, file_dict.keys())
         fill_queue(global_bear_queue, range(len(self.global_bear_list)))
 
