@@ -58,6 +58,34 @@ def print_result(interactor, result_dict, file_dict, index, retval):
     return retval or len(results) > 0
 
 
+def get_file_dict(log_printer, filename_list):
+    """
+    Gets the content of each file into a dictionary with filename as keys.
+
+    :param log_printer:   The logger which logs errors.
+    :param filename_list: List of names of files to get contents of.
+    :return:              Returns the dictionary.
+    """
+    file_dict = {}
+    for filename in filename_list:
+        try:
+            with open(filename, "r", encoding="utf-8") as f:
+                file_dict[filename] = f.readlines()
+        except UnicodeDecodeError:
+            log_printer.warn(_("Failed to read file '{}'. It seems "
+                               "to contain non-unicode characters. "
+                               "Leaving it out.".format(filename)))
+        except Exception as exception:  # pragma: no cover
+            log_printer.log_exception(_("Failed to read file '{}' "
+                                        "because of an unknown "
+                                        "error. Leaving it "
+                                        "out.").format(filename),
+                                      exception,
+                                      log_level=LOG_LEVEL.WARNING)
+
+    return file_dict
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -193,7 +221,7 @@ class SectionExecutor:
         filename_list = collect_files(path_list(self.section.get('files',
                                                                  "")),
                                       self.log_printer)
-        file_dict = self._get_file_dict(filename_list)
+        file_dict = get_file_dict(self.log_printer, filename_list)
 
         manager = multiprocessing.Manager()
         global_bear_queue = multiprocessing.Queue()
@@ -221,23 +249,3 @@ class SectionExecutor:
 
         return ([BearRunner(**bear_runner_args) for i in range(job_count)],
                 bear_runner_args)
-
-    def _get_file_dict(self, filename_list):
-        file_dict = {}
-        for filename in filename_list:
-            try:
-                with open(filename, "r", encoding="utf-8") as f:
-                    file_dict[filename] = f.readlines()
-            except UnicodeDecodeError:
-                self.log_printer.warn(_("Failed to read file '{}'. It seems "
-                                        "to contain non-unicode characters. "
-                                        "Leaving it out.".format(filename)))
-            except Exception as exception:  # pragma: no cover
-                self.log_printer.log_exception(_("Failed to read file '{}' "
-                                                 "because of an unknown "
-                                                 "error. Leaving it "
-                                                 "out.").format(filename),
-                                               exception,
-                                               log_level=LOG_LEVEL.WARNING)
-
-        return file_dict
