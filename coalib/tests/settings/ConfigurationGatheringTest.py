@@ -1,4 +1,3 @@
-import inspect
 import os
 import sys
 import tempfile
@@ -48,7 +47,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
     def test_default_coafile_parsing(self):
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
+            os.path.dirname(os.path.realpath(__file__)),
             "section_manager_test_files",
             "default_coafile"))
         (sections,
@@ -65,7 +64,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
     def test_user_coafile_parsing(self):
         tmp = StringConstants.user_coafile
         StringConstants.user_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
+            os.path.dirname(os.path.realpath(__file__)),
             "section_manager_test_files",
             "default_coafile"))
         (sections,
@@ -107,12 +106,12 @@ class ConfigurationGatheringTest(unittest.TestCase):
     def test_merge(self):
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
+            os.path.dirname(os.path.realpath(__file__)),
             "section_manager_test_files",
             "default_coafile"))
 
         config = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
+            os.path.dirname(os.path.realpath(__file__)),
             "section_manager_test_files",
             ".coafile"))
         # Check merging of default_coafile and .coafile
