@@ -167,6 +167,91 @@ def instantiate_processes(section,
             bear_runner_args)
 
 
+def process_queues(processes,
+                   control_queue,
+                   local_result_dict,
+                   global_result_dict,
+                   file_dict,
+                   interactor):
+    """
+    Iterate the control queue and send the results recieved to the interactor
+    so that they can be presented to the user.
+
+    :param processes:          List of processes which can be used as
+                               BearRunners.
+    :param control_queue:      Containing control elements that indicate
+                               whether there is a result available and which
+                               bear it belongs to.
+    :param local_result_dict:  Dictionary containing results respective to
+                               local bears. It is modified by the processes
+                               i.e. results are added to it by multiple
+                               processes.
+    :param global_result_dict: Dictionary containing results respective to
+                               global bears. It is modified by the processes
+                               i.e. results are added to it by multiple
+                               processes.
+    :param file_dict:          Dictionary containing file contents with
+                               filename as keys.
+    :param interactor:         The interactor with which the user interacts.
+    :return:                   Return True if all bears execute succesfully and
+                               Results were delivered to the user. Else False.
+    """
+    running_processes = get_running_processes(processes)
+    retval = False
+    # Number of processes working on local bears
+    local_processes = len(processes)
+    global_result_buffer = []
+
+    # One process is the logger thread
+    while local_processes > 1 and running_processes > 1:
+        try:
+            control_elem, index = control_queue.get(timeout=0.1)
+
+            if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
+                local_processes -= 1
+            elif control_elem == CONTROL_ELEMENT.LOCAL:
+                assert local_processes != 0
+                retval = print_result(local_result_dict,
+                                      file_dict,
+                                      index,
+                                      retval,
+                                      interactor)
+            elif control_elem == CONTROL_ELEMENT.GLOBAL:
+                global_result_buffer.append(index)
+        except queue.Empty:
+            running_processes = get_running_processes(processes)
+
+    # Flush global result buffer
+    for elem in global_result_buffer:
+        retval = print_result(global_result_dict,
+                              file_dict,
+                              elem,
+                              retval,
+                              interactor)
+
+    running_processes = get_running_processes(processes)
+    # One process is the logger thread
+    while running_processes > 1:
+        try:
+            control_elem, index = control_queue.get(timeout=0.1)
+
+            if control_elem == CONTROL_ELEMENT.GLOBAL:
+                retval = print_result(global_result_dict,
+                                      file_dict,
+                                      index,
+                                      retval,
+                                      interactor)
+            else:
+                assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
+                running_processes = get_running_processes(processes)
+
+        except queue.Empty:
+            running_processes = get_running_processes(processes)
+
+    interactor.finalize(file_dict)
+    return retval
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -217,11 +302,12 @@ class SectionExecutor:
             runner.start()
 
         try:
-            return (self._process_queues(processes,
-                                         arg_dict["control_queue"],
-                                         arg_dict["local_result_dict"],
-                                         arg_dict["global_result_dict"],
-                                         arg_dict["file_dict"]),
+            return (process_queues(processes,
+                                   arg_dict["control_queue"],
+                                   arg_dict["local_result_dict"],
+                                   arg_dict["global_result_dict"],
+                                   arg_dict["file_dict"],
+                                   self.interactor),
                     arg_dict["local_result_dict"],
                     arg_dict["global_result_dict"])
         finally:
@@ -229,64 +315,3 @@ class SectionExecutor:
 
             for runner in processes:
                 runner.join()
-
-    def _process_queues(self,
-                        processes,
-                        control_queue,
-                        local_result_dict,
-                        global_result_dict,
-                        file_dict):
-        running_processes = get_running_processes(processes)
-        retval = False
-        # Number of processes working on local bears
-        local_processes = len(processes)
-        global_result_buffer = []
-
-        # One process is the logger thread
-        while local_processes > 1 and running_processes > 1:
-            try:
-                control_elem, index = control_queue.get(timeout=0.1)
-
-                if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
-                    local_processes -= 1
-                elif control_elem == CONTROL_ELEMENT.LOCAL:
-                    assert local_processes != 0
-                    retval = print_result(local_result_dict,
-                                          file_dict,
-                                          index,
-                                          retval,
-                                          self.interactor)
-                elif control_elem == CONTROL_ELEMENT.GLOBAL:
-                    global_result_buffer.append(index)
-            except queue.Empty:
-                running_processes = get_running_processes(processes)
-
-        # Flush global result buffer
-        for elem in global_result_buffer:
-            retval = print_result(global_result_dict,
-                                  file_dict,
-                                  elem,
-                                  retval,
-                                  self.interactor)
-
-        running_processes = get_running_processes(processes)
-        # One process is the logger thread
-        while running_processes > 1:
-            try:
-                control_elem, index = control_queue.get(timeout=0.1)
-
-                if control_elem == CONTROL_ELEMENT.GLOBAL:
-                    retval = print_result(global_result_dict,
-                                          file_dict,
-                                          index,
-                                          retval,
-                                          self.interactor)
-                else:
-                    assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
-                    running_processes = get_running_processes(processes)
-
-            except queue.Empty:
-                running_processes = get_running_processes(processes)
-
-        self.interactor.finalize(file_dict)
-        return retval
