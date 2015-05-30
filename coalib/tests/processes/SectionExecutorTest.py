@@ -13,6 +13,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
+from coalib.processes.SectionExecutor import process_queues
 import re
 
 
@@ -40,39 +41,6 @@ class SectionExecutorTestInteractor(Interactor, LogPrinter):
 
     def print_results(self, result_list, file_dict):
         self.result_queue.put(result_list)
-
-
-class ProcessQueuesTestSectionExecutor(SectionExecutor):
-    """
-    A SectionExecutor class designed to simply test _process_queues on its own.
-    """
-
-    def __init__(self,
-                 section,
-                 local_bear_list,
-                 global_bear_list,
-                 interactor,
-                 log_printer):
-        SectionExecutor.__init__(self,
-                                 section,
-                                 local_bear_list,
-                                 global_bear_list,
-                                 interactor,
-                                 log_printer)
-
-    def process_queues(self,
-                       control_queue,
-                       local_result_dict,
-                       global_result_dict):
-        self.control_queue = control_queue
-        # _process_queues() will only use len() to determine the number of
-        # processes. So just fill with an empty list with three elements.
-        self._process_queues(
-            [DummyProcess(ctrlq=self.control_queue) for i in range(3)],
-            control_queue,
-            local_result_dict,
-            global_result_dict,
-            None)
 
 
 class MessageQueueingInteractor(Interactor):
@@ -165,11 +133,6 @@ class SectionExecutorTest(unittest.TestCase):
 
     def test_process_queues(self):
         mock_interactor = MessageQueueingInteractor()
-        uut = ProcessQueuesTestSectionExecutor(self.sections["default"],
-                                               self.local_bears["default"],
-                                               self.global_bears["default"],
-                                               mock_interactor,
-                                               mock_interactor)
         ctrlq = queue.Queue()
 
         # Append custom controlling sequences.
@@ -190,10 +153,14 @@ class SectionExecutorTest(unittest.TestCase):
         ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
-        uut.process_queues(ctrlq,
-                           {1: ["The first result."],
-                            2: ["The second result.", HiddenResult("t", "c")]},
-                           {1: ["The one and only global result."]})
+        process_queues(
+            mock_interactor,
+            [DummyProcess(ctrlq=ctrlq) for i in range(3)],
+            ctrlq,
+            {1: ["The first result."],
+             2: ["The second result.", HiddenResult("t", "c")]},
+            {1: ["The one and only global result."]},
+            None)
 
         self.assertEqual(mock_interactor.get(), (["The first result."], None))
         self.assertEqual(mock_interactor.get(), (["The second result."], None))
@@ -205,9 +172,13 @@ class SectionExecutorTest(unittest.TestCase):
         # No valid FINISH element in the queue
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
-        uut.process_queues(ctrlq,
-                           {1: "The first result.", 2: "The second result."},
-                           {1: "The one and only global result."})
+        process_queues(
+            mock_interactor,
+            [DummyProcess(ctrlq=ctrlq) for i in range(3)],
+            ctrlq,
+            {1: "The first result.", 2: "The second result."},
+            {1: "The one and only global result."},
+            None)
         with self.assertRaises(queue.Empty):
             mock_interactor.get()
 
