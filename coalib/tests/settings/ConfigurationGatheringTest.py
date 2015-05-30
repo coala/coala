@@ -6,8 +6,8 @@ import unittest
 sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
-from coalib.settings.SectionManager import (gather_configuration,
-                                            retrieve_logging_objects)
+from coalib.settings.ConfigurationGathering import (gather_configuration,
+                                                    retrieve_logging_objects)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.output.ConsoleInteractor import ConsoleInteractor
@@ -20,7 +20,7 @@ from coalib.output.ClosableObject import close_objects
 import re
 
 
-class SectionManagerTest(unittest.TestCase):
+class ConfigurationGatheringTest(unittest.TestCase):
     def test_run(self):
         # We need to use a bad filename or this will parse coalas .coafile
         (sections,
@@ -48,7 +48,7 @@ class SectionManagerTest(unittest.TestCase):
     def test_default_coafile_parsing(self):
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTest)),
+            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
             "section_manager_test_files",
             "default_coafile"))
         (sections,
@@ -65,7 +65,7 @@ class SectionManagerTest(unittest.TestCase):
     def test_user_coafile_parsing(self):
         tmp = StringConstants.user_coafile
         StringConstants.user_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTest)),
+            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
             "section_manager_test_files",
             "default_coafile"))
         (sections,
@@ -107,12 +107,12 @@ class SectionManagerTest(unittest.TestCase):
     def test_merge(self):
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTest)),
+            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
             "section_manager_test_files",
             "default_coafile"))
 
         config = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionManagerTest)),
+            os.path.dirname(inspect.getfile(ConfigurationGatheringTest)),
             "section_manager_test_files",
             ".coafile"))
         # Check merging of default_coafile and .coafile

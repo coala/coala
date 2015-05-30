@@ -17,7 +17,7 @@ from coalib.output.ClosableObject import ClosableObject
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.SectionExecutor import SectionExecutor
-from coalib.settings.SectionManager import gather_configuration
+from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.i18n import _
 
 
