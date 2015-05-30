@@ -34,6 +34,10 @@ def non_hidden_results(result_list):
     return results
 
 
+def get_running_processes(processes):
+    return sum((1 if process.is_alive() else 0) for process in processes)
+
+
 def print_result(interactor, result_dict, file_dict, index, retval):
     """
     Takes the results produced by each bear and gives them to the interactor to
@@ -113,17 +117,13 @@ class SectionExecutor:
             for runner in processes:
                 runner.join()
 
-    @staticmethod
-    def _get_running_processes(processes):
-        return sum((1 if process.is_alive() else 0) for process in processes)
-
     def _process_queues(self,
                         processes,
                         control_queue,
                         local_result_dict,
                         global_result_dict,
                         file_dict):
-        running_processes = self._get_running_processes(processes)
+        running_processes = get_running_processes(processes)
         retval = False
         # Number of processes working on local bears
         local_processes = len(processes)
@@ -146,7 +146,7 @@ class SectionExecutor:
                 elif control_elem == CONTROL_ELEMENT.GLOBAL:
                     global_result_buffer.append(index)
             except queue.Empty:
-                running_processes = self._get_running_processes(processes)
+                running_processes = get_running_processes(processes)
 
         # Flush global result buffer
         for elem in global_result_buffer:
@@ -156,7 +156,7 @@ class SectionExecutor:
                                   elem,
                                   retval)
 
-        running_processes = self._get_running_processes(processes)
+        running_processes = get_running_processes(processes)
         # One process is the logger thread
         while running_processes > 1:
             try:
@@ -170,10 +170,10 @@ class SectionExecutor:
                                           retval)
                 else:
                     assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
-                    running_processes = self._get_running_processes(processes)
+                    running_processes = get_running_processes(processes)
 
             except queue.Empty:
-                running_processes = self._get_running_processes(processes)
+                running_processes = get_running_processes(processes)
 
         self.interactor.finalize(file_dict)
         return retval

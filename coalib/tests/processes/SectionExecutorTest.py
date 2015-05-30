@@ -3,6 +3,7 @@ import os
 import queue
 import unittest
 import sys
+import multiprocessing
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
@@ -13,6 +14,17 @@ from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 import re
+
+
+class DummyProcess(multiprocessing.Process):
+    def __init__(self, ctrlq):
+        multiprocessing.Process.__init__(self)
+        self.control_queue = ctrlq
+
+    def is_alive(self):
+        if self.control_queue.empty():
+            return False
+        return True
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
@@ -55,15 +67,12 @@ class ProcessQueuesTestSectionExecutor(SectionExecutor):
         self.control_queue = control_queue
         # _process_queues() will only use len() to determine the number of
         # processes. So just fill with an empty list with three elements.
-        self._process_queues([None for i in range(3)],
-                             control_queue,
-                             local_result_dict,
-                             global_result_dict,
-                             None)
-
-    def _get_running_processes(self, processes):
-        # Two processes plus one logger process until no commands are left.
-        return 0 if self.control_queue.empty() else 3
+        self._process_queues(
+            [DummyProcess(ctrlq=self.control_queue) for i in range(3)],
+            control_queue,
+            local_result_dict,
+            global_result_dict,
+            None)
 
 
 class MessageQueueingInteractor(Interactor):
@@ -156,12 +165,11 @@ class SectionExecutorTest(unittest.TestCase):
 
     def test_process_queues(self):
         mock_interactor = MessageQueueingInteractor()
-        uut = ProcessQueuesTestSectionExecutor(
-            self.sections["default"],
-            self.local_bears["default"],
-            self.global_bears["default"],
-            mock_interactor,
-            mock_interactor)
+        uut = ProcessQueuesTestSectionExecutor(self.sections["default"],
+                                               self.local_bears["default"],
+                                               self.global_bears["default"],
+                                               mock_interactor,
+                                               mock_interactor)
         ctrlq = queue.Queue()
 
         # Append custom controlling sequences.
