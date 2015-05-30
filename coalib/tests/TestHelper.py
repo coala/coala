@@ -89,6 +89,9 @@ class TestHelper:
             number = len(self.test_files)
             nonexistent_tests = 0
 
+        # Sort tests alphabetically.
+        self.test_files.sort(key=lambda fl: str.lower(os.path.split(fl)[1]))
+
         for i, file in enumerate(self.test_files):
             self.__execute_test(file,
                                 i+nonexistent_tests+1,
