@@ -50,15 +50,6 @@ class ConfParser:
 
         return self.export_to_settings()
 
-    def reparse(self, input_data):
-        """
-        Parses the input and overwrites all existent data
-
-        :param input_data: filename
-        :return:           the settings dictionary
-        """
-        return self.parse(input_data, overwrite=True)
-
     def export_to_settings(self):
         """
         :return a dict of Settings objects representing the current parsed

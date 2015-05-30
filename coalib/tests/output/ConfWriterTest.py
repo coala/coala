@@ -55,7 +55,7 @@ class ConfWriterTest(unittest.TestCase):
                        "value\n",
                        "; just a omment\n",
                        "; just a omment\n"]
-        self.uut.write_sections(self.conf_parser.reparse(self.file))
+        self.uut.write_sections(self.conf_parser.parse(self.file))
         self.uut.close()
 
         with open(self.write_file_name, "r") as f:
