@@ -52,11 +52,10 @@ def load_config_file(filename, log_printer, silent=False):
                         exist.
     """
     filename = os.path.abspath(filename)
-    conf_parser = ConfParser()
 
     try:
-        return conf_parser.reparse(filename)
-    except conf_parser.FileNotFoundError:
+        return ConfParser().parse(filename)
+    except ConfParser.FileNotFoundError:
         if not silent:
             log_printer.warn(
                 _("The requested coafile '{filename}' does not exist. "
@@ -153,7 +152,7 @@ def load_configuration(arg_list):
                      LogPrinter, sections: dict(str, Section),
                      targets: list(str)). (Types indicated after colon.)
     """
-    cli_sections = CliParser().reparse(arg_list=arg_list)
+    cli_sections = CliParser().parse(arg_list=arg_list)
     interactor, log_printer = retrieve_logging_objects(cli_sections["default"])
 
     targets = []
