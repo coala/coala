@@ -1,7 +1,7 @@
 import sys
 
 sys.path.insert(0, ".")
-from coalib.parsing.CliParser import CliParser
+from coalib.parsing.CliParser import parse_cli
 import unittest
 import argparse
 
@@ -14,7 +14,6 @@ class CliParserTest(unittest.TestCase):
                                           '--settings',
                                           nargs='+',
                                           dest='settings')
-        self.uut = CliParser(self.test_arg_parser)
 
     def dict_from_sections(self, parsed_sections):
         parsed_dict = {}
@@ -24,14 +23,9 @@ class CliParserTest(unittest.TestCase):
                       str(value)) for key, value in section.contents.items()])
         return parsed_dict
 
-    def test_raises(self):
-        self.assertRaises(TypeError, CliParser, 5)
-        self.assertRaises(SystemExit, self.uut.parse, ["-h"])
-        self.assertRaises(SystemExit, self.uut.parse, ["--nonsense"])
-
     def test_parse(self):
         # regular parse
-        parsed_sections = self.uut.parse(
+        parsed_sections = parse_cli(
             ['-t', 'ignored1', 'ignored2',
              '-t', 'taken',
              '-S', 'section1.key1,section2.key2=value1,value2',
@@ -41,7 +35,8 @@ class CliParserTest(unittest.TestCase):
              '.=not_either',
              '.key=only_in_default',
              'default_key1,default_key2=single_value',
-             'default_key3=first_value,second_value'])
+             'default_key3=first_value,second_value'],
+            arg_parser=self.test_arg_parser)
         expected_dict = {
             'default': {
                 ("test", "taken"),
@@ -57,28 +52,6 @@ class CliParserTest(unittest.TestCase):
         self.assertEqual(parsed_sections["default"].name, "Default")
         self.assertEqual(self.dict_from_sections(parsed_sections),
                          expected_dict)
-        self.assertEqual(
-            self.dict_from_sections(self.uut.sections),
-            expected_dict)
-
-        # additional parse
-        add_parsed_sections = self.uut.parse(['-S', 'additional.key=value'])
-        add_expected_dict = {
-            'default': {
-                ("test", "taken"),
-                ("key", "only_in_default"),
-                ("default_key1", "single_value"),
-                ("default_key2", "single_value"),
-                ("default_key3", "first_value,second_value")},
-            'section1': {
-                ("key1", "value1,value2")},
-            'section2': {
-                ("key2", "only_this_value"),
-                ("key2a", "k2a")},
-            'additional': {
-                ("key", "value")}}
-        self.assertEqual(self.dict_from_sections(add_parsed_sections),
-                         add_expected_dict)
 
 
 if __name__ == '__main__':
