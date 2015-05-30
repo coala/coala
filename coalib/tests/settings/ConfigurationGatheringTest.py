@@ -20,7 +20,7 @@ import re
 
 
 class ConfigurationGatheringTest(unittest.TestCase):
-    def test_run(self):
+    def test_gather_configuration(self):
         # We need to use a bad filename or this will parse coalas .coafile
         (sections,
          local_bears,
@@ -156,11 +156,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
          global_bears,
          targets,
          interactor,
-         log_printer) = gather_configuration(arg_list=["-S",
-                                          "value=1",
-                                          "test.value=2",
-                                          "-c",
-                                          "some_bad_file_name"])
+         log_printer) = gather_configuration(
+            arg_list=["-S", "value=1", "test.value=2", "-c", "bad_file_name"])
         close_objects(interactor, log_printer)
         self.assertEqual(sections["default"],
                          sections["test"].defaults)
