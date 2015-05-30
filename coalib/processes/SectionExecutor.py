@@ -1,6 +1,5 @@
 import multiprocessing
 import queue
-import threading
 
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
@@ -10,6 +9,7 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import path_list
 from coalib.misc.i18n import _
+from coalib.processes.LogPrinterThread import LogPrinterThread
 
 
 def get_cpu_count():
@@ -66,25 +66,6 @@ class SectionExecutor:
     4. Join all processes
     """
 
-    class LogPrinterThread(threading.Thread):
-        """
-        This is the Thread object that outputs all log messages it gets from
-        its message_queue.
-        """
-        def __init__(self, message_queue, log_printer):
-            threading.Thread.__init__(self)
-            self.running = True
-            self.message_queue = message_queue
-            self.log_printer = log_printer
-
-        def run(self):
-            while self.running:
-                try:
-                    elem = self.message_queue.get(timeout=0.1)
-                    self.log_printer.log_message(elem)
-                except queue.Empty:
-                    pass
-
     def __init__(self,
                  section,
                  local_bear_list,
@@ -110,8 +91,8 @@ class SectionExecutor:
         running_processes = get_cpu_count()
         processes, arg_dict = self._instantiate_processes(running_processes)
 
-        logger_thread = self.LogPrinterThread(arg_dict["message_queue"],
-                                              self.log_printer)
+        logger_thread = LogPrinterThread(arg_dict["message_queue"],
+                                         self.log_printer)
         # Start and join the logger thread along with the BearRunner's
         processes.append(logger_thread)
 

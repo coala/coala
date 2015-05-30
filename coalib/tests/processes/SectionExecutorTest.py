@@ -139,13 +139,6 @@ class SectionExecutorTest(unittest.TestCase):
                          "\n line nr: None\n severity: 1\n'test "
                          "message'".format(file=self.testcode_c_path))
 
-        # Checking the content of those messages would mean checking hardcoded
-        # strings. I recall some other test already does this so we
-        # shouldn't make maintenance so hard for us here.
-        # We'll get 1 log message per bear (set up, run, tear down) plus one
-        # for the unreadable file.
-        self.assertEqual(self.log_queue.qsize(), 3)
-
     def test_empty_run(self):
         self.uut.global_bear_list = []
         self.uut.local_bear_list = []
