@@ -100,18 +100,6 @@ class StringProcessingTest(unittest.TestCase):
         for (args, kwargs), result in invocation_and_results.items():
             self.assertEqual(postprocess(func(*args, **kwargs)), result)
 
-    def assertIteratorElementsEqual(self, iterator1, iterator2):
-        """
-        Checks whether each element in the iterators and their length do equal.
-
-        :param iterator1: The first iterator.
-        :param iterator2: The second iterator.
-        """
-        for x in iterator1:
-            self.assertEqual(x, next(iterator2))
-
-        self.assertRaises(StopIteration, next, iterator2)
-
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
