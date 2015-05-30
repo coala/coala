@@ -34,6 +34,26 @@ def non_hidden_results(result_list):
     return results
 
 
+def print_result(interactor, result_dict, file_dict, index, retval):
+    """
+    Takes the results produced by each bear and gives them to the interactor to
+    present to the user.
+
+    :param interactor:  The interactor with which to interact.
+    :param result_dict: A dictionary containing results with their respective
+                        filenames.
+    :param file_dict:   A dictionary containing the name of files and its
+                        contents.
+    :param index:       Name of the file.
+    :param retval:      A True or False parameter
+    :return:            Returns True if everything went correctly. Else false.
+    """
+    results = non_hidden_results(result_dict[index])
+    interactor.print_results(results, file_dict)
+
+    return retval or len(results) > 0
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -137,10 +157,11 @@ class SectionExecutor:
                     local_processes -= 1
                 elif control_elem == CONTROL_ELEMENT.LOCAL:
                     assert local_processes != 0
-                    retval = self._print_result(local_result_dict,
-                                                file_dict,
-                                                index,
-                                                retval)
+                    retval = print_result(self.interactor,
+                                          local_result_dict,
+                                          file_dict,
+                                          index,
+                                          retval)
                 elif control_elem == CONTROL_ELEMENT.GLOBAL:
                     global_result_buffer.append(index)
             except queue.Empty:
@@ -148,10 +169,11 @@ class SectionExecutor:
 
         # Flush global result buffer
         for elem in global_result_buffer:
-            retval = self._print_result(global_result_dict,
-                                        file_dict,
-                                        elem,
-                                        retval)
+            retval = print_result(self.interactor,
+                                  global_result_dict,
+                                  file_dict,
+                                  elem,
+                                  retval)
 
         running_processes = self._get_running_processes(processes)
         # One process is the logger thread
@@ -160,10 +182,11 @@ class SectionExecutor:
                 control_elem, index = control_queue.get(timeout=0.1)
 
                 if control_elem == CONTROL_ELEMENT.GLOBAL:
-                    retval = self._print_result(global_result_dict,
-                                                file_dict,
-                                                index,
-                                                retval)
+                    retval = print_result(self.interactor,
+                                          global_result_dict,
+                                          file_dict,
+                                          index,
+                                          retval)
                 else:
                     assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                     running_processes = self._get_running_processes(processes)
@@ -173,12 +196,6 @@ class SectionExecutor:
 
         self.interactor.finalize(file_dict)
         return retval
-
-    def _print_result(self, result_dict, file_dict, index, retval):
-        results = non_hidden_results(result_dict[index])
-        self.interactor.print_results(results, file_dict)
-
-        return retval or len(results) > 0
 
     def _instantiate_bears(self, file_dict, message_queue):
         for i in range(len(self.local_bear_list)):
