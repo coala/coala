@@ -42,9 +42,6 @@ class CliParser:
                                        {},
                                        section_override_delimiters)
 
-        self.__reset_sections()
-
-    def __reset_sections(self):
         self.sections = OrderedDict(default=Section('Default'))
 
     def parse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
