@@ -2,7 +2,6 @@ import sys
 sys.path.insert(0, ".")
 import unittest
 
-from coalib.parsing.StringProcessing import unescape
 from coalib.parsing.StringProcessing import position_is_escaped
 
 
@@ -61,30 +60,6 @@ class StringProcessingTest(unittest.TestCase):
             r"\\;",
             r"abc;a;;;;;asc"]
 
-        # Set up test dependent variables.
-        self.set_up_unescape()
-
-    def set_up_unescape(self):
-        self.test_unescape_expected_results = [
-            r"out1 'escaped-escape:        \ ' out2",
-            r"out1 'escaped-quote:         ' ' out2",
-            r"out1 'escaped-anything:      X ' out2",
-            r"out1 'two escaped escapes: \\ ' out2",
-            r"out1 'escaped-quote at end:   '' out2",
-            r"out1 'escaped-escape at end:  \' out2",
-            r"out1           'str1' out2 'str2' out2",
-            r"out1 '        'str1' out2 'str2' out2",
-            r"out1 \'      'str1' out2 'str2' out2",
-            r"out1 \        'str1' out2 'str2' out2",
-            r"out1 \\      'str1' out2 'str2' out2",
-            r"out1         \'str1' out2 'str2' out2",
-            r"out1       \\'str1' out2 'str2' out2",
-            r"out1           'str1''str2''str3' out2",
-            r"",
-            r"out1 out2 out3",
-            r"",
-            self.bs]
-
     def assertResultsEqual(self,
                            func,
                            invocation_and_results,
@@ -138,20 +113,6 @@ class StringProcessingTest(unittest.TestCase):
             self.assertEqual(x, next(iterator2))
 
         self.assertRaises(StopIteration, next, iterator2)
-
-    # Test unescape() function.
-    def test_unescape(self):
-        results = [unescape(elem) for elem in self.test_strings]
-        compare = zip(self.test_unescape_expected_results, results)
-
-        for elem in compare:
-            self.assertEqual(elem[0], elem[1])
-
-    # Test unescape() for some special possible flaws.
-    def test_unescape_custom(self):
-        self.assertEqual(unescape("hello\\"), "hello")
-        self.assertEqual(unescape("te\st\\\\"), "test\\")
-        self.assertEqual(unescape("\\\\\\"), "\\")
 
     # Test the position_is_escaped() function with a basic test string.
     def test_position_is_escaped(self):
