@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.SectionFilling import fill_section, Setting
+from coalib.settings.SectionFilling import fill_section, fill_settings, Setting
 from coalib.settings.Section import Section
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
@@ -37,6 +37,26 @@ class SectionFillingTest(unittest.TestCase):
         self.interactor = ConsoleInteractor(self.log_printer)
         self.section = Section("test")
         self.section.append(Setting("key", "val"))
+
+    def test_fill_settings(self):
+        sections = {"test": self.section}
+        with simulate_console_inputs() as generator:
+            fill_settings(sections,
+                          self.interactor,
+                          self.log_printer)
+            self.assertEqual(generator.last_input, -1)
+
+        self.section.append(Setting("bears", "SpaceConsistencyBear"))
+
+        with simulate_console_inputs("True"):
+            local_bears, global_bears = fill_settings(sections,
+                                                      self.interactor,
+                                                      self.log_printer)
+            self.assertEqual(len(local_bears["test"]), 1)
+            self.assertEqual(len(global_bears["test"]), 0)
+
+        self.assertEqual(bool(self.section["use_spaces"]), True)
+        self.assertEqual(len(self.section.contents), 3)
 
     def test_fill_section(self):
         # Use the same value for both because order isn't predictable (uses
