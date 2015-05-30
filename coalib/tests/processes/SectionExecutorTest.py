@@ -10,7 +10,7 @@ from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.processes.SectionExecutor import SectionExecutor
+from coalib.processes.SectionExecutor import execute_section
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.SectionExecutor import process_queues
@@ -83,14 +83,12 @@ class SectionExecutorTest(unittest.TestCase):
                                                         self.result_queue,
                                                         self.log_queue)
 
-        self.uut = SectionExecutor(self.sections["default"],
-                                   self.local_bears["default"],
-                                   self.global_bears["default"],
-                                   self.interactor,
-                                   self.interactor)
-
     def test_run(self):
-        results = self.uut.run()
+        results = execute_section(self.sections["default"],
+                                  self.global_bears["default"],
+                                  self.local_bears["default"],
+                                  self.interactor,
+                                  self.interactor)
         self.assertTrue(results[0])
 
         local_results = self.result_queue.get(timeout=0)
@@ -121,9 +119,11 @@ class SectionExecutorTest(unittest.TestCase):
         # shouldn't make maintenance so hard for us here.
 
     def test_empty_run(self):
-        self.uut.global_bear_list = []
-        self.uut.local_bear_list = []
-        results = self.uut.run()
+        results = execute_section(self.sections["default"],
+                                  [],
+                                  [],
+                                  self.interactor,
+                                  self.interactor)
         # No results
         self.assertFalse(results[0])
         # One file
