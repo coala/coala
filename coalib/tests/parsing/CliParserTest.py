@@ -80,12 +80,6 @@ class CliParserTest(unittest.TestCase):
         self.assertEqual(self.dict_from_sections(add_parsed_sections),
                          add_expected_dict)
 
-        # reparse
-        new_parsed_sections = self.uut.reparse(['-S', 'new_key=value'])
-        new_expected_dict = {'default': {("new_key", "value")}}
-        self.assertEqual(self.dict_from_sections(new_parsed_sections),
-                         new_expected_dict)
-
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

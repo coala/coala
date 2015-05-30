@@ -85,10 +85,5 @@ class CliParser:
                                    section_name=key_touple[0],
                                    from_cli=True)
 
-    def reparse(self, arg_list=sys.argv[1:], origin=os.getcwd()):
-        self.__reset_sections()
-
-        return self.parse(arg_list, origin)
-
     def export_to_settings(self):
         return self.sections
