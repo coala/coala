@@ -3,6 +3,7 @@ import os
 import queue
 import unittest
 import sys
+import multiprocessing
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
@@ -13,6 +14,15 @@ from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 import re
+
+
+class DummyProcess(multiprocessing.Process):
+    def __init__(self, control_queue):
+        multiprocessing.Process.__init__(self)
+        self.control_queue = control_queue
+
+    def is_alive(self):
+        return not self.control_queue.empty()
 
 
 class SectionExecutorTestInteractor(Interactor, LogPrinter):
@@ -53,17 +63,12 @@ class ProcessQueuesTestSectionExecutor(SectionExecutor):
                        local_result_dict,
                        global_result_dict):
         self.control_queue = control_queue
-        # _process_queues() will only use len() to determine the number of
-        # processes. So just fill with an empty list with three elements.
-        self._process_queues([None for i in range(3)],
-                             control_queue,
-                             local_result_dict,
-                             global_result_dict,
-                             None)
-
-    def _get_running_processes(self, processes):
-        # Two processes plus one logger process until no commands are left.
-        return 0 if self.control_queue.empty() else 3
+        self._process_queues(
+            [DummyProcess(control_queue=self.control_queue) for i in range(3)],
+            control_queue,
+            local_result_dict,
+            global_result_dict,
+            None)
 
 
 class MessageQueueingInteractor(Interactor):
