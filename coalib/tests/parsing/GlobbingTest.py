@@ -6,10 +6,13 @@ import tempfile
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.parsing.Glob import glob, iglob, _Selector, _iter_or_combinations
+from coalib.parsing.Globbing import (glob,
+                                     iglob,
+                                     _Selector,
+                                     _iter_or_combinations)
 
 
-class GlobTest(unittest.TestCase):
+class GlobingTest(unittest.TestCase):
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp(prefix='coala_import_test_dir_')
         self.tmp_subdir = tempfile.mkdtemp(prefix='pref',
