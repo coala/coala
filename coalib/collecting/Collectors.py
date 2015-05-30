@@ -3,7 +3,7 @@ import os
 from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import _
-from coalib.parsing.Glob import iglob
+from coalib.parsing.Globbing import iglob
 
 
 def _yield_if_right_kind(bear_class, kinds):
