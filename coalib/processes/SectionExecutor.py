@@ -113,6 +113,60 @@ def instantiate_bears(section,
                                                   TIMEOUT=0.1)
 
 
+def instantiate_processes(section,
+                          log_printer,
+                          local_bear_list,
+                          global_bear_list,
+                          job_count):
+    """
+    Instantiate the number of BearRunner objects or processes that will run
+    bears which will be responsible for running bears in a multiprocessing
+    environment.
+
+    :param section:          The section the bears belong to.
+    :param log_printer:      The log printer to warn to.
+    :param local_bear_list:  List of local bears belonging to the section.
+    :param global_bear_list: List of global bears belonging to the section.
+    :param job_count:        Max number of processes to create.
+    :return:                 A tuple containing a list of BearRunner objects,
+                             and the arguments passed to each object which are
+                             the same for each object.
+    """
+    filename_list = collect_files(path_list(section.get('files', "")),
+                                  log_printer)
+    file_dict = get_file_dict(log_printer, filename_list)
+
+    manager = multiprocessing.Manager()
+    global_bear_queue = multiprocessing.Queue()
+    filename_queue = multiprocessing.Queue()
+    local_result_dict = manager.dict()
+    global_result_dict = manager.dict()
+    message_queue = multiprocessing.Queue()
+    control_queue = multiprocessing.Queue()
+
+    bear_runner_args = {"file_name_queue": filename_queue,
+                        "local_bear_list": local_bear_list,
+                        "global_bear_list": global_bear_list,
+                        "global_bear_queue": global_bear_queue,
+                        "file_dict": file_dict,
+                        "local_result_dict": local_result_dict,
+                        "global_result_dict": global_result_dict,
+                        "message_queue": message_queue,
+                        "control_queue": control_queue,
+                        "TIMEOUT": 0.1}
+
+    instantiate_bears(section,
+                      local_bear_list,
+                      global_bear_list,
+                      file_dict,
+                      message_queue)
+    fill_queue(filename_queue, file_dict.keys())
+    fill_queue(global_bear_queue, range(len(global_bear_list)))
+
+    return ([BearRunner(**bear_runner_args) for i in range(job_count)],
+            bear_runner_args)
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -148,7 +202,11 @@ class SectionExecutor:
                  bear results (bear names are key).
         """
         running_processes = get_cpu_count()
-        processes, arg_dict = self._instantiate_processes(running_processes)
+        processes, arg_dict = instantiate_processes(self.section,
+                                                    self.log_printer,
+                                                    self.local_bear_list,
+                                                    self.global_bear_list,
+                                                    running_processes)
 
         logger_thread = LogPrinterThread(arg_dict["message_queue"],
                                          self.log_printer)
@@ -232,39 +290,3 @@ class SectionExecutor:
 
         self.interactor.finalize(file_dict)
         return retval
-
-    def _instantiate_processes(self, job_count):
-        filename_list = collect_files(path_list(self.section.get('files',
-                                                                 "")),
-                                      self.log_printer)
-        file_dict = get_file_dict(self.log_printer, filename_list)
-
-        manager = multiprocessing.Manager()
-        global_bear_queue = multiprocessing.Queue()
-        filename_queue = multiprocessing.Queue()
-        local_result_dict = manager.dict()
-        global_result_dict = manager.dict()
-        message_queue = multiprocessing.Queue()
-        control_queue = multiprocessing.Queue()
-
-        bear_runner_args = {"file_name_queue": filename_queue,
-                            "local_bear_list": self.local_bear_list,
-                            "global_bear_list": self.global_bear_list,
-                            "global_bear_queue": global_bear_queue,
-                            "file_dict": file_dict,
-                            "local_result_dict": local_result_dict,
-                            "global_result_dict": global_result_dict,
-                            "message_queue": message_queue,
-                            "control_queue": control_queue,
-                            "TIMEOUT": 0.1}
-
-        instantiate_bears(self.section,
-                          self.local_bear_list,
-                          self.global_bear_list,
-                          file_dict,
-                          message_queue)
-        fill_queue(filename_queue, file_dict.keys())
-        fill_queue(global_bear_queue, range(len(self.global_bear_list)))
-
-        return ([BearRunner(**bear_runner_args) for i in range(job_count)],
-                bear_runner_args)
