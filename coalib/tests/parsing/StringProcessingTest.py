@@ -19,6 +19,7 @@ class StringProcessingTest(unittest.TestCase):
         # terminating " or '.
         self.bs = "\\"
 
+        # Basic test strings all StringProcessing functions should test.
         self.test_strings = [
             r"out1 'escaped-escape:        \\ ' out2",
             r"out1 'escaped-quote:         \' ' out2",
@@ -43,7 +44,6 @@ class StringProcessingTest(unittest.TestCase):
         # pattern, not the test string).
         self.multi_pattern_test_string = (r"abcabccba###\\13q4ujsabbc\+'**'ac"
                                           r"###.#.####-ba")
-
         # Multiple patterns for the multi-pattern tests.
         self.multi_patterns = [r"abc",
                                r"ab",
