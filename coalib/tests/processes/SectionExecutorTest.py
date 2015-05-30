@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
-from coalib.settings.SectionManager import gather_configuration
+from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.SectionExecutor import SectionExecutor
