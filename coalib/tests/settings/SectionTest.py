@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, ".")
 
-from coalib.settings.Section import Section, Setting
+from coalib.settings.Section import Section, Setting, append_to_sections
 from coalib.misc.StringConstants import StringConstants
 
 
@@ -113,6 +113,25 @@ class SectionTest(unittest.TestCase):
 
         self.assertEqual(str(conf.copy().update(cli).defaults),
                          "confdef {def2 : dval2, def1 : dval1}")
+
+    def test_append_to_sections(self):
+        sections = {}
+
+        append_to_sections(sections, "", "", "")
+        self.assertEqual(sections, {})
+
+        append_to_sections(sections, "key", None, "")
+        self.assertEqual(sections, {})
+
+        append_to_sections(sections, "test", "val", "origin")
+        self.assertIn("default", sections)
+        self.assertEqual(len(sections), 1)
+        self.assertEqual(len(sections["default"].contents), 1)
+
+        append_to_sections(sections, "test1", "val", "origin", "default")
+        self.assertIn("default", sections)
+        self.assertEqual(len(sections), 1)
+        self.assertEqual(len(sections["default"].contents), 2)
 
 
 if __name__ == '__main__':
