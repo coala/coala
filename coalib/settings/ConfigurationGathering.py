@@ -219,7 +219,7 @@ def gather_configuration(arg_list=sys.argv[1:]):
     interactor, log_printer, sections, targets = (
         load_configuration(arg_list))
     local_bears, global_bears = fill_settings(sections,
-                                              interactor,
+                                              interactor.acquire_settings,
                                               log_printer)
     save_sections(sections)
     warn_nonexistent_targets(targets, sections, log_printer)
