@@ -9,16 +9,21 @@ from coalib.settings.Setting import Setting, path_list
 from coalib.misc.i18n import _
 
 
-def fill_settings(sections, interactor, log_printer):
+def fill_settings(sections, acquire_settings, log_printer):
     """
-    Retrieves all bears and requests missing settings via the given interactor.
+    Retrieves all bears and requests missing settings via the given
+    acquire_settings method.
 
-    :param sections:    The sections to fill up, will be modified in place.
-    :param interactor:  The interactor to request the missing settings from.
-    :param log_printer: The log printer to use for logging.
-    :return:            A tuple containing (local_bears, global_bears), each
-                        of them being a dictionary with the section name as
-                        key and as value the bears as a list.
+    :param sections:         The sections to fill up, modified in place.
+    :param acquire_settings: The method to use for requesting settings. It will
+                             get a parameter which is a dictionary with the
+                             settings name as key and a list containing a
+                             description in [0] and the names of the bears
+                             who need this setting in all following indexes.
+    :param log_printer:      The log printer to use for logging.
+    :return:                 A tuple containing (local_bears, global_bears),
+                             each of them being a dictionary with the section
+                             name as key and as value the bears as a list.
     """
     local_bears = {}
     global_bears = {}
@@ -38,7 +43,7 @@ def fill_settings(sections, interactor, log_printer):
                                              log_printer)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
-        fill_section(section, interactor, log_printer, all_bears)
+        fill_section(section, acquire_settings, log_printer, all_bears)
 
         local_bears[section_name] = section_local_bears
         global_bears[section_name] = section_global_bears
@@ -46,7 +51,7 @@ def fill_settings(sections, interactor, log_printer):
     return local_bears, global_bears
 
 
-def fill_section(section, interactor, log_printer, bears):
+def fill_section(section, acquire_settings, log_printer, bears):
     """
     Retrieves needed settings from given bears and asks the user for
     missing values.
@@ -55,12 +60,16 @@ def fill_section(section, interactor, log_printer, bears):
     latest bear will be taken.
 
 
-    :param section:     A section containing available settings. Settings
-                        will be added if some are missing.
-    :param interactor:  The interactor to use for requesting settings.
-    :param log_printer: The log printer for logging.
-    :param bears:       All bear classes or instances.
-    :return:            The new section
+    :param section:          A section containing available settings. Settings
+                             will be added if some are missing.
+    :param acquire_settings: The method to use for requesting settings. It will
+                             get a parameter which is a dictionary with the
+                             settings name as key and a list containing a
+                             description in [0] and the names of the bears
+                             who need this setting in all following indexes.
+    :param log_printer:      The log printer for logging.
+    :param bears:            All bear classes or instances.
+    :return:                 The new section.
     """
     # Retrieve needed settings.
     prel_needed_settings = {}
@@ -87,7 +96,7 @@ def fill_section(section, interactor, log_printer, bears):
 
     # Get missing ones.
     if len(needed_settings) > 0:
-        new_vals = interactor.acquire_settings(needed_settings)
+        new_vals = acquire_settings(needed_settings)
         for setting, help_text in new_vals.items():
             section.append(Setting(setting, help_text))
 
