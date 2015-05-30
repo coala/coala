@@ -8,6 +8,24 @@ from coalib.settings.Section import Section, append_to_sections
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
+def parse_custom_settings(sections,
+                          custom_settings_list,
+                          origin,
+                          line_parser):
+    for setting_definition in custom_settings_list:
+        (section_stub,
+         key_touples,
+         value,
+         comment_stub) = line_parser.parse(setting_definition)
+        for key_touple in key_touples:
+            append_to_sections(sections,
+                               key=key_touple[1],
+                               value=value,
+                               origin=origin,
+                               section_name=key_touple[0],
+                               from_cli=True)
+
+
 class CliParser:
     def __init__(self,
                  arg_parser=default_arg_parser,
@@ -57,7 +75,10 @@ class CliParser:
         for arg_key, arg_value in sorted(
                 vars(self._arg_parser.parse_args(arg_list)).items()):
             if arg_key == 'settings' and arg_value is not None:
-                self._parse_custom_settings(arg_value, origin)
+                parse_custom_settings(self.sections,
+                                      arg_value,
+                                      origin,
+                                      self._line_parser)
             else:
                 if isinstance(arg_value, list):
                     arg_value = ",".join([str(val) for val in arg_value])
@@ -69,15 +90,3 @@ class CliParser:
                                    from_cli=True)
 
         return self.sections
-
-    def _parse_custom_settings(self, custom_settings_list, origin):
-        for setting_definition in custom_settings_list:
-            section_stub, key_touples, value, comment_stub =\
-                self._line_parser.parse(setting_definition)
-            for key_touple in key_touples:
-                append_to_sections(self.sections,
-                                   key=key_touple[1],
-                                   value=value,
-                                   origin=origin,
-                                   section_name=key_touple[0],
-                                   from_cli=True)
