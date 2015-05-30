@@ -11,7 +11,7 @@ from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.CliParser import parse_cli
+from coalib.parsing.CliParsing import parse_cli
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import fill_settings
