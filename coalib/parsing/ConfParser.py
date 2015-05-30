@@ -8,6 +8,11 @@ from coalib.settings.Section import Section
 
 
 class ConfParser:
+    if sys.version_info < (3, 3):  # pragma: no cover
+        FileNotFoundError = IOError
+    else:
+        FileNotFoundError = FileNotFoundError
+
     def __init__(self,
                  key_value_delimiters=['='],
                  comment_seperators=['#', ';', '//'],
@@ -21,11 +26,6 @@ class ConfParser:
         self.sections = None
         self.__rand_helper = None
         self.__init_sections()
-
-        if sys.version_info < (3, 3):  # pragma: no cover
-            self.FileNotFoundError = IOError
-        else:
-            self.FileNotFoundError = FileNotFoundError
 
     def parse(self, input_data, overwrite=False):
         """
