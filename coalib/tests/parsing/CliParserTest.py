@@ -58,7 +58,7 @@ class CliParserTest(unittest.TestCase):
         self.assertEqual(self.dict_from_sections(parsed_sections),
                          expected_dict)
         self.assertEqual(
-            self.dict_from_sections(self.uut.export_to_settings()),
+            self.dict_from_sections(self.uut.sections),
             expected_dict)
 
         # additional parse

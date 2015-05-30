@@ -84,6 +84,3 @@ class CliParser:
                                    origin=origin,
                                    section_name=key_touple[0],
                                    from_cli=True)
-
-    def export_to_settings(self):
-        return self.sections
