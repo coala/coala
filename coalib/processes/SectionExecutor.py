@@ -31,6 +31,29 @@ def fill_queue(queue_fill, any_list):
         queue_fill.put(elem)
 
 
+def print_result(result_dict, file_dict, index, retval, interactor):
+    """
+    Takes the results produced by each bear and gives them to the interactor to
+    present to the user.
+
+    :param result_dict: A dictionary containing results.
+    :param file_dict:   A dictionary containing the name of files and its
+                        contents.
+    :param index:       It is the index indicating which result to print.
+    :param retval:      It is True if no results were yielded ever before. If
+                        it is False this function will return False no matter
+                        what happens. Else it depends on if this invocation
+                        yields results.
+    :param interactor:  The interactor with which to interact.
+    :return:            Returns False if any results were yielded. Else True.
+    """
+    results = list(filter(lambda result: not isinstance(result, HiddenResult),
+                          result_dict[index]))
+    interactor.print_results(results, file_dict)
+
+    return retval or len(results) > 0
+
+
 class SectionExecutor:
     """
     The section executor does the following things:
@@ -134,10 +157,11 @@ class SectionExecutor:
                     local_processes -= 1
                 elif control_elem == CONTROL_ELEMENT.LOCAL:
                     assert local_processes != 0
-                    retval = self._print_result(local_result_dict,
-                                                file_dict,
-                                                index,
-                                                retval)
+                    retval = print_result(local_result_dict,
+                                          file_dict,
+                                          index,
+                                          retval,
+                                          self.interactor)
                 elif control_elem == CONTROL_ELEMENT.GLOBAL:
                     global_result_buffer.append(index)
             except queue.Empty:
@@ -145,10 +169,11 @@ class SectionExecutor:
 
         # Flush global result buffer
         for elem in global_result_buffer:
-            retval = self._print_result(global_result_dict,
-                                        file_dict,
-                                        elem,
-                                        retval)
+            retval = print_result(global_result_dict,
+                                  file_dict,
+                                  elem,
+                                  retval,
+                                  self.interactor)
 
         running_processes = self._get_running_processes(processes)
         # One process is the logger thread
@@ -157,10 +182,11 @@ class SectionExecutor:
                 control_elem, index = control_queue.get(timeout=0.1)
 
                 if control_elem == CONTROL_ELEMENT.GLOBAL:
-                    retval = self._print_result(global_result_dict,
-                                                file_dict,
-                                                index,
-                                                retval)
+                    retval = print_result(global_result_dict,
+                                          file_dict,
+                                          index,
+                                          retval,
+                                          self.interactor)
                 else:
                     assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                     running_processes = self._get_running_processes(processes)
@@ -170,14 +196,6 @@ class SectionExecutor:
 
         self.interactor.finalize(file_dict)
         return retval
-
-    def _print_result(self, result_dict, file_dict, index, retval):
-        results = list(filter(lambda result: not isinstance(result,
-                                                            HiddenResult),
-                              result_dict[index]))
-        self.interactor.print_results(results, file_dict)
-
-        return retval or len(results) > 0
 
     def _instantiate_bears(self, file_dict, message_queue):
         for i in range(len(self.local_bear_list)):
