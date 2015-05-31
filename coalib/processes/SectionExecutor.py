@@ -1,6 +1,5 @@
 import multiprocessing
 import queue
-import threading
 
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
@@ -10,6 +9,7 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import path_list
 from coalib.misc.i18n import _
+from coalib.processes.LogPrinterThread import LogPrinterThread
 
 
 def get_cpu_count():
@@ -20,228 +20,290 @@ def get_cpu_count():
         return 2
 
 
-class SectionExecutor:
-    """
-    The section executor does the following things:
+def fill_queue(_queue, any_list):
+    for elem in any_list:
+        _queue.put(elem)
 
+
+def non_hidden_results(result_list):
+    results = []
+    for result in result_list:
+        if not isinstance(result, HiddenResult):
+            results.append(result)
+
+    return results
+
+
+def get_running_processes(processes):
+    return sum((1 if process.is_alive() else 0) for process in processes)
+
+
+def print_result(interactor, result_dict, file_dict, index, retval):
+    """
+    Takes the results produced by each bear and gives them to the interactor to
+    present to the user.
+
+    :param interactor:  The interactor with which to interact.
+    :param result_dict: A dictionary containing results with their respective
+                        filenames.
+    :param file_dict:   A dictionary containing the name of files and its
+                        contents.
+    :param index:       Name of the file.
+    :param retval:      A True or False parameter
+    :return:            Returns True if everything went correctly. Else false.
+    """
+    results = non_hidden_results(result_dict[index])
+    interactor.print_results(results, file_dict)
+
+    return retval or len(results) > 0
+
+
+def get_file_dict(log_printer, filename_list):
+    """
+    Gets the content of each file into a dictionary with filename as keys.
+
+    :param log_printer:   The logger which logs errors.
+    :param filename_list: List of names of files to get contents of.
+    :return:              Returns the dictionary.
+    """
+    file_dict = {}
+    for filename in filename_list:
+        try:
+            with open(filename, "r", encoding="utf-8") as f:
+                file_dict[filename] = f.readlines()
+        except UnicodeDecodeError:
+            log_printer.warn(_("Failed to read file '{}'. It seems "
+                               "to contain non-unicode characters. "
+                               "Leaving it out.".format(filename)))
+        except Exception as exception:  # pragma: no cover
+            log_printer.log_exception(_("Failed to read file '{}' "
+                                        "because of an unknown "
+                                        "error. Leaving it "
+                                        "out.").format(filename),
+                                      exception,
+                                      log_level=LOG_LEVEL.WARNING)
+
+    return file_dict
+
+
+def instantiate_bears(section,
+                      local_bear_list,
+                      global_bear_list,
+                      file_dict,
+                      message_queue):
+    """
+    It instantiates each bears as objects so that they can be used later.
+
+    :param section:          The section the bears belong to.
+    :param local_bear_list:  List of local bears belonging to the section.
+    :param global_bear_list: List of global bears belonging to the section.
+    :param file_dict:        Dictionary containing filenames and their
+                             contents.
+    :param message_queue:    Queue responsible to maintain the messages
+                             delivered by the bears.
+    """
+    for i in range(len(local_bear_list)):
+        local_bear_list[i] = local_bear_list[i](section,
+                                                message_queue,
+                                                TIMEOUT=0.1)
+    for i in range(len(global_bear_list)):
+        global_bear_list[i] = global_bear_list[i](file_dict,
+                                                  section,
+                                                  message_queue,
+                                                  TIMEOUT=0.1)
+
+
+def instantiate_processes(section,
+                          log_printer,
+                          local_bear_list,
+                          global_bear_list,
+                          job_count):
+    """
+    Instantiate the number of BearRunner objects or processes that will run
+    bears which will be responsible for running bears in a multiprocessing
+    environment.
+
+    :param section:          The section the bears belong to.
+    :param log_printer:      The log printer to warn to.
+    :param local_bear_list:  List of local bears belonging to the section.
+    :param global_bear_list: List of global bears belonging to the section.
+    :param job_count:        Max number of processes to create.
+    :return:                 A tuple containing a list of BearRunner objects,
+                             and the arguments passed to each object which are
+                             the same for each object.
+    """
+    filename_list = collect_files(path_list(section.get('files', "")),
+                                  log_printer)
+    file_dict = get_file_dict(log_printer, filename_list)
+
+    manager = multiprocessing.Manager()
+    global_bear_queue = multiprocessing.Queue()
+    filename_queue = multiprocessing.Queue()
+    local_result_dict = manager.dict()
+    global_result_dict = manager.dict()
+    message_queue = multiprocessing.Queue()
+    control_queue = multiprocessing.Queue()
+
+    bear_runner_args = {"file_name_queue": filename_queue,
+                        "local_bear_list": local_bear_list,
+                        "global_bear_list": global_bear_list,
+                        "global_bear_queue": global_bear_queue,
+                        "file_dict": file_dict,
+                        "local_result_dict": local_result_dict,
+                        "global_result_dict": global_result_dict,
+                        "message_queue": message_queue,
+                        "control_queue": control_queue,
+                        "TIMEOUT": 0.1}
+
+    instantiate_bears(section,
+                      local_bear_list,
+                      global_bear_list,
+                      file_dict,
+                      message_queue)
+    fill_queue(filename_queue, file_dict.keys())
+    fill_queue(global_bear_queue, range(len(global_bear_list)))
+
+    return ([BearRunner(**bear_runner_args) for i in range(job_count)],
+            bear_runner_args)
+
+
+def process_queues(interactor,
+                   processes,
+                   control_queue,
+                   local_result_dict,
+                   global_result_dict,
+                   file_dict):
+    """
+    Iterate the control queue and send the results recieved to the interactor
+    so that they can be presented to the user.
+
+    :param interactor:         The interactor with which the user interacts.
+    :param processes:          List of processes which can be used as
+                               BearRunners.
+    :param control_queue:      Containing control elements that indicate
+                               whether there is a result available and which
+                               bear it belongs to.
+    :param local_result_dict:  Dictionary containing results respective to
+                               local bears.
+    :param global_result_dict: Dictionary containing results respective to
+                               global bears.
+    :param file_dict:          Dictionary containing file contents with
+                               filename as keys.
+    :return:                   Return True if all bears execute succesfully and
+                               Results were delivered to the user. Else False.
+    """
+    running_processes = get_running_processes(processes)
+    retval = False
+    # Number of processes working on local bears
+    local_processes = len(processes)
+    global_result_buffer = []
+
+    # One process is the logger thread
+    while local_processes > 1 and running_processes > 1:
+        try:
+            control_elem, index = control_queue.get(timeout=0.1)
+
+            if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
+                local_processes -= 1
+            elif control_elem == CONTROL_ELEMENT.LOCAL:
+                assert local_processes != 0
+                retval = print_result(interactor,
+                                      local_result_dict,
+                                      file_dict,
+                                      index,
+                                      retval)
+            elif control_elem == CONTROL_ELEMENT.GLOBAL:
+                global_result_buffer.append(index)
+        except queue.Empty:
+            running_processes = get_running_processes(processes)
+
+    # Flush global result buffer
+    for elem in global_result_buffer:
+        retval = print_result(interactor,
+                              global_result_dict,
+                              file_dict,
+                              elem,
+                              retval)
+
+    running_processes = get_running_processes(processes)
+    # One process is the logger thread
+    while running_processes > 1:
+        try:
+            control_elem, index = control_queue.get(timeout=0.1)
+
+            if control_elem == CONTROL_ELEMENT.GLOBAL:
+                retval = print_result(interactor,
+                                      global_result_dict,
+                                      file_dict,
+                                      index,
+                                      retval)
+            else:
+                assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
+                running_processes = get_running_processes(processes)
+
+        except queue.Empty:
+            running_processes = get_running_processes(processes)
+
+    interactor.finalize(file_dict)
+    return retval
+
+
+def execute_section(section,
+                    global_bear_list,
+                    local_bear_list,
+                    interactor,
+                    log_printer):
+    """
+    Executes the section with the given bears.
+
+    The execute_section method does the following things:
     1. Prepare a BearRunner
       * Load files
       * Create queues
     2. Spawn up one or more BearRunner's
     3. Output results from the BearRunner's
     4. Join all processes
+
+    :param section:          The section to execute.
+    :param global_bear_list: List of global bears belonging to the section.
+    :param local_bear_list:  List of local bears belonging to the section.
+    :param interactor:       The interactor the user interacts with.
+    :param log_printer:      The log_printer to warn to.
+
+    :return: Tuple containing a bool (True if results were yielded, False
+             otherwise), a Manager.dict containing all local results
+             (filenames are key) and a Manager.dict containing all global
+             bear results (bear names are key).
     """
+    local_bear_list = Dependencies.resolve(local_bear_list)
+    global_bear_list = Dependencies.resolve(global_bear_list)
 
-    class LogPrinterThread(threading.Thread):
-        """
-        This is the Thread object that outputs all log messages it gets from
-        its message_queue.
-        """
-        def __init__(self, message_queue, log_printer):
-            threading.Thread.__init__(self)
-            self.running = True
-            self.message_queue = message_queue
-            self.log_printer = log_printer
+    running_processes = get_cpu_count()
+    processes, arg_dict = instantiate_processes(section,
+                                                log_printer,
+                                                local_bear_list,
+                                                global_bear_list,
+                                                running_processes)
 
-        def run(self):
-            while self.running:
-                try:
-                    elem = self.message_queue.get(timeout=0.1)
-                    self.log_printer.log_message(elem)
-                except queue.Empty:
-                    pass
+    logger_thread = LogPrinterThread(arg_dict["message_queue"],
+                                     log_printer)
+    # Start and join the logger thread along with the BearRunner's
+    processes.append(logger_thread)
 
-    def __init__(self,
-                 section,
-                 local_bear_list,
-                 global_bear_list,
-                 interactor,
-                 log_printer):
-        self.section = section
-        self.local_bear_list = Dependencies.resolve(local_bear_list)
-        self.global_bear_list = Dependencies.resolve(global_bear_list)
+    for runner in processes:
+        runner.start()
 
-        self.interactor = interactor
-        self.log_printer = log_printer
-
-    def run(self):
-        """
-        Executes the section with the given bears.
-
-        :return: Tuple containing a bool (True if results were yielded, False
-                 otherwise), a Manager.dict containing all local results
-                 (filenames are key) and a Manager.dict containing all global
-                 bear results (bear names are key).
-        """
-        self.interactor.begin_section(self.section)
-
-        running_processes = get_cpu_count()
-        processes, arg_dict = self._instantiate_processes(running_processes)
-
-        logger_thread = self.LogPrinterThread(arg_dict["message_queue"],
-                                              self.log_printer)
-        # Start and join the logger thread along with the BearRunner's
-        processes.append(logger_thread)
+    try:
+        return (process_queues(interactor,
+                                processes,
+                                arg_dict["control_queue"],
+                                arg_dict["local_result_dict"],
+                                arg_dict["global_result_dict"],
+                                arg_dict["file_dict"]),
+                arg_dict["local_result_dict"],
+                arg_dict["global_result_dict"])
+    finally:
+        logger_thread.running = False
 
         for runner in processes:
-            runner.start()
-
-        try:
-            return (self._process_queues(processes,
-                                         arg_dict["control_queue"],
-                                         arg_dict["local_result_dict"],
-                                         arg_dict["global_result_dict"],
-                                         arg_dict["file_dict"]),
-                    arg_dict["local_result_dict"],
-                    arg_dict["global_result_dict"])
-        finally:
-            logger_thread.running = False
-
-            for runner in processes:
-                runner.join()
-
-    @staticmethod
-    def _get_running_processes(processes):
-        return sum((1 if process.is_alive() else 0) for process in processes)
-
-    def _process_queues(self,
-                        processes,
-                        control_queue,
-                        local_result_dict,
-                        global_result_dict,
-                        file_dict):
-        running_processes = self._get_running_processes(processes)
-        retval = False
-        # Number of processes working on local bears
-        local_processes = len(processes)
-        global_result_buffer = []
-
-        # One process is the logger thread
-        while local_processes > 1 and running_processes > 1:
-            try:
-                control_elem, index = control_queue.get(timeout=0.1)
-
-                if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
-                    local_processes -= 1
-                elif control_elem == CONTROL_ELEMENT.LOCAL:
-                    assert local_processes != 0
-                    retval = self._print_result(local_result_dict,
-                                                file_dict,
-                                                index,
-                                                retval)
-                elif control_elem == CONTROL_ELEMENT.GLOBAL:
-                    global_result_buffer.append(index)
-            except queue.Empty:
-                running_processes = self._get_running_processes(processes)
-
-        # Flush global result buffer
-        for elem in global_result_buffer:
-            retval = self._print_result(global_result_dict,
-                                        file_dict,
-                                        elem,
-                                        retval)
-
-        running_processes = self._get_running_processes(processes)
-        # One process is the logger thread
-        while running_processes > 1:
-            try:
-                control_elem, index = control_queue.get(timeout=0.1)
-
-                if control_elem == CONTROL_ELEMENT.GLOBAL:
-                    retval = self._print_result(global_result_dict,
-                                                file_dict,
-                                                index,
-                                                retval)
-                else:
-                    assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
-                    running_processes = self._get_running_processes(processes)
-
-            except queue.Empty:
-                running_processes = self._get_running_processes(processes)
-
-        self.interactor.finalize(file_dict)
-        return retval
-
-    @staticmethod
-    def _non_hidden_results(result_list):
-        results = []
-        for result in result_list:
-            if not isinstance(result, HiddenResult):
-                results.append(result)
-
-        return results
-
-    def _print_result(self, result_dict, file_dict, index, retval):
-        results = self._non_hidden_results(result_dict[index])
-        self.interactor.print_results(results, file_dict)
-
-        return retval or len(results) > 0
-
-    def _instantiate_bears(self, file_dict, message_queue):
-        for i in range(len(self.local_bear_list)):
-            self.local_bear_list[i] = self.local_bear_list[i](self.section,
-                                                              message_queue,
-                                                              TIMEOUT=0.1)
-        for i in range(len(self.global_bear_list)):
-            self.global_bear_list[i] = self.global_bear_list[i](file_dict,
-                                                                self.section,
-                                                                message_queue,
-                                                                TIMEOUT=0.1)
-
-    def _instantiate_processes(self, job_count):
-        filename_list = collect_files(path_list(self.section.get('files',
-                                                                 "")),
-                                      self.log_printer)
-        file_dict = self._get_file_dict(filename_list)
-
-        manager = multiprocessing.Manager()
-        global_bear_queue = multiprocessing.Queue()
-        filename_queue = multiprocessing.Queue()
-        local_result_dict = manager.dict()
-        global_result_dict = manager.dict()
-        message_queue = multiprocessing.Queue()
-        control_queue = multiprocessing.Queue()
-
-        bear_runner_args = {"file_name_queue": filename_queue,
-                            "local_bear_list": self.local_bear_list,
-                            "global_bear_list": self.global_bear_list,
-                            "global_bear_queue": global_bear_queue,
-                            "file_dict": file_dict,
-                            "local_result_dict": local_result_dict,
-                            "global_result_dict": global_result_dict,
-                            "message_queue": message_queue,
-                            "control_queue": control_queue,
-                            "TIMEOUT": 0.1}
-
-        self._instantiate_bears(file_dict,
-                                message_queue)
-        self._fill_queue(filename_queue, file_dict.keys())
-        self._fill_queue(global_bear_queue, range(len(self.global_bear_list)))
-
-        return ([BearRunner(**bear_runner_args) for i in range(job_count)],
-                bear_runner_args)
-
-    @staticmethod
-    def _fill_queue(_queue, any_list):
-        for elem in any_list:
-            _queue.put(elem)
-
-    def _get_file_dict(self, filename_list):
-        file_dict = {}
-        for filename in filename_list:
-            try:
-                with open(filename, "r", encoding="utf-8") as f:
-                    file_dict[filename] = f.readlines()
-            except UnicodeDecodeError:
-                self.log_printer.warn(_("Failed to read file '{}'. It seems "
-                                        "to contain non-unicode characters. "
-                                        "Leaving it out.".format(filename)))
-            except Exception as exception:  # pragma: no cover
-                self.log_printer.log_exception(_("Failed to read file '{}' "
-                                                 "because of an unknown "
-                                                 "error. Leaving it "
-                                                 "out.").format(filename),
-                                               exception,
-                                               log_level=LOG_LEVEL.WARNING)
-
-        return file_dict
+            runner.join()

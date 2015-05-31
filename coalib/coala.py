@@ -16,8 +16,8 @@ import sys
 from coalib.output.ClosableObject import ClosableObject
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
-from coalib.processes.SectionExecutor import SectionExecutor
 from coalib.settings.ConfigurationGathering import gather_configuration
+from coalib.processes.SectionExecutor import execute_section
 from coalib.misc.i18n import _
 
 
@@ -39,12 +39,13 @@ def main():
             if not section.is_enabled(targets):
                 continue
 
-            yielded_results = yielded_results or SectionExecutor(
+            interactor.begin_section(section)
+            yielded_results = yielded_results or execute_section(
                 section=section,
                 global_bear_list=global_bears[section_name],
                 local_bear_list=local_bears[section_name],
                 interactor=interactor,
-                log_printer=log_printer).run()[0]
+                log_printer=log_printer)[0]
             did_nothing = False
 
         if did_nothing:
