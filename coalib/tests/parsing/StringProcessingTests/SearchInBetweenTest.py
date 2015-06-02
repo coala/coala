@@ -144,6 +144,36 @@ class SearchInBetweenTest(StringProcessingTest):
              for auto_trim in [True, False]},
             list)
 
+    # Test the search_in_between() function using the test-strings specific
+    # for search-in-between functions.
+    def test_extended(self):
+        expected_results = [
+            [r"", r"This is a word", r"(in a word"],
+            [r"((((((((((((((((((1"],
+            [r"do (it ", r"", r"hello."],
+            [r"", r"This\ is a word" + self.bs,
+                r"(in a\\\ word" + 5 * self.bs],
+            [r"\(\((((((\\\(((((((((((1"],
+            [r"do (it ", r"", r"hello."]]
+
+        self.assertResultsEqual(
+            search_in_between,
+            {(begin_pattern,
+              end_pattern,
+              test_string,
+              0,
+              False,
+              use_regex): result
+             for test_string, result in zip(
+                 self.search_in_between_test_strings,
+                 expected_results)
+             for use_regex, begin_pattern, end_pattern in
+                 [(True, r"\(", r"\)"),
+                  (False,
+                   self.search_in_between_begin_pattern,
+                   self.search_in_between_end_pattern)]},
+            list)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
