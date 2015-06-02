@@ -19,6 +19,7 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
             os.path.dirname(__file__),
             "clone_detection_samples"))
         self.section = Section("default")
+        self.section.append(Setting("files", "", origin=self.base_test_path))
         self.section.append(Setting("condition_list",
                                     "returned, "
                                     "is_condition, "
