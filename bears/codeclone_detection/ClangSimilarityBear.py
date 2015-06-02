@@ -73,7 +73,8 @@ class ClangSimilarityBear(GlobalBear):
         self.debug("Creating count matrices...")
         count_matrices = get_count_matrices(
             ClangCountVectorCreator(list(condition_list.keys()),
-                                    list(condition_list.values())),
+                                    list(condition_list.values()),
+                                    self.section["files"].origin),
             list(self.file_dict.keys()),
             lambda prog: self.debug("{:2.4f}%...".format(prog)))
 
