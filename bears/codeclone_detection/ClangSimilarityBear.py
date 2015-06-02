@@ -34,7 +34,7 @@ def get_difference(args):  # pragma: no cover
     :param args: A tuple holding the first function id, the second and the
                  count matrices dictionary holding the count matrices for
                  each function with the function id as key.
-    :return:     A tuple containing both function ids and their similarity.
+    :return:     A tuple containing both function ids and their difference.
     """
     function_1, function_2, count_matrices = args
     return (function_1,
