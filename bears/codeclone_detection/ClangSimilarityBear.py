@@ -1,7 +1,7 @@
 from itertools import combinations
 import multiprocessing
 
-
+from coalib.misc.StringConverter import StringConverter
 from coalib.processes.SectionExecutor import get_cpu_count
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import typed_dict, path
@@ -45,7 +45,23 @@ def get_difference(args):  # pragma: no cover
 
 class ClangSimilarityBear(GlobalBear):
     def run(self,
-            condition_list: counting_condition_dict):
+            condition_list: counting_condition_dict=
+                counting_condition_dict(StringConverter(
+                    "returned, "
+                    "is_condition, "
+                    "in_condition, "
+                    "in_second_level_condition, "
+                    "in_third_level_condition, "
+                    "is_assignee, "
+                    "is_assigner, "
+                    "loop_content, "
+                    "second_level_loop_content, "
+                    "third_level_loop_content, "
+                    "is_param, "
+                    "in_sum, "
+                    "in_product, "
+                    "in_binary_operation,"
+                    "member_accessed"))):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
