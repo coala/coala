@@ -1,7 +1,6 @@
 import sys
 import unittest
 import os
-import inspect
 from queue import Queue
 
 sys.path.insert(0, ".")
@@ -17,7 +16,7 @@ from coalib.settings.Setting import Setting
 class ClangCloneDetectionBearTest(unittest.TestCase):
     def setUp(self):
         self.base_test_path = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ClangCloneDetectionBearTest)),
+            os.path.dirname(__file__),
             "clone_detection_samples"))
         self.section = Section("default")
         self.section.append(Setting("condition_list",
