@@ -35,25 +35,30 @@ def get_running_processes(processes):
     return sum((1 if process.is_alive() else 0) for process in processes)
 
 
-def print_result(result_dict, file_dict, index, retval, interactor):
+def print_result(result_dict,
+                 file_dict,
+                 index,
+                 retval,
+                 print_results):
     """
     Takes the results produced by each bear and gives them to the interactor to
     present to the user.
 
-    :param result_dict: A dictionary containing results.
-    :param file_dict:   A dictionary containing the name of files and its
-                        contents.
-    :param index:       It is the index indicating which result to print.
-    :param retval:      It is True if no results were yielded ever before. If
-                        it is False this function will return False no matter
-                        what happens. Else it depends on if this invocation
-                        yields results.
-    :param interactor:  The interactor with which to interact.
-    :return:            Returns False if any results were yielded. Else True.
+    :param result_dict:   A dictionary containing results.
+    :param file_dict:     A dictionary containing the name of files and its
+                          contents.
+    :param index:         It is the index indicating which result to print.
+    :param retval:        It is True if no results were yielded ever before.
+                          If it is False this function will return False no
+                          matter what happens. Else it depends on if this
+                          invocation yields results.
+    :param print_results: Prints all given results appropriate to the
+                          output medium.
+    :return:              Returns False if any results were yielded. Else True.
     """
     results = list(filter(lambda result: not isinstance(result, HiddenResult),
                           result_dict[index]))
-    interactor.print_results(results, file_dict)
+    print_results(results, file_dict)
 
     return retval or len(results) > 0
 
@@ -172,7 +177,8 @@ def process_queues(processes,
                    local_result_dict,
                    global_result_dict,
                    file_dict,
-                   interactor):
+                   print_results,
+                   finalize):
     """
     Iterate the control queue and send the results recieved to the interactor
     so that they can be presented to the user.
@@ -192,7 +198,10 @@ def process_queues(processes,
                                processes.
     :param file_dict:          Dictionary containing file contents with
                                filename as keys.
-    :param interactor:         The interactor with which the user interacts.
+    :param print_results:      Prints all given results appropriate to the
+                               output medium.
+    :param finalize:           This method is called after all results have
+                               been sent for printing.
     :return:                   Return True if all bears execute succesfully and
                                Results were delivered to the user. Else False.
     """
@@ -215,7 +224,7 @@ def process_queues(processes,
                                       file_dict,
                                       index,
                                       retval,
-                                      interactor)
+                                      print_results)
             elif control_elem == CONTROL_ELEMENT.GLOBAL:
                 global_result_buffer.append(index)
         except queue.Empty:
@@ -227,7 +236,7 @@ def process_queues(processes,
                               file_dict,
                               elem,
                               retval,
-                              interactor)
+                              print_results)
 
     running_processes = get_running_processes(processes)
     # One process is the logger thread
@@ -240,7 +249,7 @@ def process_queues(processes,
                                       file_dict,
                                       index,
                                       retval,
-                                      interactor)
+                                      print_results)
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                 running_processes = get_running_processes(processes)
@@ -248,14 +257,15 @@ def process_queues(processes,
         except queue.Empty:
             running_processes = get_running_processes(processes)
 
-    interactor.finalize(file_dict)
+    finalize(file_dict)
     return retval
 
 
 def execute_section(section,
                     global_bear_list,
                     local_bear_list,
-                    interactor,
+                    print_results,
+                    finalize,
                     log_printer):
     """
     Executes the section with the given bears.
@@ -271,12 +281,16 @@ def execute_section(section,
     :param section:          The section to execute.
     :param global_bear_list: List of global bears belonging to the section.
     :param local_bear_list:  List of local bears belonging to the section.
-    :param interactor:       The interactor the user interacts with.
+    :param print_results:    Prints all given results appropriate to the
+                             output medium.
+    :param finalize:         This method is called after all results have been
+                             sent for printing.
     :param log_printer:      The log_printer to warn to.
-    :return: Tuple containing a bool (True if results were yielded, False
-             otherwise), a Manager.dict containing all local results
-             (filenames are key) and a Manager.dict containing all global
-             bear results (bear names are key).
+    :return:                 Tuple containing a bool (True if results were
+                             yielded, False otherwise), a Manager.dict
+                             containing all local results(filenames are key)
+                             and a Manager.dict containing all global bear
+                             results (bear names are key).
     """
     local_bear_list = Dependencies.resolve(local_bear_list)
     global_bear_list = Dependencies.resolve(global_bear_list)
@@ -302,7 +316,8 @@ def execute_section(section,
                                arg_dict["local_result_dict"],
                                arg_dict["global_result_dict"],
                                arg_dict["file_dict"],
-                               interactor),
+                               print_results,
+                               finalize),
                 arg_dict["local_result_dict"],
                 arg_dict["global_result_dict"])
     finally:

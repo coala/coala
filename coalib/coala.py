@@ -52,7 +52,8 @@ def main():
                     section=section,
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
-                    interactor=interactor,
+                    print_results=interactor.print_results,
+                    finalize=interactor.finalize,
                     log_printer=log_printer)[0]
                 did_nothing = False
 
