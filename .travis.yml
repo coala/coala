@@ -5,11 +5,17 @@ python:
   - "3.3"
   - "3.2"
 
+addons:
+  apt:
+    sources:
+    - deadsnakes
+
 install:
   - sh .misc/.install.sh
 
 script:
-  - python3 ./run_tests.py --cover --disallow-test-skipping
+  # dbus-launch which sets environment variables and starts dbus-daemon
+  - dbus-launch python3 ./run_tests.py --cover --disallow-test-skipping
   - python3 setup.py install
   - coala -c .misc/.ci_coafile
 
