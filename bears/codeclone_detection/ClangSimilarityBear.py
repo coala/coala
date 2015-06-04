@@ -69,7 +69,13 @@ class ClangSimilarityBear(GlobalBear):
         :param condition_list:       A comma seperated list of counting
                                      conditions. Possible values are: used,
                                      returned, is_condition, in_condition,
-                                     is_assignee, is_assigner, loop_content.
+                                     in_second_level_condition,
+                                     in_third_level_condition, is_assignee,
+                                     is_assigner, loop_content,
+                                     second_level_loop_content,
+                                     third_level_loop_content, is_param,
+                                     in_sum, in_product, in_binary_operation,
+                                     member_accessed.
                                      Weightings can be assigned to each
                                      condition due to providing a dict
                                      value, i.e. having used weighted in
