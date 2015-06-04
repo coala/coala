@@ -1,7 +1,6 @@
 import sys
 import unittest
 import os
-import inspect
 from queue import Queue
 
 sys.path.insert(0, ".")
@@ -17,25 +16,10 @@ from coalib.settings.Setting import Setting
 class ClangCloneDetectionBearTest(unittest.TestCase):
     def setUp(self):
         self.base_test_path = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ClangCloneDetectionBearTest)),
+            os.path.dirname(__file__),
             "clone_detection_samples"))
         self.section = Section("default")
-        self.section.append(Setting("condition_list",
-                                    "returned, "
-                                    "is_condition, "
-                                    "in_condition, "
-                                    "in_second_level_condition, "
-                                    "in_third_level_condition, "
-                                    "is_assignee, "
-                                    "is_assigner, "
-                                    "loop_content, "
-                                    "second_level_loop_content, "
-                                    "third_level_loop_content, "
-                                    "is_param, "
-                                    "in_sum, "
-                                    "in_product, "
-                                    "in_binary_operation,"
-                                    "member_accessed"))
+        self.section.append(Setting("files", "", origin=self.base_test_path))
         self.clone_files = [os.listdir(os.path.join(self.base_test_path,
                                                     "clones"))]
 

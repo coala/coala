@@ -37,8 +37,7 @@ def main():
          log_printer) = gather_configuration()
 
         if bool(sections["default"].get("show_bears", "False")):
-            show_bears(sections,
-                       local_bears,
+            show_bears(local_bears,
                        global_bears,
                        interactor.show_bears)
             did_nothing = False

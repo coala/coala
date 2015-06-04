@@ -1,7 +1,7 @@
 from itertools import combinations
 import multiprocessing
 
-
+from coalib.misc.StringConverter import StringConverter
 from coalib.processes.SectionExecutor import get_cpu_count
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import typed_dict
@@ -34,7 +34,7 @@ def get_difference(args):  # pragma: no cover
     :param args: A tuple holding the first function id, the second and the
                  count matrices dictionary holding the count matrices for
                  each function with the function id as key.
-    :return:     A tuple containing both function ids and their similarity.
+    :return:     A tuple containing both function ids and their difference.
     """
     function_1, function_2, count_matrices = args
     return (function_1,
@@ -45,7 +45,23 @@ def get_difference(args):  # pragma: no cover
 
 class ClangSimilarityBear(GlobalBear):
     def run(self,
-            condition_list: counting_condition_dict):
+            condition_list: counting_condition_dict=
+                counting_condition_dict(StringConverter(
+                    "returned, "
+                    "is_condition, "
+                    "in_condition, "
+                    "in_second_level_condition, "
+                    "in_third_level_condition, "
+                    "is_assignee, "
+                    "is_assigner, "
+                    "loop_content, "
+                    "second_level_loop_content, "
+                    "third_level_loop_content, "
+                    "is_param, "
+                    "in_sum, "
+                    "in_product, "
+                    "in_binary_operation,"
+                    "member_accessed"))):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
@@ -73,7 +89,8 @@ class ClangSimilarityBear(GlobalBear):
         self.debug("Creating count matrices...")
         count_matrices = get_count_matrices(
             ClangCountVectorCreator(list(condition_list.keys()),
-                                    list(condition_list.values())),
+                                    list(condition_list.values()),
+                                    self.section["files"].origin),
             list(self.file_dict.keys()),
             lambda prog: self.debug("{:2.4f}%...".format(prog)))
 
