@@ -252,66 +252,61 @@ def process_queues(processes,
     return retval
 
 
-class SectionExecutor:
+def execute_section(section,
+                    global_bear_list,
+                    local_bear_list,
+                    interactor,
+                    log_printer):
     """
-    The section executor does the following things:
+    Executes the section with the given bears.
 
+    The execute_section method does the following things:
     1. Prepare a BearRunner
       * Load files
       * Create queues
     2. Spawn up one or more BearRunner's
     3. Output results from the BearRunner's
     4. Join all processes
+
+    :param section:          The section to execute.
+    :param global_bear_list: List of global bears belonging to the section.
+    :param local_bear_list:  List of local bears belonging to the section.
+    :param interactor:       The interactor the user interacts with.
+    :param log_printer:      The log_printer to warn to.
+    :return: Tuple containing a bool (True if results were yielded, False
+             otherwise), a Manager.dict containing all local results
+             (filenames are key) and a Manager.dict containing all global
+             bear results (bear names are key).
     """
+    local_bear_list = Dependencies.resolve(local_bear_list)
+    global_bear_list = Dependencies.resolve(global_bear_list)
 
-    def __init__(self,
-                 section,
-                 local_bear_list,
-                 global_bear_list,
-                 interactor,
-                 log_printer):
-        self.section = section
-        self.local_bear_list = Dependencies.resolve(local_bear_list)
-        self.global_bear_list = Dependencies.resolve(global_bear_list)
+    running_processes = get_cpu_count()
+    processes, arg_dict = instantiate_processes(section,
+                                                local_bear_list,
+                                                global_bear_list,
+                                                running_processes,
+                                                log_printer)
 
-        self.interactor = interactor
-        self.log_printer = log_printer
+    logger_thread = LogPrinterThread(arg_dict["message_queue"],
+                                     log_printer)
+    # Start and join the logger thread along with the BearRunner's
+    processes.append(logger_thread)
 
-    def run(self):
-        """
-        Executes the section with the given bears.
+    for runner in processes:
+        runner.start()
 
-        :return: Tuple containing a bool (True if results were yielded, False
-                 otherwise), a Manager.dict containing all local results
-                 (filenames are key) and a Manager.dict containing all global
-                 bear results (bear names are key).
-        """
-        running_processes = get_cpu_count()
-        processes, arg_dict = instantiate_processes(self.section,
-                                                    self.local_bear_list,
-                                                    self.global_bear_list,
-                                                    running_processes,
-                                                    self.log_printer)
-
-        logger_thread = LogPrinterThread(arg_dict["message_queue"],
-                                         self.log_printer)
-        # Start and join the logger thread along with the BearRunner's
-        processes.append(logger_thread)
+    try:
+        return (process_queues(processes,
+                               arg_dict["control_queue"],
+                               arg_dict["local_result_dict"],
+                               arg_dict["global_result_dict"],
+                               arg_dict["file_dict"],
+                               interactor),
+                arg_dict["local_result_dict"],
+                arg_dict["global_result_dict"])
+    finally:
+        logger_thread.running = False
 
         for runner in processes:
-            runner.start()
-
-        try:
-            return (process_queues(processes,
-                                   arg_dict["control_queue"],
-                                   arg_dict["local_result_dict"],
-                                   arg_dict["global_result_dict"],
-                                   arg_dict["file_dict"],
-                                   self.interactor),
-                    arg_dict["local_result_dict"],
-                    arg_dict["global_result_dict"])
-        finally:
-            logger_thread.running = False
-
-            for runner in processes:
-                runner.join()
+            runner.join()
