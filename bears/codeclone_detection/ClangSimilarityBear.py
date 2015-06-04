@@ -2,7 +2,7 @@ from itertools import combinations
 import multiprocessing
 
 from coalib.misc.StringConverter import StringConverter
-from coalib.processes.SectionExecutor import get_cpu_count
+from coalib.processes.Processing import get_cpu_count
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import typed_dict
 from coalib.bears.GlobalBear import GlobalBear

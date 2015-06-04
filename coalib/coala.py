@@ -16,7 +16,7 @@ import sys
 from coalib.output.ClosableObject import ClosableObject
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
-from coalib.processes.SectionExecutor import execute_section
+from coalib.processes.Processing import execute_section
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.ShowBears import show_bears
 from coalib.misc.i18n import _

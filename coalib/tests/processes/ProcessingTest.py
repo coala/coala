@@ -10,10 +10,10 @@ from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.processes.SectionExecutor import execute_section
+from coalib.processes.Processing import execute_section
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.SectionExecutor import process_queues
+from coalib.processes.Processing import process_queues
 import re
 
 
@@ -26,7 +26,7 @@ class DummyProcess(multiprocessing.Process):
         return not self.control_queue.empty()
 
 
-class SectionExecutorTestInteractor(Interactor, LogPrinter):
+class ProcessingTestInteractor(Interactor, LogPrinter):
     def __init__(self, log_printer, result_queue, log_queue):
         Interactor.__init__(self, log_printer)
         LogPrinter.__init__(self)
@@ -58,10 +58,10 @@ class MessageQueueingInteractor(Interactor):
         return self.queue.get(timeout=0)
 
 
-class SectionExecutorTest(unittest.TestCase):
+class ProcessingTest(unittest.TestCase):
     def setUp(self):
         config_path = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(SectionExecutorTest)),
+            os.path.dirname(inspect.getfile(ProcessingTest)),
             "section_executor_test_files",
             ".coafile"))
         self.testcode_c_path = os.path.join(os.path.dirname(config_path),
@@ -77,9 +77,9 @@ class SectionExecutorTest(unittest.TestCase):
         self.log_queue = queue.Queue()
 
         log_printer = ConsolePrinter()
-        self.interactor = SectionExecutorTestInteractor(log_printer,
-                                                        self.result_queue,
-                                                        self.log_queue)
+        self.interactor = ProcessingTestInteractor(log_printer,
+                                                   self.result_queue,
+                                                   self.log_queue)
 
     def test_run(self):
         results = execute_section(self.sections["default"],
