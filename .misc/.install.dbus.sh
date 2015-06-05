@@ -1,4 +1,4 @@
-sudo apt-get install libdbus-glib-1-dev
+sudo apt-get install -y libdbus-glib-1-dev
 
 if [ "$TRAVIS" = "true" ] ; then
   echo Downloading dbus...

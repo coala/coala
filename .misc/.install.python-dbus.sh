@@ -17,7 +17,12 @@ case "$python_version" in
     ;;
 esac
 
-sudo apt-get install ${system_python}-dev
+if [ "$SCRUTINIZER" = "true" ] ; then
+  sudo apt-get install -y software-properties-common
+  sudo add-apt-repository -y ppa:fkrull/deadsnakes
+  sudo apt-get update
+fi
+sudo apt-get install -y ${system_python}-dev
 
 sh .install.dbus.sh
 
@@ -29,7 +34,11 @@ rm dbus-python.tar.gz
 
 mkdir -p python-tmpenv
 
-python_virtualenv=$VIRTUAL_ENV
+if [ "$SCRUTINIZER" = "true" ] ; then
+  python_virtualenv=${PYENV_ROOT}/versions/$python_version
+else
+  python_virtualenv=$VIRTUAL_ENV
+fi
 python_tmpenv=`pwd`/python-tmpenv
 
 cd dbus-python-1.2.0

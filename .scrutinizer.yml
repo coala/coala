@@ -1,0 +1,13 @@
+filter:
+    excluded_paths:
+        - 'coalib/bearlib/parsing/clang/*'
+
+build:
+    environment:
+        python: '3.4.1'
+    tests:
+        before:
+            - sh .misc/.install.sh
+            - python3 setup.py install
+        override:
+            - dbus-launch python3 run_tests.py --cover --disallow-test-skipping
