@@ -324,6 +324,7 @@ modify it to let it test your stuff and run from the coala root folder
 import sys
 import unittest
 
+sys.path.insert(0, ".")
 # Import here your needed coala components.
 
 
