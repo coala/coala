@@ -191,6 +191,30 @@ def load_configuration(arg_list):
     return interactor, log_printer, sections, targets
 
 
+def find_user_config(file_path, max_trials=10):
+    """
+    Uses the filepath to find the most suitable user config file for the file.
+
+    :param file_path: The path of the file whose user config needs to be found
+    :return:          The config file's path
+    """
+    file_path = os.path.normpath(os.path.abspath(os.path.expanduser(file_path)))
+    old_dir = None
+    base_dir = os.path.dirname(file_path)
+    home_dir = os.path.expanduser("~")
+
+    while base_dir != old_dir and old_dir != home_dir and max_trials > 0:
+        config_file = os.path.join(base_dir, ".coafile")
+        if os.path.isfile(config_file):
+            return config_file
+
+        old_dir = base_dir
+        base_dir = os.path.dirname(old_dir)
+        max_trials = max_trials - 1
+
+    return ""
+
+
 def gather_configuration(arg_list=sys.argv[1:]):
     """
     Loads all configuration files, retrieves bears and all needed

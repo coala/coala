@@ -6,7 +6,8 @@ sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
-                                                    retrieve_logging_objects)
+                                                    retrieve_logging_objects,
+                                                    find_user_config)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.output.ConsoleInteractor import ConsoleInteractor
@@ -287,6 +288,21 @@ class ConfigurationGatheringTest(unittest.TestCase):
         interactor, log_printer = retrieve_logging_objects(test_section)
         self.assertEqual(log_printer.log_level, LOG_LEVEL.DEBUG)
         close_objects(interactor, log_printer)
+
+    def test_find_user_config(self):
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        c_file = os.path.join(current_dir,
+                              "section_manager_test_files",
+                              "project",
+                              "test.c")
+
+        retval = find_user_config(c_file, 1)
+        self.assertEqual("", retval)
+
+        retval = find_user_config(c_file, 2)
+        self.assertEqual(os.path.join(current_dir,
+                                      "section_manager_test_files",
+                                      ".coafile"), retval)
 
 
 if __name__ == '__main__':
