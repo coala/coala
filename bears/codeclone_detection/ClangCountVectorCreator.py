@@ -97,16 +97,6 @@ class ClangCountVectorCreator:
         self.count_vectors = {}
         self.stack = []
 
-    def create_count_vector(self, name):
-        """
-        Creates a new CountVector object with the given name and the metadata
-        associated with this object.
-
-        :param name: The name of the variable to count for.
-        :return:     The new CountVector object.
-        """
-        return CountVector(name, self.conditions, self.weightings)
-
     def _get_vector_for_function(self, cursor, child_num=0):
         """
         Creates a CountVector object for the given cursor.
@@ -127,7 +117,7 @@ class ClangCountVectorCreator:
         identifier = get_identifier_name(cursor)
         if is_variable_declaration(cursor):
             self.count_vectors[identifier] = (
-                self.create_count_vector(identifier))
+                CountVector(identifier, self.conditions, self.weightings))
 
         if self.is_variable_reference(cursor):
             self.count_vectors[identifier].count_reference(self.stack)
