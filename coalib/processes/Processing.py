@@ -35,31 +35,28 @@ def get_running_processes(processes):
     return sum((1 if process.is_alive() else 0) for process in processes)
 
 
-def print_result(result_dict,
+def print_result(results,
                  file_dict,
-                 index,
                  retval,
                  print_results):
     """
     Takes the results produced by each bear and gives them to the interactor to
     present to the user.
 
-    :param result_dict:   A dictionary containing results.
+    :param results:       A list of results.
     :param file_dict:     A dictionary containing the name of files and its
                           contents.
-    :param index:         It is the index indicating which result to print.
     :param retval:        It is True if no results were yielded ever before.
                           If it is False this function will return False no
                           matter what happens. Else it depends on if this
                           invocation yields results.
-    :param print_results: Prints all given results appropriate to the
-                          output medium.
+    :param print_results: Prints all given results appropriate to the output
+                          medium.
     :return:              Returns False if any results were yielded. Else True.
     """
     results = list(filter(lambda result: not isinstance(result, HiddenResult),
-                          result_dict[index]))
+                          results))
     print_results(results, file_dict)
-
     return retval or len(results) > 0
 
 
@@ -220,9 +217,8 @@ def process_queues(processes,
                 local_processes -= 1
             elif control_elem == CONTROL_ELEMENT.LOCAL:
                 assert local_processes != 0
-                retval = print_result(local_result_dict,
+                retval = print_result(local_result_dict[index],
                                       file_dict,
-                                      index,
                                       retval,
                                       print_results)
             elif control_elem == CONTROL_ELEMENT.GLOBAL:
@@ -232,9 +228,8 @@ def process_queues(processes,
 
     # Flush global result buffer
     for elem in global_result_buffer:
-        retval = print_result(global_result_dict,
+        retval = print_result(global_result_dict[elem],
                               file_dict,
-                              elem,
                               retval,
                               print_results)
 
@@ -245,9 +240,8 @@ def process_queues(processes,
             control_elem, index = control_queue.get(timeout=0.1)
 
             if control_elem == CONTROL_ELEMENT.GLOBAL:
-                retval = print_result(global_result_dict,
+                retval = print_result(global_result_dict[index],
                                       file_dict,
-                                      index,
                                       retval,
                                       print_results)
             else:
