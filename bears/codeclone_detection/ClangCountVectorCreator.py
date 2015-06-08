@@ -22,6 +22,37 @@ def get_include_paths(file_path, setting_path):
     return result
 
 
+def is_function_declaration(cursor):
+    """
+    Checks if the given clang cursor is a function declaration.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       A bool.
+    """
+    return cursor.kind == CursorKind.FUNCTION_DECL
+
+
+def get_identifier_name(cursor):
+    """
+    Retrieves the identifier name from the given clang cursor.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       The identifier as string.
+    """
+    return cursor.displayname.decode()
+
+
+def is_variable_declaration(cursor):
+    """
+    Checks if the given clang cursor is a variable declaration.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       A bool.
+    """
+    return (cursor.kind == CursorKind.VAR_DECL or
+            cursor.kind == CursorKind.PARM_DECL)
+
+
 class ClangCountVectorCreator:
     """
     This object uses clang to create a count vector for each function for given
@@ -37,23 +68,10 @@ class ClangCountVectorCreator:
     The ClangCountVectorCreator will only count variables local to each
     function.
     """
-    @staticmethod
-    def is_function_declaration(cursor):
-        return cursor.kind == CursorKind.FUNCTION_DECL
-
-    @staticmethod
-    def is_variable_declaration(cursor):
-        return (cursor.kind == CursorKind.VAR_DECL or
-                cursor.kind == CursorKind.PARM_DECL)
-
-    @staticmethod
-    def get_identifier_name(cursor):
-        return cursor.displayname.decode()
-
     def is_variable_reference(self, cursor):
-        return (self.get_identifier_name(cursor) in self.count_vectors and
+        return (get_identifier_name(cursor) in self.count_vectors and
                 (cursor.kind is CursorKind.DECL_REF_EXPR or
-                 self.is_variable_declaration(cursor)))
+                 is_variable_declaration(cursor)))
 
     def __init__(self,
                  conditions=None,
@@ -106,8 +124,8 @@ class ClangCountVectorCreator:
         assert isinstance(cursor, Cursor)
         self.stack.append((cursor, child_num))
 
-        identifier = self.get_identifier_name(cursor)
-        if self.is_variable_declaration(cursor):
+        identifier = get_identifier_name(cursor)
+        if is_variable_declaration(cursor):
             self.count_vectors[identifier] = (
                 self.create_count_vector(identifier))
 
@@ -135,11 +153,11 @@ class ClangCountVectorCreator:
         if file is not None:
             file = file.name.decode()
 
-        if str(file) == str(filename) and self.is_function_declaration(cursor):
+        if str(file) == str(filename) and is_function_declaration(cursor):
             self._get_vector_for_function(cursor)
 
             result = {(cursor.extent.start.line,
-                       self.get_identifier_name(cursor)): self.count_vectors}
+                       get_identifier_name(cursor)): self.count_vectors}
             # Reset local states
             self.count_vectors = {}
             self.stack = []
