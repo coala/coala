@@ -19,6 +19,16 @@ class CountVector:
 
         assert len(self.count_vector) is len(self.weightings)
 
+    def create_null_vector(self, name):
+        """
+        Creates a new CountVector object with the same counting conditions
+        and weightings but initializes it to zero.
+
+        :return: A CountVector object.
+        """
+        return CountVector(name, self.conditions, self.weightings)
+
+
     def count_reference(self, *args, **kwargs):
         """
         Counts the reference to the variable under the conditions held in this
