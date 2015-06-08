@@ -49,8 +49,7 @@ def is_variable_declaration(cursor):
     :param cursor: A clang cursor from the AST.
     :return:       A bool.
     """
-    return (cursor.kind == CursorKind.VAR_DECL or
-            cursor.kind == CursorKind.PARM_DECL)
+    return cursor.kind in [CursorKind.VAR_DECL, CursorKind.PARM_DECL]
 
 
 class ClangCountVectorCreator:
