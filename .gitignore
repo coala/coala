@@ -1,4 +1,6 @@
+.directory
 .idea
+.kdev4
 __pycache__
 *~
 build
@@ -13,4 +15,5 @@ coverage.xml
 .htmlreport
 *.orig
 *.diff
+*.kdev4
 *.patch
