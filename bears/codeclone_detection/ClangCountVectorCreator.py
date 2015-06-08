@@ -59,11 +59,11 @@ class ClangCountVectorCreator:
     counting conditions. The counting conditions are clang specific and they
     are called like this:
 
-      condition(cursor, stack)
+      condition(stack)
 
-    While cursor is a clang cursor and stack is a stack holding a tuple
-    holding the parent cursors and the child number. (E.g. if a cursor is
-    the third child of its parent its child number is two, counted from zero.)
+    While stack is a stack (i.e. list) holding a tuple holding the parent
+    cursors and the child number. (E.g. if a cursor is the third child of
+    its parent its child number is two, counted from zero.)
 
     The ClangCountVectorCreator will only count variables local to each
     function.
@@ -130,8 +130,7 @@ class ClangCountVectorCreator:
                 self.create_count_vector(identifier))
 
         if self.is_variable_reference(cursor):
-            self.count_vectors[identifier].count_reference(cursor,
-                                                           self.stack)
+            self.count_vectors[identifier].count_reference(self.stack)
 
         for i, child in enumerate(cursor.get_children()):
             self._get_vector_for_function(child, i)

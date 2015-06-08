@@ -100,7 +100,7 @@ def _get_position_in_for_tokens(tokens, position):
     return FOR_POSITION.UNKNOWN  # pragma: no cover
 
 
-def _get_positions_in_for_loop(cursor, stack):
+def _get_positions_in_for_loop(stack):
     """
     Investigates all FOR_STMT objects in the stack and checks for each in
     what position the given cursor is.
@@ -114,7 +114,7 @@ def _get_positions_in_for_loop(cursor, stack):
         if elem.kind == CursorKind.FOR_STMT:
             results.append(_get_position_in_for_tokens(
                 elem.get_tokens(),
-                (cursor.location.line, cursor.location.column)))
+                (stack[-1][0].location.line, stack[-1][0].location.column)))
 
     return results
 
@@ -172,7 +172,7 @@ ADV_ASSIGNMENT_OPERATORS = [op + "=" for op in ARITH_BINARY_OPERATORS]
 ASSIGNMENT_OPERATORS = ["="] + ADV_ASSIGNMENT_OPERATORS
 
 
-def in_sum(cursor, stack):
+def in_sum(stack):
     """
     A counting condition returning true if the variable is used in a sum
     statement, i.e. within the operators +, - and their associated compound
@@ -181,7 +181,7 @@ def in_sum(cursor, stack):
     return _stack_contains_operators(stack, ['+', '-', '+=', '-='])
 
 
-def in_product(cursor, stack):
+def in_product(stack):
     """
     A counting condition returning true if the variable is used in a product
     statement, i.e. within the operators *, /, % and their associated compound
@@ -190,7 +190,7 @@ def in_product(cursor, stack):
     return _stack_contains_operators(stack, ['*', '/', '%', '*=', '/=', '%='])
 
 
-def in_binary_operation(cursor, stack):
+def in_binary_operation(stack):
     """
     A counting condition returning true if the variable is used in a binary
     operation, i.e. within the operators |, & and their associated compound
@@ -199,19 +199,19 @@ def in_binary_operation(cursor, stack):
     return _stack_contains_operators(stack, ['&', '|', '&=', '|='])
 
 
-def member_accessed(cursor, stack):
+def member_accessed(stack):
     return _stack_contains_kind(stack, CursorKind.MEMBER_REF_EXPR)
 
 
-def used(cursor, stack):
+def used(stack):
     return True
 
 
-def returned(cursor, stack):
+def returned(stack):
     return _stack_contains_kind(stack, CursorKind.RETURN_STMT)
 
 
-def is_inc_or_dec(cursor, stack):
+def is_inc_or_dec(stack):
     for elem, child_num in stack:
         if elem.kind == CursorKind.UNARY_OPERATOR:
             for token in elem.get_tokens():
@@ -221,28 +221,28 @@ def is_inc_or_dec(cursor, stack):
     return False
 
 
-def is_condition(cursor, stack):
+def is_condition(stack):
     return (_is_nth_child_of_kind(stack, [0], CursorKind.WHILE_STMT) != 0 or
             _is_nth_child_of_kind(stack, [0], CursorKind.IF_STMT) != 0 or
-            FOR_POSITION.COND in _get_positions_in_for_loop(cursor, stack))
+            FOR_POSITION.COND in _get_positions_in_for_loop(stack))
 
 
-def in_condition(cursor, stack):
+def in_condition(stack):
     # In every case the first child of IF_STMT is the condition itself
     # (non-NULL) so the second and third child are in the then/else branch
     return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 1
 
 
-def in_second_level_condition(cursor, stack):
+def in_second_level_condition(stack):
     return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 2
 
 
-def in_third_level_condition(cursor, stack):
+def in_third_level_condition(stack):
     return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) > 2
 
 
-def is_assignee(cursor, stack):
-    cursor_pos = (cursor.extent.end.line, cursor.extent.end.column)
+def is_assignee(stack):
+    cursor_pos = (stack[-1][0].extent.end.line, stack[-1][0].extent.end.column)
     for elem, child_num in stack:
         if (
                 elem.kind == CursorKind.BINARY_OPERATOR or
@@ -256,11 +256,12 @@ def is_assignee(cursor, stack):
                         cursor_pos <= token_pos):
                     return True
 
-    return is_inc_or_dec(cursor, stack)
+    return is_inc_or_dec(stack)
 
 
-def is_assigner(cursor, stack):
-    cursor_pos = (cursor.extent.start.line, cursor.extent.start.column)
+def is_assigner(stack):
+    cursor_pos = (stack[-1][0].extent.start.line,
+                  stack[-1][0].extent.start.column)
     for elem, child_num in stack:
         if (
                 elem.kind == CursorKind.BINARY_OPERATOR or
@@ -275,30 +276,30 @@ def is_assigner(cursor, stack):
                         token.spelling.decode() != "=")):
                     return True
 
-    return is_inc_or_dec(cursor, stack)
+    return is_inc_or_dec(stack)
 
 
-def _loop_level(cursor, stack):
-    positions_in_for = _get_positions_in_for_loop(cursor, stack)
+def _loop_level(stack):
+    positions_in_for = _get_positions_in_for_loop(stack)
     return (positions_in_for.count(FOR_POSITION.INC) +
             positions_in_for.count(FOR_POSITION.BODY) +
             _is_nth_child_of_kind(stack, [1], CursorKind.WHILE_STMT))
 
 
-def loop_content(cursor, stack):
-    return _loop_level(cursor, stack) == 1
+def loop_content(stack):
+    return _loop_level(stack) == 1
 
 
-def second_level_loop_content(cursor, stack):
-    return _loop_level(cursor, stack) == 2
+def second_level_loop_content(stack):
+    return _loop_level(stack) == 2
 
 
-def third_level_loop_content(cursor, stack):
-    return _loop_level(cursor, stack) > 2
+def third_level_loop_content(stack):
+    return _loop_level(stack) > 2
 
 
-def is_param(cursor, stack):
-    return cursor.kind == CursorKind.PARM_DECL
+def is_param(stack):
+    return stack[-1][0].kind == CursorKind.PARM_DECL
 
 
 condition_dict = {"used": used,
