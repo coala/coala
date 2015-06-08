@@ -11,11 +11,11 @@ from coalib.bearlib.parsing.clang.cindex import (CursorKind,
                                                  LibclangError)
 
 
-def no_condition(cursor, stack):
+def no_condition(stack):
     return True
 
 
-def is_call_argument(cursor, stack):
+def is_call_argument(stack):
     for elem, child_num in stack:
         if elem.kind == CursorKind.CALL_EXPR:
             return True
