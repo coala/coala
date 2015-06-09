@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 class CountVector:
     def __init__(self, name, conditions=None, weightings=None):
         """
@@ -51,6 +54,9 @@ class CountVector:
 
     def __iter__(self):
         return iter(self.count_vector)
+
+    def __abs__(self):
+        return sqrt(sum(x**2 for x in self))
 
     def difference(self, other):
         """
