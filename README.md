@@ -59,7 +59,7 @@ Build status
 (Code quality 1)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
-(Code quality 2)
+(Code quality 2, due to some issues that seem to be unrelated to our code the analysis may currently fail. We are working on resolving the problem.)
 
 [![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg?branch=master)](https://coveralls.io/r/coala-analyzer/coala?branch=master)
 (Statement coverage, measured on linux with python 3.4)
