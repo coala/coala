@@ -51,6 +51,18 @@ def _is_nth_child_of_kind(stack, allowed_nums, kind):
     return count
 
 
+def is_function(stack):
+    """
+    Checks if the cursor on top of the stack is used as a method or as a
+    variable.
+
+    :param stack: A stack holding a tuple holding the parent cursors and the
+                  child number.
+    :return:      True if this is used as a function, false otherwise.
+    """
+    return _is_nth_child_of_kind(stack, [0], CursorKind.CALL_EXPR) != 0
+
+
 FOR_POSITION = enum("UNKNOWN", "INIT", "COND", "INC", "BODY")
 
 
@@ -352,6 +364,23 @@ def is_param(stack):
     return stack[-1][0].kind == CursorKind.PARM_DECL
 
 
+def is_called(stack):
+    """
+    Yields true if the cursor is a function that is called. (Function pointers
+    are counted too.)
+    """
+    return (_stack_contains_kind(stack, CursorKind.CALL_EXPR) and
+            is_function(stack))
+
+
+def is_call_param(stack):
+    """
+    Yields true if the cursor is a parameter to another function.
+    """
+    return (_stack_contains_kind(stack, CursorKind.CALL_EXPR) and
+            not is_function(stack))
+
+
 condition_dict = {"used": used,
                   "returned": returned,
                   "is_condition": is_condition,
@@ -364,6 +393,8 @@ condition_dict = {"used": used,
                   "second_level_loop_content": second_level_loop_content,
                   "third_level_loop_content": third_level_loop_content,
                   "is_param": is_param,
+                  "is_called": is_called,
+                  "is_call_param": is_call_param,
                   "in_sum": in_sum,
                   "in_product": in_product,
                   "in_binary_operation": in_binary_operation,
