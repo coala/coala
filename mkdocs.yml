@@ -1,6 +1,4 @@
 site_name: coala documentation
-repo_url: https://github.com/coala-analyzer/coala
-docs_dir: doc
 pages:
 - Getting Started:
     - 'Introduction': 'README.md'
