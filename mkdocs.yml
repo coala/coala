@@ -1,23 +1,21 @@
 site_name: coala documentation
 repo_url: https://github.com/coala-analyzer/coala
 docs_dir: doc
-theme: simplex
 pages:
-- ['README.md', 'Getting Started', 'Introduction']
-- ['Install.md', 'Getting Started', 'Installation']
-- ['Tutorial.md', 'Getting Started', 'Tutorial']
-- ['Exit_Codes.md', 'Getting Started', 'Exit Codes']
-- ['Getting_Involved/README.md', 'Getting Involved', 'Introduction']
-- ['Getting_Involved/Writing_Bears.md', 'Getting Involved', 'Writing Bears']
-- ['Getting_Involved/Review.md', 'Getting Involved', 'Review']
-- ['Getting_Involved/Codestyle.md', 'Getting Involved', 'Codestyle']
-- ['Getting_Involved/Testing.md', 'Getting Involved', 'Executing Tests']
-- ['Getting_Involved/Writing_Tests.md', 'Getting Involved', 'Writing Tests']
-- ['Getting_Involved/Translating.md', 'Getting Involved', 'Translating']
-- ['Getting_Involved/Writing_Good_Commits.md',
-   'Getting Involved',
-   'Writing Good Commits']
-- ['Getting_Involved/MAC_Hints.md', 'Getting Involved', 'MAC Hints']
-- ['General_Dev_Info/git_tutorial_1.md',
-   'General Developer Information',
-   'A Hitchhikers Guide To Git (1): Genesis']
+- Getting Started:
+    - 'Introduction': 'README.md'
+    - 'Installation': 'Install.md'
+    - 'Tutorial': 'Tutorial.md'
+    - 'Exit Codes': 'Exit_Codes.md'
+- Getting Involved:
+    - 'Introduction': 'Getting_Involved/README.md'
+    - 'Writing Bears': 'Getting_Involved/Writing_Bears.md'
+    - 'Review': 'Getting_Involved/Review.md'
+    - 'Codestyle': 'Getting_Involved/Codestyle.md'
+    - 'Executing Tests': 'Getting_Involved/Testing.md'
+    - 'Writing Tests': 'Getting_Involved/Writing_Tests.md'
+    - 'Translating': 'Getting_Involved/Translating.md'
+    - 'Writing Good Commits': 'Getting_Involved/Writing_Good_Commits.md'
+    - 'MAC Hints': 'Getting_Involved/MAC_Hints.md'
+- General Developer Information:
+    - 'A Hitchhikers Guide To Git (1): Genesis': 'General_Dev_Info/git_tutorial_1.md'
