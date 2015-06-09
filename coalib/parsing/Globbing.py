@@ -16,6 +16,9 @@ import re
 
 from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import N_
+from coalib.parsing.StringProcessing import unescape
+from coalib.parsing.StringProcessing import unescaped_search_for
+from coalib.parsing.StringProcessing import unescaped_split
 
 
 def _make_selector(pattern_parts):
@@ -32,7 +35,7 @@ def _make_selector(pattern_parts):
     child_parts = pattern_parts[1:]
     if pat == '**':
         cls = _RecursiveWildcardSelector
-    elif '**' in pat:
+    elif _unescaped_find(pat, '**') >= 0:
         raise ValueError(N_("Invalid pattern: '**' can only be "
                             "an entire path component"))
     elif _is_wildcard_pattern(pat):
@@ -47,7 +50,25 @@ def _is_wildcard_pattern(pat):
     Decides whether this pattern needs actual matching using fnmatch, or can
     be looked up directly as part of a path.
     """
-    return "*" in pat or "?" in pat or "[" in pat
+    return _unescaped_find(pat, '*') >= 0 or\
+        _unescaped_find(pat, '?') >= 0 or\
+        _unescaped_find(pat, '[') >= 0
+
+
+def _unescaped_find(string, pattern):
+    try:
+        position = next(unescaped_search_for(pattern, string)).start()
+        return position
+    except StopIteration:
+        return -1
+
+
+def _unescaped_rfind(string, pattern):
+    try:
+        position = list(unescaped_search_for(pattern, string))[-1].start()
+        return position
+    except IndexError:
+        return -1
 
 
 @yield_once
@@ -78,8 +99,8 @@ def _iter_or_combinations(pattern,
     # Taking the leftmost closing delimiter and the rightmost opening delimiter
     # left of it ensures that the delimiters belong together and the pattern is
     # parsed correctly from the most nested section outwards.
-    closing_pos = pattern.find(closing_delimiter)
-    opening_pos = pattern[:closing_pos].rfind(opening_delimiter)
+    closing_pos = _unescaped_find(pattern, closing_delimiter)
+    opening_pos = _unescaped_rfind(pattern[:closing_pos], opening_delimiter)
 
     if (
             (closing_pos == -1) != (opening_pos == -1) or
@@ -110,8 +131,8 @@ def _iter_or_combinations(pattern,
                                                          closing_delimiter,
                                                          separator):
                 yield new_combination
-    elif separator in pattern:
-        for choice in pattern.split(separator):
+    elif _unescaped_find(pattern, separator) >= 0:
+        for choice in unescaped_split(separator, pattern):
             yield choice
     else:
         yield pattern
@@ -222,7 +243,7 @@ class _PathSelector(_Selector):
     using fnmatch.
     """
     def __init__(self, path, child_parts):
-        self.path = path
+        self.path = unescape(path)
         _Selector.__init__(self, child_parts)
 
     def _collect(self, path):
@@ -281,9 +302,11 @@ def iglob(pattern, files=True, dirs=True):
 
     for pat in _iter_or_combinations(pattern):
         # extract drive letter, if possible:
+        # this *should* work on windows, even when the directory seperators
+        # are doubled (escaped)
         drive_letter, pat = os.path.splitdrive(pat)
         # "/a/b.py" -> ['', 'a', 'b.py'] or \\a\\b.py -> ['', 'a', 'b.py']
-        pattern_parts = pat.split(os.sep)
+        pattern_parts = list(unescaped_split(os.sep, pat))
         # replace first pattern part with absolute path root if empty
         if pat.startswith(os.sep):
             pattern_parts[0] = drive_letter and drive_letter + "\\" or os.sep
