@@ -10,7 +10,6 @@ Our glob syntax is at follows:
     \\      escapes the following character and matches it as is
 """
 
-import fnmatch
 import os
 import platform
 import re
@@ -245,7 +244,7 @@ class _WildcardSelector(_Selector):
     def _collect(self, path):
         if os.path.isdir(path):
             for file_or_dir in os.listdir(path):
-                if fnmatch.fnmatch(file_or_dir, self.pat):
+                if fnmatch(file_or_dir, self.pat):
                     file_or_dir = os.path.join(path, file_or_dir)
                     for result in self.successor.collect(file_or_dir):
                         yield result
@@ -311,7 +310,7 @@ def glob(pattern, files=True, dirs=True):
     return list(iglob(pattern, files, dirs))
 
 
-def _fnmatch(name, pattern, force_case=False):
+def fnmatch(name, pattern, force_case=False):
     """
     Tests whether name matches the pattern
 
