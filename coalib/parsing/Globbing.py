@@ -1,5 +1,19 @@
+"""
+Several methods to match and collect filenames with glob statements.
+Our glob syntax is at follows:
+
+    **      matches everything
+    *       matches everything but '/' on Linux, '/' and '\\' on Windows
+    ?       matches any single character
+    [seq]   matches any character in seq
+    [!seq]  matches any char not in seq
+    \\      escapes the following character and matches it as is
+"""
+
 import fnmatch
 import os
+import platform
+import re
 
 from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import N_
@@ -102,6 +116,76 @@ def _iter_or_combinations(pattern,
             yield choice
     else:
         yield pattern
+
+
+def translate_glob_2_re(pattern):
+    """
+    Translates a glob pattern to a regular expression.
+    """
+
+    index, length = 0, len(pattern)
+    regex = ''
+    while index < length:
+
+        # note: char is 1 behind index
+        char = pattern[index]
+        index = index+1
+
+        if char == '*':
+
+            # ** matches everything
+            if index < length and pattern[index] == '*':
+                regex = regex + '.*'
+                index = index + 1
+
+            # * matches everythin but '/' and r'\\' on Windows
+            elif platform.system() == 'Windows':
+                regex = regex + '(?!.*/|.*\\\\\\\\).*'
+
+            # * matches everything but '/' on Linux/Unix
+            else:
+                regex = regex + '[^/]*'
+
+        # ? matches any single character
+        elif char == '?':
+            regex = regex + '.'
+
+        # [seq] matches any one of seq and [!seq] matches any one not in seq
+        elif char == '[':
+            position = index  # index: one after '['
+            if position < length and pattern[position] == '!':
+                position = position+1
+            if position < length and pattern[position] == ']':
+                position = position+1  # no seq inside brackets
+            while position < length and pattern[position] != ']':
+                position = position+1  # position one after closing bracket
+
+            # sequence has no end -> '[' interpreted as single char
+            if position >= length:
+                regex = regex + '\\['
+
+            # seq = sequence inside brackets
+            else:
+                seq = pattern[index:position].replace('\\', '\\\\')
+                index = position+1
+                if seq[0] == '!':
+                    seq = '^' + seq[1:]
+                elif seq[0] == '^':
+                    seq = '\\' + seq
+                regex = "{}[{}]".format(regex, seq)
+
+        # the next character is escaped and taken as is
+        elif char == '\\':
+            char = pattern[index]
+            index = index+1
+            regex = regex + re.escape(char)
+
+        # usual character
+        else:
+            regex = regex + re.escape(char)
+
+    # (?ms): flags for re.compile(): m = multi-line, s = dot matches all
+    return regex + '\Z(?ms)'
 
 
 class _Selector:
@@ -225,3 +309,23 @@ def glob(pattern, files=True, dirs=True):
     :return:        List of all files matching the pattern
     """
     return list(iglob(pattern, files, dirs))
+
+
+def _fnmatch(name, pattern, force_case=False):
+    """
+    Tests whether name matches the pattern
+
+    :param name:       Filename that is being checked.
+    :param pattern:    Pattern that matches the filename.
+    :param force_case: If False, name and pattern will be first case-normalized
+                       if the operating system requires this.
+    :return:           True if name matches the pattern, False otherwise
+    """
+
+    if not force_case:
+        name = os.path.normcase(name)  # only if OS is case insensitive
+        pattern = os.path.normcase(pattern)
+
+    match = re.compile(translate_glob_2_re(pattern)).match
+
+    return match(name) is not None
