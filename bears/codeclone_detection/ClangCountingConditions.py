@@ -200,18 +200,31 @@ def in_binary_operation(stack):
 
 
 def member_accessed(stack):
+    """
+    Yields true if a member of the cursor is accessed or the cursor is the
+    accessed member.
+    """
     return _stack_contains_kind(stack, CursorKind.MEMBER_REF_EXPR)
 
 
 def used(stack):
+    """
+    Yields true.
+    """
     return True
 
 
 def returned(stack):
+    """
+    Yields true if the cursor on top is used in a return statement.
+    """
     return _stack_contains_kind(stack, CursorKind.RETURN_STMT)
 
 
 def is_inc_or_dec(stack):
+    """
+    Yields true if the cursor on top is inc- or decremented.
+    """
     for elem, child_num in stack:
         if elem.kind == CursorKind.UNARY_OPERATOR:
             for token in elem.get_tokens():
@@ -222,26 +235,42 @@ def is_inc_or_dec(stack):
 
 
 def is_condition(stack):
+    """
+    Yields true if the cursor on top is used as a condition.
+    """
     return (_is_nth_child_of_kind(stack, [0], CursorKind.WHILE_STMT) != 0 or
             _is_nth_child_of_kind(stack, [0], CursorKind.IF_STMT) != 0 or
             FOR_POSITION.COND in _get_positions_in_for_loop(stack))
 
 
 def in_condition(stack):
+    """
+    Yields true if the cursor on top is in the body of one condition.
+    """
     # In every case the first child of IF_STMT is the condition itself
     # (non-NULL) so the second and third child are in the then/else branch
     return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 1
 
 
 def in_second_level_condition(stack):
+    """
+    Yields true if the cursor on top is in the body of two nested conditions.
+    """
     return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) == 2
 
 
 def in_third_level_condition(stack):
+    """
+    Yields true if the cursor on top is in the body of three or more nested
+    conditions.
+    """
     return _is_nth_child_of_kind(stack, [1, 2], CursorKind.IF_STMT) > 2
 
 
 def is_assignee(stack):
+    """
+    Yields true if the cursor on top is assigned something.
+    """
     cursor_pos = (stack[-1][0].extent.end.line, stack[-1][0].extent.end.column)
     for elem, child_num in stack:
         if (
@@ -260,6 +289,9 @@ def is_assignee(stack):
 
 
 def is_assigner(stack):
+    """
+    Yields true if the cursor on top is used for an assignment on the RHS.
+    """
     cursor_pos = (stack[-1][0].extent.start.line,
                   stack[-1][0].extent.start.column)
     for elem, child_num in stack:
@@ -280,6 +312,12 @@ def is_assigner(stack):
 
 
 def _loop_level(stack):
+    """
+    Investigates the stack to determine the loop level.
+
+    :param stack: A stack of clang cursors.
+    :return:      An integer representing the level of nested loops.
+    """
     positions_in_for = _get_positions_in_for_loop(stack)
     return (positions_in_for.count(FOR_POSITION.INC) +
             positions_in_for.count(FOR_POSITION.BODY) +
@@ -287,18 +325,30 @@ def _loop_level(stack):
 
 
 def loop_content(stack):
+    """
+    Yields true if the cursor on top is within a first level loop.
+    """
     return _loop_level(stack) == 1
 
 
 def second_level_loop_content(stack):
+    """
+    Yields true if the cursor on top is within a second level loop.
+    """
     return _loop_level(stack) == 2
 
 
 def third_level_loop_content(stack):
+    """
+    Yields true if the cursor on top is within a third (or higher) level loop.
+    """
     return _loop_level(stack) > 2
 
 
 def is_param(stack):
+    """
+    Yields true if the cursor on top is a parameter declaration.
+    """
     return stack[-1][0].kind == CursorKind.PARM_DECL
 
 
