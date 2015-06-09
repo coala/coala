@@ -12,7 +12,7 @@ from coalib.parsing.Globbing import (glob,
                                      _iter_or_combinations)
 
 
-class GlobingTest(unittest.TestCase):
+class GlobbingTest(unittest.TestCase):
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp(prefix='coala_import_test_dir_')
         self.tmp_subdir = tempfile.mkdtemp(prefix='pref',

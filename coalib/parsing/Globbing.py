@@ -103,8 +103,8 @@ def _iter_or_combinations(pattern,
             # This loop iterates through all possible combinations for the new
             # whole pattern, which has it's first pair of parentheses replaced
             # already:
-            # "a(cd)" (first call) yields "ac", then "ad",
-            # "b(cd)" (second call) yields "bc" and "bd"
+            # "a(c|d)" (first call) yields "ac", then "ad",
+            # "b(c|d)" (second call) yields "bc" and "bd"
             for new_combination in _iter_or_combinations(new_pattern,
                                                          opening_delimiter,
                                                          closing_delimiter,
@@ -137,7 +137,7 @@ def translate_glob_2_re(pattern):
                 regex = regex + '.*'
                 index = index + 1
 
-            # * matches everythin but '/' and r'\\' on Windows
+            # * matches everything but '/' and r'\\' on Windows
             elif platform.system() == 'Windows':
                 regex = regex + '(?!.*/|.*\\\\\\\\).*'
 
