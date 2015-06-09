@@ -1,3 +1,4 @@
+import copy
 from munkres import Munkres
 # Instantiate globally since this class is holding stateless public methods.
 munkres = Munkres()
@@ -52,8 +53,37 @@ def get_count_matrices(count_vector_creator,
     return result
 
 
-# Coverage cannot be measured because this is in another process
-def compare_functions(cm1, cm2):  # pragma: no cover
+def pad_count_vectors(cm1, cm2):
+    """
+    Pads the smaller count matrix with zeroed count vectors.
+
+    :param cm1: First cm. Will not be modified.
+    :param cm2: Second cm. Will not be modified.
+    :return:    A tuple holding two cms.
+    """
+    cm1len = len(cm1)
+    cm2len = len(cm2)
+    if cm1len != cm2len:
+        # Copy the smaller matrix as it will be altered
+        if cm1len > cm2len:
+            cm2 = copy.copy(cm2)
+        else:  # make cm1 the larger (or equal) one
+            tmp = cm2
+            cm2 = copy.copy(cm1)
+            cm1 = tmp
+
+        any_count_vector = list(cm1.values())[0]
+        # Fill up smaller count matrix with zero vectors. This way no
+        # padding is needed later and if count vectors are zero on both
+        # side, the difference is zero too which wouldn't be taken into
+        # account with simple padding of ones.
+        for i in range(len(cm1) - len(cm2)):
+            cm2[i] = any_count_vector.create_null_vector(i)
+
+    return cm1, cm2
+
+
+def compare_functions(cm1, cm2):
     """
     Compares the functions represented by the given count matrices.
 
@@ -67,6 +97,8 @@ def compare_functions(cm1, cm2):  # pragma: no cover
     if len(cm1) == 0 or len(cm2) == 0:
         return 1 if len(cm1) != len(cm2) else 0
 
+    cm1, cm2 = pad_count_vectors(cm1, cm2)
+
     # The cost matrix holds the difference between the two variables i and
     # j in the i/j field. This is a representation of a bipartite weighted
     # graph with nodes representing the first function on the one side
@@ -77,15 +109,10 @@ def compare_functions(cm1, cm2):  # pragma: no cover
                     for cv2 in cm2.values()]
                    for cv1 in cm1.values()]
 
-    # Pad manually with ones. If we have one variable in one function and
-    # no corresponding in the other this is 100% difference, so 1.
-    cost_matrix = munkres.pad_matrix(cost_matrix, pad_value=1)
-
     # The munkres algorithm will calculate a matching such that the sum of
     # the taken fields is minimal. It thus will associate each variable
     # from one function to one on the other function.
     matching = munkres.compute(cost_matrix)
 
     # Sum it up, normalize it so we have a value in [0, 1]
-    return (sum(cost_matrix[x][y] for x, y in matching) /
-            max(len(cm1), len(cm2)))
+    return sum(cost_matrix[x][y] for x, y in matching) / len(cm1)
