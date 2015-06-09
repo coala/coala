@@ -57,7 +57,8 @@ class ClangCountingConditionsTest(unittest.TestCase):
             "used",
             (1, "used(int, int)"),
             {"a": [5],
-             "b": [6]})
+             "b": [6],
+             "foo": [1]})
 
     def test_returned(self):
         self.check_counting_condition(
