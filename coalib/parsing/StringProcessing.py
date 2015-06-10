@@ -87,6 +87,50 @@ def trim_empty_matches(iterator, groups=[0]):
                 continue
 
 
+def _split(string,
+           max_split,
+           remove_empty_matches,
+           matching_function,
+           *args,
+           **kwargs):
+    """
+    Splits a string using a given matching-function that matches the separator.
+
+    This function implements general features needed from the split functions
+    in this module (the max-split and remove-empty-matches features).
+
+    :param string:               The string where to split.
+    :param max_split:            Defines the maximum number of splits. If 0 or
+                                 less is provided, the number of splits is not
+                                 limited.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the result.
+    :param matching_function:    The matching function. It must return
+                                 MatchObject's containing the matched
+                                 split-separator.
+    :param args:                 Positional arguments to invoke the
+                                 matching_function with.
+    :param kwargs:               Key-value arguments to invoke the
+                                 matching_function with.
+    """
+    last_end_pos = 0
+
+    for match in matching_function(*args, **kwargs):
+        split_string = string[last_end_pos : match.start()]
+        last_end_pos = match.end()
+
+        if not remove_empty_matches or len(split_string) != 0:
+            yield split_string
+
+            max_split -= 1
+            if max_split == 0:
+                break  # only reachable when max_split > 0
+
+    # Append the rest of the string.
+    if not remove_empty_matches or len(string) > last_end_pos:
+        yield string[last_end_pos:]
+
+
 def split(pattern,
           string,
           max_split=0,
@@ -108,42 +152,16 @@ def split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    if not use_regex:
-        pattern = re.escape(pattern)
-
-    # re.split() is not usable for this function. It has a bug when using too
-    # many capturing groups "()".
-
-    # Regex explanation:
-    # 1. (.*?)              Match any char unlimited times, as few times as
-    #                       possible. Save the match in the first capturing
-    #                       group (match.group(1)).
-    # 2. (?:pattern)        A non-capturing group that matches the
-    #                       split-pattern. Because the first group is lazy
-    #                       (matches as few times as possible) the next
-    #                       occurring split-sequence is matched.
-    regex = r"(.*?)(?:" + pattern + r")"
-
-    item = None
-    for item in re.finditer(regex, string, re.DOTALL):
-        if not remove_empty_matches or len(item.group(1)) != 0:
-            # Return the first matching group. The pattern from parameter can't
-            # change the group order.
-            yield item.group(1)
-
-            max_split -= 1
-            if 0 == max_split:
-                break  # only reachable when max_split > 0
-
-    if item is None:
-        last_pos = 0
-    else:
-        last_pos = item.end()
-
-    # Append the rest of the string, since it's not in the result list (only
-    # matches are captured that have a leading separator).
-    if not remove_empty_matches or len(string) > last_pos:
-        yield string[last_pos:]
+    for elem in _split(string,
+                       max_split,
+                       remove_empty_matches,
+                       search_for,
+                       pattern,
+                       string,
+                       0,
+                       0,
+                       use_regex):
+        yield elem
 
 
 def unescaped_split(pattern,
@@ -168,23 +186,16 @@ def unescaped_split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    last_end_pos = 0
-
-    for item in unescaped_search_for(pattern, string, 0, 0, use_regex):
-        split_string = string[last_end_pos : item.start()]
-        last_end_pos = item.end()
-
-        if not remove_empty_matches or len(split_string) != 0:
-            yield split_string
-
-            max_split -= 1
-            if max_split == 0:
-                break  # only reachable when max_split > 0
-
-
-    # Append the rest of the string.
-    if not remove_empty_matches or len(string) > last_end_pos:
-        yield string[last_end_pos:]
+    for elem in _split(string,
+                       max_split,
+                       remove_empty_matches,
+                       unescaped_search_for,
+                       pattern,
+                       string,
+                       0,
+                       0,
+                       use_regex):
+        yield elem
 
 
 def search_in_between(begin,
