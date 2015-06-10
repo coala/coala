@@ -1,7 +1,7 @@
 site_name: coala documentation
 pages:
 - Getting Started:
-    - 'Introduction': 'README.md'
+    - 'Introduction': 'index.md'
     - 'Installation': 'Install.md'
     - 'Tutorial': 'Tutorial.md'
     - 'Exit Codes': 'Exit_Codes.md'
