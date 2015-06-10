@@ -13,7 +13,9 @@ if __name__ == "__main__":
           version=version_str,
           description='Code Analysis Application (coala)',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt, Mischa Krüger',
-          maintainer_email='lasse.schuirmann@gmail.com, fabian@neuschmidt.de, makman@alice.de',
+          maintainer_email='lasse.schuirmann@gmail.com, '
+                           'fabian@neuschmidt.de, '
+                           'makman@alice.de',
           url='http://coala.schuirmann.net/',
           scripts=['coala.py', 'coala'],
           packages=['bears',
