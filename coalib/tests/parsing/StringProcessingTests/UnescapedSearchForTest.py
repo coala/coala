@@ -138,6 +138,39 @@ class UnescapedSearchForTest(StringProcessingTest):
                  [elem[0 : max_match] for elem in expected_master_results])},
             self.list_zero_group)
 
+    # Test unescaped_search_for() for its max_match parameter with matches
+    # that are also escaped.
+    def test_max_match_escaping_flaw(self):
+        expected_master_results = [
+            2 * [r"'"],
+            2 * [r"'"],
+            2 * [r"'"],
+            2 * [r"'"],
+            2 * [r"'"],
+            2 * [r"'"],
+            4 * [r"'"],
+            4 * [r"'"],
+            4 * [r"'"],
+            4 * [r"'"],
+            4 * [r"'"],
+            4 * [r"'"],
+            4 * [r"'"],
+            6 * [r"'"],
+            [],
+            [],
+            [],
+            []]
+
+        self.assertResultsEqual(
+            unescaped_search_for,
+            {(r"'", test_string, 0, max_match, use_regex): result
+             for max_match in [1, 2, 3, 4, 5, 6, 100]
+             for test_string, result in zip(
+                 self.test_strings,
+                 [elem[0 : max_match] for elem in expected_master_results])
+             for use_regex in [True, False]},
+            self.list_zero_group)
+
     # Test unescaped_search_for() with regexes disabled.
     def test_disabled_regex(self):
         search_pattern = r"\'"
