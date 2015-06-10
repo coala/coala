@@ -43,8 +43,8 @@ Read more at our [documentation](http://coala.rtfd.org/en/latest/).
 Authors
 -------
 
-Lasse Schuirmann  <lasse@schuirmann.net> and Fabian Neuschmidt
-<fabian@neuschmidt.de> are the current maintainers of this project.
+coala is maintained by a growing community. Please take a look at te meta
+information in setup.py for current maintainers.
 
 Build status
 ------------
