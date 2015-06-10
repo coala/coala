@@ -36,19 +36,14 @@ def unescaped_search_for(pattern,
                       less is provided, the number of splits is not limited.
     :param use_regex: Specifies whether to treat the pattern as a regex or
                       simple string.
-    :return:          An iterator returning MatchObject's. The MatchObject
-                      contains the backslashes preceded by your pattern.
+    :return:          An iterator returning MatchObject's.
     """
-    if not use_regex:
-        pattern = re.escape(pattern)
+    it = limit(
+        filter(lambda match: not position_is_escaped(string, match.start()),
+               search_for(pattern, string, flags, 0, use_regex)),
+        max_match)
 
-    # Regex explanation:
-    # 1. (?<!\\)((?:\\\\)*) Unescaping sequence. Only matches backslashes if
-    #                       their count is even.
-    # 2. (?:pattern)        A non-capturing group that matches the pattern.
-    regex = r"(?<!\\)((?:\\\\)*)(?:" + pattern + r")"
-
-    for elem in search_for(regex, string, flags, max_match, True):
+    for elem in it:
         yield elem
 
 

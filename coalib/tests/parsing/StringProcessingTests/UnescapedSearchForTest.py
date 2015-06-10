@@ -61,21 +61,20 @@ class UnescapedSearchForTest(StringProcessingTest):
 
     # Test unescaped_search_for() with a simple pattern.
     def test_simple_pattern(self):
-        # Don't forget to prepend consumed escape characters.
         expected_results = [
             2 * [r"'"],
             2 * [r"'"],
             2 * [r"'"],
             2 * [r"'"],
             2 * [r"'"],
-            [r"'", r"\\'"],
+            2 * [r"'"],
             4 * [r"'"],
             4 * [r"'"],
             4 * [r"'"],
             4 * [r"'"],
             4 * [r"'"],
-            [r"\\'"] + 3 * [r"'"],
-            [r"\\\\'"] + 3 * [r"'"],
+            4 * [r"'"],
+            4 * [r"'"],
             6 * [r"'"],
             [],
             [],
@@ -98,24 +97,24 @@ class UnescapedSearchForTest(StringProcessingTest):
         # matched escape characters inside the result list consumed from the
         # internal regex of unescaped_search_for().
         expected_results = [
-            29 * [r""] + [2 * self.bs] + 7 * [r""],
             38 * [r""],
             38 * [r""],
-            27 * [r""] + [4 * self.bs] + 7 * [r""],
             38 * [r""],
-            30 * [r""] + [2 * self.bs] + 6 * [r""],
+            37 * [r""],
+            38 * [r""],
+            38 * [r""],
             39 * [r""],
             38 * [r""],
-            5 * [r""] + [2 * self.bs] + 30 * [r""],
-            5 * [r""] + [2 * self.bs] + 31 * [r""],
-            5 * [r""] + [4 * self.bs] + 29 * [r""],
-            13 * [r""] + [2 * self.bs] + 23 * [r""],
-            11 * [r""] + [4 * self.bs] + 23 * [r""],
+            37 * [r""],
+            38 * [r""],
+            37 * [r""],
+            38 * [r""],
+            37 * [r""],
             39 * [r""],
             [r""],
             15 * [r""],
             [r""],
-            [2 * self.bs]]
+            2 * [r""]]
 
         self.assertResultsEqual(
             unescaped_search_for,
@@ -151,7 +150,7 @@ class UnescapedSearchForTest(StringProcessingTest):
             [],
             [],
             [search_pattern],
-            [2 * self.bs + search_pattern],
+            [search_pattern],
             [],
             [],
             [],
