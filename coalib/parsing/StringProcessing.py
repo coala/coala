@@ -338,10 +338,7 @@ def unescape(string):
     """
     regex = r"\\(.)|\\$"
 
-    def replacement_function(match):
-        return match.group(1)
-
-    return re.sub(regex, replacement_function, string, 0, re.DOTALL)
+    return re.sub(regex, lambda m: m.group(1), string, 0, re.DOTALL)
 
 
 def position_is_escaped(string, position=None):
