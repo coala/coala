@@ -17,3 +17,5 @@ coverage.xml
 *.diff
 *.kdev4
 *.patch
+*.sublime-project
+*.sublime-workspace
