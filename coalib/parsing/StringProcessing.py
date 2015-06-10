@@ -156,9 +156,6 @@ def unescaped_split(pattern,
     is not a natural split pattern (if you don't specify it yourself).
     This function handles escaped split-patterns (and so splits only patterns
     that are unescaped).
-    CAUTION: Using the escaped character '\' in the pattern the function can
-             return strange results. The backslash can interfere with the
-             escaping regex-sequence used internally to split.
 
     :param pattern:              A pattern that defines where to split.
     :param string:               The string to split by the defined pattern.
@@ -171,55 +168,23 @@ def unescaped_split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    # Need to use re.search() since using splitting directly is not possible.
-    # We need to match the separator only if the number of escapes is even.
-    # The solution is to use look-behind-assertions, but these don't support a
-    # variable number of letters (means quantifiers are not usable there). So
-    # if we try to match the escape sequences too, they would be replaced,
-    # because they are consumed then by the regex. That's not wanted.
+    last_end_pos = 0
 
-    if not use_regex:
-        pattern = re.escape(pattern)
+    for item in unescaped_search_for(pattern, string, 0, 0, use_regex):
+        split_string = string[last_end_pos : item.start()]
+        last_end_pos = item.end()
 
-    # Regex explanation:
-    # 1. (.*?)              Match any char unlimited times, as few times as
-    #                       possible. Save the match in the first capturing
-    #                       group (match.group(1)).
-    # 2. (?<!\\)((?:\\\\)*) Unescaping sequence. Only matches backslashes if
-    #                       their count is even.
-    # 3. (?:pattern)        A non-capturing group that matches the
-    #                       split-pattern. Because the first group is lazy
-    #                       (matches as few times as possible) the next
-    #                       occurring split-sequence is matched.
-    regex = r"(.*?)(?<!\\)((?:\\\\)*)(?:" + pattern + r")"
-
-    item = None
-    for item in re.finditer(regex, string, re.DOTALL):
-        concat_string = item.group(1)
-
-        if item.group(2) is not None:
-            # Escaped escapes were consumed from the second group, append them
-            # too.
-            concat_string += item.group(2)
-
-        if not remove_empty_matches or len(concat_string) != 0:
-            # Return the first matching group. The pattern from parameter can't
-            # change the group order.
-            yield concat_string
+        if not remove_empty_matches or len(split_string) != 0:
+            yield split_string
 
             max_split -= 1
             if max_split == 0:
                 break  # only reachable when max_split > 0
 
-    if item is None:
-        last_pos = 0
-    else:
-        last_pos = item.end()
 
-    # Append the rest of the string, since it's not in the result list (only
-    # matches are captured that have a leading separator).
-    if not remove_empty_matches or len(string) > last_pos:
-        yield string[last_pos:]
+    # Append the rest of the string.
+    if not remove_empty_matches or len(string) > last_end_pos:
+        yield string[last_end_pos:]
 
 
 def search_in_between(begin,
