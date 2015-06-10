@@ -7,6 +7,16 @@ from coalib.output.dbus.DbusDocument import DbusDocument
 
 
 class DbusDocumentTest(unittest.TestCase):
+    def setUp(self):
+        self.config_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__),
+            "dbus_test_files",
+            ".coafile"))
+        self.testcode_c_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__),
+            "dbus_test_files",
+            "testcode.c"))
+
     def test_path(self):
         test_file = "a"
         uut = DbusDocument(id=1)
@@ -23,6 +33,29 @@ class DbusDocumentTest(unittest.TestCase):
         self.assertEqual(uut.config_file, "config_file")
 
         self.assertEqual(uut.GetConfigFile(), "config_file")
+
+    def test_analyze(self):
+        uut = DbusDocument(id=1)
+        self.assertEqual(uut.Analyze(), [])
+
+        uut.path = self.testcode_c_path
+        self.assertEqual(uut.Analyze(), [])
+
+        uut.SetConfigFile(self.config_path)
+
+        self.assertEqual(uut.Analyze(),
+                         [['default',
+                           True,
+                           [['LocalTestBear',
+                             'test msg',
+                             'None',
+                             'None',
+                             '1'],
+                            ['GlobalTestBear',
+                             'test msg',
+                             self.testcode_c_path,
+                             'None',
+                             '1']]]])
 
 
 if __name__ == "__main__":
