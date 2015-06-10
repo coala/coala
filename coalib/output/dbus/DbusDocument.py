@@ -121,7 +121,6 @@ class DbusDocument(dbus.service.Object):
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
                     print_results=interactor.print_results,
-                    finalize=interactor.finalize,
                     log_printer=log_printer)
 
                 retval.append(

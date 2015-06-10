@@ -174,8 +174,7 @@ def process_queues(processes,
                    local_result_dict,
                    global_result_dict,
                    file_dict,
-                   print_results,
-                   finalize):
+                   print_results):
     """
     Iterate the control queue and send the results recieved to the interactor
     so that they can be presented to the user.
@@ -197,8 +196,6 @@ def process_queues(processes,
                                filename as keys.
     :param print_results:      Prints all given results appropriate to the
                                output medium.
-    :param finalize:           This method is called after all results have
-                               been sent for printing.
     :return:                   Return True if all bears execute succesfully and
                                Results were delivered to the user. Else False.
     """
@@ -251,7 +248,6 @@ def process_queues(processes,
         except queue.Empty:
             running_processes = get_running_processes(processes)
 
-    finalize(file_dict)
     return retval
 
 
@@ -259,7 +255,6 @@ def execute_section(section,
                     global_bear_list,
                     local_bear_list,
                     print_results,
-                    finalize,
                     log_printer):
     """
     Executes the section with the given bears.
@@ -277,8 +272,6 @@ def execute_section(section,
     :param local_bear_list:  List of local bears belonging to the section.
     :param print_results:    Prints all given results appropriate to the
                              output medium.
-    :param finalize:         This method is called after all results have been
-                             sent for printing.
     :param log_printer:      The log_printer to warn to.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
@@ -310,10 +303,10 @@ def execute_section(section,
                                arg_dict["local_result_dict"],
                                arg_dict["global_result_dict"],
                                arg_dict["file_dict"],
-                               print_results,
-                               finalize),
+                               print_results),
                 arg_dict["local_result_dict"],
-                arg_dict["global_result_dict"])
+                arg_dict["global_result_dict"],
+                arg_dict["file_dict"])
     finally:
         logger_thread.running = False
 
