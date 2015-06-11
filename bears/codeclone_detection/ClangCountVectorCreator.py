@@ -42,14 +42,17 @@ def get_identifier_name(cursor):
     return cursor.displayname.decode()
 
 
-def is_variable_declaration(cursor):
+def is_reference(cursor):
     """
-    Checks if the given clang cursor is a variable declaration.
+    Determines if the cursor is a reference to something, i.e. an identifier
+    of a function or variable.
 
     :param cursor: A clang cursor from the AST.
-    :return:       A bool.
+    :return:       True if the cursor is a reference.
     """
-    return cursor.kind in [CursorKind.VAR_DECL, CursorKind.PARM_DECL]
+    return cursor.kind in [CursorKind.VAR_DECL,
+                           CursorKind.PARM_DECL,
+                           CursorKind.DECL_REF_EXPR]
 
 
 class ClangCountVectorCreator:
@@ -67,11 +70,6 @@ class ClangCountVectorCreator:
     The ClangCountVectorCreator will only count variables local to each
     function.
     """
-    def is_variable_reference(self, cursor):
-        return (get_identifier_name(cursor) in self.count_vectors and
-                (cursor.kind is CursorKind.DECL_REF_EXPR or
-                 is_variable_declaration(cursor)))
-
     def __init__(self,
                  conditions=None,
                  weightings=None,
@@ -114,11 +112,11 @@ class ClangCountVectorCreator:
         self.stack.append((cursor, child_num))
 
         identifier = get_identifier_name(cursor)
-        if is_variable_declaration(cursor):
-            self.count_vectors[identifier] = (
-                CountVector(identifier, self.conditions, self.weightings))
+        if is_reference(cursor):
+            if identifier not in self.count_vectors:
+                self.count_vectors[identifier] = (
+                    CountVector(identifier, self.conditions, self.weightings))
 
-        if self.is_variable_reference(cursor):
             self.count_vectors[identifier].count_reference(self.stack)
 
         for i, child in enumerate(cursor.get_children()):
