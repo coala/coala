@@ -66,7 +66,7 @@ class NestedSearchInBetweenTest(StringProcessingTest):
     def test_regex_pattern(self):
         self.assertResultsEqual(
             nested_search_in_between,
-            {("(?:)\(", "\)(?:)", test_string, 0, False, True): result
+            {(r"(?:)\(", r"\)(?:)", test_string, 0, False, True): result
              for test_string, result in zip(
                  self.search_in_between_test_strings,
                  self.test_basic_expected_results)},
