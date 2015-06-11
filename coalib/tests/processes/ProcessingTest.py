@@ -86,7 +86,6 @@ class ProcessingTest(unittest.TestCase):
                                   self.global_bears["default"],
                                   self.local_bears["default"],
                                   self.interactor.print_results,
-                                  self.interactor.finalize,
                                   self.interactor)
         self.assertTrue(results[0])
 
@@ -118,7 +117,6 @@ class ProcessingTest(unittest.TestCase):
                                   [],
                                   [],
                                   self.interactor.print_results,
-                                  self.interactor.finalize,
                                   self.interactor)
         # No results
         self.assertFalse(results[0])
@@ -156,8 +154,7 @@ class ProcessingTest(unittest.TestCase):
              2: ["The second result.", HiddenResult("t", "c")]},
             {1: ["The one and only global result."]},
             None,
-            mock_interactor.print_results,
-            mock_interactor.finalize)
+            mock_interactor.print_results)
 
         self.assertEqual(mock_interactor.get(), (["The first result."], None))
         self.assertEqual(mock_interactor.get(), (["The second result."], None))
@@ -175,8 +172,7 @@ class ProcessingTest(unittest.TestCase):
             {1: "The first result.", 2: "The second result."},
             {1: "The one and only global result."},
             None,
-            mock_interactor.print_results,
-            mock_interactor.finalize)
+            mock_interactor.print_results)
         with self.assertRaises(queue.Empty):
             mock_interactor.get()
 
