@@ -98,3 +98,6 @@ void initialize(struct test_struct *a) {
 
     do_something(a);
 }
+
+int only_declared(void);
+int also_only_declared(void);
