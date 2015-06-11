@@ -2,6 +2,7 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
+from coalib.parsing.Globbing2 import _iter_alternatives
 from coalib.parsing.Globbing2 import _iter_choices
 from coalib.parsing.Globbing2 import _position_is_bracketed
 
@@ -44,6 +45,26 @@ class GlobbingHelperFunctionsTest(unittest.TestCase):
             }
         for pattern, choices in pattern_choices_dict.items():
             self.assertEqual(list(_iter_choices(pattern)), choices)
+
+    def test_alternatives(self):
+        # patterm: [alternatives]
+        pattern_alternatives_dict = {
+            "": [""],
+            "(ab)": ["ab"],
+            "a|b": ["a|b"],
+            "()": [""],
+            "(|)": [""],
+            "(a|b)": ["a", "b"],
+            "(a|b|c)": ["a", "b", "c"],
+            "a(b|c)": ["ab", "ac"],
+            "(a|b)(c|d)": ["ac", "ad", "bc", "bd"],
+            "(a|b(c|d)": ["(a|bc", "(a|bd"],
+            "(a[|]b)": ["a[|]b"],
+            "[(]a|b)": ["[(]a|b)"],
+            }
+        for pattern, alternatives in pattern_alternatives_dict.items():
+            self.assertEqual(sorted(list(_iter_alternatives(pattern))),
+                             sorted(alternatives))
 
 
 if __name__ == '__main__':

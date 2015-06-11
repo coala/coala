@@ -56,3 +56,38 @@ def _iter_choices(pattern):
         if not _position_is_bracketed(pattern, end_pos):
             yield pattern[start_pos: end_pos]
             start_pos = end_pos + 1
+
+
+@yield_once
+def _iter_alternatives(pattern):
+    """
+    Iterates through all glob patterns that can be obtained by combination of
+    all choices for each alternative.
+    """
+    # Taking the leftmost closing parenthesis and the rightmost opening
+    # parenthesis left of it ensures that the delimiters belong together and
+    # the pattern is parsed correctly from the most nested section outwards.
+    end_pos = None
+    for match in re.finditer('\\)', pattern):
+        if not _position_is_bracketed(pattern, match.start()):
+            end_pos = match.start()
+            break  # break to get leftmost
+
+    start_pos = None
+    for match in re.finditer('\\(', pattern[:end_pos]):
+        if not _position_is_bracketed(pattern, match.start()):
+            start_pos = match.end()
+            # no break to get rightmost
+
+    if None in (start_pos, end_pos):
+        yield pattern
+    else:
+        # iterate through choices inside of parenthesis (separated by '|'):
+        for choice in _iter_choices(pattern[start_pos: end_pos]):
+            # put glob expression back together with alternative:
+            variant = pattern[:start_pos-1] + choice + pattern[end_pos+1:]
+
+            # iterate through alternatives outside of parenthesis
+            # (pattern kann have more alternatives elsewhere)
+            for glob_pattern in _iter_alternatives(variant):
+                yield glob_pattern
