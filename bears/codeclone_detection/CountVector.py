@@ -58,6 +58,19 @@ class CountVector:
     def __abs__(self):
         return sqrt(sum(x**2 for x in self))
 
+    def maxabs(self, other):
+        """
+        Calculates the absolute value of a vector that has the maximum
+        entries row-wise of both given vectors. This can be used as
+        normalization since this value is guaranteed to be bigger or equal
+        the difference value of those two vectors.
+
+        :param other: The vector to normalize with.
+        :return:      A float value bigger or equal than the difference
+                      between self and other.
+        """
+        return sum(max(x, y)**2 for x, y in zip(self, other))
+
     def difference(self, other):
         """
         Calculates a normalized difference. This value can be used to indicate
@@ -71,7 +84,7 @@ class CountVector:
         assert isinstance(other, CountVector)
         assert len(other) == len(self)
 
-        maxabs = sum(max(x, y)**2 for x, y in zip(self, other))
+        maxabs = self.maxabs(other)
         if maxabs == 0:
             return 0
 
