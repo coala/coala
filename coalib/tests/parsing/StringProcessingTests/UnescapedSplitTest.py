@@ -1,7 +1,7 @@
 import sys
-sys.path.insert(0, ".")
 import unittest
 
+sys.path.insert(0, ".")
 from coalib.tests.parsing.StringProcessingTest import StringProcessingTest
 from coalib.parsing.StringProcessing import unescaped_split
 
