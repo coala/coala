@@ -1,3 +1,4 @@
+from math import sqrt
 import sys
 
 sys.path.insert(0, ".")
@@ -50,6 +51,26 @@ class CountVectorTest(unittest.TestCase):
         self.assertEqual(repr(uut), str(uut))
         self.assertEqual(repr(uut), "[2]")
         self.assertEqual(list(uut), [2])
+
+    def test_cloning(self):
+        uut = CountVector("varname",
+                          [lambda cursor, stack: cursor and stack],
+                          [2])
+        uut.count_reference(True, True)
+        clone = uut.create_null_vector("test")
+        self.assertEqual(clone.name, "test")
+        self.assertEqual(clone.weightings, uut.weightings)
+        self.assertEqual(clone.conditions, uut.conditions)
+        self.assertEqual(clone.count_vector, [0])
+
+    def test_abs(self):
+        uut = CountVector("varname",
+                          [lambda x: True, lambda x: x])
+        self.assertEqual(abs(uut), 0)
+        uut.count_reference(True)
+        self.assertEqual(abs(uut), sqrt(2))
+        uut.count_reference(False)
+        self.assertEqual(abs(uut), sqrt(5))
 
     def check_difference(self, cv1, cv2, expected_difference):
         """

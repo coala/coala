@@ -22,38 +22,47 @@ def get_include_paths(file_path, setting_path):
     return result
 
 
+def is_function_declaration(cursor):
+    """
+    Checks if the given clang cursor is a function declaration.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       A bool.
+    """
+    return cursor.kind == CursorKind.FUNCTION_DECL
+
+
+def get_identifier_name(cursor):
+    """
+    Retrieves the identifier name from the given clang cursor.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       The identifier as string.
+    """
+    return cursor.displayname.decode()
+
+
+def is_variable_reference(cursor):
+    return cursor.kind in [CursorKind.VAR_DECL,
+                           CursorKind.PARM_DECL,
+                           CursorKind.DECL_REF_EXPR]
+
+
 class ClangCountVectorCreator:
     """
     This object uses clang to create a count vector for each function for given
     counting conditions. The counting conditions are clang specific and they
     are called like this:
 
-      condition(cursor, stack)
+      condition(stack)
 
-    While cursor is a clang cursor and stack is a stack holding a tuple
-    holding the parent cursors and the child number. (E.g. if a cursor is
-    the third child of its parent its child number is two, counted from zero.)
+    While stack is a stack (i.e. list) holding a tuple holding the parent
+    cursors and the child number. (E.g. if a cursor is the third child of
+    its parent its child number is two, counted from zero.)
 
     The ClangCountVectorCreator will only count variables local to each
     function.
     """
-    @staticmethod
-    def is_function_declaration(cursor):
-        return cursor.kind == CursorKind.FUNCTION_DECL
-
-    @staticmethod
-    def is_variable_declaration(cursor):
-        return (cursor.kind == CursorKind.VAR_DECL or
-                cursor.kind == CursorKind.PARM_DECL)
-
-    @staticmethod
-    def get_identifier_name(cursor):
-        return cursor.displayname.decode()
-
-    def is_variable_reference(self, cursor):
-        return (self.get_identifier_name(cursor) in self.count_vectors and
-                (cursor.kind is CursorKind.DECL_REF_EXPR or
-                 self.is_variable_declaration(cursor)))
 
     def __init__(self,
                  conditions=None,
@@ -79,16 +88,6 @@ class ClangCountVectorCreator:
         self.count_vectors = {}
         self.stack = []
 
-    def create_count_vector(self, name):
-        """
-        Creates a new CountVector object with the given name and the metadata
-        associated with this object.
-
-        :param name: The name of the variable to count for.
-        :return:     The new CountVector object.
-        """
-        return CountVector(name, self.conditions, self.weightings)
-
     def _get_vector_for_function(self, cursor, child_num=0):
         """
         Creates a CountVector object for the given cursor.
@@ -106,14 +105,13 @@ class ClangCountVectorCreator:
         assert isinstance(cursor, Cursor)
         self.stack.append((cursor, child_num))
 
-        identifier = self.get_identifier_name(cursor)
-        if self.is_variable_declaration(cursor):
-            self.count_vectors[identifier] = (
-                self.create_count_vector(identifier))
+        identifier = get_identifier_name(cursor)
+        if is_variable_reference(cursor):
+            if identifier not in self.count_vectors:
+                self.count_vectors[identifier] = (
+                    CountVector(identifier, self.conditions, self.weightings))
 
-        if self.is_variable_reference(cursor):
-            self.count_vectors[identifier].count_reference(cursor,
-                                                           self.stack)
+            self.count_vectors[identifier].count_reference(self.stack)
 
         for i, child in enumerate(cursor.get_children()):
             self._get_vector_for_function(child, i)
@@ -135,11 +133,11 @@ class ClangCountVectorCreator:
         if file is not None:
             file = file.name.decode()
 
-        if str(file) == str(filename) and self.is_function_declaration(cursor):
+        if str(file) == str(filename) and is_function_declaration(cursor):
             self._get_vector_for_function(cursor)
 
             result = {(cursor.extent.start.line,
-                       self.get_identifier_name(cursor)): self.count_vectors}
+                       get_identifier_name(cursor)): self.count_vectors}
             # Reset local states
             self.count_vectors = {}
             self.stack = []

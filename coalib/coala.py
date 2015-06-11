@@ -48,13 +48,14 @@ def main():
                     continue
 
                 interactor.begin_section(section)
-                yielded_results = yielded_results or execute_section(
+                results = execute_section(
                     section=section,
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
                     print_results=interactor.print_results,
-                    finalize=interactor.finalize,
-                    log_printer=log_printer)[0]
+                    log_printer=log_printer)
+                yielded_results = yielded_results or results[0]
+                interactor.finalize(results[3])
                 did_nothing = False
 
         if did_nothing:

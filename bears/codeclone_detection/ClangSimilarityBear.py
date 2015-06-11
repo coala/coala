@@ -1,8 +1,6 @@
 from itertools import combinations
-import multiprocessing
 
 from coalib.misc.StringConverter import StringConverter
-from coalib.processes.Processing import get_cpu_count
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import typed_dict
 from coalib.bears.GlobalBear import GlobalBear
@@ -101,11 +99,6 @@ class ClangSimilarityBear(GlobalBear):
             lambda prog: self.debug("{:2.4f}%...".format(prog)))
 
         self.debug("Calculating differences...")
-        # Code clone detection may take ages for a larger code basis. It is
-        # highly probable, that no other bears are running in parallel,
-        # thus we do parallel execution within this bear.
-        pool = multiprocessing.Pool(get_cpu_count())
-
         differences = []
         function_count = len(count_matrices)
         # Thats n over 2, hardcoded to simplify calculation
@@ -113,9 +106,7 @@ class ClangSimilarityBear(GlobalBear):
         function_combinations = [(f1, f2, count_matrices)
                                  for f1, f2 in combinations(count_matrices, 2)]
 
-        for i, elem in enumerate(pool.imap_unordered(get_difference,
-                                                     function_combinations,
-                                                     chunksize=100)):
+        for i, elem in enumerate(map(get_difference, function_combinations)):
             if i % 1000 == 0:
                 self.debug("{:2.4f}%...".format(100*i/combination_length))
             differences.append(elem)

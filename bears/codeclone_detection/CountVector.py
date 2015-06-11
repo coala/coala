@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 class CountVector:
     def __init__(self, name, conditions=None, weightings=None):
         """
@@ -18,6 +21,16 @@ class CountVector:
             self.weightings = [1 for elem in self.conditions]
 
         assert len(self.count_vector) is len(self.weightings)
+
+    def create_null_vector(self, name):
+        """
+        Creates a new CountVector object with the same counting conditions
+        and weightings but initializes it to zero.
+
+        :return: A CountVector object.
+        """
+        return CountVector(name, self.conditions, self.weightings)
+
 
     def count_reference(self, *args, **kwargs):
         """
@@ -41,6 +54,9 @@ class CountVector:
 
     def __iter__(self):
         return iter(self.count_vector)
+
+    def __abs__(self):
+        return sqrt(sum(x**2 for x in self))
 
     def difference(self, other):
         """

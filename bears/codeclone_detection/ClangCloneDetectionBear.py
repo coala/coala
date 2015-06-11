@@ -8,7 +8,7 @@ from bears.codeclone_detection.ClangSimilarityBear import ClangSimilarityBear
 class ClangCloneDetectionBear(GlobalBear):
     def run(self,
             dependency_results: dict,
-            max_clone_difference: float=0.2):
+            max_clone_difference: float=0.22):
         '''
         Checks the given code for similar functions that are probably
         redundant.
