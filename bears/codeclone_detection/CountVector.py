@@ -73,19 +73,14 @@ class CountVector:
 
     def difference(self, other):
         """
-        Calculates a normalized difference. This value can be used to indicate
-        the similarity of the associated variables, while 0 means no
-        difference, i.e. the count vectors are identical, and 1 means maximum
-        difference, i.e. they are not similar at all.
+        Calculates an absolute difference value. This value can be used to
+        indicate the similarity of the associated variables, while 0 means no
+        difference, i.e. the count vectors are identical.
 
         :param other: The CountVector to calculate the difference to.
-        :return:      A difference value in [0, 1].
+        :return:      An absolute difference value.
         """
         assert isinstance(other, CountVector)
         assert len(other) == len(self)
 
-        maxabs = self.maxabs(other)
-        if maxabs == 0:
-            return 0
-
-        return sum((x-y)**2 for x, y in zip(self, other))/maxabs
+        return sqrt(sum((x-y)**2 for x, y in zip(self, other)))
