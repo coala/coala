@@ -7,33 +7,31 @@ from coalib.parsing.StringProcessing import unescaped_search_in_between
 
 
 class UnescapedSearchInBetweenTest(StringProcessingTest):
-    def setUp(self):
-        StringProcessingTest.setUp(self)
+    bs = StringProcessingTest.bs
 
-        self.test_basic_pattern = "'"
-        self.test_basic_expected_results = [
-            [r"escaped-escape:        \\ "],
-            [r"escaped-quote:         \' "],
-            [r"escaped-anything:      \X "],
-            [r"two escaped escapes: \\\\ "],
-            [r"escaped-quote at end:   \'"],
-            [r"escaped-escape at end:  " + 2 * self.bs],
-            [r"str1", r"str2"],
-            [r"str1", r"str2"],
-            [r"str1", r"str2"],
-            [r"str1", r"str2"],
-            [r"str1", r"str2"],
-            [r"str1", r"str2"],
-            [r"str1", r"str2"],
-            [r"str1", r"str2", r"str3"],
-            [],
-            [],
-            [],
-            []]
+    test_basic_pattern = "'"
+    test_basic_expected_results = [
+        [r"escaped-escape:        \\ "],
+        [r"escaped-quote:         \' "],
+        [r"escaped-anything:      \X "],
+        [r"two escaped escapes: \\\\ "],
+        [r"escaped-quote at end:   \'"],
+        [r"escaped-escape at end:  " + 2 * bs],
+        [r"str1", r"str2"],
+        [r"str1", r"str2"],
+        [r"str1", r"str2"],
+        [r"str1", r"str2"],
+        [r"str1", r"str2"],
+        [r"str1", r"str2"],
+        [r"str1", r"str2"],
+        [r"str1", r"str2", r"str3"],
+        [],
+        [],
+        [],
+        []]
 
-        self.test_max_match_pattern = self.test_basic_pattern
-        self.test_max_match_expected_master_results = (
-            self.test_basic_expected_results)
+    test_max_match_pattern = test_basic_pattern
+    test_max_match_expected_master_results = test_basic_expected_results
 
     # Test the basic unescaped_search_in_between() functionality.
     def test_basic(self):

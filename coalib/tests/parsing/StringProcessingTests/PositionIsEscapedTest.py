@@ -7,9 +7,6 @@ from coalib.parsing.StringProcessing import position_is_escaped
 
 
 class PositionIsEscapedTest(StringProcessingTest):
-    def setUp(self):
-        StringProcessingTest.setUp(self)
-
     # Test the position_is_escaped() function.
     def test_basic(self):
         expected_results = [

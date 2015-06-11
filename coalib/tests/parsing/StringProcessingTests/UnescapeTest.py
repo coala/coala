@@ -7,9 +7,6 @@ from coalib.parsing.StringProcessing import unescape
 
 
 class UnescapeTest(StringProcessingTest):
-    def setUp(self):
-        StringProcessingTest.setUp(self)
-
     # Test the unescape() function.
     def test_basic(self):
         expected_results = [

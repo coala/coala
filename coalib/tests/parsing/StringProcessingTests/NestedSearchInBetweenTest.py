@@ -7,17 +7,15 @@ from coalib.parsing.StringProcessing import nested_search_in_between
 
 
 class NestedSearchInBetweenTest(StringProcessingTest):
-    def setUp(self):
-        StringProcessingTest.setUp(self)
+    bs = StringProcessingTest.bs
 
-        self.test_basic_expected_results = [
-            [r"", r"This is a word", r"(in a word) another "],
-            [r"((((((((((((((((((1)2)3))))))))))))))))"],
-            [r"do (it ) more ", r"", r"hello."],
-            [r"", r"This\ is a word" + self.bs,
-                r"(in a\\\ word\\\\\) another " + self.bs],
-            [r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + self.bs],
-            [r"do (it ) more ", r"", r"hello."]]
+    test_basic_expected_results = [
+        [r"", r"This is a word", r"(in a word) another "],
+        [r"((((((((((((((((((1)2)3))))))))))))))))"],
+        [r"do (it ) more ", r"", r"hello."],
+        [r"", r"This\ is a word" + bs, r"(in a\\\ word\\\\\) another " + bs],
+        [r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + bs],
+        [r"do (it ) more ", r"", r"hello."]]
 
     # Test the basic functionality of nested_search_in_between().
     def test_basic(self):

@@ -7,36 +7,32 @@ from coalib.parsing.StringProcessing import unescaped_search_for
 
 
 class UnescapedSearchForTest(StringProcessingTest):
-    def setUp(self):
-        StringProcessingTest.setUp(self)
+    # Match either "out1" or "out2".
+    test_basic_pattern = "out1|out2"
+    # These are the expected results for the zero-group of the
+    # returned MatchObject's.
+    test_basic_expected_results = [
+        [r"out1", r"out2"],
+        [r"out1", r"out2"],
+        [r"out1", r"out2"],
+        [r"out1", r"out2"],
+        [r"out1", r"out2"],
+        [r"out1", r"out2"],
+        [r"out1", r"out2", r"out2"],
+        [r"out1", r"out2", r"out2"],
+        [r"out1", r"out2", r"out2"],
+        [r"out1", r"out2", r"out2"],
+        [r"out1", r"out2", r"out2"],
+        [r"out1", r"out2", r"out2"],
+        [r"out1", r"out2", r"out2"],
+        [r"out1", r"out2"],
+        [],
+        [r"out1", r"out2"],
+        [],
+        []]
 
-        # Match either "out1" or "out2".
-        self.test_basic_pattern = "out1|out2"
-        # These are the expected results for the zero-group of the
-        # returned MatchObject's.
-        self.test_basic_expected_results = [
-            [r"out1", r"out2"],
-            [r"out1", r"out2"],
-            [r"out1", r"out2"],
-            [r"out1", r"out2"],
-            [r"out1", r"out2"],
-            [r"out1", r"out2"],
-            [r"out1", r"out2", r"out2"],
-            [r"out1", r"out2", r"out2"],
-            [r"out1", r"out2", r"out2"],
-            [r"out1", r"out2", r"out2"],
-            [r"out1", r"out2", r"out2"],
-            [r"out1", r"out2", r"out2"],
-            [r"out1", r"out2", r"out2"],
-            [r"out1", r"out2"],
-            [],
-            [r"out1", r"out2"],
-            [],
-            []]
-
-        self.test_max_match_pattern = self.test_basic_pattern
-        self.test_max_match_expected_master_result = (
-            self.test_basic_expected_results)
+    test_max_match_pattern = test_basic_pattern
+    test_max_match_expected_master_result = test_basic_expected_results
 
     @staticmethod
     def list_zero_group(it):

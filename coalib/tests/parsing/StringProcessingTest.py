@@ -4,71 +4,69 @@ import unittest
 
 
 class StringProcessingTest(unittest.TestCase):
-    def setUp(self):
-        # The backslash character. Needed since there are limitations when
-        # using backslashes at the end of raw-strings in front of the
-        # terminating " or '.
-        self.bs = "\\"
+    # The backslash character. Needed since there are limitations when
+    # using backslashes at the end of raw-strings in front of the
+    # terminating " or '.
+    bs = "\\"
 
-        # Basic test strings all StringProcessing functions should test.
-        self.test_strings = [
-            r"out1 'escaped-escape:        \\ ' out2",
-            r"out1 'escaped-quote:         \' ' out2",
-            r"out1 'escaped-anything:      \X ' out2",
-            r"out1 'two escaped escapes: \\\\ ' out2",
-            r"out1 'escaped-quote at end:   \'' out2",
-            r"out1 'escaped-escape at end:  \\' out2",
-            r"out1           'str1' out2 'str2' out2",
-            r"out1 \'        'str1' out2 'str2' out2",
-            r"out1 \\\'      'str1' out2 'str2' out2",
-            r"out1 \\        'str1' out2 'str2' out2",
-            r"out1 \\\\      'str1' out2 'str2' out2",
-            r"out1         \\'str1' out2 'str2' out2",
-            r"out1       \\\\'str1' out2 'str2' out2",
-            r"out1           'str1''str2''str3' out2",
-            r"",
-            r"out1 out2 out3",
-            self.bs,
-            2 * self.bs]
+    # Basic test strings all StringProcessing functions should test.
+    test_strings = [
+        r"out1 'escaped-escape:        \\ ' out2",
+        r"out1 'escaped-quote:         \' ' out2",
+        r"out1 'escaped-anything:      \X ' out2",
+        r"out1 'two escaped escapes: \\\\ ' out2",
+        r"out1 'escaped-quote at end:   \'' out2",
+        r"out1 'escaped-escape at end:  \\' out2",
+        r"out1           'str1' out2 'str2' out2",
+        r"out1 \'        'str1' out2 'str2' out2",
+        r"out1 \\\'      'str1' out2 'str2' out2",
+        r"out1 \\        'str1' out2 'str2' out2",
+        r"out1 \\\\      'str1' out2 'str2' out2",
+        r"out1         \\'str1' out2 'str2' out2",
+        r"out1       \\\\'str1' out2 'str2' out2",
+        r"out1           'str1''str2''str3' out2",
+        r"",
+        r"out1 out2 out3",
+        bs,
+        2 * bs]
 
-        # Test string for multi-pattern tests (since we want to variate the
-        # pattern, not the test string).
-        self.multi_pattern_test_string = (r"abcabccba###\\13q4ujsabbc\+'**'ac"
-                                          r"###.#.####-ba")
-        # Multiple patterns for the multi-pattern tests.
-        self.multi_patterns = [r"abc",
-                               r"ab",
-                               r"ab|ac",
-                               2 * self.bs,
-                               r"#+",
-                               r"(a)|(b)|(#.)",
-                               r"(?:a(b)*c)+",
-                               r"1|\+"]
+    # Test string for multi-pattern tests (since we want to variate the
+    # pattern, not the test string).
+    multi_pattern_test_string = (r"abcabccba###\\13q4ujsabbc\+'**'ac"
+                                 r"###.#.####-ba")
+    # Multiple patterns for the multi-pattern tests.
+    multi_patterns = [r"abc",
+                      r"ab",
+                      r"ab|ac",
+                      2 * bs,
+                      r"#+",
+                      r"(a)|(b)|(#.)",
+                      r"(?:a(b)*c)+",
+                      r"1|\+"]
 
-        # Test strings for the remove_empty_matches feature (alias auto-trim).
-        self.auto_trim_test_pattern = r";"
-        self.auto_trim_test_strings = [
-            r";;;;;;;;;;;;;;;;",
-            r"\\;\\\\\;\\#;\\\';;\;\\\\;+ios;;",
-            r"1;2;3;4;5;6;",
-            r"1;2;3;4;5;6;7",
-            r"",
-            r"Hello world",
-            r"\;",
-            r"\\;",
-            r"abc;a;;;;;asc"]
+    # Test strings for the remove_empty_matches feature (alias auto-trim).
+    auto_trim_test_pattern = r";"
+    auto_trim_test_strings = [r";;;;;;;;;;;;;;;;",
+                              r"\\;\\\\\;\\#;\\\';;\;\\\\;+ios;;",
+                              r"1;2;3;4;5;6;",
+                              r"1;2;3;4;5;6;7",
+                              r"",
+                              r"Hello world",
+                              r"\;",
+                              r"\\;",
+                              r"abc;a;;;;;asc"]
 
-        # Test strings for search-in-between functions.
-        self.search_in_between_begin_pattern = r"("
-        self.search_in_between_end_pattern = r")"
-        self.search_in_between_test_strings = [
-            r"()assk(This is a word)and((in a word) another ) one anyway.",
-            r"bcc5(((((((((((((((((((1)2)3)))))))))))))))))",
-            r"Let's (do (it ) more ) complicated ) ) ) () (hello.)",
-            r"()assk\\(This\ is a word\)and((in a\\\ word\\\\\) another \)) " +
-                r"one anyway.",
-            r"bcc5\(\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)\)",
-            r"Let's \(do (it ) more ) \\ complicated ) ) ) () (hello.)\\z"]
+    # Test strings for search-in-between functions.
+    search_in_between_begin_pattern = r"("
+    search_in_between_end_pattern = r")"
+    search_in_between_test_strings = [
+        r"()assk(This is a word)and((in a word) another ) one anyway.",
+        r"bcc5(((((((((((((((((((1)2)3)))))))))))))))))",
+        r"Let's (do (it ) more ) complicated ) ) ) () (hello.)",
+        r"()assk\\(This\ is a word\)and((in a\\\ word\\\\\) another \)) "
+            r"one anyway.",
+        r"bcc5\(\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)\)",
+        r"Let's \(do (it ) more ) \\ complicated ) ) ) () (hello.)\\z"]
 
 
     def assertResultsEqual(self,

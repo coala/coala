@@ -7,36 +7,31 @@ from coalib.parsing.StringProcessing import unescaped_split
 
 
 class UnescapedSplitTest(StringProcessingTest):
-    def setUp(self):
-        StringProcessingTest.setUp(self)
+    bs = StringProcessingTest.bs
 
-        self.test_basic_pattern = r"'"
-        self.test_basic_expected_results = [
-            [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
-            [r"out1 ", r"escaped-quote:         \' ", r" out2"],
-            [r"out1 ", r"escaped-anything:      \X ", r" out2"],
-            [r"out1 ", r"two escaped escapes: \\\\ ", r" out2"],
-            [r"out1 ", r"escaped-quote at end:   \'", r" out2"],
-            [r"out1 ", r"escaped-escape at end:  " + 2 * self.bs, r" out2"],
-            [r"out1           ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \'        ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \\\'      ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \\        ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1 \\\\      ", r"str1", r" out2 ", r"str2", r" out2"],
-            [r"out1         " + 2 * self.bs, r"str1", r" out2 ", r"str2",
-                r" out2"],
-            [r"out1       " + 4 * self.bs, r"str1", r" out2 ", r"str2",
-                r" out2"],
-            [r"out1           ", r"str1", r"", r"str2", r"", r"str3",
-                r" out2"],
-            [r""],
-            [r"out1 out2 out3"],
-            [self.bs],
-            [2 * self.bs]]
+    test_basic_pattern = r"'"
+    test_basic_expected_results = [
+        [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
+        [r"out1 ", r"escaped-quote:         \' ", r" out2"],
+        [r"out1 ", r"escaped-anything:      \X ", r" out2"],
+        [r"out1 ", r"two escaped escapes: \\\\ ", r" out2"],
+        [r"out1 ", r"escaped-quote at end:   \'", r" out2"],
+        [r"out1 ", r"escaped-escape at end:  " + 2 * bs, r" out2"],
+        [r"out1           ", r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1 \'        ", r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1 \\\'      ", r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1 \\        ", r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1 \\\\      ", r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1         " + 2 * bs, r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1       " + 4 * bs, r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1           ", r"str1", r"", r"str2", r"", r"str3", r" out2"],
+        [r""],
+        [r"out1 out2 out3"],
+        [bs],
+        [2 * bs]]
 
-        self.test_max_split_pattern = self.test_basic_pattern
-        self.test_max_split_expected_master_results = (
-            self.test_basic_expected_results)
+    test_max_split_pattern = test_basic_pattern
+    test_max_split_expected_master_results = test_basic_expected_results
 
     # Test the basic unescaped_split() functionality.
     def test_basic(self):
