@@ -30,9 +30,6 @@ class SearchInBetweenTest(StringProcessingTest):
         [],
         []]
 
-    test_max_match_pattern = test_basic_pattern
-    test_max_match_expected_master_results = test_basic_expected_results
-
     # Test the basic search_in_between() functionality.
     def test_basic(self):
         expected_results = self.test_basic_expected_results
@@ -53,9 +50,8 @@ class SearchInBetweenTest(StringProcessingTest):
     # Test the search_in_between() while varying the max_match
     # parameter.
     def test_max_match(self):
-        search_pattern = self.test_max_match_pattern
-        expected_master_results = (
-            self.test_max_match_expected_master_results)
+        search_pattern = self.test_basic_pattern
+        expected_master_results = self.test_basic_expected_results
 
         self.assertResultsEqual(
             search_in_between,

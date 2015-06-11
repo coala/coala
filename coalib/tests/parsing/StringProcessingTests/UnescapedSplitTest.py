@@ -30,9 +30,6 @@ class UnescapedSplitTest(StringProcessingTest):
         [bs],
         [2 * bs]]
 
-    test_max_split_pattern = test_basic_pattern
-    test_max_split_expected_master_results = test_basic_expected_results
-
     # Test the basic unescaped_split() functionality.
     def test_basic(self):
         split_pattern = self.test_basic_pattern
@@ -49,9 +46,8 @@ class UnescapedSplitTest(StringProcessingTest):
     # Test the unescaped_split() function while varying the max_split
     # parameter.
     def test_max_split(self):
-        split_pattern = self.test_max_split_pattern
-        expected_master_results = (
-            self.test_max_split_expected_master_results)
+        split_pattern = self.test_basic_pattern
+        expected_master_results = self.test_basic_expected_results
 
         for max_split in [1, 2, 3, 4, 5, 6, 7, 8, 9, 112]:
             expected_results = [

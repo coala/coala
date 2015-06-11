@@ -31,9 +31,6 @@ class SearchForTest(StringProcessingTest):
         [],
         []]
 
-    test_max_match_pattern = test_basic_pattern
-    test_max_match_expected_master_result = test_basic_expected_results
-
     @staticmethod
     def list_zero_group(it):
         """
@@ -84,8 +81,8 @@ class SearchForTest(StringProcessingTest):
 
     # Test search_for() for its max_match parameter.
     def test_max_match(self):
-        search_pattern = self.test_max_match_pattern
-        expected_master_results = self.test_max_match_expected_master_result
+        search_pattern = self.test_basic_pattern
+        expected_master_results = self.test_basic_expected_results
 
         self.assertResultsEqual(
             search_for,
