@@ -12,6 +12,9 @@ Glob Syntax:
 '*':             Matches everything but os.sep.
 '**':            Matches everything.
 """
+import re
+
+from coalib.misc.Decorators import yield_once
 
 
 def _position_is_bracketed(string, position):
@@ -39,3 +42,17 @@ def _position_is_bracketed(string, position):
                     return True
                 index = closing_index + 1
     return False
+
+
+def _iter_choices(pattern):
+    """
+    Iterate through each choice of an alternative.
+    Basically splitting on '|'s if they are not bracketed
+    """
+    start_pos = 0
+    split_pos_list = [match.start() for match in re.finditer('\\|', pattern)]
+    split_pos_list.append(len(pattern))
+    for end_pos in split_pos_list:
+        if not _position_is_bracketed(pattern, end_pos):
+            yield pattern[start_pos: end_pos]
+            start_pos = end_pos + 1
