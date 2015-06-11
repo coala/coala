@@ -1,7 +1,9 @@
+import os
 import unittest
 import sys
 
 sys.path.insert(0, ".")
+from coalib.parsing.Globbing2 import fnmatch
 from coalib.parsing.Globbing2 import _iter_alternatives
 from coalib.parsing.Globbing2 import _iter_choices
 from coalib.parsing.Globbing2 import _position_is_bracketed
@@ -66,6 +68,73 @@ class GlobbingHelperFunctionsTest(unittest.TestCase):
             self.assertEqual(sorted(list(_iter_alternatives(pattern))),
                              sorted(alternatives))
 
+
+class FnmatchTest(unittest.TestCase):
+    def _test_fnmatch(self, pattern, matches, non_matches):
+        for match in matches:
+            self.assertTrue(fnmatch(match, pattern))
+        for non_match in non_matches:
+            self.assertFalse(fnmatch(non_match, pattern))
+
+    def test_circumflex_in_set(self):
+        pattern = "[^abc]"
+        matches = ["^", "a", "b", "c"]
+        non_matches = ["d", "e", "f", "g"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_negative_set(self):
+        pattern = "[!ab]"
+        matches = ["c", "d"]
+        non_matches = ["a", "b"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_escaped_bracket(self):
+        pattern = "[]ab]"
+        matches = ["]", "a", "b"]
+        non_matches = ["[]ab]", "ab]"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_empty_set(self):
+        pattern = "a[]b"
+        matches = ["a[]b"]
+        non_matches = ["a", "b", "[", "]", "ab"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_home_dir(self):
+        pattern = os.path.join("~", "a", "b")
+        matches = [os.path.expanduser(os.path.join("~", "a", "b"))]
+        non_matches = [os.path.join("~", "a", "b")]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_alternatives(self):
+        pattern = "(a|b)"
+        matches = ["a", "b"]
+        non_matches = ["(a|b)", "a|b"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_set_precedence(self):
+        pattern = "(a|[b)]"
+        matches = ["(a|b", "(a|)"]
+        non_matches = ["a]", "[b]"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_questionmark(self):
+        pattern = "a?b"
+        matches = ["axb", "ayb"]
+        non_matches = ["ab", "aXXb"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_asterisk(self):
+        pattern = "a*b"
+        matches = ["axb", "ayb"]
+        non_matches = ["aXbX", os.path.join("a", "b")]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_double_asterisk(self):
+        pattern = "a**b"
+        matches = ["axb", "ayb", os.path.join("a", "b")]
+        non_matches = ["aXbX"]
+        self._test_fnmatch(pattern, matches, non_matches)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
