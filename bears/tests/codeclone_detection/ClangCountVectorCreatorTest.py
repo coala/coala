@@ -35,10 +35,16 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
         expected_results = {
             (6, "test()"): {},
             (12, "main(int, char *)"): {
+                # Variables
                 "i": [],
                 "asd": [],
                 "t": [],
-                "args": []}}
+                "args": [],
+                # Globals
+                "g": [],
+                # Functions
+                "smile": [],
+                "printf": []}}
 
         self.uut = ClangCountVectorCreator()
         cv_dict = self.uut.get_vectors_for_file(self.testfile)
@@ -61,10 +67,16 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
         expected_results = {
             (6, "test()"): {},
             (12, "main(int, char *)"): {
+                # Variables
                 "i": [4, 1],
                 "asd": [1, 0],
                 "t": [4, 1],
-                "args": [2, 0]}}
+                "args": [2, 0],
+                # Globals
+                "g": [3, 1],
+                # Functions
+                "smile": [1, 1],
+                "printf": [1, 1]}}
 
         self.uut = ClangCountVectorCreator([no_condition, is_call_argument])
         cv_dict = self.uut.get_vectors_for_file(self.testfile)
