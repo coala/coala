@@ -208,7 +208,7 @@ def translate_glob_2_re(pattern):
             regex = regex + re.escape(char)
 
     # (?ms): flags for re.compile(): m = multi-line, s = dot matches all
-    return regex + '\Z(?ms)'
+    return regex + '\\Z(?ms)'
 
 
 class _Selector:
@@ -304,6 +304,7 @@ def iglob(pattern, files=True, dirs=True):
         raise StopIteration()
 
     for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
         # extract drive letter, if possible:
         # this *should* work on windows, even when the directory seperators
         # are doubled (escaped)
@@ -345,9 +346,10 @@ def fnmatch(name, pattern):
     :return:           True if name matches the pattern, False otherwise
     """
     name = os.path.normcase(name)  # only if OS is case insensitive
-    match = re.compile(translate_glob_2_re(pattern)).match
     for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
         pat = os.path.normcase(pat)
+        match = re.compile(translate_glob_2_re(pat)).match
         if match(name) is not None:
             return True
 

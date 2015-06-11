@@ -252,6 +252,14 @@ class FnmatchTest(unittest.TestCase):
         non_matches = ["a", "b", "[", "]", "ab"]
         self._test_fnmatch(pattern, matches, non_matches)
 
+    def test_home_dir(self):
+        """
+        A leading '~' should be expanded to the current user's home dir
+        """
+        pattern = "~/a/b"
+        matches = [os.path.expanduser("~/a/b")]
+        non_matches = ["~/a/b"]
+        self._test_fnmatch(pattern, matches, non_matches)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
