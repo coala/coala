@@ -110,14 +110,14 @@ class CountVectorTest(unittest.TestCase):
             ([1], [1], 0),
             ([100], [100], 0),
 
-            ([0], [100], 1),
+            ([0], [100], 100),
             ([0], [1], 1),
-            ([0, 1], [1, 0], 1),
+            ([0, 1], [1, 0], sqrt(2)),
 
-            ([0, 1], [1, 1], 0.5),
-            ([0, 2], [1, 2], 0.2),  # Higher values get weighted more
-            ([4], [3], 1/16),
-            ([0, 4], [0, 3], 1/16)]  # Zeros are weighted zeroly
+            ([0, 1], [1, 1], 1),
+            ([0, 2], [1, 2], 1),
+            ([4], [3], 1),
+            ([0, 4], [0, 3], 1)]  # Zeros don't matter
 
         for elem in count_vector_difference_matrix:
             self.check_difference(*elem, diff_function="difference")
