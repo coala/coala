@@ -150,3 +150,140 @@ def translate(pattern):
         else:
             regex = regex + re.escape(char)
     return regex + '\\Z(?ms)'
+
+
+def glob(pattern):
+    """
+    Return a list of paths matching a pathname pattern.
+
+    Glob Syntax:
+    '[seq]':         Matches any character in seq. Cannot be empty.
+                     Any Special Character looses its special meaning in a set.
+    '[!seq]':        Matches any character not in seq. Cannot be empty
+                     Any Special Character looses its special meaning in a set.
+    '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
+                     More than two or just one sequence can be given.
+    '?':             Matches any single character.
+    '*':             Matches everything but os.sep.
+    '**':            Matches everything.
+    """
+
+    return list(iglob(pattern))
+
+
+def iglob(pattern):
+    """
+    Return an iterator which yields the paths matching a pathname pattern.
+
+    Glob Syntax:
+    '[seq]':         Matches any character in seq. Cannot be empty.
+                     Any Special Character looses its special meaning in a set.
+    '[!seq]':        Matches any character not in seq. Cannot be empty
+                     Any Special Character looses its special meaning in a set.
+    '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
+                     More than two or just one sequence can be given.
+    '?':             Matches any single character.
+    '*':             Matches everything but os.sep.
+    '**':            Matches everything.
+    """
+    for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
+        pat = os.path.normcase(pat)
+        dirname, basename = os.path.split(pat)
+        if not has_wildcard(pat):
+            if basename:
+                if os.path.exists(pat):  # pragma: nocover
+                    yield pat
+            else:
+                # Patterns ending with a slash should match only directories
+                if os.path.isdir(dirname):
+                    yield pat
+            return
+
+        if not dirname:  # pragma: nocover
+            if basename == '**':  # pragma: nocover
+                for filename in relativ_recursive_glob(dirname, basename):
+                    yield filename
+            else:  # pragma: nocover
+                for filename in relativ_recursive_glob(dirname, basename):
+                    yield filename
+            return
+
+        # Prevent an infinite recursion if a drive or UNC path contains
+        # wildcard characters (i.e. r'\\?\C:').
+        if dirname != pat and has_wildcard(dirname):
+            dirs = iglob(dirname)
+        else:
+            dirs = [dirname]
+        if has_wildcard(basename):
+            if basename == '**':
+                glob_in_dir = relativ_recursive_glob
+            else:
+                glob_in_dir = relativ_wildcard_glob
+        else:
+            glob_in_dir = relativ_flat_glob
+        for dirname in dirs:
+            for name in glob_in_dir(dirname, basename):
+                yield os.path.join(dirname, name)
+
+
+# non recursive glob in dir, accepting wildcards
+def relativ_wildcard_glob(dirname, pattern):
+    if not dirname:  # pragma: nocover
+        dirname = os.curdir
+    try:
+        names = os.listdir(dirname)
+    except OSError:
+        return []
+    result = []
+    pattern = os.path.normcase(pattern)
+    match = re.compile(translate(pattern)).match
+    for name in names:
+        if match(os.path.normcase(name)):
+            result.append(name)
+    return result
+
+
+# non recursive glob in dir, accepting only basenames
+def relativ_flat_glob(dirname, basename):
+    if not basename:  # pragma: nocover
+        # `os.path.split()` returns an empty basename for paths ending with a
+        # directory separator.  'q*x/' should match only directories.
+        if os.path.isdir(dirname):  # pragma: nocover
+            return [basename]
+    else:
+        if os.path.exists(os.path.join(dirname, basename)):  # pragma: nocover
+            return [basename]
+    return []  # pragma: nocover
+
+
+# recursive relativ glob, accepting only '**'
+def relativ_recursive_glob(dirname, pattern):
+    assert pattern == '**'
+    if dirname:  # pragma: nocover
+        yield pattern[:0]
+    for relative_dir in _iter_relative_dirs(dirname):
+        yield relative_dir
+
+
+# recursive relativ listdir
+def _iter_relative_dirs(dirname):
+    if not dirname:  # pragma: nocover
+        dirname = os.curdir
+    try:
+        files_or_dirs = os.listdir(dirname)
+    except os.error:
+        return
+    for file_or_dir in files_or_dirs:
+        yield file_or_dir
+        path = os.path.join(dirname, file_or_dir) if dirname else file_or_dir
+        for sub_file_or_dir in _iter_relative_dirs(path):
+            yield os.path.join(file_or_dir, sub_file_or_dir)
+
+
+wildcard_check_pattern = re.compile('([*?[])')
+
+
+def has_wildcard(pattern):
+    match = wildcard_check_pattern.search(pattern)
+    return match is not None

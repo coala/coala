@@ -1,12 +1,47 @@
+"""
+Tests Globbing and related functions
+
+Test Files are local and permanent and organized as follows:
+
+GlobTestDir
+├── SubDir1
+│   ├── File11.py
+│   └── File12.py
+│ SubDir2
+│   ├── File(with)parentheses.txt
+│   └── File[with]brackets.txt
+├── File1.x
+├── File2.y
+└── File3.z
+"""
+import inspect
 import os
 import unittest
 import sys
 
 sys.path.insert(0, ".")
 from coalib.parsing.Globbing2 import fnmatch
+from coalib.parsing.Globbing2 import glob
 from coalib.parsing.Globbing2 import _iter_alternatives
 from coalib.parsing.Globbing2 import _iter_choices
 from coalib.parsing.Globbing2 import _position_is_bracketed
+
+
+class TestFiles:
+    """
+    Testfiles to check glob patterns on
+    """
+    glob_test_root = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+    glob_test_dir = os.path.join(glob_test_root, 'GlobTestDir')
+    dir1 = os.path.join(glob_test_dir, 'SubDir1')
+    file11 = os.path.join(dir1, 'File11.py')
+    file12 = os.path.join(dir1, 'File12.py')
+    dir2 = os.path.join(glob_test_dir, 'SubDir2')
+    file_paren = os.path.join(dir2, 'File(with)parentheses.txt')
+    file_brack = os.path.join(dir2, 'File[with]brackets.txt')
+    file1 = os.path.join(glob_test_dir, 'File1.x')
+    file2 = os.path.join(glob_test_dir, 'File2.y')
+    file3 = os.path.join(glob_test_dir, 'File3.z')
 
 
 class GlobbingHelperFunctionsTest(unittest.TestCase):
@@ -135,6 +170,105 @@ class FnmatchTest(unittest.TestCase):
         matches = ["axb", "ayb", os.path.join("a", "b")]
         non_matches = ["aXbX"]
         self._test_fnmatch(pattern, matches, non_matches)
+
+
+class GlobTest(unittest.TestCase):
+    def setUp(self):
+        self.maxDiff = None
+
+    def _test_glob(self, pattern, file_list):
+        results = sorted(glob(pattern))
+        file_list = sorted(file_list)
+        self.assertEqual(results, file_list)
+
+    def test_collect_files(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, 'Sub*', 'File1?.py')
+        file_list = [TestFiles.file11, TestFiles.file12]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_dirs(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, 'Sub*' + os.sep)
+        file_list = [TestFiles.dir1+os.sep, TestFiles.dir2+os.sep]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_specific_dir(self):
+        pattern = os.path.join(TestFiles.dir1 + os.sep)
+        file_list = [TestFiles.dir1+os.sep]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_flat(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, '*')
+        file_list = [TestFiles.dir1,
+                     TestFiles.dir2,
+                     TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_all(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, '**', '*')
+        file_list = [TestFiles.dir1,
+                     TestFiles.dir2,
+                     TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3,
+                     TestFiles.file11,
+                     TestFiles.file12,
+                     TestFiles.file_paren,
+                     TestFiles.file_brack]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_basename(self):
+        pattern = TestFiles.glob_test_dir
+        file_list = [TestFiles.glob_test_dir]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_none(self):
+        pattern = ''
+        file_list = []
+        self._test_glob(pattern, file_list)
+
+    def test_collect_specific(self):
+        pattern = os.path.join(TestFiles.file12)
+        file_list = [TestFiles.file12]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_parentheses(self):
+        pattern = os.path.join(TestFiles.glob_test_dir,
+                               'SubDir[12]',
+                               'File[(]with)parentheses.txt')
+        file_list = [TestFiles.file_paren]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_brackets(self):
+        pattern = os.path.join(TestFiles.glob_test_dir,
+                               'SubDir[12]',
+                               'File[[]with[]]brackets.txt')
+        file_list = [TestFiles.file_brack]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_or(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, "File?.(x|y|z)")
+        file_list = [TestFiles.file1, TestFiles.file2, TestFiles.file3]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_recursive(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, "**", "*")
+        file_list = [TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3,
+                     TestFiles.file11,
+                     TestFiles.file12,
+                     TestFiles.file_paren,
+                     TestFiles.file_brack,
+                     TestFiles.dir1,
+                     TestFiles.dir2]
+        self._test_glob(pattern, file_list)
+
+    def test_collect_invalid(self):
+        pattern = "NOPE"
+        file_list = []
+        self._test_glob(pattern, file_list)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
