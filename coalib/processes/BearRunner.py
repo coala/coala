@@ -93,6 +93,58 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
     return result_list
 
 
+def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
+    """
+    This method is responsible for executing the instance of a bear. It also
+    reports or logs errors if any occur during the execution of that bear
+    instance.
+
+    :param message_queue: A queue that contains messages of type
+                          errors/warnings/debug statements to be printed in the
+                          Log.
+    :param timeout:       The queue blocks at most timeout seconds for a free
+                          slot to execute the put operation on. After the
+                          timeout it returns queue Full exception.
+    :param bear_instance: The instance of the bear to be executed.
+    :param args:          The arguments that are to be passed to the bear.
+    :param kwargs:        The keyword arguments that are to be passed to the
+                          bear.
+    :return:              Returns a valid list of objects of the type Result
+                          if the bear executed succesfully. None otherwise.
+    """
+    if kwargs.get("dependency_results", True) is None:
+        del kwargs["dependency_results"]
+
+    name = bear_instance.__class__.__name__
+
+    try:
+        result_list = bear_instance.execute(*args,
+                                            **kwargs)
+    except:
+        send_msg(message_queue,
+                 timeout,
+                 LOG_LEVEL.ERROR,
+                 _("The bear {bear} failed to run with the arguments "
+                   "{arglist}, {kwarglist}. Skipping bear...")
+                 .format(bear=name, arglist=args, kwarglist=kwargs))
+        send_msg(message_queue,
+                 timeout,
+                 LOG_LEVEL.DEBUG,
+                 _("Traceback for error in bear {bear}:")
+                 .format(bear=name),
+                 traceback.format_exc(),
+                 delimiter="\n")
+
+        return None
+
+    return validate_results(message_queue,
+                            timeout,
+                            result_list,
+                            name,
+                            args,
+                            kwargs)
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -306,10 +358,12 @@ class BearRunner(multiprocessing.Process):
 
         kwargs = {"dependency_results":
                       self._get_local_dependency_results(bear_instance)}
-        return self._run_bear(bear_instance,
-                              filename,
-                              self.file_dict[filename],
-                              **kwargs)
+        return run_bear(self.message_queue,
+                        self.TIMEOUT,
+                        bear_instance,
+                        filename,
+                        self.file_dict[filename],
+                        **kwargs)
 
     def __run_global_bear(self, global_bear_instance, dependency_results):
         if not isinstance(global_bear_instance, GlobalBear) \
@@ -325,37 +379,7 @@ class BearRunner(multiprocessing.Process):
             return None
 
         kwargs = {"dependency_results": dependency_results}
-        return self._run_bear(global_bear_instance, **kwargs)
-
-    def _run_bear(self, bear_instance, *args, **kwargs):
-        if kwargs.get("dependency_results", True) is None:
-            del kwargs["dependency_results"]
-
-        name = bear_instance.__class__.__name__
-
-        try:
-            result_list = bear_instance.execute(*args,
-                                                **kwargs)
-        except:
-            send_msg(self.message_queue,
-                     self.TIMEOUT,
-                     LOG_LEVEL.ERROR,
-                     _("The bear {bear} failed to run with the arguments "
-                       "{arglist}, {kwarglist}. Skipping bear...")
-                     .format(bear=name, arglist=args, kwarglist=kwargs))
-            send_msg(self.message_queue,
-                     self.TIMEOUT,
-                     LOG_LEVEL.DEBUG,
-                     _("Traceback for error in bear {bear}:")
-                     .format(bear=name),
-                     traceback.format_exc(),
-                     delimiter="\n")
-
-            return None
-
-        return validate_results(self.message_queue,
-                                self.TIMEOUT,
-                                result_list,
-                                name,
-                                args,
-                                kwargs)
+        return run_bear(self.message_queue,
+                        self.TIMEOUT,
+                        global_bear_instance,
+                        **kwargs)
