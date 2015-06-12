@@ -8,7 +8,10 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.processes.BearRunner import BearRunner, LogMessage, LOG_LEVEL
+from coalib.processes.BearRunner import (BearRunner,
+                                         LogMessage,
+                                         LOG_LEVEL,
+                                         send_msg)
 from coalib.settings.Section import Section
 
 
@@ -127,7 +130,13 @@ class BearRunnerUnitTest(unittest.TestCase):
 
     def test_messaging(self):
         self.uut.debug("test", "messag", delimiter="-", end="e")
-        self.uut.warn("test", "messag", delimiter="-", end="e")
+        send_msg(self.uut.message_queue,
+                 self.uut.TIMEOUT,
+                 LOG_LEVEL.WARNING,
+                 "test",
+                 "messag",
+                 delimiter="-",
+                 end="e")
         self.uut.err("test", "messag", delimiter="-", end="e")
 
         self.assertEqual(self.message_queue.get(),

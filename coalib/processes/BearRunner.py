@@ -113,14 +113,6 @@ class BearRunner(multiprocessing.Process):
         # the result dict
         self._local_result_list = []
 
-    def warn(self, *args, delimiter=' ', end=''):
-        send_msg(self.message_queue,
-                 self.TIMEOUT,
-                 LOG_LEVEL.WARNING,
-                 *args,
-                 delimiter=delimiter,
-                 end=end)
-
     def err(self, *args, delimiter=' ', end=''):
         send_msg(self.message_queue,
                  self.TIMEOUT,
@@ -253,10 +245,12 @@ class BearRunner(multiprocessing.Process):
     def __run_local_bear(self, bear_instance, filename):
         if not isinstance(bear_instance, LocalBear) or \
                 bear_instance.kind() != BEAR_KIND.LOCAL:
-            self.warn(_("A given local bear ({}) is not valid. "
-                        "Leaving it out...")
-                      .format(bear_instance.__class__.__name__),
-                      StringConstants.THIS_IS_A_BUG)
+            send_msg(self.message_queue,
+                     self.TIMEOUT,
+                     LOG_LEVEL.WARNING,
+                     _("A given local bear ({}) is not valid. Leaving "
+                       "it out...").format(bear_instance.__class__.__name__),
+                     StringConstants.THIS_IS_A_BUG)
 
             return None
 
@@ -270,10 +264,13 @@ class BearRunner(multiprocessing.Process):
     def __run_global_bear(self, global_bear_instance, dependency_results):
         if not isinstance(global_bear_instance, GlobalBear) \
                 or global_bear_instance.kind() != BEAR_KIND.GLOBAL:
-            self.warn(_("A given global bear ({}) is not valid. "
-                        "Leaving it out...")
-                      .format(global_bear_instance.__class__.__name__),
-                      StringConstants.THIS_IS_A_BUG)
+            send_msg(self.message_queue,
+                     self.TIMEOUT,
+                     LOG_LEVEL.WARNING,
+                     _("A given global bear ({}) is not valid. Leaving it "
+                       "out...")
+                     .format(global_bear_instance.__class__.__name__),
+                     StringConstants.THIS_IS_A_BUG)
 
             return None
 
