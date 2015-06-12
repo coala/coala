@@ -12,6 +12,27 @@ from coalib.misc.i18n import _
 from coalib.results.Result import Result
 
 
+def send_msg(message_queue, timeout, log_level, *args, delimiter=' ', end=''):
+    """
+    Puts message into message queue for a LogPrinter to present to the user.
+
+    :param message_queue: The queue to put the message into and which the
+                          LogPrinter reads.
+    :param timeout:       The queue blocks at most timeout seconds for a free
+                          slot to execute the put operation on. After the
+                          timeout it returns queue Full exception.
+    :param log_level:     The log_level i.e Error,Debug or Warning.It is sent
+                          to the LogPrinter depending on the message.
+    :param args:          This includes the elements of the message.
+    :param delimiter:     It is the value placed between each arg. By default
+                          it is a ' '.
+    :param end:           It is the value placed at the end of the message.
+    """
+    output = str(delimiter).join(str(arg) for arg in args) + str(end)
+    message_queue.put(LogMessage(log_level, output),
+                      timeout=timeout)
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -93,13 +114,28 @@ class BearRunner(multiprocessing.Process):
         self._local_result_list = []
 
     def warn(self, *args, delimiter=' ', end=''):
-        self.__send_msg(LOG_LEVEL.WARNING, *args, delimiter=delimiter, end=end)
+        send_msg(self.message_queue,
+                 self.TIMEOUT,
+                 LOG_LEVEL.WARNING,
+                 *args,
+                 delimiter=delimiter,
+                 end=end)
 
     def err(self, *args, delimiter=' ', end=''):
-        self.__send_msg(LOG_LEVEL.ERROR, *args, delimiter=delimiter, end=end)
+        send_msg(self.message_queue,
+                 self.TIMEOUT,
+                 LOG_LEVEL.ERROR,
+                 *args,
+                 delimiter=delimiter,
+                 end=end)
 
     def debug(self, *args, delimiter=' ', end=''):
-        self.__send_msg(LOG_LEVEL.DEBUG, *args, delimiter=delimiter, end=end)
+        send_msg(self.message_queue,
+                 self.TIMEOUT,
+                 LOG_LEVEL.DEBUG,
+                 *args,
+                 delimiter=delimiter,
+                 end=end)
 
     def run(self):
         self.run_local_bears()
@@ -177,11 +213,6 @@ class BearRunner(multiprocessing.Process):
                     self.global_bear_queue.task_done()
         except queue.Empty:
             return
-
-    def __send_msg(self, log_level, *args, delimiter=' ', end=''):
-        output = str(delimiter).join(str(arg) for arg in args) + str(end)
-        self.message_queue.put(LogMessage(log_level, output),
-                               timeout=self.TIMEOUT)
 
     def __run_local_bears(self, filename):
         if filename not in self.file_dict:
