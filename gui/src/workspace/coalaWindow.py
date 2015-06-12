@@ -4,7 +4,7 @@ from gi.repository import Gtk
 
 from gui.src.support.fileTree import coalaFileTree
 from gui.src.support.settingTree import coalaSettingTree
-from coalib.settings.SectionManager import SectionManager
+from coalib.settings.ConfigurationGathering import load_config_file
 from coalib.settings.Section import Section
 
 
@@ -17,8 +17,8 @@ class coalaWindow(Gtk.ApplicationWindow):
 
         self.path = src
         os.chdir(self.path)
-        self.section_manager = SectionManager()
         self.sections = {}
+        self.sections_view = {}
 
         self._ui = Gtk.Builder()
         self._ui.add_from_resource("/coala/coalaWindow.ui")
@@ -31,6 +31,10 @@ class coalaWindow(Gtk.ApplicationWindow):
 
         self.add_button = self._ui.get_object("add_section_button")
         self.add_button.connect("clicked", self.add_section_dialog, "Section name:")
+        self.add_setting_button = self._ui.get_object("addsetting")
+        self.add_setting_button.connect("clicked", self.add_setting)
+        self.delete_setting_button = self._ui.get_object("delsetting")
+        self.delete_setting_button.connect("clicked", self.del_setting)
 
         self.section_stack = self._ui.get_object("sections")
         self.section_stack_switcher = self._ui.get_object("section_switcher")
@@ -49,15 +53,14 @@ class coalaWindow(Gtk.ApplicationWindow):
 
     def setup_config_file(self):
         if os.path.isfile(self.path+'/.coafile'):
-            self.section_manager._load_configuration([])
+            self.sections = load_config_file(self.path+'/.coafile', None)
         else:
             coafile = open(".coafile", "w")
             coafile.close()
-            self.section_manager._load_configuration([])
         self.setup_sections()
 
     def setup_sections(self):
-        for key in self.section_manager.sections:
+        for key in self.sections:
             self.add_section(key)
 
     def add_section_dialog(self, button, message):
@@ -81,22 +84,40 @@ class coalaWindow(Gtk.ApplicationWindow):
             return None
 
     def add_section(self, section):
+        frame = Gtk.Frame()
+        frame.set_name(section)
+        frame.set_vexpand(True)
+        frame.set_hexpand(True)
+        frame.set_visible(True)
+        frame.set_border_width(5)
         box = Gtk.Box()
         box.set_visible(True)
-        box.set_border_width(10)
         box.set_hexpand(True)
         sw = Gtk.ScrolledWindow()
         sw.set_visible(True)
         sw.set_hexpand(True)
         settings = coalaSettingTree()
-        self.sections[section] = settings
+        self.sections_view[section] = settings
         sw.add(settings.treeView)
         box.add(sw)
-        if section in self.section_manager.sections:
-            for key in self.section_manager.sections[section]:
+        frame.add(box)
+        if section in self.sections:
+            for key in self.sections[section]:
                 settings.append([key,
-                                 str(self.section_manager.sections[section][key])])
-        else:
-            self.section_manager.sections[section] = Section(section)
-        self.section_stack.add_titled(box, section, section)
+                                 str(self.sections[section][key])])
+        self.section_stack.add_titled(frame, section, section)
         self.section_stack_switcher.queue_draw()
+
+    def del_setting(self, button):
+        section = self.section_stack.get_visible_child()
+        settings = self.sections_view[section.get_name()]
+        selection = settings.treeView.get_selection()
+        result = selection.get_selected()
+        if result:
+            model, iter = result
+        model.remove(iter)
+
+    def add_setting(self, button):
+        section = self.section_stack.get_visible_child()
+        settings = self.sections_view[section.get_name()]
+        settings.append(["Entry", "Value"])
