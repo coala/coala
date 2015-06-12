@@ -129,7 +129,13 @@ class BearRunnerUnitTest(unittest.TestCase):
         self.assertIsInstance(self.uut, multiprocessing.Process)
 
     def test_messaging(self):
-        self.uut.debug("test", "messag", delimiter="-", end="e")
+        send_msg(self.uut.message_queue,
+                 self.uut.TIMEOUT,
+                 LOG_LEVEL.DEBUG,
+                 "test",
+                 "messag",
+                 delimiter="-",
+                 end="e")
         send_msg(self.uut.message_queue,
                  self.uut.TIMEOUT,
                  LOG_LEVEL.WARNING,
