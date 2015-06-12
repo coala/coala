@@ -2,7 +2,7 @@
 
 import os
 import tempfile
-from distutils.sysconfig import get_python_lib
+from site import getsitepackages
 
 from coalib.tests.TestHelper import TestHelper
 
@@ -20,13 +20,14 @@ if __name__ == '__main__':
 
     testhelper = TestHelper(parser)
 
-    ignore_list = [
-        os.path.join(tempfile.gettempdir(), "**"),
-        os.path.join(os.path.dirname(get_python_lib()), "**"),
+    ignore_list = ([os.path.join(x, "**") for x in getsitepackages()] +
+                   [os.path.join(tempfile.gettempdir(), "**")])
+
+    # Project specific ignore list.
+    ignore_list += [
         os.path.join("coalib", "tests", "**"),
         os.path.join("coalib", "bearlib", "parsing", "clang", "**"),
-        os.path.join("bears", "tests", "**")
-    ]
+        os.path.join("bears", "tests", "**")]
 
     if not testhelper.args.ignore_main_tests:
         testhelper.add_test_files(os.path.abspath(os.path.join("coalib",
