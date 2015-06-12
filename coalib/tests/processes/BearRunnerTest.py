@@ -275,7 +275,6 @@ d
                                           "arbitrary",
                                           severity=RESULT_SEVERITY.INFO)]
 
-
         control_elem, index = self.control_queue.get()
         self.assertEqual(control_elem, CONTROL_ELEMENT.LOCAL_FINISHED)
         control_elem, index = self.control_queue.get()
