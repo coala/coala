@@ -33,6 +33,66 @@ def send_msg(message_queue, timeout, log_level, *args, delimiter=' ', end=''):
                       timeout=timeout)
 
 
+def validate_results(message_queue, timeout, result_list, name, args, kwargs):
+    """
+    Validates if the result_list passed to it contains valid set of results.
+    That is the result_list must itself be a list and contain objects of the
+    instance of Result object. If any irregularity is found a message is put in
+    the message_queue to present the irregularity to the user. Each result_list
+    belongs to an execution of a bear.
+
+    :param message_queue: A queue that contains messages of type
+                          errors/warnings/debug statements to be printed in the
+                          Log.
+    :param timeout:       The queue blocks at most timeout seconds for a free
+                          slot to execute the put operation on. After the
+                          timeout it returns queue Full exception.
+    :param result_list:   The list of results to validate.
+    :param name:          The name of the bear executed.
+    :param args:          The args with which the bear was executed.
+    :param kwargs:        The kwargs with which the bear was executed.
+    :return:              Returns None if the result_list is invalid. Else it
+                          returns the result_list itself.
+    """
+    if result_list is None:
+        return None
+
+    if not isinstance(result_list, list):
+        send_msg(message_queue,
+                 timeout,
+                 LOG_LEVEL.ERROR,
+                 _("The results from the bear {bear} couldn't be processed "
+                   "with arguments {arglist}, {kwarglist}.")
+                 .format(bear=name, arglist=args, kwarglist=kwargs))
+        send_msg(message_queue,
+                 timeout,
+                 LOG_LEVEL.DEBUG,
+                 _("The return value of the {bear} is an instance of {ret}"
+                   " but should be an instance of list.")
+                 .format(bear=name, ret=result_list.__class__))
+        return None
+
+    for result in result_list:
+        if not isinstance(result, Result):
+            send_msg(message_queue,
+                     timeout,
+                     LOG_LEVEL.ERROR,
+                     _("The results from the bear {bear} could only be "
+                       "partially processed with arguments {arglist}, "
+                       "{kwarglist}")
+                     .format(bear=name, arglist=args, kwarglist=kwargs))
+            send_msg(message_queue,
+                     timeout,
+                     LOG_LEVEL.DEBUG,
+                     _("One of the results in the list for the bear {bear} is "
+                       "an instance of {ret} but it should be an instance of "
+                       "Result")
+                     .format(bear=name, ret=result.__class__))
+            result_list.remove(result)
+
+    return result_list
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -293,43 +353,9 @@ class BearRunner(multiprocessing.Process):
 
             return None
 
-        return self._validate_results(result_list, name, args, kwargs)
-
-    def _validate_results(self, result_list, name, args, kwargs):
-        if result_list is None:
-            return None
-
-        if not isinstance(result_list, list):
-            send_msg(self.message_queue,
-                     self.TIMEOUT,
-                     LOG_LEVEL.ERROR,
-                     _("The results from the bear {bear} couldn't be processed"
-                       " with arguments {arglist}, {kwarglist}.")
-                     .format(bear=name, arglist=args, kwarglist=kwargs))
-            send_msg(self.message_queue,
-                     self.TIMEOUT,
-                     LOG_LEVEL.DEBUG,
-                     _("The return value of the {bear} is an instance of {ret}"
-                       " but should be an instance of list.")
-                     .format(bear=name, ret=result_list.__class__))
-            return None
-
-        for result in result_list:
-            if not isinstance(result, Result):
-                send_msg(self.message_queue,
-                         self.TIMEOUT,
-                         LOG_LEVEL.ERROR,
-                         _("The results from the bear {bear} could only be"
-                           "partially processed with arguments {arglist}, "
-                           "{kwarglist}")
-                         .format(bear=name, arglist=args, kwarglist=kwargs))
-                send_msg(self.message_queue,
-                         self.TIMEOUT,
-                         LOG_LEVEL.DEBUG,
-                         _("One of the results in the list for the bear {bear}"
-                           " is an instance of {ret} but it should be an "
-                           "instance of Result")
-                         .format(bear=name, ret=result.__class__))
-                result_list.remove(result)
-
-        return result_list
+        return validate_results(self.message_queue,
+                                self.TIMEOUT,
+                                result_list,
+                                name,
+                                args,
+                                kwargs)
