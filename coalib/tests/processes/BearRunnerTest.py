@@ -137,7 +137,13 @@ class BearRunnerUnitTest(unittest.TestCase):
                  "messag",
                  delimiter="-",
                  end="e")
-        self.uut.err("test", "messag", delimiter="-", end="e")
+        send_msg(self.uut.message_queue,
+                 self.uut.TIMEOUT,
+                 LOG_LEVEL.ERROR,
+                 "test",
+                 "messag",
+                 delimiter="-",
+                 end="e")
 
         self.assertEqual(self.message_queue.get(),
                          LogMessage(LOG_LEVEL.DEBUG, "test-message"))

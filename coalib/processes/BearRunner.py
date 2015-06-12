@@ -113,14 +113,6 @@ class BearRunner(multiprocessing.Process):
         # the result dict
         self._local_result_list = []
 
-    def err(self, *args, delimiter=' ', end=''):
-        send_msg(self.message_queue,
-                 self.TIMEOUT,
-                 LOG_LEVEL.ERROR,
-                 *args,
-                 delimiter=delimiter,
-                 end=end)
-
     def debug(self, *args, delimiter=' ', end=''):
         send_msg(self.message_queue,
                  self.TIMEOUT,
@@ -208,7 +200,10 @@ class BearRunner(multiprocessing.Process):
 
     def __run_local_bears(self, filename):
         if filename not in self.file_dict:
-            self.err(_("An internal error occurred."),
+            send_msg(self.message_queue,
+                     self.TIMEOUT,
+                     LOG_LEVEL.ERROR,
+                     _("An internal error occurred."),
                      StringConstants.THIS_IS_A_BUG)
             self.debug(_("The given file through the queue is not in the "
                          "file dictionary."))
@@ -287,7 +282,10 @@ class BearRunner(multiprocessing.Process):
             result_list = bear_instance.execute(*args,
                                                 **kwargs)
         except:
-            self.err(_("The bear {bear} failed to run with the arguments "
+            send_msg(self.message_queue,
+                     self.TIMEOUT,
+                     LOG_LEVEL.ERROR,
+                     _("The bear {bear} failed to run with the arguments "
                        "{arglist}, {kwarglist}. Skipping bear...")
                      .format(bear=name, arglist=args, kwarglist=kwargs))
             self.debug(_("Traceback for error in bear {bear}:")
@@ -304,7 +302,10 @@ class BearRunner(multiprocessing.Process):
             return None
 
         if not isinstance(result_list, list):
-            self.err(_("The results from the bear {bear} couldn't be processed"
+            send_msg(self.message_queue,
+                     self.TIMEOUT,
+                     LOG_LEVEL.ERROR,
+                     _("The results from the bear {bear} couldn't be processed"
                        " with arguments {arglist}, {kwarglist}.")
                      .format(bear=name, arglist=args, kwarglist=kwargs))
             self.debug(_("The return value of the {bear} is an instance of"
@@ -314,7 +315,10 @@ class BearRunner(multiprocessing.Process):
 
         for result in result_list:
             if not isinstance(result, Result):
-                self.err(_("The results from the bear {bear} could only be"
+                send_msg(self.message_queue,
+                         self.TIMEOUT,
+                         LOG_LEVEL.ERROR,
+                         _("The results from the bear {bear} could only be"
                            "partially processed with arguments {arglist}, "
                            "{kwarglist}")
                          .format(bear=name, arglist=args, kwarglist=kwargs))
