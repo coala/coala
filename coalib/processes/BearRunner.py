@@ -351,6 +351,39 @@ def get_global_dependency_results(global_result_dict, bear_instance):
     return dependency_results
 
 
+def get_next_global_bear(timeout,
+                         global_bear_queue,
+                         global_bear_list,
+                         global_result_dict):
+    """
+    Retrieves the next global bear.
+
+    :param timeout:            The queue blocks at most timeout seconds for a
+                               free slot to execute the put operation on. After
+                               the timeout it returns queue Full exception.
+    :param global_bear_queue:  queue (read, write) of indexes of global bear
+                               instances in the global_bear_list.
+    :param global_bear_list:   A list containing all global bears to be
+                               executed.
+    :param global_result_dict: A Manager.dict that will be used to store global
+                               results. The list of results of one global bear
+                               will be stored with the bear name as key.
+    :return:                   (bear, bearname, dependency_results)
+    """
+    dependency_results = False
+
+    while dependency_results is False:
+        bear_id = global_bear_queue.get(timeout=timeout)
+        bear = global_bear_list[bear_id]
+
+        dependency_results = \
+            get_global_dependency_results(global_result_dict, bear)
+        if dependency_results is False:
+            global_bear_queue.put(bear_id)
+
+    return bear, bear.__class__.__name__, dependency_results
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -454,29 +487,14 @@ class BearRunner(multiprocessing.Process):
         except queue.Empty:
             return
 
-    def _get_next_global_bear(self):
-        """
-        Retrieves the next global bear.
-
-        :return: (bear, bearname, dependency_results)
-        """
-        dependency_results = False
-
-        while dependency_results is False:
-            bear_id = self.global_bear_queue.get(timeout=self.TIMEOUT)
-            bear = self.global_bear_list[bear_id]
-
-            dependency_results = \
-                get_global_dependency_results(self.global_result_dict, bear)
-            if dependency_results is False:
-                self.global_bear_queue.put(bear_id)
-
-        return bear, bear.__class__.__name__, dependency_results
-
     def run_global_bears(self):
         try:
             while True:
-                bear, bearname, dep_results = self._get_next_global_bear()
+                bear, bearname, dep_results = \
+                    get_next_global_bear(self.TIMEOUT,
+                                         self.global_bear_queue,
+                                         self.global_bear_list,
+                                         self.global_result_dict)
                 result = run_global_bear(self.message_queue,
                                          self.TIMEOUT,
                                          bear,
