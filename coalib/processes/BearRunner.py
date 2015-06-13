@@ -1,5 +1,4 @@
 import queue
-import multiprocessing
 import traceback
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
