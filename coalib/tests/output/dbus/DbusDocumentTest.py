@@ -26,8 +26,11 @@ class DbusDocumentTest(unittest.TestCase):
         self.assertEqual(uut.path, os.path.abspath(test_file))
 
     def test_config(self):
-        uut = DbusDocument("dummy_path")
+        uut = DbusDocument(id=1)
         self.assertEqual(uut.FindConfigFile(), "")
+
+        uut.path = self.testcode_c_path
+        self.assertEqual(uut.FindConfigFile(), self.config_path)
 
         uut.SetConfigFile("config_file")
         self.assertEqual(uut.config_file, "config_file")

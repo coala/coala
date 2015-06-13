@@ -36,6 +36,9 @@ class DbusDocument(dbus.service.Object):
 
         :return: The config file path
         """
+        if self.path == "":
+            return ""
+
         self.config_file = find_user_config(self.path)
         return self.config_file
 
