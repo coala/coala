@@ -475,100 +475,79 @@ def run_global_bears(message_queue,
         return
 
 
-class BearRunner(multiprocessing.Process):
-    def __init__(self,
-                 file_name_queue,
-                 local_bear_list,
-                 global_bear_list,
-                 global_bear_queue,
-                 file_dict,
-                 local_result_dict,
-                 global_result_dict,
-                 message_queue,
-                 control_queue,
-                 TIMEOUT=0):
-        """
-        This is the object that actually runs on the processes
+def run(file_name_queue,
+        local_bear_list,
+        global_bear_list,
+        global_bear_queue,
+        file_dict,
+        local_result_dict,
+        global_result_dict,
+        message_queue,
+        control_queue,
+        timeout=0):
+    """
+    This is the method that is actually runs by processes.
 
-        If parameters type is 'queue (read)' this means it has to implement the
-        get(timeout=TIMEOUT) method and it shall raise queue.Empty if the queue
-        is empty up until the end of the timeout. If the queue has the
-        (optional!) task_done() attribute, BearRunner will call it after
-        processing each item.
+    If parameters type is 'queue (read)' this means it has to implement the
+    get(timeout=TIMEOUT) method and it shall raise queue.Empty if the queue
+    is empty up until the end of the timeout. If the queue has the
+    (optional!) task_done() attribute, the run method will call it after
+    processing each item.
 
-        If parameters type is 'queue (write)' it shall implement the
-        put(object, timeout=TIMEOUT) method.
+    If parameters type is 'queue (write)' it shall implement the
+    put(object, timeout=TIMEOUT) method.
 
-        If the queues raise any exception not specified here the user will get
-        an 'unknown error' message. So beware of that.
+    If the queues raise any exception not specified here the user will get
+    an 'unknown error' message. So beware of that.
 
-        :param file_name_queue:    queue (read) of file names to check with
-                                   local bears. Every BearRunner takes one of
-                                   those and checks it with all local bears.
-                                   (Repeat until queue empty.)
-        :param local_bear_list:    list of local bear instances
-        :param global_bear_list:   list of global bear instances
-        :param global_bear_queue:  queue (read, write) of indexes of global
-                                   bear instances in the global_bear_list
-        :param file_dict:          dict of all files as {filename:file}, file
-                                   as in file.readlines()
-        :param local_result_dict:  A Manager.dict that will be used to store
-                                   local results. A list of all local results
-                                   will be stored with the filename as key.
-        :param global_result_dict: A Manager.dict that will be used to store
-                                   global results. The list of results of one
-                                   global bear will be stored with the bear
-                                   name as key.
-        :param message_queue:      queue (write) for debug/warning/error
-                                   messages (type LogMessage)
-        :param control_queue:      queue (write). If any result gets written to
-                                   the result_dict a tuple containing a
-                                   CONTROL_ELEMENT (to indicate what kind of
-                                   event happened) and either a bear name
-                                   (for global results) or a file name to
-                                   indicate the result will be put to the
-                                   queue. If this BearRunner finished all its
-                                   local bears it will put
-                                   (CONTROL_ELEMENT.LOCAL_FINISHED, None) to
-                                   the queue, if it finished all global ones,
-                                   (CONTROL_ELEMENT.GLOBAL_FINISHED, None) will
-                                   be put there.
-        :param TIMEOUT:            in seconds for all queue actions
-        """
-        multiprocessing.Process.__init__(self)
+    :param file_name_queue:    queue (read) of file names to check with local
+                               bears. Each invocation of the run method needs
+                               one such queue which it checks with all the
+                               local bears. The queue could be empty.
+                               (Repeat until queue empty.)
+    :param local_bear_list:    List of local bear instances.
+    :param global_bear_list:   List of global bear instances.
+    :param global_bear_queue:  queue (read, write) of indexes of global bear
+                               instances in the global_bear_list.
+    :param file_dict:          dict of all files as {filename:file}, file as in
+                               file.readlines().
+    :param local_result_dict:  A Manager.dict that will be used to store local
+                               results. A list of all local results.
+                               will be stored with the filename as key.
+    :param global_result_dict: A Manager.dict that will be used to store global
+                               results. The list of results of one global bear
+                               will be stored with the bear name as key.
+    :param message_queue:      queue (write) for debug/warning/error
+                               messages (type LogMessage)
+    :param control_queue:      queue (write). If any result gets written to the
+                               result_dict a tuple containing a CONTROL_ELEMENT
+                               (to indicate what kind of event happened) and
+                               either a bear name (for global results) or a
+                               file name to indicate the result will be put to
+                               the queue. If the run method finished all its
+                               local bears it will put
+                               (CONTROL_ELEMENT.LOCAL_FINISHED, None) to the
+                               queue, if it finished all global ones,
+                               (CONTROL_ELEMENT.GLOBAL_FINISHED, None) will
+                               be put there.
+    :param timeout:            The queue blocks at most timeout seconds for a
+                               free slot to execute the put operation on. After
+                               the timeout it returns queue Full exception.
+    """
+    run_local_bears(file_name_queue,
+                    message_queue,
+                    timeout,
+                    file_dict,
+                    local_bear_list,
+                    local_result_dict,
+                    control_queue)
+    control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
-        self.filename_queue = file_name_queue
-        self.local_bear_list = local_bear_list
-        self.global_bear_queue = global_bear_queue
-        self.global_bear_list = global_bear_list
+    run_global_bears(message_queue,
+                     timeout,
+                     global_bear_queue,
+                     global_bear_list,
+                     global_result_dict,
+                     control_queue)
+    control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
-        self.file_dict = file_dict
-
-        self.local_result_dict = local_result_dict
-        self.global_result_dict = global_result_dict
-        self.message_queue = message_queue
-        self.control_queue = control_queue
-
-        self.TIMEOUT = TIMEOUT
-
-        # Will be used to hold local results when they are not yet stored in
-        # the result dict
-        self._local_result_list = []
-
-    def run(self):
-        run_local_bears(self.filename_queue,
-                        self.message_queue,
-                        self.TIMEOUT,
-                        self.file_dict,
-                        self.local_bear_list,
-                        self.local_result_dict,
-                        self.control_queue)
-        self.control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
-
-        run_global_bears(self.message_queue,
-                         self.TIMEOUT,
-                         self.global_bear_queue,
-                         self.global_bear_list,
-                         self.global_result_dict,
-                         self.control_queue)
-        self.control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))

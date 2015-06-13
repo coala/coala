@@ -4,7 +4,7 @@ import queue
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
 from coalib.output.printers import LOG_LEVEL
-from coalib.processes.BearRunner import BearRunner
+from coalib.processes.BearRunner import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import path_list
@@ -121,17 +121,16 @@ def instantiate_processes(section,
                           job_count,
                           log_printer):
     """
-    Instantiate the number of BearRunner objects or processes that will run
-    bears which will be responsible for running bears in a multiprocessing
-    environment.
+    Instantiate the number of processes that will run bears which will be
+    responsible for running bears in a multiprocessing environment.
 
     :param section:          The section the bears belong to.
     :param local_bear_list:  List of local bears belonging to the section.
     :param global_bear_list: List of global bears belonging to the section.
     :param job_count:        Max number of processes to create.
     :param log_printer:      The log printer to warn to.
-    :return:                 A tuple containing a list of BearRunner objects,
-                             and the arguments passed to each object which are
+    :return:                 A tuple containing a list of processes,
+                             and the arguments passed to each process which are
                              the same for each object.
     """
     filename_list = collect_files(path_list(section.get('files', "")),
@@ -155,7 +154,7 @@ def instantiate_processes(section,
                         "global_result_dict": global_result_dict,
                         "message_queue": message_queue,
                         "control_queue": control_queue,
-                        "TIMEOUT": 0.1}
+                        "timeout": 0.1}
 
     instantiate_bears(section,
                       local_bear_list,
@@ -165,7 +164,8 @@ def instantiate_processes(section,
     fill_queue(filename_queue, file_dict.keys())
     fill_queue(global_bear_queue, range(len(global_bear_list)))
 
-    return ([BearRunner(**bear_runner_args) for i in range(job_count)],
+    return ([multiprocessing.Process(target=run, kwargs=bear_runner_args)
+             for i in range(job_count)],
             bear_runner_args)
 
 
@@ -180,8 +180,8 @@ def process_queues(processes,
     Iterate the control queue and send the results recieved to the interactor
     so that they can be presented to the user.
 
-    :param processes:          List of processes which can be used as
-                               BearRunners.
+    :param processes:          List of processes which can be used to run
+                               Bears.
     :param control_queue:      Containing control elements that indicate
                                whether there is a result available and which
                                bear it belongs to.
@@ -265,11 +265,11 @@ def execute_section(section,
     Executes the section with the given bears.
 
     The execute_section method does the following things:
-    1. Prepare a BearRunner
+    1. Prepare a Process
       * Load files
       * Create queues
-    2. Spawn up one or more BearRunner's
-    3. Output results from the BearRunner's
+    2. Spawn up one or more Processes
+    3. Output results from the Processes
     4. Join all processes
 
     :param section:          The section to execute.

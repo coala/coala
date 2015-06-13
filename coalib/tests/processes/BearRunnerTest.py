@@ -8,10 +8,7 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.processes.BearRunner import (BearRunner,
-                                         LogMessage,
-                                         LOG_LEVEL,
-                                         send_msg)
+from coalib.processes.BearRunner import run, LogMessage, LOG_LEVEL, send_msg
 from coalib.settings.Section import Section
 
 
@@ -115,36 +112,24 @@ class BearRunnerUnitTest(unittest.TestCase):
         self.global_result_dict = manager.dict()
         self.message_queue = queue.Queue()
         self.control_queue = queue.Queue()
-        self.uut = BearRunner(self.file_name_queue,
-                              self.local_bear_list,
-                              self.global_bear_list,
-                              self.global_bear_queue,
-                              self.file_dict,
-                              self.local_result_dict,
-                              self.global_result_dict,
-                              self.message_queue,
-                              self.control_queue)
-
-    def test_inheritance(self):
-        self.assertIsInstance(self.uut, multiprocessing.Process)
 
     def test_messaging(self):
-        send_msg(self.uut.message_queue,
-                 self.uut.TIMEOUT,
+        send_msg(self.message_queue,
+                 0,
                  LOG_LEVEL.DEBUG,
                  "test",
                  "messag",
                  delimiter="-",
                  end="e")
-        send_msg(self.uut.message_queue,
-                 self.uut.TIMEOUT,
+        send_msg(self.message_queue,
+                 0,
                  LOG_LEVEL.WARNING,
                  "test",
                  "messag",
                  delimiter="-",
                  end="e")
-        send_msg(self.uut.message_queue,
-                 self.uut.TIMEOUT,
+        send_msg(self.message_queue,
+                 0,
                  LOG_LEVEL.ERROR,
                  "test",
                  "messag",
@@ -174,7 +159,15 @@ class BearRunnerUnitTest(unittest.TestCase):
         self.file_name_queue.put("t")
         self.file_dict["t"] = []
 
-        self.uut.run()
+        run(self.file_name_queue,
+            self.local_bear_list,
+            self.global_bear_list,
+            self.global_bear_queue,
+            self.file_dict,
+            self.local_result_dict,
+            self.global_result_dict,
+            self.message_queue,
+            self.control_queue)
 
         try:
             while True:
@@ -189,7 +182,15 @@ class BearRunnerUnitTest(unittest.TestCase):
         self.file_name_queue.put("t")
         self.file_dict["t"] = []
 
-        self.uut.run()
+        run(self.file_name_queue,
+            self.local_bear_list,
+            self.global_bear_list,
+            self.global_bear_queue,
+            self.file_dict,
+            self.local_result_dict,
+            self.global_result_dict,
+            self.message_queue,
+            self.control_queue)
 
     def test_strange_bear(self):
         self.local_bear_list.append(UnexpectedBear1(self.settings,
@@ -199,7 +200,15 @@ class BearRunnerUnitTest(unittest.TestCase):
         self.file_name_queue.put("t")
         self.file_dict["t"] = []
 
-        self.uut.run()
+        run(self.file_name_queue,
+            self.local_bear_list,
+            self.global_bear_list,
+            self.global_bear_queue,
+            self.file_dict,
+            self.local_result_dict,
+            self.global_result_dict,
+            self.message_queue,
+            self.control_queue)
 
         expected_messages = [LOG_LEVEL.DEBUG,
                              LOG_LEVEL.ERROR,
@@ -232,15 +241,6 @@ d
         self.global_result_dict = manager.dict()
         self.message_queue = queue.Queue()
         self.control_queue = queue.Queue()
-        self.uut = BearRunner(self.file_name_queue,
-                              self.local_bear_list,
-                              self.global_bear_list,
-                              self.global_bear_queue,
-                              self.file_dict,
-                              self.local_result_dict,
-                              self.global_result_dict,
-                              self.message_queue,
-                              self.control_queue)
 
         self.file1 = "file1"
         self.file2 = "arbitrary"
@@ -261,7 +261,15 @@ d
         self.global_bear_queue.put(1)
 
     def test_run(self):
-        self.uut.run()
+        run(self.file_name_queue,
+            self.local_bear_list,
+            self.global_bear_list,
+            self.global_bear_queue,
+            self.file_dict,
+            self.local_result_dict,
+            self.global_result_dict,
+            self.message_queue,
+            self.control_queue)
 
         expected_messages = [LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING,
