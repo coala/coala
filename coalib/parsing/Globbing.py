@@ -1,8 +1,25 @@
-import fnmatch
+"""
+Several methods to match and collect filenames with glob statements.
+Our glob syntax is at follows:
+
+    **      matches everything
+    *       matches everything but '/' on Linux, '/' and '\\' on Windows
+    ?       matches any single character
+    [seq]   matches any character in seq
+    [!seq]  matches any char not in seq
+    \\      escapes the following character and matches it as is
+"""
+
 import os
+import platform
+import re
 
 from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import N_
+from coalib.parsing.StringProcessing import position_is_escaped
+from coalib.parsing.StringProcessing import unescape
+from coalib.parsing.StringProcessing import unescaped_search_for
+from coalib.parsing.StringProcessing import unescaped_split
 
 
 def _make_selector(pattern_parts):
@@ -19,7 +36,7 @@ def _make_selector(pattern_parts):
     child_parts = pattern_parts[1:]
     if pat == '**':
         cls = _RecursiveWildcardSelector
-    elif '**' in pat:
+    elif _unescaped_find(pat, '**') >= 0:
         raise ValueError(N_("Invalid pattern: '**' can only be "
                             "an entire path component"))
     elif _is_wildcard_pattern(pat):
@@ -34,14 +51,32 @@ def _is_wildcard_pattern(pat):
     Decides whether this pattern needs actual matching using fnmatch, or can
     be looked up directly as part of a path.
     """
-    return "*" in pat or "?" in pat or "[" in pat
+    return _unescaped_find(pat, '*') >= 0 or\
+        _unescaped_find(pat, '?') >= 0 or\
+        _unescaped_find(pat, '[') >= 0
+
+
+def _unescaped_find(string, pattern):
+    try:
+        position = next(unescaped_search_for(pattern, string)).start()
+        return position
+    except StopIteration:
+        return -1
+
+
+def _unescaped_rfind(string, pattern):
+    try:
+        position = list(unescaped_search_for(pattern, string))[-1].start()
+        return position
+    except IndexError:
+        return -1
 
 
 @yield_once
-def _iter_or_combinations(pattern,
-                          opening_delimiter="(",
-                          closing_delimiter=")",
-                          separator="|"):
+def _iter_alternatives(pattern,
+                       opening_delimiter="(",
+                       closing_delimiter=")",
+                       separator="|"):
     """
     A pattern can contain an "or" in the form of (a|b|c). This function will
     iterate through all possible combinations. Nesting is supported
@@ -65,14 +100,15 @@ def _iter_or_combinations(pattern,
     # Taking the leftmost closing delimiter and the rightmost opening delimiter
     # left of it ensures that the delimiters belong together and the pattern is
     # parsed correctly from the most nested section outwards.
-    closing_pos = pattern.find(closing_delimiter)
-    opening_pos = pattern[:closing_pos].rfind(opening_delimiter)
+    closing_pos = _unescaped_find(pattern, closing_delimiter)
+    opening_pos = _unescaped_rfind(pattern[:closing_pos], opening_delimiter)
 
     if (
             (closing_pos == -1) != (opening_pos == -1) or
             # Special case that gets overlooked because opening_delimiter
             # is only being looked for in pattern[:-1] when closing_pos == -1
-            (closing_pos == -1 and pattern.endswith(opening_delimiter))):
+            (closing_pos == -1 and pattern.endswith(opening_delimiter)) and
+            not position_is_escaped(pattern, -1)):
         raise ValueError(N_("Parentheses of pattern are not matching"))
 
     if -1 not in (opening_pos, closing_pos):  # parentheses in pattern
@@ -82,26 +118,97 @@ def _iter_or_combinations(pattern,
         # This loop iterates through all possible combinations that can be
         # inserted in place of the first innermost pair of parentheses:
         # "(a|b)(c|d)" yields "a", then "b"
-        for combination in _iter_or_combinations(parenthesized,
-                                                 opening_delimiter,
-                                                 closing_delimiter,
-                                                 separator):
+        for combination in _iter_alternatives(parenthesized,
+                                              opening_delimiter,
+                                              closing_delimiter,
+                                              separator):
             new_pattern = prefix + combination + postfix
             # This loop iterates through all possible combinations for the new
             # whole pattern, which has it's first pair of parentheses replaced
             # already:
-            # "a(cd)" (first call) yields "ac", then "ad",
-            # "b(cd)" (second call) yields "bc" and "bd"
-            for new_combination in _iter_or_combinations(new_pattern,
-                                                         opening_delimiter,
-                                                         closing_delimiter,
-                                                         separator):
+            # "a(c|d)" (first call) yields "ac", then "ad",
+            # "b(c|d)" (second call) yields "bc" and "bd"
+            for new_combination in _iter_alternatives(new_pattern,
+                                                      opening_delimiter,
+                                                      closing_delimiter,
+                                                      separator):
                 yield new_combination
-    elif separator in pattern:
-        for choice in pattern.split(separator):
+    elif _unescaped_find(pattern, separator) >= 0:
+        for choice in unescaped_split(separator, pattern):
             yield choice
     else:
         yield pattern
+
+
+def translate_glob_2_re(pattern):
+    """
+    Translates a glob pattern to a regular expression.
+    CAUTION: this function does not handle alternatives such as '(a|b)'
+             you need to evaluate them first, using _iter_or_combinations
+    """
+
+    index, length = 0, len(pattern)
+    regex = ''
+    while index < length:
+
+        # note: char is 1 behind index
+        char = pattern[index]
+        index = index+1
+
+        # the next character is escaped and taken as is
+        if char == '\\':
+            char = pattern[index]
+            index = index+1
+            regex = regex + re.escape(char)
+
+        elif char == '*':
+            # ** matches everything
+            if index < length and pattern[index] == '*':
+                regex = regex + '.*'
+                index = index + 1
+
+            # * matches everything but '/' and r'\\' on Windows
+            elif platform.system() == 'Windows':            # pragma: nocover
+                regex = regex + '(?!.*/|.*\\\\\\\\).*'      # pragma: nocover
+
+            # * matches everything but '/' on Linux/Unix
+            else:                                           # pragma: nocover
+                regex = regex + '[^/]*'                     # pragma: nocover
+
+        # ? matches any single character
+        elif char == '?':
+            regex = regex + '.'
+
+        # [seq] matches any one of seq and [!seq] matches any one not in seq
+        elif char == '[':
+            position = index  # index: one after '['
+            if position < length and pattern[position] == '!':
+                position = position+1
+            if position < length and pattern[position] == ']':
+                position = position+1  # no seq inside brackets
+            while position < length and pattern[position] != ']':
+                position = position+1  # position one after closing bracket
+
+            # sequence has no end -> '[' interpreted as single char
+            if position >= length:
+                regex = regex + '\\['
+
+            # seq = sequence inside brackets
+            else:
+                seq = pattern[index:position].replace('\\', '\\\\')
+                index = position+1
+                if seq[0] == '!':
+                    seq = '^' + seq[1:]
+                elif seq[0] == '^':
+                    seq = '\\' + seq
+                regex = "{}[{}]".format(regex, seq)
+
+        # usual character
+        else:
+            regex = regex + re.escape(char)
+
+    # (?ms): flags for re.compile(): m = multi-line, s = dot matches all
+    return regex + '\\Z(?ms)'
 
 
 class _Selector:
@@ -121,7 +228,7 @@ class _Selector:
         return self._collect(path)
 
     def _collect(self, paths):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
 
 class _TerminatingSelector:
@@ -139,7 +246,7 @@ class _PathSelector(_Selector):
     using fnmatch.
     """
     def __init__(self, path, child_parts):
-        self.path = path
+        self.path = unescape(path)
         _Selector.__init__(self, child_parts)
 
     def _collect(self, path):
@@ -161,7 +268,7 @@ class _WildcardSelector(_Selector):
     def _collect(self, path):
         if os.path.isdir(path):
             for file_or_dir in os.listdir(path):
-                if fnmatch.fnmatch(file_or_dir, self.pat):
+                if fnmatch(file_or_dir, self.pat):
                     file_or_dir = os.path.join(path, file_or_dir)
                     for result in self.successor.collect(file_or_dir):
                         yield result
@@ -196,11 +303,14 @@ def iglob(pattern, files=True, dirs=True):
     if pattern == "" or (not files and not dirs):
         raise StopIteration()
 
-    for pat in _iter_or_combinations(pattern):
+    for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
         # extract drive letter, if possible:
+        # this *should* work on windows, even when the directory seperators
+        # are doubled (escaped)
         drive_letter, pat = os.path.splitdrive(pat)
         # "/a/b.py" -> ['', 'a', 'b.py'] or \\a\\b.py -> ['', 'a', 'b.py']
-        pattern_parts = pat.split(os.sep)
+        pattern_parts = list(unescaped_split(os.sep, pat))
         # replace first pattern part with absolute path root if empty
         if pat.startswith(os.sep):
             pattern_parts[0] = drive_letter and drive_letter + "\\" or os.sep
@@ -225,3 +335,22 @@ def glob(pattern, files=True, dirs=True):
     :return:        List of all files matching the pattern
     """
     return list(iglob(pattern, files, dirs))
+
+
+def fnmatch(name, pattern):
+    """
+    Tests whether name matches the pattern
+
+    :param name:       Filename that is being checked.
+    :param pattern:    Pattern that matches the filename.
+    :return:           True if name matches the pattern, False otherwise
+    """
+    name = os.path.normcase(name)  # only if OS is case insensitive
+    for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
+        pat = os.path.normcase(pat)
+        match = re.compile(translate_glob_2_re(pat)).match
+        if match(name) is not None:
+            return True
+
+    return False
