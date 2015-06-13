@@ -384,6 +384,51 @@ def get_next_global_bear(timeout,
     return bear, bear.__class__.__name__, dependency_results
 
 
+def run_local_bears(filename_queue,
+                    message_queue,
+                    timeout,
+                    file_dict,
+                    local_bear_list,
+                    local_result_dict,
+                    control_queue):
+    """
+    Run local bears on all the files given.
+
+    :param filename_queue:    queue (read) of file names to check with
+                              local bears.
+    :param message_queue:     A queue that contains messages of type
+                              errors/warnings/debug statements to be printed
+                              in the Log.
+    :param timeout:           The queue blocks at most timeout seconds for a
+                              free slot to execute the put operation on. After
+                              the timeout it returns queue Full exception.
+    :param file_dict:         Dictionary that contains contents of files.
+    :param local_bear_list:   List of local bears to run.
+    :param local_result_dict: A Manager.dict that will be used to store local
+                              bear results. A list of all local bear results
+                              will be stored with the filename as key.
+    :param control_queue:     If any result gets written to the result_dict a
+                              tuple containing a CONTROL_ELEMENT (to indicate
+                              what kind of event happened) and either a bear
+                              name(for global results) or a file name to
+                              indicate the result will be put to the queue.
+    """
+    try:
+        while True:
+            filename = filename_queue.get(timeout=timeout)
+            run_local_bears_on_file(message_queue,
+                                    timeout,
+                                    file_dict,
+                                    local_bear_list,
+                                    local_result_dict,
+                                    control_queue,
+                                    filename)
+            if hasattr(filename_queue, "task_done"):
+                filename_queue.task_done()
+    except queue.Empty:
+        return
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -465,27 +510,17 @@ class BearRunner(multiprocessing.Process):
         self._local_result_list = []
 
     def run(self):
-        self.run_local_bears()
+        run_local_bears(self.filename_queue,
+                        self.message_queue,
+                        self.TIMEOUT,
+                        self.file_dict,
+                        self.local_bear_list,
+                        self.local_result_dict,
+                        self.control_queue)
         self.control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
         self.run_global_bears()
         self.control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-    def run_local_bears(self):
-        try:
-            while True:
-                filename = self.filename_queue.get(timeout=self.TIMEOUT)
-                run_local_bears_on_file(self.message_queue,
-                                        self.TIMEOUT,
-                                        self.file_dict,
-                                        self.local_bear_list,
-                                        self.local_result_dict,
-                                        self.control_queue,
-                                        filename)
-                if hasattr(self.filename_queue, "task_done"):
-                    self.filename_queue.task_done()
-        except queue.Empty:
-            return
 
     def run_global_bears(self):
         try:
