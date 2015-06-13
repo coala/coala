@@ -320,6 +320,37 @@ def run_local_bears_on_file(message_queue,
     control_queue.put((CONTROL_ELEMENT.LOCAL, filename))
 
 
+def get_global_dependency_results(global_result_dict, bear_instance):
+    """
+    This method gets all the results originating from the dependencies of a
+    bear_instance. Each bear_instance may or may not have dependencies.
+
+    :param global_result_dict: The list of results out of which the dependency
+                               results are picked.
+    :return:                   None if bear has no dependencies, False if
+                               dependencies are not met, the dependency dict
+                               otherwise.
+    """
+    try:
+        deps = bear_instance.get_dependencies()
+        if deps == []:
+            return None
+    except AttributeError:
+        # When this occurs we have an invalid bear and a warning will be
+        # emitted later.
+        return None
+
+    dependency_results = {}
+    for dep in deps:
+        depname = dep.__name__
+        if depname not in global_result_dict:
+            return False
+
+        dependency_results[depname] = global_result_dict[depname]
+
+    return dependency_results
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -423,32 +454,6 @@ class BearRunner(multiprocessing.Process):
         except queue.Empty:
             return
 
-    def _get_global_dependency_results(self, bear_instance):
-        """
-        Retreives dependency results for a global bear.
-
-        :return: None if bear has no dependencies, False if dependencies are
-        not met, the dependency dict otherwise.
-        """
-        try:
-            deps = bear_instance.get_dependencies()
-            if deps == []:
-                return None
-        except AttributeError:
-            # When this occurs we have an invalid bear and a warning will be
-            # emitted later.
-            return None
-
-        dependency_results = {}
-        for dep in deps:
-            depname = dep.__name__
-            if depname not in self.global_result_dict:
-                return False
-
-            dependency_results[depname] = self.global_result_dict[depname]
-
-        return dependency_results
-
     def _get_next_global_bear(self):
         """
         Retrieves the next global bear.
@@ -461,7 +466,8 @@ class BearRunner(multiprocessing.Process):
             bear_id = self.global_bear_queue.get(timeout=self.TIMEOUT)
             bear = self.global_bear_list[bear_id]
 
-            dependency_results = self._get_global_dependency_results(bear)
+            dependency_results = \
+                get_global_dependency_results(self.global_result_dict, bear)
             if dependency_results is False:
                 self.global_bear_queue.put(bear_id)
 
