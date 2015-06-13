@@ -145,6 +145,37 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
                             kwargs)
 
 
+def get_local_dependency_results(local_result_list, bear_instance):
+    """
+    This method gets all the results originating from the dependencies of a
+    bear_instance. Each bear_instance may or may not have dependencies.
+
+    :param local_result_list: The list of results out of which the dependency
+                              results are picked.
+    :param bear_instance:     The instance of a local bear to get the
+                              dependencies from.
+    :return:                  Return none if their are no dependencies for the
+                              bear. Else return a dictionary containing
+                              dependency results.
+    """
+    deps = bear_instance.get_dependencies()
+    if deps == []:
+        return None
+
+    dependency_results = {}
+    dep_strings = []
+    for dep in deps:
+        dep_strings.append(dep.__name__)
+
+    for result in local_result_list:
+        if result.origin in dep_strings:
+            results = dependency_results.get(result.origin, [])
+            results.append(result)
+            dependency_results[result.origin] = results
+
+    return dependency_results
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -326,24 +357,6 @@ class BearRunner(multiprocessing.Process):
         self.local_result_dict[filename] = self._local_result_list
         self.control_queue.put((CONTROL_ELEMENT.LOCAL, filename))
 
-    def _get_local_dependency_results(self, bear_instance):
-        deps = bear_instance.get_dependencies()
-        if deps == []:
-            return None
-
-        dependency_results = {}
-        dep_strings = []
-        for dep in deps:
-            dep_strings.append(dep.__name__)
-
-        for result in self._local_result_list:
-            if result.origin in dep_strings:
-                results = dependency_results.get(result.origin, [])
-                results.append(result)
-                dependency_results[result.origin] = results
-
-        return dependency_results
-
     def __run_local_bear(self, bear_instance, filename):
         if not isinstance(bear_instance, LocalBear) or \
                 bear_instance.kind() != BEAR_KIND.LOCAL:
@@ -357,7 +370,8 @@ class BearRunner(multiprocessing.Process):
             return None
 
         kwargs = {"dependency_results":
-                      self._get_local_dependency_results(bear_instance)}
+                      get_local_dependency_results(self._local_result_list,
+                                                   bear_instance)}
         return run_bear(self.message_queue,
                         self.TIMEOUT,
                         bear_instance,
