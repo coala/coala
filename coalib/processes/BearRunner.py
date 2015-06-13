@@ -354,7 +354,7 @@ class BearRunner(multiprocessing.Process):
         try:
             while True:
                 filename = self.filename_queue.get(timeout=self.TIMEOUT)
-                self.__run_local_bears(filename)
+                self.run_local_bears_on_file(filename)
                 if hasattr(self.filename_queue, "task_done"):
                     self.filename_queue.task_done()
         except queue.Empty:
@@ -423,7 +423,7 @@ class BearRunner(multiprocessing.Process):
         except queue.Empty:
             return
 
-    def __run_local_bears(self, filename):
+    def run_local_bears_on_file(self, filename):
         if filename not in self.file_dict:
             send_msg(self.message_queue,
                      self.TIMEOUT,
