@@ -263,6 +263,63 @@ def run_global_bear(message_queue,
                     **kwargs)
 
 
+def run_local_bears_on_file(message_queue,
+                            timeout,
+                            file_dict,
+                            local_bear_list,
+                            local_result_dict,
+                            control_queue,
+                            filename):
+    """
+    This method runs a list of local bears on one file.
+
+    :param message_queue:     A queue that contains messages of type
+                              errors/warnings/debug statements to be printed
+                              in the Log.
+    :param timeout:           The queue blocks at most timeout seconds for a
+                              free slot to execute the put operation on. After
+                              the timeout it returns queue Full exception.
+    :param file_dict:         Dictionary that contains contents of files.
+    :param local_bear_list:   List of local bears to run on file.
+    :param local_result_dict: A Manager.dict that will be used to store local
+                              bear results. A list of all local bear results
+                              will be stored with the filename as key.
+    :param control_queue:     If any result gets written to the result_dict a
+                              tuple containing a CONTROL_ELEMENT (to indicate
+                              what kind of event happened) and either a bear
+                              name(for global results) or a file name to
+                              indicate the result will be put to the queue.
+    :param filename:          The name of file on which to run the bears.
+    """
+    if filename not in file_dict:
+        send_msg(message_queue,
+                 timeout,
+                 LOG_LEVEL.ERROR,
+                 _("An internal error occurred."),
+                 StringConstants.THIS_IS_A_BUG)
+        send_msg(message_queue,
+                 timeout,
+                 LOG_LEVEL.DEBUG,
+                 _("The given file through the queue is not in the file "
+                   "dictionary."))
+
+        return
+
+    local_result_list = []
+    for bear_instance in local_bear_list:
+        r = run_local_bear(message_queue,
+                           timeout,
+                           local_result_list,
+                           file_dict,
+                           bear_instance,
+                           filename)
+        if r is not None:
+            local_result_list.extend(r)
+
+    local_result_dict[filename] = local_result_list
+    control_queue.put((CONTROL_ELEMENT.LOCAL, filename))
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -354,7 +411,13 @@ class BearRunner(multiprocessing.Process):
         try:
             while True:
                 filename = self.filename_queue.get(timeout=self.TIMEOUT)
-                self.run_local_bears_on_file(filename)
+                run_local_bears_on_file(self.message_queue,
+                                        self.TIMEOUT,
+                                        self.file_dict,
+                                        self.local_bear_list,
+                                        self.local_result_dict,
+                                        self.control_queue,
+                                        filename)
                 if hasattr(self.filename_queue, "task_done"):
                     self.filename_queue.task_done()
         except queue.Empty:
@@ -422,32 +485,3 @@ class BearRunner(multiprocessing.Process):
                     self.global_bear_queue.task_done()
         except queue.Empty:
             return
-
-    def run_local_bears_on_file(self, filename):
-        if filename not in self.file_dict:
-            send_msg(self.message_queue,
-                     self.TIMEOUT,
-                     LOG_LEVEL.ERROR,
-                     _("An internal error occurred."),
-                     StringConstants.THIS_IS_A_BUG)
-            send_msg(self.message_queue,
-                     self.TIMEOUT,
-                     LOG_LEVEL.DEBUG,
-                     _("The given file through the queue is not in the file "
-                       "dictionary."))
-
-            return
-
-        self._local_result_list = []
-        for bear_instance in self.local_bear_list:
-            r = run_local_bear(self.message_queue,
-                               self.TIMEOUT,
-                               self._local_result_list,
-                               self.file_dict,
-                               bear_instance,
-                               filename)
-            if r is not None:
-                self._local_result_list.extend(r)
-
-        self.local_result_dict[filename] = self._local_result_list
-        self.control_queue.put((CONTROL_ELEMENT.LOCAL, filename))
