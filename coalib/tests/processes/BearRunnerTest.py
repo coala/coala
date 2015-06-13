@@ -121,27 +121,9 @@ class BearRunnerUnitTest(unittest.TestCase):
                  "messag",
                  delimiter="-",
                  end="e")
-        send_msg(self.message_queue,
-                 0,
-                 LOG_LEVEL.WARNING,
-                 "test",
-                 "messag",
-                 delimiter="-",
-                 end="e")
-        send_msg(self.message_queue,
-                 0,
-                 LOG_LEVEL.ERROR,
-                 "test",
-                 "messag",
-                 delimiter="-",
-                 end="e")
 
         self.assertEqual(self.message_queue.get(),
                          LogMessage(LOG_LEVEL.DEBUG, "test-message"))
-        self.assertEqual(self.message_queue.get(),
-                         LogMessage(LOG_LEVEL.WARNING, "test-message"))
-        self.assertEqual(self.message_queue.get(),
-                         LogMessage(LOG_LEVEL.ERROR, "test-message"))
 
     def test_dependencies(self):
         self.local_bear_list.append(SimpleBear(self.settings,
