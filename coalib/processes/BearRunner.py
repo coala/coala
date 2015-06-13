@@ -429,6 +429,52 @@ def run_local_bears(filename_queue,
         return
 
 
+def run_global_bears(message_queue,
+                     timeout,
+                     global_bear_queue,
+                     global_bear_list,
+                     global_result_dict,
+                     control_queue):
+    """
+    Run all global bears.
+
+    :param message_queue:      A queue that contains messages of type
+                               errors/warnings/debug statements to be printed
+                               in the Log.
+    :param timeout:            The queue blocks at most timeout seconds for a
+                               free slot to execute the put operation on. After
+                               the timeout it returns queue Full exception.
+    :param global_bear_queue:  queue (read, write) of indexes of global bear
+                               instances in the global_bear_list.
+    :param global_bear_list:   list of global bear instances
+    :param global_result_dict: A Manager.dict that will be used to store global
+                               results. The list of results of one global bear
+                               will be stored with the bear name as key.
+    :param control_queue:      If any result gets written to the result_dict a
+                               tuple containing a CONTROL_ELEMENT (to indicate
+                               what kind of event happened) and either a bear
+                               name(for global results) or a file name to
+                               indicate the result will be put to the queue.
+    """
+    try:
+        while True:
+            bear, bearname, dep_results = \
+                get_next_global_bear(timeout,
+                                     global_bear_queue,
+                                     global_bear_list,
+                                     global_result_dict)
+            result = run_global_bear(message_queue, timeout, bear, dep_results)
+            if result:
+                global_result_dict[bearname] = result
+                control_queue.put((CONTROL_ELEMENT.GLOBAL, bearname))
+            else:
+                global_result_dict[bearname] = None
+            if hasattr(global_bear_queue, "task_done"):
+                global_bear_queue.task_done()
+    except queue.Empty:
+        return
+
+
 class BearRunner(multiprocessing.Process):
     def __init__(self,
                  file_name_queue,
@@ -519,28 +565,10 @@ class BearRunner(multiprocessing.Process):
                         self.control_queue)
         self.control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
-        self.run_global_bears()
+        run_global_bears(self.message_queue,
+                         self.TIMEOUT,
+                         self.global_bear_queue,
+                         self.global_bear_list,
+                         self.global_result_dict,
+                         self.control_queue)
         self.control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-    def run_global_bears(self):
-        try:
-            while True:
-                bear, bearname, dep_results = \
-                    get_next_global_bear(self.TIMEOUT,
-                                         self.global_bear_queue,
-                                         self.global_bear_list,
-                                         self.global_result_dict)
-                result = run_global_bear(self.message_queue,
-                                         self.TIMEOUT,
-                                         bear,
-                                         dep_results)
-                if result:
-                    self.global_result_dict[bearname] = result
-                    self.control_queue.put((CONTROL_ELEMENT.GLOBAL,
-                                            bearname))
-                else:
-                    self.global_result_dict[bearname] = None
-                if hasattr(self.global_bear_queue, "task_done"):
-                    self.global_bear_queue.task_done()
-        except queue.Empty:
-            return
