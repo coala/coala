@@ -69,7 +69,7 @@ class CountVector:
         :return:      A float value bigger or equal than the difference
                       between self and other.
         """
-        return sum(max(x, y)**2 for x, y in zip(self, other))
+        return sqrt(sum(max(x, y)**2 for x, y in zip(self, other)))
 
     def difference(self, other):
         """

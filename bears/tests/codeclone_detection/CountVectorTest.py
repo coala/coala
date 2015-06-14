@@ -128,11 +128,11 @@ class CountVectorTest(unittest.TestCase):
             ([], [], 0),
             ([0], [0], 0),
             ([1], [1], 1),
-            ([100], [100], 10000),
+            ([100], [100], 100),
 
-            ([0], [100], 10000),
+            ([0], [100], 100),
             ([0], [1], 1),
-            ([0, 1], [1, 0], 2)]
+            ([0, 1], [1, 0], sqrt(2))]
 
         for elem in count_vector_difference_matrix:
             self.check_difference(*elem, diff_function="maxabs")
