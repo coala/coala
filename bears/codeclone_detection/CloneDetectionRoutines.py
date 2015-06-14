@@ -113,4 +113,4 @@ def compare_functions(cm1, cm2):  # pragma: no cover
 
     # If max_sum is zero diff_sum should be zero so division by zero can't
     # occur here.
-    return diff_sum/max_sum
+    return (diff_sum/max_sum) * ((3*max_sum+1)/(4*max_sum))
