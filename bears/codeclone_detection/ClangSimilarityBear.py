@@ -23,6 +23,27 @@ counting_condition_dict = typed_dict(
     float,
     1)
 
+default_cc_dict = counting_condition_dict(StringConverter(
+    """
+used: 0.0,
+third_level_loop_content: 1.0,
+second_level_loop_content: 1.0,
+returned: 0.0,
+member_accessed: 1.0,
+loop_content: 0.4,
+is_param: 0.0,
+is_condition: 0.8,
+is_called: 0.0,
+is_call_param: 1.0,
+is_assigner: 0.2,
+is_assignee: 0.5,
+in_third_level_condition: 1.0,
+in_sum: 1.8,
+in_second_level_condition: 1.2,
+in_product: 0.8,
+in_condition: 1.0,
+in_binary_operation: 1.0"""))
+
 
 # Coverage cannot be measured because this is in another process
 def get_difference(args):  # pragma: no cover
@@ -43,27 +64,7 @@ def get_difference(args):  # pragma: no cover
 
 class ClangSimilarityBear(GlobalBear):
     def run(self,
-            condition_list: counting_condition_dict=
-                counting_condition_dict(StringConverter(
-                    """
-used: 0.0,
-third_level_loop_content: 1.0,
-second_level_loop_content: 1.0,
-returned: 0.0,
-member_accessed: 1.0,
-loop_content: 0.4,
-is_param: 0.0,
-is_condition: 0.8,
-is_called: 0.0,
-is_call_param: 1.0,
-is_assigner: 0.2,
-is_assignee: 0.5,
-in_third_level_condition: 1.0,
-in_sum: 1.8,
-in_second_level_condition: 1.2,
-in_product: 0.8,
-in_condition: 1.0,
-in_binary_operation: 1.0"""))):
+            condition_list: counting_condition_dict=default_cc_dict):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
