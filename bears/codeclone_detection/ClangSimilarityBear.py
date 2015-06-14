@@ -45,23 +45,25 @@ class ClangSimilarityBear(GlobalBear):
     def run(self,
             condition_list: counting_condition_dict=
                 counting_condition_dict(StringConverter(
-                    "returned,"
-                    "is_condition,"
-                    "in_condition,"
-                    "in_second_level_condition,"
-                    "in_third_level_condition,"
-                    "is_assignee,"
-                    "is_assigner,"
-                    "loop_content,"
-                    "second_level_loop_content,"
-                    "third_level_loop_content,"
-                    "is_param,"
-                    "in_sum,"
-                    "in_product,"
-                    "in_binary_operation,"
-                    "member_accessed,"
-                    "is_called,"
-                    "is_call_param"))):
+                    """
+used: 0.0,
+third_level_loop_content: 1.0,
+second_level_loop_content: 1.0,
+returned: 0.0,
+member_accessed: 1.0,
+loop_content: 1.2,
+is_param: 1.0,
+is_condition: 0.0,
+is_called: 1.0,
+is_call_param: 1.0,
+is_assigner: 0.0,
+is_assignee: 1.0,
+in_third_level_condition: 1.0,
+in_sum: 1.0,
+in_second_level_condition: 1.0,
+in_product: 1.0,
+in_condition: 1.0,
+in_binary_operation: 1.0"""))):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
