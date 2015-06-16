@@ -49,8 +49,9 @@ information in setup.py for current maintainers.
 Build status
 ------------
 
-[![Linux Build Status](https://travis-ci.org/coala-analyzer/coala.svg?branch=master)](https://travis-ci.org/coala-analyzer/coala)
-(Linux build and test, python 3.2, 3.3, 3.4)
+[![Linux Build Status](https://circleci.com/gh/coala-analyzer/coala.svg?style=svg)](https://circleci.com/gh/coala-analyzer/coala)
+(Linux build and test, python 3.4 (node 0), 3.3 (node 1), 3.2 (node2), test
+skip test (node 3))
 
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/jevcxfo48mc4e09p/branch/master?svg=true)](https://ci.appveyor.com/project/sils1297/coala/branch/master)
 (Windows build and test, python 3.3, 3.4)
