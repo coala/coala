@@ -21,3 +21,9 @@ test:
   post:
     - sh .misc/.success.coverage.sh:
         parallel: true
+
+deployment:
+  translation:
+    branch: master
+    commands:
+      - sh .misc/.deploy.zanata.sh

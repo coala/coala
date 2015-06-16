@@ -18,6 +18,3 @@ script:
   - dbus-launch python3 ./run_tests.py --disallow-test-skipping
   - python3 setup.py install
   - coala -c .misc/.ci_coafile
-
-after_success:
-  - sh .misc/.success.sh
