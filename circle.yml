@@ -1,12 +1,12 @@
-machine:
-  python:
-    version: 3.4.2
-
 dependencies:
   pre:
     # Stop some services that circle-ci starts on it's own that we don't need
     - sudo service mysql stop
     - sudo service mongodb stop
+    # Set the python version
+    - sh .misc/choose_python_version.sh
+    # Disable the virtuelenv circleci spawns on it's own
+    - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
     # Running tests without dependencies should work, this tests the skipping ability
     - python run_tests.py
   override:
@@ -14,5 +14,7 @@ dependencies:
 
 test:
   override:
-    - python run_tests.py -s
-    - ./coala -c .misc/.ci_coafile
+    - python run_tests.py -s:
+        parallel: true
+    - ./coala -c .misc/.ci_coafile:
+        parallel: true

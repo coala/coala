@@ -29,7 +29,12 @@ rm dbus-python.tar.gz
 
 mkdir -p python-tmpenv
 
-python_virtualenv=$VIRTUAL_ENV
+if [ "$CIRCLECI" = "true" ] ; then
+  python_virtualenv=`pyenv prefix`
+else
+  python_virtualenv=$VIRTUAL_ENV
+fi
+
 python_tmpenv=`pwd`/python-tmpenv
 
 cd dbus-python-1.2.0
