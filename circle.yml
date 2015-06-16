@@ -12,7 +12,10 @@ dependencies:
 
 test:
   override:
-    - if [ $CIRCLE_NODE_INDEX == 3 ] ; then python run_tests.py; else python run_tests.py -s; fi:
+    - sh .misc/run_tests.sh:
         parallel: true
     - ./coala -c .misc/.ci_coafile:
+        parallel: true
+  post:
+    - sh .misc/.success.coverage.sh:
         parallel: true

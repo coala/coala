@@ -6,7 +6,7 @@ if [ "$CIRCLECI" = "true" ] && [ $CIRCLE_NODE_INDEX = 3 ]; then
   exit 0
 fi
 
-if python --version | grep 3\.4 && [ "$TRAVIS" = "true" ] ; then
+if [ "$CIRCLECI" = "true" ] && [ $CIRCLE_NODE_INDEX = 0 ] ; then
   pip install coveralls codecov
 fi
 
