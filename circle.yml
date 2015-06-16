@@ -7,14 +7,12 @@ dependencies:
     - sh .misc/choose_python_version.sh
     # Disable the virtuelenv circleci spawns on it's own
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
-    # Running tests without dependencies should work, this tests the skipping ability
-    - python run_tests.py
   override:
     - sh .misc/.install.sh
 
 test:
   override:
-    - python run_tests.py -s:
+    - if [ $CIRCLE_NODE_INDEX == 3 ] ; then python run_tests.py; else python run_tests.py -s; fi:
         parallel: true
     - ./coala -c .misc/.ci_coafile:
         parallel: true

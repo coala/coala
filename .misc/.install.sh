@@ -1,3 +1,8 @@
+if [ "$CIRCLECI" = "true" ] && [ $CIRCLE_NODE_INDEX = 3 ]; then
+  # Don't install any deps for container 3 in circleci
+  exit 0
+fi
+
 if python --version | grep 3\.4 && [ "$TRAVIS" = "true" ] ; then
   pip install coveralls codecov
 fi
