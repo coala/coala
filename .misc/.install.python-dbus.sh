@@ -1,25 +1,7 @@
 set -x
 set -e
 
-echo Trying to find python version...
-
-python_version=`python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))'`
-
-case "$python_version" in
-  "3.4"*)
-    system_python=python3.4
-    ;;
-  "3.3"*)
-    system_python=python3.3
-    ;;
-  "3.2"*)
-    system_python=python3.2
-    ;;
-  *)
-    echo Python version was not understood. It was detected as - $python_version
-    ;;
-esac
-
+. "$(dirname "$0")"/setup_env_vars.sh
 sudo apt-get install ${system_python}-dev libdbus-glib-1-dev
 
 echo Downloading python-dbus...
