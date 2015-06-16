@@ -14,7 +14,9 @@ test:
   override:
     - sh .misc/run_tests.sh:
         parallel: true
-    - ./coala -c .misc/.ci_coafile:
+    - python setup.py install:
+        parallel: true
+    - coala -c .misc/.ci_coafile:
         parallel: true
   post:
     - sh .misc/.success.coverage.sh:
