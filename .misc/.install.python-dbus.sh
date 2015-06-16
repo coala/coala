@@ -20,9 +20,7 @@ case "$python_version" in
     ;;
 esac
 
-sudo apt-get install ${system_python}-dev
-
-sh .install.dbus.sh
+sudo apt-get install ${system_python}-dev libdbus-glib-1-dev
 
 echo Downloading python-dbus...
 wget http://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.0.tar.gz -O dbus-python.tar.gz -q
