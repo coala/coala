@@ -4,6 +4,9 @@ machine:
 
 dependencies:
   pre:
+    # Stop some services that circle-ci starts on it's own that we don't need
+    - sudo service mysql stop
+    - sudo service mongodb stop
     # Running tests without dependencies should work, this tests the skipping ability
     - python run_tests.py
   override:
