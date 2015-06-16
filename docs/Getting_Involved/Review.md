@@ -26,19 +26,27 @@ The review process for coala is as follows:
 
 # Continous Integration
 
-It is not allowed to merge a pull request into master if one of the following
-applies:
+It is only allowed to merge a pull request into master if all of the following
+apply:
 
- * The build/tests must pass on all services. (travis, scrutinizer,
-   circleci, appveyor)
- * codacy may not yield any issues.
- * The branch coverage goes down. (codecov.io)
- * The statement coverage is not 100%. (coveralls)
+ * The build/tests pass on all services. (circleci, appveyor)
+ * Scrutinizer shows passed. (That is: no new issues, no new classes with rating
+   D or worse, project quality metric may only get better.)
+ * The branch coverage stays or raises. (codecov.io)
+ * The statement coverage is 100%. (coveralls)
 
 The coverage values may go down by a commit, however this is to be avoided.
 Tests must work for every commit.
 
 Continuous integration is always done for the last commit on a pull request.
+
+## Exceptions
+
+AppVeyor may take a very long time to finish its build. Contact sils1297 on
+gitter if you rely on AppVeyor executing your build timely for merge to get the
+queues cleaned. A PR may however be merged without the AppVeyor build being
+finished if no functional code changes were made to the PR since the last
+successful AppVeyor build.
 
 # Reviewing Commits
 
