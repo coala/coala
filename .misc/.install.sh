@@ -17,6 +17,7 @@ fi
 
 cd .misc
 
+sh .install.python-gi.sh
 sh .install.python-dbus.sh
 
 cd ..
