@@ -1,8 +1,8 @@
 case $CIRCLE_NODE_INDEX in
- 0)
-  echo Using Python 3.4.2...
-  pyenv install -ks 3.4.2
-  pyenv local 3.4.2
+ 1)
+  echo Using Python 3.3.3...
+  pyenv install -ks 3.3.3
+  pyenv local 3.3.3
   ;;
  2)
   echo Using Python 3.2.5...
@@ -14,8 +14,8 @@ case $CIRCLE_NODE_INDEX in
   pyenv local 3.2.5
   ;;
  *)
-  echo Using Python 3.3.3...
-  pyenv install -ks 3.3.3
-  pyenv local 3.3.3
+  echo Using Python 3.4.2...
+  pyenv install -ks 3.4.2
+  pyenv local 3.4.2
   ;;
 esac
