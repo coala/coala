@@ -1,3 +1,6 @@
+set -x
+set -e
+
 if [ "$CIRCLECI" = "true" ] && [ $CIRCLE_NODE_INDEX = 3 ]; then
   # Don't install any deps for container 3 in circleci
   exit 0

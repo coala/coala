@@ -1,3 +1,6 @@
+set -x
+set -e
+
 sudo apt-get install libdbus-glib-1-dev
 
 if [ "$TRAVIS" = "true" ] ; then

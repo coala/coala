@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -x
+set -e
+
 cd ..
 echo '' > locale/coala.pot
 echo Generating new pot file...

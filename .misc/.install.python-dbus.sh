@@ -1,3 +1,6 @@
+set -x
+set -e
+
 echo Trying to find python version...
 
 python_version=`python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))'`

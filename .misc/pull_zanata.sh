@@ -1,3 +1,6 @@
+set -x
+set -e
+
 sh .install.zanata.sh
 
 echo Pulling translations...
