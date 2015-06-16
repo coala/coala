@@ -15,7 +15,7 @@ install:
 
 script:
   # dbus-launch which sets environment variables and starts dbus-daemon
-  - dbus-launch python3 ./run_tests.py --cover --disallow-test-skipping
+  - dbus-launch python3 ./run_tests.py --disallow-test-skipping
   - python3 setup.py install
   - coala -c .misc/.ci_coafile
 
