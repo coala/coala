@@ -18,3 +18,6 @@ case "$python_version" in
     echo Python version was not understood. It was detected as - $python_version
     ;;
 esac
+
+# Python virtualenv
+python_virtualenv=`pyenv prefix`

@@ -10,12 +10,6 @@ echo Unpacking python-dbus...
 tar -zxvf dbus-python.tar.gz > /dev/null
 rm dbus-python.tar.gz
 
-if [ "$CIRCLECI" = "true" ] ; then
-  python_virtualenv=`pyenv prefix`
-else
-  python_virtualenv=$VIRTUAL_ENV
-fi
-
 cd dbus-python-1.2.0
 
 PYTHON=`sudo which ${system_python}` ./configure --prefix=$python_virtualenv
