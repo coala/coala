@@ -15,14 +15,10 @@ The review process for coala is as follows:
    one.
 4. If the commits are not linearly mergeable into master, rebase and go to step
    one.
-5. All commits are acked and fit linearly onto master. The reviewer or
-   submitter may now _fast forward_ the master. Since linear fitting is a
-   prerequisite merging is not going to happen nor allowed.
-
-> **Note**
->
-> You might want to add the option `merge.ff = only` to your
-> gitconfig.
+5. All commits are acked and fit linearly onto master. All continuous
+   integration services (as described below) pass. Anyone with collaborator
+   permission may leave the `@rultor merge` command to get the PR merged
+   automatically.
 
 # Continous Integration
 
@@ -39,14 +35,6 @@ The coverage values may go down by a commit, however this is to be avoided.
 Tests must work for every commit.
 
 Continuous integration is always done for the last commit on a pull request.
-
-## Exceptions
-
-AppVeyor may take a very long time to finish its build. Contact sils1297 on
-gitter if you rely on AppVeyor executing your build timely for merge to get the
-queues cleaned. A PR may however be merged without the AppVeyor build being
-finished if no functional code changes were made to the PR since the last
-successful AppVeyor build.
 
 # Reviewing Commits
 
