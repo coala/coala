@@ -54,7 +54,7 @@ Build status
 skip test (node 3))
 
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/jevcxfo48mc4e09p/branch/master?svg=true)](https://ci.appveyor.com/project/sils1297/coala/branch/master)
-(Windows build and test, python 3.3, 3.4)
+(Windows build and test, 3.4)
 
 [![Codacy Code Quality](https://www.codacy.com/project/badge/f0ac979fa93f49509cba9086754a50d4)](https://www.codacy.com/app/lasse/coala)
 (Code quality 1)
