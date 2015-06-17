@@ -18,4 +18,11 @@ if [ ! "$python_unicode_storage" = "UCS4" ] ; then
 fi
 source .misc/setup_env_vars.sh
 
+# Node specific commands
+case $CIRCLE_NODE_INDEX in
+  0) pip install coveralls codecov ;;
+  3) exit 0 ;;
+  *) ;;
+esac
+
 bash .misc/.install.sh
