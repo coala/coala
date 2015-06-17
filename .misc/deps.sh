@@ -8,11 +8,14 @@ case $CIRCLE_NODE_INDEX in
  *) dep_version="3.4.2" ;;
 esac
 
-if [ $dep_version = "3.2.5" ] ; then
-  PYTHON_CONFIGURE_OPTS="--with-wide-unicode" pyenv install -kf $dep_version
-else
-  pyenv install -ks $dep_version
-fi
+# Install python version needed
+pyenv install -ks $dep_version
 pyenv local $dep_version
+source .misc/setup_env_vars.sh
+if [ ! "$python_unicode_storage" = "UCS4" ] ; then
+  pyenv uninstall -f $dep_version
+  PYTHON_CONFIGURE_OPTS="--with-wide-unicode" pyenv install -k $python_version
+fi
+source .misc/setup_env_vars.sh
 
 bash .misc/.install.sh

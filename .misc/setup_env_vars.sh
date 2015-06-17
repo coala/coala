@@ -21,3 +21,6 @@ esac
 
 # Python virtualenv
 python_virtualenv=`pyenv prefix`
+
+# Unicode storage type in python
+python_unicode_storage=`python -c "import sys; print('UCS4' if sys.maxunicode > 65536 else 'UCS2')"`
