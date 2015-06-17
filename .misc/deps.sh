@@ -33,4 +33,7 @@ case $CIRCLE_NODE_INDEX in
   *) ;;
 esac
 
+# pip commands
+pip install munkres3
+
 bash .misc/.install.sh
