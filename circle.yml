@@ -1,10 +1,8 @@
 dependencies:
   pre:
     - bash .misc/deps.pre.sh
-    # Set the python version
-    - sh .misc/choose_python_version.sh
   override:
-    - sh .misc/.install.sh
+    - bash .misc/deps.sh
 
 test:
   override:
