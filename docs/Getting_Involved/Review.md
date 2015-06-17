@@ -15,14 +15,10 @@ The review process for coala is as follows:
    one.
 4. If the commits are not linearly mergeable into master, rebase and go to step
    one.
-5. All commits are acked and fit linearly onto master. The reviewer or
-   submitter may now _fast forward_ the master. Since linear fitting is a
-   prerequisite merging is not going to happen nor allowed.
-
-> **Note**
->
-> You might want to add the option `merge.ff = only` to your
-> gitconfig.
+5. All commits are acknowledged and fit linearly onto master. All continuous
+   integration services (as described below) pass. Anyone with collaborator
+   permission may leave the `@rultor merge` command to get the PR merged
+   automatically.
 
 # Continous Integration
 
