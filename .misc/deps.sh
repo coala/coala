@@ -36,4 +36,8 @@ esac
 # pip commands
 pip install munkres3
 
-bash .misc/.install.sh
+# from source
+cd .misc
+bash install.python-gi.sh
+bash install.python-dbus.sh
+cd ..
