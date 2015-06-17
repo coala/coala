@@ -36,14 +36,6 @@ Tests must work for every commit.
 
 Continuous integration is always done for the last commit on a pull request.
 
-## Exceptions
-
-AppVeyor may take a very long time to finish its build. Contact sils1297 on
-gitter if you rely on AppVeyor executing your build timely for merge to get the
-queues cleaned. A PR may however be merged without the AppVeyor build being
-finished if no functional code changes were made to the PR since the last
-successful AppVeyor build.
-
 # Reviewing Commits
 
  * Generated code is not intended to be reviewed. Instead rather try to verify
