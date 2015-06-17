@@ -32,7 +32,8 @@ def main():
     test_file_names = []
 
     ignore_list = ([os.path.join(x, "**") for x in getsitepackages()] +
-                   [os.path.join(tempfile.gettempdir(), "**")])
+                   [os.path.join(tempfile.gettempdir(), "**")] +
+                   [os.path.join("/", "usr", "local", "Cellar", "**")])
 
     # Project specific ignore list.
     ignore_list += [
