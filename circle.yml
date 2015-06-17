@@ -23,7 +23,16 @@ test:
         parallel: true
 
 deployment:
+  distribution:
+    branch: /.*/
+    commands:
+      - sh .misc/.deploy.dist.sh
+
   translation:
     branch: master
     commands:
       - sh .misc/.deploy.zanata.sh
+
+general:
+  artifacts:
+    - "dist"
