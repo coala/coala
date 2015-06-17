@@ -11,10 +11,7 @@ echo Unpacking python-gi...
 tar -xJf python-gi.tar.xz > /dev/null
 rm python-gi.tar.xz
 
-mkdir -p python-tmpenv
-
 python_virtualenv=`pyenv prefix`
-
 cd pygobject-3.16.2
 
 PYTHON=`sudo which ${system_python}` ./configure --prefix=$python_virtualenv
