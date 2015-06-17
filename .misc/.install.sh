@@ -12,7 +12,7 @@ fi
 
 if [ "$CIRCLECI" = "true" ] ; then
   sudo add-apt-repository -y ppa:fkrull/deadsnakes
-  sudo apt-get update
+  sudo apt-get -qq update
 fi
 
 cd .misc
@@ -24,4 +24,4 @@ cd ..
 
 pip install munkres3
 
-sudo apt-get install espeak libclang1-3.4
+sudo apt-get -qq install espeak libclang1-3.4
