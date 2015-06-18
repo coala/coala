@@ -20,6 +20,12 @@ The review process for coala is as follows:
    permission may leave the `@rultor merge` command to get the PR merged
    automatically.
 
+> **Note**:
+> To be able to see rultor's logs - you need to be added as a "Reader". Please
+> follow the instructions at
+> [rultor's docs](http://doc.rultor.com/reference.html) to find your URN and
+> add it in the .rultor.yml file in the "readers" section.
+
 # Continous Integration
 
 It is only allowed to merge a pull request into master if all of the following
