@@ -1,7 +1,7 @@
 set -x
 set -e
 
-sh .install.zanata.sh
+bash install.zanata.sh
 
 echo Pulling translations...
 zanata-cli-3.6.0/bin/zanata-cli -B pull --url https://translate.zanata.org/zanata/ > /dev/null
