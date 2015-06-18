@@ -5,3 +5,6 @@ merge:
 
 decrypt:
   .misc/zanata_key.sh: ".misc/zanata_key.sh.asc"
+
+readers:
+  - "urn:github:5716520"
