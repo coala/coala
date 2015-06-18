@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ $CIRCLE_NODE_INDEX = 0 ] ; then
   echo Running Zanata...
   cd .misc
