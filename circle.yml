@@ -14,7 +14,8 @@ test:
         parallel: true
 
 deployment:
-  coverage:
+  deployment_scripts:
     branch: /.*/
     commands:
       - bash .misc/deploy.coverage.sh
+      - bash .misc/deploy.zanata.sh
