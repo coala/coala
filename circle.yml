@@ -17,4 +17,4 @@ deployment:
   coverage:
     branch: /.*/
     commands:
-      - sh .misc/deploy.coverage.sh
+      - bash .misc/deploy.coverage.sh
