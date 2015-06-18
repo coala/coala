@@ -12,6 +12,9 @@ test:
         parallel: true
     - coala -c .misc/.ci_coafile:
         parallel: true
-  post:
-    - sh .misc/.success.coverage.sh:
-        parallel: true
+
+deployment:
+  coverage:
+    branch: /.*/
+    commands:
+      - sh .misc/.success.coverage.sh
