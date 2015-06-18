@@ -28,13 +28,13 @@ sudo apt-get -qq install glib2.0-dev gobject-introspection libgirepository1.0-de
 
 # Node specific commands
 case $CIRCLE_NODE_INDEX in
-  0) pip install coveralls codecov ;;
+  0) pip install -q coveralls codecov ;;
   3) exit 0 ;;
   *) ;;
 esac
 
 # pip commands
-pip install munkres3
+pip install -q munkres3
 
 # from source
 cd .misc
