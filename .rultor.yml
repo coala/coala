@@ -2,3 +2,6 @@ merge:
   script:
     - "bash .misc/fail_if_HEAD_is_merge.sh"
     - "bash .misc/.deploy.zanata.sh"
+
+decrypt:
+  .misc/zanata_key.sh: ".misc/zanata_key.sh.asc"
