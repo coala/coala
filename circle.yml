@@ -6,7 +6,7 @@ dependencies:
 
 test:
   override:
-    - sh .misc/run_tests.sh:
+    - bash .misc/tests.sh:
         parallel: true
     - python setup.py install:
         parallel: true
