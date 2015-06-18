@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+set -x
+
 echo Running Zanata...
 cd .misc
 sh .install.zanata.sh
