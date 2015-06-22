@@ -17,7 +17,7 @@ if __name__ == "__main__":
                            'fabian@neuschmidt.de, '
                            'makman@alice.de',
           url='http://coala.schuirmann.net/',
-          scripts=['coala.py', 'coala'],
+          scripts=['coala.py', 'coala', 'coala-ci.py', 'coala-ci'],
           packages=['bears',
                     'bears.codeclone_detection',
                     'bears.misc',
