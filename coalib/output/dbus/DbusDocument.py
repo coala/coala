@@ -119,7 +119,7 @@ class DbusDocument(dbus.service.Object):
 
             if is_applicable:
                 section["files"].value = self.path
-                result = execute_section(
+                results = execute_section(
                     section=section,
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
@@ -127,7 +127,7 @@ class DbusDocument(dbus.service.Object):
                     log_printer=log_printer)
 
                 retval.append(
-                    DbusDocument.results_to_dbus_struct(result, section_name))
+                    DbusDocument.results_to_dbus_struct(results, section_name))
 
         return retval
 
