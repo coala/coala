@@ -5,7 +5,7 @@ from gi.repository import Gtk
 from gui.src.support.fileTree import coalaFileTree
 from gui.src.support.settingTree import coalaSettingTree
 from coalib.settings.ConfigurationGathering import load_config_file
-from coalib.settings.Section import Section
+from gui.src.support.WriteFile import write_to_file
 
 
 class coalaWindow(Gtk.ApplicationWindow):
@@ -97,6 +97,8 @@ class coalaWindow(Gtk.ApplicationWindow):
         sw.set_visible(True)
         sw.set_hexpand(True)
         settings = coalaSettingTree()
+        settings.renderer1.connect("edited", self.text_edited_column1, settings)
+        settings.renderer2.connect("edited", self.text_edited_column2, settings)
         self.sections_view[section] = settings
         sw.add(settings.treeView)
         box.add(sw)
@@ -107,6 +109,7 @@ class coalaWindow(Gtk.ApplicationWindow):
                                  str(self.sections[section][key])])
         self.section_stack.add_titled(frame, section, section)
         self.section_stack_switcher.queue_draw()
+        write_to_file(self.sections_view)
 
     def del_setting(self, button):
         section = self.section_stack.get_visible_child()
@@ -116,8 +119,18 @@ class coalaWindow(Gtk.ApplicationWindow):
         if result:
             model, iter = result
         model.remove(iter)
+        write_to_file(self.sections_view)
 
     def add_setting(self, button):
         section = self.section_stack.get_visible_child()
         settings = self.sections_view[section.get_name()]
         settings.append(["Entry", "Value"])
+        write_to_file(self.sections_view)
+
+    def text_edited_column1(self, widget, path, text, liststore):
+        liststore[path][0] = text
+        write_to_file(self.sections_view)
+
+    def text_edited_column2(self, widget, path, text, liststore):
+        liststore[path][1] = text
+        write_to_file(self.sections_view)
