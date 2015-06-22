@@ -67,19 +67,22 @@ class ProcessingTest(unittest.TestCase):
         self.testcode_c_path = os.path.join(os.path.dirname(config_path),
                                             "testcode.c")
 
-        self.sections, self.local_bears, self.global_bears, targets = (
-            gather_configuration(["--config", re.escape(config_path)])[0:4])
-        self.assertEqual(len(self.local_bears["default"]), 1)
-        self.assertEqual(len(self.global_bears["default"]), 1)
-        self.assertEqual(targets, [])
-
         self.result_queue = queue.Queue()
         self.log_queue = queue.Queue()
-
         log_printer = ConsolePrinter()
         self.interactor = ProcessingTestInteractor(log_printer,
                                                    self.result_queue,
                                                    self.log_queue)
+
+        (self.sections,
+         self.local_bears,
+         self.global_bears,
+         targets) = gather_configuration(self.interactor.acquire_settings,
+                                         log_printer,
+                                         ["--config", re.escape(config_path)])
+        self.assertEqual(len(self.local_bears["default"]), 1)
+        self.assertEqual(len(self.global_bears["default"]), 1)
+        self.assertEqual(targets, [])
 
     def test_run(self):
         results = execute_section(self.sections["default"],

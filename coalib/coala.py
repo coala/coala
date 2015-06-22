@@ -13,7 +13,7 @@
 
 import sys
 
-from coalib.output.ClosableObject import ClosableObject
+from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
@@ -23,8 +23,8 @@ from coalib.misc.i18n import _
 
 
 def main():
-    log_printer = None
-    interactor = None
+    log_printer = ConsolePrinter()
+    interactor = ConsoleInteractor(log_printer)
     exitcode = 0
     try:
         did_nothing = True
@@ -32,9 +32,8 @@ def main():
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration()
+         targets) = gather_configuration(interactor.acquire_settings,
+                                         log_printer)
 
         if bool(sections["default"].get("show_bears", "False")):
             show_bears(local_bears,
@@ -77,17 +76,9 @@ def main():
                         "This should never happen. When asked for, the "
                         "following information may help investigating:")
 
-        if log_printer is None:
-            log_printer = ConsolePrinter()
-
         log_printer.log_exception(UNKNOWN_ERROR + " " + DESCRIPTION,
                                   exception)
         exitcode = 255
-
-    if log_printer is not None and isinstance(log_printer, ClosableObject):
-        log_printer.close()
-    if interactor is not None and isinstance(interactor, ClosableObject):
-        interactor.close()
 
     return exitcode
 
