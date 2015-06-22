@@ -11,8 +11,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
@@ -81,7 +79,3 @@ def main():
         exitcode = 255
 
     return exitcode
-
-
-if __name__ == "__main__":
-    sys.exit(main())
