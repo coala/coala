@@ -4,7 +4,7 @@ import queue
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
 from coalib.output.printers import LOG_LEVEL
-from coalib.processes.BearRunner import run
+from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import path_list
@@ -291,7 +291,7 @@ def execute_section(section,
 
     logger_thread = LogPrinterThread(arg_dict["message_queue"],
                                      log_printer)
-    # Start and join the logger thread along with the BearRunner's
+    # Start and join the logger thread along with the processes to run bears
     processes.append(logger_thread)
 
     for runner in processes:
