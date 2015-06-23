@@ -57,6 +57,34 @@ def _position_is_bracketed(string, position):
     return False
 
 
+def _boundary_of_alternatives_indices(pattern):
+    """
+    Determines the location of a set of alternatives in a glob pattern.
+    Alternatives are defined by a matching set of non-bracketed parentheses.
+
+    :param pattern: Glob pattern with wildcards.
+    :return:        Indices of the innermost set of matching non-bracketed
+                    parentheses in a tuple. The Index of a missing parenthesis
+                    will be passed as None.
+    """
+    # Taking the leftmost closing parenthesis and the rightmost opening
+    # parenthesis left of it ensures that the parentheses belong together and
+    # the pattern is parsed correctly from the most nested section outwards.
+    end_pos = None
+    for match in re.finditer('\\)', pattern):
+        if not _position_is_bracketed(pattern, match.start()):
+            end_pos = match.start()
+            break  # break to get leftmost
+
+    start_pos = None
+    for match in re.finditer('\\(', pattern[:end_pos]):
+        if not _position_is_bracketed(pattern, match.start()):
+            start_pos = match.end()
+            # no break to get rightmost
+
+    return start_pos, end_pos
+
+
 @yield_once
 def _iter_choices(pattern):
     """
@@ -74,6 +102,32 @@ def _iter_choices(pattern):
         if not _position_is_bracketed(pattern, end_pos):
             yield pattern[start_pos: end_pos]
             start_pos = end_pos + 1
+
+
+@yield_once
+def _iter_alternatives(pattern):
+    """
+    Iterates through all glob patterns that can be obtaines by combination of
+    all choices for each alternative
+
+    :param pattern: Glob pattern with wildcards
+    :return:        Iterator that yields all glob patterns without alternatives
+                    that can be created from the given pattern containing them.
+    """
+    start_pos, end_pos = _boundary_of_alternatives_indices(pattern)
+
+    if None in (start_pos, end_pos):
+        yield pattern
+    else:
+        # iterate through choices inside of parenthesis (separated by '|'):
+        for choice in _iter_choices(pattern[start_pos: end_pos]):
+            # put glob expression back together with alternative:
+            variant = pattern[:start_pos-1] + choice + pattern[end_pos+1:]
+
+            # iterate through alternatives outside of parenthesis
+            # (pattern can have more alternatives elsewhere)
+            for glob_pattern in _iter_alternatives(variant):
+                yield glob_pattern
 
 
 def _make_selector(pattern_parts):
