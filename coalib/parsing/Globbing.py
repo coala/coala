@@ -5,6 +5,56 @@ from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import N_
 
 
+def _end_of_set_index(string, start_index):
+    """
+    Returns the position of the appropriate closing bracket for a glob set in
+    string.
+
+    :param string:      Glob string with wildcards
+    :param start_index: Index at which the set starts, meaning the position
+                        right behind the opening bracket
+    :return:            Position of appropriate closing bracket
+    """
+    length = len(string)
+    closing_index = start_index
+    if closing_index < length and string[closing_index] == '!':
+        closing_index += 1
+
+    if closing_index < length:  # the set cannot be closed by a bracket here
+        closing_index += 1
+
+    while closing_index < length and string[closing_index] != ']':
+        closing_index += 1
+
+    return closing_index
+
+def _position_is_bracketed(string, position):
+    """
+    Tests whether the char at string[position] is inside a valid pair of
+    brackets (and therefore loses its special meaning)
+
+    :param string:   Glob string with wildcards
+    :param position: Position of a char in string
+    :return:         Whether or not the char is inside a valid set of brackets
+    """
+    # allow negative positions and trim too long ones
+    position = len(string[:position])
+
+    index, length = 0, len(string)
+    while index < position:
+        char = string[index]
+        index += 1
+        if char == '[':
+            closing_index = _end_of_set_index(string, index)
+            if closing_index < length:
+                if index <= position < closing_index:
+                    return True
+                index = closing_index + 1
+            else:
+                return False
+    return False
+
+
 def _make_selector(pattern_parts):
     """
     Creates an instance of the selector class that fits the first pattern part.
