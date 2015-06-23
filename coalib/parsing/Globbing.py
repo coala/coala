@@ -1,5 +1,6 @@
-import fnmatch
+from fnmatch import fnmatch as legacy_fnmatch
 import os
+import platform
 import re
 
 from coalib.misc.Decorators import yield_once
@@ -128,6 +129,78 @@ def _iter_alternatives(pattern):
             # (pattern can have more alternatives elsewhere)
             for glob_pattern in _iter_alternatives(variant):
                 yield glob_pattern
+
+
+def translate(pattern):
+    """
+    Translates a pattern into a regular expression.
+
+    :param pattern: Glob pattern with wildcards
+    :return:        Regular expression with the same meaning
+    """
+    index, length = 0, len(pattern)
+    regex = ''
+    while index < length:
+        char = pattern[index]
+        index += 1
+        if char == '*':
+            # '**' matches everything
+            if index < length and pattern[index] == '*':
+                regex += '.*'
+            # on Windows, '*' matches everything but the filesystem
+            # separators '/' and '\'.
+            elif platform.system() == 'Windows':  # pragma: nocover (Windows)
+                regex += '[^/\\\\]*'
+            # on all other (~Unix-) platforms, '*' matches everything but the
+            # filesystem separator, most likely '/'.
+            else:
+                regex += '[^' + re.escape(os.sep) + ']*'
+        elif char == '?':
+            regex += '.'
+        elif char == '[':
+            closing_index = _end_of_set_index(pattern, index)
+            if closing_index >= length:
+                regex += '\\['
+            else:
+                sequence = pattern[index:closing_index].replace('\\', '\\\\')
+                index = closing_index+1
+                if sequence[0] == '!':
+                    sequence = '^' + sequence[1:]
+                elif sequence[0] == '^':
+                    sequence = '\\' + sequence
+                regex += '[' + sequence + ']'
+        else:
+            regex = regex + re.escape(char)
+    return regex + '\\Z(?ms)'
+
+
+def fnmatch(name, pattern):
+    """
+    Tests whether name matches pattern
+
+    :param name:    File or directory name
+    :param pattern: Glob string with wildcards
+    :return:        Boolean: Whether or not name is matched by pattern
+
+    Glob Syntax:
+    '[seq]':         Matches any character in seq. Cannot be empty.
+                     Any special character looses its special meaning in a set.
+   '[!seq]':         Matches any character not in seq. Cannot be empty
+                     Any special character looses its special meaning in a set.
+    '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
+                     More than two or just one sequence can be given.
+    '?':             Matches any single character.
+    '*':             Matches everything but os.sep.
+    '**':            Matches everything.
+    """
+    name = os.path.normcase(name)
+    for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
+        pat = os.path.normcase(pat)
+        match = re.compile(translate(pat)).match
+        if match(name) is not None:
+            return True
+    return False
 
 
 def _make_selector(pattern_parts):
@@ -286,7 +359,7 @@ class _WildcardSelector(_Selector):
     def _collect(self, path):
         if os.path.isdir(path):
             for file_or_dir in os.listdir(path):
-                if fnmatch.fnmatch(file_or_dir, self.pat):
+                if legacy_fnmatch(file_or_dir, self.pat):
                     file_or_dir = os.path.join(path, file_or_dir)
                     for result in self.successor.collect(file_or_dir):
                         yield result
