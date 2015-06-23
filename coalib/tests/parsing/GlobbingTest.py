@@ -10,10 +10,11 @@ from coalib.parsing.Globbing import (glob,
                                      iglob,
                                      _Selector,
                                      _iter_or_combinations)
+from coalib.parsing.Globbing import _iter_choices
 from coalib.parsing.Globbing import _position_is_bracketed
 
 
-class PositionIsBracketedTest(unittest.TestCase):
+class GlobbingHelperFunctionsTest(unittest.TestCase):
     def test_positions(self):
         # pattern: [bracketed values]
         pattern_positions_dict = {
@@ -35,6 +36,23 @@ class PositionIsBracketedTest(unittest.TestCase):
                     self.assertTrue(_position_is_bracketed(pattern, pos))
                 else:
                     self.assertFalse(_position_is_bracketed(pattern, pos))
+
+    def test_choices(self):
+        # pattern: [choices]
+        pattern_choices_dict = {
+            "": [""],
+            "a": ["a"],
+            "a|b": ["a", "b"],
+            "a|b|c": ["a", "b", "c"],
+            "a|b[|]c": ["a", "b[|]c"],
+            "a|[b|c]": ["a", "[b|c]"],
+            "a[|b|c]": ["a[|b|c]"],
+            "[a|b|c]": ["[a|b|c]"],
+            "[a]|[b]|[c]": ["[a]", "[b]", "[c]"],
+            "[[a]|[b]|[c]": ["[[a]", "[b]", "[c]"]
+            }
+        for pattern, choices in pattern_choices_dict.items():
+            self.assertEqual(list(_iter_choices(pattern)), choices)
 
 
 class GlobingTest(unittest.TestCase):

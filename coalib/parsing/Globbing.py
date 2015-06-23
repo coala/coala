@@ -1,5 +1,6 @@
 import fnmatch
 import os
+import re
 
 from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import N_
@@ -28,6 +29,7 @@ def _end_of_set_index(string, start_index):
 
     return closing_index
 
+
 def _position_is_bracketed(string, position):
     """
     Tests whether the char at string[position] is inside a valid pair of
@@ -53,6 +55,25 @@ def _position_is_bracketed(string, position):
             else:
                 return False
     return False
+
+
+@yield_once
+def _iter_choices(pattern):
+    """
+    Iterate through each choice of an alternative. Splits pattern on '|'s if
+    they are not bracketed.
+
+    :param pattern: String of choices separated by '|'s
+    :return:        Iterator that yields parts of string separated by
+                    non-bracketed '|'s
+    """
+    start_pos = 0
+    split_pos_list = [match.start() for match in re.finditer('\\|', pattern)]
+    split_pos_list.append(len(pattern))
+    for end_pos in split_pos_list:
+        if not _position_is_bracketed(pattern, end_pos):
+            yield pattern[start_pos: end_pos]
+            start_pos = end_pos + 1
 
 
 def _make_selector(pattern_parts):
