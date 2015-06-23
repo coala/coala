@@ -31,48 +31,39 @@ def _import_bears(file_path, kinds):
 
 
 @yield_once
-def icollect(file_paths, log_printer, files=True, dirs=True):
+def icollect(file_paths):
     """
     Evaluate globs in file paths and return all matching files.
 
     :param file_paths:  list of file paths that can include globs
-    :param log_printer: where to log things that go wrong
-    :param files:       True if files are to be collected
-    :param dirs:        True if dirs are to be collected
     :return:            iterator that yields paths of all matching files
     :raises SystemExit: when getting an invalid pattern
     """
     for file_path in file_paths:
-        try:
-            for match in iglob(file_path, files=files, dirs=dirs):
-                yield match
-        except ValueError as exception:
-            log_printer.err(
-                _("The given glob '{glob}' contains an invalid pattern. "
-                  "Detailed error is: {error_message}").format(
-                    glob=file_path,
-                    error_message=str(_(exception))))
-            raise SystemExit(3)
+        for match in iglob(file_path):
+            yield match
 
 
-def collect_files(file_paths, log_printer):
+def collect_files(file_paths):
     """
     Evaluate globs in file paths and return all matching files
 
     :param file_paths: list of file paths that can include globs
     :return:           list of paths of all matching files
     """
-    return list(icollect(file_paths, log_printer, dirs=False))
+    results = list(icollect(file_paths))
+    return [result for result in results if os.path.isfile(result)]
 
 
-def collect_dirs(dir_paths, log_printer):
+def collect_dirs(dir_paths):
     """
     Evaluate globs in directory paths and return all matching directories
 
     :param dir_paths: list of file paths that can include globs
     :return:          list of paths of all matching directories
     """
-    return list(icollect(dir_paths, log_printer, files=False))
+    results = list(icollect(dir_paths))
+    return [result for result in results if os.path.isdir(result)]
 
 
 @yield_once
@@ -86,19 +77,21 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
     :param log_printer: log_printer to handle logging
     :return:            iterator that yields bear classes
     """
-    for bear_dir in icollect(bear_dirs, log_printer, files=False):
-        for bear_name in bear_names:
-            for matching_file in iglob(
-                    os.path.join(bear_dir, bear_name + '.py')):
+    for bear_dir in icollect(bear_dirs):
+        if os.path.isdir(bear_dir):
+            for bear_name in bear_names:
+                for matching_file in iglob(
+                        os.path.join(bear_dir, bear_name + '.py')):
 
-                try:
-                    for bear in _import_bears(matching_file, kinds):
-                        yield bear
-                except:
-                    log_printer.warn(_("Unable to collect bears from {file}. "
-                                       "Probably the file is malformed or "
-                                       "the module code raises an exception.")
-                                     .format(file=matching_file))
+                    try:
+                        for bear in _import_bears(matching_file, kinds):
+                            yield bear
+                    except:
+                        log_printer.warn(
+                            _("Unable to collect bears from {file}. "
+                              "Probably the file is malformed or "
+                              "the module code raises an exception.")
+                            .format(file=matching_file))
 
 
 def collect_bears(bear_dirs, bear_names, kinds, log_printer):

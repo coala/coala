@@ -109,7 +109,8 @@ class DbusDocument(dbus.service.Object):
                 abs_file_pattern = os.path.join(
                     os.path.dirname(self.config_file),
                     file_pattern)
-                if self.path in glob(abs_file_pattern, files=True, dirs=False):
+                fs = [f for f in glob(abs_file_pattern) if os.path.isfile(f)]
+                if self.path in fs:
                     is_applicable = True
                     break
 

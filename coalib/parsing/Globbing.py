@@ -1,227 +1,289 @@
-import fnmatch
 import os
+import platform
+import re
 
 from coalib.misc.Decorators import yield_once
-from coalib.misc.i18n import N_
 
 
-def _make_selector(pattern_parts):
+def _find_set_end(string, start_index):
+    length = len(string)
+    closing_index = start_index
+    if closing_index < length and string[closing_index] == '!':
+        closing_index += 1
+    if closing_index < length and string[closing_index] == ']':
+        closing_index += 1
+    while closing_index < length and string[closing_index] != ']':
+        closing_index += 1
+    return closing_index
+
+
+def _position_is_bracketed(string, position):
     """
-    Creates an instance of the selector class that fits the first pattern part.
-
-    :param pattern_parts: List of strings representing a file system path that
-                          may contain wildcards
-    :return:              Selector class that represents the first pattern part
-    :raises ValueError:   If the pattern is invalid. (Error message is marked
-                          for translation and can thus be used in the UI.)
+    Tests whether the char at string[position] is inside a valid pair of
+    brackets (and therefore looses its special meaning).
     """
-    pat = pattern_parts[0]
-    child_parts = pattern_parts[1:]
-    if pat == '**':
-        cls = _RecursiveWildcardSelector
-    elif '**' in pat:
-        raise ValueError(N_("Invalid pattern: '**' can only be "
-                            "an entire path component"))
-    elif _is_wildcard_pattern(pat):
-        cls = _WildcardSelector
-    else:
-        cls = _PathSelector
-    return cls(pat, child_parts)
+    # allow negative positions and trim too long ones
+    position = len(string[:position])
+
+    index, length = 0, len(string)
+    while index < position:
+        char = string[index]
+        index += 1
+        if char == '[':
+            closing_index = _find_set_end(string, index)
+            if closing_index < length:
+                if index <= position < closing_index:
+                    return True
+                index = closing_index + 1
+    return False
 
 
-def _is_wildcard_pattern(pat):
+def _iter_choices(pattern):
     """
-    Decides whether this pattern needs actual matching using fnmatch, or can
-    be looked up directly as part of a path.
+    Iterate through each choice of an alternative.
+    Basically splitting on '|'s if they are not bracketed
     """
-    return "*" in pat or "?" in pat or "[" in pat
+    start_pos = 0
+    split_pos_list = [match.start() for match in re.finditer('\\|', pattern)]
+    split_pos_list.append(len(pattern))
+    for end_pos in split_pos_list:
+        if not _position_is_bracketed(pattern, end_pos):
+            yield pattern[start_pos: end_pos]
+            start_pos = end_pos + 1
 
 
 @yield_once
-def _iter_or_combinations(pattern,
-                          opening_delimiter="(",
-                          closing_delimiter=")",
-                          separator="|"):
+def _iter_alternatives(pattern):
     """
-    A pattern can contain an "or" in the form of (a|b|c). This function will
-    iterate through all possible combinations. Nesting is supported
-    for "(a(b|c)d|e)" it will yield the patterns "abd", "acd" and "e".
-
-    :param pattern:           A string that may contain an "or" representation
-                              following the syntax demonstrated above.
-    :param opening_delimiter: Character or sequence thereof that marks the
-                              beginning of an "or" representation
-    :param closing_delimiter: Character or sequence thereof that marks the
-                              end of an "or" representation
-    :param separator:         Character or sequence thereof that separates the
-                              alternatives
-    :returns:                 Iterator that yields the results originating from
-                              inserting all possible combinations of
-                              alternatives into the pattern.
-    :raises ValueError:       If the pattern is invalid. (Error message is
-                              marked for translation and can thus be used in
-                              the UI.)
+    Iterates through all glob patterns that can be obtained by combination of
+    all choices for each alternative.
     """
-    # Taking the leftmost closing delimiter and the rightmost opening delimiter
-    # left of it ensures that the delimiters belong together and the pattern is
-    # parsed correctly from the most nested section outwards.
-    closing_pos = pattern.find(closing_delimiter)
-    opening_pos = pattern[:closing_pos].rfind(opening_delimiter)
+    # Taking the leftmost closing parenthesis and the rightmost opening
+    # parenthesis left of it ensures that the delimiters belong together and
+    # the pattern is parsed correctly from the most nested section outwards.
+    end_pos = None
+    for match in re.finditer('\\)', pattern):
+        if not _position_is_bracketed(pattern, match.start()):
+            end_pos = match.start()
+            break  # break to get leftmost
 
-    if (
-            (closing_pos == -1) != (opening_pos == -1) or
-            # Special case that gets overlooked because opening_delimiter
-            # is only being looked for in pattern[:-1] when closing_pos == -1
-            (closing_pos == -1 and pattern.endswith(opening_delimiter))):
-        raise ValueError(N_("Parentheses of pattern are not matching"))
+    start_pos = None
+    for match in re.finditer('\\(', pattern[:end_pos]):
+        if not _position_is_bracketed(pattern, match.start()):
+            start_pos = match.end()
+            # no break to get rightmost
 
-    if -1 not in (opening_pos, closing_pos):  # parentheses in pattern
-        prefix = pattern[:opening_pos]
-        parenthesized = pattern[opening_pos+len(opening_delimiter):closing_pos]
-        postfix = pattern[closing_pos+len(closing_delimiter):]
-        # This loop iterates through all possible combinations that can be
-        # inserted in place of the first innermost pair of parentheses:
-        # "(a|b)(c|d)" yields "a", then "b"
-        for combination in _iter_or_combinations(parenthesized,
-                                                 opening_delimiter,
-                                                 closing_delimiter,
-                                                 separator):
-            new_pattern = prefix + combination + postfix
-            # This loop iterates through all possible combinations for the new
-            # whole pattern, which has it's first pair of parentheses replaced
-            # already:
-            # "a(cd)" (first call) yields "ac", then "ad",
-            # "b(cd)" (second call) yields "bc" and "bd"
-            for new_combination in _iter_or_combinations(new_pattern,
-                                                         opening_delimiter,
-                                                         closing_delimiter,
-                                                         separator):
-                yield new_combination
-    elif separator in pattern:
-        for choice in pattern.split(separator):
-            yield choice
-    else:
+    if None in (start_pos, end_pos):
         yield pattern
+    else:
+        # iterate through choices inside of parenthesis (separated by '|'):
+        for choice in _iter_choices(pattern[start_pos: end_pos]):
+            # put glob expression back together with alternative:
+            variant = pattern[:start_pos-1] + choice + pattern[end_pos+1:]
+
+            # iterate through alternatives outside of parenthesis
+            # (pattern kann have more alternatives elsewhere)
+            for glob_pattern in _iter_alternatives(variant):
+                yield glob_pattern
 
 
-class _Selector:
+def fnmatch(name, pattern):
     """
-    Every Selector class has a successor Selector class with the remaining
-    pattern parts. Together they represent the glob expression that gets
-    evaluated.
+    Test whether name matches pattern.
+
+    Glob Syntax:
+    '[seq]':         Matches any character in seq. Cannot be empty.
+                     Any Special Character looses its special meaning in a set.
+    '[!seq]':        Matches any character not in seq. Cannot be empty
+                     Any Special Character looses its special meaning in a set.
+    '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
+                     More than two or just one sequence can be given.
+    '?':             Matches any single character.
+    '*':             Matches everything but os.sep.
+    '**':            Matches everything.
     """
-    def __init__(self, child_parts):
-        self.child_parts = child_parts
-        if child_parts:
-            self.successor = _make_selector(child_parts)
+    name = os.path.normcase(name)
+    for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
+        pat = os.path.normcase(pat)
+        match = re.compile(translate(pat)).match
+        if match(name) is not None:
+            return True
+    return False
+
+
+def translate(pattern):
+    """
+    Translate a shell pattern to a regular expression.
+    """
+    index, length = 0, len(pattern)
+    regex = ''
+    while index < length:
+        char = pattern[index]
+        index += 1
+        if char == '*':
+            # '**' matches everything
+            if index < length and pattern[index] == '*':
+                regex += '.*'
+            # on Windows, '*' matches everything but the filesystem
+            # separators '/' and '\'.
+            elif platform.system() == 'Windows':
+                regex += '[^/\\\\]*'
+            # on all other (~Unix-) platforms, '*' matches everything but the
+            # filesystem separator, most likely '/'.
+            else:
+                regex += '[^' + re.escape(os.sep) + ']*'
+        elif char == '?':
+            regex += '.'
+        elif char == '[':
+            closing_index = _find_set_end(pattern, index)
+            if closing_index >= length:
+                regex += '\\['
+            else:
+                sequence = pattern[index:closing_index].replace('\\', '\\\\')
+                index = closing_index+1
+                if sequence[0] == '!':
+                    sequence = '^' + sequence[1:]
+                elif sequence[0] == '^':
+                    sequence = '\\' + sequence
+                regex = "{}[{}]".format(regex, sequence)
         else:
-            self.successor = _TerminatingSelector()
-
-    def collect(self, path=os.path.abspath(os.curdir)):
-        return self._collect(path)
-
-    def _collect(self, paths):
-        raise NotImplementedError
+            regex = regex + re.escape(char)
+    return regex + '\\Z(?ms)'
 
 
-class _TerminatingSelector:
+def glob(pattern):
     """
-    Represents the end of a pattern.
+    Return a list of paths matching a pathname pattern.
+
+    Glob Syntax:
+    '[seq]':         Matches any character in seq. Cannot be empty.
+                     Any Special Character looses its special meaning in a set.
+    '[!seq]':        Matches any character not in seq. Cannot be empty
+                     Any Special Character looses its special meaning in a set.
+    '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
+                     More than two or just one sequence can be given.
+    '?':             Matches any single character.
+    '*':             Matches everything but os.sep.
+    '**':            Matches everything.
     """
-    @staticmethod
-    def collect(path):
-        yield path
+
+    return list(iglob(pattern))
 
 
-class _PathSelector(_Selector):
+def iglob(pattern):
     """
-    Represents names of files and directories that do not need to be matched
-    using fnmatch.
+    Return an iterator which yields the paths matching a pathname pattern.
+
+    Glob Syntax:
+    '[seq]':         Matches any character in seq. Cannot be empty.
+                     Any Special Character looses its special meaning in a set.
+    '[!seq]':        Matches any character not in seq. Cannot be empty
+                     Any Special Character looses its special meaning in a set.
+    '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
+                     More than two or just one sequence can be given.
+    '?':             Matches any single character.
+    '*':             Matches everything but os.sep.
+    '**':            Matches everything.
     """
-    def __init__(self, path, child_parts):
-        self.path = path
-        _Selector.__init__(self, child_parts)
+    for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
+        pat = os.path.normcase(pat)
+        dirname, basename = os.path.split(pat)
+        if not has_wildcard(pat):
+            if basename:
+                if os.path.exists(pat):  # pragma: nocover
+                    yield pat
+            else:
+                # Patterns ending with a slash should match only directories
+                if os.path.isdir(dirname):
+                    yield pat
+            return
 
-    def _collect(self, path):
-        extended_path = os.path.join(path, self.path)
-        if os.path.exists(extended_path):
-            for result in self.successor.collect(extended_path):
-                yield result
+        if not dirname:  # pragma: nocover
+            if basename == '**':  # pragma: nocover
+                for filename in relativ_recursive_glob(dirname, basename):
+                    yield filename
+            else:  # pragma: nocover
+                for filename in relativ_recursive_glob(dirname, basename):
+                    yield filename
+            return
 
-
-class _WildcardSelector(_Selector):
-    """
-    Represents names of files and directories that contain wildcards and need
-    to be matched using fnmatch.
-    """
-    def __init__(self, pat, child_parts):
-        self.pat = pat
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        if os.path.isdir(path):
-            for file_or_dir in os.listdir(path):
-                if fnmatch.fnmatch(file_or_dir, self.pat):
-                    file_or_dir = os.path.join(path, file_or_dir)
-                    for result in self.successor.collect(file_or_dir):
-                        yield result
-
-
-class _RecursiveWildcardSelector(_Selector):
-    """
-    Represents the '**' wildcard.
-    """
-    def __init__(self, pat, child_parts):
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        for root, dirs, files in os.walk(path, followlinks=True):
-            for result in self.successor.collect(root):
-                yield result
-
-
-def iglob(pattern, files=True, dirs=True):
-    """
-    Iterate over this subtree and yield all existing files matching the given
-    pattern.
-
-    :param pattern:     Unix style glob pattern that matches paths
-    :param files:       Whether or not to include files
-    :param dirs:        Whether or not to include directories
-    :return:            List of all files matching the pattern
-    :raises ValueError: If an invalid pattern is found. The exception message
-                        is marked for translation, thus can be translated
-                        dynamically if needed.
-    """
-    if pattern == "" or (not files and not dirs):
-        raise StopIteration()
-
-    for pat in _iter_or_combinations(pattern):
-        # extract drive letter, if possible:
-        drive_letter, pat = os.path.splitdrive(pat)
-        # "/a/b.py" -> ['', 'a', 'b.py'] or \\a\\b.py -> ['', 'a', 'b.py']
-        pattern_parts = pat.split(os.sep)
-        # replace first pattern part with absolute path root if empty
-        if pat.startswith(os.sep):
-            pattern_parts[0] = drive_letter and drive_letter + "\\" or os.sep
-
-        selector = _make_selector(pattern_parts)
-
-        for p in selector.collect():
-            if os.path.isfile(p) and files is True:
-                yield p
-            elif os.path.isdir(p) and dirs is True:
-                yield p
+        # Prevent an infinite recursion if a drive or UNC path contains
+        # wildcard characters (i.e. r'\\?\C:').
+        if dirname != pat and has_wildcard(dirname):
+            dirs = iglob(dirname)
+        else:
+            dirs = [dirname]
+        if has_wildcard(basename):
+            if basename == '**':
+                glob_in_dir = relativ_recursive_glob
+            else:
+                glob_in_dir = relativ_wildcard_glob
+        else:
+            glob_in_dir = relativ_flat_glob
+        for dirname in dirs:
+            for name in glob_in_dir(dirname, basename):
+                yield os.path.join(dirname, name)
 
 
-def glob(pattern, files=True, dirs=True):
-    """
-    Iterate over this subtree and return a list of all existing files matching
-    the given pattern.
+# non recursive glob in dir, accepting wildcards
+def relativ_wildcard_glob(dirname, pattern):
+    if not dirname:  # pragma: nocover
+        dirname = os.curdir
+    try:
+        names = os.listdir(dirname)
+    except OSError:
+        return []
+    result = []
+    pattern = os.path.normcase(pattern)
+    match = re.compile(translate(pattern)).match
+    for name in names:
+        if match(os.path.normcase(name)):
+            result.append(name)
+    return result
 
-    :param pattern: Unix style glob pattern that matches paths
-    :param files:   Whether or not to include files
-    :param dirs:    Whether or not to include directories
-    :return:        List of all files matching the pattern
-    """
-    return list(iglob(pattern, files, dirs))
+
+# non recursive glob in dir, accepting only basenames
+def relativ_flat_glob(dirname, basename):
+    if not basename:  # pragma: nocover
+        # `os.path.split()` returns an empty basename for paths ending with a
+        # directory separator.  'q*x/' should match only directories.
+        if os.path.isdir(dirname):  # pragma: nocover
+            return [basename]
+    else:
+        if os.path.exists(os.path.join(dirname, basename)):  # pragma: nocover
+            return [basename]
+    return []  # pragma: nocover
+
+
+# recursive relativ glob, accepting only '**'
+def relativ_recursive_glob(dirname, pattern):
+    assert pattern == '**'
+    if dirname:  # pragma: nocover
+        yield pattern[:0]
+    for relative_dir in _iter_relative_dirs(dirname):
+        yield relative_dir
+
+
+# recursive relativ listdir
+def _iter_relative_dirs(dirname):
+    if not dirname:  # pragma: nocover
+        dirname = os.curdir
+    try:
+        files_or_dirs = os.listdir(dirname)
+    except os.error:
+        return
+    for file_or_dir in files_or_dirs:
+        yield file_or_dir
+        path = os.path.join(dirname, file_or_dir) if dirname else file_or_dir
+        for sub_file_or_dir in _iter_relative_dirs(path):
+            yield os.path.join(file_or_dir, sub_file_or_dir)
+
+
+wildcard_check_pattern = re.compile('([*?[])')
+
+
+def has_wildcard(pattern):
+    match = wildcard_check_pattern.search(pattern)
+    return match is not None
