@@ -1,314 +1,125 @@
 import multiprocessing
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞹶=NotImplementedError
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ٹ=sum
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﵧ=list
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓禰=filter
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﺠ=isinstance
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ۯ=len
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ẩ=open
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠊=UnicodeDecodeError
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐦇=Exception
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐡓=range
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐨗=False
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭝ=multiprocessing.Manager
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𣗳=multiprocessing.cpu_count
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓䨞=multiprocessing.Process
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ꉗ=multiprocessing.Queue
 import queue
-
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓醳=queue.Empty
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﺟ=Dependencies.resolve
 from coalib.output.printers import LOG_LEVEL
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﺀ=LOG_LEVEL.WARNING
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𨿄=CONTROL_ELEMENT.LOCAL
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𣼺=CONTROL_ELEMENT.GLOBAL_FINISHED
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𧪏=CONTROL_ELEMENT.LOCAL_FINISHED
+𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠰=CONTROL_ELEMENT.GLOBAL
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import path_list
 from coalib.misc.i18n import _
 from coalib.processes.LogPrinterThread import LogPrinterThread
-
-
-def get_cpu_count():
-    try:
-        return multiprocessing.cpu_count()
-    # cpu_count is not implemented for some CPU architectures/OSes
-    except NotImplementedError:  # pragma: no cover
-        return 2
-
-
-def fill_queue(queue_fill, any_list):
-    """
-    Takes element from a list and populates a queue with those elements.
-
-    :param queue_fill: The queue to be filled.
-    :param any_list:   List containing the elements.
-    """
-    for elem in any_list:
-        queue_fill.put(elem)
-
-
-def get_running_processes(processes):
-    return sum((1 if process.is_alive() else 0) for process in processes)
-
-
-def print_result(results,
-                 file_dict,
-                 retval,
-                 print_results):
-    """
-    Takes the results produced by each bear and gives them to the interactor to
-    present to the user.
-
-    :param results:       A list of results.
-    :param file_dict:     A dictionary containing the name of files and its
-                          contents.
-    :param retval:        It is True if no results were yielded ever before.
-                          If it is False this function will return False no
-                          matter what happens. Else it depends on if this
-                          invocation yields results.
-    :param print_results: Prints all given results appropriate to the output
-                          medium.
-    :return:              Returns False if any results were yielded. Else True.
-    """
-    results = list(filter(lambda result: not isinstance(result, HiddenResult),
-                          results))
-    print_results(results, file_dict)
-    return retval or len(results) > 0
-
-
-def get_file_dict(filename_list, log_printer):
-    """
-    Reads all files into a dictionary.
-
-    :param filename_list: List of names of paths to files to get contents of.
-    :param log_printer:   The logger which logs errors.
-    :return:              Reads the content of each file into a dictionary
-                          with filenames as keys.
-    """
-    file_dict = {}
-    for filename in filename_list:
-        try:
-            with open(filename, "r", encoding="utf-8") as f:
-                file_dict[filename] = f.readlines()
-        except UnicodeDecodeError:
-            log_printer.warn(_("Failed to read file '{}'. It seems to contain "
-                               "non-unicode characters. Leaving it "
-                               "out.".format(filename)))
-        except Exception as exception:  # pragma: no cover
-            log_printer.log_exception(_("Failed to read file '{}' because of "
-                                        "an unknown error. Leaving it "
-                                        "out.").format(filename),
-                                      exception,
-                                      log_level=LOG_LEVEL.WARNING)
-
-    return file_dict
-
-
-def instantiate_bears(section,
-                      local_bear_list,
-                      global_bear_list,
-                      file_dict,
-                      message_queue):
-    """
-    Instantiates each bear with the arguments it needs.
-
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bears to instantiate.
-    :param global_bear_list: List of global bears to instantiate.
-    :param file_dict:        Dictionary containing filenames and their
-                             contents.
-    :param message_queue:    Queue responsible to maintain the messages
-                             delivered by the bears.
-    """
-    for i in range(len(local_bear_list)):
-        local_bear_list[i] = local_bear_list[i](section,
-                                                message_queue,
-                                                TIMEOUT=0.1)
-    for i in range(len(global_bear_list)):
-        global_bear_list[i] = global_bear_list[i](file_dict,
-                                                  section,
-                                                  message_queue,
-                                                  TIMEOUT=0.1)
-
-
-def instantiate_processes(section,
-                          local_bear_list,
-                          global_bear_list,
-                          job_count,
-                          log_printer):
-    """
-    Instantiate the number of processes that will run bears which will be
-    responsible for running bears in a multiprocessing environment.
-
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bears belonging to the section.
-    :param global_bear_list: List of global bears belonging to the section.
-    :param job_count:        Max number of processes to create.
-    :param log_printer:      The log printer to warn to.
-    :return:                 A tuple containing a list of processes,
-                             and the arguments passed to each process which are
-                             the same for each object.
-    """
-    filename_list = collect_files(path_list(section.get('files', "")),
-                                  log_printer)
-    file_dict = get_file_dict(filename_list, log_printer)
-
-    manager = multiprocessing.Manager()
-    global_bear_queue = multiprocessing.Queue()
-    filename_queue = multiprocessing.Queue()
-    local_result_dict = manager.dict()
-    global_result_dict = manager.dict()
-    message_queue = multiprocessing.Queue()
-    control_queue = multiprocessing.Queue()
-
-    bear_runner_args = {"file_name_queue": filename_queue,
-                        "local_bear_list": local_bear_list,
-                        "global_bear_list": global_bear_list,
-                        "global_bear_queue": global_bear_queue,
-                        "file_dict": file_dict,
-                        "local_result_dict": local_result_dict,
-                        "global_result_dict": global_result_dict,
-                        "message_queue": message_queue,
-                        "control_queue": control_queue,
-                        "timeout": 0.1}
-
-    instantiate_bears(section,
-                      local_bear_list,
-                      global_bear_list,
-                      file_dict,
-                      message_queue)
-    fill_queue(filename_queue, file_dict.keys())
-    fill_queue(global_bear_queue, range(len(global_bear_list)))
-
-    return ([multiprocessing.Process(target=run, kwargs=bear_runner_args)
-             for i in range(job_count)],
-            bear_runner_args)
-
-
-def process_queues(processes,
-                   control_queue,
-                   local_result_dict,
-                   global_result_dict,
-                   file_dict,
-                   print_results):
-    """
-    Iterate the control queue and send the results recieved to the interactor
-    so that they can be presented to the user.
-
-    :param processes:          List of processes which can be used to run
-                               Bears.
-    :param control_queue:      Containing control elements that indicate
-                               whether there is a result available and which
-                               bear it belongs to.
-    :param local_result_dict:  Dictionary containing results respective to
-                               local bears. It is modified by the processes
-                               i.e. results are added to it by multiple
-                               processes.
-    :param global_result_dict: Dictionary containing results respective to
-                               global bears. It is modified by the processes
-                               i.e. results are added to it by multiple
-                               processes.
-    :param file_dict:          Dictionary containing file contents with
-                               filename as keys.
-    :param print_results:      Prints all given results appropriate to the
-                               output medium.
-    :return:                   Return True if all bears execute succesfully and
-                               Results were delivered to the user. Else False.
-    """
-    running_processes = get_running_processes(processes)
-    retval = False
-    # Number of processes working on local bears
-    local_processes = len(processes)
-    global_result_buffer = []
-
-    # One process is the logger thread
-    while local_processes > 1 and running_processes > 1:
-        try:
-            control_elem, index = control_queue.get(timeout=0.1)
-
-            if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
-                local_processes -= 1
-            elif control_elem == CONTROL_ELEMENT.LOCAL:
-                assert local_processes != 0
-                retval = print_result(local_result_dict[index],
-                                      file_dict,
-                                      retval,
-                                      print_results)
-            elif control_elem == CONTROL_ELEMENT.GLOBAL:
-                global_result_buffer.append(index)
-        except queue.Empty:
-            running_processes = get_running_processes(processes)
-
-    # Flush global result buffer
-    for elem in global_result_buffer:
-        retval = print_result(global_result_dict[elem],
-                              file_dict,
-                              retval,
-                              print_results)
-
-    running_processes = get_running_processes(processes)
-    # One process is the logger thread
-    while running_processes > 1:
-        try:
-            control_elem, index = control_queue.get(timeout=0.1)
-
-            if control_elem == CONTROL_ELEMENT.GLOBAL:
-                retval = print_result(global_result_dict[index],
-                                      file_dict,
-                                      retval,
-                                      print_results)
-            else:
-                assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
-                running_processes = get_running_processes(processes)
-
-        except queue.Empty:
-            running_processes = get_running_processes(processes)
-
-    return retval
-
-
-def execute_section(section,
-                    global_bear_list,
-                    local_bear_list,
-                    print_results,
-                    log_printer):
-    """
-    Executes the section with the given bears.
-
-    The execute_section method does the following things:
-    1. Prepare a Process
-      * Load files
-      * Create queues
-    2. Spawn up one or more Processes
-    3. Output results from the Processes
-    4. Join all processes
-
-    :param section:          The section to execute.
-    :param global_bear_list: List of global bears belonging to the section.
-    :param local_bear_list:  List of local bears belonging to the section.
-    :param print_results:    Prints all given results appropriate to the
-                             output medium.
-    :param log_printer:      The log_printer to warn to.
-    :return:                 Tuple containing a bool (True if results were
-                             yielded, False otherwise), a Manager.dict
-                             containing all local results(filenames are key)
-                             and a Manager.dict containing all global bear
-                             results (bear names are key).
-    """
-    local_bear_list = Dependencies.resolve(local_bear_list)
-    global_bear_list = Dependencies.resolve(global_bear_list)
-
-    running_processes = get_cpu_count()
-    processes, arg_dict = instantiate_processes(section,
-                                                local_bear_list,
-                                                global_bear_list,
-                                                running_processes,
-                                                log_printer)
-
-    logger_thread = LogPrinterThread(arg_dict["message_queue"],
-                                     log_printer)
-    # Start and join the logger thread along with the processes to run bears
-    processes.append(logger_thread)
-
-    for runner in processes:
-        runner.start()
-
-    try:
-        return (process_queues(processes,
-                               arg_dict["control_queue"],
-                               arg_dict["local_result_dict"],
-                               arg_dict["global_result_dict"],
-                               arg_dict["file_dict"],
-                               print_results),
-                arg_dict["local_result_dict"],
-                arg_dict["global_result_dict"],
-                arg_dict["file_dict"])
-    finally:
-        logger_thread.running = False
-
-        for runner in processes:
-            runner.join()
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𥍑():
+ try:
+  return 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𣗳()
+ except 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞹶: 
+  return 2
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𢽀(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﴚ,any_list):
+ for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𫜰 in any_list:
+  𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﴚ.put(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𫜰)
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𪾜(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ):
+ return 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ٹ((1 if process.is_alive()else 0)for process in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ)
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﳉ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬣,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰,print_results):
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬣=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﵧ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓禰(lambda result:not 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﺠ(result,HiddenResult),𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬣))
+ print_results(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬣,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积)
+ return 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰 or 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ۯ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬣)>0
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﳰ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞺸,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗):
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积={}
+ for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻩ in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞺸:
+  try:
+   with 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ẩ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻩ,"r",encoding="utf-8")as f:
+    𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻩ]=f.readlines()
+  except 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠊:
+   𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗.warn(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𤊈("Failed to read file '{}'. It seems to contain " "non-unicode characters. Leaving it " "out.".format(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻩ)))
+  except 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐦇 as 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭣ: 
+   𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗.log_exception(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𤊈("Failed to read file '{}' because of " "an unknown error. Leaving it " "out.").format(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻩ),𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭣ,log_level=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﺀ)
+ return 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓聈(section,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐤣):
+ for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ڋ in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐡓(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ۯ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅)):
+  𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ڋ]=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ڋ](section,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐤣,TIMEOUT=0.1)
+ for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ڋ in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐡓(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ۯ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ)):
+  𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ڋ]=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ڋ](𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,section,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐤣,TIMEOUT=0.1)
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬞(section,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ,job_count,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗):
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞺸=collect_files(path_list(section.get('files',"")))
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﳰ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞺸,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞹹=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭝ()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𓂒=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ꉗ()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𢳔=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ꉗ()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𧼏=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞹹.dict()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓庤=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞹹.dict()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐤣=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ꉗ()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃓=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ꉗ()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﮭ={"file_name_queue":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𢳔,"local_bear_list":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅,"global_bear_list":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ,"global_bear_queue":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𓂒,"file_dict":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,"local_result_dict":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𧼏,"global_result_dict":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓庤,"message_queue":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐤣,"control_queue":𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃓,"timeout":0.1}
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓聈(section,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐤣)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𢽀(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𢳔,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积.keys())
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𢽀(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𓂒,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐡓(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ۯ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ)))
+ return([𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓䨞(target=run,kwargs=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﮭ)for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ڋ in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐡓(job_count)],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﮭ)
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃐(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃓,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𧼏,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓庤,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,print_results):
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𪾜(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐨗
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𥟦=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ۯ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠒=[]
+ while 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𥟦>1 and 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ>1:
+  try:
+   𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬏,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭢ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃓.get(timeout=0.1)
+   if 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬏==𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𧪏:
+    𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𥟦-=1
+   elif 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬏==𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𨿄:
+    assert 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𥟦!=0
+    𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﳉ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𧼏[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭢ],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰,print_results)
+   elif 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬏==𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠰:
+    𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠒.append(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭢ)
+  except 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓醳:
+   𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𪾜(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ)
+ for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𫜰 in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠒:
+  𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﳉ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓庤[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𫜰],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰,print_results)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𪾜(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ)
+ while 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ>1:
+  try:
+   𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬏,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭢ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃓.get(timeout=0.1)
+   if 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬏==𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐠰:
+    𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﳉ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓庤[𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﭢ],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓积,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰,print_results)
+   else:
+    assert 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬏==𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𣼺
+    𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𪾜(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ)
+  except 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓醳:
+   𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𪾜(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ)
+ return 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓땰
+def 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𞺁(section,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅,print_results,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗):
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﺟ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﺟ(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𥍑()
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐬞(section,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃅,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻤ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶋ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓煣=LogPrinterThread(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["message_queue"],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓汗)
+ 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ.append(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓煣)
+ for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻞ in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ:
+  𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻞ.start()
+ try:
+  return(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐃐(𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ,𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["control_queue"],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["local_result_dict"],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["global_result_dict"],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["file_dict"],print_results),𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["local_result_dict"],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["global_result_dict"],𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓㤆["file_dict"])
+ finally:
+  𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓煣.running=𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓𐨗
+  for 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻞ in 𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﶞ:
+   𫔧ࡀߋﲰ𐰛וּ𝜈燈ڊޱ𢫪ﰼ𐩯ﱥݷ𩑈瘽ﮤ𫄭𐰴𪡻𞺥䃒ﰚ𥋷𐨦ﲏﶺ𐡓ﻞ.join()
+# Created by pyminifier (https://github.com/liftoff/pyminifier)
