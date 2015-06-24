@@ -1,3 +1,4 @@
 merge:
+  fast-forward: only
   script:
-    - "bash .misc/fail_if_HEAD_is_merge.sh"
+    - "bash .misc/succeed.sh"
