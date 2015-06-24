@@ -1,5 +1,7 @@
 set -x
 set -e
 
-coveralls
-codecov
+if [[ "$CIRCLE_NODE_INDEX" != "3" ]] ; then
+  coveralls
+  codecov
+fi
