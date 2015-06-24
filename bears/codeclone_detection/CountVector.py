@@ -73,9 +73,8 @@ class CountVector:
 
     def difference(self, other):
         """
-        Calculates an absolute difference value. This value can be used to
-        indicate the similarity of the associated variables, while 0 means no
-        difference, i.e. the count vectors are identical.
+        Calculates an absolute difference value. 0 means no difference,
+        i.e. the count vectors are identical.
 
         :param other: The CountVector to calculate the difference to.
         :return:      An absolute difference value.
