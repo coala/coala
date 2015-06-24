@@ -74,7 +74,7 @@ class ConsoleInteractorTest(unittest.TestCase):
         Result.get_actions = lambda x: []
         PatchResult.get_actions = lambda x: [ApplyPatchAction()]
 
-        if sys.version_info < (3, 3):  # pragma: no cover
+        if sys.version_info < (3, 3):
             self.FileNotFoundError = OSError
         else:
             self.FileNotFoundError = FileNotFoundError
