@@ -1,122 +1,58 @@
 import inspect
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ᒔ=TypeError
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﹹ=sorted
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽䔫=len
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𥫊=inspect.getfile
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﺱ=inspect.currentframe
 import os
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰=os.path
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𩑤=os.sep
 import sys
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𢨡=sys.path
 import unittest
-
-sys.path.insert(0, ".")
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﵲ=unittest.main
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ڒ=unittest.TestCase
+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𢨡.insert(0,".")
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.collecting.Collectors import collect_files, \
-                                         collect_dirs, \
-                                         collect_bears
-
-
-class CollectFilesTest(unittest.TestCase):
-    def setUp(self):
-        current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        self.collectors_test_dir = os.path.join(current_dir,
-                                                "collectors_test_dir")
-        self.log_printer = ConsolePrinter()
-
-    def test_file_empty(self):
-        self.assertRaises(TypeError, collect_files)
-
-    def test_file_invalid(self):
-        self.assertEqual(collect_files(["invalid_path"], self.log_printer), [])
-
-    def test_expression_invalid(self):
-        self.assertRaises(SystemExit, collect_files, ["**d"], self.log_printer)
-
-    def test_file_collection(self):
-        self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
-                                                     "others",
-                                                     "*",
-                                                     "*2.py")],
-                                       self.log_printer),
-                         [os.path.join(self.collectors_test_dir,
-                                       "others",
-                                       "py_files",
-                                       "file2.py")])
-
-
-class CollectDirsTest(unittest.TestCase):
-    def setUp(self):
-        current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        self.collectors_test_dir = os.path.join(current_dir,
-                                                "collectors_test_dir")
-
-        self.log_printer = ConsolePrinter()
-
-    def test_dir_empty(self):
-        self.assertRaises(TypeError, collect_dirs)
-
-    def test_dir_invalid(self):
-        self.assertEqual(collect_dirs(["invalid_path"], self.log_printer), [])
-
-    def test_expression_invalid(self):
-        self.assertRaises(SystemExit, collect_files, ["**d"], self.log_printer)
-
-    def test_dir_collection(self):
-        self.assertEqual(
-            sorted(collect_dirs([os.path.join(self.collectors_test_dir,
-                                              "**")],
-                                self.log_printer)),
-            sorted([
-                os.path.join(self.collectors_test_dir, "bears"),
-                os.path.join(self.collectors_test_dir, "bears", "__pycache__"),
-                os.path.join(self.collectors_test_dir, "others"),
-                os.path.join(self.collectors_test_dir, "others", "c_files"),
-                os.path.join(self.collectors_test_dir, "others", "py_files"),
-                self.collectors_test_dir]))
-
-
-class CollectBearsTest(unittest.TestCase):
-    def setUp(self):
-        current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
-        self.collectors_test_dir = os.path.join(current_dir,
-                                                "collectors_test_dir")
-
-        self.log_printer = ConsolePrinter()
-
-    def test_bear_empty(self):
-        self.assertRaises(TypeError, collect_bears)
-
-    def test_bear_invalid(self):
-        self.assertEqual(collect_bears(["invalid_paths"],
-                                       ["invalid_name"],
-                                       ["invalid kind"],
-                                       self.log_printer), [])
-
-    def test_expression_invalid(self):
-        self.assertRaises(SystemExit, collect_files, ["**d"], self.log_printer)
-
-    def test_simple_single(self):
-        self.assertEqual(len(collect_bears(
-            [os.path.join(self.collectors_test_dir, "bears")],
-            ["bear1"],
-            ["kind"],
-            self.log_printer)), 1)
-
-    def test_reference_single(self):
-        self.assertEqual(len(collect_bears(
-            [os.path.join(self.collectors_test_dir, "bears")],
-            ["metabear"],
-            ["kind"],
-            self.log_printer)), 1)
-
-    def test_no_duplications(self):
-        self.assertEqual(len(collect_bears(
-            [os.path.join(self.collectors_test_dir, "bears", "**")],
-            ["*"],
-            ["kind"],
-            self.log_printer)), 2)
-
-    def test_wrong_kind(self):
-        self.assertEqual(len(collect_bears(
-            [os.path.join(self.collectors_test_dir, "bears", "**")],
-            ["*"],
-            ["other_kind"],
-            self.log_printer)), 0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+from coalib.collecting.Collectors import collect_files, collect_dirs, collect_bears
+class 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺡(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ڒ):
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺂(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺘=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.split(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𥫊(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﺱ()))[0]
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺘,"collectors_test_dir")
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𐨞()
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𖡹(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertRaises(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ᒔ,collect_files)
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽כּ(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(collect_files(["invalid_path"]),[])
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽崺(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(collect_files([둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"others","*","*2.py")]),[둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.normcase(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"others","py_files","file2.py"))])
+class 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𪬎(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ڒ):
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺂(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺘=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.split(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𥫊(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﺱ()))[0]
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺘,"collectors_test_dir")
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𐨞()
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﺠ(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertRaises(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ᒔ,collect_dirs)
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𪺹(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(collect_dirs(["invalid_path"]),[])
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﳈ(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﹹ(collect_dirs([둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"**")])),둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﹹ([둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.normcase(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"bears")),둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.normcase(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"bears","__pycache__")),둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.normcase(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"others")),둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.normcase(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"others","c_files")),둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.normcase(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"others","py_files")),둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.normcase(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir+둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𩑤)]))
+class 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𩰱(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ڒ):
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺂(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺘=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.split(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𥫊(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﺱ()))[0]
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞺘,"collectors_test_dir")
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer=둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𐨞()
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𐤦(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertRaises(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ᒔ,collect_bears)
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𐠛(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(collect_bears(["invalid_paths"],["invalid_name"],["invalid kind"],둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer),[])
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𨐼(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽䔫(collect_bears([둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"bears")],["bear1"],["kind"],둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer)),1)
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﮙ(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽䔫(collect_bears([둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"bears")],["metabear"],["kind"],둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer)),1)
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽혋(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽䔫(collect_bears([둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"bears","**")],["*"],["kind"],둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer)),2)
+ def 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽蟶(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹):
+  둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.assertEqual(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽䔫(collect_bears([둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽唰.join(둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.collectors_test_dir,"bears","**")],["*"],["other_kind"],둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽𞸹.log_printer)),0)
+if __name__=='__main__':
+ 둿𨋰𪠐ﻆﲮﶕ菀𥹂𥓽ﵲ(verbosity=2)

@@ -1,227 +1,195 @@
-import fnmatch
 import os
-
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞺄=len
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐬂=True
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ㅋ=False
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲜ=None
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𥤭=OSError
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𩔦=list
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤅻=os.error
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘=os.path
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤌝=os.sep
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜飇=os.curdir
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𠯯=os.listdir
+import platform
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐨗=platform.system
+import re
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜钅=re.finditer
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻺ=re.escape
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤺜=re.compile
 from coalib.misc.Decorators import yield_once
-from coalib.misc.i18n import N_
-
-
-def _make_selector(pattern_parts):
-    """
-    Creates an instance of the selector class that fits the first pattern part.
-
-    :param pattern_parts: List of strings representing a file system path that
-                          may contain wildcards
-    :return:              Selector class that represents the first pattern part
-    :raises ValueError:   If the pattern is invalid. (Error message is marked
-                          for translation and can thus be used in the UI.)
-    """
-    pat = pattern_parts[0]
-    child_parts = pattern_parts[1:]
-    if pat == '**':
-        cls = _RecursiveWildcardSelector
-    elif '**' in pat:
-        raise ValueError(N_("Invalid pattern: '**' can only be "
-                            "an entire path component"))
-    elif _is_wildcard_pattern(pat):
-        cls = _WildcardSelector
-    else:
-        cls = _PathSelector
-    return cls(pat, child_parts)
-
-
-def _is_wildcard_pattern(pat):
-    """
-    Decides whether this pattern needs actual matching using fnmatch, or can
-    be looked up directly as part of a path.
-    """
-    return "*" in pat or "?" in pat or "[" in pat
-
-
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䭂(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ,start_index):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞺄(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ)
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍=start_index
+ if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴 and ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍]=='!':
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍+=1
+ if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴: 
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍+=1
+ while ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴 and ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍]!=']':
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍+=1
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞸎(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜惡):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜惡=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞺄(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ[:ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜惡])
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴=0,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞺄(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ)
+ while ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜惡:
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﴳ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕]
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕+=1
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﴳ=='[':
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䭂(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ۻ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕)
+   if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴:
+    if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕<=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜惡<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍:
+     return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐬂
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍+1
+   else:
+    return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ㅋ
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ㅋ
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻧ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲜ
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜钅('\\)',ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+  if not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞸎(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋.start()):
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋.start()
+   break 
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲜ
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜钅('\\(',ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[:ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁]):
+  if not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞸎(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋.start()):
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋.end()
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁
 @yield_once
-def _iter_or_combinations(pattern,
-                          opening_delimiter="(",
-                          closing_delimiter=")",
-                          separator="|"):
-    """
-    A pattern can contain an "or" in the form of (a|b|c). This function will
-    iterate through all possible combinations. Nesting is supported
-    for "(a(b|c)d|e)" it will yield the patterns "abd", "acd" and "e".
-
-    :param pattern:           A string that may contain an "or" representation
-                              following the syntax demonstrated above.
-    :param opening_delimiter: Character or sequence thereof that marks the
-                              beginning of an "or" representation
-    :param closing_delimiter: Character or sequence thereof that marks the
-                              end of an "or" representation
-    :param separator:         Character or sequence thereof that separates the
-                              alternatives
-    :returns:                 Iterator that yields the results originating from
-                              inserting all possible combinations of
-                              alternatives into the pattern.
-    :raises ValueError:       If the pattern is invalid. (Error message is
-                              marked for translation and can thus be used in
-                              the UI.)
-    """
-    # Taking the leftmost closing delimiter and the rightmost opening delimiter
-    # left of it ensures that the delimiters belong together and the pattern is
-    # parsed correctly from the most nested section outwards.
-    closing_pos = pattern.find(closing_delimiter)
-    opening_pos = pattern[:closing_pos].rfind(opening_delimiter)
-
-    if (
-            (closing_pos == -1) != (opening_pos == -1) or
-            # Special case that gets overlooked because opening_delimiter
-            # is only being looked for in pattern[:-1] when closing_pos == -1
-            (closing_pos == -1 and pattern.endswith(opening_delimiter))):
-        raise ValueError(N_("Parentheses of pattern are not matching"))
-
-    if -1 not in (opening_pos, closing_pos):  # parentheses in pattern
-        prefix = pattern[:opening_pos]
-        parenthesized = pattern[opening_pos+len(opening_delimiter):closing_pos]
-        postfix = pattern[closing_pos+len(closing_delimiter):]
-        # This loop iterates through all possible combinations that can be
-        # inserted in place of the first innermost pair of parentheses:
-        # "(a|b)(c|d)" yields "a", then "b"
-        for combination in _iter_or_combinations(parenthesized,
-                                                 opening_delimiter,
-                                                 closing_delimiter,
-                                                 separator):
-            new_pattern = prefix + combination + postfix
-            # This loop iterates through all possible combinations for the new
-            # whole pattern, which has it's first pair of parentheses replaced
-            # already:
-            # "a(cd)" (first call) yields "ac", then "ad",
-            # "b(cd)" (second call) yields "bc" and "bd"
-            for new_combination in _iter_or_combinations(new_pattern,
-                                                         opening_delimiter,
-                                                         closing_delimiter,
-                                                         separator):
-                yield new_combination
-    elif separator in pattern:
-        for choice in pattern.split(separator):
-            yield choice
-    else:
-        yield pattern
-
-
-class _Selector:
-    """
-    Every Selector class has a successor Selector class with the remaining
-    pattern parts. Together they represent the glob expression that gets
-    evaluated.
-    """
-    def __init__(self, child_parts):
-        self.child_parts = child_parts
-        if child_parts:
-            self.successor = _make_selector(child_parts)
-        else:
-            self.successor = _TerminatingSelector()
-
-    def collect(self, path=os.path.abspath(os.curdir)):
-        return self._collect(path)
-
-    def _collect(self, paths):
-        raise NotImplementedError
-
-
-class _TerminatingSelector:
-    """
-    Represents the end of a pattern.
-    """
-    @staticmethod
-    def collect(path):
-        yield path
-
-
-class _PathSelector(_Selector):
-    """
-    Represents names of files and directories that do not need to be matched
-    using fnmatch.
-    """
-    def __init__(self, path, child_parts):
-        self.path = path
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        extended_path = os.path.join(path, self.path)
-        if os.path.exists(extended_path):
-            for result in self.successor.collect(extended_path):
-                yield result
-
-
-class _WildcardSelector(_Selector):
-    """
-    Represents names of files and directories that contain wildcards and need
-    to be matched using fnmatch.
-    """
-    def __init__(self, pat, child_parts):
-        self.pat = pat
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        if os.path.isdir(path):
-            for file_or_dir in os.listdir(path):
-                if fnmatch.fnmatch(file_or_dir, self.pat):
-                    file_or_dir = os.path.join(path, file_or_dir)
-                    for result in self.successor.collect(file_or_dir):
-                        yield result
-
-
-class _RecursiveWildcardSelector(_Selector):
-    """
-    Represents the '**' wildcard.
-    """
-    def __init__(self, pat, child_parts):
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        for root, dirs, files in os.walk(path, followlinks=True):
-            for result in self.successor.collect(root):
-                yield result
-
-
-def iglob(pattern, files=True, dirs=True):
-    """
-    Iterate over this subtree and yield all existing files matching the given
-    pattern.
-
-    :param pattern:     Unix style glob pattern that matches paths
-    :param files:       Whether or not to include files
-    :param dirs:        Whether or not to include directories
-    :return:            List of all files matching the pattern
-    :raises ValueError: If an invalid pattern is found. The exception message
-                        is marked for translation, thus can be translated
-                        dynamically if needed.
-    """
-    if pattern == "" or (not files and not dirs):
-        raise StopIteration()
-
-    for pat in _iter_or_combinations(pattern):
-        # extract drive letter, if possible:
-        drive_letter, pat = os.path.splitdrive(pat)
-        # "/a/b.py" -> ['', 'a', 'b.py'] or \\a\\b.py -> ['', 'a', 'b.py']
-        pattern_parts = pat.split(os.sep)
-        # replace first pattern part with absolute path root if empty
-        if pat.startswith(os.sep):
-            pattern_parts[0] = drive_letter and drive_letter + "\\" or os.sep
-
-        selector = _make_selector(pattern_parts)
-
-        for p in selector.collect():
-            if os.path.isfile(p) and files is True:
-                yield p
-            elif os.path.isdir(p) and dirs is True:
-                yield p
-
-
-def glob(pattern, files=True, dirs=True):
-    """
-    Iterate over this subtree and return a list of all existing files matching
-    the given pattern.
-
-    :param pattern: Unix style glob pattern that matches paths
-    :param files:   Whether or not to include files
-    :param dirs:    Whether or not to include directories
-    :return:        List of all files matching the pattern
-    """
-    return list(iglob(pattern, files, dirs))
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ꘜ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ=0
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﵜ=[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋.start()for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜钅('\\|',ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇)]
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﵜ.append(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞺄(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇))
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﵜ:
+  if not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞸎(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁):
+   yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ:ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁]
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁+1
+@yield_once
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜හ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻧ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇)
+ if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲜ in(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁):
+  yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇
+ else:
+  for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜皴 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ꘜ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ:ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁]):
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﰶ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[:ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲘ-1]+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜皴+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐤁+1:]
+   for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭞ in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜හ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﰶ):
+    yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭞ
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐨝(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴=0,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞺄(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇)
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛=''
+ while ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴:
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﴳ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕]
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕+=1
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﴳ=='*':
+   if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕<ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴 and ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕]=='*':
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+='.*'
+   elif ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐨗()=='Windows': 
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+='[^/\\\\]*'
+   else:
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+='[^'+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻺ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤌝)+']*'
+  elif ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﴳ=='?':
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+='.'
+  elif ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﴳ=='[':
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䭂(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕)
+   if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍>=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜갴:
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+='\\['
+   else:
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕:ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍].replace('\\','\\\\')
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧧕=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𢤍+1
+    if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ[0]=='!':
+     ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ='^'+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ[1:]
+    elif ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ[0]=='^':
+     ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ='\\'+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+='['+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜שּ+']'
+  else:
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻺ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﴳ)
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜䙛+'\\Z(?ms)'
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𥜚(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.normcase(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ)
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜හ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.expanduser(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏)
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.normcase(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏)
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤺜(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐨝(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏)).match
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ)is not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲜ:
+   return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐬂
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ㅋ
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𫄖(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.split(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇)
+ if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑:
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.exists(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+   yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇
+ else:
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.isdir(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ):
+   yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇
+ return
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦷛(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ):
+ if not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ:
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜飇
+ try:
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ꤝ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𠯯(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ)
+ except ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤅻:
+  return
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠗 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ꤝ:
+  yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠗
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐦛=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.join(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠗)if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ else ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠗
+  for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞸷 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦷛(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐦛):
+   yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.join(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠗,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𞸷)
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜嚲(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ if not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ:
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜飇
+ try:
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜齨=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𠯯(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ)
+ except ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𥤭:
+  return[]
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦔤=[]
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.normcase(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇)
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤺜(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𐨝(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇)).match
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜齨:
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.normcase(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ)):
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦔤.append(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ)
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦔤
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ࢥ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑):
+ if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.exists(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.join(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑)):
+  return[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑]
+ return[]
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜笋(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ assert ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇=='**'
+ if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ:
+  yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇[:0]
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𡋾 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦷛(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ):
+  yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𡋾
+ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜נּ=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𤺜('([*?[])')
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦛨(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜נּ.search(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇)
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𧶋 is not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﲜ
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜톼(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜හ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.expanduser(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏)
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.normcase(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏)
+  ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.split(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏)
+  if not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦛨(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏):
+   for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜멖 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𫄖(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏):
+    yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜멖
+   return
+  if not ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ:
+   if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑=='**':
+    for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜멖 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜笋(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑):
+     yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜멖
+   else:
+    for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜멖 in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜嚲(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑):
+     yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜멖
+   return
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ!=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㐏 and ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦛨(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ):
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𥫴=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜톼(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ)
+  else:
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𥫴=[ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ]
+  if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦛨(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑):
+   if ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑=='**':
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㗆=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜笋
+   else:
+    ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㗆=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜嚲
+  else:
+   ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㗆=ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ࢥ
+  for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𥫴:
+   for ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ in ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㗆(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜蠑):
+    yield ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜㜘.join(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭼ,ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﻼ)
+def ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜ﭺ(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇):
+ return ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𩔦(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜톼(ﰼ𠍁メ𨛰䁲ﮑﻥ𐩵띜𦹇))
