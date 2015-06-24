@@ -95,6 +95,13 @@ class ResultTest(unittest.TestCase):
         cmp = Result("origin", "message", "file")
         self.assertNotEqual(cmp, uut)
 
+        cmp = Result("origin", "", "file", line_nr=1, debug_msg="test")
+        self.assert_ordering(uut, cmp)
+
+        cmp = Result("origin", "message", "file", line_nr=1, debug_msg="test")
+        self.assertNotEqual(cmp, uut)
+        self.assert_ordering(cmp, uut)
+
     def assert_equal(self, first, second):
         self.assertGreaterEqual(first, second)
         self.assertEqual(first, second)

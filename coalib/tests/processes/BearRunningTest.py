@@ -8,7 +8,11 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.processes.BearRunning import run, LogMessage, LOG_LEVEL, send_msg
+from coalib.processes.BearRunning import (run,
+                                          LogMessage,
+                                          LOG_LEVEL,
+                                          send_msg,
+                                          task_done)
 from coalib.settings.Section import Section
 
 
@@ -112,6 +116,13 @@ class BearRunningUnitTest(unittest.TestCase):
         self.global_result_dict = manager.dict()
         self.message_queue = queue.Queue()
         self.control_queue = queue.Queue()
+
+    def test_queue_done_marking(self):
+        self.message_queue.put("test")
+        task_done(self.message_queue)  # Should make the queue joinable
+        self.message_queue.join()
+
+        task_done("test")  # Should pass silently
 
     def test_messaging(self):
         send_msg(self.message_queue,

@@ -72,13 +72,20 @@ class CountVectorTest(unittest.TestCase):
         uut.count_reference(False)
         self.assertEqual(abs(uut), sqrt(5))
 
-    def check_difference(self, cv1, cv2, expected_difference):
+    def check_difference(self,
+                         cv1,
+                         cv2,
+                         expected_difference,
+                         diff_function):
         """
-        Checks the difference between the given count vectors.
+        Checks the difference between the given count vectors through a
+        given difference function.
 
         :param cv1:                 List of counts to put in the first CV.
         :param cv2:                 List of counts to put in the second CV.
         :param expected_difference: The expected difference value.
+        :param diff_function:       The name of the member function to check
+                                    (string).
         """
         # Create empty CountVector objects
         count_vector1 = CountVector("", [lambda: False for i in cv1])
@@ -87,11 +94,11 @@ class CountVectorTest(unittest.TestCase):
         count_vector1.count_vector = cv1
         count_vector2.count_vector = cv2
 
-        self.assertEqual(count_vector1.difference(count_vector2),
+        self.assertEqual(getattr(count_vector1, diff_function)(count_vector2),
                          expected_difference,
                          "Difference value for vectors {} and {} doesnt match"
                          ".".format(cv1, cv2))
-        self.assertEqual(count_vector2.difference(count_vector1),
+        self.assertEqual(getattr(count_vector2, diff_function)(count_vector1),
                          expected_difference,
                          "The difference operation is not symmetric.")
 
@@ -103,17 +110,33 @@ class CountVectorTest(unittest.TestCase):
             ([1], [1], 0),
             ([100], [100], 0),
 
-            ([0], [100], 1),
+            ([0], [100], 100),
             ([0], [1], 1),
-            ([0, 1], [1, 0], 1),
+            ([0, 1], [1, 0], sqrt(2)),
 
-            ([0, 1], [1, 1], 0.5),
-            ([0, 2], [1, 2], 0.2),  # Higher values get weighted more
-            ([4], [3], 1/16),
-            ([0, 4], [0, 3], 1/16)]  # Zeros are weighted zeroly
+            ([0, 1], [1, 1], 1),
+            ([0, 2], [1, 2], 1),
+            ([4], [3], 1),
+            ([0, 4], [0, 3], 1)]  # Zeros don't matter
 
         for elem in count_vector_difference_matrix:
-            self.check_difference(*elem)
+            self.check_difference(*elem, diff_function="difference")
+
+    def test_maxabs(self):
+        # For each tuple first two items are CVs to compare, third is dif value
+        count_vector_difference_matrix = [
+            ([], [], 0),
+            ([0], [0], 0),
+            ([1], [1], 1),
+            ([100], [100], 100),
+
+            ([0], [100], 100),
+            ([0], [1], 1),
+            ([0, 1], [1, 0], sqrt(2))]
+
+        for elem in count_vector_difference_matrix:
+            self.check_difference(*elem, diff_function="maxabs")
+
 
 
 if __name__ == '__main__':

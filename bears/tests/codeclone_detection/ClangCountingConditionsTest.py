@@ -57,7 +57,24 @@ class ClangCountingConditionsTest(unittest.TestCase):
             "used",
             (1, "used(int, int)"),
             {"a": [5],
-             "b": [6]})
+             "b": [6],
+             "foo": [1]})
+
+    def test_is_called(self):
+        self.check_counting_condition(
+            "is_called",
+            (1, "used(int, int)"),
+            {"a": [0],
+             "b": [0],
+             "foo": [1]})
+
+    def test_is_call_param(self):
+        self.check_counting_condition(
+            "is_call_param",
+            (1, "used(int, int)"),
+            {"a": [0],
+             "b": [1],
+             "foo": [0]})
 
     def test_returned(self):
         self.check_counting_condition(
