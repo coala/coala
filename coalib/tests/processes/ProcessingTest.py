@@ -1,184 +1,121 @@
 import inspect
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠪠=False
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺=None
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎=len
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠞪=str
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﺸ=file
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩚭=range
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䒬=inspect.getfile
 import os
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮌ=os.path
 import queue
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩙯=queue.Queue
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𥇰=queue.Empty
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢷬=queue.get
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𧿧=queue.put
 import unittest
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﴜ=unittest.main
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ࡔ=unittest.TestCase
 import sys
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ڽ=sys.path
 import multiprocessing
-
-sys.path.insert(0, ".")
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ךּ=multiprocessing.Process
+import platform
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢟴=platform.system
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ڽ.insert(0,".")
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.Interactor import Interactor
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﶶ=Interactor.__init__
 from coalib.output.printers.LogPrinter import LogPrinter
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐰵=LogPrinter.__init__
 from coalib.processes.Processing import execute_section
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠇤=CONTROL_ELEMENT.LOCAL
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮚ=CONTROL_ELEMENT.GLOBAL_FINISHED
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𫅳=CONTROL_ELEMENT.GLOBAL
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐠢=CONTROL_ELEMENT.LOCAL_FINISHED
 from coalib.processes.Processing import process_queues
 import re
-
-
-class DummyProcess(multiprocessing.Process):
-    def __init__(self, control_queue):
-        multiprocessing.Process.__init__(self)
-        self.control_queue = control_queue
-
-    def is_alive(self):
-        return not self.control_queue.empty()
-
-
-class ProcessingTestInteractor(Interactor, LogPrinter):
-    def __init__(self, log_printer, result_queue, log_queue):
-        Interactor.__init__(self, log_printer)
-        LogPrinter.__init__(self)
-        self.result_queue = result_queue
-        self.log_queue = log_queue
-        self.set_up = False
-
-    def log_message(self, log_message, timestamp=None, **kwargs):
-        self.log_queue.put(log_message)
-
-    def print_results(self, result_list, file_dict):
-        self.result_queue.put(result_list)
-
-
-class MessageQueueingInteractor(Interactor):
-    """
-    A simple interactor that pushes all results it gets to a queue for
-    testing purposes.
-    """
-
-    def __init__(self):
-        Interactor.__init__(self, None)
-        self.queue = queue.Queue()
-
-    def print_results(self, *args):
-        self.queue.put(args)
-
-    def get(self):
-        return self.queue.get(timeout=0)
-
-
-class ProcessingTest(unittest.TestCase):
-    def setUp(self):
-        config_path = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ProcessingTest)),
-            "section_executor_test_files",
-            ".coafile"))
-        self.testcode_c_path = os.path.join(os.path.dirname(config_path),
-                                            "testcode.c")
-
-        self.result_queue = queue.Queue()
-        self.log_queue = queue.Queue()
-        log_printer = ConsolePrinter()
-        self.interactor = ProcessingTestInteractor(log_printer,
-                                                   self.result_queue,
-                                                   self.log_queue)
-
-        (self.sections,
-         self.local_bears,
-         self.global_bears,
-         targets) = gather_configuration(self.interactor.acquire_settings,
-                                         log_printer,
-                                         ["--config", re.escape(config_path)])
-        self.assertEqual(len(self.local_bears["default"]), 1)
-        self.assertEqual(len(self.global_bears["default"]), 1)
-        self.assertEqual(targets, [])
-
-    def test_run(self):
-        results = execute_section(self.sections["default"],
-                                  self.global_bears["default"],
-                                  self.local_bears["default"],
-                                  self.interactor.print_results,
-                                  self.interactor)
-        self.assertTrue(results[0])
-
-        local_results = self.result_queue.get(timeout=0)
-        global_results = self.result_queue.get(timeout=0)
-        self.assertTrue(self.result_queue.empty())
-
-        self.assertEqual(len(local_results), 1)
-        self.assertEqual(len(global_results), 1)
-        # Result dict also returned
-        # One file
-        self.assertEqual(len(results[1]), 1)
-        # One global bear
-        self.assertEqual(len(results[2]), 1)
-
-        local_result = local_results[0]
-        global_result = global_results[0]
-
-        self.assertEqual(str(local_result),
-                         "Result:\n origin: 'LocalTestBear'\n file: 'None'\n "
-                         "line nr: None\n severity: 1\n'test msg'")
-        self.assertEqual(str(global_result),
-                         "Result:\n origin: 'GlobalTestBear'\n file: '{file}'"
-                         "\n line nr: None\n severity: 1\n'test "
-                         "message'".format(file=self.testcode_c_path))
-
-    def test_empty_run(self):
-        results = execute_section(self.sections["default"],
-                                  [],
-                                  [],
-                                  self.interactor.print_results,
-                                  self.interactor)
-        # No results
-        self.assertFalse(results[0])
-        # One file
-        self.assertEqual(len(results[1]), 1)
-        # No global bear
-        self.assertEqual(len(results[2]), 0)
-
-    def test_process_queues(self):
-        mock_interactor = MessageQueueingInteractor()
-        ctrlq = queue.Queue()
-
-        # Append custom controlling sequences.
-
-        # Simulated process 1
-        ctrlq.put((CONTROL_ELEMENT.LOCAL, 1))
-        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
-
-        # Simulated process 2
-        ctrlq.put((CONTROL_ELEMENT.LOCAL, 2))
-
-        # Simulated process 1
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-        # Simulated process 2
-        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-        process_queues(
-            [DummyProcess(control_queue=ctrlq) for i in range(3)],
-            ctrlq,
-            {1: ["The first result."],
-             2: ["The second result.", HiddenResult("t", "c")]},
-            {1: ["The one and only global result."]},
-            None,
-            mock_interactor.print_results)
-
-        self.assertEqual(mock_interactor.get(), (["The first result."], None))
-        self.assertEqual(mock_interactor.get(), (["The second result."], None))
-        self.assertEqual(mock_interactor.get(),
-                         (["The one and only global result."], None))
-        self.assertEqual(mock_interactor.get(),
-                         (["The one and only global result."], None))
-
-        # No valid FINISH element in the queue
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-        process_queues(
-            [DummyProcess(control_queue=ctrlq) for i in range(3)],
-            ctrlq,
-            {1: "The first result.", 2: "The second result."},
-            {1: "The one and only global result."},
-            None,
-            mock_interactor.print_results)
-        with self.assertRaises(queue.Empty):
-            mock_interactor.get()
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿놄=re.escape
+class ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢚉(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ךּ):
+ def __init__(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﭐ):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ךּ.__init__(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.control_queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﭐ
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ؼ(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣):
+  return not ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.control_queue.empty()
+class ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ڵ(Interactor,LogPrinter):
+ def __init__(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐰯,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﭲ,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𪗺):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﶶ(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐰯)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐰵(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.result_queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﭲ
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.log_queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𪗺
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.set_up=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠪠
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𞺢(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𞺢,timestamp=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺,**kwargs):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.log_queue.put(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𞺢)
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ߐ(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣,result_list,file_dict):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.result_queue.put(result_list)
+class ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݫ(Interactor):
+ def __init__(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﶶ(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩙯()
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ߐ(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣,*args):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𧿧(args)
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿誗(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣):
+  return ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢷬(timeout=0)
+class ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐦠(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ࡔ):
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿郰(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿پ=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮌ.abspath(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮌ.join(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮌ.dirname(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䒬(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐦠)),"section_executor_test_files",".coafile"))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.testcode_c_path=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮌ.join(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮌ.dirname(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿پ),"testcode.c")
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.result_queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩙯()
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.log_queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩙯()
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐰯=ConsolePrinter()
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.interactor=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ڵ(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐰯,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.result_queue,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.log_queue)
+  (ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.sections,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.local_bears,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.global_bears,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠾞)=gather_configuration(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.interactor.acquire_settings,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐰯,["--config",ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿놄(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿پ)])
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.local_bears["default"]),1)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.global_bears["default"]),1)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠾞,[])
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿麺(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏=execute_section(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.sections["default"],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.global_bears["default"],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.local_bears["default"],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.interactor.print_results,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.interactor)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertTrue(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏[0])
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𥊥=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.result_queue.get(timeout=0)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ܛ=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.result_queue.get(timeout=0)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertTrue(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.result_queue.empty())
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𥊥),1)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ܛ),1)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏[1]),1)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏[2]),1)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𥌑=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𥊥[0]
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𓉮=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ܛ[0]
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠞪(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𥌑),"Result:\n origin: 'LocalTestBear'\n file: 'None'\n " "line nr: None\n severity: 1\n'test msg'")
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﺸ=(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢟴()=='Windows' and ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.testcode_c_path.lower()or ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.testcode_c_path)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠞪(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𓉮),"Result:\n origin: 'GlobalTestBear'\n file: '{}'" "\n line nr: None\n severity: 1\n'test " "message'".format(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﺸ))
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐨛(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏=execute_section(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.sections["default"],[],[],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.interactor.print_results,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.interactor)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertFalse(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏[0])
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏[1]),1)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿䨎(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦃏[2]),0)
+ def ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﲌ(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣):
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݫ()
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩙯()
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠇤,1))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐠢,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𫅳,1))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𠇤,2))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮚ,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𐠢,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𫅳,1))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮚ,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦅊([ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢚉(control_queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ)for i in ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩚭(3)],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ,{1:["The first result."],2:["The second result.",HiddenResult("t","c")]},{1:["The one and only global result."]},ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ߐ)
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿誗(),(["The first result."],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿誗(),(["The second result."],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿誗(),(["The one and only global result."],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertEqual(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿誗(),(["The one and only global result."],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ.put((ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﮚ,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺))
+  ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𦅊([ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢚉(control_queue=ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ)for i in ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𩚭(3)],ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ݲ,{1:"The first result.",2:"The second result."},{1:"The one and only global result."},ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𢜺,ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ߐ)
+  with ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𣫣.assertRaises(ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿𥇰):
+   ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﳲ.ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿誗()
+if __name__=='__main__':
+ ﳯﳕ閷黦ﭿ𤚡𥄗ߟﲤ𦜗ﱪ𐰚𐰓𐠖ﶅﳛ𞺷𞸚𐦯ﶟ𥿁𡞦𞺳𞺇ﰴﮩ썝ﲴ𪣿ﴜ(verbosity=2)
+# Created by pyminifier (https://github.com/liftoff/pyminifier)

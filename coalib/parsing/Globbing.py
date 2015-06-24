@@ -1,227 +1,196 @@
-import fnmatch
 import os
-
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𢺜=len
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𝝘=True
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰿=False
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ꗂ=None
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𡇜=OSError
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﳰ=list
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𧓵=os.sep
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ=os.path
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴉ=os.error
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫嶏=os.listdir
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𨟅=os.curdir
+import platform
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ۅ=platform.system
+import re
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐦪=re.escape
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤕪=re.compile
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫שׁ=re.finditer
 from coalib.misc.Decorators import yield_once
-from coalib.misc.i18n import N_
-
-
-def _make_selector(pattern_parts):
-    """
-    Creates an instance of the selector class that fits the first pattern part.
-
-    :param pattern_parts: List of strings representing a file system path that
-                          may contain wildcards
-    :return:              Selector class that represents the first pattern part
-    :raises ValueError:   If the pattern is invalid. (Error message is marked
-                          for translation and can thus be used in the UI.)
-    """
-    pat = pattern_parts[0]
-    child_parts = pattern_parts[1:]
-    if pat == '**':
-        cls = _RecursiveWildcardSelector
-    elif '**' in pat:
-        raise ValueError(N_("Invalid pattern: '**' can only be "
-                            "an entire path component"))
-    elif _is_wildcard_pattern(pat):
-        cls = _WildcardSelector
-    else:
-        cls = _PathSelector
-    return cls(pat, child_parts)
-
-
-def _is_wildcard_pattern(pat):
-    """
-    Decides whether this pattern needs actual matching using fnmatch, or can
-    be looked up directly as part of a path.
-    """
-    return "*" in pat or "?" in pat or "[" in pat
-
-
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯛ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤,start_index):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𢺜(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤)
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀=start_index
+ if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸 and 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀]=='!':
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀+=1
+ if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸: 
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀+=1
+ while 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸 and 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀]!=']':
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀+=1
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶚ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𢺜(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤[:𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ])
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸=0,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𢺜(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤)
+ while 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ:
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﵶ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ]
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ+=1
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﵶ=='[':
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯛ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𠓤,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ)
+   if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸:
+    if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ<=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀:
+     return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𝝘
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀+1
+   else:
+    return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰿
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰿
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﳟ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ꗂ
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫שׁ('\\)',𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+  if not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶚ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ.start()):
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ.start()
+   break 
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ꗂ
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫שׁ('\\(',𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[:𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ]):
+  if not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶚ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ.start()):
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ.end()
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ
 @yield_once
-def _iter_or_combinations(pattern,
-                          opening_delimiter="(",
-                          closing_delimiter=")",
-                          separator="|"):
-    """
-    A pattern can contain an "or" in the form of (a|b|c). This function will
-    iterate through all possible combinations. Nesting is supported
-    for "(a(b|c)d|e)" it will yield the patterns "abd", "acd" and "e".
-
-    :param pattern:           A string that may contain an "or" representation
-                              following the syntax demonstrated above.
-    :param opening_delimiter: Character or sequence thereof that marks the
-                              beginning of an "or" representation
-    :param closing_delimiter: Character or sequence thereof that marks the
-                              end of an "or" representation
-    :param separator:         Character or sequence thereof that separates the
-                              alternatives
-    :returns:                 Iterator that yields the results originating from
-                              inserting all possible combinations of
-                              alternatives into the pattern.
-    :raises ValueError:       If the pattern is invalid. (Error message is
-                              marked for translation and can thus be used in
-                              the UI.)
-    """
-    # Taking the leftmost closing delimiter and the rightmost opening delimiter
-    # left of it ensures that the delimiters belong together and the pattern is
-    # parsed correctly from the most nested section outwards.
-    closing_pos = pattern.find(closing_delimiter)
-    opening_pos = pattern[:closing_pos].rfind(opening_delimiter)
-
-    if (
-            (closing_pos == -1) != (opening_pos == -1) or
-            # Special case that gets overlooked because opening_delimiter
-            # is only being looked for in pattern[:-1] when closing_pos == -1
-            (closing_pos == -1 and pattern.endswith(opening_delimiter))):
-        raise ValueError(N_("Parentheses of pattern are not matching"))
-
-    if -1 not in (opening_pos, closing_pos):  # parentheses in pattern
-        prefix = pattern[:opening_pos]
-        parenthesized = pattern[opening_pos+len(opening_delimiter):closing_pos]
-        postfix = pattern[closing_pos+len(closing_delimiter):]
-        # This loop iterates through all possible combinations that can be
-        # inserted in place of the first innermost pair of parentheses:
-        # "(a|b)(c|d)" yields "a", then "b"
-        for combination in _iter_or_combinations(parenthesized,
-                                                 opening_delimiter,
-                                                 closing_delimiter,
-                                                 separator):
-            new_pattern = prefix + combination + postfix
-            # This loop iterates through all possible combinations for the new
-            # whole pattern, which has it's first pair of parentheses replaced
-            # already:
-            # "a(cd)" (first call) yields "ac", then "ad",
-            # "b(cd)" (second call) yields "bc" and "bd"
-            for new_combination in _iter_or_combinations(new_pattern,
-                                                         opening_delimiter,
-                                                         closing_delimiter,
-                                                         separator):
-                yield new_combination
-    elif separator in pattern:
-        for choice in pattern.split(separator):
-            yield choice
-    else:
-        yield pattern
-
-
-class _Selector:
-    """
-    Every Selector class has a successor Selector class with the remaining
-    pattern parts. Together they represent the glob expression that gets
-    evaluated.
-    """
-    def __init__(self, child_parts):
-        self.child_parts = child_parts
-        if child_parts:
-            self.successor = _make_selector(child_parts)
-        else:
-            self.successor = _TerminatingSelector()
-
-    def collect(self, path=os.path.abspath(os.curdir)):
-        return self._collect(path)
-
-    def _collect(self, paths):
-        raise NotImplementedError
-
-
-class _TerminatingSelector:
-    """
-    Represents the end of a pattern.
-    """
-    @staticmethod
-    def collect(path):
-        yield path
-
-
-class _PathSelector(_Selector):
-    """
-    Represents names of files and directories that do not need to be matched
-    using fnmatch.
-    """
-    def __init__(self, path, child_parts):
-        self.path = path
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        extended_path = os.path.join(path, self.path)
-        if os.path.exists(extended_path):
-            for result in self.successor.collect(extended_path):
-                yield result
-
-
-class _WildcardSelector(_Selector):
-    """
-    Represents names of files and directories that contain wildcards and need
-    to be matched using fnmatch.
-    """
-    def __init__(self, pat, child_parts):
-        self.pat = pat
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        if os.path.isdir(path):
-            for file_or_dir in os.listdir(path):
-                if fnmatch.fnmatch(file_or_dir, self.pat):
-                    file_or_dir = os.path.join(path, file_or_dir)
-                    for result in self.successor.collect(file_or_dir):
-                        yield result
-
-
-class _RecursiveWildcardSelector(_Selector):
-    """
-    Represents the '**' wildcard.
-    """
-    def __init__(self, pat, child_parts):
-        _Selector.__init__(self, child_parts)
-
-    def _collect(self, path):
-        for root, dirs, files in os.walk(path, followlinks=True):
-            for result in self.successor.collect(root):
-                yield result
-
-
-def iglob(pattern, files=True, dirs=True):
-    """
-    Iterate over this subtree and yield all existing files matching the given
-    pattern.
-
-    :param pattern:     Unix style glob pattern that matches paths
-    :param files:       Whether or not to include files
-    :param dirs:        Whether or not to include directories
-    :return:            List of all files matching the pattern
-    :raises ValueError: If an invalid pattern is found. The exception message
-                        is marked for translation, thus can be translated
-                        dynamically if needed.
-    """
-    if pattern == "" or (not files and not dirs):
-        raise StopIteration()
-
-    for pat in _iter_or_combinations(pattern):
-        # extract drive letter, if possible:
-        drive_letter, pat = os.path.splitdrive(pat)
-        # "/a/b.py" -> ['', 'a', 'b.py'] or \\a\\b.py -> ['', 'a', 'b.py']
-        pattern_parts = pat.split(os.sep)
-        # replace first pattern part with absolute path root if empty
-        if pat.startswith(os.sep):
-            pattern_parts[0] = drive_letter and drive_letter + "\\" or os.sep
-
-        selector = _make_selector(pattern_parts)
-
-        for p in selector.collect():
-            if os.path.isfile(p) and files is True:
-                yield p
-            elif os.path.isdir(p) and dirs is True:
-                yield p
-
-
-def glob(pattern, files=True, dirs=True):
-    """
-    Iterate over this subtree and return a list of all existing files matching
-    the given pattern.
-
-    :param pattern: Unix style glob pattern that matches paths
-    :param files:   Whether or not to include files
-    :param dirs:    Whether or not to include directories
-    :return:        List of all files matching the pattern
-    """
-    return list(iglob(pattern, files, dirs))
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𡵉(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ=0
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐠖=[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ.start()for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫שׁ('\\|',𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ)]
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐠖.append(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𢺜(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ))
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐠖:
+  if not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶚ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ):
+   yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ:𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ]
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ+1
+@yield_once
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐊠(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﳟ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ)
+ if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ꗂ in(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ):
+  yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ
+ else:
+  for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫蚌 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𡵉(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ:𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ]):
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ᝋ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[:𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﱨ-1]+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫蚌+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﰂ+1:]
+   for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ףּ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐊠(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ᝋ):
+    yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ףּ
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𡪇(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸=0,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𢺜(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ)
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ=''
+ while 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸:
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﵶ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ]
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ+=1
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﵶ=='*':
+   if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ<𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸 and 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ]=='*':
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+='.*'
+   elif 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ۅ()=='Windows': 
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+='[^/\\\\]*'
+   else:
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+='[^'+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐦪(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𧓵)+']*'
+  elif 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﵶ=='?':
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+='.'
+  elif 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﵶ=='[':
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯛ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ)
+   if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀>=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣣸:
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+='\\['
+   else:
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ:𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀].replace('\\','\\\\')
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܪ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤟀+1
+    if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫[0]=='!':
+     𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫='^'+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫[1:]
+    elif 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫[0]=='^':
+     𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫='\\'+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+='['+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫㟫+']'
+  else:
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐦪(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﵶ)
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﲫ+'\\Z(?ms)'
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶷ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.normcase(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ)
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐊠(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.expanduser(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚)
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.normcase(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚)
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤕪(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𡪇(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚)).match
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ)is not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ꗂ:
+   return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𝝘
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰿
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐦡(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.split(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ)
+ if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔:
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.exists(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+   yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ
+ else:
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.isdir(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓):
+   yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ
+ return
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣐐(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓):
+ if not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓:
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𨟅
+ try:
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐬪=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫嶏(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓)
+ except 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴉ:
+  return
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴍ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐬪:
+  yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴍ
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫שּׂ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.join(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴍ)if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓 else 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴍ
+  for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐨛 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣐐(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫שּׂ):
+   yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.join(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴍ,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐨛)
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫쁏(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ if not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓:
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𨟅
+ try:
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫뽈=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫嶏(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓)
+ except 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𡇜:
+  return[]
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐬔=[]
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.normcase(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ)
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤕪(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𡪇(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ)).match
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫뽈:
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.normcase(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ)):
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐬔.append(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ)
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐬔
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫祅(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔):
+ if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.exists(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.join(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔)):
+  return[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔]
+ return[]
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫썠(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ assert 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ=='**'
+ if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓:
+  yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ[:0]
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫䢊 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣐐(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓):
+  yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫䢊
+𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𩕧=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𤕪('([*?[])')
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܙ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𩕧.search(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ)
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﶌ is not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ꗂ
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﺅ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐊠(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.expanduser(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚)
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.normcase(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚)
+  𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.split(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚)
+  if not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܙ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚):
+   for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣔑 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐦡(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚):
+    yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣔑
+   return
+  if not 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓:
+   if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔=='**':
+    for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣔑 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫썠(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔):
+     yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣔑
+   else:
+    for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣔑 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫쁏(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔):
+     yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𣔑
+   return
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓!=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸚 and 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܙ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓):
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴠ=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﺅ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓)
+  else:
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴠ=[𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓]
+  if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ܙ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔):
+   if 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔=='**':
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐤲=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫썠
+   else:
+    𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐤲=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫쁏
+  else:
+   𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐤲=𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫祅
+  for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓 in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﴠ:
+   for 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ in 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐤲(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𞸔):
+    yield 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ػ.join(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𐰓,𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯟ)
+def 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫𢊎(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ):
+ return 𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﳰ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﺅ(𐡒ဿ𞸍𢳻𩲆𐠍ﻁﵟ𞹇𐠚𧨣ﵻ𐦔ܜﵴ𧴼Ꮤ𐡆𐠎ﭚڕﻦﳂ睋ﺐ𐠦𪠌𑚐𐤫ﯰ))
+# Created by pyminifier (https://github.com/liftoff/pyminifier)
