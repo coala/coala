@@ -4,12 +4,6 @@ import sys
 from coalib.misc.StringConstants import StringConstants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
-from coalib.output.NullInteractor import NullInteractor
-from coalib.output.ClosableObject import close_objects
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.output.printers.FilePrinter import FilePrinter
-from coalib.output.printers.NullPrinter import NullPrinter
-from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParsing import parse_cli
 from coalib.parsing.ConfParser import ConfParser
@@ -100,60 +94,18 @@ def warn_nonexistent_targets(targets, sections, log_printer):
                   "Thus it cannot be executed.").format(section=target))
 
 
-def retrieve_logging_objects(section):
-    """
-    Creates an appropriate log printer and interactor according to the
-    settings.
-
-    :param section: The section to get the logging objects for.
-    :return:        A tuple holding (interactor, log_printer).
-    """
-    log_type = str(section.get("log_type", "console")).lower()
-    output_type = str(section.get("output", "console")).lower()
-    str_log_level = str(section.get("log_level", "")).upper()
-    log_level = LOG_LEVEL.str_dict.get(str_log_level, LOG_LEVEL.WARNING)
-
-    if log_type == "console":
-        log_printer = ConsolePrinter(log_level=log_level)
-    else:
-        try:
-            # ConsolePrinter is the only printer which may not throw an
-            # exception (if we have no bugs though) so well fallback to him
-            # if some other printer fails
-            if log_type == "none":
-                log_printer = NullPrinter()
-            else:
-                log_printer = FilePrinter(filename=log_type,
-                                          log_level=log_level)
-        except:
-            log_printer = ConsolePrinter(log_level=log_level)
-            log_printer.log(
-                LOG_LEVEL.WARNING,
-                _("Failed to instantiate the logging method '{}'. Falling "
-                  "back to console output.").format(log_type))
-
-    if output_type == "none":
-        interactor = NullInteractor(log_printer=log_printer)
-    else:
-        interactor = ConsoleInteractor.from_section(
-            section,
-            log_printer=log_printer)
-
-    return interactor, log_printer
-
-
-def load_configuration(arg_list):
+def load_configuration(arg_list, log_printer):
     """
     Parses the CLI args and loads the config file accordingly, taking
     default_coafile and the users .coarc into account.
 
-    :param arg_list: The list of command line arguments.
-    :return:         A tuple holding (interactor: Interactor, log_printer:
-                     LogPrinter, sections: dict(str, Section),
-                     targets: list(str)). (Types indicated after colon.)
+    :param arg_list:    The list of command line arguments.
+    :param log_printer: The LogPrinter object for logging.
+    :return:            A tuple holding (log_printer: LogPrinter, sections:
+                        dict(str, Section), targets: list(str)). (Types
+                        indicated after colon.)
     """
     cli_sections = parse_cli(arg_list=arg_list)
-    interactor, log_printer = retrieve_logging_objects(cli_sections["default"])
 
     targets = []
     # We don't want to store targets argument back to file, thus remove it
@@ -185,10 +137,11 @@ def load_configuration(arg_list):
         if section != "default":
             sections[section].defaults = sections["default"]
 
-    close_objects(interactor, log_printer)
-    interactor, log_printer = retrieve_logging_objects(sections["default"])
+    str_log_level = str(sections["default"].get("log_level", "")).upper()
+    log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
+                                                   LOG_LEVEL.WARNING)
 
-    return interactor, log_printer, sections, targets
+    return sections, targets
 
 
 def find_user_config(file_path, max_trials=10):
@@ -217,7 +170,7 @@ def find_user_config(file_path, max_trials=10):
     return ""
 
 
-def gather_configuration(arg_list=sys.argv[1:]):
+def gather_configuration(acquire_settings, log_printer, arg_list=sys.argv[1:]):
     """
     Loads all configuration files, retrieves bears and all needed
     settings, saves back if needed and warns about non-existent targets.
@@ -233,19 +186,25 @@ def gather_configuration(arg_list=sys.argv[1:]):
     - Writes back the new sections to the configuration file if needed
     - Gives all information back to caller
 
-    :param arg_list: CLI args to use
-    :return:         A tuple with the following contents:
-                      * A dictionary with the sections
-                      * Dictionary of list of local bears for each section
-                      * Dictionary of list of global bears for each section
-                      * The targets list
-                      * The interactor (needs to be closed!)
-                      * The log printer (needs to be closed!)
+    :param acquire_settings: The method to use for requesting settings. It will
+                             get a parameter which is a dictionary with the
+                             settings name as key and a list containing a
+                             description in [0] and the names of the bears
+                             who need this setting in all following indexes.
+    :param log_printer:      The log printer to use for logging. The log level
+                             will be adjusted to the one given by the section.
+    :param arg_list:         CLI args to use
+    :return:                 A tuple with the following contents:
+                              * A dictionary with the sections
+                              * Dictionary of list of local bears for each
+                                section
+                              * Dictionary of list of global bears for each
+                                section
+                              * The targets list
     """
-    interactor, log_printer, sections, targets = (
-        load_configuration(arg_list))
+    sections, targets = load_configuration(arg_list, log_printer)
     local_bears, global_bears = fill_settings(sections,
-                                              interactor.acquire_settings,
+                                              acquire_settings,
                                               log_printer)
     save_sections(sections)
     warn_nonexistent_targets(targets, sections, log_printer)
@@ -253,6 +212,4 @@ def gather_configuration(arg_list=sys.argv[1:]):
     return (sections,
             local_bears,
             global_bears,
-            targets,
-            interactor,
-            log_printer)
+            targets)

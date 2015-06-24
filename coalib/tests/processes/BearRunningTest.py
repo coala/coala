@@ -8,7 +8,7 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.processes.BearRunner import run, LogMessage, LOG_LEVEL, send_msg
+from coalib.processes.BearRunning import run, LogMessage, LOG_LEVEL, send_msg
 from coalib.settings.Section import Section
 
 
@@ -98,7 +98,7 @@ class UnexpectedBear2(LocalBear):
         return 1
 
 
-class BearRunnerUnitTest(unittest.TestCase):
+class BearRunningUnitTest(unittest.TestCase):
     def setUp(self):
         self.settings = Section("name")
 
@@ -203,7 +203,7 @@ class BearRunnerUnitTest(unittest.TestCase):
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
 
 
-class BearRunnerIntegrationTest(unittest.TestCase):
+class BearRunningIntegrationTest(unittest.TestCase):
     example_file = """a
 b
 c

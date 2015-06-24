@@ -6,31 +6,30 @@ sys.path.insert(0, ".")
 
 from coalib.misc.StringConstants import StringConstants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
-                                                    retrieve_logging_objects,
                                                     find_user_config)
-from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
-from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.NullInteractor import NullInteractor
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.output.printers.FilePrinter import FilePrinter
 from coalib.output.printers.NullPrinter import NullPrinter
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.ClosableObject import close_objects
 import re
 
 
 class ConfigurationGatheringTest(unittest.TestCase):
+    def setUp(self):
+        self.log_printer = NullPrinter()
+        self.interactor = NullInteractor(self.log_printer)
+
+    def tearDown(self):
+        close_objects(self.log_printer, self.interactor)
+
     def test_gather_configuration(self):
         # We need to use a bad filename or this will parse coalas .coafile
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(
+         targets) = gather_configuration(
+            self.interactor.acquire_settings,
+            self.log_printer,
             arg_list=['-S', "test=5", "-c", "some_bad_filename"])
-        close_objects(interactor, log_printer)
 
         self.assertEqual(str(sections["default"]),
                          "Default {config : some_bad_filename, test : 5}")
@@ -38,11 +37,10 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(
+         targets) = gather_configuration(
+            self.interactor.acquire_settings,
+            self.log_printer,
             arg_list=['-S test=5', '-c bad_filename', '-b LineCountBear'])
-        close_objects(interactor, log_printer)
         self.assertEqual(len(local_bears["default"]), 1)
 
     def test_default_coafile_parsing(self):
@@ -54,10 +52,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration()
-        close_objects(interactor, log_printer)
+         targets) = gather_configuration(self.interactor.acquire_settings,
+                                         self.log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
         StringConstants.system_coafile = tmp
@@ -71,37 +67,24 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration()
-        close_objects(interactor, log_printer)
+         targets) = gather_configuration(self.interactor.acquire_settings,
+                                         self.log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
         StringConstants.user_coafile = tmp
 
-    @staticmethod
-    def test_nonexistent_file():
+    def test_nonexistent_file(self):
         filename = "bad.one/test\neven with bad chars in it"
         # Shouldn't throw an exception
-        (sections,
-         local_bears,
-         global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(arg_list=['-S',
-                                                       "config=" + filename])
-        close_objects(interactor, log_printer)
+        gather_configuration(self.interactor.acquire_settings,
+                             self.log_printer,
+                             arg_list=['-S', "config=" + filename])
 
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = filename
         # Shouldn't throw an exception
-        (sections,
-         local_bears,
-         global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration()
-        close_objects(interactor, log_printer)
+        gather_configuration(self.interactor.acquire_settings,
+                             self.log_printer)
         StringConstants.system_coafile = tmp
 
     def test_merge(self):
@@ -119,10 +102,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(arg_list=["-c", re.escape(config)])
-        close_objects(interactor, log_printer)
+         targets) = gather_configuration(self.interactor.acquire_settings,
+                                         self.log_printer,
+                                         arg_list=["-c", re.escape(config)])
         self.assertEqual(str(sections["test"]),
                          "test {value : 2}")
         self.assertEqual(str(sections["test-2"]),
@@ -131,15 +113,14 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(arg_list=["-c",
-                                          re.escape(config),
-                                          "-S",
-                                          "test.value=3",
-                                          "test-2.bears=",
-                                          "test-5.bears=TestBear2"])
-        close_objects(interactor, log_printer)
+         targets) = gather_configuration(self.interactor.acquire_settings,
+                                         self.log_printer,
+                                         arg_list=["-c",
+                                                   re.escape(config),
+                                                   "-S",
+                                                   "test.value=3",
+                                                   "test-2.bears=",
+                                                   "test-5.bears=TestBear2"])
         self.assertEqual(str(sections["test"]), "test {value : 3}")
         self.assertEqual(str(sections["test-2"]),
                          "test-2 {files : ., bears : }")
@@ -155,11 +136,10 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(
+         targets) = gather_configuration(
+            self.interactor.acquire_settings,
+            self.log_printer,
             arg_list=["-S", "value=1", "test.value=2", "-c", "bad_file_name"])
-        close_objects(interactor, log_printer)
         self.assertEqual(sections["default"],
                          sections["test"].defaults)
 
@@ -168,33 +148,25 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                 "SectionManagerTestFile")
 
         # We need to use a bad filename or this will parse coalas .coafile
-        (sections,
-         local_bears,
-         global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(
+        gather_configuration(
+            self.interactor.acquire_settings,
+            self.log_printer,
             arg_list=['-S',
                       "save=" + re.escape(filename),
                       "-c=some_bad_filename"])
-        close_objects(interactor, log_printer)
 
         with open(filename, "r") as f:
             lines = f.readlines()
         self.assertEqual(["[Default]\n", "config = some_bad_filename\n"],
                          lines)
 
-        (sections,
-         local_bears,
-         global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(
+        gather_configuration(
+            self.interactor.acquire_settings,
+            self.log_printer,
             arg_list=['-S',
                       "save=true",
                       "config=" + re.escape(filename),
                       "test.value=5"])
-        close_objects(interactor, log_printer)
 
         with open(filename, "r") as f:
             lines = f.readlines()
@@ -205,89 +177,16 @@ class ConfigurationGatheringTest(unittest.TestCase):
                           "[test]\n",
                           "value = 5\n"], lines)
 
-    def test_logging_objects(self):
-        (sections,
-         local_bears,
-         global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(arg_list=['-S', "log_type=none"])
-        close_objects(interactor, log_printer)
-        self.assertIsInstance(log_printer, NullPrinter)
-
-        (sections,
-         local_bears,
-         global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(arg_list=['-S', "output=none"])
-        close_objects(interactor, log_printer)
-        self.assertIsInstance(interactor, NullInteractor)
-
     def test_targets(self):
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(arg_list=["default",
-                                                       "test1",
-                                                       "test2"])
-        close_objects(interactor, log_printer)
+         targets) = gather_configuration(self.interactor.acquire_settings,
+                                         self.log_printer,
+                                         arg_list=["default",
+                                                   "test1",
+                                                   "test2"])
         self.assertEqual(targets, ["default", "test1", "test2"])
-
-    def test_outputting(self):
-        interactor, log_printer = retrieve_logging_objects(Section("default"))
-        self.assertIsInstance(interactor, ConsoleInteractor)
-        close_objects(interactor, log_printer)
-
-        test_section = Section("default")
-        test_section.append(Setting(key="output", value="none"))
-        interactor, log_printer = retrieve_logging_objects(test_section)
-        self.assertIsInstance(interactor, NullInteractor)
-        close_objects(interactor, log_printer)
-
-        test_section = Section("default")
-        test_section.append(Setting(key="output", value="anything else"))
-        interactor, log_printer = retrieve_logging_objects(test_section)
-        self.assertIsInstance(interactor, ConsoleInteractor)
-        close_objects(interactor, log_printer)
-
-    def test_logging(self):
-        test_section = Section("default")
-        test_section.append(Setting(key="log_TYPE", value="conSole"))
-        interactor, log_printer = retrieve_logging_objects(test_section)
-        self.assertIsInstance(log_printer, ConsolePrinter)
-        close_objects(interactor, log_printer)
-
-        test_section = Section("default")
-        test_section.append(Setting(key="log_TYPE", value="NONE"))
-        interactor, log_printer = retrieve_logging_objects(test_section)
-        self.assertIsInstance(log_printer, NullPrinter)
-        close_objects(interactor, log_printer)
-
-        filename = tempfile.gettempdir() + os.path.sep + "log_test~"
-        test_section = Section("default")
-        test_section.append(Setting(key="log_TYPE", value=re.escape(filename)))
-        interactor, log_printer = retrieve_logging_objects(test_section)
-        self.assertIsInstance(log_printer, FilePrinter)
-        close_objects(interactor, log_printer)
-        os.remove(filename)
-
-        test_section = Section("default")
-        test_section.append(Setting(key="log_TYPE",
-                                    value="./invalid path/@#$%^&*()_"))
-        # Should throw a warning
-        interactor, log_printer = retrieve_logging_objects(test_section)
-        self.assertIsInstance(log_printer, ConsolePrinter)
-        self.assertEqual(log_printer.log_level, LOG_LEVEL.WARNING)
-        close_objects(interactor, log_printer)
-
-        test_section.append(Setting(key="LOG_LEVEL", value="DEBUG"))
-        # Should throw a warning
-        interactor, log_printer = retrieve_logging_objects(test_section)
-        self.assertEqual(log_printer.log_level, LOG_LEVEL.DEBUG)
-        close_objects(interactor, log_printer)
 
     def test_find_user_config(self):
         current_dir = os.path.abspath(os.path.dirname(__file__))

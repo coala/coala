@@ -40,8 +40,8 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                                                 "non_clones"))]
 
         self.check_clone_detection_bear(self.non_clone_files,
-                                        lambda results:
-                                        self.assertEqual(results, []))
+                                        lambda results, msg:
+                                        self.assertEqual(results, [], msg))
 
     def test_clones(self):
         self.clone_files = [
@@ -50,8 +50,8 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                                                 "clones"))]
 
         self.check_clone_detection_bear(self.clone_files,
-                                        lambda results:
-                                        self.assertNotEqual(results, []))
+                                        lambda results, msg:
+                                        self.assertNotEqual(results, [], msg))
 
     def check_clone_detection_bear(self, files, result_check_function):
         """
@@ -74,7 +74,8 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
             arg_dict = {"dependency_results":
                         {"ClangSimilarityBear": similarity_results}}
 
-            result_check_function(uut.run_bear_from_section([], arg_dict))
+            result_check_function(uut.run_bear_from_section([], arg_dict),
+                                  "while analyzing "+file)
 
 
 def skip_test():

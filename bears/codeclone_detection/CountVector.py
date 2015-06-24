@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 class CountVector:
     def __init__(self, name, conditions=None, weightings=None):
         """
@@ -18,6 +21,16 @@ class CountVector:
             self.weightings = [1 for elem in self.conditions]
 
         assert len(self.count_vector) is len(self.weightings)
+
+    def create_null_vector(self, name):
+        """
+        Creates a new CountVector object with the same counting conditions
+        and weightings but initializes it to zero.
+
+        :return: A CountVector object.
+        """
+        return CountVector(name, self.conditions, self.weightings)
+
 
     def count_reference(self, *args, **kwargs):
         """
@@ -42,21 +55,32 @@ class CountVector:
     def __iter__(self):
         return iter(self.count_vector)
 
+    def __abs__(self):
+        return sqrt(sum(x**2 for x in self))
+
+    def maxabs(self, other):
+        """
+        Calculates the absolute value of a vector that has the maximum
+        entries row-wise of both given vectors. This can be used as
+        normalization since this value is guaranteed to be bigger or equal
+        the difference value of those two vectors.
+
+        :param other: The vector to normalize with.
+        :return:      A float value bigger or equal than the difference
+                      between self and other.
+        """
+        return sqrt(sum(max(x, y)**2 for x, y in zip(self, other)))
+
     def difference(self, other):
         """
-        Calculates a normalized difference. This value can be used to indicate
-        the similarity of the associated variables, while 0 means no
-        difference, i.e. the count vectors are identical, and 1 means maximum
-        difference, i.e. they are not similar at all.
+        Calculates an absolute difference value. This value can be used to
+        indicate the similarity of the associated variables, while 0 means no
+        difference, i.e. the count vectors are identical.
 
         :param other: The CountVector to calculate the difference to.
-        :return:      A difference value in [0, 1].
+        :return:      An absolute difference value.
         """
         assert isinstance(other, CountVector)
         assert len(other) == len(self)
 
-        maxabs = sum(max(x, y)**2 for x, y in zip(self, other))
-        if maxabs == 0:
-            return 0
-
-        return sum((x-y)**2 for x, y in zip(self, other))/maxabs
+        return sqrt(sum((x-y)**2 for x, y in zip(self, other)))

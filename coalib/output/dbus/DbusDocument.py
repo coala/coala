@@ -1,5 +1,7 @@
 import os
 import dbus.service
+from coalib.output.NullInteractor import NullInteractor
+from coalib.output.printers.NullPrinter import NullPrinter
 
 from coalib.settings.ConfigurationGathering import find_user_config
 from coalib.settings.ConfigurationGathering import gather_configuration
@@ -88,15 +90,17 @@ class DbusDocument(dbus.service.Object):
         if self.path == "" or self.config_file == "":
             return retval
 
-        args = ["--output=none",
-                "--config=" + self.config_file]
+        args = ["--config=" + self.config_file]
+
+        log_printer = NullPrinter()
+        interactor = NullInteractor(log_printer)
 
         (sections,
          local_bears,
          global_bears,
-         targets,
-         interactor,
-         log_printer) = gather_configuration(arg_list=args)
+         targets) = gather_configuration(interactor.acquire_settings,
+                                         log_printer,
+                                         arg_list=args)
 
         for section_name in sections:
             section = sections[section_name]
@@ -115,8 +119,7 @@ class DbusDocument(dbus.service.Object):
 
             if is_applicable:
                 section["files"].value = self.path
-                interactor.begin_section(section)
-                result = execute_section(
+                results = execute_section(
                     section=section,
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
@@ -124,7 +127,7 @@ class DbusDocument(dbus.service.Object):
                     log_printer=log_printer)
 
                 retval.append(
-                    DbusDocument.results_to_dbus_struct(result, section_name))
+                    DbusDocument.results_to_dbus_struct(results, section_name))
 
         return retval
 

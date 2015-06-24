@@ -10,7 +10,7 @@ test:
         parallel: true
     - python setup.py install:
         parallel: true
-    - coala -c .misc/.ci_coafile:
+    - coala-ci:
         parallel: true
 
 deployment:

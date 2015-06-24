@@ -29,12 +29,6 @@ default_arg_parser.add_argument('-d',
                                 nargs='+',
                                 metavar='DIR',
                                 help=BEAR_DIRS_HELP)
-LOG_TYPE_HELP = _("Type of logging (console or any filename)")
-default_arg_parser.add_argument('-l',
-                                '--log-type',
-                                nargs=1,
-                                metavar='ENUM',
-                                help=LOG_TYPE_HELP)
 LOG_LEVEL_HELP = _("Enum('ERROR','WARNING','DEBUG') to set level of log "
                    "output")
 default_arg_parser.add_argument('-L',
@@ -43,12 +37,6 @@ default_arg_parser.add_argument('-L',
                                 choices=['ERROR', 'WARNING', 'DEBUG'],
                                 metavar='ENUM',
                                 help=LOG_LEVEL_HELP)
-OUTPUT_HELP = _('Type of output (console or none)')
-default_arg_parser.add_argument('-o',
-                                '--output',
-                                nargs=1,
-                                metavar='FILE',
-                                help=OUTPUT_HELP)
 CONFIG_HELP = _('Configuration file to be used, defaults to .coafile')
 default_arg_parser.add_argument('-c',
                                 '--config',

@@ -1,3 +1,4 @@
+import copy
 from munkres import Munkres
 # Instantiate globally since this class is holding stateless public methods.
 munkres = Munkres()
@@ -67,25 +68,49 @@ def compare_functions(cm1, cm2):  # pragma: no cover
     if len(cm1) == 0 or len(cm2) == 0:
         return 1 if len(cm1) != len(cm2) else 0
 
+    if len(cm1) != len(cm2):
+        if len(cm1) > len(cm2):
+            cm2 = copy.copy(cm2)
+        else:
+            tmp = cm2
+            cm2 = copy.copy(cm1)
+            cm1 = tmp
+
+        any_count_vector = list(cm1.values())[0]
+        # Fill up smaller count matrix with zero vectors. This way no
+        # padding is needed later and if count vectors are zero on both
+        # side, the difference is zero too which wouldn't be taken into
+        # account with simple padding of ones.
+        for i in range(len(cm1) - len(cm2)):
+            cm2[i] = any_count_vector.create_null_vector(i)
+
     # The cost matrix holds the difference between the two variables i and
     # j in the i/j field. This is a representation of a bipartite weighted
     # graph with nodes representing the first function on the one side
     # (rows) and the nodes representing the second function on the other
     #  side (columns). The fields in the matrix are the weighted nodes
     # connecting each element from one side to the other.
-    cost_matrix = [[cv1.difference(cv2)
-                    for cv2 in cm2.values()]
-                   for cv1 in cm1.values()]
-
-    # Pad manually with ones. If we have one variable in one function and
-    # no corresponding in the other this is 100% difference, so 1.
-    cost_matrix = munkres.pad_matrix(cost_matrix, pad_value=1)
+    diff_table = [(cv1,
+                   [(cv2, cv1.difference(cv2)) for cv2 in cm2.values()])
+                  for cv1 in cm1.values()]
+    cost_matrix = [[difference
+                    for cv2, difference in lst]
+                   for cv1, lst in diff_table]
 
     # The munkres algorithm will calculate a matching such that the sum of
     # the taken fields is minimal. It thus will associate each variable
     # from one function to one on the other function.
     matching = munkres.compute(cost_matrix)
 
-    # Sum it up, normalize it so we have a value in [0, 1]
-    return (sum(cost_matrix[x][y] for x, y in matching) /
-            max(len(cm1), len(cm2)))
+    diff_sum = sum(cost_matrix[x][y] for x, y in matching)
+    # For each match we get the maximum of the absolute value of the count
+    # vectors. Summed up with this we can normalize the whole thing.
+    max_sum = sum(diff_table[x][0].maxabs(diff_table[x][1][y][0])
+                  for x, y in matching)
+
+    if diff_sum == 0:
+        return 0
+
+    # If max_sum is zero diff_sum should be zero so division by zero can't
+    # occur here.
+    return (diff_sum/max_sum) * ((3*max_sum+1)/(4*max_sum))
