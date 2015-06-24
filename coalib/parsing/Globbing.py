@@ -423,3 +423,165 @@ def glob(pattern, files=True, dirs=True):
     :return:        List of all files matching the pattern
     """
     return list(iglob(pattern, files, dirs))
+
+
+def _absolute_flat_glob(pattern):
+    """
+    Glob function for a pattern that do not contain wildcards.
+
+    :pattern: File or directory path
+    :return:  Iterator that yields at most one valid file or dir name
+    """
+    dirname, basename = os.path.split(pattern)
+
+    if basename:
+        if os.path.exists(pattern):
+            yield pattern
+    else:
+        # Patterns ending with a slash should match only directories
+        if os.path.isdir(dirname):
+            yield pattern
+    return
+
+
+def _iter_relative_dirs(dirname):
+    """
+    Recursively iterates subdirectories of all levels from dirname
+
+    :param dirname: Directory name
+    :return:        Iterator that yields files and directory from the given dir
+                    and all it's (recursive) subdirectories
+    """
+    if not dirname:
+        dirname = os.curdir
+    try:
+        files_or_dirs = os.listdir(dirname)
+    except os.error:
+        return
+    for file_or_dir in files_or_dirs:
+        yield file_or_dir
+        path = os.path.join(dirname, file_or_dir)
+        for sub_file_or_dir in _iter_relative_dirs(path):
+            yield os.path.join(file_or_dir, sub_file_or_dir)
+
+
+def relative_wildcard_glob(dirname, pattern):
+    """
+    Non-recursive glob for one directory. Accepts wildcards.
+
+    :param dirname: Directory name
+    :param pattern: Glob pattern with wildcards
+    :return:        List of files in the dir of dirname that match the pattern
+    """
+    if not dirname:
+        dirname = os.curdir
+    try:
+        names = os.listdir(dirname)
+    except OSError:
+        return []
+    result = []
+    pattern = os.path.normcase(pattern)
+    match = re.compile(translate(pattern)).match
+    for name in names:
+        if match(os.path.normcase(name)):
+            result.append(name)
+    return result
+
+
+def relative_flat_glob(dirname, basename):
+    """
+    Non-recursive glob for one directory. Does not accept wildcards.
+
+    :param dirname:  Directory name
+    :param basename: Basename of a file in dir of dirname
+    :return:         List containing Basename if the file exists
+    """
+    if os.path.exists(os.path.join(dirname, basename)):
+        return [basename]
+    return[]
+
+
+def relative_recursive_glob(dirname, pattern):
+    """
+    Recursive Glob for one directory and all its (nested) subdirectories.
+    Accepts only '**' as pattern.
+
+    :param dirname: Directory name
+    :param pattern: The recursive wildcard '**'
+    :return:        Iterator that yields all the (nested) subdirectories of the
+                    given dir
+    """
+    assert pattern == '**'
+    if dirname:
+        yield pattern[:0]
+    for relative_dir in _iter_relative_dirs(dirname):
+        yield relative_dir
+
+
+wildcard_check_pattern = re.compile('([*?[])')
+
+
+def has_wildcard(pattern):
+    """
+    Checks whether pattern has any wildcards.
+
+    :param pattern: Glob pattern that may contain wildcards
+    :return:        Boolean: Whether or not there are wildcards in pattern
+    """
+    match = wildcard_check_pattern.search(pattern)
+    return match is not None
+
+
+def iglob2(pattern):
+    """
+    Iterates all filesystem paths that get matched by the glob pattern.
+    Syntax is equal to that of fnmatch.
+
+    :param pattern: Glob pattern with wildcards
+    :return:        Iterator that yields all file names that match pattern
+    """
+    for pat in _iter_alternatives(pattern):
+        pat = os.path.expanduser(pat)
+        pat = os.path.normcase(pat)
+        dirname, basename = os.path.split(pat)
+        if not has_wildcard(pat):
+            for file in _absolute_flat_glob(pat):
+                yield file
+            return
+
+        if not dirname:
+            if basename == '**':
+                for file in relative_recursive_glob(dirname, basename):
+                    yield file
+            else:
+                for file in relative_wildcard_glob(dirname, basename):
+                    yield file
+            return
+
+        # Prevent an infinite recursion if a drive or UNC path contains
+        # wildcard characters (i.e. r'\\?\C:').
+        if dirname != pat and has_wildcard(dirname):
+            dirs = iglob(dirname)
+        else:
+            dirs = [dirname]
+        if has_wildcard(basename):
+            if basename == '**':
+                relative_glob_function = relative_recursive_glob
+            else:
+                relative_glob_function = relative_wildcard_glob
+        else:
+            relative_glob_function = relative_flat_glob
+        for dirname in dirs:
+            for name in relative_glob_function(dirname, basename):
+                yield os.path.join(dirname, name)
+
+
+def glob2(pattern):
+    """
+    Iterates all filesystem paths that get matched by the glob pattern.
+    Syntax is equal to that of fnmatch.
+
+    :param pattern: Glob pattern with wildcards
+    :return:        List of all file names that match pattern
+    """
+    return list(iglob2(pattern))
