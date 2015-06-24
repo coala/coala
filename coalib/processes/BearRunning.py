@@ -383,6 +383,17 @@ def get_next_global_bear(timeout,
     return bear, bear.__class__.__name__, dependency_results
 
 
+def task_done(obj):
+    """
+    Invokes task_done if the given queue provides this operation. Otherwise
+    passes silently.
+
+    :param obj: Any object.
+    """
+    if hasattr(obj, "task_done"):
+        obj.task_done()
+
+
 def run_local_bears(filename_queue,
                     message_queue,
                     timeout,
@@ -422,8 +433,7 @@ def run_local_bears(filename_queue,
                                     local_result_dict,
                                     control_queue,
                                     filename)
-            if hasattr(filename_queue, "task_done"):
-                filename_queue.task_done()
+            task_done(filename_queue)
     except queue.Empty:
         return
 
@@ -468,8 +478,7 @@ def run_global_bears(message_queue,
                 control_queue.put((CONTROL_ELEMENT.GLOBAL, bearname))
             else:
                 global_result_dict[bearname] = None
-            if hasattr(global_bear_queue, "task_done"):
-                global_bear_queue.task_done()
+            task_done(global_bear_queue)
     except queue.Empty:
         return
 
