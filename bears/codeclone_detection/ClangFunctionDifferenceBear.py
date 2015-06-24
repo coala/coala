@@ -62,7 +62,7 @@ def get_difference(args):  # pragma: no cover
                               count_matrices[function_2]))
 
 
-class ClangSimilarityBear(GlobalBear):
+class ClangFunctionDifferenceBear(GlobalBear):
     def run(self,
             condition_list: counting_condition_dict=default_cc_dict):
         '''

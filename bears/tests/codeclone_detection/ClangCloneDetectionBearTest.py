@@ -5,7 +5,8 @@ from queue import Queue
 
 sys.path.insert(0, ".")
 
-from bears.codeclone_detection.ClangSimilarityBear import ClangSimilarityBear
+from bears.codeclone_detection.ClangFunctionDifferenceBear import (
+    ClangFunctionDifferenceBear)
 from bears.codeclone_detection.ClangCloneDetectionBear import \
     ClangCloneDetectionBear
 from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
@@ -24,13 +25,13 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                                                     "clones"))]
 
     def test_dependencies(self):
-        self.assertIn(ClangSimilarityBear,
+        self.assertIn(ClangFunctionDifferenceBear,
                       ClangCloneDetectionBear.get_dependencies())
 
     def test_invalid_conditions(self):
         self.section.append(Setting("condition_list", "bullshit"))
 
-        self.uut = ClangSimilarityBear({}, self.section, Queue())
+        self.uut = ClangFunctionDifferenceBear({}, self.section, Queue())
         self.assertEqual(self.uut.run_bear_from_section([], {}), None)
 
     def test_non_clones(self):
@@ -63,7 +64,7 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                                       results are invalid.
         """
         for file in files:
-            similarity_results = ClangSimilarityBear(
+            difference_results = ClangFunctionDifferenceBear(
                 {file: ""},
                 self.section,
                 Queue()).run_bear_from_section([], {})
@@ -72,7 +73,8 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                 self.section,
                 Queue())
             arg_dict = {"dependency_results":
-                        {"ClangSimilarityBear": similarity_results}}
+                        {ClangFunctionDifferenceBear.__name__:
+                         difference_results}}
 
             result_check_function(uut.run_bear_from_section([], arg_dict),
                                   "while analyzing "+file)
