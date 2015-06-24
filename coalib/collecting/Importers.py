@@ -48,7 +48,10 @@ def _has_all(obj, attribute_names):
 
 def _is_defined_in(obj, file_path):
     try:
-        if inspect.getfile(obj) == file_path:
+        source = inspect.getfile(obj)
+        if (platform.system() == 'Windows' and
+                source.lower() == file_path.lower() or
+                source == file_path):
             return True
     except TypeError:  # Bool values and others
         pass

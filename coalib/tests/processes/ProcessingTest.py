@@ -4,6 +4,7 @@ import queue
 import unittest
 import sys
 import multiprocessing
+import platform
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
@@ -110,10 +111,12 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(str(local_result),
                          "Result:\n origin: 'LocalTestBear'\n file: 'None'\n "
                          "line nr: None\n severity: 1\n'test msg'")
+        file = (platform.system() == 'Windows' and
+                self.testcode_c_path.lower() or self.testcode_c_path)
         self.assertEqual(str(global_result),
-                         "Result:\n origin: 'GlobalTestBear'\n file: '{file}'"
+                         "Result:\n origin: 'GlobalTestBear'\n file: '{}'"
                          "\n line nr: None\n severity: 1\n'test "
-                         "message'".format(file=self.testcode_c_path))
+                         "message'".format(file))
 
     def test_empty_run(self):
         results = execute_section(self.sections["default"],

@@ -6,7 +6,8 @@ from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.settings.ConfigurationGathering import find_user_config
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.processes.Processing import execute_section
-from coalib.parsing.Globbing import glob
+from coalib.parsing.Globbing import fnmatch
+from coalib.settings.Setting import path_list
 
 
 class DbusDocument(dbus.service.Object):
@@ -108,16 +109,9 @@ class DbusDocument(dbus.service.Object):
             if not section.is_enabled(targets):
                 continue
 
-            is_applicable = False
-            for file_pattern in section["files"]:
-                abs_file_pattern = os.path.join(
-                    os.path.dirname(self.config_file),
-                    file_pattern)
-                if self.path in glob(abs_file_pattern, files=True, dirs=False):
-                    is_applicable = True
-                    break
+            if any([fnmatch(self.path, file_pattern)
+                    for file_pattern in path_list(section["files"])]):
 
-            if is_applicable:
                 section["files"].value = self.path
                 results = execute_section(
                     section=section,

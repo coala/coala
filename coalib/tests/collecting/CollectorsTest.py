@@ -21,21 +21,18 @@ class CollectFilesTest(unittest.TestCase):
         self.assertRaises(TypeError, collect_files)
 
     def test_file_invalid(self):
-        self.assertEqual(collect_files(["invalid_path"], self.log_printer), [])
-
-    def test_expression_invalid(self):
-        self.assertRaises(SystemExit, collect_files, ["**d"], self.log_printer)
+        self.assertEqual(collect_files(["invalid_path"]), [])
 
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
                                                      "others",
                                                      "*",
-                                                     "*2.py")],
-                                       self.log_printer),
-                         [os.path.join(self.collectors_test_dir,
-                                       "others",
-                                       "py_files",
-                                       "file2.py")])
+                                                     "*2.py")]),
+                         [os.path.normcase(os.path.join(
+                             self.collectors_test_dir,
+                             "others",
+                             "py_files",
+                             "file2.py"))])
 
 
 class CollectDirsTest(unittest.TestCase):
@@ -50,23 +47,26 @@ class CollectDirsTest(unittest.TestCase):
         self.assertRaises(TypeError, collect_dirs)
 
     def test_dir_invalid(self):
-        self.assertEqual(collect_dirs(["invalid_path"], self.log_printer), [])
-
-    def test_expression_invalid(self):
-        self.assertRaises(SystemExit, collect_files, ["**d"], self.log_printer)
+        self.assertEqual(collect_dirs(["invalid_path"]), [])
 
     def test_dir_collection(self):
         self.assertEqual(
             sorted(collect_dirs([os.path.join(self.collectors_test_dir,
-                                              "**")],
-                                self.log_printer)),
-            sorted([
-                os.path.join(self.collectors_test_dir, "bears"),
-                os.path.join(self.collectors_test_dir, "bears", "__pycache__"),
-                os.path.join(self.collectors_test_dir, "others"),
-                os.path.join(self.collectors_test_dir, "others", "c_files"),
-                os.path.join(self.collectors_test_dir, "others", "py_files"),
-                self.collectors_test_dir]))
+                                              "**")])),
+            sorted([os.path.normcase(os.path.join(
+                self.collectors_test_dir, "bears")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "bears",
+                                              "__pycache__")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others",
+                                              "c_files")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others",
+                                              "py_files")),
+                os.path.normcase(self.collectors_test_dir+os.sep)]))
 
 
 class CollectBearsTest(unittest.TestCase):
@@ -85,9 +85,6 @@ class CollectBearsTest(unittest.TestCase):
                                        ["invalid_name"],
                                        ["invalid kind"],
                                        self.log_printer), [])
-
-    def test_expression_invalid(self):
-        self.assertRaises(SystemExit, collect_files, ["**d"], self.log_printer)
 
     def test_simple_single(self):
         self.assertEqual(len(collect_bears(

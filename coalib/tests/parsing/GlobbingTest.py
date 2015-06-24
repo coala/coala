@@ -1,19 +1,47 @@
-import glob as python_standard_glob
+"""
+Tests Globbing and related functions
+
+Test Files are local and permanent and organized as follows:
+
+GlobTestDir
+├── SubDir1
+│   ├── File11.py
+│   └── File12.py
+│ SubDir2
+│   ├── File(with)parentheses.txt
+│   └── File[with]brackets.txt
+├── File1.x
+├── File2.y
+└── File3.z
+"""
+import inspect
 import os
-import shutil
-import sys
-import tempfile
 import unittest
+import sys
 
 sys.path.insert(0, ".")
-from coalib.parsing.Globbing import (glob,
-                                     iglob,
-                                     _Selector,
-                                     _iter_or_combinations)
 from coalib.parsing.Globbing import _iter_alternatives
 from coalib.parsing.Globbing import _iter_choices
 from coalib.parsing.Globbing import _position_is_bracketed
 from coalib.parsing.Globbing import fnmatch
+from coalib.parsing.Globbing import glob
+
+
+class TestFiles:
+    """
+    Testfiles to check glob patterns on
+    """
+    glob_test_root = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+    glob_test_dir = os.path.join(glob_test_root, 'GlobTestDir')
+    dir1 = os.path.join(glob_test_dir, 'SubDir1')
+    file11 = os.path.join(dir1, 'File11.py')
+    file12 = os.path.join(dir1, 'File12.py')
+    dir2 = os.path.join(glob_test_dir, 'SubDir2')
+    file_paren = os.path.join(dir2, 'File(with)parentheses.txt')
+    file_brack = os.path.join(dir2, 'File[with]brackets.txt')
+    file1 = os.path.join(glob_test_dir, 'File1.x')
+    file2 = os.path.join(glob_test_dir, 'File2.y')
+    file3 = os.path.join(glob_test_dir, 'File3.z')
 
 
 class GlobbingHelperFunctionsTest(unittest.TestCase):
@@ -145,174 +173,139 @@ class FnmatchTest(unittest.TestCase):
         self._test_fnmatch(pattern, matches, non_matches)
 
 
-class GlobingTest(unittest.TestCase):
+class GlobTest(unittest.TestCase):
     def setUp(self):
-        self.tmp_dir = tempfile.mkdtemp(prefix='coala_import_test_dir_')
-        self.tmp_subdir = tempfile.mkdtemp(prefix='pref',
-                                           dir=self.tmp_dir)
-        self.tmp_subdir2 = tempfile.mkdtemp(prefix='random',
-                                            dir=self.tmp_subdir)
-        self.tmp_subdir3 = tempfile.mkdtemp(prefix='random2',
-                                            dir=self.tmp_subdir2)
-        (self.testfile1, self.testfile1_path) = tempfile.mkstemp(
-            suffix='.py',
-            prefix='testfile1_',
-            dir=self.tmp_subdir2)
-        (self.testfile2, self.testfile2_path) = tempfile.mkstemp(
-            suffix='.c',
-            prefix='testfile2_',
-            dir=self.tmp_subdir2)
-        (self.testfile3, self.testfile3_path) = tempfile.mkstemp(
-            suffix='.py',
-            prefix='testfile3_',
-            dir=self.tmp_subdir3)
-        # We don't need the file opened
-        os.close(self.testfile1)
-        os.close(self.testfile2)
-        os.close(self.testfile3)
+        self.maxDiff = None
 
-    def tearDown(self):
-        shutil.rmtree(self.tmp_dir)
+    def _test_glob(self, pattern, file_list):
+        results = sorted([os.path.normcase(g) for g in glob(pattern)])
+        file_list = sorted([os.path.normcase(f) for f in file_list])
+        self.assertEqual(results, file_list)
 
-    def test_files(self):
-        file_name_list = sorted(glob(os.path.join(self.tmp_dir,
-                                                  "pref*",
-                                                  "**",
-                                                  "*.py"),
-                                     dirs=False))
-        self.assertEqual(file_name_list,
-                         sorted([self.testfile1_path, self.testfile3_path]))
+    def test_collect_files(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, 'Sub*', 'File1?.py')
+        file_list = [TestFiles.file11, TestFiles.file12]
+        self._test_glob(pattern, file_list)
 
-    def test_dirs(self):
-        dir_name_list = sorted(glob(os.path.join(self.tmp_dir,
-                                                 "**",
-                                                 "random*"),
-                                    files=False))
-        self.assertEqual(dir_name_list,
-                         sorted([self.tmp_subdir2, self.tmp_subdir3]))
+    def test_collect_dirs(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, 'Sub*' + os.sep)
+        file_list = [TestFiles.dir1+os.sep, TestFiles.dir2+os.sep]
+        self._test_glob(pattern, file_list)
 
-    def test_no_dirs(self):
-        dir_name_list = sorted(glob(os.path.join(self.tmp_dir,
-                                                 "**",
-                                                 "random*"),
-                                    dirs=False))
-        self.assertEqual(dir_name_list, [])
+    def test_collect_specific_dir(self):
+        pattern = os.path.join(TestFiles.dir1 + os.sep)
+        file_list = [TestFiles.dir1+os.sep]
+        self._test_glob(pattern, file_list)
 
-    def test_or(self):
-        file_name_list = sorted(glob(os.path.join(self.tmp_dir, "pref*", "**",
-                                                  "*(.py|.c)"), dirs=False))
-        self.assertEqual(file_name_list,
-                         sorted([self.testfile1_path,
-                                 self.testfile2_path,
-                                 self.testfile3_path]))
+    def test_collect_flat(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, '*')
+        file_list = [TestFiles.dir1,
+                     TestFiles.dir2,
+                     TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3]
+        self._test_glob(pattern, file_list)
 
-    def test_miss(self):
-        dir_name_list = sorted(glob(os.path.join("*",
-                                                 "something",
-                                                 "that",
-                                                 "isnt",
-                                                 "there")))
-        self.assertEqual(dir_name_list, [])
+    def test_collect_all(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, '**', '*')
+        file_list = [TestFiles.dir1,
+                     TestFiles.dir2,
+                     TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3,
+                     TestFiles.file11,
+                     TestFiles.file12,
+                     TestFiles.file_paren,
+                     TestFiles.file_brack]
+        self._test_glob(pattern, file_list)
 
-    def test_none(self):
-        dir_name_list = sorted(glob(os.path.join(self.tmp_dir, "**", "*"),
-                                    files=False,
-                                    dirs=False))
-        self.assertEqual(dir_name_list, [])
+    def test_collect_basename(self):
+        pattern = TestFiles.glob_test_dir
+        file_list = [TestFiles.glob_test_dir]
+        self._test_glob(pattern, file_list)
 
-    def test_empty(self):
-        self.assertEqual(glob(""), [])
+    def test_collect_none(self):
+        pattern = ''
+        file_list = []
+        self._test_glob(pattern, file_list)
 
-    def test_random(self):
-        path = os.path.join(os.getcwd(), "*", "*.py")
-        self.assertTrue(self.matches_standard_glob(glob(path), path))
+    def test_collect_specific(self):
+        pattern = os.path.join(TestFiles.file12)
+        file_list = [TestFiles.file12]
+        self._test_glob(pattern, file_list)
 
-    def test_curdir(self):
-        self.assertTrue(self.matches_standard_glob(glob("*"), "*"))
+    def test_collect_parentheses(self):
+        pattern = os.path.join(TestFiles.glob_test_dir,
+                               'SubDir[12]',
+                               'File[(]with)parentheses.txt')
+        file_list = [TestFiles.file_paren]
+        self._test_glob(pattern, file_list)
 
-    def test_wrong_wildcard(self):
-        with self.assertRaises(ValueError):
-            list(iglob(os.path.join("**", "a**b", "**")))
+    def test_collect_brackets(self):
+        pattern = os.path.join(TestFiles.glob_test_dir,
+                               'SubDir[12]',
+                               'File[[]with[]]brackets.txt')
+        file_list = [TestFiles.file_brack]
+        self._test_glob(pattern, file_list)
 
-    def test_selector_error(self):
-        with self.assertRaises(NotImplementedError):
-            a = _Selector(False)
-            a._collect("stuff")
+    def test_collect_or(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, "File?.(x|y|z)")
+        file_list = [TestFiles.file1, TestFiles.file2, TestFiles.file3]
+        self._test_glob(pattern, file_list)
 
-    def matches_standard_glob(self, file_list, pattern):
-        file_list = sorted(file_list)
-        glob_list = python_standard_glob.glob(pattern)
-        if pattern.startswith('*'):
-            glob_list.extend(python_standard_glob.glob('.' + pattern))
-        absolute_glob_list = [os.path.abspath(path) for path in glob_list]
-        return file_list == sorted(absolute_glob_list)
+    def test_wildcard_dir(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, "SubDir?", "File11.py")
+        file_list = [TestFiles.file11]
+        self._test_glob(pattern, file_list)
 
+    def test_collect_recursive(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, "**", "*")
+        file_list = [TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3,
+                     TestFiles.file11,
+                     TestFiles.file12,
+                     TestFiles.file_paren,
+                     TestFiles.file_brack,
+                     TestFiles.dir1,
+                     TestFiles.dir2]
+        self._test_glob(pattern, file_list)
 
-class IterOrCombinationTest(unittest.TestCase):
-    def test_correct_evaluation(self):
-        pattern_result_dict = {
-            "": [""],
-            "()": [""],
-            "()()()()()": [""],
-            "()((()))(())": [""],
-            "abc": ["abc"],
-            "(a)": ["a"],
-            "(|)": [""],
-            "(a|)": ["", "a"],
-            "(a|b)": ["a", "b"],
-            "(a)(b)(c)": ["abc"],
-            "a(b|c)d": ["abd", "acd"],
-            "(a(b|c)d)": ["abd", "acd"],
-            "((a|b)|c|d)": ["a", "b", "c", "d"],
-            "(a|b)(c|d)": ["ac", "ad", "bc", "bd"],
-            "a((b|c|d)|e(f|g))(h|i)j": ["abhj",
-                                        "abij",
-                                        "achj",
-                                        "acij",
-                                        "adhj",
-                                        "adij",
-                                        "aefhj",
-                                        "aefij",
-                                        "aeghj",
-                                        "aegij"]
-            }
+    def test_collect_invalid(self):
+        pattern = "NOPE"
+        file_list = []
+        self._test_glob(pattern, file_list)
 
-        for pattern, result_list in pattern_result_dict.items():
-            self.assertEqual(sorted(list(_iter_or_combinations(pattern))),
-                             result_list)
+    def test_no_dirname_recursive(self):
+        old_curdir = os.curdir
+        os.curdir = TestFiles.glob_test_dir
+        pattern = '**'
+        file_list = [TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3,
+                     TestFiles.file11,
+                     TestFiles.file12,
+                     TestFiles.file_paren,
+                     TestFiles.file_brack,
+                     TestFiles.dir1,
+                     TestFiles.dir2]
+        results = sorted([os.path.normcase(os.path.join(os.curdir, g))
+                          for g in glob(pattern)])
+        file_list = sorted([os.path.normcase(f) for f in file_list])
+        self.assertEqual(results, file_list)
+        os.curdir = old_curdir
 
-    def test_parentheses_check(self):
-        pattern_list = ["(",
-                        ")",
-                        "())",
-                        "(()",
-                        "a(b|(c)d",
-                        "ab|(c)d(",
-                        ")(",
-                        "())("
-                        "a((b|c|d)|e)(f|g))(h|i)j"]
-
-        for pattern in pattern_list:
-            self.assertRaises(ValueError, list, _iter_or_combinations(pattern))
-
-    def test_long_delimiters(self):
-        pattern = "AAAAAAaBBBbCCCAAAcBBBdCCCBBBeCCC"  # ((a|b)(c|d)|e)
-        result_list = ["ac", "ad", "bc", "bd", "e"]
-        self.assertEqual(
-            sorted(list(_iter_or_combinations(pattern,
-                                              opening_delimiter="AAA",
-                                              closing_delimiter="CCC",
-                                              separator="BBB"))),
-            result_list)
-
-    def test_long_delimiter_check(self):
-        pattern = "AAAAAAaBBBbCCCAAAcBBBAAAdCCCBBBeCCC"  # ((a|b)(c|(d)|e)
-        self.assertRaises(ValueError,
-                          list,
-                          _iter_or_combinations(pattern,
-                                                opening_delimiter="AAA",
-                                                closing_delimiter="CCC",
-                                                separator="BBB"))
+    def test_no_dirname(self):
+        old_curdir = os.curdir
+        os.curdir = TestFiles.glob_test_dir
+        pattern = '*Dir?'
+        file_list = [TestFiles.dir1,
+                     TestFiles.dir2]
+        results = sorted([os.path.normcase(os.path.join(os.curdir, g))
+                          for g in glob(pattern)])
+        file_list = sorted([os.path.normcase(f) for f in file_list])
+        self.assertEqual(results, file_list)
+        os.curdir = old_curdir
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

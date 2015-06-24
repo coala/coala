@@ -133,8 +133,7 @@ def instantiate_processes(section,
                              and the arguments passed to each process which are
                              the same for each object.
     """
-    filename_list = collect_files(path_list(section.get('files', "")),
-                                  log_printer)
+    filename_list = collect_files(path_list(section.get('files', "")))
     file_dict = get_file_dict(filename_list, log_printer)
 
     manager = multiprocessing.Manager()
