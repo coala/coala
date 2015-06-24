@@ -1,16 +1,30 @@
 import inspect
 import os
+import platform
 import sys
 from coalib.misc.Decorators import arguments_to_lists, yield_once
 from coalib.misc.ContextManagers import suppress_stdout
 
 
 def _import_module(file_path):
+    if not os.path.exists(file_path):
+        raise ImportError
+
     module_name = os.path.splitext(os.path.basename(file_path))[0]
     module_dir = os.path.dirname(file_path)
 
     if module_dir not in sys.path:
         sys.path.insert(0, module_dir)
+
+    # Ugly inconsistency: Python will insist on correctly cased module names
+    # independent of whether the OS is case-sensitive or not.
+    # We want all cases to match though.
+    if platform.system() == 'Windows':  # pragma: nocover
+        for cased_file_path in os.listdir(module_dir):
+            cased_module_name = os.path.splitext(cased_file_path)[0]
+            if cased_module_name.lower() == module_name.lower():
+                module_name = cased_module_name
+                break
 
     return __import__(module_name)
 
