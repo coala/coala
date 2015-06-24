@@ -1,4 +1,4 @@
 merge:
   fast-forward: only
   script:
-    - "bash .misc/succeed.sh"
+    - echo "Nothing to do."
