@@ -62,11 +62,8 @@ skip test (node 3))
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
 (Code quality 2)
 
-[![Coverage Status](https://coveralls.io/repos/coala-analyzer/coala/badge.svg?branch=master)](https://coveralls.io/r/coala-analyzer/coala?branch=master)
-(Statement coverage, measured on linux with python 3.4)
-
 [![codecov.io](https://codecov.io/github/coala-analyzer/coala/coverage.svg?branch=master)](https://codecov.io/github/coala-analyzer/coala?branch=master)
-(Branch coverage, measured on linux with python 3.4)
+(Branch coverage)
 
 [![Documentation Status](https://readthedocs.org/projects/coala/badge/?version=latest)](https://readthedocs.org/projects/coala/?badge=latest)
 (Documentation Status)

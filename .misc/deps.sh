@@ -28,7 +28,7 @@ sudo apt-get -qq install glib2.0-dev gobject-introspection libgirepository1.0-de
 
 # Node specific commands
 if [[ "$CIRCLE_NODE_INDEX" != "3" ]] ; then
-  pip install -q coveralls codecov munkres3
+  pip install -q codecov munkres3
 
   cd .misc
   bash install.python-gi.sh
