@@ -83,6 +83,12 @@ def pad_count_vectors(cm1, cm2):
     return cm1, cm2
 
 
+def relative_difference(difference, maxabs):
+    if maxabs == 0:
+        return 1
+    return difference/maxabs
+
+
 def compare_functions(cm1, cm2):
     """
     Compares the functions represented by the given count matrices.
@@ -105,10 +111,12 @@ def compare_functions(cm1, cm2):
     #  side (columns). The fields in the matrix are the weighted nodes
     # connecting each element from one side to the other.
     diff_table = [(cv1,
-                   [(cv2, cv1.difference(cv2)) for cv2 in cm2.values()])
+                   [(cv2, cv1.difference(cv2), cv1.maxabs(cv2))
+                    for cv2 in cm2.values()])
                   for cv1 in cm1.values()]
-    cost_matrix = [[difference
-                    for cv2, difference in lst]
+
+    cost_matrix = [[relative_difference(difference, maxabs)
+                    for cv2, difference, maxabs in lst]
                    for cv1, lst in diff_table]
 
     # The munkres algorithm will calculate a matching such that the sum of
@@ -116,10 +124,11 @@ def compare_functions(cm1, cm2):
     # from one function to one on the other function.
     matching = munkres.compute(cost_matrix)
 
-    diff_sum = sum(cost_matrix[x][y] for x, y in matching)
+    diff_sum = sum(diff_table[x][1][y][1]
+                   for x, y in matching)
     # For each match we get the maximum of the absolute value of the count
     # vectors. Summed up with this we can normalize the whole thing.
-    max_sum = sum(diff_table[x][0].maxabs(diff_table[x][1][y][0])
+    max_sum = sum(diff_table[x][1][y][2]
                   for x, y in matching)
 
     if diff_sum == 0:
