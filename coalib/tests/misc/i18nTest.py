@@ -17,8 +17,9 @@ from coalib.misc import i18n
 
 print("Testing translation building...")
 shutil.rmtree("build", ignore_errors=True)
-i18n.compile_translations(True)
-i18n.compile_translations(False)
+i18n.compile_translations()
+# Shouldn't complain if files are already there, ideally not rebuild!
+i18n.compile_translations()
 
 
 class i18nTest(unittest.TestCase):

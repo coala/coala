@@ -8,9 +8,7 @@ import sys
 COALA_DOMAIN = 'coala'
 
 
-def compile_translations(verbose=True):
-    if verbose:
-        print("Compiling translations...")
+def compile_translations():
     translations = []
     trans_install_dir_prefix = os.path.join(sys.prefix, "share", "locale")
     for (path, dirnames, filenames) in os.walk("locale"):
@@ -37,8 +35,6 @@ def compile_translations(verbose=True):
                         continue
 
                 try:
-                    if verbose:
-                        print("Compiling {}...".format(lang))
                     subprocess.call(["msgfmt", src, "--output-file", dest])
                     translations.append((install_dir, [dest]))
                 except:  # pragma: no cover
