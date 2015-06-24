@@ -94,8 +94,7 @@ def compare_functions(cm1, cm2):
     """
     assert isinstance(cm1, dict)
     assert isinstance(cm2, dict)
-    if len(cm1) == 0 or len(cm2) == 0:
-        return 1 if len(cm1) != len(cm2) else 0
+    assert 0 not in (len(cm1), len(cm2))
 
     cm1, cm2 = pad_count_vectors(cm1, cm2)
 
