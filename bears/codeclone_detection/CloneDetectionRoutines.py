@@ -22,7 +22,7 @@ def exclude_function(count_matrix):
 
 def get_count_matrices(count_vector_creator,
                        filenames,
-                       progress_callback=lambda x: x):
+                       progress_callback):
     """
     Retrieves matrices holding count vectors for all variables for all
     functions in the given file.
