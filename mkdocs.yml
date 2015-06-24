@@ -4,6 +4,7 @@ pages:
     - 'Introduction': 'index.md'
     - 'Installation': 'Install.md'
     - 'Tutorial': 'Tutorial.md'
+    - 'Glob Patterns': 'Glob_Patterns.md'
     - 'Exit Codes': 'Exit_Codes.md'
 - Getting Involved:
     - 'Introduction': 'Getting_Involved/README.md'
