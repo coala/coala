@@ -71,8 +71,8 @@ class ConsoleInteractorTest(unittest.TestCase):
         # All those tests assume that Result has no actions and PatchResult has
         # one. This makes this test independent from the real number of actions
         # applicable to those results.
-        Result.get_actions = lambda self: []
-        PatchResult.get_actions = lambda self: [ApplyPatchAction()]
+        Result.get_actions = lambda x: []
+        PatchResult.get_actions = lambda x: [ApplyPatchAction()]
 
         if sys.version_info < (3, 3):  # pragma: no cover
             self.FileNotFoundError = OSError
