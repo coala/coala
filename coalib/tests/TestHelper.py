@@ -7,8 +7,10 @@ import sys
 import shutil
 import webbrowser
 from coalib.misc.ContextManagers import (suppress_stdout,
-                                         preserve_sys_path)
+                                         preserve_sys_path,
+                                         subprocess_timeout)
 from coalib.misc.StringConstants import StringConstants
+
 
 class TestHelper:
     @staticmethod
@@ -40,6 +42,13 @@ class TestHelper:
                             help="Return nonzero if any tests are skipped "
                                  "or fail",
                             action="store_true")
+        parser.add_argument("-T",
+                            "--timeout",
+                            default=10,
+                            type=int,
+                            help="Amount of time to wait for a test to run "
+                                 "before killing it. To not use any timeout, "
+                                 "set this to 0")
 
         return parser
 
@@ -170,7 +179,9 @@ class TestHelper:
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              universal_newlines=True)
-        retval = p.wait()
+        with subprocess_timeout(p, self.args.timeout):
+            retval = p.wait()
+
         if retval != 0 or self.args.verbose:
             for line in p.stderr:
                 print(line, end='')
