@@ -25,6 +25,7 @@ sudo apt-get -qq install espeak libclang1-3.4
 sudo apt-get -qq install ${system_python}-dev
 sudo apt-get -qq install libdbus-glib-1-dev # for python-dbus
 sudo apt-get -qq install glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev # for python-gi
+pip install -q setuptools
 
 # Node specific commands
 if [[ "$CIRCLE_NODE_INDEX" != "3" ]] ; then

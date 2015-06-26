@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from distutils.core import setup
+from setuptools import setup
 
 from coalib.misc.i18n import compile_translations
 from coalib import version_str
@@ -17,7 +17,6 @@ if __name__ == "__main__":
                            'fabian@neuschmidt.de, '
                            'makman@alice.de',
           url='http://coala.schuirmann.net/',
-          scripts=['coala.py', 'coala', 'coala-ci.py', 'coala-ci'],
           packages=['bears',
                     'bears.codeclone_detection',
                     'bears.misc',
@@ -49,4 +48,9 @@ if __name__ == "__main__":
                            "extendable and language independent. Code analysis"
                            " happens in python scripts while coala manages "
                            "these, tries to provide helpful libraries and "
-                           "provides a user interface.")
+                           "provides a user interface.",
+          entry_points={
+              "console_scripts": [
+                  "coala = coalib.coala:main",
+                  "coala-ci = coalib.coala_ci:main",
+                  "coala-dbus = coalib.coala_dbus:main"]})
