@@ -53,4 +53,28 @@ if __name__ == "__main__":
               "console_scripts": [
                   "coala = coalib.coala:main",
                   "coala-ci = coalib.coala_ci:main",
-                  "coala-dbus = coalib.coala_dbus:main"]})
+                  "coala-dbus = coalib.coala_dbus:main"]},
+          # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+          classifiers=[
+              'Development Status :: 3 - Alpha',
+
+              'Environment :: Console',
+              'Environment :: MacOS X',
+              'Environment :: Win32 (MS Windows)',
+              'Environment :: X11 Applications :: Gnome',
+
+              'Intended Audience :: Science/Research',
+              'Intended Audience :: Developers',
+
+              'License :: OSI Approved :: GNU Affero General Public License '
+              'v3 or later (AGPLv3+)',
+
+              'Operating System :: OS Independent',
+
+              'Programming Language :: Python :: 3.2',
+              'Programming Language :: Python :: 3.3',
+              'Programming Language :: Python :: 3.4',
+
+              'Topic :: Scientific/Engineering :: Information Analysis',
+              'Topic :: Software Development :: Quality Assurance',
+              'Topic :: Text Processing :: Linguistic'])
