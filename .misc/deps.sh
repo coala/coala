@@ -29,7 +29,7 @@ pip install -q setuptools
 
 # Node specific commands
 if [[ "$CIRCLE_NODE_INDEX" != "3" ]] ; then
-  pip install -q codecov munkres3
+  pip install -q codecov -r requirements.txt
 
   cd .misc
   bash install.python-gi.sh
