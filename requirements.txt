@@ -1,0 +1,3 @@
+setuptools
+munkres3
+coverage

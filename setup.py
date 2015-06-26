@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 
-from distutils.core import setup
+from setuptools import setup
+import sys
 
 from coalib.misc.i18n import compile_translations
 from coalib import version_str
+
+
+if sys.version_info < (3, 2):
+    raise Exception("coala supports only python 3.2 or later.")
 
 
 if __name__ == "__main__":
@@ -16,8 +21,8 @@ if __name__ == "__main__":
           maintainer_email='lasse.schuirmann@gmail.com, '
                            'fabian@neuschmidt.de, '
                            'makman@alice.de',
-          url='http://coala.schuirmann.net/',
-          scripts=['coala.py', 'coala', 'coala-ci.py', 'coala-ci'],
+          url='http://coala.rtfd.org/',
+          platforms='any',
           packages=['bears',
                     'bears.codeclone_detection',
                     'bears.misc',
@@ -49,4 +54,33 @@ if __name__ == "__main__":
                            "extendable and language independent. Code analysis"
                            " happens in python scripts while coala manages "
                            "these, tries to provide helpful libraries and "
-                           "provides a user interface.")
+                           "provides a user interface.",
+          entry_points={
+              "console_scripts": [
+                  "coala = coalib.coala:main",
+                  "coala-ci = coalib.coala_ci:main",
+                  "coala-dbus = coalib.coala_dbus:main"]},
+          # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+          classifiers=[
+              'Development Status :: 3 - Alpha',
+
+              'Environment :: Console',
+              'Environment :: MacOS X',
+              'Environment :: Win32 (MS Windows)',
+              'Environment :: X11 Applications :: Gnome',
+
+              'Intended Audience :: Science/Research',
+              'Intended Audience :: Developers',
+
+              'License :: OSI Approved :: GNU Affero General Public License '
+              'v3 or later (AGPLv3+)',
+
+              'Operating System :: OS Independent',
+
+              'Programming Language :: Python :: 3.2',
+              'Programming Language :: Python :: 3.3',
+              'Programming Language :: Python :: 3.4',
+
+              'Topic :: Scientific/Engineering :: Information Analysis',
+              'Topic :: Software Development :: Quality Assurance',
+              'Topic :: Text Processing :: Linguistic'])

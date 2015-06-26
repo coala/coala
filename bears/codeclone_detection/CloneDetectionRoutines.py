@@ -89,20 +89,77 @@ def relative_difference(difference, maxabs):
     return difference/maxabs
 
 
-def compare_functions(cm1, cm2):
+def average(lst):
+    return sum(lst)/len(lst)
+
+
+def get_difference(matching_iterator, average_calculation, reduce_big_diffs):
+    """
+    Retrieves the difference value for the matched function represented by the
+    given matches.
+
+    :param matching_iterator:   A list holding tuples of an absolute difference
+                                value and a value to normalize the difference
+                                into a range of [0, 1].
+    :param average_calculation: If set to true this function will take the
+                                average of all variable differences as the
+                                difference, else it will normalize the
+                                function as a whole and thus weighting in
+                                variables dependent on their size.
+    :param reduce_big_diffs:    If set to true, the difference value of big
+                                function pairs will be reduced. This may be
+                                useful because small functions are less  likely
+                                to be clones at the same difference value than
+                                big functions which provide a better
+                                refactoring opportunity for the user.
+    :return:                    A difference value between 0 and 1.
+    """
+    norm_sum = sum(norm for diff, norm in matching_iterator)  # Cannot be zero
+
+    if average_calculation:
+        difference = average([relative_difference(diff, norm)
+                              for diff, norm in matching_iterator])
+    else:
+        difference = sum(diff for diff, norm in matching_iterator)/norm_sum
+
+    if reduce_big_diffs:
+        # This function starts at 1 and converges to .75 for norm_sum -> inf
+        difference *= (3*norm_sum+1)/(4*norm_sum)
+
+    return difference
+
+
+def compare_functions(cm1,
+                      cm2,
+                      average_calculation=False,
+                      reduce_big_diffs=True):
     """
     Compares the functions represented by the given count matrices.
 
-    :param cm1: Count vector dict for the first function.
-    :param cm2: Count vector dict for the second function.
-    :return:    The difference between these functions, 0 is identical and
-                1 is not similar at all.
+    :param cm1:                 Count vector dict for the first function.
+    :param cm2:                 Count vector dict for the second function.
+    :param average_calculation: If set to true the difference calculation
+                                function will take the average of all variable
+                                differences as the difference, else it will
+                                normalize the function as a whole and thus
+                                weighting in variables dependent on their size.
+    :param reduce_big_diffs:    If set to true, the difference value of big
+                                function pairs will be reduced. This may be
+                                useful because small functions are less  likely
+                                to be clones at the same difference value than
+                                big functions which provide a better
+                                refactoring opportunity for the user.
+    :return:                    The difference between these functions, 0 is
+                                identical and 1 is not similar at all.
     """
-    assert isinstance(cm1, dict)
-    assert isinstance(cm2, dict)
     assert 0 not in (len(cm1), len(cm2))
 
     cm1, cm2 = pad_count_vectors(cm1, cm2)
+
+    diff_table = [(cv1,
+                   [(cv2, cv1.difference(cv2), cv1.maxabs(cv2))
+                    for cv2 in cm2.values()])
+                  for cv1 in cm1.values()]
 
     # The cost matrix holds the difference between the two variables i and
     # j in the i/j field. This is a representation of a bipartite weighted
@@ -110,11 +167,6 @@ def compare_functions(cm1, cm2):
     # (rows) and the nodes representing the second function on the other
     #  side (columns). The fields in the matrix are the weighted nodes
     # connecting each element from one side to the other.
-    diff_table = [(cv1,
-                   [(cv2, cv1.difference(cv2), cv1.maxabs(cv2))
-                    for cv2 in cm2.values()])
-                  for cv1 in cm1.values()]
-
     cost_matrix = [[relative_difference(difference, maxabs)
                     for cv2, difference, maxabs in lst]
                    for cv1, lst in diff_table]
@@ -124,16 +176,7 @@ def compare_functions(cm1, cm2):
     # from one function to one on the other function.
     matching = munkres.compute(cost_matrix)
 
-    diff_sum = sum(diff_table[x][1][y][1]
-                   for x, y in matching)
-    # For each match we get the maximum of the absolute value of the count
-    # vectors. Summed up with this we can normalize the whole thing.
-    max_sum = sum(diff_table[x][1][y][2]
-                  for x, y in matching)
-
-    if diff_sum == 0:
-        return 0
-
-    # If max_sum is zero diff_sum should be zero so division by zero can't
-    # occur here.
-    return (diff_sum/max_sum) * ((3*max_sum+1)/(4*max_sum))
+    return get_difference([(diff_table[x][1][y][1], diff_table[x][1][y][2])
+                           for x, y in matching],
+                          average_calculation,
+                          reduce_big_diffs)
