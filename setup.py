@@ -17,6 +17,7 @@ if __name__ == "__main__":
                            'fabian@neuschmidt.de, '
                            'makman@alice.de',
           url='http://coala.rtfd.org/',
+          platforms='any',
           packages=['bears',
                     'bears.codeclone_detection',
                     'bears.misc',
