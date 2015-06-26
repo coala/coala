@@ -89,35 +89,68 @@ def relative_difference(difference, maxabs):
     return difference/maxabs
 
 
-def get_difference(matching_iterator):
+def average(lst):
+    return sum(lst)/len(lst)
+
+
+def get_difference(matching_iterator, average_calculation, reduce_big_diffs):
     """
     Retrieves the difference value for the matched function represented by the
     given matches.
 
-    :param matching_iterator: A list holding tuples of an absolute difference
-                              value and a value to normalize the difference
-                              into a range of [0, 1].
-    :return:                  A difference value between 0 and 1.
+    :param matching_iterator:   A list holding tuples of an absolute difference
+                                value and a value to normalize the difference
+                                into a range of [0, 1].
+    :param average_calculation: If set to true this function will take the
+                                average of all variable differences as the
+                                difference, else it will normalize the
+                                function as a whole and thus weighting in
+                                variables dependent on their size.
+    :param reduce_big_diffs:    If set to true, the difference value of big
+                                function pairs will be reduced. This may be
+                                useful because small functions are less  likely
+                                to be clones at the same difference value than
+                                big functions which provide a better
+                                refactoring opportunity for the user.
+    :return:                    A difference value between 0 and 1.
     """
-    diff_sum = sum(diff for diff, norm in matching_iterator)
-    if diff_sum == 0:  # To avoid division by zero later
-        return 0
+    norm_sum = sum(norm for diff, norm in matching_iterator)  # Cannot be zero
 
-    # For each match we get the maximum of the absolute value of the count
-    # vectors. Summed up with this we can normalize the whole thing.
-    norm_sum = sum(norm for diff, norm in matching_iterator)
+    if average_calculation:
+        difference = average([relative_difference(diff, norm)
+                              for diff, norm in matching_iterator])
+    else:
+        difference = sum(diff for diff, norm in matching_iterator)/norm_sum
 
-    return (diff_sum/norm_sum) * ((3*norm_sum+1)/(4*norm_sum))
+    if reduce_big_diffs:
+        # This function starts at 1 and converges to .75 for norm_sum -> inf
+        difference *= (3*norm_sum+1)/(4*norm_sum)
+
+    return difference
 
 
-def compare_functions(cm1, cm2):
+def compare_functions(cm1,
+                      cm2,
+                      average_calculation=False,
+                      reduce_big_diffs=True):
     """
     Compares the functions represented by the given count matrices.
 
-    :param cm1: Count vector dict for the first function.
-    :param cm2: Count vector dict for the second function.
-    :return:    The difference between these functions, 0 is identical and
-                1 is not similar at all.
+    :param cm1:                 Count vector dict for the first function.
+    :param cm2:                 Count vector dict for the second function.
+    :param average_calculation: If set to true the difference calculation
+                                function will take the average of all variable
+                                differences as the difference, else it will
+                                normalize the function as a whole and thus
+                                weighting in variables dependent on their size.
+    :param reduce_big_diffs:    If set to true, the difference value of big
+                                function pairs will be reduced. This may be
+                                useful because small functions are less  likely
+                                to be clones at the same difference value than
+                                big functions which provide a better
+                                refactoring opportunity for the user.
+    :return:                    The difference between these functions, 0 is
+                                identical and 1 is not similar at all.
     """
     assert 0 not in (len(cm1), len(cm2))
 
@@ -144,4 +177,6 @@ def compare_functions(cm1, cm2):
     matching = munkres.compute(cost_matrix)
 
     return get_difference([(diff_table[x][1][y][1], diff_table[x][1][y][2])
-                           for x, y in matching])
+                           for x, y in matching],
+                          average_calculation,
+                          reduce_big_diffs)
