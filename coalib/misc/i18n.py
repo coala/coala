@@ -25,31 +25,30 @@ def compile_translations():
     translations = []
     trans_install_dir_prefix = os.path.join(sys.prefix, "share", "locale")
     for (path, dirnames, filenames) in os.walk("locale"):
-        for filename in filenames:
-            if filename.endswith(".po"):
-                lang = filename[:-3]
-                src = os.path.join(path, filename)
-                dest_path = os.path.join("build",
-                                         "locale",
-                                         lang,
-                                         "LC_MESSAGES")
-                os.makedirs(dest_path, exist_ok=True)
-                dest = os.path.join(dest_path, COALA_DOMAIN + ".mo")
-                install_dir = os.path.join(trans_install_dir_prefix,
-                                           lang,
-                                           "LC_MESSAGES")
+        for filename in filter(lambda name: name.endswith(".po"), filenames):
+            lang = filename[:-3]
+            src = os.path.join(path, filename)
+            dest_path = os.path.join("build",
+                                     "locale",
+                                     lang,
+                                     "LC_MESSAGES")
+            os.makedirs(dest_path, exist_ok=True)
+            dest = os.path.join(dest_path, COALA_DOMAIN + ".mo")
+            install_dir = os.path.join(trans_install_dir_prefix,
+                                       lang,
+                                       "LC_MESSAGES")
 
 
-                try:
-                    if file_needs_update(src, dest):
-                        subprocess.call(["msgfmt", src, "--output-file", dest])
+            try:
+                if file_needs_update(src, dest):
+                    subprocess.call(["msgfmt", src, "--output-file", dest])
 
-                    translations.append((install_dir, [dest]))
-                except:  # pragma: no cover
-                    print("WARNING: Failed building translation for {}."
-                          "Please make sure msgfmt (usually provided"
-                          "with the gettext package) are installed"
-                          "and in PATH.".format(lang))
+                translations.append((install_dir, [dest]))
+            except:  # pragma: no cover
+                print("WARNING: Failed building translation for {}."
+                      "Please make sure msgfmt (usually provided"
+                      "with the gettext package) are installed"
+                      "and in PATH.".format(lang))
     return translations
 
 
