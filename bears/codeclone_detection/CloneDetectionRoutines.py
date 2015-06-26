@@ -89,6 +89,27 @@ def relative_difference(difference, maxabs):
     return difference/maxabs
 
 
+def get_difference(matching_iterator):
+    """
+    Retrieves the difference value for the matched function represented by the
+    given matches.
+
+    :param matching_iterator: A list holding tuples of an absolute difference
+                              value and a value to normalize the difference
+                              into a range of [0, 1].
+    :return:                  A difference value between 0 and 1.
+    """
+    diff_sum = sum(diff for diff, norm in matching_iterator)
+    if diff_sum == 0:  # To avoid division by zero later
+        return 0
+
+    # For each match we get the maximum of the absolute value of the count
+    # vectors. Summed up with this we can normalize the whole thing.
+    norm_sum = sum(norm for diff, norm in matching_iterator)
+
+    return (diff_sum/norm_sum) * ((3*norm_sum+1)/(4*norm_sum))
+
+
 def compare_functions(cm1, cm2):
     """
     Compares the functions represented by the given count matrices.
@@ -102,17 +123,17 @@ def compare_functions(cm1, cm2):
 
     cm1, cm2 = pad_count_vectors(cm1, cm2)
 
+    diff_table = [(cv1,
+                   [(cv2, cv1.difference(cv2), cv1.maxabs(cv2))
+                    for cv2 in cm2.values()])
+                  for cv1 in cm1.values()]
+
     # The cost matrix holds the difference between the two variables i and
     # j in the i/j field. This is a representation of a bipartite weighted
     # graph with nodes representing the first function on the one side
     # (rows) and the nodes representing the second function on the other
     #  side (columns). The fields in the matrix are the weighted nodes
     # connecting each element from one side to the other.
-    diff_table = [(cv1,
-                   [(cv2, cv1.difference(cv2), cv1.maxabs(cv2))
-                    for cv2 in cm2.values()])
-                  for cv1 in cm1.values()]
-
     cost_matrix = [[relative_difference(difference, maxabs)
                     for cv2, difference, maxabs in lst]
                    for cv1, lst in diff_table]
@@ -122,14 +143,5 @@ def compare_functions(cm1, cm2):
     # from one function to one on the other function.
     matching = munkres.compute(cost_matrix)
 
-    diff_sum = sum(diff_table[x][1][y][1] for x, y in matching)
-    # For each match we get the maximum of the absolute value of the count
-    # vectors. Summed up with this we can normalize the whole thing.
-    max_sum = sum(diff_table[x][1][y][2] for x, y in matching)
-
-    if diff_sum == 0:
-        return 0
-
-    # If max_sum is zero diff_sum should be zero so division by zero can't
-    # occur here.
-    return (diff_sum/max_sum) * ((3*max_sum+1)/(4*max_sum))
+    return get_difference([(diff_table[x][1][y][1], diff_table[x][1][y][2])
+                           for x, y in matching])
