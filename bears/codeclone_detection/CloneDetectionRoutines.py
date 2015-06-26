@@ -98,8 +98,6 @@ def compare_functions(cm1, cm2):
     :return:    The difference between these functions, 0 is identical and
                 1 is not similar at all.
     """
-    assert isinstance(cm1, dict)
-    assert isinstance(cm2, dict)
     assert 0 not in (len(cm1), len(cm2))
 
     cm1, cm2 = pad_count_vectors(cm1, cm2)
