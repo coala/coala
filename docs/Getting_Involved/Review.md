@@ -34,8 +34,8 @@ apply:
  * The build/tests pass on all services. (circleci, appveyor)
  * Scrutinizer shows passed. (That is: no new issues, no new classes with rating
    D or worse, project quality metric may only get better.)
- * The branch coverage stays or raises. (codecov.io)
- * The statement coverage is 100%. (coveralls)
+ * The branch coverage stays or raises, implies all statements covered.
+   (codecov.io)
 
 The coverage values may go down by a commit, however this is to be avoided.
 Tests must work for every commit.

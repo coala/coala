@@ -12,10 +12,12 @@ test:
         parallel: true
     - coala-ci:
         parallel: true
+    - bash .misc/deploy.coverage.sh:
+        parallel: true
 
 deployment:
   deployment_scripts:
     branch: /.*/
     commands:
-      - bash .misc/deploy.coverage.sh
       - bash .misc/deploy.zanata.sh
+      - bash .misc/deploy.pypi.sh

@@ -45,8 +45,7 @@ in_condition: 1.0,
 in_binary_operation: 1.0"""))
 
 
-# Coverage cannot be measured because this is in another process
-def get_difference(args):  # pragma: no cover
+def get_difference(args):
     """
     Retrieves the difference between two functions using the munkres algorithm.
 
@@ -55,16 +54,24 @@ def get_difference(args):  # pragma: no cover
                  each function with the function id as key.
     :return:     A tuple containing both function ids and their difference.
     """
-    function_1, function_2, count_matrices = args
+    (function_1,
+     function_2,
+     count_matrices,
+     average_calculation,
+     reduce_big_diffs) = args
     return (function_1,
             function_2,
             compare_functions(count_matrices[function_1],
-                              count_matrices[function_2]))
+                              count_matrices[function_2],
+                              average_calculation,
+                              reduce_big_diffs))
 
 
 class ClangFunctionDifferenceBear(GlobalBear):
     def run(self,
-            condition_list: counting_condition_dict=default_cc_dict):
+            condition_list: counting_condition_dict=default_cc_dict,
+            average_calculation: bool=False,
+            reduce_big_diffs: bool=True):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
@@ -85,6 +92,19 @@ class ClangFunctionDifferenceBear(GlobalBear):
                                      half as much as other conditions would
                                      simply be: "used: 0.5, is_assignee".
                                      Weightings default to 1 if unset.
+        :param average_calculation: If set to true the difference calculation
+                                    function will take the average of all
+                                    variable differences as the difference,
+                                    else it will normalize the function as a
+                                    whole and thus weighting in variables
+                                    dependent on their size.
+        :param reduce_big_diffs:    If set to true, the difference value of big
+                                    function pairs will be reduced. This may be
+                                    useful because small functions are less
+                                    likely to be clones at the same difference
+                                    value than big functions which provide a
+                                    better refactoring opportunity for the
+                                    user.
         '''
         if not isinstance(condition_list, dict):
             self.err("The condition_list setting is invalid. Code clone "
@@ -109,7 +129,11 @@ class ClangFunctionDifferenceBear(GlobalBear):
         function_count = len(count_matrices)
         # Thats n over 2, hardcoded to simplify calculation
         combination_length = function_count * (function_count-1) / 2
-        function_combinations = [(f1, f2, count_matrices)
+        function_combinations = [(f1,
+                                  f2,
+                                  count_matrices,
+                                  average_calculation,
+                                  reduce_big_diffs)
                                  for f1, f2 in combinations(count_matrices, 2)]
 
         for i, elem in enumerate(map(get_difference, function_combinations)):

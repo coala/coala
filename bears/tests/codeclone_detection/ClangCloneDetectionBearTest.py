@@ -28,6 +28,18 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
         self.assertIn(ClangFunctionDifferenceBear,
                       ClangCloneDetectionBear.get_dependencies())
 
+    def test_configuration(self):
+        self.section.append(Setting("average_calculation", "true"))
+        self.section.append(Setting("reduce_big_diffs", "false"))
+
+        self.clone_files = [
+            os.path.join(self.base_test_path, "clones", "s4c.c")]
+
+        # It should break things
+        self.check_clone_detection_bear(self.clone_files,
+                                        lambda results, msg:
+                                        self.assertNotEqual(results, [], msg))
+
     def test_invalid_conditions(self):
         self.section.append(Setting("condition_list", "bullshit"))
 
