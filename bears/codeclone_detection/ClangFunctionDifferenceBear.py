@@ -45,8 +45,7 @@ in_condition: 1.0,
 in_binary_operation: 1.0"""))
 
 
-# Coverage cannot be measured because this is in another process
-def get_difference(args):  # pragma: no cover
+def get_difference(args):
     """
     Retrieves the difference between two functions using the munkres algorithm.
 
