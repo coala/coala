@@ -8,6 +8,19 @@ import sys
 COALA_DOMAIN = 'coala'
 
 
+def file_needs_update(source, generated):
+    """
+    Checks if the generated file is nonexistent or older than the source file
+    and to be regenerated.
+    """
+    if os.path.exists(generated):
+        src_mtime = os.stat(source)[8]
+        gen_mtime = os.stat(generated)[8]
+        return src_mtime > gen_mtime
+    else:
+        return True
+
+
 def compile_translations():
     translations = []
     trans_install_dir_prefix = os.path.join(sys.prefix, "share", "locale")
@@ -20,22 +33,17 @@ def compile_translations():
                                          "locale",
                                          lang,
                                          "LC_MESSAGES")
+                os.makedirs(dest_path, exist_ok=True)
                 dest = os.path.join(dest_path, COALA_DOMAIN + ".mo")
                 install_dir = os.path.join(trans_install_dir_prefix,
                                            lang,
                                            "LC_MESSAGES")
 
-                if not os.path.exists(dest_path):
-                    os.makedirs(dest_path)
-                elif os.path.exists(dest):
-                    src_mtime = os.stat(src)[8]
-                    dest_mtime = os.stat(dest)[8]
-                    if src_mtime <= dest_mtime:
-                        translations.append((install_dir, [dest]))
-                        continue
 
                 try:
-                    subprocess.call(["msgfmt", src, "--output-file", dest])
+                    if file_needs_update(src, dest):
+                        subprocess.call(["msgfmt", src, "--output-file", dest])
+
                     translations.append((install_dir, [dest]))
                 except:  # pragma: no cover
                     print("WARNING: Failed building translation for {}."
