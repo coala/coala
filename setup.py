@@ -16,7 +16,7 @@ if __name__ == "__main__":
           maintainer_email='lasse.schuirmann@gmail.com, '
                            'fabian@neuschmidt.de, '
                            'makman@alice.de',
-          url='http://coala.schuirmann.net/',
+          url='http://coala.rtfd.org/',
           packages=['bears',
                     'bears.codeclone_detection',
                     'bears.misc',
