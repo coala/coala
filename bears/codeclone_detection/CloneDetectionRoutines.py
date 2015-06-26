@@ -122,12 +122,10 @@ def compare_functions(cm1, cm2):
     # from one function to one on the other function.
     matching = munkres.compute(cost_matrix)
 
-    diff_sum = sum(diff_table[x][1][y][1]
-                   for x, y in matching)
+    diff_sum = sum(diff_table[x][1][y][1] for x, y in matching)
     # For each match we get the maximum of the absolute value of the count
     # vectors. Summed up with this we can normalize the whole thing.
-    max_sum = sum(diff_table[x][1][y][2]
-                  for x, y in matching)
+    max_sum = sum(diff_table[x][1][y][2] for x, y in matching)
 
     if diff_sum == 0:
         return 0
