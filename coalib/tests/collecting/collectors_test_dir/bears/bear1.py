@@ -1,7 +1,7 @@
 from coalib.bears.Bear import Bear
-import inspect
 import multiprocessing
 from coalib.settings.Section import Section
+
 
 class TestBear(Bear):
     def __init__(self):
@@ -12,7 +12,7 @@ class TestBear(Bear):
         return "kind"
 
     def origin(self):
-        return inspect.getfile(inspect.currentframe())
+        return __file__
 
 
 class NoKind():

@@ -14,7 +14,6 @@ GlobTestDir
 ├── File2.y
 └── File3.z
 """
-import inspect
 import os
 import unittest
 import sys
@@ -31,7 +30,7 @@ class TestFiles:
     """
     Testfiles to check glob patterns on
     """
-    glob_test_root = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+    glob_test_root = os.path.split(__file__)[0]
     glob_test_dir = os.path.join(glob_test_root, 'GlobTestDir')
     dir1 = os.path.join(glob_test_dir, 'SubDir1')
     file11 = os.path.join(dir1, 'File11.py')

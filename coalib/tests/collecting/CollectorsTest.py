@@ -1,4 +1,3 @@
-import inspect
 import os
 import sys
 import unittest
@@ -12,7 +11,7 @@ from coalib.collecting.Collectors import collect_files, \
 
 class CollectFilesTest(unittest.TestCase):
     def setUp(self):
-        current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
         self.log_printer = ConsolePrinter()
@@ -37,7 +36,7 @@ class CollectFilesTest(unittest.TestCase):
 
 class CollectDirsTest(unittest.TestCase):
     def setUp(self):
-        current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
 
@@ -71,7 +70,7 @@ class CollectDirsTest(unittest.TestCase):
 
 class CollectBearsTest(unittest.TestCase):
     def setUp(self):
-        current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
 

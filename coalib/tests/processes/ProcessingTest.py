@@ -1,4 +1,3 @@
-import inspect
 import os
 import queue
 import unittest
@@ -62,7 +61,7 @@ class MessageQueueingInteractor(Interactor):
 class ProcessingTest(unittest.TestCase):
     def setUp(self):
         config_path = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ProcessingTest)),
+            os.path.dirname(__file__),
             "section_executor_test_files",
             ".coafile"))
         self.testcode_c_path = os.path.join(os.path.dirname(config_path),

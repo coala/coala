@@ -1,4 +1,3 @@
-import inspect
 import os
 import sys
 
@@ -12,7 +11,7 @@ from collections import OrderedDict
 class ImportObjectsTest(unittest.TestCase):
 
     def setUp(self):
-        current_dir = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        current_dir = os.path.split(__file__)[0]
         self.testfile1_path = os.path.join(current_dir,
                                            "importers_test_dir",
                                            "file_one.py")

@@ -1,7 +1,6 @@
 import sys
 import os
 import unittest
-import inspect
 
 sys.path.insert(0, ".")
 from coalib.settings.Setting import Setting
@@ -14,7 +13,7 @@ from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 class ClangCountingConditionsTest(unittest.TestCase):
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ClangCountingConditionsTest)),
+            os.path.dirname(__file__),
             "conditions_samples.c"))
 
     def check_counting_condition(self, conditions, function, expected):

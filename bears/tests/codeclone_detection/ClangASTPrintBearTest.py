@@ -2,7 +2,6 @@ from queue import Queue
 import sys
 import unittest
 import os
-import inspect
 
 sys.path.insert(0, ".")
 
@@ -15,7 +14,7 @@ from coalib.settings.Section import Section
 class ClangASTPrintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ClangASTPrintBearTest)),
+            os.path.dirname(__file__),
             "sample.c"))
         self.queue = Queue()
         self.uut = ClangASTPrintBear(Section("name"), self.queue)

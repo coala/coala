@@ -1,4 +1,3 @@
-import inspect
 import os
 import sys
 
@@ -39,7 +38,7 @@ class StringConstants:
     COVERAGE_DIR = "./.coverageresults"
 
     # Path to the coalib directory
-    coalib_root = os.path.join(os.path.dirname(inspect.getfile(_)),
+    coalib_root = os.path.join(os.path.dirname(__file__),
                                os.path.pardir)
 
     # Path to the directory containing the default bears

@@ -1,7 +1,6 @@
 import sys
 import os
 import unittest
-import inspect
 
 sys.path.insert(0, ".")
 from bears.codeclone_detection.ClangCountVectorCreator import \
@@ -28,7 +27,7 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
 
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
-            os.path.dirname(inspect.getfile(ClangCountVectorCreatorTest)),
+            os.path.dirname(__file__),
             "sample.c"))
 
     def test_empty_counting(self):

@@ -1,5 +1,5 @@
 from bear1 import TestBear as ImportedTestBear
-import inspect
+
 
 class SubTestBear(ImportedTestBear):
     def __init__(self):
@@ -10,4 +10,4 @@ class SubTestBear(ImportedTestBear):
         return "kind"
 
     def origin(self):
-        return inspect.getfile(inspect.currentframe())
+        return __file__
