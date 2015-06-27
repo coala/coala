@@ -16,28 +16,28 @@ class TestHelper:
         parser = argparse.ArgumentParser(**kwargs)
         parser.add_argument("-t",
                             "--test-only",
-                            help="execute only the tests with the "
+                            help="Execute only the tests with the "
                                  "given base name",
                             nargs="+")
         parser.add_argument("-c",
                             "--cover",
-                            help="measure code coverage",
+                            help="Measure code coverage",
                             action="store_true")
         parser.add_argument("-H",
                             "--html",
-                            help="generate html code coverage, implies -c",
+                            help="Generate html code coverage, implies -c",
                             action="store_true")
         parser.add_argument("-v",
                             "--verbose",
-                            help="more verbose output",
+                            help="More verbose output",
                             action="store_true")
         parser.add_argument("-o",
                             "--omit",
-                            help="base names of tests to omit",
+                            help="Base names of tests to omit",
                             nargs="+")
         parser.add_argument("-s",
                             "--disallow-test-skipping",
-                            help="return nonzero if any tests are skipped "
+                            help="Return nonzero if any tests are skipped "
                                  "or fail",
                             action="store_true")
 
