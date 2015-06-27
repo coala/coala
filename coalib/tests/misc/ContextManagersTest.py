@@ -16,8 +16,7 @@ class ContextManagersTest(unittest.TestCase):
     def test_subprocess_timeout(self):
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
-                              "import time; time.sleep(0.5); print('hi')",
-                              ])
+                              "import time; time.sleep(0.5); print('hi')"])
         retval = None
         with subprocess_timeout(p, 0.2):
             retval = p.wait()
@@ -25,8 +24,7 @@ class ContextManagersTest(unittest.TestCase):
 
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
-                              "print('hi')",
-                              ])
+                              "print('hi')"])
         retval = None
         with subprocess_timeout(p, 0.2):
             retval = p.wait()
@@ -34,8 +32,7 @@ class ContextManagersTest(unittest.TestCase):
 
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
-                              "print('hi')",
-                              ])
+                              "print('hi')"])
         retval = None
         with subprocess_timeout(p, 0):
             retval = p.wait()
