@@ -8,6 +8,8 @@ import signal
 import threading
 import platform
 
+from coalib.misc.MutableValue import MutableValue
+
 
 @contextmanager
 def subprocess_timeout(sub_process, seconds, kill_pg=False):
@@ -22,8 +24,10 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
     :param kill_pg:     Boolean whether to kill the process group or only this
                         process.
     """
+    timedout = MutableValue(False)
+
     if seconds <= 0:
-        yield
+        yield timedout
         return
 
     finished = threading.Event()
@@ -31,6 +35,7 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
     def kill_it():
         finished.wait(seconds)
         if not finished.is_set():
+            timedout.value = True
             if platform.system() == "Windows":  # pragma: no cover
                 pgid = sub_process.pid
             else:
@@ -42,7 +47,7 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
     t = threading.Thread(name='timeout-killer', target=kill_it)
     try:
         t.start()
-        yield
+        yield timedout
     finally:
         finished.set()
         t.join()

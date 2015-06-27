@@ -29,9 +29,9 @@ class ContextManagersTest(unittest.TestCase):
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
                               "import time; time.sleep(0.5); print('hi')"])
-        retval = None
-        with subprocess_timeout(p, 0.2):
+        with subprocess_timeout(p, 0.2) as timedout:
             retval = p.wait()
+            self.assertEqual(timedout.value, True)
         self.assertNotEqual(retval, 0)
 
         if platform.system() == "Windows":
@@ -45,25 +45,25 @@ class ContextManagersTest(unittest.TestCase):
                                   "-c",
                                   process_group_timeout_test_code],
                                  preexec_fn=os.setsid)
-        retval = None
         with subprocess_timeout(p, 0.2, kill_pg=True):
             retval = p.wait()
+            self.assertEqual(timedout.value, True)
         self.assertNotEqual(retval, 0)
 
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
                               "print('hi')"])
-        retval = None
-        with subprocess_timeout(p, 0.2):
+        with subprocess_timeout(p, 0.5) as timedout:
             retval = p.wait()
+            self.assertEqual(timedout.value, False)
         self.assertEqual(retval, 0)
 
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
                               "print('hi')"])
-        retval = None
-        with subprocess_timeout(p, 0):
+        with subprocess_timeout(p, 0) as timedout:
             retval = p.wait()
+            self.assertEqual(timedout.value, False)
         self.assertEqual(retval, 0)
 
     def test_suppress_stdout(self):
