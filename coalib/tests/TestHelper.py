@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import shutil
+import time
 import webbrowser
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          preserve_sys_path,
@@ -236,19 +237,27 @@ class TestHelper:
         """
         basename = os.path.splitext(os.path.basename(filename))[0]
         reason = self.__check_module_skip(filename)
-        if reason is not False:
-            print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
-                                                           max_nr,
-                                                           basename,
-                                                           reason))
-            self.skipped_tests += 1
-        else:
-            print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
-            result = self.__execute_python3_file(filename, ignored_files)
-            if self.args.verbose or result != 0:
-                print("#" * 70)
+        try:
+            if reason is not False:
+                print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
+                                                               max_nr,
+                                                               basename,
+                                                               reason))
+                self.skipped_tests += 1
+            else:
+                print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
+                result = self.__execute_python3_file(filename, ignored_files)
+                if self.args.verbose or result != 0:
+                    print("#" * 70)
 
-            self.failed_tests += result
+                self.failed_tests += result
+        except KeyboardInterrupt:
+            print(" {:>2}/{:<2} | {}, Skipping: Keyboard Interrupt".format(
+                curr_nr,
+                max_nr,
+                basename))
+            self.skipped_tests += 1
+            time.sleep(.25)  # allow abortion of the whole script by second ^C
 
     def __is_eligible_test(self, filename):
         if not filename.endswith("Test.py"):
