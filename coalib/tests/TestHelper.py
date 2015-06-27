@@ -6,6 +6,7 @@ import subprocess
 import sys
 import shutil
 import webbrowser
+import platform
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          preserve_sys_path,
                                          subprocess_timeout)
@@ -175,11 +176,20 @@ class TestHelper:
                 pass
 
     def __print_output(self, command_array):
-        p = subprocess.Popen(command_array,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             universal_newlines=True)
-        with subprocess_timeout(p, self.args.timeout):
+        if platform.system() == "Windows":
+            p = subprocess.Popen(
+                command_array,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                universal_newlines=True,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        else:
+            p = subprocess.Popen(command_array,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
+                                 universal_newlines=True,
+                                 preexec_fn=os.setsid)
+        with subprocess_timeout(p, self.args.timeout, kill_pg=True):
             retval = p.wait()
 
         if retval != 0 or self.args.verbose:
