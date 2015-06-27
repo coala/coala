@@ -7,7 +7,7 @@ from site import getsitepackages
 from coalib.tests.TestHelper import TestHelper
 
 
-if __name__ == '__main__':
+def main():
     parser = TestHelper.create_argparser(description="Runs coalas tests.")
     parser.add_argument("-b",
                         "--ignore-bear-tests",
@@ -40,3 +40,13 @@ if __name__ == '__main__':
                                                                "tests")))
 
     exit(testhelper.run_tests(ignore_list))
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Program terminated by user.")
+        exit(130)
+
+    exit(0)
