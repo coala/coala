@@ -9,7 +9,7 @@ rm python-gi.tar.xz
 
 cd pygobject-3.16.2
 
-PYTHON=`sudo which ${system_python}` ./configure --prefix=$python_virtualenv
+./configure --prefix=$python_virtualenv
 make >/dev/null || make
 make install
 

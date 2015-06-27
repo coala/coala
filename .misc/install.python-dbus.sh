@@ -9,7 +9,7 @@ rm dbus-python.tar.gz
 
 cd dbus-python-1.2.0
 
-PYTHON=`sudo which ${system_python}` ./configure --prefix=$python_virtualenv
+./configure --prefix=$python_virtualenv
 make >/dev/null || make
 make install
 
