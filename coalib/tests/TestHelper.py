@@ -176,6 +176,8 @@ class TestHelper:
                 pass
 
     def __print_output(self, command_array):
+        timed_out = False
+
         if platform.system() == "Windows":
             p = subprocess.Popen(
                 command_array,
@@ -189,14 +191,22 @@ class TestHelper:
                                  stderr=subprocess.PIPE,
                                  universal_newlines=True,
                                  preexec_fn=os.setsid)
-        with subprocess_timeout(p, self.args.timeout, kill_pg=True):
+        with subprocess_timeout(p,
+                                self.args.timeout,
+                                kill_pg=True) as timedout:
             retval = p.wait()
+            timed_out = timedout.value
 
         if retval != 0 or self.args.verbose:
             for line in p.stderr:
                 print(line, end='')
             for line in p.stdout:
                 print(line, end='')
+
+        if timed_out:
+            print("This test failed because it was taking more than",
+                  self.args.timeout, "sec to execute. To change the "
+                  "timeout setting use the `-T` or `--timeout` argument.")
 
         return retval
 
