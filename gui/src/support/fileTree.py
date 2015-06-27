@@ -14,7 +14,6 @@ class coalaFileTree(Gtk.TreeStore):
 
         treeviewcol = Gtk.TreeViewColumn("File")
         colcelltext = Gtk.CellRendererText()
-        colcelltext.set_property("foreground", "red")
         colcellimg = Gtk.CellRendererPixbuf()
         treeviewcol.pack_start(colcellimg, False)
         treeviewcol.pack_start(colcelltext, True)

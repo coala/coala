@@ -1,11 +1,13 @@
 import os
-from collections import OrderedDict
 from gi.repository import Gtk
+from gi.repository import GtkSource
+from gi.repository import Gdk
 
 from gui.src.support.fileTree import coalaFileTree
 from gui.src.support.settingTree import coalaSettingTree
 from coalib.settings.ConfigurationGathering import load_config_file
-from gui.src.support.WriteFile import write_to_file
+from gui.src.support.WriteFile import write_to_file_and_run
+from gui.src.support.LineRenderer import LineRenderer
 
 
 class coalaWindow(Gtk.ApplicationWindow):
@@ -19,6 +21,7 @@ class coalaWindow(Gtk.ApplicationWindow):
         os.chdir(self.path)
         self.sections = {}
         self.sections_view = {}
+        self.results = None
 
         self._ui = Gtk.Builder()
         self._ui.add_from_resource("/coala/coalaWindow.ui")
@@ -46,6 +49,11 @@ class coalaWindow(Gtk.ApplicationWindow):
         self.filetreecontainer = self._ui.get_object("filetree")
         self.filetreecontainer.add(self.filetree.fileTreeView)
         self.filetreecontainer.set_size_request(244, -1)
+        self.select = self.filetree.fileTreeView.get_selection()
+        self.select.connect("changed", self.on_file_tree_selection_changed)
+
+        self.source_view = self._ui.get_object("sourceview")
+        self.source_view_iter = 0
 
         self.setup_config_file()
 
@@ -58,6 +66,7 @@ class coalaWindow(Gtk.ApplicationWindow):
             coafile = open(".coafile", "w")
             coafile.close()
         self.setup_sections()
+        self.results = write_to_file_and_run(self.sections_view)
 
     def setup_sections(self):
         for key in self.sections:
@@ -109,7 +118,6 @@ class coalaWindow(Gtk.ApplicationWindow):
                                  str(self.sections[section][key])])
         self.section_stack.add_titled(frame, section, section)
         self.section_stack_switcher.queue_draw()
-        write_to_file(self.sections_view)
 
     def del_setting(self, button):
         section = self.section_stack.get_visible_child()
@@ -119,18 +127,109 @@ class coalaWindow(Gtk.ApplicationWindow):
         if result:
             model, iter = result
         model.remove(iter)
-        write_to_file(self.sections_view)
+        self.results = write_to_file_and_run(self.sections_view)
 
     def add_setting(self, button):
         section = self.section_stack.get_visible_child()
         settings = self.sections_view[section.get_name()]
         settings.append(["Entry", "Value"])
-        write_to_file(self.sections_view)
+        self.results = write_to_file_and_run(self.sections_view)
 
     def text_edited_column1(self, widget, path, text, liststore):
         liststore[path][0] = text
-        write_to_file(self.sections_view)
+        self.results = write_to_file_and_run(self.sections_view)
 
     def text_edited_column2(self, widget, path, text, liststore):
         liststore[path][1] = text
-        write_to_file(self.sections_view)
+        self.results = write_to_file_and_run(self.sections_view)
+
+    def on_file_tree_selection_changed(self, selection):
+        model, treeiter = selection.get_selected()
+        if treeiter != None:
+            if os.path.isdir(model[treeiter][2]):
+                print("You selected", model[treeiter][0], model[treeiter][2])
+            else:
+                self.source_view_iter = 0
+                print("You selected", model[treeiter][0], model[treeiter][2])
+                if self.source_view:
+                    children = self.source_view.get_children()
+                    for child in children:
+                        child.destroy()
+                prev = None
+                if self.results[model[treeiter][2]]:
+                    for result in sorted(self.results[model[treeiter][2]]):
+                        print(result)
+                        if prev:
+                            if prev.line_nr:
+                                self.print_result(result.severity, result.origin, result.message, result.file, result.line_nr, max(result.line_nr-5, prev.line_nr))
+                            else:
+                                self.print_result(result.severity, result.origin, result.message, result.file, result.line_nr, max(result.line_nr-5, 1))
+                        else:
+                            if result.line_nr:
+                                self.print_result(result.severity, result.origin, result.message, result.file, result.line_nr, max(result.line_nr-5, 1))
+                            else:
+                                self.print_result(result.severity, result.origin, result.message, result.file)
+                        prev = result
+
+    def print_result(self,
+                     severity,
+                     origin,
+                     message,
+                     filename,
+                     line_nr=None,
+                     start_nr=None):
+        colored_box = Gtk.Box()
+        if severity == 0:
+            colored_box.override_background_color(Gtk.StateType.NORMAL, Gdk.RGBA(0,255,0,.5))
+        elif severity == 1:
+            colored_box.override_background_color(Gtk.StateType.NORMAL, Gdk.RGBA(255,255,0,.5))
+        else:
+            colored_box.override_background_color(Gtk.StateType.NORMAL, Gdk.RGBA(255,0,0,.5))
+        colored_box.set_size_request(21, -1)
+        colored_box.set_visible(True)
+        colored_box.set_vexpand(True)
+        if line_nr is None:
+            self.source_view.attach(colored_box, 0, self.source_view_iter, 1, 1)
+            frame = Gtk.Frame()
+            frame.set_hexpand(True)
+            frame.set_vexpand(True)
+            frame.set_label(origin)
+            label = Gtk.Label()
+            label.set_text(message)
+            label.set_visible(True)
+            frame.add(label)
+            frame.set_visible(True)
+            frame.set_border_width(10)
+            self.source_view.attach(frame, 1, self.source_view_iter, 1,1)
+            self.source_view_iter += 1
+
+        else:
+            language_manager = GtkSource.LanguageManager.new()
+            language = language_manager.guess_language(filename, None)
+            textbuffer = GtkSource.Buffer()
+            textbuffer.set_highlight_syntax(True)
+            textbuffer.set_language(language)
+            textbuffer.set_text(''.join(open(filename).readlines()[start_nr:line_nr])[:-1])
+            textview = GtkSource.View(visible=True, buffer=textbuffer, monospace=True, editable=False)
+            textview.set_visible(True)
+            textview.set_hexpand(True)
+            self.source_view.attach(textview, 0,self.source_view_iter, 2, 1)
+            gutter = textview.get_gutter(Gtk.TextWindowType.LEFT)
+            renderer = LineRenderer(start_nr, xpad=6, xalign=1.0)
+            gutter.insert(renderer, 0)
+            self.source_view_iter += 1
+
+            self.source_view.attach(colored_box, 0, self.source_view_iter, 1, 1)
+            frame = Gtk.Frame()
+            frame.set_hexpand(True)
+            frame.set_vexpand(True)
+            frame.set_label(origin)
+            label = Gtk.Label()
+            label.set_text(message)
+            label.set_visible(True)
+            frame.add(label)
+            frame.set_visible(True)
+            frame.set_border_width(10)
+            self.source_view.attach(frame, 1, self.source_view_iter, 1,1)
+            self.source_view_iter += 1
+

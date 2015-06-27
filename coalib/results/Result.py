@@ -78,6 +78,12 @@ class Result:
         if self.file != other.file:
             return self.file < other.file
 
+        if self.line_nr is None and other.line_nr is not None:
+            return True
+
+        if self.line_nr is not None and other.line_nr is None:
+            return False
+
         # If we have a line result show results with a lesser line number first
         if self.line_nr is not None and other.line_nr is not None:
             if self.line_nr != other.line_nr:
