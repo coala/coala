@@ -20,3 +20,4 @@ deployment:
     branch: /.*/
     commands:
       - bash .misc/deploy.zanata.sh
+      - bash .misc/deploy.pypi.sh
