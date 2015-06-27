@@ -1,15 +1,46 @@
 import copy
 import unittest
 import sys
+import subprocess
 
 sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          retrieve_stdout,
                                          simulate_console_inputs,
-                                         preserve_sys_path)
+                                         preserve_sys_path,
+                                         subprocess_timeout)
+from coalib.misc.StringConstants import StringConstants
 
 
 class ContextManagersTest(unittest.TestCase):
+    def test_subprocess_timeout(self):
+        p = subprocess.Popen([StringConstants.python_executable,
+                              "-c",
+                              "import time; time.sleep(0.5); print('hi')",
+                              ])
+        retval = None
+        with subprocess_timeout(p, 0.2):
+            retval = p.wait()
+        self.assertNotEqual(retval, 0)
+
+        p = subprocess.Popen([StringConstants.python_executable,
+                              "-c",
+                              "print('hi')",
+                              ])
+        retval = None
+        with subprocess_timeout(p, 0.2):
+            retval = p.wait()
+        self.assertEqual(retval, 0)
+
+        p = subprocess.Popen([StringConstants.python_executable,
+                              "-c",
+                              "print('hi')",
+                              ])
+        retval = None
+        with subprocess_timeout(p, 0):
+            retval = p.wait()
+        self.assertEqual(retval, 0)
+
     def test_suppress_stdout(self):
         def print_func():
             print("func")

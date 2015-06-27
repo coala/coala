@@ -4,6 +4,39 @@ import os
 from io import StringIO
 import builtins
 import copy
+import signal
+import threading
+
+
+@contextmanager
+def subprocess_timeout(sub_process, seconds):
+    """
+    Kill subprocess if the sub process takes more the than the timeout.
+
+    :param sub_process: The sub process to run.
+    :param seconds:     The number of seconds to allow the test to run for. If
+                        set to 0 or a negative value, it waits indefinitely.
+                        Floats can be used to specify units smaller than
+                        seconds.
+    """
+    if seconds <= 0:
+        yield
+        return
+
+    finished = threading.Event()
+
+    def kill_it():
+        finished.wait(seconds)
+        if not finished.is_set():
+            os.kill(sub_process.pid, signal.SIGINT)
+
+    t = threading.Thread(name='timeout-killer', target=kill_it)
+    try:
+        t.start()
+        yield
+    finally:
+        finished.set()
+        t.join()
 
 
 @contextmanager
