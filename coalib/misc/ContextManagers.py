@@ -6,10 +6,11 @@ import builtins
 import copy
 import signal
 import threading
+import platform
 
 
 @contextmanager
-def subprocess_timeout(sub_process, seconds):
+def subprocess_timeout(sub_process, seconds, kill_pg=False):
     """
     Kill subprocess if the sub process takes more the than the timeout.
 
@@ -18,6 +19,8 @@ def subprocess_timeout(sub_process, seconds):
                         set to 0 or a negative value, it waits indefinitely.
                         Floats can be used to specify units smaller than
                         seconds.
+    :param kill_pg:     Boolean whether to kill the process group or only this
+                        process.
     """
     if seconds <= 0:
         yield
@@ -28,7 +31,13 @@ def subprocess_timeout(sub_process, seconds):
     def kill_it():
         finished.wait(seconds)
         if not finished.is_set():
+            if platform.system() == "Windows":  # pragma: no cover
+                pgid = sub_process.pid
+            else:
+                pgid = os.getpgid(sub_process.pid)
             os.kill(sub_process.pid, signal.SIGINT)
+            if kill_pg:
+                os.killpg(pgid, signal.SIGINT)
 
     t = threading.Thread(name='timeout-killer', target=kill_it)
     try:

@@ -2,6 +2,8 @@ import copy
 import unittest
 import sys
 import subprocess
+import os
+import platform
 
 sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import (suppress_stdout,
@@ -12,6 +14,16 @@ from coalib.misc.ContextManagers import (suppress_stdout,
 from coalib.misc.StringConstants import StringConstants
 
 
+process_group_timeout_test_code = """
+import time, subprocess;
+from coalib.misc.StringConstants import StringConstants;
+time.sleep(0.5);
+subprocess.Popen([StringConstants.python_executable,
+                  "-c",
+                  "import time; time.sleep(100)"])
+"""
+
+
 class ContextManagersTest(unittest.TestCase):
     def test_subprocess_timeout(self):
         p = subprocess.Popen([StringConstants.python_executable,
@@ -19,6 +31,22 @@ class ContextManagersTest(unittest.TestCase):
                               "import time; time.sleep(0.5); print('hi')"])
         retval = None
         with subprocess_timeout(p, 0.2):
+            retval = p.wait()
+        self.assertNotEqual(retval, 0)
+
+        if platform.system() == "Windows":
+            p = subprocess.Popen(
+                [StringConstants.python_executable,
+                 "-c",
+                 process_group_timeout_test_code],
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        else:
+            p = subprocess.Popen([StringConstants.python_executable,
+                                  "-c",
+                                  process_group_timeout_test_code],
+                                 preexec_fn=os.setsid)
+        retval = None
+        with subprocess_timeout(p, 0.2, kill_pg=True):
             retval = p.wait()
         self.assertNotEqual(retval, 0)
 
