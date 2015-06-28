@@ -76,6 +76,27 @@ def is_eligible_test(filename, test_only, omit):
     return True
 
 
+def delete_coverage():
+    """
+    Deletes previous coverage data.
+
+    :return: False if coverage3 cannot be executed.
+    """
+    coverage_available = False
+    with suppress_stdout():
+        coverage_available = subprocess.call(
+            [StringConstants.python_executable,
+             "-m",
+             "coverage",
+             "erase"]) == 0
+    if not coverage_available:
+        print("Coverage failed. Falling back to standard unit tests."
+              "Install code coverage measurement for python3. Package"
+              "name should be something like: python-coverage3/coverage")
+
+    return coverage_available
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -92,30 +113,9 @@ class TestHelper:
         self.failed_tests = 0
         self.skipped_tests = 0
 
-    def delete_coverage(self):
-        """
-        Deletes previous coverage data and adjusts the args.cover member to
-        False if coverage3 is unavailable.
-
-        :return: False if coverage3 cannot be executed.
-        """
-        coverage_available = False
-        with suppress_stdout():
-            coverage_available = subprocess.call(
-                [StringConstants.python_executable,
-                 "-m",
-                 "coverage",
-                 "erase"]) == 0
-        if not coverage_available:
-            print("Coverage failed. Falling back to standard unit tests."
-                  "Install code coverage measurement for python3. Package"
-                  "name should be something like: python-coverage3/coverage")
-            self.args.cover = False  # Don't use coverage if this fails
-        return coverage_available
-
     def run_tests(self, ignore_list):
         if self.args.cover:
-            self.delete_coverage()
+            self.args.cover = delete_coverage()
 
         if len(self.args.test_only) > 0:
             nonexistent_tests, number = self.show_nonexistent_tests()
