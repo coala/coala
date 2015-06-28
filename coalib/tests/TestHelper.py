@@ -97,6 +97,25 @@ def delete_coverage():
     return coverage_available
 
 
+def check_module_skip(filename):
+    with preserve_sys_path(), suppress_stdout():
+        module_dir = os.path.dirname(filename)
+        if module_dir not in sys.path:
+            sys.path.insert(0, module_dir)
+
+        try:
+            module = importlib.import_module(
+                os.path.basename(os.path.splitext(filename)[0]))
+
+            for name, obj in inspect.getmembers(module):
+                if inspect.isfunction(obj) and name == "skip_test":
+                    return obj()
+        except ImportError as exception:
+            return str(exception)
+
+        return False
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -242,25 +261,6 @@ class TestHelper:
                                     ignored_files,
                                     filename])
 
-    @staticmethod
-    def __check_module_skip(filename):
-        with preserve_sys_path(), suppress_stdout():
-            module_dir = os.path.dirname(filename)
-            if module_dir not in sys.path:
-                sys.path.insert(0, module_dir)
-
-            try:
-                module = importlib.import_module(
-                    os.path.basename(os.path.splitext(filename)[0]))
-
-                for name, object in inspect.getmembers(module):
-                    if inspect.isfunction(object) and name == "skip_test":
-                        return object()
-            except ImportError as exception:
-                return str(exception)
-
-            return False
-
     def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
         Executes the given test and counts up failed_tests or skipped_tests if
@@ -272,7 +272,7 @@ class TestHelper:
         :param ignored_files: Files to ignore for coverage
         """
         basename = os.path.splitext(os.path.basename(filename))[0]
-        reason = self.__check_module_skip(filename)
+        reason = check_module_skip(filename)
         if reason is not False:
             print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
                                                            max_nr,
