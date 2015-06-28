@@ -52,6 +52,18 @@ def create_argparser(**kwargs):
     return parser
 
 
+def resolve_implicit_args(args, parser):
+    args.cover = args.cover or args.html
+    if args.omit is not None and args.test_only is not None:
+        parser.error("Incompatible options: --omit and --test_only")
+    if args.omit is None:
+        args.omit = []
+    if args.test_only is None:
+        args.test_only = []
+
+    return args
+
+
 def is_eligible_test(filename, test_only, omit):
     """
     Checks if the filename is a Test or not. The conditions are:
@@ -211,7 +223,7 @@ class TestHelper:
         """
         self.parser = parser
         self.args = self.parser.parse_args()
-        self.__resolve_implicit_args()
+        self.args = resolve_implicit_args(self.args, self.parser)
         self.test_files = []
         self.test_file_names = []
         self.failed_tests = 0
@@ -261,15 +273,6 @@ class TestHelper:
                     self.test_files.append(os.path.join(dirpath, filename))
                     self.test_file_names.append(
                         os.path.splitext(os.path.basename(filename))[0])
-
-    def __resolve_implicit_args(self):
-        self.args.cover = self.args.cover or self.args.html
-        if self.args.omit is not None and self.args.test_only is not None:
-            self.parser.error("Incompatible options: --omit and --test_only")
-        if self.args.omit is None:
-            self.args.omit = []
-        if self.args.test_only is None:
-            self.args.test_only = []
 
     def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
