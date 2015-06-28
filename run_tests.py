@@ -4,7 +4,7 @@ import os
 import tempfile
 from site import getsitepackages
 
-from coalib.tests.TestHelper import (TestHelper,
+from coalib.tests.TestHelper import (parse_args,
                                      create_argparser,
                                      run_tests,
                                      get_test_files)
@@ -21,7 +21,9 @@ def main():
                         help="ignore main program tests",
                         action="store_true")
 
-    testhelper = TestHelper(parser)
+    args = parse_args(parser)
+    test_files = []
+    test_file_names = []
 
     ignore_list = ([os.path.join(x, "**") for x in getsitepackages()] +
                    [os.path.join(tempfile.gettempdir(), "**")])
@@ -32,30 +34,30 @@ def main():
         os.path.join("coalib", "bearlib", "parsing", "clang", "**"),
         os.path.join("bears", "tests", "**")]
 
-    if not testhelper.args.ignore_main_tests:
-        (test_files,
-         test_file_names) = get_test_files(
+    if not args.ignore_main_tests:
+        (main_test_files,
+         main_test_file_names) = get_test_files(
             os.path.abspath(os.path.join("coalib", "tests")),
-            test_only=testhelper.args.test_only,
-            omit=testhelper.args.omit)
-        testhelper.test_files += test_files
-        testhelper.test_file_names += test_file_names
+            test_only=args.test_only,
+            omit=args.omit)
+        test_files += main_test_files
+        test_file_names += main_test_file_names
     else:
         ignore_list.append(os.path.join("coalib", "**"))
 
-    if not testhelper.args.ignore_bear_tests:
-        (test_files,
-         test_file_names) = get_test_files(
+    if not args.ignore_bear_tests:
+        (bear_test_files,
+         bear_test_file_names) = get_test_files(
             os.path.abspath(os.path.join("bears", "tests")),
-            test_only=testhelper.args.test_only,
-            omit=testhelper.args.omit)
-        testhelper.test_files += test_files
-        testhelper.test_file_names += test_file_names
+            test_only=args.test_only,
+            omit=args.omit)
+        test_files += bear_test_files
+        test_file_names += bear_test_file_names
 
     exit(run_tests(ignore_list,
-                   testhelper.args,
-                   testhelper.test_files,
-                   testhelper.test_file_names))
+                   args,
+                   test_files,
+                   test_file_names))
 
 
 if __name__ == '__main__':

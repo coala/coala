@@ -52,6 +52,20 @@ def create_argparser(**kwargs):
     return parser
 
 
+def parse_args(parser):
+    """
+    Parses the CLI arguments.
+
+    :param parser: A argparse.ArgumentParser created with the
+                   create_argparser method of TestHelper module.
+    :return args:  The parsed arguments.
+    """
+    args = parser.parse_args()
+    args = resolve_implicit_args(args, parser)
+
+    return args
+
+
 def resolve_implicit_args(args, parser):
     args.cover = args.cover or args.html
     if args.omit is not None and args.test_only is not None:
@@ -326,20 +340,3 @@ def run_tests(ignore_list, args, test_files, test_file_names):
         return failed_tests
     else:
         return failed_tests + skipped_tests
-
-
-class TestHelper:
-    def __init__(self, parser):
-        """
-        Creates a new test helper and with it parses the CLI arguments.
-
-        :param parser: A argparse.ArgumentParser created with the
-                       create_argparser method of this class.
-        """
-        self.parser = parser
-        self.args = self.parser.parse_args()
-        self.args = resolve_implicit_args(self.args, self.parser)
-        self.test_files = []
-        self.test_file_names = []
-        self.failed_tests = 0
-        self.skipped_tests = 0
