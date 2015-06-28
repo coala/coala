@@ -12,12 +12,15 @@ esac
 # Note - `--with-wide-unicode` is needed only because 3.2.5 defaults to UCS2 unicode
 PYTHON_CONFIGURE_OPTS="--with-wide-unicode" pyenv install -ks $dep_version
 pyenv local $dep_version
-source .misc/setup_env_vars.sh
+export python_unicode_storage=`python -c "import sys; print('UCS4' if sys.maxunicode > 65536 else 'UCS2')"`
+
 if [ ! "$python_unicode_storage" = "UCS4" ] ; then
   pyenv uninstall -f $dep_version
-  PYTHON_CONFIGURE_OPTS="--with-wide-unicode" pyenv install -k $python_version
-  source .misc/setup_env_vars.sh
+  PYTHON_CONFIGURE_OPTS="--with-wide-unicode" pyenv install -k $dep_version
 fi
+
+# Env vars for deps.sh
+export python_virtualenv=`pyenv prefix`
 
 # apt-get commands
 sudo apt-get -qq install espeak libclang1-3.4
