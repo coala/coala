@@ -143,6 +143,32 @@ def check_module_skip(filename):
         return False
 
 
+def show_coverage_results(html):
+    subprocess.call([StringConstants.python_executable,
+                     "-m",
+                     "coverage",
+                     "combine"])
+    subprocess.call([StringConstants.python_executable,
+                     "-m",
+                     "coverage",
+                     "report",
+                     "-m"])
+    if html:
+        shutil.rmtree(".htmlreport", ignore_errors=True)
+        print("Generating HTML report to .htmlreport...")
+        subprocess.call([StringConstants.python_executable,
+                         "-m",
+                         "coverage",
+                         "html",
+                         "-d",
+                         ".htmlreport"])
+        try:
+            webbrowser.open_new_tab(os.path.join(".htmlreport",
+                                                 "index.html"))
+        except webbrowser.Error:
+            pass
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -184,7 +210,7 @@ class TestHelper:
                                         self.skipped_tests))
 
         if self.args.cover:
-            self.__show_coverage_results()
+            show_coverage_results(self.args.html)
 
         if not self.args.disallow_test_skipping:
             return self.failed_tests
@@ -221,31 +247,6 @@ class TestHelper:
             self.args.omit = []
         if self.args.test_only is None:
             self.args.test_only = []
-
-    def __show_coverage_results(self):
-        subprocess.call([StringConstants.python_executable,
-                         "-m",
-                         "coverage",
-                         "combine"])
-        subprocess.call([StringConstants.python_executable,
-                         "-m",
-                         "coverage",
-                         "report",
-                         "-m"])
-        if self.args.html:
-            shutil.rmtree(".htmlreport", ignore_errors=True)
-            print("Generating HTML report to .htmlreport...")
-            subprocess.call([StringConstants.python_executable,
-                             "-m",
-                             "coverage",
-                             "html",
-                             "-d",
-                             ".htmlreport"])
-            try:
-                webbrowser.open_new_tab(os.path.join(".htmlreport",
-                                                     "index.html"))
-            except webbrowser.Error:
-                pass
 
     def __execute_python3_file(self, filename, ignored_files):
         if not self.args.cover:
