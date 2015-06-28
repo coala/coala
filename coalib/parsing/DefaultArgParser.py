@@ -7,6 +7,7 @@ from coalib import version_str
 def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
     arg_parser = argparse.ArgumentParser(
         formatter_class=formatter_class,
+        prog="coala",
         description=_("coala is a simple COde AnaLysis Application. Its goal "
                       "is to make static code analysis easy and convenient "
                       "for all languages."))
