@@ -213,6 +213,51 @@ def show_nonexistent_tests(test_only, test_file_names):
     return nonexistent_tests, number
 
 
+def execute_test(filename,
+                 curr_nr,
+                 max_nr,
+                 ignored_files,
+                 verbose,
+                 cover,
+                 timeout):
+    """
+    Executes the given test and counts up failed_tests or skipped_tests if
+    needed.
+
+    :param filename:      Filename of test to execute.
+    :param curr_nr:       Number of current test.
+    :param max_nr:        Count of all tests.
+    :param ignored_files: Comma separated list of files to ignore for coverage.
+    :param verbose:       Boolean to show more information.
+    :param cover:         Boolean to calculate coverage information or not.
+    :param timeout:       Time in seconds to wait for the test to complete
+                          before killing it. Floats are allowed for units
+                          smaller than a second.
+    :return:              Returns a tuple with (failed_tests, skipped_tests).
+                          As this executes one file, the tuple will be either
+                          (0, 0) or (0, 1) or (1, 0).
+    """
+    basename = os.path.splitext(os.path.basename(filename))[0]
+    reason = check_module_skip(filename)
+    if reason is not False:
+        print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
+                                                       max_nr,
+                                                       basename,
+                                                       reason))
+        return 0, 1
+    else:
+        print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
+        result = execute_python_file(filename,
+                                     ignored_files,
+                                     cover=cover,
+                                     timeout=timeout,
+                                     verbose=verbose)
+        if verbose or result != 0:
+            print("#" * 70)
+
+        return result, 0
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -246,10 +291,17 @@ class TestHelper:
         self.test_files.sort(key=lambda fl: str.lower(os.path.split(fl)[1]))
 
         for i, file in enumerate(self.test_files):
-            self.__execute_test(file,
-                                i+nonexistent_tests+1,
-                                number,
-                                ",".join(ignore_list))
+            failed_tests, skipped_tests = execute_test(
+                file,
+                i+nonexistent_tests+1,
+                number,
+                ",".join(ignore_list),
+                verbose=self.args.verbose,
+                cover=self.args.cover,
+                timeout=self.args.timeout)
+            self.failed_tests += failed_tests
+            self.skipped_tests += skipped_tests
+
 
         print("\nTests finished: failures in {} of {} test modules, skipped "
               "{} test modules.".format(self.failed_tests,
@@ -273,33 +325,3 @@ class TestHelper:
                     self.test_files.append(os.path.join(dirpath, filename))
                     self.test_file_names.append(
                         os.path.splitext(os.path.basename(filename))[0])
-
-    def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
-        """
-        Executes the given test and counts up failed_tests or skipped_tests if
-        needed.
-
-        :param filename:      Filename of test to execute
-        :param curr_nr:       Number of current test
-        :param max_nr:        Count of all tests
-        :param ignored_files: Files to ignore for coverage
-        """
-        basename = os.path.splitext(os.path.basename(filename))[0]
-        reason = check_module_skip(filename)
-        if reason is not False:
-            print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
-                                                           max_nr,
-                                                           basename,
-                                                           reason))
-            self.skipped_tests += 1
-        else:
-            print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
-            result = execute_python_file(filename,
-                                         ignored_files,
-                                         cover=self.args.cover,
-                                         timeout=self.args.timeout,
-                                         verbose=self.args.verbose)
-            if self.args.verbose or result != 0:
-                print("#" * 70)
-
-            self.failed_tests += result
