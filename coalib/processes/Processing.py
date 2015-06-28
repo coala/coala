@@ -1,5 +1,8 @@
 import multiprocessing
 import queue
+import os
+import platform
+import subprocess
 
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
@@ -34,6 +37,17 @@ def fill_queue(queue_fill, any_list):
 def get_running_processes(processes):
     return sum((1 if process.is_alive() else 0) for process in processes)
 
+
+def create_process_group(command_array, **kwargs):
+    if platform.system() == "Windows":  # pragma: no cover
+        p = subprocess.Popen(command_array,
+                             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+                             **kwargs)
+    else:
+        p = subprocess.Popen(command_array,
+                             preexec_fn=os.setsid,
+                             **kwargs)
+    return p
 
 def print_result(results,
                  file_dict,

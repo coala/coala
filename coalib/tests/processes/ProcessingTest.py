@@ -4,6 +4,8 @@ import unittest
 import sys
 import multiprocessing
 import platform
+import re
+import subprocess
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
@@ -13,8 +15,19 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.Processing import process_queues
-import re
+from coalib.processes.Processing import process_queues, create_process_group
+from coalib.misc.StringConstants import StringConstants
+
+
+process_group_test_code = """
+import time, subprocess, os, platform;
+from coalib.misc.StringConstants import StringConstants;
+p=subprocess.Popen([StringConstants.python_executable,
+                  "-c",
+                  "import time; time.sleep(0.1)"]);
+pgid = p.pid if platform.system() == "Windows" else os.getpgid(p.pid);
+print(p.pid, pgid)
+"""
 
 
 class DummyProcess(multiprocessing.Process):
@@ -180,6 +193,24 @@ class ProcessingTest(unittest.TestCase):
             mock_interactor.print_results)
         with self.assertRaises(queue.Empty):
             mock_interactor.get()
+
+    def test_create_process_group(self):
+        p = create_process_group([StringConstants.python_executable,
+                                  "-c",
+                                  process_group_test_code],
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+        retval = p.wait()
+        if retval != 0:
+            for line in p.stderr:
+                print(line, end='')
+            raise Exception("Subprocess did not exit correctly")
+        output = [i for i in p.stdout]
+        pid, pgid = [int(i.strip()) for i_out in output for i in i_out.split()]
+        if platform.system() != "Windows":
+            # There is no way of testing this on windows with the current python
+            # modules subprocess and os
+            self.assertEqual(p.pid, pgid)
 
 
 if __name__ == '__main__':
