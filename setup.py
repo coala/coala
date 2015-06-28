@@ -3,6 +3,7 @@
 from setuptools import setup
 import sys
 
+from coalib.misc.BuildManPage import BuildManPage
 from coalib.misc.i18n import compile_translations
 from coalib import version_str
 
@@ -83,4 +84,5 @@ if __name__ == "__main__":
 
               'Topic :: Scientific/Engineering :: Information Analysis',
               'Topic :: Software Development :: Quality Assurance',
-              'Topic :: Text Processing :: Linguistic'])
+              'Topic :: Text Processing :: Linguistic'],
+          cmdclass={'build_manpage': BuildManPage})
