@@ -258,6 +258,50 @@ def execute_test(filename,
         return result, 0
 
 
+def run_tests(ignore_list, args, test_files, test_file_names):
+    failed_tests = 0
+    skipped_tests = 0
+    if args.cover:
+        args.cover = delete_coverage()
+
+    if len(args.test_only) > 0:
+        (nonexistent_tests,
+         number) = show_nonexistent_tests(args.test_only,
+                                          test_file_names)
+        failed_tests += nonexistent_tests
+    else:
+        number = len(test_files)
+        nonexistent_tests = 0
+
+    # Sort tests alphabetically.
+    test_files.sort(key=lambda fl: str.lower(os.path.split(fl)[1]))
+
+    for i, file in enumerate(test_files):
+        _failed_tests, _skipped_tests = execute_test(
+            file,
+            i+nonexistent_tests+1,
+            number,
+            ",".join(ignore_list),
+            verbose=args.verbose,
+            cover=args.cover,
+            timeout=args.timeout)
+        failed_tests += _failed_tests
+        skipped_tests += _skipped_tests
+
+    print("\nTests finished: failures in {} of {} test modules, skipped "
+          "{} test modules.".format(failed_tests,
+                                    number,
+                                    skipped_tests))
+
+    if args.cover:
+        show_coverage_results(args.html)
+
+    if not args.disallow_test_skipping:
+        return failed_tests
+    else:
+        return failed_tests + skipped_tests
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -273,48 +317,6 @@ class TestHelper:
         self.test_file_names = []
         self.failed_tests = 0
         self.skipped_tests = 0
-
-    def run_tests(self, ignore_list):
-        if self.args.cover:
-            self.args.cover = delete_coverage()
-
-        if len(self.args.test_only) > 0:
-            (nonexistent_tests,
-             number) = show_nonexistent_tests(self.args.test_only,
-                                              self.test_file_names)
-            self.failed_tests += nonexistent_tests
-        else:
-            number = len(self.test_files)
-            nonexistent_tests = 0
-
-        # Sort tests alphabetically.
-        self.test_files.sort(key=lambda fl: str.lower(os.path.split(fl)[1]))
-
-        for i, file in enumerate(self.test_files):
-            failed_tests, skipped_tests = execute_test(
-                file,
-                i+nonexistent_tests+1,
-                number,
-                ",".join(ignore_list),
-                verbose=self.args.verbose,
-                cover=self.args.cover,
-                timeout=self.args.timeout)
-            self.failed_tests += failed_tests
-            self.skipped_tests += skipped_tests
-
-
-        print("\nTests finished: failures in {} of {} test modules, skipped "
-              "{} test modules.".format(self.failed_tests,
-                                        number,
-                                        self.skipped_tests))
-
-        if self.args.cover:
-            show_coverage_results(self.args.html)
-
-        if not self.args.disallow_test_skipping:
-            return self.failed_tests
-        else:
-            return self.failed_tests + self.skipped_tests
 
     def add_test_files(self, testdir):
         for (dirpath, dirnames, filenames) in os.walk(testdir):

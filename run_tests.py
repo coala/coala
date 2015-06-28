@@ -4,7 +4,7 @@ import os
 import tempfile
 from site import getsitepackages
 
-from coalib.tests.TestHelper import TestHelper, create_argparser
+from coalib.tests.TestHelper import TestHelper, create_argparser, run_tests
 
 
 def main():
@@ -39,7 +39,10 @@ def main():
         testhelper.add_test_files(os.path.abspath(os.path.join("bears",
                                                                "tests")))
 
-    exit(testhelper.run_tests(ignore_list))
+    exit(run_tests(ignore_list,
+                   testhelper.args,
+                   testhelper.test_files,
+                   testhelper.test_file_names))
 
 
 if __name__ == '__main__':
