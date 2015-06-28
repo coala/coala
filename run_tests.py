@@ -4,11 +4,11 @@ import os
 import tempfile
 from site import getsitepackages
 
-from coalib.tests.TestHelper import TestHelper
+from coalib.tests.TestHelper import TestHelper, create_argparser
 
 
 def main():
-    parser = TestHelper.create_argparser(description="Runs coalas tests.")
+    parser = create_argparser(description="Runs coalas tests.")
     parser.add_argument("-b",
                         "--ignore-bear-tests",
                         help="ignore bear tests",
