@@ -97,6 +97,33 @@ def delete_coverage():
     return coverage_available
 
 
+def execute_command_array(command_array, timeout, verbose):
+    timed_out = False
+
+    p = create_process_group(command_array,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             universal_newlines=True)
+    with subprocess_timeout(p,
+                            timeout,
+                            kill_pg=True) as timedout:
+        retval = p.wait()
+        timed_out = timedout.value
+
+    if retval != 0 or verbose:
+        for line in p.stderr:
+            print(line, end='')
+        for line in p.stdout:
+            print(line, end='')
+
+    if timed_out:
+        print("This test failed because it was taking more than", timeout,
+              "sec to execute. To change the timeout setting use the `-T` or "
+              "`--timeout` argument.")
+
+    return retval
+
+
 def check_module_skip(filename):
     with preserve_sys_path(), suppress_stdout():
         module_dir = os.path.dirname(filename)
@@ -220,46 +247,24 @@ class TestHelper:
             except webbrowser.Error:
                 pass
 
-    def __print_output(self, command_array):
-        timed_out = False
-
-        p = create_process_group(command_array,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE,
-                                 universal_newlines=True)
-        with subprocess_timeout(p,
-                                self.args.timeout,
-                                kill_pg=True) as timedout:
-            retval = p.wait()
-            timed_out = timedout.value
-
-        if retval != 0 or self.args.verbose:
-            for line in p.stderr:
-                print(line, end='')
-            for line in p.stdout:
-                print(line, end='')
-
-        if timed_out:
-            print("This test failed because it was taking more than",
-                  self.args.timeout, "sec to execute. To change the "
-                  "timeout setting use the `-T` or `--timeout` argument.")
-
-        return retval
-
     def __execute_python3_file(self, filename, ignored_files):
         if not self.args.cover:
-            return self.__print_output([StringConstants.python_executable,
-                                        filename])
+            return execute_command_array([StringConstants.python_executable,
+                                          filename],
+                                         timeout=self.args.timeout,
+                                         verbose=self.args.verbose)
 
-        return self.__print_output([StringConstants.python_executable,
-                                    "-m",
-                                    "coverage",
-                                    "run",
-                                    "-p",  # make it collectable later
-                                    "--branch",
-                                    "--omit",
-                                    ignored_files,
-                                    filename])
+        return execute_command_array([StringConstants.python_executable,
+                                      "-m",
+                                      "coverage",
+                                      "run",
+                                      "-p",  # make it collectable later
+                                      "--branch",
+                                      "--omit",
+                                      ignored_files,
+                                      filename],
+                                     timeout=self.args.timeout,
+                                     verbose=self.args.verbose)
 
     def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
