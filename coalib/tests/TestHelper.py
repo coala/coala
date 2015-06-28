@@ -189,6 +189,18 @@ def execute_python_file(filename, ignored_files, cover, timeout, verbose):
                                  verbose=verbose)
 
 
+def show_nonexistent_tests(test_only, test_file_names):
+    nonexistent_tests = 0
+    number = len(test_only)
+    for test in test_only:
+        if test not in test_file_names:
+            nonexistent_tests += 1
+            print(" {:>2}/{:<2} | {}, Cannot execute: This test does "
+                  "not exist.".format(nonexistent_tests, number, test))
+
+    return nonexistent_tests, number
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -210,7 +222,10 @@ class TestHelper:
             self.args.cover = delete_coverage()
 
         if len(self.args.test_only) > 0:
-            nonexistent_tests, number = self.show_nonexistent_tests()
+            (nonexistent_tests,
+             number) = show_nonexistent_tests(self.args.test_only,
+                                              self.test_file_names)
+            self.failed_tests += nonexistent_tests
         else:
             number = len(self.test_files)
             nonexistent_tests = 0
@@ -236,18 +251,6 @@ class TestHelper:
             return self.failed_tests
         else:
             return self.failed_tests + self.skipped_tests
-
-    def show_nonexistent_tests(self):
-        nonexistent_tests = 0
-        number = len(self.args.test_only)
-        for test in self.args.test_only:
-            if test not in self.test_file_names:
-                nonexistent_tests += 1
-                self.failed_tests += 1
-                print(" {:>2}/{:<2} | {}, Cannot execute: This test does "
-                      "not exist.".format(nonexistent_tests, number, test))
-
-        return nonexistent_tests, number
 
     def add_test_files(self, testdir):
         for (dirpath, dirnames, filenames) in os.walk(testdir):
