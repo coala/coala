@@ -2,8 +2,6 @@ import copy
 import unittest
 import sys
 import subprocess
-import os
-import platform
 
 sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import (suppress_stdout,
@@ -12,6 +10,7 @@ from coalib.misc.ContextManagers import (suppress_stdout,
                                          preserve_sys_path,
                                          subprocess_timeout)
 from coalib.misc.StringConstants import StringConstants
+from coalib.processes.Processing import create_process_group
 
 
 process_group_timeout_test_code = """
@@ -34,17 +33,9 @@ class ContextManagersTest(unittest.TestCase):
             self.assertEqual(timedout.value, True)
         self.assertNotEqual(retval, 0)
 
-        if platform.system() == "Windows":
-            p = subprocess.Popen(
-                [StringConstants.python_executable,
-                 "-c",
-                 process_group_timeout_test_code],
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
-        else:
-            p = subprocess.Popen([StringConstants.python_executable,
+        p = create_process_group([StringConstants.python_executable,
                                   "-c",
-                                  process_group_timeout_test_code],
-                                 preexec_fn=os.setsid)
+                                  process_group_timeout_test_code])
         with subprocess_timeout(p, 0.2, kill_pg=True):
             retval = p.wait()
             self.assertEqual(timedout.value, True)
