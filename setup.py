@@ -3,6 +3,7 @@
 from setuptools import setup
 import sys
 
+from distutils.command.build import build
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.misc.i18n import compile_translations
 from coalib import version_str
@@ -14,6 +15,9 @@ if sys.version_info < (3, 2):
 
 if __name__ == "__main__":
     data_files = compile_translations()
+
+    # Add build_manpage to the `python setup.py build` command
+    build.sub_commands.append(('build_manpage', None))
 
     setup(name='coala',
           version=version_str,
