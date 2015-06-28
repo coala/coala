@@ -9,8 +9,8 @@ rm dbus-python.tar.gz
 
 cd dbus-python-1.2.0
 
-./configure --prefix=$python_virtualenv
+./configure --prefix=$python_virtualenv >/dev/null || ./configure --prefix=$python_virtualenv
 make >/dev/null || make
-make install
+make install >/dev/null || make install
 
 cd ..
