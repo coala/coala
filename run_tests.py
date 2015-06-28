@@ -4,7 +4,10 @@ import os
 import tempfile
 from site import getsitepackages
 
-from coalib.tests.TestHelper import TestHelper, create_argparser, run_tests
+from coalib.tests.TestHelper import (TestHelper,
+                                     create_argparser,
+                                     run_tests,
+                                     get_test_files)
 
 
 def main():
@@ -30,14 +33,24 @@ def main():
         os.path.join("bears", "tests", "**")]
 
     if not testhelper.args.ignore_main_tests:
-        testhelper.add_test_files(os.path.abspath(os.path.join("coalib",
-                                                               "tests")))
+        (test_files,
+         test_file_names) = get_test_files(
+            os.path.abspath(os.path.join("coalib", "tests")),
+            test_only=testhelper.args.test_only,
+            omit=testhelper.args.omit)
+        testhelper.test_files += test_files
+        testhelper.test_file_names += test_file_names
     else:
         ignore_list.append(os.path.join("coalib", "**"))
 
     if not testhelper.args.ignore_bear_tests:
-        testhelper.add_test_files(os.path.abspath(os.path.join("bears",
-                                                               "tests")))
+        (test_files,
+         test_file_names) = get_test_files(
+            os.path.abspath(os.path.join("bears", "tests")),
+            test_only=testhelper.args.test_only,
+            omit=testhelper.args.omit)
+        testhelper.test_files += test_files
+        testhelper.test_file_names += test_file_names
 
     exit(run_tests(ignore_list,
                    testhelper.args,

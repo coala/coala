@@ -258,6 +258,32 @@ def execute_test(filename,
         return result, 0
 
 
+def get_test_files(testdir, test_only, omit):
+    """
+    Searches within a directory for all files which could contain tests. Uses
+    the `is_eligible_test` function internally to get a list of files.
+
+    :param testdir:   The directory to search in.
+    :param test_only: Only accepts tests within the filenames in this list.
+    :param omit:      Does not use filenames in this list.
+    :return:          A tuple containing a list of file paths which need to be
+                      executed and a list of the name of the file (without the
+                      extension).
+
+    """
+    test_files = []
+    test_file_names = []
+    for (dirpath, dirnames, filenames) in os.walk(testdir):
+        for filename in filenames:
+            if is_eligible_test(filename,
+                                test_only=test_only,
+                                omit=omit):
+                test_files.append(os.path.join(dirpath, filename))
+                test_file_names.append(
+                    os.path.splitext(os.path.basename(filename))[0])
+    return test_files, test_file_names
+
+
 def run_tests(ignore_list, args, test_files, test_file_names):
     failed_tests = 0
     skipped_tests = 0
@@ -317,13 +343,3 @@ class TestHelper:
         self.test_file_names = []
         self.failed_tests = 0
         self.skipped_tests = 0
-
-    def add_test_files(self, testdir):
-        for (dirpath, dirnames, filenames) in os.walk(testdir):
-            for filename in filenames:
-                if is_eligible_test(filename,
-                                    test_only=self.args.test_only,
-                                    omit=self.args.omit):
-                    self.test_files.append(os.path.join(dirpath, filename))
-                    self.test_file_names.append(
-                        os.path.splitext(os.path.basename(filename))[0])
