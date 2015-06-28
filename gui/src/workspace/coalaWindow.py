@@ -161,43 +161,45 @@ class coalaWindow(Gtk.ApplicationWindow):
                         print(result)
                         if prev:
                             if prev.line_nr:
-                                self.print_result(result.severity, result.origin, result.message, result.file, result.line_nr, max(result.line_nr-5, prev.line_nr))
+                                self.print_result(result, max(result.line_nr-5, prev.line_nr))
                             else:
-                                self.print_result(result.severity, result.origin, result.message, result.file, result.line_nr, max(result.line_nr-5, 1))
+                                self.print_result(result, max(result.line_nr-5, 1))
                         else:
                             if result.line_nr:
-                                self.print_result(result.severity, result.origin, result.message, result.file, result.line_nr, max(result.line_nr-5, 1))
+                                self.print_result(result, max(result.line_nr-5, 1))
                             else:
-                                self.print_result(result.severity, result.origin, result.message, result.file)
+                                self.print_result(result)
                         prev = result
 
-    def print_result(self,
-                     severity,
-                     origin,
-                     message,
-                     filename,
-                     line_nr=None,
-                     start_nr=None):
+    def print_result(self,result, start_nr=None):
         colored_box = Gtk.Box()
-        if severity == 0:
+        if result.severity == 0:
             colored_box.override_background_color(Gtk.StateType.NORMAL, Gdk.RGBA(0,255,0,.5))
-        elif severity == 1:
+        elif result.severity == 1:
             colored_box.override_background_color(Gtk.StateType.NORMAL, Gdk.RGBA(255,255,0,.5))
         else:
             colored_box.override_background_color(Gtk.StateType.NORMAL, Gdk.RGBA(255,0,0,.5))
         colored_box.set_size_request(21, -1)
         colored_box.set_visible(True)
         colored_box.set_vexpand(True)
-        if line_nr is None:
+        if result.line_nr is None:
             self.source_view.attach(colored_box, 0, self.source_view_iter, 1, 1)
             frame = Gtk.Frame()
             frame.set_hexpand(True)
             frame.set_vexpand(True)
-            frame.set_label(origin)
+            frame.set_label(result.origin)
+            frame_layout = Gtk.Box()
+            frame_layout.set_border_width(5)
             label = Gtk.Label()
-            label.set_text(message)
+            label.set_text(result.message)
             label.set_visible(True)
-            frame.add(label)
+            label.set_vexpand(True)
+            label.set_hexpand(True)
+            frame_layout.add(label)
+            frame_layout.set_hexpand(True)
+            frame_layout.set_vexpand(True)
+            frame_layout.set_visible(True)
+            frame.add(frame_layout)
             frame.set_visible(True)
             frame.set_border_width(10)
             self.source_view.attach(frame, 1, self.source_view_iter, 1,1)
@@ -205,11 +207,11 @@ class coalaWindow(Gtk.ApplicationWindow):
 
         else:
             language_manager = GtkSource.LanguageManager.new()
-            language = language_manager.guess_language(filename, None)
+            language = language_manager.guess_language(result.file, None)
             textbuffer = GtkSource.Buffer()
             textbuffer.set_highlight_syntax(True)
             textbuffer.set_language(language)
-            textbuffer.set_text(''.join(open(filename).readlines()[start_nr:line_nr])[:-1])
+            textbuffer.set_text(''.join(open(result.file).readlines()[start_nr:result.line_nr])[:-1])
             textview = GtkSource.View(visible=True, buffer=textbuffer, monospace=True, editable=False)
             textview.set_visible(True)
             textview.set_hexpand(True)
@@ -223,13 +225,54 @@ class coalaWindow(Gtk.ApplicationWindow):
             frame = Gtk.Frame()
             frame.set_hexpand(True)
             frame.set_vexpand(True)
-            frame.set_label(origin)
+            frame.set_label(result.origin)
+            frame_layout = Gtk.Grid(row_spacing=3, column_spacing=1)
+            frame_layout.set_border_width(5)
             label = Gtk.Label()
-            label.set_text(message)
+            label.set_text(result.message)
             label.set_visible(True)
-            frame.add(label)
+            label.set_vexpand(True)
+            label.set_hexpand(True)
+            frame_layout.attach(label, 0, 0, 3,1)
+            ignore_button = Gtk.Button()
+            ignore_button.set_label("Ignore")
+            ignore_button.set_visible(True)
+            ignore_button.set_hexpand(True)
+            ignore_button.set_vexpand(True)
+            frame_layout.attach(ignore_button,0,1,1,1)
+            edit_button = Gtk.Button()
+            edit_button.set_label("Edit Manually")
+            edit_button.set_visible(True)
+            edit_button.set_hexpand(True)
+            edit_button.set_vexpand(True)
+            frame_layout.attach(edit_button,1,1,1,1)
+            patch_button = Gtk.Button()
+            patch_button.set_label("Apply Patch")
+            patch_button.set_visible(True)
+            patch_button.set_hexpand(True)
+            patch_button.set_vexpand(True)
+            frame_layout.attach(patch_button,2,1,1,1)
+            frame_layout.set_hexpand(True)
+            frame_layout.set_vexpand(True)
+            frame_layout.set_visible(True)
+            frame.add(frame_layout)
             frame.set_visible(True)
             frame.set_border_width(10)
+            ignore_button.connect("clicked", self.ignore_btn, textview, frame, colored_box)
+            edit_button.connect("clicked", self.edit_btn, result.file)
+            patch_button.connect("clicked", self.patch_btn, result)
+            if len(result.get_actions()) == 1:
+                patch_button.set_sensitive(False)
             self.source_view.attach(frame, 1, self.source_view_iter, 1,1)
             self.source_view_iter += 1
 
+    def ignore_btn(self, button, source_view, frame, colored_box):
+        source_view.destroy()
+        frame.destroy()
+        colored_box.destroy()
+
+    def edit_btn(self, button, filename):
+        os.system("open "+filename)
+
+    def patch_btn(self, button, result):
+        print(result.get_actions())

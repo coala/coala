@@ -2,23 +2,102 @@
 bears = LineCountBear
 enabled = true
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
-[default]
-enabled = false
-files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [docs]
 enabled = true
 bears = SpaceConsistencyBear
 files = doc/**/*.md
 use_spaces = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [pythoncheck]
 enabled = true
 bears = SpaceConsistencyBear, LineLengthBear
 use_spaces = True
 max_line_length = 80
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [todos]
 bears = KeywordBear
 ci_keywords, cs_keywords = TODO, FIXME
 enabled = true
+files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[default]
+enabled = false
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
 
