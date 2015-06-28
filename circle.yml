@@ -1,10 +1,15 @@
 dependencies:
-  pre:
-    - bash .misc/deps.pre.sh
+  cache_directories:
+    - ~/.pyenv/versions/3.2.6
+    - ~/.pyenv/versions/3.3.6
+    - ~/.pyenv/versions/3.4.2
   override:
-    - bash .misc/deps.sh
+    - bash .misc/deps.pre.sh
 
 test:
+  pre:
+    - bash .misc/deps.sh:
+        parallel: true
   override:
     - bash .misc/tests.sh:
         parallel: true
