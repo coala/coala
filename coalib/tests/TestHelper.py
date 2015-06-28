@@ -169,6 +169,26 @@ def show_coverage_results(html):
             pass
 
 
+def execute_python_file(filename, ignored_files, cover, timeout, verbose):
+    if not cover:
+        return execute_command_array([StringConstants.python_executable,
+                                      filename],
+                                     timeout=timeout,
+                                     verbose=verbose)
+
+    return execute_command_array([StringConstants.python_executable,
+                                  "-m",
+                                  "coverage",
+                                  "run",
+                                  "-p",  # make it collectable later
+                                  "--branch",
+                                  "--omit",
+                                  ignored_files,
+                                  filename],
+                                 timeout=timeout,
+                                 verbose=verbose)
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -248,25 +268,6 @@ class TestHelper:
         if self.args.test_only is None:
             self.args.test_only = []
 
-    def __execute_python3_file(self, filename, ignored_files):
-        if not self.args.cover:
-            return execute_command_array([StringConstants.python_executable,
-                                          filename],
-                                         timeout=self.args.timeout,
-                                         verbose=self.args.verbose)
-
-        return execute_command_array([StringConstants.python_executable,
-                                      "-m",
-                                      "coverage",
-                                      "run",
-                                      "-p",  # make it collectable later
-                                      "--branch",
-                                      "--omit",
-                                      ignored_files,
-                                      filename],
-                                     timeout=self.args.timeout,
-                                     verbose=self.args.verbose)
-
     def __execute_test(self, filename, curr_nr, max_nr, ignored_files):
         """
         Executes the given test and counts up failed_tests or skipped_tests if
@@ -287,7 +288,11 @@ class TestHelper:
             self.skipped_tests += 1
         else:
             print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
-            result = self.__execute_python3_file(filename, ignored_files)
+            result = execute_python_file(filename,
+                                         ignored_files,
+                                         cover=self.args.cover,
+                                         timeout=self.args.timeout,
+                                         verbose=self.args.verbose)
             if self.args.verbose or result != 0:
                 print("#" * 70)
 
