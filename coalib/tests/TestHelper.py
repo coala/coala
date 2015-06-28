@@ -52,6 +52,30 @@ def create_argparser(**kwargs):
     return parser
 
 
+def is_eligible_test(filename, test_only, omit):
+    """
+    Checks if the filename is a Test or not. The conditions are:
+     - Ends with "Test.py"
+     - Is not present in `omit`
+     - If test_only is not empty, it should be present in test_only
+
+    :param filename:  The filename to check eligibility for.
+    :param test_only: Only execute files within the filenames in this list.
+    :param omit:      The filename should not be in this list.
+    return:           True if the file is eligible to be run as a test,
+                      else False.
+    """
+    if not filename.endswith("Test.py"):
+        return False
+    name = os.path.splitext(os.path.basename(filename))[0]
+    if name in omit:
+        return False
+    if (len(test_only) > 0) and (name not in test_only):
+        return False
+
+    return True
+
+
 class TestHelper:
     def __init__(self, parser):
         """
@@ -136,7 +160,9 @@ class TestHelper:
     def add_test_files(self, testdir):
         for (dirpath, dirnames, filenames) in os.walk(testdir):
             for filename in filenames:
-                if self.__is_eligible_test(filename):
+                if is_eligible_test(filename,
+                                    test_only=self.args.test_only,
+                                    omit=self.args.omit):
                     self.test_files.append(os.path.join(dirpath, filename))
                     self.test_file_names.append(
                         os.path.splitext(os.path.basename(filename))[0])
@@ -260,16 +286,3 @@ class TestHelper:
                 print("#" * 70)
 
             self.failed_tests += result
-
-    def __is_eligible_test(self, filename):
-        if not filename.endswith("Test.py"):
-            return False
-        name = os.path.splitext(os.path.basename(filename))[0]
-        if name in self.args.omit:
-            return False
-        if (
-                (len(self.args.test_only) > 0) and
-                (name not in self.args.test_only)):
-            return False
-
-        return True
