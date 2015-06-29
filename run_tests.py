@@ -7,7 +7,8 @@ from site import getsitepackages
 from coalib.tests.TestHelper import (parse_args,
                                      create_argparser,
                                      run_tests,
-                                     get_test_files)
+                                     get_test_files,
+                                     delete_coverage)
 
 
 def main():
@@ -66,5 +67,9 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print("Program terminated by user.")
         exit(130)
+    finally:
+        print("Cleaning up...", end=' ')
+        delete_coverage(silent=True)
+        print("Done!")
 
     exit(0)

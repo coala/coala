@@ -102,7 +102,7 @@ def is_eligible_test(filename, test_only, omit):
     return True
 
 
-def delete_coverage():
+def delete_coverage(silent=False):
     """
     Deletes previous coverage data.
 
@@ -115,7 +115,7 @@ def delete_coverage():
              "-m",
              "coverage",
              "erase"]) == 0
-    if not coverage_available:
+    if not coverage_available and not silent:
         print("Coverage failed. Falling back to standard unit tests."
               "Install code coverage measurement for python3. Package"
               "name should be something like: python-coverage3/coverage")
