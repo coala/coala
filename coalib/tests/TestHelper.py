@@ -6,11 +6,13 @@ import subprocess
 import sys
 import shutil
 import webbrowser
+import multiprocessing
+import functools
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          preserve_sys_path,
                                          subprocess_timeout)
 from coalib.misc.StringConstants import StringConstants
-from coalib.processes.Processing import create_process_group
+from coalib.processes.Processing import create_process_group, get_cpu_count
 
 
 def create_argparser(**kwargs):
@@ -43,7 +45,7 @@ def create_argparser(**kwargs):
                         action="store_true")
     parser.add_argument("-T",
                         "--timeout",
-                        default=10,
+                        default=20,
                         type=int,
                         help="Amount of time to wait for a test to run "
                              "before killing it. To not use any timeout, "
@@ -129,8 +131,17 @@ def delete_coverage(silent=False):
 
 
 def execute_command_array(command_array, timeout, verbose):
-    timed_out = False
+    """
+    Executes the given command array in a subprocess group.
 
+    :param command_array: The command array to execute.
+    :param timeout:       Time to wait until killing the process.
+    :param verbose:       Return the stdout and stderr of the subprocess or not.
+    :return:              A tuple of (result, message) where message gives
+                          text information of what happened.
+    """
+    timed_out = False
+    message = ""
     p = create_process_group(command_array,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
@@ -142,17 +153,15 @@ def execute_command_array(command_array, timeout, verbose):
         timed_out = timedout.value
 
     if retval != 0 or verbose:
-        for line in p.stderr:
-            print(line, end='')
-        for line in p.stdout:
-            print(line, end='')
+        message += "".join(p.stderr)
+        message += "".join(p.stdout)
 
     if timed_out:
-        print("This test failed because it was taking more than", timeout,
-              "sec to execute. To change the timeout setting use the `-T` or "
-              "`--timeout` argument.")
+        message += ("This test failed because it was taking more than %f sec "
+                    "to execute. To change the timeout setting use the `-T` "
+                    "or `--timeout` argument.\n" % timeout)
 
-    return retval
+    return retval, message
 
 
 def check_module_skip(filename):
@@ -223,8 +232,6 @@ def show_nonexistent_tests(test_only, test_file_names):
 
 
 def execute_test(filename,
-                 curr_nr,
-                 max_nr,
                  ignored_files,
                  verbose,
                  cover,
@@ -234,37 +241,39 @@ def execute_test(filename,
     needed.
 
     :param filename:      Filename of test to execute.
-    :param curr_nr:       Number of current test.
-    :param max_nr:        Count of all tests.
     :param ignored_files: Comma separated list of files to ignore for coverage.
     :param verbose:       Boolean to show more information.
     :param cover:         Boolean to calculate coverage information or not.
     :param timeout:       Time in seconds to wait for the test to complete
                           before killing it. Floats are allowed for units
                           smaller than a second.
-    :return:              Returns a tuple with (failed_tests, skipped_tests).
-                          As this executes one file, the tuple will be either
-                          (0, 0) or (0, 1) or (1, 0).
+    :return:              Returns a tuple with (failed_tests, skipped_tests,
+                          message).
     """
-    basename = os.path.splitext(os.path.basename(filename))[0]
     reason = check_module_skip(filename)
     if reason is not False:
-        print(" {:>2}/{:<2} | {}, Skipping: {}".format(curr_nr,
-                                                       max_nr,
-                                                       basename,
-                                                       reason))
-        return 0, 1
+        return 0, 1, reason
     else:
-        print(" {:>2}/{:<2} | {}".format(curr_nr, max_nr, basename))
-        result = execute_python_file(filename,
-                                     ignored_files,
-                                     cover=cover,
-                                     timeout=timeout,
-                                     verbose=verbose)
-        if verbose or result != 0:
-            print("#" * 70)
+        result, stdout = execute_python_file(filename,
+                                             ignored_files,
+                                             cover=cover,
+                                             timeout=timeout,
+                                             verbose=verbose)
+        return result, 0, stdout
 
-        return result, 0
+
+def print_test_results(test_file, test_nr, test_count, skipped, message):
+    basename = os.path.splitext(os.path.basename(test_file))[0]
+    if skipped:
+        print(" {:>2}/{:<2} | {}, Skipping: {}".format(test_nr,
+                                                       test_count,
+                                                       basename,
+                                                       message))
+    else:
+        print(" {:>2}/{:<2} | {}".format(test_nr, test_count, basename))
+        print(message, end="")
+        if message:
+            print("#" * 70)
 
 
 def get_test_files(testdir, test_only, omit):
@@ -301,31 +310,39 @@ def run_tests(ignore_list, args, test_files, test_file_names):
 
     if len(args.test_only) > 0:
         (nonexistent_tests,
-         number) = show_nonexistent_tests(args.test_only,
+         max_nr) = show_nonexistent_tests(args.test_only,
                                           test_file_names)
         failed_tests += nonexistent_tests
     else:
-        number = len(test_files)
+        max_nr = len(test_files)
         nonexistent_tests = 0
 
     # Sort tests alphabetically.
     test_files.sort(key=lambda fl: str.lower(os.path.split(fl)[1]))
 
-    for i, file in enumerate(test_files):
-        _failed_tests, _skipped_tests = execute_test(
-            file,
-            i+nonexistent_tests+1,
-            number,
-            ",".join(ignore_list),
-            verbose=args.verbose,
-            cover=args.cover,
-            timeout=args.timeout)
-        failed_tests += _failed_tests
-        skipped_tests += _skipped_tests
+    pool = multiprocessing.Pool(get_cpu_count())
+    partial_execute_test = functools.partial(
+        execute_test,
+        ignored_files=",".join(ignore_list),
+        verbose=args.verbose,
+        cover=args.cover,
+        timeout=args.timeout)
+
+    pool_outputs = pool.imap(partial_execute_test, test_files)
+    curr_nr = 0
+    for failed, skipped, message in pool_outputs:
+        curr_nr += 1
+        failed_tests += failed
+        skipped_tests += skipped
+        print_test_results(test_files[curr_nr-1],
+                           curr_nr,
+                           max_nr,
+                           skipped,
+                           message)
 
     print("\nTests finished: failures in {} of {} test modules, skipped "
           "{} test modules.".format(failed_tests,
-                                    number,
+                                    max_nr,
                                     skipped_tests))
 
     if args.cover:
