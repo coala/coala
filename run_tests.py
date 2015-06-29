@@ -66,10 +66,9 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print("Program terminated by user.")
-        exit(130)
-    finally:
         print("Cleaning up...", end=' ')
         delete_coverage(silent=True)
         print("Done!")
+        exit(130)
 
     exit(0)
