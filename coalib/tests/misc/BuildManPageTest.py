@@ -2,9 +2,12 @@ import datetime
 import argparse
 import sys
 import unittest
+import tempfile
+from setuptools.dist import Distribution
+from distutils.errors import DistutilsOptionError
 
 sys.path.insert(0, ".")
-from coalib.misc.BuildManPage import ManPageFormatter
+from coalib.misc.BuildManPage import ManPageFormatter, BuildManPage
 
 
 app_name = "name"
@@ -102,6 +105,44 @@ class ManPageFormatterTest(unittest.TestCase):
                          ".SH OPTIONS\n"
                          "  -h, --help  show this help message and exit\n"
                          .format(app_name, today))
+
+
+class BuildManPageTest(unittest.TestCase):
+    def test_finalize_options(self):
+        dist = Distribution()
+        uut = BuildManPage(dist)
+        self.assertRaises(DistutilsOptionError, uut.finalize_options)
+        uut.output = tempfile.mkstemp()[1]
+        self.assertRaises(DistutilsOptionError, uut.finalize_options)
+        uut.parser = "coalib.tests.misc.BuildManPageTest:test_arg_parser"
+
+        uut.finalize_options()
+        self.assertIsInstance(uut._parser, argparse.ArgumentParser)
+
+        uut.run()
+        result = open(uut.output).read()
+
+        today = datetime.date.today().strftime('%Y\\-%m\\-%d')
+        self.assertEqual(result,
+""".TH {0} 1 {1}
+.SH NAME
+{0}
+.SH SYNOPSIS
+ \\fB{0}\\fR [-h] [-a A] arg1
+
+
+.SH DESCRIPTION
+UNKNOWN
+.SH OPTIONS
+  arg1
+
+  \\fB-h\\fR, \\fB--help\\fR
+                        show this help message and exit
+  \\fB-a\\fR \\fIA\\fR
+.SH MAINTAINER(S)
+ UNKNOWN
+.SH SEE ALSO
+ Online documentation: UNKNOWN""".format(app_name, today))
 
 
 if __name__ == "__main__":

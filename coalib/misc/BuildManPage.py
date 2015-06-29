@@ -1,5 +1,86 @@
 import datetime
 import argparse
+from distutils.core import Command
+from distutils.errors import DistutilsOptionError
+
+
+class BuildManPage(Command):
+    """
+    Add a `build_manpage` command  to your setup.py.
+    To use this Command class add a command to call this class::
+
+        # For setuptools
+        setup(
+              entry_points={
+                "distutils.commands": [
+                    "build_manpage = coalib.misc.BuildManPage:BuildManPage"
+                ]
+              }
+        )
+
+        # For distutils
+        from coalib.misc.BuildManPage import BuildManPage
+        setup(
+              cmdclass={'build_manpage': BuildManPage}
+        )
+
+    You can then use the following setup command to produce a man page::
+
+        $ python setup.py build_manpage --output=coala.1 \
+            --parser=coalib.parsing.DefaultArgParser:default_arg_parser
+
+    If automatically want to build the man page every time you invoke
+    your build, add to your ```setup.cfg``` the following::
+
+        [build_manpage]
+        output = <appname>.1
+        parser = <path_to_your_parser>
+    """
+    user_options = [
+        ('output=', 'O', 'output file'),
+        ('parser=', None, 'module path to an ArgumentParser instance'
+         '(e.g. mymod:func, where func is a method or function which return'
+         'an arparse.ArgumentParser instance.'),
+    ]
+
+    def initialize_options(self):
+        self.output = None
+        self.parser = None
+
+    def finalize_options(self):
+        if self.output is None:
+            raise DistutilsOptionError('\'output\' option is required')
+        if self.parser is None:
+            raise DistutilsOptionError('\'parser\' option is required')
+        mod_name, func_name = self.parser.split(':')
+        fromlist = mod_name.split('.')
+        mod = __import__(mod_name, fromlist=fromlist)
+        self._parser = \
+            getattr(mod, func_name)(formatter_class=ManPageFormatter)
+
+        self.announce('Writing man page %s' % self.output)
+        self._today = datetime.date.today()
+
+    def run(self):
+        dist = self.distribution
+        homepage = dist.get_url()
+        maintainer = dist.get_maintainer()
+        appname = self._parser.prog
+
+        sections = {"see also": ("Online documentation: {}".format(homepage)),
+                    "maintainer(s)": maintainer}
+
+        dist = self.distribution
+        mpf = ManPageFormatter(appname,
+                               desc=dist.get_description(),
+                               long_desc=dist.get_long_description(),
+                               ext_sections=sections,
+                               parser=self._parser)
+
+        m = mpf.format_man_page()
+
+        with open(self.output, 'w') as f:
+            f.write(m)
 
 
 class ManPageFormatter(argparse.HelpFormatter):
@@ -118,8 +199,9 @@ class ManPageFormatter(argparse.HelpFormatter):
             return ''
 
         footer = []
-        for section, value in sections.items():
-            part = ".SH {}\n {}".format(section.upper(), value)
+
+        for section in sorted(sections.keys()):
+            part = ".SH {}\n {}".format(section.upper(), sections[section])
             footer.append(part)
 
         return '\n'.join(footer)
