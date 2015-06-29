@@ -9,7 +9,7 @@ dependencies:
 
 test:
   pre:
-    - python run_tests.py:
+    - python run_tests.py -j3:
         parallel: true
     - bash .misc/deps.sh:
         parallel: true
