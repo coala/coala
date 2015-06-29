@@ -1,5 +1,5 @@
 import os
-import sys
+import platform
 
 from coalib.misc.i18n import _
 
@@ -54,7 +54,7 @@ class StringConstants:
 
     user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
 
-    if sys.platform.startswith("win"):  # pragma: no cover
+    if platform.system() == "Windows":  # pragma: no cover
         python_executable = "python"
     else:
         python_executable = "python3"
