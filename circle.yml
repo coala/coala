@@ -3,6 +3,7 @@ dependencies:
     - ~/.pyenv/versions/3.2.6
     - ~/.pyenv/versions/3.3.6
     - ~/.pyenv/versions/3.4.2
+    - ~/.pyenv/versions/pypy3-2.4.0
   override:
     - bash .misc/deps.pre.sh
 
@@ -13,7 +14,7 @@ test:
     - bash .misc/deps.sh:
         parallel: true
   override:
-    - python run_tests.py --disallow-test-skipping --cover:
+    - bash .misc/tests.sh:
         parallel: true
     - python setup.py install:
         parallel: true
