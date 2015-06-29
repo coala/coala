@@ -117,7 +117,8 @@ def delete_coverage(silent=False):
     """
     coverage_available = False
     with suppress_stdout():
-        coverage_available = execute_coverage_command("erase") == 0
+        coverage_available = (execute_coverage_command("combine") == 0 and
+                              execute_coverage_command("erase") == 0)
 
     if not coverage_available and not silent:
         print("Coverage failed. Falling back to standard unit tests."
