@@ -139,6 +139,8 @@ UNKNOWN
   \\fB-h\\fR, \\fB--help\\fR
                         show this help message and exit
   \\fB-a\\fR \\fIA\\fR
+.SH LICENSE
+ UNKNOWN
 .SH MAINTAINER(S)
  UNKNOWN
 .SH SEE ALSO
