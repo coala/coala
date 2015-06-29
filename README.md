@@ -50,11 +50,10 @@ Build status
 ------------
 
 [![Linux Build Status](https://circleci.com/gh/coala-analyzer/coala.svg?style=svg)](https://circleci.com/gh/coala-analyzer/coala)
-(Linux build and test, python 3.4 (node 0), 3.3 (node 1), 3.2 (node2), test
-skip test (node 3))
+(Linux build and test, python 3.4 (node 0), 3.3 (node 1), 3.2 (node2), pypy3-2.4.0 (node 3))
 
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/jevcxfo48mc4e09p/branch/master?svg=true)](https://ci.appveyor.com/project/sils1297/coala/branch/master)
-(Windows build and test, 3.4)
+(Windows build and test, 3.4 and 3.3)
 
 [![Codacy Code Quality](https://www.codacy.com/project/badge/f0ac979fa93f49509cba9086754a50d4)](https://www.codacy.com/app/lasse/coala)
 (Code quality 1)
