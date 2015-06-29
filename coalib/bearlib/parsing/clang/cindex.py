@@ -65,8 +65,13 @@ call is efficient.
 from ctypes import *
 import collections
 import os
+import platform
 
 from coalib.bearlib.parsing.clang import enumerations
+
+if platform.python_implementation() != "CPython":
+    raise ImportError("Invalid Python implementation. "
+                      "Only CPython is supported")
 
 # ctypes doesn't implicitly convert c_void_p to the appropriate wrapper
 # object. This is a problem, because it means that from_parameter will see an
@@ -3117,7 +3122,6 @@ class Config:
         if Config.library_file:
             files.append(Config.library_file)
 
-        import platform
         name = platform.system()
 
         if name == 'Darwin':
