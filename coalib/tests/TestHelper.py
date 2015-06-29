@@ -50,6 +50,11 @@ def create_argparser(**kwargs):
                         help="Amount of time to wait for a test to run "
                              "before killing it. To not use any timeout, "
                              "set this to 0")
+    parser.add_argument("-j",
+                        "--jobs",
+                        default=get_cpu_count(),
+                        type=int,
+                        help="Number of jobs to use in parallel.")
 
     return parser
 
@@ -320,7 +325,7 @@ def run_tests(ignore_list, args, test_files, test_file_names):
     # Sort tests alphabetically.
     test_files.sort(key=lambda fl: str.lower(os.path.split(fl)[1]))
 
-    pool = multiprocessing.Pool(get_cpu_count())
+    pool = multiprocessing.Pool(args.jobs)
     partial_execute_test = functools.partial(
         execute_test,
         ignored_files=",".join(ignore_list),
