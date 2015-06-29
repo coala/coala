@@ -52,6 +52,13 @@ def create_argparser(**kwargs):
     return parser
 
 
+def execute_coverage_command(*args):
+    commands = [StringConstants.python_executable,
+                "-m",
+                "coverage"] + list(args)
+    return subprocess.call(commands)
+
+
 def parse_args(parser):
     """
     Parses the CLI arguments.
@@ -110,11 +117,8 @@ def delete_coverage(silent=False):
     """
     coverage_available = False
     with suppress_stdout():
-        coverage_available = subprocess.call(
-            [StringConstants.python_executable,
-             "-m",
-             "coverage",
-             "erase"]) == 0
+        coverage_available = execute_coverage_command("erase") == 0
+
     if not coverage_available and not silent:
         print("Coverage failed. Falling back to standard unit tests."
               "Install code coverage measurement for python3. Package"
@@ -170,24 +174,14 @@ def check_module_skip(filename):
 
 
 def show_coverage_results(html):
-    subprocess.call([StringConstants.python_executable,
-                     "-m",
-                     "coverage",
-                     "combine"])
-    subprocess.call([StringConstants.python_executable,
-                     "-m",
-                     "coverage",
-                     "report",
-                     "-m"])
+    execute_coverage_command("combine")
+    execute_coverage_command("report", "-m")
+
     if html:
         shutil.rmtree(".htmlreport", ignore_errors=True)
         print("Generating HTML report to .htmlreport...")
-        subprocess.call([StringConstants.python_executable,
-                         "-m",
-                         "coverage",
-                         "html",
-                         "-d",
-                         ".htmlreport"])
+        execute_coverage_command("html", "-d", ".htmlreport")
+
         try:
             webbrowser.open_new_tab(os.path.join(".htmlreport",
                                                  "index.html"))
