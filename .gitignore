@@ -21,3 +21,4 @@ coverage.xml
 *.sublime-workspace
 .python-version
 coala.egg-info
+.coverage.*
