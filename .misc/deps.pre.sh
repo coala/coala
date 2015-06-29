@@ -15,15 +15,8 @@ case $CIRCLE_NODE_INDEX in
 esac
 
 # Install python version needed
-# Note - `--with-wide-unicode` is needed only because 3.2.5 defaults to UCS2 unicode
-
 for dep_version in "${dep_versions[@]}" ; do
-  PYTHON_CONFIGURE_OPTS="--with-wide-unicode" pyenv install -ks $dep_version
-  pyenv local $dep_version
-  export python_unicode_storage=`python -c "import sys; print('UCS4' if sys.maxunicode > 65536 else 'UCS2')"`
-
-  if [ ! "$python_unicode_storage" = "UCS4" ] ; then
-    pyenv uninstall -f $dep_version
-    PYTHON_CONFIGURE_OPTS="--with-wide-unicode" pyenv install -k $dep_version
-  fi
+  pyenv install -ks $dep_version
 done
+
+pyenv local ${dep_versions[-1]}
