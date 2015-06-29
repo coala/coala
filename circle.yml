@@ -8,16 +8,18 @@ dependencies:
 
 test:
   pre:
+    - python run_tests.py:
+        parallel: true
     - bash .misc/deps.sh:
         parallel: true
   override:
-    - bash .misc/tests.sh:
+    - python run_tests.py --disallow-test-skipping --cover:
         parallel: true
     - python setup.py install:
         parallel: true
     - coala-ci:
         parallel: true
-    - bash .misc/deploy.coverage.sh:
+    - codecov:
         parallel: true
 
 deployment:
