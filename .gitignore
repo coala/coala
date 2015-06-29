@@ -22,3 +22,4 @@ coverage.xml
 .python-version
 coala.egg-info
 .coverage.*
+coala.1
