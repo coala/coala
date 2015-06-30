@@ -77,7 +77,7 @@ def _get_locale():  # pragma: no cover
 if os.getenv('LANGUAGE') is None \
    and os.getenv('LC_ALL') is None \
    and os.getenv('LC_MESSAGES') is None \
-   and os.getenv('LANG') is None:  # pragma: no cover
+   and os.getenv('LANG') is None:
     # This will succeed e.g. for windows, gettext only searches those four
     # environment vars we run coverage on linux so we won't get this covered.
     os.environ['LANG'] = _get_locale()

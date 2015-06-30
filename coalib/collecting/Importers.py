@@ -19,7 +19,7 @@ def _import_module(file_path):
     # Ugly inconsistency: Python will insist on correctly cased module names
     # independent of whether the OS is case-sensitive or not.
     # We want all cases to match though.
-    if platform.system() == 'Windows':  # pragma: nocover
+    if platform.system() == 'Windows':
         for cased_file_path in os.listdir(module_dir):
             cased_module_name = os.path.splitext(cased_file_path)[0]
             if cased_module_name.lower() == module_name.lower():
