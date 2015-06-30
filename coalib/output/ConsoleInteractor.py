@@ -71,7 +71,8 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                                                          str(arr[0]),
                                                          needed))
 
-    def _format_line(self, line, real_nr="", sign="|", mod_nr="", symbol="", ):
+    @staticmethod
+    def _format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
         return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
                                              sign,
                                              mod_nr,

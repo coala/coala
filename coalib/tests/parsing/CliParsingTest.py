@@ -15,7 +15,8 @@ class CliParserTest(unittest.TestCase):
                                           nargs='+',
                                           dest='settings')
 
-    def dict_from_sections(self, parsed_sections):
+    @staticmethod
+    def dict_from_sections(parsed_sections):
         parsed_dict = {}
         for section_name, section in parsed_sections.items():
             parsed_dict[section_name] = (
