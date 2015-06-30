@@ -10,3 +10,5 @@ tests with our `./run_tests.py` script and report any errors you get!
 
 If you need more options about allowing skipped tests, getting code coverage
 displayed or omitting/selecting tests, just query `./run_tests.py --help`.
+Please note that you will not get a test coverage of 100% - the coverage on the
+website is merged for several python versions.
