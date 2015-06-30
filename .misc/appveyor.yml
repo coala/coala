@@ -44,4 +44,7 @@ build: false  # Not a C# project, build stuff at the test step instead.
 test_script:
   - "%CMD_IN_ENV% python run_tests.py --cover"
   - "%CMD_IN_ENV% python setup.py install"
+  - "bash <(curl -s https://codecov.io/bash)"
   - "%CMD_IN_ENV% bash <(curl -s https://codecov.io/bash)"
+  - "bash -c 'echo Nothing'"
+  - "%CMD_IN_ENV% bash -c 'echo Nothing'"
