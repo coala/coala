@@ -37,7 +37,7 @@ class Bear(LogPrinter):
     def __init__(self,
                  section,
                  message_queue,
-                 TIMEOUT=0):
+                 timeout=0):
         LogPrinter.__init__(self)
 
         if not isinstance(section, Section):
@@ -47,7 +47,7 @@ class Bear(LogPrinter):
 
         self.section = section
         self.message_queue = message_queue
-        self.TIMEOUT = TIMEOUT
+        self.timeout = timeout
 
     def _print(self, output, **kwargs):
         self.debug(output)

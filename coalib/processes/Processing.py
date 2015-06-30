@@ -121,12 +121,12 @@ def instantiate_bears(section,
     for i in range(len(local_bear_list)):
         local_bear_list[i] = local_bear_list[i](section,
                                                 message_queue,
-                                                TIMEOUT=0.1)
+                                                timeout=0.1)
     for i in range(len(global_bear_list)):
         global_bear_list[i] = global_bear_list[i](file_dict,
                                                   section,
                                                   message_queue,
-                                                  TIMEOUT=0.1)
+                                                  timeout=0.1)
 
 
 def instantiate_processes(section,

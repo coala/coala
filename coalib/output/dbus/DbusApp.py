@@ -7,8 +7,8 @@ class DbusApp:
     """
     Stores data about each client that connects to the DbusServer
     """
-    def __init__(self, id, name=""):
-        self.id = id
+    def __init__(self, app_id, name=""):
+        self.app_id = app_id
         self.name = name
 
         self.docs = {}
@@ -30,7 +30,7 @@ class DbusApp:
         :return:            a DbusDocument object.
         """
         path = os.path.abspath(os.path.expanduser(path))
-        doc = DbusDocument(id=self._next_doc_id(), path=path)
+        doc = DbusDocument(doc_id=self._next_doc_id(), path=path)
         self.docs[path] = doc
 
         return doc

@@ -13,21 +13,21 @@ from coalib.settings.Setting import path_list
 class DbusDocument(dbus.service.Object):
     interface = "org.coala.v1"
 
-    def __init__(self, id, path=""):
+    def __init__(self, doc_id, path=""):
         """
         Creates a new dbus object-path for every document that a
         DbusApplication wants coala to analyze. It stores the information
         (path) of the document and the config file to use when analyzing the
         given document.
 
-        :param id:   An id for the document.
-        :param path: The path to the document.
+        :param doc_id: An id for the document.
+        :param path:   The path to the document.
         """
         dbus.service.Object.__init__(self)
 
         self.config_file = ""
         self.path = path
-        self.id = id
+        self.doc_id = doc_id
 
     @dbus.service.method(interface,
                          in_signature="",

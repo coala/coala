@@ -19,14 +19,14 @@ class DbusDocumentTest(unittest.TestCase):
 
     def test_path(self):
         test_file = "a"
-        uut = DbusDocument(id=1)
+        uut = DbusDocument(doc_id=1)
         self.assertEqual(uut.path, "")
 
-        uut = DbusDocument(id=1, path=test_file)
+        uut = DbusDocument(doc_id=1, path=test_file)
         self.assertEqual(uut.path, os.path.abspath(test_file))
 
     def test_config(self):
-        uut = DbusDocument(id=1)
+        uut = DbusDocument(doc_id=1)
         self.assertEqual(uut.FindConfigFile(), "")
 
         uut.path = self.testcode_c_path
@@ -38,7 +38,7 @@ class DbusDocumentTest(unittest.TestCase):
         self.assertEqual(uut.GetConfigFile(), "config_file")
 
     def test_analyze(self):
-        uut = DbusDocument(id=1)
+        uut = DbusDocument(doc_id=1)
         self.assertEqual(uut.Analyze(), [])
 
         uut.path = self.testcode_c_path

@@ -127,8 +127,8 @@ class DbusServer(dbus.service.Object):
         :return:     a DbusDocument object.
         """
         doc = app.create_document(path)
-        objpath = (self._object_path + "/" + str(app.id) +
-                   "/documents/" + str(doc.id))
+        objpath = (self._object_path + "/" + str(app.app_id) +
+                   "/documents/" + str(doc.doc_id))
         doc.add_to_connection(self._connection, objpath)
 
         return doc

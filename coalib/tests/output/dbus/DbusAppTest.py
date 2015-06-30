@@ -7,7 +7,7 @@ from coalib.output.dbus.DbusApp import DbusApp
 
 class DbusServerTest(unittest.TestCase):
     def test_docs(self):
-        uut = DbusApp(id=1)
+        uut = DbusApp(app_id=1)
         doc1 = __file__
         doc2 = __file__ + ".txt"
 
