@@ -79,10 +79,10 @@ class BuildManPage(Command):
                                ext_sections=sections,
                                parser=self._parser)
 
-        m = mpf.format_man_page()
+        formatted_man_page = mpf.format_man_page()
 
-        with open(self.output, 'w') as f:
-            f.write(m)
+        with open(self.output, 'w') as man_file:
+            man_file.write(formatted_man_page)
 
 
 class ManPageFormatter(argparse.HelpFormatter):

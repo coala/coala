@@ -310,14 +310,14 @@ def run_local_bears_on_file(message_queue,
 
     local_result_list = []
     for bear_instance in local_bear_list:
-        r = run_local_bear(message_queue,
-                           timeout,
-                           local_result_list,
-                           file_dict,
-                           bear_instance,
-                           filename)
-        if r is not None:
-            local_result_list.extend(r)
+        result = run_local_bear(message_queue,
+                                timeout,
+                                local_result_list,
+                                file_dict,
+                                bear_instance,
+                                filename)
+        if result is not None:
+            local_result_list.extend(result)
 
     local_result_dict[filename] = local_result_list
     control_queue.put((CONTROL_ELEMENT.LOCAL, filename))

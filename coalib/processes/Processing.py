@@ -40,14 +40,15 @@ def get_running_processes(processes):
 
 def create_process_group(command_array, **kwargs):
     if platform.system() == "Windows":  # pragma: no cover
-        p = subprocess.Popen(command_array,
-                             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-                             **kwargs)
+        proc = subprocess.Popen(
+            command_array,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            **kwargs)
     else:
-        p = subprocess.Popen(command_array,
-                             preexec_fn=os.setsid,
-                             **kwargs)
-    return p
+        proc = subprocess.Popen(command_array,
+                                preexec_fn=os.setsid,
+                                **kwargs)
+    return proc
 
 def print_result(results,
                  file_dict,
@@ -86,8 +87,8 @@ def get_file_dict(filename_list, log_printer):
     file_dict = {}
     for filename in filename_list:
         try:
-            with open(filename, "r", encoding="utf-8") as f:
-                file_dict[filename] = f.readlines()
+            with open(filename, "r", encoding="utf-8") as _file:
+                file_dict[filename] = _file.readlines()
         except UnicodeDecodeError:
             log_printer.warn(_("Failed to read file '{}'. It seems to contain "
                                "non-unicode characters. Leaving it "

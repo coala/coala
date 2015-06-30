@@ -90,12 +90,12 @@ def unescaped_search_for(pattern,
                       simple string.
     :return:          An iterator returning MatchObject's.
     """
-    it = limit(
+    _iter = limit(
         filter(lambda match: not position_is_escaped(string, match.start()),
                search_for(pattern, string, flags, 0, use_regex)),
         max_match)
 
-    for elem in it:
+    for elem in _iter:
         yield elem
 
 

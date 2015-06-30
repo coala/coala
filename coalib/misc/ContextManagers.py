@@ -44,13 +44,13 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
             if kill_pg:
                 os.killpg(pgid, signal.SIGINT)
 
-    t = threading.Thread(name='timeout-killer', target=kill_it)
+    thread = threading.Thread(name='timeout-killer', target=kill_it)
     try:
-        t.start()
+        thread.start()
         yield timedout
     finally:
         finished.set()
-        t.join()
+        thread.join()
 
 
 @contextmanager

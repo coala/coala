@@ -43,10 +43,10 @@ class ConfWriter(ClosableObject):
 
         keys = []
         val = None
-        it = section.__iter__(ignore_defaults=True)
+        section_iter = section.__iter__(ignore_defaults=True)
         try:
             while True:
-                setting = section[next(it)]
+                setting = section[next(section_iter)]
                 if (str(setting) == val and
                     not self.is_comment(setting.key) and
                    (

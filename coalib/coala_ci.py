@@ -55,13 +55,12 @@ def main():
     except SystemExit as exception:
         exitcode = exception.code
     except Exception as exception:
-        UNKNOWN_ERROR = (_("An unknown error occurred.") + " " +
-                         StringConstants.THIS_IS_A_BUG)
-        DESCRIPTION = _("During execution of coala an exception was raised. "
-                        "This should never happen. When asked for, the "
-                        "following information may help investigating:")
-
-        log_printer.log_exception(UNKNOWN_ERROR + " " + DESCRIPTION,
+        log_printer.log_exception(_("An unknown error occurred.") + " " +
+                                  StringConstants.THIS_IS_A_BUG + " " +
+                                  _("During execution of coala an exception "
+                                  "was raised. This should never happen. When "
+                                  "asked for, the following information may "
+                                  "help investigating:"),
                                   exception)
         exitcode = 255
 

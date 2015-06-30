@@ -40,8 +40,8 @@ class ConfParser:
         if os.path.isdir(input_data):
             input_data = os.path.join(input_data, ".coafile")
 
-        with open(input_data, "r", encoding='utf-8') as f:
-            lines = f.readlines()
+        with open(input_data, "r", encoding='utf-8') as _file:
+            lines = _file.readlines()
 
         if overwrite:
             self.__init_sections()
