@@ -8,6 +8,7 @@ import shutil
 import webbrowser
 import multiprocessing
 import functools
+import tempfile
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          preserve_sys_path,
                                          subprocess_timeout)
@@ -147,9 +148,11 @@ def execute_command_array(command_array, timeout, verbose):
     """
     timed_out = False
     message = ""
+    stdout_file = tempfile.TemporaryFile()
+    stderr_file = tempfile.TemporaryFile()
     p = create_process_group(command_array,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
+                             stdout=stdout_file,
+                             stderr=stderr_file,
                              universal_newlines=True)
     with subprocess_timeout(p,
                             timeout,
@@ -158,8 +161,13 @@ def execute_command_array(command_array, timeout, verbose):
         timed_out = timedout.value
 
     if retval != 0 or verbose:
-        message += "".join(p.stderr)
-        message += "".join(p.stdout)
+        stderr_file.seek(0)
+        stdout_file.seek(0)
+        message += stderr_file.read().decode("utf-8")
+        message += stdout_file.read().decode("utf-8")
+
+    stdout_file.close()
+    stderr_file.close()
 
     if timed_out:
         message += ("This test failed because it was taking more than %f sec "
