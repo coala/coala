@@ -143,17 +143,23 @@ if __name__ == '__main__':
 >
 > Tests in coala are evaluated against their coverage, means how many
 > statements will be executed from your component when invoking your test
-> cases. You should aim at a branch coverage of 100%.
+> cases. A branch coverage of 100% is needed for any commit in order to be
+> pushed to master - please ask us on gitter if you need help raising your
+> coverage!
 >
-> The branch coverage can be measured with the `./run_tests.py -c` command.
-> Even more information is available with the `-H` parameter. In order for this
-> to work you will need to have the coverage3 binary installed. It usually
-> comes with a package named `python-coverage3` or similar. Make sure that you
-> installed the version for python 3 and not the one for python 2!
+> The branch coverage can be measured locally with the `./run_tests.py -c`
+> command. Even more information is available with the `-H` parameter. In
+> order for this to work you will need to have the coverage3 binary
+> installed. It usually comes with a package named `python-coverage3` or
+> similar. Make sure that you installed the version for python 3 and not the
+> one for python 2! As our coverage is measured across builds against
+> several python versions (we need version specific branches here and there)
+> you will not get the full coverage locally! Simply make a pull request to
+> get the coverage measured automatically.
 >
 > If some code is untestable, you need to mark your component code with
 > `# pragma: no cover`. Important: Provide a reason why your code is
-> untestable.
+> untestable. Code coverage is measured using python 3.2, 3.2 and 3.4 on linux.
 >
 > ```python
 > # Reason why this function is untestable.
@@ -161,8 +167,6 @@ if __name__ == '__main__':
 >     # Untestable code.
 >     pass
 > ```
->
-> Code coverage is measured using python 3.4.
 
 # `setUp()` and `tearDown()`
 

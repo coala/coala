@@ -36,7 +36,7 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
         finished.wait(seconds)
         if not finished.is_set():
             timedout.value = True
-            if platform.system() == "Windows":  # pragma: no cover
+            if platform.system() == "Windows":
                 pgid = sub_process.pid
             else:
                 pgid = os.getpgid(sub_process.pid)

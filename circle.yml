@@ -20,7 +20,7 @@ test:
         parallel: true
     - coala-ci:
         parallel: true
-    - codecov:
+    - bash .misc/deploy.coverage.sh:
         parallel: true
 
 deployment:
