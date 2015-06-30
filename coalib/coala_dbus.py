@@ -27,7 +27,9 @@ def main():
     session_bus = dbus.SessionBus()
     # The BusName needs to be saved to a variable, if it is not saved - the
     # Bus will be closed.
-    dbus_name = dbus.service.BusName("org.coala.v1", session_bus)
+    dbus_name = dbus.service.BusName(  # pylint: disable=unused-variable
+        "org.coala.v1",
+        session_bus)
     DbusServer(session_bus,
                '/org/coala/v1',
                on_disconnected=lambda: GLib.idle_add(lambda: sys.exit(0)))

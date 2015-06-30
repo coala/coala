@@ -24,7 +24,7 @@ def file_needs_update(source, generated):
 def compile_translations():
     translations = []
     trans_install_dir_prefix = os.path.join(sys.prefix, "share", "locale")
-    for (path, dirnames, filenames) in os.walk("locale"):
+    for (path, dummy, filenames) in os.walk("locale"):
         for filename in filter(lambda name: name.endswith(".po"), filenames):
             lang = filename[:-3]
             src = os.path.join(path, filename)

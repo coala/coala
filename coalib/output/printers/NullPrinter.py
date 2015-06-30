@@ -7,7 +7,7 @@ class NullPrinter(ColorPrinter, LogPrinter):
         ColorPrinter.__init__(self)
         LogPrinter.__init__(self)
 
-    def print(self, *args, delimiter=' ', end='\n', **kwargs):
+    def print(self, *args, **kwargs):
         return
 
     def log_message(self, log_message, timestamp=None, **kwargs):

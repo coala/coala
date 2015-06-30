@@ -64,7 +64,7 @@ class FunctionMetadata:
         params = {}
 
         for param in self.non_optional_params:
-            desc, annotation = self.non_optional_params[param]
+            dummy, annotation = self.non_optional_params[param]
             params[param] = self._get_param(param,
                                             section,
                                             annotation,
@@ -72,7 +72,7 @@ class FunctionMetadata:
 
         for param in self.optional_params:
             if param in section:
-                desc, annotation, default = self.optional_params[param]
+                dummy, annotation, dummy = self.optional_params[param]
                 params[param] = self._get_param(param,
                                                 section,
                                                 annotation,
