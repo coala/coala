@@ -325,13 +325,16 @@ def iglob(pattern):
                 yield file
             return
 
+        if basename == '**':
+            relative_glob_function = relative_recursive_glob
+        elif has_wildcard(basename):
+            relative_glob_function = relative_wildcard_glob
+        else:
+            relative_glob_function = relative_flat_glob
+
         if not dirname:
-            if basename == '**':
-                for file in relative_recursive_glob(dirname, basename):
-                    yield file
-            else:
-                for file in relative_wildcard_glob(dirname, basename):
-                    yield file
+            for file in relative_glob_function(dirname, basename):
+                yield file
             return
 
         # Prevent an infinite recursion if a drive or UNC path contains
@@ -340,13 +343,7 @@ def iglob(pattern):
             dirs = iglob(dirname)
         else:
             dirs = [dirname]
-        if has_wildcard(basename):
-            if basename == '**':
-                relative_glob_function = relative_recursive_glob
-            else:
-                relative_glob_function = relative_wildcard_glob
-        else:
-            relative_glob_function = relative_flat_glob
+
         for dirname in dirs:
             for name in relative_glob_function(dirname, basename):
                 yield os.path.join(dirname, name)
