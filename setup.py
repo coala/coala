@@ -45,6 +45,10 @@ if __name__ == "__main__":
                     'coalib.results',
                     'coalib.results.result_actions',
                     'coalib.settings'],
+          install_requires=[
+              "setuptools",
+              "munkres3",
+              "coverage"],
           package_data={'coalib': ['default_coafile']},
           license="AGPL v3",
           data_files=data_files,
