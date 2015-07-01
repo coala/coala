@@ -13,9 +13,10 @@ esac
 # Install python version needed and related deps
 
 # apt-get commands
-sudo apt-get -qq install espeak libclang1-3.4
-sudo apt-get -qq install libdbus-glib-1-dev # for python-dbus
-sudo apt-get -qq install glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev # for python-gi
+deps="espeak libclang1-3.4"
+deps_python_dbus="libdbus-glib-1-dev"
+deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
+sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
