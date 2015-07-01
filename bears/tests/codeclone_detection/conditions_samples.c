@@ -21,7 +21,7 @@ int returned(int a, int b) {
 
 int loopy(int a, int b) {
     if (a) {
-        return 1;
+        return 0;
     }
 
     while (b) {

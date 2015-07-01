@@ -33,7 +33,9 @@ class ClangCountingConditionsTest(unittest.TestCase):
         vectors = counter.get_vectors_for_file(self.testfile)
 
         actual = vectors[function]
-        self.assertEqual(len(actual), len(expected))
+        self.assertEqual(len(actual),
+                         len(expected),
+                         "Actual dict: " + str(actual))
         self.assertEqual(sorted(actual.keys()),
                          sorted(expected.keys()))
         for variable in actual:
@@ -57,7 +59,8 @@ class ClangCountingConditionsTest(unittest.TestCase):
             (1, "used(int, int)"),
             {"a": [5],
              "b": [6],
-             "foo": [1]})
+             "foo": [1],
+             "#0": [1]})
 
     def test_is_called(self):
         self.check_counting_condition(
@@ -65,7 +68,8 @@ class ClangCountingConditionsTest(unittest.TestCase):
             (1, "used(int, int)"),
             {"a": [0],
              "b": [0],
-             "foo": [1]})
+             "foo": [1],
+             "#0": [0]})
 
     def test_is_call_param(self):
         self.check_counting_condition(
@@ -73,7 +77,8 @@ class ClangCountingConditionsTest(unittest.TestCase):
             (1, "used(int, int)"),
             {"a": [0],
              "b": [1],
-             "foo": [0]})
+             "foo": [0],
+             "#0": [0]})
 
     def test_returned(self):
         self.check_counting_condition(
@@ -87,7 +92,8 @@ class ClangCountingConditionsTest(unittest.TestCase):
             "is_condition",
             (22, "loopy(int, int)"),
             {"a": [2],
-             "b": [1]})
+             "b": [1],
+             "#0": [0]})
 
     def test_in_condition(self):
         self.check_counting_condition(
@@ -103,63 +109,96 @@ class ClangCountingConditionsTest(unittest.TestCase):
             (111, "levels(int, int, int)"),
             {"first": [3],
              "second": [0],
-             "third": [0]})
+             "third": [0],
+             "#0": [0],
+             "#1": [2],
+             "#2": [2],
+             "#3": [0],
+             "#5": [0]})
 
         self.check_counting_condition(
             "in_second_level_condition",
             (111, "levels(int, int, int)"),
             {"first": [0],
              "second": [1],
-             "third": [0]})
+             "third": [0],
+             "#0": [0],
+             "#1": [1],
+             "#2": [0],
+             "#3": [1],
+             "#5": [0]})
 
         self.check_counting_condition(
             "in_third_level_condition",
             (111, "levels(int, int, int)"),
             {"first": [0],
              "second": [0],
-             "third": [2]})
+             "third": [2],
+             "#0": [0],
+             "#1": [0],
+             "#2": [1],
+             "#3": [1],
+             "#5": [0]})
 
     def test_is_assignee(self):
         self.check_counting_condition(
             "is_assignee",
             (62, "assignation(int, int)"),
             {"a": [3],
-             "b": [9]})
+             "b": [9],
+             "#1": [0]})
 
     def test_is_assigner(self):
         self.check_counting_condition(
             "is_assigner",
             (62, "assignation(int, int)"),
             {"a": [6],
-             "b": [9]})
+             "b": [9],
+             "#1": [4]})
 
     def test_loop_content(self):
         self.check_counting_condition(
             "loop_content",
             (22, "loopy(int, int)"),
             {"a": [0],
-             "b": [6]})
+             "b": [6],
+             "#0": [0]})
 
         self.check_counting_condition(
             "loop_content",
             (111, "levels(int, int, int)"),
             {"first": [1],
              "second": [0],
-             "third": [0]})
+             "third": [0],
+             "#0": [0],
+             "#1": [2],
+             "#2": [0],
+             "#3": [0],
+             "#5": [0]})
 
         self.check_counting_condition(
             "second_level_loop_content",
             (111, "levels(int, int, int)"),
             {"first": [0],
              "second": [1],
-             "third": [0]})
+             "third": [0],
+             "#0": [0],
+             "#1": [0],
+             "#2": [2],
+             "#3": [0],
+             "#5": [0]})
 
         self.check_counting_condition(
             "third_level_loop_content",
             (111, "levels(int, int, int)"),
             {"first": [0],
              "second": [0],
-             "third": [2]})
+             "third": [2],
+             "#0": [0],
+             "#1": [0],
+             "#2": [0],
+             "#3": [1],
+             "#5": [1]})
 
     def test_is_param(self):
         self.check_counting_condition(
@@ -175,26 +214,31 @@ class ClangCountingConditionsTest(unittest.TestCase):
             "in_sum",
             (89, "arithmetics(int, int)"),
             {"a": [4],
-             "b": [3]})
+             "b": [3],
+             "#4": [1]})
 
         self.check_counting_condition(
             "in_product",
             (89, "arithmetics(int, int)"),
             {"a": [6],
-             "b": [6]})
+             "b": [6],
+             "#4": [0]})
 
         self.check_counting_condition(
             "in_binary_operation",
             (89, "arithmetics(int, int)"),
             {"a": [6],
-             "b": [2]})
+             "b": [2],
+             "#4": [0]})
 
     def test_member_accessed(self):
         self.check_counting_condition(
             "member_accessed",
             (149, "structing(struct test_struct, struct test_struct *)"),
             {"a": [1],
-             "b": [1]})
+             "b": [1],
+             "#1": [0],
+             "#2": [1]})
 
 
 def skip_test():

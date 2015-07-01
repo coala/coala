@@ -42,6 +42,21 @@ def get_identifier_name(cursor):
     return cursor.displayname.decode()
 
 
+def is_literal(cursor):
+    """
+    :param cursor: A clang cursor from the AST.
+    :return:       True if the cursor is a literal of any kind..
+    """
+    return cursor.kind in [CursorKind.INTEGER_LITERAL,
+                           CursorKind.FLOATING_LITERAL,
+                           CursorKind.IMAGINARY_LITERAL,
+                           CursorKind.STRING_LITERAL,
+                           CursorKind.CHARACTER_LITERAL,
+                           CursorKind.OBJC_STRING_LITERAL,
+                           CursorKind.CXX_BOOL_LITERAL_EXPR,
+                           CursorKind.CXX_NULL_PTR_LITERAL_EXPR]
+
+
 def is_reference(cursor):
     """
     Determines if the cursor is a reference to something, i.e. an identifier
@@ -94,6 +109,13 @@ class ClangCountVectorCreator:
         self.count_vectors = {}
         self.stack = []
 
+    def count_identifier(self, identifier):
+        if identifier not in self.count_vectors:
+            self.count_vectors[identifier] = (
+                CountVector(identifier, self.conditions, self.weightings))
+
+        self.count_vectors[identifier].count_reference(self.stack)
+
     def _get_vector_for_function(self, cursor, child_num=0):
         """
         Creates a CountVector object for the given cursor.
@@ -111,13 +133,15 @@ class ClangCountVectorCreator:
         assert isinstance(cursor, Cursor)
         self.stack.append((cursor, child_num))
 
-        identifier = get_identifier_name(cursor)
         if is_reference(cursor):
-            if identifier not in self.count_vectors:
-                self.count_vectors[identifier] = (
-                    CountVector(identifier, self.conditions, self.weightings))
-
-            self.count_vectors[identifier].count_reference(self.stack)
+            self.count_identifier(get_identifier_name(cursor))
+        if is_literal(cursor):
+            tokens = list(cursor.get_tokens())
+            if tokens:
+                # Mangle constants with $ (-> no valid C identifier), first
+                # token is the constant, semicolon and similar things may
+                # follow, don't want them
+                self.count_identifier("#" + tokens[0].spelling.decode())
 
         for i, child in enumerate(cursor.get_children()):
             self._get_vector_for_function(child, i)

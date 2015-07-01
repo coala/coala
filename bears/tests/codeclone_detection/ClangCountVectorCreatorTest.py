@@ -43,7 +43,10 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
                 "g": [],
                 # Functions
                 "smile": [],
-                "printf": []}}
+                "printf": [],
+                # Constants
+                "#5": [],
+                '#"i is %d"': []}}
 
         self.uut = ClangCountVectorCreator()
         cv_dict = self.uut.get_vectors_for_file(self.testfile)
@@ -51,7 +54,7 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
         self.check_cv_dict(cv_dict, expected_results)
 
     def check_cv_dict(self, actual, expected):
-        self.assertEqual(len(actual), len(expected))
+        self.assertEqual(len(actual), len(expected), str(actual))
         self.assertEqual(sorted(actual.keys()), sorted(expected.keys()))
 
         for function in actual:
@@ -75,7 +78,10 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
                 "g": [3, 1],
                 # Functions
                 "smile": [1, 1],
-                "printf": [1, 1]}}
+                "printf": [1, 1],
+                # Constants
+                "#5": [1, 0],
+                '#"i is %d"': [1, 1]}}
 
         self.uut = ClangCountVectorCreator([no_condition, is_call_argument])
         cv_dict = self.uut.get_vectors_for_file(self.testfile)
