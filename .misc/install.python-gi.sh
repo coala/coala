@@ -1,6 +1,11 @@
 set -x
 set -e
 
+if python -c "import gi" ; then
+  echo python-gi already installed
+  exit 0
+fi
+
 if [ ! -d "pygobject-3.16.2" ] ; then
   echo Downloading python-gi...
   wget http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.16/pygobject-3.16.2.tar.xz -O python-gi.tar.xz -q

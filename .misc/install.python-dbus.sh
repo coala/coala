@@ -1,6 +1,11 @@
 set -x
 set -e
 
+if python -c "import dbus" ; then
+  echo python-dbus already installed
+  exit 0
+fi
+
 if [ ! -d "dbus-python-1.2.0" ] ; then
   echo Downloading python-dbus...
   wget http://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.0.tar.gz -O dbus-python.tar.gz -q
