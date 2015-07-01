@@ -1,13 +1,17 @@
 set -x
 set -e
 
-echo Downloading python-gi...
-wget http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.16/pygobject-3.16.2.tar.xz -O python-gi.tar.xz -q
-echo Unpacking python-gi...
-tar -xJf python-gi.tar.xz > /dev/null
-rm python-gi.tar.xz
-
-cd pygobject-3.16.2
+if [ ! -d "pygobject-3.16.2" ] ; then
+  echo Downloading python-gi...
+  wget http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.16/pygobject-3.16.2.tar.xz -O python-gi.tar.xz -q
+  echo Unpacking python-gi...
+  tar -xJf python-gi.tar.xz > /dev/null
+  rm python-gi.tar.xz
+  cd pygobject-3.16.2
+else
+  cd pygobject-3.16.2
+  make clean >/dev/null || make clean
+fi
 
 ./configure --prefix=$python_virtualenv >/dev/null || ./configure --prefix=$python_virtualenv
 make >/dev/null || make
