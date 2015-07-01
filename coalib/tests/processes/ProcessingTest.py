@@ -27,6 +27,7 @@ p=subprocess.Popen([StringConstants.python_executable,
                   "import time; time.sleep(0.1)"]);
 pgid = p.pid if platform.system() == "Windows" else os.getpgid(p.pid);
 print(p.pid, pgid)
+p.terminate()
 """
 
 
@@ -206,6 +207,8 @@ class ProcessingTest(unittest.TestCase):
                 print(line, end='')
             raise Exception("Subprocess did not exit correctly")
         output = [i for i in p.stdout]
+        p.stderr.close()
+        p.stdout.close()
         pid, pgid = [int(i.strip()) for i_out in output for i in i_out.split()]
         if platform.system() != "Windows":
             # There is no way of testing this on windows with the current python
