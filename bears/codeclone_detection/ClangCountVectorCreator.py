@@ -1,6 +1,11 @@
 import os
 from bears.codeclone_detection.CountVector import CountVector
-from coalib.bearlib.parsing.clang.cindex import Cursor, CursorKind, Index
+from bears.codeclone_detection.ClangCountingConditions import (
+    is_reference,
+    get_identifier_name,
+    is_literal,
+    is_function_declaration)
+from coalib.bearlib.parsing.clang.cindex import Cursor, Index
 
 
 def get_include_paths(file_path, setting_path):
@@ -20,54 +25,6 @@ def get_include_paths(file_path, setting_path):
         result.append(path)
 
     return result
-
-
-def is_function_declaration(cursor):
-    """
-    Checks if the given clang cursor is a function declaration.
-
-    :param cursor: A clang cursor from the AST.
-    :return:       A bool.
-    """
-    return cursor.kind == CursorKind.FUNCTION_DECL
-
-
-def get_identifier_name(cursor):
-    """
-    Retrieves the identifier name from the given clang cursor.
-
-    :param cursor: A clang cursor from the AST.
-    :return:       The identifier as string.
-    """
-    return cursor.displayname.decode()
-
-
-def is_literal(cursor):
-    """
-    :param cursor: A clang cursor from the AST.
-    :return:       True if the cursor is a literal of any kind..
-    """
-    return cursor.kind in [CursorKind.INTEGER_LITERAL,
-                           CursorKind.FLOATING_LITERAL,
-                           CursorKind.IMAGINARY_LITERAL,
-                           CursorKind.STRING_LITERAL,
-                           CursorKind.CHARACTER_LITERAL,
-                           CursorKind.OBJC_STRING_LITERAL,
-                           CursorKind.CXX_BOOL_LITERAL_EXPR,
-                           CursorKind.CXX_NULL_PTR_LITERAL_EXPR]
-
-
-def is_reference(cursor):
-    """
-    Determines if the cursor is a reference to something, i.e. an identifier
-    of a function or variable.
-
-    :param cursor: A clang cursor from the AST.
-    :return:       True if the cursor is a reference.
-    """
-    return cursor.kind in [CursorKind.VAR_DECL,
-                           CursorKind.PARM_DECL,
-                           CursorKind.DECL_REF_EXPR]
 
 
 class ClangCountVectorCreator:

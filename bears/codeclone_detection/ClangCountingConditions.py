@@ -9,6 +9,54 @@ from coalib.bearlib.parsing.clang.cindex import CursorKind
 from coalib.misc.Enum import enum
 
 
+def is_function_declaration(cursor):
+    """
+    Checks if the given clang cursor is a function declaration.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       A bool.
+    """
+    return cursor.kind == CursorKind.FUNCTION_DECL
+
+
+def get_identifier_name(cursor):
+    """
+    Retrieves the identifier name from the given clang cursor.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       The identifier as string.
+    """
+    return cursor.displayname.decode()
+
+
+def is_literal(cursor):
+    """
+    :param cursor: A clang cursor from the AST.
+    :return:       True if the cursor is a literal of any kind..
+    """
+    return cursor.kind in [CursorKind.INTEGER_LITERAL,
+                           CursorKind.FLOATING_LITERAL,
+                           CursorKind.IMAGINARY_LITERAL,
+                           CursorKind.STRING_LITERAL,
+                           CursorKind.CHARACTER_LITERAL,
+                           CursorKind.OBJC_STRING_LITERAL,
+                           CursorKind.CXX_BOOL_LITERAL_EXPR,
+                           CursorKind.CXX_NULL_PTR_LITERAL_EXPR]
+
+
+def is_reference(cursor):
+    """
+    Determines if the cursor is a reference to something, i.e. an identifier
+    of a function or variable.
+
+    :param cursor: A clang cursor from the AST.
+    :return:       True if the cursor is a reference.
+    """
+    return cursor.kind in [CursorKind.VAR_DECL,
+                           CursorKind.PARM_DECL,
+                           CursorKind.DECL_REF_EXPR]
+
+
 def _stack_contains_kind(stack, kind):
     """
     Checks if a cursor with the given kind is within the stack.
