@@ -9,9 +9,6 @@ dependencies:
     - bash .misc/deps.sh
 
 test:
-  pre:
-    - python run_tests.py -j1:
-        parallel: true
   override:
     - bash .misc/tests.sh:
         parallel: true
