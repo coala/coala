@@ -5,13 +5,12 @@ dependencies:
     - ~/.pyenv/versions/3.4.2
     - ~/.pyenv/versions/pypy3-2.4.0
   override:
-    - bash .misc/deps.pre.sh
+    - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
+    - bash .misc/deps.sh
 
 test:
   pre:
     - python run_tests.py -j3:
-        parallel: true
-    - bash .misc/deps.sh:
         parallel: true
   override:
     - bash .misc/tests.sh:
