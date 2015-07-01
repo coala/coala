@@ -173,6 +173,7 @@ def execute_command_array(command_array, timeout, verbose):
         message += ("This test failed because it was taking more than %f sec "
                     "to execute. To change the timeout setting use the `-T` "
                     "or `--timeout` argument.\n" % timeout)
+        return 1, message  # Guaranteed fail, especially on race condition
 
     return retval, message
 
