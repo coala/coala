@@ -146,7 +146,6 @@ def execute_command_array(command_array, timeout, verbose):
     :return:              A tuple of (result, message) where message gives
                           text information of what happened.
     """
-    timed_out = False
     message = ""
     stdout_file = tempfile.TemporaryFile()
     stderr_file = tempfile.TemporaryFile()
