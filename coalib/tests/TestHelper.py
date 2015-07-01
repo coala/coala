@@ -328,7 +328,6 @@ def run_tests(ignore_list, args, test_files, test_file_names):
         failed_tests += nonexistent_tests
     else:
         max_nr = len(test_files)
-        nonexistent_tests = 0
 
     # Sort tests alphabetically.
     test_files.sort(key=lambda fl: str.lower(os.path.split(fl)[1]))
