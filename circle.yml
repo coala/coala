@@ -10,7 +10,7 @@ dependencies:
 
 test:
   pre:
-    - python run_tests.py -j3:
+    - python run_tests.py -j1:
         parallel: true
   override:
     - bash .misc/tests.sh:
