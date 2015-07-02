@@ -3,6 +3,18 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
+def local_bear(function):
+    return type(function.__name__,
+                (LocalBear,),
+                dict(_run=staticmethod(function),
+                     run=lambda self, filename, file, *args, **kwargs: \
+                         self._run(filename, file, *args, **kwargs),
+                     get_metadata=classmethod(lambda cls: \
+    FunctionMetadata.from_function(
+        cls._run,
+        omit=["self", "filename", "file", "dependency_results"]))))
+
+
 class LocalBear(Bear):
     """
     A LocalBear is a Bear that analyzes only one file at once. It therefore can
