@@ -38,7 +38,7 @@ coala is a simple COde AnaLysis Application. Its goal is to make static code
 analysis easy while remaining completely modular and therefore extendable and
 language independent.
 
-Read more at our [documentation](http://coala.rtfd.org/en/latest/).
+Read more at our [documentation](http://coala.rtfd.org/).
 
 Authors
 -------
@@ -71,7 +71,7 @@ GETTING INVOLVED
 ================
 
 If you want to contribute to coala, please take a look at the
-[Getting Involved Information](http://coala.rtfd.org/en/latest/Getting_Involved/).
+[Getting Involved Information](http://coala.readthedocs.org/en/latest/Getting_Involved/README/).
 
 We appreciate any help!
 
