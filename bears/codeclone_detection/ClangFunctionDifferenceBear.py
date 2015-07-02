@@ -1,3 +1,4 @@
+import functools
 from itertools import combinations
 
 from coalib.misc.StringConverter import StringConverter
@@ -45,7 +46,10 @@ in_condition: 1.0,
 in_binary_operation: 1.0"""))
 
 
-def get_difference(args):
+def get_difference(function_pair,
+                   count_matrices,
+                   average_calculation,
+                   reduce_big_diffs):
     """
     Retrieves the difference between two functions using the munkres algorithm.
 
@@ -54,11 +58,7 @@ def get_difference(args):
                  each function with the function id as key.
     :return:     A tuple containing both function ids and their difference.
     """
-    (function_1,
-     function_2,
-     count_matrices,
-     average_calculation,
-     reduce_big_diffs) = args
+    function_1, function_2 = function_pair
     return (function_1,
             function_2,
             compare_functions(count_matrices[function_1],
@@ -129,14 +129,15 @@ class ClangFunctionDifferenceBear(GlobalBear):
         function_count = len(count_matrices)
         # Thats n over 2, hardcoded to simplify calculation
         combination_length = function_count * (function_count-1) / 2
-        function_combinations = [(f1,
-                                  f2,
-                                  count_matrices,
-                                  average_calculation,
-                                  reduce_big_diffs)
-                                 for f1, f2 in combinations(count_matrices, 2)]
+        partial_get_difference = functools.partial(
+            get_difference,
+            count_matrices=count_matrices,
+            average_calculation=average_calculation,
+            reduce_big_diffs=reduce_big_diffs)
 
-        for i, elem in enumerate(map(get_difference, function_combinations)):
+        for i, elem in enumerate(
+                map(partial_get_difference,
+                    [(f1, f2) for f1, f2 in combinations(count_matrices, 2)])):
             if i % 1000 == 0:
                 self.debug("{:2.4f}%...".format(100*i/combination_length))
             differences.append(elem)
