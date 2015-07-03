@@ -45,4 +45,4 @@ test_script:
   - "%CMD_IN_ENV% python run_tests.py --cover"
   - "%CMD_IN_ENV% python setup.py install"
   - "%CMD_IN_ENV% appveyor DownloadFile https://codecov.io/bash -FileName codecov.sh"
-  - "%CMD_IN_ENV% bash codecov.sh"
+  - "%CMD_IN_ENV% bash codecov.sh -X gcov"
