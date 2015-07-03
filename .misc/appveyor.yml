@@ -22,11 +22,6 @@ environment:
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "64"
 
-branches:  # Only build official branches, PRs are built anyway.
-  only:
-    - master
-    - /release.*/
-
 install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
@@ -44,5 +39,5 @@ build: false  # Not a C# project, build stuff at the test step instead.
 test_script:
   - "%CMD_IN_ENV% python run_tests.py --cover"
   - "%CMD_IN_ENV% python setup.py install"
-  - "%CMD_IN_ENV% appveyor DownloadFile https://codecov.io/bash -FileName codecov.sh"
-  - "%CMD_IN_ENV% bash codecov.sh"
+  - "%CMD_IN_ENV% appveyor DownloadFile https://raw.githubusercontent.com/codecov/codecov-bash/ci/appveyor/codecov -FileName codecov.sh"
+  - "%CMD_IN_ENV% bash codecov.sh -X gcov"
