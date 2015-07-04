@@ -7,7 +7,7 @@ from coalib.output.dbus.DbusApp import DbusApp
 class DbusServer(dbus.service.Object):
     interface = "org.coala.v1"
 
-    def __init__(self, bus, path, on_disconnected=None):
+    def __init__(self, bus, path, on_disconnected=None, verbose=False):
         """
         Creates a new DbusServer class which handles the dynamic creation and
         disposal of dbus object-paths for documents and also handles
@@ -19,12 +19,14 @@ class DbusServer(dbus.service.Object):
                                 communicate.
         :param on_disconnected: This function will be called when the DbusServer
                                 has no more applications connected to it.
+        :param verbose:         If true, prints helpful debugging messages.
         """
         dbus.service.Object.__init__(self, bus, path)
 
         self.apps = {}
         self.__next_app_id = 0
         self.on_disconnected = on_disconnected
+        self.verbose = verbose
 
         bus.add_signal_receiver(self._on_name_lost,
                                 signal_name='NameOwnerChanged',
@@ -46,7 +48,12 @@ class DbusServer(dbus.service.Object):
         """
         app = self.get_or_create_app(sender)
         doc = self.get_or_create_document(app, path)
-        return doc._object_path
+        obj_path = doc._object_path
+
+        if self.verbose:
+            print('DbusServer:CreateDocument - created', obj_path, "for", path)
+
+        return obj_path
 
     @dbus.service.method(interface,
                          in_signature="s",
@@ -69,6 +76,9 @@ class DbusServer(dbus.service.Object):
             return
 
         self.dispose_document(app, path)
+
+        if self.verbose:
+            print('DbusServer:DisposeDocument - disposed', path)
 
     def _on_name_lost(self, name, oldowner, newowner):
         if newowner != '':

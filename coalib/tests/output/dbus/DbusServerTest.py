@@ -1,3 +1,4 @@
+import os
 import sys
 import unittest
 import dbus
@@ -5,6 +6,7 @@ import dbus.mainloop
 
 sys.path.insert(0, ".")
 from coalib.output.dbus.DbusServer import DbusServer
+from coalib.misc.ContextManagers import retrieve_stdout
 
 
 class DbusServerTest(unittest.TestCase):
@@ -95,6 +97,20 @@ class DbusServerTest(unittest.TestCase):
 
         uut.DisposeDocument(doc1, sender="app2")
         self.assertEqual(len(uut.apps), 0)
+
+        uut.verbose = True
+
+        with retrieve_stdout() as stdout:
+            obj_path = uut.CreateDocument(doc1, sender="app1")
+            expected_output = ('DbusServer:CreateDocument - created ' +
+                               obj_path + ' for ' + os.path.abspath(doc1) +
+                               '\n')
+            self.assertEqual(expected_output, stdout.getvalue())
+
+            uut.DisposeDocument(doc1, sender="app1")
+            expected_output += ('DbusServer:DisposeDocument - disposed ' +
+                                os.path.abspath(doc1) + '\n')
+            self.assertEqual(expected_output, stdout.getvalue())
 
 
 if __name__ == "__main__":
