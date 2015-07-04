@@ -136,7 +136,7 @@ class DbusServer(dbus.service.Object):
         :param path: The path to the document to be created.
         :return:     a DbusDocument object.
         """
-        doc = app.create_document(path)
+        doc = app.create_document(path, verbose=self.verbose)
         objpath = self._object_path + "/" + str(app.id) + \
                   "/documents/" + str(doc.id)
         doc.add_to_connection(self._connection, objpath)
