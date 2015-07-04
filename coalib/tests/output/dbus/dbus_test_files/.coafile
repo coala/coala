@@ -10,3 +10,7 @@ files = *.py
 
 [C]
 files = *.c
+
+[C2]
+files = *.c
+bears =

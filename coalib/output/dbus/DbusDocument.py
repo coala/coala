@@ -13,21 +13,23 @@ from coalib.settings.Setting import path_list
 class DbusDocument(dbus.service.Object):
     interface = "org.coala.v1"
 
-    def __init__(self, id, path=""):
+    def __init__(self, id, path="", verbose=False):
         """
         Creates a new dbus object-path for every document that a
         DbusApplication wants coala to analyze. It stores the information
         (path) of the document and the config file to use when analyzing the
         given document.
 
-        :param id:   An id for the document.
-        :param path: The path to the document.
+        :param id:      An id for the document.
+        :param path:    The path to the document.
+        :param verbose: If true, prints helpful debugging messages.
         """
         dbus.service.Object.__init__(self)
 
         self.config_file = ""
         self.path = path
         self.id = id
+        self.verbose = verbose
 
     @dbus.service.method(interface,
                          in_signature="",
@@ -43,6 +45,10 @@ class DbusDocument(dbus.service.Object):
             return ""
 
         self.config_file = find_user_config(self.path)
+
+        if self.verbose:
+            print('DbusDocument:FindConfigFile - found', self.config_file)
+
         return self.config_file
 
     @dbus.service.method(interface,
@@ -58,6 +64,10 @@ class DbusDocument(dbus.service.Object):
         :return:            The config path which has been used
         """
         self.config_file = config_file
+
+        if self.verbose:
+            print('DbusDocument:SetConfigFile - set to', self.config_file)
+
         return self.config_file
 
     @dbus.service.method(interface,
@@ -69,6 +79,9 @@ class DbusDocument(dbus.service.Object):
 
         :return: The config path which is being used
         """
+        if self.verbose:
+            print('DbusDocument:GetConfigFile - got', self.config_file)
+
         return self.config_file
 
     @dbus.service.method(interface,
@@ -89,6 +102,15 @@ class DbusDocument(dbus.service.Object):
         """
         retval = []
         if self.path == "" or self.config_file == "":
+            if self.verbose:
+                print('DbusDocument:Analyze - empty because ', end="")
+                if self.config_file == "":
+                    print("config_file is empty", end="")
+                if self.config_file == "" and self.path == "":
+                    print(" and ", end="")
+                if self.path == "":
+                    print("path is empty", end="")
+                print()
             return retval
 
         args = ["--config=" + self.config_file]
@@ -107,7 +129,13 @@ class DbusDocument(dbus.service.Object):
             section = sections[section_name]
 
             if not section.is_enabled(targets):
-                continue
+                if self.verbose:
+                    print('DbusDocument:Analyze - section', section_name,
+                          'not enabled')
+                # The next `continue` *IS* covered, but due to the issue #198
+                # (https://goo.gl/JLRJ3p) in coveragepy, it shows that
+                # it is not covered.
+                continue  # pragma: no cover
 
             if any([fnmatch(self.path, file_pattern)
                     for file_pattern in path_list(section["files"])]):
@@ -120,9 +148,32 @@ class DbusDocument(dbus.service.Object):
                     print_results=interactor.print_results,
                     log_printer=log_printer)
 
-                retval.append(
-                    DbusDocument.results_to_dbus_struct(results, section_name))
+                struct_results = DbusDocument.results_to_dbus_struct(
+                    results,
+                    section_name)
+                retval.append(struct_results)
 
+                if self.verbose:
+                    print('DbusDocument:Analyze - section', section_name,
+                          'results:')
+                    print('  string  section', struct_results[0])
+                    print('  boolean result', struct_results[1])
+                    if len(struct_results[2]) == 0:
+                        print('  struct result: empty')
+                    else:
+                        for (origin,
+                             message,
+                             file,
+                             line_nr,
+                             severity) in struct_results[2]:
+                            print('  struct result:')
+                            print('    string origin', origin)
+                            print('    string message', message)
+                            print('    string file', file)
+                            print('    string line_nr', line_nr)
+                            print('    string severity', severity)
+        if self.verbose:
+            print('-' * 70)
         return retval
 
     @staticmethod

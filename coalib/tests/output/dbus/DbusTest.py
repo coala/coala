@@ -102,7 +102,10 @@ class DbusTest(unittest.TestCase):
                              'test msg',
                              self.testcode_c_path,
                              'None',
-                             '1')])])
+                             '1')]),
+                           ('c2',
+                            False,
+                            [])])
 
         self.remote_object.DisposeDocument(
             self.testcode_c_path,

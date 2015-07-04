@@ -18,7 +18,7 @@ class DbusApp:
         self.__next_doc_id += 1
         return self.__next_doc_id
 
-    def create_document(self, path):
+    def create_document(self, path, verbose=False):
         """
         Create a new dbus document.
 
@@ -27,10 +27,12 @@ class DbusApp:
                             document object path.
         :param object_path: The connection to which the new ddocument object
                             path should be added.
+        :param verbose:     If true, prints helpful debugging messages in
+                            the created DbusDocument.
         :return:            a DbusDocument object.
         """
         path = os.path.abspath(os.path.expanduser(path))
-        doc = DbusDocument(id=self._next_doc_id(), path=path)
+        doc = DbusDocument(id=self._next_doc_id(), path=path, verbose=verbose)
         self.docs[path] = doc
 
         return doc
