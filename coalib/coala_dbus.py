@@ -19,18 +19,28 @@ import dbus.mainloop.glib
 from gi.repository import GLib
 
 from coalib.output.dbus.DbusServer import DbusServer
+from coalib.parsing.DbusArgParser import dbus_arg_parser
 
 
 def main():
+    parser = dbus_arg_parser()
+    args = parser.parse_args()
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     session_bus = dbus.SessionBus()
     # The BusName needs to be saved to a variable, if it is not saved - the
     # Bus will be closed.
     dbus_name = dbus.service.BusName("org.coala.v1", session_bus)
+
+    if not args.persistent:
+        on_disconnected = lambda: GLib.idle_add(lambda: sys.exit(0))
+    else:
+        on_disconnected = None
+
     DbusServer(session_bus,
                '/org/coala/v1',
-               on_disconnected=lambda: GLib.idle_add(lambda: sys.exit(0)))
+               on_disconnected=on_disconnected,
+               verbose=args.verbose)
 
     mainloop = GLib.MainLoop()
     mainloop.run()
