@@ -45,9 +45,9 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg="The given lines are not a list.")
         self.assertEqual(
-            local_bear.execute(
+            list(local_bear.execute(
                 filename,
-                LocalBearTestHelper.prepare_lines(lines)),
+                LocalBearTestHelper.prepare_lines(lines))),
             [],
             msg="The local bear '{}' yields a result although it "
                 "shouldn't.".format(local_bear.__class__.__name__))
@@ -80,9 +80,9 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg="The given lines are not a list.")
         self.assertNotEqual(
-            len(local_bear.execute(
+            len(list(local_bear.execute(
                 filename,
-                LocalBearTestHelper.prepare_lines(lines))),
+                LocalBearTestHelper.prepare_lines(lines)))),
             0,
             msg="The local bear '{}' yields no result although it "
                 "should.".format(local_bear.__class__.__name__))
@@ -138,8 +138,9 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                     local_bear.__class__.__name__))
         else:
             self.assertEqual(
-                local_bear.execute(filename,
-                                   LocalBearTestHelper.prepare_lines(lines)),
+                list(local_bear.execute(
+                    filename,
+                    LocalBearTestHelper.prepare_lines(lines))),
                 results,
                 msg="The local bear '{}' yields not the right results or the "
                     "order may be wrong.".format(
