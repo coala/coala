@@ -3,7 +3,7 @@ from itertools import combinations
 
 from coalib.misc.StringConverter import StringConverter
 from coalib.results.HiddenResult import HiddenResult
-from coalib.settings.Setting import typed_dict
+from coalib.settings.Setting import typed_ordered_dict
 from coalib.bears.GlobalBear import GlobalBear
 from bears.codeclone_detection.ClangCountVectorCreator import \
     ClangCountVectorCreator
@@ -19,7 +19,7 @@ function takes a setting and creates a dictionary out of it while it
 converts all keys to counting condition function objects (via the
 condition_dict) and all values to floats while unset values default to 1.
 """
-counting_condition_dict = typed_dict(
+counting_condition_dict = typed_ordered_dict(
     lambda setting: condition_dict[str(setting).lower()],
     float,
     1)
