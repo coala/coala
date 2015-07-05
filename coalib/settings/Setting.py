@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import os
 
 from coalib.misc.StringConverter import StringConverter
@@ -36,6 +37,22 @@ def typed_dict(key_type, value_type, default):
         key_type(StringConverter(key)):
         value_type(StringConverter(value)) if value != "" else default
         for key, value in dict(setting).items()}
+
+
+def typed_ordered_dict(key_type, value_type, default):
+    """
+    Creates a function that converts a setting into an ordered dict with the
+    given types.
+
+    :param key_type:   The type conversion function for the keys.
+    :param value_type: The type conversion function for the values.
+    :param default:    The default value to use if no one is given by the user.
+    :return:           A conversion function.
+    """
+    return lambda setting: OrderedDict(
+        (key_type(StringConverter(key)),
+         value_type(StringConverter(value)) if value != "" else default)
+        for key, value in OrderedDict(setting).items())
 
 
 class Setting(StringConverter):

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import re
 from coalib.misc.StringConstants import StringConstants
 from coalib.parsing.StringProcessing import unescaped_split, unescape
@@ -103,7 +104,8 @@ class StringConverter:
             self.__escaped_list.remove("")
 
     def __prepare_dict(self):
-        self.__dict = {}
+        # We must keep order here, user can drop it later.
+        self.__dict = OrderedDict()
         for elem in self.__get_raw_list():
             key_val = [unescape(item)
                        for item in unescaped_split(self.__dict_delimiter,
