@@ -9,8 +9,8 @@ class LineCountBear(LocalBear):
         '''
         Counts the lines of each file.
         '''
-        return [Result(
+        yield Result(
             origin=self,
             message=_("This file has {count} lines.").format(count=len(file)),
             severity=RESULT_SEVERITY.INFO,
-            file=filename)]
+            file=filename)
