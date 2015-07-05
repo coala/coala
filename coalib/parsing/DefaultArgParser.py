@@ -15,6 +15,12 @@ def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
     arg_parser.add_argument('TARGETS',
                             nargs='*',
                             help=_("Sections to be executed exclusively."))
+    CONFIG_HELP = _('Configuration file to be used, defaults to .coafile')
+    arg_parser.add_argument('-c',
+                            '--config',
+                            nargs=1,
+                            metavar='FILE',
+                            help=CONFIG_HELP)
     arg_parser.add_argument('-f',
                             '--files',
                             nargs='+',
@@ -39,12 +45,20 @@ def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
                             choices=['ERROR', 'WARNING', 'DEBUG'],
                             metavar='ENUM',
                             help=LOG_LEVEL_HELP)
-    CONFIG_HELP = _('Configuration file to be used, defaults to .coafile')
-    arg_parser.add_argument('-c',
-                            '--config',
-                            nargs=1,
-                            metavar='FILE',
-                            help=CONFIG_HELP)
+    SETTINGS_HELP = _('Arbitrary settings in the form of section.key=value')
+    arg_parser.add_argument('-S',
+                            '--settings',
+                            nargs='+',
+                            metavar='SETTING',
+                            help=SETTINGS_HELP)
+    SHOW_BEARS_HELP = _("Display bears and its metadata with the sections "
+                        "that they belong to")
+    arg_parser.add_argument('-B',
+                            '--show-bears',
+                            nargs='?',
+                            const=True,
+                            metavar='BOOL',
+                            help=SHOW_BEARS_HELP)
     SAVE_HELP = _('Filename of file to be saved to, if provided with no '
                   'arguments, settings will be stored back to the file given '
                   'by -c')
@@ -54,23 +68,9 @@ def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
                             const=True,
                             metavar='FILE',
                             help=SAVE_HELP)
-    SETTINGS_HELP = _('Arbitrary settings in the form of section.key=value')
-    arg_parser.add_argument('-S',
-                            '--settings',
-                            nargs='+',
-                            metavar='SETTING',
-                            help=SETTINGS_HELP)
+
     arg_parser.add_argument('-v',
                             '--version',
                             action='version',
                             version=version_str)
-    SHOW_BEARS_HELP = _("Display bears and its metadata with the sections "
-                        "that they belong to")
-    arg_parser.add_argument('-B',
-                            '--show-bears',
-                            nargs='?',
-                            const=True,
-                            metavar='BOOL',
-                            help=SHOW_BEARS_HELP)
-
     return arg_parser
