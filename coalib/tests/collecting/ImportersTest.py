@@ -85,18 +85,20 @@ class ImportObjectsTest(unittest.TestCase):
                                local=True,
                                verbose=True)),
             1)
+
     def test_invalid_file(self):
-        self.assertEqual(
-            len(import_objects("some/invalid/path",
-                               attributes="method",
-                               local=True,
-                               verbose=True)),
-            0)
-        self.assertEqual(
-            len(import_objects("some/invalid/path",
-                               attributes="method",
-                               local=True,
-                               verbose=False)),
-            0)
+        with self.assertRaises(ImportError):
+            import_objects("some/invalid/path",
+                           attributes="method",
+                           local=True,
+                           verbose=True)
+
+        with self.assertRaises(ImportError):
+            import_objects("some/invalid/path",
+                           attributes="method",
+                           local=True,
+                           verbose=False)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
