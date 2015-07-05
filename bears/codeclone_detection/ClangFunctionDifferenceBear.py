@@ -142,4 +142,4 @@ class ClangFunctionDifferenceBear(GlobalBear):
                 self.debug("{:2.4f}%...".format(100*i/combination_length))
             differences.append(elem)
 
-        return [HiddenResult(self.__class__.__name__, differences)]
+        yield HiddenResult(self.__class__.__name__, differences)

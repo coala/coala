@@ -44,7 +44,7 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
         self.section.append(Setting("condition_list", "bullshit"))
 
         self.uut = ClangFunctionDifferenceBear({}, self.section, Queue())
-        self.assertEqual(self.uut.run_bear_from_section([], {}), None)
+        self.assertEqual(list(self.uut.run_bear_from_section([], {})), [])
 
     def test_non_clones(self):
         self.non_clone_files = [
@@ -86,10 +86,11 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                 Queue())
             arg_dict = {"dependency_results":
                         {ClangFunctionDifferenceBear.__name__:
-                         difference_results}}
+                         list(difference_results)}}
 
-            result_check_function(uut.run_bear_from_section([], arg_dict),
-                                  "while analyzing "+file)
+            result_check_function(
+                list(uut.run_bear_from_section([], arg_dict)),
+                "while analyzing "+file)
 
 
 def skip_test():

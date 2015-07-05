@@ -21,10 +21,9 @@ class ClangCloneDetectionBear(GlobalBear):
             ClangFunctionDifferenceBear.__name__][0].contents
 
         self.debug("Creating results...")
-        results = []
         for function_1, function_2, difference in differences:
             if difference < max_clone_difference:
-                results.append(Result(
+                yield Result(
                     self.__class__.__name__,
                     _("Code clone found. The other occurrence is at file "
                       "{file}, line {line}, function {function}. The "
@@ -35,9 +34,7 @@ class ClangCloneDetectionBear(GlobalBear):
                         difference=difference),
                     file=function_1[0],
                     severity=RESULT_SEVERITY.MAJOR,
-                    line_nr=function_1[1]))
-
-        return results
+                    line_nr=function_1[1])
 
     @staticmethod
     def get_dependencies():
