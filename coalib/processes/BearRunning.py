@@ -1,5 +1,6 @@
 import queue
 import traceback
+from collections import Iterable
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -56,7 +57,7 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
     if result_list is None:
         return None
 
-    if not isinstance(result_list, list):
+    if not isinstance(result_list, Iterable):
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
@@ -70,6 +71,9 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
                    " but should be an instance of list.")
                  .format(bear=name, ret=result_list.__class__))
         return None
+
+    # If it's already a list it won't change it
+    result_list = list(result_list)
 
     for result in result_list:
         if not isinstance(result, Result):
