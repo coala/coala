@@ -16,19 +16,15 @@ class LineLengthBear(LocalBear):
         :param max_line_length: Maximum number of characters for a line.
         :param tab_width: Number of spaces to show for one tab.
         '''
-        results = []
         spacing_helper = SpacingHelper.from_section(section=self.section)
 
         for line_number, line in enumerate(file):
             line = spacing_helper.replace_tabs_with_spaces(line)
             if len(line) > max_line_length + 1:
-                results.append(
-                    Result(origin=self,
-                           message=_("Line is longer than allowed.") +
-                                   " ({actual} > {maximum})".format(
-                                       actual=len(line),
-                                       maximum=max_line_length),
-                           file=filename,
-                           line_nr=line_number + 1))
-
-        return results
+                yield Result(origin=self,
+                             message=_("Line is longer than allowed.") +
+                                     " ({actual} > {maximum})".format(
+                                         actual=len(line),
+                                         maximum=max_line_length),
+                             file=filename,
+                             line_nr=line_number + 1)
