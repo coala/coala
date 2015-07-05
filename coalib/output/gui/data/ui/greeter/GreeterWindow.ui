@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkHeaderBar" id="headerbar">
+    <property name="visible">true</property>
+    <property name="show_close_button">true</property>
+    <child type="title">
+      <object class="GtkStack" id="title_stack">
+        <property name="visible">true</property>
+        <property name="transition-type">crossfade</property>
+        <child>
+          <object class="GtkLabel" id="browse_title">
+            <property name="visible">true</property>
+            <property name="label" translatable="yes">
+              Select a Project</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="selection_title">
+            <property name="visible">true</property>
+            <property name="label" translatable="yes">
+              Click an item to select</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="new">
+        <property name="label">New</property>
+        <property name="visible">true</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="search_button">
+        <property name="visible">true</property>
+        <style>
+          <class name="image-button"/>
+        </style>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">edit-find-symbolic</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">2</property>
+        <property name="pack-type">end</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="selection_mode">
+        <property name="visible">true</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon-name">object-select-symbolic</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">1</property>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="cancel_button">
+        <property name="label">Cancel</property>
+        <property name="visible">False</property>
+      </object>
+      <packing>
+        <property name="position">0</property>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkBox" id="project_box">
+    <property name="expand">true</property>
+    <property name="orientation">vertical</property>
+    <property name="visible">true</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="expand">true</property>
+        <property name="visible">true</property>
+        <child>
+          <object class="GtkListBox" id="projects">
+            <property name="visible">true</property>
+            <property name="selection-mode">none</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkActionBar" id="action_bar">
+        <property name="visible">false</property>
+        <child>
+          <object class="GtkButton" id="remove_button">
+            <property name="label">Remove</property>
+            <property name="visible">true</property>
+            <style>
+              <class name="destructive-action"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -4,9 +4,9 @@ import platform
 import os
 
 class ProjectMetadata:
-    def __init__(self, file=os.path.expanduser('~/.local/.coala')):
-        self.file = file
-        if platform.system() == 'windows':  # pragma: no cover
+    def __init__(self):
+        self.file = os.path.expanduser('~/.local/.coala')
+        if platform.system() == 'windows':# pragma: no cover
             self.file = None
         self.shelf = None
 
