@@ -138,12 +138,17 @@ class Interactor(SectionCreatable, Printer):
             diff = self.file_diff_dict[filename]
             file_dict[filename] = diff.apply(file_dict[filename])
 
-            # Backup original file, override old backup if needed
-            shutil.copy2(filename, filename + ".orig")
+            try:
+                # Backup original file, override old backup if needed
+                shutil.copy2(filename, filename + ".orig")
 
-            # Write new contents
-            with open(filename, mode='w') as file:
-                file.writelines(file_dict[filename])
+                # Write new contents
+                with open(filename, mode='w') as file:
+                    file.writelines(file_dict[filename])
+            except Exception:  # IOError on python 3.2, PermissionError later
+                self.log_printer.err("Unable to write patch to file "
+                                     "{filename}.".format(filename=filename))
+
 
     @classmethod
     def get_metadata(cls):
