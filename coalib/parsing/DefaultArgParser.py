@@ -60,13 +60,6 @@ def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
                             nargs='+',
                             metavar='SETTING',
                             help=SETTINGS_HELP)
-    APPLY_HELP = _("Enum('YES','NO','ASK') to set whether to apply changes")
-    arg_parser.add_argument('-a',
-                            '--apply-changes',
-                            nargs=1,
-                            choices=['YES', 'NO', 'ASK'],
-                            metavar='ENUM',
-                            help=APPLY_HELP)
     arg_parser.add_argument('-v',
                             '--version',
                             action='version',
