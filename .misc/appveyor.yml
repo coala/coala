@@ -39,6 +39,9 @@ install:
 
   - "%CMD_IN_ENV% pip install coverage pylint setuptools"
 
+  - "nuget install Gettext.Tools -Version 0.19.4"
+  - "SET PATH=%PATH%;%cd%\\Gettext.Tools.0.19.4\\tools"
+
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
