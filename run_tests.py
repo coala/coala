@@ -3,6 +3,11 @@
 import os
 import tempfile
 from site import getsitepackages
+import sys
+
+if sys.version_info < (3, 2):
+    print("coala supports only python 3.2 or later.")
+    exit(1)
 
 from coalib.tests.TestHelper import (parse_args,
                                      create_argparser,
@@ -66,7 +71,7 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print("Program terminated by user.")
-        print("Cleaning up...", end=' ')
+        print("Cleaning up...")
         delete_coverage(silent=True)
         print("Done!")
         exit(130)
