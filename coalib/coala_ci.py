@@ -11,7 +11,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from coalib.output.NullInteractor import NullInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
@@ -21,14 +20,13 @@ from coalib.misc.i18n import _
 
 def main():
     log_printer = ConsolePrinter()
-    interactor = NullInteractor(log_printer)
     exitcode = 0
     try:
         yielded_results = False
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(interactor.acquire_settings,
+         targets) = gather_configuration(lambda *args: True,
                                          log_printer)
 
         for section_name in sections:
@@ -36,12 +34,11 @@ def main():
             if not section.is_enabled(targets):
                 continue
 
-            interactor.begin_section(section)
             results = execute_section(
                 section=section,
                 global_bear_list=global_bears[section_name],
                 local_bear_list=local_bears[section_name],
-                print_results=interactor.print_results,
+                print_results=lambda *args: True,
                 log_printer=log_printer)
             yielded_results = yielded_results or results[0]
 

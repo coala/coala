@@ -1,6 +1,5 @@
 import os
 import dbus.service
-from coalib.output.NullInteractor import NullInteractor
 from coalib.output.printers.NullPrinter import NullPrinter
 
 from coalib.settings.ConfigurationGathering import find_user_config
@@ -94,12 +93,11 @@ class DbusDocument(dbus.service.Object):
         args = ["--config=" + self.config_file]
 
         log_printer = NullPrinter()
-        interactor = NullInteractor(log_printer)
 
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(interactor.acquire_settings,
+         targets) = gather_configuration(None,
                                          log_printer,
                                          arg_list=args)
 
@@ -117,7 +115,7 @@ class DbusDocument(dbus.service.Object):
                     section=section,
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
-                    print_results=interactor.print_results,
+                    print_results=lambda *args: True,
                     log_printer=log_printer)
 
                 retval.append(

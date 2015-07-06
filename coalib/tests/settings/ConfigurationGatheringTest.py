@@ -7,7 +7,6 @@ sys.path.insert(0, ".")
 from coalib.misc.StringConstants import StringConstants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
-from coalib.output.NullInteractor import NullInteractor
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.ClosableObject import close_objects
 import re
@@ -16,10 +15,9 @@ import re
 class ConfigurationGatheringTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = NullPrinter()
-        self.interactor = NullInteractor(self.log_printer)
 
     def tearDown(self):
-        close_objects(self.log_printer, self.interactor)
+        close_objects(self.log_printer)
 
     def test_gather_configuration(self):
         # We need to use a bad filename or this will parse coalas .coafile
@@ -27,7 +25,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
          local_bears,
          global_bears,
          targets) = gather_configuration(
-            self.interactor.acquire_settings,
+            lambda *args: True,
             self.log_printer,
             arg_list=['-S', "test=5", "-c", "some_bad_filename"])
 
@@ -38,7 +36,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
          local_bears,
          global_bears,
          targets) = gather_configuration(
-            self.interactor.acquire_settings,
+            lambda *args: True,
             self.log_printer,
             arg_list=['-S test=5', '-c bad_filename', '-b LineCountBear'])
         self.assertEqual(len(local_bears["default"]), 1)
@@ -52,7 +50,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(self.interactor.acquire_settings,
+         targets) = gather_configuration(lambda *args: True,
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
@@ -67,7 +65,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(self.interactor.acquire_settings,
+         targets) = gather_configuration(lambda *args: True,
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
@@ -76,14 +74,14 @@ class ConfigurationGatheringTest(unittest.TestCase):
     def test_nonexistent_file(self):
         filename = "bad.one/test\neven with bad chars in it"
         # Shouldn't throw an exception
-        gather_configuration(self.interactor.acquire_settings,
+        gather_configuration(lambda *args: True,
                              self.log_printer,
                              arg_list=['-S', "config=" + filename])
 
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = filename
         # Shouldn't throw an exception
-        gather_configuration(self.interactor.acquire_settings,
+        gather_configuration(lambda *args: True,
                              self.log_printer)
         StringConstants.system_coafile = tmp
 
@@ -102,7 +100,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(self.interactor.acquire_settings,
+         targets) = gather_configuration(lambda *args: True,
                                          self.log_printer,
                                          arg_list=["-c", re.escape(config)])
         self.assertEqual(str(sections["test"]),
@@ -113,7 +111,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(self.interactor.acquire_settings,
+         targets) = gather_configuration(lambda *args: True,
                                          self.log_printer,
                                          arg_list=["-c",
                                                    re.escape(config),
@@ -137,7 +135,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
          local_bears,
          global_bears,
          targets) = gather_configuration(
-            self.interactor.acquire_settings,
+            lambda *args: True,
             self.log_printer,
             arg_list=["-S", "value=1", "test.value=2", "-c", "bad_file_name"])
         self.assertEqual(sections["default"],
@@ -149,7 +147,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         # We need to use a bad filename or this will parse coalas .coafile
         gather_configuration(
-            self.interactor.acquire_settings,
+            lambda *args: True,
             self.log_printer,
             arg_list=['-S',
                       "save=" + re.escape(filename),
@@ -161,7 +159,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                          lines)
 
         gather_configuration(
-            self.interactor.acquire_settings,
+            lambda *args: True,
             self.log_printer,
             arg_list=['-S',
                       "save=true",
@@ -181,7 +179,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(self.interactor.acquire_settings,
+         targets) = gather_configuration(lambda *args: True,
                                          self.log_printer,
                                          arg_list=["default",
                                                    "test1",
