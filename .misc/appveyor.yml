@@ -37,7 +37,7 @@ install:
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip install coverage pylint setuptools"
+  - "%CMD_IN_ENV% pip install coverage pylint setuptools munkres3"
 
   - "nuget install Gettext.Tools -Version 0.19.4"
   - "SET PATH=%PATH%;%cd%\\Gettext.Tools.0.19.4\\tools"
