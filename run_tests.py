@@ -3,11 +3,10 @@
 import os
 import tempfile
 from site import getsitepackages
-import sys
 
-if sys.version_info < (3, 2):
-    print("coala supports only python 3.2 or later.")
-    exit(1)
+from coalib import assert_supported_version
+
+assert_supported_version()
 
 from coalib.tests.TestHelper import (parse_args,
                                      create_argparser,

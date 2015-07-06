@@ -14,11 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from coalib.misc.i18n import _
+from coalib import assert_supported_version
 
-if sys.version_info < (3, 2):
-    print(_("coala supports only python 3.2 or later."))
-    exit(1)
+assert_supported_version()
 
 from coalib.coala import main
 

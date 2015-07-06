@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 
 from setuptools import setup
-import sys
 from distutils.command.build import build
 
-from coalib.misc.i18n import _
-
-if sys.version_info < (3, 2):
-    print(_("coala supports only python 3.2 or later."))
-    exit(1)
-
 from coalib.misc.i18n import compile_translations
-from coalib import version_str
+from coalib import version_str, assert_supported_version
 from coalib.misc.BuildManPage import BuildManPage
+
+
+assert_supported_version()
 
 
 if __name__ == "__main__":
