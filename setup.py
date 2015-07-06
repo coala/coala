@@ -4,13 +4,15 @@ from setuptools import setup
 import sys
 from distutils.command.build import build
 
+from coalib.misc.i18n import _
+
+if sys.version_info < (3, 2):
+    print(_("coala supports only python 3.2 or later."))
+    exit(1)
+
 from coalib.misc.i18n import compile_translations
 from coalib import version_str
 from coalib.misc.BuildManPage import BuildManPage
-
-
-if sys.version_info < (3, 2):
-    raise Exception("coala supports only python 3.2 or later.")
 
 
 if __name__ == "__main__":
@@ -22,7 +24,7 @@ if __name__ == "__main__":
     setup(name='coala',
           version=version_str,
           description='Code Analysis Application (coala)',
-          maintainer='Lasse Schuirmann, Fabian Neuschmidt, Mischa Krüger',
+          maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger",
           maintainer_email='lasse.schuirmann@gmail.com, '
                            'fabian@neuschmidt.de, '
                            'makman@alice.de',
