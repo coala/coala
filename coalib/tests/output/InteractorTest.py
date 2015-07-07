@@ -11,7 +11,6 @@ class InteractorTest(unittest.TestCase):
         self.uut = Interactor(ConsolePrinter())
 
     def test_api(self):
-        self.assertRaises(NotImplementedError, self.uut.begin_section, "name")
         self.assertRaises(NotImplementedError, self.uut.show_bears, {})
         self.assertRaises(NotImplementedError, self.uut.did_nothing)
 

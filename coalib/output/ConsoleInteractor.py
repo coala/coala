@@ -319,7 +319,24 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
             self.print_result(result, file_dict)
 
+    def begin_section(self, section):
+        """
+        Will be called before the results for a section come in (via
+        print_results).
+
+        :param section: The section that will get executed now.
+        """
+        self.file_diff_dict = {}
+        self.current_section = section
+        self._print_section_beginning(section)
+
     def _print_section_beginning(self, section):
+        """
+        Will be called after initialization current_section in
+        begin_section()
+
+        :param section: The section that will get executed now.
+        """
         self.print(_("Executing section {name}...").format(name=section.name))
 
     def show_bears(self, bears):
