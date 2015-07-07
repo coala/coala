@@ -1,8 +1,6 @@
 import shutil
 
-from coalib.results.Result import Result
 from coalib.output.printers.Printer import Printer
-from coalib.misc.i18n import _
 
 class Interactor(Printer):
     def __init__(self, log_printer):
@@ -10,12 +8,6 @@ class Interactor(Printer):
         self.log_printer = log_printer
         self.file_diff_dict = {}
         self.current_section = None
-
-    def _print_result(self, result):
-        """
-        Prints the result.
-        """
-        raise NotImplementedError
 
     def _print_actions(self, actions):
         """
@@ -37,40 +29,6 @@ class Interactor(Printer):
         :param exception:   The exception with which it failed.
         """
         raise NotImplementedError
-
-    def print_result(self, result, file_dict):
-        """
-        Prints the result appropriate to the output medium.
-
-        :param result:    A derivative of Result.
-        :param file_dict: A dictionary containing all files with filename as
-                          key.
-        """
-        if not isinstance(result, Result):
-            self.log_printer.warn(_("One of the results can not be printed "
-                                    "since it is not a valid derivative of "
-                                    "the coala result class."))
-            return
-
-        self._print_result(result)
-
-        actions = result.get_actions()
-        if actions == []:
-            return
-
-        action_dict = {}
-        metadata_list = []
-        for action in actions:
-            metadata = action.get_metadata()
-            action_dict[metadata.name] = action
-            metadata_list.append(metadata)
-
-        # User can always choose no action which is guaranteed to succeed
-        while not self.apply_action(metadata_list,
-                                    action_dict,
-                                    result,
-                                    file_dict):
-            pass
 
     def apply_action(self,
                      metadata_list,

@@ -105,6 +105,8 @@ class ConsoleInteractorTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 2)
 
     def test_print_result(self):
+        self.uut.print_result("illegal value", {})
+
         with simulate_console_inputs(0):
             self.uut.print_result(PatchResult("origin", "msg", {}), {})
 

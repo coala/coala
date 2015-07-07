@@ -12,6 +12,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _
 from coalib.settings.Setting import Setting
+from coalib.results.Result import Result
 
 
 class ConsoleInteractor(Interactor, ConsolePrinter):
@@ -80,6 +81,9 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                                              line.rstrip("\n"))
 
     def _print_result(self, result):
+        """
+        Prints the result.
+        """
         self.print(self._format_line(
             "[{sev}] {bear}:".format(
                 sev=RESULT_SEVERITY.__str__(result.severity),
@@ -172,6 +176,40 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                         real_nr=current_line + i,
                         mod_nr=current_line + i),
                     color=self.FILE_LINES_COLOR)
+
+    def print_result(self, result, file_dict):
+        """
+        Prints the result to the console.
+
+        :param result:    A derivative of Result.
+        :param file_dict: A dictionary containing all files with filename as
+                          key.
+        """
+        if not isinstance(result, Result):
+            self.log_printer.warn(_("One of the results can not be printed "
+                                    "since it is not a valid derivative of "
+                                    "the coala result class."))
+            return
+
+        self._print_result(result)
+
+        actions = result.get_actions()
+        if actions == []:
+            return
+
+        action_dict = {}
+        metadata_list = []
+        for action in actions:
+            metadata = action.get_metadata()
+            action_dict[metadata.name] = action
+            metadata_list.append(metadata)
+
+        # User can always choose no action which is guaranteed to succeed
+        while not self.apply_action(metadata_list,
+                                    action_dict,
+                                    result,
+                                    file_dict):
+            pass
 
     def print_results(self, result_list, file_dict):
         if not isinstance(result_list, list):

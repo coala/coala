@@ -15,17 +15,6 @@ class InteractorTest(unittest.TestCase):
         self.assertRaises(NotImplementedError,
                           self.uut.acquire_settings,
                           "anything")
-        self.assertRaises(NotImplementedError,
-                          self.uut.print_result,
-                          Result("message", "origin"), {})
-        self.assertRaises(NotImplementedError,
-                          self.uut.print_result,
-                          Result("origin",
-                                 "line",
-                                 "message",
-                                 "file",
-                                 line_nr=1),
-                          {})
         self.assertRaises(NotImplementedError, self.uut.begin_section, "name")
         self.assertRaises(NotImplementedError, self.uut.show_bears, {})
         self.assertRaises(NotImplementedError, self.uut.did_nothing)
@@ -34,8 +23,6 @@ class InteractorTest(unittest.TestCase):
                           self.uut._print_action_failed,
                           "t",
                           Exception())
-
-        self.uut.print_result("illegal value", {})
 
 
 if __name__ == '__main__':
