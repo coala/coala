@@ -32,10 +32,3 @@ class Interactor(Printer):
                       sections which the bear belongs as the value.
         """
         raise NotImplementedError
-
-    def did_nothing(self):
-        """
-        Will be called after processing a coafile when nothing had to be done,
-        i.e. no section was enabled/targeted.
-        """
-        raise NotImplementedError

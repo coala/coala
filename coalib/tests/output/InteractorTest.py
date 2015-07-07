@@ -12,8 +12,6 @@ class InteractorTest(unittest.TestCase):
 
     def test_api(self):
         self.assertRaises(NotImplementedError, self.uut.show_bears, {})
-        self.assertRaises(NotImplementedError, self.uut.did_nothing)
-
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

@@ -398,5 +398,9 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                                _("No optional settings."))
 
     def did_nothing(self):
+        """
+        Will be called after processing a coafile when nothing had to be done,
+        i.e. no section was enabled/targeted.
+        """
         self.print(_("No existent section was targeted or enabled. Nothing "
                      "to do."))
