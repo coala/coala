@@ -23,6 +23,15 @@ def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
                                          line.rstrip("\n"))
 
 
+def nothing_done(console_printer):
+    """
+    Will be called after processing a coafile when nothing had to be done,
+    i.e. no section was enabled/targeted.
+    """
+    console_printer.print(_("No existent section was targeted or enabled. "
+                            "Nothing to do."))
+
+
 def finalize(file_diff_dict, file_dict):
     """
     To be called after all results are given to the interactor.
@@ -410,11 +419,3 @@ class ConsoleInteractor(ConsolePrinter):
                                metadata.optional_params,
                                "  ",
                                _("No optional settings."))
-
-    def did_nothing(self):
-        """
-        Will be called after processing a coafile when nothing had to be done,
-        i.e. no section was enabled/targeted.
-        """
-        self.print(_("No existent section was targeted or enabled. Nothing "
-                     "to do."))

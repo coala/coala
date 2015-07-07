@@ -11,7 +11,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from coalib.output.ConsoleInteractor import ConsoleInteractor, finalize
+from coalib.output.ConsoleInteractor import (ConsoleInteractor,
+                                             finalize,
+                                             nothing_done)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
@@ -56,7 +58,7 @@ def main():
                 did_nothing = False
 
         if did_nothing:
-            interactor.did_nothing()
+            nothing_done(interactor)
 
         if yielded_results:
             exitcode = 1

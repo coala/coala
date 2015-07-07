@@ -13,7 +13,9 @@ from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
-from coalib.output.ConsoleInteractor import ConsoleInteractor, finalize
+from coalib.output.ConsoleInteractor import (ConsoleInteractor,
+                                             finalize,
+                                             nothing_done)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -178,7 +180,7 @@ class ConsoleInteractorTest(unittest.TestCase):
                                "{name}...").format(name="name") + "\n")
 
         with retrieve_stdout() as stdout:
-            self.uut.did_nothing()
+            nothing_done(self.uut)
             self.assertEqual(stdout.getvalue(),
                              _("No existent section was targeted or enabled. "
                                "Nothing to do.") + "\n")
