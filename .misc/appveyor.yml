@@ -31,13 +31,17 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
+  # language-tool needs the registry tweaked here since it determines the java
+  # version wrong (since appveyor has both, 1.7 and 1.8 in x86 and x64).
+  - "SET KEY_NAME=HKLM\\Software\\JavaSoft\\Java Runtime Environment"
+  - "REG add \"%KEY_NAME%\" /v CurrentVersion /t REG_SZ /d 1.7 /f"
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip -q install coverage pylint setuptools munkres3"
+  - "%CMD_IN_ENV% pip -q install coverage pylint setuptools munkres3 language-check"
 
   - "nuget install Gettext.Tools -Version 0.19.4"
   - "SET PATH=%PATH%;%cd%\\Gettext.Tools.0.19.4\\tools"
