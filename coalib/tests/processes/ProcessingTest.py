@@ -91,7 +91,7 @@ class ProcessingTest(unittest.TestCase):
         (self.sections,
          self.local_bears,
          self.global_bears,
-         targets) = gather_configuration(self.interactor.acquire_settings,
+         targets) = gather_configuration(lambda *args: True,
                                          log_printer,
                                          ["--config", re.escape(config_path)])
         self.assertEqual(len(self.local_bears["default"]), 1)

@@ -9,23 +9,6 @@ class Interactor(Printer):
         self.file_diff_dict = {}
         self.current_section = None
 
-    def acquire_settings(self, settings):
-        """
-        This method prompts the user for the given settings.
-
-        :param settings: a dictionary with the settings name as key and a list
-                         containing a description in [0] and the name of the
-                         bears who need this setting in [1] and following.
-                         Example:
-        {"UseTabs": ["describes whether tabs should be used instead of spaces",
-                     "SpaceConsistencyBear",
-                     "SomeOtherBear"]}
-
-        :return:         a dictionary with the settings name as key and the
-                         given value as value.
-        """
-        raise NotImplementedError
-
     def finalize(self, file_dict):
         """
         To be called after all results are given to the interactor.

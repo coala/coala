@@ -75,6 +75,20 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         return True
 
     def acquire_settings(self, settings_names_dict):
+        """
+        This method prompts the user for the given settings.
+
+        :param settings: a dictionary with the settings name as key and a list
+                         containing a description in [0] and the name of the
+                         bears who need this setting in [1] and following.
+                         Example:
+        {"UseTabs": ["describes whether tabs should be used instead of spaces",
+                     "SpaceConsistencyBear",
+                     "SomeOtherBear"]}
+
+        :return:         a dictionary with the settings name as key and the
+                         given value as value.
+        """
         if not isinstance(settings_names_dict, dict):
             raise TypeError("The settings_names_dict parameter has to be a "
                             "dictionary.")
