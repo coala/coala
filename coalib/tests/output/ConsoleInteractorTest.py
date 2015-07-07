@@ -13,7 +13,7 @@ from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
-from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.ConsoleInteractor import ConsoleInteractor, finalize
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -139,7 +139,7 @@ class ConsoleInteractorTest(unittest.TestCase):
                                               {testfile_path: diff}),
                                   file_dict)
             self.assertEqual(input_generator.last_input, 2)
-            self.uut.finalize(file_dict)
+            finalize(self.uut.file_diff_dict, file_dict)
 
             with open(testfile_path) as f:
                 self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])

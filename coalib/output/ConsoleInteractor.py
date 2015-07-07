@@ -23,6 +23,27 @@ def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
                                          line.rstrip("\n"))
 
 
+def finalize(file_diff_dict, file_dict):
+    """
+    To be called after all results are given to the interactor.
+
+    :param file_diff_dict: A dictionary containing filenames as keys and diff
+                           objects as values.
+    :param file_dict:      A dictionary containing all files with filename as
+                           key.
+    """
+    for filename in file_diff_dict:
+        diff = file_diff_dict[filename]
+        file_dict[filename] = diff.apply(file_dict[filename])
+
+        # Backup original file, override old backup if needed
+        shutil.copy2(filename, filename + ".orig")
+
+        # Write new contents
+        with open(filename, mode='w') as file:
+            file.writelines(file_dict[filename])
+
+
 class ConsoleInteractor(ConsolePrinter):
     STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" "
                                 "({}) needed by {}: ")
@@ -331,24 +352,6 @@ class ConsoleInteractor(ConsolePrinter):
         :param section: The section that will get executed now.
         """
         self.print(_("Executing section {name}...").format(name=section.name))
-
-    def finalize(self, file_dict):
-        """
-        To be called after all results are given to the interactor.
-
-        :param file_dict: A dictionary containing all files with filename as
-                          key.
-        """
-        for filename in self.file_diff_dict:
-            diff = self.file_diff_dict[filename]
-            file_dict[filename] = diff.apply(file_dict[filename])
-
-            # Backup original file, override old backup if needed
-            shutil.copy2(filename, filename + ".orig")
-
-            # Write new contents
-            with open(filename, mode='w') as file:
-                file.writelines(file_dict[filename])
 
     def show_bears(self, bears):
         """

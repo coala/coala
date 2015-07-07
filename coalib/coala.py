@@ -11,7 +11,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.ConsoleInteractor import ConsoleInteractor, finalize
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
@@ -52,7 +52,7 @@ def main():
                     print_results=interactor.print_results,
                     log_printer=log_printer)
                 yielded_results = yielded_results or results[0]
-                interactor.finalize(results[3])
+                finalize(interactor.file_diff_dict, results[3])
                 did_nothing = False
 
         if did_nothing:
