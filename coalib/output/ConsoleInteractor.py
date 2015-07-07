@@ -15,6 +15,14 @@ from coalib.settings.Setting import Setting
 from coalib.results.Result import Result
 
 
+def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
+    return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
+                                         sign,
+                                         mod_nr,
+                                         symbol,
+                                         line.rstrip("\n"))
+
+
 class ConsoleInteractor(ConsolePrinter):
     STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" "
                                 "({}) needed by {}: ")
@@ -121,25 +129,14 @@ class ConsoleInteractor(ConsolePrinter):
                                                          str(arr[0]),
                                                          needed))
 
-    @staticmethod
-    def _format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
-        return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
-                                             sign,
-                                             mod_nr,
-                                             symbol,
-                                             line.rstrip("\n"))
-
     def _print_result(self, result):
         """
         Prints the result.
         """
-        self.print(self._format_line(
-            "[{sev}] {bear}:".format(
-                sev=RESULT_SEVERITY.__str__(result.severity),
-                bear=result.origin)),
+        self.print(format_line("[{sev}] {bear}:".format(
+            sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
             color=RESULT_SEVERITY_COLORS[result.severity])
-        self.print(*[self._format_line(line)
-                     for line in result.message.split("\n")],
+        self.print(*[format_line(line) for line in result.message.split("\n")],
                    delimiter="\n")
 
     def _print_actions(self, actions):
@@ -160,25 +157,24 @@ class ConsoleInteractor(ConsolePrinter):
         return self._get_action_info(actions[choice - 1])
 
     def _choose_action(self, actions):
-        self.print(self._format_line(
+        self.print(format_line(
             _("The following options are applicable to this result:")))
 
         while True:
-            self.print(self._format_line(" 0: " + _("Do nothing.")))
+            self.print(format_line(" 0: " + _("Do nothing.")))
             for i, action in enumerate(actions):
-                self.print(self._format_line("{:>2}: {}".format(i + 1,
-                                                                action.desc)))
+                self.print(format_line("{:>2}: {}".format(i + 1, action.desc)))
 
             try:
-                line = self._format_line(_("Please enter the number of the "
-                                           "action you want to execute. "))
+                line = format_line(_("Please enter the number of the action "
+                                     "you want to execute. "))
                 choice = int(input(line))
                 if 0 <= choice <= len(actions):
                     return choice
             except ValueError:
                 pass
 
-            self.print(self._format_line(_("Please enter a valid number.")))
+            self.print(format_line(_("Please enter a valid number.")))
 
     def _print_action_failed(self, action_name, exception):
         """
@@ -199,7 +195,7 @@ class ConsoleInteractor(ConsolePrinter):
 
         for param_name in params:
             if param_name not in self.current_section:
-                question = self._format_line(
+                question = format_line(
                     _("Please enter a value for the parameter '{}' ({}): ")
                     .format(param_name, params[param_name][0]))
                 self.current_section.append(Setting(param_name,
@@ -208,10 +204,7 @@ class ConsoleInteractor(ConsolePrinter):
         return action.name, self.current_section
 
     def _print_segregation(self):
-        self.print(self._format_line(line="",
-                                     real_nr="...",
-                                     sign="|",
-                                     mod_nr="..."),
+        self.print(format_line(line="", real_nr="...", sign="|", mod_nr="..."),
                    color=self.FILE_LINES_COLOR)
 
     def _print_lines(self, file_dict, current_line, result_line, result_file):
@@ -227,15 +220,14 @@ class ConsoleInteractor(ConsolePrinter):
             for i in range(max(result_line - self.pre_padding, 1),
                            result_line + 1):
                 self.print(
-                    self._format_line(
-                        line=file_dict[result_file][i - 1],
-                        real_nr=i,
-                        mod_nr=i),
+                    format_line(line=file_dict[result_file][i - 1],
+                                real_nr=i,
+                                mod_nr=i),
                     color=self.FILE_LINES_COLOR)
         else:
             for i in range(1, line_delta + 1):
                 self.print(
-                    self._format_line(
+                    format_line(
                         line=file_dict[result_file][current_line + i - 1],
                         real_nr=current_line + i,
                         mod_nr=current_line + i),
@@ -310,8 +302,7 @@ class ConsoleInteractor(ConsolePrinter):
                     raise AssertionError("The sorting of the results doesn't "
                                          "work correctly.")
                 if len(file_dict[result.file]) < result.line_nr - 1:
-                    self.print(self._format_line(
-                        line=self.STR_LINE_DOESNT_EXIST))
+                    self.print(format_line(line=self.STR_LINE_DOESNT_EXIST))
                 else:
                     self._print_lines(file_dict,
                                       current_line,
