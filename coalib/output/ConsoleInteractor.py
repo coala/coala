@@ -41,6 +41,39 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
 
         self.pre_padding = pre_padding
 
+    def apply_action(self,
+                     metadata_list,
+                     action_dict,
+                     result,
+                     file_dict):
+        """
+        Applies action selected by user specific to a result.
+
+        :param metadata_list: A list of FunctionMetadata objects.
+        :param action_dict:   Dictionary containing action names as keys and
+                              actions as values.
+        :param result:        Result depending on which action is chosen.
+        :param file_dict:     A dictionary containing all files with filename
+                              as key.
+        :return:              True if action is applied successfully.
+                              Else False.
+        """
+        action_name, section = self._print_actions(metadata_list)
+        if action_name is None:
+            return True
+
+        chosen_action = action_dict[action_name]
+        try:
+            chosen_action.apply_from_section(result,
+                                             file_dict,
+                                             self.file_diff_dict,
+                                             section)
+        except Exception as exception:  # pylint: disable=broad-except
+            self._print_action_failed(action_name, exception)
+            return False
+
+        return True
+
     def acquire_settings(self, settings_names_dict):
         if not isinstance(settings_names_dict, dict):
             raise TypeError("The settings_names_dict parameter has to be a "
@@ -94,6 +127,15 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                    delimiter="\n")
 
     def _print_actions(self, actions):
+        """
+        Prints the given actions and lets the user choose.
+
+        :param actions: A list of FunctionMetadata objects.
+        :return:        A touple with the name member of the FunctionMetadata
+                        object chosen by the user and a Section containing at
+                        least all needed values for the action. If the user did
+                        choose to do nothing, return (None, None).
+        """
         choice = self._choose_action(actions)
 
         if choice == 0:
@@ -123,6 +165,12 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             self.print(self._format_line(_("Please enter a valid number.")))
 
     def _print_action_failed(self, action_name, exception):
+        """
+        Prints out the information that the chosen action failed.
+
+        :param action_name: The name of the action that failed.
+        :param exception:   The exception with which it failed.
+        """
         self.log_printer.log_exception("Failed to execute the action "
                                        "{}.".format(action_name),
                                        exception)

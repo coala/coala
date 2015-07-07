@@ -9,48 +9,6 @@ class Interactor(Printer):
         self.file_diff_dict = {}
         self.current_section = None
 
-    def _print_actions(self, actions):
-        """
-        Prints the given actions and lets the user choose.
-
-        :param actions: A list of FunctionMetadata objects.
-        :return:        A touple with the name member of the FunctionMetadata
-                        object chosen by the user and a Section containing at
-                        least all needed values for the action. If the user did
-                        choose to do nothing, return (None, None).
-        """
-        raise NotImplementedError
-
-    def _print_action_failed(self, action_name, exception):
-        """
-        Prints out the information that the chosen action failed.
-
-        :param action_name: The name of the action that failed.
-        :param exception:   The exception with which it failed.
-        """
-        raise NotImplementedError
-
-    def apply_action(self,
-                     metadata_list,
-                     action_dict,
-                     result,
-                     file_dict):
-        action_name, section = self._print_actions(metadata_list)
-        if action_name is None:
-            return True
-
-        chosen_action = action_dict[action_name]
-        try:
-            chosen_action.apply_from_section(result,
-                                             file_dict,
-                                             self.file_diff_dict,
-                                             section)
-        except Exception as exception:  # pylint: disable=broad-except
-            self._print_action_failed(action_name, exception)
-            return False
-
-        return True
-
     def acquire_settings(self, settings):
         """
         This method prompts the user for the given settings.
