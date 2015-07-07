@@ -23,6 +23,18 @@ def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
                                          line.rstrip("\n"))
 
 
+def print_section_beginning(console_printer, section):
+    """
+    Will be called after initialization current_section in
+    begin_section()
+
+    :param console_printer: Object to print messages on the console.
+    :param section:         The section that will get executed now.
+    """
+    console_printer.print(_("Executing section {name}...").format(
+        name=section.name))
+
+
 def nothing_done(console_printer):
     """
     Will be called after processing a coafile when nothing had to be done,
@@ -351,16 +363,7 @@ class ConsoleInteractor(ConsolePrinter):
         """
         self.file_diff_dict = {}
         self.current_section = section
-        self._print_section_beginning(section)
-
-    def _print_section_beginning(self, section):
-        """
-        Will be called after initialization current_section in
-        begin_section()
-
-        :param section: The section that will get executed now.
-        """
-        self.print(_("Executing section {name}...").format(name=section.name))
+        print_section_beginning(self, section)
 
     def show_bears(self, bears):
         """
