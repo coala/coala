@@ -10,13 +10,12 @@ from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY,
     RESULT_SEVERITY_COLORS)
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.output.Interactor import Interactor
 from coalib.misc.i18n import _
 from coalib.settings.Setting import Setting
 from coalib.results.Result import Result
 
 
-class ConsoleInteractor(Interactor, ConsolePrinter):
+class ConsoleInteractor(ConsolePrinter):
     STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" "
                                 "({}) needed by {}: ")
     STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
@@ -37,10 +36,12 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         :param pre_padding: Number of code lines to show before a result as
                             context.
         """
-        Interactor.__init__(self, log_printer=log_printer)
         ConsolePrinter.__init__(self, print_colored=print_colored)
 
         self.pre_padding = pre_padding
+        self.log_printer = log_printer
+        self.file_diff_dict = {}
+        self.current_section = None
 
     def apply_action(self,
                      metadata_list,

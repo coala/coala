@@ -10,7 +10,6 @@ import subprocess
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
-from coalib.output.Interactor import Interactor
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
@@ -40,9 +39,8 @@ class DummyProcess(multiprocessing.Process):
         return not self.control_queue.empty()
 
 
-class ProcessingTestInteractor(Interactor, LogPrinter):
+class ProcessingTestInteractor(LogPrinter):
     def __init__(self, log_printer, result_queue, log_queue):
-        Interactor.__init__(self, log_printer)
         LogPrinter.__init__(self)
         self.result_queue = result_queue
         self.log_queue = log_queue
@@ -55,14 +53,13 @@ class ProcessingTestInteractor(Interactor, LogPrinter):
         self.result_queue.put(result_list)
 
 
-class MessageQueueingInteractor(Interactor):
+class MessageQueueingInteractor():
     """
     A simple interactor that pushes all results it gets to a queue for
     testing purposes.
     """
 
     def __init__(self):
-        Interactor.__init__(self, None)
         self.queue = queue.Queue()
 
     def print_results(self, *args):
