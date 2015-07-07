@@ -1,15 +1,11 @@
 import shutil
 
-from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.results.Result import Result
 from coalib.output.printers.Printer import Printer
 from coalib.misc.i18n import _
-from coalib.settings.FunctionMetadata import FunctionMetadata
 
-
-class Interactor(SectionCreatable, Printer):
+class Interactor(Printer):
     def __init__(self, log_printer):
-        SectionCreatable.__init__(self)
         Printer.__init__(self)
         self.log_printer = log_printer
         self.file_diff_dict = {}
@@ -144,11 +140,6 @@ class Interactor(SectionCreatable, Printer):
             # Write new contents
             with open(filename, mode='w') as file:
                 file.writelines(file_dict[filename])
-
-    @classmethod
-    def get_metadata(cls):
-        return FunctionMetadata.from_function(cls.__init__,
-                                              ["self", "log_printer"])
 
     def begin_section(self, section):
         """

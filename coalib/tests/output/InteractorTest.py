@@ -43,9 +43,6 @@ class InteractorTest(unittest.TestCase):
         self.uut.print_results([], {})
         self.uut.print_results(["illegal value"], {})
 
-        self.assertEqual(self.uut.get_metadata().non_optional_params, {})
-        self.assertEqual(self.uut.get_metadata().optional_params, {})
-
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

@@ -7,7 +7,7 @@ sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.PatchResult import PatchResult, Result
 from coalib.results.Diff import Diff
-from coalib.settings.Section import Section, Setting
+from coalib.settings.Section import Section
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
@@ -292,12 +292,6 @@ class ConsoleInteractorTest(unittest.TestCase):
                           self.uut.print_results,
                           [Result("t", "msg", None, line_nr=5)],
                           {})
-
-    def test_from_section(self):
-        section = Section("test")
-        ConsoleInteractor.from_section(section, log_printer=self.log_printer)
-        section.append(Setting("output", "stderr"))
-        ConsoleInteractor.from_section(section, log_printer=self.log_printer)
 
     def test_show_bears_empty(self):
         with retrieve_stdout() as stdout:
