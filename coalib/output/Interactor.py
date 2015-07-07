@@ -93,22 +93,6 @@ class Interactor(Printer):
 
         return True
 
-    def print_results(self, result_list, file_dict):
-        """
-        Prints all given results. They will be sorted.
-
-        :param result_list: List of the results
-        :param file_dict:   Dictionary containing filename: file_contents
-        """
-        if not isinstance(result_list, list):
-            raise TypeError("result_list should be of type list")
-        if not isinstance(file_dict, dict):
-            raise TypeError("file_dict should be of type dict")
-
-        sorted_results = sorted(result_list)
-        for result in sorted_results:
-            self.print_result(result, file_dict)
-
     def acquire_settings(self, settings):
         """
         This method prompts the user for the given settings.
