@@ -156,6 +156,35 @@ def show_enumeration(console_printer, title, items, indentation, no_items_text):
     console_printer.print()
 
 
+def show_bear(console_printer, bear, sections, metadata):
+    """
+    Display all information about a bear.
+
+    :param console_printer: Object to print messages on the console.
+    :param bear:            The bear to be displayed.
+    :param sections:        The sections to which the bear belongs.
+    :param metadata:        Metadata about the bear.
+    """
+    console_printer.print("{bear}:".format(bear=bear.__name__))
+    console_printer.print("  " + metadata.desc + "\n")
+
+    show_enumeration(console_printer,
+                     _("Used in:"),
+                     sections,
+                     "  ",
+                     _("No sections."))
+    show_enumeration(console_printer,
+                     _("Needed Settings:"),
+                     metadata.non_optional_params,
+                     "  ",
+                     _("No needed settings."))
+    show_enumeration(console_printer,
+                     _("Optional Settings:"),
+                     metadata.optional_params,
+                     "  ",
+                     _("No optional settings."))
+
+
 class ConsoleInteractor(ConsolePrinter):
     STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
                               "cannot be printed because it refers to a line "
@@ -421,24 +450,4 @@ class ConsoleInteractor(ConsolePrinter):
         else:
             for bear in sorted(bears.keys(),
                                key=lambda bear: bear.__name__):
-                self._show_bear(bear, bears[bear], bear.get_metadata())
-
-    def _show_bear(self, bear, sections, metadata):
-        self.print("{bear}:".format(bear=bear.__name__))
-        self.print("  " + metadata.desc + "\n")
-
-        show_enumeration(self,
-                         _("Used in:"),
-                         sections,
-                         "  ",
-                         _("No sections."))
-        show_enumeration(self,
-                         _("Needed Settings:"),
-                         metadata.non_optional_params,
-                         "  ",
-                         _("No needed settings."))
-        show_enumeration(self,
-                         _("Optional Settings:"),
-                         metadata.optional_params,
-                         "  ",
-                         _("No optional settings."))
+                show_bear(self, bear, bears[bear], bear.get_metadata())
