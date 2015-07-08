@@ -35,6 +35,7 @@ install:
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
+  - "java -version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
   - "%CMD_IN_ENV% pip install coverage pylint setuptools language-check"
