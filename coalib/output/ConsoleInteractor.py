@@ -150,6 +150,36 @@ def get_action_info(section, action):
     return action.name, section
 
 
+def choose_action(console_printer, actions):
+    """
+    Presents the actions available to the user and takes as input the action
+    the user wants to choose.
+
+    :param console_printer: Object to print messages on the console.
+    :param actions:         Actions available to the user.
+    :return:                Return choice of action of user.
+    """
+    console_printer.print(format_line(
+        _("The following options are applicable to this result:")))
+
+    while True:
+        console_printer.print(format_line(" 0: " + _("Do nothing.")))
+        for i, action in enumerate(actions):
+            console_printer.print(format_line("{:>2}: {}".format(i + 1,
+                                                                 action.desc)))
+
+        try:
+            line = format_line(_("Please enter the number of the action "
+                                 "you want to execute. "))
+            choice = int(input(line))
+            if 0 <= choice <= len(actions):
+                return choice
+        except ValueError:
+            pass
+
+        console_printer.print(format_line(_("Please enter a valid number.")))
+
+
 def show_enumeration(console_printer, title, items, indentation, no_items_text):
     """
     This function takes as input an iterable object (preferably a list or
@@ -307,32 +337,12 @@ class ConsoleInteractor(ConsolePrinter):
                         least all needed values for the action. If the user did
                         choose to do nothing, return (None, None).
         """
-        choice = self._choose_action(actions)
+        choice = choose_action(self, actions)
 
         if choice == 0:
             return None, None
 
         return get_action_info(self.current_section, actions[choice - 1])
-
-    def _choose_action(self, actions):
-        self.print(format_line(
-            _("The following options are applicable to this result:")))
-
-        while True:
-            self.print(format_line(" 0: " + _("Do nothing.")))
-            for i, action in enumerate(actions):
-                self.print(format_line("{:>2}: {}".format(i + 1, action.desc)))
-
-            try:
-                line = format_line(_("Please enter the number of the action "
-                                     "you want to execute. "))
-                choice = int(input(line))
-                if 0 <= choice <= len(actions):
-                    return choice
-            except ValueError:
-                pass
-
-            self.print(format_line(_("Please enter a valid number.")))
 
     def _print_action_failed(self, action_name, exception):
         """
