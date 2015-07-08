@@ -17,6 +17,7 @@ from coalib.results.Result import Result
 
 STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
                             "needed by {}: ")
+FILE_LINES_COLOR = "blue"
 
 
 def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
@@ -255,6 +256,13 @@ def apply_action(log_printer,
     return True
 
 
+def print_segregation(console_printer):
+    console_printer.print(format_line(line="",
+                                      real_nr="...",
+                                      sign="|",
+                                      mod_nr="..."),
+                          color=FILE_LINES_COLOR)
+
 
 def show_enumeration(console_printer, title, items, indentation, no_items_text):
     """
@@ -340,7 +348,6 @@ class ConsoleInteractor(ConsolePrinter):
                               "that doesn't seem to exist in the given file.")
     STR_PROJECT_WIDE = _("Project wide:")
     FILE_NAME_COLOR = "blue"
-    FILE_LINES_COLOR = "blue"
 
     def __init__(self,
                  log_printer,
@@ -370,10 +377,6 @@ class ConsoleInteractor(ConsolePrinter):
         self.print(*[format_line(line) for line in result.message.split("\n")],
                    delimiter="\n")
 
-    def _print_segregation(self):
-        self.print(format_line(line="", real_nr="...", sign="|", mod_nr="..."),
-                   color=self.FILE_LINES_COLOR)
-
     def _print_lines(self, file_dict, current_line, result_line, result_file):
         """
         Prints the lines between the current and the result line. If needed
@@ -382,7 +385,7 @@ class ConsoleInteractor(ConsolePrinter):
         line_delta = result_line - current_line
 
         if line_delta > self.pre_padding:
-            self._print_segregation()
+            print_segregation(self)
 
             for i in range(max(result_line - self.pre_padding, 1),
                            result_line + 1):
@@ -390,7 +393,7 @@ class ConsoleInteractor(ConsolePrinter):
                     format_line(line=file_dict[result_file][i - 1],
                                 real_nr=i,
                                 mod_nr=i),
-                    color=self.FILE_LINES_COLOR)
+                    color=FILE_LINES_COLOR)
         else:
             for i in range(1, line_delta + 1):
                 self.print(
@@ -398,7 +401,7 @@ class ConsoleInteractor(ConsolePrinter):
                         line=file_dict[result_file][current_line + i - 1],
                         real_nr=current_line + i,
                         mod_nr=current_line + i),
-                    color=self.FILE_LINES_COLOR)
+                    color=FILE_LINES_COLOR)
 
     def print_result(self, result, file_dict):
         """
