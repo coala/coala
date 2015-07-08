@@ -26,8 +26,7 @@ def main():
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(lambda *args: True,
-                                         log_printer)
+         targets) = gather_configuration(lambda *args: True, log_printer)
 
         for section_name in sections:
             section = sections[section_name]

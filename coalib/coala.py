@@ -13,7 +13,8 @@
 
 from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              finalize,
-                                             nothing_done)
+                                             nothing_done,
+                                             acquire_settings)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
@@ -32,8 +33,7 @@ def main():
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(interactor.acquire_settings,
-                                         log_printer)
+         targets) = gather_configuration(acquire_settings, log_printer)
 
         if bool(sections["default"].get("show_bears", "False")):
             show_bears(local_bears,

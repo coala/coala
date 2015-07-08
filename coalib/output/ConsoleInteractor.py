@@ -97,6 +97,35 @@ def require_setting(log_printer, setting_name, arr):
                                                 needed))
 
 
+def acquire_settings(log_printer, settings_names_dict):
+    """
+    This method prompts the user for the given settings.
+
+    :param log_printer: Printer responsible for logging the messages.
+    :param settings:    a dictionary with the settings name as key and a list
+                        containing a description in [0] and the name of the
+                        bears who need this setting in [1] and following.
+                     Example:
+    {"UseTabs": ["describes whether tabs should be used instead of spaces",
+                 "SpaceConsistencyBear",
+                 "SomeOtherBear"]}
+
+    :return:            a dictionary with the settings name as key and the
+                        given value as value.
+    """
+    if not isinstance(settings_names_dict, dict):
+        raise TypeError("The settings_names_dict parameter has to be a "
+                        "dictionary.")
+
+    result = {}
+    for setting_name, arr in settings_names_dict.items():
+        value = require_setting(log_printer, setting_name, arr)
+        if value is not None:
+            result[setting_name] = value
+
+    return result
+
+
 class ConsoleInteractor(ConsolePrinter):
     STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
                               "cannot be printed because it refers to a line "
@@ -155,33 +184,6 @@ class ConsoleInteractor(ConsolePrinter):
             return False
 
         return True
-
-    def acquire_settings(self, settings_names_dict):
-        """
-        This method prompts the user for the given settings.
-
-        :param settings: a dictionary with the settings name as key and a list
-                         containing a description in [0] and the name of the
-                         bears who need this setting in [1] and following.
-                         Example:
-        {"UseTabs": ["describes whether tabs should be used instead of spaces",
-                     "SpaceConsistencyBear",
-                     "SomeOtherBear"]}
-
-        :return:         a dictionary with the settings name as key and the
-                         given value as value.
-        """
-        if not isinstance(settings_names_dict, dict):
-            raise TypeError("The settings_names_dict parameter has to be a "
-                            "dictionary.")
-
-        result = {}
-        for setting_name, arr in settings_names_dict.items():
-            value = require_setting(self.log_printer, setting_name, arr)
-            if value is not None:
-                result[setting_name] = value
-
-        return result
 
     def _print_result(self, result):
         """

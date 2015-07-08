@@ -7,7 +7,7 @@ from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SectionFilling import fill_section, fill_settings, Setting
 from coalib.settings.Section import Section
-from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.ConsoleInteractor import acquire_settings
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 
@@ -34,7 +34,6 @@ class LocalTestBear(LocalBear):
 class SectionFillingTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ConsolePrinter()
-        self.acquire = ConsoleInteractor(self.log_printer).acquire_settings
         self.section = Section("test")
         self.section.append(Setting("key", "val"))
 
@@ -42,7 +41,7 @@ class SectionFillingTest(unittest.TestCase):
         sections = {"test": self.section}
         with simulate_console_inputs() as generator:
             fill_settings(sections,
-                          self.acquire,
+                          acquire_settings,
                           self.log_printer)
             self.assertEqual(generator.last_input, -1)
 
@@ -50,7 +49,7 @@ class SectionFillingTest(unittest.TestCase):
 
         with simulate_console_inputs("True"):
             local_bears, global_bears = fill_settings(sections,
-                                                      self.acquire,
+                                                      acquire_settings,
                                                       self.log_printer)
             self.assertEqual(len(local_bears["test"]), 1)
             self.assertEqual(len(global_bears["test"]), 0)
@@ -63,7 +62,7 @@ class SectionFillingTest(unittest.TestCase):
         # dict)
         with simulate_console_inputs(0, 0):
             new_section = fill_section(self.section,
-                                       self.acquire,
+                                       acquire_settings,
                                        self.log_printer,
                                        [LocalTestBear,
                                         GlobalTestBear,
@@ -76,7 +75,7 @@ class SectionFillingTest(unittest.TestCase):
 
         # Shouldnt change anything the second time
         new_section = fill_section(self.section,
-                                   self.acquire,
+                                   acquire_settings,
                                    self.log_printer,
                                    [LocalTestBear, GlobalTestBear])
 

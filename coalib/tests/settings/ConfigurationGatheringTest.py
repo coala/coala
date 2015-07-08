@@ -81,8 +81,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         tmp = StringConstants.system_coafile
         StringConstants.system_coafile = filename
         # Shouldn't throw an exception
-        gather_configuration(lambda *args: True,
-                             self.log_printer)
+        gather_configuration(lambda *args: True, self.log_printer)
         StringConstants.system_coafile = tmp
 
     def test_merge(self):

@@ -15,7 +15,8 @@ from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
 from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              finalize,
-                                             nothing_done)
+                                             nothing_done,
+                                             acquire_settings)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -82,27 +83,27 @@ class ConsoleInteractorTest(unittest.TestCase):
             self.FileNotFoundError = FileNotFoundError
 
     def test_require_settings(self):
-        self.assertRaises(TypeError, self.uut.acquire_settings, 0)
-        self.assertEqual(self.uut.acquire_settings({0: 0}), {})
+        self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
+        self.assertEqual(acquire_settings(self.log_printer, {0: 0}), {})
 
         with simulate_console_inputs(0, 1, 2) as generator:
-            self.assertEqual(
-                self.uut.acquire_settings(
-                    {"setting": ["help text", "SomeBear"]}),
-                {"setting": 0})
+            self.assertEqual(acquire_settings(self.log_printer,
+                                              {"setting": ["help text",
+                                                           "SomeBear"]}),
+                             {"setting": 0})
 
-            self.assertEqual(
-                self.uut.acquire_settings(
-                    {"setting": ["help text", "SomeBear", "AnotherBear"]}),
-                {"setting": 1})
+            self.assertEqual(acquire_settings(self.log_printer,
+                                              {"setting": ["help text",
+                                                           "SomeBear",
+                                                           "AnotherBear"]}),
+                             {"setting": 1})
 
-            self.assertEqual(
-                self.uut.acquire_settings(
-                    {"setting": ["help text",
-                                 "SomeBear",
-                                 "AnotherBear",
-                                 "YetAnotherBear"]}),
-                {"setting": 2})
+            self.assertEqual(acquire_settings(self.log_printer,
+                                              {"setting": ["help text",
+                                                           "SomeBear",
+                                                           "AnotherBear",
+                                                           "YetAnotherBear"]}),
+                             {"setting": 2})
 
             self.assertEqual(generator.last_input, 2)
 
