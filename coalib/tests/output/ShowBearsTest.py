@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 sys.path.insert(0, ".")
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.output.ConsoleInteractor import ConsoleInteractor
+from coalib.output.ConsoleInteractor import print_bears
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.output.ShowBears import show_bears
 from bears.misc.KeywordBear import KeywordBear
@@ -23,8 +23,6 @@ class SomeglobalBear(Bear):
 class ShowBearsTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ConsolePrinter(print_colored=False)
-        self.interactor = ConsoleInteractor(self.log_printer,
-                                            print_colored=False)
         self.local_bears = OrderedDict([("default", [KeywordBear]),
                                         ("test", [LineLengthBear,
                                                   KeywordBear])])
@@ -36,13 +34,13 @@ class ShowBearsTest(unittest.TestCase):
             bears = {KeywordBear: ['default', 'test'],
                      LineLengthBear: ['test'],
                      SomeglobalBear: ['default', 'test']}
-            self.interactor.show_bears(bears)
+            print_bears(self.log_printer, bears)
             expected_string = stdout.getvalue()
         self.maxDiff = None
         with retrieve_stdout() as stdout:
             show_bears(self.local_bears,
                        self.global_bears,
-                       self.interactor.show_bears)
+                       self.log_printer)
             self.assertEqual(expected_string, stdout.getvalue())
 
 

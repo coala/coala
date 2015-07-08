@@ -1,7 +1,8 @@
 from coalib.misc.DictUtilities import inverse_dicts
+from coalib.output.ConsoleInteractor import print_bears
 
 
-def show_bears(local_bears, global_bears, show_bears_callback):
+def show_bears(local_bears, global_bears, console_printer):
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
@@ -17,4 +18,4 @@ def show_bears(local_bears, global_bears, show_bears_callback):
     """
     bears = inverse_dicts(local_bears, global_bears)
 
-    show_bears_callback(bears)
+    print_bears(console_printer, bears)

@@ -185,6 +185,25 @@ def show_bear(console_printer, bear, sections, metadata):
                      _("No optional settings."))
 
 
+def print_bears(console_printer, bears):
+    """
+    Presents all bears being used in a stylized manner.
+
+    :param console_printer: Object to print messages on the console.
+    :param bears:           Its a dictionary with bears as keys and list of
+                            sections containing those bears as values.
+    """
+    if not bears:
+        console_printer.print(_("No bears to show."))
+    else:
+        for bear in sorted(bears.keys(),
+                           key=lambda bear: bear.__name__):
+            show_bear(console_printer,
+                      bear,
+                      bears[bear],
+                      bear.get_metadata())
+
+
 class ConsoleInteractor(ConsolePrinter):
     STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
                               "cannot be printed because it refers to a line "
@@ -437,17 +456,3 @@ class ConsoleInteractor(ConsolePrinter):
         self.file_diff_dict = {}
         self.current_section = section
         print_section_beginning(self, section)
-
-    def show_bears(self, bears):
-        """
-        Presents all bears being used in a stylized manner.
-
-        :param bears: Its a dictionary with bears as keys and list of sections
-                      containing those bears as values.
-        """
-        if not bears:
-            self.print(_("No bears to show."))
-        else:
-            for bear in sorted(bears.keys(),
-                               key=lambda bear: bear.__name__):
-                show_bear(self, bear, bears[bear], bear.get_metadata())

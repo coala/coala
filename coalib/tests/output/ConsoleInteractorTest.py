@@ -16,7 +16,8 @@ from coalib.misc.ContextManagers import (simulate_console_inputs,
 from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              finalize,
                                              nothing_done,
-                                             acquire_settings)
+                                             acquire_settings,
+                                             print_bears)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -298,16 +299,16 @@ class ConsoleInteractorTest(unittest.TestCase):
                           [Result("t", "msg", None, line_nr=5)],
                           {})
 
-    def test_show_bears_empty(self):
+    def test_print_bears_empty(self):
         with retrieve_stdout() as stdout:
             bears = {}
-            self.uut.show_bears(bears)
+            print_bears(self.log_printer, bears)
             self.assertEqual(_("No bears to show.\n"), stdout.getvalue())
 
-    def test_show_bears(self):
+    def test_print_bears(self):
         with retrieve_stdout() as stdout:
             bears = {TestBear: ["default", "docs"]}
-            self.uut.show_bears(bears)
+            print_bears(self.log_printer, bears)
             expected_string = "TestBear:\n"
             expected_string += "  Test bear Description.\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -321,10 +322,10 @@ class ConsoleInteractorTest(unittest.TestCase):
 
             self.assertEqual(expected_string, stdout.getvalue())
 
-    def test_show_bears_no_settings(self):
+    def test_print_bears_no_settings(self):
         with retrieve_stdout() as stdout:
             bears = {SomeBear: ["default"]}
-            self.uut.show_bears(bears)
+            print_bears(self.log_printer, bears)
             expected_string = "SomeBear:\n"
             expected_string += "  " + "Some Description." + "\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -334,10 +335,10 @@ class ConsoleInteractorTest(unittest.TestCase):
 
             self.assertEqual(expected_string, stdout.getvalue())
 
-    def test_show_bears_no_needed_settings(self):
+    def test_print_bears_no_needed_settings(self):
         with retrieve_stdout() as stdout:
             bears = {SomeOtherBear: ["test"]}
-            self.uut.show_bears(bears)
+            print_bears(self.log_printer, bears)
             expected_string = "SomeOtherBear:\n"
             expected_string += "  " + "This is a Bear." + "\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -349,10 +350,10 @@ class ConsoleInteractorTest(unittest.TestCase):
 
             self.assertEqual(expected_string, stdout.getvalue())
 
-    def test_show_bears_no_optional_settings(self):
+    def test_print_bears_no_optional_settings(self):
         with retrieve_stdout() as stdout:
             bears = {TestBear2: ["test"]}
-            self.uut.show_bears(bears)
+            print_bears(self.log_printer, bears)
             expected_string = "TestBear2:\n"
             expected_string += "  Test bear 2 description.\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -363,10 +364,10 @@ class ConsoleInteractorTest(unittest.TestCase):
 
             self.assertEqual(expected_string, stdout.getvalue())
 
-    def test_show_bears_no_sections(self):
+    def test_print_bears_no_sections(self):
         with retrieve_stdout() as stdout:
             bears = {SomeBear: []}
-            self.uut.show_bears(bears)
+            print_bears(self.log_printer, bears)
             expected_string = "SomeBear:\n"
             expected_string += "  " + "Some Description." + "\n\n"
             expected_string += "  " + _("No sections.") + "\n\n"

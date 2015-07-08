@@ -38,7 +38,7 @@ def main():
         if bool(sections["default"].get("show_bears", "False")):
             show_bears(local_bears,
                        global_bears,
-                       interactor.show_bears)
+                       interactor)
             did_nothing = False
         else:
             for section_name in sections:
