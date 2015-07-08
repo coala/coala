@@ -180,6 +180,24 @@ def choose_action(console_printer, actions):
         console_printer.print(format_line(_("Please enter a valid number.")))
 
 
+def print_actions(console_printer, section, actions):
+    """
+    Prints the given actions and lets the user choose.
+
+    :param actions: A list of FunctionMetadata objects.
+    :return:        A touple with the name member of the FunctionMetadata
+                    object chosen by the user and a Section containing at
+                    least all needed values for the action. If the user did
+                    choose to do nothing, return (None, None).
+    """
+    choice = choose_action(console_printer, actions)
+
+    if choice == 0:
+        return None, None
+
+    return get_action_info(section, actions[choice - 1])
+
+
 def show_enumeration(console_printer, title, items, indentation, no_items_text):
     """
     This function takes as input an iterable object (preferably a list or
@@ -301,7 +319,9 @@ class ConsoleInteractor(ConsolePrinter):
         :return:              True if action is applied successfully.
                               Else False.
         """
-        action_name, section = self._print_actions(metadata_list)
+        action_name, section = print_actions(self,
+                                             self.current_section,
+                                             metadata_list)
         if action_name is None:
             return True
 
@@ -326,23 +346,6 @@ class ConsoleInteractor(ConsolePrinter):
             color=RESULT_SEVERITY_COLORS[result.severity])
         self.print(*[format_line(line) for line in result.message.split("\n")],
                    delimiter="\n")
-
-    def _print_actions(self, actions):
-        """
-        Prints the given actions and lets the user choose.
-
-        :param actions: A list of FunctionMetadata objects.
-        :return:        A touple with the name member of the FunctionMetadata
-                        object chosen by the user and a Section containing at
-                        least all needed values for the action. If the user did
-                        choose to do nothing, return (None, None).
-        """
-        choice = choose_action(self, actions)
-
-        if choice == 0:
-            return None, None
-
-        return get_action_info(self.current_section, actions[choice - 1])
 
     def _print_action_failed(self, action_name, exception):
         """
