@@ -126,6 +126,30 @@ def acquire_settings(log_printer, settings_names_dict):
     return result
 
 
+def get_action_info(section, action):
+    """
+    Get all the required Settings for an action. It updates the section with
+    the Settings.
+
+    :param section: The section the action corresponds to.
+    :param action:  The action to get the info for.
+    :return:        Action name and the updated section.
+    """
+    params = action.non_optional_params
+
+    if section is None:
+        raise ValueError("section has to be intializied.")
+
+    for param_name in params:
+        if param_name not in section:
+            question = format_line(
+                _("Please enter a value for the parameter '{}' ({}): ")
+                .format(param_name, params[param_name][0]))
+            section.append(Setting(param_name, input(question)))
+
+    return action.name, section
+
+
 def show_enumeration(console_printer, title, items, indentation, no_items_text):
     """
     This function takes as input an iterable object (preferably a list or
@@ -288,7 +312,7 @@ class ConsoleInteractor(ConsolePrinter):
         if choice == 0:
             return None, None
 
-        return self._get_action_info(actions[choice - 1])
+        return get_action_info(self.current_section, actions[choice - 1])
 
     def _choose_action(self, actions):
         self.print(format_line(
@@ -320,22 +344,6 @@ class ConsoleInteractor(ConsolePrinter):
         self.log_printer.log_exception("Failed to execute the action "
                                        "{}.".format(action_name),
                                        exception)
-
-    def _get_action_info(self, action):
-        params = action.non_optional_params
-
-        if self.current_section is None:
-            raise ValueError("current_section has to be intializied.")
-
-        for param_name in params:
-            if param_name not in self.current_section:
-                question = format_line(
-                    _("Please enter a value for the parameter '{}' ({}): ")
-                    .format(param_name, params[param_name][0]))
-                self.current_section.append(Setting(param_name,
-                                                    input(question)))
-
-        return action.name, self.current_section
 
     def _print_segregation(self):
         self.print(format_line(line="", real_nr="...", sign="|", mod_nr="..."),

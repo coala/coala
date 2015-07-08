@@ -17,7 +17,8 @@ from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              finalize,
                                              nothing_done,
                                              acquire_settings,
-                                             print_bears)
+                                             print_bears,
+                                             get_action_info)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -151,8 +152,8 @@ class ConsoleInteractorTest(unittest.TestCase):
             os.remove(testfile_path)
             os.remove(testfile_path + ".orig")
 
-            name, section = self.uut._get_action_info(
-                TestAction().get_metadata())
+            name, section = get_action_info(self.uut.current_section,
+                                            TestAction().get_metadata())
             self.assertEqual(input_generator.last_input, 3)
             self.assertEqual(str(section), " {param : 3}")
             self.assertEqual(name, "TestAction")
