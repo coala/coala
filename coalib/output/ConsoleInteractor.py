@@ -198,6 +198,64 @@ def print_actions(console_printer, section, actions):
     return get_action_info(section, actions[choice - 1])
 
 
+def print_action_failed(log_printer, action_name, exception):
+    """
+    Prints out the information that the chosen action failed.
+
+    :param log_printer: Printer responsible for logging the messages.
+    :param action_name: The name of the action that failed.
+    :param exception:   The exception with which it failed.
+    """
+    log_printer.log_exception("Failed to execute the action {}.".
+                              format(action_name), exception)
+
+
+def apply_action(log_printer,
+                 console_printer,
+                 section,
+                 metadata_list,
+                 action_dict,
+                 result,
+                 file_diff_dict,
+                 file_dict):
+    """
+    Applies the action selected by the user.
+
+    :param log_printer:     Printer responsible for logging the messages.
+    :param console_printer: Object to print messages on the console.
+    :param section:         Currently active section.
+    :param metadata_list:   Contains metadata for all the actions.
+    :param action_dict:     Contains the action names as keys and their
+                            references as values.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If its an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    :return:                Returns a boolean value. True if the action got
+                            applied successfully, and false if it failed.
+    """
+    action_name, section = print_actions(console_printer,
+                                         section,
+                                         metadata_list)
+    if action_name is None:
+        return True
+
+    chosen_action = action_dict[action_name]
+    try:
+        chosen_action.apply_from_section(result,
+                                         file_dict,
+                                         file_diff_dict,
+                                         section)
+    except Exception as exception:  # pylint: disable=broad-except
+        print_action_failed(log_printer, action_name, exception)
+        return False
+
+    return True
+
+
+
 def show_enumeration(console_printer, title, items, indentation, no_items_text):
     """
     This function takes as input an iterable object (preferably a list or
@@ -302,41 +360,6 @@ class ConsoleInteractor(ConsolePrinter):
         self.file_diff_dict = {}
         self.current_section = None
 
-    def apply_action(self,
-                     metadata_list,
-                     action_dict,
-                     result,
-                     file_dict):
-        """
-        Applies action selected by user specific to a result.
-
-        :param metadata_list: A list of FunctionMetadata objects.
-        :param action_dict:   Dictionary containing action names as keys and
-                              actions as values.
-        :param result:        Result depending on which action is chosen.
-        :param file_dict:     A dictionary containing all files with filename
-                              as key.
-        :return:              True if action is applied successfully.
-                              Else False.
-        """
-        action_name, section = print_actions(self,
-                                             self.current_section,
-                                             metadata_list)
-        if action_name is None:
-            return True
-
-        chosen_action = action_dict[action_name]
-        try:
-            chosen_action.apply_from_section(result,
-                                             file_dict,
-                                             self.file_diff_dict,
-                                             section)
-        except Exception as exception:  # pylint: disable=broad-except
-            self._print_action_failed(action_name, exception)
-            return False
-
-        return True
-
     def _print_result(self, result):
         """
         Prints the result.
@@ -346,17 +369,6 @@ class ConsoleInteractor(ConsolePrinter):
             color=RESULT_SEVERITY_COLORS[result.severity])
         self.print(*[format_line(line) for line in result.message.split("\n")],
                    delimiter="\n")
-
-    def _print_action_failed(self, action_name, exception):
-        """
-        Prints out the information that the chosen action failed.
-
-        :param action_name: The name of the action that failed.
-        :param exception:   The exception with which it failed.
-        """
-        self.log_printer.log_exception("Failed to execute the action "
-                                       "{}.".format(action_name),
-                                       exception)
 
     def _print_segregation(self):
         self.print(format_line(line="", real_nr="...", sign="|", mod_nr="..."),
@@ -416,10 +428,14 @@ class ConsoleInteractor(ConsolePrinter):
             metadata_list.append(metadata)
 
         # User can always choose no action which is guaranteed to succeed
-        while not self.apply_action(metadata_list,
-                                    action_dict,
-                                    result,
-                                    file_dict):
+        while not apply_action(self.log_printer,
+                               self,
+                               self.current_section,
+                               metadata_list,
+                               action_dict,
+                               result,
+                               self.file_diff_dict,
+                               file_dict):
             pass
 
     def print_results(self, result_list, file_dict):
