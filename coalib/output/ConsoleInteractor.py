@@ -15,6 +15,10 @@ from coalib.settings.Setting import Setting
 from coalib.results.Result import Result
 
 
+STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
+                            "needed by {}: ")
+
+
 def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
     return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
                                          sign,
@@ -65,9 +69,35 @@ def finalize(file_diff_dict, file_dict):
             file.writelines(file_dict[filename])
 
 
+def require_setting(log_printer, setting_name, arr):
+    """
+    This method is responsible for prompting a user about a missing setting and
+    taking its value as input from the user.
+
+    :param log_printer:  Printer responsible for logging the messages.
+    :param setting_name: Name od the setting missing
+    :param arr:          a list containing a description in [0] and the name
+                         of the bears who need this setting in [1] and
+                         following.
+    """
+    if not isinstance(arr, list) or len(arr) < 2:
+        log_printer.log(LOG_LEVEL.WARNING,
+                        _("One of the given settings ({}) is not properly "
+                          "described.").format(str(setting_name)))
+
+        return None
+
+    if len(arr) == 2:
+        needed = arr[1]
+    else:
+        needed = ", ".join(arr[1:-1]) + _(" and ") + arr[-1]
+
+    return input(STR_GET_VAL_FOR_SETTING.format(str(setting_name),
+                                                str(arr[0]),
+                                                needed))
+
+
 class ConsoleInteractor(ConsolePrinter):
-    STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" "
-                                "({}) needed by {}: ")
     STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
                               "cannot be printed because it refers to a line "
                               "that doesn't seem to exist in the given file.")
@@ -147,29 +177,11 @@ class ConsoleInteractor(ConsolePrinter):
 
         result = {}
         for setting_name, arr in settings_names_dict.items():
-            value = self._require_setting(setting_name, arr)
+            value = require_setting(self.log_printer, setting_name, arr)
             if value is not None:
                 result[setting_name] = value
 
         return result
-
-    def _require_setting(self, setting_name, arr):
-        if not isinstance(arr, list) or len(arr) < 2:
-            self.log_printer.log(LOG_LEVEL.WARNING,
-                                 _("One of the given settings ({}) is not "
-                                   "properly described.").
-                                 format(str(setting_name)))
-
-            return None
-
-        if len(arr) == 2:
-            needed = arr[1]
-        else:
-            needed = ", ".join(arr[1:-1]) + _(" and ") + arr[-1]
-
-        return input(self.STR_GET_VAL_FOR_SETTING.format(str(setting_name),
-                                                         str(arr[0]),
-                                                         needed))
 
     def _print_result(self, result):
         """
