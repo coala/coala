@@ -10,14 +10,15 @@ def exclude_function(count_matrix):
     detection to take this function into account.
 
     Applied heuristics:
-     * Functions with only count vectors with a sum of all elements of 1
-       or 0 are very likely only declarations or empty and to be ignored.
+     * Functions with only count vectors with a sum of all unweighted elements
+       of lower then 10 are very likely only declarations or empty and to be
+       ignored.
 
     :param count_matrix: A dictionary with count vectors representing all
                          variables for a function.
     :return:             True if the function is useless for evaluation.
     """
-    return all(sum(cv.count_vector) < 2 for cv in count_matrix.values())
+    return all(sum(cv.unweighted) < 10 for cv in count_matrix.values())
 
 
 def get_count_matrices(count_vector_creator,
@@ -114,15 +115,17 @@ def get_difference(matching_iterator, average_calculation, reduce_big_diffs):
                                 refactoring opportunity for the user.
     :return:                    A difference value between 0 and 1.
     """
-    norm_sum = sum(norm for diff, norm in matching_iterator)  # Cannot be zero
+    norm_sum = sum(norm for diff, norm in matching_iterator)
 
     if average_calculation:
         difference = average([relative_difference(diff, norm)
                               for diff, norm in matching_iterator])
     else:
-        difference = sum(diff for diff, norm in matching_iterator)/norm_sum
+        difference = relative_difference(
+            sum(diff for diff, norm in matching_iterator),
+            norm_sum)
 
-    if reduce_big_diffs:
+    if reduce_big_diffs and norm_sum != 0:
         # This function starts at 1 and converges to .75 for norm_sum -> inf
         difference *= (3*norm_sum+1)/(4*norm_sum)
 
