@@ -6,7 +6,7 @@
 void clearScreen() {
     uint16_t i;
     volatile unsigned char *videoram = (unsigned char *)FB_MEM_LOCATION;
-    for(i=0; i<FB_LINES*FB_COLUMNS*2; i++)
+    for(i=0; i<25*80*2; i++)
         if(i % 2)
             videoram[i]=COLCODE(STDFG, STDBG);
         else
