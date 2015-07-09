@@ -32,6 +32,7 @@ class CountVectorTest(unittest.TestCase):
         self.assertEqual(uut.count_vector, [1])
         uut.count_reference(True, False)
         self.assertEqual(uut.count_vector, [1])
+        self.assertEqual(uut.unweighted, [1])
 
     def test_weighting(self):
         uut = CountVector("varname",
@@ -40,8 +41,10 @@ class CountVectorTest(unittest.TestCase):
                           [2, 1])
         uut.count_reference(True, True)
         self.assertEqual(uut.count_vector, [2, 1])
+        self.assertEqual(uut.unweighted, [1, 1])
         uut.count_reference(True, False)
         self.assertEqual(uut.count_vector, [2, 2])
+        self.assertEqual(uut.unweighted, [1, 2])
 
     def test_conversions(self):
         uut = CountVector("varname",

@@ -16,6 +16,7 @@ class CountVector:
         self.name = name
         self.conditions = conditions if conditions is not None else []
         self.count_vector = [0 for elem in self.conditions]
+        self.unweighted = [0 for elem in self.conditions]
         self.weightings = weightings
         if self.weightings is None:
             self.weightings = [1 for elem in self.conditions]
@@ -42,6 +43,7 @@ class CountVector:
         for i in range(len(self.conditions)):
             if self.conditions[i](*args, **kwargs):
                 self.count_vector[i] += self.weightings[i]
+                self.unweighted[i] += 1
 
     def __str__(self):
         return self.__repr__()
