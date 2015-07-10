@@ -9,7 +9,7 @@ from bears.codeclone_detection.ClangFunctionDifferenceBear import (
 class ClangCloneDetectionBear(GlobalBear):
     def run(self,
             dependency_results: dict,
-            max_clone_difference: float=0.35):
+            max_clone_difference: float=0.29):
         '''
         Checks the given code for similar functions that are probably
         redundant.
