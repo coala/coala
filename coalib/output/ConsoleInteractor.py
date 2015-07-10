@@ -367,16 +367,6 @@ class ConsoleInteractor(ConsolePrinter):
         self.file_diff_dict = {}
         self.current_section = None
 
-    def _print_result(self, result):
-        """
-        Prints the result.
-        """
-        self.print(format_line("[{sev}] {bear}:".format(
-            sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
-            color=RESULT_SEVERITY_COLORS[result.severity])
-        self.print(*[format_line(line) for line in result.message.split("\n")],
-                   delimiter="\n")
-
     def _print_lines(self, file_dict, current_line, result_line, result_file):
         """
         Prints the lines between the current and the result line. If needed
@@ -417,7 +407,11 @@ class ConsoleInteractor(ConsolePrinter):
                                     "the coala result class."))
             return
 
-        self._print_result(result)
+        self.print(format_line("[{sev}] {bear}:".format(
+            sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
+            color=RESULT_SEVERITY_COLORS[result.severity])
+        self.print(*[format_line(line) for line in result.message.split("\n")],
+                   delimiter="\n")
 
         actions = result.get_actions()
         if actions == []:
