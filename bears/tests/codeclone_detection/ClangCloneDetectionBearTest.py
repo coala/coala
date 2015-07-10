@@ -41,7 +41,7 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
                                         self.assertNotEqual(results, [], msg))
 
     def test_invalid_conditions(self):
-        self.section.append(Setting("condition_list", "bullshit"))
+        self.section.append(Setting("counting_conditions", "bullshit"))
 
         self.uut = ClangFunctionDifferenceBear({}, self.section, Queue())
         self.assertEqual(list(self.uut.run_bear_from_section([], {})), [])

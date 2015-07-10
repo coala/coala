@@ -69,14 +69,14 @@ def get_difference(function_pair,
 
 class ClangFunctionDifferenceBear(GlobalBear):
     def run(self,
-            condition_list: counting_condition_dict=default_cc_dict,
+            counting_conditions: counting_condition_dict=default_cc_dict,
             average_calculation: bool=False,
             reduce_big_diffs: bool=True):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
 
-        :param condition_list:       A comma seperated list of counting
+        :param counting_conditions:  A comma seperated list of counting
                                      conditions. Possible values are: used,
                                      returned, is_condition, in_condition,
                                      in_second_level_condition,
@@ -106,19 +106,19 @@ class ClangFunctionDifferenceBear(GlobalBear):
                                     better refactoring opportunity for the
                                     user.
         '''
-        if not isinstance(condition_list, dict):
-            self.err("The condition_list setting is invalid. Code clone "
+        if not isinstance(counting_conditions, dict):
+            self.err("The counting_conditions setting is invalid. Code clone "
                      "detection cannot run.")
             return
 
         self.debug("Using the following counting conditions:")
-        for key, val in condition_list.items():
+        for key, val in counting_conditions.items():
             self.debug(" *", key.__name__, "(weighting: {})".format(val))
 
         self.debug("Creating count matrices...")
         count_matrices = get_count_matrices(
-            ClangCountVectorCreator(list(condition_list.keys()),
-                                    list(condition_list.values()),
+            ClangCountVectorCreator(list(counting_conditions.keys()),
+                                    list(counting_conditions.values()),
                                     self.section["files"].origin),
             list(self.file_dict.keys()),
             lambda prog: self.debug("{:2.4f}%...".format(prog)))
