@@ -143,3 +143,4 @@ class ClangFunctionDifferenceBear(GlobalBear):
             differences.append(elem)
 
         yield HiddenResult(self.__class__.__name__, differences)
+        yield HiddenResult(self.__class__.__name__, count_matrices)
