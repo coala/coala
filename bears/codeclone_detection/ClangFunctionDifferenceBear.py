@@ -138,7 +138,7 @@ class ClangFunctionDifferenceBear(GlobalBear):
         for i, elem in enumerate(
                 map(partial_get_difference,
                     [(f1, f2) for f1, f2 in combinations(count_matrices, 2)])):
-            if i % 1000 == 0:
+            if i % 50 == 0:
                 self.debug("{:2.4f}%...".format(100*i/combination_length))
             differences.append(elem)
 
