@@ -157,6 +157,7 @@ class Interactor(SectionCreatable, Printer):
 
         :param section: The section that will get executed now.
         """
+        self.file_diff_dict = {}
         self.current_section = section
         self._print_section_beginning(section)
 

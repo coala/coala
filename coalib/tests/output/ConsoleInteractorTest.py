@@ -124,6 +124,10 @@ class ConsoleInteractorTest(unittest.TestCase):
                                               {testfile_path: diff}),
                                   file_dict)
 
+        # Check that the next section doesn't use the same diff files dict
+        self.uut.begin_section(Section(""))
+        self.assertEqual(len(self.uut.file_diff_dict), 0)
+
         # To assure user can rechose if he didn't chose wisely
         with simulate_console_inputs("INVALID", -1, 1, 3) as input_generator:
             # To load current_section in ConsoleInteractor object
@@ -166,6 +170,7 @@ class ConsoleInteractorTest(unittest.TestCase):
     def test_static_functions(self):
         with retrieve_stdout() as stdout:
             self.uut.begin_section(Section("name"))
+            self.assertEqual(len(self.uut.file_diff_dict), 0)
             self.assertEqual(stdout.getvalue(),
                              _("Executing section "
                                "{name}...").format(name="name") + "\n")
