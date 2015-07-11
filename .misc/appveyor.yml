@@ -31,7 +31,7 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;C:\\Program\ Files\\Java\\jdk1.8.0\\bin;%PATH%"
   - "echo %PATH%"
 
   # Check that we have the expected version and architecture for Python
