@@ -9,18 +9,22 @@ environment:
     - PYTHON: "C:\\Python33"
       PYTHON_VERSION: "3.3"
       PYTHON_ARCH: "32"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.7.0\ (x86)\\bin"
 
     - PYTHON: "C:\\Python33-x64"
       PYTHON_VERSION: "3.3"
       PYTHON_ARCH: "64"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.8.0\ (x86)\\bin"
 
     - PYTHON: "C:\\Python34"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "32"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.7.0\ (x86)\\bin"
 
     - PYTHON: "C:\\Python34-x64"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "64"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.8.0\ (x86)\\bin"
 
 branches:  # Only build official branches, PRs are built anyway.
   only:
@@ -31,13 +35,15 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%JAVA_PATH%;%PATH%"
+  - "echo %PATH%"
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
+  - "java -version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip install coverage pylint setuptools"
+  - "%CMD_IN_ENV% pip install coverage pylint setuptools language-check"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 

@@ -162,8 +162,10 @@ def execute_command_array(command_array, timeout, verbose):
     if retval != 0 or verbose:
         stderr_file.seek(0)
         stdout_file.seek(0)
-        message += stderr_file.read().decode("utf-8")
-        message += stdout_file.read().decode("utf-8")
+        # Don't use "replace" for decoding! Windows has problems to encode the
+        # the replacement character again when outputting to console.
+        message += stderr_file.read().decode("utf-8", "ignore")
+        message += stdout_file.read().decode("utf-8", "ignore")
 
     stdout_file.close()
     stderr_file.close()
