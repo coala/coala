@@ -66,6 +66,42 @@ class StringProcessingTest(unittest.TestCase):
         r"bcc5\(\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)\)",
         r"Let's \(do (it ) more ) \\ complicated ) ) ) () (hello.)\\z"]
 
+    @staticmethod
+    def escape(string, escape_chars):
+        """
+        Escapes all chars given inside the given string.
+
+        :param string:       The string where to escape characters.
+        :param escape_chars: The string that contains the character to escape.
+                             Each char inside this string will be escaped in
+                             the order given. Duplicate chars are allowed.
+        :return:             The escaped string.
+        """
+        for chr in escape_chars:
+            string = string.replace(chr, "\\" + chr)
+
+        return string
+
+    @staticmethod
+    def _construct_message(func, args, kwargs):
+        """
+        Constructs the error message for the call result assertions.
+
+        :param func:   The function that was called.
+        :param args:   The argument tuple the function was invoked with.
+        :param kwargs: The named arguments dict the function was invoked with.
+        :param return: The error message.
+        """
+        format_arg = (lambda arg:
+            '"' + StringProcessingTest.escape(arg, '\\"') + '"'
+            if isinstance(arg, str) else
+            str(arg))
+
+        args = [format_arg(x) for x in args]
+        kwargs = [str(key) + '=' + format_arg(value)
+                  for key, value in kwargs.items()]
+
+        return "Called {}({}).".format(func.__name__, ", ".join(args + kwargs))
 
     def assertResultsEqual(self,
                            func,
@@ -85,7 +121,10 @@ class StringProcessingTest(unittest.TestCase):
                                        Performs no postprocessing by default.
         """
         for args, result in invocation_and_results.items():
-            self.assertEqual(postprocess(func(*args)), result)
+            self.assertEqual(
+                postprocess(func(*args)),
+                result,
+                self._construct_message(func, args, {}))
 
     def assertResultsEqualEx(self,
                              func,
@@ -107,7 +146,10 @@ class StringProcessingTest(unittest.TestCase):
                                        Performs no postprocessing by default.
         """
         for (args, kwargs), result in invocation_and_results.items():
-            self.assertEqual(postprocess(func(*args, **kwargs)), result)
+            self.assertEqual(
+                postprocess(func(*args, **kwargs)),
+                result,
+                self._construct_message(func, args, kwargs))
 
 
 if __name__ == '__main__':
