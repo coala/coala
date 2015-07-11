@@ -9,22 +9,22 @@ environment:
     - PYTHON: "C:\\Python33"
       PYTHON_VERSION: "3.3"
       PYTHON_ARCH: "32"
-      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.7.0\\bin"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.7.0\ (x86)\\bin"
 
     - PYTHON: "C:\\Python33-x64"
       PYTHON_VERSION: "3.3"
       PYTHON_ARCH: "64"
-      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.8.0\\bin"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.8.0\ (x86)\\bin"
 
     - PYTHON: "C:\\Python34"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "32"
-      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.7.0\\bin"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.7.0\ (x86)\\bin"
 
     - PYTHON: "C:\\Python34-x64"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "64"
-      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.8.0\\bin"
+      JAVA_PATH: "C:\\Program\ Files\\Java\\jdk1.8.0\ (x86)\\bin"
 
 branches:  # Only build official branches, PRs are built anyway.
   only:
