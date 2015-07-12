@@ -4,9 +4,9 @@ import unittest
 
 sys.path.insert(0, ".")
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.collecting.Collectors import collect_files, \
-                                         collect_dirs, \
-                                         collect_bears
+from coalib.collecting.Collectors import (collect_files,
+                                          collect_dirs,
+                                          collect_bears)
 
 
 class CollectFilesTest(unittest.TestCase):

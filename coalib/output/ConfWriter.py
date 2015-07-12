@@ -47,11 +47,11 @@ class ConfWriter(ClosableObject):
         try:
             while True:
                 setting = section[next(it)]
-                if str(setting) == val and\
-                   not self.is_comment(setting.key) and\
+                if (str(setting) == val and
+                    not self.is_comment(setting.key) and
                    (
                         (setting.key not in self.__unsavable_keys) or
-                        (not setting.from_cli)):
+                        (not setting.from_cli))):
                     keys.append(setting.key)
                 elif ((setting.key not in self.__unsavable_keys) or
                       (not setting.from_cli)):

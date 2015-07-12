@@ -44,8 +44,8 @@ class ApplyPatchActionTest(unittest.TestCase):
                   file_diff_dict)
 
         for filename in file_diff_dict:
-            file_dict[filename] =\
-                file_diff_dict[filename].apply(file_dict[filename])
+            file_dict[filename] = (
+                file_diff_dict[filename].apply(file_dict[filename]))
 
         self.assertEqual(file_dict, expected_file_dict)
 

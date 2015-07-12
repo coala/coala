@@ -58,8 +58,8 @@ class ResultActionTest(unittest.TestCase):
             section)
 
         for filename in diff_dict:
-            file_dict[filename] =\
-                diff_dict[filename].apply(file_dict[filename])
+            file_dict[filename] = (
+                diff_dict[filename].apply(file_dict[filename]))
 
         self.assertEqual(file_dict, expected_file_dict)
 

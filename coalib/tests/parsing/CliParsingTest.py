@@ -18,9 +18,9 @@ class CliParserTest(unittest.TestCase):
     def dict_from_sections(self, parsed_sections):
         parsed_dict = {}
         for section_name, section in parsed_sections.items():
-            parsed_dict[section_name] = \
+            parsed_dict[section_name] = (
                 set([(key,
-                      str(value)) for key, value in section.contents.items()])
+                      str(value)) for key, value in section.contents.items()]))
         return parsed_dict
 
     def test_parse_cli(self):

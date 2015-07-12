@@ -25,20 +25,20 @@ class ClangASTPrintBearTest(LocalBearTestHelper):
             self.uut.run("notexistant", [])
 
     def test_ast(self):
-        expected_ast = \
+        expected_ast = (
             """
 |-stdio.h CursorKind.INCLUSION_DIRECTIVE Lines 2-2 (# include < stdio . h > #)
-|-not_existant.c CursorKind.INCLUSION_DIRECTIVE Lines 3-3 (# include """ + \
+|-not_existant.c CursorKind.INCLUSION_DIRECTIVE Lines 3-3 (# include """
             """"not_existant.c" // Empty function)
 |-test() CursorKind.FUNCTION_DECL Lines 6-6 (int test ( void ) ;)
 |-g CursorKind.VAR_DECL Lines 9-9 (int g ;)
-`-main(int, char *) CursorKind.FUNCTION_DECL Lines 12-30 (int main ( """ + \
-"""int t , char * args ) { // Usage in a call smile ( t , g ) ; // Simpl""" + \
-"""e stupid assignment t = g ; // Local declaration int * asd ; // Simpl""" + \
-"""e more stupid reassignment, this time using other syntax elems t = """ + \
-"""args [ g ] ; // Declaration in for loop for ( int i ; i < 5 ; i ++ """ + \
+`-main(int, char *) CursorKind.FUNCTION_DECL Lines 12-30 (int main ( """
+"""int t , char * args ) { // Usage in a call smile ( t , g ) ; // Simpl"""
+"""e stupid assignment t = g ; // Local declaration int * asd ; // Simpl"""
+"""e more stupid reassignment, this time using other syntax elems t = """
+"""args [ g ] ; // Declaration in for loop for ( int i ; i < 5 ; i ++ """
 """) { // Checking out constants printf ( "i is %d" , i ) ; } })
-"""
+""")
 
         self.uut.run(self.testfile, [])
 

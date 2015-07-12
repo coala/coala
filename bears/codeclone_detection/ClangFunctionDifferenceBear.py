@@ -5,12 +5,12 @@ from coalib.misc.StringConverter import StringConverter
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.Setting import typed_ordered_dict
 from coalib.bears.GlobalBear import GlobalBear
-from bears.codeclone_detection.ClangCountVectorCreator import \
-    ClangCountVectorCreator
+from bears.codeclone_detection.ClangCountVectorCreator import (
+    ClangCountVectorCreator)
 from bears.codeclone_detection.ClangCountingConditions import condition_dict
-from bears.codeclone_detection.CloneDetectionRoutines import \
-    compare_functions, \
-    get_count_matrices
+from bears.codeclone_detection.CloneDetectionRoutines import (
+    compare_functions,
+    get_count_matrices)
 
 
 """

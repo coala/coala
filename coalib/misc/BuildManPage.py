@@ -55,8 +55,8 @@ class BuildManPage(Command):
         mod_name, func_name = self.parser.split(':')
         fromlist = mod_name.split('.')
         mod = __import__(mod_name, fromlist=fromlist)
-        self._parser = \
-            getattr(mod, func_name)(formatter_class=ManPageFormatter)
+        self._parser = (
+            getattr(mod, func_name)(formatter_class=ManPageFormatter))
 
         self.announce('Writing man page %s' % self.output)
         self._today = datetime.date.today()
@@ -168,8 +168,8 @@ class ManPageFormatter(argparse.HelpFormatter):
                                    '')
 
         usage = usage.replace('%s ' % self._prog, '')
-        usage = '.SH SYNOPSIS\n \\fB%s\\fR %s\n' \
-            % (ManPageFormatter._markup(self._prog), usage)
+        usage = ('.SH SYNOPSIS\n \\fB%s\\fR %s\n'
+            % (ManPageFormatter._markup(self._prog), usage))
         return usage
 
     def _mk_description(self):

@@ -54,13 +54,13 @@ class Result:
         return str(self)
 
     def __str__(self):
-        return "Result:\n origin: '{origin}'\n file: '{file}'\n line nr: " \
-               "{linenr}\n severity: {severity}\n" \
-               "'{msg}'".format(origin=self.origin,
-                                file=self.file,
-                                severity=self.severity,
-                                msg=self.message,
-                                linenr=self.line_nr)
+        return ("Result:\n origin: '{origin}'\n file: '{file}'\n line nr: "
+                "{linenr}\n severity: {severity}\n"
+                "'{msg}'".format(origin=self.origin,
+                                 file=self.file,
+                                 severity=self.severity,
+                                 msg=self.message,
+                                 linenr=self.line_nr))
 
     def __eq__(self, other):
         return (isinstance(other, Result) and
