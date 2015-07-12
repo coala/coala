@@ -31,7 +31,7 @@ disallows mixing of tabs and spaces.
 
 If you want to write a construct with brackets and elements that does not fit
 into one line, Pythons implicit line joining inside parentheses, brackets
-and braces can be used to avoid ugly backslashes as newline escapes.
+and braces must be used instead of ugly backslashes as newline escapes.
 
 There are two variants for multiline statements.
 
