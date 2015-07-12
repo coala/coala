@@ -27,12 +27,15 @@ Code analysis happens in python scripts while coala manages these, tries to
 provide helpful libraries and provides multiple user interfaces. (Currently
 we support only Console output but others will follow.)
 
+One could say coala unites all language independent parts of a linter and is
+arbitrarily extensible.
+
 # What do I get?
 
 ## As a User
 
 coala allows you to simply check your code against certain quality
-requirements. The checking routines are named **bears** in coala. You can
+requirements. The checking routines are named **Bears** in coala. You can
 easily define a simple project file to check your project with all bears
 either shipped with coala or ones you found in the internet and trust.
 
@@ -52,7 +55,7 @@ See *Writing Bears* under *Getting Involved* for more information on this.
 # Status of the Project
 
 We are currently working hard to make this project reality. coala is currently
-usable, in an alpha stage and provides the most basic features. If you want to
+usable, in an alpha stage and already provides many features. If you want to
 see how the development progresses, check out
 
 https://github.com/coala-analyzer/coala
