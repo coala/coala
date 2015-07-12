@@ -12,3 +12,12 @@ If you need more options about allowing skipped tests, getting code coverage
 displayed or omitting/selecting tests, just query `./run_tests.py --help`.
 Please note that you will not get a test coverage of 100% - the coverage on the
 website is merged for several python versions.
+
+# Using test coverage
+
+To get coverage information, you can run `./run_tests.py --cover`. To do so you
+need to install the `coverage` package via pip:
+
+```
+pip install coverage
+```
