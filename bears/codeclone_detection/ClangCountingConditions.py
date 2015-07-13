@@ -66,7 +66,7 @@ def _stack_contains_kind(stack, kind):
     :param kind:  The kind of the cursor to search for.
     :return:      True if the kind was found.
     """
-    for elem, child_num in stack:
+    for elem, dummy in stack:
         if elem.kind == kind:
             return True
 
@@ -170,7 +170,7 @@ def _get_positions_in_for_loop(stack):
     :return:       A list of semantic FOR_POSITION's within for loops.
     """
     results = []
-    for elem, child_num in stack:
+    for elem, dummy in stack:
         if elem.kind == CursorKind.FOR_STMT:
             results.append(_get_position_in_for_tokens(
                 elem.get_tokens(),
@@ -211,7 +211,7 @@ def _stack_contains_operators(stack, operators):
     :param operators: A list of strings. E.g. ["+", "-"]
     :return:          True if the operator was found.
     """
-    for elem, child_num in stack:
+    for elem, dummy in stack:
         if elem.kind in [CursorKind.BINARY_OPERATOR,
                          CursorKind.COMPOUND_ASSIGNMENT_OPERATOR]:
             operator = _get_binop_operator(elem)
@@ -285,7 +285,7 @@ def is_inc_or_dec(stack):
     """
     Returns true if the cursor on top is inc- or decremented.
     """
-    for elem, child_num in stack:
+    for elem, dummy in stack:
         if elem.kind == CursorKind.UNARY_OPERATOR:
             for token in elem.get_tokens():
                 if token.spelling.decode() in ["--", "++"]:
@@ -332,7 +332,7 @@ def is_assignee(stack):
     Returns true if the cursor on top is assigned something.
     """
     cursor_pos = (stack[-1][0].extent.end.line, stack[-1][0].extent.end.column)
-    for elem, child_num in stack:
+    for elem, dummy in stack:
         if (
                 elem.kind == CursorKind.BINARY_OPERATOR or
                 elem.kind == CursorKind.COMPOUND_ASSIGNMENT_OPERATOR):
@@ -354,7 +354,7 @@ def is_assigner(stack):
     """
     cursor_pos = (stack[-1][0].extent.start.line,
                   stack[-1][0].extent.start.column)
-    for elem, child_num in stack:
+    for elem, dummy in stack:
         if (
                 elem.kind == CursorKind.BINARY_OPERATOR or
                 elem.kind == CursorKind.COMPOUND_ASSIGNMENT_OPERATOR):
