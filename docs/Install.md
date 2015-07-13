@@ -12,6 +12,10 @@ don't already have pip, you can install it like described on
 <https://pip.pypa.io/en/stable/installing.html>. Note that pip is shipped with
 python 3.4 by default.
 
+Some linux distributions still ship python 2 as the default python installation.
+If you are using one of those distributions, you need to use `pip3` and
+`python3` instead of `pip` and `python`.
+
 To install the latest most stable version of coala, use:
 
 ```
@@ -49,7 +53,7 @@ cd coala
 You can now install coala with a simple:
 
 ```
-python3 setup.py install
+python setup.py install
 ```
 
 You will have coala installed into your python scripts directory. On an unixoid
@@ -58,7 +62,7 @@ system it is probably already available on your command line globally.
 Note that the usual installation requires root access. On an unixoid system
 (Mac, Linux) this can be achieved by using `sudo`:
 
-```sudo python3 setup.py install```
+```sudo python setup.py install```
 
 The easiest way to install under Windows is to start a command prompt as an
 administrator and start `setup.py`.
@@ -66,8 +70,8 @@ administrator and start `setup.py`.
 ## Alternate installation
 
 If you want to install coala to an alternate location you can e.g. call
-`python3 setup.py install --prefix=/your/prefix/location`. Other options are
-documented on https://docs.python.org/3.2/install/#alternate-installation.
+`python setup.py install --prefix=/your/prefix/location`. Other options are
+documented on <https://docs.python.org/3.2/install/#alternate-installation>.
 
 # Dependencies
 
@@ -99,7 +103,7 @@ On windows, you can download gettext manually from
 ## eSpeak (*)
 
 If you want to use coalas voice outputter you need to install eSpeak from
-http://espeak.sourceforge.net/ or your favorite package manager on linux. Note
+<http://espeak.sourceforge.net/> or your favorite package manager on linux. Note
 that voice output is currently only possible when developing for coala. If
 you care for voice output, please contact us so we will speed up development
 of our voice output module.
