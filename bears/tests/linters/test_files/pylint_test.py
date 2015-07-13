@@ -6,7 +6,7 @@ print(sys.path)
 
 class Something:
     def method_without_self():
-        pass
+            pass
 
     def something(self):
         pass

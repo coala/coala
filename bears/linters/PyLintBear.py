@@ -12,11 +12,8 @@ if sys.version_info < (3, 3):  # pragma: no cover
 
 
 class PyLintBear(LocalBear):
-    def parse_line(self, file, pylint_line):
+    def parse_result(self, file, pylint_line):
         parts = pylint_line.split("|", maxsplit=2)
-
-        if len(parts) < 3:
-            return None
 
         line_nr = int(parts[0])
         severity = parts[1]
@@ -67,10 +64,16 @@ class PyLintBear(LocalBear):
                         stderr=PIPE,
                         universal_newlines=True)
         process.wait()
+        current_lines = ""
         for line in process.stdout.readlines():
-            result = self.parse_line(filename, line)
-            if result is not None:
-                yield result
+            if line.startswith("***"):
+                continue
+
+            if current_lines != "" and line.split("|", 1)[0].isdigit():
+                yield self.parse_result(filename, current_lines)
+                current_lines = ""
+
+            current_lines += line
 
         process.stdout.close()
         process.stderr.close()
