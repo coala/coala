@@ -125,7 +125,14 @@ def load_configuration(arg_list, log_printer):
     config = os.path.abspath(
         str(cli_sections["default"].get("config", user_config)))
 
-    coafile_sections = load_config_file(config, log_printer)
+    try:
+        save = bool(cli_sections["default"].get("save", "False"))
+    except ValueError:
+        # A file is deposited for the save parameter, means we want to save but
+        # to a specific file.
+        save = True
+
+    coafile_sections = load_config_file(config, log_printer, silent=save)
 
     sections = merge_section_dicts(default_sections, user_sections)
 
