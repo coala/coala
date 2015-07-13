@@ -1,8 +1,8 @@
 dependencies:
   cache_directories:
-    - ~/.pyenv/versions/3.2.6
     - ~/.pyenv/versions/3.3.6
     - ~/.pyenv/versions/3.4.2
+    - ~/.pyenv/versions/3.5.0b3
     - ~/.pyenv/versions/pypy3-2.4.0
   override:
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc

@@ -8,7 +8,7 @@ from coalib.settings.Section import Section
 
 
 class ConfParser:
-    if sys.version_info < (3, 3):
+    if sys.version_info < (3, 3):  # pragma: no cover
         FileNotFoundError = IOError
     else:
         FileNotFoundError = FileNotFoundError
