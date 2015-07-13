@@ -16,10 +16,10 @@ from coalib.processes.Processing import create_process_group
 process_group_timeout_test_code = """
 import time, subprocess;
 from coalib.misc.StringConstants import StringConstants;
-time.sleep(0.5);
-subprocess.Popen([StringConstants.python_executable,
-                  "-c",
-                  "import time; time.sleep(100)"])
+p = subprocess.Popen([StringConstants.python_executable,
+                     "-c",
+                     "import time; time.sleep(100)"]);
+time.sleep(100);
 """
 
 
@@ -27,23 +27,25 @@ class ContextManagersTest(unittest.TestCase):
     def test_subprocess_timeout(self):
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
-                              "import time; time.sleep(0.5); print('hi')"])
+                              "import time; time.sleep(0.5);"],
+                             stderr=subprocess.PIPE)
         with subprocess_timeout(p, 0.2) as timedout:
             retval = p.wait()
+            p.stderr.close()
             self.assertEqual(timedout.value, True)
         self.assertNotEqual(retval, 0)
 
         p = create_process_group([StringConstants.python_executable,
                                   "-c",
                                   process_group_timeout_test_code])
-        with subprocess_timeout(p, 0.2, kill_pg=True):
+        with subprocess_timeout(p, 0.5, kill_pg=True):
             retval = p.wait()
             self.assertEqual(timedout.value, True)
         self.assertNotEqual(retval, 0)
 
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
-                              "print('hi')"])
+                              "import time"])
         with subprocess_timeout(p, 0.5) as timedout:
             retval = p.wait()
             self.assertEqual(timedout.value, False)
@@ -51,7 +53,7 @@ class ContextManagersTest(unittest.TestCase):
 
         p = subprocess.Popen([StringConstants.python_executable,
                               "-c",
-                              "print('hi')"])
+                              "import time"])
         with subprocess_timeout(p, 0) as timedout:
             retval = p.wait()
             self.assertEqual(timedout.value, False)

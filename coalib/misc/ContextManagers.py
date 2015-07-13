@@ -22,7 +22,7 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
                         Floats can be used to specify units smaller than
                         seconds.
     :param kill_pg:     Boolean whether to kill the process group or only this
-                        process.
+                        process. (not applicable for windows)
     """
     timedout = MutableValue(False)
 
@@ -32,13 +32,14 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
 
     finished = threading.Event()
 
+    if platform.system() == "Windows":  # pragma: no cover
+        kill_pg = False
+
     def kill_it():
         finished.wait(seconds)
         if not finished.is_set():
             timedout.value = True
-            if platform.system() == "Windows":  # pragma: no cover
-                pgid = sub_process.pid
-            else:
+            if kill_pg:
                 pgid = os.getpgid(sub_process.pid)
             os.kill(sub_process.pid, signal.SIGINT)
             if kill_pg:
