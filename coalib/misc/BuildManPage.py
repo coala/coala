@@ -65,12 +65,12 @@ class BuildManPage(Command):
         dist = self.distribution
         homepage = dist.get_url()
         maintainer = dist.get_maintainer()
-        license = dist.get_license()
+        _license = dist.get_license()
         appname = self._parser.prog
 
         sections = {"see also": ("Online documentation: {}".format(homepage)),
                     "maintainer(s)": maintainer,
-                    "license": license}
+                    "license": _license}
 
         dist = self.distribution
         mpf = ManPageFormatter(appname,
