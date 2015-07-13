@@ -10,7 +10,7 @@ from bears.linters.PyLintBear import PyLintBear
 from coalib.settings.Section import Section
 
 
-class SpaceConsistencyBearTest(LocalBearTestHelper):
+class PyLintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
         self.uut = PyLintBear(self.section, Queue())
