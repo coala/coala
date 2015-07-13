@@ -35,7 +35,7 @@ class PyLintBear(LocalBear):
     def run(self,
             filename,
             file,
-            pylint_disable: typed_list(str)=None,
+            pylint_disable: typed_list(str)=("fixme"),
             pylint_enable: typed_list(str)=None,
             pylint_cli_options: str=""):
         '''

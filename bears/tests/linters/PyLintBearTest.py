@@ -19,6 +19,7 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
                                       "pylint_test.py")
 
     def test_run(self):
+        self.section.append(Setting("pylint_disable", ""))
         self.assertLinesInvalid(
             self.uut,
             [],  # Doesn't matter, pylint will parse the file
