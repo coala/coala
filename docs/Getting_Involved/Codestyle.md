@@ -171,3 +171,42 @@ as long as it does not cause local name clashes.
 
 Wildcard imports (`from <module\> import *`) are not allowed as they make it
 unclear which names are present in the namespace.
+
+# Documentation Comments
+
+A documentation comment consists of 2 parts - the description of what the
+function/class/module does followed by the parameters it takes in, the
+return value it gives out and the exceptions it can raise.
+
+Nothing should be written on the first and last line where the docstring
+begins and ends, and a newline should separate the description and the rest.
+Each message in the documentation comment must end with a full-stop. Also
+the description of all arguments and the return value should begin at the
+same column.
+
+Example:
+```
+def area(height, breadth):
+    """
+    Finds the area of a rectangle of the given length and breadth.
+
+    :param length:      The length of the rectangle.
+    :param breadth:     The breadth of the rectangle.
+    :return:            The area of the rectangle.
+    :raises ValueError: Raises ValueError if the arguments are not of type
+                        float or int.
+    """
+
+```
+
+If the description for a param or other keywords exceeds 1 line, continue
+it in the next. Make sure that the second line is aligned Below the first
+line.
+
+Example :
+```
+:param something: A very long line describing the variable something
+                  in great detail.
+:return:          This message also started in the same column and it
+                  starts again at the same column as the rest of the messages.
+```
