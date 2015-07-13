@@ -67,7 +67,7 @@ def main():
         print(_("Found EOF. Exiting gracefully."))
     except SystemExit as exception:
         exitcode = exception.code
-    except Exception as exception:
+    except Exception as exception:  # pylint: disable=broad-except
         log_printer.log_exception(_("An unknown error occurred.") + " " +
                                   StringConstants.THIS_IS_A_BUG + " " +
                                   _("During execution of coala an exception "
