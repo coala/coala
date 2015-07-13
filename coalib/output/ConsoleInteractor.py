@@ -1,6 +1,6 @@
 try:
     # This import has side effects and is needed to make input() behave nicely
-    import readline
+    import readline  # pylint: disable=unused-import
 except ImportError: # pragma: no cover
     pass
 
