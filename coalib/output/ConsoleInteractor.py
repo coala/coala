@@ -232,7 +232,7 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
             self.print(_("No bears to show."))
         else:
             for bear in sorted(bears.keys(),
-                               key=lambda bear: bear.__class__.__name__):
+                               key=lambda bear: bear.__name__):
                 self._show_bear(bear, bears[bear], bear.get_metadata())
 
     def _show_enumeration(self, title, items, indentation, no_items_text):
