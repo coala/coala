@@ -28,6 +28,7 @@ if __name__ == "__main__":
           platforms='any',
           packages=['bears',
                     'bears.codeclone_detection',
+                    'bears.linters',
                     'bears.misc',
                     'bears.spacing',
                     'coalib',
