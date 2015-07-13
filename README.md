@@ -20,7 +20,7 @@ ooP""Y8888PP*"Y8888P"   "Y8888P"`Y88P'"Y88P"Y8888P"`Y8            oooo888P"
 INSTALLATION
 ============
 
-coala can be installed with `python3 setup.py install`. If you need more
+coala can be installed with `pip install coala`. If you need more
 information about the installation and dependencies, take a look at our
 [installation documentation](http://coala.rtfd.org/en/latest/Install/).
 
