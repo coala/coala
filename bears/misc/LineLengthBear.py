@@ -5,6 +5,7 @@ from coalib.misc.i18n import _
 
 
 class LineLengthBear(LocalBear):
+    # pylint: disable=unused-argument
     def run(self,
             filename,
             file,

@@ -267,6 +267,7 @@ def member_accessed(stack):
     return _stack_contains_kind(stack, CursorKind.MEMBER_REF_EXPR)
 
 
+# pylint: disabled=unused-argument
 def used(stack):
     """
     Returns true.

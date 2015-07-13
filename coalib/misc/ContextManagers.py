@@ -118,7 +118,8 @@ def simulate_console_inputs(*inputs):
             self.last_input = -1
             self.inputs = inputs
 
-        def generate_input(self, x=''):
+        def generate_input(self, prompt=''):
+            print(prompt, end="")
             self.last_input += 1
             return self.inputs[self.last_input]
 

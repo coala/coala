@@ -91,11 +91,9 @@ class ManPageFormatter(argparse.HelpFormatter):
                  indent_increment=2,
                  max_help_position=24,
                  width=None,
-                 section=1,
                  desc=None,
                  long_desc=None,
                  ext_sections=None,
-                 authors=None,
                  parser=None):
         argparse.HelpFormatter.__init__(self, prog)
 
