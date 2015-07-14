@@ -21,7 +21,7 @@ class OpenEditorAction(ApplyPatchAction):
 
         :param editor: The editor to open the file with.
         """
-        filename = result.file
+        filename = result.position.file
         original_file = original_file_dict[filename]
         diff = file_diff_dict.get(filename, Diff())
         current_file = diff.apply(original_file)

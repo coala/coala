@@ -30,15 +30,14 @@ class ResultTest(unittest.TestCase):
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')
         self.assertEqual(str(uut),
-                         "Result:\n origin: 'a'\n file: 'c'\n line nr: None\n"
-                         " severity: 1\n'b'")
+                         "Result:\n origin: 'a'\n position: file: 'c', line: "
+                         "None\n severity: 1\n'b'")
         self.assertEqual(str(uut), repr(uut))
         self.assertEqual(
             Result("origin", "message", "file", line_nr=1).__str__(),
             """Result:
  origin: 'origin'
- file: 'file'
- line nr: 1
+ position: file: 'file', line: 1
  severity: 1
 'message'""")
 
@@ -85,8 +84,8 @@ class ResultTest(unittest.TestCase):
                                 severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(greater_origin, medium)
 
-        medium.line_nr = 5
-        greater_origin.line_nr = 3
+        medium.position.line = 5
+        greater_origin.position.line = 3
         self.assert_ordering(medium, greater_origin)
 
         uut = Result("origin", "message", "file", line_nr=1)

@@ -1,6 +1,7 @@
 from functools import total_ordering
 
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.ResultPosition import ResultPosition
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 
 
@@ -46,48 +47,35 @@ class Result:
         self.origin = origin
         self.message = message
         self.debug_msg = debug_msg
-        self.file = file
-        self.line_nr = line_nr
+        self.position = ResultPosition(file=file, line=line_nr)
         self.severity = severity
 
     def __repr__(self):
         return str(self)
 
     def __str__(self):
-        return ("Result:\n origin: '{origin}'\n file: '{file}'\n line nr: "
-                "{linenr}\n severity: {severity}\n"
+        return ("Result:\n origin: '{origin}'\n position: {position}\n"
+                " severity: {severity}\n"
                 "'{msg}'".format(origin=self.origin,
-                                 file=self.file,
+                                 position=str(self.position),
                                  severity=self.severity,
-                                 msg=self.message,
-                                 linenr=self.line_nr))
+                                 msg=self.message))
 
     def __eq__(self, other):
         return (isinstance(other, Result) and
                 self.origin == other.origin and
                 self.message == other.message and
                 self.debug_msg == other.debug_msg and
-                self.file == other.file and
                 self.severity == other.severity and
-                self.line_nr == other.line_nr)
+                self.position == other.position)
 
     def __lt__(self, other):
         if not isinstance(other, Result):
             raise TypeError("Comparision with non-result classes is not "
                             "supported.")
 
-        # Show elements without files first
-        if (self.file is None) != (other.file is None):
-            return self.file is None
-
-        # Now either both .file members are None or both are set
-        if self.file != other.file:
-            return self.file < other.file
-
-        # If we have a line result show results with a lesser line number first
-        if self.line_nr is not None and other.line_nr is not None:
-            if self.line_nr != other.line_nr:
-                return self.line_nr < other.line_nr
+        if self.position != other.position:
+            return self.position < other.position
 
         # Both files are equal
         if self.severity != other.severity:
@@ -107,7 +95,7 @@ class Result:
         :return: All ResultAction classes applicable to this result.
         """
         actions = []
-        if self.file is not None:
+        if self.position.file is not None:
             actions.append(OpenEditorAction())
 
         return actions

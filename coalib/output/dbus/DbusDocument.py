@@ -149,8 +149,8 @@ class DbusDocument(dbus.service.Object):
                 for result in value:
                     results_for_section.append([str(result.origin),
                                                 str(result.message),
-                                                str(result.file),
-                                                str(result.line_nr),
+                                                str(result.position.file),
+                                                str(result.position.line),
                                                 str(result.severity)])
 
         return [section_name, section_result[0], results_for_section]
