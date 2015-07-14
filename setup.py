@@ -63,7 +63,8 @@ if __name__ == "__main__":
                            "extendable and language independent. Code analysis"
                            " happens in python scripts while coala manages "
                            "these, tries to provide helpful libraries and "
-                           "provides a user interface.",
+                           "provides a user interface. Please visit "
+                           "http://coala.rtfd.org/ for more information.",
           entry_points={
               "console_scripts": [
                   "coala = coalib.coala:main",
