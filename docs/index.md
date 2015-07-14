@@ -30,6 +30,10 @@ we support only Console output but others will follow.)
 One could say coala unites all language independent parts of a linter and is
 arbitrarily extensible.
 
+To get started, take a look at our
+[Installation Instructions](Users/Install.md) and the
+[Tutorial](Users/Tutorial.md).
+
 # What do I get?
 
 ## As a User
