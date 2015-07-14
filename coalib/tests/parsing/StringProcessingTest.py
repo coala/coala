@@ -1,4 +1,8 @@
+import sys
 import unittest
+
+sys.path.insert(0, ".")
+from coalib.parsing.StringProcessing import escape
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -67,22 +71,6 @@ class StringProcessingTest(unittest.TestCase):
         r"Let's \(do (it ) more ) \\ complicated ) ) ) () (hello.)\\z"]
 
     @staticmethod
-    def escape(string, escape_chars):
-        """
-        Escapes all chars given inside the given string.
-
-        :param string:       The string where to escape characters.
-        :param escape_chars: The string that contains the character to escape.
-                             Each char inside this string will be escaped in
-                             the order given. Duplicate chars are allowed.
-        :return:             The escaped string.
-        """
-        for chr in escape_chars:
-            string = string.replace(chr, "\\" + chr)
-
-        return string
-
-    @staticmethod
     def _construct_message(func, args, kwargs):
         """
         Constructs the error message for the call result assertions.
@@ -93,7 +81,7 @@ class StringProcessingTest(unittest.TestCase):
         :param return: The error message.
         """
         format_arg = (lambda arg:
-            '"' + StringProcessingTest.escape(arg, '\\"') + '"'
+            '"' + escape(arg, '\\"') + '"'
             if isinstance(arg, str) else
             str(arg))
 

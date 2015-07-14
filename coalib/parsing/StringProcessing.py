@@ -342,6 +342,24 @@ def unescaped_search_in_between(begin,
                elem.group(begin_pattern_groups + 2))
 
 
+def escape(string, escape_chars, escape_with="\\"):
+    """
+    Escapes all chars given inside the given string.
+
+    :param string:       The string where to escape characters.
+    :param escape_chars: The string or Iterable that contains the characters
+                         to escape. Each char inside this string will be
+                         escaped in the order given. Duplicate chars are
+                         allowed.
+    :param escape_with:  The string that should be used as escape sequence.
+    :return:             The escaped string.
+    """
+    for chr in escape_chars:
+        string = string.replace(chr, escape_with + chr)
+
+    return string
+
+
 def unescape(string):
     """
     Trimms off all escape characters from the given string.
