@@ -55,13 +55,7 @@ def main():
     except SystemExit as exception:
         exitcode = exception.code
     except Exception as exception:  # pylint: disable=broad-except
-        log_printer.log_exception(_("An unknown error occurred.") + " " +
-                                  StringConstants.THIS_IS_A_BUG + " " +
-                                  _("During execution of coala an exception "
-                                  "was raised. This should never happen. When "
-                                  "asked for, the following information may "
-                                  "help investigating:"),
-                                  exception)
+        log_printer.log_exception(StringConstants.CRASH_MESSAGE, exception)
         exitcode = 255
 
     return exitcode
