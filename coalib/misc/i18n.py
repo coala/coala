@@ -21,14 +21,14 @@ def file_needs_update(source, generated):
         return True
 
 
-def compile_translations():
+def compile_translations(build_dir="build"):
     translations = []
     trans_install_dir_prefix = os.path.join(sys.prefix, "share", "locale")
     for (path, dummy, filenames) in os.walk("locale"):
         for filename in filter(lambda name: name.endswith(".po"), filenames):
             lang = filename[:-3]
             src = os.path.join(path, filename)
-            dest_path = os.path.join("build",
+            dest_path = os.path.join(build_dir,
                                      "locale",
                                      lang,
                                      "LC_MESSAGES")
