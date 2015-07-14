@@ -1,8 +1,4 @@
-import sys
 import unittest
-
-sys.path.insert(0, ".")
-from coalib.parsing.StringProcessing import escape
 
 
 class StringProcessingTest(unittest.TestCase):
@@ -80,13 +76,8 @@ class StringProcessingTest(unittest.TestCase):
         :param kwargs: The named arguments dict the function was invoked with.
         :param return: The error message.
         """
-        format_arg = (lambda arg:
-            '"' + escape(arg, '\\"') + '"'
-            if isinstance(arg, str) else
-            str(arg))
-
-        args = [format_arg(x) for x in args]
-        kwargs = [str(key) + '=' + format_arg(value)
+        args = [repr(x) for x in args]
+        kwargs = [repr(key) + '=' + repr(value)
                   for key, value in kwargs.items()]
 
         return "Called {}({}).".format(func.__name__, ", ".join(args + kwargs))
