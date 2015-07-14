@@ -4,6 +4,7 @@ import os
 import tempfile
 from site import getsitepackages
 
+from coalib.misc import i18n
 from coalib import assert_supported_version
 
 assert_supported_version()
@@ -58,6 +59,9 @@ def main():
             omit=args.omit)
         test_files += bear_test_files
         test_file_names += bear_test_file_names
+
+    # Compile translations
+    i18n.compile_translations()
 
     exit(run_tests(ignore_list,
                    args,
