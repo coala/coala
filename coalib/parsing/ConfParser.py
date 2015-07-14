@@ -14,14 +14,17 @@ class ConfParser:
         FileNotFoundError = FileNotFoundError
 
     def __init__(self,
-                 key_value_delimiters=['='],
-                 comment_seperators=['#', ';', '//'],
-                 key_delimiters=[',', ' '],
-                 section_name_surroundings={'[': "]"}):
+                 key_value_delimiters=('=',),
+                 comment_seperators=('#', ';', '//'),
+                 key_delimiters=(',', ' '),
+                 section_name_surroundings=None):
+        section_name_surroundings = section_name_surroundings or {"[": "]"}
+
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
                                       key_delimiters,
                                       section_name_surroundings)
+
         # Declare it
         self.sections = None
         self.__rand_helper = None

@@ -66,7 +66,7 @@ class Setting(StringConverter):
                  value,
                  origin="",
                  strip_whitespaces=True,
-                 list_delimiters=[",", ";"],
+                 list_delimiters=(",", ";"),
                  from_cli=False):
         """
         Initializes a new Setting,

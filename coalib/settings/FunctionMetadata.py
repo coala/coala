@@ -92,7 +92,7 @@ class FunctionMetadata:
             return section[param]
 
     @classmethod
-    def from_function(cls, func, omit=[]):
+    def from_function(cls, func, omit=()):
         """
         Creates a FunctionMetadata object from a function. Please note that any
         variable argument lists are not supported. If you do not want the

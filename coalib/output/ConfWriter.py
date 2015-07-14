@@ -6,11 +6,11 @@ class ConfWriter(ClosableObject):
     def __init__(self,
                  file_name,
                  key_value_delimiter='=',
-                 comment_seperators=['#', ';', '//'],
+                 comment_seperators=('#', ';', '//'),
                  key_delimiter=',',
                  section_name_surrounding_beg='[',
                  section_name_surrounding_end="]",
-                 unsavable_keys=["save"]):
+                 unsavable_keys=("save",)):
         ClosableObject.__init__(self)
         self.__file_name = file_name
         self.__file = open(self.__file_name, "w")

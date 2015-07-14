@@ -22,7 +22,7 @@ def limit(iterator, count):
                 break
 
 
-def trim_empty_matches(iterator, groups=[0]):
+def trim_empty_matches(iterator, groups=(0,)):
     """
     A filter that removes empty match strings. It can only operate on iterators
     whose elements are of type MatchObject.

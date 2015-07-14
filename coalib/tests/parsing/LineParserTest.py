@@ -67,9 +67,11 @@ class LineParserTest(unittest.TestCase):
     def check_data_set(self,
                        line,
                        output_section="",
-                       output_keys=[],
+                       output_keys=None,
                        output_value='',
                        output_comment=''):
+        output_keys = output_keys or []
+
         section_name, keys, value, comment = self.uut.parse(line)
 
         self.assertEqual(section_name, output_section)

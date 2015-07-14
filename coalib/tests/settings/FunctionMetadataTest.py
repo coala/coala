@@ -74,8 +74,11 @@ class FunctionMetadataTest(unittest.TestCase):
                                          name,
                                          desc="",
                                          retval_desc="",
-                                         non_optional_params={},
-                                         optional_params={}):
+                                         non_optional_params=None,
+                                         optional_params=None):
+        non_optional_params = non_optional_params or {}
+        optional_params = optional_params or {}
+
         self.assertEqual(metadata.name, name)
         self.assertEqual(metadata.desc, desc)
         self.assertEqual(metadata.retval_desc, retval_desc)

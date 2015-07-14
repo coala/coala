@@ -55,8 +55,10 @@ class DocumentationCommentParserTest(unittest.TestCase):
     def check_from_docstring_dataset(self,
                                      docstring,
                                      desc="",
-                                     param_dict={},
+                                     param_dict=None,
                                      retval_desc=""):
+        param_dict = param_dict or {}
+
         self.assertIsInstance(docstring,
                               str,
                               "docstring needs to be a string for this test.")
