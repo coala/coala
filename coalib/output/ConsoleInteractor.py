@@ -185,9 +185,11 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
         current_line = 0
 
         for result in sorted(result_list):
-            if result.file != current_file:
-                if result.file in file_dict or result.file is None:
-                    current_file = result.file
+            file = result.position.file
+            line = result.position.line
+            if file != current_file:
+                if file in file_dict or file is None:
+                    current_file = file
                     current_line = 0
                     self.print("\n\n{}".format(current_file
                                                if current_file is not None
@@ -200,22 +202,19 @@ class ConsoleInteractor(Interactor, ConsolePrinter):
                                             "exist.").format(str(result)))
                     continue
 
-            if result.line_nr is not None:
+            if line is not None:
                 if current_file is None:
                     raise AssertionError("A result with a line_nr should also "
                                          "have a file.")
-                if result.line_nr < current_line:  # pragma: no cover
+                if line < current_line:  # pragma: no cover
                     raise AssertionError("The sorting of the results doesn't "
                                          "work correctly.")
-                if len(file_dict[result.file]) < result.line_nr - 1:
+                if len(file_dict[file]) < line - 1:
                     self.print(self._format_line(
                         line=self.STR_LINE_DOESNT_EXIST))
                 else:
-                    self._print_lines(file_dict,
-                                      current_line,
-                                      result.line_nr,
-                                      result.file)
-                    current_line = result.line_nr
+                    self._print_lines(file_dict, current_line, line, file)
+                    current_line = result.position.line
 
             self.print_result(result, file_dict)
 

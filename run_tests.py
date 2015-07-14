@@ -8,11 +8,11 @@ from coalib import assert_supported_version
 
 assert_supported_version()
 
-from coalib.tests.TestHelper import (parse_args,
-                                     create_argparser,
-                                     run_tests,
-                                     get_test_files,
-                                     delete_coverage)
+from coalib.tests.TestUtilities import (parse_args,
+                                        create_argparser,
+                                        run_tests,
+                                        get_test_files,
+                                        delete_coverage)
 
 
 def main():

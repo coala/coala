@@ -157,7 +157,7 @@ class ConsoleInteractorTest(unittest.TestCase):
             PatchResult.get_actions = lambda self: [OpenEditorAction()]
 
             patch_result = PatchResult("origin", "msg", {testfile_path: diff})
-            patch_result.file = "f_b"
+            patch_result.position.file = "f_b"
 
             self.uut.print_result(patch_result, file_dict)
             # choose action, choose editor, choose no action (-1 -> 2)

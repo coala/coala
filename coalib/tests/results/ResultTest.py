@@ -1,8 +1,9 @@
 import sys
+import unittest
 
 sys.path.insert(0, ".")
+from coalib.results.ResultPosition import ResultPosition
 from coalib.results.Result import Result, RESULT_SEVERITY
-import unittest
 
 
 class ResultTest(unittest.TestCase):
@@ -24,21 +25,20 @@ class ResultTest(unittest.TestCase):
     def test_get_actions(self):
         self.assertEqual(len(Result("origin", "msg").get_actions()), 0)
         self.assertEqual(
-            len(Result("origin", "msg", file="file").get_actions()),
+            len(Result("origin", "msg", ResultPosition("file")).get_actions()),
             1)
 
     def test_string_conversion(self):
-        uut = Result('a', 'b', 'c')
+        uut = Result('a', 'b', ResultPosition(file='c'))
         self.assertEqual(str(uut),
-                         "Result:\n origin: 'a'\n file: 'c'\n line nr: None\n"
-                         " severity: 1\n'b'")
+                         "Result:\n origin: 'a'\n position: file: 'c', line: "
+                         "None\n severity: 1\n'b'")
         self.assertEqual(str(uut), repr(uut))
         self.assertEqual(
-            Result("origin", "message", "file", line_nr=1).__str__(),
+            Result("origin", "message", ResultPosition("file", 1)).__str__(),
             """Result:
  origin: 'origin'
- file: 'file'
- line nr: 1
+ position: file: 'file', line: 1
  severity: 1
 'message'""")
 
@@ -52,53 +52,56 @@ class ResultTest(unittest.TestCase):
         """
         medium = Result(origin='b',
                         message='b',
-                        file='b',
+                        position=ResultPosition('b'),
                         severity=RESULT_SEVERITY.NORMAL)
         medium_too = Result(origin='b',
                             message='b',
-                            file='b',
+                            position=ResultPosition('b'),
                             severity=RESULT_SEVERITY.NORMAL)
         self.assert_equal(medium, medium_too)
 
         bigger_file = Result(origin='b',
                              message='b',
-                             file='c',
+                             position=ResultPosition('c'),
                              severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(bigger_file, medium)
 
         no_file = Result(origin='b',
                          message='b',
-                         file=None,
+                         position=None,
                          severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(medium, no_file)
 
         no_file_and_unsevere = Result(origin='b',
                                       message='b',
-                                      file=None,
+                                      position=None,
                                       severity=RESULT_SEVERITY.INFO)
         self.assert_ordering(no_file_and_unsevere, no_file)
         self.assert_ordering(medium, no_file_and_unsevere)
 
         greater_origin = Result(origin='c',
                                 message='b',
-                                file='b',
+                                position=ResultPosition(file='b'),
                                 severity=RESULT_SEVERITY.NORMAL)
         self.assert_ordering(greater_origin, medium)
 
-        medium.line_nr = 5
-        greater_origin.line_nr = 3
+        medium.position.line = 5
+        greater_origin.position.line = 3
         self.assert_ordering(medium, greater_origin)
 
-        uut = Result("origin", "message", "file", line_nr=1)
-        cmp = Result("origin", "message", "file", line_nr=1)
+        uut = Result("origin", "message", ResultPosition("file", 1))
+        cmp = Result("origin", "message", ResultPosition("file", 1))
         self.assert_equal(cmp, uut)
-        cmp = Result("origin", "message", "file")
+        cmp = Result("origin", "message", ResultPosition("file"))
         self.assertNotEqual(cmp, uut)
 
-        cmp = Result("origin", "", "file", line_nr=1, debug_msg="test")
+        cmp = Result("origin", "", ResultPosition("file", 1), debug_msg="test")
         self.assert_ordering(uut, cmp)
 
-        cmp = Result("origin", "message", "file", line_nr=1, debug_msg="test")
+        cmp = Result("origin",
+                     "message",
+                     ResultPosition("file", 1),
+                     debug_msg="test")
         self.assertNotEqual(cmp, uut)
         self.assert_ordering(cmp, uut)
 
