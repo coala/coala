@@ -43,8 +43,6 @@ requirements. The checking routines are named **Bears** in coala. You can
 easily define a simple project file to check your project with all bears
 either shipped with coala or ones you found in the internet and trust.
 
-Please look at the Tutorial for an usage introduction!
-
 ## As a Developer
 
 If you are not satisfied with the functionality given by the bears we provide,
