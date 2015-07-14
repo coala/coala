@@ -10,10 +10,10 @@ from coalib.parsing.DefaultArgParser import default_arg_parser
 def parse_cli(arg_list=sys.argv[1:],
               origin=os.getcwd(),
               arg_parser=default_arg_parser(),
-              key_value_delimiters=['=', ':'],
-              comment_seperators=[],
-              key_delimiters=[','],
-              section_override_delimiters=["."]):
+              key_value_delimiters=('=', ':'),
+              comment_seperators=(),
+              key_delimiters=(',',),
+              section_override_delimiters=(".",)):
     """
     Parses the CLI arguments and creates sections out of it.
 

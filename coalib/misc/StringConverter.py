@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import Iterable, OrderedDict
 import re
 from coalib.misc.StringConstants import StringConstants
 from coalib.parsing.StringProcessing import unescaped_split, unescape
@@ -19,10 +19,8 @@ class StringConverter:
         if list_delimiters is None:
             list_delimiters = [",", ";"]
 
-        if (
-                not isinstance(list_delimiters, list) and
-                not isinstance(list_delimiters, str)):
-            raise TypeError("list_delimiters has to be a string or a list")
+        if not isinstance(list_delimiters, Iterable):
+            raise TypeError("list_delimiters has to be an Iterable.")
         if not isinstance(strip_whitespaces, bool):
             raise TypeError("strip_whitespaces has to be a bool parameter")
 

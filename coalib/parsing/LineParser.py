@@ -4,11 +4,11 @@ from coalib.parsing.StringProcessing import unescape
 
 class LineParser:
     def __init__(self,
-                 key_value_delimiters=['='],
-                 comment_seperators=['#', ';', '//'],
-                 key_delimiters=[','],
-                 section_name_surroundings={'[': "]"},
-                 section_override_delimiters=["."]):
+                 key_value_delimiters=('=',),
+                 comment_seperators=('#', ';', '//'),
+                 key_delimiters=(',',),
+                 section_name_surroundings=None,
+                 section_override_delimiters=(".",)):
         """
         Creates a new line parser. Please note that no delimiter or seperator
         may be an "o" or you may encounter undefined behaviour with the
@@ -20,6 +20,8 @@ class LineParser:
         :param key_delimiters:              Delimiters between several keys
         :param section_name_surroundings:   Dictionary, e.g. {"[", "]"} means a
                                             section name is surrounded by [].
+                                            If None, {"[": "]"} is used as
+                                            default.
         :param section_override_delimiters: Delimiter for a section override.
                                             E.g. "." would mean that
                                             section.key is a possible key that
@@ -27,6 +29,8 @@ class LineParser:
                                             "section" despite of the current
                                             section.
         """
+        section_name_surroundings = section_name_surroundings or {"[": "]"}
+
         self.key_value_delimiters = key_value_delimiters
         self.comment_seperators = comment_seperators
         self.key_delimiters = key_delimiters
