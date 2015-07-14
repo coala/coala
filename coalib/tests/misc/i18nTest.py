@@ -14,31 +14,30 @@ else:
 from coalib.misc import i18n
 
 
+def set_lang(lang):
+    os.environ["LANGUAGE"] = lang
+    os.environ["LC_ALL"] = lang
+    os.environ["LC_MESSAGES"] = lang
+    os.environ["LANG"] = lang
+    gettext._default_localedir = os.path.abspath(os.path.join("build",
+                                                              "locale"))
+    importlib.reload(i18n)
+
+
 class i18nTest(unittest.TestCase):
-    @staticmethod
-    def set_lang(lang):
-        os.environ["LANGUAGE"] = lang
-        os.environ["LC_ALL"] = lang
-        os.environ["LC_MESSAGES"] = lang
-        os.environ["LANG"] = lang
-        gettext._default_localedir = os.path.abspath(os.path.join("build",
-                                                                  "locale"))
-
-        importlib.reload(i18n)
-
     def test_de(self):
-        self.set_lang("de_DE.UTF8")
+        set_lang("de_DE.UTF8")
         # Do not change this translation without changing it in the code also!
         self.assertEqual(i18n._("A string to test translations."),
                          "Eine Zeichenkette um Übersetzungen zu testen.")
 
     def test_unknown(self):
-        self.set_lang("unknown_language")
+        set_lang("unknown_language")
         self.assertEqual(i18n._("A string to test translations."),
                          "A string to test translations.")
 
     def test_translation_marking(self):
-        self.set_lang("de_DE.UTF8")
+        set_lang("de_DE.UTF8")
         string = "A not directly translated test string."
         self.assertEqual(i18n.N_("A not directly translated test string."),
                          string)

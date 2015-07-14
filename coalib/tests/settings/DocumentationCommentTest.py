@@ -5,7 +5,7 @@ import subprocess
 sys.path.insert(0, ".")
 
 from coalib.settings.DocumentationComment import DocumentationComment
-from coalib.tests.misc.i18nTest import i18nTest
+from coalib.tests.misc.i18nTest import set_lang
 
 
 class DocumentationCommentParserTest(unittest.TestCase):
@@ -41,7 +41,7 @@ class DocumentationCommentParserTest(unittest.TestCase):
         }, retval_desc="retval description override")
 
     def test_translation(self):
-        i18nTest.set_lang("de_DE.UTF8")
+        set_lang("de_DE.UTF8")
         self.check_from_docstring_dataset(
             '''
             Test description. Do not translate except german.
