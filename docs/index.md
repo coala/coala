@@ -63,4 +63,4 @@ We are currently working hard to make this project reality. coala is currently
 usable, in an alpha stage and already provides many features. If you want to
 see how the development progresses, check out
 
-https://github.com/coala-analyzer/coala
+<https://github.com/coala-analyzer/coala>
