@@ -34,9 +34,8 @@ class ResultTest(unittest.TestCase):
                          " severity: 1\n'b'")
         self.assertRegex(
             repr(uut),
-            "<Result object\\(origin: ['\"]a['\"], file: ['\"]c['\"], "
-                "line_nr: None, severity: 1, message: ['\"]b['\"]\\) "
-                "at 0x[0-9a-fA-F]+>")
+            "<Result object\\(origin: 'a', file: 'c', line_nr: None, "
+                "severity: 1, message: 'b'\\) at 0x[0-9a-fA-F]+>")
         self.assertEqual(
             Result("origin", "message", "file", line_nr=1).__str__(),
             """Result:
