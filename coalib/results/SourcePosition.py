@@ -30,7 +30,8 @@ class SourcePosition:
             str(self.line))
 
     def __repr__(self):
-        return str(self)
+        return ("<" + SourcePosition.__name__ + " object(" + str(self) + ") "
+                "at " + hex(id(self)) + ">")
 
     def __eq__(self, other):
         return (self.file == other.file and
