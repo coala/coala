@@ -14,7 +14,7 @@
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
-from coalib.processes.Processing import execute_section
+from coalib.processes.Processing import execute_enabled_sections
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.ShowBears import show_bears
 from coalib.misc.i18n import _
@@ -39,21 +39,15 @@ def main():
                        interactor.show_bears)
             did_nothing = False
         else:
-            for section_name in sections:
-                section = sections[section_name]
-                if not section.is_enabled(targets):
-                    continue
-
-                interactor.begin_section(section)
-                results = execute_section(
-                    section=section,
-                    global_bear_list=global_bears[section_name],
-                    local_bear_list=local_bears[section_name],
-                    print_results=interactor.print_results,
-                    log_printer=log_printer)
+            section_results = execute_enabled_sections(sections,
+                                                       targets,
+                                                       global_bears,
+                                                       local_bears,
+                                                       interactor,
+                                                       log_printer)
+            did_nothing = len(section_results) == 0
+            for results in section_results:
                 yielded_results = yielded_results or results[0]
-                interactor.finalize(results[3])
-                did_nothing = False
 
         if did_nothing:
             interactor.did_nothing()
@@ -68,13 +62,7 @@ def main():
     except SystemExit as exception:
         exitcode = exception.code
     except Exception as exception:  # pylint: disable=broad-except
-        log_printer.log_exception(_("An unknown error occurred.") + " " +
-                                  StringConstants.THIS_IS_A_BUG + " " +
-                                  _("During execution of coala an exception "
-                                  "was raised. This should never happen. When "
-                                  "asked for, the following information may "
-                                  "help investigating:"),
-                                  exception)
+        log_printer.log_exception(StringConstants.CRASH_MESSAGE, exception)
         exitcode = 255
 
     return exitcode

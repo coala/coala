@@ -326,3 +326,42 @@ def execute_section(section,
 
         for runner in processes:
             runner.join()
+
+
+def execute_enabled_sections(sections,
+                             targets,
+                             global_bears,
+                             local_bears,
+                             interactor,
+                             log_printer):
+    """
+    Executes all the sections with their respective bears if if is enabled.
+
+    :param sections:     A list of section names that need to be executed.
+    :param targets:      The targets list
+    :param global_bears: A dictionary with keys as section names and values
+                         are a list of global_bears belonging to that section.
+    :param local_bears:  A dictionary with keys as section names and values
+                         are a list of local_bears belonging to that section.
+    :param interactor:   The interactor to use.
+    :param log_printer:  The log_printer to warn to.
+    :return:             A list of the section results.
+    """
+    section_results = []
+    for section_name in sections:
+        section = sections[section_name]
+        if not section.is_enabled(targets):
+            continue
+
+        interactor.begin_section(section)
+        results = execute_section(
+            section=section,
+            global_bear_list=global_bears[section_name],
+            local_bear_list=local_bears[section_name],
+            print_results=interactor.print_results,
+            log_printer=log_printer)
+
+        section_results.append(results)
+        interactor.finalize(results[3])
+
+    return section_results
