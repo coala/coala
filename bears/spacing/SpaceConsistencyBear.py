@@ -1,4 +1,5 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
+from coalib.results.ResultPosition import ResultPosition
 from coalib.results.Diff import Diff
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.i18n import _
@@ -43,5 +44,5 @@ class SpaceConsistencyBear(LocalBear):
                 yield PatchResult(self,
                                   _("Line contains spacing inconsistencies."),
                                   {filename: diff},
-                                  filename,
-                                  line_nr=line_number+1)
+                                  position=ResultPosition(filename,
+                                                       line_number+1))

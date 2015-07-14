@@ -38,5 +38,11 @@ class ResultPosition:
         if self.file != other.file:
             return self.file < other.file
 
-        # Show results with a lesser line number first
-        return self.line < other.line
+        # Show results with a no or lesser line number first
+        if (self.line is None) != (other.line is None):
+            return self.line is None
+
+        if self.line != other.line:
+            return self.line < other.line
+
+        return False

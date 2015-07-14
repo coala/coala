@@ -16,30 +16,31 @@ class Result:
     you will get an ordering which follows the following conditions,
     while the first condition has the highest priority, which descends to the
     last condition.
-    1. Results with no files will be shown first
-    2. Results will be sorted by files (ascending alphabetically)
-    3. Results will be sorted by lines (ascending)
-    4. Results will be sorted by severity (descending, major first, info last)
-    5. Results will be sorted by origin (ascending alphabetically)
-    6. Results will be sorted by message (ascending alphabetically)
-    7. Results will be sorted by debug message (ascending alphabetically)
+    1. Results will be sorted by position (files ascending alphabetically,
+       no files first)
+    2. Results will be sorted by severity (descending, major first, info last)
+    3. Results will be sorted by origin (ascending alphabetically)
+    4. Results will be sorted by message (ascending alphabetically)
+    5. Results will be sorted by debug message (ascending alphabetically)
     """
 
     def __init__(self,
                  origin,
                  message,
-                 file=None,
+                 position=None,
                  severity=RESULT_SEVERITY.NORMAL,
-                 line_nr=None,
                  debug_msg=""):
         """
-        :param origin:    Class name or class of the creator of this object
-        :param message:   Message to show with this result
-        :param file:      The path to the affected file
-        :param severity:  Severity of this result
-        :param line_nr:   Number of the line which is affected, first line is 1
-        :param debug_msg: A message which may help the user find out why
-                          this result was yielded.
+        :param origin:          Class name or class of the creator of this
+                                object.
+        :param message:         Message to show with this result.
+        :param position:        A ResultPosition object or None to give no
+                                position.
+        :param severity:        The severity of this result. (RESULT_SEVERITY)
+        :param debug_msg:       A message which may help the user find out why
+                                this result was yielded.
+        :raises AssertionError: If the position is not None or a ResultPosition
+                                object.
         """
         if not isinstance(origin, str):
             origin = origin.__class__.__name__
@@ -47,7 +48,8 @@ class Result:
         self.origin = origin
         self.message = message
         self.debug_msg = debug_msg
-        self.position = ResultPosition(file=file, line=line_nr)
+        self.position = position or ResultPosition(None, None)
+        assert isinstance(self.position, ResultPosition)
         self.severity = severity
 
     def __repr__(self):

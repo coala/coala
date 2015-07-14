@@ -17,10 +17,10 @@ class ResultTest(unittest.TestCase):
         self.assertEqual(str(uut), repr(uut))
 
     def test_ordering(self):
-        self.assert_equal(ResultPosition(None, 0),
-                          ResultPosition(None, 0))
+        self.assert_equal(ResultPosition(None, None),
+                          ResultPosition(None, None))
         self.assert_ordering(ResultPosition("a file", 4),
-                             ResultPosition(None, 0))
+                             ResultPosition(None, None))
         self.assert_ordering(ResultPosition("b file", 0),
                              ResultPosition("a file", 4))
         self.assert_ordering(ResultPosition("a file", 4),
