@@ -148,10 +148,9 @@ def execute_command_array(command_array, timeout, verbose):
     """
     message = ""
     stdout_file = tempfile.TemporaryFile()
-    stderr_file = tempfile.TemporaryFile()
     p = create_process_group(command_array,
                              stdout=stdout_file,
-                             stderr=stderr_file,
+                             stderr=subprocess.STDOUT,
                              universal_newlines=True)
     with subprocess_timeout(p,
                             timeout,
@@ -160,15 +159,12 @@ def execute_command_array(command_array, timeout, verbose):
         timed_out = timedout.value
 
     if retval != 0 or verbose:
-        stderr_file.seek(0)
         stdout_file.seek(0)
         # Don't use "replace" for decoding! Windows has problems to encode the
         # the replacement character again when outputting to console.
-        message += stderr_file.read().decode("utf-8", "ignore")
         message += stdout_file.read().decode("utf-8", "ignore")
 
     stdout_file.close()
-    stderr_file.close()
 
     if timed_out:
         message += ("This test failed because it was taking more than %f sec "
