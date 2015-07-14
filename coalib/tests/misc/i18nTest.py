@@ -11,16 +11,7 @@ if sys.version_info < (3, 4):
 else:
     import importlib
 
-build_dir = "build-i18n"
-# Only use non-installed locales, do this before importing i18n
-gettext._default_localedir = os.path.abspath(os.path.join(build_dir, "locale"))
 from coalib.misc import i18n
-
-print("Testing translation building...")
-shutil.rmtree(build_dir, ignore_errors=True)
-i18n.compile_translations(build_dir)
-# Shouldn't complain if files are already there, ideally not rebuild!
-i18n.compile_translations(build_dir)
 
 
 class i18nTest(unittest.TestCase):
@@ -30,6 +21,8 @@ class i18nTest(unittest.TestCase):
         os.environ["LC_ALL"] = lang
         os.environ["LC_MESSAGES"] = lang
         os.environ["LANG"] = lang
+        gettext._default_localedir = os.path.abspath(os.path.join("build",
+                                                                  "locale"))
 
         importlib.reload(i18n)
 
@@ -64,4 +57,16 @@ def skip_test():
 
 
 if __name__ == '__main__':
+    build_dir = "build-i18n"
+    gettext._default_localedir = os.path.abspath(os.path.join(build_dir,
+                                                              "locale"))
+    importlib.reload(i18n)
+    print("Testing translation building...")
+    shutil.rmtree(build_dir, ignore_errors=True)
+
+    i18n.compile_translations(build_dir)
+    # Shouldn't complain if files are already there, ideally not rebuild!
+    i18n.compile_translations(build_dir)
+    shutil.rmtree(build_dir, ignore_errors=True)
+
     unittest.main(verbosity=2)
