@@ -1,11 +1,11 @@
 site_name: coala documentation
 pages:
-- Getting Started:
-    - 'Introduction': 'index.md'
-    - 'Installation': 'Install.md'
-    - 'Tutorial': 'Tutorial.md'
-    - 'Glob Patterns': 'Glob_Patterns.md'
-    - 'Exit Codes': 'Exit_Codes.md'
+- Home: 'index.md'
+- For Users:
+    - 'Installation': 'Users/Install.md'
+    - 'Tutorial': 'Users/Tutorial.md'
+    - 'Glob Patterns': 'Users/Glob_Patterns.md'
+    - 'Exit Codes': 'Users/Exit_Codes.md'
 - Getting Involved:
     - 'Introduction': 'Getting_Involved/README.md'
     - 'Writing Bears': 'Getting_Involved/Writing_Bears.md'
