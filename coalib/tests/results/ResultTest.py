@@ -1,8 +1,8 @@
 import sys
+import unittest
 
 sys.path.insert(0, ".")
 from coalib.results.Result import Result, RESULT_SEVERITY
-import unittest
 
 
 class ResultTest(unittest.TestCase):

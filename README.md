@@ -24,6 +24,8 @@ coala can be installed with `pip install coala`. If you need more
 information about the installation and dependencies, take a look at our
 [installation documentation](http://coala.rtfd.org/en/latest/Install/).
 
+[![PyPI](http://img.shields.io/pypi/v/coala.svg)](https://pypi.python.org/pypi/coala)
+
 USAGE
 =====
 
