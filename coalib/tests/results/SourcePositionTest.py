@@ -26,10 +26,10 @@ class SourcePositionTest(unittest.TestCase):
 
         uut = SourcePosition(None, None)
         self.assertEqual(str(uut),
-                         "file: 'None', line: None")
+                         "file: None, line: None")
         self.assertRegex(
             repr(uut),
-            "<SourcePosition object\\(file: 'None', line: None\\) at "
+            "<SourcePosition object\\(file: None, line: None\\) at "
                 "0x[0-9a-fA-F]+>")
 
     def test_ordering(self):

@@ -25,8 +25,8 @@ class SourcePosition:
         self._line = other
 
     def __str__(self):
-        return "file: '{}', line: {}".format(
-            str(self.file),
+        return "file: {}, line: {}".format(
+            str(repr(self.file)),
             str(self.line))
 
     def __repr__(self):
