@@ -4,6 +4,7 @@ pages:
 - For Users:
     - 'Installation': 'Users/Install.md'
     - 'Tutorial': 'Users/Tutorial.md'
+    - 'coafile Specification': 'Users/coafile.md'
     - 'Glob Patterns': 'Users/Glob_Patterns.md'
     - 'Exit Codes': 'Users/Exit_Codes.md'
 - Getting Involved:
