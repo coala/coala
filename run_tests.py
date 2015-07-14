@@ -38,6 +38,7 @@ def main():
     ignore_list += [
         os.path.join("coalib", "tests", "**"),
         os.path.join("coalib", "bearlib", "parsing", "clang", "**"),
+        os.path.join("coalib", "coala*.py"),
         os.path.join("bears", "tests", "**")]
 
     if not args.ignore_main_tests:
