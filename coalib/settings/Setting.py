@@ -12,15 +12,17 @@ def path_list(obj, *args, **kwargs):
     return obj.__path_list__(*args, **kwargs)
 
 
-def typed_list(typ):
+def typed_list(conversion_func):
     """
     Creates a function that converts a setting into a list of elements each
-    having the given type.
+    converted with the given conversion function.
 
-    :param typ: The type each element should have.
-    :return:    A conversion function.
+    :param conversion_func: The conversion function that converts a string into
+                            your desired list item object.
+    :return:                A conversion function.
     """
-    return lambda setting: [typ(StringConverter(elem)) for elem in setting]
+    return lambda setting: [
+        conversion_func(StringConverter(elem)) for elem in setting]
 
 
 def typed_dict(key_type, value_type, default):
