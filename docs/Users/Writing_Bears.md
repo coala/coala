@@ -89,9 +89,9 @@ class CommunicationBear(LocalBear):
             ui=user_input,
             type=type(user_input)))
 
-        return [Result(message="A hello world result.",
-                       origin=self,
-                       file=filename)]
+        yield Result(message="A hello world result.",
+                     origin=self,
+                     file=filename)
 ```
 
 Try executing it:
@@ -144,6 +144,10 @@ for you:
 
 In the end we've got a result. If a file is provided, coala will show the file,
 if a line is provided, coala will also show a few lines before the affecting
-line. There are a few result types so you can e.g. create a PatchResult that
+line. There are a few result types so you can e.g. create a `PatchResult` that
 proposes a code change to the user. If the user likes it, coala will apply it
 automatically - you don't need to care.
+
+Your function needs to return an iterable of `Result` objects: that means you
+can either return a `list` of `Result` objects or simply yield them and write
+the method as a generator.
