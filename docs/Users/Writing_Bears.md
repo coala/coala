@@ -151,3 +151,15 @@ automatically - you don't need to care.
 Your function needs to return an iterable of `Result` objects: that means you
 can either return a `list` of `Result` objects or simply yield them and write
 the method as a generator.
+
+> **Note**:
+>
+> We are currently planning to simplify Bears for bear writers and us. In order
+> to make your Bear future proof, we recommend writing your method in generator
+> style.
+>
+> Don't worry: in order to migrate your Bears to our new API, you will likely
+> only need to change two lines of code. For more information about how bears
+> will look in the future, please read up on
+> <https://github.com/coala-analyzer/coala/issues/725> or ask us on
+> <https://gitter.im/coala-analyzer/coala>.
