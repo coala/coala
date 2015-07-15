@@ -4,12 +4,12 @@ pages:
 - For Users:
     - 'Installation': 'Users/Install.md'
     - 'Tutorial': 'Users/Tutorial.md'
+    - 'Writing Bears': 'Users/Writing_Bears.md'
     - 'coafile Specification': 'Users/coafile.md'
     - 'Glob Patterns': 'Users/Glob_Patterns.md'
     - 'Exit Codes': 'Users/Exit_Codes.md'
 - Getting Involved:
     - 'Introduction': 'Getting_Involved/README.md'
-    - 'Writing Bears': 'Getting_Involved/Writing_Bears.md'
     - 'Review': 'Getting_Involved/Review.md'
     - 'Codestyle': 'Getting_Involved/Codestyle.md'
     - 'Executing Tests': 'Getting_Involved/Testing.md'

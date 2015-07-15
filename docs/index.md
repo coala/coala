@@ -52,8 +52,7 @@ routine, add the parameters you like and see how coala automates the
 organization of settings, user interaction and execution parallelization. You
 shouldn't need to care about anything else than just writing your algorithm!
 
-See [Writing Bears](Getting_Involved/Writing_Bears.md) for more information
-on this.
+See [Writing Bears](Users/Writing_Bears.md) for more information on this.
 
 # Status of the Project
 
