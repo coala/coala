@@ -4,6 +4,7 @@ import sys
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.settings.Setting import typed_list
+from coalib.misc.Shell import escape_path_argument
 
 
 # We omit this case in our tests for technical reasons
@@ -50,7 +51,8 @@ class PyLintBear(LocalBear):
                                    passed to pylint.
         '''
         command = ('pylint -r n --msg-template="{line}|{category}|'
-                   '{msg}. ({msg_id}, {symbol}, {obj})" ' + filename)
+                   '{msg}. ({msg_id}, {symbol}, {obj})" '
+                   + escape_path_argument(filename))
         if pylint_disable:
             command += " --disable=" + ",".join(pylint_disable)
         if pylint_enable:
