@@ -2,6 +2,8 @@ from functools import total_ordering
 
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.PrintDebugMessageAction import \
+    PrintDebugMessageAction
 
 
 @total_ordering
@@ -116,5 +118,7 @@ class Result:
         actions = []
         if self.file is not None:
             actions.append(OpenEditorAction())
+        if self.debug_msg is not "":
+            actions.append(PrintDebugMessageAction())
 
         return actions
