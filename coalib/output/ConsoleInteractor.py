@@ -70,6 +70,44 @@ def finalize(file_diff_dict, file_dict):
             file.writelines(file_dict[filename])
 
 
+def print_lines(console_printer,
+                file_dict,
+                current_line,
+                result_line,
+                result_file):
+    """
+    Prints the lines between the current and the result line. If needed
+    they will be shortened.
+
+    :param console_printer: Object to print messages on the console.
+    :param file_dict      : A dictionary containing all files with filename as
+                            key.
+    :param current_line   : The current line printed by the console_printer.
+    :param result_line    : The line to which the result belongs to.
+    :param result_file    : The file to which the result belongs to.
+    """
+    line_delta = result_line - current_line
+
+    if line_delta > console_printer.pre_padding:
+        print_segregation(console_printer)
+
+        for i in range(max(result_line - console_printer.pre_padding, 1),
+                       result_line + 1):
+            console_printer.print(
+                format_line(line=file_dict[result_file][i - 1],
+                            real_nr=i,
+                            mod_nr=i),
+                color=FILE_LINES_COLOR)
+    else:
+        for i in range(1, line_delta + 1):
+            console_printer.print(
+                format_line(
+                    line=file_dict[result_file][current_line + i - 1],
+                    real_nr=current_line + i,
+                    mod_nr=current_line + i),
+                color=FILE_LINES_COLOR)
+
+
 def print_result(console_printer,
                  log_printer,
                  section,
@@ -422,32 +460,6 @@ class ConsoleInteractor(ConsolePrinter):
         self.file_diff_dict = {}
         self.current_section = None
 
-    def _print_lines(self, file_dict, current_line, result_line, result_file):
-        """
-        Prints the lines between the current and the result line. If needed
-        they will be shortened.
-        """
-        line_delta = result_line - current_line
-
-        if line_delta > self.pre_padding:
-            print_segregation(self)
-
-            for i in range(max(result_line - self.pre_padding, 1),
-                           result_line + 1):
-                self.print(
-                    format_line(line=file_dict[result_file][i - 1],
-                                real_nr=i,
-                                mod_nr=i),
-                    color=FILE_LINES_COLOR)
-        else:
-            for i in range(1, line_delta + 1):
-                self.print(
-                    format_line(
-                        line=file_dict[result_file][current_line + i - 1],
-                        real_nr=current_line + i,
-                        mod_nr=current_line + i),
-                    color=FILE_LINES_COLOR)
-
     def print_results(self, result_list, file_dict):
         if not isinstance(result_list, list):
             raise TypeError("result_list should be of type list")
@@ -485,10 +497,11 @@ class ConsoleInteractor(ConsolePrinter):
                 if len(file_dict[result.file]) < result.line_nr - 1:
                     self.print(format_line(line=self.STR_LINE_DOESNT_EXIST))
                 else:
-                    self._print_lines(file_dict,
-                                      current_line,
-                                      result.line_nr,
-                                      result.file)
+                    print_lines(self,
+                                file_dict,
+                                current_line,
+                                result.line_nr,
+                                result.file)
                     current_line = result.line_nr
 
             print_result(self,
