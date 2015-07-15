@@ -19,6 +19,8 @@ class ClangCloneDetectionBear(GlobalBear):
         '''
         differences = dependency_results[
             ClangFunctionDifferenceBear.__name__][0].contents
+        count_matrices = dependency_results[
+            ClangFunctionDifferenceBear.__name__][1].contents
 
         self.debug("Creating results...")
         for function_1, function_2, difference in differences:
@@ -34,7 +36,12 @@ class ClangCloneDetectionBear(GlobalBear):
                         difference=difference),
                     file=function_1[0],
                     severity=RESULT_SEVERITY.MAJOR,
-                    line_nr=function_1[1])
+                    line_nr=function_1[1],
+                    debug_msg="Count matrices are:\n"
+                              " 1) {cm1}\n"
+                              " 2) {cm2}".format(
+                                  cm1=count_matrices[function_1],
+                                  cm2=count_matrices[function_2]))
 
     @staticmethod
     def get_dependencies():
