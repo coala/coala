@@ -20,11 +20,20 @@ from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              print_bears,
                                              get_action_info,
                                              print_result,
-                                             print_section_beginning)
+                                             print_section_beginning,
+                                             print_results)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.bears.Bear import Bear
+
+
+STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
+                            "needed by {}: ")
+STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
+                          "cannot be printed because it refers to a line "
+                          "that doesn't seem to exist in the given file.")
+STR_PROJECT_WIDE = _("Project wide:")
 
 
 class TestAction(ResultAction):
@@ -214,41 +223,58 @@ class ConsoleInteractorTest(unittest.TestCase):
 
     def test_print_results_raising(self):
         self.assertRaises(TypeError,
-                          self.uut.print_results,
+                          print_results,
+                          self.log_printer,
                           Section(""),
+                          5,
+                          {},
+                          {})
+        self.assertRaises(TypeError,
+                          print_results,
+                          self.log_printer,
+                          Section(""),
+                          [],
                           5,
                           {})
         self.assertRaises(TypeError,
-                          self.uut.print_results,
+                          print_results,
+                          self.log_printer,
                           Section(""),
                           [],
+                          {},
                           5)
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
-            self.uut.print_results(Section(""), [], {})
+            print_results(self.log_printer, Section(""), [], {}, {})
             self.assertEqual(stdout.getvalue(), "")
 
     def test_print_results_project_wide(self):
         with retrieve_stdout() as stdout:
-            self.uut.print_results(Section(""),
-                                   [Result("origin", "message")],
-                                   {})
+            print_results(self.log_printer,
+                          Section(""),
+                          [Result("origin", "message")],
+                          {},
+                          {},
+                          color=False)
             self.assertEqual(
                 "\n\n{}\n|    |    | [{}] origin:\n|    |    | message"
-                "\n".format(self.uut.STR_PROJECT_WIDE,
+                "\n".format(STR_PROJECT_WIDE,
                             RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                 stdout.getvalue())
 
     def test_print_results_for_file(self):
         with retrieve_stdout() as stdout:
-            self.uut.print_results(
+            print_results(
+                self.log_printer,
                 Section(""),
                 [Result("SpaceConsistencyBear",
                         "Trailing whitespace found",
                         "proj/white",
                         line_nr=2)],
-                {"proj/white": ["test line\n", "line 2\n", "line 3\n"]})
+                {"proj/white": ["test line\n", "line 2\n", "line 3\n"]},
+                {},
+                color=False)
             self.assertEqual("""\n\nproj/white
 |   1|   1| test line\n|   2|   2| line 2
 |    |    | [{}] SpaceConsistencyBear:
@@ -257,7 +283,8 @@ class ConsoleInteractorTest(unittest.TestCase):
                          stdout.getvalue())
 
         with retrieve_stdout() as stdout:
-            self.uut.print_results(
+            print_results(
+                self.log_printer,
                 Section(""),
                 [Result("SpaceConsistencyBear",
                         "Trailing whitespace found",
@@ -267,7 +294,9 @@ class ConsoleInteractorTest(unittest.TestCase):
                                 "line 2\n",
                                 "line 3\n",
                                 "line 4\n",
-                                "line 5\n"]})
+                                "line 5\n"]},
+                {},
+                color=False)
             self.assertEqual("""\n\nproj/white
 | ...| ...| \n|   2|   2| line 2
 |   3|   3| line 3
@@ -280,20 +309,23 @@ class ConsoleInteractorTest(unittest.TestCase):
 
     def test_print_results_sorting(self):
         with retrieve_stdout() as stdout:
-            self.uut.print_results(Section(""),
-                                   [Result("SpaceConsistencyBear",
-                                           "Trailing whitespace found",
-                                           "proj/white",
-                                           line_nr=5),
-                                    Result("SpaceConsistencyBear",
-                                           "Trailing whitespace found",
-                                           "proj/white",
-                                           line_nr=2)],
-                                   {"proj/white": ["test line\n",
-                                                   "line 2\n",
-                                                   "line 3\n",
-                                                   "line 4\n",
-                                                   "line 5\n"]})
+            print_results(self.log_printer,
+                          Section(""),
+                          [Result("SpaceConsistencyBear",
+                                  "Trailing whitespace found",
+                                  "proj/white",
+                                  line_nr=5),
+                           Result("SpaceConsistencyBear",
+                                  "Trailing whitespace found",
+                                  "proj/white",
+                                  line_nr=2)],
+                          {"proj/white": ["test line\n",
+                                          "line 2\n",
+                                          "line 3\n",
+                                          "line 4\n",
+                                          "line 5\n"]},
+                          {},
+                          color=False)
 
             self.assertEqual("""\n\nproj/white
 |   1|   1| test line
@@ -313,31 +345,40 @@ class ConsoleInteractorTest(unittest.TestCase):
         # File isn't in dict, shouldn't print but also shouldn't throw. This
         # can occur if filter writers are doing nonsense. If this happens twice
         # the same should happen (whitebox testing: this is a potential bug.)
-        self.uut.log_printer = NullPrinter()
+        self.log_printer = NullPrinter()
         with retrieve_stdout() as stdout:
-            self.uut.print_results(
+            print_results(
+                self.log_printer,
                 Section(""),
                 [Result("t", "msg", "file", line_nr=5),
-                 Result("t", "msg", "file", line_nr=5)], {})
+                 Result("t", "msg", "file", line_nr=5)],
+                {},
+                {},
+                color=False)
             self.assertEqual("", stdout.getvalue())
 
     def test_print_results_missing_line(self):
         # Line isn't in dict[file], shouldn't print but also shouldn't throw.
         # This can occur if filter writers are doing nonsense.
         with retrieve_stdout() as stdout:
-            self.uut.print_results(
+            print_results(
+                self.log_printer,
                 Section(""),
                 [Result("t", "msg", "file", line_nr=5)],
-                {"file": []})
+                {"file": []},
+                {},
+                color=False)
             self.assertEqual("""\n\nfile\n|    |    | {}\n|    |    | [{}] t:
-|    |    | msg\n""".format(self.uut.STR_LINE_DOESNT_EXIST,
+|    |    | msg\n""".format(STR_LINE_DOESNT_EXIST,
                             RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                              stdout.getvalue())
 
         self.assertRaises(AssertionError,
-                          self.uut.print_results,
+                          print_results,
+                          self.log_printer,
                           Section(""),
                           [Result("t", "msg", None, line_nr=5)],
+                          {},
                           {})
 
     def test_print_bears_empty(self):

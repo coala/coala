@@ -15,7 +15,8 @@ from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              finalize,
                                              nothing_done,
                                              acquire_settings,
-                                             print_section_beginning)
+                                             print_section_beginning,
+                                             print_results)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
@@ -47,15 +48,17 @@ def main():
                 if not section.is_enabled(targets):
                     continue
 
+                file_diff_dict = {}
                 print_section_beginning(interactor, section)
                 results = execute_section(
                     section=section,
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
-                    print_results=interactor.print_results,
-                    log_printer=log_printer)
+                    print_results=print_results,
+                    log_printer=log_printer,
+                    file_diff_dict=file_diff_dict)
                 yielded_results = yielded_results or results[0]
-                finalize(interactor.file_diff_dict, results[3])
+                finalize(file_diff_dict, results[3])
                 did_nothing = False
 
         if did_nothing:

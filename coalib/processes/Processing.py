@@ -54,25 +54,30 @@ def print_result(results,
                  file_dict,
                  retval,
                  print_results,
-                 section):
+                 section,
+                 log_printer,
+                 file_diff_dict):
     """
     Takes the results produced by each bear and gives them to the interactor to
     present to the user.
 
-    :param results:       A list of results.
-    :param file_dict:     A dictionary containing the name of files and its
-                          contents.
-    :param retval:        It is True if no results were yielded ever before.
-                          If it is False this function will return False no
-                          matter what happens. Else it depends on if this
-                          invocation yields results.
-    :param print_results: Prints all given results appropriate to the output
-                          medium.
-    :return:              Returns False if any results were yielded. Else True.
+    :param results:        A list of results.
+    :param file_dict:      A dictionary containing the name of files and its
+                           contents.
+    :param retval:         It is True if no results were yielded ever before.
+                           If it is False this function will return False no
+                           matter what happens. Else it depends on if this
+                           invocation yields results.
+    :param print_results:  Prints all given results appropriate to the output
+                           medium.
+    :param file_diff_dict: A dictionary that contains filenames as keys and
+                           diff objects as values.
+    :return:               Returns False if any results were yielded. Else
+                           True.
     """
     results = list(filter(lambda result: not isinstance(result, HiddenResult),
                           results))
-    print_results(section, results, file_dict)
+    print_results(log_printer, section, results, file_dict, file_diff_dict)
     return retval or len(results) > 0
 
 
@@ -190,7 +195,9 @@ def process_queues(processes,
                    global_result_dict,
                    file_dict,
                    print_results,
-                   section):
+                   section,
+                   log_printer,
+                   file_diff_dict):
     """
     Iterate the control queue and send the results recieved to the interactor
     so that they can be presented to the user.
@@ -212,6 +219,8 @@ def process_queues(processes,
                                filename as keys.
     :param print_results:      Prints all given results appropriate to the
                                output medium.
+    :param file_diff_dict:     A dictionary that contains filenames as keys and
+                               diff objects as values.
     :return:                   Return True if all bears execute succesfully and
                                Results were delivered to the user. Else False.
     """
@@ -234,7 +243,9 @@ def process_queues(processes,
                                       file_dict,
                                       retval,
                                       print_results,
-                                      section)
+                                      section,
+                                      log_printer,
+                                      file_diff_dict)
             elif control_elem == CONTROL_ELEMENT.GLOBAL:
                 global_result_buffer.append(index)
         except queue.Empty:
@@ -246,7 +257,9 @@ def process_queues(processes,
                               file_dict,
                               retval,
                               print_results,
-                              section)
+                              section,
+                              log_printer,
+                              file_diff_dict)
 
     running_processes = get_running_processes(processes)
     # One process is the logger thread
@@ -259,7 +272,9 @@ def process_queues(processes,
                                       file_dict,
                                       retval,
                                       print_results,
-                                      section)
+                                      section,
+                                      log_printer,
+                                      file_diff_dict)
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                 running_processes = get_running_processes(processes)
@@ -274,7 +289,8 @@ def execute_section(section,
                     global_bear_list,
                     local_bear_list,
                     print_results,
-                    log_printer):
+                    log_printer,
+                    file_diff_dict):
     """
     Executes the section with the given bears.
 
@@ -292,6 +308,8 @@ def execute_section(section,
     :param print_results:    Prints all given results appropriate to the
                              output medium.
     :param log_printer:      The log_printer to warn to.
+    :param file_diff_dict:   A dictionary that contains filenames as keys and
+                             diff objects as values.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
@@ -323,7 +341,9 @@ def execute_section(section,
                                arg_dict["global_result_dict"],
                                arg_dict["file_dict"],
                                print_results,
-                               section),
+                               section,
+                               log_printer,
+                               file_diff_dict),
                 arg_dict["local_result_dict"],
                 arg_dict["global_result_dict"],
                 arg_dict["file_dict"])

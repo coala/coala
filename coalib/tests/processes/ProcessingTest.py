@@ -40,34 +40,14 @@ class DummyProcess(multiprocessing.Process):
         return not self.control_queue.empty()
 
 
-class ProcessingTestInteractor(LogPrinter):
-    def __init__(self, log_printer, result_queue, log_queue):
+class ProcessingTestLogPrinter(LogPrinter):
+    def __init__(self, log_queue):
         LogPrinter.__init__(self)
-        self.result_queue = result_queue
         self.log_queue = log_queue
         self.set_up = False
 
     def log_message(self, log_message, timestamp=None, **kwargs):
         self.log_queue.put(log_message)
-
-    def print_results(self, section, result_list, file_dict):
-        self.result_queue.put(result_list)
-
-
-class MessageQueueingInteractor():
-    """
-    A simple interactor that pushes all results it gets to a queue for
-    testing purposes.
-    """
-
-    def __init__(self):
-        self.queue = queue.Queue()
-
-    def print_results(self, section, result_list, file_dict):
-        self.queue.put((result_list, file_dict))
-
-    def get(self):
-        return self.queue.get(timeout=0)
 
 
 class ProcessingTest(unittest.TestCase):
@@ -80,11 +60,10 @@ class ProcessingTest(unittest.TestCase):
                                             "testcode.c")
 
         self.result_queue = queue.Queue()
+        self.queue = queue.Queue()
         self.log_queue = queue.Queue()
         log_printer = ConsolePrinter()
-        self.interactor = ProcessingTestInteractor(log_printer,
-                                                   self.result_queue,
-                                                   self.log_queue)
+        self.log_printer = ProcessingTestLogPrinter(self.log_queue)
 
         (self.sections,
          self.local_bears,
@@ -100,8 +79,9 @@ class ProcessingTest(unittest.TestCase):
         results = execute_section(self.sections["default"],
                                   self.global_bears["default"],
                                   self.local_bears["default"],
-                                  self.interactor.print_results,
-                                  self.interactor)
+                                  lambda *args: self.result_queue.put(args[2]),
+                                  self.log_printer,
+                                  {})
         self.assertTrue(results[0])
 
         local_results = self.result_queue.get(timeout=0)
@@ -133,8 +113,9 @@ class ProcessingTest(unittest.TestCase):
         results = execute_section(self.sections["default"],
                                   [],
                                   [],
-                                  self.interactor.print_results,
-                                  self.interactor)
+                                  lambda *args: self.result_queue.put(args[2]),
+                                  self.log_printer,
+                                  {})
         # No results
         self.assertFalse(results[0])
         # One file
@@ -143,7 +124,6 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(len(results[2]), 0)
 
     def test_process_queues(self):
-        mock_interactor = MessageQueueingInteractor()
         ctrlq = queue.Queue()
 
         # Append custom controlling sequences.
@@ -171,14 +151,18 @@ class ProcessingTest(unittest.TestCase):
              2: ["The second result.", HiddenResult("t", "c")]},
             {1: ["The one and only global result."]},
             None,
-            mock_interactor.print_results,
-            Section(""))
+            lambda *args: self.queue.put((args[2], args[3])),
+            Section(""),
+            self.log_printer,
+            {})
 
-        self.assertEqual(mock_interactor.get(), (["The first result."], None))
-        self.assertEqual(mock_interactor.get(), (["The second result."], None))
-        self.assertEqual(mock_interactor.get(),
+        self.assertEqual(self.queue.get(timeout=0), (["The first result."],
+                                                     None))
+        self.assertEqual(self.queue.get(timeout=0), (["The second result."],
+                                                     None))
+        self.assertEqual(self.queue.get(timeout=0),
                          (["The one and only global result."], None))
-        self.assertEqual(mock_interactor.get(),
+        self.assertEqual(self.queue.get(timeout=0),
                          (["The one and only global result."], None))
 
         # No valid FINISH element in the queue
@@ -190,10 +174,12 @@ class ProcessingTest(unittest.TestCase):
             {1: "The first result.", 2: "The second result."},
             {1: "The one and only global result."},
             None,
-            mock_interactor.print_results,
-            Section(""))
+            lambda *args: self.queue.put((args[2], args[3])),
+            Section(""),
+            self.log_printer,
+            {})
         with self.assertRaises(queue.Empty):
-            mock_interactor.get()
+            self.queue.get(timeout=0)
 
     def test_create_process_group(self):
         p = create_process_group([StringConstants.python_executable,

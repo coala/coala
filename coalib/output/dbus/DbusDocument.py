@@ -116,7 +116,8 @@ class DbusDocument(dbus.service.Object):
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
                     print_results=lambda *args: True,
-                    log_printer=log_printer)
+                    log_printer=log_printer,
+                    file_diff_dict={})
 
                 retval.append(
                     DbusDocument.results_to_dbus_struct(results, section_name))

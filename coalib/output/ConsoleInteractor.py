@@ -17,6 +17,11 @@ from coalib.results.Result import Result
 
 STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
                             "needed by {}: ")
+STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
+                          "cannot be printed because it refers to a line "
+                          "that doesn't seem to exist in the given file.")
+STR_PROJECT_WIDE = _("Project wide:")
+FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
 
 
@@ -72,6 +77,7 @@ def finalize(file_diff_dict, file_dict):
 
 
 def print_lines(console_printer,
+                pre_padding,
                 file_dict,
                 current_line,
                 result_line,
@@ -89,10 +95,10 @@ def print_lines(console_printer,
     """
     line_delta = result_line - current_line
 
-    if line_delta > console_printer.pre_padding:
+    if line_delta > pre_padding:
         print_segregation(console_printer)
 
-        for i in range(max(result_line - console_printer.pre_padding, 1),
+        for i in range(max(result_line - pre_padding, 1),
                        result_line + 1):
             console_printer.print(
                 format_line(line=file_dict[result_file][i - 1],
@@ -162,6 +168,83 @@ def print_result(console_printer,
                            file_dict):
         pass
 
+
+def print_results(log_printer,
+                  section,
+                  result_list,
+                  file_dict,
+                  file_diff_dict,
+                  color=True,
+                  pre_padding=3):
+    """
+    Print all the results in a section.
+
+    :param log_printer:    Printer responsible for logging the messages.
+    :param section:        The section to which the results belong to.
+    :param result_list:    List containing the results
+    :param file_dict:      A dictionary containing all files with filename as
+                           key.
+    :param file_diff_dict: A dictionary that contains filenames as keys and
+                           diff objects as values.
+    :param color:          Boolean variable to print the results in color or
+                           not.
+    :param pre_padding:    No of lines of file to print before the result line.
+                           Default value is 3.
+    """
+    if not isinstance(result_list, list):
+        raise TypeError("result_list should be of type list")
+    if not isinstance(file_dict, dict):
+        raise TypeError("file_dict should be of type dict")
+    if not isinstance(file_diff_dict, dict):
+        raise TypeError("file_diff_dict should be of type dict")
+
+    # We can't use None since we need line 109 be executed if file of first
+    # result is None
+    console_printer = ConsolePrinter(print_colored=color)
+    current_file = False
+    current_line = 0
+
+    for result in sorted(result_list):
+        if result.file != current_file:
+            if result.file in file_dict or result.file is None:
+                current_file = result.file
+                current_line = 0
+                console_printer.print("\n\n{}".format(current_file
+                                                      if current_file is not
+                                                      None
+                                                      else STR_PROJECT_WIDE),
+                                      color=FILE_NAME_COLOR)
+            else:
+                log_printer.warn(_("A result ({}) cannot be printed "
+                                   "because it refers to a file that "
+                                   "doesn't seem to "
+                                   "exist.").format(str(result)))
+                continue
+
+        if result.line_nr is not None:
+            if current_file is None:
+                raise AssertionError("A result with a line_nr should also "
+                                     "have a file.")
+            if result.line_nr < current_line:  # pragma: no cover
+                raise AssertionError("The sorting of the results doesn't "
+                                     "work correctly.")
+            if len(file_dict[result.file]) < result.line_nr - 1:
+                console_printer.print(format_line(line=STR_LINE_DOESNT_EXIST))
+            else:
+                print_lines(console_printer,
+                            pre_padding,
+                            file_dict,
+                            current_line,
+                            result.line_nr,
+                            result.file)
+                current_line = result.line_nr
+
+        print_result(console_printer,
+                     log_printer,
+                     section,
+                     file_diff_dict,
+                     result,
+                     file_dict)
 
 
 def require_setting(log_printer, setting_name, arr):
@@ -437,11 +520,6 @@ def print_bears(console_printer, bears):
 
 
 class ConsoleInteractor(ConsolePrinter):
-    STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
-                              "cannot be printed because it refers to a line "
-                              "that doesn't seem to exist in the given file.")
-    STR_PROJECT_WIDE = _("Project wide:")
-    FILE_NAME_COLOR = "blue"
 
     def __init__(self,
                  log_printer,
@@ -459,54 +537,3 @@ class ConsoleInteractor(ConsolePrinter):
         self.pre_padding = pre_padding
         self.log_printer = log_printer
         self.file_diff_dict = {}
-
-    def print_results(self, section, result_list, file_dict):
-        if not isinstance(result_list, list):
-            raise TypeError("result_list should be of type list")
-        if not isinstance(file_dict, dict):
-            raise TypeError("file_dict should be of type dict")
-
-        # We can't use None since we need line 109 be executed if file of first
-        # result is None
-        current_file = False
-        current_line = 0
-
-        for result in sorted(result_list):
-            if result.file != current_file:
-                if result.file in file_dict or result.file is None:
-                    current_file = result.file
-                    current_line = 0
-                    self.print("\n\n{}".format(current_file
-                                               if current_file is not None
-                                               else self.STR_PROJECT_WIDE),
-                               color=self.FILE_NAME_COLOR)
-                else:
-                    self.log_printer.warn(_("A result ({}) cannot be printed "
-                                            "because it refers to a file that "
-                                            "doesn't seem to "
-                                            "exist.").format(str(result)))
-                    continue
-
-            if result.line_nr is not None:
-                if current_file is None:
-                    raise AssertionError("A result with a line_nr should also "
-                                         "have a file.")
-                if result.line_nr < current_line:  # pragma: no cover
-                    raise AssertionError("The sorting of the results doesn't "
-                                         "work correctly.")
-                if len(file_dict[result.file]) < result.line_nr - 1:
-                    self.print(format_line(line=self.STR_LINE_DOESNT_EXIST))
-                else:
-                    print_lines(self,
-                                file_dict,
-                                current_line,
-                                result.line_nr,
-                                result.file)
-                    current_line = result.line_nr
-
-            print_result(self,
-                         self.log_printer,
-                         section,
-                         self.file_diff_dict,
-                         result,
-                         file_dict)
