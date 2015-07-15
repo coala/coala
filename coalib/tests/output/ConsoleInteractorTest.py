@@ -18,7 +18,8 @@ from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              nothing_done,
                                              acquire_settings,
                                              print_bears,
-                                             get_action_info)
+                                             get_action_info,
+                                             print_result)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -110,10 +111,20 @@ class ConsoleInteractorTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 2)
 
     def test_print_result(self):
-        self.uut.print_result("illegal value", {})
+        print_result(self.uut,
+                     self.uut.log_printer,
+                     self.uut.current_section,
+                     self.uut.file_diff_dict,
+                     "illegal value",
+                     {})
 
         with simulate_console_inputs(0):
-            self.uut.print_result(PatchResult("origin", "msg", {}), {})
+            print_result(self.uut,
+                         self.uut.log_printer,
+                         self.uut.current_section,
+                         self.uut.file_diff_dict,
+                         PatchResult("origin", "msg", {}),
+                         {})
 
         (testfile, testfile_path) = tempfile.mkstemp()
         os.close(testfile)
@@ -126,10 +137,12 @@ class ConsoleInteractorTest(unittest.TestCase):
         diff.change_line(3, "3\n", "3_changed\n")
 
         with simulate_console_inputs(1), self.assertRaises(ValueError):
-            self.uut.print_result(PatchResult("origin",
-                                              "msg",
-                                              {testfile_path: diff}),
-                                  file_dict)
+            print_result(self.uut,
+                         self.uut.log_printer,
+                         self.uut.current_section,
+                         self.uut.file_diff_dict,
+                         PatchResult("origin", "msg", {testfile_path: diff}),
+                         file_dict)
 
         # Check that the next section doesn't use the same diff files dict
         self.uut.begin_section(Section(""))
@@ -139,10 +152,12 @@ class ConsoleInteractorTest(unittest.TestCase):
         with simulate_console_inputs("INVALID", -1, 1, 3) as input_generator:
             # To load current_section in ConsoleInteractor object
             self.uut.begin_section(Section(""))
-            self.uut.print_result(PatchResult("origin",
-                                              "msg",
-                                              {testfile_path: diff}),
-                                  file_dict)
+            print_result(self.uut,
+                         self.uut.log_printer,
+                         self.uut.current_section,
+                         self.uut.file_diff_dict,
+                         PatchResult("origin", "msg", {testfile_path: diff}),
+                         file_dict)
             self.assertEqual(input_generator.last_input, 2)
             finalize(self.uut.file_diff_dict, file_dict)
 
@@ -166,12 +181,22 @@ class ConsoleInteractorTest(unittest.TestCase):
             patch_result = PatchResult("origin", "msg", {testfile_path: diff})
             patch_result.file = "f_b"
 
-            self.uut.print_result(patch_result, file_dict)
+            print_result(self.uut,
+                         self.uut.log_printer,
+                         self.uut.current_section,
+                         self.uut.file_diff_dict,
+                         patch_result,
+                         file_dict)
             # choose action, choose editor, choose no action (-1 -> 2)
             self.assertEqual(generator.last_input, 2)
 
             # It shoudn't ask for parameter again
-            self.uut.print_result(patch_result, file_dict)
+            print_result(self.uut,
+                         self.uut.log_printer,
+                         self.uut.current_section,
+                         self.uut.file_diff_dict,
+                         patch_result,
+                         file_dict)
             self.assertEqual(generator.last_input, 4)
 
     def test_static_functions(self):

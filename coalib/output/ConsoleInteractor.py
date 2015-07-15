@@ -70,6 +70,61 @@ def finalize(file_diff_dict, file_dict):
             file.writelines(file_dict[filename])
 
 
+def print_result(console_printer,
+                 log_printer,
+                 section,
+                 file_diff_dict,
+                 result,
+                 file_dict):
+    """
+    Prints the result to console.
+
+    :param console_printer: Object to print messages on the console.
+    :param log_printer:     Printer responsible for logging the messages.
+    :param section:         Name of section to which the result belongs.
+    :param file_diff_dict:  Dictionary containing filenames as keys and Diff
+                            objects as values.
+    :param result:          A derivative of Result.
+    :param file_dict:       A dictionary containing all files with filename as
+                            key.
+    """
+    if not isinstance(result, Result):
+        log_printer.warn(_("One of the results can not be printed since it is "
+                           "not a valid derivative of the coala result "
+                           "class."))
+        return
+
+    console_printer.print(format_line("[{sev}] {bear}:".format(
+        sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
+        color=RESULT_SEVERITY_COLORS[result.severity])
+    console_printer.print(
+        *[format_line(line) for line in result.message.split("\n")],
+        delimiter="\n")
+
+    actions = result.get_actions()
+    if actions == []:
+        return
+
+    action_dict = {}
+    metadata_list = []
+    for action in actions:
+        metadata = action.get_metadata()
+        action_dict[metadata.name] = action
+        metadata_list.append(metadata)
+
+    # User can always choose no action which is guaranteed to succeed
+    while not apply_action(log_printer,
+                           console_printer,
+                           section,
+                           metadata_list,
+                           action_dict,
+                           result,
+                           file_diff_dict,
+                           file_dict):
+        pass
+
+
+
 def require_setting(log_printer, setting_name, arr):
     """
     This method is responsible for prompting a user about a missing setting and
@@ -393,48 +448,6 @@ class ConsoleInteractor(ConsolePrinter):
                         mod_nr=current_line + i),
                     color=FILE_LINES_COLOR)
 
-    def print_result(self, result, file_dict):
-        """
-        Prints the result to the console.
-
-        :param result:    A derivative of Result.
-        :param file_dict: A dictionary containing all files with filename as
-                          key.
-        """
-        if not isinstance(result, Result):
-            self.log_printer.warn(_("One of the results can not be printed "
-                                    "since it is not a valid derivative of "
-                                    "the coala result class."))
-            return
-
-        self.print(format_line("[{sev}] {bear}:".format(
-            sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
-            color=RESULT_SEVERITY_COLORS[result.severity])
-        self.print(*[format_line(line) for line in result.message.split("\n")],
-                   delimiter="\n")
-
-        actions = result.get_actions()
-        if actions == []:
-            return
-
-        action_dict = {}
-        metadata_list = []
-        for action in actions:
-            metadata = action.get_metadata()
-            action_dict[metadata.name] = action
-            metadata_list.append(metadata)
-
-        # User can always choose no action which is guaranteed to succeed
-        while not apply_action(self.log_printer,
-                               self,
-                               self.current_section,
-                               metadata_list,
-                               action_dict,
-                               result,
-                               self.file_diff_dict,
-                               file_dict):
-            pass
-
     def print_results(self, result_list, file_dict):
         if not isinstance(result_list, list):
             raise TypeError("result_list should be of type list")
@@ -478,7 +491,12 @@ class ConsoleInteractor(ConsolePrinter):
                                       result.file)
                     current_line = result.line_nr
 
-            self.print_result(result, file_dict)
+            print_result(self,
+                         self.log_printer,
+                         self.current_section,
+                         self.file_diff_dict,
+                         result,
+                         file_dict)
 
     def begin_section(self, section):
         """
