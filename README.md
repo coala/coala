@@ -24,6 +24,9 @@ coala can be installed with `pip install coala`. If you need more
 information about the installation and dependencies, take a look at our
 [installation documentation](http://coala.rtfd.org/en/latest/Install/).
 
+The latest code from master is automatically deployed to PyPI as a development
+version. Get it with `pip install coala --pre`.
+
 [![PyPI](http://img.shields.io/pypi/v/coala.svg)](https://pypi.python.org/pypi/coala)
 
 USAGE
