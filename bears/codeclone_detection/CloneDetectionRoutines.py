@@ -12,13 +12,14 @@ def exclude_function(count_matrix):
     Applied heuristics:
      * Functions with only count vectors with a sum of all unweighted elements
        of lower then 10 are very likely only declarations or empty and to be
-       ignored.
+       ignored. (Constants are not taken into account.)
 
     :param count_matrix: A dictionary with count vectors representing all
                          variables for a function.
     :return:             True if the function is useless for evaluation.
     """
-    return all(sum(cv.unweighted) < 10 for cv in count_matrix.values())
+    return all((cv.name.startswith("#") or sum(cv.unweighted) < 10)
+               for cv in count_matrix.values())
 
 
 def get_count_matrices(count_vector_creator,
