@@ -19,7 +19,8 @@ from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              acquire_settings,
                                              print_bears,
                                              get_action_info,
-                                             print_result)
+                                             print_result,
+                                             print_section_beginning)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -113,7 +114,7 @@ class ConsoleInteractorTest(unittest.TestCase):
     def test_print_result(self):
         print_result(self.uut,
                      self.uut.log_printer,
-                     self.uut.current_section,
+                     None,
                      self.uut.file_diff_dict,
                      "illegal value",
                      {})
@@ -121,7 +122,7 @@ class ConsoleInteractorTest(unittest.TestCase):
         with simulate_console_inputs(0):
             print_result(self.uut,
                          self.uut.log_printer,
-                         self.uut.current_section,
+                         None,
                          self.uut.file_diff_dict,
                          PatchResult("origin", "msg", {}),
                          {})
@@ -139,27 +140,26 @@ class ConsoleInteractorTest(unittest.TestCase):
         with simulate_console_inputs(1), self.assertRaises(ValueError):
             print_result(self.uut,
                          self.uut.log_printer,
-                         self.uut.current_section,
+                         None,
                          self.uut.file_diff_dict,
                          PatchResult("origin", "msg", {testfile_path: diff}),
                          file_dict)
 
-        # Check that the next section doesn't use the same diff files dict
-        self.uut.begin_section(Section(""))
-        self.assertEqual(len(self.uut.file_diff_dict), 0)
-
         # To assure user can rechose if he didn't chose wisely
         with simulate_console_inputs("INVALID", -1, 1, 3) as input_generator:
             # To load current_section in ConsoleInteractor object
-            self.uut.begin_section(Section(""))
+            curr_section = Section("")
+            print_section_beginning(self.uut, curr_section)
             print_result(self.uut,
                          self.uut.log_printer,
-                         self.uut.current_section,
+                         curr_section,
                          self.uut.file_diff_dict,
                          PatchResult("origin", "msg", {testfile_path: diff}),
                          file_dict)
             self.assertEqual(input_generator.last_input, 2)
             finalize(self.uut.file_diff_dict, file_dict)
+            # Check that the next section does not use the same file_diff_dict
+            self.assertEqual(len(self.uut.file_diff_dict), 0)
 
             with open(testfile_path) as f:
                 self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
@@ -167,7 +167,7 @@ class ConsoleInteractorTest(unittest.TestCase):
             os.remove(testfile_path)
             os.remove(testfile_path + ".orig")
 
-            name, section = get_action_info(self.uut.current_section,
+            name, section = get_action_info(curr_section,
                                             TestAction().get_metadata())
             self.assertEqual(input_generator.last_input, 3)
             self.assertEqual(str(section), " {param : 3}")
@@ -183,7 +183,7 @@ class ConsoleInteractorTest(unittest.TestCase):
 
             print_result(self.uut,
                          self.uut.log_printer,
-                         self.uut.current_section,
+                         curr_section,
                          self.uut.file_diff_dict,
                          patch_result,
                          file_dict)
@@ -193,7 +193,7 @@ class ConsoleInteractorTest(unittest.TestCase):
             # It shoudn't ask for parameter again
             print_result(self.uut,
                          self.uut.log_printer,
-                         self.uut.current_section,
+                         curr_section,
                          self.uut.file_diff_dict,
                          patch_result,
                          file_dict)
@@ -201,8 +201,7 @@ class ConsoleInteractorTest(unittest.TestCase):
 
     def test_static_functions(self):
         with retrieve_stdout() as stdout:
-            self.uut.begin_section(Section("name"))
-            self.assertEqual(len(self.uut.file_diff_dict), 0)
+            print_section_beginning(self.uut, Section("name"))
             self.assertEqual(stdout.getvalue(),
                              _("Executing section "
                                "{name}...").format(name="name") + "\n")
@@ -214,17 +213,27 @@ class ConsoleInteractorTest(unittest.TestCase):
                                "Nothing to do.") + "\n")
 
     def test_print_results_raising(self):
-        self.assertRaises(TypeError, self.uut.print_results, 5, {})
-        self.assertRaises(TypeError, self.uut.print_results, [], 5)
+        self.assertRaises(TypeError,
+                          self.uut.print_results,
+                          Section(""),
+                          5,
+                          {})
+        self.assertRaises(TypeError,
+                          self.uut.print_results,
+                          Section(""),
+                          [],
+                          5)
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
-            self.uut.print_results([], {})
+            self.uut.print_results(Section(""), [], {})
             self.assertEqual(stdout.getvalue(), "")
 
     def test_print_results_project_wide(self):
         with retrieve_stdout() as stdout:
-            self.uut.print_results([Result("origin", "message")], {})
+            self.uut.print_results(Section(""),
+                                   [Result("origin", "message")],
+                                   {})
             self.assertEqual(
                 "\n\n{}\n|    |    | [{}] origin:\n|    |    | message"
                 "\n".format(self.uut.STR_PROJECT_WIDE,
@@ -234,6 +243,7 @@ class ConsoleInteractorTest(unittest.TestCase):
     def test_print_results_for_file(self):
         with retrieve_stdout() as stdout:
             self.uut.print_results(
+                Section(""),
                 [Result("SpaceConsistencyBear",
                         "Trailing whitespace found",
                         "proj/white",
@@ -248,6 +258,7 @@ class ConsoleInteractorTest(unittest.TestCase):
 
         with retrieve_stdout() as stdout:
             self.uut.print_results(
+                Section(""),
                 [Result("SpaceConsistencyBear",
                         "Trailing whitespace found",
                         "proj/white",
@@ -269,7 +280,8 @@ class ConsoleInteractorTest(unittest.TestCase):
 
     def test_print_results_sorting(self):
         with retrieve_stdout() as stdout:
-            self.uut.print_results([Result("SpaceConsistencyBear",
+            self.uut.print_results(Section(""),
+                                   [Result("SpaceConsistencyBear",
                                            "Trailing whitespace found",
                                            "proj/white",
                                            line_nr=5),
@@ -304,6 +316,7 @@ class ConsoleInteractorTest(unittest.TestCase):
         self.uut.log_printer = NullPrinter()
         with retrieve_stdout() as stdout:
             self.uut.print_results(
+                Section(""),
                 [Result("t", "msg", "file", line_nr=5),
                  Result("t", "msg", "file", line_nr=5)], {})
             self.assertEqual("", stdout.getvalue())
@@ -313,6 +326,7 @@ class ConsoleInteractorTest(unittest.TestCase):
         # This can occur if filter writers are doing nonsense.
         with retrieve_stdout() as stdout:
             self.uut.print_results(
+                Section(""),
                 [Result("t", "msg", "file", line_nr=5)],
                 {"file": []})
             self.assertEqual("""\n\nfile\n|    |    | {}\n|    |    | [{}] t:
@@ -322,6 +336,7 @@ class ConsoleInteractorTest(unittest.TestCase):
 
         self.assertRaises(AssertionError,
                           self.uut.print_results,
+                          Section(""),
                           [Result("t", "msg", None, line_nr=5)],
                           {})
 

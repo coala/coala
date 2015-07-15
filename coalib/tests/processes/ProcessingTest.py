@@ -16,6 +16,7 @@ from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import process_queues, create_process_group
 from coalib.misc.StringConstants import StringConstants
+from coalib.settings.Section import Section
 
 
 process_group_test_code = """
@@ -49,7 +50,7 @@ class ProcessingTestInteractor(LogPrinter):
     def log_message(self, log_message, timestamp=None, **kwargs):
         self.log_queue.put(log_message)
 
-    def print_results(self, result_list, file_dict):
+    def print_results(self, section, result_list, file_dict):
         self.result_queue.put(result_list)
 
 
@@ -62,8 +63,8 @@ class MessageQueueingInteractor():
     def __init__(self):
         self.queue = queue.Queue()
 
-    def print_results(self, *args):
-        self.queue.put(args)
+    def print_results(self, section, result_list, file_dict):
+        self.queue.put((result_list, file_dict))
 
     def get(self):
         return self.queue.get(timeout=0)
@@ -170,7 +171,8 @@ class ProcessingTest(unittest.TestCase):
              2: ["The second result.", HiddenResult("t", "c")]},
             {1: ["The one and only global result."]},
             None,
-            mock_interactor.print_results)
+            mock_interactor.print_results,
+            Section(""))
 
         self.assertEqual(mock_interactor.get(), (["The first result."], None))
         self.assertEqual(mock_interactor.get(), (["The second result."], None))
@@ -188,7 +190,8 @@ class ProcessingTest(unittest.TestCase):
             {1: "The first result.", 2: "The second result."},
             {1: "The one and only global result."},
             None,
-            mock_interactor.print_results)
+            mock_interactor.print_results,
+            Section(""))
         with self.assertRaises(queue.Empty):
             mock_interactor.get()
 

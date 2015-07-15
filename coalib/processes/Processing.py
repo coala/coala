@@ -53,7 +53,8 @@ def create_process_group(command_array, **kwargs):
 def print_result(results,
                  file_dict,
                  retval,
-                 print_results):
+                 print_results,
+                 section):
     """
     Takes the results produced by each bear and gives them to the interactor to
     present to the user.
@@ -71,7 +72,7 @@ def print_result(results,
     """
     results = list(filter(lambda result: not isinstance(result, HiddenResult),
                           results))
-    print_results(results, file_dict)
+    print_results(section, results, file_dict)
     return retval or len(results) > 0
 
 
@@ -188,7 +189,8 @@ def process_queues(processes,
                    local_result_dict,
                    global_result_dict,
                    file_dict,
-                   print_results):
+                   print_results,
+                   section):
     """
     Iterate the control queue and send the results recieved to the interactor
     so that they can be presented to the user.
@@ -231,7 +233,8 @@ def process_queues(processes,
                 retval = print_result(local_result_dict[index],
                                       file_dict,
                                       retval,
-                                      print_results)
+                                      print_results,
+                                      section)
             elif control_elem == CONTROL_ELEMENT.GLOBAL:
                 global_result_buffer.append(index)
         except queue.Empty:
@@ -242,7 +245,8 @@ def process_queues(processes,
         retval = print_result(global_result_dict[elem],
                               file_dict,
                               retval,
-                              print_results)
+                              print_results,
+                              section)
 
     running_processes = get_running_processes(processes)
     # One process is the logger thread
@@ -254,7 +258,8 @@ def process_queues(processes,
                 retval = print_result(global_result_dict[index],
                                       file_dict,
                                       retval,
-                                      print_results)
+                                      print_results,
+                                      section)
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                 running_processes = get_running_processes(processes)
@@ -317,7 +322,8 @@ def execute_section(section,
                                arg_dict["local_result_dict"],
                                arg_dict["global_result_dict"],
                                arg_dict["file_dict"],
-                               print_results),
+                               print_results,
+                               section),
                 arg_dict["local_result_dict"],
                 arg_dict["global_result_dict"],
                 arg_dict["file_dict"])

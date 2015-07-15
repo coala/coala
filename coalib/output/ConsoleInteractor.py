@@ -68,6 +68,7 @@ def finalize(file_diff_dict, file_dict):
         # Write new contents
         with open(filename, mode='w') as file:
             file.writelines(file_dict[filename])
+    file_diff_dict.clear()
 
 
 def print_lines(console_printer,
@@ -458,9 +459,8 @@ class ConsoleInteractor(ConsolePrinter):
         self.pre_padding = pre_padding
         self.log_printer = log_printer
         self.file_diff_dict = {}
-        self.current_section = None
 
-    def print_results(self, result_list, file_dict):
+    def print_results(self, section, result_list, file_dict):
         if not isinstance(result_list, list):
             raise TypeError("result_list should be of type list")
         if not isinstance(file_dict, dict):
@@ -506,18 +506,7 @@ class ConsoleInteractor(ConsolePrinter):
 
             print_result(self,
                          self.log_printer,
-                         self.current_section,
+                         section,
                          self.file_diff_dict,
                          result,
                          file_dict)
-
-    def begin_section(self, section):
-        """
-        Will be called before the results for a section come in (via
-        print_results).
-
-        :param section: The section that will get executed now.
-        """
-        self.file_diff_dict = {}
-        self.current_section = section
-        print_section_beginning(self, section)

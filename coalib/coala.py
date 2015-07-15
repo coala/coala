@@ -14,7 +14,8 @@
 from coalib.output.ConsoleInteractor import (ConsoleInteractor,
                                              finalize,
                                              nothing_done,
-                                             acquire_settings)
+                                             acquire_settings,
+                                             print_section_beginning)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
@@ -46,7 +47,7 @@ def main():
                 if not section.is_enabled(targets):
                     continue
 
-                interactor.begin_section(section)
+                print_section_beginning(interactor, section)
                 results = execute_section(
                     section=section,
                     global_bear_list=global_bears[section_name],
