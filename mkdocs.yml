@@ -21,3 +21,5 @@ pages:
 - General Developer Information:
     - 'A Hitchhikers Guide To Git (1): Genesis': 'General_Dev_Info/git_tutorial_1.md'
 theme: readthedocs
+markdown_extensions:
+- pymdownx.superfences
