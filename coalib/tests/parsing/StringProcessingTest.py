@@ -77,7 +77,7 @@ class StringProcessingTest(unittest.TestCase):
         :param return: The error message.
         """
         args = [repr(x) for x in args]
-        kwargs = [repr(key) + '=' + repr(value)
+        kwargs = [str(key) + '=' + repr(value)
                   for key, value in kwargs.items()]
 
         return "Called {}({}).".format(func.__name__, ", ".join(args + kwargs))
