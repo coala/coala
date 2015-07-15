@@ -53,11 +53,7 @@ if __name__ == "__main__":
                             "munkres3",
                             "coverage",
                             "pylint",
-                            "language-check",
-                            "pymdown-extensions"],
-          dependency_links=[
-              "https://github.com/facelessuser/pymdown-extensions/archive"
-              "/master.zip#egg=pymdown-extensions-1.0.0"],
+                            "language-check"],
           package_data={'coalib': ['default_coafile']},
           license="AGPL v3",
           data_files=data_files,
