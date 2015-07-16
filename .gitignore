@@ -23,3 +23,5 @@ coverage.xml
 coala.egg-info
 .coverage.*
 coala.1
+src
+site
