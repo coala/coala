@@ -65,3 +65,11 @@ class StringConstants:
         python_executable = "python"
     else:
         python_executable = "python3"
+
+    # We use circleci for doing dev releases continuously from master to pypi
+    BUILD_NUM = os.getenv('CIRCLE_BUILD_NUM')
+    if BUILD_NUM is None:  # pragma: no cover
+        BUILD_NUM = 0
+
+    VERSION = (0, 1, 1, "dev"+str(BUILD_NUM))
+    VERSION_STR = ".".join(str(part) for part in VERSION)

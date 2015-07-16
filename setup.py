@@ -3,8 +3,9 @@
 from setuptools import setup
 from distutils.command.build import build
 
+from coalib import assert_supported_version
 from coalib.misc.i18n import compile_translations
-from coalib import VERSION_STR, assert_supported_version
+from coalib.misc.StringConstants import StringConstants
 from coalib.misc.BuildManPage import BuildManPage
 
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     build.sub_commands.append(('build_manpage', None))
 
     setup(name='coala',
-          version=VERSION_STR,
+          version=StringConstants.VERSION_STR,
           description='Code Analysis Application (coala)',
           maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger",
           maintainer_email='lasse.schuirmann@gmail.com, '
