@@ -1,0 +1,1 @@
+-e git+https://github.com/facelessuser/pymdown-extensions.git#egg=pymdown_extensions
