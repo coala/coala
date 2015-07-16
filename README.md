@@ -27,7 +27,7 @@ information about the installation and dependencies, take a look at our
 The latest code from master is automatically deployed to PyPI as a development
 version. Get it with `pip install coala --pre`.
 
-[![PyPI](http://img.shields.io/pypi/v/coala.svg)](https://pypi.python.org/pypi/coala)
+[![PyPI](https://img.shields.io/pypi/pyversions/coala.svg)](https://pypi.python.org/pypi/coala)
 
 USAGE
 =====
@@ -51,26 +51,14 @@ Authors
 coala is maintained by a growing community. Please take a look at the meta
 information in [setup.py](setup.py) for current maintainers.
 
-Build status
-------------
+Project Status
+--------------
 
-[![Linux Build Status](https://circleci.com/gh/coala-analyzer/coala.svg?style=svg)](https://circleci.com/gh/coala-analyzer/coala)
-(Linux build and test, python 3.4 (node 0), 3.3 (node 1), 3.2 (node2), pypy3-2.4.0 (node 3))
+[![Linux Build Status](https://img.shields.io/circleci/project/coala-analyzer/coala/master.svg?label=linux%20build)](https://circleci.com/gh/coala-analyzer/coala) [![Windows Build status](https://img.shields.io/appveyor/ci/sils1297/coala/master.svg?label=windows%20build)](https://ci.appveyor.com/project/sils1297/coala/branch/master)
 
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/jevcxfo48mc4e09p/branch/master?svg=true)](https://ci.appveyor.com/project/sils1297/coala/branch/master)
-(Windows build and test, 3.4 and 3.3)
-
-[![Codacy Code Quality](https://www.codacy.com/project/badge/f0ac979fa93f49509cba9086754a50d4)](https://www.codacy.com/app/lasse/coala)
-(Code quality 1)
-
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/coala-analyzer/coala/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master)
-(Code quality 2)
-
-[![codecov.io](https://codecov.io/github/coala-analyzer/coala/coverage.svg?branch=master)](https://codecov.io/github/coala-analyzer/coala?branch=master)
-(Branch coverage)
+[![Codacy Code Quality](https://img.shields.io/codacy/f0ac979fa93f49509cba9086754a50d4.svg?label=codacy quality)](https://www.codacy.com/app/lasse/coala) [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer quality)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master) [![codecov.io](https://img.shields.io/codecov/c/github/coala-analyzer/coala/master.svg?label=branch coverage)](https://codecov.io/github/coala-analyzer/coala?branch=master)
 
 [![Documentation Status](https://readthedocs.org/projects/coala/badge/?version=latest)](https://readthedocs.org/projects/coala/?badge=latest)
-(Documentation Status)
 
 GETTING INVOLVED
 ================
@@ -80,8 +68,12 @@ If you want to contribute to coala, please take a look at the
 
 We appreciate any help!
 
+[![https://gitter.im/coala-analyzer/coala](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/coala-analyzer/coala)
+
 LICENSE
 =======
+
+[![AGPL](https://img.shields.io/github/license/coala-analyzer/coala.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
 
 This code falls under the GNU Affero General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your option)
