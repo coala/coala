@@ -72,5 +72,5 @@ def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
     arg_parser.add_argument('-v',
                             '--version',
                             action='version',
-                            version=StringConstants.VERSION_STR)
+                            version=StringConstants.VERSION)
     return arg_parser

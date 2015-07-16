@@ -7,6 +7,8 @@ dependencies:
   override:
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
     - bash .misc/deps.sh
+    - python .misc/adjust_version_number.py coalib/VERSION -b $CIRCLE_BUILD_NUM
+    - python ./coala --version
 
 test:
   override:
