@@ -18,8 +18,14 @@ def exclude_function(count_matrix):
                          variables for a function.
     :return:             True if the function is useless for evaluation.
     """
-    return all((cv.name.startswith("#") or sum(cv.unweighted) < 10)
-               for cv in count_matrix.values())
+    var_count = [cv.name.startswith("#")
+                 for cv in count_matrix.values()].count(False)
+    variable_sum = sum(0 if cv.name.startswith("#") else sum(cv)
+                       for cv in count_matrix.values())
+    return (all((cv.name.startswith("#") or sum(cv.unweighted) < 10)
+                for cv in count_matrix.values()) or
+            variable_sum < 8 or
+            var_count < 2)
 
 
 def get_count_matrices(count_vector_creator,
