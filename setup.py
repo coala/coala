@@ -19,7 +19,7 @@ if __name__ == "__main__":
     build.sub_commands.append(('build_manpage', None))
 
     setup(name='coala',
-          version=StringConstants.VERSION_STR,
+          version=StringConstants.VERSION,
           description='Code Analysis Application (coala)',
           maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger",
           maintainer_email='lasse.schuirmann@gmail.com, '
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                             "coverage",
                             "pylint",
                             "language-check"],
-          package_data={'coalib': ['default_coafile']},
+          package_data={'coalib': ['default_coafile', "VERSION"]},
           license="AGPL v3",
           data_files=data_files,
           long_description="coala is a simple COde AnaLysis Application. Its "
