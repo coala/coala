@@ -1,5 +1,6 @@
 import functools
 from itertools import combinations
+import multiprocessing
 
 from coalib.misc.StringConverter import StringConverter
 from coalib.results.HiddenResult import HiddenResult
@@ -133,8 +134,9 @@ class ClangFunctionDifferenceBear(GlobalBear):
             average_calculation=average_calculation,
             reduce_big_diffs=reduce_big_diffs)
 
+        pool = multiprocessing.Pool()
         for i, elem in enumerate(
-                map(partial_get_difference,
+                pool.imap_unordered(partial_get_difference,
                     [(f1, f2) for f1, f2 in combinations(count_matrices, 2)])):
             if i % 50 == 0:
                 self.debug("{:2.4f}%...".format(100*i/combination_length))
