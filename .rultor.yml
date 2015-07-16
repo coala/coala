@@ -2,3 +2,6 @@ merge:
   fast-forward: only
   script:
     - echo "Nothing to do."
+
+release:
+  script: bash .misc/release.sh
