@@ -113,6 +113,19 @@ value into a string because we've provided the `str` annotation for this
 parameter. If no annotation is given or the value isn't convertible into the
 desired data type, you will get a `coalib.settings.Setting.Setting`.
 
+Your docstring can also be used to tell the user what exactly your bear does.
+
+Try executing
+
+```
+coala -d bears -b CommunicationBear --show-bears
+```
+
+This will show the user a bunch of information related to the bear like:
+ - A description of what the bear does
+ - The sections which uses it
+ - The settings it uses (optional and required)
+
 ## What Data Types are Supported?
 
 The Setting does support some very basic types:

@@ -175,6 +175,21 @@ several targets seperated by a space.
 
 What was that TODO again?
 
+# Show bears' information
+
+To get help on using a bear or to geta  description of the bear, use the
+`--show-bears` argument:
+
+```
+coala --bears=SpaceConsistencyBear --show-bears
+```
+
+This will display a large amount of information regarding the bears that have
+been specified (in the `.coafile` of in the CLI arguments). It shows:
+ - A description of what the bear does
+ - The sections which uses it
+ - The settings it uses (optional and required)
+
 # Integrating coala into Your Project
 
 It's easy to add coala to your project in a way that does not force your
