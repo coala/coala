@@ -54,6 +54,12 @@ shouldn't need to care about anything else than just writing your algorithm!
 
 See [Writing Bears](Users/Writing_Bears.md) for more information on this.
 
+Also, coala provides an external API using the dbus message protocol. This
+allows other applications to easily use the code analysis functionalities
+coala provides in their applications.
+
+See [External APIs](Users/External_APIs.md) for more information.
+
 # Status of the Project
 
 We are currently working hard to make this project reality. coala is currently

@@ -8,6 +8,7 @@ pages:
     - 'coafile Specification': 'Users/coafile.md'
     - 'Glob Patterns': 'Users/Glob_Patterns.md'
     - 'Exit Codes': 'Users/Exit_Codes.md'
+    - 'External APIs': 'Users/External_APIs.md'
 - Getting Involved:
     - 'Introduction': 'Getting_Involved/README.md'
     - 'Review': 'Getting_Involved/Review.md'
