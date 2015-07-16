@@ -18,6 +18,7 @@ test:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true
+    - mkdocs build --clean
 
 deployment:
   deployment_scripts:
