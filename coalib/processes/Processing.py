@@ -58,8 +58,8 @@ def print_result(results,
                  log_printer,
                  file_diff_dict):
     """
-    Takes the results produced by each bear and gives them to the interactor to
-    present to the user.
+    Takes the results produced by each bear and gives them to the print_results
+    method to present to the user.
 
     :param results:        A list of results.
     :param file_dict:      A dictionary containing the name of files and its
@@ -199,8 +199,8 @@ def process_queues(processes,
                    log_printer,
                    file_diff_dict):
     """
-    Iterate the control queue and send the results recieved to the interactor
-    so that they can be presented to the user.
+    Iterate the control queue and send the results recieved to the print_result
+    method so that they can be presented to the user.
 
     :param processes:          List of processes which can be used to run
                                Bears.

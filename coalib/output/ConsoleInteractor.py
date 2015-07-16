@@ -56,7 +56,7 @@ def nothing_done(console_printer):
 
 def finalize(file_diff_dict, file_dict):
     """
-    To be called after all results are given to the interactor.
+    To be called after all results are printed on the console.
 
     :param file_diff_dict: A dictionary containing filenames as keys and diff
                            objects as values.
@@ -517,23 +517,3 @@ def print_bears(console_printer, bears):
                       bear,
                       bears[bear],
                       bear.get_metadata())
-
-
-class ConsoleInteractor(ConsolePrinter):
-
-    def __init__(self,
-                 log_printer,
-                 pre_padding: int=3,
-                 print_colored=True):
-        """
-        A ConsoleInteractor uses the Console to interact with the user.
-
-        :param log_printer: The LogPrinter to use for logging.
-        :param pre_padding: Number of code lines to show before a result as
-                            context.
-        """
-        ConsolePrinter.__init__(self, print_colored=print_colored)
-
-        self.pre_padding = pre_padding
-        self.log_printer = log_printer
-        self.file_diff_dict = {}

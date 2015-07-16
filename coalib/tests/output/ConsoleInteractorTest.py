@@ -13,8 +13,7 @@ from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
-from coalib.output.ConsoleInteractor import (ConsoleInteractor,
-                                             finalize,
+from coalib.output.ConsoleInteractor import (finalize,
                                              nothing_done,
                                              acquire_settings,
                                              print_bears,
@@ -82,7 +81,8 @@ class SomeOtherBear(Bear):
 class ConsoleInteractorTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ConsolePrinter(print_colored=False)
-        self.uut = ConsoleInteractor(self.log_printer, print_colored=False)
+        self.console_printer = ConsolePrinter(print_colored=False)
+        self.file_diff_dict = {}
 
         # All those tests assume that Result has no actions and PatchResult has
         # one. This makes this test independent from the real number of actions
@@ -121,18 +121,18 @@ class ConsoleInteractorTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 2)
 
     def test_print_result(self):
-        print_result(self.uut,
-                     self.uut.log_printer,
+        print_result(self.console_printer,
+                     self.log_printer,
                      None,
-                     self.uut.file_diff_dict,
+                     self.file_diff_dict,
                      "illegal value",
                      {})
 
         with simulate_console_inputs(0):
-            print_result(self.uut,
-                         self.uut.log_printer,
+            print_result(self.console_printer,
+                         self.log_printer,
                          None,
-                         self.uut.file_diff_dict,
+                         self.file_diff_dict,
                          PatchResult("origin", "msg", {}),
                          {})
 
@@ -147,28 +147,27 @@ class ConsoleInteractorTest(unittest.TestCase):
         diff.change_line(3, "3\n", "3_changed\n")
 
         with simulate_console_inputs(1), self.assertRaises(ValueError):
-            print_result(self.uut,
-                         self.uut.log_printer,
+            print_result(self.console_printer,
+                         self.log_printer,
                          None,
-                         self.uut.file_diff_dict,
+                         self.file_diff_dict,
                          PatchResult("origin", "msg", {testfile_path: diff}),
                          file_dict)
 
         # To assure user can rechose if he didn't chose wisely
         with simulate_console_inputs("INVALID", -1, 1, 3) as input_generator:
-            # To load current_section in ConsoleInteractor object
             curr_section = Section("")
-            print_section_beginning(self.uut, curr_section)
-            print_result(self.uut,
-                         self.uut.log_printer,
+            print_section_beginning(self.console_printer, curr_section)
+            print_result(self.console_printer,
+                         self.log_printer,
                          curr_section,
-                         self.uut.file_diff_dict,
+                         self.file_diff_dict,
                          PatchResult("origin", "msg", {testfile_path: diff}),
                          file_dict)
             self.assertEqual(input_generator.last_input, 2)
-            finalize(self.uut.file_diff_dict, file_dict)
+            finalize(self.file_diff_dict, file_dict)
             # Check that the next section does not use the same file_diff_dict
-            self.assertEqual(len(self.uut.file_diff_dict), 0)
+            self.assertEqual(len(self.file_diff_dict), 0)
 
             with open(testfile_path) as f:
                 self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
@@ -190,33 +189,33 @@ class ConsoleInteractorTest(unittest.TestCase):
             patch_result = PatchResult("origin", "msg", {testfile_path: diff})
             patch_result.file = "f_b"
 
-            print_result(self.uut,
-                         self.uut.log_printer,
+            print_result(self.console_printer,
+                         self.log_printer,
                          curr_section,
-                         self.uut.file_diff_dict,
+                         self.file_diff_dict,
                          patch_result,
                          file_dict)
             # choose action, choose editor, choose no action (-1 -> 2)
             self.assertEqual(generator.last_input, 2)
 
             # It shoudn't ask for parameter again
-            print_result(self.uut,
-                         self.uut.log_printer,
+            print_result(self.console_printer,
+                         self.log_printer,
                          curr_section,
-                         self.uut.file_diff_dict,
+                         self.file_diff_dict,
                          patch_result,
                          file_dict)
             self.assertEqual(generator.last_input, 4)
 
     def test_static_functions(self):
         with retrieve_stdout() as stdout:
-            print_section_beginning(self.uut, Section("name"))
+            print_section_beginning(self.console_printer, Section("name"))
             self.assertEqual(stdout.getvalue(),
                              _("Executing section "
                                "{name}...").format(name="name") + "\n")
 
         with retrieve_stdout() as stdout:
-            nothing_done(self.uut)
+            nothing_done(self.console_printer)
             self.assertEqual(stdout.getvalue(),
                              _("No existent section was targeted or enabled. "
                                "Nothing to do.") + "\n")
