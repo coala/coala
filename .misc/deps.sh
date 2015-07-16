@@ -29,6 +29,11 @@ for dep_version in "${dep_versions[@]}" ; do
 
   pip install -q setuptools coverage munkres3 pylint language-check
 
+  if [ "$python_version" = "3.4" ] ; then
+    pip install -q mkdocs
+    pip install -r docs/requirements.txt
+  fi
+
   cd .misc
   if [ "$python_implementation" == "CPython" ] ; then
     bash install.python-gi.sh

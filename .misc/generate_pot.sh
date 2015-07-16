@@ -13,7 +13,7 @@ xgettext -j -c --language=Python --output=locale/coala.pot --keyword=_ \
  --package-version=`./coala --version` \
  --msgid-bugs-address=lasse.schuirmann@gmail.com \
  --copyright-holder="The coala authors" \
- `find . -name "*.py" | grep -v build` .doc_strings
+ `find . -name "*.py" | grep -v \(build\|src\)` .doc_strings
 
 echo Removing temporary files...
 rm .doc_strings
