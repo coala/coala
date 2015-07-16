@@ -13,6 +13,10 @@ assert_supported_version()
 
 
 if __name__ == "__main__":
+    authors = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
+    author_mails = ('lasse.schuirmann@gmail.com, '
+                    'fabian@neuschmidt.de, '
+                    'makman@alice.de')
     data_files = compile_translations()
 
     # Add build_manpage to the `python setup.py build` command
@@ -21,10 +25,10 @@ if __name__ == "__main__":
     setup(name='coala',
           version=StringConstants.VERSION,
           description='Code Analysis Application (coala)',
-          maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger",
-          maintainer_email='lasse.schuirmann@gmail.com, '
-                           'fabian@neuschmidt.de, '
-                           'makman@alice.de',
+          author=authors,
+          author_email=author_mails,
+          maintainer=authors,
+          maintainer_email=author_mails,
           url='http://coala.rtfd.org/',
           platforms='any',
           packages=['bears',
