@@ -3,8 +3,9 @@
 from setuptools import setup
 from distutils.command.build import build
 
+from coalib import assert_supported_version
 from coalib.misc.i18n import compile_translations
-from coalib import VERSION_STR, assert_supported_version
+from coalib.misc.StringConstants import StringConstants
 from coalib.misc.BuildManPage import BuildManPage
 
 
@@ -12,18 +13,22 @@ assert_supported_version()
 
 
 if __name__ == "__main__":
+    authors = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
+    author_mails = ('lasse.schuirmann@gmail.com, '
+                    'fabian@neuschmidt.de, '
+                    'makman@alice.de')
     data_files = compile_translations()
 
     # Add build_manpage to the `python setup.py build` command
     build.sub_commands.append(('build_manpage', None))
 
     setup(name='coala',
-          version=VERSION_STR,
+          version=StringConstants.VERSION,
           description='Code Analysis Application (coala)',
-          maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger",
-          maintainer_email='lasse.schuirmann@gmail.com, '
-                           'fabian@neuschmidt.de, '
-                           'makman@alice.de',
+          author=authors,
+          author_email=author_mails,
+          maintainer=authors,
+          maintainer_email=author_mails,
           url='http://coala.rtfd.org/',
           platforms='any',
           packages=['bears',
@@ -54,7 +59,7 @@ if __name__ == "__main__":
                             "coverage",
                             "pylint",
                             "language-check"],
-          package_data={'coalib': ['default_coafile']},
+          package_data={'coalib': ['default_coafile', "VERSION"]},
           license="AGPL v3",
           data_files=data_files,
           long_description="coala is a simple COde AnaLysis Application. Its "

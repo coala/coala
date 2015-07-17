@@ -1,4 +1,2 @@
-include locale/*.po
-include coalib/default_coafile
 include README.md
 recursive-include docs *
