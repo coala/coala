@@ -1,4 +1,5 @@
 from queue import Queue
+import subprocess
 import sys
 import os
 
@@ -54,6 +55,16 @@ class PyLintBearTest(LocalBearTestHelper):
             self.uut,
             [],
             self.test_file)
+
+
+def skip_test():
+    try:
+        subprocess.Popen(['pylint', '--version'],
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+        return False
+    except OSError:
+        return "PyLint is not installed."
 
 
 if __name__ == '__main__':
