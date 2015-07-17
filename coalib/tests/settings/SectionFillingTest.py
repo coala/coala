@@ -7,7 +7,7 @@ from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SectionFilling import fill_section, fill_settings, Setting
 from coalib.settings.Section import Section
-from coalib.output.ConsoleInteractor import acquire_settings
+from coalib.output.ConsoleInteraction import acquire_settings
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 

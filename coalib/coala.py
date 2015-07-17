@@ -11,11 +11,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from coalib.output.ConsoleInteractor import (nothing_done,
-                                             acquire_settings,
-                                             print_section_beginning,
-                                             print_results,
-                                             finalize)
+from coalib.output.ConsoleInteraction import (nothing_done,
+                                              acquire_settings,
+                                              print_section_beginning,
+                                              print_results,
+                                              finalize)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section

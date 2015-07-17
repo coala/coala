@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 sys.path.insert(0, ".")
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.output.ConsoleInteractor import print_bears
+from coalib.output.ConsoleInteraction import print_bears
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.output.ShowBears import show_bears
 from bears.misc.KeywordBear import KeywordBear

@@ -1,5 +1,5 @@
 from coalib.misc.DictUtilities import inverse_dicts
-from coalib.output.ConsoleInteractor import print_bears
+from coalib.output.ConsoleInteraction import print_bears
 
 
 def show_bears(local_bears, global_bears, console_printer):

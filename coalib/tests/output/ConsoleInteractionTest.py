@@ -13,14 +13,14 @@ from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
-from coalib.output.ConsoleInteractor import (finalize,
-                                             nothing_done,
-                                             acquire_settings,
-                                             print_bears,
-                                             get_action_info,
-                                             print_result,
-                                             print_section_beginning,
-                                             print_results)
+from coalib.output.ConsoleInteraction import (finalize,
+                                              nothing_done,
+                                              acquire_settings,
+                                              print_bears,
+                                              get_action_info,
+                                              print_result,
+                                              print_section_beginning,
+                                              print_results)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -78,7 +78,7 @@ class SomeOtherBear(Bear):
         return None
 
 
-class ConsoleInteractorTest(unittest.TestCase):
+class ConsoleInteractionTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ConsolePrinter(print_colored=False)
         self.console_printer = ConsolePrinter(print_colored=False)
