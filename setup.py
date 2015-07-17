@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from setuptools import setup
-from distutils.command.build import build
 
 from coalib import assert_supported_version
 from coalib.misc.i18n import compile_translations
@@ -18,9 +17,6 @@ if __name__ == "__main__":
                     'fabian@neuschmidt.de, '
                     'makman@alice.de')
     data_files = compile_translations()
-
-    # Add build_manpage to the `python setup.py build` command
-    build.sub_commands.append(('build_manpage', None))
 
     setup(name='coala',
           version=StringConstants.VERSION,
