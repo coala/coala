@@ -8,9 +8,10 @@ fi
 
 if [ ! -d "dbus-python-1.2.0" ] ; then
   echo Downloading python-dbus...
-  wget http://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.0.tar.gz -O dbus-python.tar.gz -q
+  # Using -q in wget makes OSX hang sometimes
+  wget http://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.0.tar.gz -O dbus-python.tar.gz
   echo Unpacking python-dbus...
-  tar -zxvf dbus-python.tar.gz > /dev/null
+  tar -zxf dbus-python.tar.gz
   rm dbus-python.tar.gz
   cd dbus-python-1.2.0
 else
