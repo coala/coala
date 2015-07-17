@@ -13,7 +13,7 @@ esac
 # Install python version needed and related deps
 
 # Update pyenv (for 3.5.0b3)
-git -C "/home/ubuntu/.pyenv" pull
+git -C ~/.pyenv pull
 
 # apt-get commands
 deps="espeak libclang1-3.4"
