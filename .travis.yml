@@ -1,0 +1,20 @@
+language:
+  # The `objective-c` language by default uses a OSX build container. This
+  # is the currently supported method of using a OSX xontainer.
+  - objective-c
+
+env:
+  global:
+    - PYENV_ROOT=~/.pyenv
+    - PATH=$PYENV_ROOT/shims:$PATH
+  matrix:
+    - PYTHON_VERSION=3.4.2
+    - PYTHON_VERSION=3.3.5
+    - PYTHON_VERSION=3.2.5
+    - PYTHON_VERSION=pypy3-2.4.0
+
+install:
+  - bash .misc/deps.osx.sh
+
+script:
+  - bash .misc/tests.sh
