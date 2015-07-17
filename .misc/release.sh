@@ -11,9 +11,13 @@ python3 .misc/adjust_version_number.py coalib/VERSION --new-version ${tag} -b 0
 
 # Commit it
 git add coalib/VERSION
-git commit -m "Release ${tag}"
+git commit -m "[GENERATED] Release ${tag}"
 
 # Put this commit onto master too, rultor doesn't do that by default
 git checkout -b tomerge
 git checkout master
 git merge --ff-only tomerge
+
+# Release!
+python3 .misc/adjust_version_number.py coalib/VERSION --release
+bash .misc/deploy.pypi.sh

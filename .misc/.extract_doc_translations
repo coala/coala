@@ -6,12 +6,15 @@ relevant lines will not be outputted.
 """
 import inspect
 import sys
+import io
 
+sys.path.insert(0, ".")
 from coalib.parsing.StringProcessing import unescaped_search_in_between
 
 
 if __name__ == '__main__':
-    content = sys.stdin.read()
+    stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+    content = stdin.read()
     for comment in unescaped_search_in_between("'''",
                                                "'''",
                                                content,

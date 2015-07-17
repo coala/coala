@@ -1,7 +1,19 @@
+install:
+  - wget https://bootstrap.pypa.io/get-pip.py
+  - python3 get-pip.py
+
+docker:
+  as_root: true
+
 merge:
   fast-forward: only
   script:
-    - echo "Nothing to do."
+    - python3 .misc/adjust_version_number.py coalib/VERSION -b `date --utc +%Y%m%d%H%M%S`
+    - bash .misc/deploy.zanata.sh
+    - bash .misc/deploy.pypi.sh
 
 release:
   script: bash .misc/release.sh
+
+decrypt:
+  rultor_secrets.sh: "repo/.misc/rultor_secrets.sh.asc"
