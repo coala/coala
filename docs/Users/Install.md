@@ -16,6 +16,9 @@ Some linux distributions still ship python 2 as the default python installation.
 If you are using one of those distributions, you need to use `pip3` and
 `python3` instead of `pip` and `python`.
 
+OSX still ships with python 2 as the default python installation, so OSX users
+need to use `python3` and `pip3` instead of `pip` and `python`.
+
 To install the latest most stable version of coala, use:
 
 ```
@@ -100,6 +103,8 @@ linux.
 On windows, you can download gettext manually from
 <http://gnuwin32.sourceforge.net/packages/gettext.htm>.
 
+On OSX, gettext can be installed using `brew install gettext`.
+
 ## eSpeak (*)
 
 If you want to use coalas voice outputter you need to install eSpeak from
@@ -107,6 +112,8 @@ If you want to use coalas voice outputter you need to install eSpeak from
 that voice output is currently only possible when developing for coala. If
 you care for voice output, please contact us so we will speed up development
 of our voice output module.
+
+On OSX, espeak can be installed using `brew install espeak`.
 
 > *Note*:
 >
@@ -145,3 +152,9 @@ For x86 python or for x64 python:
 ```setx PATH "%PATH%;%cd%\ClangSharp.XXX\content\x64" \M```
 
 Replace "XXX" with the ClangSharp version you received from nuget.
+
+### OSX
+
+This feature is known to work in OSX but is not supported yet.
+
+You can use brew to install clang with `brew install llvm --with-clang`.
