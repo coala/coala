@@ -5,6 +5,7 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
+from coalib.results.PatchResult import PatchResult
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.settings.Section import Section, Setting
 
@@ -77,6 +78,14 @@ class ResultActionTest(unittest.TestCase):
         file_dict["f_a"] = diff_dict["f_a"].apply(file_dict["f_a"])
 
         self.assertEqual(file_dict, file_dict)
+
+    def test_is_applicable(self):
+        result1 = Result("", "")
+        result2 = Result("", "", "")
+        invalid_result = ""
+        self.assertFalse(OpenEditorAction.is_applicable(result1))
+        self.assertTrue(OpenEditorAction.is_applicable(result2))
+        self.assertFalse(OpenEditorAction.is_applicable(invalid_result))
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

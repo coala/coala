@@ -5,6 +5,7 @@ sys.path.insert(0, ".")
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.Diff import Diff
 from coalib.results.PatchResult import PatchResult
+from coalib.results.Result import Result
 from coalib.settings.Section import Section
 
 class ApplyPatchActionTest(unittest.TestCase):
@@ -48,6 +49,12 @@ class ApplyPatchActionTest(unittest.TestCase):
                 file_diff_dict[filename].apply(file_dict[filename]))
 
         self.assertEqual(file_dict, expected_file_dict)
+
+    def test_is_applicable(self):
+        patch_result = PatchResult("", "", {})
+        result = Result("", "")
+        self.assertTrue(ApplyPatchAction.is_applicable(patch_result))
+        self.assertFalse(ApplyPatchAction.is_applicable(result))
 
 
 if __name__ == '__main__':

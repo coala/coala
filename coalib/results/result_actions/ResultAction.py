@@ -8,6 +8,16 @@ from coalib.settings.Section import Section
 
 
 class ResultAction:
+    @staticmethod
+    def is_applicable(result):
+        """
+        Checks whether the Action is valid for the result type.
+
+        :param result: The result from the coala run to check if an Action is
+                       applicable.
+        """
+        return False
+
     def apply(self, result, original_file_dict, file_diff_dict, **kwargs):
         """
         This action has no description although it should. Probably something

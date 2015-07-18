@@ -15,6 +15,14 @@ GUI_EDITORS = ["kate", "gedit", "subl"]
 
 
 class OpenEditorAction(ApplyPatchAction):
+    @staticmethod
+    def is_applicable(result):
+        from coalib.results.Result import Result
+        if isinstance(result, Result):
+            if result.file is not None:
+                return True
+        return False
+
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
         Open a temporary clone of the file in an editor.

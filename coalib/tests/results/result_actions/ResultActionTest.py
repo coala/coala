@@ -4,11 +4,12 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.settings.Section import Section
-
+from coalib.results.PatchResult import Result
 
 class ResultActionTest(unittest.TestCase):
     def test_api(self):
         uut = ResultAction()
+        result = Result("", "")
 
         self.assertRaises(NotImplementedError, uut.apply, 5, {}, {})
         self.assertRaises(NotImplementedError,
@@ -35,6 +36,7 @@ class ResultActionTest(unittest.TestCase):
         self.assertEqual(len(uut.get_metadata().non_optional_params), 0)
         self.assertEqual(len(uut.get_metadata().optional_params), 0)
         self.assertEqual(uut.get_metadata().name, "ResultAction")
+        self.assertFalse(uut.is_applicable(result))
 
 
 if __name__ == '__main__':
