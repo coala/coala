@@ -4,7 +4,6 @@ set -x
 # Install packages with brew
 brew update >/dev/null
 brew outdated pyenv || brew upgrade --quiet pyenv
-brew install gettext && brew link gettext --force
 brew install espeak
 brew install libffi && brew link libffi --force
 brew install cairo
@@ -25,7 +24,7 @@ python --version
 source .misc/env_variables.sh
 
 # Install packages with pip
-pip install -q setuptools coverage munkres3 pylint language-check
+pip install -q setuptools coverage munkres3 pylint language-check python-gettext
 
 # Install packages from source
 cd .misc
