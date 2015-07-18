@@ -1,4 +1,3 @@
-from datetime import datetime
 import traceback
 
 from coalib.output.printers.Printer import Printer
@@ -36,6 +35,13 @@ class LogPrinter(Printer):
 
     def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
         return self.log_message(LogMessage(LOG_LEVEL.DEBUG,
+                                           *messages,
+                                           delimiter=delimiter,
+                                           timestamp=timestamp),
+                                **kwargs)
+
+    def info(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+        return self.log_message(LogMessage(LOG_LEVEL.INFO,
                                            *messages,
                                            delimiter=delimiter,
                                            timestamp=timestamp),

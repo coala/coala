@@ -52,6 +52,17 @@ class LogPrinterTest(unittest.TestCase):
                       "d",
                       timestamp=self.timestamp,
                       end=""))
+        uut.log_level = LOG_LEVEL.INFO
+        self.assertEqual(None, uut.debug(StringConstants.COMPLEX_TEST_STRING,
+                                         timestamp=self.timestamp,
+                                         end=""))
+        self.assertEqual(
+            ("[" + _("INFO") + "][" + self.timestamp.strftime("%X") + "] " +
+             StringConstants.COMPLEX_TEST_STRING + " d", "test"),
+            uut.info(StringConstants.COMPLEX_TEST_STRING,
+                      "d",
+                      timestamp=self.timestamp,
+                      end=""))
         uut.log_level = LOG_LEVEL.WARNING
         self.assertEqual(None, uut.debug(StringConstants.COMPLEX_TEST_STRING,
                                          timestamp=self.timestamp,
