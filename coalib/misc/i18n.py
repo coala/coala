@@ -1,8 +1,15 @@
 import locale
 import os
 import gettext
-import subprocess
 import sys
+from pythongettext.msgfmt import Msgfmt
+
+
+def msgfmt(po_filename, mo_filename):
+    po_file = open(po_filename, 'rb')
+    mo_contents = Msgfmt(po_file, name=os.path.split(po_filename)[1]).get()
+    mo_file = open(mo_filename, 'wb')
+    mo_file.write(mo_contents)
 
 
 COALA_DOMAIN = 'coala'
@@ -41,7 +48,7 @@ def compile_translations(build_dir="build"):
 
             try:
                 if file_needs_update(src, dest):
-                    subprocess.call(["msgfmt", src, "--output-file", dest])
+                    msgfmt(src, dest)
 
                 translations.append((install_dir, [dest]))
             except:  # pragma: no cover

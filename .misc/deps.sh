@@ -27,7 +27,7 @@ for dep_version in "${dep_versions[@]}" ; do
   python --version
   source .misc/env_variables.sh
 
-  pip install -q setuptools coverage munkres3 pylint language-check
+  pip install -q setuptools coverage munkres3 pylint language-check python-gettext
 
   if [ "$python_version" = "3.4" ] ; then
     pip install -q mkdocs

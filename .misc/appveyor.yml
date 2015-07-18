@@ -41,10 +41,7 @@ install:
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip -q install coverage pylint setuptools munkres3 language-check"
-
-  - "nuget install Gettext.Tools -Version 0.19.4"
-  - "SET PATH=%PATH%;%cd%\\Gettext.Tools.0.19.4\\tools"
+  - "%CMD_IN_ENV% pip -q install coverage pylint setuptools munkres3 language-check python-gettext"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
