@@ -5,7 +5,7 @@ sys.path.insert(0, ".")
 from coalib.output.dbus.DbusApp import DbusApp
 
 
-class DbusServerTest(unittest.TestCase):
+class DbusAppTest(unittest.TestCase):
     def test_docs(self):
         uut = DbusApp(app_id=1)
         doc1 = __file__
