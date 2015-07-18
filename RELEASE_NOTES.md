@@ -13,7 +13,7 @@ This release features the following feature changes:
  * clang python bindings were added to the bearlib.
  * ClangCodeCloneDetection bear was added.
  * Exitcodes were organized and documented.
-   (http://coala.readthedocs.org/en/latest/Exit_Codes/)
+   (http://coala.readthedocs.org/en/latest/Users/Exit_Codes/)
  * Handling of EOF/Keyboard Interrupt was improved.
  * Console output is now colored.
  * Bears can now easily convert settings to typed lists or dicts.
@@ -24,25 +24,38 @@ This release features the following feature changes:
    re-added in the near future.
  * A `--show-bears` parameter was added to get metainformation of bears.
  * The coala versioning scheme was changed to comply PEP440.
- * `coala --version` now gives the version number. A `dev` version has the
-   build number appended, 0 means locally from source.
+ * `coala --version` now gives the version number. A released `dev` version has
+   the build date appended, 0 for local versions installed from source.
  * A `coala-dbus` binary will now be installed that spawns up a dbus API for
    controlling coala. (Linux only.)
  * The StringProcessing libary is there to help bear writers deal with regexes
    and similar things.
  * A new glob syntax was introduced and documented.
-   (http://coala.readthedocs.org/en/latest/Glob_Patterns/)
+   (http://coala.readthedocs.org/en/latest/Users/Glob_Patterns/)
+ * The `--apply-changes` argument was removed as its concept does not fit
+   anymore.
+ * Bears can now return any iterable. This makes it possible to `yield`
+   results.
+
+New bears:
+
+ * ClangCloneDetectionBear
+ * LanguageToolBear
+ * PyLintBear
 
 Infrastructural changes:
 
  * Tests are executed with multiple processes.
  * Branch coverage raised to glorious 100%.
- * We switched from Travis CI to CircleCI.
+ * We switched from Travis CI to CircleCI as Linux CI.
  * AppVeyor (Windows CI) was added.
+ * Travis CI was added for Mac OS X.
  * Development releases are automatically done from master and available via
    `pip install coala --pre`.
  * Rultor is now used exclusively to push on master. Manual pushes to master
-   are not longer allowed to avoid human errors.
+   are not longer allowed to avoid human errors. Rultor deploys translation
+   strings to Zanata and the PyPI package before pushing the fastforwarded
+   master.
 
 Internal code changes:
 
@@ -60,9 +73,11 @@ them being tests.
 We are happy to announce that Mischa Krüger is joining the maintainers team of
 coala.
 
-Furthermore we are happy to announce basic windows support. This would not
-have been possible without Mischa. coala is fully tested against python 3.3
-and 3.4 on windows while not all builtin bears are.
+Furthermore we are happy to announce basic Windows and Mac OS X support. This
+would not have been possible without Mischa and Abdeali. coala is fully tested
+against Python 3.3 and 3.4 on Windows and 3.2, 3.3, 3.4 and Pypy3 on Mac while
+not all builtin bears are tested. coala is also tested against Pypy3 and 
+Python 3.5 beta (in addition to 3.3 and 3.4) on Linux.
 
 # coala 0.1.1 alpha
 
