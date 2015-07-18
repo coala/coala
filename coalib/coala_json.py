@@ -19,6 +19,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.results.HiddenResult import HiddenResult
 from coalib.output.JSONEncoder import JSONEncoder
 from coalib.misc.Exceptions import get_exitcode
+from coalib.output.Interactions import fail_acquire_settings
 
 
 def main():
@@ -32,7 +33,7 @@ def main():
         (sections,
          local_bears,
          global_bears,
-         targets) = gather_configuration(None, log_printer)
+         targets) = gather_configuration(fail_acquire_settings, log_printer)
 
         for section_name in sections:
             section = sections[section_name]
