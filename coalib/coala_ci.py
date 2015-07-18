@@ -12,10 +12,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
-from coalib.misc.StringConstants import StringConstants
 from coalib.processes.Processing import execute_section
 from coalib.settings.ConfigurationGathering import gather_configuration
-from coalib.misc.i18n import _
+from coalib.misc.Exceptions import get_exitcode
 
 
 def main():
@@ -44,15 +43,7 @@ def main():
 
         if yielded_results:
             exitcode = 1
-    except KeyboardInterrupt:  # Ctrl+C
-        log_printer.warn(_("Program terminated by user."))
-        exitcode = 130
-    except EOFError:  # Ctrl+D
-        log_printer.debug(_("Found EOF. Exiting gracefully."))
-    except SystemExit as exception:
-        exitcode = exception.code
     except Exception as exception:  # pylint: disable=broad-except
-        log_printer.log_exception(StringConstants.CRASH_MESSAGE, exception)
-        exitcode = 255
+        exitcode = exitcode or get_exitcode(exception, log_printer)
 
     return exitcode
