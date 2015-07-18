@@ -27,8 +27,8 @@ def create_mainloop():
     session_bus = dbus.SessionBus()
     # The BusName needs to be saved to a variable, if it is not saved - the
     # Bus will be closed.
-    dbus_name = dbus.service.BusName("org.coala.v1.test", session_bus)
-    dbus_server = DbusServer(session_bus, "/org/coala/v1/test",
+    dbus_name = dbus.service.BusName("org.coala_analyzer.v1.test", session_bus)
+    dbus_server = DbusServer(session_bus, "/org/coala_analyzer/v1/test",
         on_disconnected=lambda: GLib.idle_add(lambda: sys.exit(0)))
 
     mainloop = GLib.MainLoop()
@@ -61,34 +61,35 @@ class DbusTest(unittest.TestCase):
 
     def connect_to_test_server(self):
         self.bus = dbus.SessionBus()
-        self.remote_object = self.bus.get_object("org.coala.v1.test",
-                                                 "/org/coala/v1/test")
+        self.remote_object = self.bus.get_object("org.coala_analyzer.v1.test",
+                                                 "/org/coala_analyzer/v1/test")
 
     def test_dbus(self):
         self.document_object_path = self.remote_object.CreateDocument(
             self.testcode_c_path,
-            dbus_interface="org.coala.v1")
+            dbus_interface="org.coala_analyzer.v1")
 
         self.assertRegex(str(self.document_object_path),
-                         r"^/org/coala/v1/test/\d+/documents/\d+$")
+                         r"^/org/coala_analyzer/v1/test/\d+/documents/\d+$")
 
-        self.document_object = self.bus.get_object("org.coala.v1.test",
+        self.document_object = self.bus.get_object("org.coala_analyzer.v1.test",
                                                    self.document_object_path)
 
         config_file = self.document_object.SetConfigFile(
             "dummy_config",
-            dbus_interface="org.coala.v1")
+            dbus_interface="org.coala_analyzer.v1")
         self.assertEqual(config_file, "dummy_config")
 
         config_file = self.document_object.GetConfigFile(
-            dbus_interface="org.coala.v1")
+            dbus_interface="org.coala_analyzer.v1")
         self.assertEqual(config_file, "dummy_config")
 
         config_file = self.document_object.FindConfigFile(
-            dbus_interface="org.coala.v1")
+            dbus_interface="org.coala_analyzer.v1")
         self.assertEqual(config_file, self.config_path)
 
-        analysis = self.document_object.Analyze(dbus_interface="org.coala.v1")
+        analysis = self.document_object.Analyze(
+            dbus_interface="org.coala_analyzer.v1")
 
         self.assertEqual(analysis,
                          [('default',
@@ -106,7 +107,7 @@ class DbusTest(unittest.TestCase):
 
         self.remote_object.DisposeDocument(
             self.testcode_c_path,
-            dbus_interface="org.coala.v1")
+            dbus_interface="org.coala_analyzer.v1")
 
     def tearDown(self):
         if self.subprocess:

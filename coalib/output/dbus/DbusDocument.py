@@ -10,7 +10,7 @@ from coalib.settings.Setting import path_list
 
 
 class DbusDocument(dbus.service.Object):
-    interface = "org.coala.v1"
+    interface = "org.coala_analyzer.v1"
 
     def __init__(self, doc_id, path=""):
         """

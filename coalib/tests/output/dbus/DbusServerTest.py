@@ -11,11 +11,11 @@ class DbusServerTest(unittest.TestCase):
     def setUp(self):
         self.session_bus = dbus.SessionBus(
             mainloop=dbus.mainloop.NULL_MAIN_LOOP)
-        self.dbus_name = dbus.service.BusName("org.coala.v1.test",
+        self.dbus_name = dbus.service.BusName("org.coala_analyzer.v1.test",
                                               self.session_bus)
 
     def test_apps(self):
-        uut = DbusServer(self.session_bus, "/org/coala/v1/test_apps")
+        uut = DbusServer(self.session_bus, "/org/coala_analyzer/v1/test_apps")
 
         uut.get_or_create_app("app1")
         self.assertEqual(len(uut.apps), 1)
@@ -32,7 +32,8 @@ class DbusServerTest(unittest.TestCase):
         self.assertNotIn("app1", uut.apps)
 
     def test_on_name_lost(self):
-        uut = DbusServer(self.session_bus, "/org/coala/v1/test_on_name_lost")
+        uut = DbusServer(self.session_bus,
+                         "/org/coala_analyzer/v1/test_on_name_lost")
         uut.create_app("app1")
 
         uut._on_name_lost("", "", "a1")
@@ -50,13 +51,14 @@ class DbusServerTest(unittest.TestCase):
 
         test_output = 0
         uut = DbusServer(self.session_bus,
-                         "/org/coala/v1/test_callback",
+                         "/org/coala_analyzer/v1/test_callback",
                          on_disconnected_callback)
         uut.create_app("app1")
         self.assertRaises(AssertionError, uut.dispose_app, "app1")
 
     def test_docs(self):
-        uut = DbusServer(self.session_bus, "/org/coala/v1/test_docs")
+        uut = DbusServer(self.session_bus,
+                         "/org/coala_analyzer/v1/test_docs")
         uut.create_app("app1")
         self.assertIn("app1", uut.apps)
 
@@ -83,7 +85,8 @@ class DbusServerTest(unittest.TestCase):
         self.assertNotIn("app1", uut.apps)
 
     def test_dbus_methods(self):
-        uut = DbusServer(self.session_bus, "/org/coala/v1/test_dbus_methods")
+        uut = DbusServer(self.session_bus,
+                         "/org/coala_analyzer/v1/test_dbus_methods")
         doc1 = __file__
 
         uut.CreateDocument(doc1, sender="app1")

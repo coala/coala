@@ -5,7 +5,7 @@ from coalib.output.dbus.DbusApp import DbusApp
 
 
 class DbusServer(dbus.service.Object):
-    interface = "org.coala.v1"
+    interface = "org.coala_analyzer.v1"
 
     def __init__(self, bus, path, on_disconnected=None):
         """
