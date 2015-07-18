@@ -5,7 +5,6 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
-from coalib.results.PatchResult import PatchResult
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.settings.Section import Section, Setting
 

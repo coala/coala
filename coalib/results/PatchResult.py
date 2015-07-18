@@ -4,7 +4,6 @@ To use the PatchResult you need to create a Diff for each file you want to
 change and then pass those Diff's to the patch result.
 """
 from coalib.results.Result import Result, RESULT_SEVERITY
-from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 
 
 class PatchResult(Result):
@@ -57,9 +56,3 @@ class PatchResult(Result):
                 self.diffs[filename] = other.diffs[filename]
 
         return self
-
-    def get_actions(self):
-        actions = Result.get_actions(self)
-        actions.extend([ApplyPatchAction()])
-
-        return actions

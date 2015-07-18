@@ -1,10 +1,10 @@
 from coalib.results.result_actions.ResultAction import ResultAction
+from coalib.results.PatchResult import PatchResult
 
 
 class ApplyPatchAction(ResultAction):
     @staticmethod
     def is_applicable(result):
-        from coalib.results.PatchResult import PatchResult
         if isinstance(result, PatchResult):
             return True
         return False

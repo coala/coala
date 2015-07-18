@@ -4,6 +4,8 @@ import subprocess
 
 from coalib.results.Diff import Diff
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.Result import Result
+
 
 EDITOR_ARGS = {
     "subl": "--wait",
@@ -17,7 +19,6 @@ GUI_EDITORS = ["kate", "gedit", "subl"]
 class OpenEditorAction(ApplyPatchAction):
     @staticmethod
     def is_applicable(result):
-        from coalib.results.Result import Result
         if isinstance(result, Result):
             if result.file is not None:
                 return True

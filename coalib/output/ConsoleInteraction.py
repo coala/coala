@@ -14,6 +14,8 @@ from coalib.misc.i18n import _
 from coalib.settings.Setting import Setting
 from coalib.results.Result import Result
 from coalib.misc.DictUtilities import inverse_dicts
+from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 
 
 STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
@@ -24,6 +26,7 @@ STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
 STR_PROJECT_WIDE = _("Project wide:")
 FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
+CLI_ACTIONS = [OpenEditorAction(), ApplyPatchAction()]
 
 
 def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
@@ -147,7 +150,11 @@ def print_result(console_printer,
         *[format_line(line) for line in result.message.split("\n")],
         delimiter="\n")
 
-    actions = result.get_actions()
+    actions = []
+    for action in CLI_ACTIONS:
+        if action.is_applicable(result):
+            actions.append(action)
+
     if actions == []:
         return
 

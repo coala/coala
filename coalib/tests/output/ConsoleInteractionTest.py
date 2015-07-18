@@ -101,11 +101,8 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.global_bears = OrderedDict([("default", [SomeglobalBear]),
                                          ("test", [SomeglobalBear])])
 
-        # All those tests assume that Result has no actions and PatchResult has
-        # one. This makes this test independent from the real number of actions
-        # applicable to those results.
-        Result.get_actions = lambda x: []
-        PatchResult.get_actions = lambda x: [ApplyPatchAction()]
+        OpenEditorAction.is_applicable = staticmethod(lambda result: False)
+        ApplyPatchAction.is_applicable = staticmethod(lambda result: False)
 
         if sys.version_info < (3, 3):
             self.FileNotFoundError = OSError
@@ -164,6 +161,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         diff.change_line(3, "3\n", "3_changed\n")
 
         with simulate_console_inputs(1), self.assertRaises(ValueError):
+            ApplyPatchAction.is_applicable = staticmethod(lambda result: True)
             print_result(self.console_printer,
                          self.log_printer,
                          None,
@@ -201,7 +199,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         # Check if the user is asked for the parameter only the first time.
         # Use OpenEditorAction that needs this parameter (editor command).
         with simulate_console_inputs(1, "test_editor", 0, 1, 0) as generator:
-            PatchResult.get_actions = lambda self: [OpenEditorAction()]
+            OpenEditorAction.is_applicable = staticmethod(lambda result: True)
 
             patch_result = PatchResult("origin", "msg", {testfile_path: diff})
             patch_result.file = "f_b"

@@ -21,12 +21,6 @@ class ResultTest(unittest.TestCase):
         uut = Result(self, "msg")
         self.assertEqual(uut.origin, "ResultTest")
 
-    def test_get_actions(self):
-        self.assertEqual(len(Result("origin", "msg").get_actions()), 0)
-        self.assertEqual(
-            len(Result("origin", "msg", file="file").get_actions()),
-            1)
-
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')
         self.assertEqual(str(uut),

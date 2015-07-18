@@ -1,7 +1,6 @@
 from functools import total_ordering
 
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 
 
 @total_ordering
@@ -108,13 +107,3 @@ class Result:
             return self.message < other.message
 
         return self.debug_msg < other.debug_msg
-
-    def get_actions(self):
-        """
-        :return: All ResultAction classes applicable to this result.
-        """
-        actions = []
-        if self.file is not None:
-            actions.append(OpenEditorAction())
-
-        return actions
