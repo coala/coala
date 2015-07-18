@@ -116,10 +116,10 @@ class ClangFunctionDifferenceBear(GlobalBear):
         self.debug("Creating count matrices...")
         count_matrices = get_count_matrices(
             ClangCountVectorCreator(list(counting_conditions.keys()),
-                                    list(counting_conditions.values()),
-                                    self.section["files"].origin),
+                                    list(counting_conditions.values())),
             list(self.file_dict.keys()),
-            lambda prog: self.debug("{:2.4f}%...".format(prog)))
+            lambda prog: self.debug("{:2.4f}%...".format(prog)),
+            self.section["files"].origin)
 
         self.debug("Calculating differences...")
 

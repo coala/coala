@@ -1,4 +1,3 @@
-import os
 from bears.codeclone_detection.CountVector import CountVector
 from bears.codeclone_detection.ClangCountingConditions import (
     is_reference,
@@ -6,25 +5,6 @@ from bears.codeclone_detection.ClangCountingConditions import (
     is_literal,
     is_function_declaration)
 from coalib.bearlib.parsing.clang.cindex import Cursor, Index
-
-
-def get_include_paths(file_path, setting_path):
-    """
-    Creates a list of include paths that likely resolve all includes.
-
-    :param file_path:    The path to the file to analyze.
-    :param setting_path: The path of the coafile.
-    :return:             All directories that lie in between the common subpath
-                         of those two and the file_path.
-    """
-    path = os.path.dirname(os.path.commonprefix(
-        [os.path.abspath(file_path), os.path.abspath(setting_path)]))
-    result = [path]
-    for directory in file_path[len(path)+1:].split(os.path.sep)[:-1]:
-        path = os.path.join(path, directory)
-        result.append(path)
-
-    return result
 
 
 class ClangCountVectorCreator:
@@ -44,8 +24,7 @@ class ClangCountVectorCreator:
     """
     def __init__(self,
                  conditions=None,
-                 weightings=None,
-                 definition_path=None):
+                 weightings=None):
         """
         Creates a new ClangCountVectorCreator.
 
@@ -55,14 +34,9 @@ class ClangCountVectorCreator:
                                 be counted.
         :param weightings:      Optional factors to weight counting conditions.
                                 Defaults to 1 for all conditions.
-        :param definition_path: section["files"].origin, i.e. the path where
-                                the user defined the files. Include paths will
-                                be guessed with the help of this information if
-                                it is available.
         """
         self.conditions = conditions
         self.weightings = weightings
-        self.definition_path = definition_path
         self.count_vectors = {}
         self.stack = []
 
@@ -135,7 +109,7 @@ class ClangCountVectorCreator:
 
         return result
 
-    def get_vectors_for_file(self, filename):
+    def get_vectors_for_file(self, filename, include_paths=()):
         """
         Creates a dictionary associating each function name within the given
         file with another dictionary associating each variable name (local to
@@ -146,11 +120,6 @@ class ClangCountVectorCreator:
         :return:         The dictionary holding CountVectors for all variables
                          in all functions.
         """
-        if self.definition_path is not None:
-            include_paths = get_include_paths(filename, self.definition_path)
-        else:
-            include_paths = []
-
         args = ["-I"+path for path in include_paths]
         root = Index.create().parse(filename, args=args).cursor
 

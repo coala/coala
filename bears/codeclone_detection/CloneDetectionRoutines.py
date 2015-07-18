@@ -1,7 +1,10 @@
+import os
 import copy
 from munkres import Munkres
 # Instantiate globally since this class is holding stateless public methods.
 munkres = Munkres()
+
+from coalib.collecting.Collectors import collect_dirs
 
 
 def exclude_function(count_matrix):
@@ -30,7 +33,8 @@ def exclude_function(count_matrix):
 
 def get_count_matrices(count_vector_creator,
                        filenames,
-                       progress_callback):
+                       progress_callback,
+                       base_path):
     """
     Retrieves matrices holding count vectors for all variables for all
     functions in the given file.
@@ -41,6 +45,7 @@ def get_count_matrices(count_vector_creator,
     :param progress_callback:    A function with one float argument which is
                                  called after processing each file with the
                                  progress percentage (float) as an argument.
+
     :return:                     A dict holding a tuple of (file, line,
                                  function) as key and as value a dict with
                                  variable names as key and count vector
@@ -48,10 +53,12 @@ def get_count_matrices(count_vector_creator,
     """
     result = {}
     maxlen = len(filenames)
+    include_paths = collect_dirs([os.path.dirname(base_path) + "/**"])
 
     for i, filename in enumerate(filenames):
         progress_callback(100*(i/maxlen))
-        count_dict = count_vector_creator.get_vectors_for_file(filename)
+        count_dict = count_vector_creator.get_vectors_for_file(filename,
+                                                               include_paths)
         for function in count_dict:
             if not exclude_function(count_dict[function]):
                 result[(filename,
