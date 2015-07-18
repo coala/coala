@@ -95,7 +95,9 @@ Optional dependencies are marked with (*).
 ## gettext
 
 coala uses gettext to be available in your language. If you do not install
-gettext before the installation, you will only be able to use coala in english.
+gettext before installing coala from source, you will only be able to use coala
+in english. (Of course, any binary distribution, like wheel, contains readily
+compiled translations.)
 
 Please install gettext via your favorite package manager if you are running
 linux.
