@@ -14,7 +14,7 @@
 from coalib.output.NullInteractor import NullInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.StringConstants import StringConstants
-from coalib.processes.Processing import execute_section
+from coalib.processes.Processing import execute_enabled_sections
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.i18n import _
 
@@ -31,18 +31,13 @@ def main():
          targets) = gather_configuration(interactor.acquire_settings,
                                          log_printer)
 
-        for section_name in sections:
-            section = sections[section_name]
-            if not section.is_enabled(targets):
-                continue
-
-            interactor.begin_section(section)
-            results = execute_section(
-                section=section,
-                global_bear_list=global_bears[section_name],
-                local_bear_list=local_bears[section_name],
-                print_results=interactor.print_results,
-                log_printer=log_printer)
+        section_results = execute_enabled_sections(sections,
+                                                   targets,
+                                                   global_bears,
+                                                   local_bears,
+                                                   interactor,
+                                                   log_printer)
+        for results in section_results:
             yielded_results = yielded_results or results[0]
 
         if yielded_results:
