@@ -1,9 +1,15 @@
+from datetime import datetime
+
 from coalib.misc.i18n import _
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
 class LogMessage:
-    def __init__(self, log_level, *messages, delimiter=" "):
+    def __init__(self,
+                 log_level,
+                 *messages,
+                 delimiter=" ",
+                 timestamp=None):
         if log_level not in LOG_LEVEL.reverse:
             raise ValueError("log_level has to be a valid LOG_LEVEL.")
 
@@ -13,6 +19,7 @@ class LogMessage:
             raise ValueError("Empty log messages are not allowed.")
 
         self.log_level = log_level
+        self.timestamp = timestamp or datetime.today()
 
     def __str__(self):
         log_level = _(LOG_LEVEL.reverse.get(self.log_level, "ERROR"))

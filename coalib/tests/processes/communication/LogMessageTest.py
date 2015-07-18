@@ -1,3 +1,4 @@
+from datetime import datetime
 import sys
 
 sys.path.insert(0, ".")
@@ -9,18 +10,29 @@ import unittest
 
 
 class LogMessageTest(unittest.TestCase):
+    timestamp = datetime.today()
+
     def setUp(self):
-        self.uut = LogMessage(LOG_LEVEL.DEBUG, "test", "message")
+        self.uut = LogMessage(LOG_LEVEL.DEBUG,
+                              "test",
+                              "message",
+                              timestamp=self.timestamp)
 
     def test_construction(self):
         # take a look if defaults are good
         self.assertEqual(self.uut.log_level, LOG_LEVEL.DEBUG)
         self.assertEqual(self.uut.message, "test message")
+        self.assertEqual(self.uut.timestamp, self.timestamp)
 
         # see that arguments are processed right
-        self.uut = LogMessage(LOG_LEVEL.WARNING, "   a msg  ", 5, "  ")
+        self.uut = LogMessage(LOG_LEVEL.WARNING,
+                              "   a msg  ",
+                              5,
+                              "  ",
+                              timestamp=self.timestamp)
         self.assertEqual(self.uut.log_level, LOG_LEVEL.WARNING)
         self.assertEqual(self.uut.message, "   a msg   5")
+        self.assertEqual(self.uut.timestamp, self.timestamp)
 
         self.assertRaises(ValueError, LogMessage, LOG_LEVEL.DEBUG, "")
         self.assertRaises(ValueError, LogMessage, 5, "test")

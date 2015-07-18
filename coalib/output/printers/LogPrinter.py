@@ -37,27 +37,28 @@ class LogPrinter(Printer):
     def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
         return self.log_message(LogMessage(LOG_LEVEL.DEBUG,
                                            *messages,
-                                           delimiter=delimiter),
-                                timestamp=timestamp,
+                                           delimiter=delimiter,
+                                           timestamp=timestamp),
                                 **kwargs)
 
     def warn(self, *messages, delimiter=" ", timestamp=None, **kwargs):
         return self.log_message(LogMessage(LOG_LEVEL.WARNING,
                                            *messages,
-                                           delimiter=delimiter),
-                                timestamp=timestamp,
+                                           delimiter=delimiter,
+                                           timestamp=timestamp),
                                 **kwargs)
 
     def err(self, *messages, delimiter=" ", timestamp=None, **kwargs):
         return self.log_message(LogMessage(LOG_LEVEL.ERROR,
                                            *messages,
-                                           delimiter=delimiter),
-                                timestamp=timestamp,
+                                           delimiter=delimiter,
+                                           timestamp=timestamp),
                                 **kwargs)
 
     def log(self, log_level, message, timestamp=None, **kwargs):
-        return self.log_message(LogMessage(log_level, message),
-                                timestamp=timestamp,
+        return self.log_message(LogMessage(log_level,
+                                           message,
+                                           timestamp=timestamp),
                                 **kwargs)
 
     def log_exception(self,
@@ -78,22 +79,19 @@ class LogPrinter(Printer):
         return self.log_message(
             LogMessage(log_level,
                        message + "\n\n" +
-                       _("Exception was:") + "\n" + traceback_str),
-            timestamp=timestamp,
+                       _("Exception was:") + "\n" + traceback_str,
+                       timestamp=timestamp),
             **kwargs)
 
-    def log_message(self, log_message, timestamp=None, **kwargs):
+    def log_message(self, log_message, **kwargs):
         if not isinstance(log_message, LogMessage):
             raise TypeError("log_message should be of type LogMessage.")
 
         if log_message.log_level < self.log_level:
             return
 
-        if not isinstance(timestamp, datetime):
-            timestamp = datetime.today()
-
         return self._print_log_message(
-            self._get_log_prefix(log_message.log_level, timestamp),
+            self._get_log_prefix(log_message.log_level, log_message.timestamp),
             log_message,
             **kwargs)
 

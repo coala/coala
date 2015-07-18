@@ -15,8 +15,10 @@ class TestLogPrinter(LogPrinter):
 
 
 class LogPrinterTest(unittest.TestCase):
+    timestamp = datetime.today()
     log_message = LogMessage(LOG_LEVEL.ERROR,
-                             StringConstants.COMPLEX_TEST_STRING)
+                             StringConstants.COMPLEX_TEST_STRING,
+                             timestamp=timestamp)
 
     def test_interface(self):
         uut = LogPrinter()
@@ -31,52 +33,51 @@ class LogPrinterTest(unittest.TestCase):
             uut.log_message(self.log_message, end="", special_arg="special"))
 
         uut = TestLogPrinter(log_level=LOG_LEVEL.DEBUG)
-        ts = datetime.today()
         self.assertEqual(
-            ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " +
+            ("[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
              StringConstants.COMPLEX_TEST_STRING, "test"),
-            uut.log_message(self.log_message, timestamp=ts, end=""))
+            uut.log_message(self.log_message, end=""))
         self.assertEqual(
-            ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " +
+            ("[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
              StringConstants.COMPLEX_TEST_STRING, "test"),
             uut.log(LOG_LEVEL.ERROR,
                     StringConstants.COMPLEX_TEST_STRING,
-                    timestamp=ts,
+                    timestamp=self.timestamp,
                     end=""))
 
         self.assertEqual(
-            ("[" + _("DEBUG") + "][" + ts.strftime("%X") + "] " +
+            ("[" + _("DEBUG") + "][" + self.timestamp.strftime("%X") + "] " +
              StringConstants.COMPLEX_TEST_STRING + " d", "test"),
             uut.debug(StringConstants.COMPLEX_TEST_STRING,
                       "d",
-                      timestamp=ts,
+                      timestamp=self.timestamp,
                       end=""))
         uut.log_level = LOG_LEVEL.WARNING
         self.assertEqual(None, uut.debug(StringConstants.COMPLEX_TEST_STRING,
-                                         timestamp=ts,
+                                         timestamp=self.timestamp,
                                          end=""))
         self.assertEqual(
-            ("[" + _("WARNING") + "][" + ts.strftime("%X") + "] " +
+            ("[" + _("WARNING") + "][" + self.timestamp.strftime("%X") + "] " +
              StringConstants.COMPLEX_TEST_STRING + " d", "test"),
             uut.warn(StringConstants.COMPLEX_TEST_STRING,
                      "d",
-                     timestamp=ts,
+                     timestamp=self.timestamp,
                      end=""))
         self.assertEqual(
-            ("[" + _("ERROR") + "][" + ts.strftime("%X") + "] " +
+            ("[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
              StringConstants.COMPLEX_TEST_STRING + " d", "test"),
             uut.err(StringConstants.COMPLEX_TEST_STRING,
                     "d",
-                    timestamp=ts,
+                    timestamp=self.timestamp,
                     end=""))
 
         logged = uut.log_exception(
             "Something failed.",
             NotImplementedError(StringConstants.COMPLEX_TEST_STRING),
-            timestamp=ts,
+            timestamp=self.timestamp,
             end="")
         self.assertTrue(logged[0].startswith(
-            "[" + _("ERROR") + "][" + ts.strftime("%X") +
+            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") +
             "] Something failed.\n\n" + _("Exception was:") + "\n"))
 
     def test_raises(self):
