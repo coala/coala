@@ -13,6 +13,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.misc.i18n import _
 from coalib.settings.Setting import Setting
 from coalib.results.Result import Result
+from coalib.misc.DictUtilities import inverse_dicts
 
 
 STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
@@ -517,3 +518,22 @@ def print_bears(console_printer, bears):
                       bear,
                       bears[bear],
                       bear.get_metadata())
+
+
+def show_bears(local_bears, global_bears, console_printer):
+    """
+    Extracts all the bears from each enabled section or the sections in the
+    targets and passes a dictionary to the show_bears_callback method.
+
+    :param local_bears:         Dictionary of local bears with section names
+                                as keys and bear list as values.
+    :param global_bears:        Dictionary of global bears with section
+                                names as keys and bear list as values.
+    :param show_bears_callback: The callback that is used to print these
+                                bears. It will get one parameter holding
+                                bears as key and the list of section names
+                                where it's used as values.
+    """
+    bears = inverse_dicts(local_bears, global_bears)
+
+    print_bears(console_printer, bears)
