@@ -4,6 +4,7 @@ install:
 
 docker:
   as_root: true
+  image: "coala/rultor-python"
 
 merge:
   fast-forward: only
