@@ -30,7 +30,8 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
 
     def test_configuration(self):
         self.section.append(Setting("average_calculation", "true"))
-        self.section.append(Setting("reduce_big_diffs", "false"))
+        self.section.append(Setting("poly_postprocessing", "false"))
+        self.section.append(Setting("exp_postprocessing", "true"))
 
         self.clone_files = [
             os.path.join(self.base_test_path, "clones", "s4c.c")]

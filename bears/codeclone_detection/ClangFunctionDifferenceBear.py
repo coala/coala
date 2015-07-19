@@ -47,14 +47,27 @@ member_accessed: 2"""))
 def get_difference(function_pair,
                    count_matrices,
                    average_calculation,
-                   reduce_big_diffs):
+                   poly_postprocessing,
+                   exp_postprocessing):
     """
     Retrieves the difference between two functions using the munkres algorithm.
 
-    :param args: A tuple holding the first function id, the second and the
-                 count matrices dictionary holding the count matrices for
-                 each function with the function id as key.
-    :return:     A tuple containing both function ids and their difference.
+    :param function_pair:       A tuple containing both indices for the
+                                count_matrices dictionary.
+    :param count_matrices:      A dictionary holding CMs.
+    :param average_calculation: If set to true the difference calculation
+                                function will take the average of all variable
+                                differences as the difference, else it will
+                                normalize the function as a whole and thus
+                                weighting in variables dependent on their size.
+    :param poly_postprocessing: If set to true, the difference value of big
+                                function pairs will be reduced using a
+                                polynomial approach.
+    :param exp_postprocessing:  If set to true, the difference value of big
+                                function pairs will be reduced using an
+                                exponential approach.
+    :return:                    A tuple containing both function ids and their
+                                difference.
     """
     function_1, function_2 = function_pair
     return (function_1,
@@ -62,17 +75,23 @@ def get_difference(function_pair,
             compare_functions(count_matrices[function_1],
                               count_matrices[function_2],
                               average_calculation,
-                              reduce_big_diffs))
+                              poly_postprocessing,
+                              exp_postprocessing))
 
 
 class ClangFunctionDifferenceBear(GlobalBear):
     def run(self,
             counting_conditions: counting_condition_dict=default_cc_dict,
             average_calculation: bool=False,
-            reduce_big_diffs: bool=True):
+            poly_postprocessing: bool=True,
+            exp_postprocessing: bool=False):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
+
+        Postprocessing may be done because small functions are less likely to
+        be clones at the same difference value than big functions which may
+        provide a better refactoring opportunity for the user.
 
         :param counting_conditions:  A comma seperated list of counting
                                      conditions. Possible values are: used,
@@ -96,13 +115,12 @@ class ClangFunctionDifferenceBear(GlobalBear):
                                     else it will normalize the function as a
                                     whole and thus weighting in variables
                                     dependent on their size.
-        :param reduce_big_diffs:    If set to true, the difference value of big
-                                    function pairs will be reduced. This may be
-                                    useful because small functions are less
-                                    likely to be clones at the same difference
-                                    value than big functions which provide a
-                                    better refactoring opportunity for the
-                                    user.
+        :param poly_postprocessing: If set to true, the difference value of big
+                                    function pairs will be reduced using a
+                                    polynomial approach.
+        :param exp_postprocessing:  If set to true, the difference value of big
+                                    function pairs will be reduced using an
+                                    exponential approach.
         '''
         if not isinstance(counting_conditions, dict):
             self.err("The counting_conditions setting is invalid. Code clone "
@@ -131,7 +149,8 @@ class ClangFunctionDifferenceBear(GlobalBear):
             get_difference,
             count_matrices=count_matrices,
             average_calculation=average_calculation,
-            reduce_big_diffs=reduce_big_diffs)
+            poly_postprocessing=poly_postprocessing,
+            exp_postprocessing=exp_postprocessing)
 
         for i, elem in enumerate(
                 map(partial_get_difference,

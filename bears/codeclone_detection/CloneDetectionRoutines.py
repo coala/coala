@@ -1,4 +1,5 @@
 import os
+import math
 import copy
 from munkres import Munkres
 # Instantiate globally since this class is holding stateless public methods.
@@ -108,10 +109,19 @@ def average(lst):
     return sum(lst)/len(lst)
 
 
-def get_difference(matching_iterator, average_calculation, reduce_big_diffs):
+def get_difference(matching_iterator,
+                   average_calculation,
+                   poly_postprocessing,
+                   exp_postprocessing):
     """
     Retrieves the difference value for the matched function represented by the
     given matches.
+
+    Postprocessing may be done because small functions are less likely to be
+    clones at the same difference value than big functions which may provide a
+    better refactoring opportunity for the user.
+
+    :return:                    A difference value between 0 and 1.
 
     :param matching_iterator:   A list holding tuples of an absolute difference
                                 value and a value to normalize the difference
@@ -121,13 +131,12 @@ def get_difference(matching_iterator, average_calculation, reduce_big_diffs):
                                 difference, else it will normalize the
                                 function as a whole and thus weighting in
                                 variables dependent on their size.
-    :param reduce_big_diffs:    If set to true, the difference value of big
-                                function pairs will be reduced. This may be
-                                useful because small functions are less  likely
-                                to be clones at the same difference value than
-                                big functions which provide a better
-                                refactoring opportunity for the user.
-    :return:                    A difference value between 0 and 1.
+    :param poly_postprocessing: If set to true, the difference value of big
+                                function pairs will be reduced using a
+                                polynomial approach.
+    :param exp_postprocessing:  If set to true, the difference value of big
+                                function pairs will be reduced using an
+                                exponential approach.
     """
     norm_sum = sum(norm for diff, norm in matching_iterator)
 
@@ -139,9 +148,11 @@ def get_difference(matching_iterator, average_calculation, reduce_big_diffs):
             sum(diff for diff, norm in matching_iterator),
             norm_sum)
 
-    if reduce_big_diffs and norm_sum != 0:
+    if poly_postprocessing and norm_sum != 0:
         # This function starts at 1 and converges to .75 for norm_sum -> inf
         difference *= (3*norm_sum+1)/(4*norm_sum)
+    if exp_postprocessing and norm_sum != 0:
+        difference *= math.exp(1-norm_sum)/4 + 0.75
 
     return difference
 
@@ -149,9 +160,14 @@ def get_difference(matching_iterator, average_calculation, reduce_big_diffs):
 def compare_functions(cm1,
                       cm2,
                       average_calculation=False,
-                      reduce_big_diffs=True):
+                      poly_postprocessing=True,
+                      exp_postprocessing=False):
     """
     Compares the functions represented by the given count matrices.
+
+    Postprocessing may be done because small functions are less likely to be
+    clones at the same difference value than big functions which may provide a
+    better refactoring opportunity for the user.
 
     :param cm1:                 Count vector dict for the first function.
     :param cm2:                 Count vector dict for the second function.
@@ -160,12 +176,12 @@ def compare_functions(cm1,
                                 differences as the difference, else it will
                                 normalize the function as a whole and thus
                                 weighting in variables dependent on their size.
-    :param reduce_big_diffs:    If set to true, the difference value of big
-                                function pairs will be reduced. This may be
-                                useful because small functions are less  likely
-                                to be clones at the same difference value than
-                                big functions which provide a better
-                                refactoring opportunity for the user.
+    :param poly_postprocessing: If set to true, the difference value of big
+                                function pairs will be reduced using a
+                                polynomial approach.
+    :param exp_postprocessing:  If set to true, the difference value of big
+                                function pairs will be reduced using an
+                                exponential approach.
     :return:                    The difference between these functions, 0 is
                                 identical and 1 is not similar at all.
     """
@@ -196,4 +212,5 @@ def compare_functions(cm1,
     return get_difference([(diff_table[x][1][y][1], diff_table[x][1][y][2])
                            for x, y in matching],
                           average_calculation,
-                          reduce_big_diffs)
+                          poly_postprocessing,
+                          exp_postprocessing)
