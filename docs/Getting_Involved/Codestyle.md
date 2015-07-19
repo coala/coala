@@ -172,7 +172,9 @@ as long as it does not cause local name clashes.
 Wildcard imports (`from <module\> import *`) are not allowed as they make it
 unclear which names are present in the namespace.
 
-# Documentation Comments
+# Functions
+
+## Documentation Comments
 
 A documentation comment consists of 2 parts - the description of what the
 function/class/module does followed by the parameters it takes in, the
@@ -209,4 +211,20 @@ Example :
                   in great detail.
 :return:          This message also started in the same column and it
                   starts again at the same column as the rest of the messages.
+```
+
+## Arguments
+
+Do not use mutable arguments for default arguments in functions as they get
+initialized only the first time the function is parser and are reused every
+time the function is called. Instead use immutable ones, like tuples
+instead of lists. If it is required to use a mutable argument (like dict,
+class objects, etc), declare the default value as `None` and use a
+condition inside the function to set it to the mutable argument.
+
+Example:
+
+```
+def func(arg=None):
+    arg = {"key": "val"} or arg
 ```
