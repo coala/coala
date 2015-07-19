@@ -1,7 +1,7 @@
 import os
 import sys
 
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -112,11 +112,11 @@ def load_configuration(arg_list, log_printer):
     for item in list(cli_sections["default"].contents.pop("targets", "")):
         targets.append(item.lower())
 
-    default_sections = load_config_file(StringConstants.system_coafile,
+    default_sections = load_config_file(Constants.system_coafile,
                                         log_printer)
 
     user_sections = load_config_file(
-        StringConstants.user_coafile,
+        Constants.user_coafile,
         log_printer,
         silent=True)
 

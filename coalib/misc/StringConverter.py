@@ -1,6 +1,6 @@
 from collections import Iterable, OrderedDict
 import re
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.parsing.StringProcessing import unescaped_split, unescape
 
 
@@ -37,9 +37,9 @@ class StringConverter:
         return unescape(self.value)
 
     def __bool__(self):
-        if str(self).lower() in StringConstants.TRUE_STRINGS:
+        if str(self).lower() in Constants.TRUE_STRINGS:
             return True
-        if str(self).lower() in StringConstants.FALSE_STRINGS:
+        if str(self).lower() in Constants.FALSE_STRINGS:
             return False
         raise ValueError
 

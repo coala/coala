@@ -1,6 +1,6 @@
 import subprocess
 
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.output.printers.Printer import Printer
 from coalib.output.ClosableObject import ClosableObject
 from coalib.misc.i18n import _
@@ -25,7 +25,7 @@ class EspeakPrinter(Printer, ClosableObject):
             raise EnvironmentError
         except:  # pragma: no cover
             print(_("Failed to execute eSpeak. An unknown error occurred."),
-                  StringConstants.THIS_IS_A_BUG)
+                  Constants.THIS_IS_A_BUG)
             raise EnvironmentError
 
     def _close(self):

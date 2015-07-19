@@ -1,7 +1,7 @@
 import argparse
 
 from coalib.misc.i18n import _
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 
 
 def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
@@ -72,5 +72,5 @@ def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
     arg_parser.add_argument('-v',
                             '--version',
                             action='version',
-                            version=StringConstants.VERSION)
+                            version=Constants.VERSION)
     return arg_parser

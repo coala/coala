@@ -1,7 +1,7 @@
 import os
 
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.parsing.ConfParser import ConfParser
 
 
@@ -25,7 +25,7 @@ class LanguageDefinition(SectionCreatable):
         """
         SectionCreatable.__init__(self)
         self.language = language.lower()
-        filename = os.path.join(StringConstants.language_definitions,
+        filename = os.path.join(Constants.language_definitions,
                                 language_family.lower() + ".coalang")
         self.lang_dict = ConfParser().parse(filename)[language.lower()]
 

@@ -15,14 +15,14 @@ from coalib.processes.Processing import execute_section
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import process_queues, create_process_group
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.settings.Section import Section
 
 
 process_group_test_code = """
 import time, subprocess, os, platform;
-from coalib.misc.StringConstants import StringConstants;
-p=subprocess.Popen([StringConstants.python_executable,
+from coalib.misc.Constants import Constants;
+p=subprocess.Popen([Constants.python_executable,
                   "-c",
                   "import time; time.sleep(0.1)"]);
 pgid = p.pid if platform.system() == "Windows" else os.getpgid(p.pid);
@@ -182,7 +182,7 @@ class ProcessingTest(unittest.TestCase):
             self.queue.get(timeout=0)
 
     def test_create_process_group(self):
-        p = create_process_group([StringConstants.python_executable,
+        p = create_process_group([Constants.python_executable,
                                   "-c",
                                   process_group_test_code],
                                  stdout=subprocess.PIPE,

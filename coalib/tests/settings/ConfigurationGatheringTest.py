@@ -4,7 +4,7 @@ import tempfile
 import unittest
 sys.path.insert(0, ".")
 
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
 from coalib.output.printers.NullPrinter import NullPrinter
@@ -42,8 +42,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(len(local_bears["default"]), 1)
 
     def test_default_coafile_parsing(self):
-        tmp = StringConstants.system_coafile
-        StringConstants.system_coafile = os.path.abspath(os.path.join(
+        tmp = Constants.system_coafile
+        Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             "section_manager_test_files",
             "default_coafile"))
@@ -54,11 +54,11 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
-        StringConstants.system_coafile = tmp
+        Constants.system_coafile = tmp
 
     def test_user_coafile_parsing(self):
-        tmp = StringConstants.user_coafile
-        StringConstants.user_coafile = os.path.abspath(os.path.join(
+        tmp = Constants.user_coafile
+        Constants.user_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             "section_manager_test_files",
             "default_coafile"))
@@ -69,7 +69,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
                          "test {value : 1, testval : 5}")
-        StringConstants.user_coafile = tmp
+        Constants.user_coafile = tmp
 
     def test_nonexistent_file(self):
         filename = "bad.one/test\neven with bad chars in it"
@@ -78,15 +78,15 @@ class ConfigurationGatheringTest(unittest.TestCase):
                              self.log_printer,
                              arg_list=['-S', "config=" + filename])
 
-        tmp = StringConstants.system_coafile
-        StringConstants.system_coafile = filename
+        tmp = Constants.system_coafile
+        Constants.system_coafile = filename
         # Shouldn't throw an exception
         gather_configuration(lambda *args: True, self.log_printer)
-        StringConstants.system_coafile = tmp
+        Constants.system_coafile = tmp
 
     def test_merge(self):
-        tmp = StringConstants.system_coafile
-        StringConstants.system_coafile = os.path.abspath(os.path.join(
+        tmp = Constants.system_coafile
+        Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             "section_manager_test_files",
             "default_coafile"))
@@ -127,7 +127,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                          "test-4 {bears : TestBear}")
         self.assertEqual(str(sections["test-5"]),
                          "test-5 {bears : TestBear2}")
-        StringConstants.system_coafile = tmp
+        Constants.system_coafile = tmp
 
     def test_merge_defaults(self):
         (sections,

@@ -1,5 +1,5 @@
 from coalib.output.printers.NullPrinter import NullPrinter
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.misc.i18n import _
 
 
@@ -14,7 +14,7 @@ def get_exitcode(exception, log_printer=None):
     elif isinstance(exception, SystemExit):
         exitcode = exception.code
     elif isinstance(exception, Exception):
-        log_printer.log_exception(StringConstants.CRASH_MESSAGE, exception)
+        log_printer.log_exception(Constants.CRASH_MESSAGE, exception)
         exitcode = 255
 
     return exitcode

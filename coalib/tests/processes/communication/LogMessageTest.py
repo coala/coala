@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, ".")
 from coalib.misc.i18n import _
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.processes.communication.LogMessage import LogMessage
 import unittest
 
@@ -38,23 +38,23 @@ class LogMessageTest(unittest.TestCase):
         self.assertRaises(ValueError, LogMessage, 5, "test")
 
     def test_to_str(self):
-        self.uut.message = StringConstants.COMPLEX_TEST_STRING
+        self.uut.message = Constants.COMPLEX_TEST_STRING
         self.uut.log_level = LOG_LEVEL.ERROR
         self.assertEqual(str(self.uut),
                          "[{}] {}".format(_("ERROR"),
-                                          StringConstants.COMPLEX_TEST_STRING))
+                                          Constants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.WARNING
         self.assertEqual(str(self.uut),
                          "[{}] {}".format(_("WARNING"),
-                                          StringConstants.COMPLEX_TEST_STRING))
+                                          Constants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.DEBUG
         self.assertEqual(str(self.uut),
                          "[{}] {}".format(_("DEBUG"),
-                                          StringConstants.COMPLEX_TEST_STRING))
+                                          Constants.COMPLEX_TEST_STRING))
         self.uut.log_level = 5
         self.assertEqual(str(self.uut),
                          "[{}] {}".format(_("ERROR"),
-                                          StringConstants.COMPLEX_TEST_STRING))
+                                          Constants.COMPLEX_TEST_STRING))
 
     def test_equals(self):
         self.assertEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"),

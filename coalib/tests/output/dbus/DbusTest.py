@@ -9,14 +9,14 @@ from gi.repository import GLib
 
 sys.path.insert(0, ".")
 from coalib.output.dbus.DbusServer import DbusServer
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 
 
 def make_test_server():
     # Make a dbus service in a new process. It cannot be in this process
     # as that gives SegmentationFaults because the same bus is being used.
     return subprocess.Popen([
-        StringConstants.python_executable,
+        Constants.python_executable,
         __file__,
         "server"])
 

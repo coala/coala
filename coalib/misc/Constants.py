@@ -4,7 +4,7 @@ import platform
 from coalib.misc.i18n import _
 
 
-class StringConstants:
+class Constants:
     THIS_IS_A_BUG = _("This is a bug. We are sorry for the inconvenience. "
                       "Please contact the developers for assistance.")
 

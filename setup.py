@@ -4,7 +4,7 @@ from setuptools import setup
 
 from coalib import assert_supported_version
 from coalib.misc.i18n import compile_translations
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.misc.BuildManPage import BuildManPage
 
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     data_files = compile_translations()
 
     setup(name='coala',
-          version=StringConstants.VERSION,
+          version=Constants.VERSION,
           description='Code Analysis Application (coala)',
           author=authors,
           author_email=author_mails,

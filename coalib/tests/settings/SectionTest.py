@@ -4,18 +4,18 @@ import sys
 sys.path.insert(0, ".")
 
 from coalib.settings.Section import Section, Setting, append_to_sections
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 
 
 class SectionTest(unittest.TestCase):
     def test_construction(self):
-        uut = Section(StringConstants.COMPLEX_TEST_STRING, None)
-        uut = Section(StringConstants.COMPLEX_TEST_STRING, uut)
+        uut = Section(Constants.COMPLEX_TEST_STRING, None)
+        uut = Section(Constants.COMPLEX_TEST_STRING, uut)
         self.assertRaises(TypeError, Section, "irrelevant", 5)
         self.assertRaises(ValueError, uut.__init__, "name", uut)
 
     def test_append(self):
-        uut = Section(StringConstants.COMPLEX_TEST_STRING, None)
+        uut = Section(Constants.COMPLEX_TEST_STRING, None)
         self.assertRaises(TypeError, uut.append, 5)
         uut.append(Setting(5, 5, 5))
         self.assertEqual(str(uut.get("5 ")), "5")

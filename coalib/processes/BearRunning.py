@@ -5,7 +5,7 @@ from collections import Iterable
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.StringConstants import StringConstants
+from coalib.misc.Constants import Constants
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.misc.i18n import _
@@ -210,7 +210,7 @@ def run_local_bear(message_queue,
                  LOG_LEVEL.WARNING,
                  _("A given local bear ({}) is not valid. Leaving "
                    "it out...").format(bear_instance.__class__.__name__),
-                 StringConstants.THIS_IS_A_BUG)
+                 Constants.THIS_IS_A_BUG)
 
         return None
 
@@ -255,7 +255,7 @@ def run_global_bear(message_queue,
                  _("A given global bear ({}) is not valid. Leaving it "
                    "out...")
                  .format(global_bear_instance.__class__.__name__),
-                 StringConstants.THIS_IS_A_BUG)
+                 Constants.THIS_IS_A_BUG)
 
         return None
 
@@ -299,7 +299,7 @@ def run_local_bears_on_file(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
                  _("An internal error occurred."),
-                 StringConstants.THIS_IS_A_BUG)
+                 Constants.THIS_IS_A_BUG)
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,
