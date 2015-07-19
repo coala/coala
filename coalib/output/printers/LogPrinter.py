@@ -73,6 +73,21 @@ class LogPrinter(Printer):
                       log_level=LOG_LEVEL.ERROR,
                       timestamp=None,
                       **kwargs):
+        """
+        If the log_level of the printer is greater than DEBUG, it prints
+        only the message. If it is DEBUG or lower, it shows the message
+        along with the traceback of the exception.
+
+        :param message:   The message to print.
+        :param exception: The exception to print.
+        :param log_level: The log_level of this message (not used when
+                          logging the traceback. Tracebacks always have
+                          a level of DEBUG).
+        :param timestamp: The time at which this log occured. Defaults to
+                          the current time.
+        :param kwargs:    Keyword arguments to be passed when logging the
+                          message (not used when logging the traceback).
+        """
         if not isinstance(exception, BaseException):
             raise TypeError("log_exception can only log derivatives of "
                             "BaseException.")
@@ -82,9 +97,9 @@ class LogPrinter(Printer):
                                        exception,
                                        exception.__traceback__))
 
+        self.log(log_level, message, timestamp=timestamp, **kwargs)
         return self.log_message(
-            LogMessage(log_level,
-                       message + "\n\n" +
+            LogMessage(LOG_LEVEL.DEBUG,
                        _("Exception was:") + "\n" + traceback_str,
                        timestamp=timestamp),
             **kwargs)
