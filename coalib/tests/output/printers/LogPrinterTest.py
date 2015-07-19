@@ -10,8 +10,16 @@ from coalib.misc.i18n import _
 
 
 class TestLogPrinter(LogPrinter):
+    def __init__(self, *args, **kwargs):
+        LogPrinter.__init__(self, *args, **kwargs)
+        self.printed = ''
+
     def _print(self, output, special_arg="test"):
+        self.printed += output + " " + special_arg + "\n"
         return output, special_arg
+
+    def clear(self):
+        self.printed = ""
 
 
 class LogPrinterTest(unittest.TestCase):
@@ -82,14 +90,29 @@ class LogPrinterTest(unittest.TestCase):
                     timestamp=self.timestamp,
                     end=""))
 
+        uut.log_level = LOG_LEVEL.DEBUG
+        uut.clear()
+        uut.log_exception(
+            "Something failed.",
+            NotImplementedError(Constants.COMPLEX_TEST_STRING),
+            timestamp=self.timestamp,
+            end="")
+        self.assertTrue(uut.printed.startswith(
+            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") +
+            "] Something failed. test\n" +
+            "[" + _("DEBUG") + "][" + self.timestamp.strftime("%X") +
+            "] " + _("Exception was:") + "\n"))
+
+        uut.log_level = LOG_LEVEL.INFO
+        uut.clear()
         logged = uut.log_exception(
             "Something failed.",
             NotImplementedError(Constants.COMPLEX_TEST_STRING),
             timestamp=self.timestamp,
             end="")
-        self.assertTrue(logged[0].startswith(
+        self.assertTrue(uut.printed.startswith(
             "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") +
-            "] Something failed.\n\n" + _("Exception was:") + "\n"))
+            "] Something failed. test"))
 
     def test_raises(self):
         uut = LogPrinter()
