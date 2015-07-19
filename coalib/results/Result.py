@@ -109,3 +109,26 @@ class Result:
             return self.message < other.message
 
         return self.debug_msg < other.debug_msg
+
+    def to_string_dict(self):
+        """
+        Makes a dictionary which has all keys and values as strings and
+        contains all the data that the base Result has.
+
+        :return: Dictionary with keys and values as string.
+        """
+        retval = {}
+
+        members = ["debug_msg",
+                   "file",
+                   "line_nr",
+                   "message",
+                   "origin"]
+
+        for member in members:
+            value = getattr(self, member)
+            retval[member] = "" if value == None else str(value)
+
+        retval["severity"] = str(RESULT_SEVERITY.reverse.get(self.severity, ""))
+
+        return retval

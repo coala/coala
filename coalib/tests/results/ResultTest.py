@@ -114,6 +114,35 @@ class ResultTest(unittest.TestCase):
         self.assertLessEqual(lesser, greater)
         self.assertLess(lesser, greater)
 
+    def test_string_dict(self):
+        uut = Result(None, None)
+        output = uut.to_string_dict()
+        self.assertEqual(output, {"origin": "",
+                                  "message": "",
+                                  "file": "",
+                                  "line_nr": "",
+                                  "severity": "NORMAL",
+                                  "debug_msg": ""})
+
+        uut = Result(origin="origin",
+                     message="msg",
+                     file="file",
+                     line_nr=2,
+                     severity=RESULT_SEVERITY.INFO,
+                     debug_msg="dbg")
+        output = uut.to_string_dict()
+        self.assertEqual(output, {"origin": "origin",
+                                  "message": "msg",
+                                  "file": "file",
+                                  "line_nr": "2",
+                                  "severity": "INFO",
+                                  "debug_msg": "dbg"})
+
+
+        uut = Result(origin="origin", message="msg", line_nr="a")
+        output = uut.to_string_dict()
+        self.assertEqual(output["line_nr"], "a")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
