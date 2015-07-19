@@ -67,16 +67,12 @@ class LogPrinter(Printer):
                                            timestamp=timestamp),
                                 **kwargs)
 
-    def log_exception(self,
+    def _log_exception(self,
                       message,
                       exception,
                       log_level=LOG_LEVEL.ERROR,
                       timestamp=None,
                       **kwargs):
-        if not isinstance(exception, BaseException):
-            raise TypeError("log_exception can only log derivatives of "
-                            "BaseException.")
-
         traceback_str = "\n".join(
             traceback.format_exception(type(exception),
                                        exception,
@@ -88,6 +84,39 @@ class LogPrinter(Printer):
                        _("Exception was:") + "\n" + traceback_str,
                        timestamp=timestamp),
             **kwargs)
+
+    def log_exception(self,
+                      message,
+                      exception,
+                      log_level=LOG_LEVEL.ERROR,
+                      timestamp=None,
+                      **kwargs):
+        """
+        If the log_level of the printer is greater than DEBUG, it prints
+        only the message. If it is DEBUG or lower, it shows the message
+        along with the traceback of the exception.
+
+        :param message:   The message to print.
+        :param exception: The exception to print.
+        :param log_level: The log_level of this message (not the traceback).
+        :param timestamp: The time at which this log occured. Defaults to
+                          the current time.
+        """
+        if self.log_level > LOG_LEVEL.DEBUG:
+            return self.log(log_level,
+                            message,
+                            timestamp=timestamp,
+                            **kwargs)
+        else:
+            if not isinstance(exception, BaseException):
+                raise TypeError("log_exception can only log derivatives of "
+                                "BaseException.")
+
+            return self._log_exception(message,
+                                       exception,
+                                       log_level=LOG_LEVEL.DEBUG,
+                                       timestamp=timestamp,
+                                       **kwargs)
 
     def log_message(self, log_message, **kwargs):
         if not isinstance(log_message, LogMessage):
