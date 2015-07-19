@@ -45,20 +45,22 @@ class DbusDocumentTest(unittest.TestCase):
         self.assertEqual(uut.Analyze(), [])
 
         uut.SetConfigFile(self.config_path)
-
-        self.assertEqual(uut.Analyze(),
+        output = uut.Analyze()
+        self.assertEqual(output,
                          [['default',
-                           True,
-                           [['LocalTestBear',
-                             'test msg',
-                             'None',
-                             'None',
-                             '1'],
-                            ['GlobalTestBear',
-                             'test msg',
-                             self.testcode_c_path,
-                             'None',
-                             '1']]]])
+                          True,
+                          [{'debug_msg': '',
+                            'file': '',
+                            'line_nr': '',
+                            'message': 'test msg',
+                            'origin': 'LocalTestBear',
+                            'severity': 'NORMAL'},
+                           {'debug_msg': '',
+                            'file': self.testcode_c_path,
+                            'line_nr': '',
+                            'message': 'test msg',
+                            'origin': 'GlobalTestBear',
+                            'severity': 'NORMAL'}]]])
 
 
 if __name__ == "__main__":

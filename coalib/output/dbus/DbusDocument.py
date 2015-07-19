@@ -70,9 +70,15 @@ class DbusDocument(dbus.service.Object):
         """
         return self.config_file
 
+    # Signature explanation:
+    # s -> string
+    # b -> boolean
+    # a -> array (list of tuple in python)
+    # () -> structure (or tuple in python)
+    # a{ss} -> dictionary with string keys and string values
     @dbus.service.method(interface,
                          in_signature="",
-                         out_signature="a(sba(sssss))")
+                         out_signature="a(sbaa{ss})")
     def Analyze(self):
         """
         This method analyzes the document and sends back the result
@@ -146,11 +152,8 @@ class DbusDocument(dbus.service.Object):
 
                 # Loop over every result for a file
                 for result in value:
-                    results_for_section.append([str(result.origin),
-                                                str(result.message),
-                                                str(result.file),
-                                                str(result.line_nr),
-                                                str(result.severity)])
+                    results_for_section.append(
+                        result.to_string_dict())
 
         return [section_name, section_result[0], results_for_section]
 

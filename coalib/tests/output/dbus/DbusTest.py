@@ -90,20 +90,22 @@ class DbusTest(unittest.TestCase):
 
         analysis = self.document_object.Analyze(
             dbus_interface="org.coala_analyzer.v1")
-
+        self.maxDiff = None
         self.assertEqual(analysis,
                          [('default',
-                           True,
-                           [('LocalTestBear',
-                             'test msg',
-                             'None',
-                             'None',
-                             '1'),
-                            ('GlobalTestBear',
-                             'test msg',
-                             self.testcode_c_path,
-                             'None',
-                             '1')])])
+                          True,
+                          [{'debug_msg': '',
+                            'file': '',
+                            'line_nr': "",
+                            'message': 'test msg',
+                            'origin': 'LocalTestBear',
+                            'severity': 'NORMAL'},
+                           {'debug_msg': '',
+                            'file': self.testcode_c_path,
+                            'line_nr': "",
+                            'message': 'test msg',
+                            'origin': 'GlobalTestBear',
+                            'severity': 'NORMAL'}])])
 
         self.remote_object.DisposeDocument(
             self.testcode_c_path,
