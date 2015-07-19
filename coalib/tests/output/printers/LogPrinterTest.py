@@ -82,6 +82,18 @@ class LogPrinterTest(unittest.TestCase):
                     timestamp=self.timestamp,
                     end=""))
 
+        uut.log_level = LOG_LEVEL.DEBUG
+        logged = uut.log_exception(
+            "Something failed.",
+            NotImplementedError(Constants.COMPLEX_TEST_STRING),
+            timestamp=self.timestamp,
+            end="")
+        print(logged)
+        self.assertTrue(logged[0].startswith(
+            "[" + _("DEBUG") + "][" + self.timestamp.strftime("%X") +
+            "] Something failed.\n\n" + _("Exception was:") + "\n"))
+
+        uut.log_level = LOG_LEVEL.INFO
         logged = uut.log_exception(
             "Something failed.",
             NotImplementedError(Constants.COMPLEX_TEST_STRING),
@@ -89,10 +101,11 @@ class LogPrinterTest(unittest.TestCase):
             end="")
         self.assertTrue(logged[0].startswith(
             "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") +
-            "] Something failed.\n\n" + _("Exception was:") + "\n"))
+            "] Something failed."))
 
     def test_raises(self):
         uut = LogPrinter()
+        uut.log_level = LOG_LEVEL.DEBUG
         self.assertRaises(TypeError, uut.log, 5)
         self.assertRaises(TypeError, uut.log_exception, "message", 5)
         self.assertRaises(TypeError, uut.log_message, 5)
