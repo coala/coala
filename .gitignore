@@ -25,3 +25,4 @@ coala.egg-info
 coala.1
 src
 site
+.zanata-cache
