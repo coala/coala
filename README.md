@@ -79,8 +79,7 @@ This code falls under the GNU Affero General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your option)
 any later version.
 
-Please note that some directories may have an own license. Summary of all
-licenses used:
-
- * GNU AGPLv3 (default for all code)
- * LLVM Release License (coalib/bearlib/parsing/clang)
+Please note that some files or content may be copied from other places. Most
+of them are GPL compatible. There is a small portion of code in the tests that
+falls under the Creative Commons license, see
+<https://creativecommons.org/licenses/by-sa/3.0/deed.de> for more information.

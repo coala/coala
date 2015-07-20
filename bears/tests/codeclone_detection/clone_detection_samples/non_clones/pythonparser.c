@@ -1,3 +1,5 @@
+// From CPython: https://hg.python.org/cpython
+
 typedef struct _nfaarc {
     int         ar_label;
     int         ar_arrow;

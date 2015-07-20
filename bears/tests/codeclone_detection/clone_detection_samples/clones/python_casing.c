@@ -1,3 +1,5 @@
+// From CPython: https://hg.python.org/cpython
+
 // Dummies
 #define Py_CHARMASK(c) c
 #define Py_ISLOWER(c) c

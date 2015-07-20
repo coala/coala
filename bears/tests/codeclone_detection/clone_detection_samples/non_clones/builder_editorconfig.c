@@ -1,3 +1,5 @@
+// From GNOME Builder: https://git.gnome.org/browse/gnome-builder
+
 typedef struct
 {
     char* name;

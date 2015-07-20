@@ -1,3 +1,7 @@
+// Adapted from Roy, C.K., Cordy, J.R., and Koschke, R. Comparison and
+// evaluation of code clone detection techniques and tools: A qualitative
+// approach. Science of Computer Programming 74, 7 (2009), 470–495.
+
 void foo(float, float);
 
 void original(int n) {
