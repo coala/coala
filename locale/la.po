@@ -1,9 +1,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: coala 0.1.1.dev20150719103107\n"
+"Project-Id-Version: coala 0.1.1.dev20150720093128\n"
 "Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
-"POT-Creation-Date: 2015-07-19 10:31+0000\n"
+"POT-Creation-Date: 2015-07-20 09:31+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,16 +13,6 @@ msgstr ""
 "Language: la\n"
 "X-Generator: Zanata 3.6.2\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-
-#. Ctrl+C
-#: coalib/coala_ci.py:48 coalib/coala.py:69
-msgid "Program terminated by user."
-msgstr ""
-
-#. Ctrl+D
-#: coalib/coala_ci.py:51 coalib/coala.py:72
-msgid "Found EOF. Exiting gracefully."
-msgstr ""
 
 #: coalib/processes/Processing.py:99
 msgid ""
@@ -162,8 +152,9 @@ msgid ""
 "will be stored back to the file given by -c"
 msgstr ""
 
-#: coalib/results/RESULT_SEVERITY.py:5
+#: coalib/results/RESULT_SEVERITY.py:5 coalib/output/printers/LOG_LEVEL.py:4
 #: coalib/tests/results/RESULT_SEVERITYTest.py:11
+#: coalib/tests/output/printers/LogPrinterTest.py:60
 msgid "INFO"
 msgstr ""
 
@@ -288,32 +279,42 @@ msgstr ""
 msgid "No bears to show."
 msgstr ""
 
-#: coalib/output/printers/LogPrinter.py:81
-#: coalib/tests/output/printers/LogPrinterTest.py:80
+#: coalib/output/Interactions.py:21
+msgid ""
+"During execution, we found that some requiredsettings were not provided. "
+"They are:\n"
+msgstr ""
+
+#: coalib/output/Interactions.py:25
+msgid "{} (from {}) - {}"
+msgstr ""
+
+#: coalib/output/printers/LogPrinter.py:88
+#: coalib/tests/output/printers/LogPrinterTest.py:92
 msgid "Exception was:"
 msgstr ""
 
 #: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/tests/processes/communication/LogMessageTest.py:40
-#: coalib/tests/output/printers/LogPrinterTest.py:48
+#: coalib/tests/processes/communication/LogMessageTest.py:52
+#: coalib/tests/output/printers/LogPrinterTest.py:49
 msgid "DEBUG"
 msgstr ""
 
 # translation auto-copied from project DocBook locales, version 1, document locale
 #: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/tests/processes/communication/LogMessageTest.py:36
-#: coalib/tests/output/printers/LogPrinterTest.py:59
+#: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/tests/output/printers/LogPrinterTest.py:71
 #, fuzzy
 msgid "WARNING"
 msgstr "MONITUS"
 
 #: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/tests/processes/communication/LogMessageTest.py:32
 #: coalib/tests/processes/communication/LogMessageTest.py:44
-#: coalib/tests/output/printers/LogPrinterTest.py:36
-#: coalib/tests/output/printers/LogPrinterTest.py:40
-#: coalib/tests/output/printers/LogPrinterTest.py:66
-#: coalib/tests/output/printers/LogPrinterTest.py:79
+#: coalib/tests/processes/communication/LogMessageTest.py:56
+#: coalib/tests/output/printers/LogPrinterTest.py:37
+#: coalib/tests/output/printers/LogPrinterTest.py:41
+#: coalib/tests/output/printers/LogPrinterTest.py:78
+#: coalib/tests/output/printers/LogPrinterTest.py:91
 msgid "ERROR"
 msgstr ""
 
@@ -337,13 +338,23 @@ msgid ""
 "module code raises an exception."
 msgstr ""
 
-#: coalib/misc/StringConstants.py:8
+#. Ctrl+C
+#: coalib/misc/Exceptions.py:10
+msgid "Program terminated by user."
+msgstr ""
+
+#. Ctrl+D
+#: coalib/misc/Exceptions.py:13
+msgid "Found EOF. Exiting gracefully."
+msgstr ""
+
+#: coalib/misc/Constants.py:8
 msgid ""
 "This is a bug. We are sorry for the inconvenience. Please contact the "
 "developers for assistance."
 msgstr ""
 
-#: coalib/misc/StringConstants.py:11
+#: coalib/misc/Constants.py:11
 msgid ""
 "An unknown error occurred. This is a bug. We are sorry for the inconvenience."
 " Please contact the developers for assistance. During execution of coala an "
@@ -351,7 +362,7 @@ msgid ""
 "following information may help investigating:"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:18
+#: coalib/misc/Constants.py:18
 msgid "{} is not accessible and will be ignored!"
 msgstr ""
 

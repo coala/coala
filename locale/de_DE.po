@@ -2,29 +2,18 @@
 # m0hawk <m0hawk@gmx.de>, 2015. #zanata
 msgid ""
 msgstr ""
-"Project-Id-Version: coala 0.1.1.dev20150719103107\n"
+"Project-Id-Version: coala 0.1.1.dev20150720093128\n"
 "Report-Msgid-Bugs-To: lasse.schuirmann@gmail.com\n"
-"POT-Creation-Date: 2015-07-19 10:31+0000\n"
+"POT-Creation-Date: 2015-07-20 09:31+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-07-07 06:17-0400\n"
+"PO-Revision-Date: 2015-07-20 06:33-0400\n"
 "Last-Translator: Lasse Schuirmann <lasse.schuirmann@gmail.com>\n"
 "Language-Team: \n"
 "Language: de-DE\n"
 "X-Generator: Zanata 3.6.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. Ctrl+C
-#: coalib/coala_ci.py:48 coalib/coala.py:69
-msgid "Program terminated by user."
-msgstr "Das Programm wurde durch den Benutzer beendet."
-
-#. Ctrl+D
-#: coalib/coala_ci.py:51 coalib/coala.py:72
-#, fuzzy
-msgid "Found EOF. Exiting gracefully."
-msgstr "EOF gefunden."
 
 #: coalib/processes/Processing.py:99
 msgid ""
@@ -193,8 +182,9 @@ msgstr ""
 "Datei in die gespeichert werden soll. Wenn keine Argumente gegeben sind, "
 "werden die Einstellungen zurück in die durch -c gegebene Datei gespeichert."
 
-#: coalib/results/RESULT_SEVERITY.py:5
+#: coalib/results/RESULT_SEVERITY.py:5 coalib/output/printers/LOG_LEVEL.py:4
 #: coalib/tests/results/RESULT_SEVERITYTest.py:11
+#: coalib/tests/output/printers/LogPrinterTest.py:60
 msgid "INFO"
 msgstr "INFO"
 
@@ -331,30 +321,40 @@ msgstr "Es werden keine optionalen Werte benötigt."
 msgid "No bears to show."
 msgstr "Es können keine Bären gezeigt werden."
 
-#: coalib/output/printers/LogPrinter.py:81
-#: coalib/tests/output/printers/LogPrinterTest.py:80
+#: coalib/output/Interactions.py:21
+msgid ""
+"During execution, we found that some requiredsettings were not provided. "
+"They are:\n"
+msgstr ""
+
+#: coalib/output/Interactions.py:25
+msgid "{} (from {}) - {}"
+msgstr ""
+
+#: coalib/output/printers/LogPrinter.py:88
+#: coalib/tests/output/printers/LogPrinterTest.py:92
 msgid "Exception was:"
 msgstr "Die Ausnahme war:"
 
 #: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/tests/processes/communication/LogMessageTest.py:40
-#: coalib/tests/output/printers/LogPrinterTest.py:48
+#: coalib/tests/processes/communication/LogMessageTest.py:52
+#: coalib/tests/output/printers/LogPrinterTest.py:49
 msgid "DEBUG"
 msgstr "DEBUG"
 
 #: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/tests/processes/communication/LogMessageTest.py:36
-#: coalib/tests/output/printers/LogPrinterTest.py:59
+#: coalib/tests/processes/communication/LogMessageTest.py:48
+#: coalib/tests/output/printers/LogPrinterTest.py:71
 msgid "WARNING"
 msgstr "WARNUNG"
 
 #: coalib/output/printers/LOG_LEVEL.py:4
-#: coalib/tests/processes/communication/LogMessageTest.py:32
 #: coalib/tests/processes/communication/LogMessageTest.py:44
-#: coalib/tests/output/printers/LogPrinterTest.py:36
-#: coalib/tests/output/printers/LogPrinterTest.py:40
-#: coalib/tests/output/printers/LogPrinterTest.py:66
-#: coalib/tests/output/printers/LogPrinterTest.py:79
+#: coalib/tests/processes/communication/LogMessageTest.py:56
+#: coalib/tests/output/printers/LogPrinterTest.py:37
+#: coalib/tests/output/printers/LogPrinterTest.py:41
+#: coalib/tests/output/printers/LogPrinterTest.py:78
+#: coalib/tests/output/printers/LogPrinterTest.py:91
 msgid "ERROR"
 msgstr "FEHLER"
 
@@ -386,7 +386,18 @@ msgstr ""
 "Aus {file} können keine Bären importiert werden. Die Datei ist "
 "wahrscheinlich inkorrekt oder der Modulcode wirft eine Ausnahme."
 
-#: coalib/misc/StringConstants.py:8
+#. Ctrl+C
+#: coalib/misc/Exceptions.py:10
+msgid "Program terminated by user."
+msgstr "Das Programm wurde durch den Benutzer beendet."
+
+#. Ctrl+D
+#: coalib/misc/Exceptions.py:13
+#, fuzzy
+msgid "Found EOF. Exiting gracefully."
+msgstr "EOF gefunden."
+
+#: coalib/misc/Constants.py:8
 msgid ""
 "This is a bug. We are sorry for the inconvenience. Please contact the "
 "developers for assistance."
@@ -394,7 +405,7 @@ msgstr ""
 "Dies ist ein Fehler. Wir entschuldigen uns für die Unannehmlichkeiten. Bitte "
 "kontaktieren Sie die Entwickler für Unterstützung."
 
-#: coalib/misc/StringConstants.py:11
+#: coalib/misc/Constants.py:11
 msgid ""
 "An unknown error occurred. This is a bug. We are sorry for the inconvenience."
 " Please contact the developers for assistance. During execution of coala an "
@@ -402,7 +413,7 @@ msgid ""
 "following information may help investigating:"
 msgstr ""
 
-#: coalib/misc/StringConstants.py:18
+#: coalib/misc/Constants.py:18
 msgid "{} is not accessible and will be ignored!"
 msgstr "Auf {} konnte nicht zugegriffen werden. Es wird ignoriert!"
 
@@ -446,8 +457,9 @@ msgid "A string to test translations."
 msgstr "Eine Zeichenkette um Übersetzungen zu testen."
 
 #: coalib/tests/output/ConsoleInteractionTest.py:402
+#, fuzzy
 msgid "No bears to show.\n"
-msgstr "Es können keine Bären gezeigt werden."
+msgstr "Es können keine Bären gezeigt werden.\n"
 
 #: coalib/tests/misc/i18nTest.py:42
 msgid "A not directly translated test string."
