@@ -3,7 +3,8 @@ from itertools import combinations
 
 from coalib.misc.StringConverter import StringConverter
 from coalib.results.HiddenResult import HiddenResult
-from coalib.settings.Setting import typed_ordered_dict
+from coalib.settings.Setting import typed_ordered_dict, path_list
+from coalib.collecting.Collectors import collect_dirs
 from coalib.bears.GlobalBear import GlobalBear
 from bears.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
@@ -84,7 +85,8 @@ class ClangFunctionDifferenceBear(GlobalBear):
             counting_conditions: counting_condition_dict=default_cc_dict,
             average_calculation: bool=False,
             poly_postprocessing: bool=True,
-            exp_postprocessing: bool=False):
+            exp_postprocessing: bool=False,
+            extra_include_paths: path_list=()):
         '''
         Retrieves similarities for code clone detection. Those can be reused in
         another bear to produce results.
@@ -118,6 +120,7 @@ class ClangFunctionDifferenceBear(GlobalBear):
         :param poly_postprocessing: If set to true, the difference value of big
                                     function pairs will be reduced using a
                                     polynomial approach.
+        :param extra_include_paths: A list containing additional include paths.
         :param exp_postprocessing:  If set to true, the difference value of big
                                     function pairs will be reduced using an
                                     exponential approach.
@@ -137,7 +140,8 @@ class ClangFunctionDifferenceBear(GlobalBear):
                                     list(counting_conditions.values())),
             list(self.file_dict.keys()),
             lambda prog: self.debug("{:2.4f}%...".format(prog)),
-            self.section["files"].origin)
+            self.section["files"].origin,
+            collect_dirs(extra_include_paths))
 
         self.debug("Calculating differences...")
 

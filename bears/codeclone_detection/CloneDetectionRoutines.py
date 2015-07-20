@@ -35,7 +35,8 @@ def exclude_function(count_matrix):
 def get_count_matrices(count_vector_creator,
                        filenames,
                        progress_callback,
-                       base_path):
+                       base_path,
+                       extra_include_paths):
     """
     Retrieves matrices holding count vectors for all variables for all
     functions in the given file.
@@ -46,7 +47,7 @@ def get_count_matrices(count_vector_creator,
     :param progress_callback:    A function with one float argument which is
                                  called after processing each file with the
                                  progress percentage (float) as an argument.
-
+    :param extra_include_paths:  A list containing additional include paths.
     :return:                     A dict holding a tuple of (file, line,
                                  function) as key and as value a dict with
                                  variable names as key and count vector
@@ -55,6 +56,7 @@ def get_count_matrices(count_vector_creator,
     result = {}
     maxlen = len(filenames)
     include_paths = collect_dirs([os.path.dirname(base_path) + "/**"])
+    include_paths += extra_include_paths
 
     for i, filename in enumerate(filenames):
         progress_callback(100*(i/maxlen))
