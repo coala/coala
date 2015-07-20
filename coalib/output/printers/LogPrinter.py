@@ -34,38 +34,38 @@ class LogPrinter(Printer):
                                 datetime_string)
 
     def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        return self.log_message(LogMessage(LOG_LEVEL.DEBUG,
-                                           *messages,
-                                           delimiter=delimiter,
-                                           timestamp=timestamp),
-                                **kwargs)
+        self.log_message(LogMessage(LOG_LEVEL.DEBUG,
+                                    *messages,
+                                    delimiter=delimiter,
+                                    timestamp=timestamp),
+                         **kwargs)
 
     def info(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        return self.log_message(LogMessage(LOG_LEVEL.INFO,
-                                           *messages,
-                                           delimiter=delimiter,
-                                           timestamp=timestamp),
-                                **kwargs)
+        self.log_message(LogMessage(LOG_LEVEL.INFO,
+                                    *messages,
+                                    delimiter=delimiter,
+                                    timestamp=timestamp),
+                         **kwargs)
 
     def warn(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        return self.log_message(LogMessage(LOG_LEVEL.WARNING,
-                                           *messages,
-                                           delimiter=delimiter,
-                                           timestamp=timestamp),
-                                **kwargs)
+        self.log_message(LogMessage(LOG_LEVEL.WARNING,
+                                    *messages,
+                                    delimiter=delimiter,
+                                    timestamp=timestamp),
+                         **kwargs)
 
     def err(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        return self.log_message(LogMessage(LOG_LEVEL.ERROR,
-                                           *messages,
-                                           delimiter=delimiter,
-                                           timestamp=timestamp),
-                                **kwargs)
+        self.log_message(LogMessage(LOG_LEVEL.ERROR,
+                                    *messages,
+                                    delimiter=delimiter,
+                                    timestamp=timestamp),
+                         **kwargs)
 
     def log(self, log_level, message, timestamp=None, **kwargs):
-        return self.log_message(LogMessage(log_level,
-                                           message,
-                                           timestamp=timestamp),
-                                **kwargs)
+        self.log_message(LogMessage(log_level,
+                                    message,
+                                    timestamp=timestamp),
+                         **kwargs)
 
     def log_exception(self,
                       message,
@@ -98,7 +98,7 @@ class LogPrinter(Printer):
                                        exception.__traceback__))
 
         self.log(log_level, message, timestamp=timestamp, **kwargs)
-        return self.log_message(
+        self.log_message(
             LogMessage(LOG_LEVEL.DEBUG,
                        _("Exception was:") + "\n" + traceback_str,
                        timestamp=timestamp),
@@ -111,7 +111,7 @@ class LogPrinter(Printer):
         if log_message.log_level < self.log_level:
             return
 
-        return self._print_log_message(
+        self._print_log_message(
             self._get_log_prefix(log_message.log_level, log_message.timestamp),
             log_message,
             **kwargs)
@@ -124,4 +124,4 @@ class LogPrinter(Printer):
         :param log_message: The LogMessage object to print.
         :param kwargs:      Any other keyword arguments.
         """
-        return self.print(prefix, log_message.message, **kwargs)
+        self.print(prefix, log_message.message, **kwargs)

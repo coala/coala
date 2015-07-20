@@ -16,7 +16,6 @@ class TestLogPrinter(LogPrinter):
 
     def _print(self, output, special_arg="test"):
         self.printed += output + " " + special_arg + "\n"
-        return output, special_arg
 
     def clear(self):
         self.printed = ""
@@ -36,59 +35,79 @@ class LogPrinterTest(unittest.TestCase):
 
     def test_logging(self):
         uut = TestLogPrinter(timestamp_format="")
-        self.assertEqual(
-            (str(self.log_message), "special"),
-            uut.log_message(self.log_message, end="", special_arg="special"))
+        uut.log_message(self.log_message, end="", special_arg="special")
+        self.assertEqual(uut.printed, str(self.log_message) + " special\n")
 
         uut = TestLogPrinter(log_level=LOG_LEVEL.DEBUG)
+        uut.log_message(self.log_message, end="")
         self.assertEqual(
-            ("[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
-             Constants.COMPLEX_TEST_STRING, "test"),
-            uut.log_message(self.log_message, end=""))
-        self.assertEqual(
-            ("[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
-             Constants.COMPLEX_TEST_STRING, "test"),
-            uut.log(LOG_LEVEL.ERROR,
-                    Constants.COMPLEX_TEST_STRING,
-                    timestamp=self.timestamp,
-                    end=""))
+            uut.printed,
+            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
+            Constants.COMPLEX_TEST_STRING + " test\n")
 
+        uut.clear()
+        uut.log(LOG_LEVEL.ERROR,
+                Constants.COMPLEX_TEST_STRING,
+                timestamp=self.timestamp,
+                end="")
         self.assertEqual(
-            ("[" + _("DEBUG") + "][" + self.timestamp.strftime("%X") + "] " +
-             Constants.COMPLEX_TEST_STRING + " d", "test"),
-            uut.debug(Constants.COMPLEX_TEST_STRING,
-                      "d",
-                      timestamp=self.timestamp,
-                      end=""))
+            uut.printed,
+            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
+            Constants.COMPLEX_TEST_STRING + " test\n")
+
+        uut.clear()
+        uut.debug(Constants.COMPLEX_TEST_STRING,
+                  "d",
+                  timestamp=self.timestamp,
+                  end="")
+        self.assertEqual(
+            uut.printed,
+            "[" + _("DEBUG") + "][" + self.timestamp.strftime("%X") + "] " +
+            Constants.COMPLEX_TEST_STRING + " d test\n")
+
+        uut.clear()
         uut.log_level = LOG_LEVEL.INFO
-        self.assertEqual(None, uut.debug(Constants.COMPLEX_TEST_STRING,
-                                         timestamp=self.timestamp,
-                                         end=""))
+        uut.debug(Constants.COMPLEX_TEST_STRING,
+                  timestamp=self.timestamp,
+                  end="")
+        self.assertEqual(uut.printed, "")
+
+        uut.clear()
+        uut.info(Constants.COMPLEX_TEST_STRING,
+                 "d",
+                 timestamp=self.timestamp,
+                 end="")
         self.assertEqual(
-            ("[" + _("INFO") + "][" + self.timestamp.strftime("%X") + "] " +
-             Constants.COMPLEX_TEST_STRING + " d", "test"),
-            uut.info(Constants.COMPLEX_TEST_STRING,
-                      "d",
-                      timestamp=self.timestamp,
-                      end=""))
+            uut.printed,
+            "[" + _("INFO") + "][" + self.timestamp.strftime("%X") + "] " +
+            Constants.COMPLEX_TEST_STRING + " d test\n")
+
         uut.log_level = LOG_LEVEL.WARNING
-        self.assertEqual(None, uut.debug(Constants.COMPLEX_TEST_STRING,
-                                         timestamp=self.timestamp,
-                                         end=""))
+        uut.clear()
+        uut.debug(Constants.COMPLEX_TEST_STRING,
+                  timestamp=self.timestamp,
+                  end="")
+        self.assertEqual(uut.printed, "")
+
+        uut.clear()
+        uut.warn(Constants.COMPLEX_TEST_STRING,
+                 "d",
+                 timestamp=self.timestamp,
+                 end="")
         self.assertEqual(
-            ("[" + _("WARNING") + "][" + self.timestamp.strftime("%X") + "] " +
-             Constants.COMPLEX_TEST_STRING + " d", "test"),
-            uut.warn(Constants.COMPLEX_TEST_STRING,
-                     "d",
-                     timestamp=self.timestamp,
-                     end=""))
+            uut.printed,
+            "[" + _("WARNING") + "][" + self.timestamp.strftime("%X") + "] " +
+            Constants.COMPLEX_TEST_STRING + " d test\n")
+
+        uut.clear()
+        uut.err(Constants.COMPLEX_TEST_STRING,
+                "d",
+                timestamp=self.timestamp,
+                end="")
         self.assertEqual(
-            ("[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
-             Constants.COMPLEX_TEST_STRING + " d", "test"),
-            uut.err(Constants.COMPLEX_TEST_STRING,
-                    "d",
-                    timestamp=self.timestamp,
-                    end=""))
+            uut.printed,
+            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
+            Constants.COMPLEX_TEST_STRING + " d test\n")
 
         uut.log_level = LOG_LEVEL.DEBUG
         uut.clear()
