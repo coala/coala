@@ -24,11 +24,11 @@ def exclude_function(count_matrix):
     """
     var_count = [cv.name.startswith("#")
                  for cv in count_matrix.values()].count(False)
-    variable_sum = sum(0 if cv.name.startswith("#") else sum(cv)
+    variable_sum = sum(0 if cv.name.startswith("#") else sum(cv.unweighted)
                        for cv in count_matrix.values())
     return (all((cv.name.startswith("#") or sum(cv.unweighted) < 10)
                 for cv in count_matrix.values()) or
-            variable_sum < 8 or
+            variable_sum < 11 or
             var_count < 2)
 
 
