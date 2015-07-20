@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from setuptools import setup, find_packages
+import setuptools.command.build_py
 
 from coalib import assert_supported_version
 from coalib.misc.i18n import compile_translations
@@ -11,12 +12,18 @@ from coalib.misc.BuildManPage import BuildManPage
 assert_supported_version()
 
 
+class BuildPyCommand(setuptools.command.build_py.build_py):
+    def run(self):
+        self.run_command('build_manpage')
+        setuptools.command.build_py.build_py.run(self)
+
+
 if __name__ == "__main__":
     authors = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
     author_mails = ('lasse.schuirmann@gmail.com, '
                     'fabian@neuschmidt.de, '
                     'makman@alice.de')
-    data_files = compile_translations()
+    data_files = compile_translations() + [('.', ['coala.1'])]
 
     setup(name='coala',
           version=Constants.VERSION,
@@ -76,4 +83,5 @@ if __name__ == "__main__":
               'Topic :: Scientific/Engineering :: Information Analysis',
               'Topic :: Software Development :: Quality Assurance',
               'Topic :: Text Processing :: Linguistic'],
-          cmdclass={'build_manpage': BuildManPage})
+          cmdclass={'build_manpage': BuildManPage,
+                    'build_py': BuildPyCommand})
