@@ -26,23 +26,23 @@ counting_condition_dict = typed_ordered_dict(
 default_cc_dict = counting_condition_dict(StringConverter(
     """
 used: 0,
-returned: 2,
+returned: 1.4,
 is_condition: 0,
 in_condition: 1.4,
-in_second_level_condition,
-in_third_level_condition,
-is_assignee: 1.4,
-is_assigner: 0.8,
+in_second_level_condition: 1.4,
+in_third_level_condition: 1.0,
+is_assignee: 0,
+is_assigner: 0.6,
 loop_content: 0,
 second_level_loop_content,
 third_level_loop_content,
 is_param: 2,
-is_called: 0.2,
-is_call_param: 0.8,
-in_sum: 1.4,
+is_called: 1.4,
+is_call_param: 0.0,
+in_sum: 2.0,
 in_product: 0,
 in_binary_operation,
-member_accessed: 2"""))
+member_accessed"""))
 
 
 def get_difference(function_pair,
