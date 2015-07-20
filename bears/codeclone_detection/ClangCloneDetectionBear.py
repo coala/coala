@@ -37,11 +37,8 @@ class ClangCloneDetectionBear(GlobalBear):
                     file=function_1[0],
                     severity=RESULT_SEVERITY.MAJOR,
                     line_nr=function_1[1],
-                    debug_msg="Count matrices are:\n"
-                              " 1) {cm1}\n"
-                              " 2) {cm2}".format(
-                                  cm1=count_matrices[function_1],
-                                  cm2=count_matrices[function_2]))
+                    debug_msg=[count_matrices[function_1],
+                               count_matrices[function_2]])
 
     @staticmethod
     def get_dependencies():
