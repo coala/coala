@@ -7,6 +7,8 @@ from coalib import assert_supported_version
 from coalib.misc.i18n import compile_translations
 from coalib.misc.Constants import Constants
 from coalib.misc.BuildManPage import BuildManPage
+from coalib.output.dbus.BuildDbusService import BuildDbusService
+from coalib.misc.Constants import Constants
 
 
 assert_supported_version()
@@ -15,6 +17,7 @@ assert_supported_version()
 class BuildPyCommand(setuptools.command.build_py.build_py):
     def run(self):
         self.run_command('build_manpage')
+        self.run_command('build_dbus')
         setuptools.command.build_py.build_py.run(self)
 
 
@@ -23,7 +26,9 @@ if __name__ == "__main__":
     author_mails = ('lasse.schuirmann@gmail.com, '
                     'fabian@neuschmidt.de, '
                     'makman@alice.de')
-    data_files = compile_translations() + [('.', ['coala.1'])]
+    data_files = compile_translations() + [
+        ('.', ['coala.1']),
+        ('.', [Constants.BUS_NAME + '.service'])]
 
     setup(name='coala',
           version=Constants.VERSION,
@@ -84,4 +89,5 @@ if __name__ == "__main__":
               'Topic :: Software Development :: Quality Assurance',
               'Topic :: Text Processing :: Linguistic'],
           cmdclass={'build_manpage': BuildManPage,
+                    'build_dbus': BuildDbusService,
                     'build_py': BuildPyCommand})
