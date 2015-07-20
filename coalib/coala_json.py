@@ -63,7 +63,7 @@ def main():
     except Exception as exception:  # pylint: disable=broad-except
         exitcode = exitcode or get_exitcode(exception, log_printer)
 
-    retval = {"logs": log_printer.logs, "results": results}
+    retval = {"logs": log_printer.logs, "results": sorted(results)}
     retval = json.dumps(retval,
                         cls=JSONEncoder,
                         sort_keys=True,
