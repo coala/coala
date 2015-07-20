@@ -45,10 +45,11 @@ class CountVector:
                 self.unweighted[i] += 1
 
     def __str__(self):
-        return self.__repr__()
+        return str(self.count_vector)
 
     def __repr__(self):
-        return str(self.count_vector)
+        return ("<" + self.__class__.__name__ + " object(" +
+                repr(self.count_vector) + ") at " + hex(id(self)) + ">")
 
     def __len__(self):
         return len(self.count_vector)
