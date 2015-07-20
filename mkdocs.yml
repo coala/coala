@@ -1,4 +1,9 @@
 site_name: coala documentation
+site_description: >
+                    coala is a simple COde AnaLysis Application. Its goal is
+                    to make static code analysis easy while remaining
+                    completely modular and therefore extendable and
+                    language independent.
 pages:
 - Home: 'index.md'
 - For Users:
