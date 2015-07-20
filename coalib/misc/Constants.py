@@ -69,3 +69,5 @@ class Constants:
     VERSION_FILE = os.path.join(coalib_root, "VERSION")
     with open(VERSION_FILE, 'r') as ver:
         VERSION = ver.readline().strip()
+
+    BUS_NAME = "org.coala_analyzer.v1"
