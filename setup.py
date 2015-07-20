@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from coalib import assert_supported_version
 from coalib.misc.i18n import compile_translations
@@ -27,29 +27,7 @@ if __name__ == "__main__":
           maintainer_email=author_mails,
           url='http://coala.rtfd.org/',
           platforms='any',
-          packages=['bears',
-                    'bears.codeclone_detection',
-                    'bears.linters',
-                    'bears.misc',
-                    'bears.spacing',
-                    'coalib',
-                    'coalib.bearlib',
-                    'coalib.bearlib.abstractions',
-                    'coalib.bearlib.parsing',
-                    'coalib.bearlib.parsing.clang',
-                    'coalib.bearlib.spacing',
-                    'coalib.bears',
-                    'coalib.collecting',
-                    'coalib.misc',
-                    'coalib.output',
-                    'coalib.output.printers',
-                    'coalib.output.dbus',
-                    'coalib.parsing',
-                    'coalib.processes',
-                    'coalib.processes.communication',
-                    'coalib.results',
-                    'coalib.results.result_actions',
-                    'coalib.settings'],
+          packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
           install_requires=["setuptools",
                             "munkres3",
                             "coverage",
