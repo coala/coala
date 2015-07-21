@@ -399,7 +399,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             bears = {}
             print_bears(self.log_printer, bears)
-            self.assertEqual(_("No bears to show.\n"), stdout.getvalue())
+            self.assertEqual(_("No bears to show.") + "\n", stdout.getvalue())
 
     def test_print_bears(self):
         with retrieve_stdout() as stdout:
@@ -413,8 +413,9 @@ class ConsoleInteractionTest(unittest.TestCase):
             expected_string += "  " + _("Needed Settings:") + "\n"
             expected_string += "   * setting1: Required Setting.\n\n"
             expected_string += "  " + _("Optional Settings:") + "\n"
-            expected_string += ("   * setting2: Optional Setting. (Optional, "
-                                "defaults to 'None'.)\n\n")
+            expected_string += "   * setting2: Optional Setting. ("
+            expected_string += _("Optional, defaults to '{}'.").format("None")
+            expected_string += ")\n\n"
 
             self.assertEqual(expected_string, stdout.getvalue())
 
@@ -441,8 +442,9 @@ class ConsoleInteractionTest(unittest.TestCase):
             expected_string += "   * test\n\n"
             expected_string += "  " + _("No needed settings.") + "\n\n"
             expected_string += "  " + _("Optional Settings:") + "\n"
-            expected_string += ("   * setting: This is an optional "
-                                "setting. (Optional, defaults to 'None'.)\n\n")
+            expected_string += "   * setting: This is an optional setting. ("
+            expected_string += _("Optional, defaults to '{}'.").format("None")
+            expected_string += ")\n\n"
 
             self.assertEqual(expected_string, stdout.getvalue())
 
