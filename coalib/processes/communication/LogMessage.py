@@ -32,3 +32,19 @@ class LogMessage:
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def to_string_dict(self):
+        """
+        Makes a dictionary which has all keys and values as strings and
+        contains all the data that the LogMessage has.
+
+        :return: Dictionary with keys and values as string.
+        """
+        retval = {}
+
+        retval["message"] = str(self.message)
+        retval["timestamp"] = ("" if self.timestamp == None
+                               else self.timestamp.isoformat())
+        retval["log_level"] = str(LOG_LEVEL.reverse.get(self.log_level, ""))
+
+        return retval

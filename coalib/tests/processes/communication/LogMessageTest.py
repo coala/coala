@@ -65,6 +65,21 @@ class LogMessageTest(unittest.TestCase):
                             LogMessage(LOG_LEVEL.DEBUG, "test"))
         self.assertNotEqual(LogMessage(LOG_LEVEL.DEBUG, "test message"), 5)
 
+    def test_string_dict(self):
+        self.uut.log_level = LOG_LEVEL.DEBUG
+        self.uut.message = "test"
+        self.assertEqual(
+            self.uut.to_string_dict(),
+            {"log_level": "DEBUG",
+             "message": "test",
+             "timestamp": self.timestamp.isoformat()})
+
+        self.uut.timestamp = None
+        self.uut.log_level = -9999  # invalid level
+        self.assertEqual(
+            self.uut.to_string_dict(),
+            {"log_level": "", "message": "test", "timestamp": ""})
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
