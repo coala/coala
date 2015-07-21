@@ -71,3 +71,6 @@ class DocumentationComment:
         return (cls(desc=desc.strip(),
                     param_dict=param_dict,
                     retval_desc=retval_desc.strip()))
+
+    def __str__(self):
+        return str(self.desc)
