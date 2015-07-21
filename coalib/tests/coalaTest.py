@@ -15,15 +15,15 @@ from coalib import coala_ci
 from coalib.settings import ConfigurationGathering
 
 
-def execute_coala_ci(argstring):
+def execute_coala_ci(args):
     """
     Executes the coala-ci main function with the given argument string.
 
-    :param argstring: A string holding the arguments.
-    :return:          A tuple holding the return value first and the stdout
-                      output as second element.
+    :param args: A list of arguments to pass to coala.
+    :return:     A tuple holding the return value first and the stdout output
+                 as second element.
     """
-    sys.argv = ["coala-ci"] + argstring.split(" ")
+    sys.argv = ["coala-ci"] + list(args)
     # Need to reload both as ConfigurationGathering has the old sys.argv loaded
     # and coala_ci has the old ConfigurationGathering values.
     importlib.reload(ConfigurationGathering)
@@ -43,14 +43,14 @@ class coalaTest(unittest.TestCase):
         sys.argv = self.old_argv
 
     def test_nonexistent(self):
-        retval, output = execute_coala_ci("-c nonex test")
+        retval, output = execute_coala_ci(("-c", "nonex", "test"))
         self.assertRegex(
             output,
             ".*\\[WARNING\\].*The requested coafile '.*' does not exist.\n"
             ".*\\[WARNING\\].*The requested section 'test' is not.*\n")
 
     def test_find_no_issues(self):
-        retval, output = execute_coala_ci("-c "+self.coafile)
+        retval, output = execute_coala_ci(("-c", self.coafile))
         self.assertRegex(output,
                          "(.*Unable to collect bears from.*PyLintBear.*)?",
                          "coala-ci output should be empty when running "
@@ -61,7 +61,7 @@ class coalaTest(unittest.TestCase):
                          "own code.")
 
     def test_find_issues(self):
-        retval, output = execute_coala_ci("todos -c "+self.coafile)
+        retval, output = execute_coala_ci(("todos", "-c", self.coafile))
         self.assertRegex(output,
                          "(.*Unable to collect bears from.*PyLintBear.*)?",
                          "coala-ci output should be empty when running "
