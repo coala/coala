@@ -22,10 +22,10 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
 
 
 if __name__ == "__main__":
-    authors = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
-    author_mails = ('lasse.schuirmann@gmail.com, '
-                    'fabian@neuschmidt.de, '
-                    'makman@alice.de')
+    maintainers = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
+    maintainer_mails = ('lasse.schuirmann@gmail.com, '
+                        'fabian@neuschmidt.de, '
+                        'makman@alice.de')
     data_files = compile_translations() + [
         ('.', ['coala.1']),
         ('.', [Constants.BUS_NAME + '.service'])]
@@ -33,10 +33,11 @@ if __name__ == "__main__":
     setup(name='coala',
           version=Constants.VERSION,
           description='Code Analysis Application (coala)',
-          author=authors,
-          author_email=author_mails,
-          maintainer=authors,
-          maintainer_email=author_mails,
+          author=maintainers+", Abdeali Kothari, Udayan Tandon",
+          author_email=maintainer_mails +
+                       ", abdealikothari@gmail.com, udayan12167@iiitd.ac.in",
+          maintainer=maintainers,
+          maintainer_email=maintainer_mails,
           url='http://coala.rtfd.org/',
           platforms='any',
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
