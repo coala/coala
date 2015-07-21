@@ -92,7 +92,8 @@ class DbusTest(unittest.TestCase):
             dbus_interface="org.coala_analyzer.v1")
         self.maxDiff = None
         self.assertEqual(analysis,
-                         ([],
+                         (1,
+                          [],
                           [('default',
                            True,
                            [{'debug_msg': '',
@@ -108,8 +109,35 @@ class DbusTest(unittest.TestCase):
                              'origin': 'GlobalTestBear',
                              'severity': 'NORMAL'}])]))
 
+        config_file = self.document_object.SetConfigFile(
+            self.config_path + "2",
+            dbus_interface="org.coala_analyzer.v1")
+        analysis = self.document_object.Analyze(
+            dbus_interface="org.coala_analyzer.v1")
+        self.assertEqual(analysis[0], 255)
+        self.assertEqual(analysis[1][1]["log_level"], "ERROR")
+        self.assertEqual(analysis[1][1]["message"], Constants.CRASH_MESSAGE)
+
+        # Skip file if file pattern doesn't match
+        # Also test if 2 documents can be opened simultaneously
+        self.document_object_path = self.remote_object.CreateDocument(
+            "test.unknown_ext",
+            dbus_interface="org.coala_analyzer.v1")
+        self.document_object = self.bus.get_object("org.coala_analyzer.v1.test",
+                                                   self.document_object_path)
+        config_file = self.document_object.SetConfigFile(
+            self.config_path,
+            dbus_interface="org.coala_analyzer.v1")
+        analysis = self.document_object.Analyze(
+            dbus_interface="org.coala_analyzer.v1")
+        self.assertEqual(analysis, (0, [], []))
+
         self.remote_object.DisposeDocument(
             self.testcode_c_path,
+            dbus_interface="org.coala_analyzer.v1")
+
+        self.remote_object.DisposeDocument(
+            "test.unknown_ext",
             dbus_interface="org.coala_analyzer.v1")
 
     def tearDown(self):

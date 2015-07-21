@@ -8,6 +8,8 @@ from coalib.parsing.Globbing import fnmatch
 from coalib.settings.Setting import path_list
 from coalib.results.HiddenResult import HiddenResult
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
+from coalib.output.Interactions import fail_acquire_settings
+from coalib.misc.Exceptions import get_exitcode
 
 
 class DbusDocument(dbus.service.Object):
@@ -74,12 +76,13 @@ class DbusDocument(dbus.service.Object):
     # Signature explanation:
     # s -> string
     # b -> boolean
+    # i -> integer (32bit)
     # a -> array (list of tuple in python)
     # () -> structure (or tuple in python)
     # a{ss} -> dictionary with string keys and string values
     @dbus.service.method(interface,
                          in_signature="",
-                         out_signature="(aa{ss}a(sbaa{ss}))")
+                         out_signature="(iaa{ss}a(sbaa{ss}))")
     def Analyze(self):
         """
         This method analyzes the document and sends back the result
@@ -100,37 +103,46 @@ class DbusDocument(dbus.service.Object):
         args = ["--config=" + self.config_file]
 
         log_printer = ListLogPrinter()
+        exitcode = 0
+        try:
+            yielded_results = False
+            (sections,
+             local_bears,
+             global_bears,
+             targets) = gather_configuration(fail_acquire_settings,
+                                             log_printer,
+                                             arg_list=args)
 
-        (sections,
-         local_bears,
-         global_bears,
-         targets) = gather_configuration(None,
-                                         log_printer,
-                                         arg_list=args)
+            for section_name in sections:
+                section = sections[section_name]
 
-        for section_name in sections:
-            section = sections[section_name]
+                if not section.is_enabled(targets):
+                    continue
 
-            if not section.is_enabled(targets):
-                continue
+                if any([fnmatch(self.path, file_pattern)
+                        for file_pattern in path_list(section["files"])]):
 
-            if any([fnmatch(self.path, file_pattern)
-                    for file_pattern in path_list(section["files"])]):
+                    section["files"].value = self.path
+                    section_result = execute_section(
+                        section=section,
+                        global_bear_list=global_bears[section_name],
+                        local_bear_list=local_bears[section_name],
+                        print_results=lambda *args: True,
+                        log_printer=log_printer,
+                        file_diff_dict={})
+                    yielded_results = yielded_results or section_result[0]
 
-                section["files"].value = self.path
-                results = execute_section(
-                    section=section,
-                    global_bear_list=global_bears[section_name],
-                    local_bear_list=local_bears[section_name],
-                    print_results=lambda *args: True,
-                    log_printer=log_printer,
-                    file_diff_dict={})
+                    retval.append(
+                        DbusDocument.results_to_dbus_struct(section_result,
+                                                            section_name))
 
-                retval.append(
-                    DbusDocument.results_to_dbus_struct(results, section_name))
+            if yielded_results:
+                exitcode = 1
+        except Exception as exception:  # pylint: disable=broad-except
+            exitcode = exitcode or get_exitcode(exception, log_printer)
 
         logs = [log.to_string_dict() for log in log_printer.logs]
-        return (logs, retval)
+        return (exitcode, logs, retval)
 
     @staticmethod
     def results_to_dbus_struct(section_result, section_name):

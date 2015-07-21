@@ -4,6 +4,7 @@ import unittest
 
 sys.path.insert(0, ".")
 from coalib.output.dbus.DbusDocument import DbusDocument
+from coalib.misc.Constants import Constants
 
 
 class DbusDocumentTest(unittest.TestCase):
@@ -44,10 +45,12 @@ class DbusDocumentTest(unittest.TestCase):
         uut.path = self.testcode_c_path
         self.assertEqual(uut.Analyze(), [])
 
+        self.maxDiff = None
         uut.SetConfigFile(self.config_path)
         output = uut.Analyze()
         self.assertEqual(output,
-                         ([],
+                         (1,
+                          [],
                           [['default',
                            True,
                            [{'debug_msg': '',
@@ -62,6 +65,16 @@ class DbusDocumentTest(unittest.TestCase):
                              'message': 'test msg',
                              'origin': 'GlobalTestBear',
                              'severity': 'NORMAL'}]]]))
+
+        uut.path = "test.unknown_extension"
+        output = uut.Analyze()
+        self.assertEqual(output, (0, [], []))
+
+        uut.SetConfigFile(self.config_path + "2")
+        output = uut.Analyze()
+        self.assertEqual(output[0], 255)
+        self.assertEqual(output[1][1]["log_level"], "ERROR")
+        self.assertEqual(output[1][1]["message"], Constants.CRASH_MESSAGE)
 
 
 if __name__ == "__main__":
