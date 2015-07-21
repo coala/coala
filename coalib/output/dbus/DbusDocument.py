@@ -7,6 +7,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.processes.Processing import execute_section
 from coalib.parsing.Globbing import fnmatch
 from coalib.settings.Setting import path_list
+from coalib.results.HiddenResult import HiddenResult
 
 
 class DbusDocument(dbus.service.Object):
@@ -151,9 +152,10 @@ class DbusDocument(dbus.service.Object):
             for key, value in section_result[i].items():
 
                 # Loop over every result for a file
-                for result in value:
-                    results_for_section.append(
-                        result.to_string_dict())
+                results_for_section += [result.to_string_dict()
+                    for result in filter(
+                        lambda x: not isinstance(x, HiddenResult),
+                        value)]
 
         return [section_name, section_result[0], results_for_section]
 
