@@ -18,3 +18,8 @@ install:
 
 script:
   - bash .misc/tests.sh
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/b9493488a4edb005c5c6
