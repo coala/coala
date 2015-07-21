@@ -1,3 +1,5 @@
+import platform
+
 from coalib.output.printers.ColoredLogPrinter import ColoredLogPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
@@ -11,7 +13,7 @@ class ConsolePrinter(ColoredLogPrinter):
     def __init__(self,
                  log_level=LOG_LEVEL.WARNING,
                  timestamp_format="%X",
-                 print_colored=True):
+                 print_colored=platform.system() in ("Linux",)):
         ColoredLogPrinter.__init__(self,
                                    log_level=log_level,
                                    timestamp_format=timestamp_format,
