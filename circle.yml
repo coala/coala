@@ -19,3 +19,7 @@ test:
     - bash .misc/deploy.coverage.sh:
         parallel: true
     - mkdocs build --clean
+
+notify:
+  webhooks:
+    - url: https://webhooks.gitter.im/e/9f718e67e18393c83881
