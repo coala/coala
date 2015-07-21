@@ -1,6 +1,5 @@
 import os
 import dbus.service
-from coalib.output.printers.NullPrinter import NullPrinter
 
 from coalib.settings.ConfigurationGathering import find_user_config
 from coalib.settings.ConfigurationGathering import gather_configuration
@@ -8,6 +7,7 @@ from coalib.processes.Processing import execute_section
 from coalib.parsing.Globbing import fnmatch
 from coalib.settings.Setting import path_list
 from coalib.results.HiddenResult import HiddenResult
+from coalib.output.printers.ListLogPrinter import ListLogPrinter
 
 
 class DbusDocument(dbus.service.Object):
@@ -79,7 +79,7 @@ class DbusDocument(dbus.service.Object):
     # a{ss} -> dictionary with string keys and string values
     @dbus.service.method(interface,
                          in_signature="",
-                         out_signature="a(sbaa{ss})")
+                         out_signature="(aa{ss}a(sbaa{ss}))")
     def Analyze(self):
         """
         This method analyzes the document and sends back the result
@@ -99,7 +99,7 @@ class DbusDocument(dbus.service.Object):
 
         args = ["--config=" + self.config_file]
 
-        log_printer = NullPrinter()
+        log_printer = ListLogPrinter()
 
         (sections,
          local_bears,
@@ -129,7 +129,8 @@ class DbusDocument(dbus.service.Object):
                 retval.append(
                     DbusDocument.results_to_dbus_struct(results, section_name))
 
-        return retval
+        logs = [log.to_string_dict() for log in log_printer.logs]
+        return (logs, retval)
 
     @staticmethod
     def results_to_dbus_struct(section_result, section_name):
