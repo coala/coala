@@ -52,6 +52,24 @@ class DocumentationCommentParserTest(unittest.TestCase):
                  "übersetzen.",
             param_dict={"p1": "Ein parameter."})
 
+    def test_str(self):
+        uut = DocumentationComment.from_docstring(
+            '''
+            Description of something. No params.
+            ''')
+
+        self.assertEqual(str(uut), "Description of something. No params.")
+
+        uut = DocumentationComment.from_docstring(
+            '''
+            Description of something with params.
+
+            :param x: Imagine something.
+            :param y: x^2
+            ''')
+
+        self.assertEqual(str(uut), "Description of something with params.")
+
     def check_from_docstring_dataset(self,
                                      docstring,
                                      desc="",
