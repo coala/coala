@@ -1,7 +1,9 @@
+import builtins
 import tempfile
 import unittest
 import sys
 import os
+import shutil
 from collections import OrderedDict
 
 sys.path.insert(0, ".")
@@ -11,6 +13,7 @@ from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.output.printers.NullPrinter import NullPrinter
+from coalib.misc.Exceptions import PermissionException
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
@@ -24,6 +27,7 @@ from coalib.output.ConsoleInteraction import (finalize,
                                               print_results,
                                               show_bears)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.bears.Bear import Bear
@@ -487,6 +491,36 @@ class ConsoleInteractionTest(unittest.TestCase):
                        self.global_bears,
                        self.log_printer)
             self.assertEqual(expected_string, stdout.getvalue())
+
+    def test_finalize_backup_fail(self):
+        def raise_error(file, mode=""):
+            raise PermissionException
+
+        _open = builtins.open
+        _copy2 = shutil.copy2
+
+        try:
+            builtins.open = raise_error
+            builtins.__dict__["open"] = raise_error
+            shutil.copy2 = lambda src, dst: self.assertEqual(src+".orig", dst)
+
+            diff = Diff()
+            diff.delete_line(2)
+
+            # Should catch the backup permission error during write-back.
+            finalize({"f": diff}, {"f": ["1", "2", "3"]})
+
+            # Test logging output.
+            finalize({"f": diff}, {"f": ["1", "2"]}, log_printer=None)
+
+            logger = StringPrinter()
+            finalize({"f": diff}, {"f": ["1"]}, log_printer=logger)
+            self.assertIn("Can't backup, writing patch to file f failed.",
+                          logger.string)
+
+        finally:
+            builtins.open = _open
+            shutil.copy2 = _copy2
 
 
 if __name__ == '__main__':
