@@ -7,17 +7,17 @@ brew outdated pyenv || brew upgrade --quiet pyenv
 brew install gettext && brew link gettext --force
 brew install espeak
 brew install libffi && brew link libffi --force
-brew install llvm36
-brew install cairo
-brew install sqlite && brew link sqlite --force
-brew install openssl && brew link openssl --force
-brew install Py3cairo
-brew install d-bus
-brew install dbus-glib
-brew install gobject-introspection --env=std
+# brew install llvm36
+# brew install cairo
+# brew install sqlite && brew link sqlite --force
+# brew install openssl && brew link openssl --force
+# brew install Py3cairo
+# brew install d-bus
+# brew install dbus-glib
+# brew install gobject-introspection --env=std
 
 # Start dbus in the system
-launchctl load -w `find /usr/local/Cellar/d-bus -name "org.freedesktop.dbus-session.plist"`
+# launchctl load -w `find /usr/local/Cellar/d-bus -name "org.freedesktop.dbus-session.plist"`
 
 # Install required python version for this build
 pyenv install -ks $PYTHON_VERSION
@@ -29,8 +29,8 @@ source .misc/env_variables.sh
 pip install -q setuptools coverage munkres3 pylint language-check
 
 # Install packages from source
-cd .misc
-if [ "$python_implementation" == "CPython" ] ; then
-  bash install.python-dbus.sh
-fi
-cd ..
+# cd .misc
+# if [ "$python_implementation" == "CPython" ] ; then
+#   bash install.python-dbus.sh
+# fi
+# cd ..
