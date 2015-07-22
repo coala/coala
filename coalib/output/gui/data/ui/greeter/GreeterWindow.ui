@@ -78,13 +78,61 @@
     <property name="orientation">vertical</property>
     <property name="visible">true</property>
     <child>
-      <object class="GtkScrolledWindow">
-        <property name="expand">true</property>
+      <object class="GtkScrolledWindow" id="scrolled_window">
         <property name="visible">true</property>
         <child>
-          <object class="GtkListBox" id="projects">
+          <object class="GtkViewport" id="viewport">
+            <property name="expand">true</property>
             <property name="visible">true</property>
-            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-top">32</property>
+                <property name="margin-bottom">32</property>
+                <property name="spacing">32</property>
+                <property name="orientation">vertical</property>
+                <property name="visible">true</property>
+                <child>
+                  <object class="GtkBox" id="my_projects_container">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <property name="visible">true</property>
+                    <child>
+                      <object class="GtkLabel" id="my_projects_label">
+                        <property name="halign">center</property>
+                        <property name="label" translatable="yes">Recent Projects</property>
+                        <property name="visible">true</property>
+                        <property name="xalign">0.0</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFrame" id="my_projects_frame">
+                        <property name="halign">center</property>
+                        <property name="visible">true</property>
+                        <property name="shadow-type">in</property>
+                        <child>
+                          <object class="coalaScrolledWindow">
+                            <property name="min-content-height">100</property>
+                            <property name="min-content-width">475</property>
+                            <property name="max-contentwidth">600</property>
+                            <property name="visible">true</property>
+                            <property name="vscrollbar-policy">never</property>
+                            <child>
+                              <object class="GtkListBox" id="projects">
+                                <property name="visible">true</property>
+                                <property name="selection-mode">none</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>

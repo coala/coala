@@ -1,7 +1,7 @@
 import shelve
 import os
 import time
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
 from coalib.output.gui.support.ProjectMetadata import ProjectMetadata
 from coalib.output.gui.support.Timestamp import process_timestamp
@@ -89,7 +89,7 @@ class GreeterWindow(Gtk.ApplicationWindow):
         dialog.destroy()
 
     def on_select_button_clicked(self, button):
-        self.header_bar.set_style("selection-mode")
+        self.header_bar.get_style_context().add_class("selection-mode")
         self.new_button.set_visible(False)
         self.selection_mode.set_visible(False)
         self.selection_cancel.set_visible(True)
@@ -98,6 +98,7 @@ class GreeterWindow(Gtk.ApplicationWindow):
             revealer.set_reveal_child(not revealer.get_child_revealed())
 
     def on_cancel_button_clicked(self, button):
+        self.header_bar.get_style_context().remove_class("selection-mode")
         self.new_button.set_visible(True)
         self.selection_mode.set_visible(True)
         self.selection_cancel.set_visible(False)
