@@ -22,6 +22,17 @@ def default_arg_parser(formatter_class=None):
                             nargs=1,
                             metavar='FILE',
                             help=CONFIG_HELP)
+    FIND_CONFIG_HELP = _('Attempt to find config file by checking parent '
+                         'directories of the current working directory. It is '
+                         'assumed that the config file is named '
+                         '`.coafile`. This arg is ignored if --config is also '
+                         'given')
+    arg_parser.add_argument('-F',
+                            '--find-config',
+                            nargs='?',
+                            const=True,
+                            metavar='BOOL',
+                            help=FIND_CONFIG_HELP)
     arg_parser.add_argument('-f',
                             '--files',
                             nargs='+',

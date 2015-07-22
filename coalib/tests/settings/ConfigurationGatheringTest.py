@@ -200,6 +200,30 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                       "section_manager_test_files",
                                       ".coafile"), retval)
 
+        # We need to use a bad filename or this will parse coalas .coafile
+        (sections,
+         dummy,
+         dummy,
+         dummy) = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=["--find-config", "-c", "some_bad_filename"])
+
+        self.assertEqual(str(sections["default"]),
+                         "Default {config : some_bad_filename, "
+                         "find_config : True}")
+
+        (sections,
+         dummy,
+         dummy,
+         dummy) = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=["--find-config"])
+
+        self.assertRegexpMatches(str(sections["default"]),
+                                 ".*find_config : True.*, config : .*")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

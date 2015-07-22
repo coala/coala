@@ -1,6 +1,7 @@
 import os
 import sys
 
+from coalib.settings.Setting import Setting
 from coalib.misc.Constants import Constants
 from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
@@ -106,6 +107,12 @@ def load_configuration(arg_list, log_printer):
                         indicated after colon.)
     """
     cli_sections = parse_cli(arg_list=arg_list)
+
+    if (
+            bool(cli_sections["default"].get("find_config", "False")) and
+            str(cli_sections["default"].get("config")) == ""):
+        cli_sections["default"].add_or_create_setting(
+            Setting("config", find_user_config(os.getcwd())))
 
     targets = []
     # We don't want to store targets argument back to file, thus remove it
