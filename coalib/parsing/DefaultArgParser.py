@@ -4,7 +4,8 @@ from coalib.misc.i18n import _
 from coalib.misc.Constants import Constants
 
 
-def default_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
+def default_arg_parser(formatter_class=None):
+    formatter_class = formatter_class or argparse.RawDescriptionHelpFormatter
     arg_parser = argparse.ArgumentParser(
         formatter_class=formatter_class,
         prog="coala",

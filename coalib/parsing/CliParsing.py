@@ -7,9 +7,9 @@ from coalib.settings.Section import Section, append_to_sections
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
-def parse_cli(arg_list=sys.argv[1:],
+def parse_cli(arg_list=None,
               origin=os.getcwd(),
-              arg_parser=default_arg_parser(),
+              arg_parser=None,
               key_value_delimiters=('=', ':'),
               comment_seperators=(),
               key_delimiters=(',',),
@@ -34,6 +34,8 @@ def parse_cli(arg_list=sys.argv[1:],
                                         as keys and the sections themselves
                                         as value.
     """
+    arg_list = arg_list or sys.argv[1:]
+    arg_parser = arg_parser or default_arg_parser()
     origin += os.path.sep
     sections = OrderedDict(default=Section('Default'))
     line_parser = LineParser(key_value_delimiters,
