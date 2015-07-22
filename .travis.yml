@@ -6,7 +6,7 @@ language:
 env:
   global:
     - PYENV_ROOT=~/.pyenv
-    - PATH=$PYENV_ROOT/shims:$PATH
+    - PATH=$PYENV_ROOT/shims:/usr/local/opt/llvm36/lib/llvm-3.6/lib:$PATH
   matrix:
     - PYTHON_VERSION=3.4.2
     - PYTHON_VERSION=3.3.5

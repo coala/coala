@@ -7,6 +7,7 @@ brew outdated pyenv || brew upgrade --quiet pyenv
 brew install gettext && brew link gettext --force
 brew install espeak
 brew install libffi && brew link libffi --force
+brew install llvm36
 brew install cairo
 brew install sqlite && brew link sqlite --force
 brew install openssl && brew link openssl --force
