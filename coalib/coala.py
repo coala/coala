@@ -56,7 +56,7 @@ def main():
                     log_printer=log_printer,
                     file_diff_dict=file_diff_dict)
                 yielded_results = yielded_results or results[0]
-                finalize(file_diff_dict, results[3])
+                finalize(file_diff_dict, results[3], log_printer)
                 did_nothing = False
 
         if did_nothing:
