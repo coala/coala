@@ -7,6 +7,12 @@ from coalib.processes.communication.LogMessage import LogMessage
 
 
 class LogPrinter(Printer):
+    """
+    The LogPrinter class is a Printer that provides logging features.
+
+    To use these logging features in your custom printer, just inherit this
+    class.
+    """
     def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
         """
         Creates a new log printer. The log printer adds logging capabilities to
