@@ -56,7 +56,7 @@ Project Status
 
 [![Linux Build Status](https://img.shields.io/circleci/project/coala-analyzer/coala/master.svg?label=linux%20build)](https://circleci.com/gh/coala-analyzer/coala) [![Windows Build status](https://img.shields.io/appveyor/ci/sils1297/coala/master.svg?label=windows%20build)](https://ci.appveyor.com/project/sils1297/coala/branch/master) [![OSX Build status](https://img.shields.io/travis/coala-analyzer/coala/master.svg?label=osx%20build)](https://travis-ci.org/coala-analyzer/coala)
 
-[![Codacy Code Quality](https://img.shields.io/codacy/f0ac979fa93f49509cba9086754a50d4.svg?label=codacy quality)](https://www.codacy.com/app/lasse/coala) [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer quality)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master) [![codecov.io](https://img.shields.io/codecov/c/github/coala-analyzer/coala/master.svg?label=branch coverage)](https://codecov.io/github/coala-analyzer/coala?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer quality)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master) [![codecov.io](https://img.shields.io/codecov/c/github/coala-analyzer/coala/master.svg?label=branch coverage)](https://codecov.io/github/coala-analyzer/coala?branch=master)
 
 [![Documentation Status](https://readthedocs.org/projects/coala/badge/?version=latest)](https://readthedocs.org/projects/coala/?badge=latest)
 
