@@ -26,4 +26,3 @@ def get_exitcode(exception, log_printer=None):
         exitcode = 255
 
     return exitcode
-
