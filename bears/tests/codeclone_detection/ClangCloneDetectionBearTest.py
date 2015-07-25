@@ -21,6 +21,7 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
             "clone_detection_samples"))
         self.section = Section("default")
         self.section.append(Setting("files", "", origin=self.base_test_path))
+        self.section.append(Setting("max_clone_difference", "0.308"))
         self.clone_files = [os.listdir(os.path.join(self.base_test_path,
                                                     "clones"))]
 
