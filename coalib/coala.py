@@ -64,7 +64,7 @@ def main():
 
         if yielded_results:
             exitcode = 1
-    except Exception as exception:  # pylint: disable=broad-except
+    except BaseException as exception:  # pylint: disable=broad-except
         exitcode = exitcode or get_exitcode(exception, log_printer)
 
     return exitcode

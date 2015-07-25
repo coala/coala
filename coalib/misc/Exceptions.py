@@ -21,7 +21,7 @@ def get_exitcode(exception, log_printer=None):
         print(_("Found EOF. Exiting gracefully."))
     elif isinstance(exception, SystemExit):
         exitcode = exception.code
-    elif isinstance(exception, Exception):
+    elif isinstance(exception, BaseException):
         log_printer.log_exception(Constants.CRASH_MESSAGE, exception)
         exitcode = 255
 
