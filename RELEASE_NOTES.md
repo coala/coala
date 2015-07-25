@@ -2,6 +2,12 @@
 
 This release features the following feature changes:
 
+ * `--find-config` flag: Searches for .coafile in all parent directories.
+ * Add code clone detection bears and algorithms using CMCD approach.
+ * Console color gets properly disabled now for non-supporting platforms (like
+   Windows).
+ * coala results can be outputted to JSON format using the `coala-json`
+   command.
  * Automatically add needed flags to open a new process for some editors.
  * Save backup before applying actions to files.
  * Return nonzero when erroring or yielding results.
@@ -11,7 +17,6 @@ This release features the following feature changes:
  * Manual written documentation is now hosted at http://coala.rtfd.org/.
  * Changed logging API in Bears (now: debug/warn/err).
  * clang python bindings were added to the bearlib.
- * ClangCodeCloneDetection bear was added.
  * Exitcodes were organized and documented.
    (http://coala.readthedocs.org/en/latest/Users/Exit_Codes/)
  * Handling of EOF/Keyboard Interrupt was improved.
