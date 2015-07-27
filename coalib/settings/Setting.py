@@ -1,6 +1,7 @@
 from collections import OrderedDict
 import os
 
+from coalib.misc.Decorators import generate_repr
 from coalib.misc.StringConverter import StringConverter
 
 
@@ -57,6 +58,7 @@ def typed_ordered_dict(key_type, value_type, default):
         for key, value in OrderedDict(setting).items())
 
 
+@generate_repr("key", "value")
 class Setting(StringConverter):
     """
     A Setting consists mainly of a key and a value. It mainly offers many
