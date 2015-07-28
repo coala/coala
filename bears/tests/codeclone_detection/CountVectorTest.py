@@ -51,8 +51,7 @@ class CountVectorTest(unittest.TestCase):
                           [lambda cursor, stack: cursor and stack],
                           [2])
         uut.count_reference(True, True)
-        self.assertEqual(repr(uut), str(uut))
-        self.assertEqual(repr(uut), "[2]")
+        self.assertEqual(str(uut), "[2]")
         self.assertEqual(list(uut), [2])
 
     def test_cloning(self):

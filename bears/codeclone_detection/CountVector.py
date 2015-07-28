@@ -1,6 +1,9 @@
 from math import sqrt
 
+from coalib.misc.Decorators import generate_repr
 
+
+@generate_repr()
 class CountVector:
     def __init__(self, name, conditions=None, weightings=None):
         """
@@ -45,9 +48,6 @@ class CountVector:
                 self.unweighted[i] += 1
 
     def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
         return str(self.count_vector)
 
     def __len__(self):

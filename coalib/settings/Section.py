@@ -1,6 +1,7 @@
 from collections import OrderedDict
 import copy
 
+from coalib.misc.Decorators import generate_repr
 from coalib.settings.Setting import Setting
 
 
@@ -34,6 +35,7 @@ def append_to_sections(sections,
         Setting(key, str(value), origin, from_cli=from_cli))
 
 
+@generate_repr()
 class Section:
     """
     This class holds a set of settings.
