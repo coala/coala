@@ -4,11 +4,13 @@ from gi.repository import Gtk, Gio, GObject
 from coalib.output.gui.greeter.GreeterWindow import GreeterWindow
 from coalib.output.gui.scrolledWindow.coalaScrolledWindow import (
     coalaScrolledWindow)
+from coalib.output.gui.searchbar.Searchbar import Searchbar
 
 
 class coalaApp(Gtk.Application):
     def __init__(self):
         GObject.type_register(coalaScrolledWindow)
+        GObject.type_register(Searchbar)
         Gtk.Application.__init__(self,
                                  application_id="org.coala",
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
