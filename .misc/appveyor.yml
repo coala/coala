@@ -42,6 +42,8 @@ install:
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
   - "%CMD_IN_ENV% pip -q install coverage pylint setuptools munkres3 language-check"
+  - "%CMD_IN_ENV% pip show astroid"
+  - "%CMD_IN_ENV% pip show logilab-common"
   - "%CMD_IN_ENV% pip install --upgrade astroid"
 
   - "nuget install Gettext.Tools -Version 0.19.4"
