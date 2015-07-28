@@ -1,8 +1,14 @@
 from functools import total_ordering
 
+from coalib.misc.Decorators import generate_repr
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
+@generate_repr("origin",
+               "file",
+               "line_nr",
+               ("severity", RESULT_SEVERITY.reverse.get),
+               "message")
 @total_ordering
 class Result:
     """
@@ -50,16 +56,6 @@ class Result:
         self.file = file
         self.line_nr = line_nr
         self.severity = severity
-
-    def __repr__(self):
-        return (("<" + Result.__name__ + " object(origin: {origin}, file: "
-                 "{file}, line_nr: {linenr}, severity: {severity}, message: "
-                 "{msg}) at " + hex(id(self)) + ">")
-                    .format(origin=repr(self.origin),
-                            file=repr(self.file),
-                            linenr=self.line_nr,
-                            severity=self.severity,
-                            msg=repr(self.message)))
 
     def __str__(self):
         return ("Result:\n origin: {origin}\n file: {file}\n line nr: "
