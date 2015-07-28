@@ -78,6 +78,11 @@
     <property name="orientation">vertical</property>
     <property name="visible">true</property>
     <child>
+      <object class="Searchbar" id="search_bar">
+        <property name="visible">true</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkScrolledWindow" id="scrolled_window">
         <property name="visible">true</property>
         <child>

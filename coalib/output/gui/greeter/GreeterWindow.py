@@ -15,6 +15,7 @@ class GreeterWindow(Gtk.ApplicationWindow):
         self.application = self.get_application()
         self.projectMetadata = ProjectMetadata()
         self.check_box_revealers = []
+        self.search_text = ""
 
         self._ui = Gtk.Builder()
         self._ui.add_from_resource("/org/coala/GreeterWindow.ui")
@@ -30,6 +31,7 @@ class GreeterWindow(Gtk.ApplicationWindow):
         self.add(self._ui.get_object("project_box"))
 
         self.list_box = self._ui.get_object("projects")
+        self.list_box.set_filter_func(self.filter_func, None)
         self.list_box.set_selection_mode(Gtk.SelectionMode.SINGLE)
         projects = shelve.open(self.projectMetadata.file)
         for key in projects:
@@ -40,6 +42,7 @@ class GreeterWindow(Gtk.ApplicationWindow):
         self.selection_mode = self._ui.get_object("selection_mode")
         self.selection_mode.connect("clicked", self.on_select_button_clicked)
         self.search_button = self._ui.get_object("search_button")
+        self.search_button.connect("toggled", self.on_search_button_clicked)
         self.selection_cancel = self._ui.get_object("cancel_button")
         self.selection_cancel.set_visible(False)
         self.selection_cancel.connect("clicked", self.on_cancel_button_clicked)
@@ -47,6 +50,9 @@ class GreeterWindow(Gtk.ApplicationWindow):
         self.action_bar.set_visible(False)
         self.remove_button = self._ui.get_object("remove_button")
         self.remove_button.connect("clicked", self.delete_rows)
+
+        self.search_bar = self._ui.get_object("search_bar")
+        self.search_bar.set_window(self, self.search_button)
 
     def create_project_row(self, name, timestamp, location):
         list_box_template = Gtk.Builder()
@@ -106,6 +112,9 @@ class GreeterWindow(Gtk.ApplicationWindow):
         for revealer in self.check_box_revealers:
             revealer.set_reveal_child(not revealer.get_child_revealed())
 
+    def on_search_button_clicked(self, button):
+        self.search_bar.toggle_bar()
+
     def delete_rows(self, button):
         for revealer in self.check_box_revealers:
             if revealer.get_child().get_active():
@@ -113,3 +122,14 @@ class GreeterWindow(Gtk.ApplicationWindow):
                 self.projectMetadata.delete_project(
                     os.path.basename(row_box.get_name()))
                 row_box.get_parent().destroy()
+
+    def filter_func(self, row, data=None):
+        if self.search_text == "":
+            return True
+        elif self.search_text.lower() in row.get_child().get_name().lower():
+            return True
+        return False
+
+    def refilter(self, search_text):
+        self.search_text = search_text
+        self.list_box.invalidate_filter()
