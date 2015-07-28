@@ -1,6 +1,9 @@
 from functools import total_ordering
 
+from coalib.misc.Decorators import generate_repr
 
+
+@generate_repr("file", "line")
 @total_ordering
 class SourcePosition:
     def __init__(self, file=None, line=None):
@@ -28,10 +31,6 @@ class SourcePosition:
         return "file: {}, line: {}".format(
             str(repr(self.file)),
             str(self.line))
-
-    def __repr__(self):
-        return ("<" + SourcePosition.__name__ + " object(" + str(self) + ") "
-                "at " + hex(id(self)) + ">")
 
     def __eq__(self, other):
         return (self.file == other.file and
