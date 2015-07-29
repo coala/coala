@@ -16,7 +16,7 @@ def make_test_server():
     # Make a dbus service in a new process. It cannot be in this process
     # as that gives SegmentationFaults because the same bus is being used.
     return subprocess.Popen([
-        Constants.python_executable,
+        sys.executable,
         __file__,
         "server"])
 

@@ -12,7 +12,6 @@ import tempfile
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          preserve_sys_path,
                                          subprocess_timeout)
-from coalib.misc.Constants import Constants
 from coalib.processes.Processing import create_process_group, get_cpu_count
 
 
@@ -61,7 +60,7 @@ def create_argparser(**kwargs):
 
 
 def execute_coverage_command(*args):
-    commands = [Constants.python_executable,
+    commands = [sys.executable,
                 "-m",
                 "coverage"] + list(args)
     return subprocess.call(commands)
@@ -212,12 +211,12 @@ def show_coverage_results(html):
 
 def execute_python_file(filename, ignored_files, cover, timeout, verbose):
     if not cover:
-        return execute_command_array([Constants.python_executable,
+        return execute_command_array([sys.executable,
                                       filename],
                                      timeout=timeout,
                                      verbose=verbose)
 
-    return execute_command_array([Constants.python_executable,
+    return execute_command_array([sys.executable,
                                   "-m",
                                   "coverage",
                                   "run",

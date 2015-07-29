@@ -1,5 +1,4 @@
 import os
-import platform
 
 from coalib.misc.i18n import _
 
@@ -60,11 +59,6 @@ class Constants:
     system_coafile = os.path.join(coalib_root, "default_coafile")
 
     user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
-
-    if platform.system() == "Windows":  # pragma: no cover
-        python_executable = "python"
-    else:
-        python_executable = "python3"
 
     VERSION_FILE = os.path.join(coalib_root, "VERSION")
     with open(VERSION_FILE, 'r') as ver:

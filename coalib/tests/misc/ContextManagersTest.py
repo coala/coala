@@ -9,14 +9,12 @@ from coalib.misc.ContextManagers import (suppress_stdout,
                                          simulate_console_inputs,
                                          preserve_sys_path,
                                          subprocess_timeout)
-from coalib.misc.Constants import Constants
 from coalib.processes.Processing import create_process_group
 
 
 process_group_timeout_test_code = """
-import time, subprocess;
-from coalib.misc.Constants import Constants;
-p = subprocess.Popen([Constants.python_executable,
+import time, subprocess, sys;
+p = subprocess.Popen([sys.executable,
                      "-c",
                      "import time; time.sleep(100)"]);
 time.sleep(100);
@@ -25,7 +23,7 @@ time.sleep(100);
 
 class ContextManagersTest(unittest.TestCase):
     def test_subprocess_timeout(self):
-        p = subprocess.Popen([Constants.python_executable,
+        p = subprocess.Popen([sys.executable,
                               "-c",
                               "import time; time.sleep(0.5);"],
                              stderr=subprocess.PIPE)
@@ -35,7 +33,7 @@ class ContextManagersTest(unittest.TestCase):
             self.assertEqual(timedout.value, True)
         self.assertNotEqual(retval, 0)
 
-        p = create_process_group([Constants.python_executable,
+        p = create_process_group([sys.executable,
                                   "-c",
                                   process_group_timeout_test_code])
         with subprocess_timeout(p, 0.5, kill_pg=True):
@@ -43,7 +41,7 @@ class ContextManagersTest(unittest.TestCase):
             self.assertEqual(timedout.value, True)
         self.assertNotEqual(retval, 0)
 
-        p = subprocess.Popen([Constants.python_executable,
+        p = subprocess.Popen([sys.executable,
                               "-c",
                               "import time"])
         with subprocess_timeout(p, 0.5) as timedout:
@@ -51,7 +49,7 @@ class ContextManagersTest(unittest.TestCase):
             self.assertEqual(timedout.value, False)
         self.assertEqual(retval, 0)
 
-        p = subprocess.Popen([Constants.python_executable,
+        p = subprocess.Popen([sys.executable,
                               "-c",
                               "import time"])
         with subprocess_timeout(p, 0) as timedout:
