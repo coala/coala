@@ -13,6 +13,6 @@ python3 setup.py sdist bdist_wheel
 twine upload dist/* -u "$PYPIUSER" -p "$PYPIPW"
 
 echo "Installing coala from pypi"
-pip3 install --pre coala --upgrade
+pip3 install --pre coala==`cat coalib/VERSION` --upgrade
 echo coala versions: pip=`coala -v` repo=`cat coalib/VERSION`
 [ `coala -v` = `cat coalib/VERSION` ]
