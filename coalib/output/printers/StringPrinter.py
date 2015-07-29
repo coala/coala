@@ -1,23 +1,16 @@
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.printers.Printer import Printer
-from coalib.output.printers.LogPrinter import LogPrinter
 
 
-class StringPrinter(Printer, LogPrinter):
+class StringPrinter(Printer):
     """
     This is a simple printer that prints everything to a string.
     """
 
-    def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
+    def __init__(self):
         """
         Creates a new StringPrinter with an empty print string.
-
-        :param log_level:        The minimum log level, everything below will
-                                 not be logged.
-        :param timestamp_format: The format string for the
-                                 datetime.today().strftime(format) method.
         """
-        LogPrinter.__init__(self, self, log_level, timestamp_format)
+        Printer.__init__(self)
 
         self._string = ""
 

@@ -514,10 +514,10 @@ class ConsoleInteractionTest(unittest.TestCase):
             # Test logging output.
             finalize({"f": diff}, {"f": ["1", "2"]}, log_printer=None)
 
-            logger = StringPrinter()
+            logger = LogPrinter(StringPrinter())
             finalize({"f": diff}, {"f": ["1"]}, log_printer=logger)
             self.assertIn("Can't backup, writing patch to file f failed.",
-                          logger.string)
+                          logger.printer.string)
 
         finally:
             builtins.open = _open
