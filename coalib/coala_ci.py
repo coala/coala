@@ -12,13 +12,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
 
 
 def main():
-    log_printer = ConsolePrinter()
+    log_printer = LogPrinter(ConsolePrinter())
     exitcode = 0
     try:
         yielded_results = False

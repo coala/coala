@@ -2,6 +2,7 @@ from inspect import ismethod, getfullargspec
 from collections import OrderedDict
 
 from coalib.settings.DocumentationComment import DocumentationComment
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
 
@@ -45,7 +46,7 @@ class FunctionMetadata:
 
     def create_params_from_section(self,
                                    section,
-                                   log_printer=ConsolePrinter()):
+                                   log_printer=LogPrinter(ConsolePrinter())):
         """
         Create a params dictionary for this function that holds all values the
         function needs plus optional ones that are available.

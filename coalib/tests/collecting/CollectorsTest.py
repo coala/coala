@@ -3,6 +3,7 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.collecting.Collectors import (collect_files,
                                           collect_dirs,
@@ -74,7 +75,7 @@ class CollectBearsTest(unittest.TestCase):
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
 
-        self.log_printer = ConsolePrinter()
+        self.log_printer = LogPrinter(ConsolePrinter())
 
     def test_bear_empty(self):
         self.assertRaises(TypeError, collect_bears)

@@ -9,6 +9,7 @@ from coalib.settings.SectionFilling import fill_section, fill_settings, Setting
 from coalib.settings.Section import Section
 from coalib.output.ConsoleInteraction import acquire_settings
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 
 
 class GlobalTestBear(GlobalBear):
@@ -33,7 +34,7 @@ class LocalTestBear(LocalBear):
 
 class SectionFillingTest(unittest.TestCase):
     def setUp(self):
-        self.log_printer = ConsolePrinter()
+        self.log_printer = LogPrinter(ConsolePrinter())
         self.section = Section("test")
         self.section.append(Setting("key", "val"))
 

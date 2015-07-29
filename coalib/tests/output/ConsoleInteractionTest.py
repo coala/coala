@@ -27,6 +27,7 @@ from coalib.output.ConsoleInteraction import (finalize,
                                               print_results,
                                               show_bears)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -96,7 +97,7 @@ class SomeglobalBear(Bear):
 
 class ConsoleInteractionTest(unittest.TestCase):
     def setUp(self):
-        self.log_printer = ConsolePrinter(print_colored=False)
+        self.log_printer = LogPrinter(ConsolePrinter(print_colored=False))
         self.console_printer = ConsolePrinter(print_colored=False)
         self.file_diff_dict = {}
         self.local_bears = OrderedDict([("default", [KeywordBear]),

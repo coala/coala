@@ -1,23 +1,17 @@
 import platform
 
-from coalib.output.printers.ColoredLogPrinter import ColoredLogPrinter
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.ColorPrinter import ColorPrinter
 
 
-class ConsolePrinter(ColoredLogPrinter):
+class ConsolePrinter(ColorPrinter):
     """
     A simple printer for the console that supports colors and logs.
 
     Note that pickling will not pickle the output member.
     """
     def __init__(self,
-                 log_level=LOG_LEVEL.WARNING,
-                 timestamp_format="%X",
                  print_colored=platform.system() in ("Linux",)):
-        ColoredLogPrinter.__init__(self,
-                                   log_level=log_level,
-                                   timestamp_format=timestamp_format,
-                                   print_colored=print_colored)
+        ColorPrinter.__init__(self, print_colored)
 
     def _print_uncolored(self, output, **kwargs):
         print(output, end="")

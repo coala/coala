@@ -18,13 +18,14 @@ from coalib.output.ConsoleInteraction import (nothing_done,
                                               finalize,
                                               show_bears)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
 
 
 def main():
-    log_printer = ConsolePrinter()
+    log_printer = LogPrinter(ConsolePrinter())
     console_printer = ConsolePrinter()
     exitcode = 0
     try:

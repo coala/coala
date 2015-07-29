@@ -60,7 +60,7 @@ class ProcessingTest(unittest.TestCase):
         self.result_queue = queue.Queue()
         self.queue = queue.Queue()
         self.log_queue = queue.Queue()
-        log_printer = ConsolePrinter()
+        log_printer = LogPrinter(ConsolePrinter())
         self.log_printer = ProcessingTestLogPrinter(self.log_queue)
 
         (self.sections,
