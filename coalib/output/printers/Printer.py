@@ -21,8 +21,7 @@ class Printer:
         :param output: A string which shall be printed. (Everything is in it so
                        you don't want to append a newline.)
         :param kwargs: Arbitrary additional keyword arguments which can be used
-                       to configure arbitrary things specifically to the
-                       printer.
+                       to configure arbitrary things specific to the printer.
         """
         raise NotImplementedError
 
