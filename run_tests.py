@@ -64,10 +64,7 @@ def main():
     # Compile translations
     i18n.compile_translations()
 
-    exit(run_tests(ignore_list,
-                   args,
-                   test_files,
-                   test_file_names))
+    exit(run_tests(ignore_list, args, test_files, test_file_names))
 
 
 if __name__ == '__main__':
