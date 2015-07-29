@@ -141,7 +141,8 @@ def execute_command_array(command_array, timeout, verbose):
 
     :param command_array: The command array to execute.
     :param timeout:       Time to wait until killing the process.
-    :param verbose:       Return the stdout and stderr of the subprocess or not.
+    :param verbose:       Return the stdout and stderr of the subprocess or
+                          not.
     :return:              A tuple of (result, message) where message gives
                           text information of what happened.
     """
