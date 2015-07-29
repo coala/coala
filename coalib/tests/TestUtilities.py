@@ -160,9 +160,8 @@ def execute_command_array(command_array, timeout, verbose):
 
     if retval != 0 or verbose:
         stdout_file.seek(0)
-        # Don't use "replace" for decoding! Windows has problems to encode the
-        # the replacement character again when outputting to console.
-        message += stdout_file.read().decode("utf-8", "ignore")
+        message += stdout_file.read().decode(sys.stdout.encoding,
+                                             errors="replace")
 
     stdout_file.close()
 
@@ -282,7 +281,11 @@ def print_test_results(test_file, test_nr, test_count, skipped, message):
                                                        message))
     else:
         print(" {:>2}/{:<2} | {}".format(test_nr, test_count, basename))
-        print(message, end="")
+        # Decode and encode the message string while replacing errors so
+        # unmapped characters can be printed too.
+        print(message.encode(sys.stdout.encoding, errors="replace")
+                  .decode(sys.stdout.encoding),
+              end="")
         if message:
             print("#" * 70)
 
