@@ -1,12 +1,13 @@
 import traceback
 
 from coalib.misc.i18n import _
+from coalib.output.printers.Printer import Printer
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
 
-class Bear(LogPrinter):
+class Bear(Printer, LogPrinter):
     """
     A bear contains the actual subroutine that is responsible for checking
     source code for certain specifications. However it can actually do
@@ -38,7 +39,8 @@ class Bear(LogPrinter):
                  section,
                  message_queue,
                  timeout=0):
-        LogPrinter.__init__(self)
+        Printer.__init__(self)
+        LogPrinter.__init__(self, self)
 
         if not isinstance(section, Section):
             raise TypeError("section has to be of type Section.")

@@ -1,34 +1,43 @@
 import traceback
 
-from coalib.output.printers.Printer import Printer
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.ColorPrinter import ColorPrinter
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL, LOG_LEVEL_COLORS
 from coalib.misc.i18n import _
 from coalib.processes.communication.LogMessage import LogMessage
 
 
-class LogPrinter(Printer):
+class LogPrinter:
     """
-    The LogPrinter class is a Printer that provides logging features.
+    The LogPrinter class allows to print log messages to an underlying Printer.
 
-    To use these logging features in your custom printer, just inherit this
-    class.
+    This class is an adapter, means you can create a LogPrinter from every
+    existing Printer instance.
     """
-    def __init__(self, log_level=LOG_LEVEL.WARNING, timestamp_format="%X"):
+    def __init__(self,
+                 printer,
+                 log_level=LOG_LEVEL.WARNING,
+                 timestamp_format="%X"):
         """
-        Creates a new log printer. The log printer adds logging capabilities to
-        any normal printer, just derive from this class and you should have
-        this logging capabilities for free. (Note: LogPrinter itself is
-        abstract.)
+        Creates a new log printer from an existing Printer.
 
+        :param printer:          The underlying Printer where log messages
+                                 shall be written to. If you inherit from
+                                 LogPrinter, set it to self.
         :param log_level:        The minimum log level, everything below will
                                  not be logged.
         :param timestamp_format: The format string for the
                                  datetime.today().strftime(format) method.
         """
-        Printer.__init__(self)
-
+        self._printer = printer
         self.log_level = log_level
         self.timestamp_format = timestamp_format
+
+    @property
+    def printer(self):
+        """
+        Returns the underlying printer where logs are printed to.
+        """
+        return self._printer
 
     def _get_log_prefix(self, log_level, timestamp):
         datetime_string = timestamp.strftime(self.timestamp_format)
@@ -126,8 +135,19 @@ class LogPrinter(Printer):
         """
         Override this if you want to influence how the log message is printed.
 
+        If the underlying printer is a ColorPrinter, then colored logging is
+        used. You can turn it off in the underlying ColorPrinter if you want to
+        print uncolored.
+
         :param prefix:      The prefix to print (as string).
         :param log_message: The LogMessage object to print.
         :param kwargs:      Any other keyword arguments.
         """
-        self.print(prefix, log_message.message, **kwargs)
+        if isinstance(self._printer, ColorPrinter):
+            self.printer.print(prefix,
+                               end=" ",
+                               color=LOG_LEVEL_COLORS[log_message.log_level],
+                               **kwargs)
+            self.printer.print(log_message.message, **kwargs)
+        else:
+            self.printer.print(prefix, log_message.message, **kwargs)

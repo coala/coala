@@ -40,7 +40,7 @@ class DummyProcess(multiprocessing.Process):
 
 class ProcessingTestLogPrinter(LogPrinter):
     def __init__(self, log_queue):
-        LogPrinter.__init__(self)
+        LogPrinter.__init__(self, self)
         self.log_queue = log_queue
         self.set_up = False
 

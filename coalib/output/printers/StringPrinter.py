@@ -1,8 +1,9 @@
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.Printer import Printer
 from coalib.output.printers.LogPrinter import LogPrinter
 
 
-class StringPrinter(LogPrinter):
+class StringPrinter(Printer, LogPrinter):
     """
     This is a simple printer that prints everything to a string.
     """
@@ -16,7 +17,7 @@ class StringPrinter(LogPrinter):
         :param timestamp_format: The format string for the
                                  datetime.today().strftime(format) method.
         """
-        LogPrinter.__init__(self, log_level, timestamp_format)
+        LogPrinter.__init__(self, self, log_level, timestamp_format)
 
         self._string = ""
 

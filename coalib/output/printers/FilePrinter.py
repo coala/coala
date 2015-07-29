@@ -1,9 +1,10 @@
 from coalib.output.ClosableObject import ClosableObject
+from coalib.output.printers.Printer import Printer
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
-class FilePrinter(LogPrinter, ClosableObject):
+class FilePrinter(Printer, LogPrinter, ClosableObject):
     """
     This is a simple printer/logprinter that prints everything to a file. Note
     that everything will be appended.
@@ -23,9 +24,7 @@ class FilePrinter(LogPrinter, ClosableObject):
         if not isinstance(filename, str):
             raise TypeError("filename must be a string.")
 
-        LogPrinter.__init__(self,
-                            timestamp_format=timestamp_format,
-                            log_level=log_level)
+        LogPrinter.__init__(self, self, log_level, timestamp_format)
 
         self.file = open(filename, 'a+')
 

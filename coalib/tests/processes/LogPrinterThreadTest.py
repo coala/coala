@@ -10,7 +10,7 @@ from coalib.misc.ContextManagers import retrieve_stdout
 
 class TestPrinter(LogPrinter):
     def __init__(self):
-        super().__init__()
+        LogPrinter.__init__(self, self)
 
     def log_message(self, log_message, timestamp=None, **kwargs):
         print(log_message)

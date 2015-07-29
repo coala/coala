@@ -9,7 +9,7 @@ class ColoredLogPrinter(ColorPrinter, LogPrinter):
                  timestamp_format="%X",
                  print_colored=True):
         ColorPrinter.__init__(self, print_colored=print_colored)
-        LogPrinter.__init__(self, log_level, timestamp_format)
+        LogPrinter.__init__(self, self, log_level, timestamp_format)
 
     def _print_log_message(self, prefix, log_message, **kwargs):
         """
