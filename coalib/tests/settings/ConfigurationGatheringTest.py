@@ -7,6 +7,7 @@ sys.path.insert(0, ".")
 from coalib.misc.Constants import Constants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.ClosableObject import close_objects
 import re
@@ -14,7 +15,7 @@ import re
 
 class ConfigurationGatheringTest(unittest.TestCase):
     def setUp(self):
-        self.log_printer = NullPrinter()
+        self.log_printer = LogPrinter(NullPrinter())
 
     def tearDown(self):
         close_objects(self.log_printer)

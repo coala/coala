@@ -364,7 +364,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         # File isn't in dict, shouldn't print but also shouldn't throw. This
         # can occur if filter writers are doing nonsense. If this happens twice
         # the same should happen (whitebox testing: this is a potential bug.)
-        self.log_printer = NullPrinter()
+        self.log_printer = LogPrinter(NullPrinter())
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,

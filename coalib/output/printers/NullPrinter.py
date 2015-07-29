@@ -1,14 +1,15 @@
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.ColorPrinter import ColorPrinter
+from coalib.output.printers.Printer import Printer
 
 
-class NullPrinter(ColorPrinter, LogPrinter):
+class NullPrinter(Printer):
+    """
+    A printer that dismissies all printed messages.
+    """
     def __init__(self):
-        ColorPrinter.__init__(self)
-        LogPrinter.__init__(self, self)
+        """
+        Instantiates a new NullPrinter.
+        """
+        Printer.__init__(self)
 
-    def print(self, *args, **kwargs):
-        return
-
-    def log_message(self, log_message, timestamp=None, **kwargs):
+    def _print(self, output, **kwargs):
         return

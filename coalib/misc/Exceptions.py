@@ -1,5 +1,6 @@
 import sys
 
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.Constants import Constants
 from coalib.misc.i18n import _
@@ -12,7 +13,7 @@ else:
 
 
 def get_exitcode(exception, log_printer=None):
-    log_printer = log_printer or NullPrinter()
+    log_printer = log_printer or LogPrinter(NullPrinter())
     exitcode = 0
     if isinstance(exception, KeyboardInterrupt):  # Ctrl+C
         print(_("Program terminated by user."))

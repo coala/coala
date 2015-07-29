@@ -2,6 +2,7 @@ import unittest
 import sys
 
 sys.path.insert(0, ".")
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 
 
@@ -10,7 +11,7 @@ class NullPrinterTest(unittest.TestCase):
         self.uut = NullPrinter()
         self.assertEqual(self.uut.print("anything"), None)
         self.assertEqual(self.uut.print("anything", color="red"), None)
-        self.assertEqual(self.uut.debug("message"), None)
+        self.assertEqual(LogPrinter(self.uut).debug("message"), None)
 
 
 if __name__ == '__main__':
