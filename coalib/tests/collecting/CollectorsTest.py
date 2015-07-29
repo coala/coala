@@ -15,8 +15,6 @@ class CollectFilesTest(unittest.TestCase):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
-        self.log_printer = ConsolePrinter()
-
     def test_file_empty(self):
         self.assertRaises(TypeError, collect_files)
 
@@ -40,8 +38,6 @@ class CollectDirsTest(unittest.TestCase):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
-
-        self.log_printer = ConsolePrinter()
 
     def test_dir_empty(self):
         self.assertRaises(TypeError, collect_dirs)
