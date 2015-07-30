@@ -35,8 +35,9 @@ class ConsolePrinter(ColorPrinter):
             'dark gray': '1;30',
             'bright yellow': '1;33',
             'normal': '0'}
-        color_code = color_code_dict.get(color, None)
-        if color_code is None:
-            raise ValueError("Invalid color value")
+        try:
+            color_code = color_code_dict[color]
+        except KeyError:
+            raise ValueError("Invalid color value.")
 
         print('\033[' + color_code + 'm' + output + '\033[0m', end="")
