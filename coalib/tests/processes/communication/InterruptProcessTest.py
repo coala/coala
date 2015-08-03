@@ -4,7 +4,7 @@ import time
 import multiprocessing
 
 sys.path.insert(0, ".")
-from coalib.processes.communication.InterruptProcess import interrupt_processes
+from coalib.processes.communication.InterruptProcess import interrupt_process
 from coalib.misc.ContextManagers import retrieve_stdout
 
 def runner(queue):
@@ -29,7 +29,7 @@ class InterruptProcessTest(unittest.TestCase):
         p = multiprocessing.Process(target=runner, kwargs={'queue': queue})
         p.start()
         time.sleep(2)
-        interrupt_processes(p.pid)
+        interrupt_process(p.pid)
         self.assertEqual("Hello coala", queue.get(timeout=0.1))
         self.assertEqual("Hello coala", queue.get(timeout=0.1))
         self.assertEqual("Hello coala", queue.get(timeout=0.1))
@@ -42,7 +42,7 @@ class InterruptProcessTest(unittest.TestCase):
         p = multiprocessing.Process(target=runner2, kwargs={'queue': queue})
         p.start()
         time.sleep(2)
-        interrupt_processes(p.pid)
+        interrupt_process(p.pid)
         self.assertEqual("Hello coala", queue.get(timeout=0.1))
         self.assertEqual("Hello coala", queue.get(timeout=0.1))
         self.assertEqual("Hello coala", queue.get(timeout=0.1))
