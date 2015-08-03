@@ -8,7 +8,7 @@ if platform.system() == "Windows":
     CTRL_C_EVENT = 0x0
 
 
-def interrupt_processes(pid):
+def interrupt_process(pid):
     """
     Interrupt a process by its pid.
 
