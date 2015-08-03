@@ -16,6 +16,9 @@ def interrupt_process(pid):
     Be sure that the pid you pass shares the same process group as your program
     that calls this function. If they don't share the same process group, this
     call blocks for 10 seconds to be sure that this is the case.
+    Also be aware to catch the KeyboardInterrupt in the main thread correctly
+    since it is sent first to the parent thread and propagate it down to your
+    call.
 
     :param pid: The pid of the process to interrupt.
     """
