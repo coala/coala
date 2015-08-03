@@ -1,82 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkBox" id="headerbar">
+  <object class="GtkOverlay" id="headerbar">
     <property name="visible">true</property>
     <child>
-      <object class="GtkHeaderBar" id="left_header">
+      <object class="GtkBox">
         <property name="visible">true</property>
-        <property name="show_close_button">false</property>
-        <style>
-          <class name="titlebar"/>
-        </style>
         <child>
-          <object class="GtkButton" id="add_section_button">
+          <object class="GtkHeaderBar" id="left_header">
             <property name="visible">true</property>
+            <property name="show_close_button">false</property>
             <style>
-              <class name="image-button"/>
+              <class name="titlebar"/>
             </style>
             <child>
-              <object class="GtkImage">
-                <property name="icon_name">list-add-symbolic</property>
+              <object class="GtkButton" id="add_section_button">
                 <property name="visible">true</property>
+                <style>
+                  <class name="image-button"/>
+                </style>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon_name">list-add-symbolic</property>
+                    <property name="visible">true</property>
+                  </object>
+                </child>
               </object>
+              <packing>
+                <property name="pack_type">start</property>
+              </packing>
             </child>
           </object>
           <packing>
+            <property name="expand">false</property>
+            <property name="fill">false</property>
             <property name="pack_type">start</property>
+            <property name="position">0</property>
           </packing>
         </child>
-      </object>
-      <packing>
-        <property name="expand">false</property>
-        <property name="fill">false</property>
-        <property name="pack_type">start</property>
-        <property name="position">0</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkSeparator">
-        <property name="visible">true</property>
-        <property name="orientation">vertical</property>
-      </object>
-      <packing>
-        <property name="expand">false</property>
-        <property name="fill">false</property>
-        <property name="pack_type">start</property>
-        <property name="position">1</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkHeaderBar" id="right_header">
-        <property name="visible">true</property>
-        <property name="show_close_button">true</property>
-        <style>
-          <class name="titlebar"/>
-        </style>
         <child>
-          <object class="GtkToggleButton" id="search_button">
+          <object class="GtkSeparator">
             <property name="visible">true</property>
+            <property name="orientation">vertical</property>
+          </object>
+          <packing>
+            <property name="expand">false</property>
+            <property name="fill">false</property>
+            <property name="pack_type">start</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHeaderBar" id="right_header">
+            <property name="visible">true</property>
+            <property name="show_close_button">true</property>
             <style>
-              <class name="image-button"/>
+              <class name="titlebar"/>
             </style>
             <child>
-              <object class="GtkImage">
-                <property name="icon_name">edit-find-symbolic</property>
+              <object class="GtkToggleButton" id="search_button">
                 <property name="visible">true</property>
+                <style>
+                  <class name="image-button"/>
+                </style>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon_name">edit-find-symbolic</property>
+                    <property name="visible">true</property>
+                  </object>
+                </child>
               </object>
+              <packing>
+                <property name="pack_type">end</property>
+              </packing>
             </child>
           </object>
           <packing>
-            <property name="pack_type">end</property>
+            <property name="expand">true</property>
+            <property name="fill">true</property>
+            <property name="pack_type">start</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">true</property>
-        <property name="fill">true</property>
-        <property name="pack_type">start</property>
-        <property name="position">2</property>
-      </packing>
+    </child>
+    <child type="overlay">
+      <object class="GtkStackSwitcher">
+        <property name="visible">true</property>
+        <property name="stack">main_stack</property>
+        <property name="halign">center</property>
+        <property name="valign">center</property>
+      </object>
     </child>
   </object>
   <object class="GtkBox" id="container">
@@ -161,6 +174,10 @@
               </object>
             </child>
           </object>
+          <packing>
+            <property name="name">configuration</property>
+            <property name="title">Configuration</property>
+          </packing>
         </child>
       </object>
       <packing>
