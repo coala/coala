@@ -5,12 +5,14 @@ from coalib.output.gui.greeter.GreeterWindow import GreeterWindow
 from coalib.output.gui.scrolledWindow.coalaScrolledWindow import (
     coalaScrolledWindow)
 from coalib.output.gui.searchbar.Searchbar import Searchbar
+from coalib.output.gui.support.EditableLabel import EditableLabel
 
 
 class coalaApp(Gtk.Application):
     def __init__(self):
         GObject.type_register(coalaScrolledWindow)
         GObject.type_register(Searchbar)
+        GObject.type_register(EditableLabel)
         Gtk.Application.__init__(self,
                                  application_id="org.coala",
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkBox" id="label-container">
+    <property name="visible">true</property>
+    <property name="orientation">horizontal</property>
+    <child>
+      <object class="GtkLabel" id="label">
+        <property name="visible">true</property>
+        <property name="xalign">0</property>
+        <property name="ellipsize">3</property>
+      </object>
+      <packing>
+        <property name="fill">true</property>
+        <property name="pack_type">start</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="edit-button">
+        <property name="visible">true</property>
+        <property name="relief">none</property>
+        <style>
+          <class name="image-button"/>
+        </style>
+        <child>
+          <object class="GtkImage">
+            <property name="icon_name">text-editor-symbolic</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="fill">false</property>
+        <property name="expand">false</property>
+        <property name="pack_type">end</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkBox" id="entry-container">
+    <property name="visible">true</property>
+    <property name="orientation">horizontal</property>
+    <child>
+      <object class="GtkEntry" id="entry">
+        <property name="visible">true</property>
+        <property name="placeholder-text">Section name...</property>
+      </object>
+      <packing>
+        <property name="fill">true</property>
+        <property name="pack_type">start</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+  </object>
+</interface>
