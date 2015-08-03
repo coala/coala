@@ -1,0 +1,7 @@
+[run]
+omit = */tests/*
+branch = True
+cover_pylib = False
+
+[report]
+show_missing = True
