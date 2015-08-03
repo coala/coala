@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkBox" id="section_row">
+    <property name="orientation">horizontal</property>
+    <property name="visible">true</property>
+    <property name="margin">12</property>
+    <child>
+      <object class="EditableLabel" id="name-edit">
+        <property name="visible">true</property>
+        <property name="char-width">20</property>
+        <property name="transition-type">crossfade</property>
+        <property name="default-label">Section name...</property>
+      </object>
+      <packing>
+        <property name="expand">true</property>
+        <property name="fill">true</property>
+        <property name="pack_type">start</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="delete_button">
+        <property name="visible">true</property>
+        <property name="relief">none</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon_name">edit-delete-symbolic</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkBox" id="headerbar">
+    <property name="visible">true</property>
+    <child>
+      <object class="GtkHeaderBar" id="left_header">
+        <property name="visible">true</property>
+        <property name="show_close_button">false</property>
+        <style>
+          <class name="titlebar"/>
+        </style>
+        <child>
+          <object class="GtkButton" id="add_section_button">
+            <property name="visible">true</property>
+            <style>
+              <class name="image-button"/>
+            </style>
+            <child>
+              <object class="GtkImage">
+                <property name="icon_name">list-add-symbolic</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">start</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">false</property>
+        <property name="fill">false</property>
+        <property name="pack_type">start</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkSeparator">
+        <property name="visible">true</property>
+        <property name="orientation">vertical</property>
+      </object>
+      <packing>
+        <property name="expand">false</property>
+        <property name="fill">false</property>
+        <property name="pack_type">start</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkHeaderBar" id="right_header">
+        <property name="visible">true</property>
+        <property name="show_close_button">true</property>
+        <style>
+          <class name="titlebar"/>
+        </style>
+        <child>
+          <object class="GtkToggleButton" id="search_button">
+            <property name="visible">true</property>
+            <style>
+              <class name="image-button"/>
+            </style>
+            <child>
+              <object class="GtkImage">
+                <property name="icon_name">edit-find-symbolic</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">true</property>
+        <property name="fill">true</property>
+        <property name="pack_type">start</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkBox" id="container">
+    <property name="expand">true</property>
+    <property name="orientation">vertical</property>
+    <property name="visible">true</property>
+    <child>
+      <object class="Searchbar" id="search_bar">
+        <property name="visible">true</property>
+      </object>
+      <packing>
+        <property name="expand">false</property>
+        <property name="fill">false</property>
+        <property name="pack_type">start</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkStack" id="main_stack">
+        <property name="visible">True</property>
+        <property name="transition-type">crossfade</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">true</property>
+            <property name="orientation">horizontal</property>
+            <child>
+              <object class="GtkBox" id="left_box">
+                <property name="visible">true</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="coalaScrolledWindow">
+                    <property name="max_contentwidth">250</property>
+                    <property name="visible">true</property>
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vscrollbar-policy">automatic</property>
+                    <child>
+                      <object class="GtkListBox" id="section_switcher">
+                        <property name="visible">true</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">true</property>
+                    <property name="fill">true</property>
+                    <property name="pack_type">start</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">false</property>
+                <property name="fill">false</property>
+                <property name="pack_type">start</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="visible">true</property>
+                <property name="orientation">vertical</property>
+              </object>
+              <packing>
+                <property name="expand">false</property>
+                <property name="fill">false</property>
+                <property name="pack_type">start</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="right_box">
+                <property name="visible">true</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkStack" id="sections">
+                    <property name="visible">true</property>
+                    <property name="margin">20</property>
+                    <style>
+                      <class name="main-container"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">true</property>
+        <property name="fill">true</property>
+        <property name="pack_type">start</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkSizeGroup">
+        <property name="mode">GTK_SIZE_GROUP_HORIZONTAL</property>
+        <widgets>
+          <widget name="left_box"/>
+          <widget name="left_header"/>
+        </widgets>
+      </object>
+</interface>

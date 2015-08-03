@@ -5,6 +5,7 @@ from coalib.output.gui.greeter.GreeterWindow import GreeterWindow
 from coalib.output.gui.scrolledWindow.coalaScrolledWindow import (
     coalaScrolledWindow)
 from coalib.output.gui.searchbar.Searchbar import Searchbar
+from coalib.output.gui.workspace.WorkspaceWindow import WorkspaceWindow
 from coalib.output.gui.support.EditableLabel import EditableLabel
 
 
@@ -34,7 +35,10 @@ class coalaApp(Gtk.Application):
                                       app)
 
     def _setup_workspace(self, listbox, listboxrow, app):
-        print(listboxrow.get_child().get_name())
+        self.workspace = WorkspaceWindow(self,
+                                         listboxrow.get_child().get_name())
+        self.greeter.hide()
+        self.workspace.show()
 
     def activate(self, app):
         self._setup_greeter(app)
