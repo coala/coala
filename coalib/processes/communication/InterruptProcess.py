@@ -1,11 +1,12 @@
-import os
-import signal
 import platform
 
 if platform.system() == "Windows":
     from ctypes import windll
     from time import sleep
     CTRL_C_EVENT = 0x0
+else:
+    import os
+    import signal
 
 
 def interrupt_process(pid):
