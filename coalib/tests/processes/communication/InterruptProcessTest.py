@@ -11,7 +11,7 @@ def runner(queue):
     try:
         while True:
             queue.put("Hello coala", timeout=0.1)
-            time.sleep(0.9)
+            time.sleep(0.8)
     finally:
         queue.put("End", timeout=0.1)
 
