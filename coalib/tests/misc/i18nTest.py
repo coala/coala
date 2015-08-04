@@ -25,6 +25,19 @@ def set_lang(lang):
 
 
 class i18nTest(unittest.TestCase):
+    def test_compilation(self):
+        build_dir = "build-i18n"
+        gettext._default_localedir = os.path.abspath(os.path.join(build_dir,
+                                                                  "locale"))
+        importlib.reload(i18n)
+        shutil.rmtree(build_dir, ignore_errors=True)
+
+        i18n.compile_translations(build_dir)
+        self.assertTrue(os.path.exists(gettext._default_localedir))
+        # Shouldn't complain if files are already there, ideally not rebuild!
+        i18n.compile_translations(build_dir)
+        shutil.rmtree(build_dir, ignore_errors=True)
+
     def test_de(self):
         set_lang("de_DE.UTF8")
         # Do not change this translation without changing it in the code also!
@@ -56,16 +69,4 @@ def skip_test():
 
 
 if __name__ == '__main__':
-    build_dir = "build-i18n"
-    gettext._default_localedir = os.path.abspath(os.path.join(build_dir,
-                                                              "locale"))
-    importlib.reload(i18n)
-    print("Testing translation building...")
-    shutil.rmtree(build_dir, ignore_errors=True)
-
-    i18n.compile_translations(build_dir)
-    # Shouldn't complain if files are already there, ideally not rebuild!
-    i18n.compile_translations(build_dir)
-    shutil.rmtree(build_dir, ignore_errors=True)
-
     unittest.main(verbosity=2)
