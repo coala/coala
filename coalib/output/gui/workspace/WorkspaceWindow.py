@@ -30,11 +30,16 @@ class WorkspaceWindow(Gtk.ApplicationWindow):
 
         section_row = Gtk.ListBoxRow()
         box = section_row_template.get_object("section_row")
+        delete_button = section_row_template.get_object("delete_button")
         section_row.add(box)
         section_row.set_visible(True)
+        delete_button.connect("clicked", self.delete_row, section_row)
 
         self.section_switcher.add(section_row)
         self.section_switcher.queue_draw()
+
+    def delete_row(self, button, listboxrow):
+        listboxrow.destroy()
 
     def on_close(self, event, widget):
         self.get_application().greeter.show()
