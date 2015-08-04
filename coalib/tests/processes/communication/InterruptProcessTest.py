@@ -5,7 +5,7 @@ import multiprocessing
 
 sys.path.insert(0, ".")
 from coalib.processes.communication.InterruptProcess import interrupt_process
-from coalib.misc.ContextManagers import retrieve_stdout
+
 
 def runner(queue):
     try:
