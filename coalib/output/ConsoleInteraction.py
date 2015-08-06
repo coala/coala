@@ -189,14 +189,14 @@ def print_result(console_printer,
         metadata_list.append(metadata)
 
     # User can always choose no action which is guaranteed to succeed
-    while not apply_action(log_printer,
-                           console_printer,
-                           section,
-                           metadata_list,
-                           action_dict,
-                           result,
-                           file_diff_dict,
-                           file_dict):
+    while apply_action(log_printer,
+                       console_printer,
+                       section,
+                       metadata_list,
+                       action_dict,
+                       result,
+                       file_diff_dict,
+                       file_dict):
         pass
 
 
@@ -386,10 +386,11 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     console_printer.print(format_line(
-        _("The following options are applicable to this result:")))
+        _("The following actions are applicable to this result:")))
 
     while True:
-        console_printer.print(format_line(" 0: " + _("Do nothing.")))
+        console_printer.print(format_line(" 0: " +
+                                          _("Apply no further actions.")))
         for i, action in enumerate(actions):
             console_printer.print(format_line("{:>2}: {}".format(i + 1,
                                                                  action.desc)))
@@ -459,14 +460,15 @@ def apply_action(log_printer,
                             the file with filename as keys.
     :param file_dict:       Dictionary with filename as keys and its contents
                             as values.
-    :return:                Returns a boolean value. True if the action got
-                            applied successfully, and false if it failed.
+    :return:                Returns a boolean value. True will be returned, if
+                            it makes sense that the user may choose to execute
+                            another action, False otherwise.
     """
     action_name, section = print_actions(console_printer,
                                          section,
                                          metadata_list)
     if action_name is None:
-        return True
+        return False
 
     chosen_action = action_dict[action_name]
     try:
@@ -476,7 +478,6 @@ def apply_action(log_printer,
                                          section)
     except Exception as exception:  # pylint: disable=broad-except
         print_action_failed(log_printer, action_name, exception)
-        return False
 
     return True
 

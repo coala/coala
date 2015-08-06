@@ -176,8 +176,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                          Result("origin", "msg", diffs={testfile_path: diff}),
                          file_dict)
 
-        # To assure user can rechose if he didn't chose wisely
-        with simulate_console_inputs("INVALID", -1, 1, 3) as input_generator:
+        # Interaction must be closed by the user with `0` if it's not a param
+        with simulate_console_inputs("INVALID", -1, 1, 0, 3) as input_generator:
             curr_section = Section("")
             print_section_beginning(self.console_printer, curr_section)
             print_result(self.console_printer,
@@ -186,7 +186,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          self.file_diff_dict,
                          Result("origin", "msg", diffs={testfile_path: diff}),
                          file_dict)
-            self.assertEqual(input_generator.last_input, 2)
+            self.assertEqual(input_generator.last_input, 3)
             finalize(self.file_diff_dict, file_dict)
             # Check that the next section does not use the same file_diff_dict
             self.assertEqual(len(self.file_diff_dict), 0)
@@ -199,7 +199,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             name, section = get_action_info(curr_section,
                                             TestAction().get_metadata())
-            self.assertEqual(input_generator.last_input, 3)
+            self.assertEqual(input_generator.last_input, 4)
             self.assertEqual(str(section), " {param : 3}")
             self.assertEqual(name, "TestAction")
 
