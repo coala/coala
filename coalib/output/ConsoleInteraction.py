@@ -1,4 +1,5 @@
 import shutil
+
 try:
     # This import has side effects and is needed to make input() behave nicely
     import readline  # pylint: disable=unused-import
@@ -17,6 +18,8 @@ from coalib.misc.DictUtilities import inverse_dicts
 from coalib.misc.Exceptions import PermissionException
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.PrintDebugMessageAction import (
+    PrintDebugMessageAction)
 
 
 STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
@@ -27,7 +30,9 @@ STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
 STR_PROJECT_WIDE = _("Project wide:")
 FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
-CLI_ACTIONS = [OpenEditorAction(), ApplyPatchAction()]
+CLI_ACTIONS = [OpenEditorAction(),
+               ApplyPatchAction(),
+               PrintDebugMessageAction()]
 
 
 def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
