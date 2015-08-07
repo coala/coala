@@ -165,7 +165,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         diff.delete_line(2)
         diff.change_line(3, "3\n", "3_changed\n")
 
-        with simulate_console_inputs(1), self.assertRaises(ValueError):
+        with simulate_console_inputs("INVALID", -1, 1, 0), self.assertRaises(ValueError):
             ApplyPatchAction.is_applicable = staticmethod(lambda result: True)
             print_result(self.console_printer,
                          self.log_printer,
@@ -175,7 +175,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          file_dict)
 
         # To assure user can rechose if he didn't chose wisely
-        with simulate_console_inputs("INVALID", -1, 1, 3) as input_generator:
+        with simulate_console_inputs("INVALID", -1, 1, 3, 0) as input_generator:
             curr_section = Section("")
             print_section_beginning(self.console_printer, curr_section)
             print_result(self.console_printer,
@@ -184,7 +184,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          self.file_diff_dict,
                          PatchResult("origin", "msg", {testfile_path: diff}),
                          file_dict)
-            self.assertEqual(input_generator.last_input, 2)
+            self.assertEqual(input_generator.last_input, 4)
             finalize(self.file_diff_dict, file_dict)
             # Check that the next section does not use the same file_diff_dict
             self.assertEqual(len(self.file_diff_dict), 0)

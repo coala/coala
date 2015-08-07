@@ -18,5 +18,3 @@ class ApplyPatchAction(ResultAction):
                 file_diff_dict[filename] += result.diffs[filename]
             else:
                 file_diff_dict[filename] = result.diffs[filename]
-
-        return file_diff_dict

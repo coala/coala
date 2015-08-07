@@ -62,5 +62,3 @@ class OpenEditorAction(ApplyPatchAction):
 
         intermediate_diff = Diff.from_string_arrays(current_file, new_file)
         file_diff_dict[filename] = diff + intermediate_diff
-
-        return file_diff_dict

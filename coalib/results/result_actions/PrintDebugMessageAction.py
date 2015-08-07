@@ -12,5 +12,3 @@ class PrintDebugMessageAction(ResultAction):
         Print the debug message of the result.
         """
         print(result.debug_msg)
-
-        return file_diff_dict

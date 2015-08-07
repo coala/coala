@@ -21,11 +21,10 @@ class PrintDebugMessageActionTest(unittest.TestCase):
 
     def test_apply(self):
         with retrieve_stdout() as stdout:
-            self.assertEqual(self.uut.apply_from_section(self.test_result,
-                                                         {},
-                                                         {},
-                                                         Section("name")),
-                             {})
+            self.uut.apply_from_section(self.test_result,
+                                        {},
+                                        {},
+                                        Section("name"))
             self.assertEqual(stdout.getvalue(),
                              self.test_result.debug_msg+"\n")
 

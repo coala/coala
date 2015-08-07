@@ -46,12 +46,12 @@ class ResultActionTest(unittest.TestCase):
         section.append(Setting("editor", ""))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit
-        diff_dict = uut.apply_from_section(
+        uut.apply_from_section(
             Result("origin", "msg", "f_a"),
             file_dict,
             diff_dict,
             section)
-        diff_dict = uut.apply_from_section(
+        uut.apply_from_section(
             Result("origin", "msg", "f_b"),
             file_dict,
             diff_dict,
@@ -69,10 +69,11 @@ class ResultActionTest(unittest.TestCase):
         section.append(Setting("editor", "subl"))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit_subl
-        diff_dict = uut.apply_from_section(
+        diff_dict = {}
+        uut.apply_from_section(
             Result("origin", "msg", "f_a"),
             file_dict,
-            {},
+            diff_dict,
             section)
         file_dict["f_a"] = diff_dict["f_a"].apply(file_dict["f_a"])
 
