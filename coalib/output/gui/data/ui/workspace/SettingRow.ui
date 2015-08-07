@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkBox" id="setting_row">
+    <property name="visible">true</property>
+    <property name="orientation">horizontal</property>
+    <property name="margin">6</property>
+    <child>
+      <object class="EditableLabel" id="name">
+        <property name="char-width">500</property>
+        <property name="default-label">Setting name...</property>
+        <property name="visible">true</property>
+        <property name="halign">end</property>
+      </object>
+      <packing>
+        <property name="expand">true</property>
+        <property name="fill">true</property>
+        <property name="pack_type">start</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="value">
+        <property name="visible">true</property>
+        <property name="halign">start</property>
+        <property name="max-width-chars">500</property>
+      </object>
+      <packing>
+        <property name="expand">true</property>
+        <property name="fill">true</property>
+        <property name="pack_type">start</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="delete_button">
+        <property name="sensitive">false</property>
+        <property name="visible">true</property>
+        <property name="relief">none</property>
+        <child>
+          <object class="GtkImage">
+            <property name="icon_name">edit-delete-symbolic</property>
+            <property name="visible">true</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">false</property>
+        <property name="fill">false</property>
+        <property name="pack_type">start</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+  </object>
+</interface>

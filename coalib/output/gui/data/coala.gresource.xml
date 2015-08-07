@@ -6,5 +6,8 @@
     <file alias="EditableLabel.ui">ui/support/EditableLabel.ui</file>
     <file alias="WorkspaceWindow.ui">ui/workspace/WorkspaceWindow.ui</file>
     <file alias="SectionRow.ui">ui/workspace/SectionRow.ui</file>
+    <file alias="SettingRow.ui">ui/workspace/SettingRow.ui</file>
+
+    <file alias="workspace.css">ui/workspace/workspace.css</file>
   </gresource>
 </gresources>
