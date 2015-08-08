@@ -25,7 +25,8 @@ from coalib.output.ConsoleInteraction import (finalize,
                                               print_result,
                                               print_section_beginning,
                                               print_results,
-                                              show_bears)
+                                              show_bears,
+                                              print_results_formatted)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
@@ -522,6 +523,43 @@ class ConsoleInteractionTest(unittest.TestCase):
         finally:
             builtins.open = _open
             shutil.copy2 = _copy2
+
+
+# Own test because this is easy and not tied to the rest
+class PrintFormattedResultsTest(unittest.TestCase):
+    def test_bad_format(self):
+        printer = StringPrinter()
+        logger = LogPrinter(printer)
+        print_results_formatted(logger,
+                                None,
+                                [Result("1", "2")],
+                                None,
+                                None,
+                                "{nonexistant}")
+        self.assertRegex(printer.string, ".*Unable to print.*")
+
+    def test_good_format(self):
+        printer = StringPrinter()
+        logger = LogPrinter(printer)
+        with retrieve_stdout() as stdout:
+            print_results_formatted(logger,
+                                    None,
+                                    [Result("1", "2")],
+                                    None,
+                                    None,
+                                    "{origin}")
+            self.assertEqual(stdout.getvalue(), "1\n")
+
+    @staticmethod
+    def test_empty_list():
+        # Shouldn't attempt to format the string None and will fail badly if
+        # its done wrong.
+        print_results_formatted(None,
+                                None,
+                                [],
+                                None,
+                                None,
+                                None)
 
 
 if __name__ == '__main__':

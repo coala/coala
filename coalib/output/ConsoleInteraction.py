@@ -200,6 +200,21 @@ def print_result(console_printer,
         pass
 
 
+def print_results_formatted(log_printer,
+                            section,
+                            result_list,
+                            file_dict,
+                            file_diff_dict,
+                            format_str):
+    for result in result_list:
+        try:
+            print(format_str.format(**result.__dict__))
+        except KeyError as exception:
+            log_printer.log_exception(
+                _("Unable to print the result with the given format string."),
+                exception)
+
+
 def print_results(log_printer,
                   section,
                   result_list,
