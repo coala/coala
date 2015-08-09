@@ -4,14 +4,11 @@ from setuptools import setup, find_packages
 import setuptools.command.build_py
 
 from coalib import assert_supported_version
+assert_supported_version()
 from coalib.misc.i18n import compile_translations
-from coalib.misc.Constants import Constants
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from coalib.misc.Constants import Constants
-
-
-assert_supported_version()
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):
