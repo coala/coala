@@ -8,11 +8,6 @@ sys.path.insert(0, ".")
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 
 
-class NullWriter:
-    def write(self, *args):
-        pass
-
-
 class ConsolePrinterTest(unittest.TestCase):
     def test_printing(self):
         self.uut = ConsolePrinter()
