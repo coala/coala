@@ -44,8 +44,8 @@ class SectionTest(unittest.TestCase):
         uut.add_or_create_setting(Setting(" NEW   ", "vl", 8),
                                   allow_appending=False)
         uut.add_or_create_setting(Setting("new", "val", 9),
-                                   custom_key="teSt ",
-                                   allow_appending=True)
+                                  custom_key="teSt ",
+                                  allow_appending=True)
         self.assertEqual(list(uut), ["5", "test", "new", "great", "custom"])
 
         for index in uut:
