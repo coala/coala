@@ -210,3 +210,10 @@ class Section:
                 self.contents[new_key].value = new_value
             else:
                 self.contents[key].value = new_value
+
+    def delete_setting(self, key):
+        """
+        Delete a setting
+        :param key: The key of the setting to be deleted
+        """
+        del self.contents[key]

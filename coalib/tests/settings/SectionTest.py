@@ -149,6 +149,22 @@ class SectionTest(unittest.TestCase):
         self.assertEqual("section {key4 : value14, key2 : value12}",
                          section.__str__())
 
+    def test_delete_setting(self):
+        section = Section("section", None)
+
+        section.append(Setting("key1", "value11"))
+        section.append(Setting("key2", "value12"))
+
+        section.delete_setting("key1")
+        self.assertEqual("section {key2 : value12}",
+                         section.__str__())
+
+        section.append(Setting("key3", "value13"))
+        section.append(Setting("key4", "value14"))
+
+        section.delete_setting("key3")
+        self.assertEqual("section {key2 : value12, key4 : value14}",
+                         section.__str__())
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
