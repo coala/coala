@@ -1,4 +1,4 @@
-from collections import Iterable
+from collections import Iterable, OrderedDict
 
 
 def inverse_dicts(*dicts):
@@ -36,3 +36,8 @@ def add_pair_to_dict(key, value, dictionary):
         dictionary[key].append(value)
     else:
         dictionary[key] = [value]
+
+
+def update_ordered_dict_key(dictionary, old_key, new_key):
+    return OrderedDict(((new_key if k == old_key else k), v)
+                       for k, v in dictionary.items())

@@ -1,8 +1,9 @@
 import unittest
 import sys
+from collections import OrderedDict
 
 sys.path.insert(0, ".")
-from coalib.misc.DictUtilities import inverse_dicts
+from coalib.misc.DictUtilities import inverse_dicts, update_ordered_dict_key
 
 
 class DictUtilitiesTest(unittest.TestCase):
@@ -26,6 +27,25 @@ class DictUtilitiesTest(unittest.TestCase):
                          3: [1, 2, 4],
                          4: [2, 4],
                          5: [2]}, result)
+
+    def test_update_ordered_dict_key(self):
+        self.ordered_dict = OrderedDict()
+        self.ordered_dict["default"] = "Some stuff"
+        self.ordered_dict["pythoncheck"] = "Somemore stuff"
+        self.ordered_dict = update_ordered_dict_key(self.ordered_dict,
+                                                    "default",
+                                                    "coala")
+        self.assertTrue("coala" in self.ordered_dict)
+        self.assertEqual("OrderedDict([('coala', 'Some stuff'), "
+                         "('pythoncheck', 'Somemore stuff')])",
+                         self.ordered_dict.__str__())
+        self.ordered_dict = update_ordered_dict_key(self.ordered_dict,
+                                                    "coala",
+                                                    "section")
+        self.assertTrue("section" in self.ordered_dict)
+        self.assertEqual("OrderedDict([('section', 'Some stuff'), "
+                         "('pythoncheck', 'Somemore stuff')])",
+                         self.ordered_dict.__str__())
 
 
 if __name__ == '__main__':
