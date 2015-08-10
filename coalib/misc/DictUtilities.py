@@ -1,5 +1,6 @@
 from collections import Iterable
 
+
 def inverse_dicts(*dicts):
     """
     Inverts the dicts, e.g. {1: 2, 3: 4} and {2: 3, 4: 4} will be inverted
