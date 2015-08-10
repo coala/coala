@@ -1,6 +1,7 @@
 import queue
 import sys
 import multiprocessing
+import threading
 
 sys.path.insert(0, ".")
 import unittest
@@ -102,6 +103,39 @@ class UnexpectedBear2(LocalBear):
         return 1
 
 
+class LockingBear(LocalBear):
+    def __init__(self, settings, message_q, lock_event, is_waiting_event=None):
+        LocalBear.__init__(self, settings, message_q)
+        self._lock_event = lock_event
+        self._is_waiting_event = is_waiting_event
+        self.was_executed = False
+
+    def run(self, filename, file):
+        if self._is_waiting_event:
+            self._is_waiting_event.set()
+        self._lock_event.wait()
+        self.was_executed = True
+
+
+class GlobalLockingBear(GlobalBear):
+    def __init__(self,
+                 file_dict,
+                 settings,
+                 message_q,
+                 lock_event,
+                 is_waiting_event=None):
+        GlobalBear.__init__(self, file_dict, settings, message_q)
+        self._lock_event = lock_event
+        self._is_waiting_event = is_waiting_event
+        self.was_executed = False
+
+    def run(self):
+        if self._is_waiting_event:
+            self._is_waiting_event.set()
+        self._lock_event.wait()
+        self.was_executed = True
+
+
 class BearRunningUnitTest(unittest.TestCase):
     def setUp(self):
         self.settings = Section("name")
@@ -116,6 +150,7 @@ class BearRunningUnitTest(unittest.TestCase):
         self.global_result_dict = manager.dict()
         self.message_queue = queue.Queue()
         self.control_queue = queue.Queue()
+        self.cancel_event = multiprocessing.Event()
 
     def test_queue_done_marking(self):
         self.message_queue.put("test")
@@ -160,7 +195,8 @@ class BearRunningUnitTest(unittest.TestCase):
             self.local_result_dict,
             self.global_result_dict,
             self.message_queue,
-            self.control_queue)
+            self.control_queue,
+            self.cancel_event)
 
         try:
             while True:
@@ -183,7 +219,8 @@ class BearRunningUnitTest(unittest.TestCase):
             self.local_result_dict,
             self.global_result_dict,
             self.message_queue,
-            self.control_queue)
+            self.control_queue,
+            self.cancel_event)
 
     def test_strange_bear(self):
         self.local_bear_list.append(UnexpectedBear1(self.settings,
@@ -201,7 +238,8 @@ class BearRunningUnitTest(unittest.TestCase):
             self.local_result_dict,
             self.global_result_dict,
             self.message_queue,
-            self.control_queue)
+            self.control_queue,
+            self.cancel_event)
 
         expected_messages = [LOG_LEVEL.DEBUG,
                              LOG_LEVEL.ERROR,
@@ -212,6 +250,101 @@ class BearRunningUnitTest(unittest.TestCase):
 
         for msg in expected_messages:
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
+
+    def test_event_interrupt(self):
+        short_run = lambda: run(self.file_name_queue,
+                                self.local_bear_list,
+                                self.global_bear_list,
+                                self.global_bear_queue,
+                                self.file_dict,
+                                self.local_result_dict,
+                                self.global_result_dict,
+                                self.message_queue,
+                                self.control_queue,
+                                self.cancel_event)
+
+        # Normal test without cancel-event.
+        unlock_event = multiprocessing.Event()
+        wait_event = multiprocessing.Event()
+        self.file_dict = {"0": None, "1": None}
+        self.local_bear_list = [LockingBear(self.settings,
+                                            self.message_queue,
+                                            unlock_event,
+                                            wait_event)]
+        for key in self.file_dict:
+            self.file_name_queue.put(key)
+
+        thread = threading.Thread(target=short_run)
+        thread.start()
+
+        wait_event.wait()
+        unlock_event.set()
+
+        thread.join()
+
+        for bear in self.local_bear_list:
+            self.assertTrue(bear.was_executed, True)
+
+        self.assertRaises(queue.Empty, self.file_name_queue.get, block=False)
+
+        # Test with cancel-event.
+        unlock_event = multiprocessing.Event()
+        wait_event = multiprocessing.Event()
+        self.cancel_event = multiprocessing.Event()
+        self.local_bear_list = [LockingBear(self.settings,
+                                            self.message_queue,
+                                            unlock_event,
+                                            wait_event)]
+        for key in self.file_dict:
+            self.file_name_queue.put(key)
+
+        thread = threading.Thread(target=short_run)
+        thread.start()
+
+        wait_event.wait()
+        self.cancel_event.set()
+        unlock_event.set()
+
+        thread.join()
+
+        for bear in self.local_bear_list:
+            self.assertTrue(bear.was_executed, True)
+
+        remaining_files = []
+        while not self.file_name_queue.empty():
+            remaining_files.append(self.file_name_queue.get(timeout=0.1))
+        remaining_files.sort()
+
+        self.assertTrue(remaining_files == ["0"] or remaining_files == ["1"])
+
+        # Test cancel-event with global bears.
+        unlock_event = multiprocessing.Event()
+        is_waiting_event1 = multiprocessing.Event()
+        self.local_bear_list = []
+        self.global_bear_list = [GlobalLockingBear({},
+                                                   self.settings,
+                                                   self.message_queue,
+                                                   unlock_event,
+                                                   is_waiting_event1),
+                                 GlobalLockingBear({},
+                                                   self.settings,
+                                                   self.message_queue,
+                                                   unlock_event)]
+        self.global_bear_queue.put(0)
+        self.global_bear_queue.put(1)
+        self.cancel_event = multiprocessing.Event()
+
+        thread = threading.Thread(target=short_run)
+        thread.start()
+
+        is_waiting_event1.wait()
+        self.cancel_event.set()
+        unlock_event.set()
+
+        thread.join()
+
+        self.assertTrue(self.global_bear_list[0].was_executed)
+        self.assertFalse(self.global_bear_list[1].was_executed)
 
 
 class BearRunningIntegrationTest(unittest.TestCase):
@@ -234,6 +367,7 @@ d
         self.global_result_dict = manager.dict()
         self.message_queue = queue.Queue()
         self.control_queue = queue.Queue()
+        self.cancel_event = multiprocessing.Event()
 
         self.file1 = "file1"
         self.file2 = "arbitrary"
@@ -262,7 +396,8 @@ d
             self.local_result_dict,
             self.global_result_dict,
             self.message_queue,
-            self.control_queue)
+            self.control_queue,
+            self.cancel_event)
 
         expected_messages = [LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING,

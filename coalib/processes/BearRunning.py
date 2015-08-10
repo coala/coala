@@ -404,7 +404,8 @@ def run_local_bears(filename_queue,
                     file_dict,
                     local_bear_list,
                     local_result_dict,
-                    control_queue):
+                    control_queue,
+                    cancel_event):
     """
     Run local bears on all the files given.
 
@@ -426,9 +427,11 @@ def run_local_bears(filename_queue,
                               what kind of event happened) and either a bear
                               name(for global results) or a file name to
                               indicate the result will be put to the queue.
+    :param cancel_event:      A multiprocessing.Event that delivers the current
+                              cancellation status.
     """
     try:
-        while True:
+        while not cancel_event.is_set():
             filename = filename_queue.get(timeout=timeout)
             run_local_bears_on_file(message_queue,
                                     timeout,
@@ -447,7 +450,8 @@ def run_global_bears(message_queue,
                      global_bear_queue,
                      global_bear_list,
                      global_result_dict,
-                     control_queue):
+                     control_queue,
+                     cancel_event):
     """
     Run all global bears.
 
@@ -468,9 +472,11 @@ def run_global_bears(message_queue,
                                what kind of event happened) and either a bear
                                name(for global results) or a file name to
                                indicate the result will be put to the queue.
+    :param cancel_event:       A multiprocessing.Event that delivers the
+                               current cancellation status.
     """
     try:
-        while True:
+        while not cancel_event.is_set():
             bear, bearname, dep_results = (
                 get_next_global_bear(timeout,
                                      global_bear_queue,
@@ -496,6 +502,7 @@ def run(file_name_queue,
         global_result_dict,
         message_queue,
         control_queue,
+        cancel_event,
         timeout=0):
     """
     This is the method that is actually runs by processes.
@@ -542,6 +549,8 @@ def run(file_name_queue,
                                queue, if it finished all global ones,
                                (CONTROL_ELEMENT.GLOBAL_FINISHED, None) will
                                be put there.
+    :param cancel_event:       A multiprocessing.Event that delivers the
+                               current cancellation status.
     :param timeout:            The queue blocks at most timeout seconds for a
                                free slot to execute the put operation on. After
                                the timeout it returns queue Full exception.
@@ -552,7 +561,8 @@ def run(file_name_queue,
                     file_dict,
                     local_bear_list,
                     local_result_dict,
-                    control_queue)
+                    control_queue,
+                    cancel_event)
     control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
     run_global_bears(message_queue,
@@ -560,6 +570,7 @@ def run(file_name_queue,
                      global_bear_queue,
                      global_bear_list,
                      global_result_dict,
-                     control_queue)
+                     control_queue,
+                     cancel_event)
     control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 

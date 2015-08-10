@@ -140,7 +140,8 @@ def instantiate_processes(section,
                           local_bear_list,
                           global_bear_list,
                           job_count,
-                          log_printer):
+                          log_printer,
+                          cancel_event):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -150,6 +151,8 @@ def instantiate_processes(section,
     :param global_bear_list: List of global bears belonging to the section.
     :param job_count:        Max number of processes to create.
     :param log_printer:      The log printer to warn to.
+    :param cancel_event:     A multiprocessing.Event that delivers the current
+                             cancellation status.
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
@@ -174,6 +177,7 @@ def instantiate_processes(section,
                         "global_result_dict": global_result_dict,
                         "message_queue": message_queue,
                         "control_queue": control_queue,
+                        "cancel_event": cancel_event,
                         "timeout": 0.1}
 
     instantiate_bears(section,
@@ -290,7 +294,8 @@ def execute_section(section,
                     local_bear_list,
                     print_results,
                     log_printer,
-                    file_diff_dict):
+                    file_diff_dict,
+                    cancel_event=None):
     """
     Executes the section with the given bears.
 
@@ -310,12 +315,19 @@ def execute_section(section,
     :param log_printer:      The log_printer to warn to.
     :param file_diff_dict:   A dictionary that contains filenames as keys and
                              diff objects as values.
+    :param cancel_event:     A multiprocessing.Event object to use for
+                             cancellation control. Pass one if you need to
+                             cancel this function gracefully (due to user input
+                             etc.). Supplying None is allowed (then you don't
+                             have control over cancellation).
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
                              and a Manager.dict containing all global bear
                              results (bear names are key).
     """
+    cancel_event = cancel_event or multiprocessing.Event()
+
     local_bear_list = Dependencies.resolve(local_bear_list)
     global_bear_list = Dependencies.resolve(global_bear_list)
 
@@ -324,7 +336,8 @@ def execute_section(section,
                                                 local_bear_list,
                                                 global_bear_list,
                                                 running_processes,
-                                                log_printer)
+                                                log_printer,
+                                                cancel_event)
 
     logger_thread = LogPrinterThread(arg_dict["message_queue"],
                                      log_printer)
