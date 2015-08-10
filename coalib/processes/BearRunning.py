@@ -149,28 +149,33 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
                             kwargs)
 
 
-def run(file_name_queue,
-        local_bear_list,
-        global_bear_list,
-        global_bear_queue,
-        file_dict,
-        local_result_dict,
-        global_result_dict,
-        message_queue,
-        control_queue,
-        timeout=0):
-
 class Job:
     def __init__(self, function, args, kwargs):
         self.function = function
         self.args = args
         self.kwargs = kwargs
 
-    def apply(self, message_queue):
-        if hasattr(self.function, "__metadata__"):
-            metadata = self.function.__metadata__
-            
-        self.function(*self.args, message_queue=message_queue, **self.kwargs)
+    def apply(self, message_queue, timeout):
+        try:
+            self.function(*self.args,
+                          message_queue=message_queue,
+                          **self.kwargs)
+        except Exception as exp:
+            send_msg(message_queue,
+                     timeout,
+                     LOG_LEVEL.ERROR,
+                     _("The bear {bear} failed to run with the arguments "
+                       "{arglist}, {kwarglist}. Skipping bear...")
+                     .format(bear=name, arglist=args, kwarglist=kwargs))
+            send_msg(message_queue,
+                     timeout,
+                     LOG_LEVEL.DEBUG,
+                     _("Traceback for error in bear {bear}:")
+                     .format(bear=name),
+                     traceback.format_exc(),
+                     delimiter="\n")
+
+
 
 def process_jobs(job_queue,
                  message_queue,
@@ -179,6 +184,6 @@ def process_jobs(job_queue,
     try:
         while True:
             job = job_queue.get(timeout=timeout)
-            result_dict[job] = job.apply(message_queue)
+            result_dict[job] = job.apply(message_queue, timeout)
     except Empty:
         pass
