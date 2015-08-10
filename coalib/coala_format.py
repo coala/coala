@@ -24,7 +24,6 @@ from coalib.output.Interactions import fail_acquire_settings
 def main():
     log_printer = LogPrinter(ConsolePrinter())
     exitcode = 0
-    results = {}
     try:
         yielded_results = False
 
