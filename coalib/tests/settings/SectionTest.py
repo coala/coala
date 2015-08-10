@@ -133,6 +133,22 @@ class SectionTest(unittest.TestCase):
         self.assertEqual(len(sections), 1)
         self.assertEqual(len(sections["default"].contents), 2)
 
+    def test_update_setting(self):
+        section = Section("section", None)
+
+        section.append(Setting("key1", "value11"))
+        section.append(Setting("key2", "value12"))
+
+        section.update_setting("key1", new_value="value13")
+        self.assertEqual("section {key1 : value13, key2 : value12}",
+                         section.__str__())
+        section.update_setting("key1", "key3")
+        self.assertEqual("section {key3 : value13, key2 : value12}",
+                         section.__str__())
+        section.update_setting("key3", "key4", "value14")
+        self.assertEqual("section {key4 : value14, key2 : value12}",
+                         section.__str__())
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

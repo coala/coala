@@ -3,6 +3,7 @@ import copy
 
 from coalib.misc.Decorators import generate_repr
 from coalib.settings.Setting import Setting
+from coalib.misc.DictUtilities import update_ordered_dict_key
 
 
 def append_to_sections(sections,
@@ -188,3 +189,24 @@ class Section:
                 self.defaults.update(other_section.defaults)
 
         return self
+
+    def update_setting(self,
+                       key,
+                       new_key=None,
+                       new_value=None):
+        """
+        Updates a setting with new values.
+        :param key:       The old key string.
+        :param new_key:   The new key string.
+        :param new_value: The new value for the setting
+        """
+        if new_key is not None:
+            self.contents[key].key = new_key
+            self.contents = update_ordered_dict_key(self.contents,
+                                                    key,
+                                                    new_key)
+        if new_value is not None:
+            if new_key is not None:
+                self.contents[new_key].value = new_value
+            else:
+                self.contents[key].value = new_value
