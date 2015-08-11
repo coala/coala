@@ -109,59 +109,29 @@ def get_file_dict(filename_list, log_printer):
     return file_dict
 
 
-def instantiate_bears(section,
-                      local_bear_list,
-                      global_bear_list,
-                      file_dict,
-                      message_queue):
-    """
-    Instantiates each bear with the arguments it needs.
-
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bears to instantiate.
-    :param global_bear_list: List of global bears to instantiate.
-    :param file_dict:        Dictionary containing filenames and their
-                             contents.
-    :param message_queue:    Queue responsible to maintain the messages
-                             delivered by the bears.
-    """
-    for i in range(len(local_bear_list)):
-        local_bear_list[i] = local_bear_list[i](section,
-                                                message_queue,
-                                                timeout=0.1)
-    for i in range(len(global_bear_list)):
-        global_bear_list[i] = global_bear_list[i](file_dict,
-                                                  section,
-                                                  message_queue,
-                                                  timeout=0.1)
-
-
 def instantiate_processes(section,
-                          local_bear_list,
-                          global_bear_list,
+                          bear_list,
                           job_count,
                           log_printer):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
 
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bears belonging to the section.
-    :param global_bear_list: List of global bears belonging to the section.
-    :param job_count:        Max number of processes to create.
-    :param log_printer:      The log printer to warn to.
-    :return:                 A tuple containing a list of processes,
-                             and the arguments passed to each process which are
-                             the same for each object.
+    :param section:     The section the bears belong to.
+    :param bear_list:   List of local bears belonging to the section.
+    :param job_count:   Max number of processes to create.
+    :param log_printer: The log printer to warn to.
+    :return:            A tuple containing a list of processes,
+                        and the arguments passed to each process which are
+                        the same for each object.
     """
     filename_list = collect_files(path_list(section.get('files', "")))
     file_dict = get_file_dict(filename_list, log_printer)
 
     manager = multiprocessing.Manager()
-    global_bear_queue = multiprocessing.Queue()
+    bear_queue = multiprocessing.Queue()
     filename_queue = multiprocessing.Queue()
-    local_result_dict = manager.dict()
-    global_result_dict = manager.dict()
+    result_dict = manager.dict()
     message_queue = multiprocessing.Queue()
     control_queue = multiprocessing.Queue()
 
@@ -286,8 +256,7 @@ def process_queues(processes,
 
 
 def execute_section(section,
-                    global_bear_list,
-                    local_bear_list,
+                    bear_list,
                     print_results,
                     log_printer,
                     file_diff_dict):
@@ -303,8 +272,7 @@ def execute_section(section,
     4. Join all processes
 
     :param section:          The section to execute.
-    :param global_bear_list: List of global bears belonging to the section.
-    :param local_bear_list:  List of local bears belonging to the section.
+    :param bear_list:        List of bears belonging to the section.
     :param print_results:    Prints all given results appropriate to the
                              output medium.
     :param log_printer:      The log_printer to warn to.
@@ -316,9 +284,6 @@ def execute_section(section,
                              and a Manager.dict containing all global bear
                              results (bear names are key).
     """
-    local_bear_list = Dependencies.resolve(local_bear_list)
-    global_bear_list = Dependencies.resolve(global_bear_list)
-
     running_processes = get_cpu_count()
     processes, arg_dict = instantiate_processes(section,
                                                 local_bear_list,
