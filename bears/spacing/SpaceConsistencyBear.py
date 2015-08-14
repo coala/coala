@@ -15,8 +15,8 @@ class SpaceConsistencyBear(LocalBear):
         '''
         Checks the space consistency for each line.
 
-        :param use_spaces:                True if spaces are to be used
-                                          instead of tabs.
+        :param use_spaces:                True if spaces are to be used instead
+                                          of tabs.
         :param allow_trailing_whitespace: Whether to allow trailing whitespace
                                           or not.
         :param tab_width:                 Number of spaces representing one
