@@ -151,10 +151,12 @@ def generate_repr(*members):
             # Need to fetch member variables every time since they are unknown
             # until class instantation.
             members_to_print = (
-                (member, repr) for member in
-                sorted(filter(lambda mem: not mem.startswith("_"),
-                              self.__dict__),
-                       key=str.lower))
-            return _construct_repr_string(self, members_to_print)
+                filter(lambda member: not member.startswith("_"),
+                       self.__dict__))
+
+            member_repr_list = ((member, repr) for member in
+                sorted(members_to_print, key=str.lower))
+
+            return _construct_repr_string(self, member_repr_list)
 
     return decorator
