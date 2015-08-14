@@ -97,10 +97,9 @@ def generate_repr(*members):
 
     :param members:         An iterable of member names to include into the
                             representation-string. Providing no members yields
-                            to inclusion of all member variables in
-                            alphabetical order (even that ones are included
-                            that change after instantation, but no properties
-                            or other attributes starting with an underscore).
+                            to inclusion of all member variables and properties
+                            in alphabetical order (except if they start with an
+                            underscore).
 
                             To control the representation of each member, you
                             can also pass a tuple where the first element
@@ -150,9 +149,16 @@ def generate_repr(*members):
         def __repr__(self):
             # Need to fetch member variables every time since they are unknown
             # until class instantation.
-            members_to_print = (
+            members_to_print = set(
                 filter(lambda member: not member.startswith("_"),
                        self.__dict__))
+            # Also fetch properties.
+            self_type_dict = type(self).__dict__
+            members_to_print |= set(
+                filter(lambda member: isinstance(self_type_dict[member],
+                                                 property)
+                                      and not member.startswith("_"),
+                       self_type_dict))
 
             member_repr_list = ((member, repr) for member in
                 sorted(members_to_print, key=str.lower))

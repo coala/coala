@@ -55,6 +55,10 @@ class GenerateReprTest(unittest.TestCase):
                 return self.one * "getter()"
 
             @property
+            def _private_prop(self):
+                return self.one
+
+            @property
             def defaulted_getter(self, a=3, b=2):
                 return a * b * self.one
 
@@ -180,21 +184,24 @@ class GenerateReprTest(unittest.TestCase):
 
         self.assertRegex(repr(x),
                          "<X object\\(A=2, B='A string', ComplexMember=\\[3, "
-                         "2, 1\\], one=1, Q=0\\.5\\) at 0x[0-9a-fA-F]+>")
+                         "2, 1\\], defaulted_getter=6, getter='getter\\(\\)', "
+                         "one=1, Q=0\\.5\\) at 0x[0-9a-fA-F]+>")
 
         # Insert member after instantation.
         x.Z = 17
         self.assertRegex(repr(x),
                          "<X object\\(A=2, B='A string', ComplexMember=\\[3, "
-                         "2, 1\\], one=1, Q=0\\.5, Z=17\\) at 0x[0-9a-fA-F]+>")
+                         "2, 1\\], defaulted_getter=6, getter='getter\\(\\)', "
+                         "one=1, Q=0\\.5, Z=17\\) at 0x[0-9a-fA-F]+>")
 
         # Test alphabetical order a bit more.
         x.Ba = 4
         x.g_mem = 0
         self.assertRegex(repr(x),
                          "<X object\\(A=2, B='A string', Ba=4, "
-                         "ComplexMember=\\[3, 2, 1\\], g_mem=0, one=1, "
-                         "Q=0\\.5, Z=17\\) at 0x[0-9a-fA-F]+>")
+                         "ComplexMember=\\[3, 2, 1\\], defaulted_getter=6, "
+                         "g_mem=0, getter='getter\\(\\)', one=1, Q=0\\.5, "
+                         "Z=17\\) at 0x[0-9a-fA-F]+>")
 
     def test_duplicate_member(self):
         X = generate_repr("A", "A")(self.define_class())
