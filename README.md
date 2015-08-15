@@ -54,12 +54,6 @@ information in [setup.py](setup.py) for current maintainers.
 Project Status
 --------------
 
-Please note that the linux build is currently failing because of the codecov.io
-service, we have made them aware of this issue and are awaiting them to revert
-their latest changes to their infrastructure to fix this. Please take a look at
-<https://gitter.im/codecov/support?at=55cf0292ac4f24ba69361a71> for more
-information.
-
 [![Linux Build Status](https://img.shields.io/circleci/project/coala-analyzer/coala/master.svg?label=linux%20build)](https://circleci.com/gh/coala-analyzer/coala) [![Windows Build status](https://img.shields.io/appveyor/ci/sils1297/coala/master.svg?label=windows%20build)](https://ci.appveyor.com/project/sils1297/coala/branch/master) [![OSX Build status](https://img.shields.io/travis/coala-analyzer/coala/master.svg?label=osx%20build)](https://travis-ci.org/coala-analyzer/coala)
 
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer quality)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master) [![codecov.io](https://img.shields.io/codecov/c/github/coala-analyzer/coala/master.svg?label=branch coverage)](https://codecov.io/github/coala-analyzer/coala?branch=master)
