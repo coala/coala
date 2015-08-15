@@ -11,7 +11,8 @@ class SpaceConsistencyBear(LocalBear):
             file,
             use_spaces: bool,
             allow_trailing_whitespace: bool=False,
-            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
+            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH,
+            enforce_newline_at_EOF: bool=True):
         '''
         Checks the space consistency for each line.
 
@@ -21,12 +22,23 @@ class SpaceConsistencyBear(LocalBear):
                                           or not.
         :param tab_width:                 Number of spaces representing one
                                           tab.
+        :param enforce_newline_at_EOF:    Whether to enforce a newline at the
+                                          End Of File.
         '''
         spacing_helper = SpacingHelper(tab_width)
         result_texts = []
 
-        for line_number, line in enumerate(file):
+        for line_number, line in enumerate(file, start=1):
             replacement = line
+
+            if enforce_newline_at_EOF:
+                # Since every line contains at the end at least one \n, only
+                # the last line could potentially not have one. So we don't
+                # need to check whether the current line_number is the last
+                # one.
+                if replacement[-1] != "\n":
+                    replacement += "\n"
+                    result_texts.append(_("No newline at EOF."))
 
             if not allow_trailing_whitespace:
                 pre_replacement = line
@@ -49,7 +61,7 @@ class SpaceConsistencyBear(LocalBear):
 
             if len(result_texts) > 0:
                 diff = Diff()
-                diff.change_line(line_number + 1, line, replacement)
+                diff.change_line(line_number, line, replacement)
                 inconsistencies = "".join("\n- " + string
                                           for string in result_texts)
                 yield PatchResult(self,
@@ -57,5 +69,5 @@ class SpaceConsistencyBear(LocalBear):
                                     "inconsistencies:") + inconsistencies,
                                   {filename: diff},
                                   filename,
-                                  line_nr=line_number+1)
+                                  line_nr=line_number)
                 result_texts = []

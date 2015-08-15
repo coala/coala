@@ -50,6 +50,25 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.assertLineValid(self.uut, "t \n")
         self.assertLineValid(self.uut, "\tt\n")
 
+    def test_enforce_newline_at_eof(self):
+        self.section.append(Setting("use_spaces", "true"))
+        self.section.append(Setting("allow_trailing_whitespace", "true"))
+        self.section.append(Setting("enforce_newline_at_EOF", "true"))
+
+        self.assertLineValid(self.uut, "hello world  \n", prepare_lines=False)
+        self.assertLinesValid(self.uut,
+                              ["def somecode():\n",
+                               "    print('funny')\n",
+                               "    print('funny end.')\n"],
+                              prepare_lines=False)
+        self.assertLineInvalid(self.uut,
+                               " no hello world",
+                               prepare_lines=False)
+        self.assertLinesInvalid(self.uut,
+                                ["def unfunny_code():\n",
+                                 "    print('funny')\n",
+                                 "    print('the result is not funny...')"],
+                                prepare_lines=False)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
