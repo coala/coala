@@ -1,9 +1,8 @@
-"""
-A LineDiff holds the difference between two strings.
-"""
-
-
 class LineDiff:
+    """
+    A LineDiff holds the difference between two strings.
+    """
+
     def __init__(self, change=False, delete=False, add_after=False):
         """
         Creates a new LineDiff object. Note that a line cannot be

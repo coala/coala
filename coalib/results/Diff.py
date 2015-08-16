@@ -1,6 +1,3 @@
-"""
-A Diff result represents a difference for one file.
-"""
 import difflib
 
 from coalib.results.LineDiff import LineDiff
@@ -11,6 +8,10 @@ class ConflictError(Exception):
 
 
 class Diff:
+    """
+    A Diff result represents a difference for one file.
+    """
+
     def __init__(self):
         self._changes = {}
 
