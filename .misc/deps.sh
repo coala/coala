@@ -19,6 +19,7 @@ git -C ~/.pyenv pull
 deps="espeak libclang1-3.4"
 deps_python_dbus="libdbus-glib-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
+sudo apt-get update
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 
 for dep_version in "${dep_versions[@]}" ; do
