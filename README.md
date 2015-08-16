@@ -41,7 +41,7 @@ ABOUT
 
 coala is a simple COde AnaLysis Application. Its goal is to make static code
 analysis easy while remaining completely modular and therefore extendable and
-language independent.
+language independent. coala is written with a lower case "c".
 
 Read more at our [documentation](http://coala.rtfd.org/).
 
