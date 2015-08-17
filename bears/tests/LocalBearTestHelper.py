@@ -16,8 +16,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
     def prepare_lines(lines):
         """
         Adds a trailing newline to each line if needed. This is needed since
-        the bears expect every line to have such a
-        newline at the end.
+        the bears expect every line to have such a newline at the end.
 
         :param lines: The lines to be prepared. This list will be altered so
                       you don't have to use the return value.
