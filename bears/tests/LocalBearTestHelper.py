@@ -18,14 +18,18 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         Adds a trailing newline to each line if needed. This is needed since
         the bears expect every line to have such a newline at the end.
 
+        This function does not modify the given argument in-place, it returns
+        a modified copy instead.
+
         :param lines: The lines to be prepared. This list will be altered so
                       you don't have to use the return value.
-        :return:      The lines if you want to reuse them directly.
+        :return:      The lines with a \n appended.
         """
-        for i, line in enumerate(lines):
-            lines[i] = line if line.endswith("\n") else line+"\n"
+        modified_lines = []
+        for line in lines:
+            modified_lines.append(line if line.endswith("\n") else line+"\n")
 
-        return lines
+        return modified_lines
 
     def assertLinesValid(self, local_bear, lines, filename="default"):
         """
