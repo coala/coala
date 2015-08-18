@@ -25,6 +25,8 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
 
     def test_data_sets_spaces(self):
         self.section.append(Setting("use_spaces", "true"))
+        self.section.append(Setting("allow_trailing_whitespace", "false"))
+        self.section.append(Setting("enforce_newline_at_EOF", "false"))
 
         self.assertLineValid(self.uut, "    t")
         self.assertLineInvalid(self.uut, "t \n")
@@ -33,6 +35,7 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
     def test_data_sets_tabs(self):
         self.section.append(Setting("use_spaces", "false"))
         self.section.append(Setting("allow_trailing_whitespace", "true"))
+        self.section.append(Setting("enforce_newline_at_EOF", "false"))
 
         self.assertLineInvalid(self.uut, "    t")
         self.assertLineValid(self.uut, "t \n")
