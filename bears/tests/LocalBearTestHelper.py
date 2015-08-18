@@ -31,14 +31,22 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 
         return modified_lines
 
-    def assertLinesValid(self, local_bear, lines, filename="default"):
+    def assertLinesValid(self,
+                         local_bear,
+                         lines,
+                         filename="default",
+                         prepare_lines=True):
         """
         Asserts that a check of the given lines with the given local bear does
         not yield any results.
 
-        :param local_bear: The local bear to check with.
-        :param lines:      The lines to check. (List of strings)
-        :param filename:   The filename, if it matters.
+        :param local_bear:    The local bear to check with.
+        :param lines:         The lines to check. (List of strings)
+        :param filename:      The filename, if it matters.
+        :param prepare_lines: Whether to append newlines at each line if
+                              needed. Use this with caution when disabling,
+                              since bears expect to have a \n at the end of
+                              each line.
         """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
@@ -47,33 +55,51 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         self.assertIsInstance(lines,
                               list,
                               msg="The given lines are not a list.")
+
+        if prepare_lines:
+            lines = LocalBearTestHelper.prepare_lines(lines)
+
         self.assertEqual(
-            list(local_bear.execute(
-                filename,
-                LocalBearTestHelper.prepare_lines(lines))),
+            list(local_bear.execute(filename, lines)),
             [],
             msg="The local bear '{}' yields a result although it "
                 "shouldn't.".format(local_bear.__class__.__name__))
 
-    def assertLineValid(self, local_bear, line, filename="default"):
+    def assertLineValid(self,
+                        local_bear,
+                        line,
+                        filename="default",
+                        prepare_lines=True):
         """
         Asserts that a check of the given lines with the given local bear does
         not yield any results.
 
-        :param local_bear: The local bear to check with.
-        :param line:       The lines to check. (List of strings)
-        :param filename:   The filename, if it matters.
+        :param local_bear:    The local bear to check with.
+        :param line:          The lines to check. (List of strings)
+        :param filename:      The filename, if it matters.
+        :param prepare_lines: Whether to append newlines at each line if
+                              needed. Use this with caution when disabling,
+                              since bears expect to have a \n at the end of
+                              each line.
         """
-        self.assertLinesValid(local_bear, [line], filename)
+        self.assertLinesValid(local_bear, [line], filename, prepare_lines)
 
-    def assertLinesInvalid(self, local_bear, lines, filename="default"):
+    def assertLinesInvalid(self,
+                           local_bear,
+                           lines,
+                           filename="default",
+                           prepare_lines=True):
         """
         Asserts that a check of the given lines with the given local bear does
         yield any results.
 
-        :param local_bear: The local bear to check with.
-        :param lines:      The lines to check. (List of strings)
-        :param filename:   The filename, if it matters.
+        :param local_bear:    The local bear to check with.
+        :param lines:         The lines to check. (List of strings)
+        :param filename:      The filename, if it matters.
+        :param prepare_lines: Whether to append newlines at each line if
+                              needed. Use this with caution when disabling,
+                              since bears expect to have a \n at the end of
+                              each line.
         """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
@@ -82,25 +108,35 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         self.assertIsInstance(lines,
                               list,
                               msg="The given lines are not a list.")
+
+        if prepare_lines:
+            lines = LocalBearTestHelper.prepare_lines(lines)
+
         self.assertNotEqual(
-            len(list(local_bear.execute(
-                filename,
-                LocalBearTestHelper.prepare_lines(lines)))),
+            len(list(local_bear.execute(filename, lines))),
             0,
             msg="The local bear '{}' yields no result although it "
                 "should.".format(local_bear.__class__.__name__))
 
-    def assertLineInvalid(self, local_bear, line, filename="default"):
+    def assertLineInvalid(self,
+                          local_bear,
+                          line,
+                          filename="default",
+                          prepare_lines=True):
         """
         Asserts that a check of the given lines with the given local bear does
         yield any results.
 
-        :param self:       The unittest.TestCase object for assertions.
-        :param local_bear: The local bear to check with.
-        :param line:       The lines to check. (List of strings)
-        :param filename:   The filename, if it matters.
+        :param self:          The unittest.TestCase object for assertions.
+        :param local_bear:    The local bear to check with.
+        :param line:          The lines to check. (List of strings)
+        :param filename:      The filename, if it matters.
+        :param prepare_lines: Whether to append newlines at each line if
+                              needed. Use this with caution when disabling,
+                              since bears expect to have a \n at the end of
+                              each line.
         """
-        self.assertLinesInvalid(local_bear, [line], filename)
+        self.assertLinesInvalid(local_bear, [line], filename, prepare_lines)
 
     def assertLinesYieldResults(self,
                                 local_bear,
