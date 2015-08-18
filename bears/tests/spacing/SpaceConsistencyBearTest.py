@@ -23,6 +23,15 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
                          1 + len(SpacingHelper.get_non_optional_settings()))
         self.assertIn("use_spaces", needed_settings)
 
+    def test_defaults(self):
+        # use_spaces is no default, need to set it explicitly.
+        self.section.append(Setting("use_spaces", "true"))
+
+        self.assertLineValid(self.uut, "    t")
+        self.assertLineInvalid(self.uut, "\tt")
+        self.assertLineInvalid(self.uut, "t \n")
+        self.assertLineInvalid(self.uut, "t", prepare_lines=False)
+
     def test_data_sets_spaces(self):
         self.section.append(Setting("use_spaces", "true"))
         self.section.append(Setting("allow_trailing_whitespace", "false"))
