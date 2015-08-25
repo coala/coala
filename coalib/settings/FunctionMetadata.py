@@ -1,5 +1,6 @@
 from inspect import ismethod, getfullargspec
 from collections import OrderedDict
+from copy import copy
 
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -16,7 +17,8 @@ class FunctionMetadata:
                  desc="",
                  retval_desc="",
                  non_optional_params=None,
-                 optional_params=None):
+                 optional_params=None,
+                 omit=()):
         """
         Creates the FunctionMetadata object.
 
@@ -32,6 +34,7 @@ class FunctionMetadata:
                                     of a description, the python annotation and
                                     the default value. To preserve the order,
                                     use OrderedDict.
+        :param omit:                A list of parameters to omit.
         """
         if non_optional_params is None:
             non_optional_params = OrderedDict()
@@ -41,8 +44,22 @@ class FunctionMetadata:
         self.name = name
         self.desc = desc
         self.retval_desc = retval_desc
-        self.non_optional_params = non_optional_params
-        self.optional_params = optional_params
+        self._non_optional_params = non_optional_params
+        self._optional_params = optional_params
+        # People might want to extend it later, convert tuples and iterators
+        self.omit = list(omit)
+
+    def omitted(self, params):
+        return OrderedDict(filter(lambda p: p[0] not in self.omit,
+                                  list(params.items())))
+
+    @property
+    def non_optional_params(self):
+        return self.omitted(self._non_optional_params)
+
+    @property
+    def optional_params(self):
+        return self.omitted(self._optional_params)
 
     def create_params_from_section(self,
                                    section,
@@ -106,6 +123,11 @@ class FunctionMetadata:
         :return:     The FunctionMetadata object corresponding to the given
                      function.
         """
+        if hasattr(func, "__metadata__"):
+            metadata = copy(func.__metadata__)
+            metadata.omit = omit
+            return metadata
+
         doc = func.__doc__
         if doc is None:
             doc = ""
@@ -120,7 +142,7 @@ class FunctionMetadata:
         num_non_defaults = len(args) - len(defaults)
         for i, arg in enumerate(args):
             # Implicit self argument or omitted explicitly
-            if (i < 1 and ismethod(func)) or arg in omit:
+            if i < 1 and ismethod(func):
                 continue
 
             if i < num_non_defaults:
@@ -135,8 +157,14 @@ class FunctionMetadata:
                     argspec.annotations.get(arg, None),
                     defaults[i-num_non_defaults])
 
-        return cls(name=func.__name__,
-                   desc=doc_comment.desc,
-                   retval_desc=doc_comment.retval_desc,
-                   non_optional_params=non_optional_params,
-                   optional_params=optional_params)
+        metadata = cls(name=func.__name__,
+                       desc=doc_comment.desc,
+                       retval_desc=doc_comment.retval_desc,
+                       non_optional_params=non_optional_params,
+                       optional_params=optional_params,
+                       omit=omit)
+
+        # setattr on bound methods will fail, __dict__ will use the dict from
+        # the unbound method which is ok.
+        func.__dict__['__metadata__'] = metadata
+        return func.__metadata__
