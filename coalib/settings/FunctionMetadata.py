@@ -1,5 +1,6 @@
 from inspect import ismethod, getfullargspec
 from collections import OrderedDict
+from copy import copy
 
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -122,6 +123,11 @@ class FunctionMetadata:
         :return:     The FunctionMetadata object corresponding to the given
                      function.
         """
+        if hasattr(func, "__metadata__"):
+            metadata = copy(func.__metadata__)
+            metadata.omit = omit
+            return metadata
+
         doc = func.__doc__
         if doc is None:
             doc = ""
@@ -151,9 +157,14 @@ class FunctionMetadata:
                     argspec.annotations.get(arg, None),
                     defaults[i-num_non_defaults])
 
-        return cls(name=func.__name__,
-                   desc=doc_comment.desc,
-                   retval_desc=doc_comment.retval_desc,
-                   non_optional_params=non_optional_params,
-                   optional_params=optional_params,
-                   omit=omit)
+        metadata = cls(name=func.__name__,
+                       desc=doc_comment.desc,
+                       retval_desc=doc_comment.retval_desc,
+                       non_optional_params=non_optional_params,
+                       optional_params=optional_params,
+                       omit=omit)
+
+        # setattr on bound methods will fail, __dict__ will use the dict from
+        # the unbound method which is ok.
+        func.__dict__['__metadata__'] = metadata
+        return func.__metadata__
