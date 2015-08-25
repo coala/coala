@@ -1,5 +1,6 @@
 from inspect import ismethod, getfullargspec
 from collections import OrderedDict
+from copy import copy
 
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -133,11 +134,18 @@ class FunctionMetadata:
         an actual INSTANCE of a class; passing the method of the class isn't
         enough. Alternatively you can add "self" to the omit set.
 
-        :param func: The function.
+        :param func: The function. If __metadata__ of the unbound function is
+                     present it will be copied and used, otherwise it will be
+                     generated.
         :param omit: A set of parameter names that are to be ignored.
         :return:     The FunctionMetadata object corresponding to the given
                      function.
         """
+        if hasattr(func, "__metadata__"):
+            metadata = copy(func.__metadata__)
+            metadata.omit = omit
+            return metadata
+
         doc = func.__doc__
         if doc is None:
             doc = ""

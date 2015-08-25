@@ -28,6 +28,11 @@ class FunctionMetadataTest(unittest.TestCase):
     def test_from_function(self):
         uut = FunctionMetadata.from_function(self.test_from_function)
         self.check_function_metadata_data_set(uut, "test_from_function")
+        # setattr on bound methods will fail, __dict__ will use the dict from
+        # the unbound method which is ok.
+        self.test_from_function.__dict__["__metadata__"] = FunctionMetadata("t")
+        uut = FunctionMetadata.from_function(self.test_from_function)
+        self.check_function_metadata_data_set(uut, "t")
 
         uut = FunctionMetadata.from_function(TestClass(5, 5).__init__)
         self.check_function_metadata_data_set(
