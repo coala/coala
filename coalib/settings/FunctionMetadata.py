@@ -16,7 +16,8 @@ class FunctionMetadata:
                  desc="",
                  retval_desc="",
                  non_optional_params=None,
-                 optional_params=None):
+                 optional_params=None,
+                 omit=frozenset()):
         """
         Creates the FunctionMetadata object.
 
@@ -32,6 +33,7 @@ class FunctionMetadata:
                                     of a description, the python annotation and
                                     the default value. To preserve the order,
                                     use OrderedDict.
+        :param omit:                A set of parameters to omit.
         """
         if non_optional_params is None:
             non_optional_params = OrderedDict()
@@ -41,8 +43,38 @@ class FunctionMetadata:
         self.name = name
         self.desc = desc
         self.retval_desc = retval_desc
-        self.non_optional_params = non_optional_params
-        self.optional_params = optional_params
+        self._non_optional_params = non_optional_params
+        self._optional_params = optional_params
+        self.omit = set(omit)
+
+    def _filter_out_omitted(self, params):
+        """
+        Filters out parameters that are to omit. This is a helper method for
+        the param related properties.
+
+        :param params: The parameter dictionary to filter.
+        :return:       The filtered dictionary.
+        """
+        return OrderedDict(filter(lambda p: p[0] not in self.omit,
+                                  tuple(params.items())))
+
+    @property
+    def non_optional_params(self):
+        """
+        Retrieves a dict containing the name of non optional parameters as the
+        key and a tuple of a description and the python annotation. Values that
+        are present in self.omit will be omitted.
+        """
+        return self._filter_out_omitted(self._non_optional_params)
+
+    @property
+    def optional_params(self):
+        """
+        Retrieves a dict containing the name of optional parameters as the key
+        and a tuple of a description, the python annotation and the default
+        value. Values that are present in self.omit will be omitted.
+        """
+        return self._filter_out_omitted(self._optional_params)
 
     def create_params_from_section(self,
                                    section,
@@ -93,16 +125,16 @@ class FunctionMetadata:
             return section[param]
 
     @classmethod
-    def from_function(cls, func, omit=()):
+    def from_function(cls, func, omit=frozenset()):
         """
         Creates a FunctionMetadata object from a function. Please note that any
         variable argument lists are not supported. If you do not want the
         first (usual named 'self') argument to appear please pass the method of
         an actual INSTANCE of a class; passing the method of the class isn't
-        enough. Alternatively you can add "self" to the omit list.
+        enough. Alternatively you can add "self" to the omit set.
 
         :param func: The function.
-        :param omit: A list of parameter names that are to be ignored.
+        :param omit: A set of parameter names that are to be ignored.
         :return:     The FunctionMetadata object corresponding to the given
                      function.
         """
@@ -120,7 +152,7 @@ class FunctionMetadata:
         num_non_defaults = len(args) - len(defaults)
         for i, arg in enumerate(args):
             # Implicit self argument or omitted explicitly
-            if (i < 1 and ismethod(func)) or arg in omit:
+            if i < 1 and ismethod(func):
                 continue
 
             if i < num_non_defaults:
@@ -139,4 +171,5 @@ class FunctionMetadata:
                    desc=doc_comment.desc,
                    retval_desc=doc_comment.retval_desc,
                    non_optional_params=non_optional_params,
-                   optional_params=optional_params)
+                   optional_params=optional_params,
+                   omit=omit)
