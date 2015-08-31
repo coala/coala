@@ -5,7 +5,6 @@ from coalib.misc.i18n import _
 
 
 class LineLengthBear(LocalBear):
-    # pylint: disable=unused-argument
     def run(self,
             filename,
             file,
@@ -17,7 +16,7 @@ class LineLengthBear(LocalBear):
         :param max_line_length: Maximum number of characters for a line.
         :param tab_width: Number of spaces to show for one tab.
         '''
-        spacing_helper = SpacingHelper.from_section(section=self.section)
+        spacing_helper = SpacingHelper(tab_width)
 
         for line_number, line in enumerate(file):
             line = spacing_helper.replace_tabs_with_spaces(line)
