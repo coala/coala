@@ -5,9 +5,7 @@ from coalib.results.PatchResult import PatchResult
 class ApplyPatchAction(ResultAction):
     @staticmethod
     def is_applicable(result):
-        if isinstance(result, PatchResult):
-            return True
-        return False
+        return isinstance(result, PatchResult)
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """
