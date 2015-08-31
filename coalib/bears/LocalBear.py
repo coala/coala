@@ -19,12 +19,6 @@ class LocalBear(Bear):
       certain conditions
     """
 
-    def __init__(self,
-                 section,
-                 message_queue,
-                 timeout=0):
-        Bear.__init__(self, section, message_queue, timeout)
-
     @staticmethod
     def kind():
         return BEAR_KIND.LOCAL
