@@ -4,7 +4,7 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 
 class GlobalBear(Bear):
     """
-    A GlobalBear is able to analyze semantical facts across several file.
+    A GlobalBear is able to analyze semantic facts across several file.
 
     The results of a GlobalBear will be presented grouped by the origin Bear.
     Therefore Results spanning above multiple files are allowed and will be
