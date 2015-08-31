@@ -65,8 +65,7 @@ class Bear(Printer, LogPrinter):
         kwargs.update(
             self.get_metadata().create_params_from_section(self.section))
 
-        return self.run(*args,
-                        **kwargs)
+        return self.run(*args, **kwargs)
 
     def execute(self, *args, **kwargs):
         name = self.__class__.__name__
