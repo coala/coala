@@ -101,7 +101,7 @@ class Bear(Printer, LogPrinter):
         """
         return FunctionMetadata.from_function(
             cls.run,
-            omit=["self", "dependency_results"])
+            omit={"self", "dependency_results"})
 
     @classmethod
     def missing_dependencies(cls, lst):

@@ -49,4 +49,4 @@ class LocalBear(Bear):
     def get_metadata(cls):
         return FunctionMetadata.from_function(
             cls.run,
-            omit=["self", "filename", "file", "dependency_results"])
+            omit={"self", "filename", "file", "dependency_results"})

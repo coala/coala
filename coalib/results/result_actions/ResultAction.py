@@ -70,7 +70,7 @@ class ResultAction:
         """
         data = FunctionMetadata.from_function(
             cls.apply,
-            omit=["self", "result", "original_file_dict", "file_diff_dict"])
+            omit={"self", "result", "original_file_dict", "file_diff_dict"})
         data.name = cls.__name__
 
         return data

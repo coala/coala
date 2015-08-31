@@ -52,7 +52,7 @@ class FunctionMetadataTest(unittest.TestCase):
                            + uut.str_optional.format("6") + ")", int, 6)})
 
         uut = FunctionMetadata.from_function(TestClass(5, 5).__init__,
-                                             omit=["param3", "param2"])
+                                             omit={"param3", "param2"})
         self.check_function_metadata_data_set(
             uut,
             "__init__",
