@@ -1,6 +1,5 @@
 import platform
-
-from coalib.output.printers.ColorPrinter import ColorPrinter
+from pyprint.ColorPrinter import ColorPrinter
 
 
 class ConsolePrinter(ColorPrinter):
