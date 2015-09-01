@@ -1,5 +1,6 @@
+from pyprint.Printer import Printer
+
 from coalib.output.ClosableObject import ClosableObject
-from coalib.output.printers.Printer import Printer
 
 
 class FilePrinter(Printer, ClosableObject):

@@ -1,4 +1,4 @@
-from coalib.output.printers.Printer import Printer
+from pyprint.Printer import Printer
 
 
 class ColorPrinter(Printer):

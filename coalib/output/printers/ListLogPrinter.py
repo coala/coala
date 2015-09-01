@@ -1,5 +1,6 @@
+from pyprint.Printer import Printer
+
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.output.printers.Printer import Printer
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.communication.LogMessage import LogMessage
 

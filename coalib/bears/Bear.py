@@ -1,7 +1,7 @@
 import traceback
+from pyprint.Printer import Printer
 
 from coalib.misc.i18n import _
-from coalib.output.printers.Printer import Printer
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section

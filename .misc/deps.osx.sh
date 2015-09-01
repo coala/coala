@@ -25,7 +25,7 @@ python --version
 source .misc/env_variables.sh
 
 # Install packages with pip
-pip install -q setuptools coverage munkres3 pylint language-check
+pip install -q setuptools coverage munkres3 pylint language-check PyPrint
 
 # Install packages from source
 cd .misc
