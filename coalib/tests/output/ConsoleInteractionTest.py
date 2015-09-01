@@ -5,6 +5,7 @@ import sys
 import os
 import shutil
 from collections import OrderedDict
+from pyprint.NullPrinter import NullPrinter
 
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
@@ -12,7 +13,6 @@ from coalib.results.PatchResult import PatchResult, Result
 from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.Exceptions import PermissionException
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,

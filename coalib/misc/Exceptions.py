@@ -1,7 +1,7 @@
 import sys
+from pyprint.NullPrinter import NullPrinter
 
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.misc.Constants import Constants
 from coalib.misc.i18n import _
 

@@ -1,10 +1,10 @@
 import sys
 import unittest
+from pyprint.NullPrinter import NullPrinter
 
 sys.path.insert(0, ".")
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.NullPrinter import NullPrinter
 
 
 class InteractionsTest(unittest.TestCase):

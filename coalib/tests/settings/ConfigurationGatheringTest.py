@@ -2,13 +2,13 @@ import os
 import sys
 import tempfile
 import unittest
+from pyprint.NullPrinter import NullPrinter
 sys.path.insert(0, ".")
 
 from coalib.misc.Constants import Constants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.ClosableObject import close_objects
 import re
 
