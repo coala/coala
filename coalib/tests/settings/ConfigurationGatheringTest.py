@@ -1,16 +1,16 @@
 import os
 import sys
+import re
 import tempfile
 import unittest
 from pyprint.NullPrinter import NullPrinter
+from pyprint.ClosableObject import close_objects
 sys.path.insert(0, ".")
 
 from coalib.misc.Constants import Constants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.ClosableObject import close_objects
-import re
 
 
 class ConfigurationGatheringTest(unittest.TestCase):

@@ -1,4 +1,5 @@
-from coalib.output.ClosableObject import ClosableObject
+from pyprint.ClosableObject import ClosableObject
+
 from coalib.settings.Section import Section
 
 

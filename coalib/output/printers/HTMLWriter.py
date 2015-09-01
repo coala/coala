@@ -1,4 +1,4 @@
-from coalib.output.ClosableObject import ClosableObject
+from pyprint.ClosableObject import ClosableObject
 
 
 class HTMLWriter(ClosableObject):
