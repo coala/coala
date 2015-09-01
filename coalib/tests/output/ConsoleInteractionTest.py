@@ -4,6 +4,7 @@ import sys
 import os
 from collections import OrderedDict
 from pyprint.NullPrinter import NullPrinter
+from pyprint.ConsolePrinter import ConsolePrinter
 
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
@@ -24,7 +25,6 @@ from coalib.output.ConsoleInteraction import (nothing_done,
                                               print_results,
                                               show_bears,
                                               print_results_formatted)
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction

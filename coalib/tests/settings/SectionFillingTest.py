@@ -1,5 +1,6 @@
 import unittest
 import sys
+from pyprint.ConsolePrinter import ConsolePrinter
 
 sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import simulate_console_inputs
@@ -8,7 +9,6 @@ from coalib.bears.LocalBear import LocalBear
 from coalib.settings.SectionFilling import fill_section, fill_settings, Setting
 from coalib.settings.Section import Section
 from coalib.output.ConsoleInteraction import acquire_settings
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 
 

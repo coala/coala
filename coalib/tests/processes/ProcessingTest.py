@@ -6,13 +6,13 @@ import multiprocessing
 import platform
 import re
 import subprocess
+from pyprint.ConsolePrinter import ConsolePrinter
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import process_queues, create_process_group
 from coalib.settings.Section import Section

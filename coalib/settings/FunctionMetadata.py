@@ -1,10 +1,10 @@
 from inspect import ismethod, getfullargspec
 from collections import OrderedDict
 from copy import copy
+from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.settings.DocumentationComment import DocumentationComment
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.misc.i18n import _
 
 

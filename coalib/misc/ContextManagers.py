@@ -90,7 +90,18 @@ def retrieve_stdout():
         what_was_printed = stdout.getvalue()  # Save the value
     """
     with closing(StringIO()) as sio, replace_stdout(sio):
-        yield sio
+        oldprint = builtins.print
+        try:
+            # Overriding stdout doesn't work with libraries, this ensures even
+            # cached variables take this up. Well... it works.
+            def newprint(*args, **kwargs):
+                kwargs['file'] = sio
+                oldprint(*args, **kwargs)
+
+            builtins.print = newprint
+            yield sio
+        finally:
+            builtins.print = oldprint
 
 
 @contextmanager

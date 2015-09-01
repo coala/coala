@@ -4,7 +4,8 @@ try:
 except ImportError:  # pragma: no cover
     pass
 
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
+from pyprint.ConsolePrinter import ConsolePrinter
+
 from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY,
     RESULT_SEVERITY_COLORS)

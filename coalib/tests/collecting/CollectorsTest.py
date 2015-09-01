@@ -1,10 +1,10 @@
 import os
 import sys
 import unittest
+from pyprint.ConsolePrinter import ConsolePrinter
 
 sys.path.insert(0, ".")
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.collecting.Collectors import (collect_files,
                                           collect_dirs,
                                           collect_bears)
