@@ -203,9 +203,11 @@ def print_result(console_printer,
 def print_results_formatted(log_printer,
                             section,
                             result_list,
-                            file_dict,
-                            file_diff_dict,
-                            format_str):
+                            *args):
+    format_str = str(section.get(
+        "format_str",
+        "origin:{origin}:file:{file}:line_nr:{line_nr}:severity:"
+        "{severity}:msg:{message}"))
     for result in result_list:
         try:
             print(format_str.format(**result.__dict__))
