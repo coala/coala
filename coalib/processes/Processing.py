@@ -314,7 +314,8 @@ def execute_section(section,
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
                              and a Manager.dict containing all global bear
-                             results (bear names are key).
+                             results (bear names are key) as well as the
+                             file dictionary.
     """
     local_bear_list = Dependencies.resolve(local_bear_list)
     global_bear_list = Dependencies.resolve(global_bear_list)
