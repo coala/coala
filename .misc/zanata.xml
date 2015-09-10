@@ -2,7 +2,7 @@
 <config xmlns="http://zanata.org/namespace/config/">
   <url>https://translate.zanata.org/zanata/</url>
   <project>coala</project>
-  <project-version>0.2</project-version>
+  <project-version>0.3</project-version>
   <project-type>gettext</project-type>
 
   <hooks>
