@@ -153,3 +153,6 @@ class Diff:
 
         linediff.change = (original_line, replacement)
         self._changes[line_nr] = linediff
+
+    def __eq__(self, other):
+        return self._changes == other._changes
