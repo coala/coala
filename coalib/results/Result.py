@@ -76,7 +76,7 @@ class Result:
 
     def __lt__(self, other):
         if not isinstance(other, Result):
-            raise TypeError("Comparision with non-result classes is not "
+            raise TypeError("Comparison with non-result classes is not "
                             "supported.")
 
         # Show elements without files first
