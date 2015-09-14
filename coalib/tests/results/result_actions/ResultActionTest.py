@@ -4,7 +4,7 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.settings.Section import Section
-from coalib.results.PatchResult import Result
+from coalib.results.Result import Result
 
 
 class ResultActionTest(unittest.TestCase):

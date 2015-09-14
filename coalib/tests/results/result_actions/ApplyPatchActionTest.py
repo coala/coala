@@ -4,9 +4,9 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.Diff import Diff
-from coalib.results.PatchResult import PatchResult
 from coalib.results.Result import Result
 from coalib.settings.Section import Section
+
 
 class ApplyPatchActionTest(unittest.TestCase):
     def test_apply(self):
@@ -26,21 +26,21 @@ class ApplyPatchActionTest(unittest.TestCase):
 
         diff = Diff()
         diff.delete_line(2)
-        uut.apply_from_section(PatchResult("origin", "msg", {"f_a": diff}),
+        uut.apply_from_section(Result("origin", "msg", diffs={"f_a": diff}),
                                file_dict,
                                file_diff_dict,
                                Section("t"))
 
         diff = Diff()
         diff.change_line(3, "3", "3_changed")
-        uut.apply_from_section(PatchResult("origin", "msg", {"f_a": diff}),
+        uut.apply_from_section(Result("origin", "msg", diffs={"f_a": diff}),
                                file_dict,
                                file_diff_dict,
                                Section("t"))
 
         diff = Diff()
         diff.change_line(3, "3", "3_changed")
-        uut.apply(PatchResult("origin", "msg", {"f_b": diff}),
+        uut.apply(Result("origin", "msg", diffs={"f_b": diff}),
                   file_dict,
                   file_diff_dict)
 
@@ -51,7 +51,7 @@ class ApplyPatchActionTest(unittest.TestCase):
         self.assertEqual(file_dict, expected_file_dict)
 
     def test_is_applicable(self):
-        patch_result = PatchResult("", "", {})
+        patch_result = Result("", "", diffs={})
         result = Result("", "")
         self.assertTrue(ApplyPatchAction.is_applicable(patch_result))
         self.assertFalse(ApplyPatchAction.is_applicable(result))

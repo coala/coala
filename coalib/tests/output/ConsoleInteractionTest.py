@@ -9,7 +9,7 @@ from pyprint.NullPrinter import NullPrinter
 
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
-from coalib.results.PatchResult import PatchResult, Result
+from coalib.results.Result import Result
 from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
@@ -153,7 +153,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          self.log_printer,
                          None,
                          self.file_diff_dict,
-                         PatchResult("origin", "msg", {}),
+                         Result("origin", "msg", diffs={}),
                          {})
 
         (testfile, testfile_path) = tempfile.mkstemp()
@@ -172,7 +172,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          self.log_printer,
                          None,
                          self.file_diff_dict,
-                         PatchResult("origin", "msg", {testfile_path: diff}),
+                         Result("origin", "msg", diffs={testfile_path: diff}),
                          file_dict)
 
         # To assure user can rechose if he didn't chose wisely
@@ -183,7 +183,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          self.log_printer,
                          curr_section,
                          self.file_diff_dict,
-                         PatchResult("origin", "msg", {testfile_path: diff}),
+                         Result("origin", "msg", diffs={testfile_path: diff}),
                          file_dict)
             self.assertEqual(input_generator.last_input, 2)
             finalize(self.file_diff_dict, file_dict)
@@ -207,7 +207,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         with simulate_console_inputs(1, "test_editor", 0, 1, 0) as generator:
             OpenEditorAction.is_applicable = staticmethod(lambda result: True)
 
-            patch_result = PatchResult("origin", "msg", {testfile_path: diff})
+            patch_result = Result("origin", "msg", diffs={testfile_path: diff})
             patch_result.file = "f_b"
 
             print_result(self.console_printer,
