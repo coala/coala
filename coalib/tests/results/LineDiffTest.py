@@ -29,6 +29,13 @@ class LineDiffTest(unittest.TestCase):
         uut.change = ("1", "2")
         self.assertRaises(AssertionError, setattr, uut, "delete", True)
 
+    def test_equality(self):
+        self.assertEqual(LineDiff(), LineDiff())
+        self.assertNotEqual(LineDiff(), LineDiff(delete=True))
+        self.assertNotEqual(LineDiff(add_after=['']), LineDiff())
+        self.assertNotEqual(LineDiff(add_after=['']), LineDiff(delete=True))
+        self.assertNotEqual(LineDiff(change=('', 'a')), LineDiff())
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
