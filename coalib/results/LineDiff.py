@@ -18,6 +18,11 @@ class LineDiff:
         self.delete = delete
         self.add_after = add_after
 
+    def __eq__(self, other):
+        return (self.change == other.change and
+                self.delete == other.delete and
+                self.add_after == other.add_after)
+
     @property
     def change(self):
         return self._change
