@@ -3,6 +3,7 @@ import unittest
 
 sys.path.insert(0, ".")
 from coalib.results.Result import Result, RESULT_SEVERITY
+from coalib.results.Diff import Diff
 
 
 class ResultTest(unittest.TestCase):
@@ -28,7 +29,7 @@ class ResultTest(unittest.TestCase):
         uut = Result('a', 'b', 'c')
         self.assertEqual(str(uut),
                          "Result:\n origin: 'a'\n file: 'c'\n line nr: None\n"
-                         " severity: 1\n'b'")
+                         " severity: 1\n diffs: None\n'b'")
         self.assertRegex(
             repr(uut),
             "<Result object\\(origin='a', file='c', line_nr=None, "
@@ -40,6 +41,7 @@ class ResultTest(unittest.TestCase):
  file: 'file'
  line nr: 1
  severity: 1
+ diffs: None
 'message'""")
 
     def test_ordering(self):
@@ -142,6 +144,53 @@ class ResultTest(unittest.TestCase):
         uut = Result(origin="origin", message="msg", line_nr="a")
         output = uut.to_string_dict()
         self.assertEqual(output["line_nr"], "a")
+
+    def test_apply(self):
+        file_dict = {
+            "f_a": ["1", "2", "3"],
+            "f_b": ["1", "2", "3"]
+        }
+        expected_file_dict = {
+            "f_a": ["1", "3_changed"],
+            "f_b": ["1", "2", "3"]
+        }
+        diff = Diff()
+        diff.delete_line(2)
+        diff.change_line(3, "3", "3_changed")
+
+        uut = Result("origin", "msg", diffs={"f_a": diff})
+        uut.apply(file_dict)
+
+        self.assertEqual(file_dict, expected_file_dict)
+
+    def test_add(self):
+        file_dict = {
+            "f_a": ["1", "2", "3"],
+            "f_b": ["1", "2", "3"],
+            "f_c": ["1", "2", "3"]
+        }
+        expected_file_dict = {
+            "f_a": ["1", "3_changed"],
+            "f_b": ["1", "2", "3_changed"],
+            "f_c": ["1", "2", "3"]
+        }
+
+        diff = Diff()
+        diff.delete_line(2)
+        uut1 = Result("origin", "msg", diffs={"f_a": diff})
+
+        diff = Diff()
+        diff.change_line(3, "3", "3_changed")
+        uut2 = Result("origin", "msg", diffs={"f_a": diff})
+
+        diff = Diff()
+        diff.change_line(3, "3", "3_changed")
+        uut3 = Result("origin", "msg", diffs={"f_b": diff})
+
+        uut1 += uut2 + uut3
+        uut1.apply(file_dict)
+
+        self.assertEqual(file_dict, expected_file_dict)
 
 
 if __name__ == '__main__':

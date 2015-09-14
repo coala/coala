@@ -1,7 +1,6 @@
 from language_check import LanguageTool, correct
 
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.PatchResult import PatchResult
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
 from coalib.misc.i18n import _
@@ -39,11 +38,11 @@ class LanguageToolBear(LocalBear):
         '''
         for message, diff, line in get_language_tool_results(file, locale):
             if diff:
-                yield PatchResult(self.__class__.__name__,
-                                  message,
-                                  diffs={filename: diff},
-                                  file=filename,
-                                  line_nr=line)
+                yield Result(self.__class__.__name__,
+                             message,
+                             diffs={filename: diff},
+                             file=filename,
+                             line_nr=line)
             else:
                 yield Result(self.__class__.__name__,
                              message,

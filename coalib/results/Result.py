@@ -35,7 +35,8 @@ class Result:
                  file=None,
                  severity=RESULT_SEVERITY.NORMAL,
                  line_nr=None,
-                 debug_msg=""):
+                 debug_msg="",
+                 diffs=None):
         """
         :param origin:    Class name or class of the creator of this object
         :param message:   Message to show with this result
@@ -44,6 +45,8 @@ class Result:
         :param line_nr:   Number of the line which is affected, first line is 1
         :param debug_msg: A message which may help the user find out why
                           this result was yielded.
+        :param diffs:     A dictionary associating a Diff object with each
+                          filename.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -55,14 +58,16 @@ class Result:
         self.file = file
         self.line_nr = line_nr
         self.severity = severity
+        self.diffs = diffs
 
     def __str__(self):
         return ("Result:\n origin: {origin}\n file: {file}\n line nr: "
-                "{linenr}\n severity: {severity}\n{msg}"
+                "{linenr}\n severity: {severity}\n diffs: {diffs}\n{msg}"
                 .format(origin=repr(self.origin),
                         file=repr(self.file),
                         linenr=self.line_nr,
                         severity=self.severity,
+                        diffs=repr(self.diffs),
                         msg=repr(self.message)))
 
     def __eq__(self, other):
@@ -72,7 +77,8 @@ class Result:
                 self.debug_msg == other.debug_msg and
                 self.file == other.file and
                 self.severity == other.severity and
-                self.line_nr == other.line_nr)
+                self.line_nr == other.line_nr and
+                self.diffs == other.diffs)
 
     def __lt__(self, other):
         if not isinstance(other, Result):
@@ -110,6 +116,8 @@ class Result:
         Makes a dictionary which has all keys and values as strings and
         contains all the data that the base Result has.
 
+        FIXME: diffs are not serialized ATM.
+
         :return: Dictionary with keys and values as string.
         """
         retval = {}
@@ -127,3 +135,35 @@ class Result:
         retval["severity"] = str(RESULT_SEVERITY.reverse.get(self.severity, ""))
 
         return retval
+
+    def apply(self, file_dict):
+        """
+        Applies all contained diffs to the given file_dict. This operation will
+        be done in-place.
+
+        :param file_dict: A dictionary containing all files with filename as
+                          key and all lines a value. Will be modified.
+        """
+        assert isinstance(file_dict, dict)
+        assert isinstance(self.diffs, dict)
+
+        for filename in self.diffs:
+            file_dict[filename] = self.diffs[filename].apply(
+                file_dict[filename])
+
+    def __add__(self, other):
+        """
+        Joins those patches to one patch.
+
+        :param other: The other patch.
+        """
+        assert isinstance(self.diffs, dict)
+        assert isinstance(other.diffs, dict)
+
+        for filename in other.diffs:
+            if filename in self.diffs:
+                self.diffs[filename] += other.diffs[filename]
+            else:
+                self.diffs[filename] = other.diffs[filename]
+
+        return self

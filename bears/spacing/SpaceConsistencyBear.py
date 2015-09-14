@@ -2,7 +2,7 @@ from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Diff import Diff
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.i18n import _
-from coalib.results.PatchResult import PatchResult
+from coalib.results.Result import Result
 
 
 class SpaceConsistencyBear(LocalBear):
@@ -64,10 +64,10 @@ class SpaceConsistencyBear(LocalBear):
                 diff.change_line(line_number, line, replacement)
                 inconsistencies = "".join("\n- " + string
                                           for string in result_texts)
-                yield PatchResult(self,
-                                  _("Line contains following spacing "
-                                    "inconsistencies:") + inconsistencies,
-                                  {filename: diff},
-                                  filename,
-                                  line_nr=line_number)
+                yield Result(self,
+                             _("Line contains following spacing "
+                             "inconsistencies:") + inconsistencies,
+                             diffs={filename: diff},
+                             file=filename,
+                             line_nr=line_number)
                 result_texts = []
