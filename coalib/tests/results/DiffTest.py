@@ -112,6 +112,18 @@ class DiffTest(unittest.TestCase):
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.apply(a), b)
 
+    def test_equality(self):
+        a = ["first", "second", "third"]
+        b = ["first", "third"]
+        diff_1 = Diff.from_string_arrays(a, b)
+
+        a[1] = "else"
+        diff_2 = Diff.from_string_arrays(a, b)
+        self.assertEqual(diff_1, diff_2)
+
+        diff_1.add_lines(1, ["1"])
+        self.assertNotEqual(diff_1, diff_2)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
