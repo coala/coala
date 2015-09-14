@@ -45,8 +45,7 @@ class Result:
         :param debug_msg: A message which may help the user find out why
                           this result was yielded.
         """
-        if origin == None:
-            origin = ""
+        origin = origin or ""
         if not isinstance(origin, str):
             origin = origin.__class__.__name__
 
