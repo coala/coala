@@ -1,4 +1,4 @@
-# coala 0.2.0 (WORK IN PROGRESS)
+# coala 0.2.0
 
 This release features the following feature changes:
 
@@ -81,7 +81,7 @@ coala.
 Furthermore we are happy to announce basic Windows and Mac OS X support. This
 would not have been possible without Mischa and Abdeali. coala is fully tested
 against Python 3.3 and 3.4 on Windows and 3.2, 3.3, 3.4 and Pypy3 on Mac while
-not all builtin bears are tested. coala is also tested against Pypy3 and 
+not all builtin bears are tested. coala is also tested against Pypy3 and
 Python 3.5 beta (in addition to 3.3 and 3.4) on Linux.
 
 # coala 0.1.1 alpha
