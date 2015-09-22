@@ -88,6 +88,9 @@ def run_coala(log_printer=None,
                 results_for_section = []
                 for value in chain(section_result[1].values(),
                                    section_result[2].values()):
+                    if value is None:
+                        continue
+
                     for result in value:
                         if not isinstance(result, HiddenResult):
                             results_for_section.append(result)
