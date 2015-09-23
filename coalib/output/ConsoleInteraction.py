@@ -3,7 +3,7 @@ import shutil
 try:
     # This import has side effects and is needed to make input() behave nicely
     import readline  # pylint: disable=unused-import
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     pass
 
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
