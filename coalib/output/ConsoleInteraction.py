@@ -20,6 +20,7 @@ from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
+from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 
 
 STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
@@ -32,7 +33,8 @@ FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
 CLI_ACTIONS = [OpenEditorAction(),
                ApplyPatchAction(),
-               PrintDebugMessageAction()]
+               PrintDebugMessageAction(),
+               ShowPatchAction()]
 
 
 def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
