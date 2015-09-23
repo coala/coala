@@ -1,5 +1,6 @@
 import datetime
 import argparse
+import os
 import sys
 import unittest
 import tempfile
@@ -112,7 +113,7 @@ class BuildManPageTest(unittest.TestCase):
         dist = Distribution()
         uut = BuildManPage(dist)
         self.assertRaises(DistutilsOptionError, uut.finalize_options)
-        uut.output = tempfile.mkstemp()[1]
+        handle, uut.output = tempfile.mkstemp(text=True)
         self.assertRaises(DistutilsOptionError, uut.finalize_options)
         uut.parser = "coalib.tests.misc.BuildManPageTest:test_arg_parser"
 
@@ -120,7 +121,8 @@ class BuildManPageTest(unittest.TestCase):
         self.assertIsInstance(uut._parser, argparse.ArgumentParser)
 
         uut.run()
-        result = open(uut.output).read()
+        result = os.read(handle, 1000).decode()
+        os.close(handle)
 
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(result,
