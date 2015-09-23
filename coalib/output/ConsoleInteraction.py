@@ -1,5 +1,3 @@
-import shutil
-
 try:
     # This import has side effects and is needed to make input() behave nicely
     import readline  # pylint: disable=unused-import
@@ -15,7 +13,6 @@ from coalib.misc.i18n import _
 from coalib.settings.Setting import Setting
 from coalib.results.Result import Result
 from coalib.misc.DictUtilities import inverse_dicts
-from coalib.misc.Exceptions import PermissionException
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -64,45 +61,6 @@ def nothing_done(console_printer):
     """
     console_printer.print(_("No existent section was targeted or enabled. "
                             "Nothing to do."))
-
-
-def finalize(file_diff_dict, file_dict, log_printer=None):
-    """
-    To be called after all results are printed on the console.
-
-    :param file_diff_dict: A dictionary containing filenames as keys and diff
-                           objects as values.
-    :param file_dict:      A dictionary containing all files with filename as
-                           key.
-    :param log_printer:    The log printer that is responsible for writing
-                           log-messages. The only message that will be logged
-                           is a file permission error that can occur when
-                           trying to save a backup file.
-                           Supplying None is the same as providing a
-                           NullPrinter.
-                           By default log messages are dismissed.
-    """
-    for filename in file_diff_dict:
-        diff = file_diff_dict[filename]
-        file_dict[filename] = diff.apply(file_dict[filename])
-
-        try:
-            # Backup original file, override old backup if needed
-            shutil.copy2(filename, filename + ".orig")
-
-            # Write new contents
-            with open(filename, mode='w') as file:
-                # FIXME: Don't cover this branch due to a bug. See
-                # "https://bitbucket.org/ned/coveragepy/issues/384/
-                # incomplete-branch-coverage-in-try-except"
-                file.writelines(file_dict[filename]) # pragma: no cover
-
-        except PermissionException:
-            if log_printer:
-                log_printer.err("Can't backup, writing patch to file "
-                                + filename + " failed.")
-
-    file_diff_dict.clear()
 
 
 def print_lines(console_printer,

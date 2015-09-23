@@ -196,8 +196,7 @@ def process_queues(processes,
                    file_dict,
                    print_results,
                    section,
-                   log_printer,
-                   file_diff_dict):
+                   log_printer):
     """
     Iterate the control queue and send the results recieved to the print_result
     method so that they can be presented to the user.
@@ -219,11 +218,10 @@ def process_queues(processes,
                                filename as keys.
     :param print_results:      Prints all given results appropriate to the
                                output medium.
-    :param file_diff_dict:     A dictionary that contains filenames as keys and
-                               diff objects as values.
     :return:                   Return True if all bears execute succesfully and
                                Results were delivered to the user. Else False.
     """
+    file_diff_dict = {}
     running_processes = get_running_processes(processes)
     retval = False
     # Number of processes working on local bears
@@ -289,8 +287,7 @@ def execute_section(section,
                     global_bear_list,
                     local_bear_list,
                     print_results,
-                    log_printer,
-                    file_diff_dict):
+                    log_printer):
     """
     Executes the section with the given bears.
 
@@ -308,8 +305,6 @@ def execute_section(section,
     :param print_results:    Prints all given results appropriate to the
                              output medium.
     :param log_printer:      The log_printer to warn to.
-    :param file_diff_dict:   A dictionary that contains filenames as keys and
-                             diff objects as values.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
@@ -343,8 +338,7 @@ def execute_section(section,
                                arg_dict["file_dict"],
                                print_results,
                                section,
-                               log_printer,
-                               file_diff_dict),
+                               log_printer),
                 arg_dict["local_result_dict"],
                 arg_dict["global_result_dict"],
                 arg_dict["file_dict"])

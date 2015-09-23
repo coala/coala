@@ -1,9 +1,7 @@
-import builtins
 import tempfile
 import unittest
 import sys
 import os
-import shutil
 from collections import OrderedDict
 from pyprint.NullPrinter import NullPrinter
 
@@ -14,12 +12,10 @@ from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.misc.Exceptions import PermissionException
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
-from coalib.output.ConsoleInteraction import (finalize,
-                                              nothing_done,
+from coalib.output.ConsoleInteraction import (nothing_done,
                                               acquire_settings,
                                               print_bears,
                                               get_action_info,
@@ -187,9 +183,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                          Result("origin", "msg", diffs={testfile_path: diff}),
                          file_dict)
             self.assertEqual(input_generator.last_input, 3)
-            finalize(self.file_diff_dict, file_dict)
-            # Check that the next section does not use the same file_diff_dict
-            self.assertEqual(len(self.file_diff_dict), 0)
+
+            self.file_diff_dict.clear()
 
             with open(testfile_path) as f:
                 self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
@@ -494,36 +489,6 @@ class ConsoleInteractionTest(unittest.TestCase):
                        self.global_bears,
                        self.log_printer.printer)
             self.assertEqual(expected_string, stdout.getvalue())
-
-    def test_finalize_backup_fail(self):
-        def raise_error(file, mode=""):
-            raise PermissionException
-
-        _open = builtins.open
-        _copy2 = shutil.copy2
-
-        try:
-            builtins.open = raise_error
-            builtins.__dict__["open"] = raise_error
-            shutil.copy2 = lambda src, dst: self.assertEqual(src+".orig", dst)
-
-            diff = Diff()
-            diff.delete_line(2)
-
-            # Should catch the backup permission error during write-back.
-            finalize({"f": diff}, {"f": ["1", "2", "3"]})
-
-            # Test logging output.
-            finalize({"f": diff}, {"f": ["1", "2"]}, log_printer=None)
-
-            logger = LogPrinter(StringPrinter())
-            finalize({"f": diff}, {"f": ["1"]}, log_printer=logger)
-            self.assertIn("Can't backup, writing patch to file f failed.",
-                          logger.printer.string)
-
-        finally:
-            builtins.open = _open
-            shutil.copy2 = _copy2
 
 
 # Own test because this is easy and not tied to the rest

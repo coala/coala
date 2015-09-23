@@ -15,7 +15,6 @@ def run_coala(log_printer=None,
               print_results=do_nothing,
               acquire_settings=do_nothing,
               print_section_beginning=do_nothing,
-              finalize=do_nothing,
               nothing_done=do_nothing,
               show_bears=do_nothing):
     """
@@ -36,12 +35,6 @@ def run_coala(log_printer=None,
     :param print_section_beginning: A callback that will be called with a
                                     section name string whenever analysis of a
                                     new section is started.
-    :param finalize:                The method to use for requesting settings.
-                                    It will get a parameter which is a
-                                    dictionary with the settings name as key
-                                    and a list containing a description in [0]
-                                    and the names of the bears who need this
-                                    setting in all following indexes.
     :param nothing_done:            A callback that will be called without
                                     parameters if nothing was done.
     :param show_bears:              A callback that will be called with first
@@ -74,16 +67,13 @@ def run_coala(log_printer=None,
                     continue
 
                 print_section_beginning(section)
-                file_diff_dict = {}
                 section_result = execute_section(
                     section=section,
                     global_bear_list=global_bears[section_name],
                     local_bear_list=local_bears[section_name],
                     print_results=print_results,
-                    log_printer=log_printer,
-                    file_diff_dict=file_diff_dict)
+                    log_printer=log_printer)
                 yielded_results = yielded_results or section_result[0]
-                finalize(file_diff_dict, section_result[3], log_printer)
 
                 results_for_section = []
                 for value in chain(section_result[1].values(),

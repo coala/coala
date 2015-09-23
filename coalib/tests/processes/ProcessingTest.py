@@ -78,8 +78,7 @@ class ProcessingTest(unittest.TestCase):
                                   self.global_bears["default"],
                                   self.local_bears["default"],
                                   lambda *args: self.result_queue.put(args[2]),
-                                  self.log_printer,
-                                  {})
+                                  self.log_printer)
         self.assertTrue(results[0])
 
         local_results = self.result_queue.get(timeout=0)
@@ -113,8 +112,7 @@ class ProcessingTest(unittest.TestCase):
                                   [],
                                   [],
                                   lambda *args: self.result_queue.put(args[2]),
-                                  self.log_printer,
-                                  {})
+                                  self.log_printer)
         # No results
         self.assertFalse(results[0])
         # One file
@@ -152,8 +150,7 @@ class ProcessingTest(unittest.TestCase):
             None,
             lambda *args: self.queue.put((args[2], args[3])),
             Section(""),
-            self.log_printer,
-            {})
+            self.log_printer)
 
         self.assertEqual(self.queue.get(timeout=0), (["The first result."],
                                                      None))
@@ -175,8 +172,7 @@ class ProcessingTest(unittest.TestCase):
             None,
             lambda *args: self.queue.put((args[2], args[3])),
             Section(""),
-            self.log_printer,
-            {})
+            self.log_printer)
         with self.assertRaises(queue.Empty):
             self.queue.get(timeout=0)
 

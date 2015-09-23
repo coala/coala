@@ -17,7 +17,6 @@ from coalib.output.ConsoleInteraction import (nothing_done,
                                               acquire_settings,
                                               print_section_beginning,
                                               print_results,
-                                              finalize,
                                               show_bears)
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.coala_main import run_coala
@@ -36,7 +35,6 @@ def main():
         print_results=print_results,
         acquire_settings=acquire_settings,
         print_section_beginning=partial_print_sec_beg,
-        finalize=finalize,
         nothing_done=nothing_done)
 
     return exitcode
