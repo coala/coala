@@ -10,7 +10,6 @@ env:
   matrix:
     - PYTHON_VERSION=3.4.2
     - PYTHON_VERSION=3.3.5
-    - PYTHON_VERSION=3.2.5
     - PYTHON_VERSION=pypy3-2.4.0
 
 install:

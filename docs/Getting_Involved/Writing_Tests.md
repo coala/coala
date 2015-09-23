@@ -159,7 +159,7 @@ if __name__ == '__main__':
 >
 > If some code is untestable, you need to mark your component code with
 > `# pragma: no cover`. Important: Provide a reason why your code is
-> untestable. Code coverage is measured using python 3.2, 3.3 and 3.4 on linux.
+> untestable. Code coverage is measured using python 3.3 and 3.4 on linux.
 >
 > ```python
 > # Reason why this function is untestable.

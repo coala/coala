@@ -2,10 +2,10 @@
 
 This document contains information on how to install coala. Supported platforms
 are Linux and Windows. coala is known to work on OS X as well. coala is tested
-against CPython 3.2, 3.2 and 3.4 as well as PyPy3.
+against CPython 3.3 and 3.4 as well as PyPy3.
 
 In order to run coala you need to install Python. It is recommended, that
-you install Python3 >= 3.2 from http://www.python.org.
+you install Python3 >= 3.3 from http://www.python.org.
 
 The easiest way to install coala is using pip (Pip Installs Packages). If you
 don't already have pip, you can install it like described on
@@ -74,7 +74,7 @@ administrator and start `setup.py`.
 
 If you want to install coala to an alternate location you can e.g. call
 `python setup.py install --prefix=/your/prefix/location`. Other options are
-documented on <https://docs.python.org/3.2/install/#alternate-installation>.
+documented on <https://docs.python.org/3.3/install/#alternate-installation>.
 
 # Dependencies
 

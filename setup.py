@@ -81,9 +81,12 @@ if __name__ == "__main__":
 
               'Operating System :: OS Independent',
 
-              'Programming Language :: Python :: 3.2',
+              'Programming Language :: Python :: Implementation :: PyPy',
+              'Programming Language :: Python :: Implementation :: CPython',
+
               'Programming Language :: Python :: 3.3',
               'Programming Language :: Python :: 3.4',
+              'Programming Language :: Python :: 3 :: Only',
 
               'Topic :: Scientific/Engineering :: Information Analysis',
               'Topic :: Software Development :: Quality Assurance',
