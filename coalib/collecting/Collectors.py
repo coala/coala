@@ -35,9 +35,12 @@ def icollect(file_paths):
     """
     Evaluate globs in file paths and return all matching files.
 
-    :param file_paths:  list of file paths that can include globs
+    :param file_paths:  file path or list of such that can include globs
     :return:            iterator that yields paths of all matching files
     """
+    if isinstance(file_paths, str):
+        file_paths = [file_paths]
+
     for file_path in file_paths:
         for match in iglob(file_path):
             yield match
@@ -47,7 +50,7 @@ def collect_files(file_paths):
     """
     Evaluate globs in file paths and return all matching files
 
-    :param file_paths: list of file paths that can include globs
+    :param file_paths: file path or list of such that can include globs
     :return:           list of paths of all matching files
     """
     return list(filter(os.path.isfile, icollect(file_paths)))
@@ -57,7 +60,7 @@ def collect_dirs(dir_paths):
     """
     Evaluate globs in directory paths and return all matching directories
 
-    :param dir_paths: list of file paths that can include globs
+    :param dir_paths: file path or list of such that can include globs
     :return:          list of paths of all matching directories
     """
     return list(filter(os.path.isdir, icollect(dir_paths)))
@@ -68,7 +71,7 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
 
-    :param bear_dirs:   directories that can contain bears
+    :param bear_dirs:   directory name or list of such that can contain bears
     :param bear_names:  names of bears
     :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
@@ -93,7 +96,7 @@ def collect_bears(bear_dirs, bear_names, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
 
-    :param bear_dirs:   directories that can contain bears
+    :param bear_dirs:   directory name or list of such that can contain bears
     :param bear_names:  names of bears
     :param kinds: list  of bear kinds to be collected
     :param log_printer: log_printer to handle logging

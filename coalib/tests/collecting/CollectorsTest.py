@@ -32,6 +32,17 @@ class CollectFilesTest(unittest.TestCase):
                              "py_files",
                              "file2.py"))])
 
+    def test_file_string_collection(self):
+        self.assertEqual(collect_files(os.path.join(self.collectors_test_dir,
+                                                    "others",
+                                                    "*",
+                                                    "*2.py")),
+                         [os.path.normcase(os.path.join(
+                             self.collectors_test_dir,
+                             "others",
+                             "py_files",
+                             "file2.py"))])
+
 
 class CollectDirsTest(unittest.TestCase):
     def setUp(self):
@@ -49,6 +60,25 @@ class CollectDirsTest(unittest.TestCase):
         self.assertEqual(
             sorted(collect_dirs([os.path.join(self.collectors_test_dir,
                                               "**")])),
+            sorted([os.path.normcase(os.path.join(
+                self.collectors_test_dir, "bears")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "bears",
+                                              "__pycache__")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others",
+                                              "c_files")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others",
+                                              "py_files")),
+                os.path.normcase(self.collectors_test_dir+os.sep)]))
+
+    def test_dir_string_collection(self):
+        self.assertEqual(
+            sorted(collect_dirs(os.path.join(self.collectors_test_dir,
+                                             "**"))),
             sorted([os.path.normcase(os.path.join(
                 self.collectors_test_dir, "bears")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
@@ -85,6 +115,13 @@ class CollectBearsTest(unittest.TestCase):
     def test_simple_single(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, "bears")],
+            ["bear1"],
+            ["kind"],
+            self.log_printer)), 1)
+
+    def test_string_single(self):
+        self.assertEqual(len(collect_bears(
+            os.path.join(self.collectors_test_dir, "bears"),
             ["bear1"],
             ["kind"],
             self.log_printer)), 1)
