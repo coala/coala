@@ -14,8 +14,10 @@ class ShowPatchActionTest(unittest.TestCase):
         self.uut = ShowPatchAction()
         diff_dict = {"a": Diff(), "b": Diff()}
         diff_dict["a"].add_lines(1, ["test\n"])
+        diff_dict["a"].delete_line(3)
         diff_dict["b"].add_lines(0, ["first\n"])
-        self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": []}
+
+        self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
         self.test_result = Result("origin", "message", diffs=diff_dict)
 
     def test_is_applicable(self):
@@ -31,8 +33,16 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          Section("name")),
                              {})
             self.assertEqual(stdout.getvalue(),
-                             "--- a\n+++ a\n@@ -1,3 +1,4 @@\n a\n+test\n b\n"
-                             " c\n--- b\n+++ b\n@@ -0,0 +1 @@\n+first\n")
+                             "|    |    | --- a\n"
+                             "|    |    | +++ a\n"
+                             "|   1|   1| a\n"
+                             "|    |   2|+test\n"
+                             "|   2|   3| b\n"
+                             "|   3|    |-c\n"
+                             "|    |    | --- b\n"
+                             "|    |    | +++ b\n"
+                             "|    |   1|+first\n"
+                             "|   1|   2| old_first\n")
 
     def test_apply_with_previous_patches(self):
         with retrieve_stdout() as stdout:
@@ -44,8 +54,16 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          Section("name")),
                              previous_diffs)
             self.assertEqual(stdout.getvalue(),
-                             "--- a\n+++ a\n@@ -1,3 +1,4 @@\n a\n+test\n b_cha"
-                             "nged\n c\n--- b\n+++ b\n@@ -0,0 +1 @@\n+first\n")
+                             "|    |    | --- a\n"
+                             "|    |    | +++ a\n"
+                             "|   1|   1| a\n"
+                             "|    |   2|+test\n"
+                             "|   2|   3| b_changed\n"
+                             "|   3|    |-c\n"
+                             "|    |    | --- b\n"
+                             "|    |    | +++ b\n"
+                             "|    |   1|+first\n"
+                             "|   1|   2| old_first\n")
 
 
 if __name__ == '__main__':
