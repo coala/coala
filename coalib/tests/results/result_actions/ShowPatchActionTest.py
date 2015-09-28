@@ -33,14 +33,14 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          Section("name")),
                              {})
             self.assertEqual(stdout.getvalue(),
-                             "|    |    | --- a\n"
-                             "|    |    | +++ a\n"
+                             "|----|    | a\n"
+                             "|    |++++| a\n"
                              "|   1|   1| a\n"
                              "|    |   2|+test\n"
                              "|   2|   3| b\n"
                              "|   3|    |-c\n"
-                             "|    |    | --- b\n"
-                             "|    |    | +++ b\n"
+                             "|----|    | b\n"
+                             "|    |++++| b\n"
                              "|    |   1|+first\n"
                              "|   1|   2| old_first\n")
 
@@ -54,14 +54,14 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          Section("name")),
                              previous_diffs)
             self.assertEqual(stdout.getvalue(),
-                             "|    |    | --- a\n"
-                             "|    |    | +++ a\n"
+                             "|----|    | a\n"
+                             "|    |++++| a\n"
                              "|   1|   1| a\n"
                              "|    |   2|+test\n"
                              "|   2|   3| b_changed\n"
                              "|   3|    |-c\n"
-                             "|    |    | --- b\n"
-                             "|    |    | +++ b\n"
+                             "|----|    | b\n"
+                             "|    |++++| b\n"
                              "|    |   1|+first\n"
                              "|   1|   2| old_first\n")
 

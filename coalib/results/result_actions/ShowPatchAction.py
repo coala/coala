@@ -16,8 +16,10 @@ def print_beautified_diff(difflines):
             subtracted, added = tuple(values.split(" "))
             current_line_added = int(added.split(",")[0][1:])
             current_line_subtracted = int(subtracted.split(",")[0][1:])
-        elif line.startswith("---") or line.startswith("+++"):
-            print(format_line(line))
+        elif line.startswith("---"):
+            print(format_line(line[4:], real_nr="----"))
+        elif line.startswith("+++"):
+            print(format_line(line[4:], mod_nr="++++"))
         elif line.startswith("+"):
             print(format_line(line[1:], mod_nr=current_line_added, symbol="+"))
             current_line_added += 1
