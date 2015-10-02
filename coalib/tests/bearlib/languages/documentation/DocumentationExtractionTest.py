@@ -88,6 +88,41 @@ class DocumentationExtractionTest(unittest.TestCase):
                            "\n"
                            " @param foo WHAT PARAM PLEASE!?\n")))
 
+    def test_extract_documentation_PYTHON(self):
+        data = DocumentationExtractionTest.load_testdata(".py")
+
+        expected = (("\n"
+                     "Module description.\n"
+                     "\n"
+                     "Some more foobar-like text.\n"),
+                    ("\n"
+                     "A nice and neat way of documenting code.\n"
+                     ":param radius: The explosion radius.\n"),
+                    ("\n"
+                     "Docstring with layouted text.\n"
+                     "\n"
+                     "layouts inside docs are not preserved for these "
+                     "documentation styles.\n"
+                     "this is intended.\n"),
+                    (" Docstring directly besides triple quotes.\n"
+                     "Continues here. "))
+
+        for pylang in ("PYTHON", "PYTHON3"):
+            self.assertEqual(
+                tuple(extract_documentation(data, pylang, "default")),
+                expected)
+
+        expected += (" Alternate documentation style in doxygen.\n"
+                     "  Subtext\n"
+                     " More subtext (not correctly aligned)\n"
+                     "      sub-sub-text\n"
+                     "\n",)
+
+        for pylang in ("PYTHON", "PYTHON3"):
+            self.assertEqual(
+                tuple(extract_documentation(data, pylang, "doxygen")),
+                expected)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
