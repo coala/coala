@@ -42,6 +42,9 @@ def extract_documentation(content, language, docstyle):
     where <MODE> is one of the above mentioned extraction modes (standard,
     simple, continuous).
 
+    If a language setting has an invalid format, a ResourceWarning is
+    triggered via `warnings.warn` and the setting is skipped.
+
     :param content:  The source-code-string where to extract documentation
                      from.
     :param language: The programming language used.
