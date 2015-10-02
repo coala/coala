@@ -48,9 +48,7 @@ def trim_empty(iterator):
 
     :param iterator: The iterator to be filtered.
     """
-    for elem in iterator:
-        if len(elem) != 0:
-            yield elem
+    return filter(lambda x: len(x) != 0, iterator)
 
 
 def search_for(pattern, string, flags=0, max_match=0, use_regex=False):
