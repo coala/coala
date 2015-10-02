@@ -1,3 +1,4 @@
+import os.path
 import unittest
 import sys
 
@@ -41,6 +42,30 @@ class DocumentationExtractionTest(unittest.TestCase):
         # Test unregistered docstyle.
         with self.assertRaises(KeyError):
             tuple(extract_documentation("", "PYTHON", "INVALID"))
+
+    @staticmethod
+    def load_testdata(language):
+        filename = (os.path.dirname(os.path.realpath(__file__)) +
+                    "/documentation_extraction_testdata/data" + language)
+        with open(filename, "r") as fl:
+            data = fl.read()
+
+        return data
+
+    def test_extract_documentation_C(self):
+        data = DocumentationExtractionTest.load_testdata(".c")
+
+        # No built-in documentation for C.
+        with self.assertRaises(KeyError):
+            tuple(extract_documentation(data, "C", "default"))
+
+        self.assertEqual(tuple(extract_documentation(data, "C", "doxygen")),
+                         (("\n"
+                           " This is the main function.\n"
+                           "\n"
+                           " @returns Your favorite number.\n"),
+                          (" foobar = barfoo.\n"
+                           " @param x whatever...\n")))
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ After module initialization this turns into a dict, where the keys are the
 docstyle names (so the tuple entries already standing here) and the values are
 the configuration dictionaries.
 """
-docstyles = ()
+docstyles = ("default", "doxygen")
 
 
 def get_docstyles():
