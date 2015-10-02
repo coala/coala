@@ -4,7 +4,8 @@ import sys
 sys.path.insert(0, ".")
 
 from coalib.bearlib.languages.documentation.DocumentationExtraction import (
-    _get_prefixed_settings)
+    _get_prefixed_settings,
+    extract_documentation)
 
 
 class DocumentationExtractionTest(unittest.TestCase):
@@ -35,6 +36,11 @@ class DocumentationExtractionTest(unittest.TestCase):
                          {"setting1" : "hello",
                           "setting2" : "no",
                           "super" : "+1"})
+
+    def test_extract_documentation_basic(self):
+        # Test unregistered docstyle.
+        with self.assertRaises(KeyError):
+            tuple(extract_documentation("", "PYTHON", "INVALID"))
 
 
 if __name__ == '__main__':
