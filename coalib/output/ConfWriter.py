@@ -7,7 +7,6 @@ class ConfWriter(ClosableObject):
     def __init__(self,
                  file_name,
                  key_value_delimiter='=',
-                 comment_seperators=('#',),
                  key_delimiter=',',
                  section_name_surrounding_beg='[',
                  section_name_surrounding_end="]",
@@ -16,7 +15,6 @@ class ConfWriter(ClosableObject):
         self.__file_name = file_name
         self.__file = open(self.__file_name, "w")
         self.__key_value_delimiter = key_value_delimiter
-        self.__comment_seperators = comment_seperators
         self.__key_delimiter = key_delimiter
         self.__section_name_surrounding_beg = section_name_surrounding_beg
         self.__section_name_surrounding_end = section_name_surrounding_end
