@@ -7,7 +7,7 @@ import unittest
 
 class LineParserTest(unittest.TestCase):
     def setUp(self):
-        self.uut = LineParser()
+        self.uut = LineParser(comment_seperators=('#', ';'))
 
     def test_empty_line(self):
         self.check_data_set("")

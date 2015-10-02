@@ -7,7 +7,7 @@ class ConfWriter(ClosableObject):
     def __init__(self,
                  file_name,
                  key_value_delimiter='=',
-                 comment_seperators=('#', ';', '//'),
+                 comment_seperators=('#',),
                  key_delimiter=',',
                  section_name_surrounding_beg='[',
                  section_name_surrounding_end="]",

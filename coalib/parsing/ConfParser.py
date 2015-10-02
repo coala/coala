@@ -15,7 +15,7 @@ class ConfParser:
 
     def __init__(self,
                  key_value_delimiters=('=',),
-                 comment_seperators=('#', ';', '//'),
+                 comment_seperators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=None):
         section_name_surroundings = section_name_surroundings or {"[": "]"}

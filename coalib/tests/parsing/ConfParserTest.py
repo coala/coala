@@ -20,8 +20,8 @@ class ConfParserTest(unittest.TestCase):
      j  , another = a
                    multiline
                    value
-    ; just a omment
-    ; just a omment
+    # just a omment
+    # just a omment
     nokey. = value
     default.test = content
     makefiles.lastone = val
@@ -59,8 +59,8 @@ class ConfParserTest(unittest.TestCase):
         makefiles_should = OrderedDict([
             ('j', 'a\nmultiline\nvalue'),
             ('another', 'a\nmultiline\nvalue'),
-            ('comment1', '; just a omment'),
-            ('comment2', '; just a omment'),
+            ('comment1', '# just a omment'),
+            ('comment2', '# just a omment'),
             ('lastone', 'val'),
             ('comment3', ''),
             ('a_default', 'val'),

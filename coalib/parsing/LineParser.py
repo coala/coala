@@ -5,7 +5,7 @@ from coalib.parsing.StringProcessing import unescape
 class LineParser:
     def __init__(self,
                  key_value_delimiters=('=',),
-                 comment_seperators=('#', ';', '//'),
+                 comment_seperators=('#',),
                  key_delimiters=(',',),
                  section_name_surroundings=None,
                  section_override_delimiters=(".",)):
