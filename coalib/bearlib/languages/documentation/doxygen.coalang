@@ -1,2 +1,6 @@
 [C]
 doc-marker-standard = /**, *, */
+
+[CPP]
+doc-marker-standard = /**, *, */
+doc-marker-continuous = ///, ///

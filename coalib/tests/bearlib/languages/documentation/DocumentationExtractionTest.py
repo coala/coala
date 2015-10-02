@@ -67,6 +67,27 @@ class DocumentationExtractionTest(unittest.TestCase):
                           (" foobar = barfoo.\n"
                            " @param x whatever...\n")))
 
+    def test_extract_documentation_CPP(self):
+        data = DocumentationExtractionTest.load_testdata(".cpp")
+
+        # No built-in documentation for C++.
+        with self.assertRaises(KeyError):
+            tuple(extract_documentation(data, "CPP", "default"))
+
+        self.assertEqual(tuple(extract_documentation(data, "CPP", "doxygen")),
+                         (("\n"
+                           " This is the main function.\n"
+                           " @returns Exit code.\n"
+                           "          Or any other number.\n"),
+                          (" foobar\n"
+                           " @param xyz\n"),
+                          (" Some alternate style of documentation\n"),
+                          (" Should work\n"
+                           "\n"
+                           " even without a function standing below.\n"
+                           "\n"
+                           " @param foo WHAT PARAM PLEASE!?\n")))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
