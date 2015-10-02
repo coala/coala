@@ -162,16 +162,15 @@ def split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    for elem in _split(string,
-                       max_split,
-                       remove_empty_matches,
-                       search_for,
-                       pattern,
-                       string,
-                       0,
-                       0,
-                       use_regex):
-        yield elem
+    return _split(string,
+                  max_split,
+                  remove_empty_matches,
+                  search_for,
+                  pattern,
+                  string,
+                  0,
+                  0,
+                  use_regex)
 
 
 def unescaped_split(pattern,
@@ -196,16 +195,15 @@ def unescaped_split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    for elem in _split(string,
-                       max_split,
-                       remove_empty_matches,
-                       unescaped_search_for,
-                       pattern,
-                       string,
-                       0,
-                       0,
-                       use_regex):
-        yield elem
+    return _split(string,
+                  max_split,
+                  remove_empty_matches,
+                  unescaped_search_for,
+                  pattern,
+                  string,
+                  0,
+                  0,
+                  use_regex)
 
 
 def search_in_between(begin,
