@@ -6,12 +6,6 @@ from coalib.misc.Constants import Constants
 from coalib.misc.i18n import _
 
 
-if sys.version_info < (3, 3): # pragma: no cover
-    PermissionException = IOError
-else:
-    PermissionException = PermissionError
-
-
 def get_exitcode(exception, log_printer=None):
     log_printer = log_printer or LogPrinter(NullPrinter())
     exitcode = 0
