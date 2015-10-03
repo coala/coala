@@ -6,7 +6,6 @@ sys.path.insert(0, ".")
 from coalib.bearlib.languages.LanguageDefinition import LanguageDefinition
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-from coalib.parsing.ConfParser import ConfParser
 
 
 class LanguageDefinitionTest(unittest.TestCase):
@@ -22,7 +21,7 @@ class LanguageDefinitionTest(unittest.TestCase):
             LanguageDefinition.from_section(self.section)
 
         self.section.append(Setting("language_family", "bullshit"))
-        with self.assertRaises(ConfParser().FileNotFoundError):
+        with self.assertRaises(FileNotFoundError):
             LanguageDefinition.from_section(self.section)
 
     def test_loading(self):
