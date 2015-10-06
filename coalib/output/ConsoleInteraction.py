@@ -509,16 +509,22 @@ def show_bear(console_printer, bear, sections, metadata):
                      _("No optional settings."))
 
 
-def print_bears(console_printer, bears):
+def print_bears(console_printer, bears, compress):
     """
     Presents all bears being used in a stylized manner.
 
     :param console_printer: Object to print messages on the console.
     :param bears:           Its a dictionary with bears as keys and list of
                             sections containing those bears as values.
+    :param compress:            If set to true, output will be compressed (just
+                                show bear names as a list)
     """
     if not bears:
         console_printer.print(_("No bears to show."))
+    elif compress:
+        bear_list = sorted(bears.keys(), key=lambda bear: bear.__name__)
+        for bear in bear_list:
+            console_printer.print(" *", bear.__name__)
     else:
         for bear in sorted(bears.keys(),
                            key=lambda bear: bear.__name__):
@@ -528,7 +534,7 @@ def print_bears(console_printer, bears):
                       bear.get_metadata())
 
 
-def show_bears(local_bears, global_bears, console_printer):
+def show_bears(local_bears, global_bears, compress, console_printer):
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
@@ -537,6 +543,8 @@ def show_bears(local_bears, global_bears, console_printer):
                                 as keys and bear list as values.
     :param global_bears:        Dictionary of global bears with section
                                 names as keys and bear list as values.
+    :param compress:            If set to true, output will be compressed (just
+                                show bear names as a list)
     :param show_bears_callback: The callback that is used to print these
                                 bears. It will get one parameter holding
                                 bears as key and the list of section names
@@ -544,4 +552,4 @@ def show_bears(local_bears, global_bears, console_printer):
     """
     bears = inverse_dicts(local_bears, global_bears)
 
-    print_bears(console_printer, bears)
+    print_bears(console_printer, bears, compress)

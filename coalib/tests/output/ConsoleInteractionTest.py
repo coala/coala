@@ -400,13 +400,17 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_bears_empty(self):
         with retrieve_stdout() as stdout:
             bears = {}
-            print_bears(self.log_printer.printer, bears)
+            print_bears(self.log_printer.printer, bears, True)
+            self.assertEqual(_("No bears to show.") + "\n", stdout.getvalue())
+        with retrieve_stdout() as stdout:
+            bears = {}
+            print_bears(self.log_printer.printer, bears, False)
             self.assertEqual(_("No bears to show.") + "\n", stdout.getvalue())
 
     def test_print_bears(self):
         with retrieve_stdout() as stdout:
             bears = {TestBear: ["default", "docs"]}
-            print_bears(self.log_printer.printer, bears)
+            print_bears(self.log_printer.printer, bears, False)
             expected_string = "TestBear:\n"
             expected_string += "  Test bear Description.\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -424,7 +428,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_bears_no_settings(self):
         with retrieve_stdout() as stdout:
             bears = {SomeBear: ["default"]}
-            print_bears(self.log_printer.printer, bears)
+            print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeBear:\n"
             expected_string += "  " + "Some Description." + "\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -437,7 +441,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_bears_no_needed_settings(self):
         with retrieve_stdout() as stdout:
             bears = {SomeOtherBear: ["test"]}
-            print_bears(self.log_printer.printer, bears)
+            print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeOtherBear:\n"
             expected_string += "  " + "This is a Bear." + "\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -453,7 +457,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_bears_no_optional_settings(self):
         with retrieve_stdout() as stdout:
             bears = {TestBear2: ["test"]}
-            print_bears(self.log_printer.printer, bears)
+            print_bears(self.log_printer.printer, bears, False)
             expected_string = "TestBear2:\n"
             expected_string += "  Test bear 2 description.\n\n"
             expected_string += "  " + _("Used in:") + "\n"
@@ -467,7 +471,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_bears_no_sections(self):
         with retrieve_stdout() as stdout:
             bears = {SomeBear: []}
-            print_bears(self.log_printer.printer, bears)
+            print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeBear:\n"
             expected_string += "  " + "Some Description." + "\n\n"
             expected_string += "  " + _("No sections.") + "\n\n"
@@ -481,14 +485,24 @@ class ConsoleInteractionTest(unittest.TestCase):
             bears = {KeywordBear: ['default', 'test'],
                      LineLengthBear: ['test'],
                      SomeglobalBear: ['default', 'test']}
-            print_bears(self.log_printer.printer, bears)
+            print_bears(self.log_printer.printer, bears, False)
             expected_string = stdout.getvalue()
         self.maxDiff = None
         with retrieve_stdout() as stdout:
             show_bears(self.local_bears,
                        self.global_bears,
+                       False,
                        self.log_printer.printer)
             self.assertEqual(expected_string, stdout.getvalue())
+
+        with retrieve_stdout() as stdout:
+            show_bears(self.local_bears,
+                       self.global_bears,
+                       True,
+                       self.log_printer.printer)
+            self.assertEqual(" * KeywordBear\n"
+                             " * LineLengthBear\n"
+                             " * SomeglobalBear\n", stdout.getvalue())
 
 
 # Own test because this is easy and not tied to the rest

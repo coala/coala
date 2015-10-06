@@ -1,4 +1,5 @@
 from itertools import chain
+import os
 
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -6,6 +7,10 @@ from coalib.processes.Processing import execute_section
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
+from coalib.settings.Setting import path_list
+from coalib.misc.Constants import Constants
+from coalib.bears.BEAR_KIND import BEAR_KIND
+from coalib.collecting.Collectors import collect_bears
 
 
 do_nothing = lambda *args: True
@@ -39,7 +44,11 @@ def run_coala(log_printer=None,
                                     parameters if nothing was done.
     :param show_bears:              A callback that will be called with first
                                     a list of local bears, second a list of
-                                    global bears to output them.
+                                    global bears to output them. A third bool
+                                    parameter may be used to indicate if a
+                                    compressed output (True) or a normal output
+                                    (False) is desired, the former being used
+                                    for showing all available bears to the user.
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
@@ -55,9 +64,27 @@ def run_coala(log_printer=None,
          global_bears,
          targets) = gather_configuration(acquire_settings, log_printer)
 
-        if bool(sections["default"].get("show_bears", "False")):
+        show_all_bears = bool(sections['default'].get('show_all_bears', False))
+        show_bears_ = bool(sections["default"].get("show_bears", "False"))
+        if show_all_bears:
+            show_bears_ = True
+            for section in sections:
+                bear_dirs = [os.path.join(Constants.coalib_bears_root, "**")]
+                bear_dirs += path_list(sections[section].get("bear_dirs", ""))
+
+                local_bears[section] = collect_bears(bear_dirs,
+                                            ["**"],
+                                            [BEAR_KIND.LOCAL],
+                                            log_printer)
+                global_bears[section] = collect_bears(bear_dirs,
+                                             ["**"],
+                                             [BEAR_KIND.GLOBAL],
+                                             log_printer)
+
+        if show_bears_:
             show_bears(local_bears,
-                       global_bears)
+                       global_bears,
+                       show_all_bears)
             did_nothing = False
         else:
             results = {}

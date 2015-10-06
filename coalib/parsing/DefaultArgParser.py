@@ -71,6 +71,12 @@ def default_arg_parser(formatter_class=None):
                             const=True,
                             metavar='BOOL',
                             help=SHOW_BEARS_HELP)
+    arg_parser.add_argument('-A',
+                            '--show-all-bears',
+                            nargs='?',
+                            const=True,
+                            metavar='BOOL',
+                            help=_("Display all bears."))
     SAVE_HELP = _('Filename of file to be saved to, if provided with no '
                   'arguments, settings will be stored back to the file given '
                   'by -c')
