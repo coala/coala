@@ -1,5 +1,4 @@
 from itertools import chain
-import os
 
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -7,8 +6,6 @@ from coalib.processes.Processing import execute_section
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
-from coalib.settings.Setting import path_list
-from coalib.misc.Constants import Constants
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Collectors import collect_bears
 
@@ -69,9 +66,7 @@ def run_coala(log_printer=None,
         if show_all_bears:
             show_bears_ = True
             for section in sections:
-                bear_dirs = [os.path.join(Constants.coalib_bears_root, "**")]
-                bear_dirs += path_list(sections[section].get("bear_dirs", ""))
-
+                bear_dirs = sections[section].bear_dirs()
                 local_bears[section] = collect_bears(bear_dirs,
                                             ["**"],
                                             [BEAR_KIND.LOCAL],

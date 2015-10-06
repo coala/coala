@@ -1,9 +1,11 @@
 from collections import OrderedDict
 import copy
+import os
 
 from coalib.misc.Decorators import generate_repr
-from coalib.settings.Setting import Setting
+from coalib.settings.Setting import Setting, path_list
 from coalib.misc.DictUtilities import update_ordered_dict_key
+from coalib.misc.Constants import Constants
 
 
 def append_to_sections(sections,
@@ -57,6 +59,12 @@ class Section:
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
+
+    def bear_dirs(self):
+        bear_dirs = path_list(self.get("bear_dirs", ""))
+        bear_dirs.append(os.path.join(Constants.coalib_bears_root, "**"))
+
+        return bear_dirs
 
     def is_enabled(self, targets):
         """

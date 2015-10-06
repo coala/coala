@@ -1,11 +1,9 @@
-import os
 import copy
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Collectors import collect_bears
-from coalib.misc.Constants import Constants
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.settings.Setting import Setting, path_list
+from coalib.settings.Setting import Setting
 from coalib.misc.i18n import _
 
 
@@ -29,9 +27,7 @@ def fill_settings(sections, acquire_settings, log_printer):
     global_bears = {}
 
     for section_name, section in sections.items():
-        bear_dirs = path_list(section.get("bear_dirs", ""))
-        bear_dirs.append(os.path.join(Constants.coalib_bears_root,
-                                      "**"))
+        bear_dirs = section.bear_dirs()
         bears = list(section.get("bears", ""))
         section_local_bears = collect_bears(bear_dirs,
                                             bears,

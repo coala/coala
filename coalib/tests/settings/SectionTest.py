@@ -166,5 +166,14 @@ class SectionTest(unittest.TestCase):
         self.assertEqual("section {key2 : value12, key4 : value14}",
                          section.__str__())
 
+    def test_bear_dirs_empty(self):
+        section = Section("section", None)
+        self.assertEqual(len(section.bear_dirs()), 1)
+
+    def test_bear_dirs(self):
+        section = Section("section", None)
+        section.append(Setting("bear_dirs", "test1, test2"))
+        self.assertEqual(len(section.bear_dirs()), 3)
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
