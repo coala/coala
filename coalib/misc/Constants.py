@@ -1,4 +1,5 @@
 import os
+import platform
 
 from coalib.misc.i18n import _
 
@@ -65,3 +66,13 @@ class Constants:
         VERSION = ver.readline().strip()
 
     BUS_NAME = "org.coala_analyzer.v1"
+
+    if platform.system() == 'Windows':  # pragma: no cover
+        TAGS_DIR = os.path.join(os.getenv("APPDATA"), "coala", "tags")
+    else:
+        TAGS_DIR = os.path.join(os.path.expanduser("~"),
+                                ".local",
+                                "coala",
+                                "tags")
+    if not os.path.exists(TAGS_DIR):  # pragma: no cover
+        os.makedirs(TAGS_DIR)
