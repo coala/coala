@@ -34,6 +34,9 @@ class SourcePositionTest(unittest.TestCase):
 
 
 class SourceRangeTest(unittest.TestCase):
+    def test_initialization(self):
+        uut = SourceRange(SourcePosition("FileA", "2"))
+        self.assertEqual(uut.end, SourcePosition("FileA"))
 
     def test_invalid_arguments(self):
         # arguments must be SourceRanges

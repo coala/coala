@@ -46,25 +46,28 @@ class SourcePosition:
 @generate_repr("start", "end")
 @total_ordering
 class SourceRange:
-    def __init__(self, start, end):
+    def __init__(self, start, end=None):
         if not isinstance(start, SourcePosition):
             raise TypeError("The start of this SourceRange is not a "
                             "SourcePosition")
 
-        if not isinstance(end, SourcePosition):
+        if not (isinstance(end, SourcePosition) or end is None):
             raise TypeError("The end of this SourceRange is not a "
                             "SourcePosition")
 
-        if not start.file == end.file:
+        self.start = start
+        self.end = end
+
+        if self.end is None:
+            self.end = SourcePosition(self.start.file)
+
+        if not self.start.file == self.end.file:
             raise ValueError("Start and end of this SourceRange are not"
                              "located in the same file")
 
-        if not end >= start:
+        if not self.end >= self.start:
             raise ValueError("The Start of this SourceRange lies after it's "
                              "end")
-
-        self.start = start
-        self.end = end
 
     def __eq__(self, other):
         if not isinstance(other, SourceRange):
