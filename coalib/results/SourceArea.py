@@ -33,26 +33,14 @@ class SourcePosition:
             str(self.line))
 
     def __eq__(self, other):
+        if not isinstance(other, SourcePosition):
+            return False
+
         return (self.file == other.file and
                 self.line == other.line)
 
     def __lt__(self, other):
-        # Show elements without files first
-        if (self.file is None) != (other.file is None):
-            return self.file is None
-
-        # Now either both file members are None or both are set
-        if self.file != other.file:
-            return self.file < other.file
-
-        # Show results with a no or lesser line number first
-        if (self.line is None) != (other.line is None):
-            return self.line is None
-
-        if self.line != other.line:
-            return self.line < other.line
-
-        return False
+        return lt(self, other)
 
 
 @generate_repr("start", "end")
@@ -85,11 +73,57 @@ class SourceRange:
         return self.start == other.start and self.end == other.end
 
     def __lt__(self, other):
-        if not isinstance(other, SourceRange):
-            raise TypeError("Cannot compare SourceRange with a variable of"
-                            "another type")
+        return lt(self, other)
 
-        if self.start != other.start:
-            return self.start < other.start
 
-        return self.end < other.end
+def lt(source_object, other):
+    # source_object can only be SourcePosition or SourceRange
+    if not (isinstance(other, SourcePosition) or
+            isinstance(other, SourceRange)):
+        raise TypeError("SourceArea objects can only be compared with "
+                        "each other")
+
+    if isinstance(source_object, SourcePosition):
+        if isinstance(other, SourcePosition):
+            return _lt_positions(source_object, other)
+
+        else:
+            return _lt_position_vs_range(source_object, other)
+
+    else:
+        if isinstance(other, SourcePosition):
+            # ranges and positions cannot be equal, therefore this is valid:
+            return not _lt_position_vs_range(other, source_object)
+
+        else:
+            return _lt_ranges(source_object, other)
+
+
+def _lt_positions(position, other_position):
+    if (position.file is None) != (other_position.file is None):
+        return position.file is None
+
+    if position.file != other_position.file:
+        return position.file < other_position.file
+
+    if (position.line is None) != (other_position.line is None):
+        return position.line is None
+
+    if position.line != other_position.line:
+        return position.line < other_position.line
+
+    return False
+
+
+def _lt_position_vs_range(position, other_range):
+    if position == other_range.start:
+        return True  # position < range
+
+    return position < other_range.start
+
+
+def _lt_ranges(range, other_range):
+    if range.start != other_range.start:
+        return range.start < other_range.start
+
+    return range.end < other_range.end
