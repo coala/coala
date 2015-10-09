@@ -18,25 +18,25 @@ class SourcePositionTest(unittest.TestCase):
     def test_string_conversion(self):
         uut = SourcePosition("filename", 1)
         self.assertEqual(str(uut),
-                         "file: 'filename', line: 1")
+                         "file: 'filename', line: 1, column: None")
         self.assertRegex(
             repr(uut),
-            "<SourcePosition object\\(file='filename', line=1\\) at "
-            "0x[0-9a-fA-F]+>")
+            "<SourcePosition object\\(file='filename', line=1, column=None\\) "
+            "at 0x[0-9a-fA-F]+>")
 
         uut = SourcePosition(None, None)
         self.assertEqual(str(uut),
-                         "file: None, line: None")
+                         "file: None, line: None, column: None")
         self.assertRegex(
             repr(uut),
-            "<SourcePosition object\\(file=None, line=None\\) at "
+            "<SourcePosition object\\(file=None, line=None, column=None\\) at "
             "0x[0-9a-fA-F]+>")
 
 
 class SourceRangeTest(unittest.TestCase):
     def test_initialization(self):
         uut = SourceRange(SourcePosition("FileA", "2"))
-        self.assertEqual(uut.end, SourcePosition("FileA"))
+        self.assertEqual(uut.end, SourcePosition("FileA", "2"))
 
     def test_invalid_arguments(self):
         # arguments must be SourceRanges
@@ -88,6 +88,10 @@ class SourceAreaObjectComparisonTest(unittest.TestCase):
                              SourcePosition("a file", 0))
         self.assert_ordering(SourcePosition("a file", 4),
                              SourcePosition("a file", None))
+        self.assert_ordering(SourcePosition("a file", 4, 0),
+                             SourcePosition("a file", 4))
+        self.assert_ordering(SourcePosition("a file", 4, 1),
+                             SourcePosition("a file", 4, 2))
 
     def test_range_ordering(self):
         self.assert_equal(

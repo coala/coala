@@ -3,20 +3,22 @@ from functools import total_ordering
 from coalib.misc.Decorators import generate_repr
 
 
-@generate_repr("file", "line")
+@generate_repr("file", "line", "column")
 @total_ordering
 class SourcePosition:
-    def __init__(self, file=None, line=None):
+    def __init__(self, file=None, line=None, column=None):
         """
         Creates a new result position object that represents the position of a
         result in the source code.
 
         :param file:            The filename or None.
         :param line:            The line in file or None.
+        :param none:            The column in line or None.
         :raises AssertionError: If a line number without a file is provided.
         """
         self.file = file
         self.line = line
+        self.column = column
 
     @property
     def line(self):
@@ -27,17 +29,28 @@ class SourcePosition:
         assert self.file is not None or other is None
         self._line = other
 
+    @property
+    def column(self):
+        return self._column
+
+    @column.setter
+    def column(self, other):
+        assert self.line is not None or other is None
+        self._column = other
+
     def __str__(self):
-        return "file: {}, line: {}".format(
+        return "file: {}, line: {}, column: {}".format(
             str(repr(self.file)),
-            str(self.line))
+            str(self.line),
+            str(self.column))
 
     def __eq__(self, other):
         if not isinstance(other, SourcePosition):
             return False
 
         return (self.file == other.file and
-                self.line == other.line)
+                self.line == other.line and
+                self.column == other.column)
 
     def __lt__(self, other):
         return lt(self, other)
@@ -58,8 +71,14 @@ class SourceRange:
         self.start = start
         self.end = end
 
+        # FIXME: this *should* default to the end of the file.
+        #        But, so far, None gets interpreted as a smaller value than any
+        #        number. This has to change for the comparison of SourceRange
+        #        ends. Afterwards, line and column can be removed here:
         if self.end is None:
-            self.end = SourcePosition(self.start.file)
+            self.end = SourcePosition(self.start.file,
+                                      self.start.line,
+                                      self.start.column)
 
         if not self.start.file == self.end.file:
             raise ValueError("Start and end of this SourceRange are not"
@@ -114,6 +133,12 @@ def _lt_positions(position, other_position):
 
     if position.line != other_position.line:
         return position.line < other_position.line
+
+    if (position.column is None) != (other_position.column is None):
+        return position.column is None
+
+    if position.column != other_position.column:
+        return position.column < other_position.column
 
     return False
 
