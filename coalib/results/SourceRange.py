@@ -7,10 +7,13 @@ from coalib.results.SourcePosition import SourcePosition
 @generate_repr("start", "end")
 @total_ordering
 class SourceRange:
-    def __init__(self, start, end):
+    def __init__(self, start, end=None):
         if not isinstance(start, SourcePosition):
             raise TypeError("The start of this SourceRange is not a "
                             "SourcePosition")
+
+        if end is None:
+            end = start
 
         if not isinstance(end, SourcePosition):
             raise TypeError("The end of this SourceRange is not a "
