@@ -58,7 +58,7 @@ Project Status
 
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer quality)](https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master) [![codecov.io](https://img.shields.io/codecov/c/github/coala-analyzer/coala/master.svg?label=branch coverage)](https://codecov.io/github/coala-analyzer/coala?branch=master)
 
-[![Documentation Status](https://readthedocs.org/projects/coala/badge/?version=latest)](https://readthedocs.org/projects/coala/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/coala/badge/?version=latest)](http://coala.rtfd.org/)
 
 GETTING INVOLVED
 ================
