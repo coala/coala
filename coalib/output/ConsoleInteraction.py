@@ -161,23 +161,6 @@ def print_result(console_printer,
         pass
 
 
-def print_results_formatted(log_printer,
-                            section,
-                            result_list,
-                            *args):
-    format_str = str(section.get(
-        "format_str",
-        "origin:{origin}:file:{file}:line_nr:{line_nr}:severity:"
-        "{severity}:msg:{message}"))
-    for result in result_list:
-        try:
-            print(format_str.format(**result.__dict__))
-        except KeyError as exception:
-            log_printer.log_exception(
-                _("Unable to print the result with the given format string."),
-                exception)
-
-
 def print_results(log_printer,
                   section,
                   result_list,

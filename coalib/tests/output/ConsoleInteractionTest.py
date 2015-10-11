@@ -11,7 +11,6 @@ from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
@@ -23,10 +22,8 @@ from coalib.output.ConsoleInteraction import (nothing_done,
                                               print_result,
                                               print_section_beginning,
                                               print_results,
-                                              show_bears,
-                                              print_results_formatted)
+                                              show_bears)
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.bears.Bear import Bear
@@ -503,47 +500,6 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual(" * KeywordBear\n"
                              " * LineLengthBear\n"
                              " * SomeglobalBear\n", stdout.getvalue())
-
-
-# Own test because this is easy and not tied to the rest
-class PrintFormattedResultsTest(unittest.TestCase):
-    def test_bad_format(self):
-        printer = StringPrinter()
-        logger = LogPrinter(printer)
-        section = Section("t")
-        section.append(Setting("format_str", "{nonexistant}"))
-        print_results_formatted(logger,
-                                section,
-                                [Result("1", "2")],
-                                None,
-                                None)
-        self.assertRegex(printer.string, ".*Unable to print.*")
-
-    def test_good_format(self):
-        printer = StringPrinter()
-        logger = LogPrinter(printer)
-        section = Section("t")
-        section.append(Setting("format_str", "{origin}"))
-        with retrieve_stdout() as stdout:
-            print_results_formatted(logger,
-                                    section,
-                                    [Result("1", "2")],
-                                    None,
-                                    None)
-            self.assertEqual(stdout.getvalue(), "1\n")
-
-    @staticmethod
-    def test_empty_list():
-        section = Section("t")
-        section.append(Setting("format_str", "{origin}"))
-        # Shouldn't attempt to format the string None and will fail badly if
-        # its done wrong.
-        print_results_formatted(None,
-                                section,
-                                [],
-                                None,
-                                None,
-                                None)
 
 
 if __name__ == '__main__':
