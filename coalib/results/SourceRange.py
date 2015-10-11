@@ -7,25 +7,27 @@ from coalib.results.SourcePosition import SourcePosition
 @generate_repr("start", "end")
 @total_ordering
 class SourceRange:
-    def __init__(self, start, end):
-        if not isinstance(start, SourcePosition):
-            raise TypeError("The start of this SourceRange is not a "
-                            "SourcePosition")
+    def __init__(self, start, end=None):
+        assert isinstance(start, SourcePosition)
 
-        if not isinstance(end, SourcePosition):
-            raise TypeError("The end of this SourceRange is not a "
-                            "SourcePosition")
+        # Setter of start will not work because end isn't initialized yet
+        self._start = start
+        if end is None:
+            self._end = self.start
+        else:
+            assert isinstance(end, SourcePosition)
+            assert self.start.file == end.file
+            assert end >= self.start
 
-        if not start.file == end.file:
-            raise ValueError("Start and end of this SourceRange are not"
-                             "located in the same file")
+            self._end = end
 
-        if not end >= start:
-            raise ValueError("The Start of this SourceRange lies after it's "
-                             "end")
+    @property
+    def start(self):
+        return self._start
 
-        self.start = start
-        self.end = end
+    @property
+    def end(self):
+        return self._end
 
     def __eq__(self, other):
         if not isinstance(other, SourceRange):
