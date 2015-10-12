@@ -512,6 +512,17 @@ class PrintFormattedResultsTest(unittest.TestCase):
         self.logger = LogPrinter(self.printer)
         self.section = Section("t")
 
+    def test_default_format(self):
+        expected_string = ("id:-?[0-9]+:origin:1:file:None:line_nr:None:"
+                           "severity:1:msg:2\n")
+        with retrieve_stdout() as stdout:
+            print_results_formatted(self.logger,
+                                    self.section,
+                                    [Result("1", "2")],
+                                    None,
+                                    None)
+            self.assertRegex(stdout.getvalue(), expected_string)
+
     def test_bad_format(self):
         self.section.append(Setting("format_str", "{nonexistant}"))
         print_results_formatted(self.logger,
