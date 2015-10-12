@@ -237,29 +237,6 @@ class ConsoleInteractionTest(unittest.TestCase):
                              _("No existent section was targeted or enabled. "
                                "Nothing to do.") + "\n")
 
-    def test_print_results_raising(self):
-        self.assertRaises(TypeError,
-                          print_results,
-                          self.log_printer,
-                          Section(""),
-                          5,
-                          {},
-                          {})
-        self.assertRaises(TypeError,
-                          print_results,
-                          self.log_printer,
-                          Section(""),
-                          [],
-                          5,
-                          {})
-        self.assertRaises(TypeError,
-                          print_results,
-                          self.log_printer,
-                          Section(""),
-                          [],
-                          {},
-                          5)
-
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
             print_results(self.log_printer, Section(""), [], {}, {})

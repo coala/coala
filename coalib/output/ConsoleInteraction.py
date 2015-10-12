@@ -192,13 +192,6 @@ def print_results(log_printer,
     :param pre_padding:    No of lines of file to print before the result line.
                            Default value is 3.
     """
-    if not isinstance(result_list, list):
-        raise TypeError("result_list should be of type list")
-    if not isinstance(file_dict, dict):
-        raise TypeError("file_dict should be of type dict")
-    if not isinstance(file_diff_dict, dict):
-        raise TypeError("file_diff_dict should be of type dict")
-
     # We can't use None since we need line 109 be executed if file of first
     # result is None
     console_printer = ConsolePrinter(print_colored=color)
