@@ -188,7 +188,7 @@ def print_results(log_printer,
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
     :param color:          Boolean variable to print the results in color or
-                           not.
+                           not. Can be used for testing.
     :param pre_padding:    No of lines of file to print before the result line.
                            Default value is 3.
     """
