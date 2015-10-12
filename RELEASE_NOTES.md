@@ -1,3 +1,25 @@
+# coala 0.3.0
+
+This release contains the following feature changes:
+
+ * OpenEditorAction lets the user edit the real file instead of a temporary one.
+ * All usable bears can now be shown with `--show-all-bears`.
+ * Only `#` is supported for comments in the configuration file syntax.
+ * Multiple actions can now be executed on the CLI.
+ * Patches can now be shown on the CLI.
+ * A `coala-format` binary was added that allows customized formatting for
+   results to ease integration in other systems.
+ * Printing utilities have moved into the PyPrint library.
+
+Bear API changes:
+
+ * The PatchResult class was merged into the Result class.
+
+Bear changes:
+
+ * SpaceConsistencyBear offers more verbose and precise information about the
+   problem.
+
 # coala 0.2.0
 
 This release features the following feature changes:
