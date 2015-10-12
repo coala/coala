@@ -22,6 +22,10 @@ class SourceRangeTest(unittest.TestCase):
         uut.start.line = 4
         self.assertEqual(uut.start, uut.end)
 
+    def test_file_property(self):
+        uut = SourceRange(self.result_fileA_line2)
+        self.assertEqual(uut.file, "A")
+
     def test_invalid_arguments(self):
         # arguments must be SourceRanges
         with self.assertRaises(AssertionError):

@@ -30,6 +30,10 @@ class SourceRange:
             self._end = end
 
     @property
+    def file(self):
+        return self.start.file
+
+    @property
     def start(self):
         return self._start
 
