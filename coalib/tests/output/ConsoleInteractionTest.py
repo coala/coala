@@ -274,7 +274,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                           {},
                           color=False)
             self.assertEqual(
-                "\n\n{}\n|    |    | [{}] origin:\n|    |    | message"
+                "\n\n{}\n|    | [{}] origin:\n|    | message"
                 "\n".format(STR_PROJECT_WIDE,
                             RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                 stdout.getvalue())
@@ -292,9 +292,9 @@ class ConsoleInteractionTest(unittest.TestCase):
                 {},
                 color=False)
             self.assertEqual("""\n\nproj/white
-|   1|   1| test line\n|   2|   2| line 2
-|    |    | [{}] SpaceConsistencyBear:
-|    |    | Trailing whitespace found
+|   1| test line\n|   2| line 2
+|    | [{}] SpaceConsistencyBear:
+|    | Trailing whitespace found
 """.format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                          stdout.getvalue())
 
@@ -314,12 +314,12 @@ class ConsoleInteractionTest(unittest.TestCase):
                 {},
                 color=False)
             self.assertEqual("""\n\nproj/white
-| ...| ...| \n|   2|   2| line 2
-|   3|   3| line 3
-|   4|   4| line 4
-|   5|   5| line 5
-|    |    | [{}] SpaceConsistencyBear:
-|    |    | Trailing whitespace found
+| ...| \n|   2| line 2
+|   3| line 3
+|   4| line 4
+|   5| line 5
+|    | [{}] SpaceConsistencyBear:
+|    | Trailing whitespace found
 """.format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                              stdout.getvalue())
 
@@ -344,15 +344,15 @@ class ConsoleInteractionTest(unittest.TestCase):
                           color=False)
 
             self.assertEqual("""\n\nproj/white
-|   1|   1| test line
-|   2|   2| line 2
-|    |    | [{}] SpaceConsistencyBear:
-|    |    | Trailing whitespace found
-|   3|   3| line 3
-|   4|   4| line 4
-|   5|   5| line 5
-|    |    | [{}] SpaceConsistencyBear:
-|    |    | Trailing whitespace found
+|   1| test line
+|   2| line 2
+|    | [{}] SpaceConsistencyBear:
+|    | Trailing whitespace found
+|   3| line 3
+|   4| line 4
+|   5| line 5
+|    | [{}] SpaceConsistencyBear:
+|    | Trailing whitespace found
 """.format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
            RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                              stdout.getvalue())
@@ -384,8 +384,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                 {"file": []},
                 {},
                 color=False)
-            self.assertEqual("""\n\nfile\n|    |    | {}\n|    |    | [{}] t:
-|    |    | msg\n""".format(STR_LINE_DOESNT_EXIST,
+            self.assertEqual("""\n\nfile\n|    | {}\n|    | [{}] t:
+|    | msg\n""".format(STR_LINE_DOESNT_EXIST,
                             RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                              stdout.getvalue())
 

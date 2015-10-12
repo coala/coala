@@ -35,12 +35,9 @@ CLI_ACTIONS = [OpenEditorAction(),
                ShowPatchAction()]
 
 
-def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
-    return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
-                                         sign,
-                                         mod_nr,
-                                         symbol,
-                                         line.rstrip("\n"))
+def format_lines(lines, line_nr=""):
+    return '\n'.join("|{:>4}| {}".format(line_nr, line)
+                     for line in lines.rstrip("\n").split('\n'))
 
 
 def print_section_beginning(console_printer, section):
@@ -89,17 +86,14 @@ def print_lines(console_printer,
         for i in range(max(result_line - pre_padding, 1),
                        result_line + 1):
             console_printer.print(
-                format_line(line=file_dict[result_file][i - 1],
-                            real_nr=i,
-                            mod_nr=i),
+                format_lines(lines=file_dict[result_file][i - 1],
+                             line_nr=i),
                 color=FILE_LINES_COLOR)
     else:
         for i in range(1, line_delta + 1):
             console_printer.print(
-                format_line(
-                    line=file_dict[result_file][current_line + i - 1],
-                    real_nr=current_line + i,
-                    mod_nr=current_line + i),
+                format_lines(lines=file_dict[result_file][current_line + i - 1],
+                             line_nr=current_line + i),
                 color=FILE_LINES_COLOR)
 
 
@@ -127,12 +121,10 @@ def print_result(console_printer,
                            "class."))
         return
 
-    console_printer.print(format_line("[{sev}] {bear}:".format(
+    console_printer.print(format_lines("[{sev}] {bear}:".format(
         sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
         color=RESULT_SEVERITY_COLORS[result.severity])
-    console_printer.print(
-        *[format_line(line) for line in result.message.split("\n")],
-        delimiter="\n")
+    console_printer.print(format_lines(result.message), delimiter="\n")
 
     actions = []
     for action in CLI_ACTIONS:
@@ -238,7 +230,7 @@ def print_results(log_printer,
                 raise AssertionError("The sorting of the results doesn't "
                                      "work correctly.")
             if len(file_dict[result.file]) < result.line_nr - 1:
-                console_printer.print(format_line(line=STR_LINE_DOESNT_EXIST))
+                console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST))
             else:
                 print_lines(console_printer,
                             pre_padding,
@@ -329,7 +321,7 @@ def get_action_info(section, action):
 
     for param_name in params:
         if param_name not in section:
-            question = format_line(
+            question = format_lines(
                 _("Please enter a value for the parameter '{}' ({}): ")
                 .format(param_name, params[param_name][0]))
             section.append(Setting(param_name, input(question)))
@@ -346,26 +338,26 @@ def choose_action(console_printer, actions):
     :param actions:         Actions available to the user.
     :return:                Return choice of action of user.
     """
-    console_printer.print(format_line(
+    console_printer.print(format_lines(
         _("The following actions are applicable to this result:")))
 
     while True:
-        console_printer.print(format_line(" 0: " +
+        console_printer.print(format_lines(" 0: " +
                                           _("Apply no further actions.")))
         for i, action in enumerate(actions):
-            console_printer.print(format_line("{:>2}: {}".format(i + 1,
+            console_printer.print(format_lines("{:>2}: {}".format(i + 1,
                                                                  action.desc)))
 
         try:
-            line = format_line(_("Please enter the number of the action "
-                                 "you want to execute. "))
+            line = format_lines(_("Please enter the number of the action "
+                                  "you want to execute. "))
             choice = int(input(line))
             if 0 <= choice <= len(actions):
                 return choice
         except ValueError:
             pass
 
-        console_printer.print(format_line(_("Please enter a valid number.")))
+        console_printer.print(format_lines(_("Please enter a valid number.")))
 
 
 def print_actions(console_printer, section, actions):
@@ -444,10 +436,8 @@ def apply_action(log_printer,
 
 
 def print_segregation(console_printer):
-    console_printer.print(format_line(line="",
-                                      real_nr="...",
-                                      sign="|",
-                                      mod_nr="..."),
+    console_printer.print(format_lines(lines="",
+                                       line_nr="..."),
                           color=FILE_LINES_COLOR)
 
 
