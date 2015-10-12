@@ -6,7 +6,7 @@ from coalib.misc.Decorators import generate_repr
 @generate_repr("file", "line", "column")
 @total_ordering
 class SourcePosition:
-    def __init__(self, file=None, line=None, column=None):
+    def __init__(self, file, line=None, column=None):
         """
         Creates a new result position object that represents the position of a
         result in the source code.
@@ -17,6 +17,10 @@ class SourcePosition:
                                 one in a line is 1.
         :raises AssertionError: If a line number without a file is provided.
         """
+        assert isinstance(file, str), "file must be a string!"
+        assert isinstance(line, int) or not line, "line must be an int!"
+        assert isinstance(column, int) or not column, "column must be an int!"
+
         self.file = file
         self.line = line
         self.column = column
@@ -51,10 +55,6 @@ class SourcePosition:
                 self.column == other.column)
 
     def __lt__(self, other):
-        # Show elements without files first
-        if (self.file is None) != (other.file is None):
-            return self.file is None
-
         # Now either both file members are None or both are set
         if self.file != other.file:
             return self.file < other.file
