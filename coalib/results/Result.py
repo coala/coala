@@ -34,16 +34,16 @@ class Result:
                  origin,
                  message,
                  file=None,
-                 severity=RESULT_SEVERITY.NORMAL,
                  line_nr=None,
+                 severity=RESULT_SEVERITY.NORMAL,
                  debug_msg="",
                  diffs=None):
         """
         :param origin:    Class name or class of the creator of this object
         :param message:   Message to show with this result
         :param file:      The path to the affected file
-        :param severity:  Severity of this result
         :param line_nr:   Number of the line which is affected, first line is 1
+        :param severity:  Severity of this result
         :param debug_msg: A message which may help the user find out why
                           this result was yielded.
         :param diffs:     A dictionary associating a Diff object with each
