@@ -1,6 +1,7 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
+from coalib.results.SourceRange import SourceRange, SourcePosition
 from coalib.misc.i18n import _
 
 
@@ -26,5 +27,10 @@ class LineLengthBear(LocalBear):
                                      " ({actual} > {maximum})".format(
                                          actual=len(line),
                                          maximum=max_line_length),
-                             file=filename,
-                             line_nr=line_number + 1)
+                             affected_code=(SourceRange(
+                                 SourcePosition(filename,
+                                                line_number+1,
+                                                max_line_length),
+                                 SourcePosition(filename,
+                                                line_number+1,
+                                                len(line))), ))

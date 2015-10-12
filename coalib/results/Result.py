@@ -15,39 +15,34 @@ class Result:
     """
     A result is anything that has an origin and a message.
 
-    Optionally it might affect a file.
-
     When sorting a list of results with the implemented comparision routines
     you will get an ordering which follows the following conditions,
     while the first condition has the highest priority, which descends to the
     last condition.
-    1. Results with no files will be shown first
-    2. Results will be sorted by files (ascending alphabetically)
-    3. Results will be sorted by lines (ascending)
-    4. Results will be sorted by severity (descending, major first, info last)
-    5. Results will be sorted by origin (ascending alphabetically)
-    6. Results will be sorted by message (ascending alphabetically)
-    7. Results will be sorted by debug message (ascending alphabetically)
+
+    1. Results will be sorted by affected code
+    2. Results will be sorted by severity (descending, major first, info last)
+    3. Results will be sorted by origin (ascending alphabetically)
+    4. Results will be sorted by message (ascending alphabetically)
+    5. Results will be sorted by debug message (ascending alphabetically)
     """
 
     def __init__(self,
                  origin,
                  message,
-                 file=None,
                  severity=RESULT_SEVERITY.NORMAL,
-                 line_nr=None,
+                 affected_code=(),
                  debug_msg="",
                  diffs=None):
         """
-        :param origin:    Class name or class of the creator of this object
-        :param message:   Message to show with this result
-        :param file:      The path to the affected file
-        :param severity:  Severity of this result
-        :param line_nr:   Number of the line which is affected, first line is 1
-        :param debug_msg: A message which may help the user find out why
-                          this result was yielded.
-        :param diffs:     A dictionary associating a Diff object with each
-                          filename.
+        :param origin:        Class name or class of the creator of this object
+        :param message:       Message to show with this result
+        :param severity:      Severity of this result
+        :param affected_code: A list
+        :param debug_msg:     A message which may help the user find out why
+                              this result was yielded.
+        :param diffs:         A dictionary associating a Diff object with each
+                              filename.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -56,22 +51,21 @@ class Result:
         self.origin = origin
         self.message = message
         self.debug_msg = debug_msg
-        self.file = file
-        self.line_nr = line_nr
+        self.affected_code = tuple(sorted(affected_code))
         self.severity = severity
         self.diffs = diffs
         # Convert debug message to string: some bears pack lists in there which
         # is very useful when exporting the stuff to JSON and further working
         # with the debug data. However, hash can't handle that.
         self.id = hash(
-            (origin, message, str(debug_msg), file, line_nr, severity))
+            (origin, message, str(debug_msg), repr(affected_code), severity))
 
     def __str__(self):
-        return ("Result:\n id: {id}\n origin: {origin}\n file: {file}\n line "
-                "nr: {linenr}\n severity: {severity}\n diffs: {diffs}\n{msg}"
+        return ("Result:\n id: {id}\n origin: {origin}\n affected_code: {aff}\n"
+                " severity: {severity}\n diffs: {diffs}\n{msg}"
                 .format(id=self.id,
                         origin=repr(self.origin),
-                        file=repr(self.file),
+                        aff=str(affected_code),
                         linenr=self.line_nr,
                         severity=self.severity,
                         diffs=repr(self.diffs),
@@ -83,9 +77,8 @@ class Result:
                 self.origin == other.origin and
                 self.message == other.message and
                 self.debug_msg == other.debug_msg and
-                self.file == other.file and
+                self.affected_code == other.affected_code and
                 self.severity == other.severity and
-                self.line_nr == other.line_nr and
                 self.diffs == other.diffs)
 
     def __lt__(self, other):
@@ -93,18 +86,8 @@ class Result:
             raise TypeError("Comparison with non-result classes is not "
                             "supported.")
 
-        # Show elements without files first
-        if (self.file is None) != (other.file is None):
-            return self.file is None
-
-        # Now either both .file members are None or both are set
-        if self.file != other.file:
-            return self.file < other.file
-
-        # If we have a line result show results with a lesser line number first
-        if self.line_nr is not None and other.line_nr is not None:
-            if self.line_nr != other.line_nr:
-                return self.line_nr < other.line_nr
+        if self.affected_code != other.affected_code:
+            return self.affected_code < other.affected_code
 
         # Both files are equal
         if self.severity != other.severity:
