@@ -4,7 +4,8 @@ from coalib.misc.Decorators import generate_repr
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
-@generate_repr("origin",
+@generate_repr("id",
+               "origin",
                "file",
                "line_nr",
                ("severity", RESULT_SEVERITY.reverse.get),
@@ -59,11 +60,17 @@ class Result:
         self.line_nr = line_nr
         self.severity = severity
         self.diffs = diffs
+        # Convert debug message to string: some bears pack lists in there which
+        # is very useful when exporting the stuff to JSON and further working
+        # with the debug data. However, hash can't handle that.
+        self.id = hash(
+            (origin, message, str(debug_msg), file, line_nr, severity))
 
     def __str__(self):
-        return ("Result:\n origin: {origin}\n file: {file}\n line nr: "
-                "{linenr}\n severity: {severity}\n diffs: {diffs}\n{msg}"
-                .format(origin=repr(self.origin),
+        return ("Result:\n id: {id}\n origin: {origin}\n file: {file}\n line "
+                "nr: {linenr}\n severity: {severity}\n diffs: {diffs}\n{msg}"
+                .format(id=self.id,
+                        origin=repr(self.origin),
                         file=repr(self.file),
                         linenr=self.line_nr,
                         severity=self.severity,
@@ -71,6 +78,7 @@ class Result:
                         msg=repr(self.message)))
 
     def __eq__(self, other):
+        # ID isn't relevant for content equality!
         return (isinstance(other, Result) and
                 self.origin == other.origin and
                 self.message == other.message and
@@ -122,7 +130,8 @@ class Result:
         """
         retval = {}
 
-        members = ["debug_msg",
+        members = ["id",
+                   "debug_msg",
                    "file",
                    "line_nr",
                    "message",

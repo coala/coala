@@ -167,7 +167,7 @@ def print_results_formatted(log_printer,
                             *args):
     format_str = str(section.get(
         "format_str",
-        "origin:{origin}:file:{file}:line_nr:{line_nr}:severity:"
+        "id:{id}:origin:{origin}:file:{file}:line_nr:{line_nr}:severity:"
         "{severity}:msg:{message}"))
     for result in result_list:
         try:

@@ -28,15 +28,22 @@ class ResultTest(unittest.TestCase):
     def test_string_conversion(self):
         uut = Result('a', 'b', 'c')
         self.assertEqual(str(uut),
-                         "Result:\n origin: 'a'\n file: 'c'\n line nr: None\n"
-                         " severity: 1\n diffs: None\n'b'")
+                         "Result:\n"
+                         " id: {}\n"
+                         " origin: 'a'\n"
+                         " file: 'c'\n"
+                         " line nr: None\n"
+                         " severity: 1\n"
+                         " diffs: None\n"
+                         "'b'".format(uut.id))
         self.assertRegex(
             repr(uut),
-            "<Result object\\(origin='a', file='c', line_nr=None, "
+            "<Result object\\(id=-?[0-9]+, origin='a', file='c', line_nr=None, "
                 "severity=NORMAL, message='b'\\) at 0x[0-9a-fA-F]+>")
-        self.assertEqual(
+        self.assertRegex(
             Result("origin", "message", "file", line_nr=1).__str__(),
             """Result:
+ id: -?[0-9]+
  origin: 'origin'
  file: 'file'
  line nr: 1
@@ -119,7 +126,8 @@ class ResultTest(unittest.TestCase):
     def test_string_dict(self):
         uut = Result(None, None)
         output = uut.to_string_dict()
-        self.assertEqual(output, {"origin": "",
+        self.assertEqual(output, {"id": str(uut.id),
+                                  "origin": "",
                                   "message": "",
                                   "file": "",
                                   "line_nr": "",
@@ -133,7 +141,8 @@ class ResultTest(unittest.TestCase):
                      severity=RESULT_SEVERITY.INFO,
                      debug_msg="dbg")
         output = uut.to_string_dict()
-        self.assertEqual(output, {"origin": "origin",
+        self.assertEqual(output, {"id": str(uut.id),
+                                  "origin": "origin",
                                   "message": "msg",
                                   "file": "file",
                                   "line_nr": "2",
