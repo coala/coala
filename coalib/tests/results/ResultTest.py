@@ -25,32 +25,6 @@ class ResultTest(unittest.TestCase):
         uut = Result(None, "msg")
         self.assertEqual(uut.origin, "")
 
-    def test_string_conversion(self):
-        uut = Result('a', 'b', 'c')
-        self.assertEqual(str(uut),
-                         "Result:\n"
-                         " id: {}\n"
-                         " origin: 'a'\n"
-                         " file: 'c'\n"
-                         " line nr: None\n"
-                         " severity: 1\n"
-                         " diffs: None\n"
-                         "'b'".format(uut.id))
-        self.assertRegex(
-            repr(uut),
-            "<Result object\\(id=-?[0-9]+, origin='a', file='c', line_nr=None, "
-                "severity=NORMAL, message='b'\\) at 0x[0-9a-fA-F]+>")
-        self.assertRegex(
-            Result("origin", "message", "file", line_nr=1).__str__(),
-            """Result:
- id: -?[0-9]+
- origin: 'origin'
- file: 'file'
- line nr: 1
- severity: 1
- diffs: None
-'message'""")
-
     def test_ordering(self):
         """
         Tests the ordering routines of Result. This tests enough to have all

@@ -66,17 +66,6 @@ class Result:
         self.id = hash(
             (origin, message, str(debug_msg), file, line_nr, severity))
 
-    def __str__(self):
-        return ("Result:\n id: {id}\n origin: {origin}\n file: {file}\n line "
-                "nr: {linenr}\n severity: {severity}\n diffs: {diffs}\n{msg}"
-                .format(id=self.id,
-                        origin=repr(self.origin),
-                        file=repr(self.file),
-                        linenr=self.line_nr,
-                        severity=self.severity,
-                        diffs=repr(self.diffs),
-                        msg=repr(self.message)))
-
     def __eq__(self, other):
         # ID isn't relevant for content equality!
         return (isinstance(other, Result) and

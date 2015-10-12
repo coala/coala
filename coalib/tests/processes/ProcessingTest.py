@@ -96,16 +96,15 @@ class ProcessingTest(unittest.TestCase):
         local_result = local_results[0]
         global_result = global_results[0]
 
-        self.assertEqual(str(local_result),
-                         "Result:\n id: {}\n origin: 'LocalTestBear'\n file: "
-                         "None\n line nr: None\n severity: 1\n diffs: None\n"
-                         "'test msg'".format(local_result.id))
-        file = (platform.system() == 'Windows' and
-                self.testcode_c_path.lower() or self.testcode_c_path)
-        self.assertEqual(str(global_result),
-                         "Result:\n id: {}\n origin: 'GlobalTestBear'\n file: {"
-                         "}\n line nr: None\n severity: 1\n diffs: None\n'test "
-                         "message'".format(global_result.id, repr(file)))
+        self.assertRegex(repr(local_result),
+                         "<Result object\\(id={}, origin='LocalTestBear', file="
+                         "None, line_nr=None, severity=NORMAL, message='test "
+                         "msg'\\) at 0x[0-9a-fA-F]+>".format(local_result.id))
+        self.assertRegex(repr(global_result),
+                         "<Result object\\(id={}, origin='GlobalTestBear', file"
+                         "=.*, line_nr=None, severity=NORMAL, message='test "
+                         "message'\\) at "
+                         "0x[0-9a-fA-F]+>".format(global_result.id))
 
     def test_empty_run(self):
         results = execute_section(self.sections["default"],
