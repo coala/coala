@@ -5,9 +5,15 @@ from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 
 
-def print_beautified_diff(difflines):
-    from coalib.output.ConsoleInteraction import format_line
+def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
+    return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
+                                         sign,
+                                         mod_nr,
+                                         symbol,
+                                         line.rstrip("\n"))
 
+
+def print_beautified_diff(difflines):
     current_line_added = None
     current_line_subtracted = None
     for line in difflines:
