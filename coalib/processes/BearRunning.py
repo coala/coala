@@ -1,6 +1,5 @@
 import queue
 import traceback
-from collections import Iterable
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -57,24 +56,6 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
     if result_list is None:
         return None
 
-    if not isinstance(result_list, Iterable):
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.ERROR,
-                 _("The results from the bear {bear} couldn't be processed "
-                   "with arguments {arglist}, {kwarglist}.")
-                 .format(bear=name, arglist=args, kwarglist=kwargs))
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.DEBUG,
-                 _("The return value of the {bear} is an instance of {ret}"
-                   " but should be an instance of list.")
-                 .format(bear=name, ret=result_list.__class__))
-        return None
-
-    # If it's already a list it won't change it
-    result_list = list(result_list)
-
     for result in result_list:
         if not isinstance(result, Result):
             send_msg(message_queue,
@@ -121,8 +102,7 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
     name = bear_instance.__class__.__name__
 
     try:
-        result_list = bear_instance.execute(*args,
-                                            **kwargs)
+        result_list = bear_instance.execute(*args, **kwargs)
     except:
         send_msg(message_queue,
                  timeout,
@@ -562,4 +542,3 @@ def run(file_name_queue,
                      global_result_dict,
                      control_queue)
     control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-

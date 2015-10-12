@@ -71,7 +71,8 @@ class Bear(Printer, LogPrinter):
         name = self.__class__.__name__
         try:
             self.debug(_("Running bear {}...").format(name))
-            return self.run_bear_from_section(args, kwargs)
+            # If it's already a list it won't change it
+            return list(self.run_bear_from_section(args, kwargs))
         except:
             self.warn(
                 _("Bear {} failed to run. Take a look at debug messages for "

@@ -70,6 +70,8 @@ class DependentGlobalBear(GlobalBear):
             **kwargs):
         assert len(dependency_results["SimpleGlobalBear"]) == 3
 
+        return []
+
     @staticmethod
     def get_dependencies():
         return [SimpleGlobalBear]
@@ -207,8 +209,7 @@ class BearRunningUnitTest(unittest.TestCase):
                              LOG_LEVEL.ERROR,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG]
+                             LOG_LEVEL.WARNING]
 
         for msg in expected_messages:
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
