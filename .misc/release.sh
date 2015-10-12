@@ -10,8 +10,6 @@ git diff HEAD --exit-code
 python3 .misc/adjust_version_number.py coalib/VERSION --release
 bash .misc/deploy.pypi.sh
 
-# Increment version number on master
-git checkout master
 # Adjust version number to next release, script will check validity
 python3 .misc/adjust_version_number.py coalib/VERSION --new-version ${tag} -b 0
 
