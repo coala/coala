@@ -29,6 +29,21 @@ class SourceRange:
 
             self._end = end
 
+    @classmethod
+    def from_values(cls,
+                    file,
+                    start_line=None,
+                    start_column=None,
+                    end_line=None,
+                    end_column=None):
+        start = SourcePosition(file, start_line, start_column)
+        if not end_line:
+            end = None
+        else:
+            end = SourcePosition(file, end_line, end_column)
+
+        return cls(start, end)
+
     @property
     def file(self):
         return self.start.file

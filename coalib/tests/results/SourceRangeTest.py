@@ -14,9 +14,16 @@ class SourceRangeTest(unittest.TestCase):
         self.result_fileB_line2 = SourcePosition("B", 2)
         self.result_fileB_line4 = SourcePosition("B", 4)
 
-    def test_simple_construction(self):
-        uut = SourceRange(self.result_fileA_noline)
-        self.assertEqual(uut.end, self.result_fileA_noline)
+    def test_construction(self):
+        uut1 = SourceRange(self.result_fileA_noline)
+        self.assertEqual(uut1.end, self.result_fileA_noline)
+
+        uut2 = SourceRange.from_values("A")
+        self.assertEqual(uut1, uut2)
+
+        uut = SourceRange.from_values("B", start_line=2, end_line=4)
+        self.assertEqual(uut.start, self.result_fileB_line2)
+        self.assertEqual(uut.end, self.result_fileB_line4)
 
     def test_file_property(self):
         uut = SourceRange(self.result_fileA_line2)
