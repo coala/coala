@@ -1,6 +1,8 @@
 import subprocess
 import sys
+import os
 import unittest
+import tempfile
 
 sys.path.insert(0, ".")
 from coalib.results.Diff import Diff
@@ -28,31 +30,53 @@ class ResultActionTest(unittest.TestCase):
         """
         assert ("--wait" in commands), "Did not wait for the editor to close"
 
+    def setUp(self):
+        fahandle, self.fa = tempfile.mkstemp()
+        os.close(fahandle)
+        fbhandle, self.fb = tempfile.mkstemp()
+        os.close(fbhandle)
+
+    def tearDown(self):
+        os.remove(self.fa)
+        os.remove(self.fb)
+
     def test_apply(self):
+        # Initial file contents, *before* a patch was applied
         file_dict = {
-            "f_a": ["1\n", "2\n", "3\n"],
-            "f_b": ["1\n", "2\n", "3\n"],
-            "f_c": ["1\n", "2\n", "3\n"]
-        }
+            self.fa: ["1\n", "2\n", "3\n"],
+            self.fb: ["1\n", "2\n", "3\n"],
+            "f_c": ["1\n", "2\n", "3\n"]}
+
+        # A patch that was applied for some reason to make things complicated
+        diff_dict = {self.fb: Diff()}
+        diff_dict[self.fb].change_line(3, "3\n", "3_changed\n")
+
+        # File contents after the patch was applied, that's what's in the files
+        current_file_dict = {
+            filename: diff_dict[filename].apply(file_dict[filename])
+            if filename in diff_dict else file_dict[filename]
+            for filename in (self.fa, self.fb)}
+        for filename in current_file_dict:
+            with open(filename, 'w') as handle:
+                handle.writelines(current_file_dict[filename])
+
+        # End file contents after the patch and the OpenEditorAction was applied
         expected_file_dict = {
-            "f_a": ["1\n", "3\n"],
-            "f_b": ["1\n", "3_changed\n"],
-            "f_c": ["1\n", "2\n", "3\n"]
-        }
-        diff_dict = {"f_b": Diff()}
-        diff_dict["f_b"].change_line(3, "3\n", "3_changed\n")
+            self.fa: ["1\n", "3\n"],
+            self.fb: ["1\n", "3_changed\n"],
+            "f_c": ["1\n", "2\n", "3\n"]}
 
         section = Section("")
         section.append(Setting("editor", ""))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit
         diff_dict = uut.apply_from_section(
-            Result("origin", "msg", "f_a"),
+            Result("origin", "msg", self.fa),
             file_dict,
             diff_dict,
             section)
         diff_dict = uut.apply_from_section(
-            Result("origin", "msg", "f_b"),
+            Result("origin", "msg", self.fb),
             file_dict,
             diff_dict,
             section)
@@ -64,17 +88,17 @@ class ResultActionTest(unittest.TestCase):
         self.assertEqual(file_dict, expected_file_dict)
 
     def test_subl(self):
-        file_dict = {"f_a": []}
+        file_dict = {self.fa: []}
         section = Section("")
         section.append(Setting("editor", "subl"))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit_subl
         diff_dict = uut.apply_from_section(
-            Result("origin", "msg", "f_a"),
+            Result("origin", "msg", self.fa),
             file_dict,
             {},
             section)
-        file_dict["f_a"] = diff_dict["f_a"].apply(file_dict["f_a"])
+        file_dict[self.fa] = diff_dict[self.fa].apply(file_dict[self.fa])
 
         self.assertEqual(file_dict, file_dict)
 
