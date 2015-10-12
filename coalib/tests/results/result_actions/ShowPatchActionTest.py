@@ -4,7 +4,7 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.misc.ContextManagers import retrieve_stdout
-from coalib.settings.Section import Section
+from coalib.settings.Section import Section, Setting
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
 
@@ -19,6 +19,8 @@ class ShowPatchActionTest(unittest.TestCase):
 
         self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
         self.test_result = Result("origin", "message", diffs=diff_dict)
+        self.section = Section("name")
+        self.section.append(Setting("colored", "false"))
 
     def test_is_applicable(self):
         self.assertFalse(self.uut.is_applicable(1))
@@ -30,7 +32,7 @@ class ShowPatchActionTest(unittest.TestCase):
             self.assertEqual(self.uut.apply_from_section(self.test_result,
                                                          self.file_dict,
                                                          {},
-                                                         Section("name")),
+                                                         self.section),
                              {})
             self.assertEqual(stdout.getvalue(),
                              "|----|    | a\n"
@@ -51,7 +53,7 @@ class ShowPatchActionTest(unittest.TestCase):
             self.assertEqual(self.uut.apply_from_section(self.test_result,
                                                          self.file_dict,
                                                          previous_diffs,
-                                                         Section("name")),
+                                                         self.section),
                              previous_diffs)
             self.assertEqual(stdout.getvalue(),
                              "|----|    | a\n"
