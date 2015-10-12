@@ -20,28 +20,26 @@ class SourcePosition:
         assert isinstance(file, str), "file must be a string!"
         assert isinstance(line, int) or not line, "line must be an int!"
         assert isinstance(column, int) or not column, "column must be an int!"
+        assert file is not None or line is None, ("A line must be associated "
+                                                  "to a file.")
+        assert line is not None or column is None, ("A column can only be set "
+                                                    "if a line is set.")
 
-        self.file = file
-        self.line = line
-        self.column = column
+        self._file = file
+        self._line = line
+        self._column = column
+
+    @property
+    def file(self):
+        return self._file
 
     @property
     def line(self):
         return self._line
 
-    @line.setter
-    def line(self, other):
-        assert self.file is not None or other is None
-        self._line = other
-
     @property
     def column(self):
         return self._column
-
-    @column.setter
-    def column(self, other):
-        assert self.line is not None or other is None
-        self._column = other
 
     def __str__(self):
         return "file: {}, line: {}, column: {}".format(

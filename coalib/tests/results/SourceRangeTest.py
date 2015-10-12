@@ -18,10 +18,6 @@ class SourceRangeTest(unittest.TestCase):
         uut = SourceRange(self.result_fileA_noline)
         self.assertEqual(uut.end, self.result_fileA_noline)
 
-        # If we don't give an end, end shall be start, even if we modify start
-        uut.start.line = 4
-        self.assertEqual(uut.start, uut.end)
-
     def test_file_property(self):
         uut = SourceRange(self.result_fileA_line2)
         self.assertEqual(uut.file, "A")
