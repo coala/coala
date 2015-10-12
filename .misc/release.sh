@@ -6,6 +6,9 @@ set -e
 # Abort if uncommitted things lie around
 git diff HEAD --exit-code
 
+# Update translations
+bash .misc/pull_zanata.sh
+
 # Release!
 python3 .misc/adjust_version_number.py coalib/VERSION --release
 bash .misc/deploy.pypi.sh
