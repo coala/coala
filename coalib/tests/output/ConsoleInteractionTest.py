@@ -507,39 +507,36 @@ class ConsoleInteractionTest(unittest.TestCase):
 
 # Own test because this is easy and not tied to the rest
 class PrintFormattedResultsTest(unittest.TestCase):
+    def setUp(self):
+        self.printer = StringPrinter()
+        self.logger = LogPrinter(self.printer)
+        self.section = Section("t")
+
     def test_bad_format(self):
-        printer = StringPrinter()
-        logger = LogPrinter(printer)
-        section = Section("t")
-        section.append(Setting("format_str", "{nonexistant}"))
-        print_results_formatted(logger,
-                                section,
+        self.section.append(Setting("format_str", "{nonexistant}"))
+        print_results_formatted(self.logger,
+                                self.section,
                                 [Result("1", "2")],
                                 None,
                                 None)
-        self.assertRegex(printer.string, ".*Unable to print.*")
+        self.assertRegex(self.printer.string, ".*Unable to print.*")
 
     def test_good_format(self):
-        printer = StringPrinter()
-        logger = LogPrinter(printer)
-        section = Section("t")
-        section.append(Setting("format_str", "{origin}"))
+        self.section.append(Setting("format_str", "{origin}"))
         with retrieve_stdout() as stdout:
-            print_results_formatted(logger,
-                                    section,
+            print_results_formatted(self.logger,
+                                    self.section,
                                     [Result("1", "2")],
                                     None,
                                     None)
             self.assertEqual(stdout.getvalue(), "1\n")
 
-    @staticmethod
-    def test_empty_list():
-        section = Section("t")
-        section.append(Setting("format_str", "{origin}"))
+    def test_empty_list(self):
+        self.section.append(Setting("format_str", "{origin}"))
         # Shouldn't attempt to format the string None and will fail badly if
         # its done wrong.
         print_results_formatted(None,
-                                section,
+                                self.section,
                                 [],
                                 None,
                                 None,
