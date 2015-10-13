@@ -1,4 +1,5 @@
 from functools import total_ordering
+import uuid
 
 from coalib.misc.Decorators import generate_repr
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
@@ -60,11 +61,7 @@ class Result:
         self.line_nr = line_nr
         self.severity = severity
         self.diffs = diffs
-        # Convert debug message to string: some bears pack lists in there which
-        # is very useful when exporting the stuff to JSON and further working
-        # with the debug data. However, hash can't handle that.
-        self.id = hash(
-            (origin, message, str(debug_msg), file, line_nr, severity))
+        self.id = uuid.uuid4().int
 
     def __eq__(self, other):
         # ID isn't relevant for content equality!
