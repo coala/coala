@@ -14,22 +14,34 @@ class SourceRangeTest(unittest.TestCase):
         self.result_fileB_line2 = SourcePosition("B", 2)
         self.result_fileB_line4 = SourcePosition("B", 4)
 
+    def test_simple_construction(self):
+        uut = SourceRange(self.result_fileA_noline)
+        self.assertEqual(uut.end, self.result_fileA_noline)
+
+        # If we don't give an end, end shall be start, even if we modify start
+        uut.start.line = 4
+        self.assertEqual(uut.start, uut.end)
+
+    def test_file_property(self):
+        uut = SourceRange(self.result_fileA_line2)
+        self.assertEqual(uut.file, "A")
+
     def test_invalid_arguments(self):
         # arguments must be SourceRanges
-        with self.assertRaises(TypeError):
+        with self.assertRaises(AssertionError):
             SourceRange(1, self.result_fileA_noline)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(AssertionError):
             SourceRange(self.result_fileA_line2, 1)
 
     def test_argument_file(self):
         # both Source_Positions should describe the same file
-        with self.assertRaises(ValueError):
+        with self.assertRaises(AssertionError):
             SourceRange(self.result_fileA_noline, self.result_fileB_noline)
 
     def test_argument_order(self):
         # end should come after the start
-        with self.assertRaises(ValueError):
+        with self.assertRaises(AssertionError):
             SourceRange(self.result_fileA_line2, self.result_fileA_noline)
 
     def test_order_by_file(self):

@@ -97,15 +97,15 @@ class ProcessingTest(unittest.TestCase):
         global_result = global_results[0]
 
         self.assertEqual(str(local_result),
-                         "Result:\n origin: 'LocalTestBear'\n file: None\n "
-                         "line nr: None\n severity: 1\n diffs: None\n"
-                         "'test msg'")
+                         "Result:\n id: {}\n origin: 'LocalTestBear'\n file: "
+                         "None\n line nr: None\n severity: 1\n diffs: None\n"
+                         "'test msg'".format(local_result.id))
         file = (platform.system() == 'Windows' and
                 self.testcode_c_path.lower() or self.testcode_c_path)
         self.assertEqual(str(global_result),
-                         "Result:\n origin: 'GlobalTestBear'\n file: {}"
-                         "\n line nr: None\n severity: 1\n diffs: None\n'test "
-                         "message'".format(repr(file)))
+                         "Result:\n id: {}\n origin: 'GlobalTestBear'\n file: {"
+                         "}\n line nr: None\n severity: 1\n diffs: None\n'test "
+                         "message'".format(global_result.id, repr(file)))
 
     def test_empty_run(self):
         results = execute_section(self.sections["default"],

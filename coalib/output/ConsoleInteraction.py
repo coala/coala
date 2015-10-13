@@ -35,12 +35,8 @@ CLI_ACTIONS = [OpenEditorAction(),
                ShowPatchAction()]
 
 
-def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
-    return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
-                                         sign,
-                                         mod_nr,
-                                         symbol,
-                                         line.rstrip("\n"))
+def format_line(line, line_nr=""):
+    return "|{:>4}| {}".format(str(line_nr), line.rstrip("\n"))
 
 
 def print_section_beginning(console_printer, section):
@@ -67,50 +63,46 @@ def nothing_done(console_printer):
 def print_lines(console_printer,
                 pre_padding,
                 file_dict,
-                current_line,
-                result_line,
-                result_file):
+                last_printed_line,
+                source_range):
     """
     Prints the lines between the current and the result line. If needed
     they will be shortened.
 
-    :param console_printer: Object to print messages on the console.
-    :param file_dict      : A dictionary containing all files with filename as
-                            key.
-    :param current_line   : The current line printed by the console_printer.
-    :param result_line    : The line to which the result belongs to.
-    :param result_file    : The file to which the result belongs to.
+    :param console_printer:   Object to print messages on the console.
+    :param file_dict:         A dictionary containing all files with filename as
+                              key.
+    :param last_printed_line: The current line printed by the console_printer.
+    :param source_range:      The source range to print.
     """
-    line_delta = result_line - current_line
+    line_delta = source_range.start.line - last_printed_line
 
     if line_delta > pre_padding:
         print_segregation(console_printer)
 
-        for i in range(max(result_line - pre_padding, 1),
-                       result_line + 1):
+        for i in range(max(source_range.start.line - pre_padding, 1),
+                       source_range.end.line + 1):
             console_printer.print(
-                format_line(line=file_dict[result_file][i - 1],
-                            real_nr=i,
-                            mod_nr=i),
+                format_line(line_nr=i,
+                            line=file_dict[source_range.file][i - 1]),
                 color=FILE_LINES_COLOR)
     else:
-        for i in range(1, line_delta + 1):
+        for i in range(last_printed_line, source_range.end.line):
             console_printer.print(
                 format_line(
-                    line=file_dict[result_file][current_line + i - 1],
-                    real_nr=current_line + i,
-                    mod_nr=current_line + i),
+                    line_nr=i,
+                    line=file_dict[source_range.file][i - 1]),
                 color=FILE_LINES_COLOR)
 
 
-def print_result(console_printer,
-                 log_printer,
-                 section,
-                 file_diff_dict,
-                 result,
-                 file_dict):
+def print_result_message(console_printer,
+                         log_printer,
+                         section,
+                         file_diff_dict,
+                         result,
+                         file_dict):
     """
-    Prints the result to console.
+    Prints the result message to console.
 
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
@@ -167,7 +159,7 @@ def print_results_formatted(log_printer,
                             *args):
     format_str = str(section.get(
         "format_str",
-        "origin:{origin}:file:{file}:line_nr:{line_nr}:severity:"
+        "id:{id}:origin:{origin}:file:{file}:line_nr:{line_nr}:severity:"
         "{severity}:msg:{message}"))
     for result in result_list:
         try:
@@ -185,75 +177,71 @@ def print_results(log_printer,
                   file_diff_dict,
                   color=True,
                   pre_padding=3):
-    """
-    Print all the results in a section.
-
-    :param log_printer:    Printer responsible for logging the messages.
-    :param section:        The section to which the results belong to.
-    :param result_list:    List containing the results
-    :param file_dict:      A dictionary containing all files with filename as
-                           key.
-    :param file_diff_dict: A dictionary that contains filenames as keys and
-                           diff objects as values.
-    :param color:          Boolean variable to print the results in color or
-                           not.
-    :param pre_padding:    No of lines of file to print before the result line.
-                           Default value is 3.
-    """
-    if not isinstance(result_list, list):
-        raise TypeError("result_list should be of type list")
-    if not isinstance(file_dict, dict):
-        raise TypeError("file_dict should be of type dict")
-    if not isinstance(file_diff_dict, dict):
-        raise TypeError("file_diff_dict should be of type dict")
-
-    # We can't use None since we need line 109 be executed if file of first
-    # result is None
     console_printer = ConsolePrinter(print_colored=color)
-    current_file = False
-    current_line = 0
+    for result in result_list:
+        if not isinstance(result, Result):
+            log_printer.warn(_("One of the results can not be printed since it is "
+                               "not a valid derivative of the coala result "
+                               "class."))
+            continue
 
-    for result in sorted(result_list):
-        if result.file != current_file:
-            if result.file in file_dict or result.file is None:
-                current_file = result.file
-                current_line = 0
-                console_printer.print("\n\n{}".format(current_file
-                                                      if current_file is not
-                                                      None
-                                                      else STR_PROJECT_WIDE),
+        print_result_lines(log_printer,
+                           console_printer,
+                           result,
+                           file_dict,
+                           pre_padding)
+        print_result_message(console_printer,
+                             log_printer,
+                             section,
+                             file_diff_dict,
+                             result,
+                             file_dict)
+
+
+def print_result_lines(log_printer,
+                       console_printer,
+                       result,
+                       file_dict,
+                       pre_padding):
+    """
+    Print the result in a section.
+
+    :param log_printer:     Printer responsible for logging the messages.
+    :param console_printer: Printer responsible for output.
+    :param result:          The result to print
+    :param file_dict:       A dictionary containing all files with filename as
+                            key.
+    :param pre_padding:     No of lines of file to print before the result
+                            line. Default value is 3.
+    """
+    if len(result.affected_code) == 0:
+        console_printer.print(STR_PROJECT_WIDE)
+        return
+
+    current_file = None
+    last_printed_line = 0
+
+    for sourcerange in result.affected_code:
+        if sourcerange.file != current_file:
+            if sourcerange.file in file_dict:
+                current_file = sourcerange.file
+                last_printed_line = 0
+                console_printer.print("\n\n{}".format(current_file),
                                       color=FILE_NAME_COLOR)
             else:
-                log_printer.warn(_("A result ({}) cannot be printed "
-                                   "because it refers to a file that "
-                                   "doesn't seem to "
-                                   "exist.").format(str(result)))
+                log_printer.warn(_("The result ({}) refers to a file that "
+                                   "doesn't seem to exist. "
+                                   "({})").format(str(result),
+                                                  repr(sourcerange.file)))
                 continue
 
-        if result.line_nr is not None:
-            if current_file is None:
-                raise AssertionError("A result with a line_nr should also "
-                                     "have a file.")
-            if result.line_nr < current_line:  # pragma: no cover
-                raise AssertionError("The sorting of the results doesn't "
-                                     "work correctly.")
-            if len(file_dict[result.file]) < result.line_nr - 1:
-                console_printer.print(format_line(line=STR_LINE_DOESNT_EXIST))
-            else:
+        if sourcerange.start.line is not None:
                 print_lines(console_printer,
                             pre_padding,
                             file_dict,
-                            current_line,
-                            result.line_nr,
-                            result.file)
-                current_line = result.line_nr
-
-        print_result(console_printer,
-                     log_printer,
-                     section,
-                     file_diff_dict,
-                     result,
-                     file_dict)
+                            last_printed_line,
+                            sourcerange)
+                last_printed_line = sourcerange.end.line
 
 
 def require_setting(log_printer, setting_name, arr):
@@ -445,9 +433,7 @@ def apply_action(log_printer,
 
 def print_segregation(console_printer):
     console_printer.print(format_line(line="",
-                                      real_nr="...",
-                                      sign="|",
-                                      mod_nr="..."),
+                                      line_nr="..."),
                           color=FILE_LINES_COLOR)
 
 

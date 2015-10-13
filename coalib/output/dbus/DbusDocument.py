@@ -92,9 +92,8 @@ class DbusDocument(dbus.service.Object):
                  - The name of the section
                  - Boolean which is true if all bears in the section executed
                    successfully
-                 - List of results where each result is a list which contains:
-                   (str)origin, (str)message, (str)file, (str)line_nr,
-                   (str)severity
+                 - List of results where each result is a string dictionary
+                   which contains: id, origin, message, file, line_nr, severity
         """
         retval = []
         if self.path == "" or self.config_file == "":
