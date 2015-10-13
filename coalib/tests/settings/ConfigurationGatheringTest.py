@@ -222,8 +222,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
             self.log_printer,
             arg_list=["--find-config"])
 
-        self.assertRegexpMatches(str(sections["default"]),
-                                 ".*find_config : True.*, config : .*")
+        self.assertRegex(str(sections["default"]),
+                         ".*find_config : True.*, config : .*")
 
 
 if __name__ == '__main__':
