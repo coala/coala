@@ -5,8 +5,8 @@ import tempfile
 import unittest
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ClosableObject import close_objects
-sys.path.insert(0, ".")
 
+sys.path.insert(0, ".")
 from coalib.misc.Constants import Constants
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
