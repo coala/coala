@@ -1,5 +1,6 @@
 from itertools import chain
 from pyprint.ConsolePrinter import ConsolePrinter
+import os
 
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
@@ -8,7 +9,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Collectors import collect_bears
-
+from coalib.output.Tagging import tag_results
 
 do_nothing = lambda *args: True
 
@@ -61,6 +62,8 @@ def run_coala(log_printer=None,
          global_bears,
          targets) = gather_configuration(acquire_settings, log_printer)
 
+        tag = str(sections['default'].get('tag', None))
+
         show_all_bears = bool(sections['default'].get('show_all_bears', False))
         show_bears_ = bool(sections["default"].get("show_bears", "False"))
         if show_all_bears:
@@ -109,6 +112,10 @@ def run_coala(log_printer=None,
 
                 results[section_name] = results_for_section
                 did_nothing = False
+            if tag != "None":
+                project_dir = os.path.abspath(
+                    str(sections["default"].get("config")))
+                tag_results(tag, project_dir, results)
 
         if did_nothing:
             nothing_done()
