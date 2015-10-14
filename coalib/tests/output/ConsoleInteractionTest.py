@@ -107,11 +107,6 @@ class ConsoleInteractionTest(unittest.TestCase):
         OpenEditorAction.is_applicable = staticmethod(lambda result: False)
         ApplyPatchAction.is_applicable = staticmethod(lambda result: False)
 
-        if sys.version_info < (3, 3):
-            self.FileNotFoundError = OSError
-        else:
-            self.FileNotFoundError = FileNotFoundError
-
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
         self.assertEqual(acquire_settings(self.log_printer, {0: 0}), {})

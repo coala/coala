@@ -50,7 +50,7 @@ def load_config_file(filename, log_printer, silent=False):
 
     try:
         return ConfParser().parse(filename)
-    except ConfParser.FileNotFoundError:
+    except FileNotFoundError:
         if not silent:
             log_printer.warn(
                 _("The requested coafile '{filename}' does not exist.")

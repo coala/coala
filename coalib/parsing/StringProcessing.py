@@ -38,7 +38,7 @@ def trim_empty_matches(iterator, groups=(0,)):
         for group in groups:
             if len(elem.group(group)) != 0:
                 yield elem
-                continue
+                break
 
 
 def trim_empty(iterator):
@@ -48,9 +48,7 @@ def trim_empty(iterator):
 
     :param iterator: The iterator to be filtered.
     """
-    for elem in iterator:
-        if len(elem) != 0:
-            yield elem
+    return filter(lambda x: len(x) != 0, iterator)
 
 
 def search_for(pattern, string, flags=0, max_match=0, use_regex=False):
@@ -164,16 +162,15 @@ def split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    for elem in _split(string,
-                       max_split,
-                       remove_empty_matches,
-                       search_for,
-                       pattern,
-                       string,
-                       0,
-                       0,
-                       use_regex):
-        yield elem
+    return _split(string,
+                  max_split,
+                  remove_empty_matches,
+                  search_for,
+                  pattern,
+                  string,
+                  0,
+                  0,
+                  use_regex)
 
 
 def unescaped_split(pattern,
@@ -198,16 +195,15 @@ def unescaped_split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    for elem in _split(string,
-                       max_split,
-                       remove_empty_matches,
-                       unescaped_search_for,
-                       pattern,
-                       string,
-                       0,
-                       0,
-                       use_regex):
-        yield elem
+    return _split(string,
+                  max_split,
+                  remove_empty_matches,
+                  unescaped_search_for,
+                  pattern,
+                  string,
+                  0,
+                  0,
+                  use_regex)
 
 
 def search_in_between(begin,
