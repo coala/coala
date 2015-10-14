@@ -1,19 +1,37 @@
-language:
-  # The `objective-c` language by default uses a OSX build container. This
-  # is the currently supported method of using a OSX xontainer.
-  - objective-c
+os:
+  - linux
+  - osx
+
+sudo: false
+
+language: generic
+
+addons:
+  apt:
+    packages:
+    - espeak
+    - gir1.2-glib-2.0
+    - gobject-introspection
+    - libdbus-glib-1-2
+    - python3-gi-cairo
+    - clang-3.4
+
+cache:
+  directories:
+    - $PYENV_ROOT
 
 env:
   global:
     - PYENV_ROOT=~/.pyenv
-    - PATH=$PYENV_ROOT/shims:$PATH
+    - PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:/usr/local/opt/llvm36/lib/llvm-3.6/lib:$PATH
   matrix:
+    - PYTHON_VERSION=3.5.0b3
     - PYTHON_VERSION=3.4.2
     - PYTHON_VERSION=3.3.5
     - PYTHON_VERSION=pypy3-2.4.0
 
 install:
-  - bash .misc/deps.osx.sh
+  - bash .misc/deps.${TRAVIS_OS_NAME}.sh
 
 script:
   - bash .misc/tests.sh

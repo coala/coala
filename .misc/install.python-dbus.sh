@@ -6,16 +6,18 @@ if python -c "import dbus" ; then
   exit 0
 fi
 
-if [ ! -d "dbus-python-1.2.0" ] ; then
+dbus_version=${1:-1.2.0}
+
+if [ ! -d "dbus-python-${dbus_version}" ] ; then
   echo Downloading python-dbus...
   # Using -q in wget makes OSX hang sometimes
-  wget http://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.0.tar.gz -O dbus-python.tar.gz
+  wget http://dbus.freedesktop.org/releases/dbus-python/dbus-python-${dbus_version}.tar.gz
   echo Unpacking python-dbus...
-  tar -zxf dbus-python.tar.gz
-  rm dbus-python.tar.gz
-  cd dbus-python-1.2.0
+  tar -zxf dbus-python-${dbus_version}.tar.gz
+  rm dbus-python-${dbus_version}.tar.gz
+  cd dbus-python-${dbus_version}
 else
-  cd dbus-python-1.2.0
+  cd dbus-python-${dbus_version}
   make clean >/dev/null || make clean
 fi
 

@@ -6,16 +6,19 @@ if python -c "import gi" ; then
   exit 0
 fi
 
-if [ ! -d "pygobject-3.16.2" ] ; then
+gi_version=${1:-3.16.2}
+gi_major_version=`echo $gi_version | cut -d. -f1-2`
+
+if [ ! -d "pygobject-${gi_version}" ] ; then
   echo Downloading python-gi...
   # Using -q in wget makes OSX hang sometimes
-  wget http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.16/pygobject-3.16.2.tar.xz -O python-gi.tar.xz
+  wget http://ftp.gnome.org/pub/GNOME/sources/pygobject/${gi_major_version}/pygobject-${gi_version}.tar.xz
   echo Unpacking python-gi...
-  tar -xJf python-gi.tar.xz
-  rm python-gi.tar.xz
-  cd pygobject-3.16.2
+  tar -xJf pygobject-${gi_version}.tar.xz
+  rm pygobject-${gi_version}.tar.xz
+  cd pygobject-${gi_version}
 else
-  cd pygobject-3.16.2
+  cd pygobject-${gi_version}
   make clean >/dev/null || make clean
 fi
 
