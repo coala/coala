@@ -1,7 +1,8 @@
-from functools import total_ordering
 import uuid
 
-from coalib.misc.Decorators import generate_repr
+from coalib.misc.Decorators import (generate_repr,
+                                    generate_ordering,
+                                    enforce_signature)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
@@ -11,34 +12,29 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
                "line_nr",
                ("severity", RESULT_SEVERITY.reverse.get),
                "message")
-@total_ordering
+@generate_ordering("file",
+                   "line_nr",
+                   "severity",
+                   "origin",
+                   "message",
+                   "debug_msg",
+                   "diffs")
 class Result:
     """
     A result is anything that has an origin and a message.
 
     Optionally it might affect a file.
-
-    When sorting a list of results with the implemented comparision routines
-    you will get an ordering which follows the following conditions,
-    while the first condition has the highest priority, which descends to the
-    last condition.
-    1. Results with no files will be shown first
-    2. Results will be sorted by files (ascending alphabetically)
-    3. Results will be sorted by lines (ascending)
-    4. Results will be sorted by severity (descending, major first, info last)
-    5. Results will be sorted by origin (ascending alphabetically)
-    6. Results will be sorted by message (ascending alphabetically)
-    7. Results will be sorted by debug message (ascending alphabetically)
     """
 
+    @enforce_signature
     def __init__(self,
                  origin,
-                 message,
-                 file=None,
-                 line_nr=None,
-                 severity=RESULT_SEVERITY.NORMAL,
+                 message: str,
+                 file: (str, None)=None,
+                 line_nr: (int, None)=None,
+                 severity: int=RESULT_SEVERITY.NORMAL,
                  debug_msg="",
-                 diffs=None):
+                 diffs: (dict, None)=None):
         """
         :param origin:    Class name or class of the creator of this object
         :param message:   Message to show with this result
@@ -62,48 +58,6 @@ class Result:
         self.severity = severity
         self.diffs = diffs
         self.id = uuid.uuid4().int
-
-    def __eq__(self, other):
-        # ID isn't relevant for content equality!
-        return (isinstance(other, Result) and
-                self.origin == other.origin and
-                self.message == other.message and
-                self.debug_msg == other.debug_msg and
-                self.file == other.file and
-                self.severity == other.severity and
-                self.line_nr == other.line_nr and
-                self.diffs == other.diffs)
-
-    def __lt__(self, other):
-        if not isinstance(other, Result):
-            raise TypeError("Comparison with non-result classes is not "
-                            "supported.")
-
-        # Show elements without files first
-        if (self.file is None) != (other.file is None):
-            return self.file is None
-
-        # Now either both .file members are None or both are set
-        if self.file != other.file:
-            return self.file < other.file
-
-        # If we have a line result show results with a lesser line number first
-        if self.line_nr is not None and other.line_nr is not None:
-            if self.line_nr != other.line_nr:
-                return self.line_nr < other.line_nr
-
-        # Both files are equal
-        if self.severity != other.severity:
-            return self.severity > other.severity
-
-        # Severities are equal, files are equal
-        if self.origin != other.origin:
-            return self.origin < other.origin
-
-        if self.message != other.message:
-            return self.message < other.message
-
-        return self.debug_msg < other.debug_msg
 
     def to_string_dict(self):
         """
@@ -131,7 +85,8 @@ class Result:
 
         return retval
 
-    def apply(self, file_dict):
+    @enforce_signature
+    def apply(self, file_dict: dict):
         """
         Applies all contained diffs to the given file_dict. This operation will
         be done in-place.
@@ -139,9 +94,6 @@ class Result:
         :param file_dict: A dictionary containing all files with filename as
                           key and all lines a value. Will be modified.
         """
-        assert isinstance(file_dict, dict)
-        assert isinstance(self.diffs, dict)
-
         for filename in self.diffs:
             file_dict[filename] = self.diffs[filename].apply(
                 file_dict[filename])
