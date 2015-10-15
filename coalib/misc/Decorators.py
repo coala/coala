@@ -1,4 +1,5 @@
 from functools import total_ordering
+import inspect
 
 
 def yield_once(iterator):
@@ -238,3 +239,58 @@ def generate_ordering(*members):
         return total_ordering(generate_eq(*members)(cls))
 
     return decorator
+
+
+def _assert_right_type(value, types, argname):
+    if isinstance(types, type) or types is None:
+        types = (types,)
+
+    for typ in types:
+        if value == typ or (isinstance(typ, type) and isinstance(value, typ)):
+            return
+
+    raise TypeError("{} must be an instance of one of {} (provided value: "
+                    "{})".format(argname, types, repr(value)))
+
+
+def enforce_signature(function):
+    """
+    Enforces the signature of the function by throwing TypeError's if invalid
+    arguments are provided. The return value is not checked.
+
+    You can annotate any parameter of your function with the desired type or a
+    tuple of allowed types. If you annotate the function with a value, this
+    value only will be allowed (useful especially for None). Example:
+
+    >>> @enforce_signature
+    ... def test(arg: bool, another: (int, None)):
+    ...     pass
+    ...
+    >>> test(True, 5)
+    >>> test(True, None)
+
+    Any string value for any parameter e.g. would then trigger a TypeError.
+
+    :param function: The function to check.
+    """
+    argspec = inspect.getfullargspec(function)
+    annotations = argspec.annotations
+    argnames = argspec.args
+
+    unnamed_annotations = {}
+    for i, arg in enumerate(argnames):
+        if arg in annotations:
+            unnamed_annotations[i] = (annotations[arg], arg)
+
+    def decorated(*args, **kwargs):
+        for i, annotation in unnamed_annotations.items():
+            if i < len(args):
+                _assert_right_type(args[i], annotation[0], annotation[1])
+
+        for argname, argval in kwargs.items():
+            if argname in annotations:
+                _assert_right_type(argval, annotations[argname], argname)
+
+        return function(*args, **kwargs)
+
+    return decorated
