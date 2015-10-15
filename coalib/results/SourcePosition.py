@@ -1,10 +1,8 @@
-from functools import total_ordering
-
-from coalib.misc.Decorators import generate_repr
+from coalib.misc.Decorators import generate_repr, generate_ordering
 
 
 @generate_repr("file", "line", "column")
-@total_ordering
+@generate_ordering("file", "line", "column")
 class SourcePosition:
     def __init__(self, file, line=None, column=None):
         """
@@ -46,29 +44,3 @@ class SourcePosition:
             str(repr(self.file)),
             str(self.line),
             str(self.column))
-
-    def __eq__(self, other):
-        return (self.file == other.file and
-                self.line == other.line and
-                self.column == other.column)
-
-    def __lt__(self, other):
-        # Now either both file members are None or both are set
-        if self.file != other.file:
-            return self.file < other.file
-
-        # Show results with a no or lesser line number first
-        if (self.line is None) != (other.line is None):
-            return self.line is None
-
-        if self.line != other.line:
-            return self.line < other.line
-
-        # Show results with no or lesser column first
-        if (self.column is None) != (other.column is None):
-            return self.column is None
-
-        if self.column != other.column:
-            return self.column < other.column
-
-        return False
