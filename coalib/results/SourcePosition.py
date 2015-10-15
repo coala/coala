@@ -38,9 +38,3 @@ class SourcePosition:
     @property
     def column(self):
         return self._column
-
-    def __str__(self):
-        return "file: {}, line: {}, column: {}".format(
-            str(repr(self.file)),
-            str(self.line),
-            str(self.column))

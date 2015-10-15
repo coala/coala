@@ -20,16 +20,12 @@ class SourcePositionTest(unittest.TestCase):
 
     def test_string_conversion(self):
         uut = SourcePosition("filename", 1)
-        self.assertEqual(str(uut),
-                         "file: 'filename', line: 1, column: None")
         self.assertRegex(
             repr(uut),
             "<SourcePosition object\\(file='filename', line=1, column=None\\) "
                 "at 0x[0-9a-fA-F]+>")
 
         uut = SourcePosition("None", None)
-        self.assertEqual(str(uut),
-                         "file: 'None', line: None, column: None")
         self.assertRegex(
             repr(uut),
             "<SourcePosition object\\(file='None', line=None, column=None\\) "
