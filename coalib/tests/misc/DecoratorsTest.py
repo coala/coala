@@ -5,6 +5,7 @@ sys.path.insert(0, ".")
 from coalib.misc.Decorators import (arguments_to_lists,
                                     yield_once,
                                     generate_repr,
+                                    generate_eq,
                                     enforce_signature)
 
 
@@ -239,6 +240,24 @@ class EnforceSignatureTest(unittest.TestCase):
 
         test_function(4, "t")
         test_function(None, "t")
+
+
+class GenerateEqTest(unittest.TestCase):
+    def test_equality(self):
+        @generate_eq("cookie", "cake")
+        class TestClass:
+            def __init__(self, cookie, cake, irrelevant):
+                self.cookie = cookie
+                self._cake = cake
+                self.irrelevant = irrelevant
+
+            @property
+            def cake(self):
+                return self._cake
+        self.assertEqual(TestClass(4, 5, 3), TestClass(4, 5, 6))
+        self.assertNotEqual(TestClass(3, 5, 5), 5)
+        self.assertNotEqual(TestClass(3, 5, 5), TestClass(4, 5, 5))
+        self.assertNotEqual(TestClass(3, 5, 5), TestClass(3, 4, 5))
 
 
 if __name__ == '__main__':
