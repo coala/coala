@@ -1,6 +1,8 @@
 import uuid
 
-from coalib.misc.Decorators import generate_repr, generate_ordering
+from coalib.misc.Decorators import (generate_repr,
+                                    generate_ordering,
+                                    enforce_signature)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
@@ -24,14 +26,15 @@ class Result:
     Optionally it might affect a file.
     """
 
+    @enforce_signature
     def __init__(self,
                  origin,
-                 message,
-                 file=None,
-                 line_nr=None,
-                 severity=RESULT_SEVERITY.NORMAL,
+                 message: str,
+                 file: (str, None)=None,
+                 line_nr: (int, None)=None,
+                 severity: int=RESULT_SEVERITY.NORMAL,
                  debug_msg="",
-                 diffs=None):
+                 diffs: (dict, None)=None):
         """
         :param origin:    Class name or class of the creator of this object
         :param message:   Message to show with this result
@@ -82,7 +85,8 @@ class Result:
 
         return retval
 
-    def apply(self, file_dict):
+    @enforce_signature
+    def apply(self, file_dict: dict):
         """
         Applies all contained diffs to the given file_dict. This operation will
         be done in-place.
@@ -90,9 +94,6 @@ class Result:
         :param file_dict: A dictionary containing all files with filename as
                           key and all lines a value. Will be modified.
         """
-        assert isinstance(file_dict, dict)
-        assert isinstance(self.diffs, dict)
-
         for filename in self.diffs:
             file_dict[filename] = self.diffs[filename].apply(
                 file_dict[filename])

@@ -18,7 +18,7 @@ class ResultTest(unittest.TestCase):
         self.assertEqual(uut.origin, "")
 
     def test_string_dict(self):
-        uut = Result(None, None)
+        uut = Result(None, "")
         output = uut.to_string_dict()
         self.assertEqual(output, {"id": str(uut.id),
                                   "origin": "",
@@ -44,9 +44,9 @@ class ResultTest(unittest.TestCase):
                                   "debug_msg": "dbg"})
 
 
-        uut = Result(origin="origin", message="msg", line_nr="a")
+        uut = Result(origin="origin", message="msg", line_nr=5)
         output = uut.to_string_dict()
-        self.assertEqual(output["line_nr"], "a")
+        self.assertEqual(output["line_nr"], "5")
 
     def test_apply(self):
         file_dict = {
