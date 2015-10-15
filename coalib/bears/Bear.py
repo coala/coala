@@ -2,6 +2,7 @@ import traceback
 from pyprint.Printer import Printer
 
 from coalib.misc.i18n import _
+from coalib.misc.Decorators import enforce_signature
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
@@ -35,15 +36,14 @@ class Bear(Printer, LogPrinter):
     to the coala project.
     """
 
+    @enforce_signature
     def __init__(self,
-                 section,
+                 section: Section,
                  message_queue,
                  timeout=0):
         Printer.__init__(self)
         LogPrinter.__init__(self, self)
 
-        if not isinstance(section, Section):
-            raise TypeError("section has to be of type Section.")
         if not hasattr(message_queue, "put") and message_queue is not None:
             raise TypeError("message_queue has to be a Queue or None.")
 
