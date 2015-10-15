@@ -6,6 +6,7 @@ from coalib.misc.Decorators import (arguments_to_lists,
                                     yield_once,
                                     generate_repr,
                                     generate_eq,
+                                    generate_ordering,
                                     enforce_signature)
 
 
@@ -265,6 +266,44 @@ class GenerateEqTest(unittest.TestCase):
 
         self.assertNotEqual(TestClass(4, 5, 3), Derived(4, 5, 3))
         self.assertNotEqual(Derived(4, 5, 3), TestClass(4, 5, 3))
+
+
+class GenerateOrderingTest(unittest.TestCase):
+    def test_ordering(self):
+        @generate_ordering("cake", "cookie")
+        class TestClass:
+            def __init__(self, cookie, cake, irrelevant):
+                self.cookie = cookie
+                self._cake = cake
+                self.irrelevant = irrelevant
+
+            @property
+            def cake(self):
+                return self._cake
+
+        self.assert_equal(TestClass(4, 5, 3), TestClass(4, 5, 6))
+
+        with self.assertRaises(TypeError):
+            TestClass(4, 5, 3) < 5
+
+        # Cakes are more important than cookies
+        self.assert_ordering(TestClass(1, 1, 1), TestClass(2, 0, 4))
+        # But cookies are well too, provided cakes are there too
+        self.assert_ordering(TestClass(2, 1, 1), TestClass(1, 1, 2))
+        # Without any cookies I won't even start working
+        self.assert_ordering(TestClass(2, 1, 1), TestClass(None, 1, 2))
+
+    def assert_equal(self, first, second):
+        self.assertGreaterEqual(first, second)
+        self.assertEqual(first, second)
+        self.assertLessEqual(first, second)
+
+    def assert_ordering(self, greater, lesser):
+        self.assertGreater(greater, lesser)
+        self.assertGreaterEqual(greater, lesser)
+        self.assertNotEqual(greater, lesser)
+        self.assertLessEqual(lesser, greater)
+        self.assertLess(lesser, greater)
 
 
 if __name__ == '__main__':
