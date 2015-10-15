@@ -41,12 +41,6 @@ class SourcePosition:
     def column(self):
         return self._column
 
-    def __str__(self):
-        return "file: {}, line: {}, column: {}".format(
-            str(repr(self.file)),
-            str(self.line),
-            str(self.column))
-
     def __eq__(self, other):
         return (self.file == other.file and
                 self.line == other.line and
