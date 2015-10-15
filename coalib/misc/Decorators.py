@@ -1,3 +1,7 @@
+from functools import total_ordering
+import inspect
+
+
 def yield_once(iterator):
     """
     Decorator to make an iterator yield each result only once.
@@ -166,3 +170,124 @@ def generate_repr(*members):
             return _construct_repr_string(self, member_repr_list)
 
     return decorator
+
+def generate_eq(*members):
+    """
+    Decorator that generates equality and inequality operators for the decorated
+    class.
+
+    Note that this decorator modifies the given class in place!
+
+    :param members: A list of members to consider for equality.
+    """
+    def decorator(cls):
+        def eq(self, other):
+            if type(other) is not type(self):
+                return False
+
+            for member in members:
+                if getattr(self, member) != getattr(other, member):
+                    return False
+
+            return True
+
+        def ne(self, other):
+            return not eq(self, other)
+
+        cls.__eq__ = eq
+        cls.__ne__ = ne
+        return cls
+
+    return decorator
+
+
+def generate_ordering(*members):
+    """
+    Decorator that generates ordering operators for the decorated class. All
+    ordering except equality functions will raise a TypeError when a comparison
+    with an unrelated class is attempted.
+
+    Note that this decorator modifies the given class in place!
+
+    :param members: A list of members to consider from high priority to low.
+                    I.e. if the first member is equal the second will be taken
+                    for comparison and so on. If a member is None it is
+                    considered smaller than any other value except None.
+    """
+    def decorator(cls):
+        def lt(self, other):
+            if not isinstance(other, cls):
+                raise TypeError("Comparison with unrelated classes is "
+                                "unsupported.")
+
+            for member in members:
+                if getattr(self, member) == getattr(other, member):
+                    continue
+
+                if None in (getattr(self, member), getattr(other, member)):
+                    return getattr(self, member) is None
+
+                return getattr(self, member) < getattr(other, member)
+
+            return False
+
+        cls.__lt__ = lt
+        return total_ordering(generate_eq(*members)(cls))
+
+    return decorator
+
+
+def assert_right_type(value, types, argname):
+    if isinstance(types, type) or types is None:
+        types = (types,)
+
+    for typ in types:
+        if value == typ or (isinstance(typ, type) and isinstance(value, typ)):
+            return
+
+    raise TypeError("{} must be an instance of one of {} (provided value: "
+                    "{})".format(argname, types, repr(value)))
+
+def enforce_signature(function):
+    """
+    Enforces the signature of the function by throwing TypeError's if invalid
+    arguments are provided. The return value is not checked.
+
+    You can annotate any parameter of your function with the desired type or a
+    tuple of allowed types. If you annotate the function with a value, this
+    value only will be allowed (useful especially for None). Example:
+
+    >>> @enforce_signature
+    ... def test(arg: bool, another: (int, None)):
+    ...     pass
+    ...
+    >>> test(True, 5)
+    >>> test(True, None)
+
+    Any string value for any parameter e.g. would then trigger a TypeError.
+
+    :param function: The function to check.
+    """
+    argspec = inspect.getfullargspec(function)
+    annotations = argspec.annotations
+    argnames = argspec.args
+
+    unnamed_annotations = {}
+    for i, arg in enumerate(argnames):
+        if arg in annotations:
+            unnamed_annotations[i] = (annotations[arg], arg)
+
+    def decorated(*args, **kwargs):
+        for i, annotation in unnamed_annotations.items():
+            if i < len(args):
+                assert_right_type(args[i],
+                                  unnamed_annotations[i][0],
+                                  unnamed_annotations[i][1])
+
+        for argname, argval in kwargs.items():
+            if argname in annotations:
+                assert_right_type(argval, annotations[argname], argname)
+
+        return function(*args, **kwargs)
+
+    return decorated

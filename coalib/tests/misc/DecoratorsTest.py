@@ -4,7 +4,10 @@ import sys
 sys.path.insert(0, ".")
 from coalib.misc.Decorators import (arguments_to_lists,
                                     yield_once,
-                                    generate_repr)
+                                    generate_repr,
+                                    generate_eq,
+                                    generate_ordering,
+                                    enforce_signature)
 
 
 class YieldOnceTest(unittest.TestCase):
@@ -212,6 +215,96 @@ class GenerateReprTest(unittest.TestCase):
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, B='A string', A=2\\) at "
                              "0x[0-9a-fA-F]+>")
+
+
+class EnforceSignatureTest(unittest.TestCase):
+    def test_enforce_kwargs(self):
+        @enforce_signature
+        def test_function(*args, a, b: str):
+            pass
+
+        with self.assertRaises(TypeError):
+            test_function("test", a="test", b=5)
+
+        test_function(5, a=5, b="test")
+
+    def test_enforce_args(self):
+        @enforce_signature
+        def test_function(a: (int, None), b: "t", c=5, d: str="a"):
+            pass
+
+        with self.assertRaises(TypeError):
+            test_function("t", "t")
+
+        with self.assertRaises(TypeError):
+            test_function(4, "test")
+
+        test_function(4, "t")
+        test_function(None, "t")
+
+
+class GenerateEqTest(unittest.TestCase):
+    def test_equality(self):
+        @generate_eq("cookie", "cake")
+        class TestClass:
+            def __init__(self, cookie, cake, irrelevant):
+                self.cookie = cookie
+                self._cake = cake
+                self.irrelevant = irrelevant
+
+            @property
+            def cake(self):
+                return self._cake
+
+        self.assertEqual(TestClass(4, 5, 3), TestClass(4, 5, 6))
+        self.assertNotEqual(TestClass(3, 5, 5), 5)
+        self.assertNotEqual(TestClass(3, 5, 5), TestClass(4, 5, 5))
+        self.assertNotEqual(TestClass(3, 5, 5), TestClass(3, 4, 5))
+
+        class Derived(TestClass):
+            pass
+
+        self.assertNotEqual(TestClass(4, 5, 3), Derived(4, 5, 3))
+        self.assertNotEqual(Derived(4, 5, 3), TestClass(4, 5, 3))
+
+
+class GenerateOrderingTest(unittest.TestCase):
+    def test_ordering(self):
+        @generate_ordering("cake", "cookie")
+        class TestClass:
+            def __init__(self, cookie, cake, irrelevant):
+                self.cookie = cookie
+                self._cake = cake
+                self.irrelevant = irrelevant
+
+            @property
+            def cake(self):
+                return self._cake
+
+        self.assert_equal(TestClass(4, 5, 3), TestClass(4, 5, 6))
+
+        with self.assertRaises(TypeError):
+            TestClass(4, 5, 3) < 5
+
+        # Cakes are more important than cookies
+        self.assert_ordering(TestClass(1, 1, 1), TestClass(2, 0, 4))
+        # But cookies are well too, provided cakes are there too
+        self.assert_ordering(TestClass(2, 1, 1), TestClass(1, 1, 2))
+        # Without any cookies I won't even start working
+        self.assert_ordering(TestClass(2, 1, 1), TestClass(None, 1, 2))
+
+    def assert_equal(self, first, second):
+        self.assertGreaterEqual(first, second)
+        self.assertEqual(first, second)
+        self.assertLessEqual(first, second)
+
+    def assert_ordering(self, greater, lesser):
+        self.assertGreater(greater, lesser)
+        self.assertGreaterEqual(greater, lesser)
+        self.assertNotEqual(greater, lesser)
+        self.assertLessEqual(lesser, greater)
+        self.assertLess(lesser, greater)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
