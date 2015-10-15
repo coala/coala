@@ -47,38 +47,6 @@ class SourceRangeTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             SourceRange(self.result_fileA_line2, self.result_fileA_noline)
 
-    def test_order_by_file(self):
-        self.assertTrue(
-            SourceRange(self.result_fileA_noline, self.result_fileA_line2) <
-            SourceRange(self.result_fileB_noline, self.result_fileB_line2))
-
-    def test_order_by_line(self):
-        self.assertTrue(
-            SourceRange(self.result_fileB_noline, self.result_fileB_line4) <
-            SourceRange(self.result_fileB_line2, self.result_fileB_line4))
-
-        self.assertTrue(
-            SourceRange(self.result_fileB_line2, self.result_fileB_line4) <
-            SourceRange(self.result_fileB_line4, self.result_fileB_line4))
-
-    def test_order_by_end(self):
-        self.assertTrue(
-            SourceRange(self.result_fileB_noline, self.result_fileB_line2) <
-            SourceRange(self.result_fileB_noline, self.result_fileB_line4))
-
-    def test_equality(self):
-        self.assertTrue(
-            SourceRange(self.result_fileB_noline, self.result_fileB_line2) ==
-            SourceRange(self.result_fileB_noline, self.result_fileB_line2))
-
-        self.assertFalse(
-            SourceRange(self.result_fileB_noline, self.result_fileB_line2) ==
-            SourceRange(self.result_fileB_noline, self.result_fileB_line4))
-
-        self.assertFalse(
-            SourceRange(self.result_fileB_noline, self.result_fileB_line2) ==
-            1)
-
     def test_invalid_comparison(self):
         with self.assertRaises(TypeError):
             SourceRange(self.result_fileB_noline, self.result_fileB_line2) < 1
