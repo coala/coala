@@ -1,3 +1,6 @@
+from functools import total_ordering
+
+
 def yield_once(iterator):
     """
     Decorator to make an iterator yield each result only once.
@@ -164,5 +167,70 @@ def generate_repr(*members):
                 sorted(members_to_print, key=str.lower))
 
             return _construct_repr_string(self, member_repr_list)
+
+    return decorator
+
+def generate_eq(*members):
+    """
+    Decorator that generates equality and inequality operators for the decorated
+    class.
+
+    Note that this decorator modifies the given class in place!
+
+    :param members: A list of members to consider for equality.
+    """
+    def decorator(cls):
+        def eq(self, other):
+            if type(other) is not type(self):
+                return False
+
+            for member in members:
+                if getattr(self, member) != getattr(other, member):
+                    return False
+
+            return True
+
+        def ne(self, other):
+            return not eq(self, other)
+
+        cls.__eq__ = eq
+        cls.__ne__ = ne
+        return cls
+
+    return decorator
+
+
+def generate_ordering(*members):
+    """
+    Decorator that generates ordering operators for the decorated class. All
+    ordering except equality functions will raise a TypeError when a comparison
+    with an unrelated class is attempted.
+
+    Note that this decorator modifies the given class in place!
+
+    :param members: A list of members to consider from high priority to low.
+                    I.e. if the first member is equal the second will be taken
+                    for comparison and so on. If a member is None it is
+                    considered smaller than any other value except None.
+    """
+    def decorator(cls):
+        def lt(self, other):
+            if not isinstance(other, cls):
+                raise TypeError("Comparison with unrelated classes is "
+                                "unsupported.")
+
+            for member in members:
+                if getattr(self, member) == getattr(other, member):
+                    continue
+
+                if None in (getattr(self, member), getattr(other, member)):
+                    return getattr(self, member) is None
+
+                return getattr(self, member) < getattr(other, member)
+
+            return False
+
+        cls.__lt__ = lt
+        return total_ordering(generate_eq(*members)(cls))
 
     return decorator
