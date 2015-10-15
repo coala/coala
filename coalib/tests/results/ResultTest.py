@@ -59,7 +59,7 @@ class ResultTest(unittest.TestCase):
                                       message='b',
                                       file=None,
                                       severity=RESULT_SEVERITY.INFO)
-        self.assert_ordering(no_file_and_unsevere, no_file)
+        self.assert_ordering(no_file, no_file_and_unsevere)
         self.assert_ordering(medium, no_file_and_unsevere)
 
         greater_origin = Result(origin='c',

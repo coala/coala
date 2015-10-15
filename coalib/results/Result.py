@@ -94,7 +94,7 @@ class Result:
 
         # Both files are equal
         if self.severity != other.severity:
-            return self.severity > other.severity
+            return self.severity < other.severity
 
         # Severities are equal, files are equal
         if self.origin != other.origin:
