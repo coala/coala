@@ -4,7 +4,8 @@ import sys
 sys.path.insert(0, ".")
 from coalib.misc.Decorators import (arguments_to_lists,
                                     yield_once,
-                                    generate_repr)
+                                    generate_repr,
+                                    enforce_signature)
 
 
 class YieldOnceTest(unittest.TestCase):
@@ -212,6 +213,33 @@ class GenerateReprTest(unittest.TestCase):
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, B='A string', A=2\\) at "
                              "0x[0-9a-fA-F]+>")
+
+
+class EnforceSignatureTest(unittest.TestCase):
+    def test_enforce_kwargs(self):
+        @enforce_signature
+        def test_function(*args, a, b: str):
+            pass
+
+        with self.assertRaises(TypeError):
+            test_function("test", a="test", b=5)
+
+        test_function(5, a=5, b="test")
+
+    def test_enforce_args(self):
+        @enforce_signature
+        def test_function(a: (int, None), b: "t", c=5, d: str="a"):
+            pass
+
+        with self.assertRaises(TypeError):
+            test_function("t", "t")
+
+        with self.assertRaises(TypeError):
+            test_function(4, "test")
+
+        test_function(4, "t")
+        test_function(None, "t")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
