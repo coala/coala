@@ -35,13 +35,9 @@ class ConfParserTest(unittest.TestCase):
             filehandler.write(self.example_file)
 
         self.uut = ConfParser()
-        if sys.version_info < (3, 3):
-            err = OSError
-        else:
-            err = FileNotFoundError
         try:
             os.remove(self.nonexistentfile)
-        except err:
+        except FileNotFoundError:
             pass
 
     def tearDown(self):
@@ -69,7 +65,7 @@ class ConfParserTest(unittest.TestCase):
             ('t', '')
         ])
 
-        self.assertRaises(self.uut.FileNotFoundError,
+        self.assertRaises(FileNotFoundError,
                           self.uut.parse,
                           self.nonexistentfile)
         sections = self.uut.parse(self.file)
