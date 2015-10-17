@@ -15,13 +15,15 @@ class LanguageDefinition(SectionCreatable):
         definitions to keep your bear independent of the semantics of each
         language.
 
-        :param language_family:               The language family. E.g. C for
-                                              C++ and C and C# and so on.
-        :param language:                      The actual language (e.g. C++).
-        :raises ConfParser.FileNotFoundError: If no definition is available
-                                              for the given family.
-        :raises KeyError:                     If no definition is available
-                                              for the given language.
+        :param language_family:    The language family. E.g. C for C++ and C
+                                   and C# and so on.
+        :param language:           The actual language (e.g. C++).
+        :raises FileNotFoundError: Raised when no definition is available for
+                                   the given family. This is a compatability
+                                   exception from module
+                                   `coalib.misc.Compatability`.
+        :raises KeyError:          Raised when no definition is available for
+                                   the given language.
         """
         SectionCreatable.__init__(self)
         self.language = language.lower()

@@ -1,5 +1,4 @@
 from collections import OrderedDict
-import sys
 import os
 
 from coalib.parsing.LineParser import LineParser
@@ -8,11 +7,6 @@ from coalib.settings.Section import Section
 
 
 class ConfParser:
-    if sys.version_info < (3, 3):  # pragma: no cover
-        FileNotFoundError = IOError
-    else:
-        FileNotFoundError = FileNotFoundError
-
     def __init__(self,
                  key_value_delimiters=('=',),
                  comment_seperators=('#',),
@@ -32,9 +26,7 @@ class ConfParser:
 
     def parse(self, input_data, overwrite=False):
         """
-        Parses the input and adds the new data to the existing. If you want to
-        catch the FileNotFoundError please take the FileNotFoundError member of
-        this object for catching for backwards compatability to python 3.2.
+        Parses the input and adds the new data to the existing.
 
         :param input_data: filename
         :param overwrite:  behaves like reparse if this is True
