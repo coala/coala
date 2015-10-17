@@ -549,11 +549,11 @@ def _nested_search_in_between(begin, end, string):
     """
     # Regex explanation:
     # 1. (begin) A capturing group that matches the begin sequence.
-    # 2. (?:end) A non-capturing group that matches the end sequence. Because
-    #            the 1st group is lazy (matches as few times as possible) the
-    #            next occurring end-sequence is matched.
+    # 2. (end)   A capturing group that matches the end sequence. Because the
+    #            1st group is lazy (matches as few times as possible) the next
+    #            occurring end-sequence is matched.
     # The '|' in the regex matches either the first or the second part.
-    regex = r"(" + begin + r")|(?:" + end + r")"
+    regex = "(" + begin + ")|(" + end + ")"
 
     left_match = None
     nesting_level = 0
@@ -573,7 +573,11 @@ def _nested_search_in_between(begin, end, string):
                 nesting_level -= 1
 
             if nesting_level == 0 and left_match != None:
-                yield string[left_match.end() : match.start()]
+                yield InBetweenMatch(
+                    Match(left_match.group(), left_match.start()),
+                    Match(string[left_match.end() : match.start()],
+                          left_match.end()),
+                    Match(match.group(), match.start()))
                 left_match = None
 
 
@@ -615,7 +619,7 @@ def nested_search_in_between(begin,
     strings = _nested_search_in_between(begin, end, string)
 
     if remove_empty_matches:
-        strings = trim_empty(strings)
+        strings = filter(lambda x: len(x.inside) != 0, strings)
 
     strings = limit(strings, max_matches)
 
