@@ -1,0 +1,14 @@
+[C]
+doc-marker-standard = /**, *, */
+
+[CPP]
+doc-marker-standard = /**, *, */
+doc-marker-continuous = ///, ///
+
+[PYTHON]
+doc-marker-simple = """, """
+doc-marker-continuous = \#\#, \#
+
+[PYTHON3]
+doc-marker-simple = """, """
+doc-marker-continuous = \#\#, \#
