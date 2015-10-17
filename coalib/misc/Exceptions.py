@@ -1,15 +1,8 @@
-import sys
 from pyprint.NullPrinter import NullPrinter
 
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.Constants import Constants
 from coalib.misc.i18n import _
-
-
-if sys.version_info < (3, 3): # pragma: no cover
-    PermissionException = IOError
-else:
-    PermissionException = PermissionError
 
 
 def get_exitcode(exception, log_printer=None):
