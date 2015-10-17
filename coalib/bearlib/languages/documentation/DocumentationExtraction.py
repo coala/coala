@@ -2,9 +2,38 @@ from itertools import chain
 from operator import attrgetter
 
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
-    DocstyleDefinition)
+    DocstyleDefinition,
+    DOCTYPES)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
+from coalib.parsing.StringProcessing import search_in_between
+
+
+def _extract_documentation_standard(content,
+                                    marker_start,
+                                    marker_eachline,
+                                    marker_stop):
+    """
+    Extract documentation of doctype 'standard'.
+
+    :param content:         The source-code-string where to extract
+                            documentation from.
+    :param marker_start:    The start marker.
+    :param marker_eachline: The each-line marker.
+    :param marker_stop:     The stop marker.
+    :return:                An iterator yielding a tuple where the first entry
+                            is a range pair (start, end) describing the range
+                            where the documentation was found and the second
+                            one the actual documentation string.
+    """
+
+    for match in search_in_between(marker_start, marker_stop, content):
+        it = iter(str(match.inside).splitlines(keepends=True))
+        docstring = next(it)
+        docstring += "".join(line.lstrip(" \t").replace(marker_eachline, "", 1)
+                             for line in it)
+
+        yield ((match.begin.position, match.end.end_position), docstring)
 
 
 """
@@ -15,7 +44,7 @@ where to extract documentation from. They have to yield tuples where the first
 entry is the `(start, stop)`-position tuple and the second one the actual
 documentation string.
 """
-_extract = {}
+_extract = {DOCTYPES.standard : _extract_documentation_standard}
 
 
 def extract_documentation_with_docstyle(content, docstyle_definition):
