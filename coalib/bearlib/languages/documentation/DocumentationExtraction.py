@@ -36,6 +36,27 @@ def _extract_documentation_standard(content,
         yield ((match.begin.position, match.end.end_position), docstring)
 
 
+def _extract_documentation_simple(content, marker_start, marker_stop):
+    """
+    Extract documentation of doctype 'simple'.
+
+    :param content:      The source-code-string where to extract documentation
+                         from.
+    :param marker_start: The start marker.
+    :param marker_stop:  The stop marker.
+    :return:             An iterator yielding a tuple where the first entry is
+                         a range pair (start, end) describing the range where
+                         the documentation was found and the second one the
+                         actual documentation string.
+    """
+    for match in search_in_between(marker_start, marker_stop, content):
+        it = iter(str(match.inside).splitlines(keepends=True))
+        docstring = next(it)
+        docstring += "".join(line.lstrip(" \t") for line in it)
+
+        yield ((match.begin.position, match.end.end_position), docstring)
+
+
 """
 Contains all registered documentation extraction functions.
 
@@ -44,7 +65,8 @@ where to extract documentation from. They have to yield tuples where the first
 entry is the `(start, stop)`-position tuple and the second one the actual
 documentation string.
 """
-_extract = {DOCTYPES.standard : _extract_documentation_standard}
+_extract = {DOCTYPES.standard : _extract_documentation_standard,
+            DOCTYPES.simple : _extract_documentation_simple}
 
 
 def extract_documentation_with_docstyle(content, docstyle_definition):

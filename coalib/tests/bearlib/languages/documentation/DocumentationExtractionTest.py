@@ -32,6 +32,22 @@ class DocumentationExtractionTest(unittest.TestCase):
                                    DOCTYPES.standard,
                                    ("A", "B")))
 
+        with self.assertRaises(ValueError):
+            extract_documentation_with_docstyle(
+                "",
+                DocstyleDefinition("C",
+                                   "default",
+                                   DOCTYPES.simple,
+                                   ("A",)))
+
+        with self.assertRaises(ValueError):
+            extract_documentation_with_docstyle(
+                "",
+                DocstyleDefinition("C",
+                                   "default",
+                                   DOCTYPES.simple,
+                                   ("A", "B", "C")))
+
     def test_extract_documentation_invalid_input(self):
         with self.assertRaises(FileNotFoundError):
             tuple(extract_documentation("", "PYTHON", "INVALID"))
@@ -70,6 +86,53 @@ class DocumentationExtractionTest(unittest.TestCase):
                                " @param x whatever...\n"),
                               docstyle_C_doxygen,
                               (182, 230))))
+
+    def test_extract_documentation_PYTHON3(self):
+        data = DocumentationExtractionTest.load_testdata(".py")
+
+        docstyle_PYTHON3_default_simple = DocstyleDefinition(
+            "PYTHON3",
+            "default",
+            DOCTYPES.simple,
+            ('"""', '"""'))
+
+        docstyle_PYTHON3_doxygen_simple = DocstyleDefinition(
+            "PYTHON3",
+            "doxygen",
+            DOCTYPES.simple,
+            ('"""', '"""'))
+
+        expected = (DocumentationComment(
+                        ("\n"
+                         "Module description.\n"
+                         "\n"
+                         "Some more foobar-like text.\n"),
+                        docstyle_PYTHON3_default_simple,
+                        (0, 56)),
+                    DocumentationComment(
+                        ("\n"
+                         "A nice and neat way of documenting code.\n"
+                         ":param radius: The explosion radius.\n"),
+                        docstyle_PYTHON3_default_simple,
+                        (92, 189)),
+                    DocumentationComment(
+                        ("\n"
+                         "Docstring with layouted text.\n"
+                         "\n"
+                         "layouts inside docs are not preserved for these "
+                         "documentation styles.\n"
+                         "this is intended.\n"),
+                        docstyle_PYTHON3_default_simple,
+                        (200, 330)),
+                    DocumentationComment(
+                        (" Docstring directly besides triple quotes.\n"
+                         "Continues here. "),
+                        docstyle_PYTHON3_default_simple,
+                        (332, 401)))
+
+        self.assertEqual(
+            tuple(extract_documentation(data, "PYTHON3", "default")),
+            expected)
 
 
 if __name__ == '__main__':
