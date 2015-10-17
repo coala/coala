@@ -8,6 +8,9 @@ from coalib.parsing.StringProcessing import (InBetweenMatch,
                                              search_in_between)
 
 
+# TODO Refactor all self.bs / bs to "\\", it annoys.
+# TODO Use raw strings where appropriate (so: only when \ is inside the string,
+#      not at end) applies to all StringProcessingTests.
 class SearchInBetweenTest(StringProcessingTest):
     bs = StringProcessingTest.bs
 

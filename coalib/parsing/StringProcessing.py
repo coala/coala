@@ -70,6 +70,15 @@ class Match:
         return (self.position, self.end_position)
 
 
+# TODO: len()/__len__ for InBetweenMatch that returns the complete span?
+#       If so integrate into doc-extraction.
+# TODO: And also maybe a range() function that gives the range like in Match.
+#       Also don't forget to use in doc-extraction.
+# TODO: Aaaand maybe also __str__? Again implement into doc-extraction.
+# TODO: Add convenience constructor with (begin, pos, inside, pos, end, pos)
+#       that creates the matches for you. ---> DON'T FORGET IMPLEMENTING INTO
+#       ALGORITHMS AND THEIR TEST'S!!! (and also don't forget to test the
+#       convenience method itself...)
 @generate_repr("begin", "inside", "end")
 class InBetweenMatch:
     """
@@ -87,6 +96,7 @@ class InBetweenMatch:
         :param inside: The `Match` between start and end.
         :param end:    The `Match` of the end pattern.
         """
+        # TODO: begin, inside, end ordering assertions?
         self._begin = begin
         self._inside = inside
         self._end = end
