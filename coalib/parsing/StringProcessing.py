@@ -471,5 +471,4 @@ def nested_search_in_between(begin,
 
     strings = limit(strings, max_matches)
 
-    for elem in strings:
-        yield elem
+    return strings
