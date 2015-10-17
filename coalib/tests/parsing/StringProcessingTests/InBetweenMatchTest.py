@@ -16,6 +16,15 @@ class InBetweenMatchTest(unittest.TestCase):
         self.assertEqual(str(uut.end), "GHI")
         self.assertEqual(uut.end.position, 6)
 
+        uut = InBetweenMatch.from_values("hello", 47, "world", 77, "rises", 90)
+
+        self.assertEqual(str(uut.begin), "hello")
+        self.assertEqual(uut.begin.position, 47)
+        self.assertEqual(str(uut.inside), "world")
+        self.assertEqual(uut.inside.position, 77)
+        self.assertEqual(str(uut.end), "rises")
+        self.assertEqual(uut.end.position, 90)
+
     def test_equal(self):
         uut = InBetweenMatch(Match("123", 4),
                              Match("456", 8),
