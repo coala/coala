@@ -4,19 +4,30 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
-from coalib.parsing.StringProcessing import nested_search_in_between
+from coalib.parsing.StringProcessing import (InBetweenMatch,
+                                             nested_search_in_between)
 
 
 class NestedSearchInBetweenTest(StringProcessingTestBase):
     bs = StringProcessingTestBase.bs
 
     test_basic_expected_results = [
-        [r"", r"This is a word", r"(in a word) another "],
-        [r"((((((((((((((((((1)2)3))))))))))))))))"],
-        [r"do (it ) more ", r"", r"hello."],
-        [r"", r"This\ is a word" + bs, r"(in a\\\ word\\\\\) another " + bs],
-        [r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + bs],
-        [r"do (it ) more ", r"", r"hello."]]
+        [("(", 0, "", 1, ")", 1),
+         ("(", 6, "This is a word", 7, ")", 21),
+         ("(", 25, "(in a word) another ", 26, ")", 46)],
+        [("(", 4, "((((((((((((((((((1)2)3))))))))))))))))", 5, ")", 44)],
+        [("(", 6, "do (it ) more ", 7, ")", 21),
+         ("(", 41, "", 42, ")", 42),
+         ("(", 44, "hello.", 45, ")", 51)],
+        [("(", 0, "", 1, ")", 1),
+         ("(", 8, r"This\ is a word" + bs, 9, ")", 25),
+         ("(", 29, r"(in a\\\ word\\\\\) another " + bs, 30, ")", 59)],
+        [("(", 5,
+          r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + bs, 6,
+          ")", 57)],
+        [("(", 7, "do (it ) more ", 8, ")", 22),
+         ("(", 45, "", 46, ")", 46),
+         ("(", 48, "hello.", 49, ")", 55)]]
 
     # Test the basic functionality of nested_search_in_between().
     def test_basic(self):
@@ -27,7 +38,8 @@ class NestedSearchInBetweenTest(StringProcessingTestBase):
               test_string,
               0,
               False,
-              False): result
+              False): [InBetweenMatch.from_values(*args)
+                       for args in result]
              for test_string, result in zip(
                  self.search_in_between_test_strings,
                  self.test_basic_expected_results)},
@@ -53,7 +65,8 @@ class NestedSearchInBetweenTest(StringProcessingTestBase):
               test_string,
               max_match,
               False,
-              False): result
+              False): [InBetweenMatch.from_values(*args)
+                       for args in result]
              for max_match in [1, 2, 5, 22]
              for test_string, result in zip(
                  self.search_in_between_test_strings,
@@ -65,7 +78,8 @@ class NestedSearchInBetweenTest(StringProcessingTestBase):
     def test_regex_pattern(self):
         self.assertResultsEqual(
             nested_search_in_between,
-            {(r"(?:)\(", r"\)(?:)", test_string, 0, False, True): result
+            {(r"(?:)\(", r"\)(?:)", test_string, 0, False, True):
+                 [InBetweenMatch.from_values(*args) for args in result]
              for test_string, result in zip(
                  self.search_in_between_test_strings,
                  self.test_basic_expected_results)},
@@ -74,13 +88,23 @@ class NestedSearchInBetweenTest(StringProcessingTestBase):
     # Test nested_search_in_between() for its auto_trim feature.
     def test_auto_trim(self):
         expected_results = [
-            [r"This is a word", r"(in a word) another "],
-            [r"((((((((((((((((((1)2)3))))))))))))))))"],
-            [r"do (it ) more ", r"hello."],
-            [r"This\ is a word" + self.bs,
-                r"(in a\\\ word\\\\\) another " + self.bs],
-            [r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + self.bs],
-            [r"do (it ) more ", r"hello."]]
+            [("(", 6, "This is a word", 7, ")", 21),
+             ("(", 25, "(in a word) another ", 26, ")", 46)],
+            [("(", 4, "((((((((((((((((((1)2)3))))))))))))))))", 5, ")", 44)],
+            [("(", 6, "do (it ) more ", 7, ")", 21),
+             ("(", 44, "hello.", 45, ")", 51)],
+            [("(", 8, r"This\ is a word" + self.bs, 9, ")", 25),
+             ("(", 29,
+              r"(in a\\\ word\\\\\) another " + self.bs, 30,
+              ")", 59)],
+            [("(",
+              5,
+              r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + self.bs,
+              6,
+              ")",
+              57)],
+            [("(", 7, "do (it ) more ", 8, ")", 22),
+             ("(", 48, "hello.", 49, ")", 55)]]
 
         self.assertResultsEqual(
             nested_search_in_between,
@@ -89,7 +113,8 @@ class NestedSearchInBetweenTest(StringProcessingTestBase):
               test_string,
               0,
               True,
-              use_regex): result
+              use_regex): [InBetweenMatch.from_values(*args)
+                           for args in result]
              for test_string, result in zip(
                  self.search_in_between_test_strings,
                  expected_results)
