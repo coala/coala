@@ -4,7 +4,7 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
-from coalib.parsing.StringProcessing import search_in_between
+from coalib.parsing.StringProcessing import InBetweenMatch, search_in_between
 
 
 class SearchInBetweenTest(StringProcessingTestBase):
@@ -12,20 +12,41 @@ class SearchInBetweenTest(StringProcessingTestBase):
 
     test_basic_pattern = "'"
     test_basic_expected_results = [
-        [r"escaped-escape:        \\ "],
-        [r"escaped-quote:         " + bs],
-        [r"escaped-anything:      \X "],
-        [r"two escaped escapes: \\\\ "],
-        [r"escaped-quote at end:   " + bs],
-        [r"escaped-escape at end:  " + 2 * bs],
-        [r"str1", r"str2"],
-        [r"        ", r" out2 "],
-        [r"      ", r" out2 "],
-        [r"str1", r"str2"],
-        [r"str1", r"str2"],
-        [r"str1", r"str2"],
-        [r"str1", r"str2"],
-        [r"str1", r"str2", r"str3"],
+        [(test_basic_pattern, 5,
+          r"escaped-escape:        \\ ", 6,
+          test_basic_pattern, 32)],
+        [(test_basic_pattern, 5,
+          "escaped-quote:         " + bs, 6,
+          test_basic_pattern, 30)],
+        [(test_basic_pattern, 5,
+          r"escaped-anything:      \X ", 6,
+          test_basic_pattern, 32)],
+        [(test_basic_pattern, 5,
+          r"two escaped escapes: \\\\ ", 6,
+          test_basic_pattern, 32)],
+        [(test_basic_pattern, 5,
+          "escaped-quote at end:   " + bs, 6,
+          test_basic_pattern, 31)],
+        [(test_basic_pattern, 5,
+          "escaped-escape at end:  " + 2 * bs, 6,
+          test_basic_pattern, 32)],
+        [(test_basic_pattern, 15, "str1", 16, test_basic_pattern, 20),
+         (test_basic_pattern, 27, "str2", 28, test_basic_pattern, 32)],
+        [(test_basic_pattern, 6, "        ", 7, test_basic_pattern, 15),
+         (test_basic_pattern, 20, " out2 ", 21, test_basic_pattern, 27)],
+        [(test_basic_pattern, 8, "      ", 9, test_basic_pattern, 15),
+         (test_basic_pattern, 20, " out2 ", 21, test_basic_pattern, 27)],
+        [(test_basic_pattern, 15, "str1", 16, test_basic_pattern, 20),
+         (test_basic_pattern, 27, "str2", 28, test_basic_pattern, 32)],
+        [(test_basic_pattern, 15, "str1", 16, test_basic_pattern, 20),
+         (test_basic_pattern, 27, "str2", 28, test_basic_pattern, 32)],
+        [(test_basic_pattern, 15, "str1", 16, test_basic_pattern, 20),
+         (test_basic_pattern, 27, "str2", 28, test_basic_pattern, 32)],
+        [(test_basic_pattern, 15, "str1", 16, test_basic_pattern, 20),
+         (test_basic_pattern, 27, "str2", 28, test_basic_pattern, 32)],
+        [(test_basic_pattern, 15, "str1", 16, test_basic_pattern, 20),
+         (test_basic_pattern, 21, "str2", 22, test_basic_pattern, 26),
+         (test_basic_pattern, 27, "str3", 28, test_basic_pattern, 32)],
         [],
         [],
         [],
@@ -42,7 +63,8 @@ class SearchInBetweenTest(StringProcessingTestBase):
               test_string,
               0,
               False,
-              use_regex): result
+              use_regex): [InBetweenMatch.from_values(*args)
+                           for args in result]
              for test_string, result in zip(self.test_strings,
                                             expected_results)
              for use_regex in [True, False]},
@@ -61,7 +83,8 @@ class SearchInBetweenTest(StringProcessingTestBase):
               test_string,
               max_match,
               False,
-              use_regex): result
+              use_regex): [InBetweenMatch.from_values(*args)
+                           for args in result]
              for max_match in [1, 2, 3, 4, 5, 100]
              for test_string, result in zip(
                  self.test_strings,
@@ -73,14 +96,24 @@ class SearchInBetweenTest(StringProcessingTestBase):
     # patterns.
     def test_regex_pattern(self):
         expected_results = [
-            [r""],
-            [r"c"],
-            [r"c", r"bc\+'**'"],
-            [r""],
-            [r"\\13q4ujsabbc\+'**'ac", r"."],
-            [r"", r"", r"", r"", r"", r"c\+'**'", r"", r"", r"-"],
-            [r"cba###\\13q4ujs"],
-            [r"3q4ujsabbc" + self.bs]]
+            [("abc", 0, "", 3, "abc", 3)],
+            [("ab", 0, "c", 2, "ab", 3)],
+            [("ab", 0, "c", 2, "ab", 3),
+             ("ab", 21, r"bc\+'**'", 23, "ac", 31)],
+            [(self.bs, 12, "", 13, self.bs, 13)],
+            [("###", 9, r"\\13q4ujsabbc\+'**'ac", 12, "###", 33),
+             ("#", 37, ".", 38, "####", 39)],
+            [("a", 0, "", 1, "b", 1),
+             ("a", 3, "", 4, "b", 4),
+             ("b", 7, "", 8, "a", 8),
+             ("##", 9, "", 11, "#\\", 11),
+             ("a", 21, "", 22, "b", 22),
+             ("b", 23, r"c\+'**'", 24, "a", 31),
+             ("##", 33, "", 35, "#.", 35),
+             ("#.", 37, "", 39, "##", 39),
+             ("##", 41, "-", 43, "b", 44)],
+            [("abcabc", 0, r"cba###\\13q4ujs", 6, "abbc", 21)],
+            [("1", 14, "3q4ujsabbc" + self.bs, 15, "+", 26)]]
 
         self.assertResultsEqual(
             search_in_between,
@@ -89,7 +122,8 @@ class SearchInBetweenTest(StringProcessingTestBase):
               self.multi_pattern_test_string,
               0,
               False,
-              True): result
+              True): [InBetweenMatch.from_values(*args)
+                      for args in result]
              for pattern, result in zip(self.multi_patterns,
                                         expected_results)},
             list)
@@ -99,14 +133,21 @@ class SearchInBetweenTest(StringProcessingTestBase):
     def test_auto_trim(self):
         expected_results = [
             [],
-            [5 * self.bs, r"\\\'", self.bs, r"+ios"],
-            [r"2", r"4", r"6"],
-            [r"2", r"4", r"6"],
+            [(";", 2, 5 * self.bs, 3, ";", 8),
+             (";", 12, r"\\\'", 13, ";", 17),
+             (";", 18, self.bs, 19, ";", 20),
+             (";", 25, "+ios", 26, ";", 30)],
+            [(";", 1, "2", 2, ";", 3),
+             (";", 5, "4", 6, ";", 7),
+             (";", 9, "6", 10, ";", 11)],
+            [(";", 1, "2", 2, ";", 3),
+             (";", 5, "4", 6, ";", 7),
+             (";", 9, "6", 10, ";", 11)],
             [],
             [],
             [],
             [],
-            [r"a"]]
+            [(";", 3, "a", 4, ";", 5)]]
 
         self.assertResultsEqual(
             search_in_between,
@@ -115,7 +156,8 @@ class SearchInBetweenTest(StringProcessingTestBase):
               test_string,
               0,
               True,
-              use_regex): result
+              use_regex): [InBetweenMatch.from_values(*args)
+                           for args in result]
              for test_string, result in zip(self.auto_trim_test_strings,
                                             expected_results)
              for use_regex in [True, False]},
@@ -133,7 +175,8 @@ class SearchInBetweenTest(StringProcessingTestBase):
               test_string,
               0,
               auto_trim, # For remove_empty_matches both works, True and False.
-              False): result
+              False): [InBetweenMatch.from_values(*args)
+                       for args in result]
              for test_string, result in zip(self.test_strings,
                                             expected_results)
              for auto_trim in [True, False]},
@@ -143,13 +186,20 @@ class SearchInBetweenTest(StringProcessingTestBase):
     # for search-in-between functions.
     def test_extended(self):
         expected_results = [
-            [r"", r"This is a word", r"(in a word"],
-            [r"((((((((((((((((((1"],
-            [r"do (it ", r"", r"hello."],
-            [r"", r"This\ is a word" + self.bs,
-                r"(in a\\\ word" + 5 * self.bs],
-            [r"\(\((((((\\\(((((((((((1"],
-            [r"do (it ", r"", r"hello."]]
+            [("(", 0, "", 1, ")", 1),
+             ("(", 6, "This is a word", 7, ")", 21),
+             ("(", 25, "(in a word", 26, ")", 36)],
+            [("(", 4, "((((((((((((((((((1", 5, ")", 24)],
+            [("(", 6, "do (it ", 7, ")", 14),
+             ("(", 41, "", 42, ")", 42),
+             ("(", 44, "hello.", 45, ")", 51)],
+            [("(", 0, "", 1, ")", 1),
+             ("(", 8, r"This\ is a word" + self.bs, 9, ")", 25),
+             ("(", 29, r"(in a\\\ word" + 5 * self.bs, 30, ")", 48)],
+            [("(", 5, r"\(\((((((\\\(((((((((((1", 6, ")", 30)],
+            [("(", 7, "do (it ", 8, ")", 15),
+             ("(", 45, "", 46, ")", 46),
+             ("(", 48, "hello.", 49, ")", 55)]]
 
         self.assertResultsEqual(
             search_in_between,
@@ -158,7 +208,8 @@ class SearchInBetweenTest(StringProcessingTestBase):
               test_string,
               0,
               False,
-              use_regex): result
+              use_regex): [InBetweenMatch.from_values(*args)
+                           for args in result]
              for test_string, result in zip(
                  self.search_in_between_test_strings,
                  expected_results)

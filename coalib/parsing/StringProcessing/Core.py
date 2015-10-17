@@ -1,5 +1,6 @@
 import re
 
+from coalib.parsing.StringProcessing import InBetweenMatch
 from coalib.parsing.StringProcessing.Filters import (limit,
                                                      trim_empty,
                                                      trim_empty_matches)
@@ -177,10 +178,15 @@ def search_in_between(begin,
                                  less is provided, the number of matches is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
-                                 be removed from the result.
+                                 be removed from the result. An entry is
+                                 considered empty if no inner match was
+                                 performed (regardless of matched start and
+                                 end patterns).
     :param use_regex:            Specifies whether to treat the begin and end
                                  patterns as regexes or simple strings.
-    :return:                     An iterator returning the matched strings.
+    :return:                     An iterator returning InBetweenMatch objects
+                                 that hold information about the matched begin,
+                                 inside and end string matched.
     """
 
     if not use_regex:
@@ -191,29 +197,32 @@ def search_in_between(begin,
     else:
         # Compilation of the begin sequence is needed to get the number of
         # capturing groups in it.
-        compiled_begin_pattern = re.compile(begin)
-        begin_pattern_groups = compiled_begin_pattern.groups
+        begin_pattern_groups = re.compile(begin).groups
 
     # Regex explanation:
-    # 1. (?:begin) A non-capturing group that matches the begin sequence.
-    # 2. (.*?)     Match any char unlimited times, as few times as possible.
-    #              Save the match in the first capturing group
-    #              (match.group(1)).
-    # 3. (?:end)   A non-capturing group that matches the end sequence.
-    #              Because the previous group is lazy (matches as few times as
-    #              possible) the next occurring end-sequence is matched.
-    regex = r"(?:" + begin + r")(.*?)(?:" + end + r")"
+    # 1. (begin) A capturing group that matches the begin sequence.
+    # 2. (.*?)   Match any char unlimited times, as few times as possible. Save
+    #            the match in the second capturing group (`match.group(2)`).
+    # 3. (end)   A capturing group that matches the end sequence.
+    #            Because the previous group is lazy (matches as few times as
+    #            possible) the next occurring end-sequence is matched.
+    regex = "(" + begin + ")(.*?)(" + end + ")"
 
     matches = re.finditer(regex, string, re.DOTALL)
 
     if remove_empty_matches:
         matches = trim_empty_matches(matches,
-                                     [begin_pattern_groups + 1])
+                                     (begin_pattern_groups + 2,))
 
     matches = limit(matches, max_matches)
 
-    for elem in matches:
-        yield elem.group(begin_pattern_groups + 1)
+    for m in matches:
+        yield InBetweenMatch.from_values(m.group(1),
+                                         m.start(1),
+                                         m.group(begin_pattern_groups + 2),
+                                         m.start(begin_pattern_groups + 2),
+                                         m.group(begin_pattern_groups + 3),
+                                         m.start(begin_pattern_groups + 3))
 
 
 def unescaped_search_in_between(begin,
