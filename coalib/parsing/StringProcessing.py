@@ -67,8 +67,7 @@ def search_for(pattern, string, flags=0, max_match=0, use_regex=False):
     if not use_regex:
         pattern = re.escape(pattern)
 
-    for elem in limit(re.finditer(pattern, string, flags), max_match):
-        yield elem
+    return limit(re.finditer(pattern, string, flags), max_match)
 
 
 def unescaped_search_for(pattern,
