@@ -48,6 +48,22 @@ class DocumentationExtractionTest(unittest.TestCase):
                                    DOCTYPES.simple,
                                    ("A", "B", "C")))
 
+        with self.assertRaises(ValueError):
+            extract_documentation_with_docstyle(
+                "",
+                DocstyleDefinition("C",
+                                   "default",
+                                   DOCTYPES.continuous,
+                                   ("A", "B", "C")))
+
+        with self.assertRaises(ValueError):
+            extract_documentation_with_docstyle(
+                "",
+                DocstyleDefinition("C",
+                                   "default",
+                                   DOCTYPES.continuous,
+                                   ("A",)))
+
     def test_extract_documentation_invalid_input(self):
         with self.assertRaises(FileNotFoundError):
             tuple(extract_documentation("", "PYTHON", "INVALID"))
@@ -87,6 +103,50 @@ class DocumentationExtractionTest(unittest.TestCase):
                               docstyle_C_doxygen,
                               (182, 230))))
 
+    def test_extract_documentation_CPP(self):
+        data = DocumentationExtractionTest.load_testdata(".cpp")
+
+        # No built-in documentation for C++.
+        with self.assertRaises(KeyError):
+            tuple(extract_documentation(data, "CPP", "default"))
+
+        docstyle_CPP_doxygen_standard = DocstyleDefinition(
+            "CPP",
+            "doxygen",
+            DOCTYPES.standard,
+            ("/**", "*", "*/"))
+        docstyle_CPP_doxygen_continuous = DocstyleDefinition(
+            "CPP",
+            "doxygen",
+            DOCTYPES.continuous,
+            ("///", "///"))
+
+        self.assertEqual(tuple(extract_documentation(data, "CPP", "doxygen")),
+                         (DocumentationComment(
+                              ("\n"
+                               " This is the main function.\n"
+                               " @returns Exit code.\n"
+                               "          Or any other number.\n"),
+                              docstyle_CPP_doxygen_standard,
+                              (22, 115)),
+                          DocumentationComment(
+                              (" foobar\n"
+                               " @param xyz\n"),
+                              docstyle_CPP_doxygen_standard,
+                              (174, 202)),
+                          DocumentationComment(
+                              " Some alternate style of documentation\n",
+                              docstyle_CPP_doxygen_continuous,
+                              (256, 298)),
+                          DocumentationComment(
+                              (" Should work\n"
+                               "\n"
+                               " even without a function standing below.\n"
+                               "\n"
+                               " @param foo WHAT PARAM PLEASE!?\n"),
+                              docstyle_CPP_doxygen_continuous,
+                              (324, 427))))
+
     def test_extract_documentation_PYTHON3(self):
         data = DocumentationExtractionTest.load_testdata(".py")
 
@@ -101,6 +161,12 @@ class DocumentationExtractionTest(unittest.TestCase):
             "doxygen",
             DOCTYPES.simple,
             ('"""', '"""'))
+
+        docstyle_PYTHON3_doxygen_continuous = DocstyleDefinition(
+            "PYTHON3",
+            "doxygen",
+            DOCTYPES.continuous,
+            ("##", "#"))
 
         expected = (DocumentationComment(
                         ("\n"
@@ -132,6 +198,24 @@ class DocumentationExtractionTest(unittest.TestCase):
 
         self.assertEqual(
             tuple(extract_documentation(data, "PYTHON3", "default")),
+            expected)
+
+        # Change only the docstyle in expected results.
+        expected = tuple(DocumentationComment(r.documentation,
+                                              docstyle_PYTHON3_doxygen_simple,
+                                              r.range)
+                         for r in expected)
+        expected += (DocumentationComment(
+                         (" Alternate documentation style in doxygen.\n"
+                          "  Subtext\n"
+                          " More subtext (not correctly aligned)\n"
+                          "      sub-sub-text\n"
+                          "\n"),
+                      docstyle_PYTHON3_doxygen_continuous,
+                      (404, 521)),)
+
+        self.assertEqual(
+            tuple(extract_documentation(data, "PYTHON3", "doxygen")),
             expected)
 
 

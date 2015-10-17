@@ -57,6 +57,43 @@ def _extract_documentation_simple(content, marker_start, marker_stop):
         yield ((match.begin.position, match.end.end_position), docstring)
 
 
+def _extract_documentation_continuous(content, marker_start, marker_ongoing):
+    """
+    Extract documentation of doctype 'continuous'.
+
+    :param content:        The source-code-string where to extract
+                           documentation from.
+    :param marker_start:   The start marker.
+    :param marker_ongoing: The ongoing marker.
+    :return:               An iterator yielding a tuple where the first entry
+                           is a range pair (start, end) describing the range
+                           where the documentation was found and the second one
+                           the actual documentation string.
+    """
+    pos = content.find(marker_start)
+    while pos != -1:
+        it = iter(content[pos + len(marker_start):]
+                  .splitlines(keepends=True))
+
+        found_pos = pos
+        docstring = next(it)
+        pos += len(marker_start) + len(docstring)
+
+        for line in it:
+            lstripped_line = line.lstrip(" \t")
+            # Search until the ongoing-marker runs out.
+            if lstripped_line.startswith(marker_ongoing):
+                docstring += lstripped_line[len(marker_ongoing):]
+            else:
+                break
+
+            pos += len(line)
+
+        yield ((found_pos, pos), docstring)
+
+        pos = content.find(marker_start, pos)
+
+
 """
 Contains all registered documentation extraction functions.
 
@@ -66,7 +103,8 @@ entry is the `(start, stop)`-position tuple and the second one the actual
 documentation string.
 """
 _extract = {DOCTYPES.standard : _extract_documentation_standard,
-            DOCTYPES.simple : _extract_documentation_simple}
+            DOCTYPES.simple : _extract_documentation_simple,
+            DOCTYPES.continuous : _extract_documentation_continuous}
 
 
 def extract_documentation_with_docstyle(content, docstyle_definition):
