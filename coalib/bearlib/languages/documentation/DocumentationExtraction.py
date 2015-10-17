@@ -9,6 +9,11 @@ from coalib.bearlib.languages.documentation.DocumentationComment import (
 from coalib.parsing.StringProcessing import search_in_between
 
 
+#TODO - Implement Match also for `split` and `search_for`? File an issue
+#TODO - document currently existing docstyles from coala side?
+#TODO - Add ''' ''' as markers for python 2/3 inside doc-definition files.
+
+
 def _extract_documentation_standard(content,
                                     marker_start,
                                     marker_eachline,

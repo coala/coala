@@ -56,6 +56,11 @@ Possible values for the type/format of the documentation.
 DOCTYPES = enum("standard", "simple", "continuous")
 
 
+# TODO Think about automatically lowering case when giving language and
+#      docstyle because it's used in file lookup anyway and only the name
+#      itself of them is important not the letter-case.
+#      Maybe chose also an alternate representation
+#      (higher-ing, pre-defined dict i.e.)
 @generate_repr("language",
                "docstyle",
                ("doctype", DOCTYPES.reverse.get),

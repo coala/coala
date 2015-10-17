@@ -2,6 +2,15 @@ from coalib.misc.Decorators import generate_ordering, generate_repr
 from coalib.parsing.StringProcessing import Match
 
 
+# TODO: len()/__len__ for InBetweenMatch that returns the complete span?
+#       If so integrate into doc-extraction.
+# TODO: And also maybe a range() function that gives the range like in Match.
+#       Also don't forget to use in doc-extraction.
+# TODO: Aaaand maybe also __str__? Again implement into doc-extraction.
+# TODO: Add convenience constructor with (begin, pos, inside, pos, end, pos)
+#       that creates the matches for you. ---> DON'T FORGET IMPLEMENTING INTO
+#       ALGORITHMS AND THEIR TEST'S!!! (and also don't forget to test the
+#       convenience method itself...)
 @generate_repr("begin", "inside", "end")
 @generate_ordering("begin", "inside", "end")
 class InBetweenMatch:
