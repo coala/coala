@@ -469,7 +469,4 @@ def nested_search_in_between(begin,
     if remove_empty_matches:
         strings = trim_empty(strings)
 
-    strings = limit(strings, max_matches)
-
-    for elem in strings:
-        yield elem
+    return limit(strings, max_matches)
