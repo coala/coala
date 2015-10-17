@@ -1,5 +1,6 @@
 # Don't change order of imports because of dependency chains!
 from coalib.parsing.StringProcessing.Match import Match
+from coalib.parsing.StringProcessing.InBetweenMatch import InBetweenMatch
 from coalib.parsing.StringProcessing.Core import (search_for,
                                                   unescaped_search_for,
                                                   split,
