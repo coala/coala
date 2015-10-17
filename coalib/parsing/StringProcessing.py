@@ -443,41 +443,46 @@ def unescaped_search_in_between(begin,
     else:
         # Compilation of the begin sequence is needed to get the number of
         # capturing groups in it.
-        compiled_begin_pattern = re.compile(begin)
-        begin_pattern_groups = compiled_begin_pattern.groups
+        begin_pattern_groups = re.compile(begin).groups
 
     # Regex explanation:
-    # 1. (?<!\\)(?:\\\\)* Unescapes the following char. The first part of this
-    #                     regex is a look-behind assertion. Only match the
-    #                     following if no single backslash is before it.
-    #                     The second part matches all double backslashes.
-    #                     In fact this sequence matches all escapes that occur
-    #                     as a multiple of two, means the following statement
-    #                     is not escaped.
-    # 2. (?:begin)        A non-capturing group that matches the begin
-    # 3. (.*?)            sequence. Match any char unlimited times, as few
-    #                     times as possible. Save the match in the capturing
-    #                     group after all capturing groups that can appear in
-    #                     'begin'.
-    # 4. (?<!\\)(?:\\\\)* Again the unescaping regex.
-    # 5. (?:end)          A non-capturing group that matches the end sequence.
-    #                     Because the 3. group is lazy (matches as few times as
-    #                     possible) the next occurring end-sequence is matched.
-    regex = (r"(?<!\\)(?:\\\\)*(?:" + begin + r")(.*?)(?<!\\)((?:\\\\)*)(?:" +
-             end + r")")
+    # 1. (?<!\\)(?:\\\\)*   Unescapes the following char. The first part of
+    #                       this regex is a look-behind assertion. Only match
+    #                       the following if no single backslash is before it.
+    #                       The second part matches all double backslashes.
+    #                       In fact this sequence matches all escapes that
+    #                       occur as a multiple of two, means the following
+    #                       statement is not escaped.
+    # 2. (begin)            A capturing group that matches the begin sequence.
+    # 3. (.*?)              Match any char unlimited times, as few times as
+    #                       possible. Save the match in the capturing group
+    #                       after all capturing groups that can appear in
+    #                       'begin'.
+    # 4. (?<!\\)((?:\\\\)*) Again the unescaping regex, but now all escape-
+    #                       characters get captured.
+    # 5. (end)              A capturing group that matches the end sequence.
+    #                       Because the 3. group is lazy (matches as few times
+    #                       as possible) the next occurring end-sequence is
+    #                       matched.
+    regex = (r"(?<!\\)(?:\\\\)*(" + begin + r")(.*?)(?<!\\)((?:\\\\)*)(" +
+             end + ")")
 
     matches = re.finditer(regex, string, re.DOTALL)
 
     if remove_empty_matches:
         matches = trim_empty_matches(matches,
-                                     [begin_pattern_groups + 1,
-                                      begin_pattern_groups + 2])
+                                     (begin_pattern_groups + 2,
+                                      begin_pattern_groups + 3))
 
     matches = limit(matches, max_matches)
 
-    for elem in matches:
-        yield (elem.group(begin_pattern_groups + 1) +
-               elem.group(begin_pattern_groups + 2))
+    for m in matches:
+        yield InBetweenMatch(Match(m.group(1), m.start(1)),
+                             Match(m.group(begin_pattern_groups + 2) +
+                                       m.group(begin_pattern_groups + 3),
+                                   m.start(begin_pattern_groups + 2)),
+                             Match(m.group(begin_pattern_groups + 4),
+                                   m.start(begin_pattern_groups + 4)))
 
 
 def escape(string, escape_chars, escape_with="\\"):
