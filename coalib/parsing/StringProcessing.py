@@ -38,7 +38,7 @@ def trim_empty_matches(iterator, groups=(0,)):
         for group in groups:
             if len(elem.group(group)) != 0:
                 yield elem
-                continue
+                break
 
 
 def trim_empty(iterator):
