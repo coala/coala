@@ -35,10 +35,8 @@ def trim_empty_matches(iterator, groups=(0,)):
                      MatchObject contains named groups.
     """
     for elem in iterator:
-        for group in groups:
-            if len(elem.group(group)) != 0:
-                yield elem
-                continue
+        if any(len(elem.group(group)) > 0 for group in groups):
+            yield elem
 
 
 def trim_empty(iterator):
