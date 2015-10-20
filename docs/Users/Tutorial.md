@@ -36,6 +36,7 @@ Because analysis routines can do many various things we named them _Bears_.
 Thus you can specify the kind of analysis with the `--bears` argument.
 
 Please type the following commands into the console:
+
 ```
 cd coala-tutorial
 coala --files=src/*.c --bears=SpaceConsistencyBear --save
