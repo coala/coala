@@ -1,14 +1,13 @@
 from collections import OrderedDict
 import os
-
 import sys
+import tempfile
+import unittest
 
 sys.path.insert(0, ".")
 from coalib.misc.Compatability import FileNotFoundError
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
-import unittest
-import tempfile
 
 
 class ConfParserTest(unittest.TestCase):
