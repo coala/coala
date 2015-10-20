@@ -166,3 +166,31 @@ def generate_repr(*members):
             return _construct_repr_string(self, member_repr_list)
 
     return decorator
+
+
+def generate_eq(*members):
+    """
+    Decorator that generates equality and inequality operators for the decorated
+    class. The given members as well as the type of self and other will be taken
+    into account.
+
+    Note that this decorator modifies the given class in place!
+
+    :param members: A list of members to compare for equality.
+    """
+    def decorator(cls):
+        def eq(self, other):
+            if type(other) is not type(self):
+                return False
+
+            return all(getattr(self, member) == getattr(other, member)
+                       for member in members)
+
+        def ne(self, other):
+            return not eq(self, other)
+
+        cls.__eq__ = eq
+        cls.__ne__ = ne
+        return cls
+
+    return decorator

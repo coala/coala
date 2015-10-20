@@ -4,7 +4,8 @@ import sys
 sys.path.insert(0, ".")
 from coalib.misc.Decorators import (arguments_to_lists,
                                     yield_once,
-                                    generate_repr)
+                                    generate_repr,
+                                    generate_eq)
 
 
 class YieldOnceTest(unittest.TestCase):
@@ -212,6 +213,39 @@ class GenerateReprTest(unittest.TestCase):
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, B='A string', A=2\\) at "
                              "0x[0-9a-fA-F]+>")
+
+
+class GenerateEqTest(unittest.TestCase):
+    def test_equality(self):
+        @generate_eq("cookie", "cake")
+        class TestClass:
+            def __init__(self, cookie, cake, irrelevant):
+                self.cookie = cookie
+                self._cake = cake
+                self.irrelevant = irrelevant
+
+            @property
+            def cake(self):
+                return self._cake
+
+        self.assertEqual(TestClass(4, 5, 3), TestClass(4, 5, 6))
+        self.assertNotEqual(TestClass(4, None, 3), TestClass(4, 5, 3))
+        self.assertNotEqual(TestClass(3, 5, 5), 5)
+        self.assertNotEqual(TestClass(3, 5, 5), None)
+        self.assertNotEqual(TestClass(3, 5, 5), TestClass(4, 5, 5))
+        self.assertNotEqual(TestClass(3, 5, 5), TestClass(3, 4, 5))
+
+    def test_relationship(self):
+        @generate_eq()
+        class TestClass:
+            pass
+
+        class Derived(TestClass):
+            pass
+
+        self.assertNotEqual(TestClass(), Derived())
+        self.assertNotEqual(Derived(), TestClass())
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
