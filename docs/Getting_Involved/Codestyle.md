@@ -228,3 +228,20 @@ Example:
 def func(arg=None):
     arg = {"key": "val"} or arg
 ```
+
+## Type Checking
+
+If you want to assure that parameters have a certain type, you can use the
+`enforce_signature` decorator and simply annotate your function with the allowed
+types:
+
+```python
+@enforce_signature
+def concatenate_strings(a: str, b: str, c: (str, None)=None):
+    if c is None:
+        c = ""
+    return a + b + c
+```
+
+This will raise a `TypeError` if `a`, `b` or `c` are no strings and `c` is not
+`None`.
