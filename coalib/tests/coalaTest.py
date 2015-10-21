@@ -2,6 +2,7 @@ import sys
 import os
 import unittest
 import re
+import hashlib
 
 if sys.version_info < (3, 4):
     import imp as importlib
@@ -13,6 +14,7 @@ from coalib.tests.misc.i18nTest import set_lang
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib import coala_ci
 from coalib.settings import ConfigurationGathering
+from coalib.misc.Constants import Constants
 
 
 def execute_coala_ci(args):
@@ -70,6 +72,12 @@ class coalaTest(unittest.TestCase):
                             0,
                             "coala-ci must return nonzero when running over "
                             "its own code. (Target section: todos)")
+
+    def test_tag(self):
+        default_hash = hashlib.sha224(
+            (os.getcwd() + "/.coafile test_tag").encode()).hexdigest()
+        execute_coala_ci(("-S", "tag=test_tag", "-c", self.coafile))
+        self.assertTrue(os.path.exists(Constants.TAGS_DIR+"/"+default_hash))
 
 
 if __name__ == '__main__':

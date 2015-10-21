@@ -86,6 +86,14 @@ def default_arg_parser(formatter_class=None):
                             const=True,
                             metavar='FILE',
                             help=SAVE_HELP)
+    TAG_HELP = _('Tag results with a specific name. You can access the results'
+                 ' later with that tag.')
+    arg_parser.add_argument('-t',
+                            '--tag',
+                            nargs='?',
+                            const=True,
+                            metavar='STRING',
+                            help=TAG_HELP)
 
     arg_parser.add_argument('-v',
                             '--version',
