@@ -306,25 +306,29 @@ class ConsoleInteractionTest(unittest.TestCase):
                           Section(""),
                           [Result("SpaceConsistencyBear",
                                   "Trailing whitespace found",
-                                  "proj/white",
+                                  "file",
                                   line_nr=5),
                            Result("SpaceConsistencyBear",
                                   "Trailing whitespace found",
-                                  "proj/white",
+                                  "file",
                                   line_nr=2)],
-                          {"proj/white": ["test line\n",
-                                          "line 2\n",
-                                          "line 3\n",
-                                          "line 4\n",
-                                          "line 5\n"]},
+                          {"file": ["test line\n",
+                                    "line 2\n",
+                                    "line 3\n",
+                                    "line 4\n",
+                                    "line 5\n"]},
                           {},
                           color=False)
 
-            self.assertEqual("""\n\nproj/white
+            self.assertEqual("""\n\nfile
 |   1| test line
 |   2| line 2
 |    | [{}] SpaceConsistencyBear:
 |    | Trailing whitespace found
+
+
+file
+| ...| \n|   2| line 2
 |   3| line 3
 |   4| line 4
 |   5| line 5
@@ -335,24 +339,26 @@ class ConsoleInteractionTest(unittest.TestCase):
                              stdout.getvalue())
 
     def test_print_results_missing_file(self):
-        # File isn't in dict, shouldn't print but also shouldn't throw. This
-        # can occur if filter writers are doing nonsense. If this happens twice
-        # the same should happen (whitebox testing: this is a potential bug.)
         self.log_printer = LogPrinter(NullPrinter())
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,
                 Section(""),
-                [Result("t", "msg", "file", line_nr=5),
+                [Result("t", "msg", None, line_nr=5),
                  Result("t", "msg", "file", line_nr=5)],
                 {},
                 {},
                 color=False)
-            self.assertEqual("", stdout.getvalue())
+            self.assertEqual("\n\n" + STR_PROJECT_WIDE + "\n"
+                             "|    | [NORMAL] t:\n"
+                             "|    | msg\n"
+                             # Second results file isn't there, no context is
+                             # printed, only a warning log message which we
+                             # don't catch
+                             "|    | [NORMAL] t:\n"
+                             "|    | msg\n", stdout.getvalue())
 
     def test_print_results_missing_line(self):
-        # Line isn't in dict[file], shouldn't print but also shouldn't throw.
-        # This can occur if filter writers are doing nonsense.
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,
@@ -366,13 +372,21 @@ class ConsoleInteractionTest(unittest.TestCase):
                             RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                              stdout.getvalue())
 
-        self.assertRaises(AssertionError,
-                          print_results,
-                          self.log_printer,
-                          Section(""),
-                          [Result("t", "msg", None, line_nr=5)],
-                          {},
-                          {})
+    def test_print_results_without_line(self):
+        with retrieve_stdout() as stdout:
+            print_results(
+                self.log_printer,
+                Section(""),
+                [Result("t", "msg", "file")],
+                {"file": []},
+                {},
+                color=False)
+            self.assertEqual(
+                "\n\nfile\n"
+                "|    | [{}] t:\n"
+                "|    | msg\n".format(
+                    RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+                stdout.getvalue())
 
     def test_print_bears_empty(self):
         with retrieve_stdout() as stdout:
