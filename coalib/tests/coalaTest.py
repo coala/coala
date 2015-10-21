@@ -13,6 +13,7 @@ from coalib.tests.misc.i18nTest import set_lang
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib import coala_ci
 from coalib.settings import ConfigurationGathering
+from coalib.output.Tagging import get_tag_path
 
 
 def execute_coala_ci(args):
@@ -37,7 +38,8 @@ class coalaTest(unittest.TestCase):
     def setUp(self):
         self.old_argv = sys.argv
         set_lang("unknown_language")  # Fall back to untranslated
-        self.coafile = re.escape(os.path.abspath("./.coafile"))
+        self.unescaped_coafile = os.path.abspath("./.coafile")
+        self.coafile = re.escape(self.unescaped_coafile)
 
     def tearDown(self):
         sys.argv = self.old_argv
@@ -70,6 +72,12 @@ class coalaTest(unittest.TestCase):
                             0,
                             "coala-ci must return nonzero when running over "
                             "its own code. (Target section: todos)")
+
+    def test_tagging(self):
+        execute_coala_ci(("-S", "tag=test_tag", "-c", self.coafile))
+        tag_path = get_tag_path("test_tag", self.unescaped_coafile)
+        self.assertTrue(os.path.exists(tag_path))
+        os.remove(tag_path)
 
 
 if __name__ == '__main__':
