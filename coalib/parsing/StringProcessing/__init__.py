@@ -1,0 +1,10 @@
+from coalib.parsing.StringProcessing.Core import (search_for,
+                                                  unescaped_search_for,
+                                                  split,
+                                                  unescaped_split,
+                                                  search_in_between,
+                                                  unescaped_search_in_between,
+                                                  nested_search_in_between,
+                                                  escape,
+                                                  unescape,
+                                                  position_is_escaped)

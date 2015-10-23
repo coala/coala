@@ -3,7 +3,7 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.parsing.StringProcessing import trim_empty_matches
+from coalib.parsing.StringProcessing.Filters import trim_empty_matches
 
 
 class TrimEmptyMatchesTest(unittest.TestCase):
