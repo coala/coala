@@ -3,19 +3,51 @@ import unittest
 
 sys.path.insert(0, ".")
 from coalib.tests.parsing.StringProcessingTest import StringProcessingTest
-from coalib.parsing.StringProcessing import nested_search_in_between
+from coalib.parsing.StringProcessing import (
+    InBetweenMatch,
+    Match,
+    nested_search_in_between)
 
 
 class NestedSearchInBetweenTest(StringProcessingTest):
     bs = StringProcessingTest.bs
 
     test_basic_expected_results = [
-        [r"", r"This is a word", r"(in a word) another "],
-        [r"((((((((((((((((((1)2)3))))))))))))))))"],
-        [r"do (it ) more ", r"", r"hello."],
-        [r"", r"This\ is a word" + bs, r"(in a\\\ word\\\\\) another " + bs],
-        [r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + bs],
-        [r"do (it ) more ", r"", r"hello."]]
+        [InBetweenMatch(Match("(", 0), Match("", 1), Match(")", 1)),
+         InBetweenMatch(Match("(", 6),
+                        Match("This is a word", 7),
+                        Match(")", 21)),
+         InBetweenMatch(Match("(", 25),
+                        Match("(in a word) another ", 26),
+                        Match(")", 46))],
+        [InBetweenMatch(Match("(", 4),
+                        Match("((((((((((((((((((1)2)3))))))))))))))))", 5),
+                        Match(")", 44))],
+        [InBetweenMatch(Match("(", 6),
+                        Match("do (it ) more ", 7),
+                        Match(")", 21)),
+         InBetweenMatch(Match("(", 41), Match("", 42), Match(")", 42)),
+         InBetweenMatch(Match("(", 44), Match("hello.", 45), Match(")", 51))],
+        [InBetweenMatch(Match("(", 0), Match("", 1), Match(")", 1)),
+         InBetweenMatch(Match("(", 8),
+                        Match(r"This\ is a word" + bs, 9),
+                        Match(")", 25)),
+         InBetweenMatch(Match("(", 29),
+                        Match(r"(in a\\\ word\\\\\) another " + bs, 30),
+                        Match(")", 59))],
+        [InBetweenMatch(Match("(", 5),
+                        Match(r"\(\((((((\\\(((((((((((1)2)3))\\\\\))))))))))))"
+                              r")\)" + bs, 6),
+                        Match(")", 57))],
+        [InBetweenMatch(Match("(", 7),
+                        Match("do (it ) more ", 8),
+                        Match(")", 22)),
+         InBetweenMatch(Match("(", 45),
+                        Match("", 46),
+                        Match(")", 46)),
+         InBetweenMatch(Match("(", 48),
+                        Match("hello.", 49),
+                        Match(")", 55))]]
 
     # Test the basic functionality of nested_search_in_between().
     def test_basic(self):
@@ -73,13 +105,38 @@ class NestedSearchInBetweenTest(StringProcessingTest):
     # Test nested_search_in_between() for its auto_trim feature.
     def test_auto_trim(self):
         expected_results = [
-            [r"This is a word", r"(in a word) another "],
-            [r"((((((((((((((((((1)2)3))))))))))))))))"],
-            [r"do (it ) more ", r"hello."],
-            [r"This\ is a word" + self.bs,
-                r"(in a\\\ word\\\\\) another " + self.bs],
-            [r"\(\((((((\\\(((((((((((1)2)3))\\\\\)))))))))))))\)" + self.bs],
-            [r"do (it ) more ", r"hello."]]
+            [InBetweenMatch(Match("(", 6),
+                            Match("This is a word", 7),
+                            Match(")", 21)),
+             InBetweenMatch(Match("(", 25),
+                            Match("(in a word) another ", 26),
+                            Match(")", 46))],
+            [InBetweenMatch(Match("(", 4),
+                            Match("((((((((((((((((((1)2)3))))))))))))))))", 5),
+                            Match(")", 44))],
+            [InBetweenMatch(Match("(", 6),
+                            Match("do (it ) more ", 7),
+                            Match(")", 21)),
+             InBetweenMatch(Match("(", 44),
+                            Match("hello.", 45),
+                            Match(")", 51))],
+            [InBetweenMatch(Match("(", 8),
+                            Match(r"This\ is a word" + self.bs, 9),
+                            Match(")", 25)),
+             InBetweenMatch(Match("(", 29),
+                            Match(r"(in a\\\ word\\\\\) another " + self.bs,
+                                  30),
+                            Match(")", 59))],
+            [InBetweenMatch(Match("(", 5),
+                            Match(r"\(\((((((\\\(((((((((((1)2)3))\\\\\))))))))"
+                                  r")))))\)" + self.bs, 6),
+                            Match(")", 57))],
+            [InBetweenMatch(Match("(", 7),
+                            Match("do (it ) more ", 8),
+                            Match(")", 22)),
+             InBetweenMatch(Match("(", 48),
+                            Match("hello.", 49),
+                            Match(")", 55))]]
 
         self.assertResultsEqual(
             nested_search_in_between,

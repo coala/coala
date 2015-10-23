@@ -1,5 +1,154 @@
 import re
 
+from coalib.misc.Decorators import generate_repr
+
+
+@generate_repr("match", "range")
+class Match:
+    """
+    Stores information about a single match.
+
+    This class is intended for use inside this module only.
+    """
+
+    def __init__(self, match, position):
+        """
+        Instantiates a new Match.
+
+        :param match:    The actual matched string.
+        :param position: The position where the match was found.
+        """
+        self._match = match
+        self._position = position
+
+    def __len__(self):
+        return len(self.match)
+
+    def __str__(self):
+        return self.match
+
+    def __eq__(self, other):
+        return (other is not None and
+                self.match == other.match and
+                self.position == other.position)
+
+    @property
+    def match(self):
+        """
+        Returns the text matched.
+
+        :returns: The text matched.
+        """
+        return self._match
+
+    @property
+    def position(self):
+        """
+        Returns the position where the text was matched.
+
+        :returns: The position.
+        """
+        return self._position
+
+    @property
+    def end_position(self):
+        """
+        Marks the end position of the matched text.
+
+        :returns: The end-position.
+        """
+        return len(self) + self.position
+
+    @property
+    def range(self):
+        """
+        Returns the position range where the text was matched.
+
+        :returns: A pair indicating the position range. The first element is
+                  the start position, the second one the end position.
+        """
+        return (self.position, self.end_position)
+
+
+# TODO: len()/__len__ for InBetweenMatch that returns the complete span?
+#       If so integrate into doc-extraction.
+# TODO: And also maybe a range() function that gives the range like in Match.
+#       Also don't forget to use in doc-extraction.
+# TODO: Aaaand maybe also __str__? Again implement into doc-extraction.
+# TODO: Add convenience constructor with (begin, pos, inside, pos, end, pos)
+#       that creates the matches for you. ---> DON'T FORGET IMPLEMENTING INTO
+#       ALGORITHMS AND THEIR TEST'S!!! (and also don't forget to test the
+#       convenience method itself...)
+@generate_repr("begin", "inside", "end")
+class InBetweenMatch:
+    """
+    Holds information about a match performed with the `search_in_between`
+    functions.
+
+    This class is intended for use inside this module only.
+    """
+
+    def __init__(self, begin, inside, end):
+        """
+        Instantiates a new InBetweenMatch.
+
+        :param begin:  The `Match` of the start pattern.
+        :param inside: The `Match` between start and end.
+        :param end:    The `Match` of the end pattern.
+        """
+        # TODO: begin, inside, end ordering assertions?
+        self._begin = begin
+        self._inside = inside
+        self._end = end
+
+    @classmethod
+    def from_values(cls, begin, begin_pos, inside, inside_pos, end, end_pos):
+        """
+        Instantiates a new InBetweenMatch from Match values.
+
+        This function allows to bypass the usage of Match object instantation:
+
+        ```
+        InBetweenMatch(Match("A", 0), Match("B", 1), Match("B", 2))
+        ```
+
+        can be simplified to:
+
+        ```
+        InBetweenMatch.from_values("A", 0, "B", 1, "C", 2)
+        ```
+
+        :param begin:      The matched string from start pattern.
+        :param begin_pos:  The position of the matched begin string.
+        :param inside:     The matched string from inside/in-between pattern.
+        :param inside_pos: The position of the matched inside/in-between
+                           string.
+        :param end:        The matched string from end pattern.
+        :param end_pos:    The position of the matched end string.
+        :returns:          An InBetweenMatch from the given values.
+        """
+        return cls(Match(begin, begin_pos),
+                   Match(inside, inside_pos),
+                   Match(end, end_pos))
+
+    @property
+    def begin(self):
+        return self._begin
+
+    @property
+    def inside(self):
+        return self._inside
+
+    @property
+    def end(self):
+        return self._end
+
+    def __eq__(self, other):
+        return (other is not None and
+                self.begin == other.begin and
+                self.inside == other.inside and
+                self.end == other.end)
+
 
 def limit(iterator, count):
     """
@@ -38,7 +187,7 @@ def trim_empty_matches(iterator, groups=(0,)):
         for group in groups:
             if len(elem.group(group)) != 0:
                 yield elem
-                continue
+                break
 
 
 def trim_empty(iterator):
@@ -48,9 +197,7 @@ def trim_empty(iterator):
 
     :param iterator: The iterator to be filtered.
     """
-    for elem in iterator:
-        if len(elem) != 0:
-            yield elem
+    return filter(lambda x: len(x) != 0, iterator)
 
 
 def search_for(pattern, string, flags=0, max_match=0, use_regex=False):
@@ -69,8 +216,7 @@ def search_for(pattern, string, flags=0, max_match=0, use_regex=False):
     if not use_regex:
         pattern = re.escape(pattern)
 
-    for elem in limit(re.finditer(pattern, string, flags), max_match):
-        yield elem
+    return limit(re.finditer(pattern, string, flags), max_match)
 
 
 def unescaped_search_for(pattern,
@@ -164,16 +310,15 @@ def split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    for elem in _split(string,
-                       max_split,
-                       remove_empty_matches,
-                       search_for,
-                       pattern,
-                       string,
-                       0,
-                       0,
-                       use_regex):
-        yield elem
+    return _split(string,
+                  max_split,
+                  remove_empty_matches,
+                  search_for,
+                  pattern,
+                  string,
+                  0,
+                  0,
+                  use_regex)
 
 
 def unescaped_split(pattern,
@@ -198,16 +343,15 @@ def unescaped_split(pattern,
                                  as a regex or simple string.
     :return:                     An iterator returning the split up strings.
     """
-    for elem in _split(string,
-                       max_split,
-                       remove_empty_matches,
-                       unescaped_search_for,
-                       pattern,
-                       string,
-                       0,
-                       0,
-                       use_regex):
-        yield elem
+    return _split(string,
+                  max_split,
+                  remove_empty_matches,
+                  unescaped_search_for,
+                  pattern,
+                  string,
+                  0,
+                  0,
+                  use_regex)
 
 
 def search_in_between(begin,
@@ -231,7 +375,9 @@ def search_in_between(begin,
                                  be removed from the result.
     :param use_regex:            Specifies whether to treat the begin and end
                                  patterns as regexes or simple strings.
-    :return:                     An iterator returning the matched strings.
+    :return:                     An iterator returning InBetweenMatch objects
+                                 that hold information about the matched begin,
+                                 inside and end string matched.
     """
 
     if not use_regex:
@@ -242,29 +388,31 @@ def search_in_between(begin,
     else:
         # Compilation of the begin sequence is needed to get the number of
         # capturing groups in it.
-        compiled_begin_pattern = re.compile(begin)
-        begin_pattern_groups = compiled_begin_pattern.groups
+        begin_pattern_groups = re.compile(begin).groups
 
     # Regex explanation:
-    # 1. (?:begin) A non-capturing group that matches the begin sequence.
-    # 2. (.*?)     Match any char unlimited times, as few times as possible.
-    #              Save the match in the first capturing group
-    #              (match.group(1)).
-    # 3. (?:end)   A non-capturing group that matches the end sequence.
-    #              Because the previous group is lazy (matches as few times as
-    #              possible) the next occurring end-sequence is matched.
-    regex = r"(?:" + begin + r")(.*?)(?:" + end + r")"
+    # 1. (begin) A capturing group that matches the begin sequence.
+    # 2. (.*?)   Match any char unlimited times, as few times as possible. Save
+    #            the match in the first capturing group (`match.group(1)`).
+    # 3. (end)   A capturing group that matches the end sequence.
+    #            Because the previous group is lazy (matches as few times as
+    #            possible) the next occurring end-sequence is matched.
+    regex = "(" + begin + ")(.*?)(" + end + ")"
 
     matches = re.finditer(regex, string, re.DOTALL)
 
     if remove_empty_matches:
         matches = trim_empty_matches(matches,
-                                     [begin_pattern_groups + 1])
+                                     (begin_pattern_groups + 2,))
 
     matches = limit(matches, max_matches)
 
-    for elem in matches:
-        yield elem.group(begin_pattern_groups + 1)
+    for m in matches:
+        yield InBetweenMatch(Match(m.group(1), m.start(1)),
+                             Match(m.group(begin_pattern_groups + 2),
+                                   m.start(begin_pattern_groups + 2)),
+                             Match(m.group(begin_pattern_groups + 3),
+                                   m.start(begin_pattern_groups + 3)))
 
 
 def unescaped_search_in_between(begin,
@@ -305,41 +453,46 @@ def unescaped_search_in_between(begin,
     else:
         # Compilation of the begin sequence is needed to get the number of
         # capturing groups in it.
-        compiled_begin_pattern = re.compile(begin)
-        begin_pattern_groups = compiled_begin_pattern.groups
+        begin_pattern_groups = re.compile(begin).groups
 
     # Regex explanation:
-    # 1. (?<!\\)(?:\\\\)* Unescapes the following char. The first part of this
-    #                     regex is a look-behind assertion. Only match the
-    #                     following if no single backslash is before it.
-    #                     The second part matches all double backslashes.
-    #                     In fact this sequence matches all escapes that occur
-    #                     as a multiple of two, means the following statement
-    #                     is not escaped.
-    # 2. (?:begin)        A non-capturing group that matches the begin
-    # 3. (.*?)            sequence. Match any char unlimited times, as few
-    #                     times as possible. Save the match in the capturing
-    #                     group after all capturing groups that can appear in
-    #                     'begin'.
-    # 4. (?<!\\)(?:\\\\)* Again the unescaping regex.
-    # 5. (?:end)          A non-capturing group that matches the end sequence.
-    #                     Because the 3. group is lazy (matches as few times as
-    #                     possible) the next occurring end-sequence is matched.
-    regex = (r"(?<!\\)(?:\\\\)*(?:" + begin + r")(.*?)(?<!\\)((?:\\\\)*)(?:" +
-             end + r")")
+    # 1. (?<!\\)(?:\\\\)*   Unescapes the following char. The first part of
+    #                       this regex is a look-behind assertion. Only match
+    #                       the following if no single backslash is before it.
+    #                       The second part matches all double backslashes.
+    #                       In fact this sequence matches all escapes that
+    #                       occur as a multiple of two, means the following
+    #                       statement is not escaped.
+    # 2. (begin)            A capturing group that matches the begin sequence.
+    # 3. (.*?)              Match any char unlimited times, as few times as
+    #                       possible. Save the match in the capturing group
+    #                       after all capturing groups that can appear in
+    #                       'begin'.
+    # 4. (?<!\\)((?:\\\\)*) Again the unescaping regex, but now all escape-
+    #                       characters get captured.
+    # 5. (end)              A capturing group that matches the end sequence.
+    #                       Because the 3. group is lazy (matches as few times
+    #                       as possible) the next occurring end-sequence is
+    #                       matched.
+    regex = (r"(?<!\\)(?:\\\\)*(" + begin + r")(.*?)(?<!\\)((?:\\\\)*)(" +
+             end + ")")
 
     matches = re.finditer(regex, string, re.DOTALL)
 
     if remove_empty_matches:
         matches = trim_empty_matches(matches,
-                                     [begin_pattern_groups + 1,
-                                      begin_pattern_groups + 2])
+                                     (begin_pattern_groups + 2,
+                                      begin_pattern_groups + 3))
 
     matches = limit(matches, max_matches)
 
-    for elem in matches:
-        yield (elem.group(begin_pattern_groups + 1) +
-               elem.group(begin_pattern_groups + 2))
+    for m in matches:
+        yield InBetweenMatch(Match(m.group(1), m.start(1)),
+                             Match(m.group(begin_pattern_groups + 2) +
+                                       m.group(begin_pattern_groups + 3),
+                                   m.start(begin_pattern_groups + 2)),
+                             Match(m.group(begin_pattern_groups + 4),
+                                   m.start(begin_pattern_groups + 4)))
 
 
 def escape(string, escape_chars, escape_with="\\"):
@@ -406,11 +559,11 @@ def _nested_search_in_between(begin, end, string):
     """
     # Regex explanation:
     # 1. (begin) A capturing group that matches the begin sequence.
-    # 2. (?:end) A non-capturing group that matches the end sequence. Because
-    #            the 1st group is lazy (matches as few times as possible) the
-    #            next occurring end-sequence is matched.
+    # 2. (end)   A capturing group that matches the end sequence. Because the
+    #            1st group is lazy (matches as few times as possible) the next
+    #            occurring end-sequence is matched.
     # The '|' in the regex matches either the first or the second part.
-    regex = r"(" + begin + r")|(?:" + end + r")"
+    regex = "(" + begin + ")|(" + end + ")"
 
     left_match = None
     nesting_level = 0
@@ -430,7 +583,11 @@ def _nested_search_in_between(begin, end, string):
                 nesting_level -= 1
 
             if nesting_level == 0 and left_match != None:
-                yield string[left_match.end() : match.start()]
+                yield InBetweenMatch(
+                    Match(left_match.group(), left_match.start()),
+                    Match(string[left_match.end() : match.start()],
+                          left_match.end()),
+                    Match(match.group(), match.start()))
                 left_match = None
 
 
@@ -472,9 +629,8 @@ def nested_search_in_between(begin,
     strings = _nested_search_in_between(begin, end, string)
 
     if remove_empty_matches:
-        strings = trim_empty(strings)
+        strings = filter(lambda x: len(x.inside) != 0, strings)
 
     strings = limit(strings, max_matches)
 
-    for elem in strings:
-        yield elem
+    return strings
