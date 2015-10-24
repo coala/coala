@@ -1,15 +1,3 @@
-def trim_empty(iterator):
-    """
-    A filter that removes empty objects that support len() inside the passed
-    iterator.
-
-    :param iterator: The iterator to be filtered.
-    """
-    for elem in iterator:
-        if len(elem) != 0:
-            yield elem
-
-
 def limit(iterator, count):
     """
     A filter that removes all elements behind the set limit.
