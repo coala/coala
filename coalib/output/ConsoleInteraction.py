@@ -62,39 +62,25 @@ def nothing_done(console_printer):
 
 
 def print_lines(console_printer,
-                pre_padding,
                 file_dict,
-                current_line,
-                result_line,
-                result_file):
+                file,
+                start_line,
+                end_line):
     """
     Prints the lines between the current and the result line. If needed
     they will be shortened.
 
     :param console_printer: Object to print messages on the console.
-    :param file_dict      : A dictionary containing all files with filename as
-                            key.
-    :param current_line   : The current line printed by the console_printer.
-    :param result_line    : The line to which the result belongs to.
-    :param result_file    : The file to which the result belongs to.
+    :param file_dict:       A dictionary containing all files as values with
+                            filenames as key.
+    :param file:            The related file.
+    :param start_line:      The first line to print.
+    :param end_line:        The last line to print.
     """
-    line_delta = result_line - current_line
-
-    if line_delta > pre_padding:
-        print_segregation(console_printer)
-
-        for i in range(max(result_line - pre_padding, 1),
-                       result_line + 1):
-            console_printer.print(
-                format_lines(lines=file_dict[result_file][i - 1],
-                             line_nr=i),
-                color=FILE_LINES_COLOR)
-    else:
-        for i in range(1, line_delta + 1):
-            console_printer.print(
-                format_lines(lines=file_dict[result_file][current_line + i - 1],
-                             line_nr=current_line + i),
-                color=FILE_LINES_COLOR)
+    for i in range(start_line, end_line + 1):
+        console_printer.print(
+            format_lines(lines=file_dict[file][i - 1], line_nr=i),
+            color=FILE_LINES_COLOR)
 
 
 def print_result(console_printer,
@@ -159,11 +145,27 @@ def print_results_formatted(log_printer,
                             *args):
     format_str = str(section.get(
         "format_str",
-        "id:{id}:origin:{origin}:file:{file}:line_nr:{line_nr}:severity:"
+        "id:{id}:origin:{origin}:file:{file}:from_line:{line}:from_column:"
+        "{column}:to_line:{end_line}:to_column:{end_column}:severity:"
         "{severity}:msg:{message}"))
     for result in result_list:
         try:
-            print(format_str.format(**result.__dict__))
+            if len(result.affected_code) == 0:
+                print(format_str.format(file=None,
+                                        line=None,
+                                        end_line=None,
+                                        column=None,
+                                        end_column=None,
+                                        **result.__dict__))
+                continue
+
+            for range in result.affected_code:
+                print(format_str.format(file=range.start.file,
+                                        line=range.start.line,
+                                        end_line=range.end.line,
+                                        column=range.start.column,
+                                        end_column=range.end.column,
+                                        **result.__dict__))
         except KeyError as exception:
             log_printer.log_exception(
                 _("Unable to print the result with the given format string."),
@@ -175,8 +177,7 @@ def print_results(log_printer,
                   result_list,
                   file_dict,
                   file_diff_dict,
-                  color=True,
-                  pre_padding=3):
+                  color=True):
     """
     Print all the results in a section.
 
@@ -189,22 +190,27 @@ def print_results(log_printer,
                            diff objects as values.
     :param color:          Boolean variable to print the results in color or
                            not. Can be used for testing.
-    :param pre_padding:    No of lines of file to print before the result line.
-                           Default value is 3.
     """
     console_printer = ConsolePrinter(print_colored=color)
 
     for result in sorted(result_list):
-        if result.file is not None and result.file not in file_dict:
-            log_printer.warn(_("The context for the result ({}) cannot be "
-                               "printed because it refers to a file that "
-                               "doesn't seem to "
-                               "exist.").format(str(result)))
+        if len(result.affected_code) == 0:
+            console_printer.print("\n" + STR_PROJECT_WIDE,
+                                  color=FILE_NAME_COLOR)
         else:
-            print_affected_lines(console_printer,
-                                 pre_padding,
-                                 file_dict,
-                                 result)
+            for sourcerange in result.affected_code:
+                if (
+                        sourcerange.file is not None and
+                        sourcerange.file not in file_dict):
+                    log_printer.warn(_("The context for the result ({}) cannot "
+                                       "be printed because it refers to a file "
+                                       "that doesn't seem to exist ({})"
+                                       ".").format(str(result),
+                                                   sourcerange.file))
+                else:
+                    print_affected_lines(console_printer,
+                                         file_dict,
+                                         sourcerange)
 
         print_result(console_printer,
                      log_printer,
@@ -214,23 +220,18 @@ def print_results(log_printer,
                      file_dict)
 
 
-def print_affected_lines(console_printer, pre_padding, file_dict, result):
-    if result.file is None:
-        console_printer.print("\n\n" + STR_PROJECT_WIDE, color=FILE_NAME_COLOR)
-        return
+def print_affected_lines(console_printer, file_dict, sourcerange):
+    console_printer.print("\n" + sourcerange.file, color=FILE_NAME_COLOR)
 
-    console_printer.print("\n\n" + result.file, color=FILE_NAME_COLOR)
-
-    if result.line_nr is not None:
-        if len(file_dict[result.file]) < result.line_nr:
+    if sourcerange.start.line is not None:
+        if len(file_dict[sourcerange.file]) < sourcerange.end.line:
             console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST))
         else:
             print_lines(console_printer,
-                        pre_padding,
                         file_dict,
-                        0,
-                        result.line_nr,
-                        result.file)
+                        sourcerange.file,
+                        sourcerange.start.line,
+                        sourcerange.end.line)
 
 
 def require_setting(log_printer, setting_name, arr):
@@ -418,12 +419,6 @@ def apply_action(log_printer,
         print_action_failed(log_printer, action_name, exception)
 
     return True
-
-
-def print_segregation(console_printer):
-    console_printer.print(format_lines(lines="",
-                                       line_nr="..."),
-                          color=FILE_LINES_COLOR)
 
 
 def show_enumeration(console_printer, title, items, indentation, no_items_text):

@@ -38,13 +38,13 @@ class LanguageToolBear(LocalBear):
         '''
         for message, diff, line in get_language_tool_results(file, locale):
             if diff:
-                yield Result(self.__class__.__name__,
-                             message,
-                             diffs={filename: diff},
-                             file=filename,
-                             line_nr=line)
+                yield Result.from_values(self.__class__.__name__,
+                                         message,
+                                         diffs={filename: diff},
+                                         file=filename,
+                                         line=line)
             else:
-                yield Result(self.__class__.__name__,
-                             message,
-                             file=filename,
-                             line_nr=line)
+                yield Result.from_values(self.__class__.__name__,
+                                         message,
+                                         file=filename,
+                                         line=line)

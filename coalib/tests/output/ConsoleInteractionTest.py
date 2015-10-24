@@ -9,6 +9,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
+from coalib.results.SourceRange import SourceRange
 from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
@@ -224,13 +225,14 @@ class ConsoleInteractionTest(unittest.TestCase):
                          file_dict)
             self.assertEqual(generator.last_input, 4)
 
-    def test_static_functions(self):
+    def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
             print_section_beginning(self.console_printer, Section("name"))
             self.assertEqual(stdout.getvalue(),
                              _("Executing section "
                                "{name}...").format(name="name") + "\n")
 
+    def test_nothing_done(self):
         with retrieve_stdout() as stdout:
             nothing_done(self.console_printer)
             self.assertEqual(stdout.getvalue(),
@@ -251,7 +253,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                           {},
                           color=False)
             self.assertEqual(
-                "\n\n{}\n|    | [{}] origin:\n|    | message"
+                "\n{}\n|    | [{}] origin:\n|    | message"
                 "\n".format(STR_PROJECT_WIDE,
                             RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                 stdout.getvalue())
@@ -261,15 +263,15 @@ class ConsoleInteractionTest(unittest.TestCase):
             print_results(
                 self.log_printer,
                 Section(""),
-                [Result("SpaceConsistencyBear",
-                        "Trailing whitespace found",
-                        "proj/white",
-                        line_nr=2)],
+                [Result.from_values("SpaceConsistencyBear",
+                                    "Trailing whitespace found",
+                                    file="proj/white",
+                                    line=2)],
                 {"proj/white": ["test line\n", "line 2\n", "line 3\n"]},
                 {},
                 color=False)
-            self.assertEqual("""\n\nproj/white
-|   1| test line\n|   2| line 2
+            self.assertEqual("""\nproj/white
+|   2| line 2
 |    | [{}] SpaceConsistencyBear:
 |    | Trailing whitespace found
 """.format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
@@ -279,10 +281,10 @@ class ConsoleInteractionTest(unittest.TestCase):
             print_results(
                 self.log_printer,
                 Section(""),
-                [Result("SpaceConsistencyBear",
-                        "Trailing whitespace found",
-                        "proj/white",
-                        line_nr=5)],
+                [Result.from_values("SpaceConsistencyBear",
+                                    "Trailing whitespace found",
+                                    file="proj/white",
+                                    line=5)],
                 {"proj/white": ["test line\n",
                                 "line 2\n",
                                 "line 3\n",
@@ -290,10 +292,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                 "line 5\n"]},
                 {},
                 color=False)
-            self.assertEqual("""\n\nproj/white
-| ...| \n|   2| line 2
-|   3| line 3
-|   4| line 4
+            self.assertEqual("""\nproj/white
 |   5| line 5
 |    | [{}] SpaceConsistencyBear:
 |    | Trailing whitespace found
@@ -304,14 +303,14 @@ class ConsoleInteractionTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             print_results(self.log_printer,
                           Section(""),
-                          [Result("SpaceConsistencyBear",
-                                  "Trailing whitespace found",
-                                  "file",
-                                  line_nr=5),
-                           Result("SpaceConsistencyBear",
-                                  "Trailing whitespace found",
-                                  "file",
-                                  line_nr=2)],
+                          [Result.from_values("SpaceConsistencyBear",
+                                              "Trailing whitespace found",
+                                              file="file",
+                                              line=5),
+                           Result.from_values("SpaceConsistencyBear",
+                                              "Trailing whitespace found",
+                                              file="file",
+                                              line=2)],
                           {"file": ["test line\n",
                                     "line 2\n",
                                     "line 3\n",
@@ -320,17 +319,13 @@ class ConsoleInteractionTest(unittest.TestCase):
                           {},
                           color=False)
 
-            self.assertEqual("""\n\nfile
-|   1| test line
+            self.assertEqual("""
+file
 |   2| line 2
 |    | [{}] SpaceConsistencyBear:
 |    | Trailing whitespace found
 
-
 file
-| ...| \n|   2| line 2
-|   3| line 3
-|   4| line 4
 |   5| line 5
 |    | [{}] SpaceConsistencyBear:
 |    | Trailing whitespace found
@@ -338,18 +333,49 @@ file
            RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
                              stdout.getvalue())
 
+    def test_print_results_multiple_ranges(self):
+        affected_code = (SourceRange.from_values("some_file", 5, end_line=7),
+                         SourceRange.from_values("another_file", 1, 3, 1, 5),
+                         SourceRange.from_values("another_file", 3, 3, 3, 5))
+        with retrieve_stdout() as stdout:
+            print_results(
+                self.log_printer,
+                Section(""),
+                [Result("ClangCloneDetectionBear",
+                        "Clone Found",
+                        affected_code)],
+                {"some_file": ["line "+str(i+1)+"\n" for i in range(10)],
+                 "another_file": ["line "+str(i+1)+"\n" for i in range(10)]},
+                {},
+                color=False)
+            self.assertEqual("""
+another_file
+|   1| line 1
+
+another_file
+|   3| line 3
+
+some_file
+|   5| line 5
+|   6| line 6
+|   7| line 7
+|    | [{}] ClangCloneDetectionBear:
+|    | Clone Found
+""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+                         stdout.getvalue())
+
     def test_print_results_missing_file(self):
         self.log_printer = LogPrinter(NullPrinter())
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,
                 Section(""),
-                [Result("t", "msg", None, line_nr=5),
-                 Result("t", "msg", "file", line_nr=5)],
+                [Result("t", "msg"),
+                 Result.from_values("t", "msg", file="file", line=5)],
                 {},
                 {},
                 color=False)
-            self.assertEqual("\n\n" + STR_PROJECT_WIDE + "\n"
+            self.assertEqual("\n" + STR_PROJECT_WIDE + "\n"
                              "|    | [NORMAL] t:\n"
                              "|    | msg\n"
                              # Second results file isn't there, no context is
@@ -363,23 +389,19 @@ file
             print_results(
                 self.log_printer,
                 Section(""),
-                [Result("t", "msg", "file", line_nr=5),
-                 Result("t", "msg", "file", line_nr=6)],
+                [Result.from_values("t", "msg", file="file", line=5),
+                 Result.from_values("t", "msg", file="file", line=6)],
                 {"file": ["line " + str(i+1) for i in range(5)]},
                 {},
                 color=False)
             # "NORMAL" but translated to test system language
             NORMAL = RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)
-            self.assertEqual("\n\n"
+            self.assertEqual("\n"
                              "file\n"
-                             "| ...| \n"
-                             "|   2| line 2\n"
-                             "|   3| line 3\n"
-                             "|   4| line 4\n"
                              "|   5| line 5\n"
                              "|    | [{sev}] t:\n"
                              "|    | msg\n"
-                             "\n\n"
+                             "\n"
                              "file\n"
                              "|    | {}\n"
                              "|    | [{sev}] t:\n"
@@ -392,12 +414,12 @@ file
             print_results(
                 self.log_printer,
                 Section(""),
-                [Result("t", "msg", "file")],
+                [Result.from_values("t", "msg", file="file")],
                 {"file": []},
                 {},
                 color=False)
             self.assertEqual(
-                "\n\nfile\n"
+                "\nfile\n"
                 "|    | [{}] t:\n"
                 "|    | msg\n".format(
                     RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
@@ -519,12 +541,30 @@ class PrintFormattedResultsTest(unittest.TestCase):
         self.section = Section("t")
 
     def test_default_format(self):
-        expected_string = ("id:-?[0-9]+:origin:1:file:None:line_nr:None:"
+        expected_string = ("id:-?[0-9]+:origin:1:file:None:from_line:None:"
+                           "from_column:None:to_line:None:to_column:None:"
                            "severity:1:msg:2\n")
         with retrieve_stdout() as stdout:
             print_results_formatted(self.logger,
                                     self.section,
                                     [Result("1", "2")],
+                                    None,
+                                    None)
+            self.assertRegex(stdout.getvalue(), expected_string)
+
+    def test_multiple_ranges(self):
+        expected_string = ("id:-?[0-9]+:origin:1:file:another_file:from_line:5:"
+                           "from_column:3:to_line:5:to_column:5:"
+                           "severity:1:msg:2\n"
+                           "id:-?[0-9]+:origin:1:file:some_file:from_line:5:"
+                           "from_column:None:to_line:7:to_column:None:"
+                           "severity:1:msg:2\n")
+        affected_code = (SourceRange.from_values("some_file", 5, end_line=7),
+                         SourceRange.from_values("another_file", 5, 3, 5, 5))
+        with retrieve_stdout() as stdout:
+            print_results_formatted(self.logger,
+                                    self.section,
+                                    [Result("1", "2", affected_code)],
                                     None,
                                     None)
             self.assertRegex(stdout.getvalue(), expected_string)

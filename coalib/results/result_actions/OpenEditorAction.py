@@ -18,20 +18,18 @@ GUI_EDITORS = ["kate", "gedit", "subl", "atom"]
 class OpenEditorAction(ApplyPatchAction):
     @staticmethod
     def is_applicable(result):
-        if isinstance(result, Result):
-            if result.file is not None:
-                return True
-        return False
+        return isinstance(result, Result) and len(result.affected_code) > 0
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         '''
-        Open the file in an editor.
+        Open the affected file(s) in an editor.
 
         :param editor: The editor to open the file with.
         '''
-        filename = result.file
+        # Use set to remove duplicates
+        filenames = set(src.file for src in result.affected_code)
 
-        editor_args = [editor, filename]
+        editor_args = [editor] + list(filenames)
         arg = EDITOR_ARGS.get(editor.strip(), None)
         if arg:
             editor_args.append(arg)
@@ -43,14 +41,15 @@ class OpenEditorAction(ApplyPatchAction):
         else:
             subprocess.call(editor_args)
 
-        with open(filename) as filehandle:
-            new_file = filehandle.readlines()
+        for filename in filenames:
+            with open(filename) as filehandle:
+                new_file = filehandle.readlines()
 
-        original_file = original_file_dict[filename]
-        diff = file_diff_dict.get(filename, Diff())
-        current_file = diff.apply(original_file)
+            original_file = original_file_dict[filename]
+            diff = file_diff_dict.get(filename, Diff())
+            current_file = diff.apply(original_file)
 
-        intermediate_diff = Diff.from_string_arrays(current_file, new_file)
-        file_diff_dict[filename] = diff + intermediate_diff
+            intermediate_diff = Diff.from_string_arrays(current_file, new_file)
+            file_diff_dict[filename] = diff + intermediate_diff
 
         return file_diff_dict
