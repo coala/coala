@@ -71,12 +71,12 @@ class ResultActionTest(unittest.TestCase):
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit
         diff_dict = uut.apply_from_section(
-            Result("origin", "msg", self.fa),
+            Result.from_values("origin", "msg", self.fa),
             file_dict,
             diff_dict,
             section)
         diff_dict = uut.apply_from_section(
-            Result("origin", "msg", self.fb),
+            Result.from_values("origin", "msg", self.fb),
             file_dict,
             diff_dict,
             section)
@@ -94,7 +94,7 @@ class ResultActionTest(unittest.TestCase):
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit_subl
         diff_dict = uut.apply_from_section(
-            Result("origin", "msg", self.fa),
+            Result.from_values("origin", "msg", self.fa),
             file_dict,
             {},
             section)
@@ -104,7 +104,7 @@ class ResultActionTest(unittest.TestCase):
 
     def test_is_applicable(self):
         result1 = Result("", "")
-        result2 = Result("", "", "")
+        result2 = Result.from_values("", "", "")
         invalid_result = ""
         self.assertFalse(OpenEditorAction.is_applicable(result1))
         self.assertTrue(OpenEditorAction.is_applicable(result2))

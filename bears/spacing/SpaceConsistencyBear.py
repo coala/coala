@@ -64,10 +64,11 @@ class SpaceConsistencyBear(LocalBear):
                 diff.change_line(line_number, line, replacement)
                 inconsistencies = "".join("\n- " + string
                                           for string in result_texts)
-                yield Result(self,
-                             _("Line contains following spacing "
-                             "inconsistencies:") + inconsistencies,
-                             diffs={filename: diff},
-                             file=filename,
-                             line_nr=line_number)
+                yield Result.from_values(
+                    self,
+                    _("Line contains following spacing inconsistencies:")
+                    + inconsistencies,
+                    diffs={filename: diff},
+                    file=filename,
+                    line=line_number)
                 result_texts = []

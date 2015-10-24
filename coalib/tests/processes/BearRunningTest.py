@@ -20,7 +20,9 @@ class LocalTestBear(LocalBear):
     def run(self, filename, file):
         if filename == "file1":
             raise Exception("Just to throw anything here.")
-        return [Result("LocalTestBear", "something went wrong", filename)]
+        return [Result.from_values("LocalTestBear",
+                                   "something went wrong",
+                                   filename)]
 
 
 class SimpleBear(LocalBear):
@@ -30,10 +32,16 @@ class SimpleBear(LocalBear):
             *args,
             dependency_results=None,
             **kwargs):
-        return [Result("SimpleBear", "something went wrong", filename),
+        return [Result.from_values("SimpleBear",
+                                   "something went wrong",
+                                   filename),
                 # This result should not be passed to DependentBear
-                Result("FakeBear", "something went wrong", filename),
-                Result("SimpleBear", "another thing went wrong", filename)]
+                Result.from_values("FakeBear",
+                                   "something went wrong",
+                                   filename),
+                Result.from_values("SimpleBear",
+                                   "another thing went wrong",
+                                   filename)]
 
 
 class DependentBear(LocalBear):
@@ -81,10 +89,10 @@ class GlobalTestBear(GlobalBear):
     def run(self):
         result = []
         for file, contents in self.file_dict.items():
-            result.append(Result("GlobalTestBear",
-                                 "Files are bad in general!",
-                                 file,
-                                 severity=RESULT_SEVERITY.INFO))
+            result.append(Result.from_values("GlobalTestBear",
+                                             "Files are bad in general!",
+                                             file,
+                                             severity=RESULT_SEVERITY.INFO))
         return result
 
 
@@ -279,9 +287,9 @@ d
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
 
         local_result_expected = [[],
-                                 [Result("LocalTestBear",
-                                         "something went wrong",
-                                         'arbitrary')]
+                                 [Result.from_values("LocalTestBear",
+                                                     "something went wrong",
+                                                     'arbitrary')]
                                 ]
         for expected in local_result_expected:
             control_elem, index = self.control_queue.get()
@@ -289,14 +297,16 @@ d
             real = self.local_result_dict[index]
             self.assertEqual(real, expected)
 
-        global_results_expected = [Result("GlobalTestBear",
-                                          "Files are bad in general!",
-                                          "file1",
-                                          severity=RESULT_SEVERITY.INFO),
-                                   Result("GlobalTestBear",
-                                          "Files are bad in general!",
-                                          "arbitrary",
-                                          severity=RESULT_SEVERITY.INFO)]
+        global_results_expected = [Result.from_values(
+                                       "GlobalTestBear",
+                                       "Files are bad in general!",
+                                       "file1",
+                                       severity=RESULT_SEVERITY.INFO),
+                                   Result.from_values(
+                                       "GlobalTestBear",
+                                       "Files are bad in general!",
+                                       "arbitrary",
+                                       severity=RESULT_SEVERITY.INFO)]
 
         control_elem, index = self.control_queue.get()
         self.assertEqual(control_elem, CONTROL_ELEMENT.LOCAL_FINISHED)

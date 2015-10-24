@@ -25,7 +25,7 @@ class ClangCloneDetectionBear(GlobalBear):
         self.debug("Creating results...")
         for function_1, function_2, difference in differences:
             if difference < max_clone_difference:
-                yield Result(
+                yield Result.from_values(
                     self.__class__.__name__,
                     _("Code clone found. The other occurrence is at file "
                       "{file}, line {line}, function {function}. The "
@@ -36,7 +36,7 @@ class ClangCloneDetectionBear(GlobalBear):
                         difference=difference),
                     file=function_1[0],
                     severity=RESULT_SEVERITY.MAJOR,
-                    line_nr=function_1[1],
+                    line=function_1[1],
                     debug_msg=[count_matrices[function_1],
                                count_matrices[function_2]])
 

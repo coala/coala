@@ -4,16 +4,15 @@ from coalib.misc.Decorators import (generate_repr,
                                     generate_ordering,
                                     enforce_signature)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.SourceRange import SourceRange
 
 
 @generate_repr("id",
                "origin",
-               "file",
-               "line_nr",
+               "affected_code",
                ("severity", RESULT_SEVERITY.reverse.get),
                "message")
-@generate_ordering("file",
-                   "line_nr",
+@generate_ordering("affected_code",
                    "severity",
                    "origin",
                    "message",
@@ -30,21 +29,20 @@ class Result:
     def __init__(self,
                  origin,
                  message: str,
-                 file: (str, None)=None,
-                 line_nr: (int, None)=None,
+                 affected_code: tuple=(),
                  severity: int=RESULT_SEVERITY.NORMAL,
                  debug_msg="",
                  diffs: (dict, None)=None):
         """
-        :param origin:    Class name or class of the creator of this object
-        :param message:   Message to show with this result
-        :param file:      The path to the affected file
-        :param line_nr:   Number of the line which is affected, first line is 1
-        :param severity:  Severity of this result
-        :param debug_msg: A message which may help the user find out why
-                          this result was yielded.
-        :param diffs:     A dictionary associating a Diff object with each
-                          filename.
+        :param origin:        Class name or class of the creator of this object.
+        :param message:       Message to show with this result.
+        :param affected_code: A tuple of SourceRange objects pointing to related
+                              positions in the source code.
+        :param severity:      Severity of this result.
+        :param debug_msg:     A message which may help the user find out why
+                              this result was yielded.
+        :param diffs:         A dictionary associating a Diff object with each
+                              filename.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -53,11 +51,54 @@ class Result:
         self.origin = origin
         self.message = message
         self.debug_msg = debug_msg
-        self.file = file
-        self.line_nr = line_nr
+        # Sorting is important for tuple comparison
+        self.affected_code = tuple(sorted(affected_code))
         self.severity = severity
         self.diffs = diffs
         self.id = uuid.uuid4().int
+
+    @classmethod
+    @enforce_signature
+    def from_values(cls,
+                    origin,
+                    message: str,
+                    file: str,
+                    line: (int, None)=None,
+                    column: (int, None)=None,
+                    end_line: (int, None)=None,
+                    end_column: (int, None)=None,
+                    severity: int=RESULT_SEVERITY.NORMAL,
+                    debug_msg="",
+                    diffs: (dict, None)=None):
+        """
+        Creates a result with only one SourceRange with the given start and end
+        locations.
+
+        :param origin:     Class name or class of the creator of this object.
+        :param message:    A message to explain the result.
+        :param file:       The related file.
+        :param line:       The first related line in the file. (First line is 1)
+        :param column:     The column indicating the first character. (First
+                           character is 1)
+        :param end_line:   The last related line in the file.
+        :param end_column: The column indicating the last character.
+        :param severity:   A RESULT_SEVERITY object.
+        :param debug_msg:  Another message for debugging purposes.
+        :param diffs:      A dictionary with filenames as key and Diff objects
+                           associated with them.
+        """
+        range = SourceRange.from_values(file,
+                                        line,
+                                        column,
+                                        end_line,
+                                        end_column)
+
+        return cls(origin=origin,
+                   message=message,
+                   affected_code=(range,),
+                   severity=severity,
+                   debug_msg=debug_msg,
+                   diffs=diffs)
 
     def to_string_dict(self):
         """
@@ -72,8 +113,6 @@ class Result:
 
         members = ["id",
                    "debug_msg",
-                   "file",
-                   "line_nr",
                    "message",
                    "origin"]
 
@@ -82,6 +121,14 @@ class Result:
             retval[member] = "" if value == None else str(value)
 
         retval["severity"] = str(RESULT_SEVERITY.reverse.get(self.severity, ""))
+        # FIXME: This is merely a workaround for DBus because changing it's
+        # interface is more complicated. Takes only first range here.
+        if len(self.affected_code) > 0:
+            retval["file"] = self.affected_code[0].file
+            line = self.affected_code[0].start.line
+            retval["line_nr"] = "" if line is None else str(line)
+        else:
+            retval["file"], retval["line_nr"] = "", ""
 
         return retval
 

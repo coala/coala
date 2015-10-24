@@ -28,12 +28,12 @@ class ResultTest(unittest.TestCase):
                                   "severity": "NORMAL",
                                   "debug_msg": ""})
 
-        uut = Result(origin="origin",
-                     message="msg",
-                     file="file",
-                     line_nr=2,
-                     severity=RESULT_SEVERITY.INFO,
-                     debug_msg="dbg")
+        uut = Result.from_values(origin="origin",
+                                 message="msg",
+                                 file="file",
+                                 line=2,
+                                 severity=RESULT_SEVERITY.INFO,
+                                 debug_msg="dbg")
         output = uut.to_string_dict()
         self.assertEqual(output, {"id": str(uut.id),
                                   "origin": "origin",
@@ -44,7 +44,7 @@ class ResultTest(unittest.TestCase):
                                   "debug_msg": "dbg"})
 
 
-        uut = Result(origin="origin", message="msg", line_nr=5)
+        uut = Result.from_values(origin="o", message="m", file="f", line=5)
         output = uut.to_string_dict()
         self.assertEqual(output["line_nr"], "5")
 

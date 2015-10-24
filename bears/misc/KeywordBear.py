@@ -31,9 +31,9 @@ class KeywordBear(LocalBear):
                     found_kws.append(keyword)
 
             if found_kws != []:
-                yield Result(
+                yield Result.from_values(
                     origin=self,
                     message=_("Line contains the following keywords:") +
                             "\n" + ", ".join(found_kws),
                     file=filename,
-                    line_nr=line_number + 1)
+                    line=line_number + 1)

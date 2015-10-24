@@ -97,13 +97,14 @@ class ProcessingTest(unittest.TestCase):
         global_result = global_results[0]
 
         self.assertRegex(repr(local_result),
-                         "<Result object\\(id={}, origin='LocalTestBear', file="
-                         "None, line_nr=None, severity=NORMAL, message='test "
+                         "<Result object\\(id={}, origin='LocalTestBear', "
+                         "affected_code=\\(\\), severity=NORMAL, message='test "
                          "msg'\\) at 0x[0-9a-fA-F]+>".format(local_result.id))
         self.assertRegex(repr(global_result),
-                         "<Result object\\(id={}, origin='GlobalTestBear', file"
-                         "=.*, line_nr=None, severity=NORMAL, message='test "
-                         "message'\\) at "
+                         "<Result object\\(id={}, origin='GlobalTestBear', affe"
+                         "cted_code=\\(.*start=.*file=.*section_executor_test_f"
+                         "iles.*line=None.*end=.*\\), severity=NORMAL, message="
+                         "'test message'\\) at "
                          "0x[0-9a-fA-F]+>".format(global_result.id))
 
     def test_empty_run(self):
