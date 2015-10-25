@@ -363,13 +363,28 @@ file
             print_results(
                 self.log_printer,
                 Section(""),
-                [Result("t", "msg", "file", line_nr=5)],
-                {"file": []},
+                [Result("t", "msg", "file", line_nr=5),
+                 Result("t", "msg", "file", line_nr=6)],
+                {"file": ["line " + str(i+1) for i in range(5)]},
                 {},
                 color=False)
-            self.assertEqual("""\n\nfile\n|    | {}\n|    | [{}] t:
-|    | msg\n""".format(STR_LINE_DOESNT_EXIST,
-                            RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+            # "NORMAL" but translated to test system language
+            NORMAL = RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)
+            self.assertEqual("\n\n"
+                             "file\n"
+                             "| ...| \n"
+                             "|   2| line 2\n"
+                             "|   3| line 3\n"
+                             "|   4| line 4\n"
+                             "|   5| line 5\n"
+                             "|    | [{sev}] t:\n"
+                             "|    | msg\n"
+                             "\n\n"
+                             "file\n"
+                             "|    | {}\n"
+                             "|    | [{sev}] t:\n"
+                             "|    | msg\n".format(STR_LINE_DOESNT_EXIST,
+                                                   sev=NORMAL),
                              stdout.getvalue())
 
     def test_print_results_without_line(self):

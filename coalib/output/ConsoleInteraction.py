@@ -222,7 +222,7 @@ def print_affected_lines(console_printer, pre_padding, file_dict, result):
     console_printer.print("\n\n" + result.file, color=FILE_NAME_COLOR)
 
     if result.line_nr is not None:
-        if len(file_dict[result.file]) < result.line_nr - 1:
+        if len(file_dict[result.file]) < result.line_nr:
             console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST))
         else:
             print_lines(console_printer,
