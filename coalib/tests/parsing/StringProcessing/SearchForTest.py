@@ -2,12 +2,12 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.tests.parsing.StringProcessing.StringProcessingTest import (
-    StringProcessingTest)
+from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
+    StringProcessingTestBase)
 from coalib.parsing.StringProcessing import search_for
 
 
-class SearchForTest(StringProcessingTest):
+class SearchForTest(StringProcessingTestBase):
     # Match either "out1" or "out2".
     test_basic_pattern = "out1|out2"
     # These are the expected results for the zero-group of the

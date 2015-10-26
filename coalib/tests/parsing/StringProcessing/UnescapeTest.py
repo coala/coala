@@ -2,12 +2,12 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.tests.parsing.StringProcessing.StringProcessingTest import (
-    StringProcessingTest)
+from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
+    StringProcessingTestBase)
 from coalib.parsing.StringProcessing import unescape
 
 
-class UnescapeTest(StringProcessingTest):
+class UnescapeTest(StringProcessingTestBase):
     # Test the unescape() function.
     def test_basic(self):
         expected_results = [

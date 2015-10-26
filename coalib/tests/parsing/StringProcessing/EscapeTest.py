@@ -2,12 +2,12 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.tests.parsing.StringProcessing.StringProcessingTest import (
-    StringProcessingTest)
+from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
+    StringProcessingTestBase)
 from coalib.parsing.StringProcessing import escape
 
 
-class EscapeTest(StringProcessingTest):
+class EscapeTest(StringProcessingTestBase):
     # Test escape() using a single character to escape and default parameters.
     def test_normal_behaviour(self):
         expected_results = [

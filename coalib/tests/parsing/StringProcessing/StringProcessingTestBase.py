@@ -1,7 +1,7 @@
 import unittest
 
 
-class StringProcessingTest(unittest.TestCase):
+class StringProcessingTestBase(unittest.TestCase):
     # The backslash character. Needed since there are limitations when
     # using backslashes at the end of raw-strings in front of the
     # terminating " or '.

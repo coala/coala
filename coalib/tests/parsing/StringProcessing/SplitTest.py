@@ -2,13 +2,13 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.tests.parsing.StringProcessing.StringProcessingTest import (
-    StringProcessingTest)
+from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
+    StringProcessingTestBase)
 from coalib.parsing.StringProcessing import split
 
 
-class SplitTest(StringProcessingTest):
-    bs = StringProcessingTest.bs
+class SplitTest(StringProcessingTestBase):
+    bs = StringProcessingTestBase.bs
 
     test_basic_pattern = r"'"
     test_basic_expected_results = [
