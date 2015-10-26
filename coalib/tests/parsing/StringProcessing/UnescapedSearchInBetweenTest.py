@@ -2,24 +2,25 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.tests.parsing.StringProcessingTest import StringProcessingTest
-from coalib.parsing.StringProcessing import search_in_between
+from coalib.tests.parsing.StringProcessing.StringProcessingTest import (
+    StringProcessingTest)
+from coalib.parsing.StringProcessing import unescaped_search_in_between
 
 
-class SearchInBetweenTest(StringProcessingTest):
+class UnescapedSearchInBetweenTest(StringProcessingTest):
     bs = StringProcessingTest.bs
 
     test_basic_pattern = "'"
     test_basic_expected_results = [
         [r"escaped-escape:        \\ "],
-        [r"escaped-quote:         " + bs],
+        [r"escaped-quote:         \' "],
         [r"escaped-anything:      \X "],
         [r"two escaped escapes: \\\\ "],
-        [r"escaped-quote at end:   " + bs],
+        [r"escaped-quote at end:   \'"],
         [r"escaped-escape at end:  " + 2 * bs],
         [r"str1", r"str2"],
-        [r"        ", r" out2 "],
-        [r"      ", r" out2 "],
+        [r"str1", r"str2"],
+        [r"str1", r"str2"],
         [r"str1", r"str2"],
         [r"str1", r"str2"],
         [r"str1", r"str2"],
@@ -30,12 +31,12 @@ class SearchInBetweenTest(StringProcessingTest):
         [],
         []]
 
-    # Test the basic search_in_between() functionality.
+    # Test the basic unescaped_search_in_between() functionality.
     def test_basic(self):
         expected_results = self.test_basic_expected_results
 
         self.assertResultsEqual(
-            search_in_between,
+            unescaped_search_in_between,
             {(self.test_basic_pattern,
               self.test_basic_pattern,
               test_string,
@@ -47,14 +48,14 @@ class SearchInBetweenTest(StringProcessingTest):
              for use_regex in [True, False]},
             list)
 
-    # Test the search_in_between() while varying the max_match
+    # Test the unescaped_search_in_between() while varying the max_match
     # parameter.
     def test_max_match(self):
         search_pattern = self.test_basic_pattern
         expected_master_results = self.test_basic_expected_results
 
         self.assertResultsEqual(
-            search_in_between,
+            unescaped_search_in_between,
             {(search_pattern,
               search_pattern,
               test_string,
@@ -68,21 +69,21 @@ class SearchInBetweenTest(StringProcessingTest):
              for use_regex in [True, False]},
             list)
 
-    # Test the search_in_between() function with different regex
+    # Test the unescaped_search_in_between() function with different regex
     # patterns.
     def test_regex_pattern(self):
         expected_results = [
             [r""],
             [r"c"],
             [r"c", r"bc\+'**'"],
-            [r""],
+            [r"\13q4ujsabbc"],
             [r"\\13q4ujsabbc\+'**'ac", r"."],
             [r"", r"", r"", r"", r"", r"c\+'**'", r"", r"", r"-"],
             [r"cba###\\13q4ujs"],
-            [r"3q4ujsabbc" + self.bs]]
+            []]
 
         self.assertResultsEqual(
-            search_in_between,
+            unescaped_search_in_between,
             {(pattern,
               pattern,
               self.multi_pattern_test_string,
@@ -93,12 +94,12 @@ class SearchInBetweenTest(StringProcessingTest):
                                         expected_results)},
             list)
 
-    # Test the search_in_between() function for its
+    # Test the unescaped_search_in_between() function for its
     # remove_empty_matches feature.
     def test_auto_trim(self):
         expected_results = [
             [],
-            [5 * self.bs, r"\\\'", self.bs, r"+ios"],
+            [r"\\\\\;\\#", r"+ios"],
             [r"2", r"4", r"6"],
             [r"2", r"4", r"6"],
             [],
@@ -108,7 +109,7 @@ class SearchInBetweenTest(StringProcessingTest):
             [r"a"]]
 
         self.assertResultsEqual(
-            search_in_between,
+            unescaped_search_in_between,
             {(self.auto_trim_test_pattern,
               self.auto_trim_test_pattern,
               test_string,
@@ -120,13 +121,14 @@ class SearchInBetweenTest(StringProcessingTest):
              for use_regex in [True, False]},
             list)
 
-    # Test the search_in_between() function for its use_regex parameter.
+    # Test the unescaped_search_in_between() function for its use_regex
+    # parameter.
     def test_disabled_regex(self):
-        search_pattern = r"\'"
+        search_pattern = r"'()?"
         expected_results = [[] for x in range(len(self.test_strings))]
 
         self.assertResultsEqual(
-            search_in_between,
+            unescaped_search_in_between,
             {(search_pattern,
               search_pattern,
               test_string,
@@ -138,20 +140,19 @@ class SearchInBetweenTest(StringProcessingTest):
              for auto_trim in [True, False]},
             list)
 
-    # Test the search_in_between() function using the test-strings specific
-    # for search-in-between functions.
+    # Test the unescaped_search_in_between() function using the test-strings
+    # specific for search-in-between functions.
     def test_extended(self):
         expected_results = [
             [r"", r"This is a word", r"(in a word"],
             [r"((((((((((((((((((1"],
             [r"do (it ", r"", r"hello."],
-            [r"", r"This\ is a word" + self.bs,
-                r"(in a\\\ word" + 5 * self.bs],
-            [r"\(\((((((\\\(((((((((((1"],
-            [r"do (it ", r"", r"hello."]]
+            [r"", r"This\ is a word\)and((in a\\\ word\\\\\) another \)"],
+            [r"((((\\\(((((((((((1"],
+            [r"it ", r"", r"hello."]]
 
         self.assertResultsEqual(
-            search_in_between,
+            unescaped_search_in_between,
             {(begin_pattern,
               end_pattern,
               test_string,

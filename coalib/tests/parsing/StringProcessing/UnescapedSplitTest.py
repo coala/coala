@@ -2,24 +2,25 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.tests.parsing.StringProcessingTest import StringProcessingTest
-from coalib.parsing.StringProcessing import split
+from coalib.tests.parsing.StringProcessing.StringProcessingTest import (
+    StringProcessingTest)
+from coalib.parsing.StringProcessing import unescaped_split
 
 
-class SplitTest(StringProcessingTest):
+class UnescapedSplitTest(StringProcessingTest):
     bs = StringProcessingTest.bs
 
     test_basic_pattern = r"'"
     test_basic_expected_results = [
         [r"out1 ", r"escaped-escape:        \\ ", r" out2"],
-        [r"out1 ", r"escaped-quote:         " + bs, r" ", r" out2"],
+        [r"out1 ", r"escaped-quote:         \' ", r" out2"],
         [r"out1 ", r"escaped-anything:      \X ", r" out2"],
         [r"out1 ", r"two escaped escapes: \\\\ ", r" out2"],
-        [r"out1 ", r"escaped-quote at end:   " + bs, r"", r" out2"],
+        [r"out1 ", r"escaped-quote at end:   \'", r" out2"],
         [r"out1 ", r"escaped-escape at end:  " + 2 * bs, r" out2"],
         [r"out1           ", r"str1", r" out2 ", r"str2", r" out2"],
-        [r"out1 " + bs, r"        ", r"str1", r" out2 ", r"str2", r" out2"],
-        [r"out1 " + 3 * bs, r"      ", r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1 \'        ", r"str1", r" out2 ", r"str2", r" out2"],
+        [r"out1 \\\'      ", r"str1", r" out2 ", r"str2", r" out2"],
         [r"out1 \\        ", r"str1", r" out2 ", r"str2", r" out2"],
         [r"out1 \\\\      ", r"str1", r" out2 ", r"str2", r" out2"],
         [r"out1         " + 2 * bs, r"str1", r" out2 ", r"str2", r" out2"],
@@ -30,20 +31,21 @@ class SplitTest(StringProcessingTest):
         [bs],
         [2 * bs]]
 
-    # Test the basic split() functionality.
+    # Test the basic unescaped_split() functionality.
     def test_basic(self):
         split_pattern = self.test_basic_pattern
         expected_results = self.test_basic_expected_results
 
         self.assertResultsEqual(
-            split,
+            unescaped_split,
             {(split_pattern, test_string, 0, False, use_regex): result
              for test_string, result in zip(self.test_strings,
                                             expected_results)
              for use_regex in [True, False]},
             list)
 
-    # Test the split() function while varying the max_split parameter.
+    # Test the unescaped_split() function while varying the max_split
+    # parameter.
     def test_max_split(self):
         split_pattern = self.test_basic_pattern
         expected_master_results = self.test_basic_expected_results
@@ -59,7 +61,7 @@ class SplitTest(StringProcessingTest):
                     res.append(str.join(split_pattern, master[max_split : ]))
 
             self.assertResultsEqual(
-                split,
+                unescaped_split,
                 {(split_pattern,
                   test_string,
                   max_split,
@@ -70,43 +72,42 @@ class SplitTest(StringProcessingTest):
                  for use_regex in [True, False]},
                 list)
 
-    # Test the split() function with different regex patterns.
+    # Test the unescaped_split() function with different regex patterns.
     def test_regex_pattern(self):
         expected_results = [
             [r"", r"", r"cba###\\13q4ujsabbc\+'**'ac###.#.####-ba"],
             [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'ac###.#.####-ba"],
             [r"", r"c", r"ccba###\\13q4ujs", r"bc\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###", r"", r"13q4ujsabbc", r"+'**'ac###.#.####-ba"],
+            [r"abcabccba###", r"\13q4ujsabbc", r"+'**'ac###.#.####-ba"],
             [r"abcabccba", r"\\13q4ujsabbc\+'**'ac", r".", r".", r"-ba"],
             [r"", r"", r"c", r"", r"cc", r"", r"", r"", r"\13q4ujs", r"", r"",
                 r"c\+'**'", r"c", r"", r"", r"", r"", r"-", r"", r""],
             [r"", r"cba###\\13q4ujs", r"\+'**'", r"###.#.####-ba"],
-            [r"abcabccba###" + 2 * self.bs, r"3q4ujsabbc" + self.bs,
-                r"'**'ac###.#.####-ba"]]
+            [r"abcabccba###" + 2 * self.bs,
+                r"3q4ujsabbc\+'**'ac###.#.####-ba"]]
 
         self.assertResultsEqual(
-            split,
+            unescaped_split,
             {(pattern, self.multi_pattern_test_string, 0, False, True): result
              for pattern, result in zip(self.multi_patterns,
                                         expected_results)},
             list)
 
-    # Test the split() function for its remove_empty_matches feature.
+    # Test the unescaped_split() function for its remove_empty_matches feature.
     def test_auto_trim(self):
         expected_results = [
             [],
-            [2 * self.bs, 5 * self.bs, r"\\#", r"\\\'", self.bs, 4 * self.bs,
-                r"+ios"],
+            [2 * self.bs, r"\\\\\;\\#", r"\\\'", r"\;\\\\", r"+ios"],
             [r"1", r"2", r"3", r"4", r"5", r"6"],
             [r"1", r"2", r"3", r"4", r"5", r"6", r"7"],
             [],
             [r"Hello world"],
-            [self.bs],
+            [r"\;"],
             [2 * self.bs],
             [r"abc", r"a", r"asc"]]
 
         self.assertResultsEqual(
-            split,
+            unescaped_split,
             {(self.auto_trim_test_pattern,
               test_string,
               0,
@@ -117,31 +118,13 @@ class SplitTest(StringProcessingTest):
              for use_regex in [True, False]},
             list)
 
-    # Test the split() function with regexes disabled.
+    # Test the unescaped_split() function with regexes disabled.
     def test_disabled_regex(self):
-        expected_results = [
-            [r"out1 'escaped-escape:        \\ ' out2"],
-            [r"out1 'escaped-quote:         ", r" ' out2"],
-            [r"out1 'escaped-anything:      \X ' out2"],
-            [r"out1 'two escaped escapes: \\\\ ' out2"],
-            [r"out1 'escaped-quote at end:   ", r"' out2"],
-            [r"out1 'escaped-escape at end:  " + self.bs, r" out2"],
-            [r"out1           'str1' out2 'str2' out2"],
-            [r"out1 ", r"        'str1' out2 'str2' out2"],
-            [r"out1 \\", r"      'str1' out2 'str2' out2"],
-            [r"out1 \\        'str1' out2 'str2' out2"],
-            [r"out1 \\\\      'str1' out2 'str2' out2"],
-            [r"out1         " + self.bs, r"str1' out2 'str2' out2"],
-            [r"out1       " + 3 * self.bs, r"str1' out2 'str2' out2"],
-            [r"out1           'str1''str2''str3' out2"],
-            [r""],
-            [r"out1 out2 out3"],
-            [self.bs],
-            [2 * self.bs]]
+        expected_results = [[x] for x in self.test_strings]
 
         self.assertResultsEqual(
-            split,
-            {(r"\'", test_string, 0, False, False): result
+            unescaped_split,
+            {(r"'()", test_string, 0, False, False): result
              for test_string, result in zip(self.test_strings,
                                             expected_results)},
             list)

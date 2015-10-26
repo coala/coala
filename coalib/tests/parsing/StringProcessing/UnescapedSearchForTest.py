@@ -2,7 +2,8 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.tests.parsing.StringProcessingTest import StringProcessingTest
+from coalib.tests.parsing.StringProcessing.StringProcessingTest import (
+    StringProcessingTest)
 from coalib.parsing.StringProcessing import unescaped_search_for
 
 
