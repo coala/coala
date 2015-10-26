@@ -1,5 +1,6 @@
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
+from coalib.bears.GlobalBear import GlobalBear
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
@@ -43,4 +44,32 @@ class LocalBear(Bear):
     def get_metadata(cls):
         return FunctionMetadata.from_function(
             cls.run,
-            omit={"self", "filename", "file", "dependency_results"})
+            omit={"self", "filename", "file", "dependency_results"}) # asd asd asd asd
+
+
+def LocalBearDecorator(run_function):
+    class Decorated(GlobalBear):
+        __name__ = run_function.__name__
+
+        @staticmethod
+        def kind():
+            return BEAR_KIND.GLOBAL
+
+        def run(self,
+                *args,
+                **kwargs):
+            for filename in self.file_dict:
+                for result in run_function(
+                        *args,
+                        filename=filename,
+                        file=self.file_dict[filename],
+                        **kwargs):
+                    yield result
+
+        @classmethod
+        def get_metadata(cls):
+            return FunctionMetadata.from_function(
+                run_function,
+                omit={"self", "filename", "file", "dependency_results"})
+
+    return Decorated
