@@ -7,11 +7,12 @@ from coalib.results.Result import Result
 
 EDITOR_ARGS = {
     "subl": "--wait",
-    "gedit": "-s"
+    "gedit": "-s",
+    "atom": "--wait"
 }
 
 
-GUI_EDITORS = ["kate", "gedit", "subl"]
+GUI_EDITORS = ["kate", "gedit", "subl", "atom"]
 
 
 class OpenEditorAction(ApplyPatchAction):
