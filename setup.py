@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+# TODO this is a test todo
 from setuptools import setup, find_packages
 import setuptools.command.build_py
 
