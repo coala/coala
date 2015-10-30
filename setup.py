@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+# This is a bad line *because* it is very long. Too long. coala won't like this line! I bet!
 from setuptools import setup, find_packages
 import setuptools.command.build_py
 
