@@ -20,6 +20,10 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
         setuptools.command.build_py.build_py.run(self)
 
 
+# This line is ok. But it introduces another hunk in the diff making line index
+# determination more complex.
+
+
 if __name__ == "__main__":
     maintainers = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
     maintainer_mails = ('lasse.schuirmann@gmail.com, '
@@ -96,3 +100,6 @@ if __name__ == "__main__":
           cmdclass={'build_manpage': BuildManPage,
                     'build_dbus': BuildDbusService,
                     'build_py': BuildPyCommand})
+
+
+# This is a very long line - it's simply too long. Nobody can't read it, really! It's just not ok.
