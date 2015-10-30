@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# This is a very long line - it's simply too long. Nobody can't read it, really! It's just not ok.
+
 from setuptools import setup, find_packages
 import setuptools.command.build_py
 
