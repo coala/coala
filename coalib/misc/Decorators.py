@@ -90,6 +90,26 @@ def _construct_repr_string(obj, members):
             + hex(id(obj)) + ">")
 
 
+def get_public_members(obj):
+    """
+    Retrieves a list of member-like objects (members or properties) that are
+    publically exposed.
+
+    :param obj: The object to probe.
+    :return:    A list of strings.
+    """
+    # Get public members
+    members = set(filter(lambda member: not member.startswith("_"),
+                         obj.__dict__))
+    # Also fetch properties
+    type_dict = type(obj).__dict__
+    members |= set(
+        filter(lambda member: isinstance(type_dict[member], property)
+                              and not member.startswith("_"), type_dict))
+
+    return members
+
+
 def generate_repr(*members):
     """
     Decorator that binds an auto-generated `__repr__()` function to a class.
@@ -153,16 +173,7 @@ def generate_repr(*members):
         def __repr__(self):
             # Need to fetch member variables every time since they are unknown
             # until class instantation.
-            members_to_print = set(
-                filter(lambda member: not member.startswith("_"),
-                       self.__dict__))
-            # Also fetch properties.
-            self_type_dict = type(self).__dict__
-            members_to_print |= set(
-                filter(lambda member: isinstance(self_type_dict[member],
-                                                 property)
-                                      and not member.startswith("_"),
-                       self_type_dict))
+            members_to_print = get_public_members(self)
 
             member_repr_list = ((member, repr) for member in
                 sorted(members_to_print, key=str.lower))
