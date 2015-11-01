@@ -26,7 +26,7 @@ class ClangCloneDetectionBear(GlobalBear):
         for function_1, function_2, difference in differences:
             if difference < max_clone_difference:
                 yield Result.from_values(
-                    self.__class__.__name__,
+                    self,
                     _("Code clone found. The other occurrence is at file "
                       "{file}, line {line}, function {function}. The "
                       "difference is {difference}.").format(
