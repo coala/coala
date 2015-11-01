@@ -28,4 +28,7 @@ class LineLengthBear(LocalBear):
                                 actual=len(line),
                                 maximum=max_line_length),
                     file=filename,
-                    line=line_number + 1)
+                    line=line_number + 1, # asd asd asd as das das das das dasddasd
+                    column=max_line_length + 1,
+                    end_line=line_number + 1,
+                    end_column=len(line))

@@ -76,9 +76,27 @@ def print_lines(console_printer,
                             lines to print.
     """
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
-        console_printer.print(
-            format_lines(lines=file_dict[sourcerange.file][i - 1], line_nr=i),
-            color=FILE_LINES_COLOR)
+        console_printer.print(format_lines(lines='', line_nr=i),
+                              color=FILE_LINES_COLOR,
+                              end='')
+
+        line = file_dict[sourcerange.file][i - 1].rstrip("\n")
+        printed_chars = 0
+        if i == sourcerange.start.line and sourcerange.start.column:
+            console_printer.print(line[:sourcerange.start.column-1],
+                                  color=FILE_LINES_COLOR,
+                                  end='')
+            printed_chars = sourcerange.start.column-1
+
+        if i == sourcerange.end.line and sourcerange.end.column:
+            console_printer.print(line[printed_chars:sourcerange.end.column-1],
+                                  color=HIGHLIGHTED_CODE_COLOR,
+                                  end='')
+            console_printer.print(line[sourcerange.end.column-1:],
+                                  color=FILE_LINES_COLOR)
+        else:
+            console_printer.print(line[printed_chars:],
+                                  color=HIGHLIGHTED_CODE_COLOR)
 
 
 def print_result(console_printer,
