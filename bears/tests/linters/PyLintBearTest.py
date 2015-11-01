@@ -26,13 +26,16 @@ class PyLintBearTest(LocalBearTestHelper):
             [],  # Doesn't matter, pylint will parse the file
             self.test_file)
 
-        self.section.append(Setting("pylint_disable", "E0211"))
+        # This is a special case because there's only one result yielded.
+        # This was a bug once where the last result got ignored.
+        self.section.append(Setting("pylint_disable", "E0211,W0611,C0111"))
         self.assertLinesInvalid(
             self.uut,
             [],
             self.test_file)
 
-        self.section.append(Setting("pylint_disable", "E0211,W0611,C0111"))
+        self.section.append(
+            Setting("pylint_disable", "E0211,W0611,C0111,W0311"))
         self.assertLinesValid(
             self.uut,
             [],

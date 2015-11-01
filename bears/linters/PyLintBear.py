@@ -77,5 +77,8 @@ class PyLintBear(LocalBear):
 
             current_lines += line
 
+        if current_lines != "":
+            yield self.parse_result(filename, current_lines)
+
         process.stdout.close()
         process.stderr.close()
