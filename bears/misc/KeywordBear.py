@@ -1,4 +1,4 @@
-from coalib.results.Result import Result
+from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.i18n import _
 
@@ -48,6 +48,7 @@ class KeywordBear(LocalBear):
                 line=line_number+1,
                 column=pos+1,
                 end_line=line_number+1,
-                end_column=pos+len(keyword)+1)]
+                end_column=pos+len(keyword)+1,
+                severity=RESULT_SEVERITY.INFO)]
 
         return []
