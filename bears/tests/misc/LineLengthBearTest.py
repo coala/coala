@@ -9,7 +9,7 @@ from coalib.settings.Section import Section
 from bears.misc.LineLengthBear import LineLengthBear
 
 
-class SpaceConsistencyBearTest(LocalBearTestHelper):
+class LineLengthBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
         self.section.append(Setting("max_line_length", "4"))
