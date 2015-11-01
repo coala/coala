@@ -42,7 +42,7 @@ class KeywordBear(LocalBear):
         if pos != -1:
             return [Result.from_values(
                 origin=self,
-                message=_("The line contains the keyword {}.")
+                message=_("The line contains the keyword `{}`.")
                         .format(keyword),
                 file=filename,
                 line=line_number+1,
