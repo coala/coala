@@ -29,6 +29,7 @@ STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
 STR_PROJECT_WIDE = _("Project wide:")
 FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
+HIGHLIGHTED_CODE_COLOR = 'red'
 CLI_ACTIONS = [OpenEditorAction(),
                ApplyPatchAction(),
                PrintDebugMessageAction(),
@@ -63,9 +64,7 @@ def nothing_done(console_printer):
 
 def print_lines(console_printer,
                 file_dict,
-                file,
-                start_line,
-                end_line):
+                sourcerange):
     """
     Prints the lines between the current and the result line. If needed
     they will be shortened.
@@ -73,13 +72,12 @@ def print_lines(console_printer,
     :param console_printer: Object to print messages on the console.
     :param file_dict:       A dictionary containing all files as values with
                             filenames as key.
-    :param file:            The related file.
-    :param start_line:      The first line to print.
-    :param end_line:        The last line to print.
+    :param sourcerange:     The SourceRange object referring to the related
+                            lines to print.
     """
-    for i in range(start_line, end_line + 1):
+    for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         console_printer.print(
-            format_lines(lines=file_dict[file][i - 1], line_nr=i),
+            format_lines(lines=file_dict[sourcerange.file][i - 1], line_nr=i),
             color=FILE_LINES_COLOR)
 
 
@@ -229,9 +227,7 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
         else:
             print_lines(console_printer,
                         file_dict,
-                        sourcerange.file,
-                        sourcerange.start.line,
-                        sourcerange.end.line)
+                        sourcerange)
 
 
 def require_setting(log_printer, setting_name, arr):
