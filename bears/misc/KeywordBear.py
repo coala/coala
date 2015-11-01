@@ -17,23 +17,37 @@ class KeywordBear(LocalBear):
         :param ci_keywords: A list of keywords to search for (case
                             insensitive).
         '''
+        results = list()
+
         for i in range(len(ci_keywords)):
             ci_keywords[i] = ci_keywords[i].lower()
 
         for line_number, line in enumerate(file):
-            found_kws = []
             for keyword in cs_keywords:
-                if keyword in line:
-                    found_kws.append(keyword)
+                results += self.check_line_for_keyword(line,
+                                                       filename,
+                                                       line_number,
+                                                       keyword)
 
             for keyword in ci_keywords:
-                if keyword in line.lower():
-                    found_kws.append(keyword)
+                results += self.check_line_for_keyword(line.lower(),
+                                                       filename,
+                                                       line_number,
+                                                       keyword)
 
-            if found_kws != []:
-                yield Result.from_values(
-                    origin=self,
-                    message=_("Line contains the following keywords:") +
-                            "\n" + ", ".join(found_kws),
-                    file=filename,
-                    line=line_number + 1)
+        return results
+
+    def check_line_for_keyword(self, line, filename, line_number, keyword):
+        pos = line.find(keyword)
+        if pos != -1:
+            return [Result.from_values(
+                origin=self,
+                message=_("The line contains the keyword {}.")
+                        .format(keyword),
+                file=filename,
+                line=line_number+1,
+                column=pos+1,
+                end_line=line_number+1,
+                end_column=pos+len(keyword)+1)]
+
+        return []
