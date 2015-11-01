@@ -27,7 +27,7 @@ class PyLintBear(LocalBear):
 
         message = parts[2]
 
-        return Result.from_values(self.__class__.__name__,
+        return Result.from_values(self,
                                   message,
                                   file=file,
                                   line=line_nr,
