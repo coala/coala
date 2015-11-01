@@ -32,6 +32,15 @@ class TestClass3(object):
         return ["key"]
 
 
+class PropertiedClass(object):
+    def __init__(self):
+        self._a = 5
+
+    @property
+    def prop(self):
+        return self._a
+
+
 class JSONEncoderTest(unittest.TestCase):
     kw = {"cls": JSONEncoder, "sort_keys": True}
 
@@ -56,17 +65,25 @@ class JSONEncoderTest(unittest.TestCase):
         self.assertEquals('"' + tf.isoformat() + '"',
                           json.dumps(tf, **self.kw))
 
-    def test_class(self):
+    def test_class1(self):
         tc1 = TestClass1()
         self.assertEquals('{"a": 0}', json.dumps(tc1, **self.kw))
         self.assertEquals('[{"a": 0}]', json.dumps([tc1], **self.kw))
         self.assertEquals('{"0": {"a": 0}}', json.dumps({0: tc1}, **self.kw))
+
+    def test_class2(self):
         tc2 = TestClass2()
         self.assertEquals('{"a": 0, "b": {"a": 0}}',
                           json.dumps(tc2, **self.kw))
+
+    def test_class3(self):
         tc3 = TestClass3()
         self.assertEquals('{"key": "val"}',
                           json.dumps(tc3, **self.kw))
+
+    def test_propertied_class(self):
+        uut = PropertiedClass()
+        self.assertEqual('{"prop": 5}', json.dumps(uut, **self.kw))
 
     def test_type_error(self):
         with self.assertRaises(TypeError):
