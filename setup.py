@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# This is a very long line - it's simply too long. Nobody can't read it, really! It's just not ok.
+
 from setuptools import setup, find_packages
 import setuptools.command.build_py
 
@@ -16,6 +18,10 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
         self.run_command('build_manpage')
         self.run_command('build_dbus')
         setuptools.command.build_py.build_py.run(self)
+
+
+# This line is ok. But it introduces another hunk in the diff making line index
+# determination more complex.
 
 
 if __name__ == "__main__":
@@ -94,3 +100,6 @@ if __name__ == "__main__":
           cmdclass={'build_manpage': BuildManPage,
                     'build_dbus': BuildDbusService,
                     'build_py': BuildPyCommand})
+
+
+# This is a very long line - it's simply too long. Nobody can't read it, really! It's just not ok.
