@@ -65,7 +65,7 @@ DOCTYPES = enum("standard", "simple", "continuous")
                "docstyle",
                ("doctype", DOCTYPES.reverse.get),
                "markers")
-@generate_eq("doctype", "markers", "_docstyle_lower", "_language_lower")
+@generate_eq("language", "docstyle", "doctype", "markers")
 class DocstyleDefinition:
     """
     The DocstyleDefinition class holds values that identify a certain type
@@ -80,26 +80,63 @@ class DocstyleDefinition:
         :param language: The programming language of the documentation comment.
                          For example `"CPP"` for C++ or `"PYTHON3"` for
                          Python 3.
+                         The given string is automatically lowered, so passing
+                         i.e. "CPP" or "cpp" makes no difference.
         :param docstyle: The documentation style/tool used to document code.
                          For example `"default"` or `"doxygen"`.
+                         The given string is automatically lowered, so passing
+                         i.e. "default" or "DEFAULT" makes no difference.
         :param doctype:  The type/format of the documentation. Needs to be a
                          value of the enumeration `DOCTYPES`.
         :param markers:  A tuple of marker/delimiter strings that identify the
                          documentation comment. See `DOCTYPES` for more
                          information about doctype markers.
         """
-        self.language = language
-        self.docstyle = docstyle
-        self.doctype = doctype
-        self.markers = markers
+        self._language = language.lower()
+        self._docstyle = docstyle.lower()
+        self._doctype = doctype
+        self._markers = markers
 
     @property
-    def _docstyle_lower(self):
-        return self.docstyle.lower()
+    def language(self):
+        """
+        The programming language.
+
+        :return: A lower-case string defining the programming language (i.e.
+                 "cpp" or "python").
+        """
+        return self._language
 
     @property
-    def _language_lower(self):
-        return self.language.lower()
+    def docstyle(self):
+        """
+        The documentation style/tool used to document code.
+
+        :return: A lower-case string defining the docstyle (i.e. "default" or
+                 "doxygen").
+        """
+        return self._docstyle
+
+    @property
+    def doctype(self):
+        """
+        The type/format of the documentation.
+
+        :return: A value from `DOCTYPES` enumeration.
+        """
+        return self._doctype
+
+    @property
+    def markers(self):
+        """
+        The string markers that identify a documentation comment.
+
+        See `DOCTYPES` for more information about doctype markers.
+
+        :return: A tuple of marker/delimiter strings that identify the
+                 documentation comment.
+        """
+        return self._markers
 
     @staticmethod
     def _get_prefixed_settings(settings, prefix):

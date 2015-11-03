@@ -41,23 +41,23 @@ class DocstyleDefinitionTest(unittest.TestCase):
                           "setting2" : Setting("2", "no"),
                           "super" : Setting("7", "+1")})
 
-    def test_fields(self):
+    def test_properties(self):
         uut = DocstyleDefinition("C",
                                  "doxygen",
                                  DOCTYPES.standard,
                                  ("/**", "*", "*/"))
 
-        self.assertEqual(uut.language, "C")
+        self.assertEqual(uut.language, "c")
         self.assertEqual(uut.docstyle, "doxygen")
         self.assertEqual(uut.doctype, DOCTYPES.standard)
         self.assertEqual(uut.markers, ("/**", "*", "*/"))
 
         uut = DocstyleDefinition("PYTHON",
-                                 "doxygen",
+                                 "doxyGEN",
                                  DOCTYPES.continuous,
                                  ("##", "#"))
 
-        self.assertEqual(uut.language, "PYTHON")
+        self.assertEqual(uut.language, "python")
         self.assertEqual(uut.docstyle, "doxygen")
         self.assertEqual(uut.doctype, DOCTYPES.continuous)
         self.assertEqual(uut.markers, ("##", "#"))
@@ -67,7 +67,7 @@ class DocstyleDefinitionTest(unittest.TestCase):
                                  DOCTYPES.simple,
                                  ("~~", "/~"))
 
-        self.assertEqual(uut.language, "I2C")
+        self.assertEqual(uut.language, "i2c")
         self.assertEqual(uut.docstyle, "my-custom-tool")
         self.assertEqual(uut.doctype, DOCTYPES.simple)
         self.assertEqual(uut.markers, ("~~", "/~"))
@@ -86,7 +86,7 @@ class DocstyleDefinitionTest(unittest.TestCase):
         result = tuple(DocstyleDefinition.load("PYTHON3", "default"))
         self.assertEqual(len(result), 1)
 
-        self.assertEqual(result[0].language, "PYTHON3")
+        self.assertEqual(result[0].language, "python3")
         self.assertEqual(result[0].docstyle, "default")
         self.assertEqual(result[0].doctype, DOCTYPES.simple)
         self.assertEqual(result[0].markers, ('"""', '"""'))
