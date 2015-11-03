@@ -2,6 +2,7 @@
 Default.enabled = false
 PythonCheck.enabled = true
 DOCS.enabled = true
+LineCounting.enabled = true
 
 [Default]
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
