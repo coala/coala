@@ -1,9 +1,43 @@
+# TODO:
+# - Objective C (need a representative abbreviation)
+# - PHP
+# - "synonyms"? --> [OBJC, OBJECTIVE-C] or [CPP, C-PLUS-PLUS, CPLUSPLUS] for example
+# - if synonyms are possible --> [PYTHON, PYTHON2]
+# - tests?
+
+
 [C]
-doc-marker-standard = /**, *, */
+doc-marker-standard1 = /**, *, */
+doc-marker-standard2 = /*!, *, */
+doc-marker-simple1 = /**, */
+doc-marker-simple2 = /*!, */
 
 [CPP]
-doc-marker-standard = /**, *, */
-doc-marker-continuous = ///, ///
+doc-marker-standard1 = /**, *, */
+doc-marker-standard2 = /*!, *, */
+doc-marker-simple1 = /**, */
+doc-marker-simple2 = /*!, */
+doc-marker-continuous1 = ///, ///
+doc-marker-continuous2 = //!, //!
+
+[CS]
+doc-marker-standard1 = /**, *, */
+doc-marker-standard2 = /*!, *, */
+doc-marker-simple1 = /**, */
+doc-marker-simple2 = /*!, */
+doc-marker-continuous1 = ///, ///
+doc-marker-continuous2 = //!, //!
+
+[FORTRAN]
+doc-marker-continuous = !>, !!
+
+[JAVA]
+doc-marker-standard1 = /**, *, */
+doc-marker-standard2 = /*!, *, */
+doc-marker-simple1 = /**, */
+doc-marker-simple2 = /*!, */
+doc-marker-continuous1 = ///, ///
+doc-marker-continuous2 = //!, //!
 
 [PYTHON]
 doc-marker-simple = """, """
@@ -12,3 +46,9 @@ doc-marker-continuous = \#\#, \#
 [PYTHON3]
 doc-marker-simple = """, """
 doc-marker-continuous = \#\#, \#
+
+[TCL]
+doc-marker-continuous = ##, #
+
+[VHDL]
+doc-marker-continuous = --!, --!
