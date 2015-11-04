@@ -77,7 +77,8 @@ class coalaTest(unittest.TestCase):
         execute_coala_ci(("-S", "tag=test_tag", "-c", self.coafile))
         tag_path = get_tag_path("test_tag", self.unescaped_coafile)
         self.assertTrue(os.path.exists(tag_path))
-        os.remove(tag_path)
+        execute_coala_ci(("-S", "dtag=test_tag", "-c", self.coafile))
+        self.assertFalse(os.path.exists(tag_path))
 
 
 if __name__ == '__main__':

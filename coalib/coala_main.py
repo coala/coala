@@ -9,7 +9,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Collectors import collect_bears
-from coalib.output.Tagging import tag_results
+from coalib.output.Tagging import tag_results, delete_tagged_results
 
 
 do_nothing = lambda *args: True
@@ -64,6 +64,7 @@ def run_coala(log_printer=None,
          targets) = gather_configuration(acquire_settings, log_printer)
 
         tag = str(sections['default'].get('tag', None))
+        dtag = str(sections['default'].get('dtag', None))
 
         show_all_bears = bool(sections['default'].get('show_all_bears', False))
         show_bears_ = bool(sections["default"].get("show_bears", "False"))
@@ -79,6 +80,11 @@ def run_coala(log_printer=None,
                                              ["**"],
                                              [BEAR_KIND.GLOBAL],
                                              log_printer)
+
+        if dtag != "None":
+            delete_tagged_results(
+                dtag,
+                os.path.abspath(str(sections["default"].get("config"))))
 
         if show_bears_:
             show_bears(local_bears,
