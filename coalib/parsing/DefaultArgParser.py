@@ -95,6 +95,14 @@ def default_arg_parser(formatter_class=None):
                             metavar='STRING',
                             help=TAG_HELP)
 
+    DELETE_TAG_HELP = _('Delete pre-tagged results with tag name.')
+    arg_parser.add_argument('-g',
+                            '--dtag',
+                            nargs='?',
+                            const=True,
+                            metavar='STRING',
+                            help=DELETE_TAG_HELP)
+
     arg_parser.add_argument('-v',
                             '--version',
                             action='version',
