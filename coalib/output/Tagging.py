@@ -43,3 +43,15 @@ def load_tagged_results(tag, project):
     """
     with open(get_tag_path(tag, project), 'rb') as file:
         return pickle.load(file)
+
+
+def delete_tagged_results(tag, project):
+    """
+    Deletes previously tagged results.
+
+    :param tag:     The tag name.
+    :param project: Path to the coafile the results belong to.
+    """
+    file_path = get_tag_path(tag, project)
+    if os.path.exists(file_path):
+        os.remove(file_path)
