@@ -127,7 +127,7 @@ def run_coala(log_printer=None,
                     results)
 
         if did_nothing:
-            nothing_done()
+            nothing_done(log_printer)
 
         if yielded_results:
             exitcode = 1
