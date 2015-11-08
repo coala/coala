@@ -57,6 +57,14 @@ def default_arg_parser(formatter_class=None):
                             choices=['ERROR', 'WARNING', 'DEBUG'],
                             metavar='ENUM',
                             help=LOG_LEVEL_HELP)
+    MIN_SEVERITY_HELP = _("Enum('INFO', 'NORMAL', 'MAJOR') to set the minimal "
+                          "result severity.")
+    arg_parser.add_argument('-m',
+                            '--min-severity',
+                            nargs=1,
+                            choices=('INFO', 'NORMAL', 'MAJOR'),
+                            metavar='ENUM',
+                            help=MIN_SEVERITY_HELP)
     SETTINGS_HELP = _('Arbitrary settings in the form of section.key=value')
     arg_parser.add_argument('-S',
                             '--settings',

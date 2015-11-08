@@ -10,12 +10,14 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
+from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import process_queues, create_process_group
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 process_group_test_code = """
@@ -141,25 +143,30 @@ class ProcessingTest(unittest.TestCase):
         ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
+        first_local = Result("o", "The first result.")
+        second_local = Result("o", "The second result.")
+        first_global = Result("o", "The one and only global result.")
+        section = Section("")
+        section.append(Setting('min_severity', "normal"))
         process_queues(
             [DummyProcess(control_queue=ctrlq) for i in range(3)],
             ctrlq,
-            {1: ["The first result."],
-             2: ["The second result.", HiddenResult("t", "c")]},
-            {1: ["The one and only global result."]},
+            {1: [first_local, Result('o', 'm', severity=RESULT_SEVERITY.INFO)],
+             2: [second_local, HiddenResult("t", "c")]},
+            {1: [first_global]},
             None,
             lambda *args: self.queue.put((args[2], args[3])),
-            Section(""),
+            section,
             self.log_printer)
 
-        self.assertEqual(self.queue.get(timeout=0), (["The first result."],
+        self.assertEqual(self.queue.get(timeout=0), ([first_local],
                                                      None))
-        self.assertEqual(self.queue.get(timeout=0), (["The second result."],
+        self.assertEqual(self.queue.get(timeout=0), ([second_local],
                                                      None))
         self.assertEqual(self.queue.get(timeout=0),
-                         (["The one and only global result."], None))
+                         ([first_global], None))
         self.assertEqual(self.queue.get(timeout=0),
-                         (["The one and only global result."], None))
+                         ([first_global], None))
 
         # No valid FINISH element in the queue
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))

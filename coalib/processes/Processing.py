@@ -9,7 +9,8 @@ from coalib.collecting import Dependencies
 from coalib.output.printers import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.results.HiddenResult import HiddenResult
+from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.Setting import path_list
 from coalib.misc.i18n import _
 from coalib.processes.LogPrinterThread import LogPrinterThread
@@ -75,7 +76,11 @@ def print_result(results,
     :return:               Returns False if any results were yielded. Else
                            True.
     """
-    results = list(filter(lambda result: not isinstance(result, HiddenResult),
+    min_severity_str = str(section.get('min_severity', 'INFO')).upper()
+    min_severity = RESULT_SEVERITY.str_dict.get(min_severity_str, 'INFO')
+    results = list(filter(lambda result:
+                              type(result) is Result and
+                              result.severity >= min_severity,
                           results))
     print_results(log_printer, section, results, file_dict, file_diff_dict)
     return retval or len(results) > 0
