@@ -23,7 +23,7 @@ for dep_version in "${dep_versions[@]}" ; do
   python --version
   source .misc/env_variables.sh
 
-  pip install -q setuptools coverage munkres3 pylint language-check PyPrint autopep8
+  pip install -q setuptools coverage munkres3 pylint language-check PyPrint autopep8 eradicate
 
   if [ "$python_version" = "3.4" ] ; then
     pip install -q mkdocs
