@@ -1,8 +1,8 @@
 import sys
+import unittest
 
 sys.path.insert(0, ".")
-from coalib.results.Diff import Diff, ConflictError
-import unittest
+from coalib.results.Diff import Diff, ConflictError, SourceRange
 
 
 class DiffTest(unittest.TestCase):
@@ -34,6 +34,28 @@ class DiffTest(unittest.TestCase):
         self.uut.delete_line(1)
         # Line was deleted, unchangeable
         self.assertRaises(AssertionError, self.uut.change_line, 1, "1", "2")
+
+    def test_affected_code(self):
+        self.assertEqual(self.uut.affected_code("file"), [])
+
+        self.uut.add_lines(0, ["test"])
+        self.assertEqual(self.uut.affected_code("file"), [])
+
+        self.uut.delete_line(2)
+        affected_code = [
+            SourceRange.from_values("file", start_line=2),]
+        self.assertEqual(self.uut.affected_code("file"), affected_code)
+
+        self.uut.delete_line(3)
+        affected_code = [
+            SourceRange.from_values("file", start_line=2, end_line=3),]
+        self.assertEqual(self.uut.affected_code("file"), affected_code)
+
+        self.uut.delete_line(6)
+        affected_code = [
+            SourceRange.from_values("file", start_line=2, end_line=3),
+            SourceRange.from_values('file', start_line=6)]
+        self.assertEqual(self.uut.affected_code("file"), affected_code)
 
     def test_apply(self):
         file = ["1",

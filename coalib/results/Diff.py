@@ -1,6 +1,7 @@
 import difflib
 
 from coalib.results.LineDiff import LineDiff
+from coalib.results.SourceRange import SourceRange
 
 
 class ConflictError(Exception):
@@ -95,6 +96,37 @@ class Diff:
         result.extend(file[current_line:])
 
         return result
+
+    def affected_code(self, filename):
+        """
+        Creates a list of SourceRange objects which point to the related code.
+        Changes on continuous lines will be put into one SourceRange.
+
+        :param filename: The filename to associate the SourceRange's to.
+        :return:         A list of all related SourceRange objects.
+        """
+        ranges = []
+        last_line = -1
+        last_start = -1
+        for line in sorted(self._changes.keys()):
+            if line != last_line + 1:
+                if last_start > 0:
+                    ranges.append(SourceRange.from_values(
+                        filename,
+                        start_line=last_start,
+                        end_line=last_line))
+
+                last_start = line
+
+            last_line = line
+
+        if last_start > 0:
+            ranges.append(SourceRange.from_values(
+                filename,
+                start_line=last_start,
+                end_line=last_line))
+
+        return ranges
 
     def __add__(self, other):
         """
