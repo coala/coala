@@ -42,6 +42,19 @@ class SourceRange:
 
         return cls(start, end)
 
+    @classmethod
+    def from_clang_range(cls, range):
+        """
+        Creates a SourceRange from a clang SourceRange object.
+
+        :param range: A cindex.SourceRange object.
+        """
+        return cls.from_values(range.start.file.name.decode(),
+                               range.start.line,
+                               range.start.column,
+                               range.end.line,
+                               range.end.column)
+
     @property
     def file(self):
         return self.start.file
