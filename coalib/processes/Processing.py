@@ -51,6 +51,7 @@ def create_process_group(command_array, **kwargs):
                                 **kwargs)
     return proc
 
+
 def print_result(results,
                  file_dict,
                  retval,
@@ -69,8 +70,8 @@ def print_result(results,
                            If it is False this function will return False no
                            matter what happens. Else it depends on if this
                            invocation yields results.
-    :param print_results:  Prints all given results appropriate to the output
-                           medium.
+    :param print_results:  A function that prints all given results appropriate
+                           to the output medium.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
     :return:               Returns False if any results were yielded. Else
