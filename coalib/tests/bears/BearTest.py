@@ -1,9 +1,9 @@
 import sys
-
-sys.path.insert(0, ".")
 import multiprocessing
 
+sys.path.insert(0, ".")
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.misc.i18n import _
 from coalib.bears.Bear import Bear
@@ -34,6 +34,11 @@ class BadTestBear(Bear):
         raise NotImplementedError
 
 
+class TypedTestBear(Bear):
+    def run(self, something: int):
+        return []
+
+
 class BearTest(unittest.TestCase):
     def setUp(self):
         self.queue = multiprocessing.Queue()
@@ -61,8 +66,7 @@ class BearTest(unittest.TestCase):
     def test_bad_bear(self):
         self.uut = BadTestBear(self.settings, self.queue)
         self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG,
-                           _("Running bear {}...").format("BadTestBear"))
+        self.check_message(LOG_LEVEL.DEBUG)
         self.check_message(LOG_LEVEL.WARNING,
                            _("Bear {} failed to run. Take a look at debug "
                              "messages for further "
@@ -70,11 +74,24 @@ class BearTest(unittest.TestCase):
         # debug message contains custom content, dont test this here
         self.queue.get()
 
-    def check_message(self, log_level, message):
+    def test_inconvertible(self):
+        self.uut = TypedTestBear(self.settings, self.queue)
+        self.settings.append(Setting("something", "5"))
+        self.uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG)
+
+        self.settings.append(Setting("something", "nonsense"))
+        self.uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.check_message(LOG_LEVEL.WARNING)
+
+    def check_message(self, log_level, message=None):
         msg = self.queue.get()
         self.assertIsInstance(msg, LogMessage)
-        self.assertEqual(msg.message, message)
-        self.assertEqual(msg.log_level, log_level)
+        if message:
+            self.assertEqual(msg.message, message)
+
+        self.assertEqual(msg.log_level, log_level, msg)
 
     def test_no_queue(self):
         uut = TestBear(self.settings, None)

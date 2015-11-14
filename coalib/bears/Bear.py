@@ -62,8 +62,13 @@ class Bear(Printer, LogPrinter):
         raise NotImplementedError
 
     def run_bear_from_section(self, args, kwargs):
-        kwargs.update(
-            self.get_metadata().create_params_from_section(self.section))
+        try:
+            kwargs.update(
+                self.get_metadata().create_params_from_section(self.section))
+        except ValueError as err:
+            self.warn(_("The bear {} cannot be executed.").format(
+                self.__class__.__name__), str(err))
+            return []
 
         return self.run(*args, **kwargs)
 

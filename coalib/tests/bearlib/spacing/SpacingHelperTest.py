@@ -3,7 +3,6 @@ sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Section import Section
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
-from coalib.settings.Setting import Setting
 
 
 class SpacingHelperTest(unittest.TestCase):
@@ -21,11 +20,6 @@ class SpacingHelperTest(unittest.TestCase):
 
         self.assertEqual(self.uut.tab_width,
                          self.uut.from_section(section).tab_width)
-
-        section.append(Setting("tab_width", "invalid"))
-        # Setting won't be converted since it's not possible, SpacingHelper
-        # will then complain with TypeError
-        self.assertRaises(TypeError, self.uut.from_section, section)
 
         # This is assumed in some tests. If you want to change this value, be
         # sure to change the tests too

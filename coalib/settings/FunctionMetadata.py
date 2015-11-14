@@ -1,10 +1,8 @@
 from inspect import ismethod, getfullargspec
 from collections import OrderedDict
 from copy import copy
-from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.settings.DocumentationComment import DocumentationComment
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.i18n import _
 
 
@@ -77,9 +75,7 @@ class FunctionMetadata:
         """
         return self._filter_out_omitted(self._optional_params)
 
-    def create_params_from_section(self,
-                                   section,
-                                   log_printer=LogPrinter(ConsolePrinter())):
+    def create_params_from_section(self, section):
         """
         Create a params dictionary for this function that holds all values the
         function needs plus optional ones that are available.
@@ -99,31 +95,25 @@ class FunctionMetadata:
 
         for param in self.non_optional_params:
             dummy, annotation = self.non_optional_params[param]
-            params[param] = self._get_param(param,
-                                            section,
-                                            annotation,
-                                            log_printer)
+            params[param] = self._get_param(param, section, annotation)
 
         for param in self.optional_params:
             if param in section:
                 dummy, annotation, dummy = self.optional_params[param]
-                params[param] = self._get_param(param,
-                                                section,
-                                                annotation,
-                                                log_printer)
+                params[param] = self._get_param(param, section, annotation)
 
         return params
 
     @staticmethod
-    def _get_param(param, section, annotation, log_printer):
+    def _get_param(param, section, annotation):
         if annotation is None:
             annotation = lambda x: x
+
         try:
             return annotation(section[param])
         except:
-            log_printer.warn(_("Unable to convert {param} to the desired "
-                               "data type.").format(param=param))
-            return section[param]
+            raise ValueError("Unable to convert parameter {} into type "
+                             "{}.".format(repr(param), annotation))
 
     @classmethod
     def from_function(cls, func, omit=frozenset()):

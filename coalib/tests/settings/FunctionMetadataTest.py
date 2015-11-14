@@ -17,6 +17,9 @@ class TestClass:
         :return:       ret
         """
 
+    def good_function(self, a_param: int):
+        pass
+
     def bad_function(self, bad_param: "no function"):
         pass
 
@@ -67,12 +70,26 @@ class FunctionMetadataTest(unittest.TestCase):
                            int,
                            6)})
 
-    def test_create_params_from_section(self):
+    def test_create_params_from_section_invalid(self):
         section = Section("name")
         section.append(Setting("bad_param", "value"))
         uut = FunctionMetadata.from_function(TestClass(5, 5).bad_function)
+
+        with self.assertRaises(ValueError):
+            uut.create_params_from_section(section)
+
+    def test_create_params_from_section_valid(self):
+        section = Section("name")
+        section.append(Setting("a_param", "value"))
+        uut = FunctionMetadata.from_function(TestClass(5, 5).good_function)
+
+        with self.assertRaises(ValueError):
+            uut.create_params_from_section(section)
+
+        section.append(Setting("a_param", "5"))
         params = uut.create_params_from_section(section)
-        self.assertIsInstance(params["bad_param"], Setting)
+        self.assertEqual(params['a_param'], 5)
+
 
     def check_function_metadata_data_set(self,
                                          metadata,

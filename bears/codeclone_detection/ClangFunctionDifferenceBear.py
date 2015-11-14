@@ -125,11 +125,6 @@ class ClangFunctionDifferenceBear(GlobalBear):
                                     function pairs will be reduced using an
                                     exponential approach.
         '''
-        if not isinstance(counting_conditions, dict):
-            self.err("The counting_conditions setting is invalid. Code clone "
-                     "detection cannot run.")
-            return
-
         self.debug("Using the following counting conditions:")
         for key, val in counting_conditions.items():
             self.debug(" *", key.__name__, "(weighting: {})".format(val))

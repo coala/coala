@@ -41,12 +41,6 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
         self.check_clone_detection_bear(self.clone_files,
                                         lambda results, msg: True)
 
-    def test_invalid_conditions(self):
-        self.section.append(Setting("counting_conditions", "bullshit"))
-
-        self.uut = ClangFunctionDifferenceBear({}, self.section, Queue())
-        self.assertEqual(list(self.uut.run_bear_from_section([], {})), [])
-
     def test_non_clones(self):
         self.non_clone_files = [
             os.path.join(self.base_test_path, "non_clones", elem)
