@@ -7,7 +7,7 @@ DOCS.enabled = true
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
 
 [PythonCheck]
-bears = SpaceConsistencyBear, LineLengthBear
+bears = SpaceConsistencyBear, LineLengthBear, PyUnusedCodeBear
 use_spaces = True
 max_line_length = 80
 

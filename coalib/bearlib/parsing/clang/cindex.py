@@ -91,7 +91,6 @@ class TranslationUnitLoadError(Exception):
 
     FIXME: Make libclang expose additional error information in this scenario.
     """
-    pass
 
 class TranslationUnitSaveError(Exception):
     """Represents an error that occurred when saving a TranslationUnit.
