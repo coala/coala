@@ -3,6 +3,7 @@ import unittest
 
 sys.path.insert(0, ".")
 from coalib.results.Diff import Diff, ConflictError, SourceRange
+from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 
 
 class DiffTest(unittest.TestCase):
@@ -134,6 +135,18 @@ class DiffTest(unittest.TestCase):
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.apply(a), b)
 
+    def test_from_clang_fixit(self):
+        joined_file = 'struct { int f0; }\nx = { f0 :1 };\n'
+        file = joined_file.splitlines(True)
+        fixed_file = ['struct { int f0; }\n', 'x = { .f0 = 1 };\n']
+
+        tu = Index.create().parse('t.c', unsaved_files=[
+            ('t.c'.encode(), joined_file.encode())])
+        fixit = tu.diagnostics[0].fixits[0]
+
+        clang_fixed_file = Diff.from_clang_fixit(fixit, file).apply(file)
+        self.assertEqual(fixed_file, clang_fixed_file)
+
     def test_equality(self):
         a = ["first", "second", "third"]
         b = ["first", "third"]
@@ -145,6 +158,14 @@ class DiffTest(unittest.TestCase):
 
         diff_1.add_lines(1, ["1"])
         self.assertNotEqual(diff_1, diff_2)
+
+
+def skip_test():
+    try:
+        Index.create()
+        return False
+    except LibclangError as error:
+        return str(error)
 
 
 if __name__ == '__main__':

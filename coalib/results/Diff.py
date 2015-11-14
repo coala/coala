@@ -56,6 +56,29 @@ class Diff:
 
         return result
 
+    @classmethod
+    def from_clang_fixit(cls, fixit, file):
+        """
+        Creates a Diff object from a given clang fixit and the file contents.
+
+        :param fixit: A cindex.Fixit obejct.
+        :param file:  A list of lines in the file to apply the fixit to.
+        :return:      The corresponding Diff object.
+        """
+
+        oldvalue = '\n'.join(file[fixit.range.start.line-1:
+                                  fixit.range.end.line])
+        endindex = fixit.range.end.column - len(file[fixit.range.end.line-1])-1
+
+        newvalue = (oldvalue[:fixit.range.start.column-1] +
+                    fixit.value.decode() +
+                    oldvalue[endindex:])
+        new_file = (file[:fixit.range.start.line-1] +
+                    newvalue.splitlines(True) +
+                    file[fixit.range.end.line:])
+
+        return cls.from_string_arrays(file, new_file)
+
     def _get_change(self, line_nr, min_line=1):
         if not isinstance(line_nr, int):
             raise TypeError("line_nr needs to be an integer.")
