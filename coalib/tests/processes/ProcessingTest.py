@@ -143,30 +143,55 @@ class ProcessingTest(unittest.TestCase):
         ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
-        first_local = Result("o", "The first result.")
-        second_local = Result("o", "The second result.")
+        first_local = Result.from_values("o", "The first result.", file="f")
+        second_local = Result.from_values("ABear",
+                                          "The second result.",
+                                          file="f",
+                                          line=1)
+        third_local = Result.from_values("ABear",
+                                          "The second result.",
+                                          file="f",
+                                          line=4)
+        fourth_local = Result.from_values("ABear",
+                                          "Another result.",
+                                          file="f",
+                                          line=7)
         first_global = Result("o", "The one and only global result.")
         section = Section("")
         section.append(Setting('min_severity', "normal"))
         process_queues(
             [DummyProcess(control_queue=ctrlq) for i in range(3)],
             ctrlq,
-            {1: [first_local, Result('o', 'm', severity=RESULT_SEVERITY.INFO)],
-             2: [second_local, HiddenResult("t", "c")]},
+            {1: [first_local,
+                 second_local,
+                 third_local,
+                 # The following are to be ignored
+                 Result('o', 'm', severity=RESULT_SEVERITY.INFO),
+                 Result.from_values("ABear", "u", file="f", line=2),
+                 Result.from_values("ABear", "u", file="f", line=3)],
+             2: [fourth_local,
+                 # The following are to be ignored
+                 HiddenResult("t", "c"),
+                 Result.from_values("ABear", "u", file="f", line=5),
+                 Result.from_values("ABear", "u", file="f", line=6)]},
             {1: [first_global]},
-            None,
-            lambda *args: self.queue.put((args[2], args[3])),
+            {"f": ["first line  # stop ignoring, invalid ignore range\n",
+                   "second line  # ignore all\n",
+                   "third line\n",
+                   "fourth line\n",
+                   "# Start ignoring ABear, BBear and CBear\n",
+                   "# Stop ignoring\n",
+                   "seventh"]},
+            lambda *args: self.queue.put(args[2]),
             section,
             self.log_printer)
 
-        self.assertEqual(self.queue.get(timeout=0), ([first_local],
-                                                     None))
-        self.assertEqual(self.queue.get(timeout=0), ([second_local],
-                                                     None))
-        self.assertEqual(self.queue.get(timeout=0),
-                         ([first_global], None))
-        self.assertEqual(self.queue.get(timeout=0),
-                         ([first_global], None))
+        self.assertEqual(self.queue.get(timeout=0), ([first_local,
+                                                      second_local,
+                                                      third_local]))
+        self.assertEqual(self.queue.get(timeout=0), ([fourth_local]))
+        self.assertEqual(self.queue.get(timeout=0), ([first_global]))
+        self.assertEqual(self.queue.get(timeout=0), ([first_global]))
 
         # No valid FINISH element in the queue
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
@@ -176,8 +201,8 @@ class ProcessingTest(unittest.TestCase):
             ctrlq,
             {1: "The first result.", 2: "The second result."},
             {1: "The one and only global result."},
-            None,
-            lambda *args: self.queue.put((args[2], args[3])),
+            {},
+            lambda *args: self.queue.put(args[2]),
             Section(""),
             self.log_printer)
         with self.assertRaises(queue.Empty):

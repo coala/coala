@@ -6,11 +6,13 @@ import subprocess
 
 from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
+from coalib.misc.StringConverter import StringConverter
 from coalib.output.printers import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import path_list
 from coalib.misc.i18n import _
 from coalib.processes.LogPrinterThread import LogPrinterThread
@@ -58,7 +60,8 @@ def print_result(results,
                  print_results,
                  section,
                  log_printer,
-                 file_diff_dict):
+                 file_diff_dict,
+                 ignore_ranges):
     """
     Takes the results produced by each bear and gives them to the print_results
     method to present to the user.
@@ -74,6 +77,8 @@ def print_result(results,
                            to the output medium.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
+    :param ignore_ranges:  A list of SourceRanges. Results that affect code in
+                           any of those ranges will be ignored.
     :return:               Returns False if any results were yielded. Else
                            True.
     """
@@ -81,7 +86,8 @@ def print_result(results,
     min_severity = RESULT_SEVERITY.str_dict.get(min_severity_str, 'INFO')
     results = list(filter(lambda result:
                               type(result) is Result and
-                              result.severity >= min_severity,
+                              result.severity >= min_severity and
+                              not result.to_ignore(ignore_ranges),
                           results))
     print_results(log_printer, section, results, file_dict, file_diff_dict)
     return retval or len(results) > 0
@@ -196,6 +202,48 @@ def instantiate_processes(section,
             bear_runner_args)
 
 
+def get_ignore_scope(line, keyword):
+    """
+    Retrieves the bears that are to be ignored defined in the given line.
+    :param line:    The line containing the ignore declaration.
+    :param keyword: The keyword that was found. Everything after the rightmost
+                    occurrence of it will be considered for the scope.
+    :return:        A list of lower cased bearnames or an empty list (-> "all")
+    """
+    toignore = line[line.rfind(keyword) + len(keyword):]
+    if toignore.startswith("all"):
+        return []
+    else:
+        return list(StringConverter(toignore, list_delimiters=', '))
+
+
+def yield_ignore_ranges(file_dict):
+    """
+    Yields tuples of affected bears and a SourceRange that shall be ignored for
+    those.
+
+    :param file_dict: The file dictionary.
+    """
+    for filename, file in file_dict.items():
+        start = None
+        bears = []
+        for line_number, line in enumerate(file, start=1):
+            line = line.lower()
+            if "start ignoring " in line:
+                start = line_number
+                bears = get_ignore_scope(line, "start ignoring ")
+            elif "stop ignoring" in line:
+                if start:
+                    yield (bears, SourceRange.from_values(filename,
+                                                          start,
+                                                          end_line=line_number))
+            elif "ignore " in line:
+                yield (get_ignore_scope(line, "ignore "),
+                       SourceRange.from_values(filename,
+                                               line_number,
+                                               end_line=line_number+1))
+
+
 def process_queues(processes,
                    control_queue,
                    local_result_dict,
@@ -234,6 +282,7 @@ def process_queues(processes,
     # Number of processes working on local bears
     local_processes = len(processes)
     global_result_buffer = []
+    ignore_ranges = list(yield_ignore_ranges(file_dict))
 
     # One process is the logger thread
     while local_processes > 1 and running_processes > 1:
@@ -250,7 +299,8 @@ def process_queues(processes,
                                       print_results,
                                       section,
                                       log_printer,
-                                      file_diff_dict)
+                                      file_diff_dict,
+                                      ignore_ranges)
             elif control_elem == CONTROL_ELEMENT.GLOBAL:
                 global_result_buffer.append(index)
         except queue.Empty:
@@ -264,7 +314,8 @@ def process_queues(processes,
                               print_results,
                               section,
                               log_printer,
-                              file_diff_dict)
+                              file_diff_dict,
+                              ignore_ranges)
 
     running_processes = get_running_processes(processes)
     # One process is the logger thread
@@ -279,7 +330,8 @@ def process_queues(processes,
                                       print_results,
                                       section,
                                       log_printer,
-                                      file_diff_dict)
+                                      file_diff_dict,
+                                      ignore_ranges)
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                 running_processes = get_running_processes(processes)
