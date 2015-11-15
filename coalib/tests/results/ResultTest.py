@@ -4,6 +4,7 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.results.Diff import Diff
+from coalib.results.SourceRange import SourceRange
 
 
 class ResultTest(unittest.TestCase):
@@ -94,6 +95,35 @@ class ResultTest(unittest.TestCase):
         uut1.apply(file_dict)
 
         self.assertEqual(file_dict, expected_file_dict)
+
+    def test_to_ignore(self):
+        ranges = [([], SourceRange.from_values("f", 1, 1, 2, 2))]
+        result = Result.from_values("origin",
+                                    "message",
+                                    file="e",
+                                    line=1,
+                                    column=1,
+                                    end_line=2,
+                                    end_column=2)
+
+        self.assertFalse(result.to_ignore(ranges))
+
+        ranges.append(([], SourceRange.from_values("e", 2, 3, 3, 3)))
+        self.assertFalse(result.to_ignore(ranges))
+
+        ranges.append(([], SourceRange.from_values("e", 1, 1, 2, 2)))
+        self.assertTrue(result.to_ignore(ranges))
+
+        result1 = Result.from_values("origin", "message", file="e")
+        self.assertFalse(result1.to_ignore(ranges))
+
+        ranges = [(['something', 'else', 'not origin'],
+                   SourceRange.from_values("e", 1, 1, 2, 2))]
+        self.assertFalse(result.to_ignore(ranges))
+
+        ranges = [(['something', 'else', 'origin'],
+                   SourceRange.from_values("e", 1, 1, 2, 2))]
+        self.assertTrue(result.to_ignore(ranges))
 
 
 if __name__ == '__main__':
