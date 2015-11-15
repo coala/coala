@@ -38,6 +38,11 @@ def default_arg_parser(formatter_class=None):
                             nargs='+',
                             metavar='FILE',
                             help=_('Files that should be checked'))
+    arg_parser.add_argument('-i',
+                            '--ignore',
+                            nargs='+',
+                            metavar='FILE',
+                            help=_('Files that should be ignored'))
     arg_parser.add_argument('-b',
                             '--bears',
                             nargs='+',
