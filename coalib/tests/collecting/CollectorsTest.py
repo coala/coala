@@ -43,6 +43,21 @@ class CollectFilesTest(unittest.TestCase):
                              "py_files",
                              "file2.py"))])
 
+    def test_ignored(self):
+        self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
+                                                     "others",
+                                                     "*",
+                                                     "*2.py"),
+                                        os.path.join(self.collectors_test_dir,
+                                                     "others",
+                                                     "*",
+                                                     "*2.py")],
+                                       [os.path.join(self.collectors_test_dir,
+                                                     "others",
+                                                     "py_files",
+                                                     "file2.py")]),
+                         [])
+
 
 class CollectDirsTest(unittest.TestCase):
     def setUp(self):
@@ -92,6 +107,27 @@ class CollectDirsTest(unittest.TestCase):
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others",
                                               "py_files")),
+                os.path.normcase(self.collectors_test_dir+os.sep)]))
+
+    def test_ignored(self):
+        self.assertEqual(
+            sorted(collect_dirs([os.path.join(self.collectors_test_dir,
+                                              "**")],
+                                [os.path.normcase(os.path.join(
+                                    self.collectors_test_dir,
+                                    "others",
+                                    "py_files"))])),
+
+            sorted([os.path.normcase(os.path.join(
+                self.collectors_test_dir, "bears")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "bears",
+                                              "__pycache__")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "others",
+                                              "c_files")),
                 os.path.normcase(self.collectors_test_dir+os.sep)]))
 
 

@@ -4,7 +4,7 @@ from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
 from coalib.misc.i18n import _
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.Globbing import iglob
+from coalib.parsing.Globbing import iglob, fnmatch
 
 
 def _yield_if_right_kind(bear_class, kinds):
@@ -47,24 +47,28 @@ def icollect(file_paths):
             yield match
 
 
-def collect_files(file_paths):
+def collect_files(file_paths, ignored_file_paths=None):
     """
     Evaluate globs in file paths and return all matching files
 
-    :param file_paths: file path or list of such that can include globs
-    :return:           list of paths of all matching files
+    :param file_paths:         file path or list of such that can include globs
+    :param ignored_file_paths: list of globs that match to-be-ignored files
+    :return:                   list of paths of all matching files
     """
-    return list(filter(os.path.isfile, icollect(file_paths)))
+    valid_files = list(filter(os.path.isfile, icollect(file_paths)))
+    return remove_ignored(valid_files, ignored_file_paths or [])
 
 
-def collect_dirs(dir_paths):
+def collect_dirs(dir_paths, ignored_dir_paths=None):
     """
     Evaluate globs in directory paths and return all matching directories
 
-    :param dir_paths: file path or list of such that can include globs
-    :return:          list of paths of all matching directories
+    :param dir_paths:         file path or list of such that can include globs
+    :param ignored_dir_paths: list of globs that match to-be-ignored dirs
+    :return:                  list of paths of all matching directories
     """
-    return list(filter(os.path.isdir, icollect(dir_paths)))
+    valid_dirs = list(filter(os.path.isdir, icollect(dir_paths)))
+    return remove_ignored(valid_dirs, ignored_dir_paths or [])
 
 
 @yield_once
@@ -106,3 +110,21 @@ def collect_bears(bear_dirs, bear_names, kinds, log_printer):
     :return:            list of matching bear classes
     """
     return list(icollect_bears(bear_dirs, bear_names, kinds, log_printer))
+
+
+def remove_ignored(file_paths, ignored_globs):
+    """
+    Removes file paths from list if they are ignored.
+
+    :param file_paths:    file path string or list of such
+    :param ignored_globs: list of globs that match to-be-ignored file paths
+    :return:              list without those items that should be ignored
+    """
+    file_paths = list(set(file_paths))
+
+    for file_path in file_paths:
+        for ignored_glob in ignored_globs:
+            if fnmatch(file_path, ignored_glob):
+                file_paths.remove(file_path)
+                break
+    return file_paths
