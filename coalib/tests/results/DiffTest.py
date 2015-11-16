@@ -1,8 +1,10 @@
+import unittest
+import json
 import sys
 
 sys.path.insert(0, ".")
 from coalib.results.Diff import Diff, ConflictError
-import unittest
+from coalib.output.JSONEncoder import JSONEncoder
 
 
 class DiffTest(unittest.TestCase):
@@ -123,6 +125,15 @@ class DiffTest(unittest.TestCase):
 
         diff_1.add_lines(1, ["1"])
         self.assertNotEqual(diff_1, diff_2)
+
+    def test_json(self):
+        a = ["first", "second", "third"]
+        b = ["first", "third"]
+        diff = Diff.from_string_arrays(a, b)
+        self.assertEqual(
+            json.dumps(diff, cls=JSONEncoder, sort_keys=True),
+            '{"2": {"add_after": false, "change": false, "delete": true}}')
+
 
 
 if __name__ == '__main__':
