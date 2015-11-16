@@ -7,7 +7,6 @@ from coalib.misc.Decorators import get_public_members
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        new_obj = obj
         if isinstance(obj, collections.Iterable):
             return list(obj)
         elif isinstance(obj, datetime):
