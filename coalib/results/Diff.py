@@ -66,6 +66,9 @@ class Diff:
     def __len__(self):
         return len(self._changes)
 
+    def __json__(self):
+        return self._changes
+
     def apply(self, file):
         """
         Applies this diff to the given file.

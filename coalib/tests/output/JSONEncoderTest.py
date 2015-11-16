@@ -41,6 +41,12 @@ class PropertiedClass(object):
         return self._a
 
 
+class JSONAbleClass(object):
+    @staticmethod
+    def __json__():
+        return ['dont', 'panic']
+
+
 class JSONEncoderTest(unittest.TestCase):
     kw = {"cls": JSONEncoder, "sort_keys": True}
 
@@ -84,6 +90,10 @@ class JSONEncoderTest(unittest.TestCase):
     def test_propertied_class(self):
         uut = PropertiedClass()
         self.assertEqual('{"prop": 5}', json.dumps(uut, **self.kw))
+
+    def test_jsonable_class(self):
+        uut = JSONAbleClass()
+        self.assertEqual('["dont", "panic"]', json.dumps(uut, **self.kw))
 
     def test_type_error(self):
         with self.assertRaises(TypeError):
