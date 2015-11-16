@@ -2,7 +2,6 @@
 Default.enabled = false
 PythonCheck.enabled = true
 DOCS.enabled = true
-TODOs.enabled = true
 
 [Default]
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
