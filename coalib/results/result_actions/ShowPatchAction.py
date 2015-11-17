@@ -70,7 +70,7 @@ class ShowPatchAction(ResultAction):
             original_file = original_file_dict[filename]
             diff = file_diff_dict.get(filename, Diff())
             current_file = diff.apply(original_file)
-            new_file = this_diff.apply(current_file)
+            new_file = (diff + this_diff).apply(original_file)
             print_beautified_diff(difflib.unified_diff(current_file,
                                                        new_file,
                                                        fromfile=filename,
