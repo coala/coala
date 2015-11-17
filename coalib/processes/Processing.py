@@ -374,7 +374,15 @@ def execute_section(section,
     local_bear_list = Dependencies.resolve(local_bear_list)
     global_bear_list = Dependencies.resolve(global_bear_list)
 
-    running_processes = get_cpu_count()
+    try:
+        running_processes = int(section['jobs'])
+    except ValueError:
+        log_printer.warn(_("Unable to convert setting 'jobs' into a number. "
+                           "Falling back to CPU count."))
+        running_processes = get_cpu_count()
+    except IndexError:
+        running_processes = get_cpu_count()
+
     processes, arg_dict = instantiate_processes(section,
                                                 local_bear_list,
                                                 global_bear_list,

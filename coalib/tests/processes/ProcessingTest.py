@@ -76,6 +76,7 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(targets, [])
 
     def test_run(self):
+        self.sections['default'].append(Setting('jobs', "1"))
         results = execute_section(self.sections["default"],
                                   self.global_bears["default"],
                                   self.local_bears["default"],
@@ -110,6 +111,7 @@ class ProcessingTest(unittest.TestCase):
                          "0x[0-9a-fA-F]+>".format(global_result.id))
 
     def test_empty_run(self):
+        self.sections['default'].append(Setting('jobs', "bogus!"))
         results = execute_section(self.sections["default"],
                                   [],
                                   [],

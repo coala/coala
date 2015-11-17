@@ -116,6 +116,11 @@ def default_arg_parser(formatter_class=None):
                             metavar='STRING',
                             help=DELETE_TAG_HELP)
 
+    arg_parser.add_argument("-j",
+                            "--jobs",
+                            type=int,
+                            help=_("Number of jobs to use in parallel."))
+
     arg_parser.add_argument('-v',
                             '--version',
                             action='version',
