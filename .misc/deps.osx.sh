@@ -14,6 +14,7 @@ brew install Py3cairo
 brew install d-bus
 brew install dbus-glib
 brew install gobject-introspection --env=std
+brew install gnu-indent
 
 # Start dbus in the system
 launchctl load -w `find /usr/local/Cellar/d-bus -name "org.freedesktop.dbus-session.plist"`
