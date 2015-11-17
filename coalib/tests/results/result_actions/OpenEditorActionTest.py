@@ -48,12 +48,12 @@ class ResultActionTest(unittest.TestCase):
             "f_c": ["1\n", "2\n", "3\n"]}
 
         # A patch that was applied for some reason to make things complicated
-        diff_dict = {self.fb: Diff()}
+        diff_dict = {self.fb: Diff(file_dict[self.fb])}
         diff_dict[self.fb].change_line(3, "3\n", "3_changed\n")
 
         # File contents after the patch was applied, that's what's in the files
         current_file_dict = {
-            filename: diff_dict[filename].apply(file_dict[filename])
+            filename: diff_dict[filename].modified
             if filename in diff_dict else file_dict[filename]
             for filename in (self.fa, self.fb)}
         for filename in current_file_dict:
@@ -83,7 +83,7 @@ class ResultActionTest(unittest.TestCase):
 
         for filename in diff_dict:
             file_dict[filename] = (
-                diff_dict[filename].apply(file_dict[filename]))
+                diff_dict[filename].modified)
 
         self.assertEqual(file_dict, expected_file_dict)
 
@@ -98,7 +98,7 @@ class ResultActionTest(unittest.TestCase):
             file_dict,
             {},
             section)
-        file_dict[self.fa] = diff_dict[self.fa].apply(file_dict[self.fa])
+        file_dict[self.fa] = diff_dict[self.fa].modified
 
         self.assertEqual(file_dict, file_dict)
 

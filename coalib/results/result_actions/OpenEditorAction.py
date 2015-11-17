@@ -46,10 +46,12 @@ class OpenEditorAction(ApplyPatchAction):
                 new_file = filehandle.readlines()
 
             original_file = original_file_dict[filename]
-            diff = file_diff_dict.get(filename, Diff())
-            current_file = diff.apply(original_file)
+            try:
+                current_file = file_diff_dict[filename].modified
+            except KeyError:
+                current_file = original_file
 
-            intermediate_diff = Diff.from_string_arrays(current_file, new_file)
-            file_diff_dict[filename] = diff + intermediate_diff
+            file_diff_dict[filename] = Diff.from_string_arrays(original_file,
+                                                               new_file)
 
         return file_diff_dict

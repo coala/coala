@@ -142,8 +142,7 @@ class Result:
                           key and all lines a value. Will be modified.
         """
         for filename in self.diffs:
-            file_dict[filename] = self.diffs[filename].apply(
-                file_dict[filename])
+            file_dict[filename] = self.diffs[filename].modified
 
     def __add__(self, other):
         """

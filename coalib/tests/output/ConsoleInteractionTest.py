@@ -155,7 +155,7 @@ class ConsoleInteractionTest(unittest.TestCase):
             testfile_path: ["1\n", "2\n", "3\n"],
             "f_b": ["1", "2", "3"]
         }
-        diff = Diff()
+        diff = Diff(file_dict[testfile_path])
         diff.delete_line(2)
         diff.change_line(3, "3\n", "3_changed\n")
 

@@ -14,8 +14,14 @@ class Diff:
     A Diff result represents a difference for one file.
     """
 
-    def __init__(self):
+    def __init__(self, file_list):
+        """
+        Creates an empty diff for the given file.
+
+        :param file_list: The original (unmodified) file as a list of its lines.
+        """
         self._changes = {}
+        self._file = file_list
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2):
@@ -28,7 +34,7 @@ class Diff:
         :param file_array_1: Original array
         :param file_array_2: Array to compare
         """
-        result = cls()
+        result = cls(file_array_1)
 
         matcher = difflib.SequenceMatcher(None, file_array_1, file_array_2)
         # We use this because its faster (generator) and doesnt yield as much
@@ -91,13 +97,17 @@ class Diff:
     def __len__(self):
         return len(self._changes)
 
-    def apply(self, file):
+    @property
+    def original(self):
         """
-        Applies this diff to the given file.
+        Retrieves the original file.
+        """
+        return self._file
 
-        :param file: A list of all lines in the file. (readlines) Will not be
-                     modified.
-        :return:     The modified file.
+    @property
+    def modified(self):
+        """
+        Calculates the modified file, after applying the Diff to the original.
         """
         result = []
         current_line = 0
@@ -105,10 +115,10 @@ class Diff:
         # Note that line_nr counts from _1_ although 0 is possible when
         # inserting lines before everything
         for line_nr in sorted(self._changes):
-            result.extend(file[current_line:max(line_nr-1, 0)])
+            result.extend(self._file[current_line:max(line_nr-1, 0)])
             linediff = self._changes[line_nr]
             if not linediff.delete and not linediff.change and line_nr > 0:
-                result.append(file[line_nr-1])
+                result.append(self._file[line_nr-1])
             elif linediff.change:
                 result.append(linediff.change[1])
 
@@ -117,7 +127,7 @@ class Diff:
 
             current_line = line_nr
 
-        result.extend(file[current_line:])
+        result.extend(self._file[current_line:])
 
         return result
 

@@ -22,7 +22,7 @@ class MatlabIndentationBear(LocalBear):
             stripped = line.lstrip()
             new_line = indent*indentation*' ' + stripped
             if stripped and new_line != line:
-                diff = Diff()
+                diff = Diff(file)
                 diff.change_line(line_nr, line, new_line)
                 yield Result.from_values(
                     self,

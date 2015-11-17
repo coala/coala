@@ -58,7 +58,7 @@ class ResultTest(unittest.TestCase):
             "f_a": ["1", "3_changed"],
             "f_b": ["1", "2", "3"]
         }
-        diff = Diff()
+        diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
         diff.change_line(3, "3", "3_changed")
 
@@ -79,15 +79,15 @@ class ResultTest(unittest.TestCase):
             "f_c": ["1", "2", "3"]
         }
 
-        diff = Diff()
+        diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
         uut1 = Result("origin", "msg", diffs={"f_a": diff})
 
-        diff = Diff()
+        diff = Diff(file_dict['f_a'])
         diff.change_line(3, "3", "3_changed")
         uut2 = Result("origin", "msg", diffs={"f_a": diff})
 
-        diff = Diff()
+        diff = Diff(file_dict['f_b'])
         diff.change_line(3, "3", "3_changed")
         uut3 = Result("origin", "msg", diffs={"f_b": diff})
 

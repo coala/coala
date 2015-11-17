@@ -33,29 +33,28 @@ class ApplyPatchActionTest(unittest.TestCase):
 
         file_diff_dict = {}
 
-        diff = Diff()
+        diff = Diff(file_dict[f_a])
         diff.delete_line(2)
         uut.apply_from_section(Result("origin", "msg", diffs={f_a: diff}),
                                file_dict,
                                file_diff_dict,
                                Section("t"))
 
-        diff = Diff()
+        diff = Diff(file_dict[f_a])
         diff.change_line(3, "3\n", "3_changed\n")
         uut.apply_from_section(Result("origin", "msg", diffs={f_a: diff}),
                                file_dict,
                                file_diff_dict,
                                Section("t"))
 
-        diff = Diff()
+        diff = Diff(file_dict[f_b])
         diff.change_line(3, "3\n", "3_changed\n")
         uut.apply(Result("origin", "msg", diffs={f_b: diff}),
                   file_dict,
                   file_diff_dict)
 
         for filename in file_diff_dict:
-            file_dict[filename] = (
-                file_diff_dict[filename].apply(file_dict[filename]))
+            file_dict[filename] = file_diff_dict[filename].modified
 
         self.assertEqual(file_dict, expected_file_dict)
         with open(f_a) as fa:

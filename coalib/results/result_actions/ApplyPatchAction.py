@@ -17,8 +17,7 @@ class ApplyPatchAction(ResultAction):
             else:
                 file_diff_dict[filename] = result.diffs[filename]
 
-            new_file = file_diff_dict[filename].apply(
-                original_file_dict[filename])
+            new_file = file_diff_dict[filename].modified
 
             # Backup original file, override old backup if needed
             shutil.copy2(filename, filename + ".orig")

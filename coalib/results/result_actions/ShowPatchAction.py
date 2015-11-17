@@ -68,9 +68,13 @@ class ShowPatchAction(ResultAction):
 
         for filename, this_diff in sorted(result.diffs.items()):
             original_file = original_file_dict[filename]
-            diff = file_diff_dict.get(filename, Diff())
-            current_file = diff.apply(original_file)
-            new_file = (diff + this_diff).apply(original_file)
+            try:
+                current_file = file_diff_dict[filename].modified
+                new_file = (file_diff_dict[filename] + this_diff).modified
+            except KeyError:
+                current_file = original_file
+                new_file = this_diff.modified
+
             print_beautified_diff(difflib.unified_diff(current_file,
                                                        new_file,
                                                        fromfile=filename,

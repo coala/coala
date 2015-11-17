@@ -12,12 +12,13 @@ from coalib.results.Diff import Diff
 class ShowPatchActionTest(unittest.TestCase):
     def setUp(self):
         self.uut = ShowPatchAction()
-        diff_dict = {"a": Diff(), "b": Diff()}
+        self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
+        diff_dict = {"a": Diff(self.file_dict['a']),
+                     "b": Diff(self.file_dict['b'])}
         diff_dict["a"].add_lines(1, ["test\n"])
         diff_dict["a"].delete_line(3)
         diff_dict["b"].add_lines(0, ["first\n"])
 
-        self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
         self.test_result = Result("origin", "message", diffs=diff_dict)
         self.section = Section("name")
         self.section.append(Setting("colored", "false"))
@@ -48,7 +49,7 @@ class ShowPatchActionTest(unittest.TestCase):
 
     def test_apply_with_previous_patches(self):
         with retrieve_stdout() as stdout:
-            previous_diffs = {"a": Diff()}
+            previous_diffs = {"a": Diff(self.file_dict['a'])}
             previous_diffs["a"].change_line(2, "b\n", "b_changed\n")
             self.assertEqual(self.uut.apply_from_section(self.test_result,
                                                          self.file_dict,

@@ -8,7 +8,8 @@ from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 
 class DiffTest(unittest.TestCase):
     def setUp(self):
-        self.uut = Diff()
+        self.file = ["1", "2", "3", "4"]
+        self.uut = Diff(self.file)
 
     def test_add_lines(self):
         self.uut.add_lines(0, [])
@@ -58,12 +59,7 @@ class DiffTest(unittest.TestCase):
             SourceRange.from_values('file', start_line=6)]
         self.assertEqual(self.uut.affected_code("file"), affected_code)
 
-    def test_apply(self):
-        file = ["1",
-                "2",
-                "3",
-                "4"]
-
+    def test_modified(self):
         result_file = ["0.1",
                        "0.2",
                        "1",
@@ -75,29 +71,25 @@ class DiffTest(unittest.TestCase):
         self.uut.add_lines(0, ["0.1", "0.2"])
         self.uut.add_lines(1, ["1.1"])
         self.uut.change_line(3, "3", "3.changed")
-        self.assertEqual(self.uut.apply(file), result_file)
+        self.assertEqual(self.uut.modified, result_file)
+        self.assertEqual(self.uut.original, self.file)
 
-        self.uut.delete_line(len(file))
+        self.uut.delete_line(len(self.file))
         del result_file[len(result_file) - 1]
-        self.assertEqual(self.uut.apply(file), result_file)
+        self.assertEqual(self.uut.modified, result_file)
 
         self.uut.delete_line(1)
         del result_file[2]
-        self.assertEqual(self.uut.apply(file), result_file)
+        self.assertEqual(self.uut.modified, result_file)
 
     def test_addition(self):
         self.assertRaises(TypeError, self.uut.__add__, 5)
-
-        file = ["1",
-                "1",
-                "3",
-                "4"]
 
         result_file = ["1",
                        "2",
                        "2"]
 
-        other = Diff()
+        other = Diff(self.file)
         other.delete_line(1)
         other.change_line(2, "1", "2")
         other.add_lines(0, ["1"])
@@ -107,35 +99,35 @@ class DiffTest(unittest.TestCase):
         self.uut.change_line(4, "4", "2")
         result = self.uut + other
 
-        self.assertEqual(result.apply(file), result_file)
+        self.assertEqual(result.modified, result_file)
         # Make sure it didn't happen in place!
-        self.assertNotEqual(self.uut.apply(file), result_file)
+        self.assertNotEqual(self.uut.modified, result_file)
 
     def test_from_string_arrays(self):
         a = ["q", "a", "b", "x", "c", "d"]
         b = ["a", "b", "y", "c", "d", "f"]
         self.uut = Diff.from_string_arrays(a, b)
-        self.assertEqual(self.uut.apply(a), b)
+        self.assertEqual(self.uut.modified, b)
 
         a = ["first", "fourth"]
         b = ["first", "second", "third", "fourth"]
         self.uut = Diff.from_string_arrays(a, b)
-        self.assertEqual(self.uut.apply(a), b)
+        self.assertEqual(self.uut.modified, b)
 
         a = ["first", "fourth"]
         b = ["first_changed", "second", "third", "fourth"]
         self.uut = Diff.from_string_arrays(a, b)
-        self.assertEqual(self.uut.apply(a), b)
+        self.assertEqual(self.uut.modified, b)
 
         a = ["first", "second", "third", "fourth"]
         b = ["first", "fourth"]
         self.uut = Diff.from_string_arrays(a, b)
-        self.assertEqual(self.uut.apply(a), b)
+        self.assertEqual(self.uut.modified, b)
 
         a = ["first", "second", "third", "fourth"]
         b = ["first_changed", "second_changed", "fourth"]
         self.uut = Diff.from_string_arrays(a, b)
-        self.assertEqual(self.uut.apply(a), b)
+        self.assertEqual(self.uut.modified, b)
 
     def test_from_clang_fixit(self):
         joined_file = 'struct { int f0; }\nx = { f0 :1 };\n'
@@ -146,7 +138,7 @@ class DiffTest(unittest.TestCase):
             ('t.c'.encode(), joined_file.encode())])
         fixit = tu.diagnostics[0].fixits[0]
 
-        clang_fixed_file = Diff.from_clang_fixit(fixit, file).apply(file)
+        clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
         self.assertEqual(fixed_file, clang_fixed_file)
 
     def test_equality(self):
