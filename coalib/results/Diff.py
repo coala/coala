@@ -156,28 +156,43 @@ class Diff:
         :param filename: The filename to associate the SourceRange's to.
         :return:         A list of all related SourceRange objects.
         """
-        ranges = []
-        last_line = -1
-        last_start = -1
-        for line in sorted(self._changes.keys()):
-            if line != last_line + 1:
-                if last_start > 0:
-                    ranges.append(SourceRange.from_values(
-                        filename,
-                        start_line=last_start,
-                        end_line=last_line))
+        return list(diff.range(filename) for diff in self.split_diff())
 
-                last_start = line
+    def split_diff(self):
+        """
+        Splits this diff into small pieces, such that several continuously
+        altered lines are still together in one diff. All subdiffs will be
+        yielded.
+        """
+        diffs = []
+
+        last_line = -1
+        this_diff = Diff(self._file)
+        for line in sorted(self._changes.keys()):
+            if line != last_line + 1 and len(this_diff._changes) > 0:
+                yield this_diff
+                this_diff = Diff(self._file)
 
             last_line = line
+            this_diff._changes[line] = self._changes[line]
 
-        if last_start > 0:
-            ranges.append(SourceRange.from_values(
-                filename,
-                start_line=last_start,
-                end_line=last_line))
+        if len(this_diff._changes) > 0:
+            yield this_diff
 
-        return ranges
+    def range(self, filename):
+        """
+        Calculates a SourceRange spanning over the whole Diff. If something is
+        added after the 0th line (i.e. before the first line) the first line
+        will be included in the SourceRange.
+
+        :param filename: The filename to associate the SourceRange with.
+        :return:         A SourceRange object.
+        """
+        start = min(self._changes.keys())
+        end = max(self._changes.keys())
+        return SourceRange.from_values(filename,
+                                       start_line=max(1, start),
+                                       end_line=max(1, end))
 
     def __add__(self, other):
         """

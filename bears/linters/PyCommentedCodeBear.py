@@ -14,10 +14,10 @@ class PyCommentedCodeBear(LocalBear):
         content = ''.join(file)
         new_content = list(eradicate.filter_commented_out_code(content))
         if new_content != file:
-            diff = Diff.from_string_arrays(file, new_content)
-
-            yield Result(
-                self,
-                _("This file contains commented out source code."),
-                affected_code=diff.affected_code(filename),
-                diffs={filename: diff})
+            wholediff = Diff.from_string_arrays(file, new_content)
+            for diff in wholediff.split_diff():
+                yield Result(
+                    self,
+                    _("This file contains commented out source code."),
+                    affected_code=(diff.range(filename),),
+                    diffs={filename: diff})

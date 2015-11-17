@@ -17,10 +17,12 @@ class PyUnusedCodeBear(LocalBear):
         content = ''.join(file)
         new_content = autoflake.fix_code(content)
         if new_content != content:
-            diff = Diff.from_string_arrays(file, new_content.splitlines(True))
+            wholediff = Diff.from_string_arrays(file,
+                                                new_content.splitlines(True))
 
-            yield Result(
-                self,
-                _("This file contains unused source code."),
-                affected_code=diff.affected_code(filename),
-                diffs={filename: diff})
+            for diff in wholediff.split_diff():
+                yield Result(
+                    self,
+                    _("This file contains unused source code."),
+                    affected_code=(diff.range(filename),),
+                    diffs={filename: diff})

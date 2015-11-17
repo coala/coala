@@ -43,20 +43,25 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.affected_code("file"), [])
 
         self.uut.add_lines(0, ["test"])
-        self.assertEqual(self.uut.affected_code("file"), [])
+        affected_code = [
+            SourceRange.from_values("file", start_line=1),]
+        self.assertEqual(self.uut.affected_code("file"), affected_code)
 
         self.uut.delete_line(2)
         affected_code = [
-            SourceRange.from_values("file", start_line=2),]
+            SourceRange.from_values("file", start_line=1),
+            SourceRange.from_values("file", start_line=2)]
         self.assertEqual(self.uut.affected_code("file"), affected_code)
 
         self.uut.delete_line(3)
         affected_code = [
-            SourceRange.from_values("file", start_line=2, end_line=3),]
+            SourceRange.from_values("file", start_line=1),
+            SourceRange.from_values("file", start_line=2, end_line=3)]
         self.assertEqual(self.uut.affected_code("file"), affected_code)
 
         self.uut.delete_line(6)
         affected_code = [
+            SourceRange.from_values("file", start_line=1),
             SourceRange.from_values("file", start_line=2, end_line=3),
             SourceRange.from_values('file', start_line=6)]
         self.assertEqual(self.uut.affected_code("file"), affected_code)

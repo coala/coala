@@ -29,14 +29,15 @@ class JSONFormatBear(LocalBear):
             # Because of a bug we have to strip whitespaces
             new_file = [line.rstrip(" \n")+"\n" for line in new_file]
             if file != new_file:
-                diff = Diff.from_string_arrays(file, new_file)
+                wholediff = Diff.from_string_arrays(file, new_file)
 
-                yield Result(
-                    self,
-                    _("This file can be reformatted by sorting keys and "
-                      "following indentation."),
-                    affected_code=diff.affected_code(filename),
-                    diffs={filename: diff})
+                for diff in wholediff.split_diff():
+                    yield Result(
+                        self,
+                        _("This file can be reformatted by sorting keys and "
+                          "following indentation."),
+                        affected_code=(diff.range(filename),),
+                        diffs={filename: diff})
         except self.DecodeError as err:
             yield Result.from_values(
                 self,
