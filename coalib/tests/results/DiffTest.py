@@ -105,9 +105,11 @@ class DiffTest(unittest.TestCase):
         self.uut.delete_line(1)
         self.uut.delete_line(3)
         self.uut.change_line(4, "4", "2")
-        self.uut += other
+        result = self.uut + other
 
-        self.assertEqual(self.uut.apply(file), result_file)
+        self.assertEqual(result.apply(file), result_file)
+        # Make sure it didn't happen in place!
+        self.assertNotEqual(self.uut.apply(file), result_file)
 
     def test_from_string_arrays(self):
         a = ["q", "a", "b", "x", "c", "d"]
