@@ -29,7 +29,7 @@ class Result:
     def __init__(self,
                  origin,
                  message: str,
-                 affected_code: tuple=(),
+                 affected_code: (tuple, list)=(),
                  severity: int=RESULT_SEVERITY.NORMAL,
                  debug_msg="",
                  diffs: (dict, None)=None):
