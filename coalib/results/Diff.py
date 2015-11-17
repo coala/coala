@@ -131,6 +131,23 @@ class Diff:
 
         return result
 
+    @property
+    def unified_diff(self):
+        """
+        Generates a unified diff corresponding to this patch.
+
+        Note that the unified diff is not deterministic and thus not suitable
+        for equality comparison.
+        """
+        return ''.join(difflib.unified_diff(self.original, self.modified))
+
+    def __json__(self):
+        """
+        Override JSON export, using the unified diff is the easiest thing for
+        the users.
+        """
+        return self.unified_diff
+
     def affected_code(self, filename):
         """
         Creates a list of SourceRange objects which point to the related code.

@@ -1,7 +1,6 @@
 import difflib
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.results.Diff import Diff
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 

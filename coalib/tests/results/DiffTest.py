@@ -1,9 +1,11 @@
 import sys
 import unittest
+import json
 
 sys.path.insert(0, ".")
 from coalib.results.Diff import Diff, ConflictError, SourceRange
 from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
+from coalib.output.JSONEncoder import JSONEncoder
 
 
 class DiffTest(unittest.TestCase):
@@ -152,6 +154,19 @@ class DiffTest(unittest.TestCase):
 
         diff_1.add_lines(1, ["1"])
         self.assertNotEqual(diff_1, diff_2)
+
+    def test_json_export(self):
+        a = ["first\n", "second\n", "third\n"]
+        b = ["first\n", "third\n"]
+        diff = Diff.from_string_arrays(a, b)
+        self.assertEqual(
+            json.dumps(diff, cls=JSONEncoder, sort_keys=True),
+            '"--- \\n'
+            '+++ \\n'
+            '@@ -1,3 +1,2 @@\\n'
+            ' first\\n'
+            '-second\\n'
+            ' third\\n"')
 
 
 def skip_test():
