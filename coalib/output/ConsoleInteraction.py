@@ -30,6 +30,7 @@ STR_PROJECT_WIDE = _("Project wide:")
 FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
 HIGHLIGHTED_CODE_COLOR = 'red'
+SUCCESS_COLOR = 'green'
 CLI_ACTIONS = [OpenEditorAction(),
                ApplyPatchAction(),
                PrintDebugMessageAction(),
@@ -432,6 +433,9 @@ def apply_action(log_printer,
     except Exception as exception:  # pylint: disable=broad-except
         print_action_failed(log_printer, action_name, exception)
 
+    console_printer.print(
+        format_lines(_("The action was executed successfully.")),
+        color=SUCCESS_COLOR)
     return True
 
 
