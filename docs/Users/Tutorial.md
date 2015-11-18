@@ -109,9 +109,10 @@ how to fix the issue but still tries to provide as much helpful information as
 possible and provides you the option to directly open the file in an editor
 of your choice.
 
-Note: If your editor is already open this will probably not work because the
-other process will shortly communicate with the existent process and return
-immediately. There is no way coala can know when you finished editing the file.
+Note: If your editor is already open this may not work, because the other
+process will shortly communicate with the existent process and return
+immediately. coala handles this for some editors automatically, if your's does
+not work yet - please file a bug so we can include it!
 
 If you changed one file in multiple results, coala will merge the changes if
 this is possible.
