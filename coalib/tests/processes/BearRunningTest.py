@@ -53,8 +53,6 @@ class DependentBear(LocalBear):
             **kwargs):
         assert len(dependency_results["SimpleBear"]) == 2
 
-        return []
-
     @staticmethod
     def get_dependencies():
         return [SimpleBear]
@@ -77,8 +75,6 @@ class DependentGlobalBear(GlobalBear):
             dependency_results=None,
             **kwargs):
         assert len(dependency_results["SimpleGlobalBear"]) == 3
-
-        return []
 
     @staticmethod
     def get_dependencies():
