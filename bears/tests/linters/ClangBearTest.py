@@ -6,15 +6,23 @@ sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.linters.ClangBear import ClangBear
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 
 
 class ClangBearTest(LocalBearTestHelper):
     def setUp(self):
-        self.uut = ClangBear(Section('name'), Queue())
+        self.section = Section('name')
+        self.uut = ClangBear(self.section, Queue())
 
     def test_valid(self):
         self.assertLinesValid(self.uut, ["int main() {}"], filename="test.c")
+
+    def test_disable_warnings(self):
+        self.section.append(Setting('clang_cli_options', '-w'))
+        self.assertLinesValid(self.uut,
+                              ["struct { int f0; } x = { f0 :1 };"],
+                              filename="test.c")
 
     def test_invalid(self):
         # Has no fixit
