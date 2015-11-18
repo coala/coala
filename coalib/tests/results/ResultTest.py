@@ -18,6 +18,10 @@ class ResultTest(unittest.TestCase):
         uut = Result(None, "msg")
         self.assertEqual(uut.origin, "")
 
+    def test_invalid_severity(self):
+        with self.assertRaises(ValueError):
+            Result("o", "m", severity=-5)
+
     def test_string_dict(self):
         uut = Result(None, "")
         output = uut.to_string_dict()
