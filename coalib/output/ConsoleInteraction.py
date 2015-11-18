@@ -130,7 +130,7 @@ def print_result(console_printer,
 
     actions = []
     for action in CLI_ACTIONS:
-        if action.is_applicable(result):
+        if action.is_applicable(result, file_dict, file_diff_dict):
             actions.append(action)
 
     if actions == []:

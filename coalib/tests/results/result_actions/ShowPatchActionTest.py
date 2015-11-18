@@ -24,9 +24,9 @@ class ShowPatchActionTest(unittest.TestCase):
         self.section.append(Setting("colored", "false"))
 
     def test_is_applicable(self):
-        self.assertFalse(self.uut.is_applicable(1))
-        self.assertFalse(self.uut.is_applicable(Result("o", "m")))
-        self.assertTrue(self.uut.is_applicable(self.test_result))
+        self.assertFalse(self.uut.is_applicable(1, None, None))
+        self.assertFalse(self.uut.is_applicable(Result("o", "m"), None, None))
+        self.assertTrue(self.uut.is_applicable(self.test_result, None, None))
 
     def test_apply(self):
         with retrieve_stdout() as stdout:

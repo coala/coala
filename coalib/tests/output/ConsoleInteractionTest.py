@@ -105,8 +105,8 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.global_bears = OrderedDict([("default", [SomeglobalBear]),
                                          ("test", [SomeglobalBear])])
 
-        OpenEditorAction.is_applicable = staticmethod(lambda result: False)
-        ApplyPatchAction.is_applicable = staticmethod(lambda result: False)
+        OpenEditorAction.is_applicable = staticmethod(lambda *args: False)
+        ApplyPatchAction.is_applicable = staticmethod(lambda *args: False)
 
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
@@ -160,7 +160,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         diff.change_line(3, "3\n", "3_changed\n")
 
         with simulate_console_inputs(1), self.assertRaises(ValueError):
-            ApplyPatchAction.is_applicable = staticmethod(lambda result: True)
+            ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
             print_result(self.console_printer,
                          self.log_printer,
                          None,
@@ -197,7 +197,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         # Check if the user is asked for the parameter only the first time.
         # Use OpenEditorAction that needs this parameter (editor command).
         with simulate_console_inputs(1, "test_editor", 0, 1, 0) as generator:
-            OpenEditorAction.is_applicable = staticmethod(lambda result: True)
+            OpenEditorAction.is_applicable = staticmethod(lambda *args: True)
 
             patch_result = Result("origin", "msg", diffs={testfile_path: diff})
             patch_result.file = "f_b"

@@ -9,12 +9,19 @@ from coalib.settings.Section import Section
 
 class ResultAction:
     @staticmethod
-    def is_applicable(result):
+    def is_applicable(result, original_file_dict, file_diff_dict):
         """
         Checks whether the Action is valid for the result type.
 
-        :param result: The result from the coala run to check if an Action is
-                       applicable.
+        :param result:            The result from the coala run to check if an
+                                  Action is applicable.
+       :param original_file_dict: A dictionary containing the files in the
+                                  state where the result was generated.
+       :param file_diff_dict:     A dictionary containing a diff for every
+                                  file from the state in the
+                                  original_file_dict to the current state.
+                                  This dict will be altered so you do not
+                                  need to use the return value.
         """
         return False
 

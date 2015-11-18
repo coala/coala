@@ -72,8 +72,9 @@ class ApplyPatchActionTest(unittest.TestCase):
     def test_is_applicable(self):
         patch_result = Result("", "", diffs={})
         result = Result("", "")
-        self.assertTrue(ApplyPatchAction.is_applicable(patch_result))
-        self.assertFalse(ApplyPatchAction.is_applicable(result))
+        self.assertTrue(
+            ApplyPatchAction.is_applicable(patch_result, None, None))
+        self.assertFalse(ApplyPatchAction.is_applicable(result, None, None))
 
 
 if __name__ == '__main__':

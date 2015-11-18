@@ -106,9 +106,10 @@ class ResultActionTest(unittest.TestCase):
         result1 = Result("", "")
         result2 = Result.from_values("", "", "")
         invalid_result = ""
-        self.assertFalse(OpenEditorAction.is_applicable(result1))
-        self.assertTrue(OpenEditorAction.is_applicable(result2))
-        self.assertFalse(OpenEditorAction.is_applicable(invalid_result))
+        self.assertFalse(OpenEditorAction.is_applicable(result1, None, None))
+        self.assertTrue(OpenEditorAction.is_applicable(result2, None, None))
 
+        self.assertFalse(
+            OpenEditorAction.is_applicable(invalid_result, None, None))
 if __name__ == '__main__':
     unittest.main(verbosity=2)
