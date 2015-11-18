@@ -70,11 +70,30 @@ class ApplyPatchActionTest(unittest.TestCase):
         os.remove(f_c)
 
     def test_is_applicable(self):
-        patch_result = Result("", "", diffs={})
-        result = Result("", "")
+        diff = Diff(["1\n", "2\n", "3\n"])
+        diff.delete_line(2)
+        patch_result = Result("", "", diffs={'f': diff})
         self.assertTrue(
-            ApplyPatchAction.is_applicable(patch_result, None, None))
-        self.assertFalse(ApplyPatchAction.is_applicable(result, None, None))
+            ApplyPatchAction.is_applicable(patch_result, {}, {}))
+
+    def test_is_applicable_conflict(self):
+        diff = Diff(["1\n", "2\n", "3\n"])
+        diff.add_lines(2, ['a line'])
+
+        conflict_result = Result("", "", diffs={'f': diff})
+        # Applying the same diff twice will result in a conflict
+        self.assertFalse(
+            ApplyPatchAction.is_applicable(conflict_result, {}, {'f': diff}))
+
+
+    def test_is_applicable_empty_patch(self):
+        empty_patch_result = Result("", "", diffs={})
+        self.assertFalse(
+            ApplyPatchAction.is_applicable(empty_patch_result, {}, {}))
+
+    def test_is_applicable_without_patch(self):
+        result = Result("", "")
+        self.assertFalse(ApplyPatchAction.is_applicable(result, {}, {}))
 
 
 if __name__ == '__main__':
