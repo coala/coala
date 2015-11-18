@@ -44,9 +44,6 @@ install:
   - "%CMD_IN_ENV% pip -q install coverage pylint setuptools munkres3 language-check PyPrint restructuredtext_lint autoflake autopep8 eradicate"
   - "%CMD_IN_ENV% pip -q install --upgrade astroid"
 
-  - "nuget install Gettext.Tools -Version 0.19.4"
-  - "SET PATH=%PATH%;%cd%\\Gettext.Tools.0.19.4\\tools"
-
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:

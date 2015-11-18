@@ -1,7 +1,6 @@
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.misc.i18n import _
 from bears.codeclone_detection.ClangFunctionDifferenceBear import (
     ClangFunctionDifferenceBear)
 
@@ -27,9 +26,9 @@ class ClangCloneDetectionBear(GlobalBear):
             if difference < max_clone_difference:
                 yield Result.from_values(
                     self,
-                    _("Code clone found. The other occurrence is at file "
-                      "{file}, line {line}, function {function}. The "
-                      "difference is {difference}.").format(
+                    "Code clone found. The other occurrence is at file "
+                    "{file}, line {line}, function {function}. The "
+                    "difference is {difference}.".format(
                         file=function_2[0],
                         line=function_2[1],
                         function=function_2[2],

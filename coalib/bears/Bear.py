@@ -1,7 +1,6 @@
 import traceback
 from pyprint.Printer import Printer
 
-from coalib.misc.i18n import _
 from coalib.misc.Decorators import enforce_signature
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
@@ -28,12 +27,7 @@ class Bear(Printer, LogPrinter):
     the set_up() and tear_down() functions. They will be invoked
     before/after every run invocation.
 
-    Settings are available at all times through self.section. You can access
-    coalas translation database with the _() from coalib.misc.i18n. Be aware
-    that the strings you use are probably not in the database, especially if
-    your bear is not shipped with coala. Feel free to use your own
-    translation database in this case or consider make your bear available
-    to the coala project.
+    Settings are available at all times through self.section.
     """
 
     @enforce_signature
@@ -66,7 +60,7 @@ class Bear(Printer, LogPrinter):
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
-            self.warn(_("The bear {} cannot be executed.").format(
+            self.warn("The bear {} cannot be executed.".format(
                 self.__class__.__name__), str(err))
 
         return self.run(*args, **kwargs)
@@ -74,20 +68,20 @@ class Bear(Printer, LogPrinter):
     def execute(self, *args, **kwargs):
         name = self.__class__.__name__
         try:
-            self.debug(_("Running bear {}...").format(name))
+            self.debug("Running bear {}...".format(name))
             # If it's already a list it won't change it
             return list(self.run_bear_from_section(args, kwargs) or [])
         except:
             self.warn(
-                _("Bear {} failed to run. Take a look at debug messages for "
-                  "further information.").format(name))
+                "Bear {} failed to run. Take a look at debug messages for "
+                "further information.".format(name))
             self.debug(
-                _("The bear {bear} raised an exception. If you are the writer "
-                  "of this bear, please make sure to catch all exceptions. If "
-                  "not and this error annoys you, you might want to get in "
-                  "contact with the writer of this bear.\n\nTraceback "
-                  "information is provided below:\n\n{traceback}"
-                  "\n").format(bear=name, traceback=traceback.format_exc()))
+                "The bear {bear} raised an exception. If you are the writer "
+                "of this bear, please make sure to catch all exceptions. If "
+                "not and this error annoys you, you might want to get in "
+                "contact with the writer of this bear.\n\nTraceback "
+                "information is provided below:\n\n{traceback}"
+                "\n".format(bear=name, traceback=traceback.format_exc()))
 
     @staticmethod
     def kind():

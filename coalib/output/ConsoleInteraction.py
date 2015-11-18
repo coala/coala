@@ -10,7 +10,6 @@ from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY,
     RESULT_SEVERITY_COLORS)
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.misc.i18n import _
 from coalib.settings.Setting import Setting
 from coalib.results.Result import Result
 from coalib.misc.DictUtilities import inverse_dicts
@@ -21,12 +20,12 @@ from coalib.results.result_actions.PrintDebugMessageAction import (
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 
 
-STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
-                            "needed by {}: ")
-STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
-                          "cannot be printed because it refers to a line "
-                          "that doesn't seem to exist in the given file.")
-STR_PROJECT_WIDE = _("Project wide:")
+STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
+                           "needed by {}: ")
+STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
+                         "cannot be printed because it refers to a line "
+                         "that doesn't seem to exist in the given file.")
+STR_PROJECT_WIDE = "Project wide:"
 FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
 HIGHLIGHTED_CODE_COLOR = 'red'
@@ -50,7 +49,7 @@ def print_section_beginning(console_printer, section):
     :param console_printer: Object to print messages on the console.
     :param section:         The section that will get executed now.
     """
-    console_printer.print(_("Executing section {name}...").format(
+    console_printer.print("Executing section {name}...".format(
         name=section.name))
 
 
@@ -59,8 +58,8 @@ def nothing_done(console_printer):
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
     """
-    console_printer.print(_("No existent section was targeted or enabled. "
-                            "Nothing to do."))
+    console_printer.print("No existent section was targeted or enabled. "
+                          "Nothing to do.")
 
 
 def print_lines(console_printer,
@@ -119,9 +118,9 @@ def print_result(console_printer,
                             key.
     """
     if not isinstance(result, Result):
-        log_printer.warn(_("One of the results can not be printed since it is "
-                           "not a valid derivative of the coala result "
-                           "class."))
+        log_printer.warn("One of the results can not be printed since it is "
+                         "not a valid derivative of the coala result "
+                         "class.")
         return
 
     console_printer.print(format_lines("[{sev}] {bear}:".format(
@@ -185,7 +184,7 @@ def print_results_formatted(log_printer,
                                         **result.__dict__))
         except KeyError as exception:
             log_printer.log_exception(
-                _("Unable to print the result with the given format string."),
+                "Unable to print the result with the given format string.",
                 exception)
 
 
@@ -219,11 +218,10 @@ def print_results(log_printer,
                 if (
                         sourcerange.file is not None and
                         sourcerange.file not in file_dict):
-                    log_printer.warn(_("The context for the result ({}) cannot "
-                                       "be printed because it refers to a file "
-                                       "that doesn't seem to exist ({})"
-                                       ".").format(str(result),
-                                                   sourcerange.file))
+                    log_printer.warn("The context for the result ({}) cannot "
+                                     "be printed because it refers to a file "
+                                     "that doesn't seem to exist ({})"
+                                     ".".format(str(result), sourcerange.file))
                 else:
                     print_affected_lines(console_printer,
                                          file_dict,
@@ -262,15 +260,15 @@ def require_setting(log_printer, setting_name, arr):
     """
     if not isinstance(arr, list) or len(arr) < 2:
         log_printer.log(LOG_LEVEL.WARNING,
-                        _("One of the given settings ({}) is not properly "
-                          "described.").format(str(setting_name)))
+                        "One of the given settings ({}) is not properly "
+                        "described.".format(str(setting_name)))
 
         return None
 
     if len(arr) == 2:
         needed = arr[1]
     else:
-        needed = ", ".join(arr[1:-1]) + _(" and ") + arr[-1]
+        needed = ", ".join(arr[1:-1]) + " and " + arr[-1]
 
     return input(STR_GET_VAL_FOR_SETTING.format(str(setting_name),
                                                 str(arr[0]),
@@ -323,7 +321,7 @@ def get_action_info(section, action):
     for param_name in params:
         if param_name not in section:
             question = format_lines(
-                _("Please enter a value for the parameter '{}' ({}): ")
+                "Please enter a value for the parameter '{}' ({}): "
                 .format(param_name, params[param_name][0]))
             section.append(Setting(param_name, input(question)))
 
@@ -340,25 +338,25 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     console_printer.print(format_lines(
-        _("The following actions are applicable to this result:")))
+        "The following actions are applicable to this result:"))
 
     while True:
         console_printer.print(format_lines(" 0: " +
-                                          _("Apply no further actions.")))
+                                           "Apply no further actions."))
         for i, action in enumerate(actions):
             console_printer.print(format_lines("{:>2}: {}".format(i + 1,
                                                                  action.desc)))
 
         try:
-            line = format_lines(_("Please enter the number of the action "
-                                  "you want to execute. "))
+            line = format_lines("Please enter the number of the action "
+                                "you want to execute. ")
             choice = int(input(line))
             if 0 <= choice <= len(actions):
                 return choice
         except ValueError:
             pass
 
-        console_printer.print(format_lines(_("Please enter a valid number.")))
+        console_printer.print(format_lines("Please enter a valid number."))
 
 
 def print_actions(console_printer, section, actions):
@@ -434,7 +432,7 @@ def apply_action(log_printer,
         print_action_failed(log_printer, action_name, exception)
 
     console_printer.print(
-        format_lines(_("The action was executed successfully.")),
+        format_lines("The action was executed successfully."),
         color=SUCCESS_COLOR)
     return True
 
@@ -482,20 +480,20 @@ def show_bear(console_printer, bear, sections, metadata):
     console_printer.print("  " + metadata.desc + "\n")
 
     show_enumeration(console_printer,
-                     _("Used in:"),
+                     "Used in:",
                      sections,
                      "  ",
-                     _("No sections."))
+                     "No sections.")
     show_enumeration(console_printer,
-                     _("Needed Settings:"),
+                     "Needed Settings:",
                      metadata.non_optional_params,
                      "  ",
-                     _("No needed settings."))
+                     "No needed settings.")
     show_enumeration(console_printer,
-                     _("Optional Settings:"),
+                     "Optional Settings:",
                      metadata.optional_params,
                      "  ",
-                     _("No optional settings."))
+                     "No optional settings.")
 
 
 def print_bears(console_printer, bears, compress):
@@ -509,7 +507,7 @@ def print_bears(console_printer, bears, compress):
                                 show bear names as a list)
     """
     if not bears:
-        console_printer.print(_("No bears to show."))
+        console_printer.print("No bears to show.")
     elif compress:
         bear_list = sorted(bears.keys(), key=lambda bear: bear.__name__)
         for bear in bear_list:

@@ -1,21 +1,19 @@
 import os
 import platform
 
-from coalib.misc.i18n import _
-
 
 class Constants:
-    THIS_IS_A_BUG = _("This is a bug. We are sorry for the inconvenience. "
-                      "Please contact the developers for assistance.")
+    THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
+                     "Please contact the developers for assistance.")
 
-    CRASH_MESSAGE = _("An unknown error occurred. This is a bug. We are "
-                      "sorry for the inconvenience. Please contact the "
-                      "developers for assistance. During execution of "
-                      "coala an exception was raised. This should never "
-                      "happen. When asked for, the following information "
-                      "may help investigating:")
+    CRASH_MESSAGE = ("An unknown error occurred. This is a bug. We are "
+                     "sorry for the inconvenience. Please contact the "
+                     "developers for assistance. During execution of "
+                     "coala an exception was raised. This should never "
+                     "happen. When asked for, the following information "
+                     "may help investigating:")
 
-    OBJ_NOT_ACCESSIBLE = _("{} is not accessible and will be ignored!")
+    OBJ_NOT_ACCESSIBLE = "{} is not accessible and will be ignored!"
 
     TRUE_STRINGS = ['1',
                     "on",

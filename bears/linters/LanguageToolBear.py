@@ -3,7 +3,6 @@ from language_check import LanguageTool, correct
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
-from coalib.misc.i18n import _
 
 
 def get_language_tool_results(file_contents, locale):
@@ -22,7 +21,7 @@ def get_language_tool_results(file_contents, locale):
             rule_id += '[{}]'.format(match.subId)
 
         message = (match.msg + ' (' + rule_id + ', ' +
-                   _('Found at column {col}.').format(col=match.fromx+1) + ')')
+                   'Found at column {col}.').format(col=match.fromx+1) + ')'
         yield message, diff, match.fromy+1
 
 

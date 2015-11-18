@@ -21,7 +21,6 @@ pages:
     - 'Executing Tests': 'Getting_Involved/Testing.md'
     - 'Writing Tests': 'Getting_Involved/Writing_Tests.md'
     - 'Writing Documentation': 'Getting_Involved/Writing_Documentation.md'
-    - 'Translating': 'Getting_Involved/Translating.md'
     - 'Writing Good Commits': 'Getting_Involved/Writing_Good_Commits.md'
     - 'MAC Hints': 'Getting_Involved/MAC_Hints.md'
 - General Developer Information:

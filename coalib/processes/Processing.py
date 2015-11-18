@@ -14,7 +14,6 @@ from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import path_list
-from coalib.misc.i18n import _
 from coalib.processes.LogPrinterThread import LogPrinterThread
 
 
@@ -108,13 +107,13 @@ def get_file_dict(filename_list, log_printer):
             with open(filename, "r", encoding="utf-8") as _file:
                 file_dict[filename] = _file.readlines()
         except UnicodeDecodeError:
-            log_printer.warn(_("Failed to read file '{}'. It seems to contain "
-                               "non-unicode characters. Leaving it "
-                               "out.".format(filename)))
+            log_printer.warn("Failed to read file '{}'. It seems to contain "
+                             "non-unicode characters. Leaving it "
+                             "out.".format(filename))
         except Exception as exception:  # pragma: no cover
-            log_printer.log_exception(_("Failed to read file '{}' because of "
-                                        "an unknown error. Leaving it "
-                                        "out.").format(filename),
+            log_printer.log_exception("Failed to read file '{}' because of "
+                                      "an unknown error. Leaving it "
+                                      "out.".format(filename),
                                       exception,
                                       log_level=LOG_LEVEL.WARNING)
 
@@ -377,8 +376,8 @@ def execute_section(section,
     try:
         running_processes = int(section['jobs'])
     except ValueError:
-        log_printer.warn(_("Unable to convert setting 'jobs' into a number. "
-                           "Falling back to CPU count."))
+        log_printer.warn("Unable to convert setting 'jobs' into a number. "
+                         "Falling back to CPU count.")
         running_processes = get_cpu_count()
     except IndexError:
         running_processes = get_cpu_count()

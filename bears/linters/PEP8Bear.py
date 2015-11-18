@@ -3,7 +3,6 @@ import autopep8
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
-from coalib.misc.i18n import _
 
 
 class PEP8Bear(LocalBear):
@@ -20,6 +19,6 @@ class PEP8Bear(LocalBear):
             for diff in wholediff.split_diff():
                 yield Result(
                     self,
-                    _("The code does not comply to PEP8."),
+                    "The code does not comply to PEP8.",
                     affected_code=(diff.range(filename),),
                     diffs={filename: diff})

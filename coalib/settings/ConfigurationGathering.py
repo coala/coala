@@ -4,7 +4,6 @@ import sys
 from coalib.settings.Setting import Setting
 from coalib.misc.Compatability import FileNotFoundError
 from coalib.misc.Constants import Constants
-from coalib.misc.i18n import _
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParsing import parse_cli
@@ -54,7 +53,7 @@ def load_config_file(filename, log_printer, silent=False):
     except FileNotFoundError:
         if not silent:
             log_printer.warn(
-                _("The requested coafile '{filename}' does not exist.")
+                "The requested coafile '{filename}' does not exist."
                 .format(filename=filename))
 
         return {"default": Section("default")}
@@ -92,8 +91,8 @@ def warn_nonexistent_targets(targets, sections, log_printer):
     for target in targets:
         if target not in sections:
             log_printer.warn(
-                _("The requested section '{section}' is not existent. "
-                  "Thus it cannot be executed.").format(section=target))
+                "The requested section '{section}' is not existent. "
+                "Thus it cannot be executed.".format(section=target))
 
 
 def load_configuration(arg_list, log_printer):

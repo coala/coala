@@ -2,7 +2,6 @@ from subprocess import Popen, PIPE
 import platform
 
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.i18n import _
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 
@@ -40,7 +39,7 @@ class IndentBear(LocalBear):
             for diff in wholediff.split_diff():
                 yield Result(
                     self,
-                    _("Spacing does not comply to the given standards."),
+                    "Spacing does not comply to the given standards.",
                     affected_code=(diff.range(filename),),
                     diffs={filename: diff})
 

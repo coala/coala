@@ -1,7 +1,6 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Diff import Diff
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.i18n import _
 from coalib.results.Result import Result
 
 
@@ -38,26 +37,26 @@ class SpaceConsistencyBear(LocalBear):
                 # one.
                 if replacement[-1] != "\n":
                     replacement += "\n"
-                    result_texts.append(_("No newline at EOF."))
+                    result_texts.append("No newline at EOF.")
 
             if not allow_trailing_whitespace:
                 pre_replacement = line
                 replacement = replacement.rstrip(" \t\n") + "\n"
                 if replacement != pre_replacement:
-                    result_texts.append(_("Trailing whitespaces."))
+                    result_texts.append("Trailing whitespaces.")
 
             if use_spaces:
                 pre_replacement = replacement
                 replacement = spacing_helper.replace_tabs_with_spaces(
                     replacement)
                 if replacement != pre_replacement:
-                    result_texts.append(_("Tabs used instead of spaces."))
+                    result_texts.append("Tabs used instead of spaces.")
             else:
                 pre_replacement = replacement
                 replacement = spacing_helper.replace_spaces_with_tabs(
                     replacement)
                 if replacement != pre_replacement:
-                    result_texts.append(_("Spaces used instead of tabs."))
+                    result_texts.append("Spaces used instead of tabs.")
 
             if len(result_texts) > 0:
                 diff = Diff(file)
@@ -66,7 +65,7 @@ class SpaceConsistencyBear(LocalBear):
                                           for string in result_texts)
                 yield Result.from_values(
                     self,
-                    _("Line contains following spacing inconsistencies:")
+                    "Line contains following spacing inconsistencies:"
                     + inconsistencies,
                     diffs={filename: diff},
                     file=filename,

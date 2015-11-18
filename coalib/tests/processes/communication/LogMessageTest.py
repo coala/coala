@@ -2,7 +2,6 @@ from datetime import datetime
 import sys
 
 sys.path.insert(0, ".")
-from coalib.misc.i18n import _
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.misc.Constants import Constants
 from coalib.processes.communication.LogMessage import LogMessage
@@ -41,19 +40,19 @@ class LogMessageTest(unittest.TestCase):
         self.uut.message = Constants.COMPLEX_TEST_STRING
         self.uut.log_level = LOG_LEVEL.ERROR
         self.assertEqual(str(self.uut),
-                         "[{}] {}".format(_("ERROR"),
+                         "[{}] {}".format("ERROR",
                                           Constants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.WARNING
         self.assertEqual(str(self.uut),
-                         "[{}] {}".format(_("WARNING"),
+                         "[{}] {}".format("WARNING",
                                           Constants.COMPLEX_TEST_STRING))
         self.uut.log_level = LOG_LEVEL.DEBUG
         self.assertEqual(str(self.uut),
-                         "[{}] {}".format(_("DEBUG"),
+                         "[{}] {}".format("DEBUG",
                                           Constants.COMPLEX_TEST_STRING))
         self.uut.log_level = 5
         self.assertEqual(str(self.uut),
-                         "[{}] {}".format(_("ERROR"),
+                         "[{}] {}".format("ERROR",
                                           Constants.COMPLEX_TEST_STRING))
 
     def test_equals(self):

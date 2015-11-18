@@ -1,6 +1,5 @@
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.i18n import _
 
 
 class KeywordBear(LocalBear):
@@ -42,7 +41,7 @@ class KeywordBear(LocalBear):
         if pos != -1:
             return [Result.from_values(
                 origin=self,
-                message=_("The line contains the keyword `{}`.")
+                message="The line contains the keyword `{}`."
                         .format(keyword),
                 file=filename,
                 line=line_number+1,

@@ -4,7 +4,6 @@ import json
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
-from coalib.misc.i18n import _
 
 
 class JSONFormatBear(LocalBear):
@@ -34,13 +33,13 @@ class JSONFormatBear(LocalBear):
                 for diff in wholediff.split_diff():
                     yield Result(
                         self,
-                        _("This file can be reformatted by sorting keys and "
-                          "following indentation."),
+                        "This file can be reformatted by sorting keys and "
+                        "following indentation.",
                         affected_code=(diff.range(filename),),
                         diffs={filename: diff})
         except self.DecodeError as err:
             yield Result.from_values(
                 self,
-                _("This file does not contain parsable JSON. '{adv_msg}'")
+                "This file does not contain parsable JSON. '{adv_msg}'"
                 .format(adv_msg=str(err)),
                 file=filename)

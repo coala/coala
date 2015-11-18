@@ -6,7 +6,7 @@ import unittest
 from coalib.settings.Section import Section
 from coalib.results.Result import Result, RESULT_SEVERITY
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.misc.LineCountBear import LineCountBear, _
+from bears.misc.LineCountBear import LineCountBear
 
 
 class LineCountBearTest(LocalBearTestHelper):
@@ -19,7 +19,7 @@ class LineCountBearTest(LocalBearTestHelper):
             ["1", "2", "3"],
             Result.from_values(
                 "LineCountBear",
-                _("This file has {count} lines.").format(count=3),
+                "This file has {count} lines.".format(count=3),
                 severity=RESULT_SEVERITY.INFO,
                 file="default"))
         self.assertLinesYieldResult(
@@ -27,7 +27,7 @@ class LineCountBearTest(LocalBearTestHelper):
             [],
             Result.from_values(
                 "LineCountBear",
-                _("This file has {count} lines.").format(count=0),
+                "This file has {count} lines.".format(count=0),
                 severity=RESULT_SEVERITY.INFO,
                 file="default"))
 

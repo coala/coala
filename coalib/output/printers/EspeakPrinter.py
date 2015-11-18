@@ -3,7 +3,6 @@ from pyprint.Printer import Printer
 from pyprint.ClosableObject import ClosableObject
 
 from coalib.misc.Constants import Constants
-from coalib.misc.i18n import _
 
 
 class EspeakPrinter(Printer, ClosableObject):
@@ -18,13 +17,13 @@ class EspeakPrinter(Printer, ClosableObject):
         try:
             self.espeak = subprocess.Popen(['espeak'], stdin=subprocess.PIPE)
         except OSError:  # pragma: no cover
-            print(_("eSpeak doesn't seem to be installed. You cannot use the "
-                    "voice output feature without eSpeak. It can be downloaded"
-                    " from http://espeak.sourceforge.net/ or installed via "
-                    "your usual package repositories."))
+            print("eSpeak doesn't seem to be installed. You cannot use the "
+                  "voice output feature without eSpeak. It can be downloaded"
+                  " from http://espeak.sourceforge.net/ or installed via "
+                  "your usual package repositories.")
             raise EnvironmentError
         except:  # pragma: no cover
-            print(_("Failed to execute eSpeak. An unknown error occurred."),
+            print("Failed to execute eSpeak. An unknown error occurred.",
                   Constants.THIS_IS_A_BUG)
             raise EnvironmentError
 

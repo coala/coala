@@ -1,7 +1,6 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
-from coalib.misc.i18n import _
 
 
 class LineLengthBear(LocalBear):
@@ -23,7 +22,7 @@ class LineLengthBear(LocalBear):
             if len(line) > max_line_length + 1:
                 yield Result.from_values(
                     origin=self,
-                    message=_("Line is longer than allowed.") +
+                    message="Line is longer than allowed." +
                             " ({actual} > {maximum})".format(
                                 actual=len(line),
                                 maximum=max_line_length),

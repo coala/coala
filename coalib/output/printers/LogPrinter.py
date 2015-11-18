@@ -2,7 +2,6 @@ import traceback
 from pyprint.ColorPrinter import ColorPrinter
 
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL, LOG_LEVEL_COLORS
-from coalib.misc.i18n import _
 from coalib.processes.communication.LogMessage import LogMessage
 
 
@@ -45,8 +44,8 @@ class LogPrinter:
         if datetime_string != "":
             datetime_string = "[" + datetime_string + "]"
 
-        return '[{}]{}'.format(_(LOG_LEVEL.reverse.get(log_level, "ERROR")),
-                                datetime_string)
+        return '[{}]{}'.format(LOG_LEVEL.reverse.get(log_level, "ERROR"),
+                               datetime_string)
 
     def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
         self.log_message(LogMessage(LOG_LEVEL.DEBUG,
@@ -115,7 +114,7 @@ class LogPrinter:
         self.log(log_level, message, timestamp=timestamp, **kwargs)
         self.log_message(
             LogMessage(LOG_LEVEL.DEBUG,
-                       _("Exception was:") + "\n" + traceback_str,
+                       "Exception was:" + "\n" + traceback_str,
                        timestamp=timestamp),
             **kwargs)
 

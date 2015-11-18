@@ -4,7 +4,6 @@ set -x
 # Install packages with brew
 brew update >/dev/null
 brew outdated pyenv || brew upgrade --quiet pyenv
-brew install gettext && brew link gettext --force
 brew install espeak
 brew install libffi && brew link libffi --force
 brew install cairo

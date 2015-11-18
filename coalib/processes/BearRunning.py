@@ -7,7 +7,6 @@ from coalib.bears.LocalBear import LocalBear
 from coalib.misc.Constants import Constants
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
-from coalib.misc.i18n import _
 from coalib.results.Result import Result
 
 
@@ -61,16 +60,16 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
             send_msg(message_queue,
                      timeout,
                      LOG_LEVEL.ERROR,
-                     _("The results from the bear {bear} could only be "
-                       "partially processed with arguments {arglist}, "
-                       "{kwarglist}")
+                     "The results from the bear {bear} could only be "
+                     "partially processed with arguments {arglist}, "
+                     "{kwarglist}"
                      .format(bear=name, arglist=args, kwarglist=kwargs))
             send_msg(message_queue,
                      timeout,
                      LOG_LEVEL.DEBUG,
-                     _("One of the results in the list for the bear {bear} is "
-                       "an instance of {ret} but it should be an instance of "
-                       "Result")
+                     "One of the results in the list for the bear {bear} is "
+                     "an instance of {ret} but it should be an instance of "
+                     "Result"
                      .format(bear=name, ret=result.__class__))
             result_list.remove(result)
 
@@ -107,13 +106,13 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
-                 _("The bear {bear} failed to run with the arguments "
-                   "{arglist}, {kwarglist}. Skipping bear...")
+                 "The bear {bear} failed to run with the arguments "
+                 "{arglist}, {kwarglist}. Skipping bear..."
                  .format(bear=name, arglist=args, kwarglist=kwargs))
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,
-                 _("Traceback for error in bear {bear}:")
+                 "Traceback for error in bear {bear}:"
                  .format(bear=name),
                  traceback.format_exc(),
                  delimiter="\n")
@@ -188,8 +187,8 @@ def run_local_bear(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.WARNING,
-                 _("A given local bear ({}) is not valid. Leaving "
-                   "it out...").format(bear_instance.__class__.__name__),
+                 "A given local bear ({}) is not valid. Leaving "
+                 "it out...".format(bear_instance.__class__.__name__),
                  Constants.THIS_IS_A_BUG)
 
         return None
@@ -232,8 +231,8 @@ def run_global_bear(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.WARNING,
-                 _("A given global bear ({}) is not valid. Leaving it "
-                   "out...")
+                 "A given global bear ({}) is not valid. Leaving it "
+                 "out..."
                  .format(global_bear_instance.__class__.__name__),
                  Constants.THIS_IS_A_BUG)
 
@@ -278,13 +277,13 @@ def run_local_bears_on_file(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
-                 _("An internal error occurred."),
+                 "An internal error occurred.",
                  Constants.THIS_IS_A_BUG)
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,
-                 _("The given file through the queue is not in the file "
-                   "dictionary."))
+                 "The given file through the queue is not in the file "
+                 "dictionary.")
 
         return
 

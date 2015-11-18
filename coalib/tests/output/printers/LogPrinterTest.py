@@ -9,7 +9,6 @@ from coalib.misc.Constants import Constants
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
-from coalib.misc.i18n import _
 
 
 class LogPrinterTest(unittest.TestCase):
@@ -38,7 +37,7 @@ class LogPrinterTest(unittest.TestCase):
         uut.log_message(self.log_message, end="")
         self.assertEqual(
             uut.printer.string,
-            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
+            "[ERROR][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING)
 
         uut.printer.clear()
@@ -48,7 +47,7 @@ class LogPrinterTest(unittest.TestCase):
                 end="")
         self.assertEqual(
             uut.printer.string,
-            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
+            "[ERROR][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING)
 
         uut.printer.clear()
@@ -58,7 +57,7 @@ class LogPrinterTest(unittest.TestCase):
                   end="")
         self.assertEqual(
             uut.printer.string,
-            "[" + _("DEBUG") + "][" + self.timestamp.strftime("%X") + "] " +
+            "[DEBUG][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING + " d")
 
         uut.printer.clear()
@@ -75,7 +74,7 @@ class LogPrinterTest(unittest.TestCase):
                  end="")
         self.assertEqual(
             uut.printer.string,
-            "[" + _("INFO") + "][" + self.timestamp.strftime("%X") + "] " +
+            "[INFO][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING + " d")
 
         uut.log_level = LOG_LEVEL.WARNING
@@ -92,7 +91,7 @@ class LogPrinterTest(unittest.TestCase):
                  end="")
         self.assertEqual(
             uut.printer.string,
-            "[" + _("WARNING") + "][" + self.timestamp.strftime("%X") + "] " +
+            "[WARNING][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING + " d")
 
         uut.printer.clear()
@@ -102,7 +101,7 @@ class LogPrinterTest(unittest.TestCase):
                 end="")
         self.assertEqual(
             uut.printer.string,
-            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") + "] " +
+            "[ERROR][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING + " d")
 
         uut.log_level = LOG_LEVEL.DEBUG
@@ -112,10 +111,10 @@ class LogPrinterTest(unittest.TestCase):
             NotImplementedError(Constants.COMPLEX_TEST_STRING),
             timestamp=self.timestamp)
         self.assertTrue(uut.printer.string.startswith(
-            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") +
+            "[ERROR][" + self.timestamp.strftime("%X") +
             "] Something failed.\n" +
-            "[" + _("DEBUG") + "][" + self.timestamp.strftime("%X") +
-            "] " + _("Exception was:")))
+            "[DEBUG][" + self.timestamp.strftime("%X") +
+            "] Exception was:"))
 
         uut.log_level = LOG_LEVEL.INFO
         uut.printer.clear()
@@ -125,7 +124,7 @@ class LogPrinterTest(unittest.TestCase):
             timestamp=self.timestamp,
             end="")
         self.assertTrue(uut.printer.string.startswith(
-            "[" + _("ERROR") + "][" + self.timestamp.strftime("%X") +
+            "[ERROR][" + self.timestamp.strftime("%X") +
             "] Something failed."))
 
     def test_raises(self):

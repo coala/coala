@@ -5,7 +5,6 @@ sys.path.insert(0, ".")
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.processes.communication.LogMessage import LogMessage
-from coalib.misc.i18n import _
 from coalib.bears.Bear import Bear
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 import unittest
@@ -17,7 +16,6 @@ class TestBear(Bear):
 
     def run(self):
         self.print("set", "up", delimiter="=")
-        self.warn(_("A string to test translations."))
         self.err("teardown")
         self.err()
 
@@ -57,10 +55,8 @@ class BearTest(unittest.TestCase):
     def test_message_queue(self):
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG,
-                           _("Running bear {}...").format("TestBear"))
+                           "Running bear {}...".format("TestBear"))
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
-        self.check_message(LOG_LEVEL.WARNING,
-                           _("A string to test translations."))
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 
     def test_bad_bear(self):
@@ -68,9 +64,8 @@ class BearTest(unittest.TestCase):
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
         self.check_message(LOG_LEVEL.WARNING,
-                           _("Bear {} failed to run. Take a look at debug "
-                             "messages for further "
-                             "information.").format("BadTestBear"))
+                           "Bear BadTestBear failed to run. Take a look at "
+                           "debug messages for further information.")
         # debug message contains custom content, dont test this here
         self.queue.get()
 

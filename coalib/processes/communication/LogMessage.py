@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from coalib.misc.i18n import _
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
@@ -22,7 +21,7 @@ class LogMessage:
         self.timestamp = timestamp or datetime.today()
 
     def __str__(self):
-        log_level = _(LOG_LEVEL.reverse.get(self.log_level, "ERROR"))
+        log_level = LOG_LEVEL.reverse.get(self.log_level, "ERROR")
         return '[{}] {}'.format(log_level, self.message)
 
     def __eq__(self, other):

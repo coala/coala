@@ -9,7 +9,6 @@ else:
     import importlib
 
 sys.path.insert(0, ".")
-from coalib.tests.misc.i18nTest import set_lang
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib import coala_ci
 from coalib.settings import ConfigurationGathering
@@ -37,7 +36,6 @@ def execute_coala_ci(args):
 class coalaTest(unittest.TestCase):
     def setUp(self):
         self.old_argv = sys.argv
-        set_lang("unknown_language")  # Fall back to untranslated
         self.unescaped_coafile = os.path.abspath("./.coafile")
         self.coafile = re.escape(self.unescaped_coafile)
 

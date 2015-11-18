@@ -1,7 +1,6 @@
 import inspect
 from collections import OrderedDict
 
-from coalib.misc.i18n import _
 from coalib.misc.Enum import enum
 
 
@@ -31,7 +30,7 @@ class DocumentationComment:
         :return
         @return
         """
-        lines = _(inspect.cleandoc(docstring)).split("\n")
+        lines = inspect.cleandoc(docstring).split("\n")
 
         parse_mode = cls._ParseMode.DESCRIPTION
         cur_param = ""

@@ -5,7 +5,6 @@ import subprocess
 sys.path.insert(0, ".")
 
 from coalib.settings.DocumentationComment import DocumentationComment
-from coalib.tests.misc.i18nTest import set_lang
 
 
 class DocumentationCommentParserTest(unittest.TestCase):
@@ -39,18 +38,6 @@ class DocumentationCommentParserTest(unittest.TestCase):
             "p1": "this is a multiline desc for p1",
             "p2": "p2 description"
         }, retval_desc="retval description override")
-
-    def test_translation(self):
-        set_lang("de_DE.UTF8")
-        self.check_from_docstring_dataset(
-            '''
-            Test description. Do not translate except german.
-
-            @param p1: A param.
-            ''',
-            desc="Testbeschreibung. Nicht in Sprachen außer Deutsch "
-                 "übersetzen.",
-            param_dict={"p1": "Ein parameter."})
 
     def test_str(self):
         uut = DocumentationComment.from_docstring(

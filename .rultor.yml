@@ -9,7 +9,6 @@ merge:
   fast-forward: only
   script:
     - python3 .misc/adjust_version_number.py coalib/VERSION -b `date --utc +%Y%m%d%H%M%S`
-    - bash .misc/deploy.zanata.sh
     - bash .misc/deploy.pypi.sh
 
 release:

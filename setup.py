@@ -5,7 +5,6 @@ import setuptools.command.build_py
 
 from coalib import assert_supported_version
 assert_supported_version()
-from coalib.misc.i18n import compile_translations
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from coalib.misc.Constants import Constants
@@ -23,9 +22,7 @@ if __name__ == "__main__":
     maintainer_mails = ('lasse.schuirmann@gmail.com, '
                         'fabian@neuschmidt.de, '
                         'makman@alice.de')
-    data_files = compile_translations() + [
-        ('.', ['coala.1']),
-        ('.', [Constants.BUS_NAME + '.service'])]
+    data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
 
     setup(name='coala',
           version=Constants.VERSION,

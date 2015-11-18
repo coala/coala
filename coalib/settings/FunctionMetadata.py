@@ -3,12 +3,11 @@ from collections import OrderedDict
 from copy import copy
 
 from coalib.settings.DocumentationComment import DocumentationComment
-from coalib.misc.i18n import _
 
 
 class FunctionMetadata:
-    str_nodesc = _("No description given.")
-    str_optional = _("Optional, defaults to '{}'.")
+    str_nodesc = "No description given."
+    str_optional = "Optional, defaults to '{}'."
 
     def __init__(self,
                  name,

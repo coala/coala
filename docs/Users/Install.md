@@ -92,21 +92,6 @@ Optional dependencies are marked with (*).
 >
 > Note that *nuget* downloads all packages into the current working directory.
 
-## gettext
-
-coala uses gettext to be available in your language. If you do not install
-gettext before installing coala from source, you will only be able to use coala
-in english. (Of course, any binary distribution, like wheel, contains readily
-compiled translations.)
-
-Please install gettext via your favorite package manager if you are running
-linux.
-
-On windows, you can download gettext manually from
-<http://gnuwin32.sourceforge.net/packages/gettext.htm>.
-
-On OSX, gettext can be installed using `brew install gettext`.
-
 ## eSpeak (*)
 
 If you want to use coalas voice outputter you need to install eSpeak from

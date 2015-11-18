@@ -4,7 +4,6 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Collectors import collect_bears
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.settings.Setting import Setting
-from coalib.misc.i18n import _
 
 
 def fill_settings(sections, acquire_settings, log_printer):
@@ -72,8 +71,8 @@ def fill_section(section, acquire_settings, log_printer, bears):
         if not hasattr(bear, "get_non_optional_settings"):
             log_printer.log(
                 LOG_LEVEL.WARNING,
-                _("One of the given bears ({}) has no attribute "
-                  "get_non_optional_settings.").format(str(bear)))
+                "One of the given bears ({}) has no attribute "
+                "get_non_optional_settings.".format(str(bear)))
         else:
             needed = bear.get_non_optional_settings()
             for key in needed:

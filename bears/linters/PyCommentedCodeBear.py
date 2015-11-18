@@ -3,7 +3,6 @@ import eradicate
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
-from coalib.misc.i18n import _
 
 
 class PyCommentedCodeBear(LocalBear):
@@ -18,6 +17,6 @@ class PyCommentedCodeBear(LocalBear):
             for diff in wholediff.split_diff():
                 yield Result(
                     self,
-                    _("This file contains commented out source code."),
+                    "This file contains commented out source code.",
                     affected_code=(diff.range(filename),),
                     diffs={filename: diff})

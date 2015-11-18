@@ -13,8 +13,6 @@ from coalib.results.SourceRange import SourceRange
 from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.misc.i18n import _
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
 from coalib.output.ConsoleInteraction import (nothing_done,
@@ -35,12 +33,12 @@ from bears.misc.KeywordBear import KeywordBear
 from bears.misc.LineLengthBear import LineLengthBear
 
 
-STR_GET_VAL_FOR_SETTING = _("Please enter a value for the setting \"{}\" ({}) "
-                            "needed by {}: ")
-STR_LINE_DOESNT_EXIST = _("The line belonging to the following result "
-                          "cannot be printed because it refers to a line "
-                          "that doesn't seem to exist in the given file.")
-STR_PROJECT_WIDE = _("Project wide:")
+STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
+                           "needed by {}: ")
+STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
+                         "cannot be printed because it refers to a line "
+                         "that doesn't seem to exist in the given file.")
+STR_PROJECT_WIDE = "Project wide:"
 
 
 class TestAction(ResultAction):
@@ -223,16 +221,14 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
             print_section_beginning(self.console_printer, Section("name"))
-            self.assertEqual(stdout.getvalue(),
-                             _("Executing section "
-                               "{name}...").format(name="name") + "\n")
+            self.assertEqual(stdout.getvalue(), "Executing section name...\n")
 
     def test_nothing_done(self):
         with retrieve_stdout() as stdout:
             nothing_done(self.console_printer)
             self.assertEqual(stdout.getvalue(),
-                             _("No existent section was targeted or enabled. "
-                               "Nothing to do.") + "\n")
+                             "No existent section was targeted or enabled. "
+                             "Nothing to do.\n")
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
@@ -248,9 +244,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                           {},
                           color=False)
             self.assertEqual(
-                "\n{}\n|    | [{}] origin:\n|    | message"
-                "\n".format(STR_PROJECT_WIDE,
-                            RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+                "\n{}\n|    | [NORMAL] origin:\n|    | message"
+                "\n".format(STR_PROJECT_WIDE),
                 stdout.getvalue())
 
     def test_print_results_for_file(self):
@@ -267,9 +262,9 @@ class ConsoleInteractionTest(unittest.TestCase):
                 color=False)
             self.assertEqual("""\nproj/white
 |   2| line 2
-|    | [{}] SpaceConsistencyBear:
+|    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
-""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+""",
                          stdout.getvalue())
 
         with retrieve_stdout() as stdout:
@@ -289,9 +284,9 @@ class ConsoleInteractionTest(unittest.TestCase):
                 color=False)
             self.assertEqual("""\nproj/white
 |   5| line 5
-|    | [{}] SpaceConsistencyBear:
+|    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
-""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+""",
                              stdout.getvalue())
 
     def test_print_results_sorting(self):
@@ -317,15 +312,14 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual("""
 file
 |   2| line 2
-|    | [{}] SpaceConsistencyBear:
+|    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
 
 file
 |   5| line 5
-|    | [{}] SpaceConsistencyBear:
+|    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
-""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL),
-           RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+""",
                              stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
@@ -354,9 +348,9 @@ some_file
 |   5| line 5
 |   6| line 6
 |   7| line 7
-|    | [{}] ClangCloneDetectionBear:
+|    | [NORMAL] ClangCloneDetectionBear:
 |    | Clone Found
-""".format(RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+""",
                          stdout.getvalue())
 
     def test_print_results_missing_file(self):
@@ -389,19 +383,16 @@ some_file
                 {"file": ["line " + str(i+1) for i in range(5)]},
                 {},
                 color=False)
-            # "NORMAL" but translated to test system language
-            NORMAL = RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)
             self.assertEqual("\n"
                              "file\n"
                              "|   5| line 5\n"
-                             "|    | [{sev}] t:\n"
+                             "|    | [NORMAL] t:\n"
                              "|    | msg\n"
                              "\n"
                              "file\n"
                              "|    | {}\n"
-                             "|    | [{sev}] t:\n"
-                             "|    | msg\n".format(STR_LINE_DOESNT_EXIST,
-                                                   sev=NORMAL),
+                             "|    | [NORMAL] t:\n"
+                             "|    | msg\n".format(STR_LINE_DOESNT_EXIST),
                              stdout.getvalue())
 
     def test_print_results_without_line(self):
@@ -415,20 +406,19 @@ some_file
                 color=False)
             self.assertEqual(
                 "\nfile\n"
-                "|    | [{}] t:\n"
-                "|    | msg\n".format(
-                    RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL)),
+                "|    | [NORMAL] t:\n"
+                "|    | msg\n",
                 stdout.getvalue())
 
     def test_print_bears_empty(self):
         with retrieve_stdout() as stdout:
             bears = {}
             print_bears(self.log_printer.printer, bears, True)
-            self.assertEqual(_("No bears to show.") + "\n", stdout.getvalue())
+            self.assertEqual("No bears to show.\n", stdout.getvalue())
         with retrieve_stdout() as stdout:
             bears = {}
             print_bears(self.log_printer.printer, bears, False)
-            self.assertEqual(_("No bears to show.") + "\n", stdout.getvalue())
+            self.assertEqual("No bears to show.\n", stdout.getvalue())
 
     def test_print_bears(self):
         with retrieve_stdout() as stdout:
@@ -436,14 +426,14 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "TestBear:\n"
             expected_string += "  Test bear Description.\n\n"
-            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "  Used in:\n"
             expected_string += "   * default\n"
             expected_string += "   * docs\n\n"
-            expected_string += "  " + _("Needed Settings:") + "\n"
+            expected_string += "  Needed Settings:\n"
             expected_string += "   * setting1: Required Setting.\n\n"
-            expected_string += "  " + _("Optional Settings:") + "\n"
+            expected_string += "  Optional Settings:\n"
             expected_string += "   * setting2: Optional Setting. ("
-            expected_string += _("Optional, defaults to '{}'.").format("None")
+            expected_string += "Optional, defaults to 'None'."
             expected_string += ")\n\n"
 
             self.assertEqual(expected_string, stdout.getvalue())
@@ -453,11 +443,11 @@ some_file
             bears = {SomeBear: ["default"]}
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeBear:\n"
-            expected_string += "  " + "Some Description." + "\n\n"
-            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "  Some Description.\n\n"
+            expected_string += "  Used in:\n"
             expected_string += "   * default\n\n"
-            expected_string += "  " + _("No needed settings.") + "\n\n"
-            expected_string += "  " + _("No optional settings.") + "\n\n"
+            expected_string += "  No needed settings.\n\n"
+            expected_string += "  No optional settings.\n\n"
 
             self.assertEqual(expected_string, stdout.getvalue())
 
@@ -466,13 +456,13 @@ some_file
             bears = {SomeOtherBear: ["test"]}
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeOtherBear:\n"
-            expected_string += "  " + "This is a Bear." + "\n\n"
-            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "  This is a Bear.\n\n"
+            expected_string += "  Used in:\n"
             expected_string += "   * test\n\n"
-            expected_string += "  " + _("No needed settings.") + "\n\n"
-            expected_string += "  " + _("Optional Settings:") + "\n"
+            expected_string += "  No needed settings.\n\n"
+            expected_string += "  Optional Settings:\n"
             expected_string += "   * setting: This is an optional setting. ("
-            expected_string += _("Optional, defaults to '{}'.").format("None")
+            expected_string += "Optional, defaults to 'None'."
             expected_string += ")\n\n"
 
             self.assertEqual(expected_string, stdout.getvalue())
@@ -483,11 +473,11 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "TestBear2:\n"
             expected_string += "  Test bear 2 description.\n\n"
-            expected_string += "  " + _("Used in:") + "\n"
+            expected_string += "  Used in:\n"
             expected_string += "   * test\n\n"
-            expected_string += "  " + _("Needed Settings:") + "\n"
+            expected_string += "  Needed Settings:\n"
             expected_string += "   * setting1: Required Setting.\n\n"
-            expected_string += "  " + _("No optional settings.") + "\n\n"
+            expected_string += "  No optional settings.\n\n"
 
             self.assertEqual(expected_string, stdout.getvalue())
 
@@ -496,10 +486,10 @@ some_file
             bears = {SomeBear: []}
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeBear:\n"
-            expected_string += "  " + "Some Description." + "\n\n"
-            expected_string += "  " + _("No sections.") + "\n\n"
-            expected_string += "  " + _("No needed settings.") + "\n\n"
-            expected_string += "  " + _("No optional settings.") + "\n\n"
+            expected_string += "  Some Description.\n\n"
+            expected_string += "  No sections.\n\n"
+            expected_string += "  No needed settings.\n\n"
+            expected_string += "  No optional settings.\n\n"
 
             self.assertEqual(expected_string, stdout.getvalue())
 

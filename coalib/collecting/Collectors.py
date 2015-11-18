@@ -2,7 +2,6 @@ import os
 
 from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
-from coalib.misc.i18n import _
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import iglob, fnmatch
 
@@ -92,9 +91,9 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
                         yield bear
                 except BaseException as exception:
                     log_printer.log_exception(
-                        _("Unable to collect bears from {file}. Probably the "
-                          "file is malformed or the module code raises an "
-                          "exception.").format(file=matching_file),
+                        "Unable to collect bears from {file}. Probably the "
+                        "file is malformed or the module code raises an "
+                        "exception.".format(file=matching_file),
                         exception,
                         log_level=LOG_LEVEL.WARNING)
 
