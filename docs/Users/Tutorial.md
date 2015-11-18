@@ -178,7 +178,7 @@ What was that TODO again?
 
 # Show bears' information
 
-To get help on using a bear or to geta  description of the bear, use the
+To get help on using a bear or to get a description of the bear, use the
 `--show-bears` argument:
 
 ```
