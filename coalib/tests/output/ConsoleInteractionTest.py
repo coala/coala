@@ -220,6 +220,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          file_dict)
             self.assertEqual(generator.last_input, 4)
 
+
     def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
             print_section_beginning(self.console_printer, Section("name"))

@@ -133,9 +133,6 @@ def print_result(console_printer,
         if action.is_applicable(result, file_dict, file_diff_dict):
             actions.append(action)
 
-    if actions == []:
-        return
-
     action_dict = {}
     metadata_list = []
     for action in actions:
@@ -144,15 +141,18 @@ def print_result(console_printer,
         metadata_list.append(metadata)
 
     # User can always choose no action which is guaranteed to succeed
-    while apply_action(log_printer,
-                       console_printer,
-                       section,
-                       metadata_list,
-                       action_dict,
-                       result,
-                       file_diff_dict,
-                       file_dict):
-        pass
+    while action_dict and apply_action(log_printer,
+                                       console_printer,
+                                       section,
+                                       metadata_list,
+                                       action_dict,
+                                       result,
+                                       file_diff_dict,
+                                       file_dict):
+        # Some actiona might not be applicable more than once
+        for name, action in action_dict.items():
+            if not action.is_applicable(result, file_dict, file_diff_dict):
+                del action_dict[name]
 
 
 def print_results_formatted(log_printer,
