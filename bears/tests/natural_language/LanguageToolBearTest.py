@@ -3,7 +3,7 @@ import unittest
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import generate_local_bear_test
-from bears.linters.LanguageToolBear import LanguageToolBear
+from bears.natural_language.LanguageToolBear import LanguageToolBear
 
 
 LanguageToolBearTest = generate_local_bear_test(
