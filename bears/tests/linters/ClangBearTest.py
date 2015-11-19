@@ -16,6 +16,15 @@ ClangBearTest = generate_local_bear_test(
     'test.c')
 
 
+ClangBearIgnoreTest = generate_local_bear_test(
+    ClangBear,
+    # Should ignore the warning, valid!
+    (["struct { int f0; } x = { f0 :1 };"],),
+    (),
+    'test.c',
+    settings={'clang_cli_options': '-w'})
+
+
 def skip_test():
     try:
         Index.create()
