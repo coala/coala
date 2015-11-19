@@ -1,6 +1,8 @@
+from queue import Queue
 import unittest
 
 from coalib.bears.LocalBear import LocalBear
+from coalib.settings.Section import Section
 
 
 class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
@@ -247,3 +249,33 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                      [result],
                                      filename,
                                      False)
+
+
+def generate_local_bear_test(bear, valid_files, invalid_files):
+    """
+    Generates a test for a local bear by checking the given valid and invalid
+    file contents. Simply use it on your module level like:
+
+    YourTestName = generate_local_bear_test(YourBear, (['valid line'],),
+                                            (['invalid line'],))
+
+    :param bear:          The Bear class to test.
+    :param valid_files:   An iterable of files as a string list that won't
+                          yield results.
+    :param invalid_files: An iterable of files as a string list that must
+                          yield results.
+    :return:              A unittest.TestCase object.
+    """
+    class LocalBearTest(LocalBearTestHelper):
+        def setUp(self):
+            self.uut = bear(Section('name'), Queue())
+
+        def test_valid_files(self):
+            for file in valid_files:
+                self.assertLinesValid(self.uut, file)
+
+        def test_invalid_files(self):
+            for file in invalid_files:
+                self.assertLinesInvalid(self.uut, file)
+
+    return LocalBearTest
