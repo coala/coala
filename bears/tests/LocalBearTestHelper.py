@@ -3,6 +3,7 @@ import unittest
 
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
@@ -254,7 +255,8 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 def generate_local_bear_test(bear,
                              valid_files,
                              invalid_files,
-                             filename='default'):
+                             filename='default',
+                             settings={}):
     """
     Generates a test for a local bear by checking the given valid and invalid
     file contents. Simply use it on your module level like:
@@ -271,7 +273,10 @@ def generate_local_bear_test(bear,
     """
     class LocalBearTest(LocalBearTestHelper):
         def setUp(self):
-            self.uut = bear(Section('name'), Queue())
+            self.section = Section('name')
+            self.uut = bear(self.section, Queue())
+            for name, value in settings.items():
+                self.section.append(Setting(name, value))
 
         def test_valid_files(self):
             for file in valid_files:
