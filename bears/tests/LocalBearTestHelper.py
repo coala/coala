@@ -251,7 +251,10 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                      False)
 
 
-def generate_local_bear_test(bear, valid_files, invalid_files):
+def generate_local_bear_test(bear,
+                             valid_files,
+                             invalid_files,
+                             filename='default'):
     """
     Generates a test for a local bear by checking the given valid and invalid
     file contents. Simply use it on your module level like:
@@ -272,10 +275,10 @@ def generate_local_bear_test(bear, valid_files, invalid_files):
 
         def test_valid_files(self):
             for file in valid_files:
-                self.assertLinesValid(self.uut, file)
+                self.assertLinesValid(self.uut, file, filename=filename)
 
         def test_invalid_files(self):
             for file in invalid_files:
-                self.assertLinesInvalid(self.uut, file)
+                self.assertLinesInvalid(self.uut, file, filename=filename)
 
     return LocalBearTest
