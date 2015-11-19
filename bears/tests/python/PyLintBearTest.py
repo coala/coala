@@ -1,13 +1,13 @@
-from queue import Queue
+import os
 import subprocess
 import sys
-import os
+from queue import Queue
 
 sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.PyLintBear import PyLintBear
+from bears.python.PyLintBear import PyLintBear
 from coalib.settings.Section import Section
 
 

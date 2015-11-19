@@ -1,10 +1,10 @@
-from queue import Queue
 import sys
 import unittest
+from queue import Queue
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.PEP8Bear import PEP8Bear
+from bears.python.PEP8Bear import PEP8Bear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

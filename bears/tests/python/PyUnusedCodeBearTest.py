@@ -1,10 +1,10 @@
-from queue import Queue
 import sys
 import unittest
+from queue import Queue
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.PyUnusedCodeBear import PyUnusedCodeBear
+from bears.python.PyUnusedCodeBear import PyUnusedCodeBear
 from coalib.settings.Section import Section
 
 
