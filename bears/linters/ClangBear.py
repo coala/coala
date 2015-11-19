@@ -4,16 +4,21 @@ from coalib.results.Result import Result
 from coalib.results.Diff import Diff
 from coalib.bearlib.parsing.clang.cindex import Index
 from coalib.results.SourceRange import SourceRange
+from coalib.settings.Setting import typed_list
 
 
 class ClangBear(LocalBear):
-    def run(self, filename, file):
+    def run(self, filename, file, clang_cli_options: typed_list(str)=None):
         """
         Runs Clang over the given files and raises/fixes any upcoming issues.
+
+        :param clang_cli_options: Any options that will be passed through to
+                                  Clang.
         """
         index = Index.create()
         diagnostics = index.parse(
             filename,
+            args=clang_cli_options,
             unsaved_files=[(filename.encode(),
                             ''.join(file).encode())]).diagnostics
         for diag in diagnostics:
