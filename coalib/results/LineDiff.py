@@ -1,3 +1,7 @@
+from coalib.misc.Decorators import generate_repr
+
+
+@generate_repr('change', 'delete', 'add_after')
 class LineDiff:
     """
     A LineDiff holds the difference between two strings.
