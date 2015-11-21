@@ -21,7 +21,7 @@ sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
 source ~/.bashrc
 nvm install 4.2
-npm install alex
+npm install alex mdast
 export PATH=`pwd`/node_modules/.bin/:$PATH
 
 for dep_version in "${dep_versions[@]}" ; do

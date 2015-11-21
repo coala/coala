@@ -39,7 +39,7 @@ class CorrectionBasedBear(LocalBear):
                 yield diff
 
     def _print_errors(self, errors):
-        for line in errors:
+        for line in filter(lambda error: bool(error.strip()), errors):
             self.warn(line)
 
     def retrieve_results(self, filename, file, **kwargs):
