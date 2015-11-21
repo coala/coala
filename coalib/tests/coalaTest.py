@@ -78,6 +78,12 @@ class coalaTest(unittest.TestCase):
         execute_coala_ci(("-S", "dtag=test_tag", "-c", self.coafile))
         self.assertFalse(os.path.exists(tag_path))
 
+    def test_fail_acquire_settings(self):
+        """It raises an AssertionError when required settings are missing."""
+        retval, output = execute_coala_ci((
+            "-b", 'SpaceConsistencyBear', '-c', '/dev/null'))
+        self.assertIn("During execution, we found that some", output)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

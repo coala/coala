@@ -9,6 +9,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Collectors import collect_bears
+from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.Tagging import tag_results, delete_tagged_results
 
 
@@ -17,7 +18,7 @@ do_nothing = lambda *args: True
 
 def run_coala(log_printer=None,
               print_results=do_nothing,
-              acquire_settings=do_nothing,
+              acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
               show_bears=do_nothing):
