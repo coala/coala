@@ -13,7 +13,8 @@ class BuildDbusService(Command):
         setup(
               entry_points={
                 "distutils.commands": [
-                    "build_dbus = coalib.misc.BuildDbusService:BuildDbusService"
+                    "build_dbus = "
+                    "coalib.misc.BuildDbusService:BuildDbusService"
                 ]
               }
         )

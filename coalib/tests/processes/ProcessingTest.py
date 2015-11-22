@@ -101,13 +101,13 @@ class ProcessingTest(unittest.TestCase):
 
         self.assertRegex(repr(local_result),
                          "<Result object\\(id={}, origin='LocalTestBear', "
-                         "affected_code=\\(\\), severity=NORMAL, message='test "
-                         "msg'\\) at 0x[0-9a-fA-F]+>".format(local_result.id))
+                         "affected_code=\\(\\), severity=NORMAL, message='test"
+                         " msg'\\) at 0x[0-9a-fA-F]+>".format(local_result.id))
         self.assertRegex(repr(global_result),
-                         "<Result object\\(id={}, origin='GlobalTestBear', affe"
-                         "cted_code=\\(.*start=.*file=.*section_executor_test_f"
-                         "iles.*line=None.*end=.*\\), severity=NORMAL, message="
-                         "'test message'\\) at "
+                         "<Result object\\(id={}, origin='GlobalTestBear', "
+                         "affected_code=\\(.*start=.*file=.*section_executor_"
+                         "test_files.*line=None.*end=.*\\), severity=NORMAL, "
+                         "message='test message'\\) at "
                          "0x[0-9a-fA-F]+>".format(global_result.id))
 
     def test_empty_run(self):
@@ -226,7 +226,8 @@ class ProcessingTest(unittest.TestCase):
         p.stdout.close()
         pid, pgid = [int(i.strip()) for i_out in output for i in i_out.split()]
         if platform.system() != "Windows":
-            # There is no way of testing this on windows with the current python
+            # There is no way of testing this on windows with the current
+            # python
             # modules subprocess and os
             self.assertEqual(p.pid, pgid)
 

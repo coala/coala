@@ -24,7 +24,7 @@ class LineLengthBear(LocalBear):
                     origin=self,
                     message="Line is longer than allowed." +
                             " ({actual} > {maximum})".format(
-                                actual=len(line),
+                                actual=len(line)-1,
                                 maximum=max_line_length),
                     file=filename,
                     line=line_number + 1,

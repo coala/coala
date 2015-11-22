@@ -437,7 +437,11 @@ def apply_action(log_printer,
     return True
 
 
-def show_enumeration(console_printer, title, items, indentation, no_items_text):
+def show_enumeration(console_printer,
+                     title,
+                     items,
+                     indentation,
+                     no_items_text):
     """
     This function takes as input an iterable object (preferably a list or
     a dict). And prints in a stylized format. If the iterable object is
