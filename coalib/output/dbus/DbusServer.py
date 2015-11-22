@@ -17,8 +17,9 @@ class DbusServer(dbus.service.Object):
                                 path to.
         :param path:            The path in the dbus bus using which apps can
                                 communicate.
-        :param on_disconnected: This function will be called when the DbusServer
-                                has no more applications connected to it.
+        :param on_disconnected: This function will be called when the
+                                DbusServer has no more applications connected
+                                to it.
         """
         dbus.service.Object.__init__(self, bus, path)
 

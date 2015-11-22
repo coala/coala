@@ -18,7 +18,8 @@ class Diff:
         """
         Creates an empty diff for the given file.
 
-        :param file_list: The original (unmodified) file as a list of its lines.
+        :param file_list: The original (unmodified) file as a list of its
+                          lines.
         """
         self._changes = {}
         self._file = file_list
@@ -255,4 +256,5 @@ class Diff:
         self._changes[line_nr] = linediff
 
     def __eq__(self, other):
-        return (self._file == other._file) and (self.modified == other.modified)
+        return ((self._file == other._file) and
+                (self.modified == other.modified))

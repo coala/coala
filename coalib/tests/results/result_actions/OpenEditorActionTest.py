@@ -60,7 +60,8 @@ class ResultActionTest(unittest.TestCase):
             with open(filename, 'w') as handle:
                 handle.writelines(current_file_dict[filename])
 
-        # End file contents after the patch and the OpenEditorAction was applied
+        # End file contents after the patch and the OpenEditorAction was
+        # applied
         expected_file_dict = {
             self.fa: ["1\n", "3\n"],
             self.fb: ["1\n", "3_changed\n"],

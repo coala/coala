@@ -233,9 +233,10 @@ def yield_ignore_ranges(file_dict):
                 bears = get_ignore_scope(line, "start ignoring ")
             elif "stop ignoring" in line:
                 if start:
-                    yield (bears, SourceRange.from_values(filename,
-                                                          start,
-                                                          end_line=line_number))
+                    yield (bears,
+                           SourceRange.from_values(filename,
+                                                   start,
+                                                   end_line=line_number))
             elif "ignore " in line:
                 yield (get_ignore_scope(line, "ignore "),
                        SourceRange.from_values(filename,

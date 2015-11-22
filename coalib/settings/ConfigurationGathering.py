@@ -167,7 +167,8 @@ def find_user_config(file_path, max_trials=10):
     :param max_trials: The maximum number of directories to go down to.
     :return:           The config file's path
     """
-    file_path = os.path.normpath(os.path.abspath(os.path.expanduser(file_path)))
+    file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
+        file_path)))
     old_dir = None
     base_dir = os.path.dirname(file_path)
     home_dir = os.path.expanduser("~")

@@ -9,7 +9,7 @@ files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
 [PythonCheck]
 bears = SpaceConsistencyBear, LineLengthBear, PyUnusedCodeBear
 use_spaces = True
-max_line_length = 80
+max_line_length = 79
 
 [Pylint]
 bears = PyLintBear

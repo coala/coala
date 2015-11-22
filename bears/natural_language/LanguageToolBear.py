@@ -15,7 +15,8 @@ def get_language_tool_results(filename, file_contents, locale):
             diffs = None
         else:
             replaced = correct(joined_text, [match]).splitlines(True)
-            diffs = {filename: Diff.from_string_arrays(file_contents, replaced)}
+            diffs = {filename:
+                     Diff.from_string_arrays(file_contents, replaced)}
 
         rule_id = match.ruleId
         if match.subId is not None:

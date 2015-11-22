@@ -72,8 +72,9 @@ class DbusTest(unittest.TestCase):
         self.assertRegex(str(self.document_object_path),
                          r"^/org/coala_analyzer/v1/test/\d+/documents/\d+$")
 
-        self.document_object = self.bus.get_object("org.coala_analyzer.v1.test",
-                                                   self.document_object_path)
+        self.document_object = self.bus.get_object(
+            "org.coala_analyzer.v1.test",
+            self.document_object_path)
 
         config_file = self.document_object.SetConfigFile(
             "dummy_config",
@@ -125,8 +126,9 @@ class DbusTest(unittest.TestCase):
         self.document_object_path = self.remote_object.CreateDocument(
             "test.unknown_ext",
             dbus_interface="org.coala_analyzer.v1")
-        self.document_object = self.bus.get_object("org.coala_analyzer.v1.test",
-                                                   self.document_object_path)
+        self.document_object = self.bus.get_object(
+            "org.coala_analyzer.v1.test",
+            self.document_object_path)
         config_file = self.document_object.SetConfigFile(
             self.config_path,
             dbus_interface="org.coala_analyzer.v1")

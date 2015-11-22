@@ -82,12 +82,12 @@ class Setting(StringConverter):
                                            to this value.
         :param origin:                     The originating file. This will be
                                            used for path conversions and the
-                                           last part will be stripped of. If you
-                                           want to specify a directory as origin
-                                           be sure to end it with a directory
-                                           seperator.
-        :param strip_whitespaces:          Whether to strip whitespaces from the
-                                           value or not
+                                           last part will be stripped of. If
+                                           you want to specify a directory as
+                                           origin be sure to end it with a
+                                           directory seperator.
+        :param strip_whitespaces:          Whether to strip whitespaces from
+                                           the value or not
         :param list_delimiters:            Delimiters for list conversion
         :param from_cli:                   True if this setting was read by the
                                            CliParser.
