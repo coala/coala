@@ -53,7 +53,8 @@ class ManPageFormatterTest(unittest.TestCase):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         self.assertEqual(
             uut._mk_synopsis(),
-            ".SH SYNOPSIS\n \\fB{}\\fR [-h] [-a A] arg1\n\n\n".format(app_name))
+            ".SH SYNOPSIS\n \\fB{}\\fR [-h] [-a A] arg1\n\n\n".format(
+                app_name))
 
     def test_mk_description(self):
         uut = ManPageFormatter(app_name,
@@ -95,7 +96,8 @@ class ManPageFormatterTest(unittest.TestCase):
             .format(app_name, app_description))
 
         parser = ManPageFormatter(app_name,
-                                  parser=argparse.ArgumentParser(prog=app_name))
+                                  parser=argparse.ArgumentParser(
+                                      prog=app_name))
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(parser.format_man_page(),
                          ".TH {0} 1 {1}\n"

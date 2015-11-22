@@ -1,11 +1,11 @@
-#===- __init__.py - Clang Python Bindings --------------------*- python -*--===#
+#===- __init__.py - Clang Python Bindings -------------------*- python -*--===#
 #
 #                     The LLVM Compiler Infrastructure
 #
 # This file is distributed under the University of Illinois Open Source
 # License. See LICENSE.TXT for details.
 #
-#===------------------------------------------------------------------------===#
+#===-----------------------------------------------------------------------===#
 
 r"""
 Clang Library Bindings

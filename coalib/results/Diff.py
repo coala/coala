@@ -18,7 +18,8 @@ class Diff:
         """
         Creates an empty diff for the given file.
 
-        :param file_list: The original (unmodified) file as a list of its lines.
+        :param file_list: The original (unmodified) file as a list of its
+        lines.
         """
         self._changes = {}
         self._file = file_list

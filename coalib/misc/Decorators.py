@@ -185,9 +185,9 @@ def generate_repr(*members):
 
 def generate_eq(*members):
     """
-    Decorator that generates equality and inequality operators for the decorated
-    class. The given members as well as the type of self and other will be taken
-    into account.
+    Decorator that generates equality and inequality operators for the
+    decorated class. The given members as well as the type of self and other
+    will be taken into account.
 
     Note that this decorator modifies the given class in place!
 
@@ -213,12 +213,12 @@ def generate_eq(*members):
 
 def generate_ordering(*members):
     """
-    Decorator that generates ordering operators for the decorated class based on
-    the given member names. All ordering except equality functions will raise a
-    TypeError when a comparison with an unrelated class is attempted.
+    Decorator that generates ordering operators for the decorated class based
+    on the given member names. All ordering except equality functions will
+    raise a TypeError when a comparison with an unrelated class is attempted.
     (Comparisons with child classes will thus work fine with the capabilities
-    of the base class as python will choose the base classes comparison operator
-    in that case.)
+    of the base class as python will choose the base classes comparison
+    operator in that case.)
 
     Note that this decorator modifies the given class in place!
 

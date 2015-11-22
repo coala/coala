@@ -167,7 +167,11 @@ class ConsoleInteractionTest(unittest.TestCase):
                          file_dict)
 
         # Interaction must be closed by the user with `0` if it's not a param
-        with simulate_console_inputs("INVALID", -1, 1, 0, 3) as input_generator:
+        with simulate_console_inputs("INVALID",
+                                     -1,
+                                     1,
+                                     0,
+                                     3) as input_generator:
             curr_section = Section("")
             print_section_beginning(self.console_printer, curr_section)
             print_result(self.console_printer,
@@ -538,12 +542,13 @@ class PrintFormattedResultsTest(unittest.TestCase):
             self.assertRegex(stdout.getvalue(), expected_string)
 
     def test_multiple_ranges(self):
-        expected_string = ("id:-?[0-9]+:origin:1:file:another_file:from_line:5:"
-                           "from_column:3:to_line:5:to_column:5:"
-                           "severity:1:msg:2\n"
-                           "id:-?[0-9]+:origin:1:file:some_file:from_line:5:"
-                           "from_column:None:to_line:7:to_column:None:"
-                           "severity:1:msg:2\n")
+        expected_string = (
+            "id:-?[0-9]+:origin:1:file:another_file:from_line:5:"
+            "from_column:3:to_line:5:to_column:5:"
+            "severity:1:msg:2\n"
+            "id:-?[0-9]+:origin:1:file:some_file:from_line:5:"
+            "from_column:None:to_line:7:to_column:None:"
+            "severity:1:msg:2\n")
         affected_code = (SourceRange.from_values("some_file", 5, end_line=7),
                          SourceRange.from_values("another_file", 5, 3, 5, 5))
         with retrieve_stdout() as stdout:

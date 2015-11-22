@@ -48,7 +48,8 @@ def run_coala(log_printer=None,
                                     parameter may be used to indicate if a
                                     compressed output (True) or a normal output
                                     (False) is desired, the former being used
-                                    for showing all available bears to the user.
+                                    for showing all available bears to the
+                                    user.
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
