@@ -1,11 +1,13 @@
 import autoflake
 
-from coalib.bears.LocalBear import LocalBear
-from coalib.results.Result import Result
-from coalib.results.Diff import Diff
+from bears.linters.CorrectionBasedBear import CorrectionBasedBear
 
 
-class PyUnusedCodeBear(LocalBear):
+class PyUnusedCodeBear(CorrectionBasedBear):
+    GET_REPLACEMENT = staticmethod(
+        lambda file: (autoflake.fix_code(''.join(file)).splitlines(True), []))
+    RESULT_MESSAGE = "This file contains unused source code."
+
     def run(self, filename, file):
         """
         Detects unused code. This functionality is limited to:
@@ -13,15 +15,5 @@ class PyUnusedCodeBear(LocalBear):
         - Unneeded pass statements.
         - Unneeded builtin imports. (Others might have side effects.)
         """
-        content = ''.join(file)
-        new_content = autoflake.fix_code(content)
-        if new_content != content:
-            wholediff = Diff.from_string_arrays(file,
-                                                new_content.splitlines(True))
-
-            for diff in wholediff.split_diff():
-                yield Result(
-                    self,
-                    "This file contains unused source code.",
-                    affected_code=(diff.range(filename),),
-                    diffs={filename: diff})
+        for result in self.retrieve_results(filename, file):
+            yield result
