@@ -1,16 +1,29 @@
 from collections import OrderedDict
 import json
 
-from coalib.bears.LocalBear import LocalBear
+from bears.linters.CorrectionBasedBear import CorrectionBasedBear
 from coalib.results.Result import Result
-from coalib.results.Diff import Diff
 
 
-class JSONFormatBear(LocalBear):
+class JSONFormatBear(CorrectionBasedBear):
     try:
         DecodeError = json.decoder.JSONDecodeError
     except:
         DecodeError = ValueError
+
+    GET_REPLACEMENT = lambda self, **kwargs: self.get_plain_json(**kwargs)
+    RESULT_MESSAGE = ("This file can be reformatted by sorting keys and "
+                      "following indentation.")
+
+    @staticmethod
+    def get_plain_json(file, json_sort, indent):
+        json_content = json.loads(''.join(file), object_pairs_hook=OrderedDict)
+        new_file = json.dumps(json_content,
+                              indent=indent,
+                              sort_keys=json_sort).splitlines(True)
+
+        # Because of a bug in 3.2 we need to strip whitespaces
+        return [line.rstrip(" \n")+"\n" for line in new_file], []
 
     def run(self, filename, file, json_sort: bool=False, indent: int=4):
         """
@@ -20,23 +33,11 @@ class JSONFormatBear(LocalBear):
         :param indent:    Number of spaces to indent.
         """
         try:
-            content = ''.join(file)
-            json_content = json.loads(content, object_pairs_hook=OrderedDict)
-            new_file = json.dumps(json_content,
-                                  indent=indent,
-                                  sort_keys=json_sort).splitlines(True)
-            # Because of a bug we have to strip whitespaces
-            new_file = [line.rstrip(" \n")+"\n" for line in new_file]
-            if file != new_file:
-                wholediff = Diff.from_string_arrays(file, new_file)
-
-                for diff in wholediff.split_diff():
-                    yield Result(
-                        self,
-                        "This file can be reformatted by sorting keys and "
-                        "following indentation.",
-                        affected_code=(diff.range(filename),),
-                        diffs={filename: diff})
+            for result in self.retrieve_results(filename,
+                                                file,
+                                                json_sort=json_sort,
+                                                indent=indent):
+                yield result
         except self.DecodeError as err:
             yield Result.from_values(
                 self,
