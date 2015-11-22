@@ -1,15 +1,11 @@
-from subprocess import Popen, PIPE
 import platform
-
-from coalib.bears.LocalBear import LocalBear
-from coalib.results.Diff import Diff
-from coalib.results.Result import Result
+from bears.linters.CorrectionBasedBear import CorrectionBasedBear
 
 
-INDENT_BINARY = "indent" if platform.system() != "Darwin" else "gindent"
+class IndentBear(CorrectionBasedBear):
+    BINARY = "indent" if platform.system() != "Darwin" else "gindent"
+    RESULT_MESSAGE = "Indentation can be improved."
 
-
-class IndentBear(LocalBear):
     def run(self,
             filename,
             file,
@@ -23,25 +19,7 @@ class IndentBear(LocalBear):
                                    understands. They will be simply passed
                                    through.
         """
-        process = Popen(INDENT_BINARY + " " + indent_cli_options,
-                        shell=True,
-                        stdin=PIPE,
-                        stdout=PIPE,
-                        stderr=PIPE,
-                        universal_newlines=True)
-        process.stdin.writelines(file)
-        process.stdin.close()
-        process.wait()
-        new_file = process.stdout.readlines()
-        if new_file != file:
-            wholediff = Diff.from_string_arrays(file, new_file)
-
-            for diff in wholediff.split_diff():
-                yield Result(
-                    self,
-                    "Spacing does not comply to the given standards.",
-                    affected_code=(diff.range(filename),),
-                    diffs={filename: diff})
-
-        process.stdout.close()
-        process.stderr.close()
+        for result in self.retrieve_results(filename,
+                                            file,
+                                            cli_options=indent_cli_options):
+            yield result

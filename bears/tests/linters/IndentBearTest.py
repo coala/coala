@@ -6,12 +6,12 @@ import subprocess
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.IndentBear import IndentBear, INDENT_BINARY
+from bears.linters.IndentBear import IndentBear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
 
-class PEP8BearTest(LocalBearTestHelper):
+class IndentBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section('name')
         self.uut = IndentBear(self.section, Queue())
@@ -38,7 +38,7 @@ class PEP8BearTest(LocalBearTestHelper):
 
 def skip_test():
     try:
-        subprocess.Popen([INDENT_BINARY, '--version'],
+        subprocess.Popen([IndentBear.BINARY, '--version'],
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
         return False
