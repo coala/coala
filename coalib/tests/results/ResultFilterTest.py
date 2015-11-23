@@ -5,6 +5,7 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.ResultFilter import filter_results
 from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
 
@@ -18,45 +19,103 @@ class ResultFilterTest(unittest.TestCase):
                                                'modified_file')
 
     def test_simple_cases(self):
-        self.assertTrue(True)
-        # TODO
+        class Origin:
+            pass
+
+        origin_instance = Origin()
+
+        original_result = Result.from_values(origin=origin_instance,
+                                             message="original",
+                                             file="original",
+                                             severity=RESULT_SEVERITY.NORMAL,
+                                             debug_msg="original")
+
+        clone_result = Result.from_values(origin="Origin",
+                                          message="original",
+                                          file="original",
+                                          severity=RESULT_SEVERITY.NORMAL,
+                                          debug_msg="original")
+
+        wrong_origin_result = Result.from_values(
+            origin="AnotherOrigin",
+            message="original",
+            file="original",
+            severity=RESULT_SEVERITY.NORMAL,
+            debug_msg="original")
+
+        wrong_message_result = Result.from_values(
+            origin="Origin",
+            message="another message",
+            file="original",
+            severity=RESULT_SEVERITY.NORMAL,
+            debug_msg="original")
+
+        wrong_severity_result = Result.from_values(
+            origin="Origin",
+            message="original",
+            file="original",
+            severity=RESULT_SEVERITY.INFO,
+            debug_msg="original")
+
+        wrong_debug_msg_result = Result.from_values(
+            origin="Origin",
+            message="original",
+            file="original",
+            severity=RESULT_SEVERITY.NORMAL,
+            debug_msg="another debug message")
+
+        file_dict = {"original": []}
+
+        self.assertEqual(filter_results(original_file_dict=file_dict,
+                                        modified_file_dict=file_dict,
+                                        original_results=[original_result],
+                                        modified_results=[
+                                            clone_result,
+                                            wrong_origin_result,
+                                            wrong_message_result,
+                                            wrong_severity_result,
+                                            wrong_debug_msg_result]),
+                         [wrong_origin_result,
+                          wrong_message_result,
+                          wrong_severity_result,
+                          wrong_debug_msg_result])
 
     def test_affected_code(self):
 
         # ORIGINAL SOURCE RANGES:
-        sr0_pre_change = SourceRange.from_values(self.original_file_name,
+        sr0_pre_change = SourceRange.from_values("file_name",
                                                  start_line=4,
                                                  start_column=1,
                                                  end_line=4,
                                                  end_column=6)
-        sr0_change = SourceRange.from_values(self.original_file_name,
+        sr0_change = SourceRange.from_values("file_name",
                                              start_line=4,
                                              start_column=8,
                                              end_line=4,
                                              end_column=13)
-        sr0_post_change = SourceRange.from_values(self.original_file_name,
+        sr0_post_change = SourceRange.from_values("file_name",
                                                   start_line=4,
                                                   start_column=15,
                                                   end_line=4,
                                                   end_column=19)
 
-        sr0_pre_remove = SourceRange.from_values(self.original_file_name,
+        sr0_pre_remove = SourceRange.from_values("file_name",
                                                  start_line=6,
                                                  start_column=1,
                                                  end_line=6,
                                                  end_column=6)
-        sr0_post_remove = SourceRange.from_values(self.original_file_name,
+        sr0_post_remove = SourceRange.from_values("file_name",
                                                   start_line=8,
                                                   start_column=1,
                                                   end_line=8,
                                                   end_column=5)
 
-        sr0_pre_addition = SourceRange.from_values(self.original_file_name,
+        sr0_pre_addition = SourceRange.from_values("file_name",
                                                    start_line=10,
                                                    start_column=1,
                                                    end_line=10,
                                                    end_column=6)
-        sr0_post_addition = SourceRange.from_values(self.original_file_name,
+        sr0_post_addition = SourceRange.from_values("file_name",
                                                     start_line=11,
                                                     start_column=1,
                                                     end_line=11,
@@ -83,7 +142,7 @@ class ResultFilterTest(unittest.TestCase):
                                                  sr0_post_change))
         res0_whole_change = Result.from_values(origin="origin",
                                                message="message",
-                                               file=self.original_file_name,
+                                               file="file_name",
                                                line=4,
                                                column=1,
                                                end_line=4,
@@ -101,7 +160,7 @@ class ResultFilterTest(unittest.TestCase):
                                                    sr0_post_remove))
         res0_whole_remove = Result.from_values(origin="origin",
                                                message="message",
-                                               file=self.original_file_name,
+                                               file="file_name",
                                                line=6,
                                                column=1,
                                                end_line=8,
@@ -119,51 +178,51 @@ class ResultFilterTest(unittest.TestCase):
                                                      sr0_post_addition))
         res0_whole_addition = Result.from_values(origin="origin",
                                                  message="message",
-                                                 file=self.original_file_name,
+                                                 file="file_name",
                                                  line=10,
                                                  column=1,
                                                  end_line=11,
                                                  end_column=5)
 
         # NEW SOURCE RANGES:
-        sr1_pre_change = SourceRange.from_values(self.modified_file_name,
+        sr1_pre_change = SourceRange.from_values("file_name",
                                                  start_line=4,
                                                  start_column=1,
                                                  end_line=4,
                                                  end_column=6)
-        sr1_change = SourceRange.from_values(self.modified_file_name,
+        sr1_change = SourceRange.from_values("file_name",
                                              start_line=4,
                                              start_column=8,
                                              end_line=4,
                                              end_column=13)
-        sr1_post_change = SourceRange.from_values(self.modified_file_name,
+        sr1_post_change = SourceRange.from_values("file_name",
                                                   start_line=4,
                                                   start_column=15,
                                                   end_line=4,
                                                   end_column=19)
 
-        sr1_pre_remove = SourceRange.from_values(self.modified_file_name,
+        sr1_pre_remove = SourceRange.from_values("file_name",
                                                  start_line=6,
                                                  start_column=1,
                                                  end_line=6,
                                                  end_column=6)
-        sr1_post_remove = SourceRange.from_values(self.modified_file_name,
+        sr1_post_remove = SourceRange.from_values("file_name",
                                                   start_line=7,
                                                   start_column=1,
                                                   end_line=7,
                                                   end_column=5)
 
-        sr1_pre_addition = SourceRange.from_values(self.modified_file_name,
+        sr1_pre_addition = SourceRange.from_values("file_name",
                                                    start_line=9,
                                                    start_column=1,
                                                    end_line=9,
                                                    end_column=6)
-        sr1_addition = SourceRange.from_values(self.modified_file_name,
+        sr1_addition = SourceRange.from_values("file_name",
                                                start_line=10,
                                                start_column=1,
                                                end_line=10,
                                                end_column=8)
-        sr1_post_addition = SourceRange.from_values(self.modified_file_name,
+        sr1_post_addition = SourceRange.from_values("file_name",
                                                     start_line=11,
                                                     start_column=1,
                                                     end_line=11,
@@ -190,7 +249,7 @@ class ResultFilterTest(unittest.TestCase):
                                                  sr1_post_change))
         res1_whole_change = Result.from_values(origin="origin",
                                                message="message",
-                                               file=self.modified_file_name,
+                                               file="file_name",
                                                line=4,
                                                column=1,
                                                end_line=4,
@@ -208,7 +267,7 @@ class ResultFilterTest(unittest.TestCase):
                                                    sr1_post_remove))
         res1_whole_remove = Result.from_values(origin="origin",
                                                message="message",
-                                               file=self.original_file_name,
+                                               file="file_name",
                                                line=6,
                                                column=1,
                                                end_line=7,
@@ -234,7 +293,7 @@ class ResultFilterTest(unittest.TestCase):
                                                    sr1_post_addition))
         res1_whole_addition = Result.from_values(origin="origin",
                                                  message="message",
-                                                 file=self.original_file_name,
+                                                 file="file_name",
                                                  line=9,
                                                  column=1,
                                                  end_line=11,
@@ -288,11 +347,11 @@ class ResultFilterTest(unittest.TestCase):
 
         with open(self.original_file_name, "r") as original_file:
             original_file_dict = {
-                self.original_file_name: original_file.readlines()}
+                "file_name": original_file.readlines()}
 
             with open(self.modified_file_name, "r") as modified_file:
                 modified_file_dict = {
-                    self.modified_file_name: modified_file.readlines()}
+                    "file_name": modified_file.readlines()}
 
                 # 'TIS THE IMPORTANT PART
                 self.assertEqual(sorted(filter_results(original_file_dict,
