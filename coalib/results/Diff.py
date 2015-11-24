@@ -2,6 +2,7 @@ import difflib
 import copy
 
 from coalib.results.LineDiff import LineDiff
+from coalib.results.SourcePosition import SourcePosition
 from coalib.results.SourceRange import SourceRange
 
 
@@ -253,6 +254,74 @@ class Diff:
 
         linediff.change = (original_line, replacement)
         self._changes[line_nr] = linediff
+
+    def updated_position(self, old_position):
+        """
+        Calculates the new position of a SourcePosition after all changes of
+        this diff have been applied to the file.
+
+        :param old_position: SourceRange in the old file
+        :return: SourceRange marking the same position in the new file,
+                 or None if the position doesn't exists anymore.
+        """
+        # note the difference in counting: Lines are counted relative to the
+        # original file, chars are presented in a traditional diff.
+        line_offset = 0
+        new_column = old_position.column
+
+        # adjust line
+        for line_nr in self._changes:
+            if line_nr < old_position.line:
+                change = self._changes[line_nr]
+
+                if change.delete is True:
+                    line_offset -= 1
+
+                if change.add_after is not False:
+                    line_offset += len(change.add_after)
+
+            elif line_nr == old_position.line:
+                change = self._changes[line_nr]
+
+                if change.delete is True:
+                    return None
+
+                if change.change is not False:
+
+                    #adjust column
+                    ndiff = difflib.ndiff(change.change[0], change.change[1])
+                    position = 1
+
+                    for nchange in ndiff:
+                        if position < new_column:
+                            if nchange.startswith(' '):
+                                position += 1
+
+                            elif nchange.startswith('-'):
+                                new_column -= 1
+
+                            elif nchange.startswith('+'):
+                                position += 1
+                                new_column += 1
+
+                        elif position == new_column:
+                            if nchange.startswith(' '):
+                                break
+
+                            elif nchange.startswith('-'):
+                                return None
+
+                            elif nchange.startswith('+'):
+                                position += 1
+                                new_column += 1
+                        else:
+                            break
+            else:
+                break
+
+        return SourcePosition(old_position.file,
+                              old_position.line + line_offset,
+                              new_column)
 
     def __eq__(self, other):
         return self._changes == other._changes
