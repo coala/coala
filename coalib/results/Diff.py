@@ -256,3 +256,5 @@ class Diff:
 
     def __eq__(self, other):
         return self._changes == other._changes
+#dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+        return True
