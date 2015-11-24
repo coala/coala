@@ -66,4 +66,4 @@ def diffs_match(original_file_dict,
     """
     return False
     ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-    
+    return True
