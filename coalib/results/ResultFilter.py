@@ -41,6 +41,16 @@ def _source_ranges_match(original_file,
     m0 = copy.copy(modified_source_range.start.line)
     m1 = copy.copy(modified_source_range.start.line)
 
+    print("/{}:{}->{}:{}|{}:{}->{}:{}\\".format(o0,
+                                                original_source_range.start.column,
+                                                o1,
+                                                original_source_range.end.column,
+                                                m0,
+                                                modified_source_range.start.column,
+                                                m1,
+                                                modified_source_range.end.column,))
+
+
     actual_line_index = 1
     for dline in diff:
         if dline.startswith('?'):
@@ -52,6 +62,15 @@ def _source_ranges_match(original_file,
                 m0 -= 1
                 m1 -= 1
             elif actual_line_index <= m1:
+                print("A\\{}:{}->{}:{}|{}:{}->{}:{}/ --- {}".format(o0,
+                                                original_source_range.start.column,
+                                                o1,
+                                                original_source_range.end.column,
+                                                m0,
+                                                modified_source_range.start.column,
+                                                m1,
+                                                modified_source_range.end.column,
+                                                (o0 == m0) and (o1 == m1)))
                 return False
             else:
                 break
@@ -60,11 +79,29 @@ def _source_ranges_match(original_file,
                 m0 += 1
                 m1 += 1
             elif actual_line_index <= m1:
+                print("B\\{}:{}->{}:{}|{}:{}->{}:{}/ --- {}".format(o0,
+                                                original_source_range.start.column,
+                                                o1,
+                                                original_source_range.end.column,
+                                                m0,
+                                                modified_source_range.start.column,
+                                                m1,
+                                                modified_source_range.end.column,
+                                                (o0 == m0) and (o1 == m1)))
                 return False
             else:
                 break
             actual_line_index += 1
 
+    print("\\{}:{}->{}:{}|{}:{}->{}:{}/ --- {}".format(o0,
+                                                original_source_range.start.column,
+                                                o1,
+                                                original_source_range.end.column,
+                                                m0,
+                                                modified_source_range.start.column,
+                                                m1,
+                                                modified_source_range.end.column,
+                                                (o0 == m0) and (o1 == m1)))
     return (o0 == m0) and (o1 == m1)
 
 
@@ -74,8 +111,8 @@ def source_ranges_match(original_file_dict,
                         modified_result):
 
     # TODO: a long source range could be split into consecutive parts
-    source_range_pairs = zip(original_result.affected_code,
-                             modified_result.affected_code)
+    source_range_pairs = zip(sorted(original_result.affected_code),
+                             sorted(modified_result.affected_code))
 
     for source_range_pair in source_range_pairs:
         if not _source_ranges_match(

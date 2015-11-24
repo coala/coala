@@ -316,20 +316,20 @@ class ResultFilterTest(unittest.TestCase):
                                 res0_around_addition,
                                 res0_whole_addition]
 
-        new_result_list = [res1_pre_change,
-                           res1_change,
-                           res1_post_change,
-                           res1_around_change,
-                           res1_with_change,
-                           res1_whole_change,
+        new_result_list = [res1_pre_change,#
+                           res1_change,#
+                           res1_post_change,#
+                           res1_around_change,#
+                           res1_with_change,#
+                           res1_whole_change,#
 
                            res1_pre_remove,
-                           res1_post_remove,
+                           res1_post_remove,#
                            res1_around_remove,
                            res1_whole_remove,
 
                            res1_pre_addition,
-                           res1_addition,
+                           res1_addition,#
                            res1_post_addition,
                            res1_around_addition,
                            res1_with_addition,
@@ -353,53 +353,53 @@ class ResultFilterTest(unittest.TestCase):
                 modified_file_dict = {
                     "file_name": modified_file.readlines()}
 
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[0],
-                      "\n\n")
-
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[1],
-                      "\n\n")
-
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[2],
-                      "\n\n")
-
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[3],
-                      "\n\n")
-
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[4],
-                      "\n\n")
-
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[5],
-                      "\n\n")
-
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[6],
-                      "\n\n")
-
-                print(list(filter_results(original_file_dict,
-                                                       modified_file_dict,
-                                                       original_result_list,
-                                                       new_result_list))[7],
-                      "\n\n")
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[0],
+                #       "\n\n")
+                #
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[1],
+                #       "\n\n")
+                #
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[2],
+                #       "\n\n")
+                #
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[3],
+                #       "\n\n")
+                #
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[4],
+                #       "\n\n")
+                #
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[5],
+                #       "\n\n")
+                #
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[6],
+                #       "\n\n")
+                #
+                # print(list(filter_results(original_file_dict,
+                #                                        modified_file_dict,
+                #                                        original_result_list,
+                #                                        new_result_list))[7],
+                #       "\n\n")
 
                 # 'TIS THE IMPORTANT PART
                 self.assertEqual(sorted(filter_results(original_file_dict,
