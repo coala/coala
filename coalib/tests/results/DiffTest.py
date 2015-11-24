@@ -3,6 +3,7 @@ import unittest
 import json
 
 sys.path.insert(0, ".")
+from coalib.results.SourcePosition import SourcePosition
 from coalib.results.Diff import Diff, ConflictError, SourceRange
 from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 from coalib.output.JSONEncoder import JSONEncoder
@@ -172,6 +173,45 @@ class DiffTest(unittest.TestCase):
             ' first\\n'
             '-second\\n'
             ' third\\n"')
+
+    def test_updated_positin(self):
+        self.file = ["XchangeX",
+                     "XsubtractionX",
+                     "XX",
+                     "goneX",
+                     "lateX"
+                     "change",
+                     "lateX",
+                     "subtraction",
+                     "lateX",
+                     "earlyX,"
+                     "linegoneX"]
+        uut = Diff(self.file)
+        uut.change_line(1, "XchangeX", "XegnahcX")
+        uut.change_line(2, "XsubtractionX", "XX")
+        uut.change_line(3, "XX", "XadditionX")
+        uut.change_line(4, "goneX", "gone")
+        uut.change_line(6, "change", "egnahc")
+        uut.delete_line(8)
+        uut.add_lines(9, ["addition"])
+        uut.delete_line(11)
+
+        source_position_tuples = [
+            (SourcePosition("f", 1, 1), SourcePosition("f", 1, 1)),
+            (SourcePosition("f", 1, 8), SourcePosition("f", 1, 8)),
+            (SourcePosition("f", 2, 1), SourcePosition("f", 2, 1)),
+            (SourcePosition("f", 2, 13), SourcePosition("f", 2, 2)),
+            (SourcePosition("f", 3, 1), SourcePosition("f", 3, 1)),
+            (SourcePosition("f", 3, 2), SourcePosition("f", 3, 10)),
+            (SourcePosition("f", 4, 5), None),
+            (SourcePosition("f", 5, 5), SourcePosition("f", 5, 5)),
+            (SourcePosition("f", 7, 5), SourcePosition("f", 7, 5)),
+            (SourcePosition("f", 9, 5), SourcePosition("f", 8, 5)),
+            (SourcePosition("f", 10, 6), SourcePosition("f", 10, 6)),
+            (SourcePosition("f", 11, 9), None)]
+
+        for old_position, new_position in source_position_tuples:
+            self.assertEqual(uut.updated_position(old_position), new_position)
 
 
 def skip_test():
