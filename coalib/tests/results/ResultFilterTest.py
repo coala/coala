@@ -14,9 +14,9 @@ class ResultFilterTest(unittest.TestCase):
         result_filter_test_dir = os.path.join(os.path.split(__file__)[0],
                                               'ResultFilterTestFiles')
         self.original_file_name = os.path.join(result_filter_test_dir,
-                                               'original_file')
+                                               'original_file.txt')
         self.modified_file_name = os.path.join(result_filter_test_dir,
-                                               'modified_file')
+                                               'modified_file.txt')
 
     def test_simple_cases(self):
         class Origin:
@@ -335,7 +335,7 @@ class ResultFilterTest(unittest.TestCase):
                            res1_with_addition,
                            res1_whole_addition]
 
-        unique_new_result_list = [res1_change,
+        unique_new_result_list = [res1_change,# check, pre_change
                                   res1_with_change,
                                   res1_whole_change,
 
@@ -352,6 +352,54 @@ class ResultFilterTest(unittest.TestCase):
             with open(self.modified_file_name, "r") as modified_file:
                 modified_file_dict = {
                     "file_name": modified_file.readlines()}
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[0],
+                      "\n\n")
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[1],
+                      "\n\n")
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[2],
+                      "\n\n")
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[3],
+                      "\n\n")
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[4],
+                      "\n\n")
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[5],
+                      "\n\n")
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[6],
+                      "\n\n")
+
+                print(list(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list))[7],
+                      "\n\n")
 
                 # 'TIS THE IMPORTANT PART
                 self.assertEqual(sorted(filter_results(original_file_dict,
