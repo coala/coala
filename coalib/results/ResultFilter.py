@@ -14,7 +14,13 @@ def filter_results(original_file_dict,
     :return:                   List of results from new files that are unique
                                from all those that existed in the old changes
     """
-    return [modified_results]
+    uniques = []
+
+    for m_r in modified_results:
+        if True not in [basics_match(o_r, m_r) for o_r in original_results]:
+            uniques.append(m_r)
+
+    return uniques
 
 
 def basics_match(original_result,
@@ -30,7 +36,27 @@ def basics_match(original_result,
     :param modified_result: A result of the new files
     :return:                Boolean value whether or not the properties match
     """
-    return False
+    # origin might be a class or class name
+    original_origin = isinstance(original_result.origin, str) and \
+        original_result.origin or original_result.origin.__name__()
+    modified_origin = isinstance(modified_result.origin, str) and \
+        modified_result.origin or modified_result.origin.__name__()
+
+    # we cannot tolerate differences!
+    if original_origin != modified_origin:
+        return False
+
+    elif original_result.message != modified_result.message:
+        return False
+
+    elif original_result.severity != modified_result.severity:
+        return False
+
+    elif original_result.debug_msg != modified_result.debug_msg:
+        return False
+
+    else:
+        return True
 
 
 def source_ranges_match(original_file_dict,
@@ -46,7 +72,7 @@ def source_ranges_match(original_file_dict,
     :param modified_result:    A result of the new files
     :return:                   Boolean value whether the SourceRanges match
     """
-    return False
+    return False # pragma: no cover
 
 
 def diffs_match(original_file_dict,
@@ -64,4 +90,4 @@ def diffs_match(original_file_dict,
     :param modified_result:    A result of the new files
     :return:                   Boolean value whether the Diffs match
     """
-    return False
+    return False # pragma: no cover
