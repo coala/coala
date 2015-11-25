@@ -11,13 +11,16 @@ class ConfParser:
                  key_value_delimiters=('=',),
                  comment_seperators=('#',),
                  key_delimiters=(',', ' '),
-                 section_name_surroundings=None):
+                 section_name_surroundings=None,
+                 remove_empty_iter_elements=True):
         section_name_surroundings = section_name_surroundings or {"[": "]"}
 
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
                                       key_delimiters,
                                       section_name_surroundings)
+
+        self.__remove_empty_iter_elements = remove_empty_iter_elements
 
         # Declare it
         self.sections = None
@@ -70,7 +73,11 @@ class ConfParser:
     def __add_comment(self, section, comment, origin):
         key = "comment" + str(self.__rand_helper)
         self.__rand_helper += 1
-        section.append(Setting(key, comment, origin))
+        section.append(Setting(
+            key,
+            comment,
+            origin,
+            remove_empty_iter_elements=self.__remove_empty_iter_elements))
 
     def __parse_lines(self, lines, origin):
         current_section_name = "default"
@@ -102,13 +109,21 @@ class ConfParser:
 
                 if section_override == "":
                     current_section.add_or_create_setting(
-                        Setting(key, value, origin),
+                        Setting(key,
+                                value,
+                                origin,
+                                remove_empty_iter_elements=
+                                    self.__remove_empty_iter_elements),
                         allow_appending=(keys == []))
                 else:
                     self.get_section(
                         section_override,
                         True).add_or_create_setting(
-                            Setting(key, value, origin),
+                            Setting(key,
+                                    value,
+                                    origin,
+                                    remove_empty_iter_elements=
+                                        self.__remove_empty_iter_elements),
                             allow_appending=(keys == []))
 
     def __init_sections(self):

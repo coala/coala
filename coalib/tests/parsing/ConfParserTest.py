@@ -25,6 +25,11 @@ class ConfParserTest(unittest.TestCase):
     nokey. = value
     default.test = content
     makefiles.lastone = val
+
+    [EMPTY_ELEM_STRIP]
+    A = a, b, c
+    B = a, ,, d
+    C = ,,,
     """
 
     def setUp(self):
@@ -49,8 +54,7 @@ class ConfParserTest(unittest.TestCase):
             ('another', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
-            ('t', '')
-        ])
+            ('t', '')])
 
         makefiles_should = OrderedDict([
             ('j', 'a\nmultiline\nvalue'),
@@ -62,8 +66,18 @@ class ConfParserTest(unittest.TestCase):
             ('a_default', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
-            ('t', '')
-        ])
+            ('t', '')])
+
+        empty_elem_strip_should = OrderedDict([
+            ('a', 'a, b, c'),
+            ('b', 'a, ,, d'),
+            ('c', ',,,'),
+            ('comment4', ''),
+            ('a_default', 'val'),
+            ('another', 'val'),
+            ('comment0', '# do you know that thats a comment'),
+            ('test', 'content'),
+            ('t', '')])
 
         self.assertRaises(FileNotFoundError,
                           self.uut.parse,
@@ -71,6 +85,7 @@ class ConfParserTest(unittest.TestCase):
         sections = self.uut.parse(self.file)
         self.assertNotEqual(self.uut.parse(self.file, True), sections)
 
+        # Check section "DEFAULT".
         key, val = sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
         self.assertEqual(key, 'default')
@@ -80,6 +95,7 @@ class ConfParserTest(unittest.TestCase):
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, default_should)
 
+        # Check section "MakeFiles".
         key, val = sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
         self.assertEqual(key, 'makefiles')
@@ -91,9 +107,42 @@ class ConfParserTest(unittest.TestCase):
 
         self.assertEqual(val["comment1"].key, "comment1")
 
+        # Check section "EMPTY_ELEM_STRIP".
+        key, val = sections.popitem(last=False)
+        self.assertTrue(isinstance(val, Section))
+        self.assertEqual(key, 'empty_elem_strip')
+
+        is_dict = OrderedDict()
+        for k in val:
+            is_dict[k] = str(val[k])
+        self.assertEqual(is_dict, empty_elem_strip_should)
+
+
+        # Check inexistent Section.
         self.assertRaises(IndexError,
                           self.uut.get_section,
                           "inexistent section")
+
+    def test_remove_empty_iter_elements(self):
+        # Test with empty-elem stripping.
+        uut = ConfParser(remove_empty_iter_elements=True)
+        uut.parse(self.file)
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["A"]),
+                         ["a", "b", "c"])
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["B"]),
+                         ["a", "d"])
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["C"]),
+                         [])
+
+        # Test without stripping.
+        uut = ConfParser(remove_empty_iter_elements=False)
+        uut.parse(self.file)
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["A"]),
+                         ["a", "b", "c"])
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["B"]),
+                         ["a", "", "", "d"])
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["C"]),
+                         ["", "", "", ""])
 
     def test_config_directory(self):
         self.uut.parse(self.tempdir)
