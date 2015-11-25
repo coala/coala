@@ -15,7 +15,8 @@ class StringConverter:
                  value,
                  strip_whitespaces=True,
                  list_delimiters=None,
-                 dict_delimiter=":"):
+                 dict_delimiter=":",
+                 remove_empty_iter_elements=True):
         if list_delimiters is None:
             list_delimiters = [",", ";"]
 
@@ -27,6 +28,7 @@ class StringConverter:
         self.__strip_whitespaces = strip_whitespaces
         self.__list_delimiters = list_delimiters
         self.__dict_delimiter = dict_delimiter
+        self.__remove_empty_iter_elements = remove_empty_iter_elements
 
         self.__escaped_list = None
         self.__unescaped_list = None
@@ -95,11 +97,13 @@ class StringConverter:
             self.__escaped_list = [elem.strip()
                                    for elem in self.__escaped_list]
 
-        # Need to do after stripping, cant use builtin functionality of split
-        while "" in self.__unescaped_list:
-            self.__unescaped_list.remove("")
-        while "" in self.__escaped_list:
-            self.__escaped_list.remove("")
+        if self.__remove_empty_iter_elements:
+            # Need to do after stripping, cant use builtin functionality of
+            # split.
+            while "" in self.__unescaped_list:
+                self.__unescaped_list.remove("")
+            while "" in self.__escaped_list:
+                self.__escaped_list.remove("")
 
     def __prepare_dict(self):
         # We must keep order here, user can drop it later.

@@ -76,6 +76,30 @@ class ProcessTest(unittest.TestCase):
                                    strip_whitespaces=False)
         self.assertEqual(list(self.uut), ["a", " test", " \n"])
 
+    def test_iterator_remove_empty_iter_elements(self):
+        uut = StringConverter("a, b, c, , e, , g", list_delimiters=",")
+        self.assertEqual(list(uut), ["a", "b", "c", "e", "g"])
+
+        uut = StringConverter("a, , ,, e, , g",
+                              list_delimiters=",",
+                              remove_empty_iter_elements=True)
+        self.assertEqual(list(uut), ["a", "e", "g"])
+
+        uut = StringConverter(",,, ,",
+                              list_delimiters=",",
+                              remove_empty_iter_elements=True)
+        self.assertEqual(list(uut), [])
+
+        uut = StringConverter("a, b, c, , e, , g",
+                              list_delimiters=",",
+                              remove_empty_iter_elements=False)
+        self.assertEqual(list(uut), ["a", "b", "c", "", "e", "", "g"])
+
+        uut = StringConverter(",,, ,",
+                              list_delimiters=",",
+                              remove_empty_iter_elements=False)
+        self.assertEqual(list(uut), ["", "", "", "", ""])
+
     def test_dict_conversion(self):
         self.uut = StringConverter("test")
         self.assertEqual(dict(self.uut), {"test": ""})
