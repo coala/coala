@@ -255,4 +255,4 @@ class Diff:
         self._changes[line_nr] = linediff
 
     def __eq__(self, other):
-        return self._changes == other._changes
+        return (self._file == other._file) and (self.modified == other.modified)
