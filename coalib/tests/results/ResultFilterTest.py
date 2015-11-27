@@ -3,8 +3,9 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.results.ResultFilter import filter_results
+from coalib.results.ResultFilter import filter_results, remove_range
 from coalib.results.Result import Result, RESULT_SEVERITY
+from coalib.results.SourceRange import SourceRange
 
 
 class ResultFilterTest(unittest.TestCase):
@@ -84,6 +85,56 @@ class ResultFilterTest(unittest.TestCase):
     def test_diffs(self):
         self.assertTrue(True)
 
+    def test_result_range(self):
+        test_file = ["123456789", "123456789", "123456789", "123456789"]
+
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              1,
+                                                              1,
+                                                              1,
+                                                              1)),
+                         ["23456789", "123456789", "123456789", "123456789"])
+
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              1,
+                                                              9,
+                                                              1,
+                                                              9)),
+                         ["12345678", "123456789", "123456789", "123456789"])
+
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              1,
+                                                              3,
+                                                              1,
+                                                              7)),
+                         ["1289", "123456789", "123456789", "123456789"])
+
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              1,
+                                                              3,
+                                                              2,
+                                                              7)),
+                         ["12", "89", "123456789", "123456789"])
+
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              1,
+                                                              3,
+                                                              3,
+                                                              7)),
+                         ["12", "89", "123456789"])
+
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              1,
+                                                              3,
+                                                              4,
+                                                              7)),
+                         ["12", "89"])
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
