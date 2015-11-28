@@ -11,13 +11,16 @@ class ConfParser:
                  key_value_delimiters=('=',),
                  comment_seperators=('#',),
                  key_delimiters=(',', ' '),
-                 section_name_surroundings=None):
+                 section_name_surroundings=None,
+                 remove_empty_iter_elements=True):
         section_name_surroundings = section_name_surroundings or {"[": "]"}
 
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
                                       key_delimiters,
                                       section_name_surroundings)
+
+        self.__remove_empty_iter_elements = remove_empty_iter_elements
 
         # Declare it
         self.sections = None
@@ -28,9 +31,14 @@ class ConfParser:
         """
         Parses the input and adds the new data to the existing.
 
-        :param input_data: filename
-        :param overwrite:  behaves like reparse if this is True
-        :return:           the settings dictionary
+        :param input_data: The filename to parse from.
+        :param overwrite:  If True, wipes all existing Settings inside this
+                           instance and adds only the newly parsed ones. If
+                           False, adds the newly parsed data to the existing one
+                           (and overwrites already existing keys with the newly
+                           parsed values).
+        :return:           A dictionary with (lowercase) section names as keys
+                           and their Setting objects as values.
         """
         if os.path.isdir(input_data):
             input_data = os.path.join(input_data, ".coafile")
@@ -65,7 +73,11 @@ class ConfParser:
     def __add_comment(self, section, comment, origin):
         key = "comment" + str(self.__rand_helper)
         self.__rand_helper += 1
-        section.append(Setting(key, comment, origin))
+        section.append(Setting(
+            key,
+            comment,
+            origin,
+            remove_empty_iter_elements=self.__remove_empty_iter_elements))
 
     def __parse_lines(self, lines, origin):
         current_section_name = "default"
@@ -97,13 +109,21 @@ class ConfParser:
 
                 if section_override == "":
                     current_section.add_or_create_setting(
-                        Setting(key, value, origin),
+                        Setting(key,
+                                value,
+                                origin,
+                                remove_empty_iter_elements=
+                                    self.__remove_empty_iter_elements),
                         allow_appending=(keys == []))
                 else:
                     self.get_section(
                         section_override,
                         True).add_or_create_setting(
-                            Setting(key, value, origin),
+                            Setting(key,
+                                    value,
+                                    origin,
+                                    remove_empty_iter_elements=
+                                        self.__remove_empty_iter_elements),
                             allow_appending=(keys == []))
 
     def __init_sections(self):
