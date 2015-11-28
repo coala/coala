@@ -377,18 +377,6 @@ def print_actions(console_printer, section, actions):
     return get_action_info(section, actions[choice - 1])
 
 
-def print_action_failed(log_printer, action_name, exception):
-    """
-    Prints out the information that the chosen action failed.
-
-    :param log_printer: Printer responsible for logging the messages.
-    :param action_name: The name of the action that failed.
-    :param exception:   The exception with which it failed.
-    """
-    log_printer.log_exception("Failed to execute the action {}.".
-                              format(action_name), exception)
-
-
 def apply_action(log_printer,
                  console_printer,
                  section,
@@ -432,7 +420,8 @@ def apply_action(log_printer,
             format_lines("The action was executed successfully."),
             color=SUCCESS_COLOR)
     except Exception as exception:  # pylint: disable=broad-except
-        print_action_failed(log_printer, action_name, exception)
+        log_printer.log_exception("Failed to execute the action "
+                                  "{}.".format(action_name), exception)
 
     return True
 
