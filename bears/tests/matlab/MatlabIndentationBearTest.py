@@ -3,7 +3,7 @@ import unittest
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import generate_local_bear_test
-from bears.Matlab.MatlabIndentationBear import MatlabIndentationBear
+from bears.matlab.MatlabIndentationBear import MatlabIndentationBear
 
 
 MatlabIndentationBearTest = generate_local_bear_test(
