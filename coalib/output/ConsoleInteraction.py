@@ -428,12 +428,12 @@ def apply_action(log_printer,
                                          file_dict,
                                          file_diff_dict,
                                          section)
+        console_printer.print(
+            format_lines("The action was executed successfully."),
+            color=SUCCESS_COLOR)
     except Exception as exception:  # pylint: disable=broad-except
         print_action_failed(log_printer, action_name, exception)
 
-    console_printer.print(
-        format_lines("The action was executed successfully."),
-        color=SUCCESS_COLOR)
     return True
 
 
