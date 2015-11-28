@@ -40,8 +40,9 @@ def run_coala(log_printer=None,
     :param print_section_beginning: A callback that will be called with a
                                     section name string whenever analysis of a
                                     new section is started.
-    :param nothing_done:            A callback that will be called without
-                                    parameters if nothing was done.
+    :param nothing_done:            A callback that will be called with only a
+                                    log printer that shall indicate that
+                                    nothing was done.
     :param show_bears:              A callback that will be called with first
                                     a list of local bears, second a list of
                                     global bears to output them. A third bool

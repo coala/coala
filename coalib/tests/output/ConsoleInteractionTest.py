@@ -229,10 +229,10 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_nothing_done(self):
         with retrieve_stdout() as stdout:
-            nothing_done(self.console_printer)
-            self.assertEqual(stdout.getvalue(),
-                             "No existent section was targeted or enabled. "
-                             "Nothing to do.\n")
+            nothing_done(self.log_printer)
+            self.assertIn("No existent section was targeted or enabled. "
+                          "Nothing to do.\n",
+                          stdout.getvalue())
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:

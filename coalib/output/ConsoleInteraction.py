@@ -53,13 +53,15 @@ def print_section_beginning(console_printer, section):
         name=section.name))
 
 
-def nothing_done(console_printer):
+def nothing_done(log_printer):
     """
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
+
+    :param log_printer: A LogPrinter object.
     """
-    console_printer.print("No existent section was targeted or enabled. "
-                          "Nothing to do.")
+    log_printer.warn("No existent section was targeted or enabled. "
+                     "Nothing to do.")
 
 
 def print_lines(console_printer,
