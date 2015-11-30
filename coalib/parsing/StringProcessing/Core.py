@@ -356,6 +356,32 @@ def position_is_escaped(string, position=None):
     return escapes_uneven
 
 
+def unescaped_rstrip(string):
+    """
+    Strips whitespaces from the right side of given string that are not
+    escaped.
+
+    :param string: The string where to strip whitespaces from.
+    :return:       The right-stripped string.
+    """
+    stripped = string.rstrip()
+    if (len(string) > len(stripped) and
+            position_is_escaped(stripped, len(string))):
+        stripped += string[len(stripped)]
+    return stripped
+
+
+def unescaped_strip(string):
+    """
+    Strips whitespaces of the given string taking escape characters into
+    account.
+
+    :param string: The string where to strip whitespaces from.
+    :return:       The stripped string.
+    """
+    return unescaped_rstrip(string).lstrip()
+
+
 def _nested_search_in_between(begin, end, string):
     """
     Searches for a string enclosed between a specified begin- and end-sequence.

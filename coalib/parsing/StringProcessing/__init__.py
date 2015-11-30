@@ -10,4 +10,6 @@ from coalib.parsing.StringProcessing.Core import (search_for,
                                                   nested_search_in_between,
                                                   escape,
                                                   unescape,
+                                                  unescaped_rstrip,
+                                                  unescaped_strip,
                                                   position_is_escaped)
