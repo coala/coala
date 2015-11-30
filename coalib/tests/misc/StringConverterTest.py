@@ -5,7 +5,7 @@ from coalib.misc.StringConverter import StringConverter
 import unittest
 
 
-class ProcessTest(unittest.TestCase):
+class StringConverterTest(unittest.TestCase):
     def setUp(self):
         self.uut = StringConverter("\n \\1 \n ")
 
