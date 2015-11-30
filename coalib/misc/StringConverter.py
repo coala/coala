@@ -1,7 +1,9 @@
 from collections import Iterable, OrderedDict
 import re
 from coalib.misc.Constants import Constants
-from coalib.parsing.StringProcessing import unescaped_split, unescape
+from coalib.parsing.StringProcessing import (unescaped_split,
+                                             unescaped_strip,
+                                             unescape)
 
 
 class StringConverter:
@@ -89,13 +91,13 @@ class StringConverter:
 
     def __prepare_list(self):
         self.__escaped_list = self.__get_raw_list()
+
+        if self.__strip_whitespaces:
+            self.__escaped_list = [unescaped_strip(elem)
+                                   for elem in self.__escaped_list]
+
         self.__unescaped_list = [unescape(elem)
                                  for elem in self.__escaped_list]
-        if self.__strip_whitespaces:
-            self.__unescaped_list = [elem.strip()
-                                     for elem in self.__unescaped_list]
-            self.__escaped_list = [elem.strip()
-                                   for elem in self.__escaped_list]
 
         if self.__remove_empty_iter_elements:
             # Need to do after stripping, cant use builtin functionality of
@@ -109,13 +111,12 @@ class StringConverter:
         # We must keep order here, user can drop it later.
         self.__dict = OrderedDict()
         for elem in self.__get_raw_list():
-            key_val = [unescape(item)
-                       for item in unescaped_split(self.__dict_delimiter,
-                                                   elem,
-                                                   max_split=1)]
+            key_val = unescaped_split(self.__dict_delimiter, elem, max_split=1)
 
             if self.__strip_whitespaces:
-                key_val = [item.strip() for item in key_val]
+                key_val = [unescaped_strip(item) for item in key_val]
+
+            key_val = [unescape(item) for item in key_val]
 
             if not any(item != "" for item in key_val):
                 continue
@@ -133,7 +134,7 @@ class StringConverter:
     def value(self, newval):
         self.__value = str(newval)
         if self.__strip_whitespaces:
-            self.__value = self.__value.strip()
+            self.__value = unescaped_strip(self.__value)
 
         self.__prepare_list()
         self.__prepare_dict()

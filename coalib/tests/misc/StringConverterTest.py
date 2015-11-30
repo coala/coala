@@ -58,7 +58,7 @@ class StringConverterTest(unittest.TestCase):
                                    list_delimiters=", !",
                                    strip_whitespaces=True)
         self.assertEqual(list(self.uut),
-                         ["a", "test", "with", "some", "\\ challenge"])
+                         ["a", "test", "with", "some", "\\ challenge "])
         self.uut = StringConverter("testval", list_delimiters=[",", "¸"])
         self.uut.value = "a\\n,bug¸g"
         self.assertEqual(list(self.uut), ["an", "bug", "g"])
@@ -75,6 +75,22 @@ class StringConverterTest(unittest.TestCase):
                                    list_delimiters=[","],
                                    strip_whitespaces=False)
         self.assertEqual(list(self.uut), ["a", " test", " \n"])
+
+        uut = StringConverter("A,B,C  ,  D\\x \\a,42,\\n8 ",
+                              strip_whitespaces=False)
+        self.assertEqual(list(uut), ["A", "B", "C  ", "  Dx a", "42", "n8 "])
+
+    def test_iterator_escape_whitespaces(self):
+        uut = StringConverter("ta, chi, tsu, te, \\ to", list_delimiters=",")
+        self.assertEqual(list(uut), ["ta", "chi", "tsu", "te", " to"])
+
+        uut = StringConverter(r"/**, \ *\ , \ */", list_delimiters=",")
+        self.assertEqual(list(uut), ["/**", " * ", " */"])
+
+        uut = StringConverter(
+            "abc\\\\ , def\\ \\ \\ ,   \\\\ unstrip \\\\\\  ",
+            list_delimiters=",")
+        self.assertEqual(list(uut), ["abc\\", "def   ", "\\ unstrip \\ "])
 
     def test_iterator_remove_empty_iter_elements(self):
         uut = StringConverter("a, b, c, , e, , g", list_delimiters=",")
@@ -99,6 +115,26 @@ class StringConverterTest(unittest.TestCase):
                               list_delimiters=",",
                               remove_empty_iter_elements=False)
         self.assertEqual(list(uut), ["", "", "", "", ""])
+
+    def test_dict_escape_whitespaces(self):
+        uut = StringConverter(
+            "\\  : \\  , hello: \\ world, \\\\ A \\\\ : B\\ ")
+        self.assertEqual(dict(uut), {" ": " ",
+                                     "hello": " world",
+                                     "\\ A \\": "B "})
+
+        uut = StringConverter(r"/**, \ *\ , \ */")
+        self.assertEqual(dict(uut), {"/**": "", " * ": "", " */": ""})
+
+        uut = StringConverter("abc\\\\  :    qew, def\\ \\ \\ ,"
+                              "   \\\\ unstrip \\\\\\  ")
+        self.assertEqual(dict(uut), {"abc\\": "qew",
+                                     "def   ": "",
+                                     "\\ unstrip \\ ": ""})
+
+        uut = StringConverter("A:B,C  :  D\\x \\a,42:\\n8 ",
+                              strip_whitespaces=False)
+        self.assertEqual(dict(uut), {"A": "B", "C  ": "  Dx a", "42": "n8 "})
 
     def test_dict_conversion(self):
         self.uut = StringConverter("test")
