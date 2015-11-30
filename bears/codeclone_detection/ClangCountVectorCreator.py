@@ -3,7 +3,8 @@ from bears.codeclone_detection.ClangCountingConditions import (
     is_reference,
     get_identifier_name,
     is_literal,
-    is_function_declaration)
+    is_function_declaration,
+    is_call_param)
 from coalib.bearlib.parsing.clang.cindex import Cursor, Index
 
 
@@ -73,6 +74,8 @@ class ClangCountVectorCreator:
                 # token is the constant, semicolon and similar things may
                 # follow, don't want them
                 self.count_identifier("#" + tokens[0].spelling.decode())
+        # if is_call_param(self.stack):
+        #     print(cursor)
 
         for i, child in enumerate(cursor.get_children()):
             self._get_vector_for_function(child, i)
@@ -96,9 +99,18 @@ class ClangCountVectorCreator:
 
         if str(file) == str(filename) and is_function_declaration(cursor):
             self._get_vector_for_function(cursor)
-
+            args = cursor.get_arguments()
+            func_def = get_identifier_name(cursor)[:-1]
+            func_def_list = func_def.split(",")
+            func_descr = ''
+            for ele, fele in zip(args, func_def_list):
+                literal = ele.spelling.decode('utf-8')
+                func_descr += (fele+literal)
+            if func_descr == '':
+                func_descr += func_def_list[0]
+            func_descr += ')'
             result = {(cursor.extent.start.line,
-                       get_identifier_name(cursor)): self.count_vectors}
+                       func_descr): self.count_vectors}
             # Reset local states
             self.count_vectors = {}
             self.stack = []
