@@ -99,6 +99,63 @@ class DocumentationExtractionTest(unittest.TestCase):
         self.assertEqual(tuple(extract_documentation(data, "C", "doxygen")),
                          expected_results)
 
+    def test_extract_documentation_CPP(self):
+        data = DocumentationExtractionTest.load_testdata("data.cpp")
+
+        # No built-in documentation for C++.
+        with self.assertRaises(KeyError):
+            tuple(extract_documentation(data, "CPP", "default"))
+
+        docstyle_CPP_doxygen = DocstyleDefinition.load("CPP", "doxygen")
+
+        self.assertEqual(tuple(extract_documentation(data, "CPP", "doxygen")),
+                         (DocumentationComment(
+                              ("\n"
+                               " This is the main function.\n"
+                               " @returns Exit code.\n"
+                               "          Or any other number.\n"),
+                              docstyle_CPP_doxygen,
+                              docstyle_CPP_doxygen.markers[0],
+                              TextRange.from_values(4, 1, 8, 4)),
+                          DocumentationComment(
+                              (" foobar\n"
+                               " @param xyz\n"),
+                              docstyle_CPP_doxygen,
+                              docstyle_CPP_doxygen.markers[0],
+                              TextRange.from_values(15, 1, 17, 4)),
+                          DocumentationComment(
+                              " Some alternate style of documentation\n",
+                              docstyle_CPP_doxygen,
+                              docstyle_CPP_doxygen.markers[4],
+                              TextRange.from_values(22, 1, 22, 43)),
+                          DocumentationComment(
+                              " ends instantly",
+                              docstyle_CPP_doxygen,
+                              docstyle_CPP_doxygen.markers[0],
+                              TextRange.from_values(26, 5, 26, 26)),
+                          DocumentationComment(
+                              (" Should work\n"
+                               "\n"
+                               " even without a function standing below.\n"
+                               "\n"
+                               " @param foo WHAT PARAM PLEASE!?\n"),
+                              docstyle_CPP_doxygen,
+                              docstyle_CPP_doxygen.markers[4],
+                              TextRange.from_values(32, 1, 36, 36))))
+
+    def test_extract_documentation_CPP_2(self):
+        data = DocumentationExtractionTest.load_testdata("data2.cpp")
+
+        docstyle_CPP_doxygen = DocstyleDefinition.load("CPP", "doxygen")
+
+        self.assertEqual(tuple(extract_documentation(data, "CPP", "doxygen")),
+                         (DocumentationComment(
+                              ("module comment\n"
+                               " hello world\n"),
+                              docstyle_CPP_doxygen,
+                              docstyle_CPP_doxygen.markers[0],
+                              TextRange.from_values(1, 1, 3, 4)),))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
