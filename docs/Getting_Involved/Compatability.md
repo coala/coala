@@ -15,3 +15,14 @@ when you write code for coala.
   `os.remove`.
   Raising this error manually is not permitted since it unifies more than one
   error. Only use it inside a try-except block.
+
+If you want to rethrow an exception that summarizes multiple exceptions from a
+try-except block with a different message, you can do:
+
+```
+try:
+    file = "hello_world.txt"
+    critical_task_that_can_throw(file)
+except FileNotFoundError as ex:
+    raise type(ex)("Something went wrong with your critical task.")
+```
