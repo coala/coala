@@ -46,20 +46,20 @@ class SourceRangeTest(unittest.TestCase):
 
     def test_invalid_arguments(self):
         # arguments must be SourceRanges
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             SourceRange(1, self.result_fileA_noline)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             SourceRange(self.result_fileA_line2, 1)
 
     def test_argument_file(self):
         # both Source_Positions should describe the same file
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             SourceRange(self.result_fileA_noline, self.result_fileB_noline)
 
     def test_argument_order(self):
         # end should come after the start
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             SourceRange(self.result_fileA_line2, self.result_fileA_noline)
 
     def test_invalid_comparison(self):

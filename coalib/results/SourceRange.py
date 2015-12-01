@@ -1,31 +1,30 @@
-from coalib.misc.Decorators import generate_repr, generate_ordering
+from coalib.misc.Decorators import enforce_signature
 from coalib.results.SourcePosition import SourcePosition
+from coalib.results.TextRange import TextRange
 
 
-@generate_repr("start", "end")
-@generate_ordering("start", "end")
-class SourceRange:
-    def __init__(self, start, end=None):
+class SourceRange(TextRange):
+    @enforce_signature
+    def __init__(self,
+                 start: SourcePosition,
+                 end: (SourcePosition, None)=None):
         """
         Creates a new SourceRange.
 
-        :param start: A SourcePosition indicating the start of the range.
-        :param end:   A SourcePosition indicating the end of the range. If
-                      `None` is given, the start object will be used here. end
-                      must be in the same file and be greater than start as
-                      negative ranges are not allowed.
+        :param start:       A SourcePosition indicating the start of the range.
+        :param end:         A SourcePosition indicating the end of the range.
+                            If `None` is given, the start object will be used
+                            here. end must be in the same file and be greater
+                            than start as negative ranges are not allowed.
+        :raises TypeError:  Raised when
+                            - start is no SourcePosition or None.
+                            - end is no SourcePosition.
+        :raises ValueError: Raised when file of start and end mismatch.
         """
-        assert isinstance(start, SourcePosition)
+        TextRange.__init__(self, start, end)
 
-        self._start = start
-        if end is None:
-            self._end = self.start
-        else:
-            assert isinstance(end, SourcePosition)
-            assert self.start.file == end.file
-            assert end >= self.start
-
-            self._end = end
+        if self.start.file != self.end.file:
+            raise ValueError("File of start and end position do not match.")
 
     @classmethod
     def from_values(cls,
@@ -58,14 +57,6 @@ class SourceRange:
     @property
     def file(self):
         return self.start.file
-
-    @property
-    def start(self):
-        return self._start
-
-    @property
-    def end(self):
-        return self._end
 
     def overlaps(self, other):
         return self.start <= other.end and self.end >= other.start
