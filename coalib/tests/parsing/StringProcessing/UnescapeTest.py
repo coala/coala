@@ -40,7 +40,7 @@ class UnescapeTest(StringProcessingTestBase):
     # flaws.
     def test_extended(self):
         self.assertEqual(unescape("hello\\"), "hello")
-        self.assertEqual(unescape("te\st\\\\"), "test\\")
+        self.assertEqual(unescape("te\\st\\\\"), "test\\")
         self.assertEqual(unescape("\\\\\\"), "\\")
 
 
