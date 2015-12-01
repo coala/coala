@@ -7,10 +7,10 @@ from coalib.results.SourcePosition import SourcePosition
 
 class SourcePositionTest(unittest.TestCase):
     def test_initialization(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             SourcePosition(None, 0)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             SourcePosition("file", None, 1)
 
         # However these should work:
