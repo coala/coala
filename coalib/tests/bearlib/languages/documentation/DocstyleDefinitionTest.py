@@ -4,6 +4,7 @@ import sys
 sys.path.insert(0, ".")
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
+from coalib.misc.Compatability import FileNotFoundError
 
 
 class DocstyleDefinitionTest(unittest.TestCase):
@@ -41,6 +42,23 @@ class DocstyleDefinitionTest(unittest.TestCase):
         self.assertEqual(uut.language, "i2c")
         self.assertEqual(uut.docstyle, "my-custom-tool")
         self.assertEqual(uut.markers, (("~~", "/~", "/~"), (">!", ">>", ">>")))
+
+    def test_load(self):
+        # Test unregistered docstyle.
+        with self.assertRaises(FileNotFoundError):
+            next(DocstyleDefinition.load("PYTHON", "INVALID"))
+
+        # Test unregistered language in existing docstyle.
+        with self.assertRaises(KeyError):
+            next(DocstyleDefinition.load("bake-a-cake", "default"))
+
+        # Test python 3 default configuration and if everything is parsed
+        # right.
+        result = DocstyleDefinition.load("PYTHON3", "default")
+
+        self.assertEqual(result.language, "python3")
+        self.assertEqual(result.docstyle, "default")
+        self.assertEqual(result.markers, (('"""', '', '"""'),))
 
 
 if __name__ == '__main__':

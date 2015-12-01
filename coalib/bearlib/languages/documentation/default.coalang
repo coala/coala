@@ -1,0 +1,5 @@
+[PYTHON]
+doc-marker = """, , """
+
+[PYTHON3]
+doc-marker = """, , """
