@@ -2,6 +2,7 @@ import os
 import math
 import copy
 from munkres import Munkres
+from operator import add
 # Instantiate globally since this class is holding stateless public methods.
 munkres = Munkres()
 
@@ -30,6 +31,12 @@ def exclude_function(count_matrix):
                 for cv in count_matrix.values()) or
             variable_sum < 11 or
             var_count < 2)
+
+
+def add_count_vectors(cv1, cv2):
+    cv1.count_vector = list(map(add, cv1.count_vector, cv2.count_vector))
+    cv1.unweighted = list(map(add, cv1.unweighted, cv2.unweighted))
+    return cv1
 
 
 def get_count_matrices(count_vector_creator,
