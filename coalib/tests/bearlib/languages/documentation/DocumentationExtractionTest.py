@@ -156,6 +156,78 @@ class DocumentationExtractionTest(unittest.TestCase):
                               docstyle_CPP_doxygen.markers[0],
                               TextRange.from_values(1, 1, 3, 4)),))
 
+    def test_extract_documentation_PYTHON3(self):
+        data = DocumentationExtractionTest.load_testdata("data.py")
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load("PYTHON3",
+                                                           "default")
+        docstyle_PYTHON3_doxygen = DocstyleDefinition.load("PYTHON3",
+                                                           "doxygen")
+
+        expected = (DocumentationComment(
+                        ("\n"
+                         "Module description.\n"
+                         "\n"
+                         "Some more foobar-like text.\n"),
+                        docstyle_PYTHON3_default,
+                        docstyle_PYTHON3_default.markers[0],
+                        TextRange.from_values(1, 1, 5, 4)),
+                    DocumentationComment(
+                        ("\n"
+                         "A nice and neat way of documenting code.\n"
+                         ":param radius: The explosion radius.\n"),
+                        docstyle_PYTHON3_default,
+                        docstyle_PYTHON3_default.markers[0],
+                        TextRange.from_values(8, 5, 11, 8)),
+                    DocumentationComment(
+                        ("\n"
+                         "Docstring with layouted text.\n"
+                         "\n"
+                         "    layouts inside docs are preserved for these "
+                         "documentation styles.\n"
+                         "this is intended.\n"),
+                        docstyle_PYTHON3_default,
+                        docstyle_PYTHON3_default.markers[0],
+                        TextRange.from_values(14, 1, 19, 4)),
+                    DocumentationComment(
+                        (" Docstring directly besides triple quotes.\n"
+                         "    Continues here. "),
+                        docstyle_PYTHON3_default,
+                        docstyle_PYTHON3_default.markers[0],
+                        TextRange.from_values(21, 1, 22, 24)),
+                    DocumentationComment(
+                        ("super\n"
+                         " nicely\n"
+                         "short"),
+                        docstyle_PYTHON3_default,
+                        docstyle_PYTHON3_default.markers[0],
+                        TextRange.from_values(35, 1, 37, 9)))
+
+        self.assertEqual(
+            tuple(extract_documentation(data, "PYTHON3", "default")),
+            expected)
+
+        # Change only the docstyle in expected results.
+        expected = list(DocumentationComment(r.documentation,
+                                             docstyle_PYTHON3_doxygen,
+                                             r.marker,
+                                             r.range)
+                        for r in expected)
+
+        expected.insert(4, DocumentationComment(
+            (" Alternate documentation style in doxygen.\n"
+             "  Subtext\n"
+             " More subtext (not correctly aligned)\n"
+             "      sub-sub-text\n"
+             "\n"),
+            docstyle_PYTHON3_doxygen,
+            docstyle_PYTHON3_doxygen.markers[1],
+            TextRange.from_values(25, 1, 29, 3)))
+
+        self.assertEqual(
+            list(extract_documentation(data, "PYTHON3", "doxygen")),
+            expected)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
