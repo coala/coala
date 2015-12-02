@@ -10,8 +10,8 @@ def filter_results(original_file_dict,
     """
     Filters results for such ones that are unique across file changes
 
-    :param original_file_dict: Dict of lists of file contents before the changes
-    :param modified_file_dict: Dict of lists of file contents after the changes
+    :param original_file_dict: Dict of lists of file contents before  changes
+    :param modified_file_dict: Dict of lists of file contents after changes
     :param original_results:   List of results of the old files
     :param modified_results:   List of results of the new files
     :return:                   List of results from new files that are unique
@@ -168,8 +168,8 @@ def diffs_match(original_file_dict,
     """
     Checks whether the Diffs of two results describe the same changes
 
-    :param original_file_dict: Dict of lists of file contents before the changes
-    :param modified_file_dict: Dict of lists of file contents after the changes
+    :param original_file_dict: Dict of lists of file contents before changes
+    :param modified_file_dict: Dict of lists of file contents after changes
     :param diff_dict:          Dict of diffs describing the change in each file
     :param original_result:    A result of the old files
     :param modified_result:    A result of the new files
