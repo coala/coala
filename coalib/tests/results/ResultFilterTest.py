@@ -316,38 +316,38 @@ class ResultFilterTest(unittest.TestCase):
                                 res0_around_addition,
                                 res0_whole_addition]
 
-        new_result_list = [res1_pre_change,
-                           res1_change,
-                           res1_post_change,
-                           res1_around_change,
-                           res1_with_change,
-                           res1_whole_change,
+        new_result_list = [res1_pre_change,       # FALSE POSITIVE (in-line)
+                           res1_change,           # correctly kept
+                           res1_post_change,      # FALSE POSITIVE (in-line)
+                           res1_around_change,    # FALSE POSITIVE (in-line)
+                           res1_with_change,      # correctly kept
+                           res1_whole_change,     # correctly kept
 
-                           res1_pre_remove,
-                           res1_post_remove,
-                           res1_around_remove,
-                           res1_whole_remove,
+                           res1_pre_remove,       # correctly filtered out
+                           res1_post_remove,      # correctly filtered out
+                           res1_around_remove,    # correctly filtered out
+                           res1_whole_remove,     # UNSURE
 
-                           res1_pre_addition,
-                           res1_addition,
-                           res1_post_addition,
-                           res1_around_addition,
-                           res1_with_addition,
-                           res1_whole_addition]
+                           res1_pre_addition,     # correctly filtered out
+                           res1_addition,         # correctly kept
+                           res1_post_addition,    # correctly filtered out
+                           res1_around_addition,  # FALSE POSITIVE (close-line)
+                           res1_with_addition,    # correctly kept
+                           res1_whole_addition]   # correctly kept
 
-        unique_new_result_list = [res1_pre_change,
-                                  res1_change,
-                                  res1_post_change,
-                                  res1_around_change,
-                                  res1_with_change,
-                                  res1_whole_change,
+        unique_new_result_list = [res1_pre_change,      # WRONG: line-wise diff
+                                  res1_change,          # correct
+                                  res1_post_change,     # WRONG: line-wise diff
+                                  res1_around_change,   # WRONG: line-wise diff
+                                  res1_with_change,     # correct
+                                  res1_whole_change,    # correct
 
-                                  #res1_whole_remove, ==>shit ?
+                                  #res1_whole_remove,   # UNSURE
 
-                                  res1_addition,
-                                  res1_around_addition,
-                                  res1_with_addition,
-                                  res1_whole_addition]
+                                  res1_addition,        # correct
+                                  res1_around_addition, # WRONG: line-wise diff
+                                  res1_with_addition,   # correct
+                                  res1_whole_addition]  # correct
 
         with open(self.original_file_name, "r") as original_file:
             original_file_dict = {
