@@ -32,7 +32,7 @@ class SourceRangeTest(unittest.TestCase):
         ClangRange = namedtuple("ClangRange", "start end")
         ClangPosition = namedtuple("ClangPosition", "file line column")
         ClangFile = namedtuple("ClangFile", "name")
-        file = ClangFile("t.c".encode())
+        file = ClangFile("t.c")
         start = ClangPosition(file, 1, 2)
         end = ClangPosition(file, 3, 4)
 

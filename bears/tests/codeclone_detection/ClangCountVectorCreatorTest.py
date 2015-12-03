@@ -5,9 +5,7 @@ import unittest
 sys.path.insert(0, ".")
 from bears.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
-from coalib.bearlib.parsing.clang.cindex import (CursorKind,
-                                                 Index,
-                                                 LibclangError)
+from clang.cindex import CursorKind, Index, LibclangError
 
 
 def no_condition(stack):

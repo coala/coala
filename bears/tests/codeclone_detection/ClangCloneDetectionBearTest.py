@@ -9,7 +9,7 @@ from bears.codeclone_detection.ClangFunctionDifferenceBear import (
     ClangFunctionDifferenceBear)
 from bears.codeclone_detection.ClangCloneDetectionBear import (
     ClangCloneDetectionBear)
-from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
+from clang.cindex import Index, LibclangError
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

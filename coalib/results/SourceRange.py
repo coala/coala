@@ -48,7 +48,7 @@ class SourceRange(TextRange):
 
         :param range: A cindex.SourceRange object.
         """
-        return cls.from_values(range.start.file.name.decode(),
+        return cls.from_values(range.start.file.name,
                                range.start.line,
                                range.start.column,
                                range.end.line,

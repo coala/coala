@@ -7,7 +7,7 @@ from coalib.settings.Setting import Setting
 from bears.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
 from bears.codeclone_detection import ClangCountingConditions
-from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
+from clang.cindex import Index, LibclangError
 
 
 class ClangCountingConditionsTest(unittest.TestCase):

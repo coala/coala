@@ -2,7 +2,7 @@ from coalib.bears.LocalBear import LocalBear
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
-from coalib.bearlib.parsing.clang.cindex import Index
+from clang.cindex import Index
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import typed_list
 
@@ -19,8 +19,8 @@ class ClangBear(LocalBear):
         diagnostics = index.parse(
             filename,
             args=clang_cli_options,
-            unsaved_files=[(filename.encode(),
-                            ''.join(file).encode())]).diagnostics
+            unsaved_files=[(filename,
+                            ''.join(file))]).diagnostics
         for diag in diagnostics:
             severity = {0: RESULT_SEVERITY.INFO,
                         1: RESULT_SEVERITY.INFO,
@@ -44,13 +44,13 @@ class ClangBear(LocalBear):
             # Still no affected code? Position is the best we can get...
             if len(affected_code) == 0:
                 affected_code = (SourceRange.from_values(
-                        diag.location.file.name.decode(),
+                        diag.location.file.name,
                         diag.location.line,
                         diag.location.column),)
 
             yield Result(
                 self,
-                diag.spelling.decode(),
+                diag.spelling,
                 severity=severity,
                 affected_code=affected_code,
                 diffs=diffs)
