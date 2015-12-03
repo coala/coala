@@ -3,7 +3,7 @@ import unittest
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import generate_local_bear_test
-from bears.linters.ClangBear import ClangBear
+from bears.c_languages.ClangBear import ClangBear
 from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 
 
