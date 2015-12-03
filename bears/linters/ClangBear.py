@@ -37,9 +37,16 @@ class ClangBear(LocalBear):
                 # append first one only, often there's only one anyway
                 diffs = {filename: Diff.from_clang_fixit(fixits[0], file)}
 
-                # If clang ships no range, take the stuff related to diff
+                # No affected code yet? Let's derive it from the fix!
                 if len(affected_code) == 0:
                     affected_code = diffs[filename].affected_code(filename)
+
+            # Still no affected code? Position is the best we can get...
+            if len(affected_code) == 0:
+                affected_code = (SourceRange.from_values(
+                    diag.location.file.name.decode(),
+                    diag.location.line,
+                    diag.location.column),)
 
             yield Result(
                 self,
