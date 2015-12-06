@@ -79,7 +79,7 @@ class Diff:
         endindex = fixit.range.end.column - len(file[fixit.range.end.line-1])-1
 
         newvalue = (oldvalue[:fixit.range.start.column-1] +
-                    fixit.value.decode() +
+                    fixit.value +
                     oldvalue[endindex:])
         new_file = (file[:fixit.range.start.line-1] +
                     newvalue.splitlines(True) +

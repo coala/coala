@@ -1,5 +1,5 @@
 from coalib.bears.LocalBear import LocalBear
-from coalib.bearlib.parsing.clang.cindex import Index, TranslationUnit
+from clang.cindex import Index, TranslationUnit
 
 
 class ClangASTPrintBear(LocalBear):
@@ -20,14 +20,14 @@ class ClangASTPrintBear(LocalBear):
         '''
         file = cursor.location.file
 
-        if file is not None and file.name.decode() == filename:
+        if file is not None and file.name == filename:
             self.debug(
-                before + spec_before + "-" + str(cursor.displayname.decode()),
+                before + spec_before + "-" + str(cursor.displayname),
                 str(cursor.kind),
                 "Lines",
                 str(cursor.extent.start.line) + "-" +
                 str(cursor.extent.end.line),
-                "(" + " ".join(str(token.spelling.decode())
+                "(" + " ".join(str(token.spelling)
                                for token in cursor.get_tokens()) + ")")
 
         children = list(cursor.get_children())

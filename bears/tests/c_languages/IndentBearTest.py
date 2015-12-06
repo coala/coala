@@ -1,12 +1,11 @@
-from queue import Queue
+import subprocess
 import sys
 import unittest
-import subprocess
-
+from queue import Queue
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.IndentBear import IndentBear
+from bears.c_languages.IndentBear import IndentBear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

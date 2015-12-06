@@ -7,7 +7,7 @@ sys.path.insert(0, ".")
 
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.codeclone_detection.ClangASTPrintBear import ClangASTPrintBear
-from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
+from clang.cindex import Index, LibclangError, TranslationUnitLoadError
 from coalib.settings.Section import Section
 
 
@@ -21,7 +21,7 @@ class ClangASTPrintBearTest(LocalBearTestHelper):
 
     def test_run(self):
         self.uut.run(self.testfile, [])
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TranslationUnitLoadError):
             self.uut.run("notexistant", [])
 
     def test_ast(self):

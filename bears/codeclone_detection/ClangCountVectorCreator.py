@@ -4,7 +4,7 @@ from bears.codeclone_detection.ClangCountingConditions import (
     get_identifier_name,
     is_literal,
     is_function_declaration)
-from coalib.bearlib.parsing.clang.cindex import Cursor, Index
+from clang.cindex import Cursor, Index
 
 
 class ClangCountVectorCreator:
@@ -72,7 +72,7 @@ class ClangCountVectorCreator:
                 # Mangle constants with $ (-> no valid C identifier), first
                 # token is the constant, semicolon and similar things may
                 # follow, don't want them
-                self.count_identifier("#" + tokens[0].spelling.decode())
+                self.count_identifier("#" + tokens[0].spelling)
 
         for i, child in enumerate(cursor.get_children()):
             self._get_vector_for_function(child, i)
@@ -92,7 +92,7 @@ class ClangCountVectorCreator:
         assert isinstance(cursor, Cursor)
         file = cursor.location.file
         if file is not None:
-            file = file.name.decode()
+            file = file.name
 
         if str(file) == str(filename) and is_function_declaration(cursor):
             self._get_vector_for_function(cursor)

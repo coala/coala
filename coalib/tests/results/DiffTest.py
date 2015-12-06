@@ -4,7 +4,7 @@ import json
 
 sys.path.insert(0, ".")
 from coalib.results.Diff import Diff, ConflictError, SourceRange
-from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
+from clang.cindex import Index, LibclangError
 from coalib.output.JSONEncoder import JSONEncoder
 
 
@@ -142,7 +142,7 @@ class DiffTest(unittest.TestCase):
         fixed_file = ['struct { int f0; }\n', 'x = { .f0 = 1 };\n']
 
         tu = Index.create().parse('t.c', unsaved_files=[
-            ('t.c'.encode(), joined_file.encode())])
+            ('t.c', joined_file)])
         fixit = tu.diagnostics[0].fixits[0]
 
         clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
