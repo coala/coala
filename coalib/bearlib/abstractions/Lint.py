@@ -92,19 +92,16 @@ class Lint():
         groups = self._get_groupdict(match)
 
         # Pre process the groups
-        end_line = groups.get("end_line", None)
-        if end_line != None:
-            end_line = int(end_line)
-        end_column = groups.get("end_column", None)
-        if end_column != None:
-            end_column = int(end_column)
+        for variable in ("line", "column", "end_line", "end_column"):
+            if variable in groups:
+                groups[variable] = int(groups[variable])
 
         return Result.from_values(
             origin=self,
             message=groups.get("message", ""),
             file=filename,
             severity=int(groups.get("severity", RESULT_SEVERITY.NORMAL)),
-            line=int(groups.get("line")),
-            column=int(groups.get("column", 0)),
-            end_line=end_line,
-            end_column=end_column)
+            line=groups.get("line", None),
+            column=groups.get("column", None),
+            end_line=groups.get("end_line", None),
+            end_column=groups.get("end_column", None))
