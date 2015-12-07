@@ -1,10 +1,10 @@
-from subprocess import Popen, PIPE
 import sys
+import re
 
+from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.settings.Setting import typed_list
-from coalib.misc.Shell import escape_path_argument
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 # We omit this case in our tests for technical reasons
@@ -12,26 +12,19 @@ if sys.version_info < (3, 3):  # pragma: no cover
     raise ImportError("PyLint does not support python3 < 3.3")
 
 
-class PyLintBear(LocalBear):
-    def parse_result(self, file, pylint_line):
-        parts = pylint_line.split("|", maxsplit=2)
-
-        line_nr = int(parts[0])
-        severity = parts[1]
-        if severity == "warning":
-            severity = RESULT_SEVERITY.NORMAL
-        elif severity in ["error", "fatal"]:
-            severity = RESULT_SEVERITY.MAJOR
-        else:  # convention and refactor
-            severity = RESULT_SEVERITY.INFO
-
-        message = parts[2]
-
-        return Result.from_values(self,
-                                  message,
-                                  file=file,
-                                  line=line_nr,
-                                  severity=severity)
+class PyLintBear(LocalBear, Lint):
+    executable = 'pylint'
+    arguments = ('--reports=n --persistent=n --msg-template='
+                 '"{line}.{column}|{C}: {msg_id} - {msg}"')
+    output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)'
+                    r'\|(?P<severity>[WFECRI]): (?P<message>.*)')
+    severity_map = {
+        "F": RESULT_SEVERITY.MAJOR,
+        "E": RESULT_SEVERITY.MAJOR,
+        "W": RESULT_SEVERITY.NORMAL,
+        "C": RESULT_SEVERITY.INFO,
+        "R": RESULT_SEVERITY.INFO,
+        "I": RESULT_SEVERITY.INFO}
 
     def run(self,
             filename,
@@ -50,35 +43,11 @@ class PyLintBear(LocalBear):
         :param pylint_cli_options: Any command line options you wish to be
                                    passed to pylint.
         '''
-        command = ('pylint -r n --msg-template="{line}|{category}|'
-                   '{msg}. ({msg_id}, {symbol}, {obj})" '
-                   + escape_path_argument(filename))
         if pylint_disable:
-            command += " --disable=" + ",".join(pylint_disable)
+            self.arguments += " --disable=" + ",".join(pylint_disable)
         if pylint_enable:
-            command += " --enable=" + ",".join(pylint_enable)
+            self.arguments += " --enable=" + ",".join(pylint_enable)
         if pylint_cli_options:
-            command += " " + pylint_cli_options
+            self.arguments += " " + pylint_cli_options
 
-        process = Popen(command,
-                        shell=True,
-                        stdout=PIPE,
-                        stderr=PIPE,
-                        universal_newlines=True)
-        process.wait()
-        current_lines = ""
-        for line in process.stdout.readlines():
-            if line.startswith("***"):
-                continue
-
-            if current_lines != "" and line.split("|", 1)[0].isdigit():
-                yield self.parse_result(filename, current_lines)
-                current_lines = ""
-
-            current_lines += line
-
-        if current_lines != "":
-            yield self.parse_result(filename, current_lines)
-
-        process.stdout.close()
-        process.stderr.close()
+        return self.lint(filename)
