@@ -18,7 +18,9 @@ deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 
 # NPM commands
-npm install -g jshint
+source ~/nvm/nvm.sh # For some reason `nvm` has not been loaded.
+nvm install stable
+npm install -g jshint alex
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
