@@ -9,9 +9,9 @@ from coalib.results.Result import Result
 class CorrectionBasedBear(LocalBear):
     SEVERITY = RESULT_SEVERITY.NORMAL
     GET_REPLACEMENT = (lambda self, file, cli_options:
-                       self.__run_process(file, cli_options))
+                       self._run_process(file, cli_options))
 
-    def __run_process(self, file, cli_options):
+    def _run_process(self, file, cli_options):
         process = Popen(self.BINARY + ' ' + cli_options,
                         shell=True,
                         stdin=PIPE,
@@ -31,15 +31,15 @@ class CorrectionBasedBear(LocalBear):
         return corrected, errors
 
     @staticmethod
-    def __yield_diffs(file, new_file):
+    def _yield_diffs(file, new_file):
         if new_file != file:
             wholediff = Diff.from_string_arrays(file, new_file)
 
             for diff in wholediff.split_diff():
                 yield diff
 
-    def __print_errors(self, errors):
-        for line in errors:
+    def _print_errors(self, errors):
+        for line in filter(lambda error: bool(error.strip()), errors):
             self.warn(line)
 
     def retrieve_results(self, filename, file, **kwargs):
@@ -53,9 +53,9 @@ class CorrectionBasedBear(LocalBear):
                          if you don't override the default.
         """
         new_file, errors = self.GET_REPLACEMENT(file=file, **kwargs)
-        self.__print_errors(errors)
+        self._print_errors(errors)
 
-        for diff in self.__yield_diffs(file, new_file):
+        for diff in self._yield_diffs(file, new_file):
             yield Result(
                 self,
                 self.RESULT_MESSAGE,

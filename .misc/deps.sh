@@ -17,6 +17,13 @@ deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 
+# JS Dependencies
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+source ~/.bashrc
+nvm install 4.2
+npm install alex mdast --global
+#export PATH=`pwd`/node_modules/.bin/:$PATH
+
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
   pyenv local $dep_version
