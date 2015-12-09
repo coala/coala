@@ -20,7 +20,7 @@ sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 # NPM commands
 source ~/nvm/nvm.sh # For some reason `nvm` has not been loaded.
 nvm install stable
-npm install -g jshint alex
+npm install -g jshint alex dockerfile_lint
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
