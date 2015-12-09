@@ -22,7 +22,7 @@ esac
 
 # apt-get commands
 sudo apt-get -qq update
-deps="espeak libclang1-3.4 indent"
+deps="espeak libclang1-3.4 indent mono-mcs"
 deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
