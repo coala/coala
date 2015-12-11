@@ -7,7 +7,7 @@ sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.JSHintBear import JSHintBear
+from bears.js.JSHintBear import JSHintBear
 from coalib.settings.Section import Section
 
 
