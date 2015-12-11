@@ -6,7 +6,7 @@ from queue import Queue
 sys.path.insert(0, ".")
 import unittest
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.PHPLintBear import PHPLintBear
+from bears.php.PHPLintBear import PHPLintBear
 from coalib.settings.Section import Section
 
 
