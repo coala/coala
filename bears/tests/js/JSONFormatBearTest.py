@@ -1,10 +1,10 @@
-from queue import Queue
 import sys
 import unittest
+from queue import Queue
 
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.linters.JSONFormatBear import JSONFormatBear
+from bears.js.JSONFormatBear import JSONFormatBear
 from coalib.settings.Section import Section, Setting
 
 
