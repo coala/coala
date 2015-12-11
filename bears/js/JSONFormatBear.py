@@ -1,7 +1,7 @@
-from collections import OrderedDict
 import json
+from collections import OrderedDict
 
-from bears.linters.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
 from coalib.results.Result import Result
 
 

@@ -1,6 +1,6 @@
 import eradicate
 
-from bears.linters.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
 
 
 class PyCommentedCodeBear(CorrectionBasedBear):

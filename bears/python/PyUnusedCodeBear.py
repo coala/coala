@@ -1,6 +1,6 @@
 import autoflake
 
-from bears.linters.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
 
 
 class PyUnusedCodeBear(CorrectionBasedBear):

@@ -1,6 +1,6 @@
 import autopep8
 
-from bears.linters.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
 from coalib.settings.Setting import typed_list
 
 
