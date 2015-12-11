@@ -1,9 +1,9 @@
-import sys
 import os
+import sys
 import unittest
 
 sys.path.insert(0, ".")
-from bears.codeclone_detection.ClangCountVectorCreator import (
+from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
 from coalib.bearlib.parsing.clang.cindex import (CursorKind,
                                                  Index,

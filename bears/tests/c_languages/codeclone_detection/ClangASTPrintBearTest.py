@@ -1,12 +1,13 @@
-from queue import Queue
+import os
 import sys
 import unittest
-import os
+from queue import Queue
 
 sys.path.insert(0, ".")
 
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.codeclone_detection.ClangASTPrintBear import ClangASTPrintBear
+from bears.c_languages.codeclone_detection.ClangASTPrintBear import (
+    ClangASTPrintBear)
 from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 from coalib.settings.Section import Section
 

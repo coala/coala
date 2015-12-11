@@ -1,5 +1,5 @@
-from bears.codeclone_detection.CountVector import CountVector
-from bears.codeclone_detection.ClangCountingConditions import (
+from bears.c_languages.codeclone_detection.CountVector import CountVector
+from bears.c_languages.codeclone_detection.ClangCountingConditions import (
     is_reference,
     get_identifier_name,
     is_literal,

@@ -1,12 +1,12 @@
-import sys
 import os
+import sys
 import unittest
 
 sys.path.insert(0, ".")
 from coalib.settings.Setting import Setting
-from bears.codeclone_detection.ClangCountVectorCreator import (
+from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
-from bears.codeclone_detection import ClangCountingConditions
+from bears.c_languages.codeclone_detection import ClangCountingConditions
 from coalib.bearlib.parsing.clang.cindex import Index, LibclangError
 
 
