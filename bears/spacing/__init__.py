@@ -1,3 +1,0 @@
-"""
-Contains spacing related bears.
-"""
