@@ -29,8 +29,8 @@ from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.bears.Bear import Bear
-from bears.misc.KeywordBear import KeywordBear
-from bears.misc.LineLengthBear import LineLengthBear
+from bears.general.KeywordBear import KeywordBear
+from bears.general.LineLengthBear import LineLengthBear
 
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "

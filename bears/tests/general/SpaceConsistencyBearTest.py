@@ -5,8 +5,8 @@ sys.path.insert(0, ".")
 import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.misc.SpaceConsistencyBear import (SpaceConsistencyBear,
-                                             SpacingHelper)
+from bears.general.SpaceConsistencyBear import (SpaceConsistencyBear,
+                                                SpacingHelper)
 from coalib.settings.Section import Section
 
 

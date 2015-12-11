@@ -6,7 +6,7 @@ import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
-from bears.misc.LineLengthBear import LineLengthBear
+from bears.general.LineLengthBear import LineLengthBear
 
 
 class LineLengthBearTest(LocalBearTestHelper):
