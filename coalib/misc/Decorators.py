@@ -98,16 +98,9 @@ def get_public_members(obj):
     :param obj: The object to probe.
     :return:    A list of strings.
     """
-    # Get public members
-    members = set(filter(lambda member: not member.startswith("_"),
-                         obj.__dict__))
-    # Also fetch properties
-    type_dict = type(obj).__dict__
-    members |= set(
-        filter(lambda member: isinstance(type_dict[member], property)
-                              and not member.startswith("_"), type_dict))
-
-    return members
+    return {attr: getattr(obj, attr) for attr in dir(obj)
+            if not attr.startswith("_")
+            and not hasattr(getattr(obj, attr), '__call__')}
 
 
 def generate_repr(*members):
