@@ -142,24 +142,6 @@ def source_ranges_match(original_file_dict,
     return True
 
 
-def diffs_match(original_file_dict,
-                modified_file_dict,
-                diff_dict,
-                original_result,
-                modified_result):
-    """
-    Checks whether the Diffs of two results describe the same changes
-
-    :param original_file_dict: Dict of lists of file contents before changes
-    :param modified_file_dict: Dict of lists of file contents after changes
-    :param diff_dict:          Dict of diffs describing the change in each file
-    :param original_result:    A result of the old files
-    :param modified_result:    A result of the new files
-    :return:                   Boolean value whether the Diffs match
-    """
-    return False # pragma: no cover
-
-
 def remove_range(file_contents, source_range):
     """
     removes the chars covered by the sourceRange from the file
