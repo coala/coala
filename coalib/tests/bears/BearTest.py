@@ -37,6 +37,20 @@ class TypedTestBear(Bear):
         return []
 
 
+class BearWithPrerequisites(Bear):
+    def __init__(self, section, queue, prerequisites_fulfilled):
+        self.prerequisites_fulfilled = prerequisites_fulfilled
+        Bear.__init__(self, section, queue)
+        self.was_executed = False
+
+    def run(self):
+        self.was_executed = True
+        return []
+
+    def check_prerequisites(self):
+        return self.prerequisites_fulfilled
+
+
 class BearTest(unittest.TestCase):
     def setUp(self):
         self.queue = multiprocessing.Queue()
@@ -104,6 +118,40 @@ class BearTest(unittest.TestCase):
         self.assertEqual(TestBear.missing_dependencies([TestBear,
                                                         BadTestBear]),
                          [])
+
+    def test_check_prerequisites(self):
+        uut = BearWithPrerequisites(self.settings, self.queue, True)
+        uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.assertTrue(self.queue.empty())
+        self.assertTrue(uut.was_executed)
+
+        self.assertRaisesRegex(RuntimeError,
+                               "The bear BearWithPrerequisites does not "
+                                   "fulfill all requirements\\.",
+                               BearWithPrerequisites,
+                               self.settings,
+                               self.queue,
+                               False)
+
+        self.check_message(LOG_LEVEL.WARNING,
+                           "The bear BearWithPrerequisites does not fulfill "
+                               "all requirements.")
+        self.assertTrue(self.queue.empty())
+
+        self.assertRaisesRegex(RuntimeError,
+                               "The bear BearWithPrerequisites does not "
+                                   "fulfill all requirements\\. Just because "
+                                   "I want to\\.",
+                               BearWithPrerequisites,
+                               self.settings,
+                               self.queue,
+                               "Just because I want to.")
+
+        self.check_message(LOG_LEVEL.WARNING,
+                           "The bear BearWithPrerequisites does not fulfill "
+                               "all requirements. Just because I want to.")
+        self.assertTrue(self.queue.empty())
 
 
 if __name__ == '__main__':
