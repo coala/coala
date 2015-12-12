@@ -102,9 +102,9 @@ class Bear(Printer, LogPrinter):
     @classmethod
     def get_metadata(cls):
         """
-        :return: Metadata for the run function. However parameters like
-        self or parameters implicitly used by coala (e.g. filename for local
-        bears) are already removed.
+        :return: Metadata for the run function. However parameters like `self`
+                 or parameters implicitly used by coala (e.g. filename for
+                 local bears) are already removed.
         """
         return FunctionMetadata.from_function(
             cls.run,
@@ -116,8 +116,8 @@ class Bear(Printer, LogPrinter):
         Checks if the given list contains all dependencies.
 
         :param lst: A list of all already resolved bear classes (not
-        instances).
-        :return A list of missing dependencies.
+                    instances).
+        :return:    A list of missing dependencies.
         """
         dep_classes = cls.get_dependencies()
 
@@ -136,7 +136,7 @@ class Bear(Printer, LogPrinter):
         will have the name of the Bear as key and the list of its results as
         results.
 
-        :return A list of bear classes.
+        :return: A list of bear classes.
         """
         return []
 
@@ -148,8 +148,8 @@ class Bear(Printer, LogPrinter):
         in the settings file so don't include settings where a default value
         would do.
 
-        :return: a dictionary of needed settings as keys and a tuple of help
-        text and annotation as values
+        :return: A dictionary of needed settings as keys and a tuple of help
+                 text and annotation as values
         """
         return cls.get_metadata().non_optional_params
 
