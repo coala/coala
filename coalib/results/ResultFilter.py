@@ -100,14 +100,9 @@ def basics_match(original_result,
     :param modified_result: A result of the new files
     :return:                Boolean value whether or not the properties match
     """
-    # origin might be a class or class name
-    original_origin = isinstance(original_result.origin, str) and \
-        original_result.origin or original_result.origin.__name__()
-    modified_origin = isinstance(modified_result.origin, str) and \
-        modified_result.origin or modified_result.origin.__name__()
 
     # we cannot tolerate differences!
-    if original_origin != modified_origin:
+    if original_result.origin != modified_result.origin:
         return False
 
     elif original_result.message != modified_result.message:
