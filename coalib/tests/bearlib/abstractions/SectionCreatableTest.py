@@ -30,7 +30,6 @@ class TestObject(SectionCreatable):
 class SectionCreatableTest(unittest.TestCase):
     def test_api(self):
         uut = SectionCreatable()
-        self.assertRaises(TypeError, uut.from_section, 5)
         self.assertEqual(uut.get_non_optional_settings(), {})
         self.assertEqual(uut.get_optional_settings(), {})
 
