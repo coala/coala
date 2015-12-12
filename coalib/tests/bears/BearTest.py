@@ -33,7 +33,12 @@ class BadTestBear(Bear):
 
 
 class TypedTestBear(Bear):
+    def __init__(self, section, queue):
+        Bear.__init__(self, section, queue)
+        self.was_executed = False
+
     def run(self, something: int):
+        self.was_executed = True
         return []
 
 
@@ -88,11 +93,15 @@ class BearTest(unittest.TestCase):
         self.settings.append(Setting("something", "5"))
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
+        self.assertTrue(self.uut.was_executed)
 
         self.settings.append(Setting("something", "nonsense"))
+        self.uut.was_executed = False
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
         self.check_message(LOG_LEVEL.WARNING)
+        self.assertTrue(self.queue.empty())
+        self.assertFalse(self.uut.was_executed)
 
     def check_message(self, log_level, message=None):
         msg = self.queue.get()

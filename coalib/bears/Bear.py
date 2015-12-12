@@ -72,6 +72,7 @@ class Bear(Printer, LogPrinter):
         except ValueError as err:
             self.warn("The bear {} cannot be executed.".format(
                 type(self).__name__), str(err))
+            return
 
         return self.run(*args, **kwargs)
 
