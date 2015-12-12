@@ -324,9 +324,9 @@ class ResultFilterTest(unittest.TestCase):
                            res1_whole_change,     # correctly kept
 
                            res1_pre_remove,       # correctly filtered out
-                           res1_post_remove,      # correctly filtered out
+                           res1_post_remove,      # FALSE POSITIVE (in-line)
                            res1_around_remove,    # correctly filtered out
-                           res1_whole_remove,     # UNSURE
+                           res1_whole_remove,     # correctly kept
 
                            res1_pre_addition,     # correctly filtered out
                            res1_addition,         # correctly kept
@@ -342,7 +342,8 @@ class ResultFilterTest(unittest.TestCase):
                                   res1_with_change,     # correct
                                   res1_whole_change,    # correct
 
-                                  #res1_whole_remove,   # UNSURE
+                                  res1_post_remove,     # WRONG: line-wise diff
+                                  res1_whole_remove,    # correct
 
                                   res1_addition,        # correct
                                   res1_around_addition, # WRONG: line-wise diff

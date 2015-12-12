@@ -67,25 +67,24 @@ def filter_results(original_file_dict,
 
         mod_result_diff_dict_dict[modified_result] = diff_dict
 
-    uniques = []
-
-    # THIS IS WHERE THE FUN BEGINS
-
     for m_r in modified_results:
-        if True not in [basics_match(o_r, m_r) for o_r in original_results]:
-            uniques.append(m_r)
+        for o_r in original_results:
 
-        elif True not in [source_ranges_match(
-                original_file_dict,
-                modified_file_dict,
-                diffs_dict,
-                o_r,
-                orig_result_diff_dict_dict[o_r],
-                m_r,
-                mod_result_diff_dict_dict[m_r]) for o_r in original_results]:
-            uniques.append(m_r)
+            if basics_match(o_r, m_r):
+                if source_ranges_match(original_file_dict,
+                                       modified_file_dict,
+                                       diffs_dict,
+                                       o_r,
+                                       orig_result_diff_dict_dict[o_r],
+                                       m_r,
+                                       mod_result_diff_dict_dict[m_r]):
 
-    return uniques
+                    # at least one original result matches completely
+                    modified_results.remove(m_r)
+                    break
+
+    # only those ones left that have no perfect match
+    return modified_results
 
 
 def basics_match(original_result,
