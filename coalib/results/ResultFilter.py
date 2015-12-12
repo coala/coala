@@ -101,21 +101,9 @@ def basics_match(original_result,
     :return:                Boolean value whether or not the properties match
     """
 
-    # we cannot tolerate differences!
-    if original_result.origin != modified_result.origin:
-        return False
-
-    elif original_result.message != modified_result.message:
-        return False
-
-    elif original_result.severity != modified_result.severity:
-        return False
-
-    elif original_result.debug_msg != modified_result.debug_msg:
-        return False
-
-    else:
-        return True
+    return all(getattr(original_result, member) ==
+               getattr(modified_result, member)
+               for member in ['origin', 'message', 'severity', 'debug_msg'])
 
 
 def source_ranges_match(original_file_dict,
