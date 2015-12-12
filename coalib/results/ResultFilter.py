@@ -128,8 +128,8 @@ def source_ranges_match(original_file_dict,
     for file_name in original_file_dict:
 
         try:  # fails if the affected range of the result get's modified
-            original_total_diff = \
-                diff_dict[file_name] + original_result_diff_dict[file_name]
+            original_total_diff = (diff_dict[file_name] +
+                                   original_result_diff_dict[file_name])
         except ConflictError:
             return False
 
