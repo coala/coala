@@ -1,7 +1,15 @@
-set -x
 set -e
 
+# For some reason `nvm` has not been loaded. This generates a lot of output
+# in CI, so it's done before `set -x`
+if [ -s ~/nvm/nvm.sh ]; then
+  source ~/nvm/nvm.sh
+  nvm install stable
+fi
+
 git -C ~/.pyenv pull
+
+set -x
 
 # Choose the python versions to install deps for
 case $CIRCLE_NODE_INDEX in
@@ -20,8 +28,6 @@ deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 
 # NPM commands
-source ~/nvm/nvm.sh # For some reason `nvm` has not been loaded.
-nvm install stable
 npm install -g jshint alex dockerfile_lint
 
 for dep_version in "${dep_versions[@]}" ; do
