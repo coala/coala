@@ -32,11 +32,6 @@ for dep_version in "${dep_versions[@]}" ; do
 
   pip install -q setuptools coverage munkres3 pylint language-check PyPrint autopep8 eradicate autoflake restructuredtext_lint proselint
 
-  if [ "$python_version" = "3.4" ] ; then
-    pip install -q mkdocs
-    pip install -r docs/requirements.txt
-  fi
-
   cd .misc
   if [ "$python_implementation" == "CPython" ] ; then
     bash install.python-gi.sh
@@ -45,3 +40,8 @@ for dep_version in "${dep_versions[@]}" ; do
   cd ..
 
 done
+
+if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
+  pip install -q mkdocs
+  pip install -r docs/requirements.txt
+fi
