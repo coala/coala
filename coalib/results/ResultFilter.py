@@ -21,51 +21,13 @@ def filter_results(original_file_dict,
     diffs_dict = {}
     for file in original_file_dict:
         diffs_dict[file] = Diff.from_string_arrays(original_file_dict[file],
-                                                  modified_file_dict[file])
+                                                   modified_file_dict[file])
 
-    #  orig_result_diff_dict_dict[result][file] is a diff of the changes this
-    # result would apply to the file
+    orig_result_diff_dict_dict = remove_result_ranges_diffs(original_results,
+                                                            original_file_dict)
 
-    orig_result_diff_dict_dict = {}
-    for original_result in original_results:
-        orig_file_dict_copy = copy.deepcopy(original_file_dict)
-
-        for source_range in original_result.affected_code:
-            file_name = source_range.file
-            new_file = remove_range(orig_file_dict_copy[file_name],
-                                    source_range)
-            orig_file_dict_copy[file_name] = new_file
-
-        diff_dict = {}
-        for file_name in original_file_dict:
-            diff_dict[file_name] = Diff.from_string_arrays(
-                original_file_dict[file_name],
-                orig_file_dict_copy[file_name])
-
-        orig_result_diff_dict_dict[original_result] = diff_dict
-
-    # same thing for modified results. and yes this should really be in a
-    # function... but as long as both of these are not, code clone detection
-    # won't find them >:)
-    # fixme: yeah....
-
-    mod_result_diff_dict_dict = {}
-    for modified_result in modified_results:
-        mod_file_dict_copy = copy.deepcopy(modified_file_dict)
-
-        for source_range in modified_result.affected_code:
-            file_name = source_range.file
-            new_file = remove_range(mod_file_dict_copy[file_name],
-                                    source_range)
-            mod_file_dict_copy[file_name] = new_file
-
-        diff_dict = {}
-        for file_name in modified_file_dict:
-            diff_dict[file_name] = Diff.from_string_arrays(
-                modified_file_dict[file_name],
-                mod_file_dict_copy[file_name])
-
-        mod_result_diff_dict_dict[modified_result] = diff_dict
+    mod_result_diff_dict_dict = remove_result_ranges_diffs(modified_results,
+                                                           modified_file_dict)
 
     for m_r in modified_results:
         for o_r in original_results:
@@ -182,3 +144,35 @@ def remove_range(file_contents, source_range):
             del newfile[i]
 
     return newfile
+
+
+def remove_result_ranges_diffs(result_list, file_dict):
+    """
+    Calculates the diffs to all files in file_dict that describe the removal of
+    each respective result's affected code.
+
+    :param result_list: list of results
+    :param file_dict:   dict of file contents
+    :return:            returnvalue[result][file] is a diff of the changes the
+                        removal of this result's affected code would cause for
+                        the file.
+    """
+    result_diff_dict_dict = {}
+    for original_result in result_list:
+        mod_file_dict = copy.deepcopy(file_dict)
+
+        for source_range in original_result.affected_code:
+            file_name = source_range.file
+            new_file = remove_range(mod_file_dict[file_name],
+                                    source_range)
+            mod_file_dict[file_name] = new_file
+
+        diff_dict = {}
+        for file_name in file_dict:
+            diff_dict[file_name] = Diff.from_string_arrays(
+                file_dict[file_name],
+                mod_file_dict[file_name])
+
+        result_diff_dict_dict[original_result] = diff_dict
+
+    return result_diff_dict_dict
