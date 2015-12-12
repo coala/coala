@@ -80,16 +80,8 @@ class FunctionMetadata:
         function needs plus optional ones that are available.
 
         :param section:    The section to retrieve the values from.
-        :raises TypeError: Raised when `section` is no `Section` class.
         :return:           The params dictionary.
         """
-        # Import Section only as needed to avoid circular dependency
-        from coalib.settings.Section import Section
-
-        if not isinstance(section, Section):
-            raise TypeError("The 'section' parameter should be a "
-                            "coalib.settings.Section instance.")
-
         params = {}
 
         for param in self.non_optional_params:
