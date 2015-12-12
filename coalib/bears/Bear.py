@@ -70,12 +70,12 @@ class Bear(Printer, LogPrinter):
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
             self.warn("The bear {} cannot be executed.".format(
-                self.__class__.__name__), str(err))
+                type(self).__name__), str(err))
 
         return self.run(*args, **kwargs)
 
     def execute(self, *args, **kwargs):
-        name = self.__class__.__name__
+        name = type(self).__name__
         try:
             self.debug("Running bear {}...".format(name))
             # If it's already a list it won't change it
