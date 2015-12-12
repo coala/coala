@@ -1,6 +1,7 @@
 import copy
 
 from coalib.results.Diff import Diff, ConflictError
+from coalib.results.SourceRange import SourceRange
 
 
 def filter_results(original_file_dict,
@@ -112,11 +113,13 @@ def remove_range(file_contents, source_range):
     :param source_range:  Source Range
     :return:              list of file contents without specified chars removed
     """
+    if not file_contents:
+        return []
+    # fixme: source_range could have values of None and those will crash:
 
-    # fixme: line or column could be None -.-
-    # this is not the fixing it deserves, but the one it needs right now:
-    if source_range.start.line is None:
-        return copy.deepcopy(file_contents)
+    # this should fix it, but it_s blocked by the problem in line 169
+    #source_range = expand_source_range(source_range, file_contents)
+
 
     newfile = copy.deepcopy(file_contents)
     # attention: line numbers in the SourceRange are human-readable,
@@ -140,7 +143,7 @@ def remove_range(file_contents, source_range):
         # end: index = last line -2 ==> line before last line
 
         for i in reversed(range(
-                source_range.start.line, source_range.end.line -1)):
+                source_range.start.line, source_range.end.line - 1)):
             del newfile[i]
 
     return newfile
@@ -163,6 +166,7 @@ def remove_result_ranges_diffs(result_list, file_dict):
 
         for source_range in original_result.affected_code:
             file_name = source_range.file
+            #fixme SHIT! cannot remove orig range from mod file >:(
             new_file = remove_range(mod_file_dict[file_name],
                                     source_range)
             mod_file_dict[file_name] = new_file
@@ -176,3 +180,58 @@ def remove_result_ranges_diffs(result_list, file_dict):
         result_diff_dict_dict[original_result] = diff_dict
 
     return result_diff_dict_dict
+
+
+# def expand_source_range(source_range, file_contents):
+#     """
+#     SourceRanges may contain values of None which we cannot use. This
+#     calculates usable numbers from the source range values and the file
+#     contents
+#
+#     :param source_range:  SourceRange
+#     :param file_contents: List of file contents
+#     :return:              SourceRange with all values guaranteed to not be
+#                           None
+#     """
+#     print(source_range, "\n", file_contents, "\n", "\n")
+#     # SourceRange-counting starts with 1
+#     file = source_range.file
+#
+#     #start_line
+#     if source_range.start.line is None or source_range.start.line < 1:
+#         start_line = 1
+#     else:
+#         start_line = source_range.start.line
+#
+#     #start:column
+#     if source_range.start.column is None or source_range.start.column < 1:
+#         start_column = 1
+#     else:
+#         start_column = source_range.start.column
+#
+#     #end
+#     if source_range.end is None:
+#         end_line = len(file_contents)
+#         end_column = len(file_contents[end_line-1])
+#     else:
+#
+#         #end_line
+#         if (source_range.end.line is None or
+#                 source_range.end.line > len(file_contents)):
+#             end_line = len(file_contents)
+#         else:
+#             end_line = source_range.end.line
+#
+#         # end_column
+#         if (source_range.end.column is None or
+#                 source_range.end.column > len(file_contents[end_line-1])):
+#             print("start:", start_column, "line:", file_contents[end_line-1])
+#             end_column = len(file_contents[end_line-1])
+#         else:
+#             end_column = source_range.end.column
+#
+#     return SourceRange.from_values(file,
+#                                    start_line,
+#                                    start_column,
+#                                    end_line,
+#                                    end_column)
