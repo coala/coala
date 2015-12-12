@@ -1,13 +1,15 @@
 set -x
 set -e
 
+git -C ~/.pyenv pull
+
 # Choose the python versions to install deps for
 case $CIRCLE_NODE_INDEX in
- 0) dep_versions=( "pypy3-2.4.0" "3.5.0" "3.3.6" "3.4.2" ) ;;
+ 0) dep_versions=( "pypy3-2.4.0" "3.5.1" "3.3.6" "3.4.3" ) ;;
  1) dep_versions=( "3.3.6" ) ;;
- 2) dep_versions=( "3.5.0" ) ;;
+ 2) dep_versions=( "3.5.1" ) ;;
  3) dep_versions=( "pypy3-2.4.0" ) ;;
- *) dep_versions=( "3.4.2" ) ;;
+ *) dep_versions=( "3.4.3" ) ;;
 esac
 
 # apt-get commands
