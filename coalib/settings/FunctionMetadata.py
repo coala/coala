@@ -79,9 +79,9 @@ class FunctionMetadata:
         Create a params dictionary for this function that holds all values the
         function needs plus optional ones that are available.
 
-        :param section: The section to retrieve the values from.
-        :return:        A dictionary. Unfold it with ** to pass it to the
-                        function.
+        :param section:    The section to retrieve the values from.
+        :raises TypeError: Raised when `section` is no `Section` class.
+        :return:           The params dictionary.
         """
         # Import Section only as needed to avoid circular dependency
         from coalib.settings.Section import Section
