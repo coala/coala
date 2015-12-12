@@ -1,0 +1,5 @@
+FROM ubuntu:14.04
+
+# Install basic tools
+apt-get -y -qq update
+apt-get -y -qq upgrade

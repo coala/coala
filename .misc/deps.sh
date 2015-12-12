@@ -17,13 +17,18 @@ deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
 
+# NPM commands
+source ~/nvm/nvm.sh # For some reason `nvm` has not been loaded.
+nvm install stable
+npm install -g jshint alex dockerfile_lint
+
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
   pyenv local $dep_version
   python --version
   source .misc/env_variables.sh
 
-  pip install -q setuptools coverage munkres3 pylint language-check PyPrint autopep8 eradicate autoflake restructuredtext_lint
+  pip install -q setuptools coverage munkres3 pylint language-check PyPrint autopep8 eradicate autoflake restructuredtext_lint proselint
 
   if [ "$python_version" = "3.4" ] ; then
     pip install -q mkdocs
