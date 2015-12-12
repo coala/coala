@@ -10,7 +10,7 @@ from coalib.results.SourceRange import SourceRange
 
 class ResultFilterTest(unittest.TestCase):
     def setUp(self):
-        self.maxDiff=None
+        self.maxDiff = None
         result_filter_test_dir = os.path.join(os.path.split(__file__)[0],
                                               'ResultFilterTestFiles')
         self.original_file_name = os.path.join(result_filter_test_dir,
