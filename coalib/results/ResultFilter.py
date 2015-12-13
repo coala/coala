@@ -35,11 +35,8 @@ def filter_results(original_file_dict,
 
             if basics_match(o_r, m_r):
                 if source_ranges_match(original_file_dict,
-                                       modified_file_dict,
                                        diffs_dict,
-                                       o_r,
                                        orig_result_diff_dict_dict[o_r],
-                                       m_r,
                                        mod_result_diff_dict_dict[m_r]):
 
                     # at least one original result matches completely
@@ -70,21 +67,15 @@ def basics_match(original_result,
 
 
 def source_ranges_match(original_file_dict,
-                        modified_file_dict,
                         diff_dict,
-                        original_result,
                         original_result_diff_dict,
-                        modified_result,
                         modified_result_diff_dict):
     """
     Checks whether the SourceRanges of two results match
 
     :param original_file_dict: Dict of lists of file contents before changes
-    :param modified_file_dict: Dict of lists of file contents after changes
     :param diff_dict:          Dict of diffs describing the changes per file
-    :param original_result:    A result of the old files
     :param original_result_diff_dict: diff for each file for this result
-    :param modified_result:    A result of the new files
     :param modified_result_diff_dict: guess
     :return:                     Boolean value whether the SourceRanges match
     """
@@ -115,11 +106,6 @@ def remove_range(file_contents, source_range):
     """
     if not file_contents:
         return []
-    # fixme: source_range could have values of None and those will crash:
-
-    # this should fix it, but it_s blocked by the problem in line 169
-    #source_range = expand_source_range(source_range, file_contents)
-
 
     newfile = copy.deepcopy(file_contents)
     # attention: line numbers in the SourceRange are human-readable,
@@ -127,17 +113,17 @@ def remove_range(file_contents, source_range):
 
     if source_range.start.line == source_range.end.line:
         # if it's all in one line, replace the line by it's beginning and end
-        newfile[source_range.start.line - 1] = \
-            newfile[source_range.start.line - 1][:source_range.start.column-1]\
-        + newfile[source_range.start.line - 1][source_range.end.column:]
+        newfile[source_range.start.line - 1] = (
+            newfile[source_range.start.line - 1][:source_range.start.column-1]
+            + newfile[source_range.start.line - 1][source_range.end.column:])
     else:
         # cut away after start
-        newfile[source_range.start.line - 1] = \
-            newfile[source_range.start.line - 1][:source_range.start.column-1]
+        newfile[source_range.start.line - 1] = (
+            newfile[source_range.start.line - 1][:source_range.start.column-1])
 
         # cut away before end
-        newfile[source_range.end.line - 1] = \
-            newfile[source_range.end.line - 1][source_range.end.column:]
+        newfile[source_range.end.line - 1] = (
+            newfile[source_range.end.line - 1][source_range.end.column:])
 
         # start: index = first line number ==> line after first line
         # end: index = last line -2 ==> line before last line
@@ -164,9 +150,8 @@ def remove_result_ranges_diffs(result_list, file_dict):
     for original_result in result_list:
         mod_file_dict = copy.deepcopy(file_dict)
 
-        for source_range in original_result.affected_code:
+        for source_range in reversed(original_result.affected_code):
             file_name = source_range.file
-            #fixme SHIT! cannot remove orig range from mod file >:(
             new_file = remove_range(mod_file_dict[file_name],
                                     source_range)
             mod_file_dict[file_name] = new_file
@@ -180,58 +165,3 @@ def remove_result_ranges_diffs(result_list, file_dict):
         result_diff_dict_dict[original_result] = diff_dict
 
     return result_diff_dict_dict
-
-
-# def expand_source_range(source_range, file_contents):
-#     """
-#     SourceRanges may contain values of None which we cannot use. This
-#     calculates usable numbers from the source range values and the file
-#     contents
-#
-#     :param source_range:  SourceRange
-#     :param file_contents: List of file contents
-#     :return:              SourceRange with all values guaranteed to not be
-#                           None
-#     """
-#     print(source_range, "\n", file_contents, "\n", "\n")
-#     # SourceRange-counting starts with 1
-#     file = source_range.file
-#
-#     #start_line
-#     if source_range.start.line is None or source_range.start.line < 1:
-#         start_line = 1
-#     else:
-#         start_line = source_range.start.line
-#
-#     #start:column
-#     if source_range.start.column is None or source_range.start.column < 1:
-#         start_column = 1
-#     else:
-#         start_column = source_range.start.column
-#
-#     #end
-#     if source_range.end is None:
-#         end_line = len(file_contents)
-#         end_column = len(file_contents[end_line-1])
-#     else:
-#
-#         #end_line
-#         if (source_range.end.line is None or
-#                 source_range.end.line > len(file_contents)):
-#             end_line = len(file_contents)
-#         else:
-#             end_line = source_range.end.line
-#
-#         # end_column
-#         if (source_range.end.column is None or
-#                 source_range.end.column > len(file_contents[end_line-1])):
-#             print("start:", start_column, "line:", file_contents[end_line-1])
-#             end_column = len(file_contents[end_line-1])
-#         else:
-#             end_column = source_range.end.column
-#
-#     return SourceRange.from_values(file,
-#                                    start_line,
-#                                    start_column,
-#                                    end_line,
-#                                    end_column)

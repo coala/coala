@@ -5,7 +5,7 @@ import unittest
 sys.path.insert(0, ".")
 from coalib.results.ResultFilter import filter_results, remove_range
 from coalib.results.Result import Result, RESULT_SEVERITY
-from coalib.results.SourceRange import SourceRange
+from coalib.results.SourceRange import SourceRange, SourcePosition
 
 
 class ResultFilterTest(unittest.TestCase):
@@ -418,6 +418,7 @@ class ResultFilterTest(unittest.TestCase):
                                                               4,
                                                               7)),
                          ["12", "89"])
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
