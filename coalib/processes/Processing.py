@@ -120,6 +120,23 @@ def get_file_dict(filename_list, log_printer):
     return file_dict
 
 
+def filter_raising_callables(it, exception, *args, **kwargs):
+    """
+    Filters all callable items inside the given iterator that raise the
+    given exceptions.
+
+    :param it:        The iterator to filter.
+    :param exception: The (tuple of) exception(s) to filter for.
+    :param args:      Positional arguments to pass to the callable.
+    :param kwargs:    Keyword arguments to pass to the callable.
+    """
+    for elem in it:
+        try:
+            yield elem(*args, **kwargs)
+        except exception:
+            pass
+
+
 def instantiate_bears(section,
                       local_bear_list,
                       global_bear_list,

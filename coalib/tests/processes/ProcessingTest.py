@@ -13,9 +13,11 @@ from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.processes.Processing import execute_section
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.Processing import process_queues, create_process_group
+from coalib.processes.Processing import (execute_section,
+                                         process_queues,
+                                         create_process_group,
+                                         filter_raising_callables)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
@@ -229,6 +231,37 @@ class ProcessingTest(unittest.TestCase):
             # There is no way of testing this on windows with the current
             # python modules subprocess and os
             self.assertEqual(p.pid, pgid)
+
+    def test_filter_raising_callables(self):
+        class A(Exception):
+            pass
+        class B(Exception):
+            pass
+        class C(Exception):
+            pass
+
+        def create_exception_raiser(exception):
+            def raiser(exc):
+                if exception in exc:
+                    raise exception
+                return exception
+            return raiser
+
+        raiseA, raiseB, raiseC = (create_exception_raiser(exc)
+                                  for exc in [A, B, C])
+
+        test_list = [raiseA, raiseC, raiseB, raiseC]
+        self.assertEqual(list(filter_raising_callables(test_list, A, (A,))),
+                         [C, B, C])
+
+        self.assertEqual(list(filter_raising_callables(test_list,
+                                                       (B, C),
+                                                       exc=(B, C))),
+                         [A])
+
+        # Test whether non filtered exceptions bubble up.
+        with self.assertRaises(B):
+            list(filter_raising_callables(test_list, C, exc=(B, C)))
 
 
 if __name__ == '__main__':
