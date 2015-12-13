@@ -137,14 +137,23 @@ def instantiate_bears(section,
                              delivered by the bears.
     """
     for i in range(len(local_bear_list)):
-        local_bear_list[i] = local_bear_list[i](section,
-                                                message_queue,
-                                                timeout=0.1)
+        try:
+            local_bear_list[i] = local_bear_list[i](section,
+                                                    message_queue,
+                                                    timeout=0.1)
+        except RuntimeError:
+            # If requirements of a bear are not fulfilled this is not a reason
+            # to stop instantiating bears.
+            pass
+
     for i in range(len(global_bear_list)):
-        global_bear_list[i] = global_bear_list[i](file_dict,
-                                                  section,
-                                                  message_queue,
-                                                  timeout=0.1)
+        try:
+            global_bear_list[i] = global_bear_list[i](file_dict,
+                                                      section,
+                                                      message_queue,
+                                                      timeout=0.1)
+        except RuntimeError:
+            pass
 
 
 def instantiate_processes(section,

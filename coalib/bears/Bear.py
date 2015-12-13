@@ -63,6 +63,7 @@ class Bear(Printer, LogPrinter):
             if cp is not False:
                 error_string += " " + cp
 
+            self.warn(error_string)
             raise RuntimeError(error_string)
 
     def _print(self, output, **kwargs):
