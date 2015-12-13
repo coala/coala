@@ -49,7 +49,7 @@ class Bear(Printer, LogPrinter):
         Printer.__init__(self)
         LogPrinter.__init__(self, self)
 
-        if not hasattr(message_queue, "put") and message_queue is not None:
+        if message_queue is not None and not hasattr(message_queue, "put"):
             raise TypeError("message_queue has to be a Queue or None.")
 
         self.section = section
