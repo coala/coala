@@ -35,6 +35,17 @@ class Bear(Printer, LogPrinter):
                  section: Section,
                  message_queue,
                  timeout=0):
+        """
+        Constructs a new bear.
+
+        :param section:       The section object where bear settings are
+                              contained.
+        :param message_queue: The queue object for messages. Can be `None`.
+        :param timeout:       The time the bear is allowed to run. To set no
+                              time limit, use 0.
+        :raises TypeError:    Raised when `message_queue` is no queue.
+        :raises RuntimeError: Raised when bear requirements are not fulfilled.
+        """
         Printer.__init__(self)
         LogPrinter.__init__(self, self)
 
