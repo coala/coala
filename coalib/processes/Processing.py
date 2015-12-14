@@ -146,22 +146,32 @@ def instantiate_bears(section,
     Instantiates each bear with the arguments it needs.
 
     :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bears to instantiate.
-    :param global_bear_list: List of global bears to instantiate.
+    :param local_bear_list:  List of local bear classes to instantiate.
+    :param global_bear_list: List of global bear classes to instantiate.
     :param file_dict:        Dictionary containing filenames and their
                              contents.
     :param message_queue:    Queue responsible to maintain the messages
                              delivered by the bears.
+    :return:                 The local and global bear instance lists.
     """
-    for i in range(len(local_bear_list)):
-        local_bear_list[i] = local_bear_list[i](section,
-                                                message_queue,
-                                                timeout=0.1)
-    for i in range(len(global_bear_list)):
-        global_bear_list[i] = global_bear_list[i](file_dict,
-                                                  section,
-                                                  message_queue,
-                                                  timeout=0.1)
+    local_bear_list = [bear
+                       for bear in filter_raising_callables(
+                           local_bear_list,
+                           RuntimeError,
+                           section,
+                           message_queue,
+                           timeout=0.1)]
+
+    global_bear_list = [bear
+                        for bear in filter_raising_callables(
+                            global_bear_list,
+                            RuntimeError,
+                            file_dict,
+                            section,
+                            message_queue,
+                            timeout=0.1)]
+
+    return local_bear_list, global_bear_list
 
 
 def instantiate_processes(section,
@@ -205,11 +215,13 @@ def instantiate_processes(section,
                         "control_queue": control_queue,
                         "timeout": 0.1}
 
-    instantiate_bears(section,
-                      local_bear_list,
-                      global_bear_list,
-                      file_dict,
-                      message_queue)
+    local_bear_list[:], global_bear_list[:] = instantiate_bears(
+        section,
+        local_bear_list,
+        global_bear_list,
+        file_dict,
+        message_queue)
+
     fill_queue(filename_queue, file_dict.keys())
     fill_queue(global_bear_queue, range(len(global_bear_list)))
 
