@@ -232,11 +232,13 @@ def execute_python_file(filename, ignored_files, cover, timeout, verbose):
 def show_nonexistent_tests(test_only, test_file_names):
     nonexistent_tests = 0
     number = len(test_only)
+    digits = str(len(str(number)))
+    format_string = (" {:>" + digits + "}/{:<} | {}, Cannot execute: This "
+                     "test does not exist.")
     for test in test_only:
         if test not in test_file_names:
             nonexistent_tests += 1
-            print(" {:>2}/{:<2} | {}, Cannot execute: This test does "
-                  "not exist.".format(nonexistent_tests, number, test))
+            print(format_string.format(nonexistent_tests, number, test))
 
     return nonexistent_tests, number
 
@@ -274,13 +276,17 @@ def execute_test(filename,
 
 def print_test_results(test_file, test_nr, test_count, skipped, message):
     basename = os.path.splitext(os.path.basename(test_file))[0]
+    digits = str(len(str(test_count)))
     if skipped:
-        print(" {:>2}/{:<2} | {}, Skipping: {}".format(test_nr,
-                                                       test_count,
-                                                       basename,
-                                                       message))
+        print((" {:>" + digits + "}/{:<} | {}, Skipping: {}").format(
+            test_nr,
+            test_count,
+            basename,
+            message))
     else:
-        print(" {:>2}/{:<2} | {}".format(test_nr, test_count, basename))
+        print((" {:>" + digits + "}/{:<} | {}").format(test_nr,
+                                                       test_count,
+                                                       basename))
         # Decode and encode the message string while replacing errors so
         # unmapped characters can be printed too.
         print(message.encode(sys.stdout.encoding, errors="replace")
