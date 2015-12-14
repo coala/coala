@@ -141,13 +141,13 @@ class SectionTest(unittest.TestCase):
 
         section.update_setting("key1", new_value="value13")
         self.assertEqual("section {key1 : 'value13', key2 : 'value12'}",
-                         section.__str__())
+                         str(section))
         section.update_setting("key1", "key3")
         self.assertEqual("section {key3 : 'value13', key2 : 'value12'}",
-                         section.__str__())
+                         str(section))
         section.update_setting("key3", "key4", "value14")
         self.assertEqual("section {key4 : 'value14', key2 : 'value12'}",
-                         section.__str__())
+                         str(section))
 
     def test_delete_setting(self):
         section = Section("section", None)
@@ -157,14 +157,14 @@ class SectionTest(unittest.TestCase):
 
         section.delete_setting("key1")
         self.assertEqual("section {key2 : 'value12'}",
-                         section.__str__())
+                         str(section))
 
         section.append(Setting("key3", "value13"))
         section.append(Setting("key4", "value14"))
 
         section.delete_setting("key3")
         self.assertEqual("section {key2 : 'value12', key4 : 'value14'}",
-                         section.__str__())
+                         str(section))
 
     def test_bear_dirs_empty(self):
         section = Section("section", None)
