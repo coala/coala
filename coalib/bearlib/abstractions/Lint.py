@@ -3,12 +3,13 @@ import tempfile
 import re
 import sys
 
+from coalib.bears.Bear import Bear
 from coalib.misc.Shell import escape_path_argument
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
-class Lint():
+class Lint(Bear):
     """
     :param executable:   The executable to run the linter.
     :param arguments:    The arguments to supply to the linter, such
@@ -105,3 +106,15 @@ class Lint():
             column=groups.get("column", None),
             end_line=groups.get("end_line", None),
             end_column=groups.get("end_column", None))
+
+    def check_prerequisites(self):
+        if not self.executable:
+            return True
+
+        try:
+            subprocess.Popen([self.executable, '--version'],
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+            return True
+        except OSError:
+            return self.executable+" is not installed."
