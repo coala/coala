@@ -17,8 +17,6 @@ class LineLengthBear(LocalBear):
         '''
         
         spacing_helper = SpacingHelper(tab_width)
-        
-
         for line_number, line in enumerate(file):
             line = spacing_helper.replace_tabs_with_spaces(line)
             if len(line) > max_line_length + 1:
