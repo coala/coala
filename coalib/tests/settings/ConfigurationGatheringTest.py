@@ -31,7 +31,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=['-S', "test=5", "-c", "some_bad_filename"])
 
         self.assertEqual(str(sections["default"]),
-                         "Default {config : some_bad_filename, test : 5}")
+                         "Default {config : 'some_bad_filename', test : '5'}")
 
         (sections,
          local_bears,
@@ -54,7 +54,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
          targets) = gather_configuration(lambda *args: True,
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
-                         "test {value : 1, testval : 5}")
+                         "test {value : '1', testval : '5'}")
         Constants.system_coafile = tmp
 
     def test_user_coafile_parsing(self):
@@ -69,7 +69,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
          targets) = gather_configuration(lambda *args: True,
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
-                         "test {value : 1, testval : 5}")
+                         "test {value : '1', testval : '5'}")
         Constants.user_coafile = tmp
 
     def test_nonexistent_file(self):
@@ -104,9 +104,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                          self.log_printer,
                                          arg_list=["-c", re.escape(config)])
         self.assertEqual(str(sections["test"]),
-                         "test {value : 2}")
+                         "test {value : '2'}")
         self.assertEqual(str(sections["test-2"]),
-                         "test-2 {files : ., bears : LineCountBear}")
+                         "test-2 {files : '.', bears : 'LineCountBear'}")
         # Check merging of default_coafile, .coafile and cli
         (sections,
          local_bears,
@@ -119,15 +119,15 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                                    "test.value=3",
                                                    "test-2.bears=",
                                                    "test-5.bears=TestBear2"])
-        self.assertEqual(str(sections["test"]), "test {value : 3}")
+        self.assertEqual(str(sections["test"]), "test {value : '3'}")
         self.assertEqual(str(sections["test-2"]),
-                         "test-2 {files : ., bears : }")
+                         "test-2 {files : '.', bears : ''}")
         self.assertEqual(str(sections["test-3"]),
-                         "test-3 {files : MakeFile}")
+                         "test-3 {files : 'MakeFile'}")
         self.assertEqual(str(sections["test-4"]),
-                         "test-4 {bears : TestBear}")
+                         "test-4 {bears : 'TestBear'}")
         self.assertEqual(str(sections["test-5"]),
-                         "test-5 {bears : TestBear2}")
+                         "test-5 {bears : 'TestBear2'}")
         Constants.system_coafile = tmp
 
     def test_merge_defaults(self):
@@ -211,8 +211,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=["--find-config", "-c", "some_bad_filename"])
 
         self.assertEqual(str(sections["default"]),
-                         "Default {config : some_bad_filename, "
-                         "find_config : True}")
+                         "Default {config : 'some_bad_filename', "
+                         "find_config : 'True'}")
 
         (sections,
          dummy,
@@ -223,7 +223,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=["--find-config"])
 
         self.assertRegex(str(sections["default"]),
-                         ".*find_config : True.*, config : .*")
+                         ".*find_config : 'True'.*, config : '.*'")
 
 
 if __name__ == '__main__':

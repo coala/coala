@@ -66,10 +66,10 @@ class SectionTest(unittest.TestCase):
         uut = Section("name")
         self.assertEqual(str(uut), "name {}")
         uut.append(Setting("key", "value"))
-        self.assertEqual(str(uut), "name {key : value}")
+        self.assertEqual(str(uut), "name {key : 'value'}")
         uut.append(Setting("another_key", "another_value"))
         self.assertEqual(str(uut),
-                         "name {key : value, another_key : another_value}")
+                         "name {key : 'value', another_key : 'another_value'}")
 
     def test_copy(self):
         uut = Section("name")
@@ -99,20 +99,20 @@ class SectionTest(unittest.TestCase):
 
         # Values are overwritten, new keys appended
         self.assertEqual(str(conf.copy().update(cli)),
-                         "conf {key1 : value11, key3 : value23, "
-                         "key2 : value12}")
+                         "conf {key1 : 'value11', key3 : 'value23', "
+                         "key2 : 'value12'}")
 
         cli.defaults = Section("clidef", None)
         cli.defaults.append(Setting("def1", "dval1"))
 
         self.assertEqual(str(conf.copy().update(cli).defaults),
-                         "clidef {def1 : dval1}")
+                         "clidef {def1 : 'dval1'}")
 
         conf.defaults = Section("confdef", None)
         conf.defaults.append(Setting("def2", "dval2"))
 
         self.assertEqual(str(conf.copy().update(cli).defaults),
-                         "confdef {def2 : dval2, def1 : dval1}")
+                         "confdef {def2 : 'dval2', def1 : 'dval1'}")
 
     def test_append_to_sections(self):
         sections = {}
@@ -140,13 +140,13 @@ class SectionTest(unittest.TestCase):
         section.append(Setting("key2", "value12"))
 
         section.update_setting("key1", new_value="value13")
-        self.assertEqual("section {key1 : value13, key2 : value12}",
+        self.assertEqual("section {key1 : 'value13', key2 : 'value12'}",
                          section.__str__())
         section.update_setting("key1", "key3")
-        self.assertEqual("section {key3 : value13, key2 : value12}",
+        self.assertEqual("section {key3 : 'value13', key2 : 'value12'}",
                          section.__str__())
         section.update_setting("key3", "key4", "value14")
-        self.assertEqual("section {key4 : value14, key2 : value12}",
+        self.assertEqual("section {key4 : 'value14', key2 : 'value12'}",
                          section.__str__())
 
     def test_delete_setting(self):
@@ -156,14 +156,14 @@ class SectionTest(unittest.TestCase):
         section.append(Setting("key2", "value12"))
 
         section.delete_setting("key1")
-        self.assertEqual("section {key2 : value12}",
+        self.assertEqual("section {key2 : 'value12'}",
                          section.__str__())
 
         section.append(Setting("key3", "value13"))
         section.append(Setting("key4", "value14"))
 
         section.delete_setting("key3")
-        self.assertEqual("section {key2 : value12, key4 : value14}",
+        self.assertEqual("section {key2 : 'value12', key4 : 'value14'}",
                          section.__str__())
 
     def test_bear_dirs_empty(self):

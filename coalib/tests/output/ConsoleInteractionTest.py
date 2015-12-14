@@ -193,7 +193,7 @@ class ConsoleInteractionTest(unittest.TestCase):
             name, section = get_action_info(curr_section,
                                             TestAction().get_metadata())
             self.assertEqual(input_generator.last_input, 4)
-            self.assertEqual(str(section), " {param : 3}")
+            self.assertEqual(str(section), " {param : '3'}")
             self.assertEqual(name, "TestAction")
 
         # Check if the user is asked for the parameter only the first time.

@@ -141,7 +141,7 @@ class Section:
         return self.defaults[key]
 
     def __str__(self):
-        value_list = ", ".join(key + " : " + str(self.contents[key])
+        value_list = ", ".join(key + " : " + repr(str(self.contents[key]))
                                for key in self.contents)
         return self.name + " {" + value_list + "}"
 
