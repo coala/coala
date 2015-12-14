@@ -66,7 +66,7 @@ class SectionTest(unittest.TestCase):
         uut = Section("name")
         self.assertEqual(str(uut), "name {}")
         uut.append(Setting("key", "value"))
-        self.assertEqual(str(uut), "name {key : value}")
+        self.assertEqual(str(uut), "name {key : \'value\'}")
         uut.append(Setting("another_key", "another_value"))
         self.assertEqual(str(uut),
                          "name {key : value, another_key : another_value}")
@@ -99,8 +99,8 @@ class SectionTest(unittest.TestCase):
 
         # Values are overwritten, new keys appended
         self.assertEqual(str(conf.copy().update(cli)),
-                         "conf {key1 : value11, key3 : value23, "
-                         "key2 : value12}")
+                         "conf {key1 : \'value11\', key3 : \'value23\', "
+                         "key2 : \'value12\'}")
 
         cli.defaults = Section("clidef", None)
         cli.defaults.append(Setting("def1", "dval1"))
@@ -140,7 +140,7 @@ class SectionTest(unittest.TestCase):
         section.append(Setting("key2", "value12"))
 
         section.update_setting("key1", new_value="value13")
-        self.assertEqual("section {key1 : value13, key2 : value12}",
+        self.assertEqual("section {key1 : \'value13\', key2 : \'value12\'}",
                          section.__str__())
         section.update_setting("key1", "key3")
         self.assertEqual("section {key3 : value13, key2 : value12}",
@@ -156,7 +156,7 @@ class SectionTest(unittest.TestCase):
         section.append(Setting("key2", "value12"))
 
         section.delete_setting("key1")
-        self.assertEqual("section {key2 : value12}",
+        self.assertEqual("section {key2 : \'value12\'}",
                          section.__str__())
 
         section.append(Setting("key3", "value13"))

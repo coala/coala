@@ -31,7 +31,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=['-S', "test=5", "-c", "some_bad_filename"])
 
         self.assertEqual(str(sections["default"]),
-                         "Default {config : some_bad_filename, test : 5}")
+                         "Default {config : \'some_bad_filename\', test : \'5\'}")
 
         (sections,
          local_bears,
@@ -54,7 +54,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
          targets) = gather_configuration(lambda *args: True,
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
-                         "test {value : 1, testval : 5}")
+                         "test {value :\'1\', testval : \'5\'}")
         Constants.system_coafile = tmp
 
     def test_user_coafile_parsing(self):
@@ -69,7 +69,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
          targets) = gather_configuration(lambda *args: True,
                                          self.log_printer)
         self.assertEqual(str(sections["test"]),
-                         "test {value : 1, testval : 5}")
+                         "test {value : \'1\', testval : \'5\'}")
         Constants.user_coafile = tmp
 
     def test_nonexistent_file(self):
@@ -104,7 +104,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                          self.log_printer,
                                          arg_list=["-c", re.escape(config)])
         self.assertEqual(str(sections["test"]),
-                         "test {value : 2}")
+                         "test {value : \'2\'}")
         self.assertEqual(str(sections["test-2"]),
                          "test-2 {files : ., bears : LineCountBear}")
         # Check merging of default_coafile, .coafile and cli
@@ -211,8 +211,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=["--find-config", "-c", "some_bad_filename"])
 
         self.assertEqual(str(sections["default"]),
-                         "Default {config : some_bad_filename, "
-                         "find_config : True}")
+                         "Default {config : \'some_bad_filename\', "
+                         "find_config : \'True\'}")
 
         (sections,
          dummy,
