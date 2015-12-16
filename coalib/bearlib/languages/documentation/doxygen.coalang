@@ -1,0 +1,46 @@
+[C]
+doc-marker1 = /**, \ *, \ */
+doc-marker2 = /**, , \ */
+doc-marker3 = /*!, \ *, \ */
+doc-marker4 = /*!, , \ */
+
+[CPP]
+doc-marker1 = /**, \ *, \ */
+doc-marker2 = /**, , \ */
+doc-marker3 = /*!, \ *, \ */
+doc-marker4 = /*!, , \ */
+doc-marker5 = ///, ///, ///
+doc-marker6 = //!, //!, //!
+
+[CS]
+doc-marker1 = /**, \ *, \ */
+doc-marker2 = /**, , \ */
+doc-marker3 = /*!, \ *, \ */
+doc-marker4 = /*!, , \ */
+doc-marker5 = ///, ///, ///
+doc-marker6 = //!, //!, //!
+
+[FORTRAN]
+doc-marker = !>, !!, !!
+
+[JAVA]
+doc-marker1 = /**, \ *, \ */
+doc-marker2 = /**, , \ */
+doc-marker3 = /*!, \ *, \ */
+doc-marker4 = /*!, , \ */
+doc-marker5 = ///, ///, ///
+doc-marker6 = //!, //!, //!
+
+[PYTHON]
+doc-marker1 = """, , """
+doc-marker2 = \#\#, \#, \#
+
+[PYTHON3]
+doc-marker1 = """, , """
+doc-marker2 = \#\#, \#, \#
+
+[TCL]
+doc-marker = \#\#, \#, \#
+
+[VHDL]
+doc-marker = --!, --!, --!
