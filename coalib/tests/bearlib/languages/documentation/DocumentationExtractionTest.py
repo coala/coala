@@ -67,6 +67,17 @@ class DocumentationExtractionTest(unittest.TestCase):
         self.assertEqual(tuple(extract_documentation(data, "C", "doxygen")),
                          expected_results)
 
+    def test_extract_documentation_C_2(self):
+        data = ['/** my main description\n', ' * continues here */']
+
+        docstyle_C_doxygen = DocstyleDefinition.load("C", "doxygen")
+
+        self.assertEqual(
+            list(extract_documentation(data, "C", "doxygen")),
+            [DocumentationComment(" my main description\n continues here",
+                                  docstyle_C_doxygen.markers[0],
+                                  TextRange.from_values(1, 1, 2, 21))])
+
     def test_extract_documentation_CPP(self):
         data = DocumentationExtractionTest.load_testdata("data.cpp")
 
