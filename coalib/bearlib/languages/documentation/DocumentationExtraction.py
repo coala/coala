@@ -108,6 +108,28 @@ def _compile_multi_match_regex(strings):
     return re.compile("|".join(re.escape(s) for s in strings))
 
 
+def _extract_doccomment_from_line(content, line, column, regex, marker_dict):
+    begin_match = regex.search(content[line], column)
+    if begin_match:
+        column = begin_match.end()
+        for marker in marker_dict[begin_match.group()]:
+            doccomment = _extract_doccomment(content, line, column, marker)
+            if doccomment is not None:
+                start_position = TextPosition(line + 1,
+                                              begin_match.start() + 1)
+                line, column, doccomment = doccomment
+                end_position = TextPosition(line + 1, column + 1)
+
+                doc = DocumentationComment(doccomment,
+                                           marker,
+                                           TextRange(start_position,
+                                                     end_position))
+
+                return line, column, doc
+
+    return line + 1, 0, None
+
+
 def extract_documentation_with_markers(content, markers):
     """
     Extracts all documentation texts inside the given source-code-string.
@@ -141,25 +163,13 @@ def extract_documentation_with_markers(content, markers):
     line = 0
     column = 0
     while line < len(content):
-        begin_match = begin_regex.search(content[line], column)
-        if begin_match:
-            column = begin_match.end()
-            for marker in marker_dict[begin_match.group()]:
-                doccomment = _extract_doccomment(content, line, column, marker)
-                if doccomment is not None:
-                    start_position = TextPosition(line + 1,
-                                                  begin_match.start() + 1)
-                    line, column, doccomment = doccomment
-                    end_position = TextPosition(line + 1, column + 1)
-
-                    yield DocumentationComment(doccomment,
-                                               marker,
-                                               TextRange(start_position,
-                                                         end_position))
-                    break
-        else:
-            line += 1
-            column = 0
+        line, column, doc = _extract_doccomment_from_line(content,
+                                                          line,
+                                                          column,
+                                                          begin_regex,
+                                                          marker_dict)
+        if doc:
+            yield doc
 
 
 def extract_documentation(content, language, docstyle):
