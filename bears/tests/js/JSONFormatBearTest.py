@@ -35,6 +35,13 @@ class JSONFormatBearTest(LocalBearTestHelper):
                                            '    "a": 5',
                                            '}'])
 
+    def test_indent(self):
+        test_code = ['{', '   "b": 5,', '   "a": 5', '}']
+        self.assertLinesInvalid(self.uut, test_code)
+
+        self.section.append(Setting("tab_width", "3"))
+        self.assertLinesValid(self.uut, test_code)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

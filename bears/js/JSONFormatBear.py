@@ -2,6 +2,7 @@ import json
 from collections import OrderedDict
 
 from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
 
 
@@ -26,18 +27,22 @@ class JSONFormatBear(CorrectionBasedBear):
         # whitespace here.
         return [line.rstrip(" \n")+"\n" for line in new_file], []
 
-    def run(self, filename, file, json_sort: bool=False, indent: int=4):
+    def run(self,
+            filename,
+            file,
+            json_sort: bool=False,
+            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
         """
         Raises issues for any deviations from the pretty-printed JSON.
 
         :param json_sort: Whether or not keys should be sorted.
-        :param indent:    Number of spaces to indent.
+        :param tab_width: Number of spaces to indent.
         """
         try:
             for result in self.retrieve_results(filename,
                                                 file,
                                                 json_sort=json_sort,
-                                                indent=indent):
+                                                indent=tab_width):
                 yield result
         except self.DecodeError as err:
             yield Result.from_values(
