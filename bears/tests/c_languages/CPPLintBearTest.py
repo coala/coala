@@ -27,6 +27,11 @@ class CPPLintBearTest(LocalBearTestHelper):
         self.section.append(Setting("cpplint_ignore", "legal"))
         self.assertLinesValid(self.uut, [], self.test_file)
 
+    def test_line_length(self):
+        self.section.append(Setting("cpplint_ignore", "legal"))
+        self.section.append(Setting("max_line_length", "13"))
+        self.assertLinesInvalid(self.uut, [], self.test_file)
+
 
 def skip_test():
     try:
