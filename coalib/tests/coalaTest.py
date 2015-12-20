@@ -46,8 +46,7 @@ class coalaTest(unittest.TestCase):
         retval, output = execute_coala_ci(("-c", "nonex", "test"))
         self.assertRegex(
             output,
-            ".*\\[WARNING\\].*The requested coafile '.*' does not exist.\n"
-            ".*\\[WARNING\\].*The requested section 'test' is not.*\n")
+            ".*\\[ERROR\\].*The requested coafile '.*' does not exist.\n")
 
     def test_find_no_issues(self):
         retval, output = execute_coala_ci(('docs', '-c', self.coafile))
@@ -79,9 +78,8 @@ class coalaTest(unittest.TestCase):
         self.assertFalse(os.path.exists(tag_path))
 
     def test_fail_acquire_settings(self):
-        """It raises an AssertionError when required settings are missing."""
         retval, output = execute_coala_ci((
-            "-b", 'SpaceConsistencyBear', '-c', '/dev/null'))
+            "-b", 'SpaceConsistencyBear', '-c', os.devnull))
         self.assertIn("During execution, we found that some", output)
 
 
