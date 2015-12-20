@@ -11,8 +11,8 @@ class IndentBear(CorrectionBasedBear):
     def run(self,
             filename,
             file,
-            max_line_length: int,
-            use_spaces: bool,
+            max_line_length: int=80,
+            use_spaces: bool=True,
             tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH,
             indent_cli_options: str=''):
         """
