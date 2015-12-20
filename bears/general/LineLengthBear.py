@@ -7,7 +7,7 @@ class LineLengthBear(LocalBear):
     def run(self,
             filename,
             file,
-            max_line_length: int,
+            max_line_length: int=80,
             tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
         '''
         Yields results for all lines longer than the given maximum line length.
