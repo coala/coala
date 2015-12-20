@@ -7,15 +7,15 @@ from coalib.results.Diff import Diff
 
 
 class MatlabIndentationBear(LocalBear):
-    def run(self, filename, file, indentation: int=2):
+    def run(self, filename, file, tab_width: int=2):
         """
         This bear features a simple algorithm to calculate the right
         indentation for Matlab/Octave code. However, it will not handle hanging
         indentation or conditions ranging over several lines yet.
 
-        :param indentation: Number of spaces per indentation level.
+        :param tab_width: Number of spaces per indentation level.
         """
-        new_file = list(self.reindent(file, indentation))
+        new_file = list(self.reindent(file, tab_width))
 
         if new_file != file:
             wholediff = Diff.from_string_arrays(file, new_file)
