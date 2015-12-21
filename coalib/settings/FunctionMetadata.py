@@ -127,17 +127,15 @@ class FunctionMetadata:
             metadata.omit = omit
             return metadata
 
-        doc = func.__doc__
-        if doc is None:
-            doc = ""
+        doc = func.__doc__ or ""
         doc_comment = DocumentationComment.from_docstring(doc)
 
         non_optional_params = OrderedDict()
         optional_params = OrderedDict()
 
         argspec = getfullargspec(func)
-        args = argspec.args if argspec.args is not None else ()
-        defaults = argspec.defaults if argspec.defaults is not None else ()
+        args = argspec.args or ()
+        defaults = argspec.defaults or ()
         num_non_defaults = len(args) - len(defaults)
         for i, arg in enumerate(args):
             # Implicit self argument or omitted explicitly
