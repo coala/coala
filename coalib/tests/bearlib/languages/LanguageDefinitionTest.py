@@ -4,7 +4,6 @@ import sys
 sys.path.insert(0, ".")
 
 from coalib.bearlib.languages.LanguageDefinition import LanguageDefinition
-from coalib.misc.Compatability import FileNotFoundError
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

@@ -261,8 +261,7 @@ def extract_documentation(content, language, docstyle):
     :param docstyle:           The documentation style/tool used
                                (e.g. doxygen).
     :raises FileNotFoundError: Raised when the docstyle definition file was not
-                               found. This is a compatability exception from
-                               `coalib.misc.Compatability` module.
+                               found.
     :raises KeyError:          Raised when the given language is not defined in
                                given docstyle.
     :raises ValueError:        Raised when a docstyle definition setting has an

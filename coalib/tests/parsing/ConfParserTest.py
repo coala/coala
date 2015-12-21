@@ -5,7 +5,6 @@ import tempfile
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.misc.Compatability import FileNotFoundError
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 

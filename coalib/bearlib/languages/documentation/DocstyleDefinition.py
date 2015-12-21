@@ -1,6 +1,5 @@
 import os.path
 
-from coalib.misc.Compatability import FileNotFoundError
 from coalib.misc.Decorators import generate_eq, generate_repr
 from coalib.parsing.ConfParser import ConfParser
 
@@ -111,8 +110,7 @@ class DocstyleDefinition:
                                    style/tool used to document code, e.g.
                                    `"default"` or `"doxygen"`.
         :raises FileNotFoundError: Raised when the given docstyle was not
-                                   found. This is a compatability exception
-                                   from `coalib.misc.Compatability` module.
+                                   found.
         :raises KeyError:          Raised when the given language is not
                                    defined for given docstyle.
         :return:                   The `DocstyleDefinition` for given language
@@ -125,9 +123,9 @@ class DocstyleDefinition:
         try:
             docstyle_settings = language_config_parser.parse(
                 os.path.dirname(__file__) + "/" + docstyle + ".coalang")
-        except FileNotFoundError as ex:
-            raise type(ex)("Docstyle definition " + repr(docstyle) + " not "
-                           "found.")
+        except FileNotFoundError:
+            raise FileNotFoundError("Docstyle definition " + repr(docstyle) +
+                                    " not found.")
 
         language = language.lower()
 

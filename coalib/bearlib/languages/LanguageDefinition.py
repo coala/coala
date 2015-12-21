@@ -19,9 +19,7 @@ class LanguageDefinition(SectionCreatable):
                                    and C# and so on.
         :param language:           The actual language (e.g. C++).
         :raises FileNotFoundError: Raised when no definition is available for
-                                   the given family. This is a compatability
-                                   exception from module
-                                   `coalib.misc.Compatability`.
+                                   the given family.
         :raises KeyError:          Raised when no definition is available for
                                    the given language.
         """

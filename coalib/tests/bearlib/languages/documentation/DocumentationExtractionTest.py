@@ -9,7 +9,6 @@ from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
 from coalib.bearlib.languages.documentation.DocumentationExtraction import (
     extract_documentation)
-from coalib.misc.Compatability import FileNotFoundError
 from coalib.results.TextRange import TextRange
 
 
