@@ -46,8 +46,7 @@ class coalaTest(unittest.TestCase):
         retval, output = execute_coala_ci(("-c", "nonex", "test"))
         self.assertRegex(
             output,
-            ".*\\[WARNING\\].*The requested coafile '.*' does not exist.\n"
-            ".*\\[WARNING\\].*The requested section 'test' is not.*\n")
+            ".*\\[ERROR\\].*The requested coafile '.*' does not exist.\n")
 
     def test_find_no_issues(self):
         retval, output = execute_coala_ci(('docs', '-c', self.coafile))

@@ -3,14 +3,31 @@ import sys
 import re
 import tempfile
 import unittest
+from contextlib import contextmanager
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ClosableObject import close_objects
 
 sys.path.insert(0, ".")
 from coalib.misc.Constants import Constants
+from coalib.parsing.StringProcessing import escape
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
 from coalib.output.printers.LogPrinter import LogPrinter
+
+
+@contextmanager
+def make_temp():
+    """
+    Creates a temporary file with a closed stream and deletes it when done.
+
+    :return: A contextmanager retrieving the file path.
+    """
+    temporary = tempfile.mkstemp()
+    os.close(temporary[0])
+    try:
+        yield temporary[1]
+    finally:
+        os.remove(temporary[1])
 
 
 class ConfigurationGatheringTest(unittest.TestCase):
@@ -21,21 +38,39 @@ class ConfigurationGatheringTest(unittest.TestCase):
         close_objects(self.log_printer)
 
     def test_gather_configuration(self):
-        # We need to use a bad filename or this will parse coalas .coafile
-        sections, local_bears, global_bears, targets = gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            arg_list=['-S', "test=5", "-c", "some_bad_filename"])
+        args = (lambda *args: True, self.log_printer)
+
+        # Passing the default coafile name only triggers a warning.
+        gather_configuration(*args, arg_list=["-c abcdefghi/invalid/.coafile"])
+
+        # Using a bad filename explicitly exits coala.
+        with self.assertRaises(SystemExit):
+            gather_configuration(
+                *args,
+                arg_list=["-S", "test=5", "-c", "some_bad_filename"])
+
+        with make_temp() as temporary:
+            sections, local_bears, global_bears, targets = (
+                gather_configuration(
+                    *args,
+                    arg_list=["-S",
+                              "test=5",
+                              "-c",
+                              escape(temporary, "\\"),
+                              "-s"]))
 
         self.assertEqual(str(sections["default"]),
-                         "Default {config : 'some_bad_filename', test : '5'}")
+                         "Default {config : " + repr(temporary) + ", save : "
+                             "'True', test : '5'}")
 
-        sections, local_bears, global_bears, targets = gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            arg_list=['-S test=5', '-c bad_filename', '-b LineCountBear'])
+        with make_temp() as temporary:
+            sections, local_bears, global_bears, targets = (
+                gather_configuration(*args,
+                                     arg_list=["-S test=5",
+                                               "-c " + escape(temporary, "\\"),
+                                               "-b LineCountBear -s"]))
 
-        self.assertEqual(len(local_bears["default"]), 1)
+        self.assertEqual(len(local_bears["default"]), 0)
 
     def test_default_coafile_parsing(self):
         tmp = Constants.system_coafile
@@ -72,17 +107,17 @@ class ConfigurationGatheringTest(unittest.TestCase):
         Constants.user_coafile = tmp
 
     def test_nonexistent_file(self):
-        # Shouldn't throw an exception
         filename = "bad.one/test\neven with bad chars in it"
-        gather_configuration(lambda *args: True,
-                             self.log_printer,
-                             arg_list=['-S', "config=" + filename])
+        with self.assertRaises(SystemExit):
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=['-S', "config=" + filename])
 
         tmp = Constants.system_coafile
         Constants.system_coafile = filename
 
-        # Shouldn't throw an exception
-        gather_configuration(lambda *args: True, self.log_printer)
+        with self.assertRaises(SystemExit):
+            gather_configuration(lambda *args: True, self.log_printer)
 
         Constants.system_coafile = tmp
 
@@ -133,10 +168,15 @@ class ConfigurationGatheringTest(unittest.TestCase):
         Constants.system_coafile = tmp
 
     def test_merge_defaults(self):
-        sections, local_bears, global_bears, targets = gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            arg_list=["-S", "value=1", "test.value=2", "-c", "bad_file_name"])
+        with make_temp() as temporary:
+            sections, local_bears, global_bears, targets = (
+                gather_configuration(lambda *args: True,
+                                     self.log_printer,
+                                     arg_list=["-S",
+                                               "value=1",
+                                               "test.value=2",
+                                               "-c",
+                                               escape(temporary, "\\")]))
 
         self.assertEqual(sections["default"],
                          sections["test"].defaults)
@@ -197,16 +237,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(os.path.join(current_dir,
                                       "section_manager_test_files",
                                       ".coafile"), retval)
-
-        # We need to use a bad filename or this will parse coalas .coafile
-        sections, dummy, dummy, dummy = gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            arg_list=["--find-config", "-c", "some_bad_filename"])
-
-        self.assertEqual(str(sections["default"]),
-                         "Default {config : 'some_bad_filename', "
-                         "find_config : 'True'}")
 
         sections, dummy, dummy, dummy = gather_configuration(
             lambda *args: True,

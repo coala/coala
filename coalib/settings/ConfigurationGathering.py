@@ -41,9 +41,11 @@ def load_config_file(filename, log_printer, silent=False):
     It assumes that the cli_sections are available.
 
     :param filename:    The file to load settings from.
-    :param log_printer: The log printer to log the warning to (in case).
-    :param silent:      Whether or not to warn the user if the file doesn't
-                        exist.
+    :param log_printer: The log printer to log the warning/error to (in case).
+    :param silent:      Whether or not to warn the user/exit if the file
+                        doesn't exist.
+    :raises SystemExit: Exits when given filename is invalid and is not the
+                        default coafile. Only raised when `silent` is `False`.
     """
     filename = os.path.abspath(filename)
 
@@ -51,9 +53,14 @@ def load_config_file(filename, log_printer, silent=False):
         return ConfParser().parse(filename)
     except FileNotFoundError:
         if not silent:
-            log_printer.warn(
-                "The requested coafile '{filename}' does not exist."
-                .format(filename=filename))
+            if os.path.basename(filename) == Constants.default_coafile:
+                log_printer.warn("The default coafile " +
+                                 repr(Constants.default_coafile) + " was not "
+                                 "found. Ignoring it.")
+            else:
+                log_printer.err("The requested coafile " + repr(filename) +
+                                " does not exist.")
+                sys.exit(2)
 
         return {"default": Section("default")}
 
