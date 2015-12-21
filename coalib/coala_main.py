@@ -61,10 +61,8 @@ def run_coala(log_printer=None,
     try:
         yielded_results = False
         did_nothing = True
-        (sections,
-         local_bears,
-         global_bears,
-         targets) = gather_configuration(acquire_settings, log_printer)
+        sections, local_bears, global_bears, targets = (
+            gather_configuration(acquire_settings, log_printer))
 
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
@@ -76,13 +74,13 @@ def run_coala(log_printer=None,
             for section in sections:
                 bear_dirs = sections[section].bear_dirs()
                 local_bears[section] = collect_bears(bear_dirs,
-                                            ["**"],
-                                            [BEAR_KIND.LOCAL],
-                                            log_printer)
+                                                     ["**"],
+                                                     [BEAR_KIND.LOCAL],
+                                                     log_printer)
                 global_bears[section] = collect_bears(bear_dirs,
-                                             ["**"],
-                                             [BEAR_KIND.GLOBAL],
-                                             log_printer)
+                                                      ["**"],
+                                                      [BEAR_KIND.GLOBAL],
+                                                      log_printer)
 
         if dtag != "None":
             delete_tagged_results(

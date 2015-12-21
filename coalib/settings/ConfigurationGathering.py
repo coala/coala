@@ -32,7 +32,7 @@ def merge_section_dicts(lower, higher):
     return lower
 
 
-def load_config_file(filename, log_printer, silent=False):
+def load_config_file(filename, silent=False):
     """
     Loads sections from a config file. Prints an appropriate warning if
     it doesn't exist and returns a section dict containing an empty
@@ -40,20 +40,21 @@ def load_config_file(filename, log_printer, silent=False):
 
     It assumes that the cli_sections are available.
 
-    :param filename:    The file to load settings from.
-    :param log_printer: The log printer to log the warning to (in case).
-    :param silent:      Whether or not to warn the user if the file doesn't
-                        exist.
+    :param filename:           The file to load settings from.
+    :param silent:             Whether to raise a `FileNotFoundError` exception
+                               if `file` doesn't exist.
+    :raises FileNotFoundError: Raised when `file` was not found and `silent` is
+                               `False`. This is a compatability exception from
+                               `coalib.misc.Compatability`.
     """
     filename = os.path.abspath(filename)
 
     try:
         return ConfParser().parse(filename)
-    except FileNotFoundError:
+    except FileNotFoundError as ex:
         if not silent:
-            log_printer.warn(
-                "The requested coafile '{filename}' does not exist."
-                .format(filename=filename))
+            raise type(ex)("The requested coafile " + repr(filename) +
+                           " does not exist.")
 
         return {"default": Section("default")}
 
@@ -118,13 +119,9 @@ def load_configuration(arg_list, log_printer):
     for item in list(cli_sections["default"].contents.pop("targets", "")):
         targets.append(item.lower())
 
-    default_sections = load_config_file(Constants.system_coafile,
-                                        log_printer)
+    default_sections = load_config_file(Constants.system_coafile)
 
-    user_sections = load_config_file(
-        Constants.user_coafile,
-        log_printer,
-        silent=True)
+    user_sections = load_config_file(Constants.user_coafile, silent=True)
 
     default_config = str(default_sections["default"].get("config", ".coafile"))
     user_config = str(user_sections["default"].get("config", default_config))
@@ -138,7 +135,7 @@ def load_configuration(arg_list, log_printer):
         # to a specific file.
         save = True
 
-    coafile_sections = load_config_file(config, log_printer, silent=save)
+    coafile_sections = load_config_file(config, silent=save)
 
     sections = merge_section_dicts(default_sections, user_sections)
 
