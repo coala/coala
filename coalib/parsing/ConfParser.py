@@ -1,6 +1,7 @@
 from collections import OrderedDict
 import os
 
+from coalib.misc.Constants import Constants
 from coalib.parsing.LineParser import LineParser
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
@@ -41,7 +42,7 @@ class ConfParser:
                            and their Setting objects as values.
         """
         if os.path.isdir(input_data):
-            input_data = os.path.join(input_data, ".coafile")
+            input_data = os.path.join(input_data, Constants.default_coafile)
 
         with open(input_data, "r", encoding='utf-8') as _file:
             lines = _file.readlines()

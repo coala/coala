@@ -59,6 +59,8 @@ class Constants:
 
     user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
 
+    default_coafile = ".coafile"
+
     VERSION_FILE = os.path.join(coalib_root, "VERSION")
     with open(VERSION_FILE, 'r') as ver:
         VERSION = ver.readline().strip()

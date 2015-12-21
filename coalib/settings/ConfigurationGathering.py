@@ -68,7 +68,7 @@ def save_sections(sections):
     try:
         if bool(default_section.get("save", "false")):
             conf_writer = ConfWriter(
-                str(default_section.get("config", ".coafile")))
+                str(default_section.get("config", Constants.default_coafile)))
         else:
             return
     except ValueError:
