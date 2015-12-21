@@ -3,7 +3,6 @@ dependencies:
     - ~/.pyenv/versions/3.3.6
     - ~/.pyenv/versions/3.4.3
     - ~/.pyenv/versions/3.5.1
-    - ~/.pyenv/versions/pypy3-2.4.0
   override:
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
     - bash .misc/deps.sh

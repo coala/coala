@@ -22,7 +22,8 @@ class JSONFormatBear(CorrectionBasedBear):
                               indent=indent,
                               sort_keys=json_sort).splitlines(True)
 
-        # Because of a bug in 3.2 we need to strip whitespaces
+        # Because of a bug in several python versions we have to correct
+        # whitespace here.
         return [line.rstrip(" \n")+"\n" for line in new_file], []
 
     def run(self, filename, file, json_sort: bool=False, indent: int=4):

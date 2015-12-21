@@ -2,7 +2,7 @@
 
 This document contains information on how to install coala. Supported platforms
 are Linux and Windows. coala is known to work on OS X as well. coala is tested
-against CPython 3.3 and 3.4 as well as PyPy3.
+against CPython 3.3, 3.4 and 3.5.
 
 In order to run coala you need to install Python. It is recommended, that
 you install Python3 >= 3.3 from http://www.python.org.
