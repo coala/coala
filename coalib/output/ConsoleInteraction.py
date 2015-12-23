@@ -131,9 +131,12 @@ def print_result(console_printer,
     console_printer.print(format_lines(result.message), delimiter="\n")
 
     actions = []
+    not_applicable_actions = set()
     for action in CLI_ACTIONS:
         if action.is_applicable(result, file_dict, file_diff_dict):
             actions.append(action)
+        else:
+            not_applicable_actions.add(action.get_metadata().name)
 
     if actions == []:
         return
@@ -145,16 +148,55 @@ def print_result(console_printer,
         action_dict[metadata.name] = action
         metadata_list.append(metadata)
 
-    # User can always choose no action which is guaranteed to succeed
-    while ask_for_action_and_apply(log_printer,
-                                   console_printer,
-                                   section,
-                                   metadata_list,
-                                   action_dict,
-                                   result,
-                                   file_diff_dict,
-                                   file_dict):
-        pass
+    if section is None:
+        default_actions = {}
+    else:
+        try:
+            default_actions = dict(section["default_actions"])
+            invalid_actions = default_actions.values() - action_dict.keys()
+            if len(invalid_actions) != 0:
+                reverted_default_actions = {
+                    value: key for key, value in default_actions.items()}
+                for action in invalid_actions:
+                    if action in not_applicable_actions:
+                        log_printer.err(
+                            "Selected default action {} for bear {} is not "
+                            "applicable.".format(
+                                repr(action),
+                                repr(reverted_default_actions[action])))
+                    else:
+                        log_printer.err(
+                            "Selected default action {} for bear {} does not "
+                            "exist.".format(
+                                repr(action),
+                                repr(reverted_default_actions[action])))
+                return
+        except IndexError:
+            default_actions = {}
+
+    try:
+        action_name = default_actions[result.origin]
+    except KeyError:
+        # User can always choose no action which is guaranteed to succeed
+        while ask_for_action_and_apply(log_printer,
+                                       console_printer,
+                                       section,
+                                       metadata_list,
+                                       action_dict,
+                                       result,
+                                       file_diff_dict,
+                                       file_dict):
+            pass
+        return
+
+    try:
+        action_dict[action].apply_from_section(result,
+                                               file_dict,
+                                               file_diff_dict,
+                                               section)
+    except Exception as ex:
+        log_printer.log_exception("Failed to execute action "
+                                  "{}.".format(action_name), ex)
 
 
 def print_results_formatted(log_printer,
