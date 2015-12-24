@@ -146,14 +146,14 @@ def print_result(console_printer,
         metadata_list.append(metadata)
 
     # User can always choose no action which is guaranteed to succeed
-    while apply_action(log_printer,
-                       console_printer,
-                       section,
-                       metadata_list,
-                       action_dict,
-                       result,
-                       file_diff_dict,
-                       file_dict):
+    while ask_for_action_and_apply(log_printer,
+                                   console_printer,
+                                   section,
+                                   metadata_list,
+                                   action_dict,
+                                   result,
+                                   file_diff_dict,
+                                   file_dict):
         pass
 
 
@@ -379,16 +379,16 @@ def print_actions(console_printer, section, actions):
     return get_action_info(section, actions[choice - 1])
 
 
-def apply_action(log_printer,
-                 console_printer,
-                 section,
-                 metadata_list,
-                 action_dict,
-                 result,
-                 file_diff_dict,
-                 file_dict):
+def ask_for_action_and_apply(log_printer,
+                             console_printer,
+                             section,
+                             metadata_list,
+                             action_dict,
+                             result,
+                             file_diff_dict,
+                             file_dict):
     """
-    Applies the action selected by the user.
+    Asks the user for an action and applies it.
 
     :param log_printer:     Printer responsible for logging the messages.
     :param console_printer: Object to print messages on the console.
