@@ -346,8 +346,9 @@ def choose_action(console_printer, actions):
         console_printer.print(format_lines(" 0: " +
                                            "Apply no further actions."))
         for i, action in enumerate(actions):
-            console_printer.print(format_lines("{:>2}: {}".format(i + 1,
-                                                                 action.desc)))
+            console_printer.print(format_lines("{:>2}: {}".format(
+                i + 1,
+                action.desc)))
 
         try:
             line = format_lines("Please enter the number of the action "
