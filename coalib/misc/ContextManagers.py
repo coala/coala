@@ -121,9 +121,9 @@ def simulate_console_inputs(*inputs):
             assert(input() == 3)
             assert(generator.last_input == 3)
 
-    :param inputs: Any inputs to simulate. An IndexError will be raised if
-                   input is called more often then the number of provided
-                   inputs.
+    :param inputs:      Any inputs to simulate.
+    :raises ValueError: Raised when was asked for more input but there's no
+                        more provided.
     """
     class InputGenerator:
         def __init__(self, inputs):
@@ -133,15 +133,19 @@ def simulate_console_inputs(*inputs):
         def generate_input(self, prompt=''):
             print(prompt, end="")
             self.last_input += 1
-            return self.inputs[self.last_input]
+            try:
+                return self.inputs[self.last_input]
+            except IndexError:
+                raise ValueError("Asked for more input, but no more was "
+                                 "provided from `simulate_console_inputs`.")
 
     input_generator = InputGenerator(list(inputs))
-    _input = builtins.__dict__["input"]
-    builtins.__dict__["input"] = input_generator.generate_input
+    _input = builtins.input
+    builtins.input = input_generator.generate_input
     try:
         yield input_generator
     finally:
-        builtins.__dict__["input"] = _input
+        builtins.input = _input
 
 
 @contextmanager
