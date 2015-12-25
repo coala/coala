@@ -1,3 +1,4 @@
+import shutil
 from subprocess import Popen, PIPE
 
 from coalib.bears.LocalBear import LocalBear
@@ -62,3 +63,14 @@ class CorrectionBasedBear(LocalBear):
                 affected_code=(diff.range(filename),),
                 diffs={filename: diff},
                 severity=self.SEVERITY)
+
+    @classmethod
+    def check_prerequisites(cls):
+        try:
+            if shutil.which(cls.BINARY) is None:
+                return repr(cls.BINARY) + " is not installed."
+            else:
+                return True
+        except AttributeError:
+            # Happens when `BINARY` does not exist in `cls`.
+            return True

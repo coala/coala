@@ -29,6 +29,15 @@ class CorrectionBasedBearTest(LocalBearTestHelper):
 
         self.uut.BINARY = old_binary
 
+    def test_missing_binary(self):
+        old_binary = IndentBear.BINARY
+        IndentBear.BINARY = "fdgskjfdgjdfgnlfdslk"
+
+        self.assertEqual(IndentBear.check_prerequisites(),
+                         "'fdgskjfdgjdfgnlfdslk' is not installed.")
+
+        IndentBear.BINARY = old_binary
+
 
 def skip_test():
     try:
