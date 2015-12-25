@@ -43,8 +43,10 @@ class TypedTestBear(Bear):
 
 
 class BearWithPrerequisites(Bear):
+    prerequisites_fulfilled = True
+
     def __init__(self, section, queue, prerequisites_fulfilled):
-        self.prerequisites_fulfilled = prerequisites_fulfilled
+        BearWithPrerequisites.prerequisites_fulfilled = prerequisites_fulfilled
         Bear.__init__(self, section, queue)
         self.was_executed = False
 
@@ -52,8 +54,9 @@ class BearWithPrerequisites(Bear):
         self.was_executed = True
         return []
 
-    def check_prerequisites(self):
-        return self.prerequisites_fulfilled
+    @classmethod
+    def check_prerequisites(cls):
+        return cls.prerequisites_fulfilled
 
 
 class BearTest(unittest.TestCase):

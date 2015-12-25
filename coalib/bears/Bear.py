@@ -56,7 +56,7 @@ class Bear(Printer, LogPrinter):
         self.message_queue = message_queue
         self.timeout = timeout
 
-        cp = self.check_prerequisites()
+        cp = type(self).check_prerequisites()
         if cp is not True:
             error_string = ("The bear " + type(self).__name__ +
                             " does not fulfill all requirements.")
@@ -166,13 +166,15 @@ class Bear(Printer, LogPrinter):
         """
         return cls.get_metadata().non_optional_params
 
-    @staticmethod
-    def check_prerequisites():
+    @classmethod
+    def check_prerequisites(cls):
         """
         Checks whether needed runtime prerequisites of the bear are satisfied.
 
         This function gets executed at construction and returns True by
         default.
+
+        Section value requirements shall be checked inside the `run` method.
 
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
