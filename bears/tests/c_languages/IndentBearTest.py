@@ -1,9 +1,9 @@
-import subprocess
 import sys
 import unittest
 from queue import Queue
 
 sys.path.insert(0, ".")
+from bears.tests.BearTestHelper import generate_skip_test
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.IndentBear import IndentBear
 from coalib.settings.Section import Section
@@ -45,14 +45,7 @@ class IndentBearTest(LocalBearTestHelper):
                                            "}\n"])
 
 
-def skip_test():
-    try:
-        subprocess.Popen([IndentBear.BINARY, '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "indent is not installed."
+skip_test = generate_skip_test(IndentBear)
 
 
 if __name__ == '__main__':
