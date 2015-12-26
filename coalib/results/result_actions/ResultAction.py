@@ -3,6 +3,7 @@ A ResultAction is an action that is applicable to at least some results. This
 file serves the base class for all result actions, thus providing a unified
 interface for all actions.
 """
+from coalib.misc.Decorators import enforce_signature
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
@@ -32,11 +33,12 @@ class ResultAction:
         """
         raise NotImplementedError
 
+    @enforce_signature
     def apply_from_section(self,
                            result,
-                           original_file_dict,
-                           file_diff_dict,
-                           section):
+                           original_file_dict: dict,
+                           file_diff_dict: dict,
+                           section: Section):
         """
         Applies this action to the given results with all additional options
         given as a section. The file dictionaries
@@ -54,13 +56,6 @@ class ResultAction:
                                    information.
         :return                    The modified file_diff_dict.
         """
-        if not isinstance(section, Section):
-            raise TypeError("section has to be of type Section.")
-        if not isinstance(original_file_dict, dict):
-            raise TypeError("original_file_dict has to be of type dict.")
-        if not isinstance(file_diff_dict, dict):
-            raise TypeError("file_diff_dict has to be of type dict.")
-
         params = self.get_metadata().create_params_from_section(section)
         return self.apply(result, original_file_dict, file_diff_dict, **params)
 
