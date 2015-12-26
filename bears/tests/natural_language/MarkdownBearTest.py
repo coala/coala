@@ -20,7 +20,7 @@ def skip_test():
                          stderr=subprocess.PIPE)
         return False
     except OSError:
-        return "mdast is not installed."
+        return "remark is not installed."
 
 
 if __name__ == '__main__':
