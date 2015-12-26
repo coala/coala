@@ -345,9 +345,9 @@ def choose_action(console_printer, actions):
     while True:
         console_printer.print(format_lines(" 0: " +
                                            "Apply no further actions."))
-        for i, action in enumerate(actions):
+        for i, action in enumerate(actions, 1):
             console_printer.print(format_lines("{:>2}: {}".format(
-                i + 1,
+                i,
                 action.desc)))
 
         try:
