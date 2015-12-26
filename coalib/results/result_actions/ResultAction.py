@@ -14,6 +14,8 @@ class ResultAction:
         """
         Checks whether the Action is valid for the result type.
 
+        Returns `True` by default.
+
         :param result:             The result from the coala run to check if an
                                    Action is applicable.
         :param original_file_dict: A dictionary containing the files in the
@@ -24,7 +26,7 @@ class ResultAction:
                                    This dict will be altered so you do not
                                    need to use the return value.
         """
-        return False
+        return True
 
     def apply(self, result, original_file_dict, file_diff_dict, **kwargs):
         """
