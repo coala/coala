@@ -120,10 +120,12 @@ def remove_ignored(file_paths, ignored_globs):
     :return:              list without those items that should be ignored
     """
     file_paths = list(set(file_paths))
+    reduced_list = file_paths[:]
 
     for file_path in file_paths:
         for ignored_glob in ignored_globs:
             if fnmatch(file_path, ignored_glob):
-                file_paths.remove(file_path)
+                reduced_list.remove(file_path)
                 break
-    return file_paths
+
+    return reduced_list
