@@ -36,6 +36,13 @@ class CorrectionBasedBearTest(LocalBearTestHelper):
         self.assertEqual(IndentBear.check_prerequisites(),
                          "'fdgskjfdgjdfgnlfdslk' is not installed.")
 
+        # "echo" is existent on nearly all platforms.
+        IndentBear.BINARY = "echo"
+        self.assertTrue(IndentBear.check_prerequisites())
+
+        del IndentBear.BINARY
+        self.assertTrue(IndentBear.check_prerequisites())
+
         IndentBear.BINARY = old_binary
 
 
