@@ -35,9 +35,7 @@ for dep_version in "${dep_versions[@]}" ; do
   python --version
   source .misc/env_variables.sh
 
-  pip install -q setuptools coverage munkres3 pylint language-check PyPrint
-  pip install -q autopep8 eradicate autoflake restructuredtext_lint proselint
-  pip install -q cpplint isort
+  pip install -q -r requirements.txt
 
   cd .misc
   bash install.python-gi.sh
