@@ -101,18 +101,22 @@ As you can see, the `-S` (or `--settings`) option allows to specify arbitrary
 settings. Settings can be directly stored into a section with the
 `section.setting` syntax.
 
-It is recommended to enter `80` for the `max_line_length` setting.
+By default the `LineLengthBear` checks whether each line contains `80` chars or
+less in a line. To change this value, use the `max_line_length` inside the
+`.coafile`.
 
 coala will now yield any result you didn't correct last time plus a new one
-for the Makefile. This time coala (or better, the LineLengthBear) doesn't know
-how to fix the issue but still tries to provide as much helpful information as
-possible and provides you the option to directly open the file in an editor
+for the Makefile. This time coala (or better, the `LineLengthBear`) doesn't
+know how to fix the issue but still tries to provide as much helpful information
+as possible and provides you the option to directly open the file in an editor
 of your choice.
 
-Note: If your editor is already open this may not work, because the other
-process will shortly communicate with the existent process and return
-immediately. coala handles this for some editors automatically, if your's does
-not work yet - please file a bug so we can include it!
+> **Note:**
+>
+> If your editor is already open this may not work, because the other process
+> will shortly communicate with the existent process and return immediately.
+> coala handles this for some editors automatically, if your's does not work
+> yet - please file a bug so we can include it!
 
 If you changed one file in multiple results, coala will merge the changes if
 this is possible.
@@ -122,7 +126,6 @@ coala should have appended something like this to your `.coafile`:
 [Makefiles]
 bears = LineLengthBear
 files = Makefile
-max_line_length = 80
 ```
 
 As you see, sections provide a way to have different configurations for
