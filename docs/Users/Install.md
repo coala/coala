@@ -10,7 +10,7 @@ you install Python3 >= 3.3 from http://www.python.org.
 The easiest way to install coala is using pip (Pip Installs Packages). If you
 don't already have pip, you can install it like described on
 <https://pip.pypa.io/en/stable/installing.html>. Note that pip is shipped with
-python 3.4 by default.
+recent python versions by default.
 
 To install the latest most stable version of coala, use:
 
