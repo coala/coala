@@ -79,7 +79,7 @@ with which bears and make it available to all contributors.
 
 Feel free to play around with this file. You can either edit it manually or
 add/edit settings via `coala --save ...` invocations. If you want coala to save
-settings every time, you can add `Save = True` manually into your `.coafile`.
+settings every time, you can add `save = True` manually into your `.coafile`.
 
 # Sections
 
