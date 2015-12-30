@@ -193,6 +193,37 @@ ignore = **/resources.h
 
 Would include all header (`.h`) files but leaves out resource headers.
 
+# Ignoring code inside files
+
+Sometimes you need finer-graded ignores, so coala lets you even skip some piece
+of file!
+
+Imagine you have a `LineLengthBear` that shall not run on some code segments,
+because you can't wrap them, then this is possible:
+
+```
+code = "that's linted normally"
+
+# Ignore LineLengthBear
+unwrappable_string = "some string that is super-long and would exceed the limit"
+```
+
+You can also skip a complete area:
+
+```
+# Start ignoring LineLengthBear
+unwrappable_string_2 = unwrappable_string + "yeah it goes even further..."
+another_unwrappable_string = unwrappable_string + unwrappable_string_2
+# Stop ignoring
+```
+
+You can also conditionally combine ignore rules!
+
+```
+# Ignore LineLengthBear and SpaceConsistencyBear
+    variable = "Why the heck are spaces used instead of tabs..." + "so_long"
+```
+
 # Enabling/Disabling Sections
 
 Now that we have sections we need some way to control, which sections are
