@@ -14,7 +14,7 @@ class LogPrinter:
     """
     def __init__(self,
                  printer,
-                 log_level=LOG_LEVEL.WARNING,
+                 log_level=LOG_LEVEL.INFO,
                  timestamp_format="%X"):
         """
         Creates a new log printer from an existing Printer.
