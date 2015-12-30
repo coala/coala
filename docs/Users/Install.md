@@ -79,20 +79,6 @@ Optional dependencies are marked with (*).
 >
 > Note that *nuget* downloads all packages into the current working directory.
 
-## eSpeak (*)
-
-If you want to use coalas voice outputter you need to install eSpeak from
-<http://espeak.sourceforge.net/> or your favorite package manager on linux. Note
-that voice output is currently only possible when developing for coala. If
-you care for voice output, please contact us so we will speed up development
-of our voice output module.
-
-On OSX, espeak can be installed using `brew install espeak`.
-
-> *Note*:
->
-> eSpeak is currently unsupported on windows. However it is known to work.
-
 ## libclang and munkres (*)
 
 coala features a code clone detection algorithm for clang supported languages.
