@@ -180,6 +180,19 @@ are already available in every other section implicitly. Thus the default
 section is a good point to set things like logging and output settings or
 specifying a default set of files to check.
 
+# Ignoring files
+
+coala lets you ignore files you have included using the `ignore` setting.
+
+For example:
+
+```
+files = **/*.h
+ignore = **/resources.h
+```
+
+Would include all header (`.h`) files but leaves out resource headers.
+
 # Enabling/Disabling Sections
 
 Now that we have sections we need some way to control, which sections are
