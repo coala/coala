@@ -145,14 +145,14 @@ default_actions = SpaceConsistencyBear: ApplyPatchAction
 coala would now fix all spacing issues and without bothering you again.
 
 Currently following actions are available:
-- `ApplyPatchAction`
-  Applies a given patch (if existent).
-- `ShowPatchAction`
-  Just displays a given patch (if existent) without doing something.
+
+ * `ApplyPatchAction`: Applies a given patch (if existent).
+ * `ShowPatchAction`: Just displays a given patch (if existent) without doing
+   something.
 
 For debugging purposes:
-- `PrintDebugMessageAction`
-  Prints a debug message for the appearing result.
+
+ * `PrintDebugMessageAction`: Prints a debug message for the appearing result.
 
 # Setting Inheritance
 
@@ -214,9 +214,10 @@ coala --bears=SpaceConsistencyBear --show-bears
 
 This will display a large amount of information regarding the bears that have
 been specified (in the `.coafile` of in the CLI arguments). It shows:
- - A description of what the bear does
- - The sections which uses it
- - The settings it uses (optional and required)
+
+ * A description of what the bear does
+ * The sections which uses it
+ * The settings it uses (optional and required)
 
 # Integrating coala into Your Project
 
