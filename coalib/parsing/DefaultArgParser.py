@@ -53,12 +53,12 @@ def default_arg_parser(formatter_class=None):
                             nargs='+',
                             metavar='DIR',
                             help=BEAR_DIRS_HELP)
-    LOG_LEVEL_HELP = ("Enum('ERROR','WARNING','DEBUG') to set level of log "
-                      "output")
+    LOG_LEVEL_HELP = ("Enum('ERROR','INFO','WARNING','DEBUG') to set level of "
+                      "log output")
     arg_parser.add_argument('-L',
                             '--log-level',
                             nargs=1,
-                            choices=['ERROR', 'WARNING', 'DEBUG'],
+                            choices=['ERROR', 'INFO', 'WARNING', 'DEBUG'],
                             metavar='ENUM',
                             help=LOG_LEVEL_HELP)
     MIN_SEVERITY_HELP = ("Enum('INFO', 'NORMAL', 'MAJOR') to set the minimal "
