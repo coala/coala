@@ -43,7 +43,7 @@ coala --files=src/*.c --bears=SpaceConsistencyBear --save
 ```
 
 coala will now ask you for missing values that are needed to perform the
-analysis, which in this case is only the `use_spaces` setting. I recommend
+analysis, which in this case is only the `use_spaces` setting. We recommend
 setting it to `true`.
 
 coala will now check the code and, in case you use the tutorial code, yield two
@@ -84,7 +84,7 @@ settings every time, you can add `Save = True` manually into your `.coafile`.
 # Sections
 
 Thats all nice and well but we also have a Makefile for our project we want to
-check. So let me introduce another feature of our configuration syntax:
+check. So let us introduce another feature of our configuration syntax:
 _sections_.
 
 The line `[Default]` specifies that everything below will belong to the Default
