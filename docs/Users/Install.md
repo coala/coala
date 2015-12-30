@@ -12,23 +12,16 @@ don't already have pip, you can install it like described on
 <https://pip.pypa.io/en/stable/installing.html>. Note that pip is shipped with
 python 3.4 by default.
 
-Some linux distributions still ship python 2 as the default python installation.
-If you are using one of those distributions, you need to use `pip3` and
-`python3` instead of `pip` and `python`.
-
-OSX still ships with python 2 as the default python installation, so OSX users
-need to use `python3` and `pip3` instead of `pip` and `python`.
-
 To install the latest most stable version of coala, use:
 
 ```
-pip install coala
+pip3 install coala
 ```
 
 You can get the latest prerelease version directly from our master branch:
 
 ```
-pip install coala --pre
+pip3 install coala --pre
 ```
 
 # Installing coala from source
@@ -48,7 +41,7 @@ cd coala
 You can now install coala with a simple:
 
 ```
-python setup.py install
+python3 setup.py install
 ```
 
 You will have coala installed into your python scripts directory. On an unixoid
@@ -57,7 +50,9 @@ system it is probably already available on your command line globally.
 Note that the usual installation requires root access. On an unixoid system
 (Mac, Linux) this can be achieved by using `sudo`:
 
-```sudo python setup.py install```
+```
+sudo python3 setup.py install
+```
 
 The easiest way to install under Windows is to start a command prompt as an
 administrator and start `setup.py`.
@@ -65,7 +60,7 @@ administrator and start `setup.py`.
 ## Alternate installation
 
 If you want to install coala to an alternate location you can e.g. call
-`python setup.py install --prefix=/your/prefix/location`. Other options are
+`python3 setup.py install --prefix=/your/prefix/location`. Other options are
 documented on <https://docs.python.org/3.3/install/#alternate-installation>.
 
 # Dependencies
