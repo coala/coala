@@ -69,6 +69,28 @@ This section lists dependencies of coala that are not automatically installed.
 On Windows, you can get many with `nuget` (<https://www.nuget.org/>), on Mac
 Homebrew will help you installing dependencies (<http://brew.sh/>).
 
+## JS Dependencies
+
+coala features a lot of bears that use linters written in JavaScript. In order
+for them to be usable, you need to install them via `npm`
+(<http://nodejs.org/>):
+
+```
+npm install -g jshint alex remark dockerfile_lint csslint coffeelint
+```
+
+If a bear still doesn't work for you, please make sure that you have a decent
+version of `npm` installed. Many linux distributions ship a very old one.
+
+## Binary Dependencies
+
+Some bears need some dependencies available:
+
+ * PHPLintBear: Install `php`
+ * IndentBear: Install `indent` (be sure to use GNU Indent, Mac ships a non-GNU
+   version that lacks some functionality.)
+ * CSharpLintBear: Install `mono-mcs`
+
 ## Clang
 
 coala features some bears that make use of Clang. In order for them to work, you
