@@ -17,7 +17,14 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (execute_section,
                                          process_queues,
                                          create_process_group,
-                                         filter_raising_callables)
+                                         filter_raising_callables,
+                                         ACTIONS,
+                                         get_default_actions,
+                                         autoapply_actions)
+from coalib.results.result_actions.ResultAction import ResultAction
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.PrintDebugMessageAction import (
+    PrintDebugMessageAction)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
@@ -262,6 +269,141 @@ class ProcessingTest(unittest.TestCase):
         # Test whether non filtered exceptions bubble up.
         with self.assertRaises(B):
             list(filter_raising_callables(test_list, C, exc=(B, C)))
+
+
+class ProcessingTest_GetDefaultActions(unittest.TestCase):
+    def setUp(self):
+        self.section = Section("X")
+
+    def test_no_key(self):
+        self.assertEqual(get_default_actions(self.section), ({}, {}))
+
+    def test_no_value(self):
+        self.section.append(Setting("default_actions", ""))
+        self.assertEqual(get_default_actions(self.section), ({}, {}))
+
+    def test_only_valid_actions(self):
+        self.section.append(Setting(
+            "default_actions",
+            "MyBear: PrintDebugMessageAction, ValidBear: ApplyPatchAction"))
+        self.assertEqual(
+            get_default_actions(self.section),
+            ({"MyBear": PrintDebugMessageAction,
+              "ValidBear": ApplyPatchAction},
+             {}))
+
+    def test_valid_and_invalid_actions(self):
+        self.section.append(Setting(
+            "default_actions",
+            "MyBear: INVALID_action, ValidBear: ApplyPatchAction, XBear: ABC"))
+        self.assertEqual(get_default_actions(self.section),
+                         ({"ValidBear": ApplyPatchAction},
+                          {"MyBear": "INVALID_action", "XBear": "ABC"}))
+
+
+class ProcessingTest_AutoapplyActions(unittest.TestCase):
+    def setUp(self):
+        self.log_queue = queue.Queue()
+        self.log_printer = ProcessingTestLogPrinter(self.log_queue)
+
+        self.resultY = Result("YBear", "msg1")
+        self.resultZ = Result("ZBear", "msg2")
+        self.results = [self.resultY, self.resultZ]
+        self.section = Section("A")
+
+    def test_no_default_actions(self):
+        ret = autoapply_actions(self.results,
+                                {},
+                                {},
+                                self.section,
+                                self.log_printer)
+        self.assertEqual(ret, self.results)
+        self.assertTrue(self.log_queue.empty())
+
+    def test_with_invalid_action(self):
+        self.section.append(Setting("default_actions",
+                                    "XBear: nonSENSE_action"))
+        ret = autoapply_actions(self.results,
+                                {},
+                                {},
+                                self.section,
+                                self.log_printer)
+        self.assertEqual(ret, self.results)
+        self.assertEqual(self.log_queue.get().message,
+                         "Selected default action 'nonSENSE_action' for bear "
+                             "'XBear' does not exist. Ignoring action.")
+        self.assertTrue(self.log_queue.empty())
+
+    def test_without_default_action_and_unapplicable(self):
+        # Use a result where no default action is supplied for and another one
+        # where the action is not applicable.
+        old_is_applicable = ApplyPatchAction.is_applicable
+        ApplyPatchAction.is_applicable = lambda *args: False
+
+        self.section.append(Setting(
+            "default_actions",
+            "NoBear: ApplyPatchAction, YBear: ApplyPatchAction"))
+        ret = autoapply_actions(self.results,
+                                {},
+                                {},
+                                self.section,
+                                self.log_printer)
+        self.assertEqual(ret, self.results)
+        self.assertEqual(self.log_queue.get().message,
+                         "Selected default action 'ApplyPatchAction' for bear "
+                             "'YBear' is not applicable. Action not applied.")
+        self.assertTrue(self.log_queue.empty())
+
+        ApplyPatchAction.is_applicable = old_is_applicable
+
+    def test_applicable_action(self):
+        # Use a result whose action can be successfully applied.
+        log_printer = self.log_printer
+        class TestAction(ResultAction):
+            def apply(self, *args, **kwargs):
+                log_printer.debug("ACTION APPLIED SUCCESSFULLY.")
+
+        ACTIONS.append(TestAction)
+
+        self.section.append(Setting("default_actions", "ZBear: TestAction"))
+        ret = autoapply_actions(self.results,
+                                {},
+                                {},
+                                self.section,
+                                log_printer)
+        self.assertEqual(ret, [self.resultY])
+        self.assertEqual(self.log_queue.get().message,
+                         "ACTION APPLIED SUCCESSFULLY.")
+        self.assertEqual(self.log_queue.get().message,
+                         "Applied 'TestAction' for 'ZBear'.")
+        self.assertTrue(self.log_queue.empty())
+
+        ACTIONS.pop()
+
+    def test_failing_action(self):
+        class FailingTestAction(ResultAction):
+            def apply(self, *args, **kwargs):
+                raise RuntimeError("YEAH THAT'S A FAILING BEAR")
+
+        ACTIONS.append(FailingTestAction)
+
+        self.section.append(Setting("default_actions",
+                                    "YBear: FailingTestAction"))
+        ret = autoapply_actions(self.results,
+                                {},
+                                {},
+                                self.section,
+                                self.log_printer)
+        self.assertEqual(ret, [self.resultZ])
+        self.assertEqual(self.log_queue.get().message,
+                         "Failed to execute action 'FailingTestAction'.")
+        self.assertIn("YEAH THAT'S A FAILING BEAR",
+                      self.log_queue.get().message)
+        self.assertEqual(self.log_queue.get().message,
+                         "-> for result " + repr(self.resultY) + ".")
+        self.assertTrue(self.log_queue.empty())
+
+        ACTIONS.pop()
 
 
 if __name__ == '__main__':

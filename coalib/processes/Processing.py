@@ -15,6 +15,15 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import path_list
 from coalib.processes.LogPrinterThread import LogPrinterThread
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.PrintDebugMessageAction import (
+    PrintDebugMessageAction)
+from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
+
+
+ACTIONS = [ApplyPatchAction,
+           PrintDebugMessageAction,
+           ShowPatchAction]
 
 
 def get_cpu_count():
@@ -53,6 +62,100 @@ def create_process_group(command_array, **kwargs):
     return proc
 
 
+def get_default_actions(section):
+    """
+    Parses the key `default_actions` in the given section.
+
+    :param section:    The section where to parse from.
+    :return:           A dict with the bearname as keys and their default
+                       actions as values and another dict that contains bears
+                       and invalid action names.
+    """
+    try:
+        default_actions = dict(section["default_actions"])
+    except IndexError:
+        return {}, {}
+
+    action_dict = {action.get_metadata().name: action for action in ACTIONS}
+    invalid_action_set = default_actions.values() - action_dict.keys()
+    invalid_actions = {}
+    if len(invalid_action_set) != 0:
+        invalid_actions = {
+            bear: action
+            for bear, action in default_actions.items()
+            if action in invalid_action_set}
+        for invalid in invalid_actions.keys():
+            del default_actions[invalid]
+
+    actions = {bearname: action_dict[action_name]
+               for bearname, action_name in default_actions.items()}
+    return actions, invalid_actions
+
+
+def autoapply_actions(results,
+                      file_dict,
+                      file_diff_dict,
+                      section,
+                      log_printer):
+    """
+    Auto-applies actions like defined in the given section.
+
+    :param results:        A list of results.
+    :param file_dict:      A dictionary containing the name of files and its
+                           contents.
+    :param file_diff_dict: A dictionary that contains filenames as keys and
+                           diff objects as values.
+    :param section:        The section.
+    :param log_printer:    A log printer instance to log messages on.
+    :return:               A list of unprocessed results.
+    """
+
+    default_actions, invalid_actions = get_default_actions(section)
+
+    for bearname, actionname in invalid_actions.items():
+        log_printer.warn("Selected default action {} for bear {} does "
+                         "not exist. Ignoring action.".format(
+                             repr(actionname),
+                             repr(bearname)))
+
+    if len(default_actions) == 0:
+        # There's nothing to auto-apply.
+        return results
+
+    not_processed_results = []
+    for result in results:
+        try:
+            action = default_actions[result.origin]
+        except KeyError:
+            not_processed_results.append(result)
+            continue
+
+        if not action.is_applicable(result, file_dict, file_diff_dict):
+            log_printer.warn("Selected default action {} for bear {} is not "
+                             "applicable. Action not applied.".format(
+                                 repr(action.get_metadata().name),
+                                 repr(result.origin)))
+            not_processed_results.append(result)
+            continue
+
+        try:
+            action().apply_from_section(result,
+                                        file_dict,
+                                        file_diff_dict,
+                                        section)
+            log_printer.info("Applied {} for {}.".format(
+                repr(action.get_metadata().name),
+                repr(result.origin)))
+        except Exception as ex:
+            log_printer.log_exception(
+                "Failed to execute action {}.".format(
+                    repr(action.get_metadata().name)),
+                ex)
+            log_printer.debug("-> for result " + repr(result) + ".")
+
+    return not_processed_results
+
+
 def print_result(results,
                  file_dict,
                  retval,
@@ -88,6 +191,13 @@ def print_result(results,
                               result.severity >= min_severity and
                               not result.to_ignore(ignore_ranges),
                           results))
+
+    results = autoapply_actions(results,
+                                file_dict,
+                                file_diff_dict,
+                                section,
+                                log_printer)
+
     print_results(log_printer, section, results, file_dict, file_diff_dict)
     return retval or len(results) > 0
 
