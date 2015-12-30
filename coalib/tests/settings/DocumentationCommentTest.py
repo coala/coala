@@ -1,6 +1,5 @@
 import sys
 import unittest
-import subprocess
 
 sys.path.insert(0, ".")
 
@@ -71,16 +70,6 @@ class DocumentationCommentParserTest(unittest.TestCase):
         self.assertEqual(doc_comment.desc, desc)
         self.assertEqual(doc_comment.param_dict, param_dict)
         self.assertEqual(doc_comment.retval_desc, retval_desc)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['msgfmt'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "msgfmt is not installed."
 
 
 if __name__ == '__main__':
