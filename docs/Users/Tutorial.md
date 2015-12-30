@@ -128,6 +128,29 @@ max_line_length = 80
 As you see, sections provide a way to have different configurations for
 possibly different languages in one file. They are executed sequentially.
 
+# Auto-applying results
+
+Often you don't want to look at trivial results like spacing issues, for that
+purpose coala includes a special setting called `default_actions`, where you
+can set the action for a bear that shall be automatically applied on run.
+
+E.g. to apply a given patch, use the `ApplyPatchAction`:
+```
+bears = SpaceConsistencyBear, KeywordBear
+default_actions = SpaceConsistencyBear: ApplyPatchAction
+```
+coala would now fix all spacing issues and without bothering you again.
+
+Currently following actions are available:
+- `ApplyPatchAction`
+  Applies a given patch (if existent).
+- `ShowPatchAction`
+  Just displays a given patch (if existent) without doing something.
+
+For debugging purposes:
+- `PrintDebugMessageAction`
+  Prints a debug message for the appearing result.
+
 # Setting Inheritance
 
 All settings in the default section are implicitly inherited to all other
