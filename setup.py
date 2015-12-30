@@ -17,6 +17,10 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
         setuptools.command.build_py.build_py.run(self)
 
 
+with open('requirements.txt') as requirements:
+    required = requirements.read().splitlines()
+
+
 if __name__ == "__main__":
     maintainers = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
     maintainer_mails = ('lasse.schuirmann@gmail.com, '
@@ -35,19 +39,7 @@ if __name__ == "__main__":
           url='http://coala.rtfd.org/',
           platforms='any',
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
-          install_requires=["PyPrint",
-                            "setuptools",
-                            "munkres3",
-                            "coverage",
-                            "pylint",
-                            "language-check",
-                            "autopep8",
-                            "eradicate",
-                            "autoflake",
-                            "restructuredtext_lint",
-                            "proselint",
-                            "cpplint",
-                            "isort"],
+          install_requires=required,
           package_data={'coalib': ['default_coafile', "VERSION"]},
           license="AGPL v3",
           data_files=data_files,

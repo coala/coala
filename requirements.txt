@@ -1,0 +1,13 @@
+PyPrint==0.0.2
+setuptools==19.2
+munkres3==1.0.5.5
+coverage==4.0.3
+pylint==1.5.2
+language-check==0.7.5
+autopep8==1.2.1
+eradicate==0.1.6
+autoflake==0.6.6
+restructuredtext_lint==0.14.0
+proselint==0.3.5
+cpplint==0.0.6
+isort==4.2.2
