@@ -5,7 +5,7 @@ algorithm.)
 """
 
 
-from coalib.bearlib.parsing.clang.cindex import CursorKind
+from clang.cindex import CursorKind
 from coalib.misc.Enum import enum
 
 
@@ -26,7 +26,7 @@ def get_identifier_name(cursor):
     :param cursor: A clang cursor from the AST.
     :return:       The identifier as string.
     """
-    return cursor.displayname.decode()
+    return cursor.displayname
 
 
 def is_literal(cursor):
@@ -130,11 +130,11 @@ def _get_position_in_for_tokens(tokens, position):
     next_state = state
     opened_brackets = 0
     for token in tokens:
-        if token.spelling.decode() == ";":
+        if token.spelling == ";":
             next_state = state + 1
-        elif token.spelling.decode() == "(":
+        elif token.spelling == "(":
             opened_brackets += 1
-        elif token.spelling.decode() == ")":
+        elif token.spelling == ")":
             opened_brackets -= 1
             # Closed bracket for for condition, otherwise syntax error by clang
             if opened_brackets == 0:
@@ -220,7 +220,7 @@ def _stack_contains_operators(stack, operators):
             if operator is None:  # pragma: no cover
                 continue
 
-            if operator.spelling.decode() in operators:
+            if operator.spelling in operators:
                 return True
 
     return False
@@ -289,7 +289,7 @@ def is_inc_or_dec(stack):
     for elem, dummy in stack:
         if elem.kind == CursorKind.UNARY_OPERATOR:
             for token in elem.get_tokens():
-                if token.spelling.decode() in ["--", "++"]:
+                if token.spelling in ["--", "++"]:
                     return True
 
     return False
@@ -342,7 +342,7 @@ def is_assignee(stack):
                              token.extent.start.column)
                 # This needs to be an assignment and cursor has to be on LHS
                 if (
-                        token.spelling.decode() in ASSIGNMENT_OPERATORS and
+                        token.spelling in ASSIGNMENT_OPERATORS and
                         cursor_pos <= token_pos):
                     return True
 
@@ -364,9 +364,9 @@ def is_assigner(stack):
                 # This needs to be an assignment and cursor has to be on RHS
                 # or if we have something like += its irrelevant on which side
                 # it is because += reads on both sides
-                if (token.spelling.decode() in ASSIGNMENT_OPERATORS and (
+                if (token.spelling in ASSIGNMENT_OPERATORS and (
                         token_pos <= cursor_pos or
-                        token.spelling.decode() != "=")):
+                        token.spelling != "=")):
                     return True
 
     return is_inc_or_dec(stack)
