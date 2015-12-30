@@ -90,6 +90,10 @@ class ContextManagersTest(unittest.TestCase):
             self.assertEqual(input(), 3)
             self.assertEqual(generator.last_input, 3)
 
+        with simulate_console_inputs("test"), self.assertRaises(ValueError):
+            self.assertEqual(input(), "test")
+            input()
+
     def test_preserve_sys_path(self):
         old_sys_path = copy.copy(sys.path)
         with preserve_sys_path():

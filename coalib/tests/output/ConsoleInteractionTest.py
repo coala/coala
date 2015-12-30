@@ -15,7 +15,8 @@ from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.misc.ContextManagers import (simulate_console_inputs,
                                          retrieve_stdout)
-from coalib.output.ConsoleInteraction import (nothing_done,
+from coalib.output.ConsoleInteraction import (CLI_ACTIONS,
+                                              nothing_done,
                                               acquire_settings,
                                               print_bears,
                                               get_action_info,
@@ -44,6 +45,11 @@ STR_PROJECT_WIDE = "Project wide:"
 class TestAction(ResultAction):
     def apply(self, result, original_file_dict, file_diff_dict, param):
         pass
+
+
+class RaisingAction(ResultAction):
+    def apply(self, *args):
+        raise AssertionError
 
 
 class TestBear(Bear):
@@ -221,6 +227,66 @@ class ConsoleInteractionTest(unittest.TestCase):
                          patch_result,
                          file_dict)
             self.assertEqual(generator.last_input, 4)
+
+    def test_print_result_auto_apply(self):
+        section = Section("X")
+        section.append(Setting("default_actions",
+                               "SuperBear: InvalidACTION, XBear: ABC, "
+                                   "UltraBear: ApplyPatchAction"))
+        with retrieve_stdout() as stdout:
+            print_result(self.console_printer,
+                         self.log_printer,
+                         section,
+                         self.file_diff_dict,
+                         Result("origin", "msg", diffs={}),
+                         {})
+            console_content = stdout.getvalue()
+            self.assertIn("Selected default action 'InvalidACTION' for bear "
+                              "'SuperBear' does not exist.",
+                          console_content)
+            self.assertIn("Selected default action 'ABC' for bear 'XBear' "
+                              "does not exist.",
+                          console_content)
+            self.assertIn("Selected default action 'ApplyPatchAction' for "
+                              "bear 'UltraBear' is not applicable.",
+                          console_content)
+
+        CLI_ACTIONS.append(TestAction())
+
+        section = Section("A")
+        section.append(Setting("default_actions",
+                               "MyBear: TestAction"))
+        with retrieve_stdout() as stdout:
+            print_result(self.console_printer,
+                         self.log_printer,
+                         section,
+                         self.file_diff_dict,
+                         Result("MyBear", "msg", diffs={}),
+                         {})
+            self.assertNotIn("Selected default action 'TestAction' for bear "
+                                 "'MyBear' does not exist or is not "
+                                 "applicable.",
+                             stdout.getvalue())
+
+        CLI_ACTIONS.pop()
+
+        CLI_ACTIONS.append(RaisingAction())
+
+        section = Section("B")
+        section.append(Setting("default_actions",
+                               "MySuperBear: RaisingAction"))
+
+        with retrieve_stdout() as stdout:
+            print_result(self.console_printer,
+                         self.log_printer,
+                         section,
+                         self.file_diff_dict,
+                         Result("MySuperBear", "msg", diffs={}),
+                         {})
+            self.assertIn("Failed to execute action RaisingAction.",
+                          stdout.getvalue())
+
+        CLI_ACTIONS.pop()
 
     def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
