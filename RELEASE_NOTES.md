@@ -1,7 +1,20 @@
 # coala 0.3.0
 
-This release contains the following feature changes:
+We are dropping Python 3.2 support (and so PyPy). Also we are removing
+translations, the default language is English.
 
+This release contains these following feature changes:
+
+ * Auto-apply feature added! Results can directly be processed without user
+   interaction specifying the desired action!
+ * A missing coafile that is explicitly wanted through the `--config` flag
+   throws an error instead of a warning. Only default coafile names (ending with
+   `.coafile`) raise a warning.
+ * Various new bears integrating existing linter tools, e.g. for C/C++, Python,
+   Ruby, JSON and many more!
+ * Allow to ignore files inside the coafile.
+ * Results can now be stored and tagged with an identifier for accessing them
+   later.
  * OpenEditorAction lets the user edit the real file instead of a temporary one.
  * All usable bears can now be shown with `--show-all-bears`.
  * Only `#` is supported for comments in the configuration file syntax.
@@ -13,6 +26,8 @@ This release contains the following feature changes:
 
 Bear API changes:
 
+ * A bear can implement `check_prerequisites` to determine whether it can
+   execute in the current runtime.
  * The PatchResult class was merged into the Result class.
 
 Bear changes:
