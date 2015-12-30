@@ -65,45 +65,26 @@ documented on <https://docs.python.org/3.3/install/#alternate-installation>.
 
 # Dependencies
 
-This section lists dependencies of coala. All dependencies installable via pip
-should already have been installed during the installation of coala and are
-not mentioned here.
+This section lists dependencies of coala that are not automatically installed.
+On Windows, you can get many with `nuget` (<https://www.nuget.org/>), on Mac
+Homebrew will help you installing dependencies (<http://brew.sh/>).
 
-Optional dependencies are marked with (*).
+## Clang
 
-> **Note**: Installing Dependencies on Windows.
->
-> Some dependencies for Windows are installed via the package-manager *nuget*
-> that can be found on <https://www.nuget.org/>. Be sure to use the
-> command-line tool and not the integrated version for Visual Studio.
->
-> Note that *nuget* downloads all packages into the current working directory.
-
-## libclang and munkres (*)
-
-coala features a code clone detection algorithm for clang supported languages.
-To use it, you need to install the `libclang` library.
-
-### Linux
-
-To install libclang on linux, we have prepared readily commands for some
-distributions for you because this package is hard to find:
+coala features some bears that make use of Clang. In order for them to work, you
+need to install libclang:
 
  * Ubuntu: `apt-get install libclang1`
  * Fedora: `dnf install clang-libs` (Use `yum` instead of `dnf` on Fedora 21 or
    lower.)
  * ArchLinux: `pacman -Sy clang`
+ * Windows: `nuget install ClangSharp`
+ * OSX: `brew install llvm --with-clang`
 
 If those do not help you, search for a package that contains `libclang.so`.
 
-### Windows
-
-You can use the *nuget* package manager to obtain the `libclang` library:
-
-```nuget install ClangSharp```
-
-Execute this command to add the libclang path to the *PATH* variable
-permanently (you need to be an administrator):
+On windows, you need to execute this command to add the libclang path to the
+*PATH* variable permanently (you need to be an administrator):
 
 ```setx PATH "%PATH%;%cd%\ClangSharp.XXX\content\x86" \M```
 
@@ -112,9 +93,3 @@ For x86 python or for x64 python:
 ```setx PATH "%PATH%;%cd%\ClangSharp.XXX\content\x64" \M```
 
 Replace "XXX" with the ClangSharp version you received from nuget.
-
-### OSX
-
-This feature is known to work in OSX but is not supported yet.
-
-You can use brew to install clang with `brew install llvm --with-clang`.
