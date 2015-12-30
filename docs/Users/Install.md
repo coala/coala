@@ -31,14 +31,6 @@ You can get the latest prerelease version directly from our master branch:
 pip install coala --pre
 ```
 
-> **Note**: Supported vs. Known To Work.
->
-> At coala, we take code quality and support seriously. We cannot support
-> anything on any platform if it is not continuously tested; such things are
-> almost guaranteed to break. Thus we only declare features to be "supported"
-> on a platform when we run our tests over it continuously. Still a feature may
-> be tested manually on your platform, which we declare as "known to work".
-
 # Installing coala from source
 
 In order to install coala from source, it is recommended to install git. See
