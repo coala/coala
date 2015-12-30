@@ -159,7 +159,7 @@ def load_configuration(arg_list, log_printer):
 
     str_log_level = str(sections["default"].get("log_level", "")).upper()
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
-                                                   LOG_LEVEL.WARNING)
+                                                   LOG_LEVEL.INFO)
 
     return sections, targets
 
