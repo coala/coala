@@ -217,12 +217,17 @@ another_unwrappable_string = unwrappable_string + unwrappable_string_2
 # Stop ignoring
 ```
 
-You can also conditionally combine ignore rules!
+You can also conditionally combine ignore rules! Bear names will be split by
+comma and spaces, invalid bear names like `and` will be ignored.
 
 ```
 # Ignore LineLengthBear and SpaceConsistencyBear
     variable = "Why the heck are spaces used instead of tabs..." + "so_long"
 ```
+
+If you put an `all` instead of the bear names directly after the
+`ignore`/`ignoring` keyword, the results of all bears affecting those lines
+will be ignored.
 
 # Enabling/Disabling Sections
 
