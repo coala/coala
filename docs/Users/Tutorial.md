@@ -180,35 +180,36 @@ are already available in every other section implicitly. Thus the default
 section is a good point to set things like logging and output settings or
 specifying a default set of files to check.
 
-# Ignoring files
+# Ignoring Issues
 
-coala lets you ignore files you have included using the `ignore` setting.
+There are several ways to ignore certain issues, so you aren't lost if any
+routines yield false positives.
 
-For example:
+## Ignoring Files
+
+coala lets you ignore whole files through the `ignore` setting:
 
 ```
 files = **/*.h
 ignore = **/resources.h
 ```
 
-Would include all header (`.h`) files but leaves out resource headers.
+This configuration would include all header (`.h`) files but leaves out resource
+headers.
 
-# Ignoring code inside files
+## Ignoring code Inside Files
 
-Sometimes you need finer-graded ignores, so coala lets you even skip some piece
-of file!
-
-Imagine you have a `LineLengthBear` that shall not run on some code segments,
-because you can't wrap them, then this is possible:
+Sometimes you need finer-graded ignores. Imagine you have a `LineLengthBear`
+that shall not run on some code segments, because you can't wrap them:
 
 ```
-code = "that's linted normally"
+code = "that's checked normally"
 
 # Ignore LineLengthBear
 unwrappable_string = "some string that is super-long and would exceed the limit"
 ```
 
-You can also skip a complete area:
+You can also skip an area:
 
 ```
 # Start ignoring LineLengthBear
