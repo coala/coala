@@ -1,7 +1,8 @@
 import os
-import subprocess
 import sys
 from queue import Queue
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 import unittest
@@ -10,6 +11,7 @@ from bears.configfiles.DockerfileLintBear import DockerfileLintBear
 from coalib.settings.Section import Section
 
 
+@skipIf(which('dockerfile_lint') is None, 'dockerfile_lint is not installed')
 class DockerfileLintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
@@ -24,16 +26,6 @@ class DockerfileLintBearTest(LocalBearTestHelper):
     def test_run(self):
         self.assertLinesValid(self.uut, [], self.test_file1)
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['dockerfile_lint', '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "dockerfile-lint is not installed."
 
 
 if __name__ == '__main__':
