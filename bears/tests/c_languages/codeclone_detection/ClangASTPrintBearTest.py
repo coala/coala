@@ -5,13 +5,15 @@ from queue import Queue
 
 sys.path.insert(0, ".")
 
+from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.codeclone_detection.ClangASTPrintBear import (
     ClangASTPrintBear)
-from clang.cindex import Index, LibclangError, TranslationUnitLoadError
+from clang.cindex import TranslationUnitLoadError
 from coalib.settings.Section import Section
 
 
+@generate_skip_decorator(ClangASTPrintBear)
 class ClangASTPrintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
@@ -49,14 +51,6 @@ class ClangASTPrintBearTest(LocalBearTestHelper):
             ast += self.queue.get(timeout=0).message + "\n"
 
         self.assertEqual(ast, expected_ast)
-
-
-def skip_test():
-    try:
-        Index.create()
-        return False
-    except LibclangError as error:
-        return str(error)
 
 
 if __name__ == '__main__':

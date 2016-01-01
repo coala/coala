@@ -4,7 +4,6 @@ import unittest
 sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import generate_local_bear_test
 from bears.c_languages.ClangBear import ClangBear
-from clang.cindex import Index, LibclangError
 
 
 ClangBearTest = generate_local_bear_test(
@@ -23,14 +22,6 @@ ClangBearIgnoreTest = generate_local_bear_test(
     (),
     'test.c',
     settings={'clang_cli_options': '-w'})
-
-
-def skip_test():
-    try:
-        Index.create()
-        return False
-    except LibclangError as error:
-        return str(error)
 
 
 if __name__ == '__main__':
