@@ -2,7 +2,7 @@ from collections import OrderedDict
 import copy
 import os
 
-from coalib.misc.Decorators import generate_repr
+from coalib.misc.Decorators import generate_repr, enforce_signature
 from coalib.settings.Setting import Setting, path_list
 from coalib.misc.DictUtilities import update_ordered_dict_key
 from coalib.misc.Constants import Constants
@@ -108,6 +108,20 @@ class Section:
             val.value = str(val.value) + "\n" + setting.value
         else:
             self.append(setting, custom_key=key)
+
+    @enforce_signature
+    def __setitem__(self, key: str, value: (str, Setting)):
+        """
+        TODO
+
+        :param key:
+        :param value:
+        :return:
+        """
+        if isinstance(value, Setting):
+            self.append(value, custom_key=key)
+        else:  # It must be a string since signature is enforced
+            self.append(Setting(key, value))
 
     def __iter__(self, ignore_defaults=False):
         joined = self.contents.copy()
