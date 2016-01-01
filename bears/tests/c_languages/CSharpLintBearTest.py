@@ -1,7 +1,8 @@
 import os
-import subprocess
 import sys
 from queue import Queue
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 import unittest
@@ -10,6 +11,7 @@ from bears.c_languages.CSharpLintBear import CSharpLintBear
 from coalib.settings.Section import Section
 
 
+@skipIf(which('mcs') is None, 'mono mcs is not installed')
 class CSharpLintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
@@ -27,16 +29,6 @@ class CSharpLintBearTest(LocalBearTestHelper):
 
         # Test a file with issues
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['mcs', '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "mono's mcs is not installed."
 
 
 if __name__ == '__main__':
