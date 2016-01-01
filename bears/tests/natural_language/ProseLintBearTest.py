@@ -1,7 +1,8 @@
 import os
-import subprocess
 import sys
 from queue import Queue
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 import unittest
@@ -10,6 +11,7 @@ from bears.natural_language.ProseLintBear import ProseLintBear
 from coalib.settings.Section import Section
 
 
+@skipIf(which('proselint') is None, 'ProseLint is not installed')
 class ProseLintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
@@ -27,16 +29,6 @@ class ProseLintBearTest(LocalBearTestHelper):
 
         # Test a file with issues
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['proselint', '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "ProseLint is not installed."
 
 
 if __name__ == '__main__':
