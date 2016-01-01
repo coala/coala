@@ -11,7 +11,7 @@ from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.settings.Section import Section, Setting
 
 
-class ResultActionTest(unittest.TestCase):
+class OpenEditorActionTest(unittest.TestCase):
     @staticmethod
     def fake_edit(commands):
         filename = commands[1]
