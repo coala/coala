@@ -63,6 +63,15 @@ class SectionTest(unittest.TestCase):
         self.assertRaises(IndexError, uut.__getitem__, "great", True)
         self.assertRaises(IndexError, uut.__getitem__, " ")
 
+    def test_setitem(self):
+        uut = Section("section", None)
+        uut["key1"] = "value1"
+        self.assertEqual(str(uut), "section {key1 : 'value1'}")
+        uut["key1"] = "changed_value1"
+        self.assertEqual(str(uut), "section {key1 : 'changed_value1'}")
+        uut["key1"] = Setting("any key", "value1")
+        self.assertEqual(str(uut), "section {key1 : 'value1'}")
+
     def test_string_conversion(self):
         uut = Section("name")
         self.assertEqual(str(uut), "name {}")
