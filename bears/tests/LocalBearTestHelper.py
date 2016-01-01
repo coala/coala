@@ -270,6 +270,10 @@ def generate_local_bear_test(bear,
                           yield results.
     :param invalid_files: An iterable of files as a string list that must
                           yield results.
+    :param filename:      The filename to use for valid and invalid files.
+    :param settings:      A dictionary of keys and values (both string) from
+                          which settings will be created that will be made
+                          available for the tested bear.
     :return:              A unittest.TestCase object.
     """
     @generate_skip_decorator(bear)
