@@ -3,7 +3,6 @@ import sys
 import os
 from io import StringIO
 import builtins
-import copy
 import signal
 import threading
 import platform
@@ -146,12 +145,3 @@ def simulate_console_inputs(*inputs):
         yield input_generator
     finally:
         builtins.input = _input
-
-
-@contextmanager
-def preserve_sys_path():
-    _path = copy.copy(sys.path)
-    try:
-        yield
-    finally:
-        sys.path = _path
