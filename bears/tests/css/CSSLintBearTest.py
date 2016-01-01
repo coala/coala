@@ -1,7 +1,8 @@
 import os
-import subprocess
 import sys
 from queue import Queue
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 import unittest
@@ -10,6 +11,7 @@ from bears.css.CSSLintBear import CSSLintBear
 from coalib.settings.Section import Section
 
 
+@skipIf(which('csslint') is None, 'csslint is not installed')
 class CSSLintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
@@ -27,16 +29,6 @@ class CSSLintBearTest(LocalBearTestHelper):
 
         # Test a file with errors and warnings
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['csslint', '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "csslint is not installed."
 
 
 if __name__ == '__main__':
