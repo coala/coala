@@ -1,6 +1,4 @@
 import argparse
-import importlib
-import inspect
 import os
 import subprocess
 import sys
@@ -9,9 +7,8 @@ import webbrowser
 import multiprocessing
 import functools
 import tempfile
-from coalib.misc.ContextManagers import (suppress_stdout,
-                                         preserve_sys_path,
-                                         subprocess_timeout)
+
+from coalib.misc.ContextManagers import suppress_stdout, subprocess_timeout
 from coalib.processes.Processing import create_process_group, get_cpu_count
 
 
@@ -38,11 +35,6 @@ def create_argparser(**kwargs):
                         "--omit",
                         help="Base names of tests to omit",
                         nargs="+")
-    parser.add_argument("-s",
-                        "--disallow-test-skipping",
-                        help="Return nonzero if any tests are skipped "
-                             "or fail",
-                        action="store_true")
     parser.add_argument("-T",
                         "--timeout",
                         default=20,
@@ -174,25 +166,6 @@ def execute_command_array(command_array, timeout, verbose):
     return retval, message
 
 
-def check_module_skip(filename):
-    with preserve_sys_path(), suppress_stdout():
-        module_dir = os.path.dirname(filename)
-        if module_dir not in sys.path:
-            sys.path.insert(0, module_dir)
-
-        try:
-            module = importlib.import_module(
-                os.path.basename(os.path.splitext(filename)[0]))
-
-            for name, obj in inspect.getmembers(module):
-                if inspect.isfunction(obj) and name == "skip_test":
-                    return obj()
-        except ImportError as exception:
-            return str(exception)
-
-        return False
-
-
 def show_coverage_results(html):
     execute_coverage_command("combine")
     execute_coverage_command("report", "-m")
@@ -243,57 +216,20 @@ def show_nonexistent_tests(test_only, test_file_names):
     return nonexistent_tests, number
 
 
-def execute_test(filename,
-                 ignored_files,
-                 verbose,
-                 cover,
-                 timeout):
-    """
-    Executes the given test and counts up failed_tests or skipped_tests if
-    needed.
-
-    :param filename:      Filename of test to execute.
-    :param ignored_files: Comma separated list of files to ignore for coverage.
-    :param verbose:       Boolean to show more information.
-    :param cover:         Boolean to calculate coverage information or not.
-    :param timeout:       Time in seconds to wait for the test to complete
-                          before killing it. Floats are allowed for units
-                          smaller than a second.
-    :return:              Returns a tuple with (failed_tests, skipped_tests,
-                          message).
-    """
-    reason = check_module_skip(filename)
-    if reason is not False:
-        return 0, 1, reason
-    else:
-        result, stdout = execute_python_file(filename,
-                                             ignored_files,
-                                             cover=cover,
-                                             timeout=timeout,
-                                             verbose=verbose)
-        return result, 0, stdout
-
-
-def print_test_results(test_file, test_nr, test_count, skipped, message):
+def print_test_results(test_file, test_nr, test_count, message):
     basename = os.path.splitext(os.path.basename(test_file))[0]
     digits = str(len(str(test_count)))
-    if skipped:
-        print((" {:>" + digits + "}/{:<} | {}, Skipping: {}").format(
-            test_nr,
-            test_count,
-            basename,
-            message))
-    else:
-        print((" {:>" + digits + "}/{:<} | {}").format(test_nr,
-                                                       test_count,
-                                                       basename))
-        # Decode and encode the message string while replacing errors so
-        # unmapped characters can be printed too.
-        print(message.encode(sys.stdout.encoding, errors="replace")
-                  .decode(sys.stdout.encoding),
-              end="")
-        if message:
-            print("#" * 70)
+
+    print((" {:>" + digits + "}/{:<} | {}").format(test_nr,
+                                                   test_count,
+                                                   basename))
+    # Decode and encode the message string while replacing errors so
+    # unmapped characters can be printed too.
+    print(message.encode(sys.stdout.encoding, errors="replace")
+              .decode(sys.stdout.encoding),
+          end="")
+    if message:
+        print("#" * 70)
 
 
 def get_test_files(testdir, test_only, omit):
@@ -324,7 +260,6 @@ def get_test_files(testdir, test_only, omit):
 
 def run_tests(ignore_list, args, test_files, test_file_names):
     failed_tests = 0
-    skipped_tests = 0
     if args.cover:
         args.cover = delete_coverage()
 
@@ -341,7 +276,7 @@ def run_tests(ignore_list, args, test_files, test_file_names):
 
     pool = multiprocessing.Pool(args.jobs)
     partial_execute_test = functools.partial(
-        execute_test,
+        execute_python_file,
         ignored_files=",".join(ignore_list),
         verbose=args.verbose,
         cover=args.cover,
@@ -349,25 +284,19 @@ def run_tests(ignore_list, args, test_files, test_file_names):
 
     pool_outputs = pool.imap(partial_execute_test, test_files)
     curr_nr = 0
-    for failed, skipped, message in pool_outputs:
+    for failed, message in pool_outputs:
         curr_nr += 1
         failed_tests += failed
-        skipped_tests += skipped
         print_test_results(test_files[curr_nr-1],
                            curr_nr,
                            max_nr,
-                           skipped,
                            message)
 
-    print("\nTests finished: failures in {} of {} test modules, skipped "
-          "{} test modules.".format(failed_tests,
-                                    max_nr,
-                                    skipped_tests))
+    print("\nTests finished: failures in {} of {} test modules.".format(
+        failed_tests,
+        max_nr))
 
     if args.cover:
         show_coverage_results(args.html)
 
-    if not args.disallow_test_skipping:
-        return failed_tests
-    else:
-        return failed_tests + skipped_tests
+    return failed_tests

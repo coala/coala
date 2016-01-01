@@ -17,7 +17,7 @@ if [ "$python_version" == "3.5" ] ; then
   args+=" --omit PyLintBearTest"
 fi
 if [ "$system_os" == "LINUX" ] ; then
-  args+=" --disallow-test-skipping --cover"
+  args+=" --cover"
 fi
 
 python run_tests.py $args
