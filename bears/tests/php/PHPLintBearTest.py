@@ -1,7 +1,8 @@
 import os
-import subprocess
 import sys
 from queue import Queue
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 import unittest
@@ -10,6 +11,7 @@ from bears.php.PHPLintBear import PHPLintBear
 from coalib.settings.Section import Section
 
 
+@skipIf(which('php') is None, 'PHP is not installed')
 class PHPLintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
@@ -33,16 +35,6 @@ class PHPLintBearTest(LocalBearTestHelper):
             self.uut,
             [],
             self.test_file2)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['php', '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "PHP is not installed."
 
 
 if __name__ == '__main__':
