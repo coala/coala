@@ -4,6 +4,7 @@ import unittest
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
+from bears.tests.BearTestHelper import generate_skip_decorator
 
 
 class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
@@ -271,6 +272,7 @@ def generate_local_bear_test(bear,
                           yield results.
     :return:              A unittest.TestCase object.
     """
+    @generate_skip_decorator(bear)
     class LocalBearTest(LocalBearTestHelper):
         def setUp(self):
             self.section = Section('name')

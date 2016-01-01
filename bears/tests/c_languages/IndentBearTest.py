@@ -3,13 +3,14 @@ import unittest
 from queue import Queue
 
 sys.path.insert(0, ".")
-from bears.tests.BearTestHelper import generate_skip_test
+from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.IndentBear import IndentBear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
 
+@generate_skip_decorator(IndentBear)
 class IndentBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section('name')
@@ -43,9 +44,6 @@ class IndentBearTest(LocalBearTestHelper):
         self.assertLinesInvalid(self.uut, ["int main() {\n",
                                            "  return 0;\n",
                                            "}\n"])
-
-
-skip_test = generate_skip_test(IndentBear)
 
 
 if __name__ == '__main__':

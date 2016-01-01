@@ -3,12 +3,13 @@ import unittest
 from queue import Queue
 
 sys.path.insert(0, ".")
-from bears.tests.BearTestHelper import generate_skip_test
+from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.IndentBear import IndentBear
 from coalib.settings.Section import Section
 
 
+@generate_skip_decorator(IndentBear)
 class CorrectionBasedBearTest(LocalBearTestHelper):
     """
     This test only covers corner cases. The basic functionality is tested in
@@ -44,9 +45,6 @@ class CorrectionBasedBearTest(LocalBearTestHelper):
         self.assertTrue(IndentBear.check_prerequisites())
 
         IndentBear.BINARY = old_binary
-
-
-skip_test = generate_skip_test(IndentBear)
 
 
 if __name__ == '__main__':
