@@ -1,7 +1,8 @@
 import os
-import subprocess
 import sys
 from queue import Queue
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 import unittest
@@ -11,6 +12,7 @@ from bears.python.PyLintBear import PyLintBear
 from coalib.settings.Section import Section
 
 
+@skipIf(which('pylint') is None, 'PyLint is not installed')
 class PyLintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
@@ -58,16 +60,6 @@ class PyLintBearTest(LocalBearTestHelper):
             self.uut,
             [],
             self.test_file)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['pylint', '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "PyLint is not installed."
 
 
 if __name__ == '__main__':
