@@ -1,7 +1,8 @@
 import os
-import subprocess
 import sys
 from queue import Queue
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 import unittest
@@ -11,6 +12,7 @@ from bears.js.JSHintBear import JSHintBear
 from coalib.settings.Section import Section
 
 
+@skipIf(which('jshint') is None, 'JSHint is not installed')
 class JSHintBearTest(LocalBearTestHelper):
     def setUp(self):
         self.section = Section("test section")
@@ -44,16 +46,6 @@ class JSHintBearTest(LocalBearTestHelper):
             self.uut,
             [],
             self.test_file1)
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['jshint', '--version'],
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-        return False
-    except OSError:
-        return "JSHint is not installed."
 
 
 if __name__ == '__main__':
