@@ -1,24 +1,18 @@
-import subprocess
 import sys
+from shutil import which
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
 from coalib.output.printers.EspeakPrinter import EspeakPrinter
 import unittest
 
 
+@skipIf(which('espeak') is None, 'eSpeak is not installed.')
 class EspeakPrinterTest(unittest.TestCase):
     def test_voice_printer(self):
         self.uut = EspeakPrinter()
         self.uut.print("The", "espeak", "printer", "works!")
         self.uut.close()
-
-
-def skip_test():
-    try:
-        subprocess.Popen(['espeak'])
-        return False
-    except OSError:
-        return "eSpeak is not installed."
 
 
 if __name__ == '__main__':
