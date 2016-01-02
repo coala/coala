@@ -1,8 +1,11 @@
+from bears.c_languages.ClangBear import clang_available
 from coalib.bears.LocalBear import LocalBear
 from clang.cindex import Index, TranslationUnit
 
 
 class ClangASTPrintBear(LocalBear):
+    check_prerequisites = classmethod(clang_available)
+
     def print_node(self, cursor, filename, before="", spec_before=""):
         '''
         Prints this node and all child nodes recursively in the style of:

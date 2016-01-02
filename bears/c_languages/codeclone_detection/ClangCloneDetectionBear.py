@@ -1,3 +1,4 @@
+from bears.c_languages.ClangBear import clang_available
 from bears.c_languages.codeclone_detection.ClangFunctionDifferenceBear import (
     ClangFunctionDifferenceBear)
 from coalib.bears.GlobalBear import GlobalBear
@@ -6,6 +7,8 @@ from coalib.results.Result import Result
 
 
 class ClangCloneDetectionBear(GlobalBear):
+    check_prerequisites = classmethod(clang_available)
+
     def run(self,
             dependency_results: dict,
             max_clone_difference: float=0.185):

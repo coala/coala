@@ -5,15 +5,16 @@ from queue import Queue
 
 sys.path.insert(0, ".")
 
+from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.c_languages.codeclone_detection.ClangFunctionDifferenceBear import (
     ClangFunctionDifferenceBear)
 from bears.c_languages.codeclone_detection.ClangCloneDetectionBear import (
     ClangCloneDetectionBear)
-from clang.cindex import Index, LibclangError
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
 
+@generate_skip_decorator(ClangCloneDetectionBear)
 class ClangCloneDetectionBearTest(unittest.TestCase):
     def setUp(self):
         self.base_test_path = os.path.abspath(os.path.join(
@@ -86,14 +87,6 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
             result_check_function(
                 list(uut.run_bear_from_section([], arg_dict)),
                 "while analyzing "+file)
-
-
-def skip_test():
-    try:
-        Index.create()
-        return False
-    except LibclangError as error:
-        return str(error)
 
 
 if __name__ == '__main__':

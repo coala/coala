@@ -7,9 +7,10 @@ from coalib.settings.Setting import Setting
 from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
 from bears.c_languages.codeclone_detection import ClangCountingConditions
-from clang.cindex import Index, LibclangError
+from bears.tests.c_languages import skip_if_no_clang
 
 
+@skip_if_no_clang()
 class ClangCountingConditionsTest(unittest.TestCase):
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
@@ -239,14 +240,6 @@ class ClangCountingConditionsTest(unittest.TestCase):
              "b": [1],
              "#1": [0],
              "#2": [1]})
-
-
-def skip_test():
-    try:
-        Index.create()
-        return False
-    except LibclangError as error:
-        return str(error)
 
 
 if __name__ == '__main__':

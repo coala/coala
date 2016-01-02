@@ -2,12 +2,27 @@ from coalib.bears.LocalBear import LocalBear
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
-from clang.cindex import Index
+from clang.cindex import Index, LibclangError
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import typed_list
 
 
+def clang_available(cls):
+    """
+    Checks if Clang is available and ready to use.
+
+    :return: True if Clang is available, a description of the error else.
+    """
+    try:
+        Index.create()
+        return True
+    except LibclangError as error:  # pragma: no cover
+        return str(error)
+
+
 class ClangBear(LocalBear):
+    check_prerequisites = classmethod(clang_available)
+
     def run(self, filename, file, clang_cli_options: typed_list(str)=None):
         """
         Runs Clang over the given files and raises/fixes any upcoming issues.
