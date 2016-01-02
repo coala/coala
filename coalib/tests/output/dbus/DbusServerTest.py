@@ -1,12 +1,20 @@
 import sys
 import unittest
-import dbus
-import dbus.mainloop
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
-from coalib.output.dbus.DbusServer import DbusServer
+
+try:
+    import dbus
+    import dbus.mainloop
+
+    from coalib.output.dbus.DbusServer import DbusServer
+    skip, message = False, ''
+except ImportError as err:
+    skip, message = True, str(err)
 
 
+@skipIf(skip, message)
 class DbusServerTest(unittest.TestCase):
     def setUp(self):
         self.session_bus = dbus.SessionBus(
