@@ -2,11 +2,11 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from bears.tests.LocalBearTestHelper import generate_local_bear_test
+from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.c_languages.ClangBear import ClangBear
 
 
-ClangBearTest = generate_local_bear_test(
+ClangBearTest = verify_local_bear(
     ClangBear,
     (["int main() {}"], ),
     (["bad things, this is no C code"],  # Has no fixit
@@ -15,7 +15,7 @@ ClangBearTest = generate_local_bear_test(
     'test.c')
 
 
-ClangBearIgnoreTest = generate_local_bear_test(
+ClangBearIgnoreTest = verify_local_bear(
     ClangBear,
     # Should ignore the warning, valid!
     (["struct { int f0; } x = { f0 :1 };"],),

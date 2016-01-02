@@ -253,17 +253,17 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                      False)
 
 
-def generate_local_bear_test(bear,
-                             valid_files,
-                             invalid_files,
-                             filename='default',
-                             settings={}):
+def verify_local_bear(bear,
+                      valid_files,
+                      invalid_files,
+                      filename='default',
+                      settings={}):
     """
     Generates a test for a local bear by checking the given valid and invalid
     file contents. Simply use it on your module level like:
 
-    YourTestName = generate_local_bear_test(YourBear, (['valid line'],),
-                                            (['invalid line'],))
+    YourTestName = verify_local_bear(YourBear, (['valid line'],),
+                                     (['invalid line'],))
 
     :param bear:          The Bear class to test.
     :param valid_files:   An iterable of files as a string list that won't
