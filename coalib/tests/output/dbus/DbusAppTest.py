@@ -1,10 +1,17 @@
 import sys
 import unittest
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
-from coalib.output.dbus.DbusApp import DbusApp
+
+try:
+    from coalib.output.dbus.DbusApp import DbusApp
+    skip, message = False, ''
+except ImportError as err:
+    skip, message = True, str(err)
 
 
+@skipIf(skip, message)
 class DbusAppTest(unittest.TestCase):
     def test_docs(self):
         uut = DbusApp(app_id=1)
