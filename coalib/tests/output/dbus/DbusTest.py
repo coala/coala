@@ -1,15 +1,22 @@
 import sys
 import os
 import unittest
+from unittest.case import skipIf
 import subprocess
 import time
-import dbus
-import dbus.mainloop.glib
-from gi.repository import GLib
 
 sys.path.insert(0, ".")
-from coalib.output.dbus.DbusServer import DbusServer
 from coalib.misc.Constants import Constants
+
+try:
+    import dbus
+    import dbus.mainloop.glib
+    from gi.repository import GLib
+
+    from coalib.output.dbus.DbusServer import DbusServer
+    skip, message = False, ''
+except ImportError as err:
+    skip, message = True, str(err)
 
 
 def make_test_server():
@@ -35,6 +42,7 @@ def create_mainloop():
     mainloop.run()
 
 
+@skipIf(skip, message)
 class DbusTest(unittest.TestCase):
     def setUp(self):
         self.config_path = os.path.abspath(
@@ -149,7 +157,7 @@ class DbusTest(unittest.TestCase):
             self.subprocess.kill()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and not skip:
     arg = ""
     if len(sys.argv) > 1:
         arg = sys.argv[1]
