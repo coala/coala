@@ -1,12 +1,19 @@
 import sys
 import os
 import unittest
+from unittest.case import skipIf
 
 sys.path.insert(0, ".")
-from coalib.output.dbus.DbusDocument import DbusDocument
 from coalib.misc.Constants import Constants
 
+try:
+    from coalib.output.dbus.DbusDocument import DbusDocument
+    skip, message = False, ''
+except ImportError as err:
+    skip, message = True, str(err)
 
+
+@skipIf(skip, message)
 class DbusDocumentTest(unittest.TestCase):
     def setUp(self):
         self.config_path = os.path.abspath(
