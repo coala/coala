@@ -2,6 +2,7 @@
 Default.enabled = false
 PythonCheck.enabled = true
 DOCS.enabled = true
+bash.enabled = true
 
 [Default]
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
@@ -10,6 +11,11 @@ files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
 bears = SpaceConsistencyBear, LineLengthBear, PyUnusedCodeBear
 use_spaces = True
 max_line_length = 79
+
+[bash]
+files = .misc/*.sh
+bears = SpaceConsistencyBear, BashSemicolonBear
+use_spaces = True
 
 [Pylint]
 bears = PyLintBear
