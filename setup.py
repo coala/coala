@@ -31,9 +31,7 @@ if __name__ == "__main__":
     setup(name='coala',
           version=Constants.VERSION,
           description='Code Analysis Application (coala)',
-          author=maintainers+", Abdeali Kothari, Udayan Tandon",
-          author_email=maintainer_mails +
-                       ", abdealikothari@gmail.com, udayan12167@iiitd.ac.in",
+          author="The coala developers",
           maintainer=maintainers,
           maintainer_email=maintainer_mails,
           url='http://coala.rtfd.org/',
