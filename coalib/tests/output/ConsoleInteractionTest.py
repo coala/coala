@@ -103,8 +103,15 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.global_bears = OrderedDict([("default", [SomeglobalBear]),
                                          ("test", [SomeglobalBear])])
 
+        self.old_open_editor_applicable = OpenEditorAction.is_applicable
         OpenEditorAction.is_applicable = staticmethod(lambda *args: False)
+
+        self.old_apply_patch_applicable = ApplyPatchAction.is_applicable
         ApplyPatchAction.is_applicable = staticmethod(lambda *args: False)
+
+    def tearDown(self):
+        OpenEditorAction.is_applicable = self.old_open_editor_applicable
+        ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
 
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
