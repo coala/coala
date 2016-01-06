@@ -93,7 +93,7 @@ class Lint():
 
         # Pre process the groups
         for variable in ("line", "column", "end_line", "end_column"):
-            if variable in groups:
+            if variable in groups and groups[variable]:
                 groups[variable] = int(groups[variable])
 
         return Result.from_values(
