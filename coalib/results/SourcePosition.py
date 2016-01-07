@@ -1,3 +1,4 @@
+import os
 from coalib.misc.Decorators import (enforce_signature,
                                     generate_ordering,
                                     generate_repr)
@@ -23,6 +24,7 @@ class SourcePosition(TextPosition):
         """
         TextPosition.__init__(self, line, column)
 
+        os.path.abspath(file)
         self._file = file
 
     @property
