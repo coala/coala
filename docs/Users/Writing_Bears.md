@@ -97,7 +97,7 @@ class CommunicationBear(LocalBear):
 Try executing it:
 
 ```
-coala -f src/*.c -d bears -b CommunicationBear -L DEBUG
+coala -f=src/\*.c -d=bears -b=CommunicationBear -L=DEBUG
 ```
 
 Hey, we'll get asked for the user_input! Wasn't that easy? Go ahead, enter
