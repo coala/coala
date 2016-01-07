@@ -39,7 +39,7 @@ Please type the following commands into the console:
 
 ```
 cd coala-tutorial
-coala --files=src/*.c --bears=SpaceConsistencyBear --save
+coala --files=src/\*.c --bears=SpaceConsistencyBear --save
 ```
 
 coala will now ask you for missing values that are needed to perform the
