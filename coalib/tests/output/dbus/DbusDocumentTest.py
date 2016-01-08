@@ -4,7 +4,7 @@ import unittest
 from unittest.case import skipIf
 
 sys.path.insert(0, ".")
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 try:
     from coalib.output.dbus.DbusDocument import DbusDocument

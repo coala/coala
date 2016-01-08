@@ -1,7 +1,7 @@
 import os
 
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 from coalib.parsing.ConfParser import ConfParser
 
 

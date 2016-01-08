@@ -1,6 +1,6 @@
 import argparse
 
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 
 def default_arg_parser(formatter_class=None):

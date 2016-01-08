@@ -1,7 +1,7 @@
 from pyprint.NullPrinter import NullPrinter
 
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 
 def get_exitcode(exception, log_printer=None):

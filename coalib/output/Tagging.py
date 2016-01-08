@@ -2,7 +2,7 @@ import hashlib
 import pickle
 import os
 
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 
 def get_tag_path(tag, project):

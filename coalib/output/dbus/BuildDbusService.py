@@ -1,8 +1,7 @@
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from coalib.misc.Constants import Constants
-
+from coalib.misc import Constants
 
 class BuildDbusService(Command):
     """

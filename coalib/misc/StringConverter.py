@@ -1,6 +1,6 @@
 from collections import Iterable, OrderedDict
 import re
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 from coalib.parsing.StringProcessing import (unescaped_split,
                                              unescaped_strip,
                                              unescape)

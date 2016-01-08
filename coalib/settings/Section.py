@@ -5,7 +5,7 @@ import os
 from coalib.misc.Decorators import generate_repr
 from coalib.settings.Setting import Setting, path_list
 from coalib.misc.DictUtilities import update_ordered_dict_key
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 
 def append_to_sections(sections,

@@ -6,7 +6,7 @@ import subprocess
 import time
 
 sys.path.insert(0, ".")
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 try:
     import dbus

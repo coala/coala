@@ -19,7 +19,7 @@ import dbus.mainloop.glib
 from gi.repository import GLib
 
 from coalib.output.dbus.DbusServer import DbusServer
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 
 def main():

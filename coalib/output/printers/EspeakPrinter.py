@@ -2,7 +2,7 @@ import subprocess
 from pyprint.Printer import Printer
 from pyprint.ClosableObject import ClosableObject
 
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 
 class EspeakPrinter(Printer, ClosableObject):

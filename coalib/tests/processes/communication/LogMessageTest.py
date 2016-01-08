@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, ".")
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 from coalib.processes.communication.LogMessage import LogMessage
 import unittest
 

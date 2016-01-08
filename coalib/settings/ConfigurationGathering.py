@@ -2,7 +2,7 @@ import os
 import sys
 
 from coalib.settings.Setting import Setting
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParsing import parse_cli

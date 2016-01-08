@@ -7,7 +7,7 @@ from coalib import assert_supported_version
 assert_supported_version()
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):

@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import os
 
-from coalib.misc.Constants import Constants
+from coalib.misc import Constants
 from coalib.parsing.LineParser import LineParser
 from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
