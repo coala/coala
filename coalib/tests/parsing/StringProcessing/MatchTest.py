@@ -6,6 +6,7 @@ from coalib.parsing.StringProcessing import Match
 
 
 class MatchTest(unittest.TestCase):
+
     def test_properties(self):
         uut = Match("ABC", 0)
 

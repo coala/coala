@@ -5,6 +5,7 @@ from coalib.misc.Decorators import generate_repr
 
 @generate_repr()
 class CountVector:
+
     def __init__(self, name, conditions=None, weightings=None):
         """
         Creates a new count vector.

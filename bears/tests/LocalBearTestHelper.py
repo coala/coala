@@ -278,6 +278,7 @@ def verify_local_bear(bear,
     """
     @generate_skip_decorator(bear)
     class LocalBearTest(LocalBearTestHelper):
+
         def setUp(self):
             self.section = Section('name')
             self.uut = bear(self.section, Queue())

@@ -226,7 +226,7 @@ def print_test_results(test_file, test_nr, test_count, message):
     # Decode and encode the message string while replacing errors so
     # unmapped characters can be printed too.
     print(message.encode(sys.stdout.encoding, errors="replace")
-              .decode(sys.stdout.encoding),
+          .decode(sys.stdout.encoding),
           end="")
     if message:
         print("#" * 70)

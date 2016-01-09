@@ -3,6 +3,7 @@ from coalib.bears.LocalBear import LocalBear
 
 
 class KeywordBear(LocalBear):
+
     def run(self,
             filename,
             file,

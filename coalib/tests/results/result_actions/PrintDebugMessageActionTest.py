@@ -10,6 +10,7 @@ from coalib.results.Result import Result
 
 
 class PrintDebugMessageActionTest(unittest.TestCase):
+
     def setUp(self):
         self.uut = PrintDebugMessageAction()
         self.test_result = Result("origin", "message", debug_msg="DEBUG MSG")

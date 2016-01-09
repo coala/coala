@@ -7,6 +7,7 @@ from coalib.bearlib.languages.documentation.DocstyleDefinition import (
 
 
 class DocstyleDefinitionTest(unittest.TestCase):
+
     def test_fail_instantation(self):
         with self.assertRaises(ValueError):
             DocstyleDefinition("PYTHON", "doxyGEN", (("##", "#"),))

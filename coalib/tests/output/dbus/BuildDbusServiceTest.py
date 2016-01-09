@@ -11,6 +11,7 @@ from coalib.misc import Constants
 
 
 class BuildDbusServiceTest(unittest.TestCase):
+
     def test_build(self):
         dist = Distribution()
         uut = BuildDbusService(dist)

@@ -12,6 +12,7 @@ from coalib.settings.Setting import Setting
 
 @generate_skip_decorator(IndentBear)
 class IndentBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section('name')
         self.section.append(Setting("use_spaces", "true"))

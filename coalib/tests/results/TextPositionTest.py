@@ -6,6 +6,7 @@ from coalib.results.TextPosition import TextPosition
 
 
 class TextPositionTest(unittest.TestCase):
+
     def test_fail_instantation(self):
         with self.assertRaises(ValueError):
             TextPosition(None, 2)

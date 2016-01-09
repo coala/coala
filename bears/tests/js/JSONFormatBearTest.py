@@ -9,6 +9,7 @@ from coalib.settings.Section import Section, Setting
 
 
 class JSONFormatBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section('name')
         self.uut = JSONFormatBear(self.section, Queue())

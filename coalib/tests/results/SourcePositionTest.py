@@ -6,6 +6,7 @@ from coalib.results.SourcePosition import SourcePosition
 
 
 class SourcePositionTest(unittest.TestCase):
+
     def test_initialization(self):
         with self.assertRaises(TypeError):
             SourcePosition(None, 0)
@@ -30,7 +31,6 @@ class SourcePositionTest(unittest.TestCase):
             repr(uut),
             "<SourcePosition object\\(file='None', line=None, column=None\\) "
                 "at 0x[0-9a-fA-F]+>")
-
 
     def assert_equal(self, first, second):
         self.assertGreaterEqual(first, second)

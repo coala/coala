@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('proselint') is None, 'ProseLint is not installed')
 class ProseLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = ProseLintBear(self.section, Queue())

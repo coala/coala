@@ -15,6 +15,7 @@ from coalib.settings.Section import Section
 
 @generate_skip_decorator(ClangASTPrintBear)
 class ClangASTPrintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
             os.path.dirname(__file__),
@@ -36,12 +37,12 @@ class ClangASTPrintBearTest(LocalBearTestHelper):
 |-test() CursorKind.FUNCTION_DECL Lines 6-6 (int test ( void ) ;)
 |-g CursorKind.VAR_DECL Lines 9-9 (int g ;)
 `-main(int, char *) CursorKind.FUNCTION_DECL Lines 12-30 (int main ( """
-"""int t , char * args ) { // Usage in a call smile ( t , g ) ; // Simpl"""
-"""e stupid assignment t = g ; // Local declaration int * asd ; // Simpl"""
-"""e more stupid reassignment, this time using other syntax elems t = """
-"""args [ g ] ; // Declaration in for loop for ( int i ; i < 5 ; i ++ """
-""") { // Checking out constants printf ( "i is %d" , i ) ; } })
-""")
+            """int t , char * args ) { // Usage in a call smile ( t , g ) ; """
+            """// Simple stupid assignment t = g ; // Local declaration int """
+            """* asd ; // Simple more stupid reassignment, this time using """
+            """other syntax elems t = args [ g ] ; // Declaration in for """
+            """loop for ( int i ; i < 5 ; i ++ ) { // Checking out constants"""
+            """ printf ( "i is %d" , i ) ; } })\n""")
 
         self.uut.run(self.testfile, [])
 

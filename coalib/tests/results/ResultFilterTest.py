@@ -9,6 +9,7 @@ from coalib.results.SourceRange import SourceRange
 
 
 class ResultFilterTest(unittest.TestCase):
+
     def setUp(self):
         self.maxDiff = None
         result_filter_test_dir = os.path.join(os.path.split(__file__)[0],
@@ -346,7 +347,7 @@ class ResultFilterTest(unittest.TestCase):
                                   res1_whole_remove,    # correct
 
                                   res1_addition,        # correct
-                                  res1_around_addition, # WRONG: line-wise diff
+                                  res1_around_addition,  # WRONG: line-wise diff
                                   res1_with_addition,   # correct
                                   res1_whole_addition]  # correct
 

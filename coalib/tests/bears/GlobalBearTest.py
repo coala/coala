@@ -7,6 +7,7 @@ from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 
 
 class GlobalBearTest(unittest.TestCase):
+
     def test_api(self):
         test_object = GlobalBear(0, Section("name"), None)
         self.assertRaises(NotImplementedError, test_object.run)

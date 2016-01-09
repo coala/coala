@@ -10,6 +10,7 @@ from bears.general.LineLengthBear import LineLengthBear
 
 
 class LineLengthBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.section.append(Setting("max_line_length", "4"))

@@ -20,6 +20,7 @@ time.sleep(100);
 
 
 class ContextManagersTest(unittest.TestCase):
+
     def test_subprocess_timeout(self):
         p = subprocess.Popen([sys.executable,
                               "-c",

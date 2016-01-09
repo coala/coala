@@ -6,6 +6,7 @@ from coalib.parsing.StringProcessing import InBetweenMatch, Match
 
 
 class InBetweenMatchTest(unittest.TestCase):
+
     def test_invalid(self):
         self.assertRaises(ValueError,
                           InBetweenMatch,

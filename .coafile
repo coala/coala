@@ -1,18 +1,40 @@
-# So all sections are disabled by default
-Default.enabled = false
-PythonCheck.enabled = true
-DOCS.enabled = true
-
 [Default]
 files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
+ignore =
+    coalib/tests/bearlib/languages/documentation/documentation_extraction_testdata/data.py,
+    coalib/tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
+    bears/tests/python/test_files/pylint_test.py
 
-[PythonCheck]
-bears = SpaceConsistencyBear, LineLengthBear, PyUnusedCodeBear
+max_line_length = 80
 use_spaces = True
-max_line_length = 79
+
+[autopep8]
+bears = PEP8Bear
+
+default_actions = PEP8Bear: ApplyPatchAction
+
+[python]
+# Patches may conflict with autopep8 so putting them in own section so they
+# will be executed sequentially; also we need the LineLengthBear to double
+# check the line length because PEP8Bear sometimes itn't able to correct the
+# linelength.
+bears = SpaceConsistencyBear, PyUnusedCodeBear, LineLengthBear
+
+default_actions =
+    SpaceConsistencyBear: ApplyPatchAction,
+    PyUnusedCodeBear: ApplyPatchAction
+
+[DOCS]
+bears = SpaceConsistencyBear
+
+files = docs/**/*.md
+default_actions = SpaceConsistencyBear: ApplyPatchAction
 
 [Pylint]
+enabled = False
+
 bears = PyLintBear
+
 pylint_cli_options = --ignore\=CVS,cindex.py,tests
 pylint_disable = missing-docstring, # Lots of functions don't need docstrings
                  arguments-differ, # Some child classes need to change
@@ -30,14 +52,14 @@ pylint_disable = missing-docstring, # Lots of functions don't need docstrings
                                   # different from PEP
 
 [LineCounting]
+enabled = False
+
 bears = LineCountBear
 
 [TODOS]
+enabled = False
+
 bears = KeywordBear
+
 ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
-
-[DOCS]
-bears = SpaceConsistencyBear
-files = docs/**/*.md
-use_spaces = True

@@ -7,6 +7,7 @@ from coalib.bearlib.languages.documentation.DocumentationComment import (
 
 
 class DocumentationCommentTest(unittest.TestCase):
+
     def test_fields(self):
         uut = DocumentationComment("my doc",
                                    ("/**", "*", "*/"),

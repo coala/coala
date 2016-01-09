@@ -11,6 +11,7 @@ import unittest
 
 
 class TestBear(Bear):
+
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
 
@@ -25,6 +26,7 @@ class TestBear(Bear):
 
 
 class BadTestBear(Bear):
+
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
 
@@ -33,6 +35,7 @@ class BadTestBear(Bear):
 
 
 class TypedTestBear(Bear):
+
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
         self.was_executed = False
@@ -60,6 +63,7 @@ class BearWithPrerequisites(Bear):
 
 
 class BearTest(unittest.TestCase):
+
     def setUp(self):
         self.queue = multiprocessing.Queue()
         self.settings = Section("test_settings")
@@ -140,7 +144,7 @@ class BearTest(unittest.TestCase):
 
         self.assertRaisesRegex(RuntimeError,
                                "The bear BearWithPrerequisites does not "
-                                   "fulfill all requirements\\.",
+                               "fulfill all requirements\\.",
                                BearWithPrerequisites,
                                self.settings,
                                self.queue,
@@ -148,13 +152,13 @@ class BearTest(unittest.TestCase):
 
         self.check_message(LOG_LEVEL.WARNING,
                            "The bear BearWithPrerequisites does not fulfill "
-                               "all requirements.")
+                           "all requirements.")
         self.assertTrue(self.queue.empty())
 
         self.assertRaisesRegex(RuntimeError,
                                "The bear BearWithPrerequisites does not "
-                                   "fulfill all requirements\\. Just because "
-                                   "I want to\\.",
+                               "fulfill all requirements\\. Just because "
+                               "I want to\\.",
                                BearWithPrerequisites,
                                self.settings,
                                self.queue,
@@ -162,7 +166,7 @@ class BearTest(unittest.TestCase):
 
         self.check_message(LOG_LEVEL.WARNING,
                            "The bear BearWithPrerequisites does not fulfill "
-                               "all requirements. Just because I want to.")
+                           "all requirements. Just because I want to.")
         self.assertTrue(self.queue.empty())
 
 

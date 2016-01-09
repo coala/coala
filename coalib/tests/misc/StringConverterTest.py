@@ -6,6 +6,7 @@ import unittest
 
 
 class StringConverterTest(unittest.TestCase):
+
     def setUp(self):
         self.uut = StringConverter("\n \\1 \n ")
 

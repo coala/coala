@@ -8,6 +8,7 @@ from coalib.results.SourceRange import SourceRange
 
 
 class ResultTest(unittest.TestCase):
+
     def test_origin(self):
         uut = Result("origin", "msg")
         self.assertEqual(uut.origin, "origin")
@@ -47,7 +48,6 @@ class ResultTest(unittest.TestCase):
                                   "line_nr": "2",
                                   "severity": "INFO",
                                   "debug_msg": "dbg"})
-
 
         uut = Result.from_values(origin="o", message="m", file="f", line=5)
         output = uut.to_string_dict()

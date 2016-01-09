@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('mcs') is None, 'mono mcs is not installed')
 class CSharpLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = CSharpLintBear(self.section, Queue())

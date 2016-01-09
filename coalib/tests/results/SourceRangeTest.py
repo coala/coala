@@ -8,6 +8,7 @@ from coalib.results.SourceRange import SourceRange
 
 
 class SourceRangeTest(unittest.TestCase):
+
     def setUp(self):
         self.result_fileA_noline = SourcePosition("A")
         self.result_fileA_line2 = SourcePosition("A", 2)

@@ -51,13 +51,13 @@ class SplitTest(StringProcessingTestBase):
 
         for max_split in [1, 2, 3, 4, 5, 6, 7, 8, 9, 112]:
             expected_results = [
-                elem[0 : max_split] for elem in expected_master_results]
+                elem[0: max_split] for elem in expected_master_results]
 
             for res, master in zip(expected_results, expected_master_results):
                 if max_split < len(master):
                     # max_split is less the length of our master result list,
                     # need to append the rest as a joined string.
-                    res.append(str.join(split_pattern, master[max_split : ]))
+                    res.append(str.join(split_pattern, master[max_split:]))
 
             self.assertResultsEqual(
                 split,
@@ -150,4 +150,3 @@ class SplitTest(StringProcessingTestBase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-

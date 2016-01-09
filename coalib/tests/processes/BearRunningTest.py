@@ -17,6 +17,7 @@ from coalib.settings.Section import Section
 
 
 class LocalTestBear(LocalBear):
+
     def run(self, filename, file):
         if filename == "file1":
             raise Exception("Just to throw anything here.")
@@ -26,6 +27,7 @@ class LocalTestBear(LocalBear):
 
 
 class SimpleBear(LocalBear):
+
     def run(self,
             filename,
             file,
@@ -45,6 +47,7 @@ class SimpleBear(LocalBear):
 
 
 class DependentBear(LocalBear):
+
     def run(self,
             filename,
             file,
@@ -59,6 +62,7 @@ class DependentBear(LocalBear):
 
 
 class SimpleGlobalBear(GlobalBear):
+
     def run(self,
             *args,
             dependency_results=None,
@@ -70,6 +74,7 @@ class SimpleGlobalBear(GlobalBear):
 
 
 class DependentGlobalBear(GlobalBear):
+
     def run(self,
             *args,
             dependency_results=None,
@@ -82,6 +87,7 @@ class DependentGlobalBear(GlobalBear):
 
 
 class GlobalTestBear(GlobalBear):
+
     def run(self):
         result = []
         for file, contents in self.file_dict.items():
@@ -93,22 +99,26 @@ class GlobalTestBear(GlobalBear):
 
 
 class EvilBear(LocalBear):
+
     def execute(self, *args, **kwargs):
         raise NotImplementedError
 
 
 class UnexpectedBear1(LocalBear):
+
     def run(self, filename, file):
         return [1,
                 Result("UnexpectedBear1", "test result")]
 
 
 class UnexpectedBear2(LocalBear):
+
     def run(self, filename, file):
         return 1
 
 
 class BearRunningUnitTest(unittest.TestCase):
+
     def setUp(self):
         self.settings = Section("name")
 
@@ -286,7 +296,7 @@ d
                                  [Result.from_values("LocalTestBear",
                                                      "something went wrong",
                                                      'arbitrary')]
-                                ]
+                                 ]
         for expected in local_result_expected:
             control_elem, index = self.control_queue.get()
             self.assertEqual(control_elem, CONTROL_ELEMENT.LOCAL)

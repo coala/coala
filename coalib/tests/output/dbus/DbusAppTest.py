@@ -13,6 +13,7 @@ except ImportError as err:
 
 @skipIf(skip, message)
 class DbusAppTest(unittest.TestCase):
+
     def test_docs(self):
         uut = DbusApp(app_id=1)
         doc1 = __file__

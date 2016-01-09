@@ -9,6 +9,7 @@ from coalib.parsing.StringProcessing import unescape
 
 class UnescapeTest(StringProcessingTestBase):
     # Test the unescape() function.
+
     def test_basic(self):
         expected_results = [
             r"out1 'escaped-escape:        \ ' out2",
@@ -46,4 +47,3 @@ class UnescapeTest(StringProcessingTestBase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-

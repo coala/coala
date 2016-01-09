@@ -9,6 +9,7 @@ from coalib.parsing.StringProcessing import position_is_escaped
 
 class PositionIsEscapedTest(StringProcessingTestBase):
     # Test the position_is_escaped() function.
+
     def test_basic(self):
         expected_results = [
             30 * [False] + [True] + 7 * [False],
@@ -70,4 +71,3 @@ class PositionIsEscapedTest(StringProcessingTestBase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-

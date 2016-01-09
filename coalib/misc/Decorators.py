@@ -169,7 +169,7 @@ def generate_repr(*members):
             members_to_print = get_public_members(self)
 
             member_repr_list = ((member, repr) for member in
-                sorted(members_to_print, key=str.lower))
+                                sorted(members_to_print, key=str.lower))
 
             return _construct_repr_string(self, member_repr_list)
 

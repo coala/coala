@@ -4,6 +4,7 @@ from coalib.results.Result import Result
 
 
 class LineLengthBear(LocalBear):
+
     def run(self,
             filename,
             file,

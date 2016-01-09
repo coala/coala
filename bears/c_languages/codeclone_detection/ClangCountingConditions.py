@@ -196,7 +196,7 @@ def _get_binop_operator(cursor):
         if (operator_min_begin < (token.extent.start.line,
                                   token.extent.start.column) and
             operator_max_end >= (token.extent.end.line,
-                                token.extent.end.column)):
+                                 token.extent.end.column)):
             return token
 
     return None  # pragma: no cover

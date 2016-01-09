@@ -22,6 +22,7 @@ class ClangCountVectorCreator:
     The ClangCountVectorCreator will only count variables local to each
     function.
     """
+
     def __init__(self,
                  conditions=None,
                  weightings=None):

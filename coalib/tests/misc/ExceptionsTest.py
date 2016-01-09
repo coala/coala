@@ -7,6 +7,7 @@ from coalib.misc.Exceptions import get_exitcode
 
 
 class ExceptionsTest(unittest.TestCase):
+
     def test_get_exitcode(self):
         self.assertEqual(get_exitcode(KeyboardInterrupt()), 130)
         self.assertEqual(get_exitcode(AssertionError()), 255)

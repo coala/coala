@@ -17,7 +17,7 @@ class LineDiff:
         :param add_after: False or a list of lines to append after this ones
         """
         self._delete = False  # change property setter will need this value
-                              # for assertion
+        # for assertion
         self.change = change
         self.delete = delete
         self.add_after = add_after

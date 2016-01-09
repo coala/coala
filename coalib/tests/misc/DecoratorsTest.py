@@ -11,6 +11,7 @@ from coalib.misc.Decorators import (arguments_to_lists,
 
 
 class YieldOnceTest(unittest.TestCase):
+
     def test_yield_once(self):
         @yield_once
         def iterate_over_list(arg_list):
@@ -22,6 +23,7 @@ class YieldOnceTest(unittest.TestCase):
 
 
 class ArgumentsToListsTest(unittest.TestCase):
+
     def test_arguments_to_lists(self):
         @arguments_to_lists
         def return_args(*args, **kwargs):
@@ -38,9 +40,11 @@ class ArgumentsToListsTest(unittest.TestCase):
 class GenerateReprTest(unittest.TestCase):
     # We can't define the class in the scope of this test because generate_repr
     # modifies the class in place, so we need to redefine it every time.
+
     @staticmethod
     def define_class():
         class X:
+
             def __init__(self):
                 self.A = 2
                 self.B = "A string"
@@ -88,24 +92,24 @@ class GenerateReprTest(unittest.TestCase):
         X = generate_repr("A", "B", "ComplexMember")(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, B='A string', ComplexMember=\\[3, "
-                             "2, 1\\]\\) at 0x[0-9a-fA-F]+>")
+                         "2, 1\\]\\) at 0x[0-9a-fA-F]+>")
 
         X = generate_repr("A", "B", "ComplexMember", "Q")(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, B='A string', "
-                             "ComplexMember=\\[3, 2, 1\\]\\, Q=0\\.5\\) at "
-                             "0x[0-9a-fA-F]+>")
+                         "ComplexMember=\\[3, 2, 1\\]\\, Q=0\\.5\\) at "
+                         "0x[0-9a-fA-F]+>")
 
         # Switch order.
         X = generate_repr("ComplexMember", "A")(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(ComplexMember=\\[3, 2, 1\\], A=2\\) at "
-                             "0x[0-9a-fA-F]+>")
+                         "0x[0-9a-fA-F]+>")
 
         X = generate_repr("Q", "ComplexMember", "A", "B")(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(Q=0\\.5, ComplexMember=\\[3, 2, 1\\], "
-                             "A=2, B='A string'\\) at 0x[0-9a-fA-F]+>")
+                         "A=2, B='A string'\\) at 0x[0-9a-fA-F]+>")
 
     def test_manual_argument_list_with_custom_repr(self):
         X = generate_repr(("A", lambda x: str(x ** 2)))(self.define_class())
@@ -124,7 +128,7 @@ class GenerateReprTest(unittest.TestCase):
         X = X(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(B='A string', A=4, "
-                             "ComplexMember=3\\.2\\.1\\) at 0x[0-9a-fA-F]+>")
+                         "ComplexMember=3\\.2\\.1\\) at 0x[0-9a-fA-F]+>")
 
         # Combine normal strings with tuples.
         X = generate_repr("A",
@@ -134,14 +138,14 @@ class GenerateReprTest(unittest.TestCase):
         X = X(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, B=A string, "
-                             "ComplexMember=\\[3, 2, 1\\], Q=OVERRIDE\\) at "
-                             "0x[0-9a-fA-F]+>")
+                         "ComplexMember=\\[3, 2, 1\\], Q=OVERRIDE\\) at "
+                         "0x[0-9a-fA-F]+>")
 
     def test_properties(self):
         X = generate_repr("getter")(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(getter='getter\\(\\)'\\) at "
-                             "0x[0-9a-fA-F]+>")
+                         "0x[0-9a-fA-F]+>")
 
         X = generate_repr("A",
                           "getter",
@@ -150,19 +154,19 @@ class GenerateReprTest(unittest.TestCase):
 
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, getter='getter\\(\\)', "
-                             "defaulted_getter=6\\) at 0x[0-9a-fA-F]+>")
+                         "defaulted_getter=6\\) at 0x[0-9a-fA-F]+>")
 
     def test_getter_like_functions(self):
         X = generate_repr("getter_like_function")(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(getter_like_function=\\['A', 'B'\\]\\) "
-                             "at 0x[0-9a-fA-F]+>")
+                         "at 0x[0-9a-fA-F]+>")
 
         X = generate_repr("defaulted_getter_like_function")
         X = X(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(defaulted_getter_like_function=\\(33, "
-                             "34, 35\\)\\) at 0x[0-9a-fA-F]+>")
+                         "34, 35\\)\\) at 0x[0-9a-fA-F]+>")
 
     def test_invalid_attribute(self):
         X = generate_repr("A", "B", "INVALID")(self.define_class())
@@ -214,13 +218,15 @@ class GenerateReprTest(unittest.TestCase):
         X = generate_repr("A", "B", "A")(self.define_class())
         self.assertRegex(repr(X()),
                          "<X object\\(A=2, B='A string', A=2\\) at "
-                             "0x[0-9a-fA-F]+>")
+                         "0x[0-9a-fA-F]+>")
 
 
 class GenerateEqTest(unittest.TestCase):
+
     def test_equality(self):
         @generate_eq("cookie", "cake")
         class TestClass:
+
             def __init__(self, cookie, cake, irrelevant):
                 self.cookie = cookie
                 self._cake = cake
@@ -250,9 +256,11 @@ class GenerateEqTest(unittest.TestCase):
 
 
 class GenerateOrderingTest(unittest.TestCase):
+
     def test_ordering(self):
         @generate_ordering("cake", "cookie")
         class TestClass:
+
             def __init__(self, cookie, cake, irrelevant):
                 self.cookie = cookie
                 self._cake = cake
@@ -288,6 +296,7 @@ class GenerateOrderingTest(unittest.TestCase):
 
 
 class EnforceSignatureTest(unittest.TestCase):
+
     def test_enforce_kwargs(self):
         @enforce_signature
         def test_function(*args, a, b: str):

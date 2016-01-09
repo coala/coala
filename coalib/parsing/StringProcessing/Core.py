@@ -78,7 +78,7 @@ def _split(string,
     last_end_pos = 0
 
     for match in matching_function(*args, **kwargs):
-        split_string = string[last_end_pos : match.start()]
+        split_string = string[last_end_pos: match.start()]
         last_end_pos = match.end()
 
         if not remove_empty_matches or len(split_string) != 0:
@@ -301,7 +301,7 @@ def unescaped_search_in_between(begin,
         yield InBetweenMatch.from_values(m.group(1),
                                          m.start(1),
                                          m.group(begin_pattern_groups + 2) +
-                                             m.group(begin_pattern_groups + 3),
+                                         m.group(begin_pattern_groups + 3),
                                          m.start(begin_pattern_groups + 2),
                                          m.group(begin_pattern_groups + 4),
                                          m.start(begin_pattern_groups + 4))
@@ -424,7 +424,7 @@ def _nested_search_in_between(begin, end, string):
                 yield InBetweenMatch.from_values(
                     left_match.group(),
                     left_match.start(),
-                    string[left_match.end() : match.start()],
+                    string[left_match.end(): match.start()],
                     left_match.end(),
                     match.group(),
                     match.start())

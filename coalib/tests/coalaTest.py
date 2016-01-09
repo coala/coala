@@ -34,6 +34,7 @@ def execute_coala_ci(args):
 
 
 class coalaTest(unittest.TestCase):
+
     def setUp(self):
         self.old_argv = sys.argv
         self.unescaped_coafile = os.path.abspath("./.coafile")

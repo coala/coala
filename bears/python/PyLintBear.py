@@ -17,7 +17,7 @@ class PyLintBear(LocalBear, Lint):
     arguments = ('--reports=n --persistent=n --msg-template='
                  '"{line}.{column}|{C}: {msg_id} - {msg}"')
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)'
-                    r'\|(?P<severity>[WFECRI]): (?P<message>.*)')
+                              r'\|(?P<severity>[WFECRI]): (?P<message>.*)')
     severity_map = {
         "F": RESULT_SEVERITY.MAJOR,
         "E": RESULT_SEVERITY.MAJOR,

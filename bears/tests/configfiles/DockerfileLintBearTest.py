@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('dockerfile_lint') is None, 'dockerfile_lint is not installed')
 class DockerfileLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = DockerfileLintBear(self.section, Queue())

@@ -8,6 +8,7 @@ from coalib.results.Result import Result
 
 
 class ResultActionTest(unittest.TestCase):
+
     def test_api(self):
         uut = ResultAction()
         result = Result("", "")

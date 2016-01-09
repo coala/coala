@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('coffeelint') is None, 'coffeelint is not installed')
 class CoffeeLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = CoffeeLintBear(self.section, Queue())
