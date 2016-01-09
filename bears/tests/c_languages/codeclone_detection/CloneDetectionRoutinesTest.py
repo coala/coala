@@ -7,6 +7,7 @@ from bears.c_languages.codeclone_detection.CloneDetectionRoutines import (
 
 
 class CloneDetectionRoutinesTest(unittest.TestCase):
+
     def test_relative_difference(self):
         # This test is needed because our exclusion heuristic is grown so
         # good that during our "real code" tests some corner cases just

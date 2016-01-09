@@ -6,6 +6,7 @@ from coalib.results.Result import Result
 
 
 class reSTLintBear(LocalBear):
+
     def run(self, filename, file):
         """
         Lints reStructuredText.

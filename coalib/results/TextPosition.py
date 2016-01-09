@@ -6,6 +6,7 @@ from coalib.misc.Decorators import (enforce_signature,
 @generate_repr("line", "column")
 @generate_ordering("line", "column")
 class TextPosition:
+
     @enforce_signature
     def __init__(self, line: (int, None)=None, column: (int, None)=None):
         """

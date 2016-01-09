@@ -5,6 +5,7 @@ from coalib.results.Result import Result
 
 
 class SpaceConsistencyBear(LocalBear):
+
     def run(self,
             filename,
             file,

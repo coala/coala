@@ -13,6 +13,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 
 
 class GlobalTestBear(GlobalBear):
+
     def __init__(self):
         GlobalBear.__init__(self, {}, Section("irrelevant"), None)
 
@@ -23,6 +24,7 @@ class GlobalTestBear(GlobalBear):
 
 
 class LocalTestBear(LocalBear):
+
     def __init__(self):
         LocalBear.__init__(self, [], "", Section("irrelevant"), None)
 
@@ -33,6 +35,7 @@ class LocalTestBear(LocalBear):
 
 
 class SectionFillingTest(unittest.TestCase):
+
     def setUp(self):
         self.log_printer = LogPrinter(ConsolePrinter())
         self.section = Section("test")

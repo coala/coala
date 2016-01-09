@@ -91,7 +91,7 @@ class SearchForTest(StringProcessingTestBase):
              for max_match in [1, 2, 3, 4, 5, 6, 987, 100928321]
              for test_string, result in zip(
                  self.test_strings,
-                 [elem[0 : max_match] for elem in expected_master_results])},
+                 [elem[0: max_match] for elem in expected_master_results])},
             self.list_zero_group)
 
     # Test search_for() with regexes disabled.

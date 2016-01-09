@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('csslint') is None, 'csslint is not installed')
 class CSSLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = CSSLintBear(self.section, Queue())

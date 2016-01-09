@@ -12,6 +12,7 @@ class LogPrinter:
     This class is an adapter, means you can create a LogPrinter from every
     existing Printer instance.
     """
+
     def __init__(self,
                  printer,
                  log_level=LOG_LEVEL.INFO,

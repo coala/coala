@@ -6,6 +6,7 @@ from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 
 
 class SpacingHelperTest(unittest.TestCase):
+
     def setUp(self):
         self.uut = SpacingHelper()
 

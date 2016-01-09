@@ -6,6 +6,7 @@ from coalib.results.Result import Result
 
 
 class PyImportSortBear(LocalBear):
+
     def run(self, filename, file):
         """
         Sorts imports for python.

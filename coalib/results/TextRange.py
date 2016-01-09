@@ -7,6 +7,7 @@ from coalib.results.TextPosition import TextPosition
 @generate_repr("start", "end")
 @generate_ordering("start", "end")
 class TextRange:
+
     @enforce_signature
     def __init__(self, start: TextPosition, end: (TextPosition, None)=None):
         """

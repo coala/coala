@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('php') is None, 'PHP is not installed')
 class PHPLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = PHPLintBear(self.section, Queue())

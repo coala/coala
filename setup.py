@@ -11,6 +11,7 @@ from coalib.misc import Constants
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):
+
     def run(self):
         self.run_command('build_manpage')
         self.run_command('build_dbus')

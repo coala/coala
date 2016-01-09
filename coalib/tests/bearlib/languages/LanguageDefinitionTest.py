@@ -9,6 +9,7 @@ from coalib.settings.Setting import Setting
 
 
 class LanguageDefinitionTest(unittest.TestCase):
+
     def setUp(self):
         self.section = Section("any")
         self.section.append(Setting("language_family", "C"))

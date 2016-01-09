@@ -15,15 +15,16 @@ except ImportError as err:
 
 @skipIf(skip, message)
 class DbusDocumentTest(unittest.TestCase):
+
     def setUp(self):
         self.config_path = os.path.abspath(
             os.path.join(os.path.dirname(__file__),
-            "dbus_test_files",
-            ".coafile"))
+                         "dbus_test_files",
+                         ".coafile"))
         self.testcode_c_path = os.path.abspath(
             os.path.join(os.path.dirname(__file__),
-            "dbus_test_files",
-            "testcode.c"))
+                         "dbus_test_files",
+                         "testcode.c"))
 
     def test_path(self):
         test_file = "a"

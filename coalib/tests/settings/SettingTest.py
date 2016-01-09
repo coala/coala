@@ -15,6 +15,7 @@ import re
 
 
 class SettingTest(unittest.TestCase):
+
     def test_construction(self):
         self.assertRaises(ValueError, Setting, "", 2, 2)
         self.assertRaises(TypeError, Setting, "", "", "", from_cli=5)

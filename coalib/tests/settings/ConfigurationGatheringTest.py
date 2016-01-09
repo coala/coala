@@ -31,6 +31,7 @@ def make_temp():
 
 
 class ConfigurationGatheringTest(unittest.TestCase):
+
     def setUp(self):
         self.log_printer = LogPrinter(NullPrinter())
 
@@ -61,7 +62,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         self.assertEqual(str(sections["default"]),
                          "Default {config : " + repr(temporary) + ", save : "
-                             "'True', test : '5'}")
+                         "'True', test : '5'}")
 
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (

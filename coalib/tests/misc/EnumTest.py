@@ -6,6 +6,7 @@ import unittest
 
 
 class ProcessTest(unittest.TestCase):
+
     def setUp(self):
         self.uut = enum("ZERO", "ONE", "TWO", THREE="val")
 

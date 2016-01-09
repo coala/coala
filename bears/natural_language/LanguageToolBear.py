@@ -31,6 +31,7 @@ def get_language_tool_results(filename, file_contents, locale):
 
 
 class LanguageToolBear(LocalBear):
+
     def run(self,
             filename,
             file,

@@ -13,6 +13,7 @@ from coalib.results.TextRange import TextRange
 
 
 class DocumentationExtractionTest(unittest.TestCase):
+
     def test_extract_documentation_invalid_input(self):
         with self.assertRaises(FileNotFoundError):
             tuple(extract_documentation("", "PYTHON", "INVALID"))
@@ -214,7 +215,7 @@ class DocumentationExtractionTest(unittest.TestCase):
         self.assertEqual(
             list(extract_documentation(data, "PYTHON3", "doxygen")),
             [DocumentationComment(" documentation in single line without "
-                                      "return at end.",
+                                  "return at end.",
                                   docstyle_PYTHON3_doxygen.markers[1],
                                   TextRange.from_values(1, 1, 1, 55))])
 

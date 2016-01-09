@@ -30,6 +30,7 @@ def test_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
 
 
 class ManPageFormatterTest(unittest.TestCase):
+
     def test_format_functions(self):
         uut = ManPageFormatter(app_name)
         self.assertEqual(ManPageFormatter._markup("a-b"), "a\\-b")
@@ -64,7 +65,7 @@ class ManPageFormatterTest(unittest.TestCase):
                                parser=test_arg_parser(),
                                long_desc=app_long_description)
         self.assertEqual(uut._mk_description(),
-            ".SH DESCRIPTION\n{}\n".format(app_long_description))
+                         ".SH DESCRIPTION\n{}\n".format(app_long_description))
 
     def test_mk_options(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
@@ -111,6 +112,7 @@ class ManPageFormatterTest(unittest.TestCase):
 
 
 class BuildManPageTest(unittest.TestCase):
+
     def test_finalize_options(self):
         dist = Distribution()
         uut = BuildManPage(dist)
@@ -128,7 +130,7 @@ class BuildManPageTest(unittest.TestCase):
 
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(result,
-""".TH {0} 1 {1}
+                         """.TH {0} 1 {1}
 .SH NAME
 {0}
 .SH SYNOPSIS

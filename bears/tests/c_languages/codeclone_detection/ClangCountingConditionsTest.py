@@ -12,6 +12,7 @@ from bears.tests.c_languages import skip_if_no_clang
 
 @skip_if_no_clang()
 class ClangCountingConditionsTest(unittest.TestCase):
+
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
             os.path.dirname(__file__),

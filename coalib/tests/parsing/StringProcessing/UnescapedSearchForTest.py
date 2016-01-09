@@ -129,7 +129,7 @@ class UnescapedSearchForTest(StringProcessingTestBase):
              for max_match in [1, 2, 3, 4, 5, 6, 987, 1122334455]
              for test_string, result in zip(
                  self.test_strings,
-                 [elem[0 : max_match] for elem in expected_master_results])},
+                 [elem[0: max_match] for elem in expected_master_results])},
             self.list_zero_group)
 
     # Test unescaped_search_for() for its max_match parameter with matches
@@ -161,7 +161,7 @@ class UnescapedSearchForTest(StringProcessingTestBase):
              for max_match in [1, 2, 3, 4, 5, 6, 100]
              for test_string, result in zip(
                  self.test_strings,
-                 [elem[0 : max_match] for elem in expected_master_results])
+                 [elem[0: max_match] for elem in expected_master_results])
              for use_regex in [True, False]},
             self.list_zero_group)
 
@@ -198,4 +198,3 @@ class UnescapedSearchForTest(StringProcessingTestBase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-

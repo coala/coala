@@ -16,6 +16,7 @@ except ImportError as err:
 
 @skipIf(skip, message)
 class DbusServerTest(unittest.TestCase):
+
     def setUp(self):
         self.session_bus = dbus.SessionBus(
             mainloop=dbus.mainloop.NULL_MAIN_LOOP)

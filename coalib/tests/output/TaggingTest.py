@@ -10,6 +10,7 @@ from coalib.output.Tagging import (get_tag_path,
 
 
 class TaggingTest(unittest.TestCase):
+
     def test_get_tag_path(self):
         self.assertEqual(get_tag_path("a", "b"), get_tag_path("a", "b"))
         self.assertNotEqual(get_tag_path("a", "b"), get_tag_path("a", "c"))

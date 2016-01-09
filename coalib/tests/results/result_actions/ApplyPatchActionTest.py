@@ -11,6 +11,7 @@ from coalib.settings.Section import Section
 
 
 class ApplyPatchActionTest(unittest.TestCase):
+
     def test_apply(self):
         uut = ApplyPatchAction()
         fh_a, f_a = mkstemp()
@@ -84,7 +85,6 @@ class ApplyPatchActionTest(unittest.TestCase):
         # Applying the same diff twice will result in a conflict
         self.assertFalse(
             ApplyPatchAction.is_applicable(conflict_result, {}, {'f': diff}))
-
 
     def test_is_applicable_empty_patch(self):
         empty_patch_result = Result("", "", diffs={})

@@ -4,6 +4,7 @@ from coalib.results.Result import Result
 
 
 class LineCountBear(LocalBear):
+
     def run(self, filename, file, *args):
         '''
         Counts the lines of each file.

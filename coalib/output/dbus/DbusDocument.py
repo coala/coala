@@ -164,7 +164,7 @@ class DbusDocument(dbus.service.Object):
 
                 # Loop over every result for a file
                 results_for_section += [result.to_string_dict()
-                    for result in filter(
+                                        for result in filter(
                         lambda x: not isinstance(x, HiddenResult),
                         value)]
 

@@ -11,6 +11,7 @@ from coalib.settings.Section import Section
 
 
 class SpaceConsistencyBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = SpaceConsistencyBear(self.section, Queue())

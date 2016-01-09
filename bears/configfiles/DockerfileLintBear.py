@@ -5,6 +5,7 @@ from coalib.bears.LocalBear import LocalBear
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
 
+
 class DockerfileLintBear(LocalBear, Lint):
     executable = 'dockerfile_lint'
     arguments = '--json -f'

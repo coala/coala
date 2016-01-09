@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('ruby') is None, 'Ruby is not installed')
 class RubyLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = RubyLintBear(self.section, Queue())

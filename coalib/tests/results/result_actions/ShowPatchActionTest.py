@@ -10,6 +10,7 @@ from coalib.results.Diff import Diff
 
 
 class ShowPatchActionTest(unittest.TestCase):
+
     def setUp(self):
         self.uut = ShowPatchAction()
         self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}

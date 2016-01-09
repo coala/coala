@@ -16,6 +16,7 @@ GUI_EDITORS = ["kate", "gedit", "subl", "atom"]
 
 
 class OpenEditorAction(ApplyPatchAction):
+
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
         return isinstance(result, Result) and len(result.affected_code) > 0

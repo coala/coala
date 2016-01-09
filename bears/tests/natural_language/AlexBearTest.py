@@ -13,6 +13,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('alex') is None, 'Alex is not installed')
 class AlexBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = AlexBear(self.section, Queue())

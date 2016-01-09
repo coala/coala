@@ -11,10 +11,12 @@ from coalib.collecting.Collectors import (collect_files,
 
 
 class CollectFilesTest(unittest.TestCase):
+
     def setUp(self):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
+
     def test_file_empty(self):
         self.assertRaises(TypeError, collect_files)
 
@@ -60,6 +62,7 @@ class CollectFilesTest(unittest.TestCase):
 
 
 class CollectDirsTest(unittest.TestCase):
+
     def setUp(self):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
@@ -132,6 +135,7 @@ class CollectDirsTest(unittest.TestCase):
 
 
 class CollectBearsTest(unittest.TestCase):
+
     def setUp(self):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,

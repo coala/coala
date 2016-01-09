@@ -6,6 +6,7 @@ import unittest
 
 
 class LineParserTest(unittest.TestCase):
+
     def setUp(self):
         self.uut = LineParser(comment_seperators=('#', ';'))
 

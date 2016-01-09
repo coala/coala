@@ -7,6 +7,7 @@ class DbusApp:
     """
     Stores data about each client that connects to the DbusServer
     """
+
     def __init__(self, app_id, name=""):
         self.app_id = app_id
         self.name = name

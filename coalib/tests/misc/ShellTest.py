@@ -7,6 +7,7 @@ from coalib.misc.Shell import escape_path_argument
 
 class ShellTest(unittest.TestCase):
     # Tests the function that makes a path shell-argument-ready.
+
     def test_escape_path_argument(self):
         osname = "Linux"
         self.assertEqual(

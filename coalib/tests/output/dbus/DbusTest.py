@@ -36,7 +36,8 @@ def create_mainloop():
     # Bus will be closed.
     dbus_name = dbus.service.BusName("org.coala_analyzer.v1.test", session_bus)
     dbus_server = DbusServer(session_bus, "/org/coala_analyzer/v1/test",
-        on_disconnected=lambda: GLib.idle_add(lambda: sys.exit(0)))
+                             on_disconnected=lambda: GLib.idle_add(
+                                     lambda: sys.exit(0)))
 
     mainloop = GLib.MainLoop()
     mainloop.run()
@@ -44,15 +45,16 @@ def create_mainloop():
 
 @skipIf(skip, message)
 class DbusTest(unittest.TestCase):
+
     def setUp(self):
         self.config_path = os.path.abspath(
             os.path.join(os.path.dirname(__file__),
-            "dbus_test_files",
-            ".coafile"))
+                         "dbus_test_files",
+                         ".coafile"))
         self.testcode_c_path = os.path.abspath(
             os.path.join(os.path.dirname(__file__),
-            "dbus_test_files",
-            "testcode.c"))
+                         "dbus_test_files",
+                         "testcode.c"))
 
         self.subprocess = make_test_server()
         trials_left = 10

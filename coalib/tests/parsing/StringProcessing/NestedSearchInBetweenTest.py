@@ -79,7 +79,7 @@ class NestedSearchInBetweenTest(StringProcessingTestBase):
         self.assertResultsEqual(
             nested_search_in_between,
             {(r"(?:)\(", r"\)(?:)", test_string, 0, False, True):
-                 [InBetweenMatch.from_values(*args) for args in result]
+             [InBetweenMatch.from_values(*args) for args in result]
              for test_string, result in zip(
                  self.search_in_between_test_strings,
                  self.test_basic_expected_results)},
@@ -135,4 +135,3 @@ class NestedSearchInBetweenTest(StringProcessingTestBase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-
