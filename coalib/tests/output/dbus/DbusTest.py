@@ -36,8 +36,7 @@ def create_mainloop():
     # Bus will be closed.
     dbus_name = dbus.service.BusName("org.coala_analyzer.v1.test", session_bus)
     dbus_server = DbusServer(session_bus, "/org/coala_analyzer/v1/test",
-                             on_disconnected=lambda: GLib.idle_add(
-                                     lambda: sys.exit(0)))
+                             on_disconnected=lambda: GLib.idle_add(sys.exit))
 
     mainloop = GLib.MainLoop()
     mainloop.run()
