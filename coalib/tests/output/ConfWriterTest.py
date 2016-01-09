@@ -11,17 +11,17 @@ import tempfile
 
 class ConfWriterTest(unittest.TestCase):
     example_file = ("to be ignored \n"
-    "    save=true\n"
-    "    a_default, another = val \n"
-    "    TEST = tobeignored  # do you know that thats a comment \n"
-    "    test = push \n"
-    "    t = \n"
-    "    [MakeFiles] \n"
-    "     j  , ANother = a \n"
-    "                   multiline \n"
-    "                   value \n"
-    "    ; just a omment \n"
-    "    ; just a omment \n")
+                    "    save=true\n"
+                    "    a_default, another = val \n"
+                    "    TEST = tobeignored  # thats a comment \n"
+                    "    test = push \n"
+                    "    t = \n"
+                    "    [MakeFiles] \n"
+                    "     j  , ANother = a \n"
+                    "                   multiline \n"
+                    "                   value \n"
+                    "    ; just a omment \n"
+                    "    ; just a omment \n")
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
@@ -45,7 +45,7 @@ class ConfWriterTest(unittest.TestCase):
         result_file = ["[Default]\n",
                        "save = true\n",
                        "a_default, another = val\n",
-                       "# do you know that thats a comment\n",
+                       "# thats a comment\n",
                        "test = push\n",
                        "t = \n",
                        "\n",

@@ -10,6 +10,7 @@ from coalib.settings.Setting import Setting
 
 
 class PEP8BearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section('name')
         self.section.append(Setting('max_line_length', '80'))

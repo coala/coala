@@ -10,6 +10,7 @@ from bears.general.LineCountBear import LineCountBear
 
 
 class LineCountBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.uut = LineCountBear(Section("name"), Queue())
 

@@ -9,6 +9,7 @@ from coalib.settings.Section import Section
 
 
 class PyUnusedCodeBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.uut = PyUnusedCodeBear(Section('name'), Queue())
 

@@ -10,6 +10,7 @@ class ListLogPrinter(Printer, LogPrinter):
     A ListLogPrinter is a log printer which collects all LogMessages to a list
     so that the logs can be used at a later time.
     """
+
     def __init__(self,
                  log_level=LOG_LEVEL.WARNING,
                  timestamp_format="%X"):

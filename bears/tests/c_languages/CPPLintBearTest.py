@@ -14,6 +14,7 @@ from coalib.settings.Setting import Setting
 
 @skipIf(which('cpplint') is None, 'cpplint is not installed')
 class CPPLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = CPPLintBear(self.section, Queue())

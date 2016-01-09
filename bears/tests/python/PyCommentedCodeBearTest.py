@@ -9,6 +9,7 @@ from coalib.settings.Section import Section
 
 
 class PyCommentedCodeBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.uut = PyCommentedCodeBear(Section('name'), Queue())
 

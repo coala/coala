@@ -9,6 +9,7 @@ from coalib.settings.Section import Section
 
 
 class ResultAction:
+
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
         """

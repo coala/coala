@@ -8,6 +8,7 @@ from coalib.misc import Constants
 
 
 class SectionTest(unittest.TestCase):
+
     def test_construction(self):
         uut = Section(Constants.COMPLEX_TEST_STRING, None)
         uut = Section(Constants.COMPLEX_TEST_STRING, uut)

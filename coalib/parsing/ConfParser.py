@@ -8,6 +8,7 @@ from coalib.settings.Section import Section
 
 
 class ConfParser:
+
     def __init__(self,
                  key_value_delimiters=('=',),
                  comment_seperators=('#',),
@@ -113,8 +114,9 @@ class ConfParser:
                         Setting(key,
                                 value,
                                 origin,
+                                # Ignore PEP8Bear, it fails to format that
                                 remove_empty_iter_elements=
-                                    self.__remove_empty_iter_elements),
+                                self.__remove_empty_iter_elements),
                         allow_appending=(keys == []))
                 else:
                     self.get_section(
@@ -123,8 +125,9 @@ class ConfParser:
                             Setting(key,
                                     value,
                                     origin,
+                                    # Ignore PEP8Bear, it fails to format that
                                     remove_empty_iter_elements=
-                                        self.__remove_empty_iter_elements),
+                                    self.__remove_empty_iter_elements),
                             allow_appending=(keys == []))
 
     def __init_sections(self):

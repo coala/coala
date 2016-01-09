@@ -8,6 +8,7 @@ class LogPrinterThread(threading.Thread):
     its message_queue. Setting obj.running = False will stop within the next
     0.1 seconds.
     """
+
     def __init__(self, message_queue, log_printer):
         threading.Thread.__init__(self)
         self.running = True

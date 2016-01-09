@@ -14,6 +14,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('pylint') is None, 'PyLint is not installed')
 class PyLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = PyLintBear(self.section, Queue())

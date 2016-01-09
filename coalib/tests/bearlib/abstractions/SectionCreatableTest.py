@@ -7,6 +7,7 @@ from coalib.settings.Section import Section, Setting
 
 
 class TestObject(SectionCreatable):
+
     def __init__(self,
                  setting_one: int,
                  raw_setting,
@@ -28,6 +29,7 @@ class TestObject(SectionCreatable):
 
 
 class SectionCreatableTest(unittest.TestCase):
+
     def test_api(self):
         uut = SectionCreatable()
         self.assertEqual(uut.get_non_optional_settings(), {})

@@ -3,6 +3,7 @@ from distutils.errors import DistutilsOptionError
 
 from coalib.misc import Constants
 
+
 class BuildDbusService(Command):
     """
     Add a `build_dbus` command  to your setup.py.
@@ -46,4 +47,3 @@ class BuildDbusService(Command):
 
         with open(self.output, 'w') as f:
             f.write(dbus_service)
-

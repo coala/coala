@@ -4,6 +4,7 @@ from coalib.settings.Section import Section
 
 
 class TestBear(Bear):
+
     def __init__(self):
         Bear.__init__(self, Section("settings"), multiprocessing.Queue())
 
@@ -16,6 +17,7 @@ class TestBear(Bear):
 
 
 class NoKind():
+
     def __init__(self):
         pass
 

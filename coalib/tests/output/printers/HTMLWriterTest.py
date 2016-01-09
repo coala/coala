@@ -8,6 +8,7 @@ from coalib.output.printers.HTMLWriter import HTMLWriter
 
 
 class HTMLWriterTest(unittest.TestCase):
+
     def setUp(self):
         handle, self.filename = tempfile.mkstemp()
         os.close(handle)  # We don't need the handle provided by mkstemp

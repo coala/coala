@@ -7,6 +7,7 @@ import argparse
 
 
 class CliParserTest(unittest.TestCase):
+
     def setUp(self):
         self.test_arg_parser = argparse.ArgumentParser()
         self.test_arg_parser.add_argument('-t', nargs='+', dest='test')

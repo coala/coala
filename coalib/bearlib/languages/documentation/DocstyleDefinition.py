@@ -137,7 +137,7 @@ class DocstyleDefinition:
 
         marker_sets = (tuple(value)
                        for key, value in
-                           filter(lambda kv: not kv[0].startswith("comment"),
-                                  docstyle_settings.contents.items()))
+                       filter(lambda kv: not kv[0].startswith("comment"),
+                              docstyle_settings.contents.items()))
 
         return cls(language, docstyle, marker_sets)

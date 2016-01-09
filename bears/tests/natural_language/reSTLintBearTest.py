@@ -9,6 +9,7 @@ from coalib.settings.Section import Section
 
 
 class reSTLintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.uut = reSTLintBear(Section('name'), Queue())
 

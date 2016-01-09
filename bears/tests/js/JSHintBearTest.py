@@ -14,6 +14,7 @@ from coalib.settings.Section import Section
 
 @skipIf(which('jshint') is None, 'JSHint is not installed')
 class JSHintBearTest(LocalBearTestHelper):
+
     def setUp(self):
         self.section = Section("test section")
         self.uut = JSHintBear(self.section, Queue())

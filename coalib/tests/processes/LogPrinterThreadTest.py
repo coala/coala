@@ -9,13 +9,16 @@ from coalib.misc.ContextManagers import retrieve_stdout
 
 
 class TestPrinter(LogPrinter):
+
     def __init__(self):
         LogPrinter.__init__(self, self)
 
     def log_message(self, log_message, timestamp=None, **kwargs):
         print(log_message)
 
+
 class LogPrinterThreadTest(unittest.TestCase):
+
     def test_run(self):
         log_printer = TestPrinter()
         log_queue = queue.Queue()

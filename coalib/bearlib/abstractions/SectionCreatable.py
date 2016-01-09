@@ -28,6 +28,7 @@ class SectionCreatable:
     If you write a documentation comment, you can use :param to add
     descriptions to your parameters. These will be available too automatically.
     """
+
     def __init__(self):
         pass  # Method needs to be available
 

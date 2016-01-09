@@ -194,8 +194,8 @@ def run_local_bear(message_queue,
         return None
 
     kwargs = {"dependency_results":
-                  get_local_dependency_results(local_result_list,
-                                               bear_instance)}
+              get_local_dependency_results(local_result_list,
+                                           bear_instance)}
     return run_bear(message_queue,
                     timeout,
                     bear_instance,

@@ -41,6 +41,7 @@ p.terminate()
 
 
 class DummyProcess(multiprocessing.Process):
+
     def __init__(self, control_queue):
         multiprocessing.Process.__init__(self)
         self.control_queue = control_queue
@@ -50,6 +51,7 @@ class DummyProcess(multiprocessing.Process):
 
 
 class ProcessingTestLogPrinter(LogPrinter):
+
     def __init__(self, log_queue):
         LogPrinter.__init__(self, self)
         self.log_queue = log_queue
@@ -60,6 +62,7 @@ class ProcessingTestLogPrinter(LogPrinter):
 
 
 class ProcessingTest(unittest.TestCase):
+
     def setUp(self):
         config_path = os.path.abspath(os.path.join(
             os.path.dirname(__file__),
@@ -160,9 +163,9 @@ class ProcessingTest(unittest.TestCase):
                                           file="f",
                                           line=1)
         third_local = Result.from_values("ABear",
-                                          "The second result.",
-                                          file="f",
-                                          line=4)
+                                         "The second result.",
+                                         file="f",
+                                         line=4)
         fourth_local = Result.from_values("ABear",
                                           "Another result.",
                                           file="f",
@@ -242,8 +245,10 @@ class ProcessingTest(unittest.TestCase):
     def test_filter_raising_callables(self):
         class A(Exception):
             pass
+
         class B(Exception):
             pass
+
         class C(Exception):
             pass
 
@@ -272,6 +277,7 @@ class ProcessingTest(unittest.TestCase):
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):
+
     def setUp(self):
         self.section = Section("X")
 
@@ -302,6 +308,7 @@ class ProcessingTest_GetDefaultActions(unittest.TestCase):
 
 
 class ProcessingTest_AutoapplyActions(unittest.TestCase):
+
     def setUp(self):
         self.log_queue = queue.Queue()
         self.log_printer = ProcessingTestLogPrinter(self.log_queue)
@@ -331,7 +338,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         self.assertEqual(ret, self.results)
         self.assertEqual(self.log_queue.get().message,
                          "Selected default action 'nonSENSE_action' for bear "
-                             "'XBear' does not exist. Ignoring action.")
+                         "'XBear' does not exist. Ignoring action.")
         self.assertTrue(self.log_queue.empty())
 
     def test_without_default_action_and_unapplicable(self):
@@ -351,7 +358,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         self.assertEqual(ret, self.results)
         self.assertEqual(self.log_queue.get().message,
                          "Selected default action 'ApplyPatchAction' for bear "
-                             "'YBear' is not applicable. Action not applied.")
+                         "'YBear' is not applicable. Action not applied.")
         self.assertTrue(self.log_queue.empty())
 
         ApplyPatchAction.is_applicable = old_is_applicable
@@ -359,7 +366,9 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
     def test_applicable_action(self):
         # Use a result whose action can be successfully applied.
         log_printer = self.log_printer
+
         class TestAction(ResultAction):
+
             def apply(self, *args, **kwargs):
                 log_printer.debug("ACTION APPLIED SUCCESSFULLY.")
 
@@ -382,6 +391,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
 
     def test_failing_action(self):
         class FailingTestAction(ResultAction):
+
             def apply(self, *args, **kwargs):
                 raise RuntimeError("YEAH THAT'S A FAILING BEAR")
 
@@ -407,6 +417,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
 
 
 class ProcessingTest_PrintResult(unittest.TestCase):
+
     def setUp(self):
         self.section = Section('name')
         self.log_printer = LogPrinter(ConsolePrinter(), log_level=0)
@@ -429,7 +440,7 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         # Override and verify that result is unprocessed, i.e. not gone
         self.section.append(Setting('autoapply', 'false'))
         retval, newres = print_result(results, {}, 0, lambda *args: None,
-                                       self.section, self.log_printer, {}, [])
+                                      self.section, self.log_printer, {}, [])
         self.assertNotEqual(newres, [])
 
 

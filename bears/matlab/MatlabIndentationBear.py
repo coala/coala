@@ -7,6 +7,7 @@ from coalib.results.Diff import Diff
 
 
 class MatlabIndentationBear(LocalBear):
+
     def run(self, filename, file, tab_width: int=2):
         """
         This bear features a simple algorithm to calculate the right

@@ -10,6 +10,7 @@ from coalib.output.JSONEncoder import JSONEncoder
 
 
 class DiffTest(unittest.TestCase):
+
     def setUp(self):
         self.file = ["1", "2", "3", "4"]
         self.uut = Diff(self.file)
@@ -45,7 +46,7 @@ class DiffTest(unittest.TestCase):
 
         self.uut.add_lines(0, ["test"])
         affected_code = [
-            SourceRange.from_values("file", start_line=1),]
+            SourceRange.from_values("file", start_line=1)]
         self.assertEqual(self.uut.affected_code("file"), affected_code)
 
         self.uut.delete_line(2)

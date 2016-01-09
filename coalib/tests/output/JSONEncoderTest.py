@@ -8,17 +8,20 @@ from coalib.output.JSONEncoder import JSONEncoder
 
 
 class TestClass1(object):
+
     def __init__(self):
         self.a = 0
 
 
 class TestClass2(object):
+
     def __init__(self):
         self.a = 0
         self.b = TestClass1()
 
 
 class TestClass3(object):
+
     def __init__(self):
         self.a = 0
         self.b = TestClass1()
@@ -33,6 +36,7 @@ class TestClass3(object):
 
 
 class PropertiedClass(object):
+
     def __init__(self):
         self._a = 5
 
@@ -42,6 +46,7 @@ class PropertiedClass(object):
 
 
 class JSONAbleClass(object):
+
     @staticmethod
     def __json__():
         return ['dont', 'panic']

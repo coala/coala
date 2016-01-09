@@ -6,6 +6,7 @@ from coalib.parsing.ConfParser import ConfParser
 
 
 class LanguageDefinition(SectionCreatable):
+
     def __init__(self, language_family: str, language: str):
         """
         Creates a new LanguageDefinition object from file.

@@ -9,6 +9,7 @@ from coalib.results.SourceRange import SourceRange
 
 
 class ResultFilterTest(unittest.TestCase):
+
     def setUp(self):
         self.maxDiff = None
         result_filter_test_dir = os.path.join(os.path.split(__file__)[0],
@@ -335,20 +336,20 @@ class ResultFilterTest(unittest.TestCase):
                            res1_with_addition,    # correctly kept
                            res1_whole_addition]   # correctly kept
 
-        unique_new_result_list = [res1_pre_change,      # WRONG: line-wise diff
-                                  res1_change,          # correct
-                                  res1_post_change,     # WRONG: line-wise diff
-                                  res1_around_change,   # WRONG: line-wise diff
-                                  res1_with_change,     # correct
-                                  res1_whole_change,    # correct
+        unique_new_result_list = [res1_pre_change,       # WRONG: line-wise diff
+                                  res1_change,           # correct
+                                  res1_post_change,      # WRONG: line-wise diff
+                                  res1_around_change,    # WRONG: line-wise diff
+                                  res1_with_change,      # correct
+                                  res1_whole_change,     # correct
 
-                                  res1_post_remove,     # WRONG: line-wise diff
-                                  res1_whole_remove,    # correct
+                                  res1_post_remove,      # WRONG: line-wise diff
+                                  res1_whole_remove,     # correct
 
-                                  res1_addition,        # correct
-                                  res1_around_addition, # WRONG: line-wise diff
-                                  res1_with_addition,   # correct
-                                  res1_whole_addition]  # correct
+                                  res1_addition,         # correct
+                                  res1_around_addition,  # WRONG: line-wise diff
+                                  res1_with_addition,    # correct
+                                  res1_whole_addition]   # correct
 
         with open(self.original_file_name, "r") as original_file:
             original_file_dict = {

@@ -86,6 +86,7 @@ class BuildManPage(Command):
 
 
 class ManPageFormatter(argparse.HelpFormatter):
+
     def __init__(self,
                  prog,
                  indent_increment=2,
@@ -167,7 +168,7 @@ class ManPageFormatter(argparse.HelpFormatter):
 
         usage = usage.replace('%s ' % self._prog, '')
         usage = ('.SH SYNOPSIS\n \\fB%s\\fR %s\n'
-            % (ManPageFormatter._markup(self._prog), usage))
+                 % (ManPageFormatter._markup(self._prog), usage))
         return usage
 
     def _mk_description(self):

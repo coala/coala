@@ -6,6 +6,7 @@ import unittest
 
 
 class LineDiffTest(unittest.TestCase):
+
     def test_everything(self):
         self.assertRaises(TypeError, LineDiff, delete=5)
         self.assertRaises(TypeError, LineDiff, change=5)

@@ -4,6 +4,7 @@ from coalib.results.TextRange import TextRange
 
 
 class SourceRange(TextRange):
+
     @enforce_signature
     def __init__(self,
                  start: SourcePosition,

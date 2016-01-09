@@ -125,6 +125,7 @@ def simulate_console_inputs(*inputs):
                         more provided.
     """
     class InputGenerator:
+
         def __init__(self, inputs):
             self.last_input = -1
             self.inputs = inputs

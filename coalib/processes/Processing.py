@@ -187,9 +187,9 @@ def print_result(results,
     min_severity_str = str(section.get('min_severity', 'INFO')).upper()
     min_severity = RESULT_SEVERITY.str_dict.get(min_severity_str, 'INFO')
     results = list(filter(lambda result:
-                              type(result) is Result and
-                              result.severity >= min_severity and
-                              not result.to_ignore(ignore_ranges),
+                          type(result) is Result and
+                          result.severity >= min_severity and
+                          not result.to_ignore(ignore_ranges),
                           results))
     retval = retval or len(results) > 0
 

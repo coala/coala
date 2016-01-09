@@ -5,6 +5,7 @@ from coalib.results.Diff import ConflictError
 
 
 class ApplyPatchAction(ResultAction):
+
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
         if not result.diffs:

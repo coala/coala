@@ -4,6 +4,7 @@ from coalib.settings.Section import Section
 
 
 class ConfWriter(ClosableObject):
+
     def __init__(self,
                  file_name,
                  key_value_delimiter='=',
@@ -48,7 +49,7 @@ class ConfWriter(ClosableObject):
                 setting = section[next(section_iter)]
                 if (str(setting) == val and
                     not self.is_comment(setting.key) and
-                   (
+                    (
                         (setting.key not in self.__unsavable_keys) or
                         (not setting.from_cli))):
                     keys.append(setting.key)

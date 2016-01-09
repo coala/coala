@@ -1,4 +1,5 @@
 class CircularDependencyError(Exception):
+
     @classmethod
     def for_bears(cls, bears):
         """

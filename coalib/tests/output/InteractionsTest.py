@@ -8,6 +8,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 
 
 class InteractionsTest(unittest.TestCase):
+
     def test_(self):
         log_printer = LogPrinter(NullPrinter())
         self.assertRaises(TypeError, fail_acquire_settings, log_printer, None)

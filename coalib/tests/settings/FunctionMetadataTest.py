@@ -8,6 +8,7 @@ from coalib.settings.Setting import Setting
 
 
 class TestClass:
+
     def __init__(self, param1, param2, param3=5, param4: int=6):
         """
         Description
@@ -25,6 +26,7 @@ class TestClass:
 
 
 class FunctionMetadataTest(unittest.TestCase):
+
     def test_construction(self):
         self.check_function_metadata_data_set(FunctionMetadata("name"), "name")
 
@@ -90,7 +92,6 @@ class FunctionMetadataTest(unittest.TestCase):
         section.append(Setting("a_param", "5"))
         params = uut.create_params_from_section(section)
         self.assertEqual(params['a_param'], 5)
-
 
     def check_function_metadata_data_set(self,
                                          metadata,

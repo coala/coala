@@ -9,6 +9,7 @@ from coalib.parsing.StringProcessing import escape
 
 class EscapeTest(StringProcessingTestBase):
     # Test escape() using a single character to escape and default parameters.
+
     def test_normal_behaviour(self):
         expected_results = [
             r"out1 \'escaped-escape:        \\ \' out2",
@@ -126,4 +127,3 @@ class EscapeTest(StringProcessingTestBase):
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-

@@ -44,6 +44,7 @@ class TestFiles:
 
 
 class GlobbingHelperFunctionsTest(unittest.TestCase):
+
     def test_positions(self):
         # pattern: [bracketed values]
         pattern_positions_dict = {
@@ -105,6 +106,7 @@ class GlobbingHelperFunctionsTest(unittest.TestCase):
 
 
 class FnmatchTest(unittest.TestCase):
+
     def _test_fnmatch(self, pattern, matches, non_matches):
         for match in matches:
             self.assertTrue(fnmatch(match, pattern))
@@ -173,6 +175,7 @@ class FnmatchTest(unittest.TestCase):
 
 
 class GlobTest(unittest.TestCase):
+
     def setUp(self):
         self.maxDiff = None
 

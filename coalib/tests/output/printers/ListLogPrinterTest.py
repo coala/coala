@@ -9,6 +9,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
 class ListLogPrinterTest(unittest.TestCase):
+
     def test_logging(self):
         uut = ListLogPrinter()
         ts = datetime.today()

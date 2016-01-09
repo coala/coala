@@ -88,7 +88,7 @@ class SearchInBetweenTest(StringProcessingTestBase):
              for max_match in [1, 2, 3, 4, 5, 100]
              for test_string, result in zip(
                  self.test_strings,
-                 [elem[0 : max_match] for elem in expected_master_results])
+                 [elem[0: max_match] for elem in expected_master_results])
              for use_regex in [True, False]},
             list)
 
@@ -174,7 +174,8 @@ class SearchInBetweenTest(StringProcessingTestBase):
               search_pattern,
               test_string,
               0,
-              auto_trim, # For remove_empty_matches both works, True and False.
+              # For remove_empty_matches both works, True and False.
+              auto_trim,
               False): [InBetweenMatch.from_values(*args)
                        for args in result]
              for test_string, result in zip(self.test_strings,
@@ -214,13 +215,12 @@ class SearchInBetweenTest(StringProcessingTestBase):
                  self.search_in_between_test_strings,
                  expected_results)
              for use_regex, begin_pattern, end_pattern in
-                 [(True, r"\(", r"\)"),
-                  (False,
-                   self.search_in_between_begin_pattern,
-                   self.search_in_between_end_pattern)]},
+             [(True, r"\(", r"\)"),
+              (False,
+               self.search_in_between_begin_pattern,
+               self.search_in_between_end_pattern)]},
             list)
 
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-

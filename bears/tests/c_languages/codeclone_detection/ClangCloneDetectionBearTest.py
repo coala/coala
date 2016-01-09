@@ -16,6 +16,7 @@ from coalib.settings.Setting import Setting
 
 @generate_skip_decorator(ClangCloneDetectionBear)
 class ClangCloneDetectionBearTest(unittest.TestCase):
+
     def setUp(self):
         self.base_test_path = os.path.abspath(os.path.join(
             os.path.dirname(__file__),

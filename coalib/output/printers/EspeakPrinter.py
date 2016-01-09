@@ -6,6 +6,7 @@ from coalib.misc import Constants
 
 
 class EspeakPrinter(Printer, ClosableObject):
+
     def __init__(self):
         """
         Raises EnvironmentError if VoiceOutput is impossible.

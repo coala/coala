@@ -8,6 +8,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 class LintTest(unittest.TestCase):
+
     def test_process_output(self):
         self.uut = Lint()
         out = list(self.uut.process_output(
@@ -54,7 +55,6 @@ class LintTest(unittest.TestCase):
             "*************\n",
             'a/file.py'))
         self.assertEqual(len(out), 0)
-
 
 
 if __name__ == '__main__':

@@ -42,11 +42,13 @@ STR_PROJECT_WIDE = "Project wide:"
 
 
 class TestAction(ResultAction):
+
     def apply(self, result, original_file_dict, file_diff_dict, param):
         pass
 
 
 class TestBear(Bear):
+
     def run(self, setting1, setting2: int=None):
         """
         Test bear Description.
@@ -58,6 +60,7 @@ class TestBear(Bear):
 
 
 class TestBear2(Bear):
+
     def run(self, setting1):
         """
         Test bear 2 description.
@@ -66,7 +69,9 @@ class TestBear2(Bear):
         """
         return None
 
+
 class SomeBear(Bear):
+
     def run(self):
         """
         Some Description.
@@ -75,6 +80,7 @@ class SomeBear(Bear):
 
 
 class SomeOtherBear(Bear):
+
     def run(self, setting: int=None):
         """
         This is a Bear.
@@ -85,6 +91,7 @@ class SomeOtherBear(Bear):
 
 
 class SomeglobalBear(Bear):
+
     def run(self):
         """
         Some Description.
@@ -93,6 +100,7 @@ class SomeglobalBear(Bear):
 
 
 class ConsoleInteractionTest(unittest.TestCase):
+
     def setUp(self):
         self.log_printer = LogPrinter(ConsolePrinter(print_colored=False))
         self.console_printer = ConsolePrinter(print_colored=False)
@@ -276,7 +284,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
 """,
-                         stdout.getvalue())
+                             stdout.getvalue())
 
         with retrieve_stdout() as stdout:
             print_results(
@@ -362,7 +370,7 @@ some_file
 |    | [NORMAL] ClangCloneDetectionBear:
 |    | Clone Found
 """,
-                         stdout.getvalue())
+                             stdout.getvalue())
 
     def test_print_results_missing_file(self):
         self.log_printer = LogPrinter(NullPrinter())
@@ -531,6 +539,7 @@ some_file
 
 # Own test because this is easy and not tied to the rest
 class PrintFormattedResultsTest(unittest.TestCase):
+
     def setUp(self):
         self.printer = StringPrinter()
         self.logger = LogPrinter(self.printer)

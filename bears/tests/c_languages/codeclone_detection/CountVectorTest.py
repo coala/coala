@@ -7,6 +7,7 @@ from bears.c_languages.codeclone_detection.CountVector import CountVector
 
 
 class CountVectorTest(unittest.TestCase):
+
     def test_simple_creation(self):
         uut = CountVector("varname")
         self.assertEqual(uut.count_vector, [])
@@ -138,7 +139,6 @@ class CountVectorTest(unittest.TestCase):
 
         for elem in count_vector_difference_matrix:
             self.check_difference(*elem, diff_function="maxabs")
-
 
 
 if __name__ == '__main__':
