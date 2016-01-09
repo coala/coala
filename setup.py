@@ -10,6 +10,7 @@ from coalib.output.dbus.BuildDbusService import BuildDbusService
 from coalib.misc import Constants
 
 
+
 class BuildPyCommand(setuptools.command.build_py.build_py):
 
     def run(self):
