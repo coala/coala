@@ -15,7 +15,9 @@ default_actions = PEP8Bear: ApplyPatchAction
 
 [python]
 # Patches may conflict with autopep8 so putting them in own section so they
-# will be executed sequentially
+# will be executed sequentially; also we need the LineLengthBear to double
+# check the line length because PEP8Bear sometimes itn't able to correct the
+# linelength.
 bears = SpaceConsistencyBear, PyUnusedCodeBear, LineLengthBear
 
 default_actions =
