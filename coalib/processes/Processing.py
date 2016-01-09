@@ -200,7 +200,7 @@ def print_result(results,
                                 log_printer)
 
     print_results(log_printer, section, results, file_dict, file_diff_dict)
-    return retval
+    return retval, results
 
 
 def get_file_dict(filename_list, log_printer):
@@ -433,14 +433,15 @@ def process_queues(processes,
                 local_processes -= 1
             elif control_elem == CONTROL_ELEMENT.LOCAL:
                 assert local_processes != 0
-                retval = print_result(local_result_dict[index],
-                                      file_dict,
-                                      retval,
-                                      print_results,
-                                      section,
-                                      log_printer,
-                                      file_diff_dict,
-                                      ignore_ranges)
+                retval, res = print_result(local_result_dict[index],
+                                           file_dict,
+                                           retval,
+                                           print_results,
+                                           section,
+                                           log_printer,
+                                           file_diff_dict,
+                                           ignore_ranges)
+                local_result_dict[index] = res
             elif control_elem == CONTROL_ELEMENT.GLOBAL:
                 global_result_buffer.append(index)
         except queue.Empty:
@@ -448,14 +449,15 @@ def process_queues(processes,
 
     # Flush global result buffer
     for elem in global_result_buffer:
-        retval = print_result(global_result_dict[elem],
-                              file_dict,
-                              retval,
-                              print_results,
-                              section,
-                              log_printer,
-                              file_diff_dict,
-                              ignore_ranges)
+        retval, res = print_result(global_result_dict[elem],
+                                   file_dict,
+                                   retval,
+                                   print_results,
+                                   section,
+                                   log_printer,
+                                   file_diff_dict,
+                                   ignore_ranges)
+        global_result_dict[elem] = res
 
     running_processes = get_running_processes(processes)
     # One process is the logger thread
@@ -464,14 +466,15 @@ def process_queues(processes,
             control_elem, index = control_queue.get(timeout=0.1)
 
             if control_elem == CONTROL_ELEMENT.GLOBAL:
-                retval = print_result(global_result_dict[index],
-                                      file_dict,
-                                      retval,
-                                      print_results,
-                                      section,
-                                      log_printer,
-                                      file_diff_dict,
-                                      ignore_ranges)
+                retval, res = print_result(global_result_dict[index],
+                                           file_dict,
+                                           retval,
+                                           print_results,
+                                           section,
+                                           log_printer,
+                                           file_diff_dict,
+                                           ignore_ranges)
+                global_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                 running_processes = get_running_processes(processes)

@@ -4,7 +4,6 @@ import os
 
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
-from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
 from coalib.bears.BEAR_KIND import BEAR_KIND
@@ -115,8 +114,7 @@ def run_coala(log_printer=None,
                         continue
 
                     for result in value:
-                        if not isinstance(result, HiddenResult):
-                            results_for_section.append(result)
+                        results_for_section.append(result)
 
                 results[section_name] = results_for_section
                 did_nothing = False
