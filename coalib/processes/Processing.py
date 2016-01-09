@@ -193,11 +193,12 @@ def print_result(results,
                           results))
     retval = retval or len(results) > 0
 
-    results = autoapply_actions(results,
-                                file_dict,
-                                file_diff_dict,
-                                section,
-                                log_printer)
+    if bool(section.get('autoapply', 'true')):
+        results = autoapply_actions(results,
+                                    file_dict,
+                                    file_diff_dict,
+                                    section,
+                                    log_printer)
 
     print_results(log_printer, section, results, file_dict, file_diff_dict)
     return retval, results

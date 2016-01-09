@@ -20,7 +20,7 @@ from coalib.processes.Processing import (execute_section,
                                          filter_raising_callables,
                                          ACTIONS,
                                          get_default_actions,
-                                         autoapply_actions)
+                                         autoapply_actions, print_result)
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -404,6 +404,33 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         self.assertTrue(self.log_queue.empty())
 
         ACTIONS.pop()
+
+
+class ProcessingTest_PrintResult(unittest.TestCase):
+    def setUp(self):
+        self.section = Section('name')
+        self.log_printer = LogPrinter(ConsolePrinter(), log_level=0)
+
+    def test_autoapply_override(self):
+        """
+        Tests that the default_actions aren't automatically applied when the
+        autoapply setting overrides that.
+        """
+        self.section.append(Setting('default_actions',
+                                    'somebear: PrintDebugMessageAction'))
+
+        # Verify that it would apply the action, i.e. remove the result
+        results = [5, HiddenResult('origin', []),
+                   Result('somebear', 'message', debug_msg='debug')]
+        retval, newres = print_result(results, {}, 0, lambda *args: None,
+                                      self.section, self.log_printer, {}, [])
+        self.assertEqual(newres, [])
+
+        # Override and verify that result is unprocessed, i.e. not gone
+        self.section.append(Setting('autoapply', 'false'))
+        retval, newres = print_result(results, {}, 0, lambda *args: None,
+                                       self.section, self.log_printer, {}, [])
+        self.assertNotEqual(newres, [])
 
 
 if __name__ == '__main__':
