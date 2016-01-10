@@ -192,7 +192,6 @@ def print_result(results,
                           result.severity >= min_severity and
                           not result.to_ignore(ignore_ranges),
                           results))
-    retval = retval or len(results) > 0
 
     if bool(section.get('autoapply', 'true')):
         results = autoapply_actions(results,
@@ -202,7 +201,7 @@ def print_result(results,
                                     log_printer)
 
     print_results(log_printer, section, results, file_dict, file_diff_dict)
-    return retval, results
+    return retval or len(results) > 0, results
 
 
 def get_file_dict(filename_list, log_printer):
