@@ -404,7 +404,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
                                 {},
                                 self.section,
                                 self.log_printer)
-        self.assertEqual(ret, [self.resultZ])
+        self.assertEqual(ret, self.results)
         self.assertEqual(self.log_queue.get().message,
                          "Failed to execute action 'FailingTestAction'.")
         self.assertIn("YEAH THAT'S A FAILING BEAR",

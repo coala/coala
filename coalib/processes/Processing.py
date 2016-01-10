@@ -147,6 +147,7 @@ def autoapply_actions(results,
                 repr(action.get_metadata().name),
                 repr(result.origin)))
         except Exception as ex:
+            not_processed_results.append(result)
             log_printer.log_exception(
                 "Failed to execute action {}.".format(
                     repr(action.get_metadata().name)),
