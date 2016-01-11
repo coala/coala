@@ -1,4 +1,4 @@
-PyPrint==0.0.2
+PyPrint==0.1.0
 setuptools==19.2
 munkres3==1.0.5.5
 coverage==4.0.3
