@@ -41,9 +41,8 @@ class SpaceConsistencyBear(LocalBear):
                     result_texts.append("No newline at EOF.")
 
             if not allow_trailing_whitespace:
-                pre_replacement = line
                 replacement = replacement.rstrip(" \t\n") + "\n"
-                if replacement != pre_replacement:
+                if replacement != line.rstrip("\n") + "\n":
                     result_texts.append("Trailing whitespaces.")
 
             if use_spaces:
