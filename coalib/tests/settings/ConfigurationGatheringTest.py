@@ -15,21 +15,6 @@ from coalib.settings.ConfigurationGathering import (gather_configuration,
 from coalib.output.printers.LogPrinter import LogPrinter
 
 
-@contextmanager
-def make_temp():
-    """
-    Creates a temporary file with a closed stream and deletes it when done.
-
-    :return: A contextmanager retrieving the file path.
-    """
-    temporary = tempfile.mkstemp()
-    os.close(temporary[0])
-    try:
-        yield temporary[1]
-    finally:
-        os.remove(temporary[1])
-
-
 class ConfigurationGatheringTest(unittest.TestCase):
 
     def setUp(self):
