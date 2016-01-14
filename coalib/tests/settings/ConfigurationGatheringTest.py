@@ -14,6 +14,7 @@ from coalib.settings.ConfigurationGathering import (gather_configuration,
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.ContextManagers import make_temp
 
+
 class ConfigurationGatheringTest(unittest.TestCase):
 
     def setUp(self):
