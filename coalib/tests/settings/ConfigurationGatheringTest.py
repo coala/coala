@@ -3,7 +3,6 @@ import sys
 import re
 import tempfile
 import unittest
-from contextlib import contextmanager
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ClosableObject import close_objects
 
@@ -13,21 +12,7 @@ from coalib.parsing.StringProcessing import escape
 from coalib.settings.ConfigurationGathering import (gather_configuration,
                                                     find_user_config)
 from coalib.output.printers.LogPrinter import LogPrinter
-
-
-@contextmanager
-def make_temp():
-    """
-    Creates a temporary file with a closed stream and deletes it when done.
-
-    :return: A contextmanager retrieving the file path.
-    """
-    temporary = tempfile.mkstemp()
-    os.close(temporary[0])
-    try:
-        yield temporary[1]
-    finally:
-        os.remove(temporary[1])
+from coalib.misc.ContextManagers import make_temp
 
 
 class ConfigurationGatheringTest(unittest.TestCase):
