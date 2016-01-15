@@ -2,7 +2,13 @@
 
 import os
 import tempfile
-from site import getsitepackages
+try:
+    from site import getsitepackages
+except ImportError:
+    # When using virtualenv site package may not include getsitepackages
+    # For more details, see https://github.com/pypa/virtualenv/issues/355
+    def getsitepackages():
+        return []
 
 from coalib import assert_supported_version
 
