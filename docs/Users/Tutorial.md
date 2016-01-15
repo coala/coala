@@ -122,6 +122,7 @@ If you changed one file in multiple results, coala will merge the changes if
 this is possible.
 
 coala should have appended something like this to your `.coafile`:
+
 ```
 [Makefiles]
 bears = LineLengthBear
@@ -133,14 +134,39 @@ possibly different languages in one file. They are executed sequentially.
 
 # Auto-applying results
 
-Often you don't want to look at trivial results like spacing issues, for that
-purpose coala includes a special setting called `default_actions`, where you
-can set the action for a bear that shall be automatically applied on run.
+Often you don't want to look at trivial results like spacing issues. For that
+purpose coala includes a special setting called `default_actions` that allows
+you to set the action for a bear that shall be automatically applied on run.
 
-E.g. to apply a given patch, use the `ApplyPatchAction`:
+Let's automatically fix python code. Take a look at our sample python code:
+
 ```
-bears = SpaceConsistencyBear, KeywordBear
-default_actions = SpaceConsistencyBear: ApplyPatchAction
+$ cat src/add.py
+
+"""
+This is a simple library that provide a function that can add numbers.
+
+Cheers!
+"""
+
+
+
+def add(a,b):
+    return a+b;
+
+import sys
+
+```
+
+That looks horrible, doesn't it? Let's fix it!
+
+```
+$ coala -S python.bears=PEP8Bear python.files=\*\*/\*.py \
+python.default_actions=PEP8Bear:ApplyPatchAction --save
+# other output ...
+Executing section python...
+[INFO][11:03:37] Applied 'ApplyPatchAction' for 'PEP8Bear'.
+[INFO][11:03:37] Applied 'ApplyPatchAction' for 'PEP8Bear'.
 ```
 coala would now fix all spacing issues and without bothering you again.
 
