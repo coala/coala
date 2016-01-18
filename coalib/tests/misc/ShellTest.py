@@ -1,8 +1,10 @@
+import os
 import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.misc.Shell import escape_path_argument
+from coalib.misc.Shell import (escape_path_argument,
+                               run_interactive_shell_command)
 
 
 class ShellTest(unittest.TestCase):
@@ -67,6 +69,30 @@ class ShellTest(unittest.TestCase):
         self.assertEqual(
             escape_path_argument("system|a|b|c?d", osname),
             "system|a|b|c?d")
+
+
+class RunShellCommandTest(unittest.TestCase):
+
+    @staticmethod
+    def construct_testscript_command(scriptname):
+        return " ".join(
+            escape_path_argument(s) for s in (
+                sys.executable,
+                os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             "run_shell_command_testfiles",
+                             scriptname)))
+
+    def test_run_interactive_shell_command(self):
+        command = RunShellCommandTest.construct_testscript_command(
+            "test_interactive_program.py")
+
+        with run_interactive_shell_command(command) as p:
+            self.assertEqual(p.stdout.readline(), "test_program X\n")
+            self.assertEqual(p.stdout.readline(), "Type in a number:\n")
+            p.stdin.write("33\n")
+            p.stdin.flush()
+            self.assertEqual(p.stdout.readline(), "33\n")
+            self.assertEqual(p.stdout.readline(), "Exiting program.\n")
 
 
 if __name__ == '__main__':

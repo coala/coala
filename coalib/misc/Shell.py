@@ -1,4 +1,6 @@
+from contextlib import contextmanager
 import platform
+from subprocess import Popen, PIPE
 
 from coalib.parsing.StringProcessing import escape
 
@@ -24,3 +26,32 @@ def escape_path_argument(path, os=platform.system()):
     else:
         # Any other non-supported system doesn't get a path escape.
         return path
+
+
+@contextmanager
+def run_interactive_shell_command(command):
+    """
+    Runs a command in shell and provides stdout, stderr and stdin streams.
+
+    This function creates a context manager that sets up the process, returns
+    to caller, closes streams and waits for process to exit on leaving.
+
+    The process is opened in `universal_newlines` mode.
+
+    :param command: The command to run on shell.
+    :return:        A context manager yielding the process started from the
+                    command.
+    """
+    process = Popen(command,
+                    shell=True,
+                    stdout=PIPE,
+                    stderr=PIPE,
+                    stdin=PIPE,
+                    universal_newlines=True)
+    try:
+        yield process
+    finally:
+        process.stdout.close()
+        process.stderr.close()
+        process.stdin.close()
+        process.wait()
