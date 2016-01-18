@@ -4,7 +4,8 @@ import unittest
 
 sys.path.insert(0, ".")
 from coalib.misc.Shell import (escape_path_argument,
-                               run_interactive_shell_command)
+                               run_interactive_shell_command,
+                               run_shell_command)
 
 
 class ShellTest(unittest.TestCase):
@@ -93,6 +94,32 @@ class RunShellCommandTest(unittest.TestCase):
             p.stdin.flush()
             self.assertEqual(p.stdout.readline(), "33\n")
             self.assertEqual(p.stdout.readline(), "Exiting program.\n")
+
+    def test_run_shell_command_without_stdin(self):
+        command = RunShellCommandTest.construct_testscript_command(
+            "test_program.py")
+
+        stdout, stderr = run_shell_command(command)
+
+        expected = ("test_program Z\n"
+                    "non-interactive mode.\n"
+                    "Exiting...\n")
+        self.assertEqual(stdout, expected)
+        self.assertEqual(stderr, "")
+
+    def test_run_shell_command_with_stdin(self):
+        command = RunShellCommandTest.construct_testscript_command(
+            "test_input_program.py")
+
+        stdout, stderr = run_shell_command(command, "1  4  10  22")
+
+        self.assertEqual(stdout, "37\n")
+        self.assertEqual(stderr, "")
+
+        stdout, stderr = run_shell_command(command, "1 p 5")
+
+        self.assertEqual(stdout, "")
+        self.assertEqual(stderr, "INVALID INPUT\n")
 
 
 if __name__ == '__main__':

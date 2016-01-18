@@ -55,3 +55,18 @@ def run_interactive_shell_command(command):
         process.stderr.close()
         process.stdin.close()
         process.wait()
+
+
+def run_shell_command(command, stdin=None):
+    """
+    Runs a command in shell and returns the read stdout and stderr data.
+
+    This function waits for the process to exit.
+
+    :param command: The command to run on shell.
+    :param stdin:   Initial input to send to the process.
+    :return:        A tuple with `(stdoutstring, stderrstring)`.
+    """
+    with run_interactive_shell_command(command) as p:
+        ret = p.communicate(stdin)
+    return ret
