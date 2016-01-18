@@ -95,6 +95,17 @@ class RunShellCommandTest(unittest.TestCase):
             self.assertEqual(p.stdout.readline(), "33\n")
             self.assertEqual(p.stdout.readline(), "Exiting program.\n")
 
+    def test_run_interactive_shell_command_kwargs_delegation(self):
+        with self.assertRaises(TypeError):
+            with run_interactive_shell_command("some_command",
+                                               weird_parameter=30):
+                pass
+
+        # Test one of the forbidden parameters.
+        with self.assertRaises(TypeError):
+            with run_interactive_shell_command("some_command", shell=False):
+                pass
+
     def test_run_shell_command_without_stdin(self):
         command = RunShellCommandTest.construct_testscript_command(
             "test_program.py")
@@ -120,6 +131,14 @@ class RunShellCommandTest(unittest.TestCase):
 
         self.assertEqual(stdout, "")
         self.assertEqual(stderr, "INVALID INPUT\n")
+
+    def test_run_shell_command_kwargs_delegation(self):
+        with self.assertRaises(TypeError):
+            run_shell_command("super-cool-command", weird_parameter2="abc")
+
+        # Test one of the forbidden parameters.
+        with self.assertRaises(TypeError):
+            run_shell_command("super-cool-command", universal_newlines=False)
 
 
 if __name__ == '__main__':

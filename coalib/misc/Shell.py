@@ -29,7 +29,7 @@ def escape_path_argument(path, os=platform.system()):
 
 
 @contextmanager
-def run_interactive_shell_command(command):
+def run_interactive_shell_command(command, **kwargs):
     """
     Runs a command in shell and provides stdout, stderr and stdin streams.
 
@@ -39,6 +39,10 @@ def run_interactive_shell_command(command):
     The process is opened in `universal_newlines` mode.
 
     :param command: The command to run on shell.
+    :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
+                    that is used to spawn the process (except `shell`,
+                    `stdout`, `stderr`, `stdin` and `universal_newlines`, a
+                    `TypeError` is raised then).
     :return:        A context manager yielding the process started from the
                     command.
     """
@@ -47,7 +51,8 @@ def run_interactive_shell_command(command):
                     stdout=PIPE,
                     stderr=PIPE,
                     stdin=PIPE,
-                    universal_newlines=True)
+                    universal_newlines=True,
+                    **kwargs)
     try:
         yield process
     finally:
@@ -57,7 +62,7 @@ def run_interactive_shell_command(command):
         process.wait()
 
 
-def run_shell_command(command, stdin=None):
+def run_shell_command(command, stdin=None, **kwargs):
     """
     Runs a command in shell and returns the read stdout and stderr data.
 
@@ -65,8 +70,12 @@ def run_shell_command(command, stdin=None):
 
     :param command: The command to run on shell.
     :param stdin:   Initial input to send to the process.
+    :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
+                    that is used to spawn the process (except `shell`,
+                    `stdout`, `stderr`, `stdin` and `universal_newlines`, a
+                    `TypeError` is raised then).
     :return:        A tuple with `(stdoutstring, stderrstring)`.
     """
-    with run_interactive_shell_command(command) as p:
+    with run_interactive_shell_command(command, **kwargs) as p:
         ret = p.communicate(stdin)
     return ret
