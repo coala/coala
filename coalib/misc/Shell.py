@@ -5,6 +5,25 @@ from subprocess import Popen, PIPE
 from coalib.parsing.StringProcessing import escape
 
 
+def prepare_string_argument(string, os=platform.system()):
+    """
+    Prepares a string argument for being passed as a parameter on shell.
+
+    On Linux and Darwin this function effectively encloses the given string
+    with quotes (either '' or "", depending on content).
+
+    :param string: The string to prepare for shell.
+    :param os:     The shell platform to prepare string argument for. Possible
+                   "Linux" and "Darwin" (others will be ignored and return the
+                   given string without modification).
+    :return:       The shell-prepared string.
+    """
+    if os == "Linux" or os == "Darwin":
+        return '"' + escape(string, '"') + '"'
+    else:
+        return string
+
+
 def escape_path_argument(path, os=platform.system()):
     """
     Makes a raw path ready for using as parameter in a shell command (escapes

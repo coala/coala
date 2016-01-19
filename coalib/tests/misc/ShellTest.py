@@ -3,7 +3,8 @@ import sys
 import unittest
 
 sys.path.insert(0, ".")
-from coalib.misc.Shell import (escape_path_argument,
+from coalib.misc.Shell import (prepare_string_argument,
+                               escape_path_argument,
                                run_interactive_shell_command,
                                run_shell_command)
 
@@ -139,6 +140,37 @@ class RunShellCommandTest(unittest.TestCase):
         # Test one of the forbidden parameters.
         with self.assertRaises(TypeError):
             run_shell_command("super-cool-command", universal_newlines=False)
+
+
+class PrepareStringArgumentTest(unittest.TestCase):
+
+    def setUp(self):
+        self.test_strings = ("normal_string",
+                             "string with spaces",
+                             'string with quotes"a',
+                             "string with s-quotes'b",
+                             "bsn \n A",
+                             "unrecognized \\q escape")
+
+    def test_prepare_string_argument_linux_and_darwin(self):
+        testoses = ("Linux", "Darwin")
+        expected_results = ('"normal_string"',
+                            '"string with spaces"',
+                            '"string with quotes\\"a"',
+                            '"string with s-quotes\'b"',
+                            '"bsn \n A"',
+                            '"unrecognized \\q escape"')
+
+        for string, result in zip(self.test_strings, expected_results):
+            for testos in testoses:
+                self.assertEqual(prepare_string_argument(string, testos),
+                                 result)
+
+    def test_prepare_string_argument_unsupported_os(self):
+        testos = "WeIrD_O/S"
+
+        for string in self.test_strings:
+            self.assertEqual(prepare_string_argument(string, testos), string)
 
 
 if __name__ == '__main__':
