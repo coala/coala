@@ -274,12 +274,12 @@ class ConsoleInteractionTest(unittest.TestCase):
                 Section(""),
                 [Result.from_values("SpaceConsistencyBear",
                                     "Trailing whitespace found",
-                                    file="proj/white",
+                                    file="filename",
                                     line=2)],
-                {"proj/white": ["test line\n", "line 2\n", "line 3\n"]},
+                {"filename": ["test line\n", "line 2\n", "line 3\n"]},
                 {},
                 color=False)
-            self.assertEqual("""\nproj/white
+            self.assertEqual("""\nfilename
 |   2| line 2
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
@@ -292,16 +292,16 @@ class ConsoleInteractionTest(unittest.TestCase):
                 Section(""),
                 [Result.from_values("SpaceConsistencyBear",
                                     "Trailing whitespace found",
-                                    file="proj/white",
+                                    file="filename",
                                     line=5)],
-                {"proj/white": ["test line\n",
-                                "line 2\n",
-                                "line 3\n",
-                                "line 4\n",
-                                "line 5\n"]},
+                {"filename": ["test line\n",
+                              "line 2\n",
+                              "line 3\n",
+                              "line 4\n",
+                              "line 5\n"]},
                 {},
                 color=False)
-            self.assertEqual("""\nproj/white
+            self.assertEqual("""\nfilename
 |   5| line 5
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found

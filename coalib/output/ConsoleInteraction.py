@@ -18,6 +18,7 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
+import os.path
 
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
@@ -238,7 +239,8 @@ def print_results(log_printer,
 
 
 def print_affected_lines(console_printer, file_dict, sourcerange):
-    console_printer.print("\n" + sourcerange.file, color=FILE_NAME_COLOR)
+    console_printer.print("\n" + os.path.relpath(sourcerange.file),
+                          color=FILE_NAME_COLOR)
 
     if sourcerange.start.line is not None:
         if len(file_dict[sourcerange.file]) < sourcerange.end.line:
