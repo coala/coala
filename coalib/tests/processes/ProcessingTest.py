@@ -114,13 +114,14 @@ class ProcessingTest(unittest.TestCase):
         self.assertRegex(repr(local_result),
                          "<Result object\\(id={}, origin='LocalTestBear', "
                          "affected_code=\\(\\), severity=NORMAL, message='test"
-                         " msg'\\) at 0x[0-9a-fA-F]+>".format(local_result.id))
+                         " msg'\\) at 0x[0-9a-fA-F]+>".format(
+                             hex(local_result.id)))
         self.assertRegex(repr(global_result),
                          "<Result object\\(id={}, origin='GlobalTestBear', "
                          "affected_code=\\(.*start=.*file=.*section_executor_"
                          "test_files.*line=None.*end=.*\\), severity=NORMAL, "
                          "message='test message'\\) at "
-                         "0x[0-9a-fA-F]+>".format(global_result.id))
+                         "0x[0-9a-fA-F]+>".format(hex(global_result.id)))
 
     def test_empty_run(self):
         self.sections['default'].append(Setting('jobs', "bogus!"))

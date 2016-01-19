@@ -8,7 +8,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
 
-@generate_repr("id",
+@generate_repr(("id", hex),
                "origin",
                "affected_code",
                ("severity", RESULT_SEVERITY.reverse.get),
