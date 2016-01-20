@@ -58,8 +58,3 @@ class SourceRange(TextRange):
     @property
     def file(self):
         return self.start.file
-
-    def overlaps(self, other):
-        return (self.file == other.file and
-                self.start <= other.end and
-                self.end >= other.start)

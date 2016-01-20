@@ -56,6 +56,38 @@ class TextRangeTest(unittest.TestCase):
         self.assertEqual(uut.start, TextPosition(None, None))
         self.assertEqual(uut.end, TextPosition(None, None))
 
+    def test_no_overlap(self):
+        uut1 = TextRange.from_values(2, None, 3)
+        uut2 = TextRange.from_values(4, None, 5)
+        self.assertFalse(uut1.overlaps(uut2))
+        self.assertFalse(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(2, None, 3, 6)
+        uut2 = TextRange.from_values(3, 7, 5)
+        self.assertFalse(uut1.overlaps(uut2))
+        self.assertFalse(uut2.overlaps(uut1))
+
+    def test_overlap(self):
+        uut1 = TextRange.from_values(2, None, 3)
+        uut2 = TextRange.from_values(3, None, 5)
+        self.assertTrue(uut1.overlaps(uut2))
+        self.assertTrue(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(2, None, 3, 6)
+        uut2 = TextRange.from_values(3, 6, 5)
+        self.assertTrue(uut1.overlaps(uut2))
+        self.assertTrue(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(2, None, 7)
+        uut2 = TextRange.from_values(3, None, 5)
+        self.assertTrue(uut1.overlaps(uut2))
+        self.assertTrue(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(5, None, 7)
+        uut2 = TextRange.from_values(3, None, 6)
+        self.assertTrue(uut1.overlaps(uut2))
+        self.assertTrue(uut2.overlaps(uut1))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

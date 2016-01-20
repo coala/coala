@@ -67,38 +67,6 @@ class SourceRangeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             SourceRange(self.result_fileB_noline, self.result_fileB_line2) < 1
 
-    def test_no_overlap(self):
-        uut1 = SourceRange.from_values('file', 2, None, 3)
-        uut2 = SourceRange.from_values('file', 4, None, 5)
-        self.assertFalse(uut1.overlaps(uut2))
-        self.assertFalse(uut2.overlaps(uut1))
-
-        uut1 = SourceRange.from_values('file', 2, None, 3, 6)
-        uut2 = SourceRange.from_values('file', 3, 7, 5)
-        self.assertFalse(uut1.overlaps(uut2))
-        self.assertFalse(uut2.overlaps(uut1))
-
-    def test_overlap(self):
-        uut1 = SourceRange.from_values('file', 2, None, 3)
-        uut2 = SourceRange.from_values('file', 3, None, 5)
-        self.assertTrue(uut1.overlaps(uut2))
-        self.assertTrue(uut2.overlaps(uut1))
-
-        uut1 = SourceRange.from_values('file', 2, None, 3, 6)
-        uut2 = SourceRange.from_values('file', 3, 6, 5)
-        self.assertTrue(uut1.overlaps(uut2))
-        self.assertTrue(uut2.overlaps(uut1))
-
-        uut1 = SourceRange.from_values('file', 2, None, 7)
-        uut2 = SourceRange.from_values('file', 3, None, 5)
-        self.assertTrue(uut1.overlaps(uut2))
-        self.assertTrue(uut2.overlaps(uut1))
-
-        uut1 = SourceRange.from_values('file', 5, None, 7)
-        uut2 = SourceRange.from_values('file', 3, None, 6)
-        self.assertTrue(uut1.overlaps(uut2))
-        self.assertTrue(uut2.overlaps(uut1))
-
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

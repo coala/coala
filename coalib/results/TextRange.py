@@ -66,3 +66,6 @@ class TextRange:
     @property
     def end(self):
         return self._end
+
+    def overlaps(self, other):
+        return self.start <= other.end and self.end >= other.start
