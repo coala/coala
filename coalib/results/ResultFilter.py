@@ -1,6 +1,7 @@
 import copy
 
 from coalib.results.Diff import Diff, ConflictError
+from coalib.results.SourceRange import SourceRange
 
 
 def filter_results(original_file_dict,
@@ -149,7 +150,30 @@ def remove_result_ranges_diffs(result_list, file_dict):
     for original_result in result_list:
         mod_file_dict = copy.deepcopy(file_dict)
 
-        for source_range in reversed(original_result.affected_code):
+        # gather all source ranges from this result
+        source_ranges = []
+
+        # SourceRanges must be sorted backwards and overlaps must be eliminated
+        # this way, the deletion based on sourceRanges is not offset by
+        # previous deletions in the same line that invalidate the indices.
+        previous = None
+
+        for source_range in sorted(original_result.affected_code, reverse=True):
+            # previous exists and overlaps
+            if previous is not None and source_range.overlaps(previous):
+                combined_sr = SourceRange.join(previous, source_range)
+                previous = combined_sr
+            elif previous is None:
+                previous = source_range
+            # previous exists but it doesn't overlap
+            else:
+                source_ranges.append(previous)
+                previous = source_range
+        # don't forget last entry if there were any:
+        if previous:
+            source_ranges.append(previous)
+
+        for source_range in source_ranges:
             file_name = source_range.file
             new_file = remove_range(mod_file_dict[file_name],
                                     source_range)

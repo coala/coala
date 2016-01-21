@@ -4,6 +4,8 @@ import unittest
 
 sys.path.insert(0, ".")
 from coalib.results.ResultFilter import filter_results, remove_range
+from coalib.results.ResultFilter import remove_result_ranges_diffs
+from coalib.results.Diff import Diff
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -420,6 +422,57 @@ class ResultFilterTest(unittest.TestCase):
                                                               7)),
                          ["12", "89"])
 
+    def test_result_range_inline_overlap(self):
+        test_file = ["123456789\n"]
+        test_file_dict = {"test_file": test_file}
+
+        source_range1 = SourceRange.from_values("test_file", 1, 1, 1, 4)
+        source_range2 = SourceRange.from_values("test_file", 1, 2, 1, 3)
+        source_range3 = SourceRange.from_values("test_file", 1, 3, 1, 6)
+
+        test_result = Result("origin",
+                             "message",
+                             (source_range1, source_range2, source_range3))
+
+        result_diff = remove_result_ranges_diffs(
+                [test_result],
+                test_file_dict)[test_result]["test_file"]
+        expected_diff = Diff.from_string_arrays(test_file, ["789\n"])
+
+        self.assertEqual(result_diff, expected_diff)
+
+    def test_result_range_line_wise_overlap(self):
+        test_file = ["11", "22", "33", "44", "55", "66"]
+        test_file_dict = {"test_file": test_file}
+
+        source_range1 = SourceRange.from_values("test_file", 2, 2, 5, 1)
+        source_range2 = SourceRange.from_values("test_file", 3, 1, 4, 1)
+
+        test_result = Result("origin",
+                             "message",
+                             (source_range1, source_range2))
+
+        result_diff = remove_result_ranges_diffs(
+                [test_result],
+                test_file_dict)[test_result]["test_file"]
+        expected_diff = Diff.from_string_arrays(test_file,
+                                                ["11", "2", "5", "66"])
+
+        self.assertEqual(result_diff, expected_diff)
+
+    def test_no_range(self):
+        test_file = ["abc"]
+        test_file_dict = {"test_file": test_file}
+
+        test_result = Result("origin",
+                             "message")
+
+        result_diff = remove_result_ranges_diffs(
+                [test_result],
+                test_file_dict)[test_result]["test_file"]
+        expected_diff = Diff.from_string_arrays(test_file, ["abc"])
+
+        self.assertEqual(result_diff, expected_diff)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
