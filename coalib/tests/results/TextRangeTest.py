@@ -89,5 +89,47 @@ class TextRangeTest(unittest.TestCase):
         self.assertTrue(uut2.overlaps(uut1))
 
 
+class TextRangeJoinTest(unittest.TestCase):
+
+    def setUp(self):
+        self.pos = [TextPosition(1, 1),
+                    TextPosition(3, 1),
+                    TextPosition(3, 3),
+                    TextPosition(4, 3),
+                    TextPosition(5, 3)]
+
+    def test_fails(self):
+        # need to pass ranges
+        with self.assertRaises(TypeError):
+            TextRange.join(self.pos[0], self.pos[1])
+
+        with self.assertRaises(TypeError):
+            TextRange.join(TextRange(self.pos[0], self.pos[1]), self.pos[1])
+
+        # ranges must overlap
+        with self.assertRaises(ValueError):
+            TextRange.join(TextRange(self.pos[0], self.pos[1]),
+                           TextRange(self.pos[3], self.pos[4]))
+
+    def test_join(self):
+        # overlap
+        self.assertEqual(TextRange.join(TextRange(self.pos[0], self.pos[2]),
+                                        TextRange(self.pos[1], self.pos[3])),
+                         TextRange(self.pos[0], self.pos[3]))
+
+        self.assertEqual(TextRange.join(TextRange(self.pos[1], self.pos[3]),
+                                        TextRange(self.pos[2], self.pos[4])),
+                         TextRange(self.pos[1], self.pos[4]))
+        # embrace
+        self.assertEqual(TextRange.join(TextRange(self.pos[0], self.pos[3]),
+                                        TextRange(self.pos[1], self.pos[2])),
+                         TextRange(self.pos[0], self.pos[3]))
+
+        # touch
+        self.assertEqual(TextRange.join(TextRange(self.pos[1], self.pos[2]),
+                                        TextRange(self.pos[2], self.pos[3])),
+                         TextRange(self.pos[1], self.pos[3]))
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

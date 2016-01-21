@@ -59,6 +59,25 @@ class TextRange:
 
         return cls(start, end)
 
+    @classmethod
+    def join(cls, a, b):
+        """
+        Creates a new TextRange that covers the area of two overlapping ones
+
+        :param a: TextRange (needs to overlap b)
+        :param b: TextRange (needs to overlap a)
+        :return:  A new TextRange covering the union of the Area of a and b
+        """
+        if not isinstance(a, cls) or not isinstance(b, cls):
+            raise TypeError(
+                "only instances of {} can be joined".format(cls.__name__))
+
+        if not a.overlaps(b):
+            raise ValueError(
+                    "{}s must overlap to be joined".format(cls.__name__))
+
+        return cls(min(a.start, b.start), max(a.end, b.end))
+
     @property
     def start(self):
         return self._start
