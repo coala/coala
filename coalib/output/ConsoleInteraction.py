@@ -426,8 +426,9 @@ def ask_for_action_and_apply(log_printer,
             color=SUCCESS_COLOR)
     except Exception as exception:  # pylint: disable=broad-except
         log_printer.log_exception("Failed to execute the action "
-                                  "{}.".format(action_name), exception)
-
+                                  "{} with error: {}.".format(action_name,
+                                                              exception),
+                                  exception)
     return True
 
 

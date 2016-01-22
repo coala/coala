@@ -149,8 +149,9 @@ def autoapply_actions(results,
         except Exception as ex:
             not_processed_results.append(result)
             log_printer.log_exception(
-                "Failed to execute action {}.".format(
-                    repr(action.get_metadata().name)),
+                "Failed to execute action {} with error: {}.".format(
+                    repr(action.get_metadata().name),
+                    ex),
                 ex)
             log_printer.debug("-> for result " + repr(result) + ".")
 
