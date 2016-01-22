@@ -129,6 +129,18 @@ class ResultTest(unittest.TestCase):
                    SourceRange.from_values("e", 1, 1, 2, 2))]
         self.assertTrue(result.to_ignore(ranges))
 
+    def test_location_repr(self):
+        result_a = Result(origin="o", message="m")
+        self.assertEqual(result_a.location_repr(), "the whole project")
+
+        result_b = Result.from_values("o", "m", file="e")
+        self.assertEqual(result_b.location_repr(), "'e'")
+
+        affected_code = (SourceRange.from_values('f'),
+                         SourceRange.from_values('g'))
+        result_c = Result("o", "m", affected_code=affected_code)
+        self.assertEqual(result_c.location_repr(), "'f', 'g'")
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

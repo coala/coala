@@ -183,3 +183,18 @@ class Result:
                         return True
 
         return False
+
+    def location_repr(self):
+        """
+        Retrieves a string, that briefly represents
+        the affected code of the result.
+
+        :return: A string containing all of the affected files
+                 seperated by a comma.
+        """
+
+        if not self.affected_code:
+            return "the whole project"
+
+        return ', '.join(repr(sourcerange.file)
+                         for sourcerange in self.affected_code)
