@@ -13,24 +13,28 @@ class ShellTest(unittest.TestCase):
     # Tests the function that makes a path shell-argument-ready.
 
     def test_escape_path_argument(self):
-        osname = "Linux"
-        self.assertEqual(
-            escape_path_argument("/home/usr/a-file", osname),
-            "/home/usr/a-file")
-        self.assertEqual(
-            escape_path_argument("/home/usr/a-dir/", osname),
-            "/home/usr/a-dir/")
-        self.assertEqual(
-            escape_path_argument("/home/us r/a-file with spaces.bla", osname),
-            "/home/us\\ r/a-file\\ with\\ spaces.bla")
-        self.assertEqual(
-            escape_path_argument("/home/us r/a-dir with spaces/x/", osname),
-            "/home/us\\ r/a-dir\\ with\\ spaces/x/")
-        self.assertEqual(
-            escape_path_argument(
-                "relative something/with cherries and/pickles.delicious",
-                osname),
-            "relative\\ something/with\\ cherries\\ and/pickles.delicious")
+        osnames = ("Linux", "Darwin")
+
+        for osname in osnames:
+            self.assertEqual(
+                escape_path_argument("/home/usr/a-file", osname),
+                "/home/usr/a-file")
+            self.assertEqual(
+                escape_path_argument("/home/usr/a-dir/", osname),
+                "/home/usr/a-dir/")
+            self.assertEqual(
+                escape_path_argument("/home/us r/a-file with spaces.bla",
+                                     osname),
+                "/home/us\\ r/a-file\\ with\\ spaces.bla")
+            self.assertEqual(
+                escape_path_argument("/home/us r/a-dir with spaces/x/",
+                                     osname),
+                "/home/us\\ r/a-dir\\ with\\ spaces/x/")
+            self.assertEqual(
+                escape_path_argument(
+                    "relative something/with cherries and/pickles.delicious",
+                    osname),
+                "relative\\ something/with\\ cherries\\ and/pickles.delicious")
 
         osname = "Windows"
         self.assertEqual(

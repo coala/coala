@@ -31,8 +31,8 @@ def escape_path_argument(path, os=platform.system()):
 
     :param path: The path to make ready for shell.
     :param os:   The shell platform to escape the path argument for. Possible
-                 values are "Windows" and "Linux" (others will be ignored and
-                 return the given path without modification).
+                 values are "Windows", "Linux" and "Darwin" (others will be
+                 ignored and return the given path without modification).
     :return:     The escaped path argument.
     """
     if os == "Windows":
@@ -40,7 +40,7 @@ def escape_path_argument(path, os=platform.system()):
         # systems, but maybe for others), escape it by preceding it with
         # a caret (^).
         return '"' + escape(path, '"', '^') + '"'
-    elif os == "Linux":
+    elif os == "Linux" or os == "Darwin":
         return escape(path, " ")
     else:
         # Any other non-supported system doesn't get a path escape.
