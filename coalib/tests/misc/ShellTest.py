@@ -9,10 +9,9 @@ from coalib.misc.Shell import (prepare_string_argument,
                                run_shell_command)
 
 
-class ShellTest(unittest.TestCase):
-    # Tests the function that makes a path shell-argument-ready.
+class EscapePathArgumentTest(unittest.TestCase):
 
-    def test_escape_path_argument(self):
+    def test_escape_path_argument_linux_and_darwin(self):
         osnames = ("Linux", "Darwin")
 
         for osname in osnames:
@@ -36,6 +35,7 @@ class ShellTest(unittest.TestCase):
                     osname),
                 "relative\\ something/with\\ cherries\\ and/pickles.delicious")
 
+    def test_escape_path_argument_windows(self):
         osname = "Windows"
         self.assertEqual(
             escape_path_argument("C:\\Windows\\has-a-weird-shell.txt", osname),
@@ -62,6 +62,7 @@ class ShellTest(unittest.TestCase):
             escape_path_argument("System32\\illegal\" name \"\".curd", osname),
             "\"System32\\illegal^\" name ^\"^\".curd\"")
 
+    def test_escape_path_argument_unsupported_os(self):
         osname = "INVALID"
         self.assertEqual(
             escape_path_argument("/home/usr/a-file", osname),
