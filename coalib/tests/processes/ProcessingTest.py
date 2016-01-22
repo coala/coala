@@ -384,7 +384,8 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         self.assertEqual(self.log_queue.get().message,
                          "ACTION APPLIED SUCCESSFULLY.")
         self.assertEqual(self.log_queue.get().message,
-                         "Applied 'TestAction' for 'ZBear'.")
+                         "Applied 'TestAction' "
+                         "from the whole project for 'ZBear'.")
         self.assertTrue(self.log_queue.empty())
 
         ACTIONS.pop()

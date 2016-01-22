@@ -143,8 +143,9 @@ def autoapply_actions(results,
                                         file_dict,
                                         file_diff_dict,
                                         section)
-            log_printer.info("Applied {} for {}.".format(
+            log_printer.info("Applied {} from {} for {}.".format(
                 repr(action.get_metadata().name),
+                result.location_repr(),
                 repr(result.origin)))
         except Exception as ex:
             not_processed_results.append(result)
