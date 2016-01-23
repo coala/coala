@@ -196,5 +196,9 @@ class Result:
         if not self.affected_code:
             return "the whole project"
 
-        return ', '.join(repr(sourcerange.file)
-                         for sourcerange in self.affected_code)
+        # Set important to exclude duplicate file names
+        range_paths = set(sourcerange.file
+                          for sourcerange in self.affected_code)
+
+        return ', '.join(repr(range_path)
+                         for range_path in sorted(range_paths))
