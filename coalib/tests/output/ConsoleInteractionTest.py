@@ -1,4 +1,3 @@
-import tempfile
 import unittest
 import sys
 import os
@@ -14,7 +13,8 @@ from coalib.results.Diff import Diff
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.misc.ContextManagers import (simulate_console_inputs,
-                                         retrieve_stdout)
+                                         retrieve_stdout,
+                                         make_temp)
 from coalib.output.ConsoleInteraction import (nothing_done,
                                               acquire_settings,
                                               print_bears,
@@ -162,54 +162,56 @@ class ConsoleInteractionTest(unittest.TestCase):
                          Result("origin", "msg", diffs={}),
                          {})
 
-        (testfile, testfile_path) = tempfile.mkstemp()
-        os.close(testfile)
-        file_dict = {
-            testfile_path: ["1\n", "2\n", "3\n"],
-            "f_b": ["1", "2", "3"]
-        }
-        diff = Diff(file_dict[testfile_path])
-        diff.delete_line(2)
-        diff.change_line(3, "3\n", "3_changed\n")
+        with make_temp() as testfile_path:
+            file_dict = {
+                testfile_path: ["1\n", "2\n", "3\n"],
+                "f_b": ["1", "2", "3"]
+            }
+            diff = Diff(file_dict[testfile_path])
+            diff.delete_line(2)
+            diff.change_line(3, "3\n", "3_changed\n")
 
-        with simulate_console_inputs(1), self.assertRaises(ValueError):
-            ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
-            print_result(self.console_printer,
-                         self.log_printer,
-                         None,
-                         self.file_diff_dict,
-                         Result("origin", "msg", diffs={testfile_path: diff}),
-                         file_dict)
+            with simulate_console_inputs(1), self.assertRaises(ValueError):
+                ApplyPatchAction.is_applicable = staticmethod(
+                    lambda *args: True)
+                print_result(self.console_printer,
+                             self.log_printer,
+                             None,
+                             self.file_diff_dict,
+                             Result("origin", "msg", diffs={
+                                    testfile_path: diff}),
+                             file_dict)
 
-        # Interaction must be closed by the user with `0` if it's not a param
-        with simulate_console_inputs("INVALID",
-                                     -1,
-                                     1,
-                                     0,
-                                     3) as input_generator:
-            curr_section = Section("")
-            print_section_beginning(self.console_printer, curr_section)
-            print_result(self.console_printer,
-                         self.log_printer,
-                         curr_section,
-                         self.file_diff_dict,
-                         Result("origin", "msg", diffs={testfile_path: diff}),
-                         file_dict)
-            self.assertEqual(input_generator.last_input, 3)
+            # Interaction must be closed by the user with `0` if it's not a
+            # param
+            with simulate_console_inputs("INVALID",
+                                         -1,
+                                         1,
+                                         0,
+                                         3) as input_generator:
+                curr_section = Section("")
+                print_section_beginning(self.console_printer, curr_section)
+                print_result(self.console_printer,
+                             self.log_printer,
+                             curr_section,
+                             self.file_diff_dict,
+                             Result("origin", "msg", diffs={
+                                    testfile_path: diff}),
+                             file_dict)
+                self.assertEqual(input_generator.last_input, 3)
 
-            self.file_diff_dict.clear()
+                self.file_diff_dict.clear()
 
-            with open(testfile_path) as f:
-                self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
+                with open(testfile_path) as f:
+                    self.assertEqual(f.readlines(), ["1\n", "3_changed\n"])
 
-            os.remove(testfile_path)
-            os.remove(testfile_path + ".orig")
+                os.remove(testfile_path + ".orig")
 
-            name, section = get_action_info(curr_section,
-                                            TestAction().get_metadata())
-            self.assertEqual(input_generator.last_input, 4)
-            self.assertEqual(str(section), " {param : '3'}")
-            self.assertEqual(name, "TestAction")
+                name, section = get_action_info(curr_section,
+                                                TestAction().get_metadata())
+                self.assertEqual(input_generator.last_input, 4)
+                self.assertEqual(str(section), " {param : '3'}")
+                self.assertEqual(name, "TestAction")
 
         # Check if the user is asked for the parameter only the first time.
         # Use OpenEditorAction that needs this parameter (editor command).
