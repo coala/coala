@@ -1,14 +1,13 @@
 import datetime
 import argparse
-import os
 import sys
 import unittest
-import tempfile
 from setuptools.dist import Distribution
 from distutils.errors import DistutilsOptionError
 
 sys.path.insert(0, ".")
 from coalib.misc.BuildManPage import ManPageFormatter, BuildManPage
+from coalib.misc.ContextManagers import make_temp
 
 
 app_name = "name"
@@ -117,20 +116,20 @@ class BuildManPageTest(unittest.TestCase):
         dist = Distribution()
         uut = BuildManPage(dist)
         self.assertRaises(DistutilsOptionError, uut.finalize_options)
-        handle, uut.output = tempfile.mkstemp(text=True)
-        self.assertRaises(DistutilsOptionError, uut.finalize_options)
-        uut.parser = "coalib.tests.misc.BuildManPageTest:test_arg_parser"
+        with make_temp() as uut.output:
+            self.assertRaises(DistutilsOptionError, uut.finalize_options)
+            uut.parser = "coalib.tests.misc.BuildManPageTest:test_arg_parser"
 
-        uut.finalize_options()
-        self.assertIsInstance(uut._parser, argparse.ArgumentParser)
+            uut.finalize_options()
+            self.assertIsInstance(uut._parser, argparse.ArgumentParser)
 
-        uut.run()
-        result = os.read(handle, 1000).decode()
-        os.close(handle)
+            uut.run()
+            with open(uut.output) as file:
+                result = file.read(1000)
 
-        today = datetime.date.today().strftime('%Y\\-%m\\-%d')
-        self.assertEqual(result,
-                         """.TH {0} 1 {1}
+            today = datetime.date.today().strftime('%Y\\-%m\\-%d')
+            self.assertEqual(result,
+                             """.TH {0} 1 {1}
 .SH NAME
 {0}
 .SH SYNOPSIS
