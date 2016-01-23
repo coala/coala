@@ -1,13 +1,12 @@
 import sys
 import unittest
-import tempfile
-import os
 from setuptools.dist import Distribution
 from distutils.errors import DistutilsOptionError
 
 sys.path.insert(0, ".")
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from coalib.misc import Constants
+from coalib.misc.ContextManagers import make_temp
 
 
 class BuildDbusServiceTest(unittest.TestCase):
@@ -16,17 +15,17 @@ class BuildDbusServiceTest(unittest.TestCase):
         dist = Distribution()
         uut = BuildDbusService(dist)
         self.assertRaises(DistutilsOptionError, uut.finalize_options)
-        handle, uut.output = tempfile.mkstemp(text=True)
+        with make_temp() as uut.output:
+            uut.finalize_options()
 
-        uut.finalize_options()
+            uut.run()
+            with open(uut.output) as file:
+                result = file.read(1000)
 
-        uut.run()
-        result = os.read(handle, 1000).decode()
-
-        self.assertEqual(
-            result,
-            "[D-BUS Service]\nNames=" + Constants.BUS_NAME +
-            "\nExec=coala-dbus")
+            self.assertEqual(
+                result,
+                "[D-BUS Service]\nNames=" + Constants.BUS_NAME +
+                "\nExec=coala-dbus")
 
 
 if __name__ == "__main__":
