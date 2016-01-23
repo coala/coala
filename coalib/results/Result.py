@@ -1,4 +1,5 @@
 import uuid
+from os.path import relpath
 
 from coalib.misc.Decorators import (generate_repr,
                                     generate_ordering,
@@ -200,5 +201,5 @@ class Result:
         range_paths = set(sourcerange.file
                           for sourcerange in self.affected_code)
 
-        return ', '.join(repr(range_path)
+        return ', '.join(repr(relpath(range_path))
                          for range_path in sorted(range_paths))
