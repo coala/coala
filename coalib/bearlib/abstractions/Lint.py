@@ -3,6 +3,7 @@ import tempfile
 import re
 import sys
 
+from coalib.bearlib.abstractions.CorrectionBasedBear import is_binary_present
 from coalib.misc.Shell import escape_path_argument
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
@@ -29,6 +30,7 @@ class Lint():
                          severity of the coala Result to set it to. If it is
                          not a dict, it is ignored.
     """
+    check_prerequisites = classmethod(is_binary_present)
     executable = None
     arguments = ""
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)\|'
