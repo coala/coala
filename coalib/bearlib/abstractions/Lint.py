@@ -7,9 +7,10 @@ from coalib.bearlib.abstractions.CorrectionBasedBear import is_binary_present
 from coalib.misc.Shell import escape_path_argument
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.bears.Bear import Bear
 
 
-class Lint():
+class Lint(Bear):
     """
     :param executable:   The executable to run the linter.
     :param arguments:    The arguments to supply to the linter, such
