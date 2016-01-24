@@ -78,26 +78,6 @@ class GitCommitBearTest(unittest.TestCase):
         finally:
             shutil.which = _shutil_which
 
-    def test_good_commit_messages(self):
-        self.git_commit("A little nice commit")
-        self.assertEqual(self.run_uut(), [])
-        self.assertTrue(self.msg_queue.empty())
-
-        self.git_commit("Commits messages that nearly exceeds default limit")
-        self.assertEqual(self.run_uut(), [])
-        self.assertTrue(self.msg_queue.empty())
-
-        self.git_commit("Commits message with a body\n\nBody\nAnother body")
-        self.assertEqual(self.run_uut(), [])
-        self.assertTrue(self.msg_queue.empty())
-
-        self.git_commit(
-            "Commits message with a body\n\n"
-            "nearly exceeding the default length of a body, but not quite. "
-            "haaaaaaands")
-        self.assertEqual(self.run_uut(), [])
-        self.assertTrue(self.msg_queue.empty())
-
     def test_git_failure(self):
         # In this case use a reference to a non-existing commit, so just try
         # to log all commits on a newly created repository.
@@ -120,7 +100,7 @@ class GitCommitBearTest(unittest.TestCase):
         self.assertTrue(self.msg_queue.empty())
 
     def test_shortlog_checks(self):
-        self.git_commit("This is a shortlog")
+        self.git_commit("Commits messages that nearly exceeds default limit")
 
         self.assertEqual(self.run_uut(), [])
         self.assertTrue(self.msg_queue.empty())
@@ -135,7 +115,10 @@ class GitCommitBearTest(unittest.TestCase):
         self.assertTrue(self.msg_queue.empty())
 
     def test_body_checks(self):
-        self.git_commit("Shortlog\n\nBody with details.")
+        self.git_commit(
+            "Commits message with a body\n\n"
+            "nearly exceeding the default length of a body, but not quite. "
+            "haaaaaaands")
 
         self.assertEqual(self.run_uut(), [])
         self.assertTrue(self.msg_queue.empty())
