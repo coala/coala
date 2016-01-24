@@ -2,7 +2,7 @@ from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
 
 
 class MarkdownBear(CorrectionBasedBear):
-    BINARY = 'remark'
+    executable = 'remark'
     RESULT_MESSAGE = "The text does not comply to the set style."
 
     def run(self, filename, file):

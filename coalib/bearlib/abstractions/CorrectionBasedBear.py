@@ -13,7 +13,7 @@ class CorrectionBasedBear(LocalBear):
                        self.__run_process(file, cli_options))
 
     def __run_process(self, file, cli_options):
-        process = Popen(self.BINARY + ' ' + cli_options,
+        process = Popen(self.executable + ' ' + cli_options,
                         shell=True,
                         stdin=PIPE,
                         stdout=PIPE,
@@ -67,10 +67,10 @@ class CorrectionBasedBear(LocalBear):
     @classmethod
     def check_prerequisites(cls):
         try:
-            if shutil.which(cls.BINARY) is None:
-                return repr(cls.BINARY) + " is not installed."
+            if shutil.which(cls.executable) is None:
+                return repr(cls.executable) + " is not installed."
             else:
                 return True
         except AttributeError:
-            # Happens when `BINARY` does not exist in `cls`.
+            # Happens when `executable` does not exist in `cls`.
             return True

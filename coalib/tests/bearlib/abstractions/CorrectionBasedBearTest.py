@@ -22,29 +22,30 @@ class CorrectionBasedBearTest(LocalBearTestHelper):
         self.uut = IndentBear(self.section, self.queue)
 
     def test_errors(self):
-        old_binary, self.uut.BINARY = self.uut.BINARY, "invalid_stuff_here"
+        old_binary, self.uut.executable = self.uut.executable, "invalid_"
+        "stuff_here"
 
         self.uut.execute(filename='', file=[])
         self.queue.get()
         self.assertRegex(str(self.queue.get()), r'\[WARNING\] .*')
 
-        self.uut.BINARY = old_binary
+        self.uut.executable = old_binary
 
     def test_missing_binary(self):
-        old_binary = IndentBear.BINARY
-        IndentBear.BINARY = "fdgskjfdgjdfgnlfdslk"
+        old_binary = IndentBear.executable
+        IndentBear.executable = "fdgskjfdgjdfgnlfdslk"
 
         self.assertEqual(IndentBear.check_prerequisites(),
                          "'fdgskjfdgjdfgnlfdslk' is not installed.")
 
         # "echo" is existent on nearly all platforms.
-        IndentBear.BINARY = "echo"
+        IndentBear.executable = "echo"
         self.assertTrue(IndentBear.check_prerequisites())
 
-        del IndentBear.BINARY
+        del IndentBear.executable
         self.assertTrue(IndentBear.check_prerequisites())
 
-        IndentBear.BINARY = old_binary
+        IndentBear.executable = old_binary
 
 
 if __name__ == '__main__':
