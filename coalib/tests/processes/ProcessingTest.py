@@ -42,12 +42,13 @@ p.terminate()
 
 class DummyProcess(multiprocessing.Process):
 
-    def __init__(self, control_queue):
+    def __init__(self, control_queue, starts_dead=False):
         multiprocessing.Process.__init__(self)
         self.control_queue = control_queue
+        self.starts_dead = starts_dead
 
     def is_alive(self):
-        return not self.control_queue.empty()
+        return not self.control_queue.empty() and not self.starts_dead
 
 
 class ProcessingTestLogPrinter(LogPrinter):
@@ -208,15 +209,29 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(self.queue.get(timeout=0), ([first_global]))
         self.assertEqual(self.queue.get(timeout=0), ([first_global]))
 
-        # No valid FINISH element in the queue
+    def test_dead_processes(self):
+        ctrlq = queue.Queue()
+        # Not enough FINISH elements in the queue, processes start already dead
+        # Also queue elements are reversed
+        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
+        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
+
+        process_queues(
+            [DummyProcess(ctrlq, starts_dead=True) for i in range(3)],
+            ctrlq, {}, {}, {},
+            lambda *args: self.queue.put(args[2]),
+            Section(""),
+            self.log_printer)
+        with self.assertRaises(queue.Empty):
+            self.queue.get(timeout=0)
+
+        # Not enough FINISH elements in the queue, processes start already dead
+        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
         process_queues(
-            [DummyProcess(control_queue=ctrlq) for i in range(3)],
-            ctrlq,
-            {1: "The first result.", 2: "The second result."},
-            {1: "The one and only global result."},
-            {},
+            [DummyProcess(ctrlq, starts_dead=True) for i in range(3)],
+            ctrlq, {}, {}, {},
             lambda *args: self.queue.put(args[2]),
             Section(""),
             self.log_printer)

@@ -420,20 +420,24 @@ def process_queues(processes,
                                Results were delivered to the user. Else False.
     """
     file_diff_dict = {}
-    running_processes = get_running_processes(processes)
     retval = False
-    # Number of processes working on local bears
+    # Number of processes working on local/global bears. They are count down
+    # when the last queue element of that process is processed which may be
+    # *after* the process has ended!
     local_processes = len(processes)
+    global_processes = len(processes)
     global_result_buffer = []
     ignore_ranges = list(yield_ignore_ranges(file_dict))
 
     # One process is the logger thread
-    while local_processes > 1 and running_processes > 1:
+    while local_processes > 1:
         try:
             control_elem, index = control_queue.get(timeout=0.1)
 
             if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
                 local_processes -= 1
+            elif control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED:
+                global_processes -= 1
             elif control_elem == CONTROL_ELEMENT.LOCAL:
                 assert local_processes != 0
                 retval, res = print_result(local_result_dict[index],
@@ -445,10 +449,14 @@ def process_queues(processes,
                                            file_diff_dict,
                                            ignore_ranges)
                 local_result_dict[index] = res
-            elif control_elem == CONTROL_ELEMENT.GLOBAL:
+            else:
+                assert control_elem == CONTROL_ELEMENT.GLOBAL
                 global_result_buffer.append(index)
         except queue.Empty:
-            running_processes = get_running_processes(processes)
+            if get_running_processes(processes) < 2:  # pragma: no cover
+                # Recover silently, those branches are only
+                # nondeterministically covered.
+                break
 
     # Flush global result buffer
     for elem in global_result_buffer:
@@ -462,9 +470,8 @@ def process_queues(processes,
                                    ignore_ranges)
         global_result_dict[elem] = res
 
-    running_processes = get_running_processes(processes)
     # One process is the logger thread
-    while running_processes > 1:
+    while global_processes > 1:
         try:
             control_elem, index = control_queue.get(timeout=0.1)
 
@@ -480,10 +487,12 @@ def process_queues(processes,
                 global_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
-                running_processes = get_running_processes(processes)
-
+                global_processes -= 1
         except queue.Empty:
-            running_processes = get_running_processes(processes)
+            if get_running_processes(processes) < 2:  # pragma: no cover
+                # Recover silently, those branches are only
+                # nondeterministically covered.
+                break
 
     return retval
 
