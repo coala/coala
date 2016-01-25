@@ -30,6 +30,9 @@ bears = SpaceConsistencyBear
 files = docs/**/*.md
 default_actions = SpaceConsistencyBear: ApplyPatchAction
 
+[commit]
+bears = GitCommitBear
+
 [Pylint]
 enabled = False
 
