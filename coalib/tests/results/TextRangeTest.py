@@ -131,5 +131,28 @@ class TextRangeJoinTest(unittest.TestCase):
                          TextRange(self.pos[1], self.pos[3]))
 
 
+class TextRangeExpandTest(unittest.TestCase):
+
+    def test_expand_full(self):
+        empty_position = TextPosition()
+        file = ["abc\n", "def\n", "ghi\n"]
+        empty_range = TextRange(empty_position, empty_position)
+        full_range = TextRange.from_values(1, 1, 3, 4)
+        self.assertEqual(empty_range.expand(file), full_range)
+
+    def test_expand_none(self):
+        start_position = TextPosition(2, 2)
+        end_position = TextPosition(3, 2)
+        file = ["abc\n", "def\n", "ghi\n"]
+        text_range = TextRange(start_position, end_position)
+        self.assertEqual(text_range.expand(file), text_range)
+
+    def test_expand_semi(self):
+        file = ["abc\n", "defg\n", "hijkl\n", "mnopqr\n"]
+        semi_range = TextRange.from_values(2, None, 3, None)
+        full_range = TextRange.from_values(2, 1, 3, 6)
+        self.assertEqual(semi_range.expand(file), full_range)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
