@@ -21,9 +21,15 @@ class ApplyPatchAction(ResultAction):
         except ConflictError:
             return False
 
-    def apply(self, result, original_file_dict, file_diff_dict):
+    def apply(self,
+              result,
+              original_file_dict,
+              file_diff_dict,
+              no_orig: bool=False):
         """
         Apply the patch automatically.
+
+        :param no_orig: Wether or not to create .orig backup files
         """
         for filename in result.diffs:
             if filename in file_diff_dict:
@@ -34,7 +40,8 @@ class ApplyPatchAction(ResultAction):
             new_file = file_diff_dict[filename].modified
 
             # Backup original file, override old backup if needed
-            shutil.copy2(filename, filename + ".orig")
+            if not no_orig:
+                shutil.copy2(filename, filename + ".orig")
 
             # Write new contents
             with open(filename, mode='w') as file:
