@@ -124,4 +124,12 @@ def default_arg_parser(formatter_class=None):
                             '--version',
                             action='version',
                             version=Constants.VERSION)
+
+    arg_parser.add_argument('-n',
+                            '--no-orig',
+                            nargs='?',
+                            const=True,
+                            help="Deactivate creation of .orig files,"
+                                 ".orig backup files before applying patches")
+
     return arg_parser
