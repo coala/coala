@@ -118,6 +118,8 @@ def remove_range(file_contents, source_range):
         newfile[source_range.start.line - 1] = (
             newfile[source_range.start.line - 1][:source_range.start.column-1]
             + newfile[source_range.start.line - 1][source_range.end.column:])
+        if newfile[source_range.start.line - 1] == "":
+            del newfile[source_range.start.line - 1]
     else:
         # cut away after start
         newfile[source_range.start.line - 1] = (
@@ -133,6 +135,13 @@ def remove_range(file_contents, source_range):
         for i in reversed(range(
                 source_range.start.line, source_range.end.line - 1)):
             del newfile[i]
+
+        # remove leftover empty lines
+        # the first line here is actually the former `source_range.end.line -1`
+        if newfile[source_range.start.line] == "":
+            del newfile[source_range.start.line]
+        if newfile[source_range.start.line - 1] == "":
+            del newfile[source_range.start.line - 1]
 
     return newfile
 
