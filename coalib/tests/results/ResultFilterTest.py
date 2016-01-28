@@ -422,6 +422,22 @@ class ResultFilterTest(unittest.TestCase):
                                                               7)),
                          ["12", "89"])
 
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              None,
+                                                              None,
+                                                              None,
+                                                              None)),
+                         ["", ""])
+
+        self.assertEqual(remove_range(test_file,
+                                      SourceRange.from_values("file",
+                                                              None,
+                                                              None,
+                                                              3,
+                                                              None)),
+                         ["", "", "123456789"])
+
     def test_result_range_inline_overlap(self):
         test_file = ["123456789\n"]
         test_file_dict = {"test_file": test_file}

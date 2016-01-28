@@ -111,6 +111,8 @@ def remove_range(file_contents, source_range):
     # attention: line numbers in the SourceRange are human-readable,
     # list indices start with 0
 
+    source_range = source_range.expand(file_contents)
+
     if source_range.start.line == source_range.end.line:
         # if it's all in one line, replace the line by it's beginning and end
         newfile[source_range.start.line - 1] = (
