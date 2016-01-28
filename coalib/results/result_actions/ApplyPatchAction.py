@@ -1,4 +1,5 @@
 import shutil
+from os.path import isfile
 
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Diff import ConflictError
@@ -40,7 +41,7 @@ class ApplyPatchAction(ResultAction):
             new_file = file_diff_dict[filename].modified
 
             # Backup original file, override old backup if needed
-            if not no_orig:
+            if not no_orig and not isfile(filename + ".orig"):
                 shutil.copy2(filename, filename + ".orig")
 
             # Write new contents
