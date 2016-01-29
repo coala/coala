@@ -25,8 +25,8 @@ class ConfWriterTest(unittest.TestCase):
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
-        with open(self.file, "w", encoding='utf-8') as filehandler:
-            filehandler.write(self.example_file)
+        with open(self.file, "w", encoding='utf-8') as file:
+            file.write(self.example_file)
 
         self.conf_parser = ConfParser()
         self.write_file_name = os.path.join(tempfile.gettempdir(),
