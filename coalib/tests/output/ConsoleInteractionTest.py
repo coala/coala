@@ -1,6 +1,7 @@
 import unittest
 import sys
 import os
+from os.path import abspath
 from collections import OrderedDict
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ConsolePrinter import ConsolePrinter
@@ -278,7 +279,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                     "Trailing whitespace found",
                                     file="filename",
                                     line=2)],
-                {"filename": ["test line\n", "line 2\n", "line 3\n"]},
+                {abspath("filename"): ["test line\n", "line 2\n", "line 3\n"]},
                 {},
                 color=False)
             self.assertEqual("""\nfilename
@@ -296,11 +297,11 @@ class ConsoleInteractionTest(unittest.TestCase):
                                     "Trailing whitespace found",
                                     file="filename",
                                     line=5)],
-                {"filename": ["test line\n",
-                              "line 2\n",
-                              "line 3\n",
-                              "line 4\n",
-                              "line 5\n"]},
+                {abspath("filename"): ["test line\n",
+                                       "line 2\n",
+                                       "line 3\n",
+                                       "line 4\n",
+                                       "line 5\n"]},
                 {},
                 color=False)
             self.assertEqual("""\nfilename
@@ -322,11 +323,11 @@ class ConsoleInteractionTest(unittest.TestCase):
                                               "Trailing whitespace found",
                                               file="file",
                                               line=2)],
-                          {"file": ["test line\n",
-                                    "line 2\n",
-                                    "line 3\n",
-                                    "line 4\n",
-                                    "line 5\n"]},
+                          {abspath("file"): ["test line\n",
+                                             "line 2\n",
+                                             "line 3\n",
+                                             "line 4\n",
+                                             "line 5\n"]},
                           {},
                           color=False)
 
@@ -344,9 +345,10 @@ file
                              stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
-        affected_code = (SourceRange.from_values("some_file", 5, end_line=7),
-                         SourceRange.from_values("another_file", 1, 3, 1, 5),
-                         SourceRange.from_values("another_file", 3, 3, 3, 5))
+        affected_code = (
+            SourceRange.from_values("some_file", 5, end_line=7),
+            SourceRange.from_values("another_file", 1, 3, 1, 5),
+            SourceRange.from_values("another_file", 3, 3, 3, 5))
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,
@@ -354,8 +356,10 @@ file
                 [Result("ClangCloneDetectionBear",
                         "Clone Found",
                         affected_code)],
-                {"some_file": ["line "+str(i+1)+"\n" for i in range(10)],
-                 "another_file": ["line "+str(i+1)+"\n" for i in range(10)]},
+                {abspath("some_file"): ["line " + str(i + 1) + "\n"
+                                        for i in range(10)],
+                 abspath("another_file"): ["line " + str(i + 1) + "\n"
+                                           for i in range(10)]},
                 {},
                 color=False)
             self.assertEqual("""
@@ -401,7 +405,7 @@ some_file
                 Section(""),
                 [Result.from_values("t", "msg", file="file", line=5),
                  Result.from_values("t", "msg", file="file", line=6)],
-                {"file": ["line " + str(i+1) for i in range(5)]},
+                {abspath("file"): ["line " + str(i + 1) for i in range(5)]},
                 {},
                 color=False)
             self.assertEqual("\n"
@@ -422,7 +426,7 @@ some_file
                 self.log_printer,
                 Section(""),
                 [Result.from_values("t", "msg", file="file")],
-                {"file": []},
+                {abspath("file"): []},
                 {},
                 color=False)
             self.assertEqual(
@@ -561,10 +565,10 @@ class PrintFormattedResultsTest(unittest.TestCase):
 
     def test_multiple_ranges(self):
         expected_string = (
-            "id:-?[0-9]+:origin:1:file:another_file:from_line:5:"
+            "id:-?[0-9]+:origin:1:.*file:.*another_file:from_line:5:"
             "from_column:3:to_line:5:to_column:5:"
             "severity:1:msg:2\n"
-            "id:-?[0-9]+:origin:1:file:some_file:from_line:5:"
+            "id:-?[0-9]+:origin:1:.*file:.*some_file:from_line:5:"
             "from_column:None:to_line:7:to_column:None:"
             "severity:1:msg:2\n")
         affected_code = (SourceRange.from_values("some_file", 5, end_line=7),

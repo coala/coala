@@ -23,13 +23,13 @@ class SourcePositionTest(unittest.TestCase):
         uut = SourcePosition("filename", 1)
         self.assertRegex(
             repr(uut),
-            "<SourcePosition object\\(file='filename', line=1, column=None\\) "
-                "at 0x[0-9a-fA-F]+>")
+            "<SourcePosition object\\(file='.*filename', line=1, "
+                "column=None\\) at 0x[0-9a-fA-F]+>")
 
         uut = SourcePosition("None", None)
         self.assertRegex(
             repr(uut),
-            "<SourcePosition object\\(file='None', line=None, column=None\\) "
+            "<SourcePosition object\\(file='.*None', line=None, column=None\\) "
                 "at 0x[0-9a-fA-F]+>")
 
     def assert_equal(self, first, second):

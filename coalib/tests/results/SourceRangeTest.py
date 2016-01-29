@@ -43,7 +43,7 @@ class SourceRangeTest(unittest.TestCase):
 
     def test_file_property(self):
         uut = SourceRange(self.result_fileA_line2)
-        self.assertEqual(uut.file, "A")
+        self.assertRegex(uut.file, ".*A")
 
     def test_invalid_arguments(self):
         # arguments must be SourceRanges

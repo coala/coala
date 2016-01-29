@@ -1,3 +1,4 @@
+from os.path import abspath
 import sys
 import unittest
 
@@ -44,7 +45,7 @@ class ResultTest(unittest.TestCase):
         self.assertEqual(output, {"id": str(uut.id),
                                   "origin": "origin",
                                   "message": "msg",
-                                  "file": "file",
+                                  "file": abspath("file"),
                                   "line_nr": "2",
                                   "severity": "INFO",
                                   "debug_msg": "dbg"})
