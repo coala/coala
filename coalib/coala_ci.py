@@ -15,6 +15,6 @@ from coalib.coala_main import run_coala
 
 
 def main():
-    results, exitcode = run_coala()
+    results, exitcode = run_coala(autoapply=False)
 
     return exitcode
