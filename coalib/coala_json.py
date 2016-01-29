@@ -21,7 +21,7 @@ from coalib.coala_main import run_coala
 def main():
     log_printer = ListLogPrinter()
 
-    results, exitcode = run_coala(log_printer)
+    results, exitcode = run_coala(log_printer, autoapply=False)
 
     retval = {"logs": log_printer.logs, "results": results}
     print(json.dumps(retval,
