@@ -20,7 +20,8 @@ def run_coala(log_printer=None,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
-              show_bears=do_nothing):
+              show_bears=do_nothing,
+              autoapply=True):
     """
     This is a main method that should be usable for almost all purposes and
     reduces executing coala to one function call.
@@ -50,6 +51,9 @@ def run_coala(log_printer=None,
                                     (False) is desired, the former being used
                                     for showing all available bears to the
                                     user.
+    :param autoapply:               Set to False to autoapply nothing by
+                                    default; this is overridable via any
+                                    configuration file/CLI.
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
@@ -65,6 +69,9 @@ def run_coala(log_printer=None,
 
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
+
+        if not autoapply and 'autoapply' not in sections['default']:
+            sections['default']['autoapply'] = "False"
 
         show_all_bears = bool(sections['default'].get('show_all_bears', False))
         show_bears_ = bool(sections["default"].get("show_bears", "False"))
