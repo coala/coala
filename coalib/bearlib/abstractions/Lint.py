@@ -100,7 +100,7 @@ class Lint(Bear):
                 groups[variable] = int(groups[variable])
 
         return Result.from_values(
-            origin=self,
+            origin=groups.get("origin", self),
             message=groups.get("message", ""),
             file=filename,
             severity=int(groups.get("severity", RESULT_SEVERITY.NORMAL)),
