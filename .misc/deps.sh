@@ -44,6 +44,9 @@ for dep_version in "${dep_versions[@]}" ; do
 
 done
 
+# Calling setup.py will download checkstyle automatically so tests may succeed
+python3 setup.py --help
+
 if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
   pip install -q mkdocs
   pip install -r docs/requirements.txt
