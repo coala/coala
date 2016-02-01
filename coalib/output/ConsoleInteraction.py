@@ -3,6 +3,7 @@ try:
     import readline  # pylint: disable=unused-import
 except ImportError:  # pragma: no cover
     pass
+import os.path
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
@@ -18,7 +19,6 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
-import os.path
 
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
@@ -63,6 +63,51 @@ def nothing_done(log_printer):
     """
     log_printer.warn("No existent section was targeted or enabled. "
                      "Nothing to do.")
+
+
+def acquire_actions_and_apply(console_printer,
+                              log_printer,
+                              section,
+                              file_diff_dict,
+                              result,
+                              file_dict):
+    """
+    Acquires applicable actions and applies them.
+
+    :param console_printer: Object to print messages on the console.
+    :param log_printer:     Printer responsible for logging the messages.
+    :param section:         Name of section to which the result belongs.
+    :param file_diff_dict:  Dictionary containing filenames as keys and Diff
+                            objects as values.
+    :param result:          A derivative of Result.
+    :param file_dict:       A dictionary containing all files with filename as
+                            key.
+    """
+    actions = []
+    for action in CLI_ACTIONS:
+        if action.is_applicable(result, file_dict, file_diff_dict):
+            actions.append(action)
+
+    if actions == []:
+        return
+
+    action_dict = {}
+    metadata_list = []
+    for action in actions:
+        metadata = action.get_metadata()
+        action_dict[metadata.name] = action
+        metadata_list.append(metadata)
+
+    # User can always choose no action which is guaranteed to succeed
+    while ask_for_action_and_apply(log_printer,
+                                   console_printer,
+                                   section,
+                                   metadata_list,
+                                   action_dict,
+                                   result,
+                                   file_diff_dict,
+                                   file_dict):
+        pass
 
 
 def print_lines(console_printer,
@@ -131,31 +176,12 @@ def print_result(console_printer,
         color=RESULT_SEVERITY_COLORS[result.severity])
     console_printer.print(format_lines(result.message), delimiter="\n")
 
-    actions = []
-    for action in CLI_ACTIONS:
-        if action.is_applicable(result, file_dict, file_diff_dict):
-            actions.append(action)
-
-    if actions == []:
-        return
-
-    action_dict = {}
-    metadata_list = []
-    for action in actions:
-        metadata = action.get_metadata()
-        action_dict[metadata.name] = action
-        metadata_list.append(metadata)
-
-    # User can always choose no action which is guaranteed to succeed
-    while ask_for_action_and_apply(log_printer,
-                                   console_printer,
-                                   section,
-                                   metadata_list,
-                                   action_dict,
-                                   result,
-                                   file_diff_dict,
-                                   file_dict):
-        pass
+    acquire_actions_and_apply(console_printer,
+                              log_printer,
+                              section,
+                              file_diff_dict,
+                              result,
+                              file_dict)
 
 
 def print_results_formatted(log_printer,
@@ -191,6 +217,42 @@ def print_results_formatted(log_printer,
                 exception)
 
 
+def print_affected_files(console_printer,
+                         log_printer,
+                         section,
+                         result,
+                         file_dict,
+                         color=True):
+    """
+    Print all the afected files and affected lines within them.
+
+    :param console_printer: Object to print messages on the console.
+    :param log_printer:     Printer responsible for logging the messages.
+    :param section:         The section to which the results belong to.
+    :param result_list:     List containing the results
+    :param file_dict:       A dictionary containing all files with filename as
+                            key.
+    :param color:           Boolean variable to print the results in color or
+                            not. Can be used for testing.
+    """
+    if len(result.affected_code) == 0:
+        console_printer.print("\n" + STR_PROJECT_WIDE,
+                              color=FILE_NAME_COLOR)
+    else:
+        for sourcerange in result.affected_code:
+            if (
+                    sourcerange.file is not None and
+                    sourcerange.file not in file_dict):
+                log_printer.warn("The context for the result ({}) cannot "
+                                 "be printed because it refers to a file "
+                                 "that doesn't seem to exist ({})"
+                                 ".".format(str(result), sourcerange.file))
+            else:
+                print_affected_lines(console_printer,
+                                     file_dict,
+                                     sourcerange)
+
+
 def print_results(log_printer,
                   section,
                   result_list,
@@ -213,22 +275,13 @@ def print_results(log_printer,
     console_printer = ConsolePrinter(print_colored=color)
 
     for result in sorted(result_list):
-        if len(result.affected_code) == 0:
-            console_printer.print("\n" + STR_PROJECT_WIDE,
-                                  color=FILE_NAME_COLOR)
-        else:
-            for sourcerange in result.affected_code:
-                if (
-                        sourcerange.file is not None and
-                        sourcerange.file not in file_dict):
-                    log_printer.warn("The context for the result ({}) cannot "
-                                     "be printed because it refers to a file "
-                                     "that doesn't seem to exist ({})"
-                                     ".".format(str(result), sourcerange.file))
-                else:
-                    print_affected_lines(console_printer,
-                                         file_dict,
-                                         sourcerange)
+
+        print_affected_files(console_printer,
+                             log_printer,
+                             section,
+                             result,
+                             file_dict,
+                             color=color)
 
         print_result(console_printer,
                      log_printer,

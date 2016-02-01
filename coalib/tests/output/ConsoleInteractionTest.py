@@ -1,6 +1,6 @@
 import unittest
 import os
-from os.path import abspath
+from os.path import abspath, relpath
 from collections import OrderedDict
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ConsolePrinter import ConsolePrinter
@@ -22,6 +22,8 @@ from coalib.output.ConsoleInteraction import (nothing_done,
                                               print_section_beginning,
                                               print_results,
                                               show_bears,
+                                              print_affected_files,
+                                              acquire_actions_and_apply,
                                               print_results_formatted)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
@@ -237,6 +239,40 @@ class ConsoleInteractionTest(unittest.TestCase):
                          patch_result,
                          file_dict)
             self.assertEqual(generator.last_input, 4)
+
+    def test_print_affected_files(self):
+        with retrieve_stdout() as stdout, \
+             make_temp() as some_file:
+            file_dict = {some_file: ["1\n", "2\n", "3\n"]}
+            affected_code = (SourceRange.from_values(some_file),)
+            print_affected_files(self.console_printer,
+                                 self.log_printer,
+                                 Section(""),
+                                 Result("origin",
+                                        "message",
+                                        affected_code=affected_code),
+                                 file_dict,
+                                 color=True)
+            self.assertEqual(stdout.getvalue(),
+                             "\n"+relpath(some_file)+"\n")
+
+    def test_acquire_actions_and_apply(self):
+        with make_temp() as testfile_path:
+            file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
+            diff = Diff(file_dict[testfile_path])
+            diff.delete_line(2)
+            diff.change_line(3, "3\n", "3_changed\n")
+            with simulate_console_inputs(1, 0) as generator:
+                ApplyPatchAction.is_applicable = staticmethod(
+                        lambda *args: True)
+                acquire_actions_and_apply(self.console_printer,
+                                          self.log_printer,
+                                          Section(""),
+                                          self.file_diff_dict,
+                                          Result("origin", "message", diffs={
+                                           testfile_path: diff}),
+                                          file_dict)
+                self.assertEqual(generator.last_input, 1)
 
     def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
