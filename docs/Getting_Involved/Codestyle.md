@@ -21,7 +21,7 @@ same column.
 Example:
 
 ```
-def area(height, breadth):
+def area(length, breadth):
     """
     Finds the area of a rectangle of the given length and breadth.
 
