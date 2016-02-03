@@ -1,3 +1,48 @@
+.. coala documentation master file, created by
+   sphinx-quickstart on Wed Feb  3 16:49:01 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to the coala documentation!
+===================================
+
+.. toctree::
+   :caption: Home
+   :hidden:
+   
+   Welcome <self>
+
+.. toctree::
+   :caption: For Users
+   :hidden:
+   
+   Install <Users/Install>
+   Tutorial <Users/Tutorial>
+   Writing Bears <Users/Writing_Bears>
+   The .coafile Specification <Users/coafile>
+   Glob Patterns <Users/Glob_Patterns>
+   Exit Codes <Users/Exit_Codes>
+   External APIs <Users/External_APIs>
+
+.. toctree::
+   :caption: Getting Involved
+   :hidden:
+   
+   Introduction <Getting_Involved/README>
+   Review <Getting_Involved/Review>
+   Codestyle <Getting_Involved/Codestyle>
+   Executing Tests <Getting_Involved/Testing>
+   Writing Tests <Getting_Involved/Writing_Tests>
+   Writing Documentation <Getting_Involved/Writing_Documentation>
+   Writing Good Commits <Getting_Involved/Writing_Good_Commits>
+   MAC Hints <Getting_Involved/MAC_Hints>
+
+.. toctree::
+   :caption: General Developer Information
+   :hidden:
+   
+   A Hitchhiker's Guide to Git (1): Genesis <General_Dev_Info/git_tutorial_1>
+
 ::
 
                                                          .o88Oo._
@@ -15,8 +60,6 @@
       ,d8,_    _,d8,   ,d8' d8,   ,d8b,,d8b,_ ,d8,   ,d8b,       Y           ,o8P
     ooP""Y8888PP*"Y8888P"   "Y8888P"`Y88P'"Y88P"Y8888P"`Y8            oooo888P"
 
-Welcome to the coala documentation!
-===================================
 
 What is coala?
 --------------
