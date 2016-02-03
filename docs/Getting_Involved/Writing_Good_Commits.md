@@ -33,7 +33,7 @@ commit message.
  * `git bisect` will be much more effective. If you bisect through atomic
    commits to find the commit which caused a bug, you should be able to
    identify the real cause of the bug fastly. Good commit messages and
-   atomity of commits are key to that ability.
+   atomicity of commits are key to that ability.
 
 # How to Write Good Commit Messages
 
@@ -43,7 +43,7 @@ There are a few things to consider when writing a commit message, namely:
    shortlog.
  * The shortlog should have a tag and must have a short description:
    `tag: Short description`.
-   * The tag is usually the affected class or package and not mandantory. It
+   * The tag is usually the affected class or package and not mandatory. It
      gives context to the commit.
    * The short description starts with a big letter and is written in
      imperative present tense (i.e. `Add something`, not `Adding something` or
@@ -51,7 +51,7 @@ There are a few things to consider when writing a commit message, namely:
  * The second line must be empty.
  * All following lines may hold up to 72 chars excluding newline.
    * These lines are the long description. The long description is not
-     mandantory but may help expressing what you're doing.
+     mandatory but may help expressing what you're doing.
  * The shortlog shall describe the _change_ as exactly as possible. If it
    is a bugfix, don't describe the bug but the _change_.
  * In the long description you can add reasoning for your changes. This is
