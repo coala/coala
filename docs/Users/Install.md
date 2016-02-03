@@ -5,7 +5,7 @@ are Linux and Windows. coala is known to work on OS X as well. coala is tested
 against CPython 3.3, 3.4 and 3.5.
 
 In order to run coala you need to install Python. It is recommended, that
-you install Python3 >= 3.3 from http://www.python.org.
+you install Python3 >= 3.3 from <http://www.python.org>.
 
 The easiest way to install coala is using pip (Pip Installs Packages). If you
 don't already have pip, you can install it like described on
