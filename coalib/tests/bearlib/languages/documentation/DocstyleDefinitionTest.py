@@ -46,6 +46,12 @@ class DocstyleDefinitionTest(unittest.TestCase):
         self.assertEqual(uut.docstyle, "my-custom-tool")
         self.assertEqual(uut.markers, (("~~", "/~", "/~"), (">!", ">>", ">>")))
 
+        uut = DocstyleDefinition("Cpp", "doxygen", ("~~", "/~", "/~"))
+
+        self.assertEqual(uut.language, "cpp")
+        self.assertEqual(uut.docstyle, "doxygen")
+        self.assertEqual(uut.markers, (("~~", "/~", "/~"),))
+
     def test_load(self):
         # Test unregistered docstyle.
         with self.assertRaises(FileNotFoundError):
