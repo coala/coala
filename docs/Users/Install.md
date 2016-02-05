@@ -44,6 +44,13 @@ You can now install coala with a simple:
 python3 setup.py install
 ```
 
+For the above to work, you may also need to install `setuptools` which can be
+installed by running
+
+```
+pip3 install setuptools
+```
+
 You will have coala installed into your python scripts directory. On an unixoid
 system it is probably already available on your command line globally.
 
