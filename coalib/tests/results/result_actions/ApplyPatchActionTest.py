@@ -1,5 +1,6 @@
 import sys
 import unittest
+from os.path import isfile
 
 sys.path.insert(0, ".")
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -59,6 +60,33 @@ class ApplyPatchActionTest(unittest.TestCase):
             with open(f_c) as fc:
                 # File c is unchanged and should be untouched
                 self.assertEqual([], fc.readlines())
+
+    def test_apply_orig_option(self):
+        uut = ApplyPatchAction()
+        with make_temp() as f_a, make_temp() as f_b:
+            file_dict = {
+                f_a: ["1\n", "2\n", "3\n"],
+                f_b: ["1\n", "2\n", "3\n"]
+                }
+            expected_file_dict = {
+                f_a: ["1\n", "2\n", "3_changed\n"],
+                f_b: ["1\n", "2\n", "3_changed\n"]
+                }
+            file_diff_dict = {}
+            diff = Diff(file_dict[f_a])
+            diff.change_line(3, "3\n", "3_changed\n")
+            uut.apply(Result("origin", "msg", diffs={f_a: diff}),
+                      file_dict,
+                      file_diff_dict,
+                      no_orig=True)
+            diff = Diff(file_dict[f_b])
+            diff.change_line(3, "3\n", "3_changed\n")
+            uut.apply(Result("origin", "msg", diffs={f_b: diff}),
+                      file_dict,
+                      file_diff_dict,
+                      no_orig=False)
+            self.assertFalse(isfile(f_a+".orig"))
+            self.assertTrue(isfile(f_b+".orig"))
 
     def test_is_applicable(self):
         diff = Diff(["1\n", "2\n", "3\n"])

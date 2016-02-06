@@ -10,7 +10,8 @@ def default_arg_parser(formatter_class=None):
         prog="coala",
         description="coala is a simple COde AnaLysis Application. Its goal "
                     "is to make static code analysis easy and convenient "
-                    "for all languages.")
+                    "for all languages. coala uses bears, which are analaysis "
+                    "routines that can be combined arbitrarily.")
 
     arg_parser.add_argument('TARGETS',
                             nargs='*',
@@ -124,4 +125,12 @@ def default_arg_parser(formatter_class=None):
                             '--version',
                             action='version',
                             version=Constants.VERSION)
+
+    arg_parser.add_argument('-n',
+                            '--no-orig',
+                            nargs='?',
+                            const=True,
+                            help="Deactivate creation of .orig files,"
+                                 ".orig backup files before applying patches")
+
     return arg_parser

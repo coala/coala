@@ -43,8 +43,8 @@ class OpenEditorAction(ApplyPatchAction):
             subprocess.call(editor_args)
 
         for filename in filenames:
-            with open(filename) as filehandle:
-                new_file = filehandle.readlines()
+            with open(filename) as file:
+                new_file = file.readlines()
 
             original_file = original_file_dict[filename]
             try:

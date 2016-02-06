@@ -1,3 +1,28 @@
+# coala 0.4.0
+
+New features:
+
+ * Auto-apply can be enabled/disabled through the `autoapply` setting in a
+   coafile.
+ * Auto-applied actions print the actual file where something happened.
+ * A new bear was added, the GitCommitBear! It allows to check your current
+   commit message at HEAD from git!
+ * Filenames of results are now printed relatively to the execution directory.
+   (https://github.com/coala-analyzer/coala/issues/1124)
+
+Bugfixes:
+
+ * coala-json outputted results for file-ranges that were excluded.
+   (https://github.com/coala-analyzer/coala/issues/1165)
+ * Auto-apply actions that failed are now marked as unprocessed so the user can
+   decide manually what he wants to do with them.
+   (https://github.com/coala-analyzer/coala/issues/1202)
+ * SpaceConsistencyBear: Fixed misleading message when newline at EOF is
+   missing.
+   (https://github.com/coala-analyzer/coala/issues/1185)
+ * Results from global bears slipped through our processing facility. Should not
+   happen any more.
+
 # coala 0.3.0
 
 We are dropping Python 3.2 support (and so PyPy). Also we are removing

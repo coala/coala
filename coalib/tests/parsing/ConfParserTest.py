@@ -35,8 +35,8 @@ class ConfParserTest(unittest.TestCase):
         self.tempdir = tempfile.gettempdir()
         self.file = os.path.join(self.tempdir, ".coafile")
         self.nonexistentfile = os.path.join(self.tempdir, "e81k7bd98t")
-        with open(self.file, "w") as filehandler:
-            filehandler.write(self.example_file)
+        with open(self.file, "w") as file:
+            file.write(self.example_file)
 
         self.uut = ConfParser()
         try:

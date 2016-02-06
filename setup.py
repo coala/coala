@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import locale
 from setuptools import setup, find_packages
 import setuptools.command.build_py
 
@@ -8,6 +9,11 @@ assert_supported_version()
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from coalib.misc import Constants
+
+try:
+    locale.getlocale()
+except (ValueError, UnicodeError):
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):

@@ -1,3 +1,5 @@
+import re
+
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
@@ -9,18 +11,25 @@ class LineLengthBear(LocalBear):
             filename,
             file,
             max_line_length: int=80,
-            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
+            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH,
+            ignore_length_regex: str=''):
         '''
         Yields results for all lines longer than the given maximum line length.
 
-        :param max_line_length: Maximum number of characters for a line.
-        :param tab_width:       Number of spaces to show for one tab.
+        :param max_line_length:     Maximum number of characters for a line.
+        :param tab_width:           Number of spaces to show for one tab.
+        :param ignore_length_regex: All lines matching this regular expression
+                                    will be ignored.
         '''
         spacing_helper = SpacingHelper(tab_width)
+        ignore_regex = re.compile(ignore_length_regex)
 
         for line_number, line in enumerate(file):
             line = spacing_helper.replace_tabs_with_spaces(line)
             if len(line) > max_line_length + 1:
+                if ignore_length_regex and ignore_regex.match(line):
+                    continue
+
                 yield Result.from_values(
                     origin=self,
                     message="Line is longer than allowed." +

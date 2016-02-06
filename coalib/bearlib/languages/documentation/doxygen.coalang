@@ -44,3 +44,19 @@ doc-marker = \#\#, \#, \#
 
 [VHDL]
 doc-marker = --!, --!, --!
+
+[PHP]
+doc-marker1 = /**, \ *, \ */
+doc-marker2 = /**, , \ */
+doc-marker3 = /*!, \ *, \ */
+doc-marker4 = /*!, , \ */
+doc-marker5 = ///, ///, ///
+doc-marker6 = //!, //!, //!
+
+[OBJECTIVE-C]
+doc-marker1 = /**, \ *, \ */
+doc-marker2 = /**, , \ */
+doc-marker3 = /*!, \ *, \ */
+doc-marker4 = /*!, , \ */
+doc-marker5 = ///, ///, ///
+doc-marker6 = //!, //!, //!
