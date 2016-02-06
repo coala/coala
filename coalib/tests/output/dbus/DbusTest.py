@@ -25,8 +25,14 @@ def make_test_server():
     print(os.path.join(os.path.dirname(__file__), "DbusTestServer.py"))
     return subprocess.Popen([
         sys.executable,
-        os.path.join(os.path.dirname(__file__), "DbusTestServer.py"),
-        "server"])
+        '-c',
+        'import sys;import dbus;import dbus.mainloop.glib;from gi.repository '
+        'import GLib;from coalib.output.dbus.DbusServer import DbusServer;'
+        'dbus.mainloop.glib.DBusGMainLoop(set_as_default=True);session_bus = '
+        'dbus.SessionBus();dbus_name = dbus.service.BusName("org.coala_analy'
+        'zer.v1.test", session_bus);dbus_server = DbusServer(session_bus, '
+        '"/org/coala_analyzer/v1/test", on_disconnected=lambda: GLib.idle_add'
+        '(sys.exit));mainloop = GLib.MainLoop();mainloop.run()'])
 
 
 @skipIf(skip, message)
