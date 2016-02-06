@@ -97,7 +97,8 @@ if __name__ == "__main__":
                   "coala-ci = coalib.coala_ci:main",
                   "coala-dbus = coalib.coala_dbus:main",
                   "coala-json = coalib.coala_json:main",
-                  "coala-format = coalib.coala_format:main"]},
+                  "coala-format = coalib.coala_format:main",
+                  "coala-delete-orig = coalib.coala_delete_orig:main"]},
           # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
               'Development Status :: 3 - Alpha',
