@@ -2,6 +2,7 @@ import sys
 import os
 import unittest
 import re
+from tempfile import TemporaryDirectory, NamedTemporaryFile
 
 if sys.version_info < (3, 4):
     import imp as importlib
@@ -9,7 +10,7 @@ else:
     import importlib
 
 sys.path.insert(0, ".")
-from coalib.misc.ContextManagers import retrieve_stdout
+from coalib.misc.ContextManagers import retrieve_stdout, make_temp
 from coalib import coala_ci
 from coalib.settings import ConfigurationGathering
 from coalib.output.Tagging import get_tag_path
@@ -82,6 +83,18 @@ class coalaTest(unittest.TestCase):
         retval, output = execute_coala_ci((
             "-b", 'SpaceConsistencyBear', '-c', os.devnull))
         self.assertIn("During execution, we found that some", output)
+
+    def test_coala_delete_orig(self):
+        with TemporaryDirectory() as tempdir,\
+             NamedTemporaryFile(suffix='.orig',
+                                dir=tempdir,
+                                delete=False) as orig_file,\
+             make_temp(suffix='.coafile', prefix='', dir=tempdir) as coafile,\
+             make_temp(dir=tempdir) as unrelated_file:
+            orig_file.close()
+            execute_coala_ci(("-c", re.escape(coafile)))
+            self.assertFalse(os.path.isfile(orig_file.name))
+            self.assertTrue(os.path.isfile(unrelated_file))
 
 
 if __name__ == '__main__':
