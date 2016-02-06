@@ -1,6 +1,6 @@
 import os.path
 
-from coalib.misc.Decorators import generate_eq, generate_repr
+from coalib.misc.Decorators import generate_eq, generate_repr, enforce_signature
 from coalib.parsing.ConfParser import ConfParser
 
 
@@ -13,7 +13,8 @@ class DocstyleDefinition:
     etc.).
     """
 
-    def __init__(self, language, docstyle, markers):
+    @enforce_signature
+    def __init__(self, language: str, docstyle: str, markers):
         """
         Instantiates a new DocstyleDefinition.
 
@@ -97,7 +98,8 @@ class DocstyleDefinition:
         return self._markers
 
     @classmethod
-    def load(cls, language, docstyle):
+    @enforce_signature
+    def load(cls, language: str, docstyle: str):
         """
         Loads a `DocstyleDefinition` from the coala docstyle definition files.
 

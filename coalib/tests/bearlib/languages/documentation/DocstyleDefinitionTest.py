@@ -22,6 +22,9 @@ class DocstyleDefinitionTest(unittest.TestCase):
                                "doxygen",
                                (("##", "", "#"), ('"""', '"""')))
 
+        with self.assertRaises(TypeError):
+            DocstyleDefinition(123, ["doxygen"], (('"""', '"""')))
+
     def test_properties(self):
         uut = DocstyleDefinition("C", "doxygen", (("/**", "*", "*/"),))
 
@@ -51,6 +54,10 @@ class DocstyleDefinitionTest(unittest.TestCase):
         # Test unregistered language in existing docstyle.
         with self.assertRaises(KeyError):
             next(DocstyleDefinition.load("bake-a-cake", "default"))
+
+        # Test wrong argument type.
+        with self.assertRaises(TypeError):
+            next(DocstyleDefinition.load(123, ["list"]))
 
         # Test python 3 default configuration and if everything is parsed
         # right.
