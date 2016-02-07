@@ -43,6 +43,12 @@ Welcome to the coala documentation!
    
    A Hitchhiker's Guide to Git (1): Genesis <General_Dev_Info/git_tutorial_1>
 
+.. toctree::
+   :caption: API Documentation
+   :hidden:
+   
+   List of Modules<API/modules>
+
 ::
 
                                                          .o88Oo._
