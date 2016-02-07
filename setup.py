@@ -29,18 +29,16 @@ with open('requirements.txt') as requirements:
 
 
 if __name__ == "__main__":
-    maintainers = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
-    maintainer_mails = ('lasse.schuirmann@gmail.com, '
-                        'fabian@neuschmidt.de, '
-                        'makman@alice.de')
     data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
 
     setup(name='coala',
           version=Constants.VERSION,
           description='Code Analysis Application (coala)',
           author="The coala developers",
-          maintainer=maintainers,
-          maintainer_email=maintainer_mails,
+          maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger",
+          maintainer_email=('lasse.schuirmann@gmail.com, '
+                            'fabian@neuschmidt.de, '
+                            'makman@alice.de'),
           url='http://coala.rtfd.org/',
           platforms='any',
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
