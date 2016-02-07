@@ -6,10 +6,7 @@ class CircularDependencyError(Exception):
         Creates the CircularDependencyError with a helpful message about the
         dependency.
         """
-        bear_names = []
-
-        for bear in bears:
-            bear_names.append(bear.__name__)
+        bear_names = [bear.__name__ for bear in bears]
 
         return cls("Circular dependency detected: " + " -> ".join(bear_names))
 
