@@ -1,7 +1,6 @@
 PyPrint==0.1.1
 setuptools==19.2
 munkres3==1.0.5.5
-coverage==4.0.3
 pylint==1.5.2
 language-check==0.7.5
 autopep8==1.2.1
