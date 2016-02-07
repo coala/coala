@@ -26,4 +26,3 @@ do so you need to install the ``coverage`` package via pip:
 ::
 
     pip install coverage
-

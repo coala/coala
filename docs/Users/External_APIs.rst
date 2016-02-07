@@ -76,8 +76,9 @@ parent directories till it finds a ``.coafile``.
 
 **Args**: none
 
-**Returns**: an array of DBus structures containing: \* The name of the
-section \* Boolean which is true if all bears in the section executed
-successfully \* List of results where each result is a list which
-contains: (str)origin, (str)message, (str)file, (str)line\_nr,
-(str)severity
+**Returns**: an array of DBus structures containing:
+
+* The name of the section
+* Boolean which is true if all bears in the section executed successfully
+* List of results where each result is a list which contains:
+  (str)origin, (str)message, (str)file, (str)line\_nr, (str)severity

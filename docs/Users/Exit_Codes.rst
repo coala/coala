@@ -11,4 +11,3 @@ The following is a list of coalas exit codes and their meanings:
 -  ``130`` - A KeyboardInterrupt (Ctrl+C) was pressed during the
    execution of coala.
 -  ``255`` - Any other general errors.
-

@@ -16,10 +16,10 @@ Welcome to the coala documentation!
    :caption: For Users
    :hidden:
    
-   Install <Users/Install>
+   Installation <Users/Install>
    Tutorial <Users/Tutorial>
    Writing Bears <Users/Writing_Bears>
-   The .coafile Specification <Users/coafile>
+   coafile Specification <Users/coafile>
    Glob Patterns <Users/Glob_Patterns>
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>

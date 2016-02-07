@@ -90,4 +90,3 @@ Example
     install it by itself.
 
     Fixes https://github.com/coala-analyzer/coala/issues/269
-

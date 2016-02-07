@@ -58,4 +58,3 @@ Reviewing Commits
    pass:
 -  Coverage shall not fall.
 -  Scrutinizer oftentimes yields helpful results.
-
