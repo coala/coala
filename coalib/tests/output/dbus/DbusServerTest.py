@@ -23,6 +23,9 @@ class DbusServerTest(unittest.TestCase):
         self.dbus_name = dbus.service.BusName("org.coala_analyzer.v1.test",
                                               self.session_bus)
 
+    def tearDown(self):
+        self.session_bus.close()
+
     def test_apps(self):
         uut = DbusServer(self.session_bus, "/org/coala_analyzer/v1/test_apps")
 

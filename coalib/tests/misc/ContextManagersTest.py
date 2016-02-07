@@ -1,12 +1,14 @@
 import unittest
 import sys
 import subprocess
+import os
 
 sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          retrieve_stdout,
                                          simulate_console_inputs,
-                                         subprocess_timeout)
+                                         subprocess_timeout,
+                                         make_temp)
 from coalib.processes.Processing import create_process_group
 
 
@@ -92,6 +94,15 @@ class ContextManagersTest(unittest.TestCase):
         with simulate_console_inputs("test"), self.assertRaises(ValueError):
             self.assertEqual(input(), "test")
             input()
+
+    def test_make_temp(self):
+        with make_temp() as f_a:
+            self.assertTrue(os.path.isfile(f_a))
+            self.assertTrue(os.path.basename(f_a).startswith("tmp"))
+
+        with make_temp(suffix=".orig", prefix="pre") as f_b:
+            self.assertTrue(f_b.endswith(".orig"))
+            self.assertTrue(os.path.basename(f_b).startswith("pre"))
 
 
 if __name__ == '__main__':
