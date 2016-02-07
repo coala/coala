@@ -92,7 +92,7 @@ if __name__ == "__main__":
                   "coala-format = coalib.coala_format:main"]},
           # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
-              'Development Status :: 3 - Alpha',
+              'Development Status :: 3 - Beta',
 
               'Environment :: Console',
               'Environment :: MacOS X',
