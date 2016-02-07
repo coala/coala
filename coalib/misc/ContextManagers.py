@@ -150,13 +150,13 @@ def simulate_console_inputs(*inputs):
 
 
 @contextmanager
-def make_temp():
+def make_temp(suffix="", prefix="tmp"):
     """
     Creates a temporary file with a closed stream and deletes it when done.
 
     :return: A contextmanager retrieving the file path.
     """
-    temporary = tempfile.mkstemp()
+    temporary = tempfile.mkstemp(suffix=suffix, prefix=prefix)
     os.close(temporary[0])
     try:
         yield temporary[1]
