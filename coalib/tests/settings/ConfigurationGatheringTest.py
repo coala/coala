@@ -213,8 +213,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         current_dir = os.path.abspath(os.path.dirname(__file__))
         c_file = os.path.join(current_dir,
                               "section_manager_test_files",
-                              "project",
-                              "test.c")
+                              "project")
 
         retval = find_user_config(c_file, 1)
         self.assertEqual("", retval)
