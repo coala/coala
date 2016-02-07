@@ -17,7 +17,8 @@ test:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true
-    - mkdocs build --clean
+    - make -C docs/ clean
+    - make -C docs/ html
 
 notify:
   webhooks:

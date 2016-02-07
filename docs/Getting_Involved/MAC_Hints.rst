@@ -1,15 +1,22 @@
-## Coverage Installation Hints for OSX Users:
+Coverage Installation Hints for OSX Users:
+==========================================
 
-##### 1. Make sure you have installed Xcode and Homebrew.
+1. Make sure you have installed Xcode and Homebrew.
+---------------------------------------------------
 
-##### 2. Install Python3.
+2. Install Python3.
+-------------------
 
+::
 
     brew search python  # This should display python3
     brew install python3
     python3 --version   # To check the installed version
 
-##### 3. Create Virtual environments with pyvenv
+3. Create Virtual environments with pyvenv
+------------------------------------------
+
+::
 
     # Create Virtual Env named myenv
     pyvenv myenv
@@ -21,7 +28,10 @@
     # You can start Python3 by typing:
     python
 
-##### 4. Virtualenvwrapper with Python 3:
+4. Virtualenvwrapper with Python 3:
+-----------------------------------
+
+::
 
     # Installation
     pip install virtualenv
@@ -43,7 +53,11 @@
     # Create a new virtual environment with Python3
     mkvirtualenv --python=python3_path myenv
 
-##### Finally!
+Finally!
+--------
+
+::
 
     # Install python-coverage3 by
     easy_install coverage
+

@@ -4,6 +4,8 @@ import locale
 from urllib.request import urlopen
 from shutil import copyfileobj
 from os.path import exists
+from os import getenv
+from subprocess import call
 from setuptools import setup, find_packages
 import setuptools.command.build_py
 
@@ -47,6 +49,11 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
         setuptools.command.build_py.build_py.run(self)
 
 
+# Generate API documentation only if we are running on readthedocs.org
+on_rtd = getenv('READTHEDOCS', None) != None
+if on_rtd:
+    call(['sphinx-apidoc', '-f', '-o', 'docs/API/', '.'])
+
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
 
@@ -61,7 +68,8 @@ if __name__ == "__main__":
           version=Constants.VERSION,
           description='Code Analysis Application (coala)',
           author="The coala developers",
-          maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger",
+          maintainer=["Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
+                      if not on_rtd else "L.S., F.N., M.K."],
           maintainer_email=('lasse.schuirmann@gmail.com, '
                             'fabian@neuschmidt.de, '
                             'makman@alice.de'),
