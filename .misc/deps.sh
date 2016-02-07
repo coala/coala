@@ -48,6 +48,5 @@ done
 python3 setup.py --help
 
 if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
-  pip install -q mkdocs
-  pip install -r docs/requirements.txt
+  pip install -q sphinx
 fi
