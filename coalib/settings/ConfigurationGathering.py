@@ -176,7 +176,7 @@ def find_user_config(file_path, max_trials=10):
     file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
         file_path)))
     old_dir = None
-    base_dir = os.path.dirname(file_path)
+    base_dir = file_path
     home_dir = os.path.expanduser("~")
 
     while base_dir != old_dir and old_dir != home_dir and max_trials != 0:
