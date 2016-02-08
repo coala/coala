@@ -40,7 +40,7 @@ if __name__ == "__main__":
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
           install_requires=required,
           package_data={'coalib': ['default_coafile', "VERSION"]},
-          license="AGPL v3",
+          license="AGPL-3.0",
           data_files=data_files,
           long_description="coala is a simple COde AnaLysis Application. Its "
                            "goal is to make static code analysis easy while "
