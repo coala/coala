@@ -369,6 +369,20 @@ class ResultFilterTest(unittest.TestCase):
                                                        new_result_list)),
                                  sorted(unique_new_result_list))
 
+    def test_unrelated_file_change(self):
+        testfile_1 = ['1\n', '2\n']
+        testfile_2 = ['1\n', '2\n']
+        testfile_2_new = ['0\n', '1\n', '2\n']
+        old_result = Result.from_values('origin', 'message', 'tf1', 1)
+        new_result = Result.from_values('origin', 'message', 'tf1', 1)
+        tf1 = abspath('tf1')
+        original_file_dict = {tf1: testfile_1, 'tf2': testfile_2}
+        modified_file_dict = {tf1: testfile_1, 'tf2': testfile_2_new}
+
+        new_results = filter_results(original_file_dict, modified_file_dict,
+                                     [old_result], [new_result])
+        self.assertEqual(new_results, [])
+
     def test_result_range(self):
         test_file = ["123456789", "123456789", "123456789", "123456789"]
 
