@@ -5,6 +5,7 @@ dependencies:
     - ~/.pyenv/versions/3.5.1
   override:
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
+    - go get -u github.com/golang/lint/golint
     - bash .misc/deps.sh
 
 test:
