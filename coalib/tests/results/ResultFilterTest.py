@@ -369,9 +369,6 @@ class ResultFilterTest(unittest.TestCase):
                                                        new_result_list)),
                                  sorted(unique_new_result_list))
 
-    def test_diffs(self):
-        self.assertTrue(True)
-
     def test_result_range(self):
         test_file = ["123456789", "123456789", "123456789", "123456789"]
 
