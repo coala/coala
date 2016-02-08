@@ -43,6 +43,12 @@ def default_arg_parser(formatter_class=None):
                             nargs='+',
                             metavar='FILE',
                             help='Files that should be ignored')
+    arg_parser.add_argument('--limit-files',
+                            nargs='+',
+                            metavar='FILE',
+                            help='Files that will be analyzed will be '
+                                 'restricted to those in the globs listed '
+                                 'in this argument as well the files setting')
     arg_parser.add_argument('-b',
                             '--bears',
                             nargs='+',

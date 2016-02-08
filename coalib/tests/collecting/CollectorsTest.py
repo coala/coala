@@ -60,6 +60,22 @@ class CollectFilesTest(unittest.TestCase):
                                                      "file2.py")]),
                          [])
 
+    def test_limited(self):
+        self.assertEqual(
+            collect_files([os.path.join(self.collectors_test_dir,
+                                        "others",
+                                        "*",
+                                        "*py")],
+                          limit_file_paths=[os.path.join(
+                                                self.collectors_test_dir,
+                                                "others",
+                                                "*",
+                                                "*2.py")]),
+            [os.path.normcase(os.path.join(self.collectors_test_dir,
+                                           "others",
+                                           "py_files",
+                                           "file2.py"))])
+
 
 class CollectDirsTest(unittest.TestCase):
 
