@@ -1,7 +1,5 @@
-import sys
-
-sys.path.insert(0, ".")
 import unittest
+
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.settings.Section import Section, Setting
 

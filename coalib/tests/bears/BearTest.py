@@ -1,8 +1,6 @@
-import sys
 import multiprocessing
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.processes.communication.LogMessage import LogMessage

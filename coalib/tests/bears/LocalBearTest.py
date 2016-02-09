@@ -1,7 +1,5 @@
-import sys
-
-sys.path.insert(0, ".")
 import unittest
+
 from coalib.settings.Section import Section
 from coalib.bears.LocalBear import LocalBear, BEAR_KIND
 

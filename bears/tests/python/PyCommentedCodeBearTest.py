@@ -1,8 +1,6 @@
-import sys
 import unittest
 from queue import Queue
 
-sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.python.PyCommentedCodeBear import PyCommentedCodeBear
 from coalib.settings.Section import Section

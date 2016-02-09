@@ -1,9 +1,7 @@
-import sys
 import unittest
 from setuptools.dist import Distribution
 from distutils.errors import DistutilsOptionError
 
-sys.path.insert(0, ".")
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from coalib.misc import Constants
 from coalib.misc.ContextManagers import make_temp

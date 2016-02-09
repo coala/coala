@@ -1,8 +1,6 @@
-import sys
 import unittest
 import json
 
-sys.path.insert(0, ".")
 from bears.tests.c_languages import skip_if_no_clang
 from coalib.results.Diff import Diff, ConflictError, SourceRange
 from clang.cindex import Index

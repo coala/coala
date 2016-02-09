@@ -1,12 +1,10 @@
 import os
-import sys
 import re
 import tempfile
 import unittest
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ClosableObject import close_objects
 
-sys.path.insert(0, ".")
 from coalib.misc import Constants
 from coalib.parsing.StringProcessing import escape
 from coalib.settings.ConfigurationGathering import (gather_configuration,

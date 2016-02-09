@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.matlab.MatlabIndentationBear import MatlabIndentationBear
 

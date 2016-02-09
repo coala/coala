@@ -1,9 +1,7 @@
-import sys
 import json
 import unittest
 from datetime import datetime
 
-sys.path.insert(0, ".")
 from coalib.output.JSONEncoder import JSONEncoder
 
 

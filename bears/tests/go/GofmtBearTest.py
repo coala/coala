@@ -1,7 +1,5 @@
-import sys
-
-sys.path.insert(0, ".")
 import unittest
+
 from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.go.GofmtBear import GofmtBear
 

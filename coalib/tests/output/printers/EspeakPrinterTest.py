@@ -1,8 +1,6 @@
-import sys
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
 from coalib.output.printers.EspeakPrinter import EspeakPrinter
 import unittest
 

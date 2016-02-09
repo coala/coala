@@ -3,7 +3,6 @@ import sys
 import subprocess
 import os
 
-sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          retrieve_stdout,
                                          simulate_console_inputs,

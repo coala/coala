@@ -1,7 +1,5 @@
 import unittest
-import sys
 
-sys.path.insert(0, ".")
 from coalib.misc.Decorators import (arguments_to_lists,
                                     yield_once,
                                     generate_repr,

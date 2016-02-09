@@ -1,8 +1,6 @@
-import sys
 import unittest
 from collections import namedtuple
 
-sys.path.insert(0, ".")
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.SourceRange import SourceRange
 

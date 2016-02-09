@@ -1,7 +1,4 @@
 import unittest
-import sys
-
-sys.path.insert(0, ".")
 
 from coalib.bearlib.languages.LanguageDefinition import LanguageDefinition
 from coalib.settings.Section import Section

@@ -1,8 +1,6 @@
-from queue import Queue
-import sys
-
-sys.path.insert(0, ".")
 import unittest
+from queue import Queue
+
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.general.KeywordBear import KeywordBear

@@ -1,8 +1,6 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.parsing.LineParser import LineParser
 import unittest
+
+from coalib.parsing.LineParser import LineParser
 
 
 class LineParserTest(unittest.TestCase):

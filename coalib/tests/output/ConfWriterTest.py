@@ -1,12 +1,9 @@
 import os
-
-import sys
-
-sys.path.insert(0, ".")
-from coalib.output.ConfWriter import ConfWriter
-from coalib.parsing.ConfParser import ConfParser
 import unittest
 import tempfile
+
+from coalib.output.ConfWriter import ConfWriter
+from coalib.parsing.ConfParser import ConfParser
 
 
 class ConfWriterTest(unittest.TestCase):

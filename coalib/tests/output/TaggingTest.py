@@ -1,8 +1,6 @@
 import unittest
 import os
-import sys
 
-sys.path.insert(0, ".")
 from coalib.output.Tagging import (get_tag_path,
                                    tag_results,
                                    load_tagged_results,

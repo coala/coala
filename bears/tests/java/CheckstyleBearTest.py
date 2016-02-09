@@ -1,11 +1,9 @@
+import unittest
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.java.CheckstyleBear import CheckstyleBear
 from coalib.settings.Section import Section

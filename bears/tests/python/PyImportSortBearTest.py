@@ -1,7 +1,5 @@
 import unittest
-import sys
 
-sys.path.insert(0, ".")
 from bears.python.PyImportSortBear import PyImportSortBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 

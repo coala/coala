@@ -1,8 +1,6 @@
 import unittest
 import queue
-import sys
 
-sys.path.insert(0, ".")
 from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.ContextManagers import retrieve_stdout

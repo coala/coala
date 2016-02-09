@@ -1,8 +1,6 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.results.LineDiff import LineDiff
 import unittest
+
+from coalib.results.LineDiff import LineDiff
 
 
 class LineDiffTest(unittest.TestCase):

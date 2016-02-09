@@ -1,8 +1,6 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.misc.StringConverter import StringConverter
 import unittest
+
+from coalib.misc.StringConverter import StringConverter
 
 
 class StringConverterTest(unittest.TestCase):

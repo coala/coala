@@ -1,9 +1,7 @@
 import queue
-import sys
 import multiprocessing
-
-sys.path.insert(0, ".")
 import unittest
+
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear

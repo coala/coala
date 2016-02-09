@@ -1,8 +1,6 @@
 import os
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from bears.tests.c_languages import skip_if_no_clang
 from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)

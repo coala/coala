@@ -1,8 +1,5 @@
-import sys
 import unittest
 from unittest.case import skipIf
-
-sys.path.insert(0, ".")
 
 try:
     import dbus

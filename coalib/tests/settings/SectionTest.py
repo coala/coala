@@ -1,7 +1,4 @@
 import unittest
-import sys
-
-sys.path.insert(0, ".")
 
 from coalib.settings.Section import Section, Setting, append_to_sections
 from coalib.misc import Constants

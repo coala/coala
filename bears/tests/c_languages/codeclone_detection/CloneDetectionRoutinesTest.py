@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from bears.c_languages.codeclone_detection.CloneDetectionRoutines import (
     relative_difference)
 

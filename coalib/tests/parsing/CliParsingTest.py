@@ -1,9 +1,7 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.parsing.CliParsing import parse_cli
 import unittest
 import argparse
+
+from coalib.parsing.CliParsing import parse_cli
 
 
 class CliParserTest(unittest.TestCase):

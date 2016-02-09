@@ -1,9 +1,6 @@
 import os
-import sys
-
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.collecting.Importers import import_objects
 from collections import OrderedDict
 

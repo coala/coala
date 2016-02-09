@@ -8,7 +8,6 @@ import re
 import subprocess
 from pyprint.ConsolePrinter import ConsolePrinter
 
-sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.settings.ConfigurationGathering import gather_configuration

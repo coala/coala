@@ -1,8 +1,6 @@
-from queue import Queue
-import sys
-
-sys.path.insert(0, ".")
 import unittest
+from queue import Queue
+
 from coalib.settings.Section import Section
 from coalib.results.Result import Result, RESULT_SEVERITY
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper

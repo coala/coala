@@ -1,7 +1,5 @@
-import sys
 from math import sqrt
 
-sys.path.insert(0, ".")
 import unittest
 from bears.c_languages.codeclone_detection.CountVector import CountVector
 

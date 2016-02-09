@@ -1,12 +1,10 @@
 import unittest
-import sys
 import os
 from os.path import abspath
 from collections import OrderedDict
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ConsolePrinter import ConsolePrinter
 
-sys.path.insert(0, ".")
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 from coalib.results.SourceRange import SourceRange

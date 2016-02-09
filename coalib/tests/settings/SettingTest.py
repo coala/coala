@@ -1,9 +1,7 @@
 from collections import OrderedDict
+import re
 import os
-import sys
 import unittest
-
-sys.path.insert(0, ".")
 
 from coalib.settings.Setting import (Setting,
                                      path,
@@ -11,7 +9,6 @@ from coalib.settings.Setting import (Setting,
                                      typed_list,
                                      typed_dict,
                                      typed_ordered_dict)
-import re
 
 
 class SettingTest(unittest.TestCase):

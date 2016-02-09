@@ -1,8 +1,6 @@
 import unittest
-import sys
 from collections import OrderedDict
 
-sys.path.insert(0, ".")
 from coalib.misc.DictUtilities import inverse_dicts, update_ordered_dict_key
 
 

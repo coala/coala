@@ -1,11 +1,9 @@
 import datetime
 import argparse
-import sys
 import unittest
 from setuptools.dist import Distribution
 from distutils.errors import DistutilsOptionError
 
-sys.path.insert(0, ".")
 from coalib.misc.BuildManPage import ManPageFormatter, BuildManPage
 from coalib.misc.ContextManagers import make_temp
 

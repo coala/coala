@@ -1,7 +1,4 @@
-import sys
 import unittest
-
-sys.path.insert(0, ".")
 
 from coalib.settings.DocumentationComment import DocumentationComment
 

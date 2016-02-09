@@ -1,8 +1,6 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.misc.Enum import enum
 import unittest
+
+from coalib.misc.Enum import enum
 
 
 class ProcessTest(unittest.TestCase):

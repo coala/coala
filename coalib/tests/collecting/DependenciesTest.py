@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.bears.Bear import Bear
 from coalib.collecting import Dependencies
 

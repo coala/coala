@@ -1,8 +1,6 @@
-import sys
 import unittest
 from os.path import isfile
 
-sys.path.insert(0, ".")
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result

@@ -1,10 +1,8 @@
 import subprocess
-import sys
 import os
 import unittest
 import tempfile
 
-sys.path.insert(0, ".")
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction

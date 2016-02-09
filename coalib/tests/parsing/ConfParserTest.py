@@ -1,10 +1,8 @@
 from collections import OrderedDict
 import os
-import sys
 import tempfile
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 

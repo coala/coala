@@ -16,9 +16,7 @@ GlobTestDir
 """
 import os
 import unittest
-import sys
 
-sys.path.insert(0, ".")
 from coalib.parsing.Globbing import _iter_alternatives
 from coalib.parsing.Globbing import _iter_choices
 from coalib.parsing.Globbing import _position_is_bracketed

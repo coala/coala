@@ -1,8 +1,6 @@
-import sys
 import unittest
 from queue import Queue
 
-sys.path.insert(0, ".")
 from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.IndentBear import IndentBear

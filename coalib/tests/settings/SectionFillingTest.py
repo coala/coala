@@ -1,8 +1,6 @@
 import unittest
-import sys
 from pyprint.ConsolePrinter import ConsolePrinter
 
-sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear

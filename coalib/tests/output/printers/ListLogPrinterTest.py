@@ -1,8 +1,6 @@
-import sys
 from datetime import datetime
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL

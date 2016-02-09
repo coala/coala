@@ -3,11 +3,9 @@ from tempfile import mkdtemp
 import os
 import platform
 import stat
-import sys
 import shutil
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.misc.Shell import run_shell_command
 from coalib.settings.Section import Section
 from bears.vcs.git.GitCommitBear import GitCommitBear

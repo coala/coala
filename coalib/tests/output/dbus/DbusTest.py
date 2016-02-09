@@ -5,7 +5,6 @@ from unittest.case import skipIf
 import subprocess
 import time
 
-sys.path.insert(0, ".")
 from coalib.misc import Constants
 
 try:

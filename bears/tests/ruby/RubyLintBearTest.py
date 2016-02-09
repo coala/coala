@@ -1,11 +1,9 @@
 import os
-import sys
 import unittest
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.ruby.RubyLintBear import RubyLintBear
 from coalib.settings.Section import Section

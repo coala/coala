@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.settings.Section import Section, Setting
