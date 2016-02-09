@@ -31,12 +31,12 @@ def main(log_printer=None, section: Section=None):
 
     not_deleted = 0
     for ofile in orig_files:
-        log_printer.info("Deleting file..." + os.path.relpath(ofile))
+        log_printer.info("Deleting file... " + os.path.relpath(ofile))
         try:
             os.remove(ofile)
         except:
             not_deleted += 1
-            log_printer.warn("Couldn't delete..." + os.path.relpath(ofile))
+            log_printer.warn("Couldn't delete... " + os.path.relpath(ofile))
 
     if not_deleted:
         log_printer.warn(not_deleted + " .orig backup files could not be"
