@@ -57,6 +57,9 @@ if on_rtd:
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
 
+with open('test-requirements.txt') as requirements:
+    test_required = requirements.read().splitlines()
+
 
 if __name__ == "__main__":
     download('http://sourceforge.net/projects/checkstyle/files/checkstyle/'
@@ -77,6 +80,7 @@ if __name__ == "__main__":
           platforms='any',
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
           install_requires=required,
+          tests_require=test_required,
           package_data={'coalib': ['default_coafile', "VERSION"],
                         'bears.java': ['checkstyle.jar', 'google_checks.xml']},
           license="AGPL-3.0",
