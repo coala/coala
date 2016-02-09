@@ -37,6 +37,7 @@ python --version
 source .misc/env_variables.sh
 
 # Install packages with pip
+pip install -q -r test-requirements.txt
 pip install -q -r requirements.txt
 
 # Install packages from source

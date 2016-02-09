@@ -1,0 +1,4 @@
+coverage==4.0.3
+pytest==2.8.7
+pytest-cov==2.2.1
+pytest-timeout==1.0.0

@@ -37,6 +37,7 @@ for dep_version in "${dep_versions[@]}" ; do
   python --version
   source .misc/env_variables.sh
 
+  pip install -q -r test-requirements.txt
   pip install -q -r requirements.txt
 
   cd .misc

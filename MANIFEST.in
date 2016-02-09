@@ -1,5 +1,6 @@
 include README.md
 include LICENSE
+include test-requirements.txt
 include requirements.txt
 include setup.cfg
 recursive-include docs *
