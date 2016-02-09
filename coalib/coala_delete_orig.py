@@ -31,7 +31,8 @@ def main(log_printer=None, section: Section=None):
 
     not_deleted = 0
     for ofile in orig_files:
-        log_printer.info("Deleting file... " + os.path.relpath(ofile))
+        log_printer.info("Deleting old backup file... "
+                         + os.path.relpath(ofile))
         try:
             os.remove(ofile)
         except:
