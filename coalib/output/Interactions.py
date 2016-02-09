@@ -16,7 +16,7 @@ def fail_acquire_settings(log_printer, settings_names_dict):
 
     required_settings = settings_names_dict.keys()
     if len(required_settings) != 0:
-        msg = ("During execution, we found that some required"
+        msg = ("During execution, we found that some required "
                "settings were not provided. They are:\n")
 
         for name, setting in settings_names_dict.items():
