@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import locale
 from urllib.request import urlopen
 from shutil import copyfileobj
@@ -7,6 +8,7 @@ from os.path import exists
 from os import getenv
 from subprocess import call
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 import setuptools.command.build_py
 
 from coalib import assert_supported_version
@@ -47,6 +49,15 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
         self.run_command('build_manpage')
         self.run_command('build_dbus')
         setuptools.command.build_py.build_py.run(self)
+
+
+class PyTestCommand(TestCommand):
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main([])
+        sys.exit(errno)
 
 
 # Generate API documentation only if we are running on readthedocs.org
@@ -131,4 +142,5 @@ if __name__ == "__main__":
               'Topic :: Text Processing :: Linguistic'],
           cmdclass={'build_manpage': BuildManPage,
                     'build_dbus': BuildDbusService,
-                    'build_py': BuildPyCommand})
+                    'build_py': BuildPyCommand,
+                    'test': PyTestCommand})
