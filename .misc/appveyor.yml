@@ -44,5 +44,5 @@ install:
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - "%CMD_IN_ENV% python run_tests.py --cover --timeout 120"
+  - "%CMD_IN_ENV% python -m pytest --cov"
   - "%CMD_IN_ENV% python setup.py install"

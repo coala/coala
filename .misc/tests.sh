@@ -11,13 +11,13 @@ set -x
 
 source .misc/env_variables.sh
 
-args="-j1 --timeout 120"
+args=()
 
 if [ "$python_version" == "3.5" ] ; then
-  args+=" --omit PyLintBearTest"
+  args+=('-k' 'not PyLintBearTest')
 fi
 if [ "$system_os" == "LINUX" ] ; then
-  args+=" --cover"
+  args+=('--cov')
 fi
 
-python run_tests.py $args
+python3 -m pytest "${args[@]}"
