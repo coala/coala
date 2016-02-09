@@ -34,7 +34,9 @@ def parse_cli(arg_list=None,
                                         as keys and the sections themselves
                                         as value.
     """
-    arg_list = arg_list or sys.argv[1:]
+    # Note: arg_list can also be []. Hence we cannot use
+    # `arg_list = arg_list or default_list`
+    arg_list = sys.argv[1:] if arg_list is None else arg_list
     arg_parser = arg_parser or default_arg_parser()
     origin += os.path.sep
     sections = OrderedDict(default=Section('Default'))

@@ -68,7 +68,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer)
+            self.log_printer,
+            arg_list=[])
 
         self.assertEqual(str(sections["test"]),
                          "test {value : '1', testval : '5'}")
@@ -85,7 +86,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer)
+            self.log_printer,
+            arg_list=[])
 
         self.assertEqual(str(sections["test"]),
                          "test {value : '1', testval : '5'}")
@@ -103,7 +105,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
         Constants.system_coafile = filename
 
         with self.assertRaises(SystemExit):
-            gather_configuration(lambda *args: True, self.log_printer)
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=[])
 
         Constants.system_coafile = tmp
 
