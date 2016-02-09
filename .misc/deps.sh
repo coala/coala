@@ -50,5 +50,5 @@ done
 python3 setup.py --help
 
 if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
-  pip install -q sphinx
+  pip install -q -r docs-requirements.txt
 fi

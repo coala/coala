@@ -79,7 +79,7 @@ if __name__ == "__main__":
           install_requires=required,
           package_data={'coalib': ['default_coafile', "VERSION"],
                         'bears.java': ['checkstyle.jar', 'google_checks.xml']},
-          license="AGPL v3",
+          license="AGPL-3.0",
           data_files=data_files,
           long_description="coala is a simple COde AnaLysis Application. Its "
                            "goal is to make static code analysis easy while "
@@ -97,7 +97,8 @@ if __name__ == "__main__":
                   "coala-ci = coalib.coala_ci:main",
                   "coala-dbus = coalib.coala_dbus:main",
                   "coala-json = coalib.coala_json:main",
-                  "coala-format = coalib.coala_format:main"]},
+                  "coala-format = coalib.coala_format:main",
+                  "coala-delete-orig = coalib.coala_delete_orig:main"]},
           # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
               'Development Status :: 3 - Alpha',

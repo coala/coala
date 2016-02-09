@@ -2,6 +2,7 @@ from itertools import chain
 from pyprint.ConsolePrinter import ConsolePrinter
 import os
 
+from coalib import coala_delete_orig
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
 from coalib.settings.ConfigurationGathering import gather_configuration
@@ -66,6 +67,9 @@ def run_coala(log_printer=None,
         did_nothing = True
         sections, local_bears, global_bears, targets = (
             gather_configuration(acquire_settings, log_printer))
+
+        # Deleting all .orig files, so the latest files are up to date!
+        coala_delete_orig.main(log_printer, sections["default"])
 
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
