@@ -79,7 +79,7 @@ if __name__ == "__main__":
           install_requires=required,
           package_data={'coalib': ['default_coafile', "VERSION"],
                         'bears.java': ['checkstyle.jar', 'google_checks.xml']},
-          license="AGPL v3",
+          license="AGPL-3.0",
           data_files=data_files,
           long_description="coala is a simple COde AnaLysis Application. Its "
                            "goal is to make static code analysis easy while "
