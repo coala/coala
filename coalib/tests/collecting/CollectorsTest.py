@@ -92,13 +92,12 @@ class CollectDirsTest(unittest.TestCase):
 
     def test_dir_collection(self):
         self.assertEqual(
-            sorted(collect_dirs([os.path.join(self.collectors_test_dir,
-                                              "**")])),
+            sorted(i for i in
+                   collect_dirs([os.path.join(self.collectors_test_dir,
+                                              "**")])
+                   if "__pycache__" not in i),
             sorted([os.path.normcase(os.path.join(
                 self.collectors_test_dir, "bears")),
-                os.path.normcase(os.path.join(self.collectors_test_dir,
-                                              "bears",
-                                              "__pycache__")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
@@ -111,13 +110,12 @@ class CollectDirsTest(unittest.TestCase):
 
     def test_dir_string_collection(self):
         self.assertEqual(
-            sorted(collect_dirs(os.path.join(self.collectors_test_dir,
-                                             "**"))),
+            sorted(i for i in
+                   collect_dirs(os.path.join(self.collectors_test_dir,
+                                             "**"))
+                   if "__pycache__" not in i),
             sorted([os.path.normcase(os.path.join(
                 self.collectors_test_dir, "bears")),
-                os.path.normcase(os.path.join(self.collectors_test_dir,
-                                              "bears",
-                                              "__pycache__")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
@@ -130,18 +128,17 @@ class CollectDirsTest(unittest.TestCase):
 
     def test_ignored(self):
         self.assertEqual(
-            sorted(collect_dirs([os.path.join(self.collectors_test_dir,
+            sorted(i for i in
+                   collect_dirs([os.path.join(self.collectors_test_dir,
                                               "**")],
                                 [os.path.normcase(os.path.join(
                                     self.collectors_test_dir,
                                     "others",
-                                    "py_files"))])),
+                                    "py_files"))])
+                   if "__pycache__" not in i),
 
             sorted([os.path.normcase(os.path.join(
                 self.collectors_test_dir, "bears")),
-                os.path.normcase(os.path.join(self.collectors_test_dir,
-                                              "bears",
-                                              "__pycache__")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
