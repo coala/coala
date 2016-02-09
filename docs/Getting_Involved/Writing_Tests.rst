@@ -18,9 +18,14 @@ So how do you implement a test in coala? First up, tests are placed into
 the ``bears/tests`` (if you want to write a test for a bear) or
 ``coalib/tests`` (if you test a component written for the coalib)
 directory. They are also written in python (version 3) and get
-automatically executed from the global test script, ``run_tests.py``,
-lying in the coala root folder. There's only one constraint: The name of
-the test file has to end with ``Test.py`` (for example
+automatically executed by running:
+
+::
+
+    $ py.test
+
+There's only one constraint:
+The name of the test file has to end with ``Test.py`` (for example
 ``MyCustomTest.py``, but not ``MyCustomTestSuite.py``).
 
     **NOTE**
@@ -30,7 +35,11 @@ the test file has to end with ``Test.py`` (for example
 
     .. code:: shell
 
-        ./run_tests.py -t <your-test>
+        $ py.test -k <your-test>
+
+    You can even give partial names or queries like "not MyCustomTest"
+    to not run a specific test. More information can be got with
+    ``py.test -h``
 
 Coming to the test file structure. Every test script starts with your
 system imports, i.e.:
@@ -39,23 +48,8 @@ system imports, i.e.:
 
     # Imports the python 're' package for regex processing.
     import re
-    # ...
-
-Note that you can't import coala components here now.
-
-After that these lines follow:
-
-.. code:: python
-
     import unittest
-    import sys
-
-    sys.path.insert(0, ".")
-
-These are necessary imports and setups to make tests working properly in
-the coala testing infrastructure. They setup the paths for coala
-components so you can now import them as you would do in the written
-component itself. Don't change them except you know what you do.
+    # ...
 
 As said before, in the next line your own imports follow. So just import
 what you need from coala:
@@ -113,18 +107,6 @@ message if something went wrong in your test.
 Available assert functions are listed in the section **Assertions**
 below.
 
-At last the test file needs to end with the following sequence:
-
-.. code:: python
-
-    if __name__ == '__main__':
-        unittest.main(verbosity=2)
-
-The code is only executed if your code is run as an executable. If
-that's the case (like the ``run_tests.py`` script does), the ``main()``
-method from the ``unittest`` package is called and will execute your
-defined test.
-
 So an example test that succeeds would be:
 
 .. code:: python
@@ -142,11 +124,7 @@ So an example test that succeeds would be:
             # Hm yeah, True is True.
             self.assertTrue(True)
 
-
-    if __name__ == '__main__':
-        unittest.main(verbosity=2)
-
-    **NOTE**
+.. note::
 
     Tests in coala are evaluated against their coverage, means how many
     statements will be executed from your component when invoking your
@@ -154,13 +132,16 @@ So an example test that succeeds would be:
     order to be pushed to master - please ask us on gitter if you need
     help raising your coverage!
 
+
     The branch coverage can be measured locally with the
-    ``./run_tests.py -c`` command. Even more information is available
-    with the ``-H`` parameter. In order for this to work you will need
-    to have the coverage3 binary installed. It usually comes with a
-    package named ``python-coverage3`` or similar. Make sure that you
-    installed the version for python 3 and not the one for python 2! As
-    our coverage is measured across builds against several python
+    ``py.test --cov`` command.
+
+    .. seealso::
+
+        Module :doc:`Executing Tests <Testing>`
+            Documentation of running Tests with coverage
+
+    As our coverage is measured across builds against several python
     versions (we need version specific branches here and there) you will
     not get the full coverage locally! Simply make a pull request to get
     the coverage measured automatically.
@@ -276,8 +257,8 @@ This section contains a concluding and simple example that you can use
 as a kickstart for test-writing.
 
 Put the code under the desired folder inside ``coalib/tests`` or
-``bears/tests``, modify it to let it test your stuff and run from the
-coala root folder ``./run_tests.py``.
+``bears/tests``, modify it to let it test your stuff and run the test from
+the coala root folder ``py.test``.
 
 .. code:: python
 
@@ -304,7 +285,3 @@ coala root folder ``./run_tests.py``.
         def test_case1(self):
             # A test method. Put your test code here.
             pass
-
-
-    if __name__ == '__main__':
-        unittest.main(verbosity=2)
