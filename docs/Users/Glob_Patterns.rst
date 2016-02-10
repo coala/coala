@@ -153,8 +153,10 @@ brackets. Parentheses that have no match are ignored as well as
 
     Matches everything but the directory separator
 
-Note, that the directory separator is platform specific. '/' is never
-matched by '\*'. '\\' is matched on Linux, but not on Windows.
+.. note::
+
+    The directory separator is platform specific. '/' is never
+    matched by '\*'. '\\' is matched on Linux, but not on Windows.
 
 ::
 

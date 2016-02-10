@@ -28,7 +28,7 @@ There's only one constraint:
 The name of the test file has to end with ``Test.py`` (for example
 ``MyCustomTest.py``, but not ``MyCustomTestSuite.py``).
 
-    **NOTE**
+.. note::
 
     Often you don't want to run all available tests. To run your
     specific one, type (in the coala root folder):
@@ -60,7 +60,7 @@ what you need from coala:
     import coalib.your_component.component2
     # ...
 
-    **NOTE**
+.. note::
 
     You can use system imports here also, but the coala codestyle
     suggests to place them above the three setup lines, like before.

@@ -293,9 +293,11 @@ You should now get your editor with contents similar to this:
     +Hello World!
 
 Since we're about to create a change, git asks us for a **description**.
-(Note: Git actually allows to create commits without a description with
-a special argument. This is not recommended for productive collaborative
-work!)
+
+.. note::
+    Git actually allows to create commits without a description with
+    a special argument. This is not recommended for productive
+    collaborative work!)
 
 Since we passed the ``-v`` parameter, git also shows us below what will
 be included in our change. We'll look at this later.

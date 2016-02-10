@@ -122,7 +122,7 @@ one for the Makefile. This time coala (or better, the
 provide as much helpful information as possible and provides you the
 option to directly open the file in an editor of your choice.
 
-    **Note:**
+.. note::
 
     If your editor is already open this may not work, because the other
     process will shortly communicate with the existent process and
