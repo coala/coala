@@ -116,7 +116,7 @@ if __name__ == "__main__":
                   "coala-delete-orig = coalib.coala_delete_orig:main"]},
           # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
-              'Development Status :: 3 - Alpha',
+              'Development Status :: 4 - Beta',
 
               'Environment :: Console',
               'Environment :: MacOS X',
