@@ -2,7 +2,7 @@ from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Diff import Diff
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
-
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = 5
 
 class SpaceConsistencyBear(LocalBear):
 
