@@ -1,10 +1,26 @@
 import argparse
+import sys
 
 from coalib.misc import Constants
 
 
 def default_arg_parser(formatter_class=None):
+    """
+    This function creates an ArgParser to parse command line arguments.
+
+    :param formatter_class: Formatting the arg_parser output into a specific
+                            form. For example: In the manpage format.
+    """
     formatter_class = formatter_class or argparse.RawDescriptionHelpFormatter
+
+    entry_point = sys.argv[0]
+    for entry in ['coala-json']:
+        if entry_point.endswith(entry):
+            parser_type = entry
+            break
+    else:
+        parser_type = 'coala'
+
     arg_parser = argparse.ArgumentParser(
         formatter_class=formatter_class,
         prog="coala",
@@ -82,20 +98,21 @@ def default_arg_parser(formatter_class=None):
                             nargs='+',
                             metavar='SETTING',
                             help=SETTINGS_HELP)
-    SHOW_BEARS_HELP = ("Display bears and its metadata with the sections "
-                       "that they belong to")
-    arg_parser.add_argument('-B',
-                            '--show-bears',
-                            nargs='?',
-                            const=True,
-                            metavar='BOOL',
-                            help=SHOW_BEARS_HELP)
-    arg_parser.add_argument('-A',
-                            '--show-all-bears',
-                            nargs='?',
-                            const=True,
-                            metavar='BOOL',
-                            help="Display all bears.")
+    if parser_type == 'coala':
+        SHOW_BEARS_HELP = ("Display bears and its metadata with the sections "
+                           "that they belong to")
+        arg_parser.add_argument('-B',
+                                '--show-bears',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                help=SHOW_BEARS_HELP)
+        arg_parser.add_argument('-A',
+                                '--show-all-bears',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                help="Display all bears.")
     SAVE_HELP = ('Filename of file to be saved to, if provided with no '
                  'arguments, settings will be stored back to the file given '
                  'by -c')
