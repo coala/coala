@@ -1,6 +1,8 @@
+from itertools import chain
 from pyprint.ClosableObject import ClosableObject
 
 from coalib.settings.Section import Section
+from coalib.parsing.StringProcessing import escape
 
 
 class ConfWriter(ClosableObject):
@@ -8,16 +10,20 @@ class ConfWriter(ClosableObject):
     def __init__(self,
                  file_name,
                  key_value_delimiters=('=',),
-                 key_delimiters=(',',),
+                 comment_seperators=('#',),
+                 key_delimiters=(',', ' '),
                  section_name_surroundings=None,
+                 section_override_delimiters=(".",),
                  unsavable_keys=("save",)):
         section_name_surroundings = section_name_surroundings or {"[": "]"}
         ClosableObject.__init__(self)
         self.__file_name = file_name
         self.__file = open(self.__file_name, "w")
         self.__key_value_delimiters = key_value_delimiters
+        self.__comment_seperators = comment_seperators
         self.__key_delimiters = key_delimiters
         self.__section_name_surroundings = section_name_surroundings
+        self.__section_override_delimiters = section_override_delimiters
         self.__unsavable_keys = unsavable_keys
         self.__wrote_newline = True
         self.__closed = False
@@ -86,6 +92,15 @@ class ConfWriter(ClosableObject):
             self.__file.write(val + "\n")
             self.__wrote_newline = val == ""
             return
+
+        # Add escape characters as appropriate
+        keys = [escape(key, chain(['\\'],
+                                  self.__key_value_delimiters,
+                                  self.__comment_seperators,
+                                  self.__key_delimiters,
+                                  self.__section_override_delimiters))
+                for key in keys]
+        val = escape(val, chain(['\\'], self.__comment_seperators))
 
         self.__file.write((self.__key_delimiter + " ").join(keys) + " " +
                           self.__key_value_delimiter + " " + val + "\n")

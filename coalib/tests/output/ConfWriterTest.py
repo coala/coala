@@ -18,7 +18,13 @@ class ConfWriterTest(unittest.TestCase):
                     "                   multiline \n"
                     "                   value \n"
                     "    ; just a omment \n"
-                    "    ; just a omment \n")
+                    "    ; just a omment \n"
+                    "    key\\ space = value space\n"
+                    "    key\\=equal = value=equal\n"
+                    "    key\\\\backslash = value\\\\backslash\n"
+                    "    key\\,comma = value,comma\n"
+                    "    key\\#hash = value\\#hash\n"
+                    "    key\\.dot = value.dot\n")
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
@@ -51,7 +57,13 @@ class ConfWriterTest(unittest.TestCase):
                        "multiline\n",
                        "value\n",
                        "; just a omment\n",
-                       "; just a omment\n"]
+                       "; just a omment\n",
+                       "key\\ space = value space\n",
+                       "key\\=equal = value=equal\n",
+                       "key\\\\backslash = value\\\\backslash\n",
+                       "key\\,comma = value,comma\n",
+                       "key\\#hash = value\\#hash\n",
+                       "key\\.dot = value.dot\n"]
         self.uut.write_sections(self.conf_parser.parse(self.file))
         self.uut.close()
 

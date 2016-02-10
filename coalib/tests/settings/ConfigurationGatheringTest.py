@@ -197,6 +197,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with open(filename, "r") as f:
             lines = f.readlines()
         os.remove(filename)
+        if os.path.sep == '\\':
+            filename = escape(filename, '\\')
         self.assertEqual(["[Default]\n",
                           "config = " + filename + "\n",
                           "\n",
