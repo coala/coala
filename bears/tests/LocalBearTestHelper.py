@@ -1,10 +1,47 @@
+from contextlib import contextmanager, closing
 from queue import Queue
+from tempfile import NamedTemporaryFile
 import unittest
 
 from coalib.bears.LocalBear import LocalBear
+from coalib.results.Result import Result
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from bears.tests.BearTestHelper import generate_skip_decorator
+
+
+@contextmanager
+def prepare(lines, filename, prepare_lines, prepare_file):
+    """
+    Creates a temporary file (if filename is None) and saves the
+    lines to it. Also adds a trailing newline to each line if needed.
+
+    :param lines:         The lines to be prepared.
+    :param filename:      The filename to be prepared.
+                           - If it is None, A new tempfile will be created
+                             (if prepare_file allows it).
+                           - If it is a string, that is used as the filename.
+                           - If it is a dictionary, it is passed as kwargs
+                             to NamedTemporaryFile.
+    :param prepare_lines: Whether to append newlines at each line if needed.
+    :param prepare_file:  Whether to save lines in tempfile if needed.
+    """
+    if prepare_lines:
+        for i, line in enumerate(lines):
+            lines[i] = line if line.endswith("\n") else line + "\n"
+
+    if not prepare_file and filename is None:
+        filename = "dummy_file_name"
+
+    if not isinstance(filename, str) and prepare_file:
+        temp_file_kwargs = {}
+        if isinstance(filename, dict):
+            temp_file_kwargs = filename
+        with NamedTemporaryFile(**temp_file_kwargs) as file:
+            file.write(bytes("".join(lines), 'UTF-8'))
+            yield lines, file.name
+    else:
+        yield lines, filename
 
 
 class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
@@ -16,153 +53,90 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 
     If you miss some methods, get in contact with us, we'll be happy to help!
     """
-    @staticmethod
-    def prepare_lines(lines):
-        """
-        Adds a trailing newline to each line if needed. This is needed since
-        the bears expect every line to have such a newline at the end.
-
-        This function does not modify the given argument in-place, it returns
-        a modified copy instead.
-
-        :param lines: The lines to be prepared. This list will be altered so
-                      you don't have to use the return value.
-        :return:      The lines with a \n appended.
-        """
-        modified_lines = []
-        for line in lines:
-            modified_lines.append(line if line.endswith("\n") else line+"\n")
-
-        return modified_lines
-
-    def assertLinesValid(self,
-                         local_bear,
-                         lines,
-                         filename="default",
-                         prepare_lines=True):
+    def check_valid(self,
+                    local_bear,
+                    lines,
+                    filename,
+                    valid=True,
+                    prepare_lines=True,
+                    prepare_file=True):
         """
         Asserts that a check of the given lines with the given local bear does
         not yield any results.
 
         :param local_bear:    The local bear to check with.
-        :param lines:         The lines to check. (List of strings)
+        :param lines:         The lines to check. (string or List of strings)
         :param filename:      The filename, if it matters.
+        :param valid:         Whether the lines are valid or not.
         :param prepare_lines: Whether to append newlines at each line if
                               needed. Use this with caution when disabling,
                               since bears expect to have a \n at the end of
                               each line.
+        :param prepare_file:  Whether to create tempfile is filename is None.
+                              Use this with caution when disabling, since
+                              some bears read the filename directly.
         """
+        if isinstance(lines, str):
+            lines = [lines]
+
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
-                              msg="The given bear is no local bear.")
+                              msg="The given bear is not a local bear.")
         self.assertIsInstance(lines,
                               list,
                               msg="The given lines are not a list.")
 
-        if prepare_lines:
-            lines = LocalBearTestHelper.prepare_lines(lines)
+        with prepare(lines, filename, prepare_lines, prepare_file) \
+             as (lines, filename):
+            if valid:
+                self.assertEqual(
+                    list(local_bear.execute(filename, lines)),
+                    [],
+                    msg="The local bear '{}' yields a result although it "
+                        "shouldn't.".format(local_bear.__class__.__name__))
+            else:
+                self.assertNotEqual(
+                    len(list(local_bear.execute(filename, lines))),
+                    0,
+                    msg="The local bear '{}' yields no result although it "
+                        "should.".format(local_bear.__class__.__name__))
 
-        self.assertEqual(
-            list(local_bear.execute(filename, lines)),
-            [],
-            msg="The local bear '{}' yields a result although it "
-                "shouldn't.".format(local_bear.__class__.__name__))
-
-    def assertLineValid(self,
-                        local_bear,
-                        line,
-                        filename="default",
-                        prepare_lines=True):
+    def check_results(self,
+                      local_bear,
+                      lines,
+                      filename,
+                      results=[],
+                      check_order=False,
+                      prepare_lines=True,
+                      prepare_file=True):
         """
-        Asserts that a check of the given lines with the given local bear does
-        not yield any results.
-
-        :param local_bear:    The local bear to check with.
-        :param line:          The lines to check. (List of strings)
-        :param filename:      The filename, if it matters.
-        :param prepare_lines: Whether to append newlines at each line if
-                              needed. Use this with caution when disabling,
-                              since bears expect to have a \n at the end of
-                              each line.
-        """
-        self.assertLinesValid(local_bear, [line], filename, prepare_lines)
-
-    def assertLinesInvalid(self,
-                           local_bear,
-                           lines,
-                           filename="default",
-                           prepare_lines=True):
-        """
-        Asserts that a check of the given lines with the given local bear does
-        yield any results.
-
-        :param local_bear:    The local bear to check with.
-        :param lines:         The lines to check. (List of strings)
-        :param filename:      The filename, if it matters.
-        :param prepare_lines: Whether to append newlines at each line if
-                              needed. Use this with caution when disabling,
-                              since bears expect to have a \n at the end of
-                              each line.
-        """
-        assert isinstance(self, unittest.TestCase)
-        self.assertIsInstance(local_bear,
-                              LocalBear,
-                              msg="The given bear is no local bear.")
-        self.assertIsInstance(lines,
-                              list,
-                              msg="The given lines are not a list.")
-
-        if prepare_lines:
-            lines = LocalBearTestHelper.prepare_lines(lines)
-
-        self.assertNotEqual(
-            len(list(local_bear.execute(filename, lines))),
-            0,
-            msg="The local bear '{}' yields no result although it "
-                "should.".format(local_bear.__class__.__name__))
-
-    def assertLineInvalid(self,
-                          local_bear,
-                          line,
-                          filename="default",
-                          prepare_lines=True):
-        """
-        Asserts that a check of the given lines with the given local bear does
-        yield any results.
-
-        :param self:          The unittest.TestCase object for assertions.
-        :param local_bear:    The local bear to check with.
-        :param line:          The lines to check. (List of strings)
-        :param filename:      The filename, if it matters.
-        :param prepare_lines: Whether to append newlines at each line if
-                              needed. Use this with caution when disabling,
-                              since bears expect to have a \n at the end of
-                              each line.
-        """
-        self.assertLinesInvalid(local_bear, [line], filename, prepare_lines)
-
-    def assertLinesYieldResults(self,
-                                local_bear,
-                                lines,
-                                results,
-                                filename="default",
-                                check_order=False):
-        """
-        Asserts that a check of the given lines with the given local bear does
+        Asserts that a check of the given line with the given local bear does
         yield exactly the given results.
 
-        :param local_bear:  The local bear to check with.
-        :param lines:       The lines to check. (List of strings)
-        :param results:     The expected results.
-        :param filename:    The filename, if it matters.
-        :param check_order: Assert also that the results are in the same order
-                            (defaults to False)
+        :param local_bear:    The local bear to check with.
+        :param lines:         The lines to check. (string or List of strings)
+        :param filename:      The filename, if it matters.
+        :param results:       The expected results.
+        :param check_order:   Assert also that the results are in the same
+                              order (defaults to False)
+        :param prepare_lines: Whether to append newlines at each line if
+                              needed. Use this with caution when disabling,
+                              since bears expect to have a \n at the end of
+                              each line.
+        :param prepare_file:  Whether to create tempfile is filename is None.
+                              Use this with caution when disabling, since
+                              some bears read the filename directly.
         """
+        if isinstance(lines, str):
+            lines = [lines]
+        if isinstance(results, Result):
+            results = [results]
+
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
-                              msg="The given bear is no local bear.")
+                              msg="The given bear is not a local bear.")
         self.assertIsInstance(lines,
                               list,
                               msg="The given lines are not a list.")
@@ -170,93 +144,24 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg="The given results are not a list.")
 
-        if not check_order:
-            self.assertEqual(
-                sorted(local_bear.execute(
-                    filename,
-                    LocalBearTestHelper.prepare_lines(lines))),
-                sorted(results),
-                msg="The local bear '{}' yields not the right results or the "
-                    "order may be wrong.".format(
-                    local_bear.__class__.__name__))
-        else:
-            self.assertEqual(
-                list(local_bear.execute(
-                    filename,
-                    LocalBearTestHelper.prepare_lines(lines))),
-                results,
-                msg="The local bear '{}' yields not the right results or the "
-                    "order may be wrong.".format(
-                    local_bear.__class__.__name__))
-
-    def assertLineYieldsResults(self,
-                                local_bear,
-                                line,
-                                results,
-                                filename="default",
-                                check_order=False):
-        """
-        Asserts that a check of the given line with the given local bear does
-        yield exactly the given results.
-
-        :param local_bear:  The local bear to check with.
-        :param line:        The line to check. (String)
-        :param results:     The expected results.
-        :param filename:    The filename, if it matters.
-        :param check_order: Assert also that the results are in the same order
-                            (defaults to False)
-        """
-        self.assertLinesYieldResults(local_bear,
-                                     [line],
-                                     results,
-                                     filename,
-                                     check_order)
-
-    def assertLineYieldsResult(self,
-                               local_bear,
-                               line,
-                               result,
-                               filename="default"):
-        """
-        Asserts that a check of the given line with the given local bear does
-        yield the given result.
-
-        :param local_bear: The local bear to check with.
-        :param line:       The line to check. (String)
-        :param result:     The expected result.
-        :param filename:   The filename, if it matters.
-        """
-        self.assertLinesYieldResults(local_bear,
-                                     [line],
-                                     [result],
-                                     filename,
-                                     False)
-
-    def assertLinesYieldResult(self,
-                               local_bear,
-                               lines,
-                               result,
-                               filename="default"):
-        """
-        Asserts that a check of the given lines with the given local bear does
-        yield exactly the given result.
-
-        :param local_bear: The local bear to check with.
-        :param lines:      The lines to check. (String)
-        :param result:     The expected result.
-        :param filename:   The filename, if it matters.
-        """
-        self.assertLinesYieldResults(local_bear,
-                                     lines,
-                                     [result],
-                                     filename,
-                                     False)
+        msg = ("The local bear '{}' doesn't yield the right results or the "
+               "order may be wrong.".format(local_bear.__class__.__name__))
+        with prepare(lines, filename, prepare_lines, prepare_file) \
+             as (lines, filename):
+            if not check_order:
+                self.assertEqual(sorted(local_bear.execute(filename, lines)),
+                                 sorted(results),
+                                 msg=msg)
+            else:
+                self.assertEqual(list(local_bear.execute(filename, lines)),
+                                 results,
+                                 msg=msg)
 
 
 def verify_local_bear(bear,
-                      valid_files,
-                      invalid_files,
-                      filename='default',
+                      valid_files=(),
+                      invalid_files=(),
+                      filename=None,
                       settings={}):
     """
     Generates a test for a local bear by checking the given valid and invalid
@@ -271,6 +176,11 @@ def verify_local_bear(bear,
     :param invalid_files: An iterable of files as a string list that must
                           yield results.
     :param filename:      The filename to use for valid and invalid files.
+                           - If it is None, A new tempfile will be created
+                             (if prepare_file allows it).
+                           - If it is a string, that is used as the filename.
+                           - If it is a dictionary, it is passed as kwargs
+                             to NamedTemporaryFile.
     :param settings:      A dictionary of keys and values (both string) from
                           which settings will be created that will be made
                           available for the tested bear.
@@ -287,10 +197,10 @@ def verify_local_bear(bear,
 
         def test_valid_files(self):
             for file in valid_files:
-                self.assertLinesValid(self.uut, file, filename=filename)
+                self.check_valid(self.uut, file, filename, valid=True)
 
         def test_invalid_files(self):
             for file in invalid_files:
-                self.assertLinesInvalid(self.uut, file, filename=filename)
+                self.check_valid(self.uut, file, filename, valid=False)
 
     return LocalBearTest

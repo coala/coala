@@ -1,33 +1,29 @@
-import os
-from queue import Queue
 from shutil import which
-from unittest.case import skipIf
+from unittest.case import SkipTest
 
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
+from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.c_languages.CPPLintBear import CPPLintBear
-from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
 
+if which('cpplint') is None:
+    raise SkipTest('cpplint is not installed')
 
-@skipIf(which('cpplint') is None, 'cpplint is not installed')
-class CPPLintBearTest(LocalBearTestHelper):
+test_file = '''
+int main() {
+    return 0;
+}
+'''.split('\n')
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = CPPLintBear(self.section, Queue())
-        self.test_file = os.path.join(os.path.dirname(__file__),
-                                      "test_files",
-                                      "cpplint_bear_test.cpp")
+CPPLintBearTest = verify_local_bear(CPPLintBear,
+                                    invalid_files=(test_file, ),
+                                    filename={'suffix': '.cpp'})
 
-    def test_run(self):
-        # Should yield missing copyright line
-        self.assertLinesInvalid(self.uut, [], self.test_file)
+CPPLintBearTestLegal = verify_local_bear(CPPLintBear,
+                                         valid_files=(test_file, ),
+                                         filename={'suffix': '.cpp'},
+                                         settings={'cpplint_ignore': 'legal'})
 
-        # Let's ignore legal issues
-        self.section.append(Setting("cpplint_ignore", "legal"))
-        self.assertLinesValid(self.uut, [], self.test_file)
-
-    def test_line_length(self):
-        self.section.append(Setting("cpplint_ignore", "legal"))
-        self.section.append(Setting("max_line_length", "13"))
-        self.assertLinesInvalid(self.uut, [], self.test_file)
+CPPLintBearTestLength = verify_local_bear(CPPLintBear,
+                                          invalid_files=(test_file, ),
+                                          filename={'suffix': '.cpp'},
+                                          settings={'cpplint_ignore': 'legal',
+                                                    'max_line_length': '5'})
