@@ -89,7 +89,7 @@ This release features the following feature changes:
 -  Changed logging API in Bears (now: debug/warn/err).
 -  clang python bindings were added to the bearlib.
 -  Exitcodes were organized and documented.
-   (http://coala.readthedocs.org/en/latest/Users/Exit\_Codes/)
+   (http://coala.readthedocs.org/en/latest/Users/Exit_Codes.html)
 -  Handling of EOF/Keyboard Interrupt was improved.
 -  Console output is now colored.
 -  Bears can now easily convert settings to typed lists or dicts.
@@ -110,7 +110,7 @@ This release features the following feature changes:
 -  The StringProcessing libary is there to help bear writers deal with
    regexes and similar things.
 -  A new glob syntax was introduced and documented.
-   (http://coala.readthedocs.org/en/latest/Users/Glob\_Patterns/)
+   (http://coala.readthedocs.org/en/latest/Users/Glob_Patterns.html)
 -  The ``--apply-changes`` argument was removed as its concept does not
    fit anymore.
 -  Bears can now return any iterable. This makes it possible to
