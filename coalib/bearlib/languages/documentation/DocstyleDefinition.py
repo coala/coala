@@ -23,12 +23,19 @@ class DocstyleDefinition:
                          `"PYTHON3"`.
         :param docstyle: The case insensitive documentation style/tool used
                          to document code, e.g. `"default"` or `"doxygen"`.
-        :param markers:  An iterable of marker/delimiter string iterables that
+        :param markers:  An iterable of marker/delimiter string iterables
+                         or a single marker/delimiter string iterable that
                          identify a documentation comment. See `markers`
                          property for more details on markers.
         """
         self._language = language.lower()
         self._docstyle = docstyle.lower()
+
+        # Check and modify tuple if only one marker_set exists.
+        markers = tuple(markers)
+        if len(markers) == 3 and all(isinstance(x, str) for x in markers):
+            markers = (markers,)
+
         self._markers = tuple(tuple(marker_set) for marker_set in markers)
 
         # Check marker set dimensions.

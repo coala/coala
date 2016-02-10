@@ -1,0 +1,3 @@
+"""
+Contains Java related bears.
+"""

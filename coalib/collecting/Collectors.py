@@ -45,16 +45,19 @@ def icollect(file_paths):
             yield match
 
 
-def collect_files(file_paths, ignored_file_paths=None):
+def collect_files(file_paths, ignored_file_paths=None, limit_file_paths=None):
     """
     Evaluate globs in file paths and return all matching files
 
     :param file_paths:         file path or list of such that can include globs
     :param ignored_file_paths: list of globs that match to-be-ignored files
+    :param limit_file_paths:   list of globs that the files are limited to
     :return:                   list of paths of all matching files
     """
     valid_files = list(filter(os.path.isfile, icollect(file_paths)))
-    return remove_ignored(valid_files, ignored_file_paths or [])
+    valid_files = remove_ignored(valid_files, ignored_file_paths or [])
+    valid_files = limit_paths(valid_files, limit_file_paths or [])
+    return valid_files
 
 
 def collect_dirs(dir_paths, ignored_dir_paths=None):
@@ -128,3 +131,23 @@ def remove_ignored(file_paths, ignored_globs):
                 break
 
     return reduced_list
+
+
+def limit_paths(file_paths, limit_globs):
+    """
+    Limits file paths from list based on the given globs.
+
+    :param file_paths:  file path string or list of such
+    :param limit_globs: list of globs to limit the file paths by
+    :return:            list with only those items that in the limited globs
+    """
+    file_paths = list(set(file_paths))
+    limited_list = file_paths[:]
+
+    for file_path in file_paths:
+        for limit_glob in limit_globs:
+            if not fnmatch(file_path, limit_glob):
+                limited_list.remove(file_path)
+                break
+
+    return limited_list

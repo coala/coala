@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
 import locale
+from urllib.request import urlopen
+from shutil import copyfileobj
+from os.path import exists
+from os import getenv
+from subprocess import call
 from setuptools import setup, find_packages
 import setuptools.command.build_py
 
@@ -16,6 +21,26 @@ except (ValueError, UnicodeError):
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
+def download(url, filename, overwrite=False):
+    """
+    Downloads the given URL to the given filename. If the file exists, it won't
+    be downloaded.
+
+    :param url:       A URL to download.
+    :param filename:  The file to store the downloaded file to.
+    :param overwrite: Set to True if the file should be downloaded even if it
+                      already exists.
+    :return:          The filename.
+    """
+    if not exists(filename) or overwrite:
+        print("Downloading", filename + "...")
+        with urlopen(url) as response, open(filename, 'wb') as out_file:
+            copyfileobj(response, out_file)
+        print("DONE.")
+
+    return filename
+
+
 class BuildPyCommand(setuptools.command.build_py.build_py):
 
     def run(self):
@@ -24,29 +49,37 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
         setuptools.command.build_py.build_py.run(self)
 
 
+# Generate API documentation only if we are running on readthedocs.org
+on_rtd = getenv('READTHEDOCS', None) != None
+if on_rtd:
+    call(['sphinx-apidoc', '-f', '-o', 'docs/API/', '.'])
+
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
 
 
 if __name__ == "__main__":
-    maintainers = "Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
-    maintainer_mails = ('lasse.schuirmann@gmail.com, '
-                        'fabian@neuschmidt.de, '
-                        'makman@alice.de')
+    download('http://sourceforge.net/projects/checkstyle/files/checkstyle/'
+             '6.15/checkstyle-6.15-all.jar',
+             'bears/java/checkstyle.jar')
     data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
 
     setup(name='coala',
           version=Constants.VERSION,
           description='Code Analysis Application (coala)',
           author="The coala developers",
-          maintainer=maintainers,
-          maintainer_email=maintainer_mails,
+          maintainer=["Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
+                      if not on_rtd else "L.S., F.N., M.K."],
+          maintainer_email=('lasse.schuirmann@gmail.com, '
+                            'fabian@neuschmidt.de, '
+                            'makman@alice.de'),
           url='http://coala.rtfd.org/',
           platforms='any',
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
           install_requires=required,
-          package_data={'coalib': ['default_coafile', "VERSION"]},
-          license="AGPL v3",
+          package_data={'coalib': ['default_coafile', "VERSION"],
+                        'bears.java': ['checkstyle.jar', 'google_checks.xml']},
+          license="AGPL-3.0",
           data_files=data_files,
           long_description="coala is a simple COde AnaLysis Application. Its "
                            "goal is to make static code analysis easy while "
@@ -64,7 +97,8 @@ if __name__ == "__main__":
                   "coala-ci = coalib.coala_ci:main",
                   "coala-dbus = coalib.coala_dbus:main",
                   "coala-json = coalib.coala_json:main",
-                  "coala-format = coalib.coala_format:main"]},
+                  "coala-format = coalib.coala_format:main",
+                  "coala-delete-orig = coalib.coala_delete_orig:main"]},
           # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
               'Development Status :: 3 - Alpha',

@@ -1,4 +1,5 @@
 environment:
+  GOPATH: c:\gopath
   global:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
@@ -23,7 +24,10 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
+  - "SET PATH=%GOROOT%\bin;%PATH%"
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "SET PATH=C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
+  - go get -u github.com/golang/lint/golint
   # language-tool needs the registry tweaked here since it determines the java
   # version wrong (since appveyor has both, 1.7 and 1.8 in x86 and x64).
   - "SET KEY_NAME=HKLM\\Software\\JavaSoft\\Java Runtime Environment"
