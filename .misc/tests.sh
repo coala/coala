@@ -17,7 +17,7 @@ if [ "$python_version" == "3.5" ] ; then
   args+=('-k' 'not PyLintBearTest')
 fi
 if [ "$system_os" == "LINUX" ] ; then
-  args+=('--cov')
+  args+=('--cov' '--doctest-modules')
 fi
 
 python3 -m pytest "${args[@]}"

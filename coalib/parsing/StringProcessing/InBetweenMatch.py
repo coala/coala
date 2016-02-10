@@ -32,11 +32,9 @@ class InBetweenMatch:
 
         This function allows to bypass the usage of Match object instantation:
 
-        >>> InBetweenMatch(Match("A", 0), Match("B", 1), Match("B", 2))
-
-        can be simplified to:
-
-        >>> InBetweenMatch.from_values("A", 0, "B", 1, "C", 2)
+        >>> a = InBetweenMatch(Match("A", 0), Match("B", 1), Match("C", 2))
+        >>> b = InBetweenMatch.from_values("A", 0, "B", 1, "C", 2)
+        >>> assert a == b
 
         :param begin:      The matched string from start pattern.
         :param begin_pos:  The position of the matched begin string.
