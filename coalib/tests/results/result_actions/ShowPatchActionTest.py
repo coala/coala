@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.settings.Section import Section, Setting
@@ -68,7 +66,3 @@ class ShowPatchActionTest(unittest.TestCase):
                              "|    |++++| b\n"
                              "|    |   1|+first\n"
                              "|   1|   2| old_first\n")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

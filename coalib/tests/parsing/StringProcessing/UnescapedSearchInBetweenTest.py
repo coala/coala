@@ -1,7 +1,4 @@
-import sys
-import unittest
 
-sys.path.insert(0, ".")
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
 from coalib.parsing.StringProcessing import (InBetweenMatch,
@@ -221,7 +218,3 @@ class UnescapedSearchInBetweenTest(StringProcessingTestBase):
                self.search_in_between_begin_pattern,
                self.search_in_between_end_pattern)]},
             list)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

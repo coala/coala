@@ -1,7 +1,4 @@
-import sys
 import unittest
-
-sys.path.insert(0, ".")
 
 from coalib.misc.Exceptions import get_exitcode
 
@@ -14,7 +11,3 @@ class ExceptionsTest(unittest.TestCase):
         self.assertEqual(get_exitcode(SystemExit(999)), 999)
         self.assertEqual(get_exitcode(EOFError()), 0)
         self.assertEqual(get_exitcode(None), 0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

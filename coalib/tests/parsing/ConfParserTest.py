@@ -1,10 +1,8 @@
 from collections import OrderedDict
 import os
-import sys
 import tempfile
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 
@@ -15,6 +13,9 @@ class ConfParserTest(unittest.TestCase):
     TEST = tobeignored  # do you know that thats a comment
     test = push
     t =
+    escaped_\\=equal = escaped_\\#hash
+    escaped_\\\\backslash = escaped_\\ space
+    escaped_\\,comma = escaped_\\.dot
     [MakeFiles]
      j  , another = a
                    multiline
@@ -66,7 +67,10 @@ class ConfParserTest(unittest.TestCase):
             ('another', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
-            ('t', '')])
+            ('t', ''),
+            ('escaped_=equal', 'escaped_#hash'),
+            ('escaped_\\backslash', 'escaped_ space'),
+            ('escaped_,comma', 'escaped_.dot')])
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
@@ -88,7 +92,10 @@ class ConfParserTest(unittest.TestCase):
             ('a_default', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
-            ('t', '')])
+            ('t', ''),
+            ('escaped_=equal', 'escaped_#hash'),
+            ('escaped_\\backslash', 'escaped_ space'),
+            ('escaped_,comma', 'escaped_.dot')])
 
         # Pop off the default section.
         self.sections.popitem(last=False)
@@ -114,7 +121,10 @@ class ConfParserTest(unittest.TestCase):
             ('another', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
-            ('t', '')])
+            ('t', ''),
+            ('escaped_=equal', 'escaped_#hash'),
+            ('escaped_\\backslash', 'escaped_ space'),
+            ('escaped_,comma', 'escaped_.dot')])
 
         # Pop off the default and makefiles section.
         self.sections.popitem(last=False)
@@ -152,6 +162,3 @@ class ConfParserTest(unittest.TestCase):
 
     def test_config_directory(self):
         self.uut.parse(self.tempdir)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

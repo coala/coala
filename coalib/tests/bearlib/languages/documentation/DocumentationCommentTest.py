@@ -1,7 +1,5 @@
 import unittest
-import sys
 
-sys.path.insert(0, ".")
 from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
 
@@ -26,7 +24,3 @@ class DocumentationCommentTest(unittest.TestCase):
         self.assertEqual(str(uut), "qwertzuiop")
         self.assertEqual(uut.marker, ("##", "#", "#"))
         self.assertEqual(uut.range, None)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

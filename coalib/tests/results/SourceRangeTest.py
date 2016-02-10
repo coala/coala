@@ -1,8 +1,6 @@
-import sys
 import unittest
 from collections import namedtuple
 
-sys.path.insert(0, ".")
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.SourceRange import SourceRange
 
@@ -76,7 +74,3 @@ class SourceRangeExpandTest(unittest.TestCase):
         empty_range = SourceRange(empty_position, empty_position)
         full_range = SourceRange.from_values("filename", 1, 1, 3, 4)
         self.assertEqual(empty_range.expand(file), full_range)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

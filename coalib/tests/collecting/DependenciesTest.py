@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.bears.Bear import Bear
 from coalib.collecting import Dependencies
 
@@ -66,7 +64,3 @@ class DependenciesTest(unittest.TestCase):
             Dependencies.CircularDependencyError,
             Dependencies.resolve,
             [UnresolvableBear1])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

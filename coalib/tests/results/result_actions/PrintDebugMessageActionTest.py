@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.misc.ContextManagers import retrieve_stdout
@@ -29,7 +27,3 @@ class PrintDebugMessageActionTest(unittest.TestCase):
                              {})
             self.assertEqual(stdout.getvalue(),
                              self.test_result.debug_msg+"\n")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

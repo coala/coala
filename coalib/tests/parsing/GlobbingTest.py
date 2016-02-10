@@ -16,9 +16,7 @@ GlobTestDir
 """
 import os
 import unittest
-import sys
 
-sys.path.insert(0, ".")
 from coalib.parsing.Globbing import _iter_alternatives
 from coalib.parsing.Globbing import _iter_choices
 from coalib.parsing.Globbing import _position_is_bracketed
@@ -182,7 +180,8 @@ class GlobTest(unittest.TestCase):
     def _test_glob(self, pattern, file_list):
         results = sorted([os.path.normcase(g) for g in glob(pattern)])
         file_list = sorted([os.path.normcase(f) for f in file_list])
-        self.assertEqual(results, file_list)
+        self.assertEqual([i for i in results if "__pycache__" not in i],
+                         file_list)
 
     def test_collect_files(self):
         pattern = os.path.join(TestFiles.glob_test_dir, 'Sub*', 'File1?.py')
@@ -294,7 +293,8 @@ class GlobTest(unittest.TestCase):
         results = sorted([os.path.normcase(os.path.join(os.curdir, g))
                           for g in glob(pattern)])
         file_list = sorted([os.path.normcase(f) for f in file_list])
-        self.assertEqual(results, file_list)
+        self.assertEqual([i for i in results if "__pycache__" not in i],
+                         file_list)
         os.curdir = old_curdir
 
     def test_no_dirname(self):
@@ -308,6 +308,3 @@ class GlobTest(unittest.TestCase):
         file_list = sorted([os.path.normcase(f) for f in file_list])
         self.assertEqual(results, file_list)
         os.curdir = old_curdir
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

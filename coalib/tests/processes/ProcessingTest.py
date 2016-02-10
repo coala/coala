@@ -8,7 +8,6 @@ import re
 import subprocess
 from pyprint.ConsolePrinter import ConsolePrinter
 
-sys.path.insert(0, ".")
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.settings.ConfigurationGathering import gather_configuration
@@ -460,7 +459,3 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         retval, newres = print_result(results, {}, 0, lambda *args: None,
                                       self.section, self.log_printer, {}, [])
         self.assertNotEqual(newres, [])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

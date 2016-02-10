@@ -1,8 +1,6 @@
-import sys
 import unittest
 from os.path import isfile
 
-sys.path.insert(0, ".")
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -112,7 +110,3 @@ class ApplyPatchActionTest(unittest.TestCase):
     def test_is_applicable_without_patch(self):
         result = Result("", "")
         self.assertFalse(ApplyPatchAction.is_applicable(result, {}, {}))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

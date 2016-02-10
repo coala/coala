@@ -1,11 +1,9 @@
 from datetime import datetime
-import sys
+import unittest
 
-sys.path.insert(0, ".")
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.misc import Constants
 from coalib.processes.communication.LogMessage import LogMessage
-import unittest
 
 
 class LogMessageTest(unittest.TestCase):
@@ -78,7 +76,3 @@ class LogMessageTest(unittest.TestCase):
         self.assertEqual(
             self.uut.to_string_dict(),
             {"log_level": "", "message": "test", "timestamp": ""})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

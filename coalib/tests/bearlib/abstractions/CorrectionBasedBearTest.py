@@ -1,8 +1,5 @@
-import sys
-import unittest
 from queue import Queue
 
-sys.path.insert(0, ".")
 from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.IndentBear import IndentBear
@@ -46,7 +43,3 @@ class CorrectionBasedBearTest(LocalBearTestHelper):
         self.assertTrue(IndentBear.check_prerequisites())
 
         IndentBear.executable = old_binary
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

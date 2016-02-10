@@ -31,12 +31,16 @@ sudo apt-get -y install libperl-critic-perl
 # NPM commands
 npm install -g jshint alex remark dockerfile_lint csslint coffeelint
 
+# GO commands
+go get -u github.com/golang/lint/golint
+
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
   pyenv local $dep_version
   python --version
   source .misc/env_variables.sh
 
+  pip install -q -r test-requirements.txt
   pip install -q -r requirements.txt
 
   cd .misc

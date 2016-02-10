@@ -1,8 +1,5 @@
-import sys
 import unittest
 from unittest.case import skipIf
-
-sys.path.insert(0, ".")
 
 try:
     from coalib.output.dbus.DbusApp import DbusApp
@@ -28,7 +25,3 @@ class DbusAppTest(unittest.TestCase):
 
         uut.dispose_document(doc1)
         self.assertNotIn(doc1, uut.docs)
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

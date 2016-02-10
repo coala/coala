@@ -1,10 +1,8 @@
-import sys
 from datetime import datetime
 import unittest
 from pyprint.Printer import Printer
 from pyprint.NullPrinter import NullPrinter
 
-sys.path.insert(0, ".")
 from coalib.misc import Constants
 from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -132,7 +130,3 @@ class LogPrinterTest(unittest.TestCase):
         self.assertRaises(TypeError, uut.log, 5)
         self.assertRaises(TypeError, uut.log_exception, "message", 5)
         self.assertRaises(TypeError, uut.log_message, 5)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

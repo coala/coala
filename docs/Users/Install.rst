@@ -13,18 +13,80 @@ If you don't already have pip, you can install it like described on
 https://pip.pypa.io/en/stable/installing.html. Note that pip is shipped
 with recent python versions by default.
 
-To install the latest most stable version of coala, use:
+System wide installation
+------------------------
+
+The simplest way to install coa ais to do it system-wide. But, This is
+generally discouraged in favor or using a virtualenv.
+
+To install the latest most stable version of coala system-wide, use:
 
 ::
 
-    pip3 install coala
+    $ pip3 install coala
 
-You can get the latest prerelease version directly from our master
-branch:
+
+
+To install the nightly build from our master branch, you can do:
+
+.. note::
+
+    For this and all future steps, some steps require root access
+    (also known as administrative privileges in Windows).
+
+    **Unix based** (Max, Linux) - This can be achieved by using ``sudo``
+    in front of the command ``sudo command_name`` instead of
+    ``command_name``
+
+    **Windows** - The easiest way on windows is to start a
+    command prompt as an administrator and start ``setup.py``.
 
 ::
 
-    pip3 install coala --pre
+    $ pip3 install coala --pre
+
+Installing inside a virtualenv
+------------------------------
+
+Virtualenv is probably what you want to use during development,
+you’ll probably want to use it there, too. You can read more about
+it at their documentation - http://virtualenv.readthedocs.org
+
+First, we need to install virtualenv to the system. This can be done
+with ``pip3`` easily:
+
+::
+
+    pip3 install virtualenv
+
+Once you have virtualenv installed, just fire up a shell and create
+your own environment. I usually create a project folder and a ``venv``
+folder:
+
+::
+
+    $ virtualenv venv
+
+Now, whenever you want to work on the project, you only have to activate
+the corresponding environment.
+
+    On **Unix based** systems (OSX and Linux) this can be done with:
+
+    ::
+
+        $ source venv/bin/activate
+
+    And on **Windows** this is done with:
+
+    ::
+
+        $ venv\scripts\activate
+
+Finally, you install coala inside the activated vertualenv with:
+
+::
+
+    $ pip3 install coala
 
 Installing coala from source
 ----------------------------
@@ -32,6 +94,12 @@ Installing coala from source
 In order to install coala from source, it is recommended to install git.
 See http://git-scm.com/ for further information and a downloadable
 installer or use your package manager on linux to get it.
+
+.. note::
+
+    Again, here it is recommended to install coala inside a virtualenv.
+    This can be done by creating a virtualenv and running the installation
+    commands after the virtualenv has been activated.
 
 After having git installed, you can download the source code of coala
 with the following command:
@@ -57,16 +125,6 @@ installed by running
 You will have coala installed into your python scripts directory. On an
 unixoid system it is probably already available on your command line
 globally.
-
-Note that the usual installation requires root access. On an unixoid
-system (Mac, Linux) this can be achieved by using ``sudo``:
-
-::
-
-    sudo python3 setup.py install
-
-The easiest way to install under Windows is to start a command prompt as
-an administrator and start ``setup.py``.
 
 Alternate installation
 ~~~~~~~~~~~~~~~~~~~~~~

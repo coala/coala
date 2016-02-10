@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.parsing.StringProcessing import InBetweenMatch, Match
 
 
@@ -51,7 +49,3 @@ class InBetweenMatchTest(unittest.TestCase):
         self.assertEqual(uut.inside.position, 77)
         self.assertEqual(str(uut.end), "rises")
         self.assertEqual(uut.end.position, 90)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,11 +1,8 @@
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.CPPLintBear import CPPLintBear
 from coalib.settings.Section import Section
@@ -34,7 +31,3 @@ class CPPLintBearTest(LocalBearTestHelper):
         self.section.append(Setting("cpplint_ignore", "legal"))
         self.section.append(Setting("max_line_length", "13"))
         self.assertLinesInvalid(self.uut, [], self.test_file)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

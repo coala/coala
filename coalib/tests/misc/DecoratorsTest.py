@@ -1,7 +1,5 @@
 import unittest
-import sys
 
-sys.path.insert(0, ".")
 from coalib.misc.Decorators import (arguments_to_lists,
                                     yield_once,
                                     generate_repr,
@@ -323,7 +321,3 @@ class EnforceSignatureTest(unittest.TestCase):
 
         test_function(4, "t")
         test_function(None, "t", "anything", "test")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

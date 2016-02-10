@@ -1,8 +1,6 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.misc.Enum import enum
 import unittest
+
+from coalib.misc.Enum import enum
 
 
 class ProcessTest(unittest.TestCase):
@@ -23,7 +21,3 @@ class ProcessTest(unittest.TestCase):
         self.assertEqual(self.uut.reverse[self.uut.ONE], "ONE")
         self.assertEqual(self.uut.reverse[self.uut.TWO], "TWO")
         self.assertEqual(self.uut.reverse[self.uut.THREE], "THREE")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

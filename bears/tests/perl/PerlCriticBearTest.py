@@ -1,11 +1,8 @@
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.perl.PerlCriticBear import PerlCriticBear
@@ -33,6 +30,3 @@ class PerlCriticBearTest(LocalBearTestHelper):
         self.assertLinesInvalid(self.uut, [], self.bad_file)
         self.section.append(Setting("perlcritic_config", self.conf_file))
         self.assertLinesValid(self.uut, [], self.bad_file)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

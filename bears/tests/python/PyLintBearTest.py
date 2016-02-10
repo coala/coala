@@ -1,11 +1,8 @@
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.python.PyLintBear import PyLintBear
@@ -61,7 +58,3 @@ class PyLintBearTest(LocalBearTestHelper):
             self.uut,
             [],
             self.test_file)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

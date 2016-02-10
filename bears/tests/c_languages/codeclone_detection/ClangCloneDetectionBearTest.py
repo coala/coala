@@ -1,9 +1,6 @@
 import os
-import sys
 import unittest
 from queue import Queue
-
-sys.path.insert(0, ".")
 
 from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.c_languages.codeclone_detection.ClangFunctionDifferenceBear import (
@@ -88,7 +85,3 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
             result_check_function(
                 list(uut.run_bear_from_section([], arg_dict)),
                 "while analyzing "+file)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

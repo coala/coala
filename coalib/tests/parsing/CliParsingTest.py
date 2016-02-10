@@ -1,9 +1,7 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.parsing.CliParsing import parse_cli
 import unittest
 import argparse
+
+from coalib.parsing.CliParsing import parse_cli
 
 
 class CliParserTest(unittest.TestCase):
@@ -54,7 +52,3 @@ class CliParserTest(unittest.TestCase):
         self.assertEqual(parsed_sections["default"].name, "Default")
         self.assertEqual(self.dict_from_sections(parsed_sections),
                          expected_dict)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

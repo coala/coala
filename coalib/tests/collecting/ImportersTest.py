@@ -1,9 +1,6 @@
 import os
-import sys
-
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.collecting.Importers import import_objects
 from collections import OrderedDict
 
@@ -98,7 +95,3 @@ class ImportObjectsTest(unittest.TestCase):
                            attributes="method",
                            local=True,
                            verbose=False)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

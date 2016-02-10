@@ -1,8 +1,6 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.parsing.LineParser import LineParser
 import unittest
+
+from coalib.parsing.LineParser import LineParser
 
 
 class LineParserTest(unittest.TestCase):
@@ -79,7 +77,3 @@ class LineParserTest(unittest.TestCase):
         self.assertEqual(keys, output_keys)
         self.assertEqual(value, output_value)
         self.assertEqual(comment, output_comment)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,9 +1,7 @@
-import sys
 import os
 import unittest
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
 from coalib.misc import Constants
 
 try:
@@ -85,7 +83,3 @@ class DbusDocumentTest(unittest.TestCase):
         self.assertEqual(output[0], 255)
         self.assertEqual(output[1][1]["log_level"], "ERROR")
         self.assertEqual(output[1][1]["message"], Constants.CRASH_MESSAGE)
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

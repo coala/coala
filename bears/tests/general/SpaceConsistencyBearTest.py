@@ -1,8 +1,5 @@
-import sys
 from queue import Queue
 
-sys.path.insert(0, ".")
-import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.general.SpaceConsistencyBear import (SpaceConsistencyBear,
@@ -70,6 +67,3 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
                                  "    print('funny')\n",
                                  "    print('the result is not funny...')"],
                                 prepare_lines=False)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

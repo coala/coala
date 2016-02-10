@@ -1,8 +1,5 @@
-import sys
-import unittest
 from queue import Queue
 
-sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.python.PyCommentedCodeBear import PyCommentedCodeBear
 from coalib.settings.Section import Section
@@ -28,7 +25,3 @@ class PyCommentedCodeBearTest(LocalBearTestHelper):
     def test_invalid(self):
         self.assertLinesInvalid(self.uut, ["# import os"])
         self.assertLinesInvalid(self.uut, ["# print('comment')"])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

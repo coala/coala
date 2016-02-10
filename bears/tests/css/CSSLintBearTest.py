@@ -1,11 +1,8 @@
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.css.CSSLintBear import CSSLintBear
 from coalib.settings.Section import Section
@@ -30,7 +27,3 @@ class CSSLintBearTest(LocalBearTestHelper):
 
         # Test a file with errors and warnings
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

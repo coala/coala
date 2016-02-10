@@ -1,8 +1,6 @@
 import os
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from bears.tests.c_languages import skip_if_no_clang
 from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
@@ -87,7 +85,3 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
         cv_dict = self.uut.get_vectors_for_file(self.testfile)
 
         self.check_cv_dict(cv_dict, expected_results)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

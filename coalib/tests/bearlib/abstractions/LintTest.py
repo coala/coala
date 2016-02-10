@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
@@ -57,7 +55,3 @@ class LintTest(unittest.TestCase):
             "*************\n",
             'a/file.py'))
         self.assertEqual(len(out), 0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

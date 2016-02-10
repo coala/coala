@@ -1,11 +1,8 @@
 import os
-import sys
-import unittest
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.ruby.RubyLintBear import RubyLintBear
 from coalib.settings.Section import Section
@@ -30,7 +27,3 @@ class RubyLintBearTest(LocalBearTestHelper):
 
         # Test a file with issues
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

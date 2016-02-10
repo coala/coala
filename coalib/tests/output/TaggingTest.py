@@ -1,8 +1,6 @@
 import unittest
 import os
-import sys
 
-sys.path.insert(0, ".")
 from coalib.output.Tagging import (get_tag_path,
                                    tag_results,
                                    load_tagged_results,
@@ -27,7 +25,3 @@ class TaggingTest(unittest.TestCase):
     def test_delete_tagged_results_no_file(self):
         delete_tagged_results("test_tag", "test_path")
         self.assertFalse(os.path.exists(get_tag_path("test_tag", "test_path")))
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

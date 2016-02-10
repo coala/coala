@@ -1,7 +1,5 @@
-import sys
-
-sys.path.insert(0, ".")
 import unittest
+
 from coalib.settings.Section import Section
 from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 
@@ -14,7 +12,3 @@ class GlobalBearTest(unittest.TestCase):
 
     def test_kind(self):
         self.assertEqual(GlobalBear.kind(), BEAR_KIND.GLOBAL)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import locale
 from urllib.request import urlopen
 from shutil import copyfileobj
@@ -7,6 +8,7 @@ from os.path import exists
 from os import getenv
 from subprocess import call
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 import setuptools.command.build_py
 
 from coalib import assert_supported_version
@@ -49,6 +51,15 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
         setuptools.command.build_py.build_py.run(self)
 
 
+class PyTestCommand(TestCommand):
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main([])
+        sys.exit(errno)
+
+
 # Generate API documentation only if we are running on readthedocs.org
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
@@ -56,6 +67,9 @@ if on_rtd:
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
+
+with open('test-requirements.txt') as requirements:
+    test_required = requirements.read().splitlines()
 
 
 if __name__ == "__main__":
@@ -77,6 +91,7 @@ if __name__ == "__main__":
           platforms='any',
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
           install_requires=required,
+          tests_require=test_required,
           package_data={'coalib': ['default_coafile', "VERSION"],
                         'bears.java': ['checkstyle.jar', 'google_checks.xml']},
           license="AGPL-3.0",
@@ -127,4 +142,5 @@ if __name__ == "__main__":
               'Topic :: Text Processing :: Linguistic'],
           cmdclass={'build_manpage': BuildManPage,
                     'build_dbus': BuildDbusService,
-                    'build_py': BuildPyCommand})
+                    'build_py': BuildPyCommand,
+                    'test': PyTestCommand})

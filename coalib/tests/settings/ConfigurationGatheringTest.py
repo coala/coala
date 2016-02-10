@@ -1,12 +1,10 @@
 import os
-import sys
 import re
 import tempfile
 import unittest
 from pyprint.NullPrinter import NullPrinter
 from pyprint.ClosableObject import close_objects
 
-sys.path.insert(0, ".")
 from coalib.misc import Constants
 from coalib.parsing.StringProcessing import escape
 from coalib.settings.ConfigurationGathering import (gather_configuration,
@@ -68,7 +66,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer)
+            self.log_printer,
+            arg_list=[])
 
         self.assertEqual(str(sections["test"]),
                          "test {value : '1', testval : '5'}")
@@ -85,7 +84,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer)
+            self.log_printer,
+            arg_list=[])
 
         self.assertEqual(str(sections["test"]),
                          "test {value : '1', testval : '5'}")
@@ -103,7 +103,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
         Constants.system_coafile = filename
 
         with self.assertRaises(SystemExit):
-            gather_configuration(lambda *args: True, self.log_printer)
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=[])
 
         Constants.system_coafile = tmp
 
@@ -195,6 +197,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with open(filename, "r") as f:
             lines = f.readlines()
         os.remove(filename)
+        if os.path.sep == '\\':
+            filename = escape(filename, '\\')
         self.assertEqual(["[Default]\n",
                           "config = " + filename + "\n",
                           "\n",
@@ -231,7 +235,3 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         self.assertRegex(str(sections["default"]),
                          ".*find_config : 'True'.*, config : '.*'")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

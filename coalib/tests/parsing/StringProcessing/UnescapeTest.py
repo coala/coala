@@ -1,7 +1,4 @@
-import sys
-import unittest
 
-sys.path.insert(0, ".")
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
 from coalib.parsing.StringProcessing import unescape
@@ -43,7 +40,3 @@ class UnescapeTest(StringProcessingTestBase):
         self.assertEqual(unescape("hello\\"), "hello")
         self.assertEqual(unescape("te\\st\\\\"), "test\\")
         self.assertEqual(unescape("\\\\\\"), "\\")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

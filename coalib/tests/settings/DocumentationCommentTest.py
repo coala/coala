@@ -1,7 +1,4 @@
-import sys
 import unittest
-
-sys.path.insert(0, ".")
 
 from coalib.settings.DocumentationComment import DocumentationComment
 
@@ -71,7 +68,3 @@ class DocumentationCommentParserTest(unittest.TestCase):
         self.assertEqual(doc_comment.desc, desc)
         self.assertEqual(doc_comment.param_dict, param_dict)
         self.assertEqual(doc_comment.retval_desc, retval_desc)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

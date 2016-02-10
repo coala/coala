@@ -129,7 +129,3 @@ class StringProcessingTestBase(unittest.TestCase):
                 postprocess(func(*args, **kwargs)),
                 result,
                 self._construct_message(func, args, kwargs))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

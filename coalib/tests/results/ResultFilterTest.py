@@ -1,9 +1,7 @@
 import os
 from os.path import abspath
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.results.ResultFilter import filter_results, remove_range
 from coalib.results.ResultFilter import remove_result_ranges_diffs
 from coalib.results.Diff import Diff
@@ -509,6 +507,3 @@ class ResultFilterTest(unittest.TestCase):
         expected_diff = Diff.from_string_arrays(test_file, ["abc"])
 
         self.assertEqual(result_diff, expected_diff)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

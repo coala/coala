@@ -176,7 +176,7 @@ Your function needs to return an iterable of ``Result`` objects: that
 means you can either return a ``list`` of ``Result`` objects or simply
 yield them and write the method as a generator.
 
-    **Note**:
+.. note::
 
     We are currently planning to simplify Bears for bear writers and us.
     In order to make your Bear future proof, we recommend writing your

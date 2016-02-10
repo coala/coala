@@ -1,11 +1,8 @@
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.configfiles.DockerfileLintBear import DockerfileLintBear
 from coalib.settings.Section import Section
@@ -27,7 +24,3 @@ class DockerfileLintBearTest(LocalBearTestHelper):
     def test_run(self):
         self.assertLinesValid(self.uut, [], self.test_file1)
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

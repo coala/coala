@@ -1,8 +1,6 @@
-import sys
-
-sys.path.insert(0, ".")
-from coalib.misc.StringConverter import StringConverter
 import unittest
+
+from coalib.misc.StringConverter import StringConverter
 
 
 class StringConverterTest(unittest.TestCase):
@@ -178,7 +176,3 @@ class StringConverterTest(unittest.TestCase):
         self.assertNotEqual(StringConverter(""),
                             StringConverter("i dont know "))
         self.assertNotEqual(5, StringConverter("i dont know "))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,9 +1,7 @@
 import queue
-import sys
 import multiprocessing
-
-sys.path.insert(0, ".")
 import unittest
+
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
@@ -331,7 +329,3 @@ d
                          len(local_result_expected))
         self.assertRaises(queue.Empty, self.message_queue.get, timeout=0)
         self.assertRaises(queue.Empty, self.control_queue.get, timeout=0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

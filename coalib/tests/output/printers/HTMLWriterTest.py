@@ -1,9 +1,7 @@
-import sys
 import os
 import tempfile
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.output.printers.HTMLWriter import HTMLWriter
 
 
@@ -106,6 +104,3 @@ class HTMLWriterTest(unittest.TestCase):
                               '<html>\n',
                               '    <br/>\n',
                               '</html>\n'])
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

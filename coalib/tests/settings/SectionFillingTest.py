@@ -1,8 +1,6 @@
 import unittest
-import sys
 from pyprint.ConsolePrinter import ConsolePrinter
 
-sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
@@ -87,7 +85,3 @@ class SectionFillingTest(unittest.TestCase):
         self.assertTrue("global name" in new_section)
         self.assertEqual(new_section["key"].value, "val")
         self.assertEqual(len(new_section.contents), 3)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

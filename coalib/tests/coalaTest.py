@@ -9,7 +9,6 @@ if sys.version_info < (3, 4):
 else:
     import importlib
 
-sys.path.insert(0, ".")
 from coalib.misc.ContextManagers import retrieve_stdout, make_temp
 from coalib import coala_ci
 from coalib.settings import ConfigurationGathering
@@ -95,7 +94,3 @@ class coalaTest(unittest.TestCase):
             execute_coala_ci(("-c", re.escape(coafile)))
             self.assertFalse(os.path.isfile(orig_file.name))
             self.assertTrue(os.path.isfile(unrelated_file))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

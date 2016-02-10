@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.results.TextPosition import TextPosition
 from coalib.results.TextRange import TextRange
 
@@ -152,7 +150,3 @@ class TextRangeExpandTest(unittest.TestCase):
         semi_range = TextRange.from_values(2, None, 3, None)
         full_range = TextRange.from_values(2, 1, 3, 6)
         self.assertEqual(semi_range.expand(file), full_range)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

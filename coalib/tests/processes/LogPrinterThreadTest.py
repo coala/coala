@@ -1,8 +1,6 @@
 import unittest
 import queue
-import sys
 
-sys.path.insert(0, ".")
 from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.ContextManagers import retrieve_stdout
@@ -36,6 +34,3 @@ class LogPrinterThreadTest(unittest.TestCase):
             self.assertEqual(stdout.getvalue(),
                              "Sample message 1\nSample message 2\nSample "
                              "message 3\n")
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,7 +1,5 @@
-import sys
-
-sys.path.insert(0, ".")
 import unittest
+
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
@@ -108,7 +106,3 @@ class FunctionMetadataTest(unittest.TestCase):
         self.assertEqual(metadata.retval_desc, retval_desc)
         self.assertEqual(metadata.non_optional_params, non_optional_params)
         self.assertEqual(metadata.optional_params, optional_params)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

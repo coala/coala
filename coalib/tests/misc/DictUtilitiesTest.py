@@ -1,8 +1,6 @@
 import unittest
-import sys
 from collections import OrderedDict
 
-sys.path.insert(0, ".")
 from coalib.misc.DictUtilities import inverse_dicts, update_ordered_dict_key
 
 
@@ -47,7 +45,3 @@ class DictUtilitiesTest(unittest.TestCase):
         self.assertEqual("OrderedDict([('section', 'Some stuff'), "
                          "('pythoncheck', 'Somemore stuff')])",
                          self.ordered_dict.__str__())
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,8 +1,5 @@
-import sys
-import unittest
 from queue import Queue
 
-sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.natural_language.reSTLintBear import reSTLintBear
 from coalib.settings.Section import Section
@@ -18,7 +15,3 @@ class reSTLintBearTest(LocalBearTestHelper):
 
     def test_invalid(self):
         self.assertLinesInvalid(self.uut, ["test\n==\n"])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

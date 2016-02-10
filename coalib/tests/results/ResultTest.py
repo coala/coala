@@ -1,8 +1,6 @@
 from os.path import abspath
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.results.Diff import Diff
 from coalib.results.SourceRange import SourceRange
@@ -146,7 +144,3 @@ class ResultTest(unittest.TestCase):
                          SourceRange.from_values('f'))
         result_d = Result("o", "m", affected_code=affected_code)
         self.assertEqual(result_d.location_repr(), "'f'")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

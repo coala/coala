@@ -1,8 +1,5 @@
-import sys
-import unittest
 from queue import Queue
 
-sys.path.insert(0, ".")
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.js.JSONFormatBear import JSONFormatBear
 from coalib.settings.Section import Section, Setting
@@ -42,7 +39,3 @@ class JSONFormatBearTest(LocalBearTestHelper):
 
         self.section.append(Setting("tab_width", "3"))
         self.assertLinesValid(self.uut, test_code)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,11 +1,8 @@
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.php.PHPLintBear import PHPLintBear
 from coalib.settings.Section import Section
@@ -36,7 +33,3 @@ class PHPLintBearTest(LocalBearTestHelper):
             self.uut,
             [],
             self.test_file2)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,12 +1,9 @@
 import os
-
-import sys
-
-sys.path.insert(0, ".")
-from coalib.output.ConfWriter import ConfWriter
-from coalib.parsing.ConfParser import ConfParser
 import unittest
 import tempfile
+
+from coalib.output.ConfWriter import ConfWriter
+from coalib.parsing.ConfParser import ConfParser
 
 
 class ConfWriterTest(unittest.TestCase):
@@ -21,7 +18,13 @@ class ConfWriterTest(unittest.TestCase):
                     "                   multiline \n"
                     "                   value \n"
                     "    ; just a omment \n"
-                    "    ; just a omment \n")
+                    "    ; just a omment \n"
+                    "    key\\ space = value space\n"
+                    "    key\\=equal = value=equal\n"
+                    "    key\\\\backslash = value\\\\backslash\n"
+                    "    key\\,comma = value,comma\n"
+                    "    key\\#hash = value\\#hash\n"
+                    "    key\\.dot = value.dot\n")
 
     def setUp(self):
         self.file = os.path.join(tempfile.gettempdir(), "ConfParserTestFile")
@@ -54,7 +57,13 @@ class ConfWriterTest(unittest.TestCase):
                        "multiline\n",
                        "value\n",
                        "; just a omment\n",
-                       "; just a omment\n"]
+                       "; just a omment\n",
+                       "key\\ space = value space\n",
+                       "key\\=equal = value=equal\n",
+                       "key\\\\backslash = value\\\\backslash\n",
+                       "key\\,comma = value,comma\n",
+                       "key\\#hash = value\\#hash\n",
+                       "key\\.dot = value.dot\n"]
         self.uut.write_sections(self.conf_parser.parse(self.file))
         self.uut.close()
 
@@ -62,7 +71,3 @@ class ConfWriterTest(unittest.TestCase):
             lines = f.readlines()
 
         self.assertEqual(result_file, lines)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

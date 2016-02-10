@@ -1,10 +1,8 @@
 import subprocess
-import sys
 import os
 import unittest
 import tempfile
 
-sys.path.insert(0, ".")
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -113,7 +111,3 @@ class OpenEditorActionTest(unittest.TestCase):
 
         self.assertFalse(
             OpenEditorAction.is_applicable(invalid_result, None, None))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,7 +1,5 @@
-import sys
 from math import sqrt
 
-sys.path.insert(0, ".")
 import unittest
 from bears.c_languages.codeclone_detection.CountVector import CountVector
 
@@ -139,7 +137,3 @@ class CountVectorTest(unittest.TestCase):
 
         for elem in count_vector_difference_matrix:
             self.check_difference(*elem, diff_function="maxabs")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

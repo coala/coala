@@ -2,7 +2,6 @@ import os
 import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.misc.Shell import (prepare_string_argument,
                                escape_path_argument,
                                run_interactive_shell_command,
@@ -176,7 +175,3 @@ class PrepareStringArgumentTest(unittest.TestCase):
 
         for string in self.test_strings:
             self.assertEqual(prepare_string_argument(string, testos), string)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

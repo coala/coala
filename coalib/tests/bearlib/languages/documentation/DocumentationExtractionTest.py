@@ -1,8 +1,6 @@
 import os.path
 import unittest
-import sys
 
-sys.path.insert(0, ".")
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
@@ -218,7 +216,3 @@ class DocumentationExtractionTest(unittest.TestCase):
                                   "return at end.",
                                   docstyle_PYTHON3_doxygen.markers[1],
                                   TextRange.from_values(1, 1, 1, 55))])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

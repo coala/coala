@@ -1,8 +1,6 @@
 import os
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.settings.Setting import Setting
 from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
@@ -241,7 +239,3 @@ class ClangCountingConditionsTest(unittest.TestCase):
              "b": [1],
              "#1": [0],
              "#2": [1]})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -3,11 +3,9 @@ from tempfile import mkdtemp
 import os
 import platform
 import stat
-import sys
 import shutil
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.misc.Shell import run_shell_command
 from coalib.settings.Section import Section
 from bears.vcs.git.GitCommitBear import GitCommitBear
@@ -148,7 +146,3 @@ class GitCommitBearTest(unittest.TestCase):
         self.assertEqual(self.run_uut(body_line_length=41),
                          ["Body of HEAD commit contains too long lines."])
         self.assertTrue(self.msg_queue.empty())
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -5,7 +5,6 @@ from unittest.case import skipIf
 import subprocess
 import time
 
-sys.path.insert(0, ".")
 from coalib.misc import Constants
 
 try:
@@ -156,7 +155,3 @@ class DbusTest(unittest.TestCase):
     def tearDown(self):
         if self.subprocess:
             self.subprocess.kill()
-
-
-if __name__ == "__main__" and not skip:
-    unittest.main(verbosity=2)

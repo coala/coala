@@ -1,7 +1,5 @@
-import sys
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.misc import Constants
 from coalib.output.printers.StringPrinter import StringPrinter
 
@@ -47,7 +45,3 @@ class StringPrinterTest(unittest.TestCase):
         self.assertNotIn(Constants.COMPLEX_TEST_STRING, uut.string)
         uut.print(Constants.COMPLEX_TEST_STRING)
         self.assertEqual(Constants.COMPLEX_TEST_STRING + "\n", uut.string)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

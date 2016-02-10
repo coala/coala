@@ -1,8 +1,6 @@
-import sys
 import multiprocessing
 import unittest
 
-sys.path.insert(0, ".")
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.processes.communication.LogMessage import LogMessage
@@ -168,7 +166,3 @@ class BearTest(unittest.TestCase):
                            "The bear BearWithPrerequisites does not fulfill "
                            "all requirements. Just because I want to.")
         self.assertTrue(self.queue.empty())
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
