@@ -98,6 +98,13 @@ def default_arg_parser(formatter_class=None):
                             nargs='+',
                             metavar='SETTING',
                             help=SETTINGS_HELP)
+    if parser_type == 'coala-json':
+        arg_parser.add_argument('--text-logs',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                help='Don\'t display logs as json, display '
+                                     'them as we normally do in the console.')
     if parser_type == 'coala':
         SHOW_BEARS_HELP = ("Display bears and its metadata with the sections "
                            "that they belong to")

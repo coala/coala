@@ -31,11 +31,13 @@ def main():
     except BaseException as exception:  # Ignore PyLintBear
         return get_exitcode(exception)
 
-    log_printer = ListLogPrinter()
+    log_printer = None if args.text_logs else ListLogPrinter()
+    results, exitcode = run_coala(log_printer=log_printer, autoapply=False)
 
-    results, exitcode = run_coala(log_printer, autoapply=False)
+    retval = {"results": results}
+    if not args.text_logs:
+        retval["logs"] = log_printer.logs
 
-    retval = {"logs": log_printer.logs, "results": results}
     print(json.dumps(retval,
                      cls=JSONEncoder,
                      sort_keys=True,
