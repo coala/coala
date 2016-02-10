@@ -23,7 +23,7 @@ INSTALLATION
 
 coala can be installed with ``pip install coala``. If you need more
 information about the installation and dependencies, take a look at our
-`installation documentation <http://coala.rtfd.org/en/latest/Users/Install/>`__.
+`installation documentation <http://coala.rtfd.org/en/latest/Users/Install.html>`__.
 
 The latest code from master is automatically deployed to PyPI as a
 development version. Get it with ``pip install coala --pre``.
@@ -35,7 +35,7 @@ USAGE
 
 If you want to learn more about coala, its functionality and its usage,
 please take a look at our
-`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorial/>`__.
+`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorial.html>`__.
 
 ABOUT
 =====
@@ -66,7 +66,7 @@ GETTING INVOLVED
 ================
 
 If you want to contribute to coala, please take a look at the `Getting
-Involved Information <http://coala.readthedocs.org/en/latest/Getting_Involved/README/>`__.
+Involved Information <http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__.
 
 We appreciate any help!
 
