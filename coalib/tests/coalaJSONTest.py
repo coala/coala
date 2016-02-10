@@ -3,6 +3,7 @@ import os
 import unittest
 import re
 import json
+
 from coalib import coala_json
 from coalib.tests.TestUtilities import execute_coala
 
@@ -49,3 +50,8 @@ class coalaJSONTest(unittest.TestCase):
             if "During execution, we found that some" in msg["message"]:
                 found = True
         self.assertTrue(found)
+
+    def test_version(self):
+        retval, output = execute_coala(coala_json.main, 'coala-json', '-v')
+        self.assertEquals(retval, 0)
+        self.assertNotIn("{", output)
