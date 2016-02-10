@@ -1,6 +1,5 @@
-from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.natural_language.LanguageToolBear import LanguageToolBear
-
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 LanguageToolBearTest = verify_local_bear(
     LanguageToolBear,

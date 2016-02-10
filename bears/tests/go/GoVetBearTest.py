@@ -3,8 +3,8 @@ from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.go.GoVetBear import GoVetBear
+from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
 
 

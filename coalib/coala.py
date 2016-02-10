@@ -12,14 +12,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import functools
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.output.ConsoleInteraction import (nothing_done,
-                                              acquire_settings,
-                                              print_section_beginning,
-                                              print_results,
-                                              show_bears)
 from coalib.coala_main import run_coala
+from coalib.output.ConsoleInteraction import (
+    acquire_settings, nothing_done, print_results, print_section_beginning,
+    show_bears)
 
 
 def main():

@@ -6,6 +6,7 @@ algorithm.)
 
 
 from clang.cindex import CursorKind
+
 from coalib.misc.Enum import enum
 
 

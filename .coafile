@@ -13,6 +13,12 @@ bears = PEP8Bear
 
 default_actions = PEP8Bear: ApplyPatchAction
 
+[pyimport]
+ignore = coala, setup.py, coalib/parsing/StringProcessing/__init__.py
+bears = PyImportSortBear
+
+default_actions = PyImportSortBear: ApplyPatchAction
+
 [python]
 # Patches may conflict with autopep8 so putting them in own section so they
 # will be executed sequentially; also we need the LineLengthBear to double

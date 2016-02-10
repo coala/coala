@@ -1,11 +1,11 @@
-from collections import OrderedDict
 import copy
 import os
+from collections import OrderedDict
 
-from coalib.misc.Decorators import generate_repr, enforce_signature
-from coalib.settings.Setting import Setting, path_list
-from coalib.misc.DictUtilities import update_ordered_dict_key
 from coalib.misc import Constants
+from coalib.misc.Decorators import enforce_signature, generate_repr
+from coalib.misc.DictUtilities import update_ordered_dict_key
+from coalib.settings.Setting import Setting, path_list
 
 
 def append_to_sections(sections,

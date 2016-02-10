@@ -1,10 +1,8 @@
-import unittest
 import os
+import unittest
 
-from coalib.output.Tagging import (get_tag_path,
-                                   tag_results,
-                                   load_tagged_results,
-                                   delete_tagged_results)
+from coalib.output.Tagging import (
+    delete_tagged_results, get_tag_path, load_tagged_results, tag_results)
 
 
 class TaggingTest(unittest.TestCase):

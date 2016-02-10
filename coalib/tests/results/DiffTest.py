@@ -1,10 +1,11 @@
-import unittest
 import json
+import unittest
+
+from clang.cindex import Index
 
 from bears.tests.c_languages import skip_if_no_clang
-from coalib.results.Diff import Diff, ConflictError, SourceRange
-from clang.cindex import Index
 from coalib.output.JSONEncoder import JSONEncoder
+from coalib.results.Diff import ConflictError, Diff, SourceRange
 
 
 class DiffTest(unittest.TestCase):

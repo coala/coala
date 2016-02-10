@@ -1,7 +1,6 @@
 import os
 import platform
 
-
 THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
                  "Please contact the developers for assistance.")
 

@@ -1,7 +1,7 @@
 from queue import Queue
 
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.js.JSONFormatBear import JSONFormatBear
+from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section, Setting
 
 

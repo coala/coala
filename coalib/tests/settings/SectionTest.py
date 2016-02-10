@@ -1,7 +1,7 @@
 import unittest
 
-from coalib.settings.Section import Section, Setting, append_to_sections
 from coalib.misc import Constants
+from coalib.settings.Section import Section, Setting, append_to_sections
 
 
 class SectionTest(unittest.TestCase):

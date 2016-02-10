@@ -1,10 +1,10 @@
-from queue import Queue
 import unittest
+from queue import Queue
 
+from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-from bears.tests.BearTestHelper import generate_skip_decorator
 
 
 class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover

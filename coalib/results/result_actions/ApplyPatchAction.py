@@ -1,8 +1,8 @@
 import shutil
 from os.path import isfile
 
-from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Diff import ConflictError
+from coalib.results.result_actions.ResultAction import ResultAction
 
 
 class ApplyPatchAction(ResultAction):

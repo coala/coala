@@ -1,18 +1,18 @@
-import sys
 import os
-import unittest
 import re
-from tempfile import TemporaryDirectory, NamedTemporaryFile
+import sys
+import unittest
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+
+from coalib import coala_ci
+from coalib.misc.ContextManagers import make_temp, retrieve_stdout
+from coalib.output.Tagging import get_tag_path
+from coalib.settings import ConfigurationGathering
 
 if sys.version_info < (3, 4):
     import imp as importlib
 else:
     import importlib
-
-from coalib.misc.ContextManagers import retrieve_stdout, make_temp
-from coalib import coala_ci
-from coalib.settings import ConfigurationGathering
-from coalib.output.Tagging import get_tag_path
 
 
 def execute_coala_ci(args):

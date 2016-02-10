@@ -12,7 +12,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from coalib.coala_main import run_coala
-
 from coalib.output.ConsoleInteraction import print_results_formatted
 
 

@@ -1,7 +1,7 @@
 
+from coalib.parsing.StringProcessing import split
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
-from coalib.parsing.StringProcessing import split
 
 
 class SplitTest(StringProcessingTestBase):

@@ -1,4 +1,5 @@
 import traceback
+
 from pyprint.ColorPrinter import ColorPrinter
 
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL, LOG_LEVEL_COLORS

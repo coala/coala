@@ -2,8 +2,8 @@ from bears.c_languages.ClangBear import clang_available
 from bears.c_languages.codeclone_detection.ClangFunctionDifferenceBear import (
     ClangFunctionDifferenceBear)
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 class ClangCloneDetectionBear(GlobalBear):

@@ -1,8 +1,8 @@
 from queue import Queue
 
+from bears.c_languages.IndentBear import IndentBear
 from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.c_languages.IndentBear import IndentBear
 from coalib.settings.Section import Section
 
 

@@ -1,9 +1,9 @@
-from datetime import datetime
 import unittest
+from datetime import datetime
 
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
-from coalib.processes.communication.LogMessage import LogMessage
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.processes.communication.LogMessage import LogMessage
 
 
 class ListLogPrinterTest(unittest.TestCase):

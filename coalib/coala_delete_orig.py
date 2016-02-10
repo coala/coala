@@ -1,9 +1,10 @@
 import os
-from os.path import isdir, dirname
+from os.path import dirname, isdir
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.parsing.Globbing import glob
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.parsing.Globbing import glob
 from coalib.settings.Section import Section
 
 

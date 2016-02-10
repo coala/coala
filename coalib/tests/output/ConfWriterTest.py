@@ -1,6 +1,6 @@
 import os
-import unittest
 import tempfile
+import unittest
 
 from coalib.output.ConfWriter import ConfWriter
 from coalib.parsing.ConfParser import ConfParser

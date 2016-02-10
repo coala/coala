@@ -1,6 +1,5 @@
-from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.matlab.MatlabIndentationBear import MatlabIndentationBear
-
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 MatlabIndentationBearTest = verify_local_bear(
     MatlabIndentationBear,

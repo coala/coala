@@ -1,9 +1,9 @@
-import unittest
 import queue
+import unittest
 
-from coalib.processes.LogPrinterThread import LogPrinterThread
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.ContextManagers import retrieve_stdout
+from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.processes.LogPrinterThread import LogPrinterThread
 
 
 class TestPrinter(LogPrinter):

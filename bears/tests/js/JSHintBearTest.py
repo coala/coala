@@ -3,10 +3,10 @@ from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-from coalib.settings.Setting import Setting
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.js.JSHintBear import JSHintBear
+from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 @skipIf(which('jshint') is None, 'JSHint is not installed')

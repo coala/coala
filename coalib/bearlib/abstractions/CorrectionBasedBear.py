@@ -1,10 +1,10 @@
 import shutil
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Diff import Diff
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 def is_binary_present(cls):

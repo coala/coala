@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 
-import sys
-import locale
-from urllib.request import urlopen
-from shutil import copyfileobj
-from os.path import exists
-from os import getenv
-from subprocess import call
-from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
-import setuptools.command.build_py
-
 from coalib import assert_supported_version
 assert_supported_version()
+
+import locale
+import sys
+from os import getenv
+from os.path import exists
+from shutil import copyfileobj
+from subprocess import call
+from urllib.request import urlopen
+
+import setuptools.command.build_py
+from setuptools import find_packages, setup
+from setuptools.command.test import test as TestCommand
+
+from coalib.misc import Constants
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
-from coalib.misc import Constants
 
 try:
     locale.getlocale()
