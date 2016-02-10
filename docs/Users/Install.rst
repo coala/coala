@@ -126,6 +126,16 @@ You will have coala installed into your python scripts directory. On an
 unixoid system it is probably already available on your command line
 globally.
 
+You may also install a development version of coala to test and make changes
+easily. To do this run:
+
+::
+
+    $ python3 setup.py develop
+
+This essentially lets you install coala in a way that allows you to make
+changes to the code and see the changes take effect immediately.
+
 Alternate installation
 ~~~~~~~~~~~~~~~~~~~~~~
 
