@@ -55,3 +55,20 @@ class LintTest(unittest.TestCase):
             "*************\n",
             'a/file.py'))
         self.assertEqual(len(out), 0)
+
+    def test_missing_binary(self):
+        old_binary = Lint.executable
+        invalid_binary = "invalid_binary_which_doesnt_exist"
+        Lint.executable = invalid_binary
+
+        self.assertEqual(Lint.check_prerequisites(),
+                         "'{}' is not installed.".format(invalid_binary))
+
+        # "echo" is existent on nearly all platforms.
+        Lint.executable = "echo"
+        self.assertTrue(Lint.check_prerequisites())
+
+        del Lint.executable
+        self.assertTrue(Lint.check_prerequisites())
+
+        Lint.executable = old_binary

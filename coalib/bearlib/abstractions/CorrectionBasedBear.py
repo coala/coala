@@ -1,33 +1,10 @@
-import shutil
 from subprocess import Popen, PIPE
 
+from coalib.bearlib.abstractions.Lint import is_binary_present
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Diff import Diff
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
-
-
-def is_binary_present(cls):
-    """
-    Checks whether the needed binary is present.
-
-    The function is intended be used with classes
-    having an executable member which will be checked.
-
-    :return: True if binary is present, or is not required.
-             not True otherwise, with a string containing a
-             detailed description of what's missing.
-    """
-    try:
-        if cls.executable is None:
-            return True
-        if shutil.which(cls.executable) is None:
-            return repr(cls.executable) + " is not installed."
-        else:
-            return True
-    except AttributeError:
-        # Happens when `executable` does not exist in `cls`.
-        return True
 
 
 class CorrectionBasedBear(LocalBear):
