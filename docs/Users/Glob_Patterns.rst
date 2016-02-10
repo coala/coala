@@ -44,6 +44,7 @@ brackets have to be placed at the first position.
 
 ::
 
+    >>> from coalib.parsing.Globbing import fnmatch
     >>> fnmatch("aaa", "a[abc]a")
     True
     >>> fnmatch("aaa", "a[bcd]a")
