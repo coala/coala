@@ -7,21 +7,26 @@ class ConfWriter(ClosableObject):
 
     def __init__(self,
                  file_name,
-                 key_value_delimiter='=',
-                 key_delimiter=',',
-                 section_name_surrounding_beg='[',
-                 section_name_surrounding_end="]",
+                 key_value_delimiters=('=',),
+                 key_delimiters=(',',),
+                 section_name_surroundings=None,
                  unsavable_keys=("save",)):
+        section_name_surroundings = section_name_surroundings or {"[": "]"}
         ClosableObject.__init__(self)
         self.__file_name = file_name
         self.__file = open(self.__file_name, "w")
-        self.__key_value_delimiter = key_value_delimiter
-        self.__key_delimiter = key_delimiter
-        self.__section_name_surrounding_beg = section_name_surrounding_beg
-        self.__section_name_surrounding_end = section_name_surrounding_end
+        self.__key_value_delimiters = key_value_delimiters
+        self.__key_delimiters = key_delimiters
+        self.__section_name_surroundings = section_name_surroundings
         self.__unsavable_keys = unsavable_keys
         self.__wrote_newline = True
         self.__closed = False
+
+        self.__key_delimiter = self.__key_delimiters[0]
+        self.__key_value_delimiter = self.__key_value_delimiters[0]
+        (self.__section_name_surrounding_beg,
+         self.__section_name_surrounding_end) = (
+            tuple(self.__section_name_surroundings.items())[0])
 
     def _close(self):
         self.__file.close()
