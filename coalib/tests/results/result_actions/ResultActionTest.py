@@ -37,7 +37,3 @@ class ResultActionTest(unittest.TestCase):
         self.assertEqual(len(uut.get_metadata().optional_params), 0)
         self.assertEqual(uut.get_metadata().name, "ResultAction")
         self.assertTrue(uut.is_applicable(result, None, None))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

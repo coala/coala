@@ -155,7 +155,3 @@ class DbusTest(unittest.TestCase):
     def tearDown(self):
         if self.subprocess:
             self.subprocess.kill()
-
-
-if __name__ == "__main__" and not skip:
-    unittest.main(verbosity=2)

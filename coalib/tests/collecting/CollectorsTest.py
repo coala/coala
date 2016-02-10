@@ -197,7 +197,3 @@ class CollectBearsTest(unittest.TestCase):
             ["*"],
             ["other_kind"],
             self.log_printer)), 0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

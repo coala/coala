@@ -66,7 +66,3 @@ class ShowPatchActionTest(unittest.TestCase):
                              "|    |++++| b\n"
                              "|    |   1|+first\n"
                              "|   1|   2| old_first\n")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

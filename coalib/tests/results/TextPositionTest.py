@@ -30,7 +30,3 @@ class TextPositionTest(unittest.TestCase):
         uut = TextPosition(8, 39)
         self.assertEqual(uut.line, 8)
         self.assertEqual(uut.column, 39)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

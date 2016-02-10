@@ -1,5 +1,4 @@
 from queue import Queue
-import unittest
 
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
@@ -30,7 +29,3 @@ class LineLengthBearTest(LocalBearTestHelper):
 
         self.assertLineInvalid(self.uut, 'asdasd')
         self.assertLineValid(self.uut, 'http://a.domain.de')
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

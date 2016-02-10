@@ -1,4 +1,3 @@
-import unittest
 from queue import Queue
 
 from coalib.settings.Section import Section
@@ -29,7 +28,3 @@ class LineCountBearTest(LocalBearTestHelper):
                 "This file has {count} lines.".format(count=0),
                 severity=RESULT_SEVERITY.INFO,
                 file="default"))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

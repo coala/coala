@@ -21,7 +21,3 @@ class ProcessTest(unittest.TestCase):
         self.assertEqual(self.uut.reverse[self.uut.ONE], "ONE")
         self.assertEqual(self.uut.reverse[self.uut.TWO], "TWO")
         self.assertEqual(self.uut.reverse[self.uut.THREE], "THREE")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

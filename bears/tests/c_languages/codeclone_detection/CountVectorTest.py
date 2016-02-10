@@ -137,7 +137,3 @@ class CountVectorTest(unittest.TestCase):
 
         for elem in count_vector_difference_matrix:
             self.check_difference(*elem, diff_function="maxabs")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

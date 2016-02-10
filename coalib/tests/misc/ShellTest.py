@@ -175,7 +175,3 @@ class PrepareStringArgumentTest(unittest.TestCase):
 
         for string in self.test_strings:
             self.assertEqual(prepare_string_argument(string, testos), string)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

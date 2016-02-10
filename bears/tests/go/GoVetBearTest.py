@@ -2,7 +2,6 @@ import os
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
-import unittest
 
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.go.GoVetBear import GoVetBear
@@ -25,7 +24,3 @@ class GoVetBearTest(LocalBearTestHelper):
     def test_run(self):
         self.assertLinesValid(self.uut, [], self.good_file)
         self.assertLinesInvalid(self.uut, [], self.bad_file)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

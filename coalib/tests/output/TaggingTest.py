@@ -25,7 +25,3 @@ class TaggingTest(unittest.TestCase):
     def test_delete_tagged_results_no_file(self):
         delete_tagged_results("test_tag", "test_path")
         self.assertFalse(os.path.exists(get_tag_path("test_tag", "test_path")))
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

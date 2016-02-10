@@ -59,7 +59,3 @@ class ConfWriterTest(unittest.TestCase):
             lines = f.readlines()
 
         self.assertEqual(result_file, lines)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

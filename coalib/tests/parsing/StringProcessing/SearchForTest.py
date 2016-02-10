@@ -1,4 +1,3 @@
-import unittest
 
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
@@ -121,7 +120,3 @@ class SearchForTest(StringProcessingTestBase):
              for test_string, result in zip(self.test_strings,
                                             expected_results)},
             self.list_zero_group)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

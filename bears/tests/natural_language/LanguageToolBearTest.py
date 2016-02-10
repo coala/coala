@@ -1,5 +1,3 @@
-import unittest
-
 from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.natural_language.LanguageToolBear import LanguageToolBear
 
@@ -12,7 +10,3 @@ LanguageToolBearTest = verify_local_bear(
                    ["asdgaasdfgahsadf"],
                    ['"quoted"']),
     settings={'use_spaces': 'true'})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

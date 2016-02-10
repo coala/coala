@@ -239,7 +239,3 @@ class ClangCountingConditionsTest(unittest.TestCase):
              "b": [1],
              "#1": [0],
              "#2": [1]})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

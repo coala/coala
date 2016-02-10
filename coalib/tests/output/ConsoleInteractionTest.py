@@ -608,7 +608,3 @@ class PrintFormattedResultsTest(unittest.TestCase):
                                 None,
                                 None,
                                 None)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

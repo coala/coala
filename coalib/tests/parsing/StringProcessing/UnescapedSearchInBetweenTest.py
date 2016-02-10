@@ -1,4 +1,3 @@
-import unittest
 
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
@@ -219,7 +218,3 @@ class UnescapedSearchInBetweenTest(StringProcessingTestBase):
                self.search_in_between_begin_pattern,
                self.search_in_between_end_pattern)]},
             list)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

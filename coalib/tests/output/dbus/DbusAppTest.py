@@ -25,7 +25,3 @@ class DbusAppTest(unittest.TestCase):
 
         uut.dispose_document(doc1)
         self.assertNotIn(doc1, uut.docs)
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

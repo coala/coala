@@ -34,6 +34,3 @@ class LogPrinterThreadTest(unittest.TestCase):
             self.assertEqual(stdout.getvalue(),
                              "Sample message 1\nSample message 2\nSample "
                              "message 3\n")
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

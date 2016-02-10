@@ -104,6 +104,3 @@ class HTMLWriterTest(unittest.TestCase):
                               '<html>\n',
                               '    <br/>\n',
                               '</html>\n'])
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

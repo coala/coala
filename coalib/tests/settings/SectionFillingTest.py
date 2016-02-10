@@ -85,7 +85,3 @@ class SectionFillingTest(unittest.TestCase):
         self.assertTrue("global name" in new_section)
         self.assertEqual(new_section["key"].value, "val")
         self.assertEqual(len(new_section.contents), 3)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

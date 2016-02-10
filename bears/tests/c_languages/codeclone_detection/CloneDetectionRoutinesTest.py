@@ -18,7 +18,3 @@ class CloneDetectionRoutinesTest(unittest.TestCase):
         self.assertEqual(relative_difference(0, 0), 1)
         self.assertEqual(relative_difference(1, 0), 1)
         self.assertEqual(relative_difference(0.5, 2), 0.25)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

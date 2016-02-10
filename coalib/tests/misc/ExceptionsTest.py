@@ -11,7 +11,3 @@ class ExceptionsTest(unittest.TestCase):
         self.assertEqual(get_exitcode(SystemExit(999)), 999)
         self.assertEqual(get_exitcode(EOFError()), 0)
         self.assertEqual(get_exitcode(None), 0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

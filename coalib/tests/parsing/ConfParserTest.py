@@ -150,6 +150,3 @@ class ConfParserTest(unittest.TestCase):
 
     def test_config_directory(self):
         self.uut.parse(self.tempdir)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

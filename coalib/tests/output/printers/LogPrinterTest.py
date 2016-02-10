@@ -130,7 +130,3 @@ class LogPrinterTest(unittest.TestCase):
         self.assertRaises(TypeError, uut.log, 5)
         self.assertRaises(TypeError, uut.log_exception, "message", 5)
         self.assertRaises(TypeError, uut.log_message, 5)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

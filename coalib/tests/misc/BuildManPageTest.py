@@ -148,7 +148,3 @@ UNKNOWN
  UNKNOWN
 .SH SEE ALSO
  Online documentation: UNKNOWN""".format(app_name, today))
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

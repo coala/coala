@@ -25,7 +25,3 @@ class LanguageDefinitionTest(unittest.TestCase):
     def test_loading(self):
         uut = LanguageDefinition.from_section(self.section)
         self.assertEqual(list(uut["extensions"]), [".c", ".cpp", ".h", ".hpp"])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

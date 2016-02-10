@@ -76,7 +76,3 @@ class LogMessageTest(unittest.TestCase):
         self.assertEqual(
             self.uut.to_string_dict(),
             {"log_level": "", "message": "test", "timestamp": ""})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

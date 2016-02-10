@@ -1,4 +1,3 @@
-import unittest
 from queue import Queue
 
 from coalib.settings.Setting import Setting
@@ -25,7 +24,3 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.assertLineInvalid(self.uut, "test line todo")
         self.assertLineInvalid(self.uut, "test line warNING")
         self.assertLineInvalid(self.uut, "test line ERROR")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

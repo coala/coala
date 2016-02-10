@@ -41,7 +41,3 @@ class SourcePositionTest(unittest.TestCase):
         self.assertNotEqual(greater, lesser)
         self.assertLessEqual(lesser, greater)
         self.assertLess(lesser, greater)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

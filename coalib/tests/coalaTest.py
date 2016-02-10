@@ -94,7 +94,3 @@ class coalaTest(unittest.TestCase):
             execute_coala_ci(("-c", re.escape(coafile)))
             self.assertFalse(os.path.isfile(orig_file.name))
             self.assertTrue(os.path.isfile(unrelated_file))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -111,7 +111,3 @@ class OpenEditorActionTest(unittest.TestCase):
 
         self.assertFalse(
             OpenEditorAction.is_applicable(invalid_result, None, None))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

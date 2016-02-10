@@ -173,7 +173,3 @@ class DiffTest(unittest.TestCase):
             ' first\\n'
             '-second\\n'
             ' third\\n"')
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

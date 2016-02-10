@@ -1,4 +1,3 @@
-import unittest
 from queue import Queue
 
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
@@ -16,7 +15,3 @@ class reSTLintBearTest(LocalBearTestHelper):
 
     def test_invalid(self):
         self.assertLinesInvalid(self.uut, ["test\n==\n"])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

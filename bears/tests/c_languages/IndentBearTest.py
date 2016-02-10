@@ -1,4 +1,3 @@
-import unittest
 from queue import Queue
 
 from bears.tests.BearTestHelper import generate_skip_decorator
@@ -43,7 +42,3 @@ class IndentBearTest(LocalBearTestHelper):
         self.assertLinesInvalid(self.uut, ["int main() {\n",
                                            "  return 0;\n",
                                            "}\n"])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

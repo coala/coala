@@ -1,5 +1,4 @@
 from queue import Queue
-import unittest
 
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
@@ -68,6 +67,3 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
                                  "    print('funny')\n",
                                  "    print('the result is not funny...')"],
                                 prepare_lines=False)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

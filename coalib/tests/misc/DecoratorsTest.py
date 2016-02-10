@@ -321,7 +321,3 @@ class EnforceSignatureTest(unittest.TestCase):
 
         test_function(4, "t")
         test_function(None, "t", "anything", "test")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

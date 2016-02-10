@@ -70,7 +70,3 @@ class DocstyleDefinitionTest(unittest.TestCase):
         self.assertEqual(result.language, "python3")
         self.assertEqual(result.docstyle, "default")
         self.assertEqual(result.markers, (('"""', '', '"""'),))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

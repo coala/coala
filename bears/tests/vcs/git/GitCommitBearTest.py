@@ -146,7 +146,3 @@ class GitCommitBearTest(unittest.TestCase):
         self.assertEqual(self.run_uut(body_line_length=41),
                          ["Body of HEAD commit contains too long lines."])
         self.assertTrue(self.msg_queue.empty())
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

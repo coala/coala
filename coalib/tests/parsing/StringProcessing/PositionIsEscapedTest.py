@@ -1,4 +1,3 @@
-import unittest
 
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
@@ -65,7 +64,3 @@ class PositionIsEscapedTest(StringProcessingTestBase):
             position_is_escaped,
             {(test_string, position): result
              for position, result in result_dict.items()})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

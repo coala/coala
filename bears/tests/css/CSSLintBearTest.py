@@ -1,5 +1,4 @@
 import os
-import unittest
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
@@ -28,7 +27,3 @@ class CSSLintBearTest(LocalBearTestHelper):
 
         # Test a file with errors and warnings
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

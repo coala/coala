@@ -24,7 +24,3 @@ class MatchTest(unittest.TestCase):
         self.assertEqual(uut.end_position, 62)
         self.assertEqual(uut.range, (48, 62))
         self.assertEqual(len(uut), 14)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

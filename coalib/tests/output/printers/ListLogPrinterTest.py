@@ -27,5 +27,3 @@ class ListLogPrinterTest(unittest.TestCase):
                                      timestamp=ts)])
 
         self.assertRaises(TypeError, uut.log_message, "message")
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

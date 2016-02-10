@@ -1,4 +1,3 @@
-import unittest
 
 from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.c_languages.ClangBear import ClangBear
@@ -20,7 +19,3 @@ ClangBearIgnoreTest = verify_local_bear(
     (),
     'test.c',
     settings={'clang_cli_options': '-w'})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

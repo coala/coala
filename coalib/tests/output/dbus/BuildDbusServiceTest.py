@@ -24,7 +24,3 @@ class BuildDbusServiceTest(unittest.TestCase):
                 result,
                 "[D-BUS Service]\nNames=" + Constants.BUS_NAME +
                 "\nExec=coala-dbus")
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

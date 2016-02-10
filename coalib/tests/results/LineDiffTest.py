@@ -34,7 +34,3 @@ class LineDiffTest(unittest.TestCase):
         self.assertNotEqual(LineDiff(add_after=['']), LineDiff())
         self.assertNotEqual(LineDiff(add_after=['']), LineDiff(delete=True))
         self.assertNotEqual(LineDiff(change=('', 'a')), LineDiff())
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

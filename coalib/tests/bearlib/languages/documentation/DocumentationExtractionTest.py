@@ -216,7 +216,3 @@ class DocumentationExtractionTest(unittest.TestCase):
                                   "return at end.",
                                   docstyle_PYTHON3_doxygen.markers[1],
                                   TextRange.from_values(1, 1, 1, 55))])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -1,5 +1,4 @@
 import os
-import unittest
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
@@ -25,7 +24,3 @@ class DockerfileLintBearTest(LocalBearTestHelper):
     def test_run(self):
         self.assertLinesValid(self.uut, [], self.test_file1)
         self.assertLinesInvalid(self.uut, [], self.test_file2)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

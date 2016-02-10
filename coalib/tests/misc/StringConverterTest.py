@@ -176,7 +176,3 @@ class StringConverterTest(unittest.TestCase):
         self.assertNotEqual(StringConverter(""),
                             StringConverter("i dont know "))
         self.assertNotEqual(5, StringConverter("i dont know "))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

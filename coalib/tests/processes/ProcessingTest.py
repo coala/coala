@@ -459,7 +459,3 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         retval, newres = print_result(results, {}, 0, lambda *args: None,
                                       self.section, self.log_printer, {}, [])
         self.assertNotEqual(newres, [])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -14,6 +14,3 @@ class MakeTempTest(unittest.TestCase):
         with make_temp() as temporary:
             self.assertTrue(os.path.isfile(temporary))
         self.assertFalse(os.path.isfile(temporary))
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

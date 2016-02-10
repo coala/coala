@@ -27,7 +27,3 @@ class PrintDebugMessageActionTest(unittest.TestCase):
                              {})
             self.assertEqual(stdout.getvalue(),
                              self.test_result.debug_msg+"\n")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

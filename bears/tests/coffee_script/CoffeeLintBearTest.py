@@ -1,5 +1,4 @@
 import os
-import unittest
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
@@ -38,7 +37,3 @@ class CoffeeLintBearTest(LocalBearTestHelper):
         # CoffeeLint will generate an invalid CSV on this one!
         invalid_file = self.get_test_filename("invalid")
         self.assertLinesInvalid(self.uut, [], invalid_file)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

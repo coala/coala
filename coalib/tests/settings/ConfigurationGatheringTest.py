@@ -233,7 +233,3 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         self.assertRegex(str(sections["default"]),
                          ".*find_config : 'True'.*, config : '.*'")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

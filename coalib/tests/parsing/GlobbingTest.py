@@ -306,6 +306,3 @@ class GlobTest(unittest.TestCase):
         file_list = sorted([os.path.normcase(f) for f in file_list])
         self.assertEqual(results, file_list)
         os.curdir = old_curdir
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

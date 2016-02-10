@@ -101,7 +101,3 @@ class JSONEncoderTest(unittest.TestCase):
     def test_type_error(self):
         with self.assertRaises(TypeError):
             json.dumps(1j, **self.kw)
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

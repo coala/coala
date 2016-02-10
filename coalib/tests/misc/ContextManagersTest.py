@@ -102,7 +102,3 @@ class ContextManagersTest(unittest.TestCase):
         with make_temp(suffix=".orig", prefix="pre") as f_b:
             self.assertTrue(f_b.endswith(".orig"))
             self.assertTrue(os.path.basename(f_b).startswith("pre"))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

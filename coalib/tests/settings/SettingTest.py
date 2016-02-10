@@ -72,7 +72,3 @@ class SettingTest(unittest.TestCase):
         self.assertEqual(str(self.uut), "22")
         self.assertEqual(int(self.uut), 22)
         self.assertRaises(ValueError, bool, self.uut)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

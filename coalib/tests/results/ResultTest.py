@@ -144,7 +144,3 @@ class ResultTest(unittest.TestCase):
                          SourceRange.from_values('f'))
         result_d = Result("o", "m", affected_code=affected_code)
         self.assertEqual(result_d.location_repr(), "'f'")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

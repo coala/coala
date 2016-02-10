@@ -85,7 +85,3 @@ class ClangCountVectorCreatorTest(unittest.TestCase):
         cv_dict = self.uut.get_vectors_for_file(self.testfile)
 
         self.check_cv_dict(cv_dict, expected_results)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

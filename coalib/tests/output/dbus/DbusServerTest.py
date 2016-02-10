@@ -107,7 +107,3 @@ class DbusServerTest(unittest.TestCase):
 
         uut.DisposeDocument(doc1, sender="app2")
         self.assertEqual(len(uut.apps), 0)
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

@@ -12,7 +12,3 @@ class RESULT_SEVERITYTest(unittest.TestCase):
                          RESULT_SEVERITY.__str__(RESULT_SEVERITY.NORMAL))
         self.assertEqual("MAJOR",
                          RESULT_SEVERITY.__str__(RESULT_SEVERITY.MAJOR))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

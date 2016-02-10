@@ -329,7 +329,3 @@ d
                          len(local_result_expected))
         self.assertRaises(queue.Empty, self.message_queue.get, timeout=0)
         self.assertRaises(queue.Empty, self.control_queue.get, timeout=0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

@@ -507,6 +507,3 @@ class ResultFilterTest(unittest.TestCase):
         expected_diff = Diff.from_string_arrays(test_file, ["abc"])
 
         self.assertEqual(result_diff, expected_diff)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

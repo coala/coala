@@ -1,5 +1,4 @@
 import os
-import unittest
 from queue import Queue
 
 from bears.tests.BearTestHelper import generate_skip_decorator
@@ -49,7 +48,3 @@ class ClangASTPrintBearTest(LocalBearTestHelper):
             ast += self.queue.get(timeout=0).message + "\n"
 
         self.assertEqual(ast, expected_ast)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

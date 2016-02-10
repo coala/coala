@@ -1,4 +1,3 @@
-import unittest
 from queue import Queue
 
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
@@ -40,7 +39,3 @@ class JSONFormatBearTest(LocalBearTestHelper):
 
         self.section.append(Setting("tab_width", "3"))
         self.assertLinesValid(self.uut, test_code)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

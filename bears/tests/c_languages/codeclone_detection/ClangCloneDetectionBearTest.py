@@ -85,7 +85,3 @@ class ClangCloneDetectionBearTest(unittest.TestCase):
             result_check_function(
                 list(uut.run_bear_from_section([], arg_dict)),
                 "while analyzing "+file)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

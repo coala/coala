@@ -59,7 +59,3 @@ class SectionCreatableTest(unittest.TestCase):
         self.assertEqual(uut.setting_two, False)
         self.assertEqual(uut.setting_three, ["2", "4"])
         self.assertEqual(str(uut.opt_raw_set), "tst ,")
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

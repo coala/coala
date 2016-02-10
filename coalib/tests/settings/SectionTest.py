@@ -181,6 +181,3 @@ class SectionTest(unittest.TestCase):
         section = Section("section", None)
         section.append(Setting("bear_dirs", "test1, test2"))
         self.assertEqual(len(section.bear_dirs()), 3)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

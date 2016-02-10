@@ -64,7 +64,3 @@ class TrimEmptyMatchesTest(unittest.TestCase):
         self.assertEqual(comparable_map(trim_empty_matches(real, ("cd",))),
                          ("A1B2C3D", "Awhat doByouCthink??D", "AneverBCmindD",
                           "ABCXD"))
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

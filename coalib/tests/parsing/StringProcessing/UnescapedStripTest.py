@@ -1,4 +1,3 @@
-import unittest
 
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
@@ -57,7 +56,3 @@ class UnescapedStripTest(StringProcessingTestBase):
             unescaped_strip,
             {(test_string,): test_string
              for test_string in self.test_strings})
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

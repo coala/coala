@@ -15,7 +15,3 @@ class InteractionsTest(unittest.TestCase):
                           log_printer,
                           {"setting": ["description", "bear"]})
         self.assertEqual(fail_acquire_settings(log_printer, {}), None)
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)

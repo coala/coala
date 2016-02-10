@@ -1,11 +1,8 @@
 import os
-import sys
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-sys.path.insert(0, ".")
-import unittest
 from coalib.settings.Setting import Setting
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.go.GoLintBear import GoLintBear
@@ -31,6 +28,3 @@ class GoLintBearTest(LocalBearTestHelper):
         self.section.append(Setting("golint_cli_options",
                                     "-min_confidence=0.8"))
         self.assertLinesInvalid(self.uut, [], self.bad_file)
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

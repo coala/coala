@@ -55,7 +55,3 @@ class LintTest(unittest.TestCase):
             "*************\n",
             'a/file.py'))
         self.assertEqual(len(out), 0)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

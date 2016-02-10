@@ -1,4 +1,3 @@
-import unittest
 from queue import Queue
 
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
@@ -18,7 +17,3 @@ class PyUnusedCodeBearTest(LocalBearTestHelper):
     def test_invalid(self):
         self.assertLinesInvalid(self.uut, ["import os"])
         self.assertLinesInvalid(self.uut, ["pass"])
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

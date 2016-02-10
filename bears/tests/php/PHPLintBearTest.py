@@ -1,5 +1,4 @@
 import os
-import unittest
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
@@ -34,7 +33,3 @@ class PHPLintBearTest(LocalBearTestHelper):
             self.uut,
             [],
             self.test_file2)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

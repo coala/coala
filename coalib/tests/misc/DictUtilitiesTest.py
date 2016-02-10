@@ -45,7 +45,3 @@ class DictUtilitiesTest(unittest.TestCase):
         self.assertEqual("OrderedDict([('section', 'Some stuff'), "
                          "('pythoncheck', 'Somemore stuff')])",
                          self.ordered_dict.__str__())
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)

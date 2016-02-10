@@ -95,7 +95,3 @@ class ImportObjectsTest(unittest.TestCase):
                            attributes="method",
                            local=True,
                            verbose=False)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
