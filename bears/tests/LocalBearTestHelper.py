@@ -87,18 +87,21 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                 lines,
                                 results,
                                 filename="default",
-                                check_order=False):
+                                check_order=False,
+                                force_linebreaks=True):
         """
         Asserts that a check of the given lines with the given local bear does
         yield exactly the given results.
 
-        :param local_bear:  The local bear to check with.
-        :param lines:       The lines to check. (string if single line
-                            or List of strings)
-        :param results:     The expected result or list of results.
-        :param filename:    The filename, if it matters.
-        :param check_order: Assert also that the results are in the same order
-                            (defaults to False)
+        :param local_bear:       The local bear to check with.
+        :param lines:            The lines to check. (string if single line
+                                 or List of strings)
+        :param results:          The expected result or list of results.
+        :param filename:         The filename, if it matters.
+        :param force_linebreaks: Whether to append newlines at each line if
+                                 needed. Use this with caution when disabling,
+                                 since bears expect to have a \n at the end of
+                                 each line.
         """
         if isinstance(lines, str):
             lines = [lines]
@@ -116,20 +119,18 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg="The given results are not a list.")
 
+        if force_linebreaks:
+            lines = LocalBearTestHelper.force_linebreaks(lines)
         if not check_order:
             self.assertEqual(
-                sorted(local_bear.execute(
-                    filename,
-                    LocalBearTestHelper.force_linebreaks(lines))),
+                sorted(local_bear.execute(filename, lines)),
                 sorted(results),
                 msg="The local bear '{}' yields not the right results or the "
                     "order may be wrong.".format(
                     local_bear.__class__.__name__))
         else:
             self.assertEqual(
-                list(local_bear.execute(
-                    filename,
-                    LocalBearTestHelper.force_linebreaks(lines))),
+                list(local_bear.execute(filename, lines)),
                 results,
                 msg="The local bear '{}' yields not the right results or the "
                     "order may be wrong.".format(
