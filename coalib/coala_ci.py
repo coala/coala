@@ -12,9 +12,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from coalib.coala_main import run_coala
+from coalib.output.ConsoleInteraction import print_results_no_input
 
 
 def main():
-    results, exitcode = run_coala(autoapply=False)
+    results, exitcode = run_coala(autoapply=False,
+                                  print_results=print_results_no_input)
 
     return exitcode
