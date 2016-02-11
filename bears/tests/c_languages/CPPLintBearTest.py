@@ -21,7 +21,7 @@ class CPPLintBearTest(LocalBearTestHelper):
 
     def test_run(self):
         # Should yield missing copyright line
-        self.assertLinesInvalid(self.uut, [], self.test_file)
+        self.assertLinesValid(self.uut, [], self.test_file, valid=False)
 
         # Let's ignore legal issues
         self.section.append(Setting("cpplint_ignore", "legal"))
@@ -30,4 +30,4 @@ class CPPLintBearTest(LocalBearTestHelper):
     def test_line_length(self):
         self.section.append(Setting("cpplint_ignore", "legal"))
         self.section.append(Setting("max_line_length", "13"))
-        self.assertLinesInvalid(self.uut, [], self.test_file)
+        self.assertLinesValid(self.uut, [], self.test_file, valid=False)

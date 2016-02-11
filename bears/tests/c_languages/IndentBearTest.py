@@ -33,12 +33,12 @@ class IndentBearTest(LocalBearTestHelper):
 
     def test_tabs(self):
         test_code = ["int\n", "main ()\n", "{\n", "\treturn 0;\n", "}\n"]
-        self.assertLinesInvalid(self.uut, test_code)
+        self.assertLinesValid(self.uut, test_code, valid=False)
 
         self.section.append(Setting("use_spaces", "nope"))
         self.assertLinesValid(self.uut, test_code)
 
     def test_invalid(self):
-        self.assertLinesInvalid(self.uut, ["int main() {\n",
-                                           "  return 0;\n",
-                                           "}\n"])
+        self.assertLinesValid(self.uut, ["int main() {\n",
+                                         "  return 0;\n",
+                                         "}\n"], valid=False)

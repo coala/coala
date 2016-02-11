@@ -21,11 +21,11 @@ class LineLengthBearTest(LocalBearTestHelper):
             "e\n",
             "\n"
         ])
-        self.assertLinesInvalid(self.uut, "testa\n")
-        self.assertLinesInvalid(self.uut, "test line\n")
+        self.assertLinesValid(self.uut, "testa\n", valid=False)
+        self.assertLinesValid(self.uut, "test line\n", valid=False)
 
     def test_ignore_regex(self):
         self.section['ignore_length_regex'] = 'http://'
 
-        self.assertLinesInvalid(self.uut, 'asdasd')
+        self.assertLinesValid(self.uut, 'asdasd', valid=False)
         self.assertLinesValid(self.uut, 'http://a.domain.de')

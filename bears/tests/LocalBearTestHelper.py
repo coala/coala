@@ -40,15 +40,17 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                          local_bear,
                          lines,
                          filename="default",
+                         valid=True,
                          prepare_lines=True):
         """
-        Asserts that a check of the given lines with the given local bear does
-        not yield any results.
+        Asserts that a check of the given lines with the given local bear
+        either yields or does not yield any results.
 
         :param local_bear:    The local bear to check with.
         :param lines:         The lines to check. (string if single line
                               or List of strings)
         :param filename:      The filename, if it matters.
+        :param valid:         Whether the lines are valid or not.
         :param prepare_lines: Whether to append newlines at each line if
                               needed. Use this with caution when disabling,
                               since bears expect to have a \n at the end of
@@ -67,50 +69,18 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 
         if prepare_lines:
             lines = LocalBearTestHelper.prepare_lines(lines)
-
-        self.assertEqual(
-            list(local_bear.execute(filename, lines)),
-            [],
-            msg="The local bear '{}' yields a result although it "
-                "shouldn't.".format(local_bear.__class__.__name__))
-
-    def assertLinesInvalid(self,
-                           local_bear,
-                           lines,
-                           filename="default",
-                           prepare_lines=True):
-        """
-        Asserts that a check of the given lines with the given local bear does
-        yield any results.
-
-        :param local_bear:    The local bear to check with.
-        :param lines:         The lines to check. (string if single line
-                              or List of strings)
-        :param filename:      The filename, if it matters.
-        :param prepare_lines: Whether to append newlines at each line if
-                              needed. Use this with caution when disabling,
-                              since bears expect to have a \n at the end of
-                              each line.
-        """
-        if isinstance(lines, str):
-            lines = [lines]
-
-        assert isinstance(self, unittest.TestCase)
-        self.assertIsInstance(local_bear,
-                              LocalBear,
-                              msg="The given bear is no local bear.")
-        self.assertIsInstance(lines,
-                              list,
-                              msg="The given lines are not a list.")
-
-        if prepare_lines:
-            lines = LocalBearTestHelper.prepare_lines(lines)
-
-        self.assertNotEqual(
-            len(list(local_bear.execute(filename, lines))),
-            0,
-            msg="The local bear '{}' yields no result although it "
-                "should.".format(local_bear.__class__.__name__))
+        if valid:
+            self.assertEqual(
+                list(local_bear.execute(filename, lines)),
+                [],
+                msg="The local bear '{}' yields a result although it "
+                    "shouldn't.".format(local_bear.__class__.__name__))
+        else:
+            self.assertNotEqual(
+                len(list(local_bear.execute(filename, lines))),
+                0,
+                msg="The local bear '{}' yields no result although it "
+                    "should.".format(local_bear.__class__.__name__))
 
     def assertLinesYieldResults(self,
                                 local_bear,
@@ -200,10 +170,10 @@ def verify_local_bear(bear,
 
         def test_valid_files(self):
             for file in valid_files:
-                self.assertLinesValid(self.uut, file, filename=filename)
+                self.assertLinesValid(self.uut, file, filename, valid=True)
 
         def test_invalid_files(self):
             for file in invalid_files:
-                self.assertLinesInvalid(self.uut, file, filename=filename)
+                self.assertLinesValid(self.uut, file, filename, valid=False)
 
     return LocalBearTest

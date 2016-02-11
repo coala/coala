@@ -27,13 +27,13 @@ class CoffeeLintBearTest(LocalBearTestHelper):
 
     def test_warn(self):
         warn_file = self.get_test_filename("warning")
-        self.assertLinesInvalid(self.uut, [], warn_file)
+        self.assertLinesValid(self.uut, [], warn_file, valid=False)
 
     def test_err(self):
         err_file = self.get_test_filename("error")
-        self.assertLinesInvalid(self.uut, [], err_file)
+        self.assertLinesValid(self.uut, [], err_file, valid=False)
 
     def test_invalid(self):
         # CoffeeLint will generate an invalid CSV on this one!
         invalid_file = self.get_test_filename("invalid")
-        self.assertLinesInvalid(self.uut, [], invalid_file)
+        self.assertLinesValid(self.uut, [], invalid_file, valid=False)

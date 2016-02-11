@@ -22,20 +22,20 @@ class JSONFormatBearTest(LocalBearTestHelper):
                                          '}'])
 
     def test_invalid(self):
-        self.assertLinesInvalid(self.uut, [""])
-        self.assertLinesInvalid(self.uut, ["random stuff"])
-        self.assertLinesInvalid(self.uut, ['{"a":5,"b":5}'])
+        self.assertLinesValid(self.uut, [""], valid=False)
+        self.assertLinesValid(self.uut, ["random stuff"], valid=False)
+        self.assertLinesValid(self.uut, ['{"a":5,"b":5}'], valid=False)
 
     def test_sorting(self):
         self.section.append(Setting("json_sort", "true"))
-        self.assertLinesInvalid(self.uut, ['{',
-                                           '    "b": 5,',
-                                           '    "a": 5',
-                                           '}'])
+        self.assertLinesValid(self.uut, ['{',
+                                         '    "b": 5,',
+                                         '    "a": 5',
+                                         '}'], valid=False)
 
     def test_indent(self):
         test_code = ['{', '   "b": 5,', '   "a": 5', '}']
-        self.assertLinesInvalid(self.uut, test_code)
+        self.assertLinesValid(self.uut, test_code, valid=False)
 
         self.section.append(Setting("tab_width", "3"))
         self.assertLinesValid(self.uut, test_code)

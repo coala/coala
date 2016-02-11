@@ -23,4 +23,4 @@ class DockerfileLintBearTest(LocalBearTestHelper):
 
     def test_run(self):
         self.assertLinesValid(self.uut, [], self.test_file1)
-        self.assertLinesInvalid(self.uut, [], self.test_file2)
+        self.assertLinesValid(self.uut, [], self.test_file2, valid=False)

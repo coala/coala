@@ -15,5 +15,5 @@ class PyUnusedCodeBearTest(LocalBearTestHelper):
         self.assertLinesValid(self.uut, ["a = 2; print(a)"])
 
     def test_invalid(self):
-        self.assertLinesInvalid(self.uut, ["import os"])
-        self.assertLinesInvalid(self.uut, ["pass"])
+        self.assertLinesValid(self.uut, ["import os"], valid=False)
+        self.assertLinesValid(self.uut, ["pass"], valid=False)

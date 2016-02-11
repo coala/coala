@@ -27,6 +27,6 @@ class PerlCriticBearTest(LocalBearTestHelper):
 
     def test_run(self):
         self.assertLinesValid(self.uut, [], self.good_file)
-        self.assertLinesInvalid(self.uut, [], self.bad_file)
+        self.assertLinesValid(self.uut, [], self.bad_file, valid=False)
         self.section.append(Setting("perlcritic_config", self.conf_file))
         self.assertLinesValid(self.uut, [], self.bad_file)

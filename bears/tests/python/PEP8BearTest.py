@@ -20,7 +20,9 @@ class PEP8BearTest(LocalBearTestHelper):
     def test_line_length(self):
         self.assertLinesValid(self.uut, ["a = 1 + 1 + 1 + 1 + 1 + 1 + 1"])
         self.section.append(Setting('max_line_length', '10'))
-        self.assertLinesInvalid(self.uut, ["a = 1 + 1 + 1 + 1 + 1 + 1 + 1"])
+        self.assertLinesValid(self.uut,
+                              ["a = 1 + 1 + 1 + 1 + 1 + 1 + 1"],
+                              valid=False)
 
     def test_indent_level(self):
         test_code = ['def func():\n',
@@ -28,7 +30,7 @@ class PEP8BearTest(LocalBearTestHelper):
         self.assertLinesValid(self.uut, test_code)
 
         self.section.append(Setting('tab_width', '2'))
-        self.assertLinesInvalid(self.uut, test_code)
+        self.assertLinesValid(self.uut, test_code, valid=False)
         self.assertLinesValid(self.uut, ['def func():\n', '  pass\n'])
 
     def test_disable_warnings(self):
@@ -36,11 +38,11 @@ class PEP8BearTest(LocalBearTestHelper):
                      '    pass\n',
                      'def func2():\n',
                      '    pass\n']
-        self.assertLinesInvalid(self.uut, test_code)
+        self.assertLinesValid(self.uut, test_code, valid=False)
 
         self.section.append(Setting('pep_ignore', 'E302'))
         self.assertLinesValid(self.uut, test_code)
 
     def test_invalid(self):
-        self.assertLinesInvalid(self.uut, [""])
-        self.assertLinesInvalid(self.uut, ["a=1+1"])
+        self.assertLinesValid(self.uut, [""], valid=False)
+        self.assertLinesValid(self.uut, ["a=1+1"], valid=False)

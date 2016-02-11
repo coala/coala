@@ -26,9 +26,9 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.section.append(Setting("use_spaces", "true"))
 
         self.assertLinesValid(self.uut, "    t")
-        self.assertLinesInvalid(self.uut, "\tt")
-        self.assertLinesInvalid(self.uut, "t \n")
-        self.assertLinesInvalid(self.uut, "t", prepare_lines=False)
+        self.assertLinesValid(self.uut, "\tt", valid=False)
+        self.assertLinesValid(self.uut, "t \n", valid=False)
+        self.assertLinesValid(self.uut, "t", valid=False, prepare_lines=False)
 
     def test_data_sets_spaces(self):
         self.section.append(Setting("use_spaces", "true"))
@@ -36,15 +36,15 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.section.append(Setting("enforce_newline_at_EOF", "false"))
 
         self.assertLinesValid(self.uut, "    t")
-        self.assertLinesInvalid(self.uut, "t \n")
-        self.assertLinesInvalid(self.uut, "\tt\n")
+        self.assertLinesValid(self.uut, "t \n", valid=False)
+        self.assertLinesValid(self.uut, "\tt\n", valid=False)
 
     def test_data_sets_tabs(self):
         self.section.append(Setting("use_spaces", "false"))
         self.section.append(Setting("allow_trailing_whitespace", "true"))
         self.section.append(Setting("enforce_newline_at_EOF", "false"))
 
-        self.assertLinesInvalid(self.uut, "    t")
+        self.assertLinesValid(self.uut, "    t", valid=False)
         self.assertLinesValid(self.uut, "t \n")
         self.assertLinesValid(self.uut, "\tt\n")
 
@@ -59,11 +59,13 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
                                "    print('funny')\n",
                                "    print('funny end.')\n"],
                               prepare_lines=False)
-        self.assertLinesInvalid(self.uut,
-                                " no hello world",
-                                prepare_lines=False)
-        self.assertLinesInvalid(self.uut,
-                                ["def unfunny_code():\n",
-                                 "    print('funny')\n",
-                                 "    print('the result is not funny...')"],
-                                prepare_lines=False)
+        self.assertLinesValid(self.uut,
+                              " no hello world",
+                              valid=False,
+                              prepare_lines=False)
+        self.assertLinesValid(self.uut,
+                              ["def unfunny_code():\n",
+                               "    print('funny')\n",
+                               "    print('the result is not funny...')"],
+                              valid=False,
+                              prepare_lines=False)

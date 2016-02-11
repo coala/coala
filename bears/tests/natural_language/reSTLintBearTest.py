@@ -14,4 +14,4 @@ class reSTLintBearTest(LocalBearTestHelper):
         self.assertLinesValid(self.uut, ["test\n====\n"])
 
     def test_invalid(self):
-        self.assertLinesInvalid(self.uut, ["test\n==\n"])
+        self.assertLinesValid(self.uut, ["test\n==\n"], valid=False)

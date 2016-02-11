@@ -26,4 +26,4 @@ class RubyLintBearTest(LocalBearTestHelper):
         self.assertLinesValid(self.uut, [], self.test_file1)
 
         # Test a file with issues
-        self.assertLinesInvalid(self.uut, [], self.test_file2)
+        self.assertLinesValid(self.uut, [], self.test_file2, valid=False)

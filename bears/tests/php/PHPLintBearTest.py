@@ -23,10 +23,11 @@ class PHPLintBearTest(LocalBearTestHelper):
 
     def test_run(self):
         # Test a file with errors and warnings
-        self.assertLinesInvalid(
+        self.assertLinesValid(
             self.uut,
             [],
-            self.test_file1)
+            self.test_file1,
+            valid=False)
 
         # Test a file without any issues
         self.assertLinesValid(

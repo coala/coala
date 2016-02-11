@@ -23,5 +23,5 @@ class PyCommentedCodeBearTest(LocalBearTestHelper):
                                          '"""'])
 
     def test_invalid(self):
-        self.assertLinesInvalid(self.uut, ["# import os"])
-        self.assertLinesInvalid(self.uut, ["# print('comment')"])
+        self.assertLinesValid(self.uut, ["# import os"], valid=False)
+        self.assertLinesValid(self.uut, ["# print('comment')"], valid=False)
