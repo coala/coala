@@ -19,7 +19,8 @@ class LintTest(unittest.TestCase):
             "1.0|0: Info message\n"
             "2.2|1: Normal message\n"
             "3.4|2: Major message\n",
-            "a/file.py"))
+            "a/file.py",
+            ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 3)
         self.assertEqual(out[0].origin, "Lint")
 
@@ -45,7 +46,8 @@ class LintTest(unittest.TestCase):
         self.uut.severity_map = {"I": RESULT_SEVERITY.INFO}
         out = list(self.uut.process_output(
             "1.0|2.3|0: Info message\n",
-            'a/file.py'))
+            'a/file.py',
+            ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 1)
         self.assertEqual(out[0].affected_code[0].start.line, 1)
         self.assertEqual(out[0].affected_code[0].start.column, 0)
@@ -57,7 +59,8 @@ class LintTest(unittest.TestCase):
         out = list(self.uut.process_output(
             "Random line that shouldn't be captured\n"
             "*************\n",
-            'a/file.py'))
+            'a/file.py',
+            ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 0)
 
     @generate_skip_decorator(IndentBear)
@@ -65,11 +68,11 @@ class LintTest(unittest.TestCase):
         self.uut.executable = IndentBear.executable
         self.uut.use_stdin = True
         self.uut.use_stderr = False
-        self.uut.process_output = lambda output, filename: (output, filename)
+        self.uut.process_output = lambda output, filename, file: output
 
         input_file = ["int main(){return 0;}"]
         out = self.uut.lint(file=input_file)
-        self.assertEqual(out[0], 'int\nmain ()\n{\n  return 0;\n}\n')
+        self.assertEqual(out, 'int\nmain ()\n{\n  return 0;\n}\n')
 
     def test_missing_binary(self):
         old_binary = Lint.executable

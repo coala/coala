@@ -33,7 +33,7 @@ class CoffeeLintBear(LocalBear, Lint):
         """
         return self.lint(filename)
 
-    def process_output(self, output, filename):
+    def _process_issues(self, output, filename):
         reader = DictReader(StringIO(output))
 
         for row in reader:
