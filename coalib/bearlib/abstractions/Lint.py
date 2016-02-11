@@ -81,7 +81,7 @@ class Lint(Bear):
         process.wait()
         if self.use_stderr:
             stderr_file.seek(0)
-            output = stderr_file.read().decode(sys.stdout.encoding,
+            output = stderr_file.read().decode(sys.stderr.encoding,
                                                errors="replace")
         else:
             stdout_file.seek(0)
