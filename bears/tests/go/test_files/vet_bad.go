@@ -1,4 +1,4 @@
 package main
-func main() {
+func_misspelt main() {
     return 1 || 1
 }
