@@ -74,16 +74,14 @@ class Lint(Bear):
         assert ((self.use_stdin and file is not None) or
                 (not self.use_stdin and filename is not None))
 
-        command = self.executable + ' ' + self.arguments
-        if not self.use_stdin:
-            command += ' ' + escape_path_argument(filename)
-
         stdin_file = tempfile.TemporaryFile()
         stdout_file = tempfile.TemporaryFile()
         stderr_file = tempfile.TemporaryFile()
+
+        command = self._create_command(filename)
+
         if self.use_stdin:
-            stdin_file.write(bytes("".join(file), 'UTF-8'))
-            stdin_file.seek(0)
+            self._write(file, stdin_file, sys.stdin.encoding)
         process = subprocess.Popen(command,
                                    shell=True,
                                    stdin=stdin_file,
@@ -91,19 +89,15 @@ class Lint(Bear):
                                    stderr=stderr_file,
                                    universal_newlines=True)
         process.wait()
+        stdout_output = self._read(stdout_file, sys.stdout.encoding)
+        stderr_output = self._read(stderr_file, sys.stderr.encoding)
+        results_output = stderr_output if self.use_stderr else stdout_output
+        results = self.process_output(results_output, filename)
 
-        if self.use_stderr:
-            stderr_file.seek(0)
-            output = stderr_file.read().decode(sys.stderr.encoding,
-                                               errors="replace")
-        else:
-            stdout_file.seek(0)
-            output = stdout_file.read().decode(sys.stdout.encoding,
-                                               errors="replace")
-        stdin_file.close()
-        stdout_file.close()
-        stderr_file.close()
-        return self.process_output(output, filename)
+        for file in (stdin_file, stdout_file, stderr_file):
+            file.close()
+
+        return results
 
     def process_output(self, output, filename):
         regex = self.output_regex
@@ -121,6 +115,22 @@ class Lint(Bear):
                 groups["severity"] in self.severity_map):
             groups["severity"] = self.severity_map[groups["severity"]]
         return groups
+
+    def _create_command(self, filename):
+        command = self.executable + ' ' + self.arguments
+        if not self.use_stdin:
+            command += ' ' + escape_path_argument(filename)
+        return command
+
+    @staticmethod
+    def _read(file, encoding):
+        file.seek(0)
+        return file.read().decode(encoding or 'UTF-8', errors="replace")
+
+    @staticmethod
+    def _write(file_contents, file, encoding):
+        file.write(bytes("".join(file_contents), encoding or 'UTF-8'))
+        file.seek(0)
 
     def match_to_result(self, match, filename):
         """
