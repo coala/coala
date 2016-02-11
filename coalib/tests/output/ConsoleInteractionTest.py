@@ -1,36 +1,29 @@
-import unittest
 import os
-from os.path import abspath
+import unittest
 from collections import OrderedDict
-from pyprint.NullPrinter import NullPrinter
-from pyprint.ConsolePrinter import ConsolePrinter
+from os.path import abspath
 
-from coalib.results.result_actions.ResultAction import ResultAction
-from coalib.results.Result import Result
-from coalib.results.SourceRange import SourceRange
-from coalib.results.Diff import Diff
-from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
-from coalib.misc.ContextManagers import (simulate_console_inputs,
-                                         retrieve_stdout,
-                                         make_temp)
-from coalib.output.ConsoleInteraction import (nothing_done,
-                                              acquire_settings,
-                                              print_bears,
-                                              get_action_info,
-                                              print_result,
-                                              print_section_beginning,
-                                              print_results,
-                                              show_bears,
-                                              print_results_formatted)
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.StringPrinter import StringPrinter
-from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
-from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
-from coalib.bears.Bear import Bear
+from pyprint.ConsolePrinter import ConsolePrinter
+from pyprint.NullPrinter import NullPrinter
+
 from bears.general.KeywordBear import KeywordBear
 from bears.general.LineLengthBear import LineLengthBear
-
+from coalib.bears.Bear import Bear
+from coalib.misc.ContextManagers import (
+    make_temp, retrieve_stdout, simulate_console_inputs)
+from coalib.output.ConsoleInteraction import (
+    acquire_settings, get_action_info, nothing_done, print_bears, print_result,
+    print_results, print_results_formatted, print_section_beginning, show_bears)
+from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.StringPrinter import StringPrinter
+from coalib.results.Diff import Diff
+from coalib.results.Result import Result
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.ResultAction import ResultAction
+from coalib.results.SourceRange import SourceRange
+from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")

@@ -13,7 +13,7 @@ test:
         parallel: true
     - python setup.py install:
         parallel: true
-    - coala-ci -S=autoapply=false:
+    - pyenv rehash && coala-ci -S=autoapply=false:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true

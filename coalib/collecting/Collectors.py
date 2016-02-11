@@ -3,7 +3,7 @@ import os
 from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.Globbing import iglob, fnmatch
+from coalib.parsing.Globbing import fnmatch, iglob
 
 
 def _right_kind(bear_class, kinds):

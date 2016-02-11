@@ -1,8 +1,8 @@
-from datetime import datetime
 import unittest
+from datetime import datetime
 
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.misc import Constants
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 
 

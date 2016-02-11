@@ -1,10 +1,10 @@
 import unittest
 
+from coalib.misc.ContextManagers import retrieve_stdout
+from coalib.results.Result import Result
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
-from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.settings.Section import Section
-from coalib.results.Result import Result
 
 
 class PrintDebugMessageActionTest(unittest.TestCase):

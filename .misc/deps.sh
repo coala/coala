@@ -7,8 +7,6 @@ if [ -s ~/nvm/nvm.sh ]; then
   nvm install stable
 fi
 
-git -C ~/.pyenv pull
-
 set -x
 
 # Choose the python versions to install deps for

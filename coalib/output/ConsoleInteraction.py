@@ -4,22 +4,21 @@ try:
 except ImportError:  # pragma: no cover
     pass
 
+import os.path
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.results.RESULT_SEVERITY import (
-    RESULT_SEVERITY,
-    RESULT_SEVERITY_COLORS)
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.settings.Setting import Setting
-from coalib.results.Result import Result
 from coalib.misc.DictUtilities import inverse_dicts
-from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
-import os.path
-
+from coalib.results.RESULT_SEVERITY import (
+    RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
+from coalib.settings.Setting import Setting
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")

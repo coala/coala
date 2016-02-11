@@ -1,11 +1,10 @@
-import sys
 import re
+import sys
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.Setting import typed_list
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-
+from coalib.settings.Setting import typed_list
 
 # We omit this case in our tests for technical reasons
 if sys.version_info < (3, 3):  # pragma: no cover

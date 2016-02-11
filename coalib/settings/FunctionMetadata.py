@@ -1,6 +1,6 @@
-from inspect import ismethod, getfullargspec
 from collections import OrderedDict
 from copy import copy
+from inspect import getfullargspec, ismethod
 
 from coalib.settings.DocumentationComment import DocumentationComment
 

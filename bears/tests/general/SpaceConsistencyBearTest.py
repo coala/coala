@@ -1,10 +1,10 @@
 from queue import Queue
 
-from coalib.settings.Setting import Setting
+from bears.general.SpaceConsistencyBear import (
+    SpaceConsistencyBear, SpacingHelper)
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from bears.general.SpaceConsistencyBear import (SpaceConsistencyBear,
-                                                SpacingHelper)
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 class SpaceConsistencyBearTest(LocalBearTestHelper):

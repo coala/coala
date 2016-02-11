@@ -1,7 +1,7 @@
 
+from coalib.parsing.StringProcessing import unescaped_search_for
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
-from coalib.parsing.StringProcessing import unescaped_search_for
 
 
 class UnescapedSearchForTest(StringProcessingTestBase):

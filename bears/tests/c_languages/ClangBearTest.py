@@ -1,7 +1,6 @@
 
-from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.c_languages.ClangBear import ClangBear
-
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 ClangBearTest = verify_local_bear(
     ClangBear,

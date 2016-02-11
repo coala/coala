@@ -1,9 +1,9 @@
-from collections import Iterable, OrderedDict
 import re
+from collections import Iterable, OrderedDict
+
 from coalib.misc import Constants
-from coalib.parsing.StringProcessing import (unescaped_split,
-                                             unescaped_strip,
-                                             unescape)
+from coalib.parsing.StringProcessing import (
+    unescape, unescaped_split, unescaped_strip)
 
 
 class StringConverter:

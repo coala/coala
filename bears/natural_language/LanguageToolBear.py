@@ -1,8 +1,8 @@
 from language_check import LanguageTool, correct
 
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.Result import Result
 from coalib.results.Diff import Diff
+from coalib.results.Result import Result
 from coalib.results.SourceRange import SourceRange
 
 

@@ -1,4 +1,4 @@
-from unittest.case import skipIf, skip
+from unittest.case import skip, skipIf
 
 from clang.cindex import Index, LibclangError
 

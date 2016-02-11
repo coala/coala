@@ -1,8 +1,8 @@
 import unittest
 
 from coalib.bearlib.abstractions.Lint import Lint
-from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
 
 

@@ -1,8 +1,8 @@
 import os
 import unittest
+from collections import OrderedDict
 
 from coalib.collecting.Importers import import_objects
-from collections import OrderedDict
 
 
 class ImportObjectsTest(unittest.TestCase):

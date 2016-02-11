@@ -1,10 +1,8 @@
-from bears.c_languages.codeclone_detection.CountVector import CountVector
-from bears.c_languages.codeclone_detection.ClangCountingConditions import (
-    is_reference,
-    get_identifier_name,
-    is_literal,
-    is_function_declaration)
 from clang.cindex import Cursor, Index
+
+from bears.c_languages.codeclone_detection.ClangCountingConditions import (
+    get_identifier_name, is_function_declaration, is_literal, is_reference)
+from bears.c_languages.codeclone_detection.CountVector import CountVector
 
 
 class ClangCountVectorCreator:

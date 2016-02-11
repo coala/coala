@@ -1,6 +1,7 @@
+from clang.cindex import Index, TranslationUnit
+
 from bears.c_languages.ClangBear import clang_available
 from coalib.bears.LocalBear import LocalBear
-from clang.cindex import Index, TranslationUnit
 
 
 class ClangASTPrintBear(LocalBear):

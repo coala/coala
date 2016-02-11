@@ -1,6 +1,6 @@
 import hashlib
-import pickle
 import os
+import pickle
 
 from coalib.misc import Constants
 

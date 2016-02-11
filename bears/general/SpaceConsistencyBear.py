@@ -1,6 +1,6 @@
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
-from coalib.results.Diff import Diff
 from coalib.bears.LocalBear import LocalBear
+from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 
 

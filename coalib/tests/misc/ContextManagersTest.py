@@ -1,13 +1,11 @@
-import unittest
-import sys
-import subprocess
 import os
+import subprocess
+import sys
+import unittest
 
-from coalib.misc.ContextManagers import (suppress_stdout,
-                                         retrieve_stdout,
-                                         simulate_console_inputs,
-                                         subprocess_timeout,
-                                         make_temp)
+from coalib.misc.ContextManagers import (
+    make_temp, retrieve_stdout, simulate_console_inputs, subprocess_timeout,
+    suppress_stdout)
 from coalib.processes.Processing import create_process_group
 
 

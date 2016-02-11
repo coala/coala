@@ -1,7 +1,6 @@
 import os
 import sys
 
-from coalib.settings.Setting import Setting
 from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -9,6 +8,7 @@ from coalib.parsing.CliParsing import parse_cli
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import fill_settings
+from coalib.settings.Setting import Setting
 
 
 def merge_section_dicts(lower, higher):

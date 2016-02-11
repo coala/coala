@@ -1,10 +1,11 @@
 import unittest
-from setuptools.dist import Distribution
 from distutils.errors import DistutilsOptionError
 
-from coalib.output.dbus.BuildDbusService import BuildDbusService
+from setuptools.dist import Distribution
+
 from coalib.misc import Constants
 from coalib.misc.ContextManagers import make_temp
+from coalib.output.dbus.BuildDbusService import BuildDbusService
 
 
 class BuildDbusServiceTest(unittest.TestCase):

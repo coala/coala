@@ -1,5 +1,5 @@
-import sys
 import platform  # Unused import
+import sys
 
 print(sys.path)
 

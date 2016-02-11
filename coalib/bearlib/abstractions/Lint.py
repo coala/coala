@@ -1,13 +1,13 @@
-import subprocess
-import tempfile
 import re
+import subprocess
 import sys
+import tempfile
 
 from coalib.bearlib.abstractions.CorrectionBasedBear import is_binary_present
+from coalib.bears.Bear import Bear
 from coalib.misc.Shell import escape_path_argument
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.bears.Bear import Bear
 
 
 class Lint(Bear):

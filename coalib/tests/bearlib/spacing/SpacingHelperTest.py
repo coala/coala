@@ -1,7 +1,7 @@
 import unittest
 
-from coalib.settings.Section import Section
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
+from coalib.settings.Section import Section
 
 
 class SpacingHelperTest(unittest.TestCase):

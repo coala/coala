@@ -1,7 +1,7 @@
 
+from coalib.parsing.StringProcessing import unescaped_split
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
-from coalib.parsing.StringProcessing import unescaped_split
 
 
 class UnescapedSplitTest(StringProcessingTestBase):

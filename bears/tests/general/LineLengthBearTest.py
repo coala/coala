@@ -1,9 +1,9 @@
 from queue import Queue
 
-from coalib.settings.Setting import Setting
+from bears.general.LineLengthBear import LineLengthBear
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
-from bears.general.LineLengthBear import LineLengthBear
+from coalib.settings.Setting import Setting
 
 
 class LineLengthBearTest(LocalBearTestHelper):

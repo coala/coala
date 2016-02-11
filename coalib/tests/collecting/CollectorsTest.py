@@ -1,11 +1,11 @@
 import os
 import unittest
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from coalib.collecting.Collectors import (
+    collect_bears, collect_dirs, collect_files)
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.collecting.Collectors import (collect_files,
-                                          collect_dirs,
-                                          collect_bears)
 
 
 class CollectFilesTest(unittest.TestCase):
