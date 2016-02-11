@@ -27,14 +27,14 @@ class JSHintBearTest(LocalBearTestHelper):
 
     def test_run(self):
         # Test a file with errors and warnings
-        self.assertLinesValid(
+        self.check_validity(
             self.uut,
             [],
             self.test_file2,
             valid=False)
 
         # Test a file with a warning which can be changed using a config
-        self.assertLinesValid(
+        self.check_validity(
             self.uut,
             [],
             self.test_file1,
@@ -42,7 +42,7 @@ class JSHintBearTest(LocalBearTestHelper):
 
         # Test if warning disappears
         self.section.append(Setting("jshint_config", self.conf_file))
-        self.assertLinesValid(
+        self.check_validity(
             self.uut,
             [],
             self.test_file1)

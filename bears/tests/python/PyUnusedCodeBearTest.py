@@ -11,9 +11,9 @@ class PyUnusedCodeBearTest(LocalBearTestHelper):
         self.uut = PyUnusedCodeBear(Section('name'), Queue())
 
     def test_valid(self):
-        self.assertLinesValid(self.uut, ["import sys; sys.do()"])
-        self.assertLinesValid(self.uut, ["a = 2; print(a)"])
+        self.check_validity(self.uut, ["import sys; sys.do()"])
+        self.check_validity(self.uut, ["a = 2; print(a)"])
 
     def test_invalid(self):
-        self.assertLinesValid(self.uut, ["import os"], valid=False)
-        self.assertLinesValid(self.uut, ["pass"], valid=False)
+        self.check_validity(self.uut, ["import os"], valid=False)
+        self.check_validity(self.uut, ["pass"], valid=False)

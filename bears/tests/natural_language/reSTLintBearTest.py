@@ -11,7 +11,7 @@ class reSTLintBearTest(LocalBearTestHelper):
         self.uut = reSTLintBear(Section('name'), Queue())
 
     def test_valid(self):
-        self.assertLinesValid(self.uut, ["test\n====\n"])
+        self.check_validity(self.uut, ["test\n====\n"])
 
     def test_invalid(self):
-        self.assertLinesValid(self.uut, ["test\n==\n"], valid=False)
+        self.check_validity(self.uut, ["test\n==\n"], valid=False)

@@ -23,8 +23,8 @@ class GoLintBearTest(LocalBearTestHelper):
                                      "golint_bad.go")
 
     def test_run(self):
-        self.assertLinesValid(self.uut, [], self.good_file)
-        self.assertLinesValid(self.uut, [], self.bad_file, valid=False)
+        self.check_validity(self.uut, [], self.good_file)
+        self.check_validity(self.uut, [], self.bad_file, valid=False)
         self.section.append(Setting("golint_cli_options",
                                     "-min_confidence=0.8"))
-        self.assertLinesValid(self.uut, [], self.bad_file, valid=False)
+        self.check_validity(self.uut, [], self.bad_file, valid=False)

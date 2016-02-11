@@ -12,30 +12,30 @@ class JSONFormatBearTest(LocalBearTestHelper):
         self.uut = JSONFormatBear(self.section, Queue())
 
     def test_valid(self):
-        self.assertLinesValid(self.uut, ['{',
-                                         '    "a": 5,',
-                                         '    "b": 5',
-                                         '}'])
-        self.assertLinesValid(self.uut, ['{',
-                                         '    "b": 5,',
-                                         '    "a": 5',
-                                         '}'])
+        self.check_validity(self.uut, ['{',
+                                       '    "a": 5,',
+                                       '    "b": 5',
+                                       '}'])
+        self.check_validity(self.uut, ['{',
+                                       '    "b": 5,',
+                                       '    "a": 5',
+                                       '}'])
 
     def test_invalid(self):
-        self.assertLinesValid(self.uut, [""], valid=False)
-        self.assertLinesValid(self.uut, ["random stuff"], valid=False)
-        self.assertLinesValid(self.uut, ['{"a":5,"b":5}'], valid=False)
+        self.check_validity(self.uut, [""], valid=False)
+        self.check_validity(self.uut, ["random stuff"], valid=False)
+        self.check_validity(self.uut, ['{"a":5,"b":5}'], valid=False)
 
     def test_sorting(self):
         self.section.append(Setting("json_sort", "true"))
-        self.assertLinesValid(self.uut, ['{',
-                                         '    "b": 5,',
-                                         '    "a": 5',
-                                         '}'], valid=False)
+        self.check_validity(self.uut, ['{',
+                                       '    "b": 5,',
+                                       '    "a": 5',
+                                       '}'], valid=False)
 
     def test_indent(self):
         test_code = ['{', '   "b": 5,', '   "a": 5', '}']
-        self.assertLinesValid(self.uut, test_code, valid=False)
+        self.check_validity(self.uut, test_code, valid=False)
 
         self.section.append(Setting("tab_width", "3"))
-        self.assertLinesValid(self.uut, test_code)
+        self.check_validity(self.uut, test_code)

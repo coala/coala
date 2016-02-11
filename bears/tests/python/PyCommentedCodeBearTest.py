@@ -11,17 +11,17 @@ class PyCommentedCodeBearTest(LocalBearTestHelper):
         self.uut = PyCommentedCodeBear(Section('name'), Queue())
 
     def test_valid(self):
-        self.assertLinesValid(self.uut, ["import sys"])
-        self.assertLinesValid(self.uut, ["a = 1 + 1"])
-        self.assertLinesValid(self.uut, ["# hey man!"])
-        self.assertLinesValid(self.uut, ['"""',
-                                         'Hey, this is a code sample:',
-                                         '>>> import os',
-                                         '',
-                                         'And when you use it you can simply '
-                                         'do: `import os`.',
-                                         '"""'])
+        self.check_validity(self.uut, ["import sys"])
+        self.check_validity(self.uut, ["a = 1 + 1"])
+        self.check_validity(self.uut, ["# hey man!"])
+        self.check_validity(self.uut, ['"""',
+                                       'Hey, this is a code sample:',
+                                       '>>> import os',
+                                       '',
+                                       'And when you use it you can simply '
+                                       'do: `import os`.',
+                                       '"""'])
 
     def test_invalid(self):
-        self.assertLinesValid(self.uut, ["# import os"], valid=False)
-        self.assertLinesValid(self.uut, ["# print('comment')"], valid=False)
+        self.check_validity(self.uut, ["# import os"], valid=False)
+        self.check_validity(self.uut, ["# print('comment')"], valid=False)

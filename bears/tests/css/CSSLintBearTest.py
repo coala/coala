@@ -23,7 +23,7 @@ class CSSLintBearTest(LocalBearTestHelper):
 
     def test_run(self):
         # Test a file without any issues
-        self.assertLinesValid(self.uut, [], self.test_file1)
+        self.check_validity(self.uut, [], self.test_file1)
 
         # Test a file with errors and warnings
-        self.assertLinesValid(self.uut, [], self.test_file2, valid=False)
+        self.check_validity(self.uut, [], self.test_file2, valid=False)

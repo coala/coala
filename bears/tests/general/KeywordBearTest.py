@@ -15,12 +15,12 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.uut = KeywordBear(self.section, Queue())
 
     def test_run(self):
-        self.assertLinesValid(self.uut, [
+        self.check_validity(self.uut, [
             "test line fix me",
             "to do",
             "error fixme"
         ])
-        self.assertLinesValid(self.uut, "test line FIXME", valid=False)
-        self.assertLinesValid(self.uut, "test line todo", valid=False)
-        self.assertLinesValid(self.uut, "test line warNING", valid=False)
-        self.assertLinesValid(self.uut, "test line ERROR", valid=False)
+        self.check_validity(self.uut, "test line FIXME", valid=False)
+        self.check_validity(self.uut, "test line todo", valid=False)
+        self.check_validity(self.uut, "test line warNING", valid=False)
+        self.check_validity(self.uut, "test line ERROR", valid=False)

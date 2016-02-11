@@ -22,5 +22,5 @@ class CheckstyleBearTest(LocalBearTestHelper):
                                      "CheckstyleBad.java")
 
     def test_run(self):
-        self.assertLinesValid(self.uut, [], self.good_file)
-        self.assertLinesValid(self.uut, [], self.bad_file, valid=False)
+        self.check_validity(self.uut, [], self.good_file)
+        self.check_validity(self.uut, [], self.bad_file, valid=False)

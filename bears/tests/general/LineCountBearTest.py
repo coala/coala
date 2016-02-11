@@ -12,7 +12,7 @@ class LineCountBearTest(LocalBearTestHelper):
         self.uut = LineCountBear(Section("name"), Queue())
 
     def test_run(self):
-        self.assertLinesYieldResults(
+        self.check_results(
             self.uut,
             ["1", "2", "3"],
             Result.from_values(
@@ -20,7 +20,7 @@ class LineCountBearTest(LocalBearTestHelper):
                 "This file has {count} lines.".format(count=3),
                 severity=RESULT_SEVERITY.INFO,
                 file="default"))
-        self.assertLinesYieldResults(
+        self.check_results(
             self.uut,
             [],
             Result.from_values(

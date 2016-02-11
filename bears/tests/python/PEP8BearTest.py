@@ -14,35 +14,35 @@ class PEP8BearTest(LocalBearTestHelper):
         self.uut = PEP8Bear(self.section, Queue())
 
     def test_valid(self):
-        self.assertLinesValid(self.uut, ["import sys"])
-        self.assertLinesValid(self.uut, ["a = 1 + 1"])
+        self.check_validity(self.uut, ["import sys"])
+        self.check_validity(self.uut, ["a = 1 + 1"])
 
     def test_line_length(self):
-        self.assertLinesValid(self.uut, ["a = 1 + 1 + 1 + 1 + 1 + 1 + 1"])
+        self.check_validity(self.uut, ["a = 1 + 1 + 1 + 1 + 1 + 1 + 1"])
         self.section.append(Setting('max_line_length', '10'))
-        self.assertLinesValid(self.uut,
-                              ["a = 1 + 1 + 1 + 1 + 1 + 1 + 1"],
-                              valid=False)
+        self.check_validity(self.uut,
+                            ["a = 1 + 1 + 1 + 1 + 1 + 1 + 1"],
+                            valid=False)
 
     def test_indent_level(self):
         test_code = ['def func():\n',
                      '    pass\n']
-        self.assertLinesValid(self.uut, test_code)
+        self.check_validity(self.uut, test_code)
 
         self.section.append(Setting('tab_width', '2'))
-        self.assertLinesValid(self.uut, test_code, valid=False)
-        self.assertLinesValid(self.uut, ['def func():\n', '  pass\n'])
+        self.check_validity(self.uut, test_code, valid=False)
+        self.check_validity(self.uut, ['def func():\n', '  pass\n'])
 
     def test_disable_warnings(self):
         test_code = ['def func():\n',
                      '    pass\n',
                      'def func2():\n',
                      '    pass\n']
-        self.assertLinesValid(self.uut, test_code, valid=False)
+        self.check_validity(self.uut, test_code, valid=False)
 
         self.section.append(Setting('pep_ignore', 'E302'))
-        self.assertLinesValid(self.uut, test_code)
+        self.check_validity(self.uut, test_code)
 
     def test_invalid(self):
-        self.assertLinesValid(self.uut, [""], valid=False)
-        self.assertLinesValid(self.uut, ["a=1+1"], valid=False)
+        self.check_validity(self.uut, [""], valid=False)
+        self.check_validity(self.uut, ["a=1+1"], valid=False)

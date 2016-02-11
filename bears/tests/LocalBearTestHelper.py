@@ -36,12 +36,12 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 
         return modified_lines
 
-    def assertLinesValid(self,
-                         local_bear,
-                         lines,
-                         filename="default",
-                         valid=True,
-                         force_linebreaks=True):
+    def check_validity(self,
+                       local_bear,
+                       lines,
+                       filename="default",
+                       valid=True,
+                       force_linebreaks=True):
         """
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
@@ -69,26 +69,23 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 
         if force_linebreaks:
             lines = LocalBearTestHelper.force_linebreaks(lines)
+        bear_output = list(local_bear.execute(filename, lines))
         if valid:
-            self.assertEqual(
-                list(local_bear.execute(filename, lines)),
-                [],
-                msg="The local bear '{}' yields a result although it "
-                    "shouldn't.".format(local_bear.__class__.__name__))
+            msg = ("The local bear '{}' yields a result although it "
+                   "shouldn't.".format(local_bear.__class__.__name__))
+            self.assertEqual(bear_output, [], msg=msg)
         else:
-            self.assertNotEqual(
-                len(list(local_bear.execute(filename, lines))),
-                0,
-                msg="The local bear '{}' yields no result although it "
-                    "should.".format(local_bear.__class__.__name__))
+            msg = ("The local bear '{}' yields no result although it "
+                   "should.".format(local_bear.__class__.__name__))
+            self.assertNotEqual(len(bear_output), 0, msg=msg)
 
-    def assertLinesYieldResults(self,
-                                local_bear,
-                                lines,
-                                results,
-                                filename="default",
-                                check_order=False,
-                                force_linebreaks=True):
+    def check_results(self,
+                      local_bear,
+                      lines,
+                      results,
+                      filename="default",
+                      check_order=False,
+                      force_linebreaks=True):
         """
         Asserts that a check of the given lines with the given local bear does
         yield exactly the given results.
@@ -121,20 +118,14 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 
         if force_linebreaks:
             lines = LocalBearTestHelper.force_linebreaks(lines)
+
+        msg = ("The local bear '{}' doesn't yield the right results. Or the "
+               "order may be wrong.".format(local_bear.__class__.__name__))
+        bear_output = list(local_bear.execute(filename, lines))
         if not check_order:
-            self.assertEqual(
-                sorted(local_bear.execute(filename, lines)),
-                sorted(results),
-                msg="The local bear '{}' yields not the right results or the "
-                    "order may be wrong.".format(
-                    local_bear.__class__.__name__))
+            self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
         else:
-            self.assertEqual(
-                list(local_bear.execute(filename, lines)),
-                results,
-                msg="The local bear '{}' yields not the right results or the "
-                    "order may be wrong.".format(
-                    local_bear.__class__.__name__))
+            self.assertEqual(bear_output, results, msg=msg)
 
 
 def verify_local_bear(bear,
@@ -171,10 +162,10 @@ def verify_local_bear(bear,
 
         def test_valid_files(self):
             for file in valid_files:
-                self.assertLinesValid(self.uut, file, filename, valid=True)
+                self.check_validity(self.uut, file, filename, valid=True)
 
         def test_invalid_files(self):
             for file in invalid_files:
-                self.assertLinesValid(self.uut, file, filename, valid=False)
+                self.check_validity(self.uut, file, filename, valid=False)
 
     return LocalBearTest

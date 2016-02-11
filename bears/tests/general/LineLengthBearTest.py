@@ -14,18 +14,18 @@ class LineLengthBearTest(LocalBearTestHelper):
         self.uut = LineLengthBear(self.section, Queue())
 
     def test_run(self):
-        self.assertLinesValid(self.uut, [
+        self.check_validity(self.uut, [
             "test\n",
             "too\n",
             "er\n",
             "e\n",
             "\n"
         ])
-        self.assertLinesValid(self.uut, "testa\n", valid=False)
-        self.assertLinesValid(self.uut, "test line\n", valid=False)
+        self.check_validity(self.uut, "testa\n", valid=False)
+        self.check_validity(self.uut, "test line\n", valid=False)
 
     def test_ignore_regex(self):
         self.section['ignore_length_regex'] = 'http://'
 
-        self.assertLinesValid(self.uut, 'asdasd', valid=False)
-        self.assertLinesValid(self.uut, 'http://a.domain.de')
+        self.check_validity(self.uut, 'asdasd', valid=False)
+        self.check_validity(self.uut, 'http://a.domain.de')

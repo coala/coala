@@ -25,51 +25,47 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         # use_spaces is no default, need to set it explicitly.
         self.section.append(Setting("use_spaces", "true"))
 
-        self.assertLinesValid(self.uut, "    t")
-        self.assertLinesValid(self.uut, "\tt", valid=False)
-        self.assertLinesValid(self.uut, "t \n", valid=False)
-        self.assertLinesValid(self.uut,
-                              "t",
-                              valid=False,
-                              force_linebreaks=False)
+        self.check_validity(self.uut, "    t")
+        self.check_validity(self.uut, "\tt", valid=False)
+        self.check_validity(self.uut, "t \n", valid=False)
+        self.check_validity(self.uut, "t", force_linebreaks=False, valid=False)
 
     def test_data_sets_spaces(self):
         self.section.append(Setting("use_spaces", "true"))
         self.section.append(Setting("allow_trailing_whitespace", "false"))
         self.section.append(Setting("enforce_newline_at_EOF", "false"))
 
-        self.assertLinesValid(self.uut, "    t")
-        self.assertLinesValid(self.uut, "t \n", valid=False)
-        self.assertLinesValid(self.uut, "\tt\n", valid=False)
+        self.check_validity(self.uut, "    t")
+        self.check_validity(self.uut, "t \n", valid=False)
+        self.check_validity(self.uut, "\tt\n", valid=False)
 
     def test_data_sets_tabs(self):
         self.section.append(Setting("use_spaces", "false"))
         self.section.append(Setting("allow_trailing_whitespace", "true"))
         self.section.append(Setting("enforce_newline_at_EOF", "false"))
 
-        self.assertLinesValid(self.uut, "    t", valid=False)
-        self.assertLinesValid(self.uut, "t \n")
-        self.assertLinesValid(self.uut, "\tt\n")
+        self.check_validity(self.uut, "    t", valid=False)
+        self.check_validity(self.uut, "t \n")
+        self.check_validity(self.uut, "\tt\n")
 
     def test_enforce_newline_at_eof(self):
         self.section.append(Setting("use_spaces", "true"))
         self.section.append(Setting("allow_trailing_whitespace", "true"))
         self.section.append(Setting("enforce_newline_at_EOF", "true"))
 
-        self.assertLinesValid(self.uut, "hello world  \n",
-                              force_linebreaks=False)
-        self.assertLinesValid(self.uut,
-                              ["def somecode():\n",
-                               "    print('funny')\n",
-                               "    print('funny end.')\n"],
-                              force_linebreaks=False)
-        self.assertLinesValid(self.uut,
-                              " no hello world",
-                              valid=False,
-                              force_linebreaks=False)
-        self.assertLinesValid(self.uut,
-                              ["def unfunny_code():\n",
-                               "    print('funny')\n",
-                               "    print('the result is not funny...')"],
-                              valid=False,
-                              force_linebreaks=False)
+        self.check_validity(self.uut, "hello world  \n", force_linebreaks=False)
+        self.check_validity(self.uut,
+                            ["def somecode():\n",
+                             "    print('funny')\n",
+                             "    print('funny end.')\n"],
+                            force_linebreaks=False)
+        self.check_validity(self.uut,
+                            " no hello world",
+                            force_linebreaks=False,
+                            valid=False)
+        self.check_validity(self.uut,
+                            ["def unfunny_code():\n",
+                             "    print('funny')\n",
+                             "    print('the result is not funny...')"],
+                            force_linebreaks=False,
+                            valid=False)

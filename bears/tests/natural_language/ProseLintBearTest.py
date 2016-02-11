@@ -23,7 +23,7 @@ class ProseLintBearTest(LocalBearTestHelper):
 
     def test_run(self):
         # Test a file with no issues
-        self.assertLinesValid(self.uut, [], self.test_file1)
+        self.check_validity(self.uut, [], self.test_file1)
 
         # Test a file with issues
-        self.assertLinesValid(self.uut, [], self.test_file2, valid=False)
+        self.check_validity(self.uut, [], self.test_file2, valid=False)

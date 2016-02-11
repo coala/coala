@@ -22,5 +22,5 @@ class GoVetBearTest(LocalBearTestHelper):
                                      "vet_bad.go")
 
     def test_run(self):
-        self.assertLinesValid(self.uut, [], self.good_file)
-        self.assertLinesValid(self.uut, [], self.bad_file, valid=False)
+        self.check_validity(self.uut, [], self.good_file)
+        self.check_validity(self.uut, [], self.bad_file, valid=False)
