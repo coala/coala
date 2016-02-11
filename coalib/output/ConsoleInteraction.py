@@ -152,7 +152,8 @@ def print_result(console_printer,
                  section,
                  file_diff_dict,
                  result,
-                 file_dict):
+                 file_dict,
+                 interactive=True):
     """
     Prints the result to console.
 
@@ -164,6 +165,8 @@ def print_result(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
+    :interactive:           Variable to check wether or not to
+                            offer the user actions interactively.
     """
     if not isinstance(result, Result):
         log_printer.warn("One of the results can not be printed since it is "
@@ -176,12 +179,13 @@ def print_result(console_printer,
         color=RESULT_SEVERITY_COLORS[result.severity])
     console_printer.print(format_lines(result.message), delimiter="\n")
 
-    acquire_actions_and_apply(console_printer,
-                              log_printer,
-                              section,
-                              file_diff_dict,
-                              result,
-                              file_dict)
+    if interactive:
+        acquire_actions_and_apply(console_printer,
+                                  log_printer,
+                                  section,
+                                  file_diff_dict,
+                                  result,
+                                  file_dict)
 
 
 def print_results_formatted(log_printer,
@@ -251,6 +255,44 @@ def print_affected_files(console_printer,
                 print_affected_lines(console_printer,
                                      file_dict,
                                      sourcerange)
+
+
+def print_results_no_input(log_printer,
+                           section,
+                           result_list,
+                           file_dict,
+                           file_diff_dict,
+                           color=True):
+    """
+    Print all non interactive results in a section
+
+    :param log_printer:    Printer responsible for logging the messages.
+    :param section:        The section to which the results belong to.
+    :param result_list:    List containing the results
+    :param file_dict:      A dictionary containing all files with filename as
+                           key.
+    :param file_diff_dict: A dictionary that contains filenames as keys and
+                           diff objects as values.
+    :param color:          Boolean variable to print the results in color or
+                           not. Can be used for testing.
+    """
+    console_printer = ConsolePrinter(print_colored=color)
+    for result in result_list:
+
+        print_affected_files(console_printer,
+                             log_printer,
+                             section,
+                             result,
+                             file_dict,
+                             color=color)
+
+        print_result(console_printer,
+                     log_printer,
+                     section,
+                     file_diff_dict,
+                     result,
+                     file_dict,
+                     interactive=False)
 
 
 def print_results(log_printer,
