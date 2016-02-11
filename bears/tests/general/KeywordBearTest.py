@@ -20,7 +20,7 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
             "to do",
             "error fixme"
         ])
-        self.assertLineInvalid(self.uut, "test line FIXME")
-        self.assertLineInvalid(self.uut, "test line todo")
-        self.assertLineInvalid(self.uut, "test line warNING")
-        self.assertLineInvalid(self.uut, "test line ERROR")
+        self.assertLinesInvalid(self.uut, "test line FIXME")
+        self.assertLinesInvalid(self.uut, "test line todo")
+        self.assertLinesInvalid(self.uut, "test line warNING")
+        self.assertLinesInvalid(self.uut, "test line ERROR")
