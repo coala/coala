@@ -62,7 +62,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
-                              msg="The given bear is no local bear.")
+                              msg="The given bear is not a local bear.")
         self.assertIsInstance(lines,
                               list,
                               msg="The given lines are not a list.")
@@ -111,7 +111,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
-                              msg="The given bear is no local bear.")
+                              msg="The given bear is not a local bear.")
         self.assertIsInstance(lines,
                               list,
                               msg="The given lines are not a list.")
