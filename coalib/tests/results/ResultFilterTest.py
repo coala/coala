@@ -344,9 +344,6 @@ class ResultFilterTest(unittest.TestCase):
                                   res1_with_change,      # correct
                                   res1_whole_change,     # correct
 
-                                  res1_post_remove,      # WRONG: line-wise diff
-                                  res1_whole_remove,     # correct
-
                                   res1_addition,         # correct
                                   res1_around_addition,  # WRONG: line-wise diff
                                   res1_with_addition,    # correct

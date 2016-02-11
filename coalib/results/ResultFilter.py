@@ -30,7 +30,7 @@ def filter_results(original_file_dict,
     mod_result_diff_dict_dict = remove_result_ranges_diffs(modified_results,
                                                            modified_file_dict)
 
-    for m_r in modified_results:
+    for m_r in reversed(modified_results):
         for o_r in original_results:
 
             if basics_match(o_r, m_r):
