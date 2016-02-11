@@ -8,11 +8,6 @@ ignore =
 max_line_length = 80
 use_spaces = True
 
-[autopep8]
-bears = PEP8Bear
-
-default_actions = PEP8Bear: ApplyPatchAction
-
 [python]
 # Patches may conflict with autopep8 so putting them in own section so they
 # will be executed sequentially; also we need the LineLengthBear to double
@@ -23,6 +18,11 @@ bears = SpaceConsistencyBear, PyUnusedCodeBear, LineLengthBear
 default_actions =
     SpaceConsistencyBear: ApplyPatchAction,
     PyUnusedCodeBear: ApplyPatchAction
+
+[autopep8]
+bears = PEP8Bear
+
+default_actions = PEP8Bear: ApplyPatchAction
 
 [DOCS]
 bears = SpaceConsistencyBear
