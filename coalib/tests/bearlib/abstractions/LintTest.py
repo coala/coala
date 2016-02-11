@@ -1,5 +1,7 @@
 import unittest
 
+from bears.tests.BearTestHelper import generate_skip_decorator
+from bears.c_languages.IndentBear import IndentBear
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
@@ -57,6 +59,17 @@ class LintTest(unittest.TestCase):
             "*************\n",
             'a/file.py'))
         self.assertEqual(len(out), 0)
+
+    @generate_skip_decorator(IndentBear)
+    def test_stdin_input(self):
+        self.uut.executable = IndentBear.executable
+        self.uut.use_stdin = True
+        self.uut.use_stderr = False
+        self.uut.process_output = lambda output, filename: (output, filename)
+
+        input_file = ["int main(){return 0;}"]
+        out = self.uut.lint(file=input_file)
+        self.assertEqual(out[0], 'int\nmain ()\n{\n  return 0;\n}\n')
 
     def test_missing_binary(self):
         old_binary = Lint.executable

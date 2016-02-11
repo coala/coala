@@ -49,6 +49,7 @@ class Lint(Bear):
                           severity - The severity of the issue.
                           message - The message of the result.
     :param use_stderr:   Uses stderr as the output stream is it's True.
+    :param use_stdin:    Sends file as stdin instead of giving the file name.
     :param severity_map: A dict where the keys are the possible severity
                          values the Linter gives out and the values are the
                          severity of the coala Result to set it to. If it is
@@ -60,25 +61,37 @@ class Lint(Bear):
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)\|'
                               r'(?P<severity>\d+): (?P<message>.*)')
     use_stderr = False
+    use_stdin = False
     severity_map = None
 
-    def lint(self, filename):
+    def lint(self, filename=None, file=None):
         """
         Takes a file and lints it using the linter variables defined apriori.
 
-        :param filename: The name of the file to execute.
+        :param filename:  The name of the file to execute.
+        :param file:      The contents of the file as a list of strings.
         """
-        command = (self.executable + ' ' + self.arguments + ' '
-                   + escape_path_argument(filename))
-        stderr_file = tempfile.TemporaryFile()
+        assert ((self.use_stdin and file is not None) or
+                (not self.use_stdin and filename is not None))
+
+        command = self.executable + ' ' + self.arguments
+        if not self.use_stdin:
+            command += ' ' + escape_path_argument(filename)
+
+        stdin_file = tempfile.TemporaryFile()
         stdout_file = tempfile.TemporaryFile()
-        process = subprocess.Popen(
-            command,
-            shell=True,
-            stdout=stdout_file,
-            stderr=stderr_file,
-            universal_newlines=True)
+        stderr_file = tempfile.TemporaryFile()
+        if self.use_stdin:
+            stdin_file.write(bytes("".join(file), 'UTF-8'))
+            stdin_file.seek(0)
+        process = subprocess.Popen(command,
+                                   shell=True,
+                                   stdin=stdin_file,
+                                   stdout=stdout_file,
+                                   stderr=stderr_file,
+                                   universal_newlines=True)
         process.wait()
+
         if self.use_stderr:
             stderr_file.seek(0)
             output = stderr_file.read().decode(sys.stderr.encoding,
@@ -87,6 +100,7 @@ class Lint(Bear):
             stdout_file.seek(0)
             output = stdout_file.read().decode(sys.stdout.encoding,
                                                errors="replace")
+        stdin_file.close()
         stdout_file.close()
         stderr_file.close()
         return self.process_output(output, filename)
