@@ -21,7 +21,8 @@ class DockerfileLintBear(LocalBear, Lint):
         return self.lint(filename)
 
     def _process_issues(self, output, filename):
-        output = json.loads(output)
+        output = json.loads("".join(output))
+
         for severity in output:
             if severity == "summary":
                 continue

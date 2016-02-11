@@ -16,9 +16,9 @@ class LintTest(unittest.TestCase):
 
     def test_invalid_output(self):
         out = list(self.uut.process_output(
-            "1.0|0: Info message\n"
-            "2.2|1: Normal message\n"
-            "3.4|2: Major message\n",
+            ["1.0|0: Info message\n",
+             "2.2|1: Normal message\n",
+             "3.4|2: Major message\n"],
             "a/file.py",
             ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 3)
@@ -45,7 +45,7 @@ class LintTest(unittest.TestCase):
                                  r'(?P<severity>\d+): (?P<message>.*)')
         self.uut.severity_map = {"I": RESULT_SEVERITY.INFO}
         out = list(self.uut.process_output(
-            "1.0|2.3|0: Info message\n",
+            ["1.0|2.3|0: Info message\n"],
             'a/file.py',
             ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 1)
@@ -57,8 +57,8 @@ class LintTest(unittest.TestCase):
 
     def test_valid_output(self):
         out = list(self.uut.process_output(
-            "Random line that shouldn't be captured\n"
-            "*************\n",
+            ["Random line that shouldn't be captured\n",
+             "*************\n"],
             'a/file.py',
             ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 0)
@@ -72,7 +72,8 @@ class LintTest(unittest.TestCase):
 
         input_file = ["int main(){return 0;}"]
         out = self.uut.lint(file=input_file)
-        self.assertEqual(out, 'int\nmain ()\n{\n  return 0;\n}\n')
+        self.assertEqual(out,
+                         ['int\n', 'main ()\n', '{\n', '  return 0;\n', '}\n'])
 
     def test_missing_binary(self):
         old_binary = Lint.executable

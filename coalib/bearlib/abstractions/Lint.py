@@ -108,7 +108,7 @@ class Lint(Bear):
             file.close()
 
         if not self.use_stderr:
-            self.__print_errors(stderr_output.split("\n"))
+            self.__print_errors(stderr_output)
 
         return results
 
@@ -119,7 +119,7 @@ class Lint(Bear):
             return self._process_issues(output, filename)
 
     def _process_corrected(self, output, filename, file):
-        for diff in self.__yield_diffs(file, output.split("\n")):
+        for diff in self.__yield_diffs(file, output):
             yield Result(self,
                          self.diff_message,
                          affected_code=(diff.range(filename),),
@@ -131,7 +131,9 @@ class Lint(Bear):
         if isinstance(regex, str):
             regex = regex % {"file_name": filename}
 
-        for match in re.finditer(regex, output):
+        # Note: We join `output` because the regex may want to capture
+        #       multiple lines also.
+        for match in re.finditer(regex, "".join(output)):
             yield self.match_to_result(match, filename)
 
     def _get_groupdict(self, match):
@@ -152,7 +154,8 @@ class Lint(Bear):
     @staticmethod
     def _read(file, encoding):
         file.seek(0)
-        return file.read().decode(encoding or 'UTF-8', errors="replace")
+        return [line.decode(encoding or 'UTF-8', errors="replace")
+                for line in file.readlines()]
 
     @staticmethod
     def _write(file_contents, file, encoding):

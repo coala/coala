@@ -34,7 +34,7 @@ class CoffeeLintBear(LocalBear, Lint):
         return self.lint(filename)
 
     def _process_issues(self, output, filename):
-        reader = DictReader(StringIO(output))
+        reader = DictReader(StringIO("".join(output)))
 
         for row in reader:
             try:
