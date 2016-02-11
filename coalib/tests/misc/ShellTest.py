@@ -2,10 +2,9 @@ import os
 import sys
 import unittest
 
-from coalib.misc.Shell import (prepare_string_argument,
-                               escape_path_argument,
-                               run_interactive_shell_command,
-                               run_shell_command)
+from coalib.misc.Shell import (
+    escape_path_argument, prepare_string_argument,
+    run_interactive_shell_command, run_shell_command)
 
 
 class EscapePathArgumentTest(unittest.TestCase):

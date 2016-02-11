@@ -1,9 +1,9 @@
 from isort import SortImports
 
+from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
-from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 
 
 class PyImportSortBear(LocalBear):

@@ -1,13 +1,14 @@
 import unittest
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.SectionFilling import fill_section, fill_settings, Setting
-from coalib.settings.Section import Section
+from coalib.misc.ContextManagers import simulate_console_inputs
 from coalib.output.ConsoleInteraction import acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.settings.Section import Section
+from coalib.settings.SectionFilling import Setting, fill_section, fill_settings
 
 
 class GlobalTestBear(GlobalBear):

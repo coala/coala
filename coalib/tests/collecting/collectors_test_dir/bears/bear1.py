@@ -1,5 +1,6 @@
-from coalib.bears.Bear import Bear
 import multiprocessing
+
+from coalib.bears.Bear import Bear
 from coalib.settings.Section import Section
 
 

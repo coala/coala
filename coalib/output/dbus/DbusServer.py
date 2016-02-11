@@ -1,4 +1,5 @@
 import os
+
 import dbus.service
 
 from coalib.output.dbus.DbusApp import DbusApp

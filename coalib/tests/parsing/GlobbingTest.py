@@ -17,11 +17,8 @@ GlobTestDir
 import os
 import unittest
 
-from coalib.parsing.Globbing import _iter_alternatives
-from coalib.parsing.Globbing import _iter_choices
-from coalib.parsing.Globbing import _position_is_bracketed
-from coalib.parsing.Globbing import fnmatch
-from coalib.parsing.Globbing import glob
+from coalib.parsing.Globbing import (
+    _iter_alternatives, _iter_choices, _position_is_bracketed, fnmatch, glob)
 
 
 class TestFiles:

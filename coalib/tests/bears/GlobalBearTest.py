@@ -1,7 +1,7 @@
 import unittest
 
+from coalib.bears.GlobalBear import BEAR_KIND, GlobalBear
 from coalib.settings.Section import Section
-from coalib.bears.GlobalBear import GlobalBear, BEAR_KIND
 
 
 class GlobalBearTest(unittest.TestCase):

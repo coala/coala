@@ -1,6 +1,6 @@
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.Result import Result
 from coalib.results.HiddenResult import HiddenResult
+from coalib.results.Result import Result
 
 
 class LocalTestBear(LocalBear):  # pragma: no cover

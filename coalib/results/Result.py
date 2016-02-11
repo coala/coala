@@ -1,9 +1,8 @@
 import uuid
 from os.path import relpath
 
-from coalib.misc.Decorators import (generate_repr,
-                                    generate_ordering,
-                                    enforce_signature)
+from coalib.misc.Decorators import (
+    enforce_signature, generate_ordering, generate_repr)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 

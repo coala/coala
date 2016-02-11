@@ -1,11 +1,11 @@
 import unittest
 from os.path import isfile
 
-from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.misc.ContextManagers import make_temp
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.settings.Section import Section
-from coalib.misc.ContextManagers import make_temp
 
 
 class ApplyPatchActionTest(unittest.TestCase):

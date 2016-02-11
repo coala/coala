@@ -1,5 +1,5 @@
-import difflib
 import copy
+import difflib
 
 from coalib.results.LineDiff import LineDiff
 from coalib.results.SourceRange import SourceRange

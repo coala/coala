@@ -1,11 +1,11 @@
 import os
-from os.path import abspath
 import unittest
+from os.path import abspath
 
-from coalib.results.ResultFilter import filter_results, remove_range
-from coalib.results.ResultFilter import remove_result_ranges_diffs
 from coalib.results.Diff import Diff
-from coalib.results.Result import Result, RESULT_SEVERITY
+from coalib.results.Result import RESULT_SEVERITY, Result
+from coalib.results.ResultFilter import (
+    filter_results, remove_range, remove_result_ranges_diffs)
 from coalib.results.SourceRange import SourceRange
 
 

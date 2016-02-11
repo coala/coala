@@ -1,8 +1,9 @@
 from itertools import chain
+
 from pyprint.ClosableObject import ClosableObject
 
-from coalib.settings.Section import Section
 from coalib.parsing.StringProcessing import escape
+from coalib.settings.Section import Section
 
 
 class ConfWriter(ClosableObject):

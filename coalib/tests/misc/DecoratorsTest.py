@@ -1,11 +1,8 @@
 import unittest
 
-from coalib.misc.Decorators import (arguments_to_lists,
-                                    yield_once,
-                                    generate_repr,
-                                    generate_eq,
-                                    generate_ordering,
-                                    enforce_signature)
+from coalib.misc.Decorators import (
+    arguments_to_lists, enforce_signature, generate_eq, generate_ordering,
+    generate_repr, yield_once)
 
 
 class YieldOnceTest(unittest.TestCase):

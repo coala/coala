@@ -1,10 +1,10 @@
-from io import StringIO
 from csv import DictReader
+from io import StringIO
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 def convert_if_not_empty(value: str, conversion):
