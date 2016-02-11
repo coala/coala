@@ -1,14 +1,16 @@
-from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.Lint import Lint
+from coalib.bears.LocalBear import LocalBear
 
 
-class MarkdownBear(CorrectionBasedBear):
+class MarkdownBear(Lint, LocalBear):
     executable = 'remark'
-    RESULT_MESSAGE = "The text does not comply to the set style."
+    diff_message = "The text does not comply to the set style."
+    arguments = r'-s "bullet: \"*\", fences: true"'
+    gives_corrected = True
+    use_stdin = True
 
     def run(self, filename, file):
         """
         Raises issues against style violations on markdown files.
         """
-        cli = r'-s "bullet: \"*\", fences: true"'
-        for result in self.retrieve_results(filename, file, cli_options=cli):
-            yield result
+        return self.lint(filename, file)

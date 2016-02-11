@@ -1,13 +1,15 @@
-from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.Lint import Lint
+from coalib.bears.LocalBear import LocalBear
 
 
-class GofmtBear(CorrectionBasedBear):
+class GofmtBear(Lint, LocalBear):
     executable = 'gofmt'
-    RESULT_MESSAGE = "Formatting can be improved."
+    diff_message = "Formatting can be improved."
+    use_stdin = True
+    gives_corrected = True
 
     def run(self, filename, file):
         """
         Proposes corrections of Go code using gofmt.
         """
-        for result in self.retrieve_results(filename, file, cli_options=''):
-            yield result
+        return self.lint(filename, file)

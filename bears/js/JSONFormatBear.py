@@ -1,31 +1,38 @@
 import json
 from collections import OrderedDict
 
-from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
+from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 
 
-class JSONFormatBear(CorrectionBasedBear):
+class JSONFormatBear(Lint, LocalBear):
     try:
         DecodeError = json.decoder.JSONDecodeError
     except:
         DecodeError = ValueError
 
-    GET_REPLACEMENT = lambda self, **kwargs: self.get_plain_json(**kwargs)
-    RESULT_MESSAGE = ("This file can be reformatted by sorting keys and "
-                      "following indentation.")
+    diff_message = ("This file can be reformatted by sorting keys and "
+                    "following indentation.")
+    gives_corrected = True
 
-    @staticmethod
-    def get_plain_json(file, json_sort, indent):
-        json_content = json.loads(''.join(file), object_pairs_hook=OrderedDict)
-        new_file = json.dumps(json_content,
-                              indent=indent,
-                              sort_keys=json_sort).splitlines(True)
+    def lint(self, filename, file, **kwargs):
+        try:
+            json_content = json.loads(''.join(file),
+                                      object_pairs_hook=OrderedDict)
+        except self.DecodeError as err:
+            return [Result.from_values(
+                self,
+                "This file does not contain parsable JSON. '{adv_msg}'"
+                .format(adv_msg=str(err)),
+                file=filename)]
 
+        new_file = json.dumps(json_content, **kwargs).splitlines(True)
         # Because of a bug in several python versions we have to correct
         # whitespace here.
-        return [line.rstrip(" \n")+"\n" for line in new_file], []
+        output = [line.rstrip(" \n")+"\n" for line in new_file]
+        return self.process_output(output, filename, file)
 
     def run(self,
             filename,
@@ -38,15 +45,7 @@ class JSONFormatBear(CorrectionBasedBear):
         :param json_sort: Whether or not keys should be sorted.
         :param tab_width: Number of spaces to indent.
         """
-        try:
-            for result in self.retrieve_results(filename,
-                                                file,
-                                                json_sort=json_sort,
-                                                indent=tab_width):
-                yield result
-        except self.DecodeError as err:
-            yield Result.from_values(
-                self,
-                "This file does not contain parsable JSON. '{adv_msg}'"
-                .format(adv_msg=str(err)),
-                file=filename)
+        return self.lint(filename,
+                         file,
+                         sort_keys=json_sort,
+                         indent=tab_width)

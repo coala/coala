@@ -1,12 +1,15 @@
 import platform
 
-from coalib.bearlib.abstractions.CorrectionBasedBear import CorrectionBasedBear
+from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
+from coalib.bears.LocalBear import LocalBear
 
 
-class IndentBear(CorrectionBasedBear):
+class IndentBear(Lint, LocalBear):
     executable = "indent" if platform.system() != "Darwin" else "gindent"
-    RESULT_MESSAGE = "Indentation can be improved."
+    diff_message = "Indentation can be improved."
+    use_stdin = True
+    gives_corrected = True
 
     def run(self,
             filename,
@@ -27,12 +30,9 @@ class IndentBear(CorrectionBasedBear):
                                    understands. They will be simply passed
                                    through.
         """
-        options = "--no-tabs" if use_spaces else "--use-tabs"
-        options += (" --line-length {0} --indent-level {1} --tab-size {1} "
-                    "{2}".format(max_line_length,
-                                 tab_width,
-                                 indent_cli_options))
-        for result in self.retrieve_results(filename,
-                                            file,
-                                            cli_options=options):
-            yield result
+        self.arguments = "--no-tabs" if use_spaces else "--use-tabs"
+        self.arguments += (" --line-length {0} --indent-level {1} "
+                           "--tab-size {1} {2}".format(max_line_length,
+                                                       tab_width,
+                                                       indent_cli_options))
+        return self.lint(filename, file)
