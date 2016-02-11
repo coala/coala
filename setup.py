@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
 
-import sys
 import locale
-from urllib.request import urlopen
-from shutil import copyfileobj
-from os.path import exists
+import sys
 from os import getenv
+from os.path import exists
+from shutil import copyfileobj
 from subprocess import call
-from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
-import setuptools.command.build_py
+from urllib.request import urlopen
 
+# Start ignoring PyImportSortBear as imports below may yield syntax errors
 from coalib import assert_supported_version
+
 assert_supported_version()
+# Stop ignoring
+
+import setuptools.command.build_py
+from coalib.misc import Constants
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
-from coalib.misc import Constants
+from setuptools import find_packages, setup
+from setuptools.command.test import test as TestCommand
 
 try:
     locale.getlocale()
