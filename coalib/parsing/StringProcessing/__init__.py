@@ -1,4 +1,4 @@
-# Don't change order of imports because of dependency chains!
+# Start ignoring PyImportSortBear because of dependency chains!
 from coalib.parsing.StringProcessing.Match import Match
 from coalib.parsing.StringProcessing.InBetweenMatch import InBetweenMatch
 from coalib.parsing.StringProcessing.Core import (search_for,
@@ -13,3 +13,4 @@ from coalib.parsing.StringProcessing.Core import (search_for,
                                                   unescaped_rstrip,
                                                   unescaped_strip,
                                                   position_is_escaped)
+# Stop ignoring
