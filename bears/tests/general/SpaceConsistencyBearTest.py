@@ -28,7 +28,10 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.assertLinesValid(self.uut, "    t")
         self.assertLinesValid(self.uut, "\tt", valid=False)
         self.assertLinesValid(self.uut, "t \n", valid=False)
-        self.assertLinesValid(self.uut, "t", valid=False, prepare_lines=False)
+        self.assertLinesValid(self.uut,
+                              "t",
+                              valid=False,
+                              force_linebreaks=False)
 
     def test_data_sets_spaces(self):
         self.section.append(Setting("use_spaces", "true"))
@@ -53,19 +56,20 @@ class SpaceConsistencyBearTest(LocalBearTestHelper):
         self.section.append(Setting("allow_trailing_whitespace", "true"))
         self.section.append(Setting("enforce_newline_at_EOF", "true"))
 
-        self.assertLinesValid(self.uut, "hello world  \n", prepare_lines=False)
+        self.assertLinesValid(self.uut, "hello world  \n",
+                              force_linebreaks=False)
         self.assertLinesValid(self.uut,
                               ["def somecode():\n",
                                "    print('funny')\n",
                                "    print('funny end.')\n"],
-                              prepare_lines=False)
+                              force_linebreaks=False)
         self.assertLinesValid(self.uut,
                               " no hello world",
                               valid=False,
-                              prepare_lines=False)
+                              force_linebreaks=False)
         self.assertLinesValid(self.uut,
                               ["def unfunny_code():\n",
                                "    print('funny')\n",
                                "    print('the result is not funny...')"],
                               valid=False,
-                              prepare_lines=False)
+                              force_linebreaks=False)

@@ -18,7 +18,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
     If you miss some methods, get in contact with us, we'll be happy to help!
     """
     @staticmethod
-    def prepare_lines(lines):
+    def force_linebreaks(lines):
         """
         Adds a trailing newline to each line if needed. This is needed since
         the bears expect every line to have such a newline at the end.
@@ -41,21 +41,21 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                          lines,
                          filename="default",
                          valid=True,
-                         prepare_lines=True):
+                         force_linebreaks=True):
         """
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
 
-        :param local_bear:    The local bear to check with.
-        :param lines:         The lines to check. (string if single line
-                              or List of strings)
-        :param filename:      The filename, if it matters.
-        :param valid:         Whether the lines are valid or not.
-        :param prepare_lines: Whether to append newlines at each line if
-                              needed. Use this with caution when disabling,
-                              since bears expect to have a \n at the end of
-                              each line.
-        """
+        :param local_bear:       The local bear to check with.
+        :param lines:            The lines to check. (string if single line
+                                 or List of strings)
+        :param filename:         The filename, if it matters.
+        :param valid:            Whether the lines are valid or not.
+        :param force_linebreaks: Whether to append newlines at each line if
+                                 needed. Use this with caution when disabling,
+                                 since bears expect to have a \n at the end of
+                                 each line.
+\        """
         if isinstance(lines, str):
             lines = [lines]
 
@@ -67,8 +67,8 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg="The given lines are not a list.")
 
-        if prepare_lines:
-            lines = LocalBearTestHelper.prepare_lines(lines)
+        if force_linebreaks:
+            lines = LocalBearTestHelper.force_linebreaks(lines)
         if valid:
             self.assertEqual(
                 list(local_bear.execute(filename, lines)),
@@ -120,7 +120,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
             self.assertEqual(
                 sorted(local_bear.execute(
                     filename,
-                    LocalBearTestHelper.prepare_lines(lines))),
+                    LocalBearTestHelper.force_linebreaks(lines))),
                 sorted(results),
                 msg="The local bear '{}' yields not the right results or the "
                     "order may be wrong.".format(
@@ -129,7 +129,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
             self.assertEqual(
                 list(local_bear.execute(
                     filename,
-                    LocalBearTestHelper.prepare_lines(lines))),
+                    LocalBearTestHelper.force_linebreaks(lines))),
                 results,
                 msg="The local bear '{}' yields not the right results or the "
                     "order may be wrong.".format(
