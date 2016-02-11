@@ -128,7 +128,10 @@ def verify_local_bear(bear,
                       valid_files,
                       invalid_files,
                       filename=None,
-                      settings={}):
+                      settings={},
+                      force_linebreaks=True,
+                      create_tempfile=True,
+                      tempfile_kwargs={}):
     """
     Generates a test for a local bear by checking the given valid and invalid
     file contents. Simply use it on your module level like:
@@ -136,16 +139,21 @@ def verify_local_bear(bear,
     YourTestName = verify_local_bear(YourBear, (['valid line'],),
                                      (['invalid line'],))
 
-    :param bear:          The Bear class to test.
-    :param valid_files:   An iterable of files as a string list that won't
-                          yield results.
-    :param invalid_files: An iterable of files as a string list that must
-                          yield results.
-    :param filename:      The filename to use for valid and invalid files.
-    :param settings:      A dictionary of keys and values (both string) from
-                          which settings will be created that will be made
-                          available for the tested bear.
-    :return:              A unittest.TestCase object.
+    :param bear:             The Bear class to test.
+    :param valid_files:      An iterable of files as a string list that won't
+                             yield results.
+    :param invalid_files:    An iterable of files as a string list that must
+                             yield results.
+    :param filename:         The filename to use for valid and invalid files.
+    :param settings:         A dictionary of keys and values (both string) from
+                             which settings will be created that will be made
+                             available for the tested bear.
+    :param force_linebreaks: Whether to append newlines at each line
+                             if needed. (Bears expect a \\n for every line)
+    :param create_tempfile:  Whether to save lines in tempfile if needed.
+    :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp() if tempfile
+                             needs to be created.
+    :return:                 A unittest.TestCase object.
     """
     @generate_skip_decorator(bear)
     class LocalBearTest(LocalBearTestHelper):
@@ -158,10 +166,22 @@ def verify_local_bear(bear,
 
         def test_valid_files(self):
             for file in valid_files:
-                self.check_validity(self.uut, file, filename, valid=True)
+                self.check_validity(self.uut,
+                                    file,
+                                    filename,
+                                    valid=True,
+                                    force_linebreaks=force_linebreaks,
+                                    create_tempfile=create_tempfile,
+                                    tempfile_kwargs=tempfile_kwargs)
 
         def test_invalid_files(self):
             for file in invalid_files:
-                self.check_validity(self.uut, file, filename, valid=False)
+                self.check_validity(self.uut,
+                                    file,
+                                    filename,
+                                    valid=False,
+                                    force_linebreaks=force_linebreaks,
+                                    create_tempfile=create_tempfile,
+                                    tempfile_kwargs=tempfile_kwargs)
 
     return LocalBearTest
