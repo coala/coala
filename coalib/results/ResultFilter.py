@@ -30,7 +30,11 @@ def filter_results(original_file_dict,
     mod_result_diff_dict_dict = remove_result_ranges_diffs(modified_results,
                                                            modified_file_dict)
 
+    unique_results = []
+
     for m_r in reversed(modified_results):
+        unique = True
+
         for o_r in original_results:
 
             if basics_match(o_r, m_r):
@@ -40,11 +44,12 @@ def filter_results(original_file_dict,
                                        mod_result_diff_dict_dict[m_r]):
 
                     # at least one original result matches completely
-                    modified_results.remove(m_r)
+                    unique = False
                     break
+        if unique:
+            unique_results.append(m_r)
 
-    # only those ones left that have no perfect match
-    return modified_results
+    return unique_results
 
 
 def basics_match(original_result,
