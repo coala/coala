@@ -30,3 +30,4 @@ org.coala_analyzer.v1.service
 *.exe
 .cache
 *.eggs
+node_modules
