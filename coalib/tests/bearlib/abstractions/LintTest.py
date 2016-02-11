@@ -8,9 +8,11 @@ from coalib.settings.Section import Section
 
 class LintTest(unittest.TestCase):
 
-    def test_process_output(self):
+    def setUp(self):
         section = Section("some_name")
         self.uut = Lint(section, None)
+
+    def test_invalid_output(self):
         out = list(self.uut.process_output(
             "1.0|0: Info message\n"
             "2.2|1: Normal message\n"
@@ -34,7 +36,7 @@ class LintTest(unittest.TestCase):
         self.assertEqual(out[2].severity, RESULT_SEVERITY.MAJOR)
         self.assertEqual(out[2].message, "Major message")
 
-        self.uut = Lint(section, None)
+    def test_custom_regex(self):
         self.uut.output_regex = (r'(?P<line>\d+)\.(?P<column>\d+)\|'
                                  r'(?P<end_line>\d+)\.(?P<end_column>\d+)\|'
                                  r'(?P<severity>\d+): (?P<message>.*)')
@@ -49,7 +51,7 @@ class LintTest(unittest.TestCase):
         self.assertEqual(out[0].affected_code[0].end.column, 3)
         self.assertEqual(out[0].severity, RESULT_SEVERITY.INFO)
 
-        self.uut = Lint(section, None)
+    def test_valid_output(self):
         out = list(self.uut.process_output(
             "Random line that shouldn't be captured\n"
             "*************\n",
