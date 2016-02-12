@@ -1,5 +1,5 @@
 PyPrint==0.1.1
-setuptools==19.2
+setuptools==20.0
 munkres3==1.0.5.5
 pylint==1.5.4
 language-check==0.7.5
@@ -11,4 +11,4 @@ proselint==0.3.5
 cpplint==1.0.0
 isort==4.2.2
 # Do *not* use 0.3 which is not backwards compatible to common clang versions
-libclang-py3==0.2
+libclang-py3==0.3
