@@ -2,12 +2,14 @@ import unittest
 import sys
 import subprocess
 import os
+from tempfile import TemporaryDirectory
 
 from coalib.misc.ContextManagers import (suppress_stdout,
                                          retrieve_stdout,
                                          simulate_console_inputs,
                                          subprocess_timeout,
-                                         make_temp)
+                                         make_temp,
+                                         change_directory)
 from coalib.processes.Processing import create_process_group
 
 
@@ -102,3 +104,10 @@ class ContextManagersTest(unittest.TestCase):
         with make_temp(suffix=".orig", prefix="pre") as f_b:
             self.assertTrue(f_b.endswith(".orig"))
             self.assertTrue(os.path.basename(f_b).startswith("pre"))
+
+    def test_change_directory(self):
+        old_dir = os.getcwd()
+        with TemporaryDirectory() as tempdir, \
+                change_directory(tempdir):
+            self.assertEqual(os.getcwd(), os.path.abspath(tempdir))
+        self.assertEqual(os.getcwd(), os.path.abspath(old_dir))
