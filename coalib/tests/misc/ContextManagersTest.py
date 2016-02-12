@@ -7,7 +7,8 @@ from coalib.misc.ContextManagers import (suppress_stdout,
                                          retrieve_stdout,
                                          simulate_console_inputs,
                                          subprocess_timeout,
-                                         make_temp)
+                                         make_temp,
+                                         prepare_file)
 from coalib.processes.Processing import create_process_group
 
 
@@ -102,3 +103,35 @@ class ContextManagersTest(unittest.TestCase):
         with make_temp(suffix=".orig", prefix="pre") as f_b:
             self.assertTrue(f_b.endswith(".orig"))
             self.assertTrue(os.path.basename(f_b).startswith("pre"))
+
+    def test_prepare_file(self):
+        with prepare_file(['line1', 'line2\n'],
+                          "/file/name",
+                          force_linebreaks=True,
+                          create_tempfile=True) as (lines, filename):
+            self.assertEqual(filename, '/file/name')
+            self.assertEqual(lines, ['line1\n', 'line2\n'])
+
+        with prepare_file(['line1', 'line2\n'],
+                          None,
+                          force_linebreaks=False,
+                          create_tempfile=True) as (lines, filename):
+            self.assertTrue(os.path.isfile(filename))
+            self.assertEqual(lines, ['line1', 'line2\n'])
+
+        with prepare_file(['line1', 'line2\n'],
+                          None,
+                          tempfile_kwargs={"suffix": ".test",
+                                           "prefix": "test_"},
+                          force_linebreaks=False,
+                          create_tempfile=True) as (lines, filename):
+            self.assertTrue(os.path.isfile(filename))
+            basename = os.path.basename(filename)
+            self.assertTrue(basename.endswith(".test"))
+            self.assertTrue(basename.startswith("test_"))
+
+        with prepare_file(['line1', 'line2\n'],
+                          None,
+                          force_linebreaks=False,
+                          create_tempfile=False) as (lines, filename):
+            self.assertEqual(filename, "dummy_file_name")

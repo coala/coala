@@ -162,3 +162,35 @@ def make_temp(suffix="", prefix="tmp", dir=None):
         yield temporary[1]
     finally:
         os.remove(temporary[1])
+
+
+@contextmanager
+def prepare_file(lines,
+                 filename,
+                 force_linebreaks=True,
+                 create_tempfile=True,
+                 tempfile_kwargs={}):
+    """
+    Can creates a temporary file (if filename is None) with the lines.
+    Can also add a trailing newline to each line specified if needed.
+
+    :param lines:            The lines from the file. (list of strings)
+    :param filename:         The filename to be prepared.
+    :param force_linebreaks: Whether to append newlines at each line if needed.
+    :param create_tempfile:  Whether to save lines in tempfile if needed.
+    :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+    """
+    if force_linebreaks:
+        for i, line in enumerate(lines):
+            lines[i] = line if line.endswith("\n") else line + "\n"
+
+    if not create_tempfile and filename is None:
+        filename = "dummy_file_name"
+
+    if not isinstance(filename, str) and create_tempfile:
+        with make_temp(**tempfile_kwargs) as filename:
+            with open(filename, 'w') as file:
+                file.writelines(lines)
+            yield lines, filename
+    else:
+        yield lines, filename
