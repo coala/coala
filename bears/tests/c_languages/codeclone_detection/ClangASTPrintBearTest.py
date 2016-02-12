@@ -1,8 +1,8 @@
 import os
+import unittest
 from queue import Queue
 
 from bears.tests.BearTestHelper import generate_skip_decorator
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.codeclone_detection.ClangASTPrintBear import (
     ClangASTPrintBear)
 from clang.cindex import TranslationUnitLoadError
@@ -10,7 +10,7 @@ from coalib.settings.Section import Section
 
 
 @generate_skip_decorator(ClangASTPrintBear)
-class ClangASTPrintBearTest(LocalBearTestHelper):
+class ClangASTPrintBearTest(unittest.TestCase):
 
     def setUp(self):
         self.testfile = os.path.abspath(os.path.join(
