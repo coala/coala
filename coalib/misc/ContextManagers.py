@@ -171,7 +171,7 @@ def prepare_file(lines,
                  create_tempfile=True,
                  tempfile_kwargs={}):
     """
-    Can creates a temporary file (if filename is None) with the lines.
+    Can create a temporary file (if filename is None) with the lines.
     Can also add a trailing newline to each line specified if needed.
 
     :param lines:            The lines from the file. (list of strings)
