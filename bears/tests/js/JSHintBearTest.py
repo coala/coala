@@ -1,48 +1,36 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from coalib.settings.Setting import Setting
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.js.JSHintBear import JSHintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
+from coalib.misc.ContextManagers import prepare_file
+
+test_file1 = """
+var name = (function() { return 'Anton' }());
+""".split("\n")
 
 
-@skipIf(which('jshint') is None, 'JSHint is not installed')
-class JSHintBearTest(LocalBearTestHelper):
+test_file2 = """
+function () {
+}()
+""".split("\n")
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = JSHintBear(self.section, Queue())
-        self.test_file1 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "jshint_test1.js")
-        self.test_file2 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "jshint_test2.js")
-        self.conf_file = os.path.join(os.path.dirname(__file__),
-                                      "test_files",
-                                      "jshint_config.js")
 
-    def test_run(self):
-        # Test a file with errors and warnings
-        self.check_validity(
-            self.uut,
-            [],
-            self.test_file2,
-            valid=False)
+config_file = """
+{
+  "lastsemic": true,
+  "maxlen": 80
+}
+""".split("\n")
 
-        # Test a file with a warning which can be changed using a config
-        self.check_validity(
-            self.uut,
-            [],
-            self.test_file1,
-            valid=False)
 
-        # Test if warning disappears
-        self.section.append(Setting("jshint_config", self.conf_file))
-        self.check_validity(
-            self.uut,
-            [],
-            self.test_file1)
+JSHintBear1Test = verify_local_bear(JSHintBear,
+                                    valid_files=(),
+                                    invalid_files=(test_file1, test_file2))
+
+
+with prepare_file(config_file,
+                  filename=None,
+                  force_linebreaks=True,
+                  create_tempfile=True) as (conf_lines, conf_file):
+    JSHintBear2Test = verify_local_bear(JSHintBear,
+                                        valid_files=(test_file1),
+                                        invalid_files=(),
+                                        settings={"jshint_config": conf_file})

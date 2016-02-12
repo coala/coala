@@ -1,31 +1,26 @@
-from queue import Queue
-
-from coalib.settings.Setting import Setting
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
-from coalib.settings.Section import Section
 from bears.general.LineLengthBear import LineLengthBear
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-class LineLengthBearTest(LocalBearTestHelper):
+test_file = """
+test
+too
+er
+e
+""".split("\n")
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.section.append(Setting("max_line_length", "4"))
-        self.uut = LineLengthBear(self.section, Queue())
 
-    def test_run(self):
-        self.check_validity(self.uut, [
-            "test\n",
-            "too\n",
-            "er\n",
-            "e\n",
-            "\n"
-        ])
-        self.check_validity(self.uut, "testa\n", valid=False)
-        self.check_validity(self.uut, "test line\n", valid=False)
+LineLengthBear1Test = verify_local_bear(LineLengthBear,
+                                        valid_files=(test_file,),
+                                        invalid_files=(["testa"],
+                                                       ["test line"]),
+                                        settings={"max_line_length": "4"})
 
-    def test_ignore_regex(self):
-        self.section['ignore_length_regex'] = 'http://'
 
-        self.check_validity(self.uut, 'asdasd', valid=False)
-        self.check_validity(self.uut, 'http://a.domain.de')
+LineLengthBear2Test = verify_local_bear(LineLengthBear,
+                                        valid_files=(test_file,
+                                                     ["http://a.domain.de"]),
+                                        invalid_files=(["asdasd"],),
+                                        settings={
+                                            "max_line_length": "4",
+                                            "ignore_length_regex": "http://"})

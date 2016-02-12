@@ -1,30 +1,75 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from coalib.settings.Setting import Setting
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.go.GoLintBear import GoLintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@skipIf(which('golint') is None, 'golint is not installed')
-class GoLintBearTest(LocalBearTestHelper):
+good_file = """
+// Test that blank imports in package main are not flagged.
+// OK
 
-    def setUp(self):
-        self.section = Section("Test Section")
-        self.uut = GoLintBear(self.section, Queue())
-        self.good_file = os.path.join(os.path.dirname(__file__),
-                                      "test_files",
-                                      "golint_good.go")
-        self.bad_file = os.path.join(os.path.dirname(__file__),
-                                     "test_files",
-                                     "golint_bad.go")
+// Binary foo ...
+package main
 
-    def test_run(self):
-        self.check_validity(self.uut, [], self.good_file)
-        self.check_validity(self.uut, [], self.bad_file, valid=False)
-        self.section.append(Setting("golint_cli_options",
-                                    "-min_confidence=0.8"))
-        self.check_validity(self.uut, [], self.bad_file, valid=False)
+import _ "fmt"
+
+import (
+  "os"
+  _ "path"
+)
+
+var _ os.File // for "os"
+""".split("\n")
+
+
+bad_file = """
+// Test that blank imports in library packages are flagged.
+
+// Package foo ...
+package foo
+
+// The instructions need to go before the imports below so they will not be
+// mistaken for documentation.
+
+/* MATCH /blank import/ */ import _ "encoding/json"
+
+import (
+  "fmt"
+
+  /* MATCH /blank import/ */ _ "os"
+
+  /* MATCH /blank import/ */ _ "net/http"
+  _ "path"
+)
+
+import _ "encoding/base64" // Don't gripe about this
+
+import (
+  // Don't gripe about these next two lines.
+  _ "compress/zlib"
+  _ "syscall"
+
+  /* MATCH /blank import/ */ _ "path/filepath"
+)
+
+import (
+  "go/ast"
+  _ "go/scanner" // Don't gripe about this or the following line.
+  _ "go/token"
+)
+
+var (
+  _ fmt.Stringer // for "fmt"
+  _ ast.Node     // for "go/ast"
+)
+""".split("\n")
+
+
+GoLintBearTest = verify_local_bear(GoLintBear,
+                                   valid_files=(good_file,),
+                                   invalid_files=(bad_file,))
+
+
+GoLintBearTest = verify_local_bear(
+    GoLintBear,
+    valid_files=(),
+    invalid_files=(bad_file,),
+    settings={"golint_cli_options": "-min_confidence=0.8"})

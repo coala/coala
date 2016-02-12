@@ -1,29 +1,23 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.css.CSSLintBear import CSSLintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@skipIf(which('csslint') is None, 'csslint is not installed')
-class CSSLintBearTest(LocalBearTestHelper):
+good_file = """
+.class {
+  font-weight: 400;
+  font-size: 5px;
+}
+""".split("\n")
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = CSSLintBear(self.section, Queue())
-        self.test_file1 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "csslint_test1.css")
-        self.test_file2 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "csslint_test2.css")
 
-    def test_run(self):
-        # Test a file without any issues
-        self.check_validity(self.uut, [], self.test_file1)
+bad_file = """
+.class {
+  font-weight: 400
+  font-size: 5px;
+}
+""".split("\n")
 
-        # Test a file with errors and warnings
-        self.check_validity(self.uut, [], self.test_file2, valid=False)
+
+CSSLintBear1Test = verify_local_bear(CSSLintBear,
+                                     valid_files=(good_file,),
+                                     invalid_files=(bad_file,))

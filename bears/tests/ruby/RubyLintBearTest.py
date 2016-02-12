@@ -1,29 +1,31 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.ruby.RubyLintBear import RubyLintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@skipIf(which('ruby') is None, 'Ruby is not installed')
-class RubyLintBearTest(LocalBearTestHelper):
+good_file = """
+class HelloWorld
+    def initialize(name)
+        @name = name.capitalize
+    end
+    def sayHi
+        puts "Hello #{@name}!"
+    end
+end
+""".split("\n")
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = RubyLintBear(self.section, Queue())
-        self.test_file1 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "rubylint_test1.rb")
-        self.test_file2 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "rubylint_test2.rb")
 
-    def test_run(self):
-        # Test a file with no issues
-        self.check_validity(self.uut, [], self.test_file1)
+bad_file = """
+class HelloWorld
+    def initialize(name)
+        @name = name.capitalize
+    end
+    def sayHi
+        x = 1 # unused variables invoke a warning
+        puts "Hello #{@name}!"
+    end
+"""
 
-        # Test a file with issues
-        self.check_validity(self.uut, [], self.test_file2, valid=False)
+
+RubyLintBearTest = verify_local_bear(RubyLintBear,
+                                     valid_files=(good_file,),
+                                     invalid_files=(bad_file,))

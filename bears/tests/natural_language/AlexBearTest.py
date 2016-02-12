@@ -1,29 +1,12 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.natural_language.AlexBear import AlexBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@skipIf(which('alex') is None, 'Alex is not installed')
-class AlexBearTest(LocalBearTestHelper):
+good_file = ["Their network looks good."]
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = AlexBear(self.section, Queue())
-        self.test_file1 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "alex_test1.md")
-        self.test_file2 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "alex_test2.md")
+bad_file = ["His network looks good."]
 
-    def test_run(self):
-        # Test a file with no issues
-        self.check_validity(self.uut, [], self.test_file1)
 
-        # Test a file with issues
-        self.check_validity(self.uut, [], self.test_file2, valid=False)
+AlexBearTest = verify_local_bear(AlexBear,
+                                 valid_files=(good_file,),
+                                 invalid_files=(bad_file,))

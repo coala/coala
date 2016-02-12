@@ -1,29 +1,11 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.natural_language.ProseLintBear import ProseLintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@skipIf(which('proselint') is None, 'ProseLint is not installed')
-class ProseLintBearTest(LocalBearTestHelper):
+good_file = ["The 50s were swell."]
+bad_file = ["The 50's were swell."]
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = ProseLintBear(self.section, Queue())
-        self.test_file1 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "proselint_test1.md")
-        self.test_file2 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "proselint_test2.md")
 
-    def test_run(self):
-        # Test a file with no issues
-        self.check_validity(self.uut, [], self.test_file1)
-
-        # Test a file with issues
-        self.check_validity(self.uut, [], self.test_file2, valid=False)
+ProseLintBearTest = verify_local_bear(ProseLintBear,
+                                      valid_files=(good_file,),
+                                      invalid_files=(bad_file,))

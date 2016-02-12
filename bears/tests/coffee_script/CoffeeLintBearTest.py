@@ -1,39 +1,40 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.coffee_script.CoffeeLintBear import CoffeeLintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@skipIf(which('coffeelint') is None, 'coffeelint is not installed')
-class CoffeeLintBearTest(LocalBearTestHelper):
+good_file = """
+# Lint your CoffeeScript!
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = CoffeeLintBear(self.section, Queue())
+class Gangster
 
-    @staticmethod
-    def get_test_filename(basename):
-        return os.path.join(os.path.dirname(__file__),
-                            "test_files",
-                            basename + ".coffee")
+  wasItAGoodDay : () ->
+    yes
+""".split("\n")
 
-    def test_good(self):
-        good_file = self.get_test_filename("good")
-        self.check_validity(self.uut, [], good_file)
 
-    def test_warn(self):
-        warn_file = self.get_test_filename("warning")
-        self.check_validity(self.uut, [], warn_file, valid=False)
+warning_file = """
+# Nested string interpolation
+str = "Book by #{"#{firstName} #{lastName}".toUpperCase()}"
+""".split("\n")
 
-    def test_err(self):
-        err_file = self.get_test_filename("error")
-        self.check_validity(self.uut, [], err_file, valid=False)
 
-    def test_invalid(self):
-        # CoffeeLint will generate an invalid CSV on this one!
-        invalid_file = self.get_test_filename("invalid")
-        self.check_validity(self.uut, [], invalid_file, valid=False)
+error_file = """
+# Wrong capitalization
+class theGangster
+
+  wasItAGoodDay : () ->
+    yes
+""".split("\n")
+
+
+invalid_file = """
+# Coffeelint is buggy here and will generate an error with invalid CSV on this
+var test
+""".split("\n")
+
+
+CoffeeLintBear1Test = verify_local_bear(CoffeeLintBear,
+                                        valid_files=(good_file,),
+                                        invalid_files=(warning_file,
+                                                       error_file,
+                                                       invalid_file))

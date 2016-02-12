@@ -1,26 +1,25 @@
-import os
-from queue import Queue
-from shutil import which
-from unittest.case import skipIf
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.configfiles.DockerfileLintBear import DockerfileLintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@skipIf(which('dockerfile_lint') is None, 'dockerfile_lint is not installed')
-class DockerfileLintBearTest(LocalBearTestHelper):
+good_file = """
+FROM ubuntu:14.04
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.uut = DockerfileLintBear(self.section, Queue())
-        self.test_file1 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "dockerfilelint_test1")
-        self.test_file2 = os.path.join(os.path.dirname(__file__),
-                                       "test_files",
-                                       "dockerfilelint_test2")
+# Install basic tools
+RUN apt-get -y -qq update
+RUN apt-get -y -qq upgrade
+""".split("\n")
 
-    def test_run(self):
-        self.check_validity(self.uut, [], self.test_file1)
-        self.check_validity(self.uut, [], self.test_file2, valid=False)
+
+bad_file = """
+FROM ubuntu:14.04
+
+# Install basic tools
+apt-get -y -qq update
+apt-get -y -qq upgrade
+""".split("\n")
+
+
+DockerfileLintBear1Test = verify_local_bear(DockerfileLintBear,
+                                            valid_files=(good_file,),
+                                            invalid_files=(bad_file,))

@@ -1,17 +1,11 @@
-from queue import Queue
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.natural_language.reSTLintBear import reSTLintBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-class reSTLintBearTest(LocalBearTestHelper):
+good_file = ["test\n====\n"]
+bad_file = ["test\n==\n"]
 
-    def setUp(self):
-        self.uut = reSTLintBear(Section('name'), Queue())
 
-    def test_valid(self):
-        self.check_validity(self.uut, ["test\n====\n"])
-
-    def test_invalid(self):
-        self.check_validity(self.uut, ["test\n==\n"], valid=False)
+reSTLintBearTest = verify_local_bear(reSTLintBear,
+                                     valid_files=(good_file,),
+                                     invalid_files=(bad_file,))

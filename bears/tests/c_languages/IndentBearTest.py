@@ -1,44 +1,60 @@
-from queue import Queue
-
-from bears.tests.BearTestHelper import generate_skip_decorator
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.c_languages.IndentBear import IndentBear
-from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-@generate_skip_decorator(IndentBear)
-class IndentBearTest(LocalBearTestHelper):
+test_file1 = """
+int
+main ()
+{
+    return 0;
+}""".split("\n")
 
-    def setUp(self):
-        self.section = Section('name')
-        self.section.append(Setting("use_spaces", "true"))
-        self.section.append(Setting("max_line_length", "80"))
-        self.uut = IndentBear(self.section, Queue())
+test_file2 = """
+int
+main ()
+{
+  return 0;
+}""".split("\n")
 
-    def test_valid(self):
-        self.check_validity(self.uut, ["int\n",
-                                       "main ()\n",
-                                       "{\n",
-                                       "    return 0;\n",
-                                       "}\n"])
 
-    def test_tab_width(self):
-        self.section.append(Setting("tab_width", "2"))
-        self.check_validity(self.uut, ["int\n",
-                                       "main ()\n",
-                                       "{\n",
-                                       "  return 0;\n",
-                                       "}\n"])
+test_file3 = """
+int
+main ()
+{
+\treturn 0;
+}""".split("\n")
 
-    def test_tabs(self):
-        test_code = ["int\n", "main ()\n", "{\n", "\treturn 0;\n", "}\n"]
-        self.check_validity(self.uut, test_code, valid=False)
 
-        self.section.append(Setting("use_spaces", "nope"))
-        self.check_validity(self.uut, test_code)
+test_file4 = """
+int main() {
+  return 0;
+}""".split("\n")
 
-    def test_invalid(self):
-        self.check_validity(self.uut, ["int main() {\n",
-                                       "  return 0;\n",
-                                       "}\n"], valid=False)
+
+IndentBear1Test = verify_local_bear(IndentBear,
+                                    valid_files=(test_file1,),
+                                    invalid_files=(test_file3,),
+                                    settings={"use_spaces": "true",
+                                              "max_line_length": "80"})
+
+
+IndentBear2Test = verify_local_bear(IndentBear,
+                                    valid_files=(test_file3,),
+                                    invalid_files=(),
+                                    settings={"use_spaces": "nope",
+                                              "max_line_length": "80"})
+
+
+IndentBear3Test = verify_local_bear(IndentBear,
+                                    valid_files=(test_file2,),
+                                    invalid_files=(),
+                                    settings={"use_spaces": "true",
+                                              "max_line_length": "80",
+                                              "tab_width": "2"})
+
+
+IndentBear4Test = verify_local_bear(IndentBear,
+                                    valid_files=(),
+                                    invalid_files=(test_file4,),
+                                    settings={"use_spaces": "true",
+                                              "max_line_length": "80"})

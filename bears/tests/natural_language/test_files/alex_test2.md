@@ -1,1 +1,0 @@
-His network looks good.

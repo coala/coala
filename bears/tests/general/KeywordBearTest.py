@@ -1,26 +1,20 @@
-from queue import Queue
-
-from coalib.settings.Setting import Setting
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.general.KeywordBear import KeywordBear
-from coalib.settings.Section import Section
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-class SpaceConsistencyBearTest(LocalBearTestHelper):
+test_file = """
+test line fix me
+to do
+error fixme
+""".split("\n")
 
-    def setUp(self):
-        self.section = Section("test section")
-        self.section.append(Setting("cs_keywords", "FIXME, ERROR"))
-        self.section.append(Setting("ci_keywords", "todo, warning"))
-        self.uut = KeywordBear(self.section, Queue())
 
-    def test_run(self):
-        self.check_validity(self.uut, [
-            "test line fix me",
-            "to do",
-            "error fixme"
-        ])
-        self.check_validity(self.uut, "test line FIXME", valid=False)
-        self.check_validity(self.uut, "test line todo", valid=False)
-        self.check_validity(self.uut, "test line warNING", valid=False)
-        self.check_validity(self.uut, "test line ERROR", valid=False)
+SpaceConsistencyBearTest = verify_local_bear(KeywordBear,
+                                             valid_files=(test_file),
+                                             invalid_files=("test line FIXME",
+                                                            "test line todo",
+                                                            "test line warNING",
+                                                            "test line ERROR"),
+                                             settings={
+                                                "cs_keywords": "FIXME, ERROR",
+                                                "ci_keywords": "todo, warning"})

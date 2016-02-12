@@ -1,41 +1,39 @@
-from queue import Queue
-
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.js.JSONFormatBear import JSONFormatBear
-from coalib.settings.Section import Section, Setting
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 
-class JSONFormatBearTest(LocalBearTestHelper):
+test_file1 = """{
+    "a": 5,
+    "b": 5
+}""".split("\n")
 
-    def setUp(self):
-        self.section = Section('name')
-        self.uut = JSONFormatBear(self.section, Queue())
 
-    def test_valid(self):
-        self.check_validity(self.uut, ['{',
-                                       '    "a": 5,',
-                                       '    "b": 5',
-                                       '}'])
-        self.check_validity(self.uut, ['{',
-                                       '    "b": 5,',
-                                       '    "a": 5',
-                                       '}'])
+test_file2 = """{
+    "b": 5,
+    "a": 5
+}""".split("\n")
 
-    def test_invalid(self):
-        self.check_validity(self.uut, [""], valid=False)
-        self.check_validity(self.uut, ["random stuff"], valid=False)
-        self.check_validity(self.uut, ['{"a":5,"b":5}'], valid=False)
+test_file3 = """{
+   "b": 5,
+   "a": 5
+}""".split("\n")
 
-    def test_sorting(self):
-        self.section.append(Setting("json_sort", "true"))
-        self.check_validity(self.uut, ['{',
-                                       '    "b": 5,',
-                                       '    "a": 5',
-                                       '}'], valid=False)
 
-    def test_indent(self):
-        test_code = ['{', '   "b": 5,', '   "a": 5', '}']
-        self.check_validity(self.uut, test_code, valid=False)
+JSONFormatBear1Test = verify_local_bear(JSONFormatBear,
+                                        valid_files=(test_file1, test_file2),
+                                        invalid_files=(test_file3,
+                                                       [""],
+                                                       ["random stuff"],
+                                                       ['{"a":5,"b":5}']))
 
-        self.section.append(Setting("tab_width", "3"))
-        self.check_validity(self.uut, test_code)
+
+JSONFormatBear2Test = verify_local_bear(JSONFormatBear,
+                                        valid_files=(test_file1,),
+                                        invalid_files=(test_file2,),
+                                        settings={"json_sort": "true"})
+
+
+JSONFormatBear3Test = verify_local_bear(JSONFormatBear,
+                                        valid_files=(test_file3,),
+                                        invalid_files=(test_file2),
+                                        settings={"tab_width": "3"})
