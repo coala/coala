@@ -42,7 +42,7 @@ class coalaTest(unittest.TestCase):
         retval, output = execute_coala(
             coala_ci.main, "coala-ci", "todos", "-c", self.coafile)
         self.assertRegex(output,
-                         "(.*Unable to collect bears from.*PyLintBear.*)?",
+                         r'The line contains the keyword `# \w+`.',
                          "coala-ci output should be empty when running "
                          "over its own code. (Target section: todos)")
         self.assertNotEqual(retval,
