@@ -31,7 +31,7 @@ class ClangCloneDetectionBear(GlobalBear):
                     self,
                     "Code clone found. The other occurrence is at file "
                     "{file}, line {line}, function {function}. The "
-                    "difference is {difference}.".format(
+                    "difference is {difference}%.".format(
                         file=function_2[0],
                         line=function_2[1],
                         function=function_2[2],
