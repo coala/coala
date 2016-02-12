@@ -109,5 +109,6 @@ class ContextManagersTest(unittest.TestCase):
         old_dir = os.getcwd()
         with TemporaryDirectory() as tempdir, \
                 change_directory(tempdir):
-            self.assertEqual(os.getcwd(), os.path.abspath(tempdir))
-        self.assertEqual(os.getcwd(), os.path.abspath(old_dir))
+            print("\n"os.getcwd()+"\n" + tempdir"\n")
+            self.assertEqual(os.getcwd(), tempdir)
+        self.assertEqual(os.getcwd(), old_dir)
