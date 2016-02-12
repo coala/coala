@@ -2,6 +2,7 @@ from queue import Queue
 import unittest
 
 from coalib.bears.LocalBear import LocalBear
+from coalib.misc.ContextManagers import prepare_file
 from coalib.results.Result import Result
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
@@ -17,31 +18,15 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
 
     If you miss some methods, get in contact with us, we'll be happy to help!
     """
-    @staticmethod
-    def force_linebreaks(lines):
-        """
-        Adds a trailing newline to each line if needed. This is needed since
-        the bears expect every line to have such a newline at the end.
-
-        This function does not modify the given argument in-place, it returns
-        a modified copy instead.
-
-        :param lines: The lines to be prepared. This list will be altered so
-                      you don't have to use the return value.
-        :return:      The lines with a \n appended.
-        """
-        modified_lines = []
-        for line in lines:
-            modified_lines.append(line if line.endswith("\n") else line+"\n")
-
-        return modified_lines
 
     def check_validity(self,
                        local_bear,
                        lines,
-                       filename="default",
+                       filename=None,
                        valid=True,
-                       force_linebreaks=True):
+                       force_linebreaks=True,
+                       create_tempfile=True,
+                       tempfile_kwargs={}):
         """
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
@@ -51,11 +36,11 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                  or List of strings)
         :param filename:         The filename, if it matters.
         :param valid:            Whether the lines are valid or not.
-        :param force_linebreaks: Whether to append newlines at each line if
-                                 needed. Use this with caution when disabling,
-                                 since bears expect to have a \n at the end of
-                                 each line.
-\        """
+        :param force_linebreaks: Whether to append newlines at each line
+                                 if needed. (Bears expect a \\n for every line)
+        :param create_tempfile:  Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        """
         if isinstance(lines, str):
             lines = [lines]
 
@@ -67,25 +52,32 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg="The given lines are not a list.")
 
-        if force_linebreaks:
-            lines = LocalBearTestHelper.force_linebreaks(lines)
-        bear_output = list(local_bear.execute(filename, lines))
-        if valid:
-            msg = ("The local bear '{}' yields a result although it "
-                   "shouldn't.".format(local_bear.__class__.__name__))
-            self.assertEqual(bear_output, [], msg=msg)
-        else:
-            msg = ("The local bear '{}' yields no result although it "
-                   "should.".format(local_bear.__class__.__name__))
-            self.assertNotEqual(len(bear_output), 0, msg=msg)
+        with prepare_file(lines,
+                          filename,
+                          force_linebreaks=force_linebreaks,
+                          create_tempfile=create_tempfile,
+                          tempfile_kwargs=tempfile_kwargs) as (lines, filename):
+
+            bear_output = list(local_bear.execute(filename, lines))
+
+            if valid:
+                msg = ("The local bear '{}' yields a result although it "
+                       "shouldn't.".format(local_bear.__class__.__name__))
+                self.assertEqual(bear_output, [], msg=msg)
+            else:
+                msg = ("The local bear '{}' yields no result although it "
+                       "should.".format(local_bear.__class__.__name__))
+                self.assertNotEqual(len(bear_output), 0, msg=msg)
 
     def check_results(self,
                       local_bear,
                       lines,
                       results,
-                      filename="default",
+                      filename=None,
                       check_order=False,
-                      force_linebreaks=True):
+                      force_linebreaks=True,
+                      create_tempfile=True,
+                      tempfile_kwargs={}):
         """
         Asserts that a check of the given lines with the given local bear does
         yield exactly the given results.
@@ -95,10 +87,10 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                  or List of strings)
         :param results:          The expected result or list of results.
         :param filename:         The filename, if it matters.
-        :param force_linebreaks: Whether to append newlines at each line if
-                                 needed. Use this with caution when disabling,
-                                 since bears expect to have a \n at the end of
-                                 each line.
+        :param force_linebreaks: Whether to append newlines at each line
+                                 if needed. (Bears expect a \\n for every line)
+        :param create_tempfile:  Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
         """
         if isinstance(lines, str):
             lines = [lines]
@@ -116,22 +108,26 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg="The given results are not a list.")
 
-        if force_linebreaks:
-            lines = LocalBearTestHelper.force_linebreaks(lines)
+        with prepare_file(lines,
+                          filename,
+                          force_linebreaks=force_linebreaks,
+                          create_tempfile=create_tempfile,
+                          tempfile_kwargs=tempfile_kwargs) as (lines, filename):
 
-        msg = ("The local bear '{}' doesn't yield the right results. Or the "
-               "order may be wrong.".format(local_bear.__class__.__name__))
-        bear_output = list(local_bear.execute(filename, lines))
-        if not check_order:
-            self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
-        else:
-            self.assertEqual(bear_output, results, msg=msg)
+            msg = ("The local bear '{}' doesn't yield the right results. Or the"
+                   " order may be wrong.".format(local_bear.__class__.__name__))
+            bear_output = list(local_bear.execute(filename, lines))
+
+            if not check_order:
+                self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
+            else:
+                self.assertEqual(bear_output, results, msg=msg)
 
 
 def verify_local_bear(bear,
                       valid_files,
                       invalid_files,
-                      filename='default',
+                      filename=None,
                       settings={}):
     """
     Generates a test for a local bear by checking the given valid and invalid

@@ -19,7 +19,8 @@ class LineCountBearTest(LocalBearTestHelper):
                 "LineCountBear",
                 "This file has {count} lines.".format(count=3),
                 severity=RESULT_SEVERITY.INFO,
-                file="default"))
+                file="default"),
+            filename="default")
         self.check_results(
             self.uut,
             [],
@@ -27,4 +28,5 @@ class LineCountBearTest(LocalBearTestHelper):
                 "LineCountBear",
                 "This file has {count} lines.".format(count=0),
                 severity=RESULT_SEVERITY.INFO,
-                file="default"))
+                file="default"),
+            filename="default")
