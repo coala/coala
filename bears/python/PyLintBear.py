@@ -1,15 +1,9 @@
-import sys
 import re
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
 from coalib.settings.Setting import typed_list
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-
-
-# We omit this case in our tests for technical reasons
-if sys.version_info < (3, 3):  # pragma: no cover
-    raise ImportError("PyLint does not support python3 < 3.3")
 
 
 class PyLintBear(LocalBear, Lint):
