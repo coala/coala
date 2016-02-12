@@ -162,3 +162,13 @@ def make_temp(suffix="", prefix="tmp", dir=None):
         yield temporary[1]
     finally:
         os.remove(temporary[1])
+
+
+@contextmanager
+def change_directory(path):
+    old_dir = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(old_dir)
