@@ -33,6 +33,7 @@ npm install -g jshint alex remark dockerfile_lint csslint coffeelint
 
 # GO commands
 go get -u github.com/golang/lint/golint
+go get -u golang.org/x/tools/cmd/goimports
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
