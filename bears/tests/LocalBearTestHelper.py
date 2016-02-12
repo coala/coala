@@ -1,4 +1,4 @@
-from queue import Queue
+import queue
 import unittest
 
 from coalib.bears.LocalBear import LocalBear
@@ -7,6 +7,19 @@ from coalib.results.Result import Result
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from bears.tests.BearTestHelper import generate_skip_decorator
+
+
+def execute_bear(bear, *args, **kwargs):
+    try:
+        bear_output_generator = bear.execute(*args, **kwargs)
+        assert bear_output_generator is not None
+    except AssertionError:
+        msg = []
+        while not bear.message_queue.empty():
+            msg.append(bear.message_queue.get().message)
+        raise AssertionError("Bear returned None on execution \n" +
+                             "\n".join(msg))
+    return list(bear_output_generator)
 
 
 class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
@@ -58,8 +71,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                           create_tempfile=create_tempfile,
                           tempfile_kwargs=tempfile_kwargs) as (lines, filename):
 
-            bear_output = list(local_bear.execute(filename, lines))
-
+            bear_output = execute_bear(local_bear, filename, lines)
             if valid:
                 msg = ("The local bear '{}' yields a result although it "
                        "shouldn't.".format(local_bear.__class__.__name__))
@@ -114,10 +126,9 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                           create_tempfile=create_tempfile,
                           tempfile_kwargs=tempfile_kwargs) as (lines, filename):
 
+            bear_output = execute_bear(local_bear, filename, lines)
             msg = ("The local bear '{}' doesn't yield the right results. Or the"
                    " order may be wrong.".format(local_bear.__class__.__name__))
-            bear_output = list(local_bear.execute(filename, lines))
-
             if not check_order:
                 self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
             else:
@@ -160,7 +171,8 @@ def verify_local_bear(bear,
 
         def setUp(self):
             self.section = Section('name')
-            self.uut = bear(self.section, Queue())
+            self.uut = bear(self.section,
+                            queue.Queue())
             for name, value in settings.items():
                 self.section.append(Setting(name, value))
 
