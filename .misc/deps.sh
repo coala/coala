@@ -28,7 +28,8 @@ deps_perl="perl libperl-critic-perl"
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus $deps_perl
 
 # NPM commands
-npm install -g jshint alex remark dockerfile_lint csslint coffeelint
+sudo rm -rf /opt/alex # Delete ghc-alex as it clashes with npm deps
+npm install
 
 # GO commands
 go get -u github.com/golang/lint/golint
