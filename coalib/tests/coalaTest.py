@@ -2,14 +2,16 @@ import sys
 import os
 import unittest
 import re
-from tempfile import TemporaryDirectory, NamedTemporaryFile
+from tempfile import TemporaryDirectory, NamedTemporaryFile, mkstemp
 
 if sys.version_info < (3, 4):
     import imp as importlib
 else:
     import importlib
 
-from coalib.misc.ContextManagers import retrieve_stdout, make_temp
+from coalib.misc.ContextManagers import (retrieve_stdout,
+                                         make_temp,
+                                         change_directory)
 from coalib import coala_ci
 from coalib.settings import ConfigurationGathering
 from coalib.output.Tagging import get_tag_path
@@ -94,3 +96,20 @@ class coalaTest(unittest.TestCase):
             execute_coala_ci(("-c", re.escape(coafile)))
             self.assertFalse(os.path.isfile(orig_file.name))
             self.assertTrue(os.path.isfile(unrelated_file))
+
+    def test_coala_delete_orig_wrong_path(self):
+        with TemporaryDirectory() as tempdir, change_directory(tempdir), \
+                NamedTemporaryFile(suffix=".orig",
+                                   dir=tempdir,
+                                   delete=False) as orig_file:
+            coafile = mkstemp(dir=tempdir)
+            os.close(coafile[0])
+            orig_file.close()
+            ret, output = execute_coala_ci(())
+            self.assertIn(
+                "Can only delete .orig files if .coafile is found", output)
+            new_file_path = os.path.join(tempdir, ".coafile")
+            os.rename(coafile[1], new_file_path)
+            execute_coala_ci(())
+            self.assertFalse(os.path.isfile(orig_file.name))
+            os.remove(new_file_path)
