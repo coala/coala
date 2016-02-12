@@ -1,17 +1,17 @@
-from itertools import chain
-from pyprint.ConsolePrinter import ConsolePrinter
 import os
+from itertools import chain
+
+from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib import coala_delete_orig
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.processes.Processing import execute_section
-from coalib.settings.ConfigurationGathering import gather_configuration
-from coalib.misc.Exceptions import get_exitcode
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Collectors import collect_bears
+from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
-from coalib.output.Tagging import tag_results, delete_tagged_results
-
+from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.Tagging import delete_tagged_results, tag_results
+from coalib.processes.Processing import execute_section
+from coalib.settings.ConfigurationGathering import gather_configuration
 
 do_nothing = lambda *args: True
 

@@ -1,7 +1,7 @@
 
+from coalib.parsing.StringProcessing import unescaped_rstrip, unescaped_strip
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
-from coalib.parsing.StringProcessing import unescaped_rstrip, unescaped_strip
 
 
 class UnescapedStripTest(StringProcessingTestBase):

@@ -1,10 +1,10 @@
 import unittest
 
-from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.misc.ContextManagers import retrieve_stdout
-from coalib.settings.Section import Section, Setting
-from coalib.results.Result import Result
 from coalib.results.Diff import Diff
+from coalib.results.Result import Result
+from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
+from coalib.settings.Section import Section, Setting
 
 
 class ShowPatchActionTest(unittest.TestCase):

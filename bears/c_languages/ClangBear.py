@@ -1,9 +1,9 @@
 from clang.cindex import Index, LibclangError
 
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.results.Result import Result
 from coalib.results.Diff import Diff
+from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import typed_list
 

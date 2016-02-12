@@ -1,5 +1,5 @@
-import unittest
 import argparse
+import unittest
 
 from coalib.parsing.CliParsing import parse_cli
 

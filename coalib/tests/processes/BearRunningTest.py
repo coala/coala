@@ -1,16 +1,13 @@
-import queue
 import multiprocessing
+import queue
 import unittest
 
-from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.results.Result import Result, RESULT_SEVERITY
-from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
-from coalib.processes.BearRunning import (run,
-                                          LogMessage,
-                                          LOG_LEVEL,
-                                          send_msg,
-                                          task_done)
+from coalib.bears.LocalBear import LocalBear
+from coalib.processes.BearRunning import (
+    LOG_LEVEL, LogMessage, run, send_msg, task_done)
+from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
+from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.settings.Section import Section
 
 

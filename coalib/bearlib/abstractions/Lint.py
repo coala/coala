@@ -1,14 +1,14 @@
+import re
 import shutil
 import subprocess
-import tempfile
-import re
 import sys
+import tempfile
 
+from coalib.bears.Bear import Bear
 from coalib.misc.Shell import escape_path_argument
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.bears.Bear import Bear
 
 
 def is_binary_present(cls):

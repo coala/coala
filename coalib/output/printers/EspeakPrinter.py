@@ -1,6 +1,7 @@
 import subprocess
-from pyprint.Printer import Printer
+
 from pyprint.ClosableObject import ClosableObject
+from pyprint.Printer import Printer
 
 from coalib.misc import Constants
 

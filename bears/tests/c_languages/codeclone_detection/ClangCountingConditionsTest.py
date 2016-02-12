@@ -1,11 +1,11 @@
 import os
 import unittest
 
-from coalib.settings.Setting import Setting
+from bears.c_languages.codeclone_detection import ClangCountingConditions
 from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
-from bears.c_languages.codeclone_detection import ClangCountingConditions
 from bears.tests.c_languages import skip_if_no_clang
+from coalib.settings.Setting import Setting
 
 
 @skip_if_no_clang()

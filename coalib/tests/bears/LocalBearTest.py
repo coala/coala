@@ -1,7 +1,7 @@
 import unittest
 
+from coalib.bears.LocalBear import BEAR_KIND, LocalBear
 from coalib.settings.Section import Section
-from coalib.bears.LocalBear import LocalBear, BEAR_KIND
 
 
 class LocalBearTest(unittest.TestCase):

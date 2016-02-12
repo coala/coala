@@ -13,9 +13,9 @@
 
 import json
 
-from coalib.output.printers.ListLogPrinter import ListLogPrinter
-from coalib.output.JSONEncoder import JSONEncoder
 from coalib.coala_main import run_coala
+from coalib.output.JSONEncoder import JSONEncoder
+from coalib.output.printers.ListLogPrinter import ListLogPrinter
 
 
 def main():

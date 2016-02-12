@@ -1,10 +1,10 @@
-from collections import OrderedDict
 import os
 import sys
+from collections import OrderedDict
 
+from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.parsing.LineParser import LineParser
 from coalib.settings.Section import Section, append_to_sections
-from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
 def parse_cli(arg_list=None,

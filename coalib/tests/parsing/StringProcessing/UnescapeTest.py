@@ -1,7 +1,7 @@
 
+from coalib.parsing.StringProcessing import unescape
 from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
-from coalib.parsing.StringProcessing import unescape
 
 
 class UnescapeTest(StringProcessingTestBase):

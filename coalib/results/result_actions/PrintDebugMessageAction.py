@@ -1,5 +1,5 @@
-from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
+from coalib.results.result_actions.ResultAction import ResultAction
 
 
 class PrintDebugMessageAction(ResultAction):

@@ -1,5 +1,5 @@
-from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.bears.LocalBear import LocalBear
+from coalib.results.Result import RESULT_SEVERITY, Result
 
 
 class KeywordBear(LocalBear):

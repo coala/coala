@@ -19,6 +19,11 @@ default_actions =
     SpaceConsistencyBear: ApplyPatchAction,
     PyUnusedCodeBear: ApplyPatchAction
 
+[pyimports]
+bears = PyImportSortBear
+
+default_actions = PyImportSortBear: ApplyPatchAction
+
 [autopep8]
 bears = PEP8Bear
 

@@ -1,14 +1,10 @@
-from collections import OrderedDict
-import re
 import os
+import re
 import unittest
+from collections import OrderedDict
 
-from coalib.settings.Setting import (Setting,
-                                     path,
-                                     path_list,
-                                     typed_list,
-                                     typed_dict,
-                                     typed_ordered_dict)
+from coalib.settings.Setting import (
+    Setting, path, path_list, typed_dict, typed_list, typed_ordered_dict)
 
 
 class SettingTest(unittest.TestCase):

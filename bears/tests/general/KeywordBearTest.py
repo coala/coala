@@ -1,9 +1,9 @@
 from queue import Queue
 
-from coalib.settings.Setting import Setting
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.general.KeywordBear import KeywordBear
+from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 class SpaceConsistencyBearTest(LocalBearTestHelper):
