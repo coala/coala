@@ -1,5 +1,5 @@
 PyPrint==0.1.1
-setuptools==20.0
+setuptools==20.1
 munkres3==1.0.5.5
 pylint==1.5.4
 language-check==0.7.5
