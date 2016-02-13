@@ -48,3 +48,6 @@ if [ "$python_implementation" == "CPython" ] ; then
   bash install.python-dbus.sh
 fi
 cd ..
+
+# Calling setup.py will download checkstyle automatically so tests may succeed
+python3 setup.py --help
