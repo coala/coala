@@ -32,3 +32,4 @@ org.coala_analyzer.v1.service
 *.eggs
 node_modules
 *.log
+*.jar
