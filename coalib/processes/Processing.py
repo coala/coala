@@ -196,14 +196,20 @@ def print_result(results,
                           results))
 
     if bool(section.get('autoapply', 'true')):
-        results = autoapply_actions(results,
-                                    file_dict,
-                                    file_diff_dict,
-                                    section,
-                                    log_printer)
+        patched_results = autoapply_actions(results,
+                                            file_dict,
+                                            file_diff_dict,
+                                            section,
+                                            log_printer)
+    else:
+        patched_results = results
 
-    print_results(log_printer, section, results, file_dict, file_diff_dict)
-    return retval or len(results) > 0, results
+    print_results(log_printer,
+                  section,
+                  patched_results,
+                  file_dict,
+                  file_diff_dict)
+    return retval or len(results) > 0, patched_results
 
 
 def get_file_dict(filename_list, log_printer):

@@ -64,6 +64,7 @@ def run_coala(log_printer=None,
     results = None
     try:
         yielded_results = False
+        yielded_unfixed_results = False
         did_nothing = True
         sections, local_bears, global_bears, targets = (
             gather_configuration(acquire_settings, log_printer))
@@ -126,7 +127,8 @@ def run_coala(log_printer=None,
 
                     for result in value:
                         results_for_section.append(result)
-
+                yielded_unfixed_results = (yielded_unfixed_results or
+                                           len(results_for_section) > 0)
                 results[section_name] = results_for_section
                 did_nothing = False
 
@@ -139,8 +141,10 @@ def run_coala(log_printer=None,
         if did_nothing:
             nothing_done(log_printer)
 
-        if yielded_results:
+        if yielded_unfixed_results:
             exitcode = 1
+        elif yielded_results:
+            exitcode = 5
     except BaseException as exception:  # pylint: disable=broad-except
         exitcode = exitcode or get_exitcode(exception, log_printer)
 
