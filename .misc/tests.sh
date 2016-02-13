@@ -13,9 +13,6 @@ source .misc/env_variables.sh
 
 args=()
 
-if [ "$python_version" == "3.5" ] ; then
-  args+=('-k' 'not PyLintBearTest')
-fi
 if [ "$system_os" == "LINUX" ] ; then
   args+=('--cov' '--doctest-modules')
 fi
