@@ -12,7 +12,7 @@ MANIFEST
 *.patch
 _build
 coverage.xml
-htmlcov
+.htmlreport
 *.orig
 *.diff
 *.kdev4
