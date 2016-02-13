@@ -81,7 +81,8 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
     :param bear_names:  names of bears
     :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
-    :return:            iterator that yields bear classes
+    :return:            iterator that yields a tuple with bear class and
+                        which bear_name was used to find that bear class.
     """
     for bear_dir in filter(os.path.isdir, icollect(bear_dirs)):
         for bear_name in bear_names:
@@ -90,7 +91,7 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
 
                 try:
                     for bear in _import_bears(matching_file, kinds):
-                        yield bear
+                        yield bear, bear_name
                 except BaseException as exception:
                     log_printer.log_exception(
                         "Unable to collect bears from {file}. Probably the "
@@ -112,9 +113,16 @@ def collect_bears(bear_dirs, bear_names, kinds, log_printer):
                         The lists are in the same order as `kinds`
     """
     bears_found = tuple([] for i in range(len(kinds)))
-    for bear in icollect_bears(bear_dirs, bear_names, kinds, log_printer):
+    bear_names_with_bears = set()
+    for bear, name in icollect_bears(bear_dirs, bear_names, kinds, log_printer):
         index = kinds.index(_get_kind(bear))
         bears_found[index].append(bear)
+        bear_names_with_bears.add(name)
+
+    empty_bear_names = set(bear_names) - set(bear_names_with_bears)
+    for name in empty_bear_names:
+        log_printer.warn("No bears were found matching '{}'.".format(name))
+
     return bears_found
 
 

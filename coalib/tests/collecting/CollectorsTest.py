@@ -6,6 +6,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.collecting.Collectors import (collect_files,
                                           collect_dirs,
                                           collect_bears)
+from coalib.misc.ContextManagers import retrieve_stdout
 
 
 class CollectFilesTest(unittest.TestCase):
@@ -158,10 +159,15 @@ class CollectBearsTest(unittest.TestCase):
         self.assertRaises(TypeError, collect_bears)
 
     def test_bear_invalid(self):
-        self.assertEqual(collect_bears(["invalid_paths"],
-                                       ["invalid_name"],
-                                       ["invalid kind"],
-                                       self.log_printer), ([],))
+        with retrieve_stdout() as sio:
+            self.assertEqual(collect_bears(["invalid_paths"],
+                                           ["invalid_name"],
+                                           ["invalid kind"],
+                                           self.log_printer), ([],))
+            self.assertRegex(sio.getvalue(),
+                             ".*\\[WARNING\\].*No bears were found matching "
+                             "'invalid_name'.\n")
+
         self.assertEqual(collect_bears(["invalid_paths"],
                                        ["invalid_name"],
                                        ["invalid kind1", "invalid kind2"],
