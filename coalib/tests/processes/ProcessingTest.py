@@ -19,7 +19,9 @@ from coalib.processes.Processing import (execute_section,
                                          filter_raising_callables,
                                          ACTIONS,
                                          get_default_actions,
-                                         autoapply_actions, print_result)
+                                         autoapply_actions,
+                                         print_result,
+                                         get_file_dict)
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -289,6 +291,13 @@ class ProcessingTest(unittest.TestCase):
         # Test whether non filtered exceptions bubble up.
         with self.assertRaises(B):
             list(filter_raising_callables(test_list, C, exc=(B, C)))
+
+    def test_get_file_dict(self):
+        file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
+        self.assertEqual(len(file_dict), 1)
+        self.assertEqual(type(file_dict[self.testcode_c_path]),
+                         tuple,
+                         msg="files in file_dict should not be editable")
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):

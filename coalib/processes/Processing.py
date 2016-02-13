@@ -219,7 +219,7 @@ def get_file_dict(filename_list, log_printer):
     for filename in filename_list:
         try:
             with open(filename, "r", encoding="utf-8") as _file:
-                file_dict[filename] = _file.readlines()
+                file_dict[filename] = tuple(_file.readlines())
         except UnicodeDecodeError:
             log_printer.warn("Failed to read file '{}'. It seems to contain "
                              "non-unicode characters. Leaving it "
