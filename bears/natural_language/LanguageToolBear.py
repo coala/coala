@@ -1,3 +1,4 @@
+from guess_language import guess_language
 from language_check import LanguageTool, correct
 
 from coalib.bears.LocalBear import LocalBear
@@ -7,8 +8,11 @@ from coalib.results.SourceRange import SourceRange
 
 
 def get_language_tool_results(filename, file_contents, locale):
-    tool = LanguageTool(locale)
     joined_text = "".join(file_contents)
+    locale = guess_language(joined_text) if locale == 'auto' else locale
+    locale = 'en-US' if not locale else locale
+
+    tool = LanguageTool(locale)
     matches = tool.check(joined_text)
     for match in matches:
         if not match.replacements:
@@ -35,11 +39,14 @@ class LanguageToolBear(LocalBear):
     def run(self,
             filename,
             file,
-            locale: str='en-US'):
+            locale: str='auto'):
         '''
         Checks the code with LanguageTool.
 
-        locale: A locale representing the language you want to have checked.
+        :param locale: A locale representing the language you want to
+                       have checked. If set to 'auto' the language is
+                       guessed. If the language cannot be guessed, 'en-US'
+                       is used.
         '''
         for message, diffs, range in get_language_tool_results(
                 filename, file, locale):
