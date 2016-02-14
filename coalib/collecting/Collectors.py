@@ -106,7 +106,7 @@ def collect_bears(bear_dirs, bear_names, kinds, log_printer):
 
     :param bear_dirs:   directory name or list of such that can contain bears
     :param bear_names:  names of bears
-    :param kinds: list  of bear kinds to be collected
+    :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
     :return:            list of matching bear classes
     """
