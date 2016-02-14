@@ -7,6 +7,7 @@ from coalib.misc.ContextManagers import make_temp
 from coalib import coala_ci
 from coalib.output.Tagging import get_tag_path
 from coalib.tests.TestUtilities import execute_coala
+from coalib import coala
 
 
 class coalaTest(unittest.TestCase):
@@ -80,3 +81,11 @@ class coalaTest(unittest.TestCase):
                           "-c", re.escape(coafile))
             self.assertFalse(os.path.isfile(orig_file.name))
             self.assertTrue(os.path.isfile(unrelated_file))
+
+    def test_coala(self):
+        retval, output = execute_coala(
+            coala.main, "coala-ci", "todos", "-c", self.coafile)
+        self.assertNotEqual(retval,
+                            0,
+                            "coala-ci must return nonzero when running over "
+                            "its own code. (Target section: todos)")
