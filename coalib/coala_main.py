@@ -63,8 +63,7 @@ def run_coala(log_printer=None,
     exitcode = 0
     results = None
     try:
-        yielded_results = False
-        yielded_unfixed_results = False
+        yielded_results = yielded_unfixed_results = False
         did_nothing = True
         sections, local_bears, global_bears, targets = (
             gather_configuration(acquire_settings, log_printer))
@@ -74,6 +73,7 @@ def run_coala(log_printer=None,
 
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
+        config_file = os.path.abspath(str(sections["default"].get("config")))
 
         if not autoapply and 'autoapply' not in sections['default']:
             sections['default']['autoapply'] = "False"
@@ -91,19 +91,14 @@ def run_coala(log_printer=None,
                     log_printer)
 
         if dtag != "None":
-            delete_tagged_results(
-                dtag,
-                os.path.abspath(str(sections["default"].get("config"))))
+            delete_tagged_results(dtag, config_file)
 
         if show_bears_:
-            show_bears(local_bears,
-                       global_bears,
-                       show_all_bears)
+            show_bears(local_bears, global_bears, show_all_bears)
             did_nothing = False
         else:
             results = {}
-            for section_name in sections:
-                section = sections[section_name]
+            for section_name, section in sections.items():
                 if not section.is_enabled(targets):
                     continue
 
@@ -130,10 +125,7 @@ def run_coala(log_printer=None,
                 did_nothing = False
 
             if tag != "None":
-                tag_results(
-                    tag,
-                    os.path.abspath(str(sections["default"].get("config"))),
-                    results)
+                tag_results(tag, config_file, results)
 
         if did_nothing:
             nothing_done(log_printer)
