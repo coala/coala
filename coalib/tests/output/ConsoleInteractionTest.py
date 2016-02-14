@@ -263,7 +263,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             diff = Diff(file_dict[testfile_path])
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
-            with simulate_console_inputs(1, 0) as generator:
+            with simulate_console_inputs(1, 0) as generator, \
+                    retrieve_stdout() as sio:
                 ApplyPatchAction.is_applicable = staticmethod(
                         lambda *args: True)
                 acquire_actions_and_apply(self.console_printer,
@@ -274,6 +275,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                            testfile_path: diff}),
                                           file_dict)
                 self.assertEqual(generator.last_input, 1)
+                self.assertIn(ApplyPatchAction.success_message, sio.getvalue())
 
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:

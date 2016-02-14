@@ -50,6 +50,8 @@ def print_beautified_diff(difflines, printer):
 
 class ShowPatchAction(ResultAction):
 
+    success_message = "Displayed patch successfully."
+
     @classmethod
     def is_applicable(cls, result, original_file_dict, file_diff_dict):
         return isinstance(result, Result) and result.diffs is not None

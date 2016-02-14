@@ -517,7 +517,7 @@ def ask_for_action_and_apply(log_printer,
                                          file_diff_dict,
                                          section)
         console_printer.print(
-            format_lines("The action was executed successfully."),
+            format_lines(chosen_action.success_message),
             color=SUCCESS_COLOR)
     except Exception as exception:  # pylint: disable=broad-except
         log_printer.log_exception("Failed to execute the action "
