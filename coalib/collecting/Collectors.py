@@ -73,25 +73,25 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
 
 
 @yield_once
-def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
+def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
 
     :param bear_dirs:   directory name or list of such that can contain bears
-    :param bear_names:  names of bears
+    :param bear_globs:  globs of bears to collect
     :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
     :return:            iterator that yields a tuple with bear class and
-                        which bear_name was used to find that bear class.
+                        which bear_glob was used to find that bear class.
     """
     for bear_dir in filter(os.path.isdir, icollect(bear_dirs)):
-        for bear_name in bear_names:
+        for bear_glob in bear_globs:
             for matching_file in iglob(
-                    os.path.join(bear_dir, bear_name + '.py')):
+                    os.path.join(bear_dir, bear_glob + '.py')):
 
                 try:
                     for bear in _import_bears(matching_file, kinds):
-                        yield bear, bear_name
+                        yield bear, bear_glob
                 except BaseException as exception:
                     log_printer.log_exception(
                         "Unable to collect bears from {file}. Probably the "
@@ -101,27 +101,27 @@ def icollect_bears(bear_dirs, bear_names, kinds, log_printer):
                         log_level=LOG_LEVEL.WARNING)
 
 
-def collect_bears(bear_dirs, bear_names, kinds, log_printer):
+def collect_bears(bear_dirs, bear_globs, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
 
     :param bear_dirs:   directory name or list of such that can contain bears
-    :param bear_names:  names of bears
+    :param bear_globs:  globs of bears to collect
     :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
     :return:            tuple of list of matching bear classes based on kind.
                         The lists are in the same order as `kinds`
     """
     bears_found = tuple([] for i in range(len(kinds)))
-    bear_names_with_bears = set()
-    for bear, name in icollect_bears(bear_dirs, bear_names, kinds, log_printer):
+    bear_globs_with_bears = set()
+    for bear, glob in icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
         index = kinds.index(_get_kind(bear))
         bears_found[index].append(bear)
-        bear_names_with_bears.add(name)
+        bear_globs_with_bears.add(glob)
 
-    empty_bear_names = set(bear_names) - set(bear_names_with_bears)
-    for name in empty_bear_names:
-        log_printer.warn("No bears were found matching '{}'.".format(name))
+    empty_bear_globs = set(bear_globs) - set(bear_globs_with_bears)
+    for glob in empty_bear_globs:
+        log_printer.warn("No bears were found matching '{}'.".format(glob))
 
     return bears_found
 
