@@ -17,7 +17,7 @@ can do the following things:
 
 -  Join us on our developer chatroom:
    https://gitter.im/coala-analyzer/coala
--  Run our tests. Just execute ``./run_tests.py``. Report back to us if
+-  Run our tests. Just follow the instructions on the :doc:`Testing <../Getting_Involved/Testing>` page. Report back to us if
    anything goes wrong unexpectedly.
 -  Give us feedback. If you think we're doing something useless or
    useful with some specific things, please write us! We are interested
