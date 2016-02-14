@@ -107,8 +107,8 @@ if __name__ == "__main__":
                            " happens in python scripts while coala manages "
                            "these, tries to provide helpful libraries and "
                            "provides a user interface. Please visit "
-                           "http://coala.rtfd.org/ for more information or our"
-                           "development repository on "
+                           "http://coala.rtfd.org/ for more information or "
+                           "our development repository on "
                            "https://github.com/coala-analyzer/coala/.",
           entry_points={
               "console_scripts": [
