@@ -161,39 +161,43 @@ class CollectBearsTest(unittest.TestCase):
         self.assertEqual(collect_bears(["invalid_paths"],
                                        ["invalid_name"],
                                        ["invalid kind"],
-                                       self.log_printer), [])
+                                       self.log_printer), ([],))
+        self.assertEqual(collect_bears(["invalid_paths"],
+                                       ["invalid_name"],
+                                       ["invalid kind1", "invalid kind2"],
+                                       self.log_printer), ([], []))
 
     def test_simple_single(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, "bears")],
             ["bear1"],
             ["kind"],
-            self.log_printer)), 1)
+            self.log_printer)[0]), 1)
 
     def test_string_single(self):
         self.assertEqual(len(collect_bears(
             os.path.join(self.collectors_test_dir, "bears"),
             ["bear1"],
             ["kind"],
-            self.log_printer)), 1)
+            self.log_printer)[0]), 1)
 
     def test_reference_single(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, "bears")],
             ["metabear"],
             ["kind"],
-            self.log_printer)), 1)
+            self.log_printer)[0]), 1)
 
     def test_no_duplications(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, "bears", "**")],
             ["*"],
             ["kind"],
-            self.log_printer)), 2)
+            self.log_printer)[0]), 2)
 
     def test_wrong_kind(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, "bears", "**")],
             ["*"],
             ["other_kind"],
-            self.log_printer)), 0)
+            self.log_printer)[0]), 0)

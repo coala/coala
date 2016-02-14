@@ -108,9 +108,14 @@ def collect_bears(bear_dirs, bear_names, kinds, log_printer):
     :param bear_names:  names of bears
     :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
-    :return:            list of matching bear classes
+    :return:            tuple of list of matching bear classes based on kind.
+                        The lists are in the same order as `kinds`
     """
-    return list(icollect_bears(bear_dirs, bear_names, kinds, log_printer))
+    bears_found = tuple([] for i in range(len(kinds)))
+    for bear in icollect_bears(bear_dirs, bear_names, kinds, log_printer):
+        index = kinds.index(_get_kind(bear))
+        bears_found[index].append(bear)
+    return bears_found
 
 
 def remove_ignored(file_paths, ignored_globs):

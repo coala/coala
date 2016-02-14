@@ -28,14 +28,11 @@ def fill_settings(sections, acquire_settings, log_printer):
     for section_name, section in sections.items():
         bear_dirs = section.bear_dirs()
         bears = list(section.get("bears", ""))
-        section_local_bears = collect_bears(bear_dirs,
-                                            bears,
-                                            [BEAR_KIND.LOCAL],
-                                            log_printer)
-        section_global_bears = collect_bears(bear_dirs,
-                                             bears,
-                                             [BEAR_KIND.GLOBAL],
-                                             log_printer)
+        section_local_bears, section_global_bears = collect_bears(
+            bear_dirs,
+            bears,
+            [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
+            log_printer)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
         fill_section(section, acquire_settings, log_printer, all_bears)
