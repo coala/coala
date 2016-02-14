@@ -6,11 +6,11 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import iglob, fnmatch
 
 
-def _right_kind(bear_class, kinds):
+def _get_kind(bear_class):
     try:
-        return bear_class.kind() in kinds
+        return bear_class.kind()
     except NotImplementedError:
-        return False
+        return None
 
 
 def _import_bears(file_path, kinds):
@@ -19,13 +19,13 @@ def _import_bears(file_path, kinds):
                                      names='__additional_bears__',
                                      types=list):
         for bear_class in bear_list:
-            if _right_kind(bear_class, kinds):
+            if _get_kind(bear_class) in kinds:
                 yield bear_class
     # normal import
     for bear_class in iimport_objects(file_path,
                                       attributes='kind',
                                       local=True):
-        if _right_kind(bear_class, kinds):
+        if _get_kind(bear_class) in kinds:
             yield bear_class
 
 
