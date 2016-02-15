@@ -77,8 +77,7 @@ def run_coala(log_printer=None,
         # Deleting all .orig files, so the latest files are up to date!
         coala_delete_orig.main(log_printer, sections["default"])
 
-        if dtag != "None":
-            delete_tagged_results(dtag, config_file, log_printer)
+        delete_tagged_results(dtag, config_file, log_printer)
 
         if show_bears_ or show_all_bears:
             if show_all_bears:
@@ -107,8 +106,7 @@ def run_coala(log_printer=None,
                     yielded_unfixed_results or yielded_unfixed)
                 did_nothing = False
 
-            if tag != "None":
-                tag_results(tag, config_file, results, log_printer)
+            tag_results(tag, config_file, results, log_printer)
 
         if did_nothing:
             nothing_done(log_printer)
