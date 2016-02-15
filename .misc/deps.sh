@@ -1,14 +1,5 @@
 set -e
-
-# For some reason `nvm` has not been loaded. This generates a lot of output
-# in CI, so it's done before `set -x`
-if [ -s ~/nvm/nvm.sh ]; then
-  source ~/nvm/nvm.sh
-  nvm install stable
-fi
-
 git -C ~/.pyenv pull
-
 set -x
 
 # Choose the python versions to install deps for

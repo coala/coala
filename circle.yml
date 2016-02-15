@@ -7,6 +7,7 @@ dependencies:
   pre:
     - echo 'export PATH=$PATH:~/coala/node_modules/.bin' >> ~/.circlerc
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
+    - nvm alias default node
   override:
     - bash .misc/deps.sh
 
