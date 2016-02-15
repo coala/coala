@@ -64,6 +64,13 @@ class PyTestCommand(TestCommand):
         sys.exit(errno)
 
 
+class BuildDocsCommand(setuptools.command.build_py.build_py):
+
+    def run(self):
+        call(['sphinx-apidoc', '-f', '-o', 'docs/API/', '.'])
+        call(['make', '-C', 'docs', 'html'])
+
+
 # Generate API documentation only if we are running on readthedocs.org
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
@@ -147,4 +154,5 @@ if __name__ == "__main__":
           cmdclass={'build_manpage': BuildManPage,
                     'build_dbus': BuildDbusService,
                     'build_py': BuildPyCommand,
+                    'docs': BuildDocsCommand,
                     'test': PyTestCommand})
