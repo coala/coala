@@ -19,7 +19,7 @@ What is a bear?
 ---------------
 
 A bear is meant to do some analysis on source code. The source code will
-provided by coala so the bear doesn't have to care where it comes from
+be provided by coala so the bear doesn't have to care where it comes from
 or where it goes.
 
 A bear can communicate with the user via two ways:
