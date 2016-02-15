@@ -14,7 +14,7 @@ from coalib.output.Tagging import get_tag_path
 from coalib.tests.TestUtilities import execute_coala
 
 
-class coalaTest(unittest.TestCase):
+class coalaCITest(unittest.TestCase):
 
     def setUp(self):
         self.old_argv = sys.argv
