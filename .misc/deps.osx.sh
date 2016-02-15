@@ -27,6 +27,7 @@ brew install go
 # Install required go libraries
 go get -u github.com/golang/lint/golint
 go get -u golang.org/x/tools/cmd/goimports
+go get -u sourcegraph.com/sqs/goreturns
 
 # Start dbus in the system
 launchctl load -w `find /usr/local/Cellar/d-bus -name "org.freedesktop.dbus-session.plist"`
