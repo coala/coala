@@ -30,7 +30,7 @@ bears = LineLengthBear
 [DOCS]
 bears = SpaceConsistencyBear
 
-files = docs/**/*.md
+files = docs/**/*.rst
 default_actions = SpaceConsistencyBear: ApplyPatchAction
 
 [commit]
