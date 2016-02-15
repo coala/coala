@@ -184,7 +184,7 @@ def prepare_file(lines,
         for i, line in enumerate(lines):
             lines[i] = line if line.endswith("\n") else line + "\n"
 
-    if not create_tempfile and filename is None:
+    if create_tempfile and filename is not None:
         filename = "dummy_file_name"
 
     if not isinstance(filename, str) and create_tempfile:
