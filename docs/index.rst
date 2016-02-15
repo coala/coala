@@ -25,6 +25,12 @@ Welcome to the coala documentation!
    External APIs <Users/External_APIs>
 
 .. toctree::
+   :caption: Tutorials
+   :hidden:
+   
+   Linter Bears <Users/Tutorials/Linter_Bears>
+
+.. toctree::
    :caption: Getting Involved
    :hidden:
    
