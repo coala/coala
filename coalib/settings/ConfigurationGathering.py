@@ -191,7 +191,10 @@ def find_user_config(file_path, max_trials=10):
     return ""
 
 
-def gather_configuration(acquire_settings, log_printer, arg_list=None):
+def gather_configuration(acquire_settings,
+                         log_printer,
+                         autoapply=None,
+                         arg_list=None):
     """
     Loads all configuration files, retrieves bears and all needed
     settings, saves back if needed and warns about non-existent targets.
@@ -214,6 +217,8 @@ def gather_configuration(acquire_settings, log_printer, arg_list=None):
                              who need this setting in all following indexes.
     :param log_printer:      The log printer to use for logging. The log level
                              will be adjusted to the one given by the section.
+    :param autoapply:        Set whether to autoapply patches. This is
+                             overridable via any configuration file/CLI.
     :param arg_list:         CLI args to use
     :return:                 A tuple with the following contents:
                               * A dictionary with the sections
@@ -232,6 +237,10 @@ def gather_configuration(acquire_settings, log_printer, arg_list=None):
                                               log_printer)
     save_sections(sections)
     warn_nonexistent_targets(targets, sections, log_printer)
+
+    if not autoapply is None:
+        if not autoapply and 'autoapply' not in sections['default']:
+            sections['default']['autoapply'] = "False"
 
     return (sections,
             local_bears,

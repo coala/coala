@@ -235,3 +235,22 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         self.assertRegex(str(sections["default"]),
                          ".*find_config : 'True'.*, config : '.*'")
+
+    def test_autoapply_arg(self):
+        sections, dummy, dummy, dummy = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            autoapply=False,
+            arg_list=[])
+
+        self.assertEqual(str(sections['default'].get('autoapply', None)),
+                         'False')
+
+        sections, dummy, dummy, dummy = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            autoapply=True,
+            arg_list=[])
+
+        self.assertEqual(str(sections['default'].get('autoapply', None)),
+                         'None')

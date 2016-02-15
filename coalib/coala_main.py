@@ -65,8 +65,10 @@ def run_coala(log_printer=None,
     try:
         yielded_results = yielded_unfixed_results = False
         did_nothing = True
-        sections, local_bears, global_bears, targets = (
-            gather_configuration(acquire_settings, log_printer))
+        sections, local_bears, global_bears, targets = gather_configuration(
+            acquire_settings,
+            log_printer,
+            autoapply=autoapply)
 
         # Deleting all .orig files, so the latest files are up to date!
         coala_delete_orig.main(log_printer, sections["default"])
@@ -74,9 +76,6 @@ def run_coala(log_printer=None,
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
         config_file = os.path.abspath(str(sections["default"].get("config")))
-
-        if not autoapply and 'autoapply' not in sections['default']:
-            sections['default']['autoapply'] = "False"
 
         show_all_bears = bool(sections['default'].get('show_all_bears', False))
         show_bears_ = bool(sections["default"].get("show_bears", "False"))
