@@ -21,55 +21,27 @@ var _ os.File // for "os"
 
 
 bad_file = """
-// Test that blank imports in library packages are flagged.
+package pkg
 
-// Package foo ...
-package foo
+func addOne(x int) int {
+  x += 1
+  return x
+}
 
-// The instructions need to go before the imports below so they will not be
-// mistaken for documentation.
-
-/* MATCH /blank import/ */ import _ "encoding/json"
-
-import (
-  "fmt"
-
-  /* MATCH /blank import/ */ _ "os"
-
-  /* MATCH /blank import/ */ _ "net/http"
-  _ "path"
-)
-
-import _ "encoding/base64" // Don't gripe about this
-
-import (
-  // Don't gripe about these next two lines.
-  _ "compress/zlib"
-  _ "syscall"
-
-  /* MATCH /blank import/ */ _ "path/filepath"
-)
-
-import (
-  "go/ast"
-  _ "go/scanner" // Don't gripe about this or the following line.
-  _ "go/token"
-)
-
-var (
-  _ fmt.Stringer // for "fmt"
-  _ ast.Node     // for "go/ast"
-)
+func subOneInLoop(y int) {
+  for ; y > 0; y -= 1 {
+  }
+}
 """.split("\n")
 
 
-GoLintBearTest = verify_local_bear(GoLintBear,
-                                   valid_files=(good_file,),
-                                   invalid_files=(bad_file,))
+GoLintBear1Test = verify_local_bear(GoLintBear,
+                                    valid_files=(good_file,),
+                                    invalid_files=(bad_file,))
 
 
-GoLintBearTest = verify_local_bear(
+GoLintBear2Test = verify_local_bear(
     GoLintBear,
-    valid_files=(),
-    invalid_files=(bad_file,),
-    settings={"golint_cli_options": "-min_confidence=0.8"})
+    valid_files=(bad_file, good_file),
+    invalid_files=(),
+    settings={"golint_cli_options": "-min_confidence=1"})
