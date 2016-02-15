@@ -11,12 +11,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import functools
+from pyprint.ConsolePrinter import ConsolePrinter
+
 from coalib.coala_main import run_coala
-from coalib.output.ConsoleInteraction import print_results_no_input
+from coalib.output.ConsoleInteraction import (print_results_no_input,
+                                              print_section_beginning)
 
 
 def main():
+    console_printer = ConsolePrinter()
+    partial_print_sec_beg = functools.partial(
+        print_section_beginning,
+        console_printer)
     results, exitcode = run_coala(autoapply=False,
-                                  print_results=print_results_no_input)
+                                  print_results=print_results_no_input,
+                                  print_section_beginning=partial_print_sec_beg)
 
     return exitcode
