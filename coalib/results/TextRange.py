@@ -1,3 +1,5 @@
+import copy
+
 from coalib.misc.Decorators import (enforce_signature,
                                     generate_ordering,
                                     generate_repr)
@@ -26,7 +28,7 @@ class TextRange:
         """
 
         self._start = start
-        self._end = end or start
+        self._end = end or copy.deepcopy(start)
 
         if self._end < start:
             raise ValueError("End position can't be less than start position.")

@@ -30,7 +30,8 @@ class TextRangeTest(unittest.TestCase):
         uut = TextRange(TextPosition(70, 20), None)
         self.assertEqual(uut.start, TextPosition(70, 20))
         self.assertEqual(uut.end, TextPosition(70, 20))
-        self.assertIs(uut.start, uut.end)
+        self.assertEqual(uut.start, uut.end)
+        self.assertIsNot(uut.start, uut.end)
 
     def test_from_values(self):
         # Check if invalid ranges still fail.
