@@ -191,6 +191,18 @@ def find_user_config(file_path, max_trials=10):
     return ""
 
 
+def get_config_directory(section):
+    if section is None:
+        return os.getcwd()
+    try:
+        path = str(section["config"])
+        return path if os.path.isdir(path) else os.path.dirname(path)
+    except IndexError:
+        if os.path.isfile(os.path.join(os.getcwd(), '.coafile')):
+            return os.getcwd()
+        return None
+
+
 def gather_configuration(acquire_settings,
                          log_printer,
                          autoapply=None,

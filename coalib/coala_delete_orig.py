@@ -1,22 +1,10 @@
 import os
-from os.path import isdir, dirname
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.parsing.Globbing import glob
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
-
-
-def get_config_directory(section):
-    if section is None:
-        return os.getcwd()
-    try:
-        path = str(section["config"])
-        return path if isdir(path) else dirname(path)
-    except IndexError:
-        if os.path.isfile(os.path.join(os.getcwd(), '.coafile')):
-            return os.getcwd()
-        return None
+from coalib.settings.ConfigurationGathering import get_config_directory
 
 
 def main(log_printer=None, section: Section=None):
