@@ -15,6 +15,10 @@ environment:
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "64"
 
+cache:
+  - "%GOPATH%"
+  - "C:\\wheels"
+
 branches:  # Only build official branches, PRs are built anyway.
   only:
     - master
@@ -38,6 +42,13 @@ install:
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
+  - "%CMD_IN_ENV% pip -q install wheel"
+  # Create c:/wheels if it does not exist.
+  - ps: If ( -not (Test-Path C:\\wheels) )  { mkdir C:\\wheels }
+  - ECHO "Cached wheels:"
+  - ps: "ls \"C:\\wheels\""
+  - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r test-requirements.txt"
+  - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r requirements.txt"
   - "%CMD_IN_ENV% pip -q install -r test-requirements.txt"
   - "%CMD_IN_ENV% pip -q install -r requirements.txt"
   - "%CMD_IN_ENV% pip -q install --upgrade astroid"
