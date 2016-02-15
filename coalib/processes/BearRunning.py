@@ -525,19 +525,22 @@ def run(file_name_queue,
                                free slot to execute the put operation on. After
                                the timeout it returns queue Full exception.
     """
-    run_local_bears(file_name_queue,
-                    message_queue,
-                    timeout,
-                    file_dict,
-                    local_bear_list,
-                    local_result_dict,
-                    control_queue)
-    control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
+    try:
+        run_local_bears(file_name_queue,
+                        message_queue,
+                        timeout,
+                        file_dict,
+                        local_bear_list,
+                        local_result_dict,
+                        control_queue)
+        control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
-    run_global_bears(message_queue,
-                     timeout,
-                     global_bear_queue,
-                     global_bear_list,
-                     global_result_dict,
-                     control_queue)
-    control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
+        run_global_bears(message_queue,
+                         timeout,
+                         global_bear_queue,
+                         global_bear_list,
+                         global_result_dict,
+                         control_queue)
+        control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
+    except (OSError, KeyboardInterrupt):  # pragma: no cover
+        pass
