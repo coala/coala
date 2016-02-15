@@ -7,8 +7,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.Processing import execute_section
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
-from coalib.bears.BEAR_KIND import BEAR_KIND
-from coalib.collecting.Collectors import collect_bears
+from coalib.collecting.Collectors import collect_all_bears_from_sections
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.Tagging import tag_results, delete_tagged_results
 
@@ -81,13 +80,8 @@ def run_coala(log_printer=None,
         show_bears_ = bool(sections["default"].get("show_bears", "False"))
         if show_all_bears:
             show_bears_ = True
-            for section in sections:
-                bear_dirs = sections[section].bear_dirs()
-                local_bears[section], global_bears[section] = collect_bears(
-                    bear_dirs,
-                    ["**"],
-                    [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
-                    log_printer)
+            (local_bears,
+             global_bears) = collect_all_bears_from_sections(sections)
 
         if dtag != "None":
             delete_tagged_results(dtag, config_file, log_printer)
