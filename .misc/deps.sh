@@ -1,5 +1,4 @@
 set -e
-git -C ~/.pyenv pull
 set -x
 
 # Choose the python versions to install deps for
