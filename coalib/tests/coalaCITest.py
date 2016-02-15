@@ -44,16 +44,19 @@ class coalaCITest(unittest.TestCase):
                          "own code.")
 
     def test_find_issues(self):
-        retval, output = execute_coala(
-            coala_ci.main, "coala-ci", "todos", "-c", self.coafile)
-        self.assertRegex(output,
-                         r'The line contains the keyword `# \w+`.',
-                         "coala-ci output should be empty when running "
-                         "over its own code. (Target section: todos)")
-        self.assertNotEqual(retval,
-                            0,
-                            "coala-ci must return nonzero when running over "
-                            "its own code. (Target section: todos)")
+        with prepare_file(["#todo this is todo"], None) as (lines, filename):
+            bear = "KeywordBear"
+            retval, output = execute_coala(coala_ci.main, "coala-ci", "-c",
+                                           os.devnull, "-S",
+                                           "ci_keywords=#TODO",
+                                           "cs_keywords=#todo",
+                                           "bears=" + bear, "-f", filename)
+            self.assertIn("The line contains the keyword `#todo`.",
+                          output, "coala-ci output should match the keyword\
+                          #todo")
+            self.assertNotEqual(retval,
+                                0, "coala-ci must return nonzero when "
+                                "matching `#todo` keyword")
 
     @generate_skip_decorator(IndentBear)
     def test_fix_patchable_issues(self):
