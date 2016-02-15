@@ -24,6 +24,7 @@ npm install
 # GO commands
 go get -u github.com/golang/lint/golint
 go get -u golang.org/x/tools/cmd/goimports
+go get -u sourcegraph.com/sqs/goreturns
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
