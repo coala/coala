@@ -3,6 +3,7 @@ import re
 import sys
 import unittest
 
+from bears.general.LineCountBear import LineCountBear
 from coalib.tests.TestUtilities import execute_coala
 from coalib.misc.ContextManagers import prepare_file
 from coalib import coala
@@ -33,3 +34,15 @@ class coalaTest(unittest.TestCase):
                                        "-S", "default.enabled=false")
         self.assertEqual(retval, 0)
         self.assertIn("No existent section was targeted or enabled", output)
+
+    def test_show_bears(self):
+        retval, output = execute_coala(coala.main, "coala", "-A")
+        self.assertEqual(retval, 0)
+        bear_lines = [i.startswith(" * ") for i in output.split()]
+        self.assertGreater(len(bear_lines), 0)
+
+        retval, output = execute_coala(coala.main, "coala", "-B",
+                                       "-b", "LineCountBear",
+                                       "-c", os.devnull)
+        self.assertEqual(retval, 0)
+        self.assertIn(LineCountBear.run.__doc__.strip(), output)
