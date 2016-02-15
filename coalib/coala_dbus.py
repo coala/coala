@@ -22,6 +22,14 @@ from coalib.output.dbus.DbusServer import DbusServer
 from coalib.misc import Constants
 
 
+def sys_clean_exit():
+    sys.exit(0)
+
+
+def on_disconnected():
+    return GLib.idle_add(sys_clean_exit)
+
+
 def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
@@ -33,7 +41,7 @@ def main():
         session_bus)
     DbusServer(session_bus,
                '/org/coala_analyzer/v1',
-               on_disconnected=lambda: GLib.idle_add(lambda: sys.exit(0)))
+               on_disconnected=on_disconnected)
 
     mainloop = GLib.MainLoop()
     mainloop.run()

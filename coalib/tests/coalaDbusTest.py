@@ -28,3 +28,8 @@ class coalaDbusTest(unittest.TestCase):
         # Ensure we are able to setup dbus and create a mainloop
         with self.assertRaises(AssertionError):
             coala_dbus.main()
+
+        with self.assertRaises(SystemExit):
+            coala_dbus.sys_clean_exit()
+
+        self.assertGreater(coala_dbus.on_disconnected(), 0)
