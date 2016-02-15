@@ -18,6 +18,7 @@ environment:
 cache:
   - "%GOPATH%"
   - "C:\\wheels"
+  - "node_modules"
 
 branches:  # Only build official branches, PRs are built anyway.
   only:
@@ -52,6 +53,10 @@ install:
   - "%CMD_IN_ENV% pip -q install -r test-requirements.txt"
   - "%CMD_IN_ENV% pip -q install -r requirements.txt"
   - "%CMD_IN_ENV% pip -q install --upgrade astroid"
+
+  - ps: "Install-Product node ''"  # Use latest node v5.x.x
+  - "npm config set loglevel warn"
+  - "npm install"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
