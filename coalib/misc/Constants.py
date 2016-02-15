@@ -72,7 +72,3 @@ else:
     USER_DIR = os.path.join(os.path.expanduser("~"), ".local", "coala")
 
 TAGS_DIR = os.path.join(USER_DIR, "tags")
-try:
-    os.makedirs(TAGS_DIR)
-except:  # pragma: no cover
-    pass
