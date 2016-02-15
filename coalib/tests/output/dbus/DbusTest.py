@@ -1,7 +1,7 @@
 import sys
 import os
 import unittest
-from unittest.case import skipIf
+from unittest.case import SkipTest
 import subprocess
 import time
 
@@ -11,10 +11,8 @@ try:
     import dbus
     # Needed to determine if test needs skipping
     from gi.repository import GLib
-
-    skip, message = False, ''
 except ImportError as err:
-    skip, message = True, str(err)
+    raise SkipTest('python-dbus or python-gi is not installed')
 
 
 def make_test_server():
@@ -41,7 +39,6 @@ mainloop.run()
 """])
 
 
-@skipIf(skip, message)
 class DbusTest(unittest.TestCase):
 
     def setUp(self):

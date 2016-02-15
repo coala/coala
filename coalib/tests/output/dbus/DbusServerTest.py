@@ -1,17 +1,15 @@
 import unittest
-from unittest.case import skipIf
+from unittest.case import SkipTest
 
 try:
     import dbus
     import dbus.mainloop
 
     from coalib.output.dbus.DbusServer import DbusServer
-    skip, message = False, ''
 except ImportError as err:
-    skip, message = True, str(err)
+    raise SkipTest('python-dbus is not installed')
 
 
-@skipIf(skip, message)
 class DbusServerTest(unittest.TestCase):
 
     def setUp(self):

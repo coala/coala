@@ -1,17 +1,15 @@
 import os
 import unittest
-from unittest.case import skipIf
+from unittest.case import SkipTest
 
 from coalib.misc import Constants
 
 try:
     from coalib.output.dbus.DbusDocument import DbusDocument
-    skip, message = False, ''
 except ImportError as err:
-    skip, message = True, str(err)
+    raise SkipTest('python-dbus is not installed')
 
 
-@skipIf(skip, message)
 class DbusDocumentTest(unittest.TestCase):
 
     def setUp(self):
