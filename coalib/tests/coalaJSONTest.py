@@ -6,6 +6,7 @@ import json
 
 from coalib import coala_json
 from coalib.tests.TestUtilities import execute_coala
+from coalib.misc.ContextManagers import prepare_file
 
 
 class coalaJSONTest(unittest.TestCase):
@@ -27,18 +28,21 @@ class coalaJSONTest(unittest.TestCase):
             "The requested coafile '.*' does not exist.")
 
     def test_find_issues(self):
-        retval, output = execute_coala(
-            coala_json.main, "coala-json", "todos", "-c",
-            self.coafile)
-        output = json.loads(output)
-        self.assertRegex(output["results"]["todos"][0]["message"],
-                         r'The line contains the keyword `# \w+`.',
-                         "coala-json output should be empty when running "
-                         "over its own code. (Target section: todos)")
-        self.assertNotEqual(retval,
-                            0,
-                            "coala-json must return nonzero when running over "
-                            "its own code. (Target section: todos)")
+        with prepare_file(["#todo this is todo"], None) as (lines, filename):
+            bear = "KeywordBear"
+            retval, output = execute_coala(coala_json.main, "coala-json", "-c",
+                                           os.devnull, "-S",
+                                           "ci_keywords=#TODO",
+                                           "cs_keywords=#todo",
+                                           "bears=" + bear,
+                                           "-f", re.escape(filename))
+            output = json.loads(output)
+            self.assertEqual(output["results"]["default"][0]["message"],
+                             "The line contains the keyword `#todo`.",
+                             "coala-json output should match the keyword #todo")
+            self.assertNotEqual(retval,
+                                0, "coala-json must return nonzero when "
+                                "matching `#todo` keyword")
 
     def test_fail_acquire_settings(self):
         retval, output = execute_coala(
