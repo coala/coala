@@ -21,7 +21,8 @@ from coalib.processes.Processing import (execute_section,
                                          get_default_actions,
                                          autoapply_actions,
                                          print_result,
-                                         get_file_dict)
+                                         get_file_dict,
+                                         simplify_section_result)
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -299,6 +300,16 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(type(file_dict[self.testcode_c_path]),
                          tuple,
                          msg="files in file_dict should not be editable")
+
+    def test_simplify_section_result(self):
+        results = (True,
+                   {"file1": [Result("a", "b")], "file2": None},
+                   {"file3": [Result("a", "c")]},
+                   None)
+        yielded, yielded_unfixed, all_results = simplify_section_result(results)
+        self.assertEqual(yielded, True)
+        self.assertEqual(yielded_unfixed, True)
+        self.assertEqual(len(all_results), 2)
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):
