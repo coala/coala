@@ -5,8 +5,10 @@ from pyprint.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.collecting.Collectors import (collect_files,
                                           collect_dirs,
-                                          collect_bears)
+                                          collect_bears,
+                                          collect_all_bears_from_sections)
 from coalib.misc.ContextManagers import retrieve_stdout
+from coalib.settings.Section import Section
 
 
 class CollectFilesTest(unittest.TestCase):
@@ -98,6 +100,8 @@ class CollectDirsTest(unittest.TestCase):
             sorted([os.path.normcase(os.path.join(
                 self.collectors_test_dir, "bears")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "bears_local_global")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others",
@@ -115,6 +119,8 @@ class CollectDirsTest(unittest.TestCase):
                    if "__pycache__" not in i),
             sorted([os.path.normcase(os.path.join(
                 self.collectors_test_dir, "bears")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "bears_local_global")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
@@ -138,6 +144,8 @@ class CollectDirsTest(unittest.TestCase):
 
             sorted([os.path.normcase(os.path.join(
                 self.collectors_test_dir, "bears")),
+                os.path.normcase(os.path.join(self.collectors_test_dir,
+                                              "bears_local_global")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others")),
                 os.path.normcase(os.path.join(self.collectors_test_dir,
@@ -207,3 +215,15 @@ class CollectBearsTest(unittest.TestCase):
             ["*"],
             ["other_kind"],
             self.log_printer)[0]), 0)
+
+    def test_all_bears_from_sections(self):
+        test_section = Section("test_section")
+        test_section.bear_dirs = lambda: os.path.join(self.collectors_test_dir,
+                                                      "bears_local_global",
+                                                      "**")
+        local_bears, global_bears = collect_all_bears_from_sections(
+            {'test_section': test_section},
+            self.log_printer)
+
+        self.assertEqual(len(local_bears['test_section']), 2)
+        self.assertEqual(len(global_bears['test_section']), 2)

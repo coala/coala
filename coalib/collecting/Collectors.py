@@ -1,5 +1,6 @@
 import os
 
+from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -103,7 +104,8 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
 
 def collect_bears(bear_dirs, bear_globs, kinds, log_printer):
     """
-    Collect all bears from bear directories that have a matching kind.
+    Collect all bears from bear directories that have a matching kind
+    matching the given globs.
 
     :param bear_dirs:   directory name or list of such that can contain bears
     :param bear_globs:  globs of bears to collect
@@ -124,6 +126,25 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer):
         log_printer.warn("No bears were found matching '{}'.".format(glob))
 
     return bears_found
+
+
+def collect_all_bears_from_sections(sections, log_printer):
+    """
+    Collect all kinds of bears from bear directories given in the sections.
+
+    :param bear_dirs:   directory name or list of such that can contain bears
+    :param log_printer: log_printer to handle logging
+    """
+    local_bears = {}
+    global_bears = {}
+    for section in sections:
+        bear_dirs = sections[section].bear_dirs()
+        local_bears[section], global_bears[section] = collect_bears(
+            bear_dirs,
+            ["**"],
+            [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
+            log_printer)
+    return local_bears, global_bears
 
 
 def remove_ignored(file_paths, ignored_globs):
