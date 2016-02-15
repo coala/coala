@@ -1,5 +1,13 @@
+from unittest.case import SkipTest
+
 from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.natural_language.LanguageToolBear import LanguageToolBear
+
+try:
+    import language_check
+    import guess_language
+except ImportError as err:
+    raise SkipTest(str(err))
 
 
 LanguageToolBear1Test = verify_local_bear(
