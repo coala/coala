@@ -1,13 +1,15 @@
 import sys
 import os
 import unittest
+from pyprint.NullPrinter import NullPrinter
 import re
 from tempfile import TemporaryDirectory, NamedTemporaryFile
 
 from bears.c_languages.IndentBear import IndentBear
 from bears.tests.BearTestHelper import generate_skip_decorator
-from coalib.misc.ContextManagers import make_temp, prepare_file
 from coalib import coala_ci
+from coalib.misc.ContextManagers import make_temp, prepare_file
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.Tagging import get_tag_path
 from coalib.tests.TestUtilities import execute_coala
 
@@ -67,9 +69,10 @@ class coalaTest(unittest.TestCase):
                              "autofixes the code.")
 
     def test_tagging(self):
+        log_printer = LogPrinter(NullPrinter())
         execute_coala(coala_ci.main, "coala-ci", 'docs',
                       "-S", "tag=test_tag", "-c", self.coafile)
-        tag_path = get_tag_path("test_tag", self.unescaped_coafile)
+        tag_path = get_tag_path("test_tag", self.unescaped_coafile, log_printer)
         self.assertTrue(os.path.exists(tag_path))
         execute_coala(coala_ci.main, "coala-ci", 'docs',
                       "-S", "dtag=test_tag", "-c", self.coafile)

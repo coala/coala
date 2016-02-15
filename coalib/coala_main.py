@@ -91,7 +91,7 @@ def run_coala(log_printer=None,
                     log_printer)
 
         if dtag != "None":
-            delete_tagged_results(dtag, config_file)
+            delete_tagged_results(dtag, config_file, log_printer)
 
         if show_bears_:
             show_bears(local_bears, global_bears, show_all_bears)
@@ -125,7 +125,7 @@ def run_coala(log_printer=None,
                 did_nothing = False
 
             if tag != "None":
-                tag_results(tag, config_file, results)
+                tag_results(tag, config_file, results, log_printer)
 
         if did_nothing:
             nothing_done(log_printer)
