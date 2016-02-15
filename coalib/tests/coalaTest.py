@@ -27,3 +27,9 @@ class coalaTest(unittest.TestCase):
         self.assertIn("This file has 1 lines.",
                       output,
                       "The output should report count as 1 lines")
+
+    def test_did_nothing(self):
+        retval, output = execute_coala(coala.main, "coala", "-c", os.devnull,
+                                       "-S", "default.enabled=false")
+        self.assertEqual(retval, 0)
+        self.assertIn("No existent section was targeted or enabled", output)
