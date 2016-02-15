@@ -28,7 +28,7 @@ def get_tag_path(tag, project, log_printer):
     path = os.path.join(project, tag)
     hash = hashlib.sha224(path.encode()).hexdigest()
     tags_dir = get_tags_dir(log_printer)
-    if not tags_dir is None:
+    if tags_dir is not None:
         return os.path.join(tags_dir, hash)
     return None
 
@@ -47,7 +47,7 @@ def tag_results(tag, project, results, log_printer):
     if tag == "None":
         return
     tag_path = get_tag_path(tag, project, log_printer)
-    if not tag_path is None:
+    if tag_path is not None:
         with open(tag_path, 'wb+') as file:
             pickle.dump(results, file)
 
@@ -64,7 +64,7 @@ def load_tagged_results(tag, project, log_printer):
     if tag == "None":
         return None
     tag_path = get_tag_path(tag, project, log_printer)
-    if not tag_path is None:
+    if tag_path is not None:
         with open(tag_path, 'rb') as file:
             return pickle.load(file)
     return None
@@ -81,5 +81,5 @@ def delete_tagged_results(tag, project, log_printer):
     if tag == "None":
         return
     tag_path = get_tag_path(tag, project, log_printer)
-    if not tag_path is None and os.path.exists(tag_path):
+    if tag_path is not None and os.path.exists(tag_path):
         os.remove(tag_path)
