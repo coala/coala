@@ -40,12 +40,13 @@ class LintTest(unittest.TestCase):
         self.assertEqual(out[2].message, "Major message")
 
     def test_custom_regex(self):
-        self.uut.output_regex = (r'(?P<line>\d+)\.(?P<column>\d+)\|'
+        self.uut.output_regex = (r'(?P<origin>\w+)\|'
+                                 r'(?P<line>\d+)\.(?P<column>\d+)\|'
                                  r'(?P<end_line>\d+)\.(?P<end_column>\d+)\|'
                                  r'(?P<severity>\d+): (?P<message>.*)')
         self.uut.severity_map = {"I": RESULT_SEVERITY.INFO}
         out = list(self.uut.process_output(
-            ["1.0|2.3|0: Info message\n"],
+            ["info_msg|1.0|2.3|0: Info message\n"],
             'a/file.py',
             ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 1)
@@ -54,6 +55,7 @@ class LintTest(unittest.TestCase):
         self.assertEqual(out[0].affected_code[0].end.line, 2)
         self.assertEqual(out[0].affected_code[0].end.column, 3)
         self.assertEqual(out[0].severity, RESULT_SEVERITY.INFO)
+        self.assertEqual(out[0].origin, 'Lint (info_msg)')
 
     def test_valid_output(self):
         out = list(self.uut.process_output(

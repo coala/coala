@@ -49,6 +49,7 @@ class Lint(Bear):
                              end_column - The column where the issue ends.
                              severity - The severity of the issue.
                              message - The message of the result.
+                             origin - The origin of the issue.
                             This is not used if `gives_corrected` is set.
     :param diff_severity:   The severity to use for all results if
                             `gives_corrected` is set.
@@ -187,6 +188,10 @@ class Lint(Bear):
         for variable in ("line", "column", "end_line", "end_column"):
             if variable in groups and groups[variable]:
                 groups[variable] = int(groups[variable])
+
+        if "origin" in groups:
+            groups['origin'] = "{} ({})".format(str(self.__class__.__name__),
+                                                str(groups["origin"]))
 
         return Result.from_values(
             origin=groups.get("origin", self),
