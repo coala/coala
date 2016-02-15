@@ -28,7 +28,7 @@ def main(log_printer=None, section: Section=None):
             log_printer.warn("Couldn't delete... " + os.path.relpath(ofile))
 
     if not_deleted:
-        log_printer.warn(not_deleted + " .orig backup files could not be"
+        log_printer.warn(str(not_deleted) + " .orig backup files could not be"
                          " deleted, possibly because you lack the permission"
                          " to do so. coala may not be able to create"
                          " backup files when patches are applied.")
