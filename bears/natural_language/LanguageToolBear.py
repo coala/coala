@@ -1,3 +1,4 @@
+import shutil
 from guess_language import guess_language
 from language_check import LanguageTool, correct
 
@@ -35,6 +36,13 @@ def get_language_tool_results(filename, file_contents, locale):
 
 
 class LanguageToolBear(LocalBear):
+
+    @classmethod
+    def check_prerequisites(cls):
+        if shutil.which("java") is None:
+            return "java is not installed."
+        else:
+            return True
 
     def run(self,
             filename,
