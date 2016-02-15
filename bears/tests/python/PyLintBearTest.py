@@ -1,4 +1,5 @@
 import os
+import re
 from queue import Queue
 from shutil import which
 from unittest.case import skipIf
@@ -18,6 +19,9 @@ class PyLintBearTest(LocalBearTestHelper):
         self.test_file = os.path.join(os.path.dirname(__file__),
                                       "test_files",
                                       "pylint_test.py")
+        self.rc_file = os.path.join(os.path.dirname(__file__),
+                                    "test_files",
+                                    "pylint_config")
 
     def test_run(self):
         self.section.append(Setting("pylint_disable", ""))
@@ -43,4 +47,8 @@ class PyLintBearTest(LocalBearTestHelper):
         self.check_validity(self.uut, [], self.test_file, valid=False)
 
         self.section.append(Setting("pylint_cli_options", "--disable=all"))
+        self.check_validity(self.uut, [], self.test_file)
+
+    def test_rcfile(self):
+        self.section.append(Setting("pylint_rcfile", re.escape(self.rc_file)))
         self.check_validity(self.uut, [], self.test_file)
