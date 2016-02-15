@@ -68,24 +68,22 @@ def run_coala(log_printer=None,
             log_printer,
             autoapply=autoapply)
 
-        # Deleting all .orig files, so the latest files are up to date!
-        coala_delete_orig.main(log_printer, sections["default"])
-
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
         config_file = os.path.abspath(str(sections["default"].get("config")))
-
         show_all_bears = bool(sections['default'].get('show_all_bears', False))
         show_bears_ = bool(sections["default"].get("show_bears", "False"))
-        if show_all_bears:
-            show_bears_ = True
-            (local_bears,
-             global_bears) = collect_all_bears_from_sections(sections)
+
+        # Deleting all .orig files, so the latest files are up to date!
+        coala_delete_orig.main(log_printer, sections["default"])
 
         if dtag != "None":
             delete_tagged_results(dtag, config_file, log_printer)
 
-        if show_bears_:
+        if show_bears_ or show_all_bears:
+            if show_all_bears:
+                (local_bears,
+                 global_bears) = collect_all_bears_from_sections(sections)
             show_bears(local_bears, global_bears, show_all_bears)
             did_nothing = False
         else:
@@ -114,8 +112,7 @@ def run_coala(log_printer=None,
 
         if did_nothing:
             nothing_done(log_printer)
-
-        if yielded_unfixed_results:
+        elif yielded_unfixed_results:
             exitcode = 1
         elif yielded_results:
             exitcode = 5
