@@ -84,7 +84,8 @@ class ProcessingTest(unittest.TestCase):
          self.global_bears,
          targets) = gather_configuration(lambda *args: True,
                                          log_printer,
-                                         ["--config", re.escape(config_path)])
+                                         arg_list=["--config",
+                                                   re.escape(config_path)])
         self.assertEqual(len(self.local_bears["default"]), 1)
         self.assertEqual(len(self.global_bears["default"]), 1)
         self.assertEqual(targets, [])
