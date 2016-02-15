@@ -82,7 +82,8 @@ def run_coala(log_printer=None,
         if show_bears_ or show_all_bears:
             if show_all_bears:
                 (local_bears,
-                 global_bears) = collect_all_bears_from_sections(sections)
+                 global_bears) = collect_all_bears_from_sections(sections,
+                                                                 log_printer)
             show_bears(local_bears, global_bears, show_all_bears)
             did_nothing = False
         else:
