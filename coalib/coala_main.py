@@ -1,10 +1,9 @@
-from itertools import chain
 from pyprint.ConsolePrinter import ConsolePrinter
 import os
 
 from coalib import coala_delete_orig
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.processes.Processing import execute_section
+from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Exceptions import get_exitcode
 from coalib.collecting.Collectors import collect_all_bears_from_sections
@@ -102,19 +101,12 @@ def run_coala(log_printer=None,
                     local_bear_list=local_bears[section_name],
                     print_results=print_results,
                     log_printer=log_printer)
-                yielded_results = yielded_results or section_result[0]
+                yielded, yielded_unfixed, results[section_name] = (
+                    simplify_section_result(section_result))
 
-                results_for_section = []
-                for value in chain(section_result[1].values(),
-                                   section_result[2].values()):
-                    if value is None:
-                        continue
-
-                    for result in value:
-                        results_for_section.append(result)
-                yielded_unfixed_results = (yielded_unfixed_results or
-                                           len(results_for_section) > 0)
-                results[section_name] = results_for_section
+                yielded_results = yielded_results or yielded
+                yielded_unfixed_results = (
+                    yielded_unfixed_results or yielded_unfixed)
                 did_nothing = False
 
             if tag != "None":
