@@ -1,7 +1,7 @@
 import os
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.parsing.Globbing import glob
+from coalib.parsing import Globbing
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
@@ -15,7 +15,8 @@ def main(log_printer=None, section: Section=None):
         log_printer.err("Can only delete .orig files if .coafile is found")
         return 255
 
-    orig_files = glob(os.path.abspath(os.path.join(start_path, '**', '*.orig')))
+    orig_files = Globbing.glob(os.path.abspath(
+        os.path.join(start_path, '**', '*.orig')))
 
     not_deleted = 0
     for ofile in orig_files:
