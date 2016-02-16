@@ -1,4 +1,5 @@
 import shutil
+import os
 
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.misc.Shell import run_shell_command
@@ -38,6 +39,10 @@ class GitCommitBear(GlobalBear):
         :param allow_empty_commit_message: Whether empty commit messages are
                                            allowed or not.
         """
+        config_dir = self.get_config_dir()
+        old_dir = os.getcwd()
+        if config_dir:
+            os.chdir(config_dir)
         stdout, stderr = run_shell_command(self._git_command)
 
         if stderr:
@@ -55,6 +60,8 @@ class GitCommitBear(GlobalBear):
 
         yield from self.check_shortlog(shortlog_length, stdout[0])
         yield from self.check_body(body_line_length, force_body, stdout[1:])
+
+        os.chdir(old_dir)
 
     def check_shortlog(self, shortlog_length, shortlog):
         """

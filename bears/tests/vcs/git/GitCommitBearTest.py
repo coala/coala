@@ -5,11 +5,14 @@ import platform
 import stat
 import shutil
 import unittest
+import re
 
 from coalib.misc.Shell import run_shell_command
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 from bears.vcs.git.GitCommitBear import GitCommitBear
 from bears.tests.BearTestHelper import generate_skip_decorator
+from coalib.settings.ConfigurationGathering import get_config_directory
 
 
 @generate_skip_decorator(GitCommitBear)
@@ -42,7 +45,8 @@ class GitCommitBearTest(unittest.TestCase):
 
     def setUp(self):
         self.msg_queue = Queue()
-        self.uut = GitCommitBear(None, Section(""), self.msg_queue)
+        self.section = Section("")
+        self.uut = GitCommitBear(None, self.section, self.msg_queue)
 
         self._old_cwd = os.getcwd()
         self.gitdir = mkdtemp()
@@ -146,3 +150,20 @@ class GitCommitBearTest(unittest.TestCase):
         self.assertEqual(self.run_uut(body_line_length=41),
                          ["Body of HEAD commit contains too long lines."])
         self.assertTrue(self.msg_queue.empty())
+
+    def test_different_path(self):
+        no_git_dir = mkdtemp()
+        self.git_commit("A shortlog that is too long is not good for history")
+        os.chdir(no_git_dir)
+        # When section doesn't have a config setting
+        self.assertEqual(self.run_uut(), [])
+        git_error = self.msg_queue.get().message
+        self.assertEqual(git_error[:4], "git:")
+        # when section does have a config setting
+        self.section.append(Setting("config", re.escape(self.gitdir)))
+        self.assertEqual(self.run_uut(),
+                         ["Shortlog of HEAD commit is too long."])
+        self.assertEqual(get_config_directory(self.section),
+                         self.gitdir)
+        os.chdir(self.gitdir)
+        os.rmdir(no_git_dir)
