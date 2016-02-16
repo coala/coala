@@ -1,8 +1,10 @@
+import os
 import unittest
 
-from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.c_languages.IndentBear import IndentBear
+from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.bearlib.abstractions.Lint import Lint
+from coalib.misc.Shell import escape_path_argument
 from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.Section import Section
@@ -100,4 +102,15 @@ class LintTest(unittest.TestCase):
 
         self.assertEqual(
             self.uut._create_command(config_file="configfile").strip(),
-            "echo -c configfile")
+            "echo -c " + escape_path_argument("configfile"))
+
+    def test_config_file_generator(self):
+        self.uut.executable = "echo"
+        self.uut.config_file = lambda: ["config line1"]
+        config_filename = self.uut.generate_config_file()
+        self.assertTrue(os.path.isfile(config_filename))
+        os.remove(config_filename)
+
+        # To complete coverage of closing the config file and check if any
+        # errors are thrown there.
+        self.uut.lint("filename")
