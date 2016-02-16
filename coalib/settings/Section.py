@@ -2,6 +2,7 @@ import copy
 import os
 from collections import OrderedDict
 
+from coalib.collecting.Collectors import collect_registered_bears_dirs
 from coalib.misc import Constants
 from coalib.misc.Decorators import enforce_signature, generate_repr
 from coalib.misc.DictUtilities import update_ordered_dict_key
@@ -63,7 +64,7 @@ class Section:
     def bear_dirs(self):
         bear_dirs = path_list(self.get("bear_dirs", ""))
         bear_dirs.append(os.path.join(Constants.coalib_bears_root, "**"))
-
+        bear_dirs += collect_registered_bears_dirs('coalabears')
         return bear_dirs
 
     def is_enabled(self, targets):

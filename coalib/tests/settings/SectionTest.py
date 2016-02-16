@@ -173,11 +173,8 @@ class SectionTest(unittest.TestCase):
         self.assertEqual(str(section),
                          "section {key2 : 'value12', key4 : 'value14'}")
 
-    def test_bear_dirs_empty(self):
-        section = Section("section", None)
-        self.assertEqual(len(section.bear_dirs()), 1)
-
     def test_bear_dirs(self):
         section = Section("section", None)
+        empty_bear_dirs_len = len(section.bear_dirs())
         section.append(Setting("bear_dirs", "test1, test2"))
-        self.assertEqual(len(section.bear_dirs()), 3)
+        self.assertEqual(len(section.bear_dirs()), empty_bear_dirs_len + 2)
