@@ -21,6 +21,7 @@ Welcome to the coala documentation!
    Glob Patterns <Users/Glob_Patterns>
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>
+   Git Hooks <Users/Git_Hooks>
 
 .. toctree::
    :caption: Tutorials
