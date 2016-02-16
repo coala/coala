@@ -38,14 +38,17 @@ class JSONFormatBear(Lint, LocalBear):
             filename,
             file,
             json_sort: bool=False,
-            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH):
+            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH,
+            keep_unicode: bool=False):
         """
         Raises issues for any deviations from the pretty-printed JSON.
 
-        :param json_sort: Whether or not keys should be sorted.
-        :param tab_width: Number of spaces to indent.
+        :param json_sort:    Whether or not keys should be sorted.
+        :param tab_width:    Number of spaces to indent.
+        :param keep_unicode: Wether or not to escape unicode values using ASCII.
         """
         return self.lint(filename,
                          file,
                          sort_keys=json_sort,
-                         indent=tab_width)
+                         indent=tab_width,
+                         ensure_ascii=not keep_unicode)
