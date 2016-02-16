@@ -205,7 +205,7 @@ to keep our options. For that we will import ``typed_list`` like so
 (which the user will pass to the Bear as a setting) into a list of
 items and afterwards will apply a conversion to type ``item_type`` to each
 item in the list (you can also use basic types like ``int``, ``bool``, etc.
-see :doc:`Writing Bears <../Writing_Bears>`)
+see :doc:`Writing Bears <Writing_Bears>`)
 Next, we have to add our setting as a parameter for the ``run()`` method
 of our bear.
 We will give the param a sugestive name like ``htmllint_ignore``.
