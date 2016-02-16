@@ -166,3 +166,9 @@ class BearTest(unittest.TestCase):
                            "The bear BearWithPrerequisites does not fulfill "
                            "all requirements. Just because I want to.")
         self.assertTrue(self.queue.empty())
+
+    def test_get_config_dir(self):
+        section = Section("default")
+        section.append(Setting("config", "/path/to/dir/config"))
+        uut = TestBear(section, None)
+        self.assertEqual(uut.get_config_dir(), "/path/to/dir")

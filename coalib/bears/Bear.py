@@ -5,6 +5,7 @@ from coalib.misc.Decorators import enforce_signature
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
+from coalib.settings.ConfigurationGathering import get_config_directory
 
 
 class Bear(Printer, LogPrinter):
@@ -180,3 +181,11 @@ class Bear(Printer, LogPrinter):
                  that serves a more detailed description of what's missing.
         """
         return True
+
+    def get_config_dir(self):
+        """
+        Gives the directory where the configuration file is
+
+        :return: Directory of the config file
+        """
+        return get_config_directory(self.section)
