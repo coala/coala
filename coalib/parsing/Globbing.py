@@ -172,13 +172,13 @@ def translate(pattern):
     return regex + '\\Z(?ms)'
 
 
-def fnmatch(name, pattern):
+def fnmatch(name, patterns):
     """
     Tests whether name matches pattern
 
-    :param name:    File or directory name
-    :param pattern: Glob string with wildcards
-    :return:        Boolean: Whether or not name is matched by pattern
+    :param name:     File or directory name
+    :param patterns: Glob string with wildcards or list of globs
+    :return:         Boolean: Whether or not name is matched by pattern
 
     Glob Syntax:
     '[seq]':         Matches any character in seq. Cannot be empty.
@@ -191,13 +191,19 @@ def fnmatch(name, pattern):
     '*':             Matches everything but os.sep.
     '**':            Matches everything.
     """
+    if isinstance(patterns, str):
+        patterns = [patterns]
+    if len(patterns) == 0:
+        return True
+
     name = os.path.normcase(name)
-    for pat in _iter_alternatives(pattern):
-        pat = os.path.expanduser(pat)
-        pat = os.path.normcase(pat)
-        match = re.compile(translate(pat)).match
-        if match(name) is not None:
-            return True
+    for pattern in patterns:
+        for pat in _iter_alternatives(pattern):
+            pat = os.path.expanduser(pat)
+            pat = os.path.normcase(pat)
+            match = re.compile(translate(pat)).match
+            if match(name) is not None:
+                return True
     return False
 
 

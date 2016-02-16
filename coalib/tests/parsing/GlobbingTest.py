@@ -171,6 +171,17 @@ class FnmatchTest(unittest.TestCase):
         non_matches = ["aXbX"]
         self._test_fnmatch(pattern, matches, non_matches)
 
+    def test_multiple_patterns(self):
+        pattern = ["a**b", "a**c"]
+        matches = ["axb", "axc"]
+        non_matches = ["aXbX", "aXcX"]
+        self._test_fnmatch(pattern, matches, non_matches)
+
+        pattern = []
+        matches = ["anything", "anything_else"]
+        non_matches = []
+        self._test_fnmatch(pattern, matches, non_matches)
+
 
 class GlobTest(unittest.TestCase):
 
