@@ -1,15 +1,13 @@
 import os
 import re
 import shutil
-import subprocess
-import sys
 import tempfile
 
-from coalib.misc.Shell import escape_path_argument
+from coalib.bears.Bear import Bear
+from coalib.misc.Shell import escape_path_argument, run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.bears.Bear import Bear
 
 
 def is_binary_present(cls):
@@ -93,34 +91,22 @@ class Lint(Bear):
         assert ((self.use_stdin and file is not None) or
                 (not self.use_stdin and filename is not None))
 
-        stdin_file = tempfile.TemporaryFile()
-        stdout_file = tempfile.TemporaryFile()
-        stderr_file = tempfile.TemporaryFile()
-
         config_file = self.generate_config_file()
         command = self._create_command(filename=filename,
                                        config_file=config_file)
 
-        if self.use_stdin:
-            self._write(file, stdin_file, sys.stdin.encoding)
-        process = subprocess.Popen(command,
-                                   shell=True,
-                                   stdin=stdin_file,
-                                   stdout=stdout_file,
-                                   stderr=stderr_file,
-                                   universal_newlines=True)
-        process.wait()
-        stdout_output = self._read(stdout_file, sys.stdout.encoding)
-        stderr_output = self._read(stderr_file, sys.stderr.encoding)
+        stdin_input = "".join(file) if self.use_stdin else None
+        stdout_output, stderr_output = run_shell_command(command,
+                                                         stdin=stdin_input)
+        stdout_output = stdout_output.splitlines(keepends=True)
+        stderr_output = stderr_output.splitlines(keepends=True)
         results_output = stderr_output if self.use_stderr else stdout_output
         results = self.process_output(results_output, filename, file)
-        for file in (stdin_file, stdout_file, stderr_file):
-            file.close()
-        if config_file:
-            os.remove(config_file)
-
         if not self.use_stderr:
             self.__print_errors(stderr_output)
+
+        if config_file:
+            os.remove(config_file)
 
         return results
 
@@ -162,17 +148,6 @@ class Lint(Bear):
         for key in ("filename", "config_file"):
             kwargs[key] = escape_path_argument(kwargs.get(key, "") or "")
         return command.format(**kwargs)
-
-    @staticmethod
-    def _read(file, encoding):
-        file.seek(0)
-        return [line.decode(encoding or 'UTF-8', errors="replace")
-                for line in file.readlines()]
-
-    @staticmethod
-    def _write(file_contents, file, encoding):
-        file.write(bytes("".join(file_contents), encoding or 'UTF-8'))
-        file.seek(0)
 
     def __print_errors(self, errors):
         for line in filter(lambda error: bool(error.strip()), errors):
