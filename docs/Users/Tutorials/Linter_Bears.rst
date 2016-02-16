@@ -51,7 +51,7 @@ We use ``executable`` to specify the linter executable. In our case it would be
 
 The ``output_regex`` is used to group parts of the output (such as ``lines``,
 ``columns``, ``severity`` and ``message``) so it can be used by the Lint
-class to yield Results. (more on communicating with the user :doc:`Writing Bears <../Writing_Bears>`)
+class to yield Results. (more on communicating with the user :doc:`Writing Bears <Writing_Bears>`)
 
 In order to figure out the ``output_regex`` we have to first see how the
 linter output looks. I will use this file as ``sample.html``
@@ -144,7 +144,7 @@ could look like this
             "Error": RESULT_SEVERITY.MAJOR
         }
 
-As with every other bear (see :doc:`Writing Bears <../Writing_Bears>`) we have
+As with every other bear (see :doc:`Writing Bears <Writing_Bears>`) we have
 to define our run method.
 
 ::
@@ -193,7 +193,7 @@ options. For that we will import ``typed_list`` like so
 ``typed_list(item_type)`` is a function that converts the given input (which the user will
 pass to the Bear as a setting) into a list of items and afterwards will apply a
 conversion to type ``item_type`` to each item in the list (you can also use basic
-types like ``int``, ``bool``, etc. see :doc:`Writing Bears <../Writing_Bears>`)
+types like ``int``, ``bool``, etc. see :doc:`Writing Bears <Writing_Bears>`)
 Next, we have to add our setting as a parameter for the ``run()`` method of our bear.
 We will give the param a sugestive name like ``htmllint_ignore``.
 
