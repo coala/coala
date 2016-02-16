@@ -3,7 +3,7 @@ The .coafile Specification
 
 This document gives a short introduction into the specification of a
 coala configuration file. It is meant to be rather factual, if you wish
-to learn by example, please take a look at the :doc:`Tutorial`.
+to learn by example, please take a look at the :doc:`Tutorials/Tutorial`.
 
 Naming, Scope and Location
 --------------------------

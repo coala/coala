@@ -17,12 +17,18 @@ Welcome to the coala documentation!
    :hidden:
    
    Installation <Users/Install>
-   Tutorial <Users/Tutorial>
-   Writing Bears <Users/Writing_Bears>
    coafile Specification <Users/coafile>
    Glob Patterns <Users/Glob_Patterns>
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>
+
+.. toctree::
+   :caption: Tutorials
+   :hidden:
+   
+   First Step <Users/Tutorials/Tutorial>
+   Writing Bears <Users/Tutorials/Writing_Bears>
+   Linter Bears <Users/Tutorials/Linter_Bears>
 
 .. toctree::
    :caption: Getting Involved
@@ -83,7 +89,7 @@ One could say coala unites all language independent parts of a linter
 and is arbitrarily extensible.
 
 To get started, take a look at our :doc:`Installation
-Instructions <Users/Install>` and the :doc:`Tutorial <Users/Tutorial>`.
+Instructions <Users/Install>` and the :doc:`Tutorial <Users/Tutorials/Tutorial>`.
 
 What do I get?
 --------------
@@ -108,7 +114,7 @@ coala automates the organization of settings, user interaction and
 execution parallelization. You shouldn't need to care about anything
 else than just writing your algorithm!
 
-See :doc:`Writing Bears <Users/Writing_Bears>` for more information on
+See :doc:`Writing Bears <Users/Tutorials/Writing_Bears>` for more information on
 this.
 
 Also, coala provides an external API using the dbus message protocol.
