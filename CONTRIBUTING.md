@@ -2,7 +2,7 @@
 
 Welcome to coala! The following guidelines will give you a short overview over how we
 handle issues and PRs in this repository. coala is maintained by a growing community
-and newcomers are always welcome! 
+and newcomers are always welcome!
 
 We appreciate all valuable contributions - bug reports, documentation and design
 enhancements issues as well as pull Requests to make coala more convenient, functional
