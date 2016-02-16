@@ -37,17 +37,19 @@ def icollect(file_paths):
     Evaluate globs in file paths and return all matching files.
 
     :param file_paths:  file path or list of such that can include globs
-    :return:            iterator that yields paths of all matching files
+    :return:            iterator that yields tuple of path of a matching file,
+                        the glob where it was found
     """
     if isinstance(file_paths, str):
         file_paths = [file_paths]
 
     for file_path in file_paths:
         for match in iglob(file_path):
-            yield match
+            yield match, file_path
 
 
-def collect_files(file_paths, ignored_file_paths=None, limit_file_paths=None):
+def collect_files(file_paths, log_printer, ignored_file_paths=None,
+                  limit_file_paths=None):
     """
     Evaluate globs in file paths and return all matching files
 
@@ -63,11 +65,20 @@ def collect_files(file_paths, ignored_file_paths=None, limit_file_paths=None):
                      if limit_file_paths else lambda fname: True)
 
     valid_files = list(filter(
-        lambda fname: (os.path.isfile(fname) and
-                       not ignore_fnmatch(fname) and limit_fnmatch(fname)),
+        lambda fname: os.path.isfile(fname[0]) and not ignore_fnmatch(fname[0]),
         icollect(file_paths)))
 
-    return valid_files
+    # Find globs that gave no files and warn the user
+    if valid_files:
+        collected_files, file_globs_with_files = zip(*valid_files)
+    else:
+        collected_files, file_globs_with_files = [], []
+    empty_file_globs = set(file_paths) - set(file_globs_with_files)
+    for glob in empty_file_globs:
+        log_printer.warn("No files matching '{}' were found.".format(glob))
+
+    limited_files = list(filter(limit_fnmatch, collected_files))
+    return limited_files
 
 
 def collect_dirs(dir_paths, ignored_dir_paths=None):
@@ -81,9 +92,13 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
     ignore_fnmatch = (functools.partial(fnmatch, patterns=ignored_dir_paths)
                       if ignored_dir_paths else lambda fname: False)
     valid_dirs = list(filter(
-        lambda fname: os.path.isdir(fname) and not ignore_fnmatch(fname),
+        lambda fname: os.path.isdir(fname[0]) and not ignore_fnmatch(fname[0]),
         icollect(dir_paths)))
-    return valid_dirs
+    if valid_dirs:
+        collected_dirs, dummy = zip(*valid_dirs)
+        return list(collected_dirs)
+    else:
+        return []
 
 
 @yield_once
@@ -98,7 +113,8 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
     :return:            iterator that yields a tuple with bear class and
                         which bear_glob was used to find that bear class.
     """
-    for bear_dir in filter(os.path.isdir, icollect(bear_dirs)):
+    for bear_dir, dir_glob in filter(lambda x: os.path.isdir(x[0]),
+                                     icollect(bear_dirs)):
         for bear_glob in bear_globs:
             for matching_file in iglob(
                     os.path.join(bear_dir, bear_glob + '.py')):

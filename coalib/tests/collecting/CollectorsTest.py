@@ -17,18 +17,25 @@ class CollectFilesTest(unittest.TestCase):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
+        self.log_printer = LogPrinter(ConsolePrinter())
 
     def test_file_empty(self):
         self.assertRaises(TypeError, collect_files)
 
     def test_file_invalid(self):
-        self.assertEqual(collect_files(["invalid_path"]), [])
+        with retrieve_stdout() as sio:
+            self.assertEqual(collect_files(["invalid_path"],
+                                           self.log_printer), [])
+            self.assertRegex(sio.getvalue(),
+                             ".*\\[WARNING\\].*No files matching "
+                             "'invalid_path' were found.\n")
 
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
                                                      "others",
                                                      "*",
-                                                     "*2.py")]),
+                                                     "*2.py")],
+                                       self.log_printer),
                          [os.path.normcase(os.path.join(
                              self.collectors_test_dir,
                              "others",
@@ -39,7 +46,8 @@ class CollectFilesTest(unittest.TestCase):
         self.assertEqual(collect_files(os.path.join(self.collectors_test_dir,
                                                     "others",
                                                     "*",
-                                                    "*2.py")),
+                                                    "*2.py"),
+                                       self.log_printer),
                          [os.path.normcase(os.path.join(
                              self.collectors_test_dir,
                              "others",
@@ -55,10 +63,12 @@ class CollectFilesTest(unittest.TestCase):
                                                      "others",
                                                      "*",
                                                      "*2.py")],
-                                       [os.path.join(self.collectors_test_dir,
-                                                     "others",
-                                                     "py_files",
-                                                     "file2.py")]),
+                                       self.log_printer,
+                                       ignored_file_paths=[os.path.join(
+                                           self.collectors_test_dir,
+                                           "others",
+                                           "py_files",
+                                           "file2.py")]),
                          [])
 
     def test_limited(self):
@@ -67,6 +77,7 @@ class CollectFilesTest(unittest.TestCase):
                                         "others",
                                         "*",
                                         "*py")],
+                          self.log_printer,
                           limit_file_paths=[os.path.join(
                                                 self.collectors_test_dir,
                                                 "others",

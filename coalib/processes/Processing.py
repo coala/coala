@@ -315,6 +315,7 @@ def instantiate_processes(section,
     """
     filename_list = collect_files(
         path_list(section.get('files', "")),
+        log_printer,
         ignored_file_paths=path_list(section.get('ignore', "")),
         limit_file_paths=path_list(section.get('limit_files', "")))
     file_dict = get_file_dict(filename_list, log_printer)
