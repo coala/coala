@@ -1,3 +1,5 @@
+import collections
+
 from coalib.misc.Decorators import generate_repr
 
 
@@ -63,8 +65,9 @@ class LineDiff:
 
     @add_after.setter
     def add_after(self, value):
-        if value is not False and not isinstance(value, list):
+        if value is not False and not isinstance(value, collections.Iterable):
             raise TypeError(
                 "add_after must be False or a list of lines to append.")
-
+        if isinstance(value, collections.Iterable):
+            value = list(value)
         self._add_after = value if value != [] else False

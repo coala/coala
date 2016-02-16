@@ -20,6 +20,7 @@ class LineDiffTest(unittest.TestCase):
         self.assertEqual(LineDiff(delete=True).delete, True)
         self.assertEqual(LineDiff(add_after=[]).add_after, False)
         self.assertEqual(LineDiff(add_after=["t"]).add_after, ["t"])
+        self.assertEqual(LineDiff(add_after=("t",)).add_after, ["t"])
 
         uut = LineDiff()
         uut.delete = True
