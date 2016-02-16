@@ -1,3 +1,4 @@
+import functools
 import os
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
@@ -55,9 +56,17 @@ def collect_files(file_paths, ignored_file_paths=None, limit_file_paths=None):
     :param limit_file_paths:   list of globs that the files are limited to
     :return:                   list of paths of all matching files
     """
-    valid_files = list(filter(os.path.isfile, icollect(file_paths)))
-    valid_files = remove_ignored(valid_files, ignored_file_paths or [])
-    valid_files = limit_paths(valid_files, limit_file_paths or [])
+    ignore_fnmatch = (functools.partial(fnmatch, patterns=ignored_file_paths)
+                      if ignored_file_paths else lambda fname: False)
+
+    limit_fnmatch = (functools.partial(fnmatch, patterns=limit_file_paths)
+                     if limit_file_paths else lambda fname: True)
+
+    valid_files = list(filter(
+        lambda fname: (os.path.isfile(fname) and
+                       not ignore_fnmatch(fname) and limit_fnmatch(fname)),
+        icollect(file_paths)))
+
     return valid_files
 
 
@@ -69,8 +78,12 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
     :param ignored_dir_paths: list of globs that match to-be-ignored dirs
     :return:                  list of paths of all matching directories
     """
-    valid_dirs = list(filter(os.path.isdir, icollect(dir_paths)))
-    return remove_ignored(valid_dirs, ignored_dir_paths or [])
+    ignore_fnmatch = (functools.partial(fnmatch, patterns=ignored_dir_paths)
+                      if ignored_dir_paths else lambda fname: False)
+    valid_dirs = list(filter(
+        lambda fname: os.path.isdir(fname) and not ignore_fnmatch(fname),
+        icollect(dir_paths)))
+    return valid_dirs
 
 
 @yield_once
@@ -145,43 +158,3 @@ def collect_all_bears_from_sections(sections, log_printer):
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
             log_printer)
     return local_bears, global_bears
-
-
-def remove_ignored(file_paths, ignored_globs):
-    """
-    Removes file paths from list if they are ignored.
-
-    :param file_paths:    file path string or list of such
-    :param ignored_globs: list of globs that match to-be-ignored file paths
-    :return:              list without those items that should be ignored
-    """
-    file_paths = list(set(file_paths))
-    reduced_list = file_paths[:]
-
-    for file_path in file_paths:
-        for ignored_glob in ignored_globs:
-            if fnmatch(file_path, ignored_glob):
-                reduced_list.remove(file_path)
-                break
-
-    return reduced_list
-
-
-def limit_paths(file_paths, limit_globs):
-    """
-    Limits file paths from list based on the given globs.
-
-    :param file_paths:  file path string or list of such
-    :param limit_globs: list of globs to limit the file paths by
-    :return:            list with only those items that in the limited globs
-    """
-    file_paths = list(set(file_paths))
-    limited_list = file_paths[:]
-
-    for file_path in file_paths:
-        for limit_glob in limit_globs:
-            if not fnmatch(file_path, limit_glob):
-                limited_list.remove(file_path)
-                break
-
-    return limited_list
