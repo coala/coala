@@ -11,7 +11,8 @@ from coalib.misc.Shell import escape_path_argument
 class PyLintBear(LocalBear, Lint):
     executable = 'pylint'
     arguments = ('--reports=n --persistent=n '
-                 '--msg-template="{line}.{column}|{C}: {msg_id} - {msg}"')
+                 '--msg-template="{{line}}.{{column}}|{{C}}: '
+                 '{{msg_id}} - {{msg}}"')
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)'
                               r'\|(?P<severity>[WFECRI]): (?P<message>.*)')
     severity_map = {

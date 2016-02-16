@@ -39,7 +39,9 @@ class Lint(Bear):
     :param executable:      The executable to run the linter.
     :param arguments:       The arguments to supply to the linter, such
                             that the file name to be analyzed can be
-                            appended to the end.
+                            appended to the end. Note that we use .format()
+                            on the arguments - so, `{abc}` needs to be given
+                            as `{{abc}}`.
     :param output_regex:    The regex which will match the output of the linter
                             to get results. This regex should give out the
                             following variables:
@@ -90,7 +92,7 @@ class Lint(Bear):
         stdout_file = tempfile.TemporaryFile()
         stderr_file = tempfile.TemporaryFile()
 
-        command = self._create_command(filename)
+        command = self._create_command(filename=filename)
 
         if self.use_stdin:
             self._write(file, stdin_file, sys.stdin.encoding)
@@ -146,11 +148,11 @@ class Lint(Bear):
             groups["severity"] = self.severity_map[groups["severity"]]
         return groups
 
-    def _create_command(self, filename):
+    def _create_command(self, **kwargs):
         command = self.executable + ' ' + self.arguments
         if not self.use_stdin:
-            command += ' ' + escape_path_argument(filename)
-        return command
+            command += ' ' + escape_path_argument(kwargs.get('filename', ''))
+        return command.format(**kwargs)
 
     @staticmethod
     def _read(file, encoding):

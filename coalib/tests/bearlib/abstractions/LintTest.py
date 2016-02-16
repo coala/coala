@@ -93,3 +93,11 @@ class LintTest(unittest.TestCase):
         self.assertTrue(Lint.check_prerequisites())
 
         Lint.executable = old_binary
+
+    def test_config_file_generator(self):
+        self.uut.executable = "echo"
+        self.uut.arguments = "-c {config_file}"
+
+        self.assertEqual(
+            self.uut._create_command(config_file="configfile").strip(),
+            "echo -c configfile")
