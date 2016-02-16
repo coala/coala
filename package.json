@@ -1,10 +1,10 @@
 {
   "dependencies": {
+    "alex": "~2.0.1",
+    "coffeelint": "~1.14.2",
+    "csslint": "~0.10.0",
+    "dockerfile_lint": "~0.0.9",
     "jshint": "~2.9.1",
-    "alex" : "~2.0.1",
-    "remark": "~3.2.3",
-    "dockerfile_lint":"~0.0.9",
-    "csslint" : "~0.10.0",
-    "coffeelint" : "~1.14.2"
+    "remark": "~3.2.3"
   }
 }
