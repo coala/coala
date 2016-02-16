@@ -77,7 +77,7 @@ class LintTest(unittest.TestCase):
         input_file = ["int main(){return 0;}"]
         out = self.uut.lint(file=input_file)
         self.assertEqual(out,
-                         ['int\n', 'main ()\n', '{\n', '  return 0;\n', '}\n'])
+                         ('int\n', 'main ()\n', '{\n', '  return 0;\n', '}\n'))
 
     def test_missing_binary(self):
         old_binary = Lint.executable

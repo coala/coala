@@ -16,9 +16,9 @@ class MatlabIndentationBear(LocalBear):
 
         :param tab_width: Number of spaces per indentation level.
         """
-        new_file = list(self.reindent(file, tab_width))
+        new_file = tuple(self.reindent(file, tab_width))
 
-        if new_file != file:
+        if new_file != tuple(file):
             wholediff = Diff.from_string_arrays(file, new_file)
             for diff in wholediff.split_diff():
                 yield Result(

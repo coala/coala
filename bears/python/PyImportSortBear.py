@@ -35,14 +35,15 @@ class PyImportSortBear(LocalBear):
                                           `multi_line_output` setting.
         """
         indent = "Tab" if use_spaces == False else tab_width
-        new_file = SortImports(
+        new_file = tuple(SortImports(
             file_contents=''.join(file),
             line_length=max_line_length,
             indent=indent,
             multi_line_output=isort_multi_line_output,
             use_parentheses=use_parentheses_in_import,
-            length_sort=sort_imports_by_length).output.splitlines(True)
-        if new_file != file:
+            length_sort=sort_imports_by_length).output.splitlines(True))
+
+        if new_file != tuple(file):
             diff = Diff.from_string_arrays(file, new_file)
             yield Result(self,
                          "Imports can be sorted.",

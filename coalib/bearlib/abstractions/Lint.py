@@ -98,8 +98,8 @@ class Lint(Bear):
         stdin_input = "".join(file) if self.use_stdin else None
         stdout_output, stderr_output = run_shell_command(command,
                                                          stdin=stdin_input)
-        stdout_output = stdout_output.splitlines(keepends=True)
-        stderr_output = stderr_output.splitlines(keepends=True)
+        stdout_output = tuple(stdout_output.splitlines(keepends=True))
+        stderr_output = tuple(stderr_output.splitlines(keepends=True))
         results_output = stderr_output if self.use_stderr else stdout_output
         results = self.process_output(results_output, filename, file)
         if not self.use_stderr:
@@ -155,7 +155,7 @@ class Lint(Bear):
 
     @staticmethod
     def __yield_diffs(file, new_file):
-        if new_file != file:
+        if tuple(new_file) != tuple(file):
             wholediff = Diff.from_string_arrays(file, new_file)
 
             for diff in wholediff.split_diff():
