@@ -1,8 +1,9 @@
 import difflib
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
+from coalib.results.result_actions.ResultAction import ResultAction
 
 
 def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):

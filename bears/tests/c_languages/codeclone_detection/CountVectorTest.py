@@ -1,6 +1,6 @@
+import unittest
 from math import sqrt
 
-import unittest
 from bears.c_languages.codeclone_detection.CountVector import CountVector
 
 

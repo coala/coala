@@ -1,12 +1,12 @@
-import datetime
 import argparse
+import datetime
 import unittest
-from setuptools.dist import Distribution
 from distutils.errors import DistutilsOptionError
 
-from coalib.misc.BuildManPage import ManPageFormatter, BuildManPage
-from coalib.misc.ContextManagers import make_temp
+from setuptools.dist import Distribution
 
+from coalib.misc.BuildManPage import BuildManPage, ManPageFormatter
+from coalib.misc.ContextManagers import make_temp
 
 app_name = "name"
 app_description = ("short description " * 2).strip()

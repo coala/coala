@@ -1,11 +1,11 @@
 import multiprocessing
 import unittest
 
-from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
-from coalib.processes.communication.LogMessage import LogMessage
 from coalib.bears.Bear import Bear
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.processes.communication.LogMessage import LogMessage
+from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 class TestBear(Bear):

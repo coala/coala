@@ -1,9 +1,8 @@
 import subprocess
 
 from coalib.results.Diff import Diff
-from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.Result import Result
-
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 
 EDITOR_ARGS = {
     "subl": "--wait",

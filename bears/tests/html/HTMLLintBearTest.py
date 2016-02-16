@@ -1,7 +1,6 @@
 from bears.html.HTMLLintBear import HTMLLintBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 test_file = """
 <html>
   <body>

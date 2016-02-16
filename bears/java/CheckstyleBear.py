@@ -1,5 +1,5 @@
 import re
-from os.path import dirname, abspath, join
+from os.path import abspath, dirname, join
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear

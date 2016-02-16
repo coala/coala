@@ -1,18 +1,18 @@
-from queue import Queue
-from tempfile import mkdtemp
 import os
 import platform
-import stat
-import shutil
-import unittest
 import re
+import shutil
+import stat
+import unittest
+from queue import Queue
+from tempfile import mkdtemp
 
+from bears.tests.BearTestHelper import generate_skip_decorator
+from bears.vcs.git.GitCommitBear import GitCommitBear
 from coalib.misc.Shell import run_shell_command
+from coalib.settings.ConfigurationGathering import get_config_directory
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-from bears.vcs.git.GitCommitBear import GitCommitBear
-from bears.tests.BearTestHelper import generate_skip_decorator
-from coalib.settings.ConfigurationGathering import get_config_directory
 
 
 @generate_skip_decorator(GitCommitBear)

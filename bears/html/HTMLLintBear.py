@@ -2,8 +2,8 @@ import re
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.settings.Setting import typed_list
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.settings.Setting import typed_list
 
 
 class HTMLLintBear(LocalBear, Lint):

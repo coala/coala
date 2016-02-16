@@ -1,12 +1,12 @@
 import queue
 import unittest
 
+from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.ContextManagers import prepare_file
 from coalib.results.Result import Result
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-from bears.tests.BearTestHelper import generate_skip_decorator
 
 
 def execute_bear(bear, *args, **kwargs):

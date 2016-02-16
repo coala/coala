@@ -1,8 +1,8 @@
-from os.path import abspath
 import unittest
+from os.path import abspath
 
-from coalib.results.Result import Result, RESULT_SEVERITY
 from coalib.results.Diff import Diff
+from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.SourceRange import SourceRange
 
 

@@ -1,12 +1,12 @@
-import sys
-import os
-import unittest
-import re
 import json
+import os
+import re
+import sys
+import unittest
 
 from coalib import coala_json
-from coalib.tests.TestUtilities import execute_coala
 from coalib.misc.ContextManagers import prepare_file
+from coalib.tests.TestUtilities import execute_coala
 
 
 class coalaJSONTest(unittest.TestCase):

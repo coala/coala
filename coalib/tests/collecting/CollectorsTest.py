@@ -1,13 +1,12 @@
 import os
 import unittest
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.collecting.Collectors import (collect_files,
-                                          collect_dirs,
-                                          collect_bears,
-                                          collect_all_bears_from_sections)
+from coalib.collecting.Collectors import (
+    collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files)
 from coalib.misc.ContextManagers import retrieve_stdout
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
 
 

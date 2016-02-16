@@ -1,15 +1,16 @@
 import os
-import dbus.service
 
-from coalib.settings.ConfigurationGathering import find_user_config
-from coalib.settings.ConfigurationGathering import gather_configuration
-from coalib.processes.Processing import execute_section
-from coalib.parsing.Globbing import fnmatch
-from coalib.settings.Setting import path_list
-from coalib.results.HiddenResult import HiddenResult
-from coalib.output.printers.ListLogPrinter import ListLogPrinter
-from coalib.output.Interactions import fail_acquire_settings
+import dbus.service  # Ignore PyImportSortBear
+
 from coalib.misc.Exceptions import get_exitcode
+from coalib.output.Interactions import fail_acquire_settings
+from coalib.output.printers.ListLogPrinter import ListLogPrinter
+from coalib.parsing.Globbing import fnmatch
+from coalib.processes.Processing import execute_section
+from coalib.results.HiddenResult import HiddenResult
+from coalib.settings.ConfigurationGathering import (
+    find_user_config, gather_configuration)
+from coalib.settings.Setting import path_list
 
 
 class DbusDocument(dbus.service.Object):

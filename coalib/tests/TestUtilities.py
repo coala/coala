@@ -1,4 +1,5 @@
 import sys
+
 from coalib.misc.ContextManagers import retrieve_stdout
 
 

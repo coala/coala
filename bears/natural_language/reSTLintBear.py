@@ -1,8 +1,8 @@
 from restructuredtext_lint import lint
 
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 class reSTLintBear(LocalBear):

@@ -2,8 +2,9 @@ import inspect
 import os
 import platform
 import sys
-from coalib.misc.Decorators import arguments_to_lists, yield_once
+
 from coalib.misc.ContextManagers import suppress_stdout
+from coalib.misc.Decorators import arguments_to_lists, yield_once
 
 
 def _import_module(file_path):

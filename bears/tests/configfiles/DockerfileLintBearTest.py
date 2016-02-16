@@ -1,7 +1,6 @@
 from bears.configfiles.DockerfileLintBear import DockerfileLintBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 good_file = """
 FROM ubuntu:14.04
 

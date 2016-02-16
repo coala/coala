@@ -13,10 +13,10 @@
 
 import json
 
-from coalib.output.printers.ListLogPrinter import ListLogPrinter
-from coalib.output.JSONEncoder import JSONEncoder
 from coalib.coala_main import run_coala
 from coalib.misc.Exceptions import get_exitcode
+from coalib.output.JSONEncoder import JSONEncoder
+from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 

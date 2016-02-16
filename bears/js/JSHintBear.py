@@ -2,8 +2,8 @@ import re
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.misc.Shell import escape_path_argument
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 class JSHintBear(LocalBear, Lint):

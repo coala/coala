@@ -1,12 +1,13 @@
-from datetime import datetime
 import unittest
-from pyprint.Printer import Printer
+from datetime import datetime
+
 from pyprint.NullPrinter import NullPrinter
+from pyprint.Printer import Printer
 
 from coalib.misc import Constants
-from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
+from coalib.processes.communication.LogMessage import LOG_LEVEL, LogMessage
 
 
 class LogPrinterTest(unittest.TestCase):

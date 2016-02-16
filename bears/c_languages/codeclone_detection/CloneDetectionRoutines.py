@@ -1,11 +1,13 @@
-import os
-import math
 import copy
+import math
+import os
+
 from munkres import Munkres
-# Instantiate globally since this class is holding stateless public methods.
-munkres = Munkres()
 
 from coalib.collecting.Collectors import collect_dirs
+
+# Instantiate globally since this class is holding stateless public methods.
+munkres = Munkres()
 
 
 def exclude_function(count_matrix):

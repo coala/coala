@@ -1,7 +1,6 @@
 from bears.natural_language.ProseLintBear import ProseLintBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 good_file = ["The 50s were swell."]
 bad_file = ["The 50's were swell."]
 

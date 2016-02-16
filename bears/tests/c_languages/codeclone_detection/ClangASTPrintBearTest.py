@@ -2,10 +2,11 @@ import os
 import unittest
 from queue import Queue
 
-from bears.tests.BearTestHelper import generate_skip_decorator
+from clang.cindex import TranslationUnitLoadError
+
 from bears.c_languages.codeclone_detection.ClangASTPrintBear import (
     ClangASTPrintBear)
-from clang.cindex import TranslationUnitLoadError
+from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.settings.Section import Section
 
 

@@ -5,7 +5,7 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.Globbing import iglob, fnmatch
+from coalib.parsing.Globbing import fnmatch, iglob
 
 
 def _get_kind(bear_class):

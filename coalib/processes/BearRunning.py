@@ -5,8 +5,8 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc import Constants
+from coalib.processes.communication.LogMessage import LOG_LEVEL, LogMessage
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.communication.LogMessage import LogMessage, LOG_LEVEL
 from coalib.results.Result import Result
 
 

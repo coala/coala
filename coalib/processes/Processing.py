@@ -1,26 +1,25 @@
-from itertools import chain
 import multiprocessing
-import queue
 import os
 import platform
+import queue
 import subprocess
+from itertools import chain
 
-from coalib.collecting.Collectors import collect_files
 from coalib.collecting import Dependencies
+from coalib.collecting.Collectors import collect_files
 from coalib.misc.StringConverter import StringConverter
 from coalib.output.printers import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.results.Result import Result
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-from coalib.results.SourceRange import SourceRange
-from coalib.settings.Setting import path_list
 from coalib.processes.LogPrinterThread import LogPrinterThread
+from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
-
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.SourceRange import SourceRange
+from coalib.settings.Setting import path_list
 
 ACTIONS = [ApplyPatchAction,
            PrintDebugMessageAction,

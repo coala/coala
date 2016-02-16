@@ -1,8 +1,7 @@
 import copy
 
-from coalib.misc.Decorators import (enforce_signature,
-                                    generate_ordering,
-                                    generate_repr)
+from coalib.misc.Decorators import (
+    enforce_signature, generate_ordering, generate_repr)
 from coalib.results.TextPosition import TextPosition
 
 

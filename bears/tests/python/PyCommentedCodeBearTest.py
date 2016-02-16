@@ -1,7 +1,7 @@
 from queue import Queue
 
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.python.PyCommentedCodeBear import PyCommentedCodeBear
+from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
 
 

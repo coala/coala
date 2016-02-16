@@ -1,7 +1,7 @@
-from collections import OrderedDict
 import os
 import tempfile
 import unittest
+from collections import OrderedDict
 
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section

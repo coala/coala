@@ -1,4 +1,5 @@
 import traceback
+
 from pyprint.Printer import Printer
 
 from coalib.misc.Decorators import enforce_signature

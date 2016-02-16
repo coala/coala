@@ -1,6 +1,6 @@
 import copy
 
-from coalib.results.Diff import Diff, ConflictError
+from coalib.results.Diff import ConflictError, Diff
 from coalib.results.SourceRange import SourceRange
 
 

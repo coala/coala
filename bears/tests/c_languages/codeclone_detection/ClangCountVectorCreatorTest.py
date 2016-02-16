@@ -1,10 +1,11 @@
 import os
 import unittest
 
-from bears.tests.c_languages import skip_if_no_clang
+from clang.cindex import CursorKind
+
 from bears.c_languages.codeclone_detection.ClangCountVectorCreator import (
     ClangCountVectorCreator)
-from clang.cindex import CursorKind
+from bears.tests.c_languages import skip_if_no_clang
 
 
 def no_condition(stack):

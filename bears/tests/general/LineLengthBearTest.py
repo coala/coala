@@ -1,7 +1,6 @@
 from bears.general.LineLengthBear import LineLengthBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 test_file = """
 test
 too

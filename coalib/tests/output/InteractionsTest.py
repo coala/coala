@@ -1,4 +1,5 @@
 import unittest
+
 from pyprint.NullPrinter import NullPrinter
 
 from coalib.output.Interactions import fail_acquire_settings

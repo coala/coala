@@ -2,11 +2,11 @@ import os
 import unittest
 from queue import Queue
 
-from bears.tests.BearTestHelper import generate_skip_decorator
-from bears.c_languages.codeclone_detection.ClangFunctionDifferenceBear import (
-    ClangFunctionDifferenceBear)
 from bears.c_languages.codeclone_detection.ClangCloneDetectionBear import (
     ClangCloneDetectionBear)
+from bears.c_languages.codeclone_detection.ClangFunctionDifferenceBear import (
+    ClangFunctionDifferenceBear)
+from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

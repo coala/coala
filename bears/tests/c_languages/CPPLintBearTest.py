@@ -1,7 +1,6 @@
 from bears.c_languages.CPPLintBear import CPPLintBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 test_file = """
 int main() {
     return 0;

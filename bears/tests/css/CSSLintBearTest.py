@@ -1,7 +1,6 @@
 from bears.css.CSSLintBear import CSSLintBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 good_file = """
 .class {
   font-weight: 400;

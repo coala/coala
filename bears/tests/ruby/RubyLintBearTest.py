@@ -1,7 +1,6 @@
 from bears.ruby.RubyLintBear import RubyLintBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 good_file = """
 class HelloWorld
     def initialize(name)

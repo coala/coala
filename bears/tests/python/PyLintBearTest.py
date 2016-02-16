@@ -4,10 +4,10 @@ from queue import Queue
 from shutil import which
 from unittest.case import skipIf
 
-from coalib.settings.Setting import Setting
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.python.PyLintBear import PyLintBear
+from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 @skipIf(which('pylint') is None, 'PyLint is not installed')

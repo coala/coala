@@ -1,9 +1,9 @@
 from queue import Queue
 
-from coalib.settings.Section import Section
-from coalib.results.Result import Result, RESULT_SEVERITY
-from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from bears.general.LineCountBear import LineCountBear
+from bears.tests.LocalBearTestHelper import LocalBearTestHelper
+from coalib.results.Result import RESULT_SEVERITY, Result
+from coalib.settings.Section import Section
 
 
 class LineCountBearTest(LocalBearTestHelper):

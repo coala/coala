@@ -1,6 +1,5 @@
-from coalib.misc.Decorators import (enforce_signature,
-                                    generate_ordering,
-                                    generate_repr)
+from coalib.misc.Decorators import (
+    enforce_signature, generate_ordering, generate_repr)
 
 
 @generate_repr("line", "column")

@@ -1,10 +1,11 @@
 import os
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.parsing import Globbing
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.settings.Section import Section
+from coalib.parsing import Globbing
 from coalib.settings.ConfigurationGathering import get_config_directory
+from coalib.settings.Section import Section
 
 
 def main(log_printer=None, section: Section=None):

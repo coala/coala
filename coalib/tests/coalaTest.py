@@ -4,9 +4,9 @@ import sys
 import unittest
 
 from bears.general.LineCountBear import LineCountBear
-from coalib.tests.TestUtilities import execute_coala
-from coalib.misc.ContextManagers import prepare_file
 from coalib import coala
+from coalib.misc.ContextManagers import prepare_file
+from coalib.tests.TestUtilities import execute_coala
 
 
 class coalaTest(unittest.TestCase):

@@ -1,6 +1,6 @@
 
-from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.go.GoImportsBear import GoImportsBear
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 GoImportsBearTest = verify_local_bear(
     GoImportsBear,

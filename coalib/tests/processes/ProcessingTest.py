@@ -1,32 +1,27 @@
-import os
-import queue
-import unittest
-import sys
 import multiprocessing
+import os
 import platform
+import queue
 import re
 import subprocess
+import sys
+import unittest
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.results.HiddenResult import HiddenResult
-from coalib.results.Result import Result, RESULT_SEVERITY
-from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.Processing import (execute_section,
-                                         process_queues,
-                                         create_process_group,
-                                         filter_raising_callables,
-                                         ACTIONS,
-                                         get_default_actions,
-                                         autoapply_actions,
-                                         print_result,
-                                         get_file_dict,
-                                         simplify_section_result)
-from coalib.results.result_actions.ResultAction import ResultAction
+from coalib.processes.Processing import (
+    ACTIONS, autoapply_actions, create_process_group, execute_section,
+    filter_raising_callables, get_default_actions, get_file_dict, print_result,
+    process_queues, simplify_section_result)
+from coalib.results.HiddenResult import HiddenResult
+from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
+from coalib.results.result_actions.ResultAction import ResultAction
+from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

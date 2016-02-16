@@ -2,8 +2,8 @@ import json
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 class DockerfileLintBear(LocalBear, Lint):

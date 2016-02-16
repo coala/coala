@@ -4,8 +4,8 @@ import sys
 import unittest
 
 from coalib import coala_format
-from coalib.tests.TestUtilities import execute_coala
 from coalib.misc.ContextManagers import prepare_file
+from coalib.tests.TestUtilities import execute_coala
 
 
 class coalaFormatTest(unittest.TestCase):

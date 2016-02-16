@@ -1,5 +1,5 @@
-import datetime
 import argparse
+import datetime
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 

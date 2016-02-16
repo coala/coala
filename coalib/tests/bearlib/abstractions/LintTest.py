@@ -5,8 +5,8 @@ from bears.c_languages.IndentBear import IndentBear
 from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.misc.Shell import escape_path_argument
-from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
 
 

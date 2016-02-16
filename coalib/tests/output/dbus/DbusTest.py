@@ -1,9 +1,9 @@
-import sys
 import os
+import subprocess
+import sys
+import time
 import unittest
 from unittest.case import SkipTest
-import subprocess
-import time
 
 from coalib.misc import Constants
 

@@ -1,10 +1,10 @@
-from collections import OrderedDict
 import os
+from collections import OrderedDict
 
 from coalib.misc import Constants
 from coalib.parsing.LineParser import LineParser
-from coalib.settings.Setting import Setting
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
 
 
 class ConfParser:

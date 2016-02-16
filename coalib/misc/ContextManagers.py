@@ -1,12 +1,12 @@
-from contextlib import contextmanager, closing
-import sys
-import os
-from io import StringIO
 import builtins
-import signal
-import threading
+import os
 import platform
+import signal
+import sys
 import tempfile
+import threading
+from contextlib import closing, contextmanager
+from io import StringIO
 
 from coalib.misc.MutableValue import MutableValue
 

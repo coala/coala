@@ -1,5 +1,5 @@
-from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
+from coalib.bears.LocalBear import LocalBear
 
 
 class Test1LocalBear(LocalBear):

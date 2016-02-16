@@ -1,7 +1,7 @@
-import subprocess
 import os
-import unittest
+import subprocess
 import tempfile
+import unittest
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result

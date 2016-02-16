@@ -1,7 +1,6 @@
 from bears.natural_language.AlexBear import AlexBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 good_file = ["Their network looks good."]
 
 bad_file = ["His network looks good."]

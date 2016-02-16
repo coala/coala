@@ -1,7 +1,6 @@
 from bears.go.GoLintBear import GoLintBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 good_file = """
 // Test that blank imports in package main are not flagged.
 // OK

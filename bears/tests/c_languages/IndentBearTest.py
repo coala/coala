@@ -1,7 +1,6 @@
 from bears.c_languages.IndentBear import IndentBear
 from bears.tests.LocalBearTestHelper import verify_local_bear
 
-
 test_file1 = """
 int
 main ()

@@ -1,5 +1,5 @@
-from bears.tests.LocalBearTestHelper import verify_local_bear
 from bears.go.GoReturnsBear import GoReturnsBear
+from bears.tests.LocalBearTestHelper import verify_local_bear
 
 good_file1 = """import "errors"
 

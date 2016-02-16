@@ -1,9 +1,10 @@
-import sys
 import os
-import unittest
-from pyprint.NullPrinter import NullPrinter
 import re
-from tempfile import TemporaryDirectory, NamedTemporaryFile
+import sys
+import unittest
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+
+from pyprint.NullPrinter import NullPrinter
 
 from bears.c_languages.IndentBear import IndentBear
 from bears.tests.BearTestHelper import generate_skip_decorator

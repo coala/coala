@@ -1,6 +1,6 @@
-from contextlib import contextmanager
 import platform
-from subprocess import Popen, PIPE
+from contextlib import contextmanager
+from subprocess import PIPE, Popen
 
 from coalib.parsing.StringProcessing import escape
 

@@ -13,13 +13,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import dbus
 import sys
-import dbus.mainloop.glib
-from gi.repository import GLib
 
-from coalib.output.dbus.DbusServer import DbusServer
+import dbus
+import dbus.mainloop.glib
 from coalib.misc import Constants
+from coalib.output.dbus.DbusServer import DbusServer
+from gi.repository import GLib
 
 
 def sys_clean_exit():

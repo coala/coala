@@ -1,5 +1,6 @@
 import os
-import dbus.service
+
+import dbus.service  # Ignore PyImportSortBear
 
 from coalib.output.dbus.DbusApp import DbusApp
 

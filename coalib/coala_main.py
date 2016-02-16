@@ -1,15 +1,15 @@
-from pyprint.ConsolePrinter import ConsolePrinter
 import os
 
+from pyprint.ConsolePrinter import ConsolePrinter
+
 from coalib import coala_delete_orig
+from coalib.collecting.Collectors import collect_all_bears_from_sections
+from coalib.misc.Exceptions import get_exitcode
+from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.Tagging import delete_tagged_results, tag_results
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
-from coalib.misc.Exceptions import get_exitcode
-from coalib.collecting.Collectors import collect_all_bears_from_sections
-from coalib.output.Interactions import fail_acquire_settings
-from coalib.output.Tagging import tag_results, delete_tagged_results
-
 
 do_nothing = lambda *args: True
 
