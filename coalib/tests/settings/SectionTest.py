@@ -174,10 +174,16 @@ class SectionTest(unittest.TestCase):
                          "section {key2 : 'value12', key4 : 'value14'}")
 
     def test_bear_dirs_empty(self):
+        old_bears_dirs = Constants.registered_bears_dirs
+        Constants.registered_bears_dirs = []
         section = Section("section", None)
-        self.assertEqual(len(section.bear_dirs()), 1)
+        self.assertEqual(len(section.bear_dirs()), 0)
+        Constants.registered_bears_dirs = old_bears_dirs
 
     def test_bear_dirs(self):
+        old_bears_dirs = Constants.registered_bears_dirs
+        Constants.registered_bears_dirs = []
         section = Section("section", None)
         section.append(Setting("bear_dirs", "test1, test2"))
-        self.assertEqual(len(section.bear_dirs()), 3)
+        self.assertEqual(len(section.bear_dirs()), 2)
+        Constants.registered_bears_dirs = old_bears_dirs

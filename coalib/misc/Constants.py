@@ -1,6 +1,9 @@
 import os
 import platform
 
+from coalib.collecting.Collectors import collect_registered_bears_dirs
+
+
 THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
                  "Please contact the developers for assistance.")
 
@@ -46,7 +49,8 @@ coalib_root = os.path.join(os.path.dirname(__file__),
 
 # Path to the directory containing the default bears
 coalib_bears_root = os.path.join(coalib_root, os.path.pardir, "bears")
-registered_bears_dirs = [coalib_bears_root]
+registered_bears_dirs = ([coalib_bears_root] +
+                         collect_registered_bears_dirs('coalabears'))
 
 # Path to the language definition files
 language_definitions = os.path.join(coalib_root,
