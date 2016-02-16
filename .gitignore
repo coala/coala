@@ -33,3 +33,5 @@ org.coala_analyzer.v1.service
 node_modules
 *.log
 *.jar
+.vendor
+Goopfile.lock

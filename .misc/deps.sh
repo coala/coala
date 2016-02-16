@@ -22,9 +22,8 @@ sudo rm -rf /opt/alex # Delete ghc-alex as it clashes with npm deps
 npm install
 
 # GO commands
-go get -u github.com/golang/lint/golint
-go get -u golang.org/x/tools/cmd/goimports
-go get -u sourcegraph.com/sqs/goreturns
+go get -u github.com/karmakaze/goop
+goop install
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
