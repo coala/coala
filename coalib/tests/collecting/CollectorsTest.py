@@ -1,10 +1,12 @@
 import os
+import pkg_resources
 import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.collecting.Collectors import (
-    collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files)
+    collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
+    collect_registered_bears_dirs)
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
@@ -162,6 +164,33 @@ class CollectDirsTest(unittest.TestCase):
                                               "others",
                                               "c_files")),
                 os.path.normcase(self.collectors_test_dir+os.sep)]))
+
+    def test_collect_registered_bears_dirs(self):
+        old_iter = pkg_resources.iter_entry_points
+
+        def test_iter_entry_points(name):
+            assert name == "hello"
+
+            class EntryPoint1:
+
+                @staticmethod
+                def load():
+                    class PseudoPlugin:
+                        __file__ = "/path1/file1"
+                    return PseudoPlugin()
+
+            class EntryPoint2:
+
+                @staticmethod
+                def load():
+                    raise pkg_resources.DistributionNotFound
+
+            return iter([EntryPoint1(), EntryPoint2()])
+
+        pkg_resources.iter_entry_points = test_iter_entry_points
+        output = sorted(collect_registered_bears_dirs("hello"))
+        self.assertEqual(output, [os.path.abspath("/path1")])
+        pkg_resources.iter_entry_points = old_iter
 
 
 class CollectBearsTest(unittest.TestCase):
