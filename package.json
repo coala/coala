@@ -5,6 +5,7 @@
     "remark": "~3.2.3",
     "dockerfile_lint":"~0.0.9",
     "csslint" : "~0.10.0",
-    "coffeelint" : "~1.14.2"
+    "coffeelint" : "~1.14.2",
+    "eslint" : "~1.10.3"
   }
 }
