@@ -71,10 +71,9 @@ def collect_files(file_paths, log_printer, ignored_file_paths=None,
         collected_files, file_globs_with_files = zip(*valid_files)
     else:
         collected_files, file_globs_with_files = [], []
-    empty_file_globs = set(file_paths) - set(file_globs_with_files)
-    for glob in empty_file_globs:
-        log_printer.warn("No files matching '{}' were found.".format(glob))
 
+    _warn_if_unused_glob(log_printer, file_paths, file_globs_with_files,
+                         "No files matching '{}' were found.")
     limited_files = list(filter(limit_fnmatch, collected_files))
     return limited_files
 
@@ -145,10 +144,8 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer):
         bears_found[index].append(bear)
         bear_globs_with_bears.add(glob)
 
-    empty_bear_globs = set(bear_globs) - set(bear_globs_with_bears)
-    for glob in empty_bear_globs:
-        log_printer.warn("No bears were found matching '{}'.".format(glob))
-
+    _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
+                         "No bears were found matching '{}'.")
     return bears_found
 
 
@@ -169,3 +166,19 @@ def collect_all_bears_from_sections(sections, log_printer):
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
             log_printer)
     return local_bears, global_bears
+
+
+def _warn_if_unused_glob(log_printer, globs, used_globs, message):
+    """
+    Warn if a glob has not been used.
+
+    :param log_printer: The log_printer to handle logging.
+    :param globs:       List of globs that were expected to be used.
+    :param used_globs:  List of globs that were actually used.
+    :param message:     Warning message to display if a glob is unused.
+                        The glob which was unused will be added using
+                        .format()
+    """
+    unused_globs = set(globs) - set(used_globs)
+    for glob in unused_globs:
+        log_printer.warn(message.format(glob))
