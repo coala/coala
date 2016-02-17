@@ -1,5 +1,6 @@
 import functools
 import os
+import pkg_resources
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
@@ -182,3 +183,23 @@ def _warn_if_unused_glob(log_printer, globs, used_globs, message):
     unused_globs = set(globs) - set(used_globs)
     for glob in unused_globs:
         log_printer.warn(message.format(glob))
+
+
+def collect_registered_bears_dirs(entrypoint):
+    """
+    Searches setuptools for the entrypoint and returns the bear
+    directories given by the module.
+
+    :param entrypoint: The endpoint to find packages with.
+    :return:           List of bear directories.
+    """
+    collected_dirs = []
+    for ep in pkg_resources.iter_entry_points(entrypoint):
+        registered_package = None
+        try:
+            registered_package = ep.load()
+        except pkg_resources.DistributionNotFound:
+            continue
+        collected_dirs.append(os.path.abspath(
+            os.path.dirname(registered_package.__file__)))
+    return collected_dirs
