@@ -1,10 +1,10 @@
 from clang.cindex import Index, TranslationUnit
 
 from bears.c_languages.ClangBear import clang_available
-from coalib.bears.LocalBear import LocalBear
+from coalib.bears.GlobalBear import GlobalBear
 
 
-class ClangASTPrintBear(LocalBear):
+class ClangASTPrintBear(GlobalBear):
     check_prerequisites = classmethod(clang_available)
 
     def print_node(self, cursor, filename, before="", spec_before=""):
@@ -47,15 +47,14 @@ class ClangASTPrintBear(LocalBear):
                             before + len(spec_before)*" ",
                             "`")
 
-    def run(self,
-            filename,
-            file):
+    def run(self):
         """
         This bear is meant for debugging purposes relating to clang. It just
         prints out the whole AST for a file to the DEBUG channel.
         """
-        root = Index.create().parse(
-            filename,
-            options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD).cursor
+        for filename, file in sorted(self.file_dict.items()):
+            root = Index.create().parse(
+                filename,
+                options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD).cursor
 
-        self.print_node(root, filename)
+            self.print_node(root, filename)

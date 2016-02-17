@@ -14,16 +14,22 @@ from coalib.settings.Section import Section
 class ClangASTPrintBearTest(unittest.TestCase):
 
     def setUp(self):
-        self.testfile = os.path.abspath(os.path.join(
-            os.path.dirname(__file__),
-            "sample.c"))
+        testfile = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                "sample.c"))
         self.queue = Queue()
-        self.uut = ClangASTPrintBear(Section("name"), self.queue)
+        with open(testfile) as file:
+            testfile_lines = file.readlines()
+        self.uut = ClangASTPrintBear({testfile: testfile_lines},
+                                     Section("name"),
+                                     self.queue)
 
     def test_run(self):
-        self.uut.run(self.testfile, [])
+        self.uut.run()
         with self.assertRaises(TranslationUnitLoadError):
-            self.uut.run("notexistant", [])
+            old_file_dict = self.uut.file_dict
+            self.uut.file_dict = {"notexistant": []}
+            self.uut.run()
+            self.uut.file_dict = old_file_dict
 
     def test_ast(self):
         expected_ast = (
@@ -41,7 +47,7 @@ class ClangASTPrintBearTest(unittest.TestCase):
             """loop for ( int i ; i < 5 ; i ++ ) { // Checking out constants"""
             """ printf ( "i is %d" , i ) ; } })\n""")
 
-        self.uut.run(self.testfile, [])
+        self.uut.run()
 
         ast = "\n"
         # Only check beginning of AST
