@@ -1,16 +1,19 @@
 # How to contribute
 
-Welcome to coala! The following guidelines will give you a short overview over how we
-handle issues and PRs in this repository. coala is maintained by a growing community
-and newcomers are always welcome!
+Welcome to coala! The following guidelines will give you a short overview
+over how we handle issues and PRs in this repository. coala is maintained
+by a growing community and newcomers are always welcome!
 
-We appreciate all valuable contributions - bug reports, documentation and design
-enhancements issues as well as pull Requests to make coala more convenient, functional
-and bug free.
+We appreciate all valuable contributions - bug reports, documentation and
+design enhancements issues as well as pull Requests to make coala more
+convenient, functional and bug free.
 
-To begin contributing have a look at the open [newcomer issues](https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer).
+To begin contributing have a look at the open issues labeled with
+difficulty/newcomer -
+[newcomer issues](https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer).
 
-Follow the instructions [here](http://coala.readthedocs.org/en/latest/Getting_Involved/README.html)
+Follow the instructions
+[here](http://coala.readthedocs.org/en/latest/Getting_Involved/README.html)
 and get involved to help us make a better software.
 
 ## Filing Issues
@@ -43,9 +46,10 @@ For a PR to be merged, the following statements must hold true:
 - All CI services pass. (CircleCI, TravisCi, AppVeyor, Scrutinizer, CodeCov)
 - All commits must have been reviewed and approved by GitMate and a coala
   maintainer who is not the author of the PR.
-- Commits shall comply to the [Good Commits](http://coala.readthedocs.org/en/latest/Getting_Involved/Writing_Good_Commits.html)
- standards outlined below.
+- Commits shall comply to the commit guidelines as outlined in the docs.
 
+Commit guidelines can be found at the
+[Good Commits page](http://coala.readthedocs.org/en/latest/Getting_Involved/Writing_Good_Commits.html)
 
 ## Correcting PRs
 
@@ -53,4 +57,5 @@ Rebasing PRs is preferred over merging master into the source branches again
 and again cluttering our history. If a reviewer has suggestions, the commit
 shall be amended so the history is not cluttered by "fixup commits".
 
-For further information/queries feel free to discuss with us [here](https://gitter.im/coala-analyzer/coala).
+For further information/queries feel free to discuss with us on
+[gitter](https://gitter.im/coala-analyzer/coala).
