@@ -48,7 +48,8 @@ Example :
     :param something: A very long line describing the variable something
                       in great detail.
     :return:          This message also started in the same column and it
-                      starts again at the same column as the rest of the messages.
+                      starts again at the same column as the rest of the
+                      messages.
 
 Type Checking
 ~~~~~~~~~~~~~

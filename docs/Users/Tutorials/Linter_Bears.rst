@@ -78,7 +78,7 @@ Now we can run
     4:3: Info: Optional Tags: Omit optional tags (optional): You may remove the closing "body" tag.
     5:1: Info: Optional Tags: Omit optional tags (optional): You may remove the closing "html" tag.
 
-.. End ignoring LineLengthBear
+.. Stop ignoring LineLengthBear
 
 Our ``output_regex`` should look like this
 
@@ -94,7 +94,7 @@ Or in `python regex <https://docs.python.org/2/library/re.html>`__
 
     (?P<line>\d+):(?P<column>\d+):\s(?P<severity>Error|Warning|Info):\s(?P<message>.+)
 
-.. End ignoring LineLengthBear
+.. Stop ignoring LineLengthBear
 
 Now that we found out our ``output_regex`` (we might want to test it just
 to be sure, https://regex101.com/#python is a great tool for this purpose).

@@ -156,11 +156,11 @@ conversions for you:
    file paths relative to the file/command where the setting was set
 -  ``coalib.settings.Setting.typed_list(typ)``, converts to a list and
    applies the given conversion (``typ``) to each element.
--  ``coalib.settings.Setting.typed_ordered_dict(key_type, value_type, default)``,
-   converts to a dict while applying the ``key_type`` conversion to all
-   keys, the ``value_type`` conversion to all values and uses the
-   ``default`` value for all unset keys. Use ``typed_dict`` if the order
-   is irrelevant for you.
+-  ``coalib.settings.Setting.typed_ordered_dict(key_type, value_type,
+   default)``, converts to a dict while applying the ``key_type``
+   conversion to all keys, the ``value_type`` conversion to all values
+   and uses the ``default`` value for all unset keys. Use ``typed_dict``
+   if the order is irrelevant for you.
 
 Results
 -------

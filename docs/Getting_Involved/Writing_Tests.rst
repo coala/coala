@@ -111,8 +111,8 @@ So an example test that succeeds would be:
 
 .. code:: python
 
-    # The sys import and setup is not needed here because this example doesn't use
-    # coala components.
+    # The sys import and setup is not needed here because this example doesn't
+    # use coala components.
     import unittest
 
 
@@ -270,7 +270,8 @@ the coala root folder ``py.test``.
     # Import here your needed coala components.
 
 
-    # Your test unit. The name of this class is displayed in the test evaluation.
+    # Your test unit. The name of this class is displayed in the test
+    # evaluation.
     class YourTest(unittest.TestCase):
         def setUp(self):
             # Here you can set up your stuff. For example constant values,

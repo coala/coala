@@ -1,6 +1,8 @@
 README
 ======
 
+.. Start ignoring LineLengthBear
+
 ::
 
                                                          .o88Oo._
@@ -18,12 +20,15 @@ README
       ,d8,_    _,d8,   ,d8' d8,   ,d8b,,d8b,_ ,d8,   ,d8b,       Y           ,o8P
     ooP""Y8888PP*"Y8888P"   "Y8888P"`Y88P'"Y88P"Y8888P"`Y8            oooo888P"
 
+.. Stop ignoring LineLengthBear
+
 INSTALLATION
 ============
 
 coala can be installed with ``pip install coala``. If you need more
 information about the installation and dependencies, take a look at our
-`installation documentation <http://coala.rtfd.org/en/latest/Users/Install.html>`__.
+`installation documentation
+<http://coala.rtfd.org/en/latest/Users/Install.html>`__.
 
 The latest code from master is automatically deployed to PyPI as a
 development version. Get it with ``pip install coala --pre``.
@@ -66,7 +71,8 @@ GETTING INVOLVED
 ================
 
 If you want to contribute to coala, please take a look at the `Getting
-Involved Information <http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__.
+Involved Information
+<http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__.
 
 We appreciate any help!
 

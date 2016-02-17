@@ -255,7 +255,7 @@ can't wrap them:
     code = "that's checked normally"
 
     # Ignore LineLengthBear
-    unwrappable_string = "some string that is super-long and would exceed the limit"
+    unwrappable_string = "some string that is long and would exceed the limit"
 
 You can also skip an area:
 
