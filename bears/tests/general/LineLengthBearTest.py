@@ -22,4 +22,21 @@ LineLengthBear2Test = verify_local_bear(LineLengthBear,
                                         invalid_files=(["asdasd"],),
                                         settings={
                                             "max_line_length": "4",
-                                            "ignore_length_regex": "http://"})
+                                            "ignore_length_regex": "http://, "})
+
+LineLengthBear3Test = verify_local_bear(LineLengthBear,
+                                        valid_files=(test_file,
+                                                     ["hi there ftp://!"]),
+                                        invalid_files=(["asdasd"],),
+                                        settings={
+                                            "max_line_length": "4",
+                                            "ignore_length_regex": "ftp://, "})
+
+ineLengthBear4Test = verify_local_bear(LineLengthBear,
+                                       valid_files=(test_file,
+                                                    ["say hi.",
+                                                     "ftp://a.domain.de"]),
+                                       invalid_files=(["asdasd"],),
+                                       settings={
+                                            "max_line_length": "4",
+                                            "ignore_length_regex": "ftp://,hi"})
