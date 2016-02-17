@@ -28,7 +28,7 @@ class LineLengthBear(LocalBear):
         for line_number, line in enumerate(file):
             line = spacing_helper.replace_tabs_with_spaces(line)
             if len(line) > max_line_length + 1:
-                if any(regex.match(line) for regex in ignore_regexes):
+                if any(regex.search(line) for regex in ignore_regexes):
                     continue
 
                 yield Result.from_values(
