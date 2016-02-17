@@ -1,14 +1,13 @@
 import os
 from queue import Queue
-from shutil import which
-from unittest.case import skipIf
 
 from bears.java.CheckstyleBear import CheckstyleBear
+from bears.tests.BearTestHelper import generate_skip_decorator
 from bears.tests.LocalBearTestHelper import LocalBearTestHelper
 from coalib.settings.Section import Section
 
 
-@skipIf(which('java') is None, 'java is not installed')
+@generate_skip_decorator(CheckstyleBear)
 class CheckstyleBearTest(LocalBearTestHelper):
 
     def setUp(self):
