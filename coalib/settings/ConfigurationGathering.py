@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 
 from coalib.misc import Constants
@@ -118,7 +119,7 @@ def load_configuration(arg_list, log_printer):
             bool(cli_sections["default"].get("find_config", "False")) and
             str(cli_sections["default"].get("config")) == ""):
         cli_sections["default"].add_or_create_setting(
-            Setting("config", find_user_config(os.getcwd())))
+            Setting("config", re.escape(find_user_config(os.getcwd()))))
 
     targets = []
     # We don't want to store targets argument back to file, thus remove it
@@ -176,7 +177,8 @@ def find_user_config(file_path, max_trials=10):
     file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
         file_path)))
     old_dir = None
-    base_dir = os.path.dirname(file_path)
+    base_dir = (file_path if os.path.isdir(file_path)
+                else os.path.dirname(file_path))
     home_dir = os.path.expanduser("~")
 
     while base_dir != old_dir and old_dir != home_dir and max_trials != 0:

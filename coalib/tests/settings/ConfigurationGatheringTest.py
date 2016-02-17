@@ -231,13 +231,25 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                       "section_manager_test_files",
                                       ".coafile"), retval)
 
-        sections, dummy, dummy, dummy = gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            arg_list=["--find-config"])
+        child_dir = os.path.join(current_dir,
+                                 "section_manager_test_files",
+                                 "child_dir")
+        retval = find_user_config(child_dir, 2)
+        self.assertEqual(os.path.join(current_dir,
+                                      "section_manager_test_files",
+                                      "child_dir",
+                                      ".coafile"), retval)
 
-        self.assertRegex(str(sections["default"]),
-                         ".*find_config : 'True'.*, config : '.*'")
+        old_cwd = os.getcwd()
+        try:
+            os.chdir(child_dir)
+            sections, dummy, dummy, dummy = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=["--find-config"])
+            self.assertEqual(bool(sections["default"]['find_config']), True)
+        finally:
+            os.chdir(old_cwd)
 
     def test_get_config_directory(self):
         old_isfile = os.path.isfile
