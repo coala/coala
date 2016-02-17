@@ -23,7 +23,7 @@ def convert_if_not_empty(value: str, conversion):
 
 class CoffeeLintBear(LocalBear, Lint):
     executable = 'coffeelint'
-    arguments = '--reporter=csv'
+    arguments = '--reporter=csv {filename}'
     severity_map = {'warn': RESULT_SEVERITY.NORMAL,
                     'error': RESULT_SEVERITY.MAJOR}
 

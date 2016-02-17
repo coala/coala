@@ -52,5 +52,6 @@ class PyLintBear(LocalBear, Lint):
             self.arguments += " --rcfile=" + escape_path_argument(pylint_rcfile)
         else:
             self.arguments += " --rcfile=" + os.devnull
+        self.arguments += " {filename}"
 
         return self.lint(filename)

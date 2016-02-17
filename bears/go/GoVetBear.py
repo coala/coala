@@ -6,7 +6,7 @@ from coalib.bears.LocalBear import LocalBear
 
 class GoVetBear(LocalBear, Lint):
     executable = 'go'
-    arguments = 'vet'
+    arguments = 'vet {filename}'
     output_regex = re.compile(
         r'(?P<file_name>.+):(?P<line>\d+): (?P<message>.*)\n')
     use_stderr = True

@@ -26,7 +26,7 @@ class JSHintBear(LocalBear, Lint):
 
         :param jshint_config: The location of the jshintrc config file.
         '''
-        self.arguments = '--verbose'
+        self.arguments = '--verbose {filename}'
         if jshint_config:
             self.arguments += (" --config "
                                + escape_path_argument(jshint_config))

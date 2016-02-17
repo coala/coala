@@ -7,7 +7,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 class RubyLintBear(LocalBear, Lint):
     executable = 'ruby'
-    arguments = '-wc'
+    arguments = '-wc {filename}'
     output_regex = re.compile(
         r'(?P<file_name>.+?):(?P<line>\d+): (?P<message>'
         r'.*?(?P<severity>error|warning)[,:] [^\r\n]+)\r?\n'

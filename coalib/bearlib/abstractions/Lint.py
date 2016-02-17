@@ -42,6 +42,8 @@ class Lint(Bear):
                             appended to the end. Note that we use .format()
                             on the arguments - so, `{abc}` needs to be given
                             as `{{abc}}`.
+                            Currently, the following will be replaced:
+                            {filename} - the filename passed to lint()
     :param output_regex:    The regex which will match the output of the linter
                             to get results. This regex should give out the
                             following variables:
@@ -150,8 +152,8 @@ class Lint(Bear):
 
     def _create_command(self, **kwargs):
         command = self.executable + ' ' + self.arguments
-        if not self.use_stdin:
-            command += ' ' + escape_path_argument(kwargs.get('filename', ''))
+        kwargs['filename'] = escape_path_argument(
+            kwargs.get("filename", "") or "")
         return command.format(**kwargs)
 
     @staticmethod

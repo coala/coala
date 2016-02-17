@@ -25,4 +25,5 @@ class CheckstyleBear(LocalBear, Lint):
             r':(?P<line>\d+)(:(?P<col>\d+))?:\s*'
             r'(?P<message>.*?)\s*\[(?P<origin>[a-zA-Z]+?)\]')
         self.arguments = '-jar ' + self.jar + ' -c ' + self.google_checks
+        self.arguments += " {filename}"
         return self.lint(filename)

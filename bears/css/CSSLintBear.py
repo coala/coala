@@ -7,7 +7,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 class CSSLintBear(LocalBear, Lint):
     executable = 'csslint'
-    arguments = '--format=compact'
+    arguments = '--format=compact {filename}'
     output_regex = re.compile(
         r'(?P<file_name>.+):\s*'
         r'(?:line (?P<line>\d+), col (?P<col>\d+), )?'

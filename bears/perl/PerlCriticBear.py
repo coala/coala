@@ -32,5 +32,5 @@ class PerlCriticBear(LocalBear, Lint):
         if perlcritic_config:
             self.arguments += (" --config "
                                + escape_path_argument(perlcritic_config))
-
+        self.arguments += " {filename}"
         return self.lint(filename)

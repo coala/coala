@@ -6,7 +6,6 @@ from coalib.bears.LocalBear import LocalBear
 
 class GoLintBear(LocalBear, Lint):
     executable = 'golint'
-    arguments = ''
     output_regex = re.compile(
             r'(?P<path>.*?)\:(?P<line>\d+)\:(?P<column>\d+)\: (?P<message>.*)')
     use_stdout = True
@@ -25,5 +24,6 @@ class GoLintBear(LocalBear, Lint):
         self.arguments = ""
         if golint_cli_options:
             self.arguments += " " + golint_cli_options
+        self.arguments += " {filename}"
 
         return self.lint(filename)

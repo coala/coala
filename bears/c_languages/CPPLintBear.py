@@ -28,4 +28,5 @@ class CPPLintBear(LocalBear, Lint):
         include = ','.join('+'+part.strip() for part in cpplint_include)
         self.arguments = '--filter=' + ignore + ',' + include
         self.arguments += ' --linelength=' + str(max_line_length)
+        self.arguments += ' {filename}'
         return self.lint(filename)

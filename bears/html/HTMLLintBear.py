@@ -29,4 +29,5 @@ class HTMLLintBear(LocalBear, Lint):
         '''
         ignore = ','.join(part.strip() for part in htmllint_ignore)
         self.arguments = '--disable=' + ignore
+        self.arguments += " {filename}"
         return self.lint(filename)

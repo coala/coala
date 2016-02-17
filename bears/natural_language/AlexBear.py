@@ -10,6 +10,7 @@ class AlexBear(LocalBear, Lint):
         r'\s+(?P<line>\d+):(?P<column>\d+)\-'
         r'(?P<end_line>\d+):(?P<end_column>\d+)'
         r'\s+(?:(?P<warning>warning))\s+(?P<message>.+)')
+    arguments = "{filename}"
 
     def run(self, filename, file):
         '''
