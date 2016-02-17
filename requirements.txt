@@ -15,3 +15,4 @@ html-linter>=0.3.0
 libclang-py3==0.2
 guess-language-spirit>=0.5.2
 radon>=1.2.2
+requests>=2.9.1
