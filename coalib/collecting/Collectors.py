@@ -32,20 +32,22 @@ def _import_bears(file_path, kinds):
 
 
 @yield_once
-def icollect(file_paths):
+def icollect(file_paths, ignored_globs=None):
     """
     Evaluate globs in file paths and return all matching files.
 
-    :param file_paths:  file path or list of such that can include globs
-    :return:            iterator that yields tuple of path of a matching file,
-                        the glob where it was found
+    :param file_paths:    file path or list of such that can include globs
+    :param ignored_globs: list of globs to ignore when matching files
+    :return:              iterator that yields tuple of path of a matching
+                          file, the glob where it was found
     """
     if isinstance(file_paths, str):
         file_paths = [file_paths]
 
     for file_path in file_paths:
         for match in iglob(file_path):
-            yield match, file_path
+            if not ignored_globs or not fnmatch(match, ignored_globs):
+                yield match, file_path
 
 
 def collect_files(file_paths, log_printer, ignored_file_paths=None,
@@ -58,15 +60,11 @@ def collect_files(file_paths, log_printer, ignored_file_paths=None,
     :param limit_file_paths:   list of globs that the files are limited to
     :return:                   list of paths of all matching files
     """
-    ignore_fnmatch = (functools.partial(fnmatch, patterns=ignored_file_paths)
-                      if ignored_file_paths else lambda fname: False)
-
     limit_fnmatch = (functools.partial(fnmatch, patterns=limit_file_paths)
                      if limit_file_paths else lambda fname: True)
 
-    valid_files = list(filter(
-        lambda fname: os.path.isfile(fname[0]) and not ignore_fnmatch(fname[0]),
-        icollect(file_paths)))
+    valid_files = list(filter(lambda fname: os.path.isfile(fname[0]),
+                              icollect(file_paths, ignored_file_paths)))
 
     # Find globs that gave no files and warn the user
     if valid_files:
@@ -89,11 +87,8 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
     :param ignored_dir_paths: list of globs that match to-be-ignored dirs
     :return:                  list of paths of all matching directories
     """
-    ignore_fnmatch = (functools.partial(fnmatch, patterns=ignored_dir_paths)
-                      if ignored_dir_paths else lambda fname: False)
-    valid_dirs = list(filter(
-        lambda fname: os.path.isdir(fname[0]) and not ignore_fnmatch(fname[0]),
-        icollect(dir_paths)))
+    valid_dirs = list(filter(lambda fname: os.path.isdir(fname[0]),
+                             icollect(dir_paths, ignored_dir_paths)))
     if valid_dirs:
         collected_dirs, dummy = zip(*valid_dirs)
         return list(collected_dirs)
