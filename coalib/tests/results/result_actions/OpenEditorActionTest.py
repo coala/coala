@@ -34,10 +34,12 @@ class OpenEditorActionTest(unittest.TestCase):
         os.close(fahandle)
         fbhandle, self.fb = tempfile.mkstemp()
         os.close(fbhandle)
+        self.old_subprocess_call = subprocess.call
 
     def tearDown(self):
         os.remove(self.fa)
         os.remove(self.fb)
+        subprocess.call = self.old_subprocess_call
 
     def test_apply(self):
         # Initial file contents, *before* a patch was applied
