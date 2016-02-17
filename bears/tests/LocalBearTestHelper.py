@@ -62,7 +62,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               LocalBear,
                               msg="The given bear is not a local bear.")
         self.assertIsInstance(lines,
-                              list,
+                              (list, tuple),
                               msg="The given lines are not a list.")
 
         with prepare_file(lines,
@@ -114,7 +114,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               LocalBear,
                               msg="The given bear is not a local bear.")
         self.assertIsInstance(lines,
-                              list,
+                              (list, tuple),
                               msg="The given lines are not a list.")
         self.assertIsInstance(results,
                               list,
