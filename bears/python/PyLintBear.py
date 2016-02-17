@@ -10,9 +10,6 @@ from coalib.misc.Shell import escape_path_argument
 
 class PyLintBear(LocalBear, Lint):
     executable = 'pylint'
-    arguments = ('--reports=n --persistent=n '
-                 '--msg-template="{{line}}.{{column}}|{{C}}: '
-                 '{{msg_id}} - {{msg}}"')
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)'
                               r'\|(?P<severity>[WFECRI]): (?P<message>.*)')
     severity_map = {
@@ -42,6 +39,9 @@ class PyLintBear(LocalBear, Lint):
                                    passed to pylint.
         :param pylint_rcfile:      The rcfile for PyLint.
         '''
+        self.arguments = ('--reports=n --persistent=n '
+                          '--msg-template="{{line}}.{{column}}|{{C}}: '
+                          '{{msg_id}} - {{msg}}"')
         if pylint_disable:
             self.arguments += " --disable=" + ",".join(pylint_disable)
         if pylint_enable:

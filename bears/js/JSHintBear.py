@@ -8,7 +8,6 @@ from coalib.misc.Shell import escape_path_argument
 
 class JSHintBear(LocalBear, Lint):
     executable = 'jshint'
-    arguments = '--verbose'
     output_regex = re.compile(
         r'.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?P<message>.+) \((?P<severity>\S)\d+\)')
@@ -27,6 +26,7 @@ class JSHintBear(LocalBear, Lint):
 
         :param jshint_config: The location of the jshintrc config file.
         '''
+        self.arguments = '--verbose'
         if jshint_config:
             self.arguments += (" --config "
                                + escape_path_argument(jshint_config))

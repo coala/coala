@@ -8,7 +8,6 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 class PerlCriticBear(LocalBear, Lint):
     executable = 'perlcritic'
-    arguments = '--no-color --verbose "%l|%c|%s|%p|%m (%e)"'
     output_regex = re.compile(
             r'(?P<line>\d+)\|(?P<column>\d+)\|(?P<severity>\d+)\|'
             r'(?P<origin>.*?)\|(?P<message>.*)')
@@ -29,7 +28,7 @@ class PerlCriticBear(LocalBear, Lint):
 
         :param perlcritic_config: Location of the perlcriticrc config file.
         '''
-
+        self.arguments = '--no-color --verbose "%l|%c|%s|%p|%m (%e)"'
         if perlcritic_config:
             self.arguments += (" --config "
                                + escape_path_argument(perlcritic_config))

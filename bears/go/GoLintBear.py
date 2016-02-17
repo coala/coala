@@ -22,6 +22,7 @@ class GoLintBear(LocalBear, Lint):
         :param golint_cli_options: Any other flags you wish to pass to golint
                                    can be passed.
         '''
+        self.arguments = ""
         if golint_cli_options:
             self.arguments += " " + golint_cli_options
 
