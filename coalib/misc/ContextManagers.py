@@ -174,15 +174,15 @@ def prepare_file(lines,
     Can create a temporary file (if filename is None) with the lines.
     Can also add a trailing newline to each line specified if needed.
 
-    :param lines:            The lines from the file. (list of strings)
+    :param lines:            The lines from the file. (list or tuple of strings)
     :param filename:         The filename to be prepared.
     :param force_linebreaks: Whether to append newlines at each line if needed.
     :param create_tempfile:  Whether to save lines in tempfile if needed.
     :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
     """
     if force_linebreaks:
-        for i, line in enumerate(lines):
-            lines[i] = line if line.endswith("\n") else line + "\n"
+        lines = type(lines)(line if line.endswith('\n') else line+'\n'
+                            for line in lines)
 
     if not create_tempfile and filename is None:
         filename = "dummy_file_name"
