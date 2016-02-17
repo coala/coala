@@ -408,12 +408,16 @@ def yield_ignore_ranges(file_dict):
                     yield (bears,
                            SourceRange.from_values(filename,
                                                    start,
-                                                   end_line=line_number))
+                                                   1,
+                                                   line_number,
+                                                   len(file[line_number-1])))
             elif "ignore " in line:
                 yield (get_ignore_scope(line, "ignore "),
                        SourceRange.from_values(filename,
                                                line_number,
-                                               end_line=line_number+1))
+                                               1,
+                                               line_number+1,
+                                               len(file[line_number])))
 
 
 def process_queues(processes,
