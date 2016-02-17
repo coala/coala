@@ -13,8 +13,6 @@ class coalaJSONTest(unittest.TestCase):
 
     def setUp(self):
         self.old_argv = sys.argv
-        self.unescaped_coafile = os.path.abspath("./.coafile")
-        self.coafile = re.escape(self.unescaped_coafile)
 
     def tearDown(self):
         sys.argv = self.old_argv
