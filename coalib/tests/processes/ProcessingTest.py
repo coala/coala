@@ -296,6 +296,13 @@ class ProcessingTest(unittest.TestCase):
                          tuple,
                          msg="files in file_dict should not be editable")
 
+        # Non existent file
+        file_dict = get_file_dict(["non_existent_file"], self.log_printer)
+        self.assertEqual(file_dict, {})
+        self.assertIn(("Failed to read file 'non_existent_file' because of "
+                       "an unknown error."),
+                      self.log_printer.log_queue.get().message)
+
     def test_simplify_section_result(self):
         results = (True,
                    {"file1": [Result("a", "b")], "file2": None},
