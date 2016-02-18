@@ -8,7 +8,7 @@ from itertools import chain
 from coalib.collecting import Dependencies
 from coalib.collecting.Collectors import collect_files
 from coalib.misc.StringConverter import StringConverter
-from coalib.output.printers import LOG_LEVEL
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.LogPrinterThread import LogPrinterThread
