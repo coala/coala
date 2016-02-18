@@ -3,10 +3,7 @@
 import locale
 import sys
 from os import getenv
-from os.path import exists
-from shutil import copyfileobj
 from subprocess import call
-from urllib.request import urlopen
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
 from coalib import assert_supported_version
@@ -25,26 +22,6 @@ try:
     locale.getlocale()
 except (ValueError, UnicodeError):
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-
-
-def download(url, filename, overwrite=False):
-    """
-    Downloads the given URL to the given filename. If the file exists, it won't
-    be downloaded.
-
-    :param url:       A URL to download.
-    :param filename:  The file to store the downloaded file to.
-    :param overwrite: Set to True if the file should be downloaded even if it
-                      already exists.
-    :return:          The filename.
-    """
-    if not exists(filename) or overwrite:
-        print("Downloading", filename + "...")
-        with urlopen(url) as response, open(filename, 'wb') as out_file:
-            copyfileobj(response, out_file)
-        print("DONE.")
-
-    return filename
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):
@@ -84,9 +61,6 @@ with open('test-requirements.txt') as requirements:
 
 
 if __name__ == "__main__":
-    download('http://sourceforge.net/projects/checkstyle/files/checkstyle/'
-             '6.15/checkstyle-6.15-all.jar',
-             'bears/java/checkstyle.jar')
     data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
 
     setup(name='coala',
@@ -103,8 +77,7 @@ if __name__ == "__main__":
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
           install_requires=required,
           tests_require=test_required,
-          package_data={'coalib': ['default_coafile', "VERSION"],
-                        'bears.java': ['checkstyle.jar', 'google_checks.xml']},
+          package_data={'coalib': ['default_coafile', "VERSION"]},
           license="AGPL-3.0",
           data_files=data_files,
           long_description="coala is a simple COde AnaLysis Application. Its "
