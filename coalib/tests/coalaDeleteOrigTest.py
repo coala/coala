@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 
 from coalib import coala_delete_orig
@@ -6,10 +7,6 @@ from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.parsing import Globbing
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-
-
-def raise_assertion_error(*args, **kwargs):
-    raise AssertionError
 
 
 class coalaDeleteOrigTest(unittest.TestCase):
@@ -28,15 +25,23 @@ class coalaDeleteOrigTest(unittest.TestCase):
         os.getcwd = old_getcwd
 
     def test_remove_exception(self):
-        old_remove = os.remove
         old_glob = Globbing.glob
-        Globbing.glob = lambda *args: ["file1", "file2"]
-        os.remove = raise_assertion_error
+
+        # Non existent file
         with retrieve_stdout() as stdout:
+            Globbing.glob = lambda *args: ["non_existent_file"]
             retval = coala_delete_orig.main(section=self.section)
             output = stdout.getvalue()
             self.assertEqual(retval, 0)
-            self.assertIn("Couldn't delete... file1", output)
-            self.assertIn("Couldn't delete... file2", output)
-        os.remove = old_remove
+            self.assertIn("Couldn't delete", output)
+
+        # Directory instead of file
+        with tempfile.TemporaryDirectory() as filename, \
+                retrieve_stdout() as stdout:
+            Globbing.glob = lambda *args: [filename]
+            retval = coala_delete_orig.main(section=self.section)
+            output = stdout.getvalue()
+            self.assertEqual(retval, 0)
+            self.assertIn("Couldn't delete", output)
+
         Globbing.glob = old_glob

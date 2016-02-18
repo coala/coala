@@ -25,9 +25,10 @@ def main(log_printer=None, section: Section=None):
                          + os.path.relpath(ofile))
         try:
             os.remove(ofile)
-        except:
+        except OSError as oserror:
             not_deleted += 1
-            log_printer.warn("Couldn't delete... " + os.path.relpath(ofile))
+            log_printer.warn("Couldn't delete... {}. {}".format(
+                os.path.relpath(ofile), oserror.strerror))
 
     if not_deleted:
         log_printer.warn(str(not_deleted) + " .orig backup files could not be"
