@@ -1,9 +1,8 @@
 [Default]
-files = *.py, bears/**/*.py, coalib/**/*.py, ./coala
+files = *.py, coalib/**/*.py, ./coala
 ignore =
     coalib/tests/bearlib/languages/documentation/documentation_extraction_testdata/data.py,
     coalib/tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
-    bears/tests/python/test_files/pylint_test.py
 
 max_line_length = 80
 use_spaces = True
