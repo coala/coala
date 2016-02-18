@@ -24,7 +24,7 @@ class EspeakPrinter(Printer, ClosableObject):
                   " from http://espeak.sourceforge.net/ or installed via "
                   "your usual package repositories.")
             raise EnvironmentError
-        except:  # pragma: no cover
+        except subprocess.SubprocessError:  # pragma: no cover
             print("Failed to execute eSpeak. An unknown error occurred.",
                   Constants.THIS_IS_A_BUG)
             raise EnvironmentError
