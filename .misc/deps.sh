@@ -17,10 +17,6 @@ deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3
 deps_perl="perl libperl-critic-perl"
 sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus $deps_perl
 
-# NPM commands
-sudo rm -rf /opt/alex # Delete ghc-alex as it clashes with npm deps
-npm install
-
 # GO commands
 go get -u github.com/golang/lint/golint
 go get -u golang.org/x/tools/cmd/goimports
@@ -42,6 +38,14 @@ for dep_version in "${dep_versions[@]}" ; do
   cd ..
 
 done
+
+# cabal commands
+cabal update --verbose=0
+cabal install --verbose=0 hlint
+
+# NPM commands
+sudo rm -rf /opt/alex # Delete ghc-alex as it clashes with npm deps
+npm install
 
 # Calling setup.py will download checkstyle automatically so tests may succeed
 python3 setup.py --help
