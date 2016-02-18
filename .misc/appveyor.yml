@@ -49,8 +49,8 @@ install:
   - ps: "ls \"C:\\wheels\""
   - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r test-requirements.txt"
   - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r requirements.txt"
-  - "%CMD_IN_ENV% pip -q install -r test-requirements.txt"
-  - "%CMD_IN_ENV% pip -q install -r requirements.txt"
+  - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r test-requirements.txt"
+  - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r requirements.txt"
   - "%CMD_IN_ENV% pip -q install --upgrade astroid"
   # Calling setup.py will download checkstyle automatically so tests may succeed
   - "%CMD_IN_ENV% python setup.py --help"
