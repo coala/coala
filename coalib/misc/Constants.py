@@ -37,9 +37,6 @@ FALSE_STRINGS = ['0',
 COMPLEX_TEST_STRING = ("4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ "
                        "ĦŊħ ß°^ \\\n\u2192")
 
-# Results from coverage for unittests are stored here.
-COVERAGE_DIR = "./.coverageresults"
-
 # Path to the coalib directory
 coalib_root = os.path.join(os.path.dirname(__file__),
                            os.path.pardir)
