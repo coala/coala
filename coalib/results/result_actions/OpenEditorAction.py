@@ -44,7 +44,7 @@ class OpenEditorAction(ApplyPatchAction):
             subprocess.call(editor_args)
 
         for filename in filenames:
-            with open(filename) as file:
+            with open(filename, encoding='utf-8') as file:
                 new_file = file.readlines()
 
             original_file = original_file_dict[filename]
