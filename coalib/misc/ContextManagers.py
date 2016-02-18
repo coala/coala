@@ -189,7 +189,7 @@ def prepare_file(lines,
 
     if not isinstance(filename, str) and create_tempfile:
         with make_temp(**tempfile_kwargs) as filename:
-            with open(filename, 'w') as file:
+            with open(filename, 'w', encoding='utf-8') as file:
                 file.writelines(lines)
             yield lines, filename
     else:
