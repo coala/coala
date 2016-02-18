@@ -104,7 +104,9 @@ class Lint(Bear):
         stdout_output, stderr_output = run_shell_command(command,
                                                          stdin=stdin_input)
         stdout_output = tuple(stdout_output.splitlines(keepends=True))
+        print("stdout_output : = ", stdout_output)
         stderr_output = tuple(stderr_output.splitlines(keepends=True))
+        print("stderr_output: = ", stderr_output)
         results_output = stderr_output if self.use_stderr else stdout_output
         results = self.process_output(results_output, filename, file)
         if not self.use_stderr:
@@ -152,6 +154,7 @@ class Lint(Bear):
         command = self.executable + ' ' + self.arguments
         for key in ("filename", "config_file"):
             kwargs[key] = escape_path_argument(kwargs.get(key, "") or "")
+        print("command: = ", command.format(**kwargs))
         return command.format(**kwargs)
 
     def __print_errors(self, errors):
