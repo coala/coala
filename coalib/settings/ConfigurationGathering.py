@@ -1,5 +1,7 @@
 import os
 import sys
+from os.path import dirname
+from os.path import isdir
 
 from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
@@ -176,12 +178,14 @@ def find_user_config(file_path, max_trials=10):
     file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
         file_path)))
     old_dir = None
-    base_dir = os.path.dirname(file_path)
+    base_dir = file_path if isdir(file_path) else dirname(file_path)
     home_dir = os.path.expanduser("~")
 
     while base_dir != old_dir and old_dir != home_dir and max_trials != 0:
         config_file = os.path.join(base_dir, ".coafile")
-        if os.path.isfile(config_file):
+        if (
+                os.path.isfile(config_file) and
+                os.path.basename(config_file) == ".coafile"):
             return config_file
 
         old_dir = base_dir
