@@ -47,7 +47,7 @@ class ApplyPatchAction(ResultAction):
                 shutil.copy2(filename, filename + ".orig")
 
             # Write new contents
-            with open(filename, mode='w') as file:
+            with open(filename, mode='w', encoding='utf-8') as file:
                 file.writelines(new_file)
 
         return file_diff_dict
