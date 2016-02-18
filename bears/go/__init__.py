@@ -1,3 +1,0 @@
-"""
-Go related bears.
-"""
