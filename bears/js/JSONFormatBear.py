@@ -10,7 +10,7 @@ from coalib.results.Result import Result
 class JSONFormatBear(Lint, LocalBear):
     try:
         DecodeError = json.decoder.JSONDecodeError
-    except:
+    except AttributeError:
         DecodeError = ValueError
 
     diff_message = ("This file can be reformatted by sorting keys and "
