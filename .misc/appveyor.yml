@@ -29,14 +29,7 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - "SET PATH=%GOROOT%\bin;%PATH%"
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "SET PATH=C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
-
-  # language-tool needs the registry tweaked here since it determines the java
-  # version wrong (since appveyor has both, 1.7 and 1.8 in x86 and x64).
-  - "SET KEY_NAME=HKLM\\Software\\JavaSoft\\Java Runtime Environment"
-  - "REG add \"%KEY_NAME%\" /v CurrentVersion /t REG_SZ /d 1.7 /f"
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
@@ -54,10 +47,6 @@ install:
   - "%CMD_IN_ENV% pip -q install --upgrade astroid"
   # Calling setup.py will download checkstyle automatically so tests may succeed
   - "%CMD_IN_ENV% python setup.py --help"
-
-  - ps: "Install-Product node ''"  # Use latest node v5.x.x
-  - "npm config set loglevel warn"
-  - "npm install"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 

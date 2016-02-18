@@ -1,17 +1,4 @@
 PyPrint>=0.2.0
 setuptools>=19.2
-munkres3>=1.0.5.5
-pylint>=1.5.2
-language-check>=0.7.5
-autopep8>=1.2.1
-eradicate>=0.1.6
-autoflake>=0.6.6
-restructuredtext_lint>=0.14.0
-proselint>=0.3.5
-cpplint>=0.0.7
-isort>=4.2.2
-html-linter>=0.3.0
 # Do *not* use 0.3 which is not backwards compatible to common clang versions
 libclang-py3==0.2
-guess-language-spirit>=0.5.2
-radon>=1.2.2
