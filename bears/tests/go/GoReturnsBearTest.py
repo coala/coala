@@ -29,7 +29,6 @@ func main() {
 """.split('\n')
 
 
-
 GoReturnsBearTest = verify_local_bear(
     GoReturnsBear,
     (good_file1,good_file2,),
