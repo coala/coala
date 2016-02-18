@@ -1,4 +1,3 @@
-import platform
 from contextlib import contextmanager
 from subprocess import PIPE, Popen
 
@@ -77,42 +76,42 @@ def get_shell_type():  # pragma: no cover
     return "sh"
 
 
-def prepare_string_argument(string, os=platform.system()):
+def prepare_string_argument(string, shell=get_shell_type()):
     """
     Prepares a string argument for being passed as a parameter on shell.
 
-    On Linux and Darwin this function effectively encloses the given string
+    On `sh` this function effectively encloses the given string
     with quotes (either '' or "", depending on content).
 
     :param string: The string to prepare for shell.
-    :param os:     The shell platform to prepare string argument for. Possible
-                   "Linux" and "Darwin" (others will be ignored and return the
-                   given string without modification).
+    :param shell:  The shell platform to prepare string argument for.
+                   If it is not "sh" it will be ignored and return the
+                   given string without modification.
     :return:       The shell-prepared string.
     """
-    if os == "Linux" or os == "Darwin":
+    if shell == "sh":
         return '"' + escape(string, '"') + '"'
     else:
         return string
 
 
-def escape_path_argument(path, os=platform.system()):
+def escape_path_argument(path, shell=get_shell_type()):
     """
     Makes a raw path ready for using as parameter in a shell command (escapes
     illegal characters, surrounds with quotes etc.).
 
-    :param path: The path to make ready for shell.
-    :param os:   The shell platform to escape the path argument for. Possible
-                 values are "Windows", "Linux" and "Darwin" (others will be
-                 ignored and return the given path without modification).
-    :return:     The escaped path argument.
+    :param path:  The path to make ready for shell.
+    :param shell: The shell platform to escape the path argument for. Possible
+                  values are "sh", "powershell", and "cmd" (others will be
+                  ignored and return the given path without modification).
+    :return:      The escaped path argument.
     """
-    if os == "Windows":
+    if shell == "cmd":
         # If a quote (") occurs in path (which is illegal for NTFS file
         # systems, but maybe for others), escape it by preceding it with
         # a caret (^).
         return '"' + escape(path, '"', '^') + '"'
-    elif os == "Linux" or os == "Darwin":
+    elif shell == "sh":
         return escape(path, " ")
     else:
         # Any other non-supported system doesn't get a path escape.

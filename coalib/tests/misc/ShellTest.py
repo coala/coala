@@ -9,70 +9,68 @@ from coalib.misc.Shell import (
 
 class EscapePathArgumentTest(unittest.TestCase):
 
-    def test_escape_path_argument_linux_and_darwin(self):
-        osnames = ("Linux", "Darwin")
-
-        for osname in osnames:
-            self.assertEqual(
-                escape_path_argument("/home/usr/a-file", osname),
-                "/home/usr/a-file")
-            self.assertEqual(
-                escape_path_argument("/home/usr/a-dir/", osname),
-                "/home/usr/a-dir/")
-            self.assertEqual(
-                escape_path_argument("/home/us r/a-file with spaces.bla",
-                                     osname),
-                "/home/us\\ r/a-file\\ with\\ spaces.bla")
-            self.assertEqual(
-                escape_path_argument("/home/us r/a-dir with spaces/x/",
-                                     osname),
-                "/home/us\\ r/a-dir\\ with\\ spaces/x/")
-            self.assertEqual(
-                escape_path_argument(
-                    "relative something/with cherries and/pickles.delicious",
-                    osname),
-                "relative\\ something/with\\ cherries\\ and/pickles.delicious")
-
-    def test_escape_path_argument_windows(self):
-        osname = "Windows"
+    def test_escape_path_argument_sh(self):
+        _type = "sh"
         self.assertEqual(
-            escape_path_argument("C:\\Windows\\has-a-weird-shell.txt", osname),
+            escape_path_argument("/home/usr/a-file", _type),
+            "/home/usr/a-file")
+        self.assertEqual(
+            escape_path_argument("/home/usr/a-dir/", _type),
+            "/home/usr/a-dir/")
+        self.assertEqual(
+            escape_path_argument("/home/us r/a-file with spaces.bla",
+                                 _type),
+            "/home/us\\ r/a-file\\ with\\ spaces.bla")
+        self.assertEqual(
+            escape_path_argument("/home/us r/a-dir with spaces/x/",
+                                 _type),
+            "/home/us\\ r/a-dir\\ with\\ spaces/x/")
+        self.assertEqual(
+            escape_path_argument(
+                "relative something/with cherries and/pickles.delicious",
+                _type),
+            "relative\\ something/with\\ cherries\\ and/pickles.delicious")
+
+    def test_escape_path_argument_cmd(self):
+        _type = "cmd"
+        self.assertEqual(
+            escape_path_argument("C:\\Windows\\has-a-weird-shell.txt", _type),
             "\"C:\\Windows\\has-a-weird-shell.txt\"")
         self.assertEqual(
-            escape_path_argument("C:\\Windows\\lolrofl\\dirs\\", osname),
+            escape_path_argument("C:\\Windows\\lolrofl\\dirs\\", _type),
             "\"C:\\Windows\\lolrofl\\dirs\\\"")
         self.assertEqual(
-            escape_path_argument("X:\\Users\\Maito Gai\\fi le.exe", osname),
+            escape_path_argument("X:\\Users\\Maito Gai\\fi le.exe", _type),
             "\"X:\\Users\\Maito Gai\\fi le.exe\"")
         self.assertEqual(
             escape_path_argument("X:\\Users\\Mai to Gai\\director y\\",
-                                 osname),
+                                 _type),
             "\"X:\\Users\\Mai to Gai\\director y\\\"")
         self.assertEqual(
             escape_path_argument("X:\\Users\\Maito Gai\\\"seven-gates\".y",
-                                 osname),
+                                 _type),
             "\"X:\\Users\\Maito Gai\\^\"seven-gates^\".y\"")
         self.assertEqual(
             escape_path_argument("System32\\my-custom relative tool\\",
-                                 osname),
+                                 _type),
             "\"System32\\my-custom relative tool\\\"")
         self.assertEqual(
-            escape_path_argument("System32\\illegal\" name \"\".curd", osname),
+            escape_path_argument("System32\\illegal\" name \"\".curd", _type),
             "\"System32\\illegal^\" name ^\"^\".curd\"")
 
-    def test_escape_path_argument_unsupported_os(self):
-        osname = "INVALID"
+    def test_escape_path_argument_unsupported(self):
+        _type = "INVALID"
         self.assertEqual(
-            escape_path_argument("/home/usr/a-file", osname),
+            escape_path_argument("/home/usr/a-file", _type),
             "/home/usr/a-file")
         self.assertEqual(
-            escape_path_argument("/home/us r/a-file with spaces.bla", osname),
+            escape_path_argument("/home/us r/a-file with spaces.bla", _type),
             "/home/us r/a-file with spaces.bla")
         self.assertEqual(
-            escape_path_argument("|home|us r|a*dir with spaces|x|", osname),
+            escape_path_argument("|home|us r|a*dir with spaces|x|", _type),
             "|home|us r|a*dir with spaces|x|")
         self.assertEqual(
-            escape_path_argument("system|a|b|c?d", osname),
+            escape_path_argument("system|a|b|c?d", _type),
             "system|a|b|c?d")
 
 
@@ -155,8 +153,7 @@ class PrepareStringArgumentTest(unittest.TestCase):
                              "bsn \n A",
                              "unrecognized \\q escape")
 
-    def test_prepare_string_argument_linux_and_darwin(self):
-        testoses = ("Linux", "Darwin")
+    def test_prepare_string_argument_sh(self):
         expected_results = ('"normal_string"',
                             '"string with spaces"',
                             '"string with quotes\\"a"',
@@ -165,12 +162,10 @@ class PrepareStringArgumentTest(unittest.TestCase):
                             '"unrecognized \\q escape"')
 
         for string, result in zip(self.test_strings, expected_results):
-            for testos in testoses:
-                self.assertEqual(prepare_string_argument(string, testos),
-                                 result)
+            self.assertEqual(prepare_string_argument(string, "sh"),
+                             result)
 
-    def test_prepare_string_argument_unsupported_os(self):
-        testos = "WeIrD_O/S"
-
+    def test_prepare_string_argument_unsupported(self):
         for string in self.test_strings:
-            self.assertEqual(prepare_string_argument(string, testos), string)
+            self.assertEqual(prepare_string_argument(string, "WeIrD_O/S"),
+                             string)
