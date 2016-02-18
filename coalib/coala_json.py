@@ -14,7 +14,6 @@
 import json
 
 from coalib.coala_main import run_coala
-from coalib.misc.Exceptions import get_exitcode
 from coalib.output.JSONEncoder import JSONEncoder
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
@@ -26,10 +25,7 @@ def main():
     #       The args are again parsed later to find the settings and configs
     #       to use during analysis.
     arg_parser = default_arg_parser()
-    try:
-        args = arg_parser.parse_args()
-    except BaseException as exception:  # Ignore PyLintBear
-        return get_exitcode(exception)
+    args = arg_parser.parse_args()
 
     log_printer = None if args.text_logs else ListLogPrinter()
     results, exitcode = run_coala(log_printer=log_printer, autoapply=False)

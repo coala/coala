@@ -54,9 +54,8 @@ class coalaJSONTest(unittest.TestCase):
         self.assertTrue(found)
 
     def test_version(self):
-        retval, output = execute_coala(coala_json.main, 'coala-json', '-v')
-        self.assertEquals(retval, 0)
-        self.assertNotIn("{", output)
+        with self.assertRaises(SystemExit):
+            execute_coala(coala_json.main, 'coala-json', '-v')
 
     def test_text_logs(self):
         retval, output = execute_coala(
