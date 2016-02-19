@@ -1,9 +1,9 @@
 import os
 import re
+import shlex
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.Shell import escape_path_argument
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.Setting import typed_list
 
@@ -49,7 +49,7 @@ class PyLintBear(LocalBear, Lint):
         if pylint_cli_options:
             self.arguments += " " + pylint_cli_options
         if pylint_rcfile:
-            self.arguments += " --rcfile=" + escape_path_argument(pylint_rcfile)
+            self.arguments += " --rcfile=" + shlex.quote(pylint_rcfile)
         else:
             self.arguments += " --rcfile=" + os.devnull
         self.arguments += " {filename}"

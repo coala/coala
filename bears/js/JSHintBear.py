@@ -1,8 +1,8 @@
 import re
+import shlex
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.Shell import escape_path_argument
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
@@ -29,6 +29,6 @@ class JSHintBear(LocalBear, Lint):
         self.arguments = '--verbose {filename}'
         if jshint_config:
             self.arguments += (" --config "
-                               + escape_path_argument(jshint_config))
+                               + shlex.quote(jshint_config))
 
         return self.lint(filename)

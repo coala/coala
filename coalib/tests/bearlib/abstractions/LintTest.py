@@ -1,10 +1,10 @@
 import os
 import unittest
+import shlex
 
 from bears.c_languages.IndentBear import IndentBear
 from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.bearlib.abstractions.Lint import Lint
-from coalib.misc.Shell import escape_path_argument
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
@@ -102,7 +102,7 @@ class LintTest(unittest.TestCase):
 
         self.assertEqual(
             self.uut._create_command(config_file="configfile").strip(),
-            "echo -c " + escape_path_argument("configfile"))
+            "echo -c " + shlex.quote("configfile"))
 
     def test_config_file_generator(self):
         self.uut.executable = "echo"

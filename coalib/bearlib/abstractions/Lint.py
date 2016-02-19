@@ -2,9 +2,10 @@ import os
 import re
 import shutil
 import tempfile
+import shlex
 
 from coalib.bears.Bear import Bear
-from coalib.misc.Shell import escape_path_argument, run_shell_command
+from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
@@ -146,7 +147,7 @@ class Lint(Bear):
     def _create_command(self, **kwargs):
         command = self.executable + ' ' + self.arguments
         for key in ("filename", "config_file"):
-            kwargs[key] = escape_path_argument(kwargs.get(key, "") or "")
+            kwargs[key] = shlex.quote(kwargs.get(key, "") or "")
         return command.format(**kwargs)
 
     def __print_errors(self, errors):
