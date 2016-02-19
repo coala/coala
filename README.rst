@@ -40,7 +40,7 @@ USAGE
 
 If you want to learn more about coala, its functionality and its usage,
 please take a look at our
-`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorial.html>`__.
+`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorials/Tutorial.html>`__.
 
 ABOUT
 =====
