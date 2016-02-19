@@ -79,10 +79,10 @@ def parse_custom_settings(sections,
     :param line_parser:          The LineParser to use.
     """
     for setting_definition in custom_settings_list:
-        (dummy,
+        (_,
          key_touples,
          value,
-         dummy) = line_parser.parse(setting_definition)
+         _) = line_parser.parse(setting_definition)
         for key_touple in key_touples:
             append_to_sections(sections,
                                key=key_touple[1],
