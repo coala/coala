@@ -52,7 +52,7 @@ be
 
 The ``output_regex`` is used to group parts of the output (such as ``lines``,
 ``columns``, ``severity`` and ``message``) so it can be used by the Lint
-class to yield Results(more on communicating with the user
+class to yield Results (more on communicating with the user
 :doc:`Writing Bears <Writing_Bears>`).
 
 In order to figure out the ``output_regex`` we have to first see how the
