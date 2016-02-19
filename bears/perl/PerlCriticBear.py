@@ -1,8 +1,8 @@
 import re
+import shlex
 
 from coalib.bearlib.abstractions.Lint import Lint
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.Shell import escape_path_argument
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
@@ -31,6 +31,6 @@ class PerlCriticBear(LocalBear, Lint):
         self.arguments = '--no-color --verbose "%l|%c|%s|%p|%m (%e)"'
         if perlcritic_config:
             self.arguments += (" --config "
-                               + escape_path_argument(perlcritic_config))
+                               + shlex.quote(perlcritic_config))
         self.arguments += " {filename}"
         return self.lint(filename)
