@@ -35,6 +35,11 @@ def is_binary_present(cls):
 
 class Lint(Bear):
     """
+    Deals with the creation of linting bears.
+
+    For the tutorial see:
+    http://coala.readthedocs.org/en/latest/Users/Tutorials/Linter_Bears.html
+
     :param executable:      The executable to run the linter.
     :param arguments:       The arguments to supply to the linter, such
                             that the file name to be analyzed can be
