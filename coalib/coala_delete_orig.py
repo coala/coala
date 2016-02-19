@@ -26,7 +26,7 @@ def main(log_printer=None, section: Section=None):
             os.remove(ofile)
         except OSError as oserror:
             not_deleted += 1
-            log_printer.warn("Couldn't delete... {}. {}".format(
+            log_printer.warn("Couldn't delete {}. {}".format(
                 os.path.relpath(ofile), oserror.strerror))
 
     if not_deleted:
