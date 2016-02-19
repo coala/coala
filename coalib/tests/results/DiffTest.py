@@ -1,9 +1,7 @@
 import json
 import unittest
+from unittest.case import SkipTest
 
-from clang.cindex import Index
-
-from bears.tests.c_languages import skip_if_no_clang
 from coalib.output.JSONEncoder import JSONEncoder
 from coalib.results.Diff import ConflictError, Diff, SourceRange
 
@@ -137,16 +135,22 @@ class DiffTest(unittest.TestCase):
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.modified, b)
 
-    @skip_if_no_clang()
     def test_from_clang_fixit(self):
+        try:
+            from clang.cindex import Index, LibclangError
+        except ImportError as err:
+            raise SkipTest(str(err))
+
         joined_file = 'struct { int f0; }\nx = { f0 :1 };\n'
         file = joined_file.splitlines(True)
         fixed_file = ['struct { int f0; }\n', 'x = { .f0 = 1 };\n']
+        try:
+            tu = Index.create().parse('t.c', unsaved_files=[
+                ('t.c', joined_file)])
+        except LibclangError as err:
+            raise SkipTest(str(err))
 
-        tu = Index.create().parse('t.c', unsaved_files=[
-            ('t.c', joined_file)])
         fixit = tu.diagnostics[0].fixits[0]
-
         clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
         self.assertEqual(fixed_file, clang_fixed_file)
 
