@@ -1,9 +1,8 @@
 import os
 import unittest
 
-from bears.c_languages.IndentBear import IndentBear
-from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib.bearlib.abstractions.Lint import Lint
+from coalib.misc.ContextManagers import prepare_file
 from coalib.misc.Shell import escape_path_argument
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
@@ -67,17 +66,19 @@ class LintTest(unittest.TestCase):
             ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 0)
 
-    @generate_skip_decorator(IndentBear)
     def test_stdin_input(self):
-        self.uut.executable = IndentBear.executable
-        self.uut.use_stdin = True
-        self.uut.use_stderr = False
-        self.uut.process_output = lambda output, filename, file: output
+        with prepare_file(["abcd", "efgh"], None) as (lines, filename):
+            # Use more which is a command that can take stdin and show it.
+            # This is available in windows and unix.
+            self.uut.executable = "more"
+            self.uut.use_stdin = True
+            self.uut.use_stderr = False
+            self.uut.process_output = lambda output, filename, file: output
 
-        input_file = ["int main(){return 0;}"]
-        out = self.uut.lint(file=input_file)
-        self.assertEqual(out,
-                         ('int\n', 'main ()\n', '{\n', '  return 0;\n', '}\n'))
+            out = self.uut.lint(file=lines)
+            # Some implementations of `more` add an extra newline at the end.
+            self.assertTrue(("abcd\n", "efgh\n") == out or
+                            ("abcd\n", "efgh\n", "\n") == out)
 
     def test_missing_binary(self):
         old_binary = Lint.executable
