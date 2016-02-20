@@ -43,33 +43,33 @@ class coalaCITest(unittest.TestCase):
                          "own code.")
 
     def test_find_issues(self):
-        with bear_test_module():
-            with prepare_file(["#fixme"], None) as (lines, filename):
-                retval, output = execute_coala(
-                   coala_ci.main, "coala-ci",
-                   "-c", os.devnull,
-                   "-b", "LineCountTestBear",
-                   "-f", re.escape(filename))
-                self.assertIn("This file has 1 lines.",
-                              output,
-                              "The output should report count as 1 lines")
-                self.assertNotEqual(retval, 0,
-                                    "coala-ci was expected to return non-zero")
+        with bear_test_module(), \
+                prepare_file(["#fixme"], None) as (lines, filename):
+            retval, output = execute_coala(
+               coala_ci.main, "coala-ci",
+               "-c", os.devnull,
+               "-b", "LineCountTestBear",
+               "-f", re.escape(filename))
+            self.assertIn("This file has 1 lines.",
+                          output,
+                          "The output should report count as 1 lines")
+            self.assertNotEqual(retval, 0,
+                                "coala-ci was expected to return non-zero")
 
     def test_fix_patchable_issues(self):
-        with bear_test_module():
-            with prepare_file(["\t#include <a>"], None) as (lines, filename):
-                retval, output = execute_coala(
-                    coala_ci.main, "coala-ci",
-                    "-c", os.devnull,
-                    "-f", re.escape(filename),
-                    "-b", "SpaceConsistencyTestBear",
-                    "--settings", "autoapply=true", "use_spaces=True",
-                    "default_actions=SpaceConsistencyTestBear:ApplyPatchAction")
-                self.assertIn("Applied 'ApplyPatchAction'", output)
-                self.assertEqual(retval, 5,
-                                 "coala-ci must return exitcode 5 when it "
-                                 "autofixes the code.")
+        with bear_test_module(), \
+                prepare_file(["\t#include <a>"], None) as (lines, filename):
+            retval, output = execute_coala(
+                coala_ci.main, "coala-ci",
+                "-c", os.devnull,
+                "-f", re.escape(filename),
+                "-b", "SpaceConsistencyTestBear",
+                "--settings", "autoapply=true", "use_spaces=True",
+                "default_actions=SpaceConsistencyTestBear:ApplyPatchAction")
+            self.assertIn("Applied 'ApplyPatchAction'", output)
+            self.assertEqual(retval, 5,
+                             "coala-ci must return exitcode 5 when it "
+                             "autofixes the code.")
 
     def test_tagging(self):
         log_printer = LogPrinter(NullPrinter())

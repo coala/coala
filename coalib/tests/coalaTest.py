@@ -19,13 +19,13 @@ class coalaTest(unittest.TestCase):
         sys.argv = self.old_argv
 
     def test_coala(self):
-        with bear_test_module():
-            with prepare_file(["#fixme"], None) as (lines, filename):
-                retval, output = execute_coala(
-                                 coala.main,
-                                "coala", "-c", os.devnull,
-                                "-f", re.escape(filename),
-                                "-b", "LineCountTestBear")
+        with bear_test_module(), \
+                prepare_file(["#fixme"], None) as (lines, filename):
+            retval, output = execute_coala(
+                             coala.main,
+                            "coala", "-c", os.devnull,
+                            "-f", re.escape(filename),
+                            "-b", "LineCountTestBear")
             self.assertIn("This file has 1 lines.",
                           output,
                           "The output should report count as 1 lines")
