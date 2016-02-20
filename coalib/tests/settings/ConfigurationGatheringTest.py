@@ -243,7 +243,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         old_cwd = os.getcwd()
         try:
             os.chdir(child_dir)
-            sections, dummy, dummy, dummy = gather_configuration(
+            sections, _, _, _ = gather_configuration(
                 lambda *args: True,
                 self.log_printer,
                 arg_list=["--find-config"])
@@ -285,7 +285,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         os.path.isfile = old_isfile
 
     def test_autoapply_arg(self):
-        sections, dummy, dummy, dummy = gather_configuration(
+        sections, _, _, _ = gather_configuration(
             lambda *args: True,
             self.log_printer,
             autoapply=False,
@@ -294,7 +294,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(str(sections['default'].get('autoapply', None)),
                          'False')
 
-        sections, dummy, dummy, dummy = gather_configuration(
+        sections, _, _, _ = gather_configuration(
             lambda *args: True,
             self.log_printer,
             autoapply=True,
