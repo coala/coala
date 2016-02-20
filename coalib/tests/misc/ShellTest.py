@@ -20,16 +20,16 @@ class EscapePathArgumentTest(unittest.TestCase):
         self.assertEqual(
             escape_path_argument("/home/us r/a-file with spaces.bla",
                                  _type),
-            "/home/us\\ r/a-file\\ with\\ spaces.bla")
+            "'/home/us r/a-file with spaces.bla'")
         self.assertEqual(
             escape_path_argument("/home/us r/a-dir with spaces/x/",
                                  _type),
-            "/home/us\\ r/a-dir\\ with\\ spaces/x/")
+            "'/home/us r/a-dir with spaces/x/'")
         self.assertEqual(
             escape_path_argument(
                 "relative something/with cherries and/pickles.delicious",
                 _type),
-            "relative\\ something/with\\ cherries\\ and/pickles.delicious")
+            "'relative something/with cherries and/pickles.delicious'")
 
     def test_escape_path_argument_cmd(self):
         _type = "cmd"

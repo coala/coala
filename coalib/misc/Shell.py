@@ -112,7 +112,7 @@ def escape_path_argument(path, shell=get_shell_type()):
         # a caret (^).
         return '"' + escape(path, '"', '^') + '"'
     elif shell == "sh":
-        return escape(path, " ")
+        return shlex.quote(path)
     else:
         # Any other non-supported system doesn't get a path escape.
         return path
