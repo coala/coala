@@ -5,7 +5,7 @@ import unittest
 
 from coalib import coala_format
 from coalib.misc.ContextManagers import prepare_file
-from coalib.tests.TestUtilities import execute_coala
+from coalib.tests.TestUtilities import bear_test_module, execute_coala
 
 
 class coalaFormatTest(unittest.TestCase):
@@ -17,18 +17,15 @@ class coalaFormatTest(unittest.TestCase):
         sys.argv = self.old_argv
 
     def test_line_count(self):
-        with prepare_file(["#fixme"], None) as (lines, filename):
-            bear = "LineCountBear"
-            retval, output = execute_coala(
-                             coala_format.main,
-                            "coala-format", "-c", os.devnull,
-                            "--settings", "files=" + re.escape(filename),
-                            "bears=" + bear)
-            self.assertRegex(output,
-                             r'msg:This file has [0-9]+ lines.',
-                             "coala-format output for line count should"
-                             " not be empty")
-            self.assertEqual(retval,
-                             1,
+        with bear_test_module(), \
+                prepare_file(["#fixme"], None) as (lines, filename):
+            retval, output = execute_coala(coala_format.main, "coala-format",
+                                           "-c", os.devnull,
+                                           "-f", re.escape(filename),
+                                           "-b", "LineCountTestBear")
+            self.assertRegex(output, r'msg:This file has [0-9]+ lines.',
+                             "coala-format output for line count should "
+                             "not be empty")
+            self.assertEqual(retval, 1,
                              "coala-format must return exitcode 1 when it "
                              "yields results")
