@@ -9,6 +9,7 @@ from coalib.output.ConsoleInteraction import acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import Setting, fill_section, fill_settings
+from coalib.tests.TestUtilities import bear_test_module
 
 
 class GlobalTestBear(GlobalBear):
@@ -48,9 +49,9 @@ class SectionFillingTest(unittest.TestCase):
                           self.log_printer)
             self.assertEqual(generator.last_input, -1)
 
-        self.section.append(Setting("bears", "SpaceConsistencyBear"))
+        self.section.append(Setting("bears", "SpaceConsistencyTestBear"))
 
-        with simulate_console_inputs("True"):
+        with simulate_console_inputs("True"), bear_test_module():
             local_bears, global_bears = fill_settings(sections,
                                                       acquire_settings,
                                                       self.log_printer)
