@@ -90,7 +90,7 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
     valid_dirs = list(filter(lambda fname: os.path.isdir(fname[0]),
                              icollect(dir_paths, ignored_dir_paths)))
     if valid_dirs:
-        collected_dirs, dummy = zip(*valid_dirs)
+        collected_dirs, _ = zip(*valid_dirs)
         return list(collected_dirs)
     else:
         return []
