@@ -31,25 +31,24 @@ class coalaCITest(unittest.TestCase):
             ".*\\[ERROR\\].*The requested coafile '.*' does not exist.\n")
 
     def test_find_no_issues(self):
-        retval, output = execute_coala(
-            coala_ci.main, "coala-ci", 'docs', '-c', self.coafile)
-        self.assertRegex(output,
-                         "(.*Unable to collect bears from.*PyLintBear.*)?",
-                         "coala-ci output should be empty when running "
-                         "over its own code.")
-        self.assertEqual(retval,
-                         0,
-                         "coala-ci must return zero when running over its "
-                         "own code.")
+        with bear_test_module(), \
+                prepare_file(["#include <a>"], None) as (lines, filename):
+            retval, output = execute_coala(coala_ci.main, "coala-ci",
+                                           '-c', os.devnull,
+                                           '-f', re.escape(filename),
+                                           '-b', 'SpaceConsistencyTestBear',
+                                           "--settings", "use_spaces=True")
+            self.assertIn("Executing section Default", output)
+            self.assertEqual(retval, 0,
+                             "coala-ci must return zero when successful")
 
     def test_find_issues(self):
         with bear_test_module(), \
                 prepare_file(["#fixme"], None) as (lines, filename):
-            retval, output = execute_coala(
-               coala_ci.main, "coala-ci",
-               "-c", os.devnull,
-               "-b", "LineCountTestBear",
-               "-f", re.escape(filename))
+            retval, output = execute_coala(coala_ci.main, "coala-ci",
+                                           "-c", os.devnull,
+                                           "-b", "LineCountTestBear",
+                                           "-f", re.escape(filename))
             self.assertIn("This file has 1 lines.",
                           output,
                           "The output should report count as 1 lines")
@@ -72,23 +71,31 @@ class coalaCITest(unittest.TestCase):
                              "autofixes the code.")
 
     def test_tagging(self):
-        log_printer = LogPrinter(NullPrinter())
-        execute_coala(coala_ci.main, "coala-ci", 'docs',
-                      "-S", "tag=test_tag", "-c", self.coafile)
-        tag_path = get_tag_path("test_tag", self.unescaped_coafile, log_printer)
-        self.assertTrue(os.path.exists(tag_path))
-        execute_coala(coala_ci.main, "coala-ci", 'docs',
-                      "-S", "dtag=test_tag", "-c", self.coafile)
-        self.assertFalse(os.path.exists(tag_path))
+        with bear_test_module(), \
+                prepare_file(["\t#include <a>"], None) as (lines, filename):
+            log_printer = LogPrinter(NullPrinter())
+            execute_coala(coala_ci.main, "coala-ci", "default",
+                          "-c", self.coafile,
+                          "-f", re.escape(filename),
+                          "-b", "SpaceConsistencyTestBear",
+                          "-S", "tag=test_tag")
+            tag_path = get_tag_path("test_tag",
+                                    self.unescaped_coafile,
+                                    log_printer)
+            self.assertTrue(os.path.exists(tag_path))
+            execute_coala(coala_ci.main, "coala-ci", "default",
+                          "-c", self.coafile,
+                          "-f", re.escape(filename),
+                          "-b", "SpaceConsistencyTestBear",
+                          "-S", "dtag=test_tag")
+            self.assertFalse(os.path.exists(tag_path))
 
     def test_fail_acquire_settings(self):
-        retval, output = execute_coala(coala_ci.main,
-                                       "coala-ci",
-                                       "-b",
-                                       'SpaceConsistencyBear',
-                                       '-c',
-                                       os.devnull)
-        self.assertIn("During execution, we found that some", output)
+        with bear_test_module():
+            retval, output = execute_coala(coala_ci.main, "coala-ci",
+                                           "-b", 'SpaceConsistencyTestBear',
+                                           '-c', os.devnull)
+            self.assertIn("During execution, we found that some", output)
 
     def test_coala_delete_orig(self):
         with TemporaryDirectory() as tempdir,\
