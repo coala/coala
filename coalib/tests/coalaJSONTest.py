@@ -61,3 +61,25 @@ class coalaJSONTest(unittest.TestCase):
         self.assertRegex(
             output,
             ".*\\[ERROR\\].*The requested coafile '.*' does not exist.\n")
+
+    def test_output_file(self):
+        with prepare_file(["#todo this is todo"], None) as (lines, filename):
+            retval, output = execute_coala(coala_json.main, "coala-json",
+                                           "-c", os.devnull,
+                                           "-b", "LineCountTestBear",
+                                           "-f", re.escape(filename))
+            exp_retval, exp_output = execute_coala(coala_json.main,
+                                                   "coala-json",
+                                                   "-c", os.devnull,
+                                                   "-b", "LineCountTestBear",
+                                                   "-f", re.escape(filename),
+                                                   "-o", "file.json")
+
+        with open('file.json') as fp:
+            data = json.load(fp)
+
+        output = json.loads(output)
+
+        self.assertEqual(data['logs'][0]['log_level'],
+                         output['logs'][0]['log_level'])
+        os.remove('file.json')

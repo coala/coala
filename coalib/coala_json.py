@@ -34,10 +34,19 @@ def main():
     if not args.text_logs:
         retval["logs"] = log_printer.logs
 
-    print(json.dumps(retval,
-                     cls=JSONEncoder,
-                     sort_keys=True,
-                     indent=2,
-                     separators=(',', ': ')))
+    if args.output:
+        filename = str(args.output)
+        with open(filename, 'w+') as fp:
+            json.dump(retval, fp,
+                      cls=JSONEncoder,
+                      sort_keys=True,
+                      indent=2,
+                      separators=(',', ': '))
+    else:
+        print(json.dumps(retval,
+                         cls=JSONEncoder,
+                         sort_keys=True,
+                         indent=2,
+                         separators=(',', ': ')))
 
     return exitcode

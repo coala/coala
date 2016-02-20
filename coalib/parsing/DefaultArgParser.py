@@ -106,6 +106,13 @@ def default_arg_parser(formatter_class=None):
                                 metavar='BOOL',
                                 help='Don\'t display logs as json, display '
                                      'them as we normally do in the console.')
+        arg_parser.add_argument('-o',
+                                '--output',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                help='Write the logs as json to a file '
+                                'where filename is specified as argument.')
     if parser_type == 'coala':
         SHOW_BEARS_HELP = ("Display bears and its metadata with the sections "
                            "that they belong to")
