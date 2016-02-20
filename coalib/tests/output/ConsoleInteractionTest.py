@@ -6,8 +6,6 @@ from os.path import abspath, relpath
 from pyprint.ConsolePrinter import ConsolePrinter
 from pyprint.NullPrinter import NullPrinter
 
-from bears.general.KeywordBear import KeywordBear
-from bears.general.LineLengthBear import LineLengthBear
 from coalib.bears.Bear import Bear
 from coalib.misc.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
@@ -88,7 +86,16 @@ class SomeglobalBear(Bear):
 
     def run(self):
         """
-        Some Description.
+        Some global-bear Description.
+        """
+        return None
+
+
+class SomelocalBear(Bear):
+
+    def run(self):
+        """
+        Some local-bear Description.
         """
         return None
 
@@ -99,9 +106,8 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.log_printer = LogPrinter(ConsolePrinter(print_colored=False))
         self.console_printer = ConsolePrinter(print_colored=False)
         self.file_diff_dict = {}
-        self.local_bears = OrderedDict([("default", [KeywordBear]),
-                                        ("test", [LineLengthBear,
-                                                  KeywordBear])])
+        self.local_bears = OrderedDict([("default", [SomelocalBear]),
+                                        ("test", [SomelocalBear])])
         self.global_bears = OrderedDict([("default", [SomeglobalBear]),
                                          ("test", [SomeglobalBear])])
 
@@ -574,8 +580,7 @@ some_file
 
     def test_show_bears(self):
         with retrieve_stdout() as stdout:
-            bears = {KeywordBear: ['default', 'test'],
-                     LineLengthBear: ['test'],
+            bears = {SomelocalBear: ['default', 'test'],
                      SomeglobalBear: ['default', 'test']}
             print_bears(self.log_printer.printer, bears, False)
             expected_string = stdout.getvalue()
@@ -592,9 +597,8 @@ some_file
                        self.global_bears,
                        True,
                        self.log_printer.printer)
-            self.assertEqual(" * KeywordBear\n"
-                             " * LineLengthBear\n"
-                             " * SomeglobalBear\n", stdout.getvalue())
+            self.assertEqual(" * SomeglobalBear\n"
+                             " * SomelocalBear\n", stdout.getvalue())
 
 
 # Own test because this is easy and not tied to the rest
