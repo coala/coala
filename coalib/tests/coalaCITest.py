@@ -6,13 +6,11 @@ from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 from pyprint.NullPrinter import NullPrinter
 
-from bears.c_languages.IndentBear import IndentBear
-from bears.tests.BearTestHelper import generate_skip_decorator
 from coalib import coala_ci
 from coalib.misc.ContextManagers import make_temp, prepare_file
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.Tagging import get_tag_path
-from coalib.tests.TestUtilities import execute_coala
+from coalib.tests.TestUtilities import bear_test_module, execute_coala
 
 
 class coalaCITest(unittest.TestCase):
@@ -45,33 +43,33 @@ class coalaCITest(unittest.TestCase):
                          "own code.")
 
     def test_find_issues(self):
-        with prepare_file(["#todo this is todo"], None) as (lines, filename):
-            bear = "KeywordBear"
-            retval, output = execute_coala(coala_ci.main, "coala-ci", "-c",
-                                           os.devnull, "-S",
-                                           "ci_keywords=#TODO",
-                                           "cs_keywords=#todo",
-                                           "bears=" + bear,
-                                           "-f", re.escape(filename))
-            self.assertIn("The line contains the keyword `#todo`.",
-                          output, "coala-ci output should match the keyword\
-                          #todo")
-            self.assertNotEqual(retval,
-                                0, "coala-ci must return nonzero when "
-                                "matching `#todo` keyword")
+        with bear_test_module():
+            with prepare_file(["#fixme"], None) as (lines, filename):
+                retval, output = execute_coala(
+                   coala_ci.main, "coala-ci",
+                   "-c", os.devnull,
+                   "-b", "LineCountTestBear",
+                   "-f", re.escape(filename))
+                self.assertIn("This file has 1 lines.",
+                              output,
+                              "The output should report count as 1 lines")
+                self.assertNotEqual(retval, 0,
+                                    "coala-ci was expected to return non-zero")
 
-    @generate_skip_decorator(IndentBear)
     def test_fix_patchable_issues(self):
-        with prepare_file(["    #include <a>"], None) as (lines, filename):
-            bear = "IndentBear"
-            retval, output = execute_coala(
-                coala_ci.main, "coala-ci", "-c", os.devnull, "--settings",
-                "files=" + filename, "bears=" + bear, "autoapply=true",
-                "default_actions=" + bear + ":ApplyPatchAction")
-            self.assertEqual(retval,
-                             5,
-                             "coala-ci must return exitcode 5 when it "
-                             "autofixes the code.")
+        with bear_test_module():
+            with prepare_file(["\t#include <a>"], None) as (lines, filename):
+                retval, output = execute_coala(
+                    coala_ci.main, "coala-ci",
+                    "-c", os.devnull,
+                    "-f", re.escape(filename),
+                    "-b", "SpaceConsistencyTestBear",
+                    "--settings", "autoapply=true", "use_spaces=True",
+                    "default_actions=SpaceConsistencyTestBear:ApplyPatchAction")
+                self.assertIn("Applied 'ApplyPatchAction'", output)
+                self.assertEqual(retval, 5,
+                                 "coala-ci must return exitcode 5 when it "
+                                 "autofixes the code.")
 
     def test_tagging(self):
         log_printer = LogPrinter(NullPrinter())
