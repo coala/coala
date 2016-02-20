@@ -15,7 +15,13 @@ test:
   override:
     - bash .misc/tests.sh:
         parallel: true
+    - python .misc/adjust_version_number.py coalib/VERSION -b `date --utc +%Y%m%d%H%M%S`:
+        parallel: true
     - python setup.py install:
+        parallel: true
+    - pip install coala-bears --pre -U:
+        parallel: true
+    - coala-ci -S=autoapply=false:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true
