@@ -44,10 +44,10 @@ class LintTest(unittest.TestCase):
         self.uut.output_regex = (r'(?P<origin>\w+)\|'
                                  r'(?P<line>\d+)\.(?P<column>\d+)\|'
                                  r'(?P<end_line>\d+)\.(?P<end_column>\d+)\|'
-                                 r'(?P<severity>\d+): (?P<message>.*)')
+                                 r'(?P<severity>\w+): (?P<message>.*)')
         self.uut.severity_map = {"I": RESULT_SEVERITY.INFO}
         out = list(self.uut.process_output(
-            ["info_msg|1.0|2.3|0: Info message\n"],
+            ["info_msg|1.0|2.3|I: Info message\n"],
             'a/file.py',
             ['original_file_lines_placeholder']))
         self.assertEqual(len(out), 1)
@@ -79,6 +79,33 @@ class LintTest(unittest.TestCase):
             # Some implementations of `more` add an extra newline at the end.
             self.assertTrue(("abcd\n", "efgh\n") == out or
                             ("abcd\n", "efgh\n", "\n") == out)
+
+    def test_stderr_output(self):
+        self.uut.executable = "echo"
+        self.uut.arguments = "hello"
+        self.uut.use_stdin = False
+        self.uut.use_stderr = True
+        self.uut.process_output = lambda output, filename, file: output
+        out = self.uut.lint("unused_filename")
+        self.assertEqual((), out)  # stderr is used
+
+        self.uut.use_stderr = False
+        out = self.uut.lint("unused_filename")
+        self.assertEqual(('hello\n',), out)  # stdout is used
+
+        def assert_warn(line):
+            assert line == "hello"
+        old_warn = self.uut.warn
+        self.uut.warn = assert_warn
+        self.uut._print_errors(["hello", "\n"])
+        self.uut.warn = old_warn
+
+    def test_gives_corrected(self):
+        self.uut.gives_corrected = True
+        out = tuple(self.uut.process_output(["a", "b"], "filename", ["a", "b"]))
+        self.assertEqual((), out)
+        out = tuple(self.uut.process_output(["a", "b"], "filename", ["a"]))
+        self.assertEqual(len(out), 1)
 
     def test_missing_binary(self):
         old_binary = Lint.executable

@@ -108,7 +108,7 @@ class Lint(Bear):
         results_output = stderr_output if self.use_stderr else stdout_output
         results = self.process_output(results_output, filename, file)
         if not self.use_stderr:
-            self.__print_errors(stderr_output)
+            self._print_errors(stderr_output)
 
         if config_file:
             os.remove(config_file)
@@ -154,7 +154,7 @@ class Lint(Bear):
             kwargs[key] = escape_path_argument(kwargs.get(key, "") or "")
         return command.format(**kwargs)
 
-    def __print_errors(self, errors):
+    def _print_errors(self, errors):
         for line in filter(lambda error: bool(error.strip()), errors):
             self.warn(line)
 
