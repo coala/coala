@@ -10,8 +10,12 @@ case $CIRCLE_NODE_INDEX in
 esac
 
 # apt-get commands
+sudo sh -c 'echo "deb http://cran.rstudio.com/bin/linux/ubuntu precise/" >> /etc/apt/sources.list'
+gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
+gpg -a --export E084DAB9 | sudo apt-key add -
+
 sudo apt-get -qq update
-deps="espeak libclang1-3.4 indent mono-mcs chktex"
+deps="espeak libclang1-3.4 indent mono-mcs chktex r-base"
 deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
 deps_perl="perl libperl-critic-perl"
@@ -26,6 +30,9 @@ go get -u github.com/golang/lint/golint
 go get -u golang.org/x/tools/cmd/goimports
 go get -u sourcegraph.com/sqs/goreturns
 
+
+#R commands
+sudo su - -c "R -e \"install.packages('lintr', dependencies=TRUE, contriburl='http://cran.rstudio.com/src/contrib/')\""
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
