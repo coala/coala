@@ -184,6 +184,23 @@ class Result:
 
         return False
 
+    def overlaps(self, ranges):
+        """
+        Determines if the result overlaps with source ranges provided.
+
+        :param ranges: A list SourceRange objects to check for overlap.
+        :return:       True if the ranges overlap with the result.
+        """
+        if isinstance(ranges, SourceRange):
+            ranges = [ranges]
+
+        for range in ranges:
+            for self_range in self.affected_code:
+                if range.overlaps(self_range):
+                    return True
+
+        return False
+
     def location_repr(self):
         """
         Retrieves a string, that briefly represents

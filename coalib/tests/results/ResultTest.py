@@ -128,6 +128,20 @@ class ResultTest(unittest.TestCase):
                    SourceRange.from_values("e", 1, 1, 2, 2))]
         self.assertTrue(result.to_ignore(ranges))
 
+    def test_overlaps(self):
+        overlapping_range = SourceRange.from_values("file1", 1, 1, 2, 2)
+        nonoverlapping_range = SourceRange.from_values("file2", 1, 1, 2, 2)
+        uut = Result.from_values("origin",
+                                 "message",
+                                 file="file1",
+                                 line=1,
+                                 column=1,
+                                 end_line=2,
+                                 end_column=2)
+        self.assertTrue(uut.overlaps(overlapping_range))
+        self.assertTrue(uut.overlaps([overlapping_range]))
+        self.assertFalse(uut.overlaps(nonoverlapping_range))
+
     def test_location_repr(self):
         result_a = Result(origin="o", message="m")
         self.assertEqual(result_a.location_repr(), "the whole project")
