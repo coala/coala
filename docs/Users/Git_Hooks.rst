@@ -40,7 +40,7 @@ coala to not apply any patch by itself. Or you can run specific sections with
     `*.orig` to your .gitignore. coala creates these files while applying
     patches and they could be erroneously added to your commit.
 
-THis file needs to be executable. If it is not (or if you aren't sure), you
+This file needs to be executable. If it is not (or if you aren't sure), you
 can make it executable by:
 
 .. code:: bash
