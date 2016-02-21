@@ -84,31 +84,32 @@ def acquire_actions_and_apply(console_printer,
     :param cli_actions:     The list of cli actions available.
     """
     cli_actions = cli_actions or CLI_ACTIONS
-    actions = []
-    for action in cli_actions:
-        if action.is_applicable(result, file_dict, file_diff_dict):
-            actions.append(action)
+    while True:
+        actions = []
+        for action in cli_actions:
+            if action.is_applicable(result, file_dict, file_diff_dict):
+                actions.append(action)
 
-    if actions == []:
-        return
+        if actions == []:
+            return
 
-    action_dict = {}
-    metadata_list = []
-    for action in actions:
-        metadata = action.get_metadata()
-        action_dict[metadata.name] = action
-        metadata_list.append(metadata)
+        action_dict = {}
+        metadata_list = []
+        for action in actions:
+            metadata = action.get_metadata()
+            action_dict[metadata.name] = action
+            metadata_list.append(metadata)
 
-    # User can always choose no action which is guaranteed to succeed
-    while ask_for_action_and_apply(log_printer,
-                                   console_printer,
-                                   section,
-                                   metadata_list,
-                                   action_dict,
-                                   result,
-                                   file_diff_dict,
-                                   file_dict):
-        pass
+        # User can always choose no action which is guaranteed to succeed
+        if not ask_for_action_and_apply(log_printer,
+                                        console_printer,
+                                        section,
+                                        metadata_list,
+                                        action_dict,
+                                        result,
+                                        file_diff_dict,
+                                        file_dict):
+            break
 
 
 def print_lines(console_printer,

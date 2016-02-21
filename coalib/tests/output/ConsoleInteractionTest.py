@@ -275,6 +275,38 @@ class ConsoleInteractionTest(unittest.TestCase):
                 self.assertEqual(generator.last_input, 1)
                 self.assertIn(ApplyPatchAction.success_message, sio.getvalue())
 
+            class InvalidateTestAction(ResultAction):
+
+                is_applicable = staticmethod(lambda *args: True)
+
+                def apply(*args, **kwargs):
+                    ApplyPatchAction.is_applicable = staticmethod(
+                        lambda *args: False)
+
+            old_applypatch_is_applicable = ApplyPatchAction.is_applicable
+            ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
+            cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
+
+            with simulate_console_inputs(2, 1, 0) as generator, \
+                    retrieve_stdout() as sio:
+                acquire_actions_and_apply(self.console_printer,
+                                          self.log_printer,
+                                          Section(""),
+                                          self.file_diff_dict,
+                                          Result("origin", "message",
+                                                 diffs={testfile_path: diff}),
+                                          file_dict,
+                                          cli_actions=cli_actions)
+                self.assertEqual(generator.last_input, 2)
+
+                action_fail = "Failed to execute the action"
+                self.assertNotIn(action_fail, sio.getvalue())
+
+                apply_path_desc = ApplyPatchAction().get_metadata().desc
+                self.assertEqual(sio.getvalue().count(apply_path_desc), 1)
+
+            ApplyPatchAction.is_applicable = old_applypatch_is_applicable
+
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
