@@ -31,5 +31,5 @@ func main() {
 
 GoReturnsBearTest = verify_local_bear(
     GoReturnsBear,
-    (good_file1,good_file2,),
+    (good_file1, good_file2,),
     (bad_file1, bad_file2,))
