@@ -12,20 +12,22 @@ class ShowPatchActionTest(unittest.TestCase):
     def setUp(self):
         self.uut = ShowPatchAction()
         self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        diff_dict = {"a": Diff(self.file_dict['a']),
-                     "b": Diff(self.file_dict['b'])}
-        diff_dict["a"].add_lines(1, ["test\n"])
-        diff_dict["a"].delete_line(3)
-        diff_dict["b"].add_lines(0, ["first\n"])
+        self.diff_dict = {"a": Diff(self.file_dict['a']),
+                          "b": Diff(self.file_dict['b'])}
+        self.diff_dict["a"].add_lines(1, ["test\n"])
+        self.diff_dict["a"].delete_line(3)
+        self.diff_dict["b"].add_lines(0, ["first\n"])
 
-        self.test_result = Result("origin", "message", diffs=diff_dict)
+        self.test_result = Result("origin", "message", diffs=self.diff_dict)
         self.section = Section("name")
         self.section.append(Setting("colored", "false"))
 
     def test_is_applicable(self):
         self.assertFalse(self.uut.is_applicable(1, None, None))
         self.assertFalse(self.uut.is_applicable(Result("o", "m"), None, None))
-        self.assertTrue(self.uut.is_applicable(self.test_result, None, None))
+        self.assertTrue(self.uut.is_applicable(self.test_result, {}, {}))
+        self.assertFalse(self.uut.is_applicable(self.test_result, {},
+                                                self.diff_dict))
 
     def test_apply(self):
         with retrieve_stdout() as stdout:

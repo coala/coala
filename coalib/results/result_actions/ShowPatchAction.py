@@ -2,6 +2,7 @@ import difflib
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from coalib.results.Diff import ConflictError
 from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 
@@ -55,7 +56,16 @@ class ShowPatchAction(ResultAction):
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
-        return isinstance(result, Result) and result.diffs is not None
+        if not isinstance(result, Result) or not result.diffs:
+            return False
+
+        try:
+            for filename in result.diffs:
+                if filename in file_diff_dict:
+                    result.diffs[filename].__add__(file_diff_dict[filename])
+            return True
+        except ConflictError:
+            return False
 
     def apply(self,
               result,
