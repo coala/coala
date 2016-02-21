@@ -10,6 +10,6 @@ class GoReturnsBear(Lint, LocalBear):
 
     def run(self, filename, file):
         """
-        Proposes corrections of Go code using gofmt.
+        Proposes corrections of Go code using goreturns.
         """
         return self.lint(filename, file)
