@@ -324,6 +324,75 @@ To use our `htmllint_ignore` setting we can do
 This will not output anything because all the messages had the
 `optional_tag`.
 
+Bears That Can Suggest Corrections
+----------------------------------
+
+Some executables (like `autopep8`) can suggest corrections to be made. We can
+use such executables so that ``coala``, using these bears, can suggest and
+also make automatic corrections.
+
+::
+
+    import autopep8
+
+    from coalib.bearlib.abstractions.Lint import Lint
+    from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
+    from coalib.bears.LocalBear import LocalBear
+    from coalib.settings.Setting import typed_list
+
+
+    class PEP8Bear(Lint, LocalBear):
+        diff_message = "The code does not comply to PEP8."
+        gives_corrected = True
+
+        def lint(self, filename, file, **kwargs):
+            new_file = autopep8.fix_code(''.join(file), options=kwargs)
+            output = new_file.splitlines(True)
+            return self.process_output(output, filename, file)
+
+        def run(self,
+                filename,
+                file,
+                max_line_length: int=80,
+                tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH,
+                pep_ignore: typed_list(str)=(),
+                pep_select: typed_list(str)=()):
+            """
+            Detects and fixes PEP8 incompliant code. This bear will not change
+            functionality of the code in any way.
+
+            :param max_line_length: Maximum number of characters for a line.
+            :param tab_width:       Number of spaces per indent level.
+            :param pep_ignore:      A list of errors/warnings to ignore.
+            :param pep_select:      A list of errors/warnings to exclusively
+                                    apply.
+            """
+            return self.lint(filename,
+                             file,
+                             ignore=pep_ignore,
+                             select=pep_select,
+                             max_line_length=max_line_length,
+                             indent_size=tab_width)
+
+In the example above, things to note are:
+
+::
+
+    gives_corrected = True
+
+This tells the `Lint` class that this bear can suggest corrections.
+
+::
+
+     def lint(self, filename, file, **kwargs):
+        new_file = autopep8.fix_code(''.join(file), options=kwargs)
+        output = new_file.splitlines(True)
+        return self.process_output(output, filename, file)
+
+For such a bear, the `lint` method can be defined(*overidden* to be
+technically correct) as required.
+
+
 You now know how to write a linter Bear and also how to use it in your
 project.
 Congratulations!
