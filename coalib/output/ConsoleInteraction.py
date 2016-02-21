@@ -68,7 +68,8 @@ def acquire_actions_and_apply(console_printer,
                               section,
                               file_diff_dict,
                               result,
-                              file_dict):
+                              file_dict,
+                              cli_actions=None):
     """
     Acquires applicable actions and applies them.
 
@@ -80,9 +81,11 @@ def acquire_actions_and_apply(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
+    :param cli_actions:     The list of cli actions available.
     """
+    cli_actions = cli_actions or CLI_ACTIONS
     actions = []
-    for action in CLI_ACTIONS:
+    for action in cli_actions:
         if action.is_applicable(result, file_dict, file_diff_dict):
             actions.append(action)
 
