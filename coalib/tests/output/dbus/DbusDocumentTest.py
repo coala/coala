@@ -13,11 +13,11 @@ except ImportError as err:
 class DbusDocumentTest(unittest.TestCase):
 
     def setUp(self):
-        self.config_path = os.path.abspath(
+        self.config_path = os.path.relpath(
             os.path.join(os.path.dirname(__file__),
                          "dbus_test_files",
                          ".coafile"))
-        self.testcode_c_path = os.path.abspath(
+        self.testcode_c_path = os.path.relpath(
             os.path.join(os.path.dirname(__file__),
                          "dbus_test_files",
                          "testcode.c"))
@@ -28,14 +28,15 @@ class DbusDocumentTest(unittest.TestCase):
         self.assertEqual(uut.path, "")
 
         uut = DbusDocument(doc_id=1, path=test_file)
-        self.assertEqual(uut.path, os.path.abspath(test_file))
+        self.assertEqual(os.path.relpath(uut.path), os.path.relpath(test_file))
 
     def test_config(self):
         uut = DbusDocument(doc_id=1)
         self.assertEqual(uut.FindConfigFile(), "")
 
         uut.path = self.testcode_c_path
-        self.assertEqual(uut.FindConfigFile(), self.config_path)
+        self.assertEqual(os.path.relpath(
+            uut.FindConfigFile()), self.config_path)
 
         uut.SetConfigFile("config_file")
         self.assertEqual(uut.config_file, "config_file")

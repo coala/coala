@@ -35,6 +35,7 @@ class OpenEditorActionTest(unittest.TestCase):
         fbhandle, self.fb = tempfile.mkstemp()
         os.close(fbhandle)
         self.old_subprocess_call = subprocess.call
+        self.fa, self.fb = map(os.path.relpath, [self.fa, self.fb])
 
     def tearDown(self):
         os.remove(self.fa)
@@ -51,7 +52,6 @@ class OpenEditorActionTest(unittest.TestCase):
         # A patch that was applied for some reason to make things complicated
         diff_dict = {self.fb: Diff(file_dict[self.fb])}
         diff_dict[self.fb].change_line(3, "3\n", "3_changed\n")
-
         # File contents after the patch was applied, that's what's in the files
         current_file_dict = {
             filename: diff_dict[filename].modified
@@ -60,7 +60,6 @@ class OpenEditorActionTest(unittest.TestCase):
         for filename in current_file_dict:
             with open(filename, 'w') as handle:
                 handle.writelines(current_file_dict[filename])
-
         # End file contents after the patch and the OpenEditorAction was
         # applied
         expected_file_dict = {

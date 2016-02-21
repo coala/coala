@@ -42,11 +42,11 @@ mainloop.run()
 class DbusTest(unittest.TestCase):
 
     def setUp(self):
-        self.config_path = os.path.abspath(
+        self.config_path = os.path.relpath(
             os.path.join(os.path.dirname(__file__),
                          "dbus_test_files",
                          ".coafile"))
-        self.testcode_c_path = os.path.abspath(
+        self.testcode_c_path = os.path.relpath(
             os.path.join(os.path.dirname(__file__),
                          "dbus_test_files",
                          "testcode.c"))
@@ -92,7 +92,7 @@ class DbusTest(unittest.TestCase):
 
         config_file = self.document_object.FindConfigFile(
             dbus_interface="org.coala_analyzer.v1")
-        self.assertEqual(config_file, self.config_path)
+        self.assertEqual(os.path.relpath(config_file), self.config_path)
 
         analysis = self.document_object.Analyze(
             dbus_interface="org.coala_analyzer.v1")
