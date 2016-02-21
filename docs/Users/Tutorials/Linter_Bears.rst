@@ -237,6 +237,24 @@ of ways of doing that.
     self.arguments = '--disable=' + ignore
     return self.lint(filename)
 
+Right place for '{filename}'
+--------------------------
+
+Depending on where the executable(``html_lint.py`` in this case) wants the
+file-name(eg. ``sample.html``) to be present in the command which does the
+linting, we add ``'{filename}'`` to the arguments. When we run
+``html_lint.py -h``, we can see that the command signature is:
+``html5_lint.py [--disable=DISABLE] FILENAME...``
+
+So, we want ``'{filename}'`` at the end of the arguments.
+
+::
+
+    self.arguments = '--disable=' + ignore
+    self.arguments += ' {filename}'
+    return self.lint(filename)
+
+
 Finished Bear
 -------------
 
@@ -277,6 +295,7 @@ it should look something like this
             '''
             ignore = ','.join(part.strip() for part in htmllint_ignore)
             self.arguments = '--disable=' + ignore
+            self.arguments += ' {filename}'
             return self.lint(filename)
 
 Running and Testing our Bear
