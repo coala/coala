@@ -1,4 +1,5 @@
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
+from coalib.misc.Decorators import enforce_signature
 
 
 class SpacingHelper(SectionCreatable):
@@ -16,16 +17,14 @@ class SpacingHelper(SectionCreatable):
 
         self.tab_width = tab_width
 
-    def get_indentation(self, line):
+    @enforce_signature
+    def get_indentation(self, line: str):
         """
         Checks the lines indentation.
 
         :param line: A string to check for indentation.
         :return:     The indentation count in spaces.
         """
-        if not isinstance(line, str):
-            raise TypeError("The 'line' parameter should be a string.")
-
         count = 0
         for char in line:
             if char == ' ':
@@ -40,7 +39,8 @@ class SpacingHelper(SectionCreatable):
 
         return count
 
-    def replace_tabs_with_spaces(self, line):
+    @enforce_signature
+    def replace_tabs_with_spaces(self, line: str):
         """
         Replaces tabs in this line with the appropriate number of spaces.
 
@@ -50,16 +50,14 @@ class SpacingHelper(SectionCreatable):
         :param line: The string with tabs to replace.
         :return:     A string with no tabs.
         """
-        if not isinstance(line, str):
-            raise TypeError("The 'line' parameter should be a string.")
-
         for t_position, t_length in sorted(self.yield_tab_lengths(line),
                                            reverse=True):
             line = line[:t_position] + t_length * ' ' + line[t_position+1:]
 
         return line
 
-    def yield_tab_lengths(self, input):
+    @enforce_signature
+    def yield_tab_lengths(self, input: str):
         """
         Yields position and size of tabs in a input string.
 
@@ -76,7 +74,8 @@ class SpacingHelper(SectionCreatable):
 
             tabless_position += 1
 
-    def replace_spaces_with_tabs(self, line):
+    @enforce_signature
+    def replace_spaces_with_tabs(self, line: str):
         """
         Replaces spaces with tabs where possible. However in no case only one
         space will be replaced by a tab.
@@ -87,9 +86,6 @@ class SpacingHelper(SectionCreatable):
         :param line: The string with spaces to replace.
         :return:     The converted string.
         """
-        if not isinstance(line, str):
-            raise TypeError("The 'line' parameter should be a string.")
-
         currspaces = 0
         result = ""
         # Tracking the index of the string isnt enough because tabs are
