@@ -53,20 +53,28 @@ class SpacingHelper(SectionCreatable):
         if not isinstance(line, str):
             raise TypeError("The 'line' parameter should be a string.")
 
-        result = ""
+        for t_position, t_length in sorted(self.yield_tab_lengths(line),
+                                           reverse=True):
+            line = line[:t_position] + t_length * ' ' + line[t_position+1:]
+
+        return line
+
+    def yield_tab_lengths(self, input):
+        """
+        Yields position and size of tabs in a input string.
+
+        :param input: The string with tabs.
+        """
         tabless_position = 0
-        for char in line:
+        for index, char in enumerate(input):
             if char == '\t':
                 space_count = (self.tab_width - tabless_position
                                % self.tab_width)
-                result += space_count * " "
+                yield index, space_count
                 tabless_position += space_count
                 continue
 
-            result += char
             tabless_position += 1
-
-        return result
 
     def replace_spaces_with_tabs(self, line):
         """
