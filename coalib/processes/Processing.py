@@ -159,6 +159,25 @@ def autoapply_actions(results,
     return not_processed_results
 
 
+def check_result_ignore(result, ignore_ranges):
+    """
+    Determines if the result has to be ignored.
+
+    :param result:        The result that needs to be checked.
+    :param ignore_ranges: A list of tuples, each containing a list of lower
+                          cased affected bearnames and a SourceRange to
+                          ignore. If any of the bearname lists is empty, it
+                          is considered an ignore range for all bears.
+    :return:              True if the result has to be ignored.
+    """
+    for bears, range in ignore_ranges:
+        if ((len(bears) == 0 or result.origin.lower() in bears) and
+                result.overlaps(range)):
+            return True
+
+    return False
+
+
 def print_result(results,
                  file_dict,
                  retval,
@@ -192,7 +211,7 @@ def print_result(results,
     results = list(filter(lambda result:
                           type(result) is Result and
                           result.severity >= min_severity and
-                          not result.to_ignore(ignore_ranges),
+                          not check_result_ignore(result, ignore_ranges),
                           results))
 
     if bool(section.get('autoapply', 'true')):

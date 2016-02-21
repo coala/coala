@@ -99,35 +99,6 @@ class ResultTest(unittest.TestCase):
 
         self.assertEqual(file_dict, expected_file_dict)
 
-    def test_to_ignore(self):
-        ranges = [([], SourceRange.from_values("f", 1, 1, 2, 2))]
-        result = Result.from_values("origin",
-                                    "message",
-                                    file="e",
-                                    line=1,
-                                    column=1,
-                                    end_line=2,
-                                    end_column=2)
-
-        self.assertFalse(result.to_ignore(ranges))
-
-        ranges.append(([], SourceRange.from_values("e", 2, 3, 3, 3)))
-        self.assertFalse(result.to_ignore(ranges))
-
-        ranges.append(([], SourceRange.from_values("e", 1, 1, 2, 2)))
-        self.assertTrue(result.to_ignore(ranges))
-
-        result1 = Result.from_values("origin", "message", file="e")
-        self.assertFalse(result1.to_ignore(ranges))
-
-        ranges = [(['something', 'else', 'not origin'],
-                   SourceRange.from_values("e", 1, 1, 2, 2))]
-        self.assertFalse(result.to_ignore(ranges))
-
-        ranges = [(['something', 'else', 'origin'],
-                   SourceRange.from_values("e", 1, 1, 2, 2))]
-        self.assertTrue(result.to_ignore(ranges))
-
     def test_overlaps(self):
         overlapping_range = SourceRange.from_values("file1", 1, 1, 2, 2)
         nonoverlapping_range = SourceRange.from_values("file2", 1, 1, 2, 2)

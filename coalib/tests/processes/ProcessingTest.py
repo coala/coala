@@ -12,15 +12,16 @@ from pyprint.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
-    ACTIONS, autoapply_actions, create_process_group, execute_section,
-    filter_raising_callables, get_default_actions, get_file_dict, print_result,
-    process_queues, simplify_section_result)
+    ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
+    execute_section, filter_raising_callables, get_default_actions,
+    get_file_dict, print_result, process_queues, simplify_section_result)
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ResultAction import ResultAction
+from coalib.results.SourceRange import SourceRange
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
@@ -312,6 +313,35 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(yielded, True)
         self.assertEqual(yielded_unfixed, True)
         self.assertEqual(len(all_results), 2)
+
+    def test_ignore_results(self):
+        ranges = [([], SourceRange.from_values("f", 1, 1, 2, 2))]
+        result = Result.from_values("origin",
+                                    "message",
+                                    file="e",
+                                    line=1,
+                                    column=1,
+                                    end_line=2,
+                                    end_column=2)
+
+        self.assertFalse(check_result_ignore(result, ranges))
+
+        ranges.append(([], SourceRange.from_values("e", 2, 3, 3, 3)))
+        self.assertFalse(check_result_ignore(result, ranges))
+
+        ranges.append(([], SourceRange.from_values("e", 1, 1, 2, 2)))
+        self.assertTrue(check_result_ignore(result, ranges))
+
+        result1 = Result.from_values("origin", "message", file="e")
+        self.assertFalse(check_result_ignore(result1, ranges))
+
+        ranges = [(['something', 'else', 'not origin'],
+                   SourceRange.from_values("e", 1, 1, 2, 2))]
+        self.assertFalse(check_result_ignore(result, ranges))
+
+        ranges = [(['something', 'else', 'origin'],
+                   SourceRange.from_values("e", 1, 1, 2, 2))]
+        self.assertTrue(check_result_ignore(result, ranges))
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):
