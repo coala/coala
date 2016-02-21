@@ -30,7 +30,7 @@ def bear_test_module():
     """
     old_iter = pkg_resources.iter_entry_points
     bears_test_module = os.path.join(os.path.dirname(__file__),
-                                     "coala_bears_test_module",
+                                     "test_bears",
                                      "__init__.py")
 
     def test_iter_entry_points(name):
