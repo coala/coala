@@ -128,11 +128,11 @@ def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
     """
     for char in line:
         if char == " ":
-            console_printer.print("•", color='gray', end='')
+            console_printer.print("•", color='cyan', end='')
         elif char == '\t' and tab_dict:
             tab_count = tab_dict[index]
             console_printer.print(
-                '-'*(tab_count-1) + '>', color='gray', end='')
+                '-'*(tab_count-1) + '>', color='cyan', end='')
         else:
             console_printer.print(char, color=color, end='')
         index += 1
