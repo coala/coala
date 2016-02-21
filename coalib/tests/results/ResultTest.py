@@ -1,5 +1,5 @@
 import unittest
-from os.path import relpath
+from os.path import abspath
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import RESULT_SEVERITY, Result
@@ -43,7 +43,7 @@ class ResultTest(unittest.TestCase):
         self.assertEqual(output, {"id": str(uut.id),
                                   "origin": "origin",
                                   "message": "msg",
-                                  "file": relpath("file"),
+                                  "file": abspath("file"),
                                   "line_nr": "2",
                                   "severity": "INFO",
                                   "debug_msg": "dbg"})

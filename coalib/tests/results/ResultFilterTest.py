@@ -1,6 +1,6 @@
 import os
 import unittest
-from os.path import relpath
+from os.path import abspath
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import RESULT_SEVERITY, Result
@@ -66,7 +66,7 @@ class ResultFilterTest(unittest.TestCase):
             severity=RESULT_SEVERITY.NORMAL,
             debug_msg="another debug message")
 
-        file_dict = {relpath("original"): []}
+        file_dict = {abspath("original"): []}
 
         self.assertEqual(sorted(filter_results(original_file_dict=file_dict,
                                                modified_file_dict=file_dict,
@@ -352,11 +352,11 @@ class ResultFilterTest(unittest.TestCase):
 
         with open(self.original_file_name, "r") as original_file:
             original_file_dict = {
-                relpath("file_name"): original_file.readlines()}
+                abspath("file_name"): original_file.readlines()}
 
             with open(self.modified_file_name, "r") as modified_file:
                 modified_file_dict = {
-                    relpath("file_name"): modified_file.readlines()}
+                    abspath("file_name"): modified_file.readlines()}
 
                 # 'TIS THE IMPORTANT PART
                 self.assertEqual(sorted(filter_results(original_file_dict,
@@ -371,7 +371,7 @@ class ResultFilterTest(unittest.TestCase):
         testfile_2_new = ['0\n', '1\n', '2\n']
         old_result = Result.from_values('origin', 'message', 'tf1', 1)
         new_result = Result.from_values('origin', 'message', 'tf1', 1)
-        tf1 = relpath('tf1')
+        tf1 = abspath('tf1')
         original_file_dict = {tf1: testfile_1, 'tf2': testfile_2}
         modified_file_dict = {tf1: testfile_1, 'tf2': testfile_2_new}
 
@@ -456,7 +456,7 @@ class ResultFilterTest(unittest.TestCase):
 
     def test_result_range_inline_overlap(self):
         test_file = ["123456789\n"]
-        test_file_dict = {relpath("test_file"): test_file}
+        test_file_dict = {abspath("test_file"): test_file}
 
         source_range1 = SourceRange.from_values("test_file", 1, 1, 1, 4)
         source_range2 = SourceRange.from_values("test_file", 1, 2, 1, 3)
@@ -468,14 +468,14 @@ class ResultFilterTest(unittest.TestCase):
 
         result_diff = remove_result_ranges_diffs(
             [test_result],
-            test_file_dict)[test_result][relpath("test_file")]
+            test_file_dict)[test_result][abspath("test_file")]
         expected_diff = Diff.from_string_arrays(test_file, ["789\n"])
 
         self.assertEqual(result_diff, expected_diff)
 
     def test_result_range_line_wise_overlap(self):
         test_file = ["11", "22", "33", "44", "55", "66"]
-        test_file_dict = {relpath("test_file"): test_file}
+        test_file_dict = {abspath("test_file"): test_file}
 
         source_range1 = SourceRange.from_values("test_file", 2, 2, 5, 1)
         source_range2 = SourceRange.from_values("test_file", 3, 1, 4, 1)
@@ -486,7 +486,7 @@ class ResultFilterTest(unittest.TestCase):
 
         result_diff = remove_result_ranges_diffs(
             [test_result],
-            test_file_dict)[test_result][relpath("test_file")]
+            test_file_dict)[test_result][abspath("test_file")]
         expected_diff = Diff.from_string_arrays(test_file,
                                                 ["11", "2", "5", "66"])
 
@@ -494,14 +494,14 @@ class ResultFilterTest(unittest.TestCase):
 
     def test_no_range(self):
         test_file = ["abc"]
-        test_file_dict = {relpath("test_file"): test_file}
+        test_file_dict = {abspath("test_file"): test_file}
 
         test_result = Result("origin",
                              "message")
 
         result_diff = remove_result_ranges_diffs(
             [test_result],
-            test_file_dict)[test_result][relpath("test_file")]
+            test_file_dict)[test_result][abspath("test_file")]
         expected_diff = Diff.from_string_arrays(test_file, ["abc"])
 
         self.assertEqual(result_diff, expected_diff)

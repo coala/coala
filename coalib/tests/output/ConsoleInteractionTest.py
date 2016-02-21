@@ -1,7 +1,7 @@
 import os
 import unittest
 from collections import OrderedDict
-from os.path import relpath
+from os.path import abspath, relpath
 
 from pyprint.ConsolePrinter import ConsolePrinter
 from pyprint.NullPrinter import NullPrinter
@@ -252,8 +252,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                                         affected_code=affected_code),
                                  file_dict,
                                  color=True)
-            self.assertIn(relpath(some_file),
-                          stdout.getvalue())
+            self.assertEqual(stdout.getvalue(),
+                             "\n"+relpath(some_file)+"\n")
 
     def test_acquire_actions_and_apply(self):
         with make_temp() as testfile_path:
@@ -371,7 +371,7 @@ Project wide:
                                     "Trailing whitespace found",
                                     file="filename",
                                     line=2)],
-                {relpath("filename"): ["test line\n", "line 2\n", "line 3\n"]},
+                {abspath("filename"): ["test line\n", "line 2\n", "line 3\n"]},
                 {},
                 color=False)
             self.assertEqual("""\nfilename
@@ -389,7 +389,7 @@ Project wide:
                                     "Trailing whitespace found",
                                     file="filename",
                                     line=5)],
-                {relpath("filename"): ["test line\n",
+                {abspath("filename"): ["test line\n",
                                        "line 2\n",
                                        "line 3\n",
                                        "line 4\n",
@@ -415,7 +415,7 @@ Project wide:
                                               "Trailing whitespace found",
                                               file="file",
                                               line=2)],
-                          {relpath("file"): ["test line\n",
+                          {abspath("file"): ["test line\n",
                                              "line 2\n",
                                              "line 3\n",
                                              "line 4\n",
@@ -448,9 +448,9 @@ file
                 [Result("ClangCloneDetectionBear",
                         "Clone Found",
                         affected_code)],
-                {relpath("some_file"): ["line " + str(i + 1) + "\n"
+                {abspath("some_file"): ["line " + str(i + 1) + "\n"
                                         for i in range(10)],
-                 relpath("another_file"): ["line " + str(i + 1) + "\n"
+                 abspath("another_file"): ["line " + str(i + 1) + "\n"
                                            for i in range(10)]},
                 {},
                 color=False)
@@ -497,7 +497,7 @@ some_file
                 Section(""),
                 [Result.from_values("t", "msg", file="file", line=5),
                  Result.from_values("t", "msg", file="file", line=6)],
-                {relpath("file"): ["line " + str(i + 1) for i in range(5)]},
+                {abspath("file"): ["line " + str(i + 1) for i in range(5)]},
                 {},
                 color=False)
             self.assertEqual("\n"
@@ -518,7 +518,7 @@ some_file
                 self.log_printer,
                 Section(""),
                 [Result.from_values("t", "msg", file="file")],
-                {relpath("file"): []},
+                {abspath("file"): []},
                 {},
                 color=False)
             self.assertEqual(

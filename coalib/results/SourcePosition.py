@@ -24,7 +24,8 @@ class SourcePosition(TextPosition):
                             - line or columns are no integers.
         """
         TextPosition.__init__(self, line, column)
-        self._file = os.path.relpath(file or os.curdir)
+
+        self._file = os.path.abspath(file)
 
     @property
     def file(self):
