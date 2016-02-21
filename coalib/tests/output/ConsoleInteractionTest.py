@@ -375,7 +375,7 @@ Project wide:
                 {},
                 color=False)
             self.assertEqual("""\nfilename
-|   2| line 2
+|   2| line•2
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
 """,
@@ -397,7 +397,7 @@ Project wide:
                 {},
                 color=False)
             self.assertEqual("""\nfilename
-|   5| line 5
+|   5| line•5
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
 """,
@@ -419,18 +419,18 @@ Project wide:
                                              "line 2\n",
                                              "line 3\n",
                                              "line 4\n",
-                                             "line 5\n"]},
+                                             "line 5\t\n"]},
                           {},
                           color=False)
 
             self.assertEqual("""
 file
-|   2| line 2
+|   2| line•2
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
 
 file
-|   5| line 5
+|   5| line•5->
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
 """,
@@ -456,15 +456,15 @@ file
                 color=False)
             self.assertEqual("""
 another_file
-|   1| line 1
+|   1| line•1
 
 another_file
-|   3| line 3
+|   3| line•3
 
 some_file
-|   5| line 5
-|   6| line 6
-|   7| line 7
+|   5| line•5
+|   6| line•6
+|   7| line•7
 |    | [NORMAL] ClangCloneDetectionBear:
 |    | Clone Found
 """,
@@ -502,7 +502,7 @@ some_file
                 color=False)
             self.assertEqual("\n"
                              "file\n"
-                             "|   5| line 5\n"
+                             "|   5| line•5\n"
                              "|    | [NORMAL] t:\n"
                              "|    | msg\n"
                              "\n"

@@ -8,6 +8,7 @@ import os.path
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.misc.DictUtilities import inverse_dicts
+from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -112,8 +113,34 @@ def acquire_actions_and_apply(console_printer,
             break
 
 
+def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
+                                 tab_width, color, index=0):
+    """
+    Prints the lines with tabs and spaces replaced by unicode
+    symbols.
+
+    :param console_printer: Object to print messages on the console.
+    :param line:            The line to print to the console.
+    :param tab_dict:        A dictionary containing the tab index and length.
+    :param tab_width:       The default tab width of the system.
+    :color:                 The color to print the lines with.
+    :index:                 The index from where to start the printing.
+    """
+    for char in line:
+        if char == " ":
+            console_printer.print("•", color='gray', end='')
+        elif char == '\t' and tab_dict:
+            tab_count = tab_dict[index]
+            console_printer.print(
+                '-'*(tab_count-1) + '>', color='gray', end='')
+        else:
+            console_printer.print(char, color=color, end='')
+        index += 1
+
+
 def print_lines(console_printer,
                 file_dict,
+                section,
                 sourcerange):
     """
     Prints the lines between the current and the result line. If needed
@@ -129,24 +156,32 @@ def print_lines(console_printer,
         console_printer.print(format_lines(lines='', line_nr=i),
                               color=FILE_LINES_COLOR,
                               end='')
-
         line = file_dict[sourcerange.file][i - 1].rstrip("\n")
+        tab_width = int(section.get('tab_width', 4))
+        s = SpacingHelper(tab_width)
+        tab_dict = dict(s.yield_tab_lengths(line))
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
-            console_printer.print(line[:sourcerange.start.column-1],
-                                  color=FILE_LINES_COLOR,
-                                  end='')
+            print_spaces_tabs_in_unicode(
+                console_printer, line[:sourcerange.start.column-1],
+                tab_dict, tab_width, FILE_LINES_COLOR)
+
             printed_chars = sourcerange.start.column-1
 
         if i == sourcerange.end.line and sourcerange.end.column:
-            console_printer.print(line[printed_chars:sourcerange.end.column-1],
-                                  color=HIGHLIGHTED_CODE_COLOR,
-                                  end='')
-            console_printer.print(line[sourcerange.end.column-1:],
-                                  color=FILE_LINES_COLOR)
+            print_spaces_tabs_in_unicode(
+                console_printer, line[printed_chars:sourcerange.end.column-1],
+                tab_dict, tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+
+            print_spaces_tabs_in_unicode(
+                console_printer, line[sourcerange.end.column-1:],
+                tab_dict, tab_width, FILE_LINES_COLOR, sourcerange.end.column)
+            console_printer.print("")
         else:
-            console_printer.print(line[printed_chars:],
-                                  color=HIGHLIGHTED_CODE_COLOR)
+            print_spaces_tabs_in_unicode(
+                console_printer, line[printed_chars:], tab_dict,
+                tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+            console_printer.print("")
 
 
 def print_result(console_printer,
@@ -256,6 +291,7 @@ def print_affected_files(console_printer,
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
+                                     section,
                                      sourcerange)
 
 
@@ -335,7 +371,7 @@ def print_results(log_printer,
                      file_dict)
 
 
-def print_affected_lines(console_printer, file_dict, sourcerange):
+def print_affected_lines(console_printer, file_dict, section, sourcerange):
     console_printer.print("\n" + os.path.relpath(sourcerange.file),
                           color=FILE_NAME_COLOR)
 
@@ -345,6 +381,7 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
         else:
             print_lines(console_printer,
                         file_dict,
+                        section,
                         sourcerange)
 
 
