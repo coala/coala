@@ -126,6 +126,29 @@ You will have coala installed into your python scripts directory. On an
 unixoid system it is probably already available on your command line
 globally.
 
+You can install a development version of Coala, make changes to the package and
+test it using:
+
+::
+
+    python3 setup.py develop
+
+It essentially works the same way as the "install" command but doesn't actually
+install anything.Instead, it creates a special .egg-link file in the deployment
+directory, that links to your project’s source code. And, if your deployment 
+directory is Python’s site-packages directory, it will also update the 
+easy-install.pth file to include your project’s source code, thereby making
+it available on sys.path for all programs using that Python installation.It links 
+your projects source code to the deployment directory to make changes instant when
+you run the project. You only need to run build command when you change a project's
+C extension or similarly compiled files
+
+Those willing to contribute may use "develop" and other are recommended to use 
+"install"
+
+
+
+
 Alternate installation
 ~~~~~~~~~~~~~~~~~~~~~~
 
