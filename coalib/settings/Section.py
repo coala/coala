@@ -3,7 +3,6 @@ import os
 from collections import OrderedDict
 
 from coalib.collecting.Collectors import collect_registered_bears_dirs
-from coalib.misc import Constants
 from coalib.misc.Decorators import enforce_signature, generate_repr
 from coalib.misc.DictUtilities import update_ordered_dict_key
 from coalib.settings.Setting import Setting, path_list
@@ -63,7 +62,6 @@ class Section:
 
     def bear_dirs(self):
         bear_dirs = path_list(self.get("bear_dirs", ""))
-        bear_dirs.append(os.path.join(Constants.coalib_bears_root, "**"))
         bear_dirs += [
             os.path.join(bear_dir, "**")
             for bear_dir in collect_registered_bears_dirs('coalabears')]
