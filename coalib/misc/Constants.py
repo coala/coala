@@ -41,9 +41,6 @@ COMPLEX_TEST_STRING = ("4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓�
 coalib_root = os.path.join(os.path.dirname(__file__),
                            os.path.pardir)
 
-# Path to the directory containing the default bears
-coalib_bears_root = os.path.join(coalib_root, os.path.pardir, "bears")
-
 # Path to the language definition files
 language_definitions = os.path.join(coalib_root,
                                     "bearlib",
