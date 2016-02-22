@@ -63,7 +63,6 @@ class Section:
 
     def bear_dirs(self):
         bear_dirs = path_list(self.get("bear_dirs", ""))
-        bear_dirs.append(os.path.join(Constants.coalib_bears_root, "**"))
         bear_dirs += [
             os.path.join(bear_dir, "**")
             for bear_dir in collect_registered_bears_dirs('coalabears')]
