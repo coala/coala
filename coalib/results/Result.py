@@ -166,21 +166,20 @@ class Result:
 
         return self
 
-    def to_ignore(self, ignore_ranges):
+    def overlaps(self, ranges):
         """
-        Determines if the result has to be ignored.
+        Determines if the result overlaps with source ranges provided.
 
-        :param ignore_ranges: A list of tuples, each containing a list of lower
-                              cased affected bearnames and a SourceRange to
-                              ignore. If any of the bearname lists is empty, it
-                              is considered an ignore range for all bears.
-        :return:              True if this result has to be ignored.
+        :param ranges: A list SourceRange objects to check for overlap.
+        :return:       True if the ranges overlap with the result.
         """
-        for bears, range in ignore_ranges:
-            if len(bears) == 0 or self.origin.lower() in bears:
-                for self_range in self.affected_code:
-                    if range.overlaps(self_range):
-                        return True
+        if isinstance(ranges, SourceRange):
+            ranges = [ranges]
+
+        for range in ranges:
+            for self_range in self.affected_code:
+                if range.overlaps(self_range):
+                    return True
 
         return False
 
