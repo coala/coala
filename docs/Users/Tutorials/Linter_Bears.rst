@@ -5,7 +5,7 @@ Welcome. This tutorial aims to show you how to use the Lint
 class in order to integrate linters in your bears.
 
 Why is This Useful?
---------------------
+-------------------
 
 A lot of programming languages already have linters implemented, so if your
 project uses a language that does not already have a linter Bear you might
@@ -238,7 +238,7 @@ of ways of doing that.
     return self.lint(filename)
 
 Right place for '{filename}'
---------------------------
+----------------------------
 
 Depending on where the executable(``html_lint.py`` in this case) wants the
 file-name(eg. ``sample.html``) to be present in the command which does the

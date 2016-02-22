@@ -27,7 +27,7 @@ coala to not apply any patch by itself. Or you can run specific sections with
 
 .. seealso::
 
-    Module :doc:`Tutorial for Users <Tutorial>`
+    Module :doc:`Tutorial for Users <Tutorials/Tutorial>`
         Documentation on how to run coala which introduces the CLI arguments.
 
     Module :doc:`coafile Specification <coafile>`
