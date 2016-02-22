@@ -156,6 +156,9 @@ def collect_all_bears_from_sections(sections, log_printer):
 
     :param bear_dirs:   directory name or list of such that can contain bears
     :param log_printer: log_printer to handle logging
+    :return:            tuple of dictionaries of local and global bears
+                        The dictionary key is section class and
+                        dictionary value is a list of Bear classes
     """
     local_bears = {}
     global_bears = {}
