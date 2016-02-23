@@ -50,6 +50,8 @@ class Lint(Bear):
                             {filename}    - the filename passed to lint()
                             {config_file} - The config file created using
                                             config_file()
+    :param shell:           Whether to execute the executable in shell. `False`
+                            by default.
     :param output_regex:    The regex which will match the output of the linter
                             to get results. This regex should give out the
                             following variables:
@@ -77,6 +79,7 @@ class Lint(Bear):
     check_prerequisites = classmethod(is_binary_present)
     executable = None
     arguments = ""
+    shell = False
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)\|'
                               r'(?P<severity>\d+): (?P<message>.*)')
     diff_message = 'No result message was set'
@@ -102,7 +105,8 @@ class Lint(Bear):
 
         stdin_input = "".join(file) if self.use_stdin else None
         stdout_output, stderr_output = run_shell_command(self.command,
-                                                         stdin=stdin_input)
+                                                         stdin=stdin_input,
+                                                         shell=self.shell)
         self.stdout_output = tuple(stdout_output.splitlines(keepends=True))
         self.stderr_output = tuple(stderr_output.splitlines(keepends=True))
         results_output = (self.stderr_output if self.use_stderr
