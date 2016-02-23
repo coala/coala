@@ -126,17 +126,21 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
                         log_level=LOG_LEVEL.WARNING)
 
 
-def collect_bears(bear_dirs, bear_globs, kinds, log_printer):
+def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
+                  warn_if_unused_glob=True):
     """
     Collect all bears from bear directories that have a matching kind
     matching the given globs.
 
-    :param bear_dirs:   directory name or list of such that can contain bears
-    :param bear_globs:  globs of bears to collect
-    :param kinds:       list of bear kinds to be collected
-    :param log_printer: log_printer to handle logging
-    :return:            tuple of list of matching bear classes based on kind.
-                        The lists are in the same order as `kinds`
+    :param bear_dirs:           Directory name or list of such that can contain
+                                bears.
+    :param bear_globs:          Globs of bears to collect.
+    :param kinds:               List of bear kinds to be collected.
+    :param log_printer:         LogPrinter to handle logging.
+    :param warn_if_unused_glob: True if warning message should be shown if a
+                                glob didn't give any bears.
+    :return:                    Tuple of list of matching bear classes based on
+                                kind. The lists are in the same order as kinds.
     """
     bears_found = tuple([] for i in range(len(kinds)))
     bear_globs_with_bears = set()
@@ -145,8 +149,9 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer):
         bears_found[index].append(bear)
         bear_globs_with_bears.add(glob)
 
-    _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
-                         "No bears were found matching '{}'.")
+    if warn_if_unused_glob:
+        _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
+                             "No bears were found matching '{}'.")
     return bears_found
 
 
