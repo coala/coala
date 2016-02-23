@@ -240,8 +240,8 @@ of ways of doing that.
 Right place for '{filename}'
 ----------------------------
 
-Depending on where the executable(``html_lint.py`` in this case) wants the
-file-name(eg. ``sample.html``) to be present in the command which does the
+Depending on where the executable (``html_lint.py`` in this case) wants the
+file-name (eg. ``sample.html``) to be present in the command which does the
 linting, we add ``'{filename}'`` to the arguments. When we run
 ``html_lint.py -h``, we can see that the command signature is:
 ``html5_lint.py [--disable=DISABLE] FILENAME...``
