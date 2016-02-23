@@ -256,7 +256,7 @@ def gather_configuration(acquire_settings,
     save_sections(sections)
     warn_nonexistent_targets(targets, sections, log_printer)
 
-    if not autoapply is None:
+    if autoapply is not None:
         if not autoapply and 'autoapply' not in sections['default']:
             sections['default']['autoapply'] = "False"
 
