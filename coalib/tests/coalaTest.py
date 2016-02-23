@@ -43,8 +43,9 @@ class coalaTest(unittest.TestCase):
             bear_lines = [i.startswith(" * ") for i in output.split()]
             self.assertGreater(len(bear_lines), 0)
 
-            retval, output = execute_coala(coala.main, "coala", "-B",
-                                           "-b", "LineCountTestBear",
-                                           "-c", os.devnull)
+            retval, output = execute_coala(
+                coala.main, "coala", "-B",
+                "-b", "LineCountTestBear, SpaceConsistencyTestBear",
+                "-c", os.devnull)
             self.assertEqual(retval, 0)
             self.assertIn(LineCountTestBear.run.__doc__.strip(), output)

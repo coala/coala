@@ -16,21 +16,42 @@ import functools
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.coala_main import run_coala
+from coalib.collecting.Collectors import collect_all_bears_from_sections
 from coalib.output.ConsoleInteraction import (
     acquire_settings, nothing_done, print_results, print_section_beginning,
     show_bears)
+from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.settings.ConfigurationGathering import load_configuration
+from coalib.settings.SectionFilling import fill_settings
 
 
 def main():
+    # Note: We parse the args here once to check whether to show bears or not.
+    arg_parser = default_arg_parser()
+    args = arg_parser.parse_args()
+
     console_printer = ConsolePrinter()
-    partial_show_bears = functools.partial(
-        show_bears,
-        console_printer=console_printer)
+    if args.show_bears or args.show_all_bears:
+        log_printer = LogPrinter(console_printer)
+        sections, _ = load_configuration(arg_list=None, log_printer=log_printer)
+        if args.show_all_bears:
+            local_bears, global_bears = collect_all_bears_from_sections(
+                sections, log_printer)
+        else:
+            # We ignore missing settings as it's not important.
+            local_bears, global_bears = fill_settings(
+                sections,
+                acquire_settings=lambda *args, **kwargs: {},
+                log_printer=log_printer)
+        show_bears(local_bears, global_bears, args.show_all_bears,
+                   console_printer)
+        return 0
+
     partial_print_sec_beg = functools.partial(
         print_section_beginning,
         console_printer)
     results, exitcode = run_coala(
-        show_bears=partial_show_bears,
         print_results=print_results,
         acquire_settings=acquire_settings,
         print_section_beginning=partial_print_sec_beg,
