@@ -34,15 +34,13 @@ def run_interactive_shell_command(command, **kwargs):
     :param command: The command to run on shell. This parameter can either
                     be a sequence of arguments that are directly passed to
                     the process or a string. A string gets splitted beforehand
-                    using `shlex.split()`. If providing `shell=True` as a
-                    keyword-argument, no `shlex.split()` is performed and the
-                    command string goes directly to `subprocess.Popen()`.
+                    using `shlex.split()`.
     :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
                     that are used to spawn the process.
     :return:        A context manager yielding the process started from the
                     command.
     """
-    if not kwargs.get("shell", False) and isinstance(command, str):
+    if isinstance(command, str):
         command = shlex.split(command)
 
     args = {"stdout": PIPE,
