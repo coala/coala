@@ -40,8 +40,10 @@ class coalaTest(unittest.TestCase):
         with bear_test_module():
             retval, output = execute_coala(coala.main, "coala", "-A")
             self.assertEqual(retval, 0)
-            bear_lines = [i.startswith(" * ") for i in output.split()]
-            self.assertGreater(len(bear_lines), 0)
+
+            lines = output.splitlines()
+            bear_lines = sum(1 for line in lines if line.startswith(" * "))
+            self.assertEqual(bear_lines, 2)
 
             retval, output = execute_coala(
                 coala.main, "coala", "-B",
