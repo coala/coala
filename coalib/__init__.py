@@ -1,5 +1,7 @@
 import sys
+import Constants
 
+__version__ = Constants.VERSION
 
 def assert_supported_version():  # pragma: no cover
     if not sys.version_info > (3, 2):
