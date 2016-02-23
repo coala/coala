@@ -1,5 +1,4 @@
 from contextlib import contextmanager
-import shlex
 from subprocess import PIPE, Popen
 
 from coalib.parsing.StringProcessing import escape
@@ -8,34 +7,23 @@ from coalib.parsing.StringProcessing import escape
 @contextmanager
 def run_interactive_shell_command(command, **kwargs):
     """
-    Runs a single command in shell and provides stdout, stderr and stdin
-    streams.
+    Runs a command in shell and provides stdout, stderr and stdin streams.
 
-    This function creates a context manager that sets up the process (using
-    `subprocess.Popen()`), returns to caller, closes streams and waits for
-    process to exit on leaving.
+    This function creates a context manager that sets up the process, returns
+    to caller, closes streams and waits for process to exit on leaving.
 
-    Shell execution is disabled by default (so no shell expansion takes place).
-    If you want to turn shell execution on, you can pass `shell=True` like you
-    would do for `subprocess.Popen()`.
+    The process is opened in `universal_newlines` mode.
 
-    The process is opened in `universal_newlines` mode by default.
-
-    :param command: The command to run on shell. This parameter can either
-                    be a sequence of arguments that are directly passed to
-                    the process or a string. A string gets splitted beforehand
-                    using `shlex.split()`.
+    :param command: The command to run on shell.
     :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
-                    that is used to spawn the process (except `stdout`,
-                    `stderr`, `stdin` and `universal_newlines`, a `TypeError`
-                    is raised then).
+                    that is used to spawn the process (except `shell`,
+                    `stdout`, `stderr`, `stdin` and `universal_newlines`, a
+                    `TypeError` is raised then).
     :return:        A context manager yielding the process started from the
                     command.
     """
-    if isinstance(command, str):
-        command = shlex.split(command)
-
     process = Popen(command,
+                    shell=True,
                     stdout=PIPE,
                     stderr=PIPE,
                     stdin=PIPE,
@@ -52,26 +40,16 @@ def run_interactive_shell_command(command, **kwargs):
 
 def run_shell_command(command, stdin=None, **kwargs):
     """
-    Runs a single command in shell and returns the read stdout and stderr data.
+    Runs a command in shell and returns the read stdout and stderr data.
 
-    This function waits for the process (created using `subprocess.Popen()`) to
-    exit.
+    This function waits for the process to exit.
 
-    Shell execution is disabled by default (so no shell expansion takes place).
-    If you want to turn shell execution on, you can pass `shell=True` like you
-    would do for `subprocess.Popen()`.
-
-    See also `run_interactive_shell_command()`.
-
-    :param command: The command to run on shell. This parameter can either
-                    be a sequence of arguments that are directly passed to
-                    the process or a string. A string gets splitted beforehand
-                    using `shlex.split()`.
+    :param command: The command to run on shell.
     :param stdin:   Initial input to send to the process.
     :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
-                    that is used to spawn the process (except `stdout`,
-                    `stderr`, `stdin` and `universal_newlines`, a `TypeError`
-                    is raised then).
+                    that is used to spawn the process (except `shell`,
+                    `stdout`, `stderr`, `stdin` and `universal_newlines`, a
+                    `TypeError` is raised then).
     :return:        A tuple with `(stdoutstring, stderrstring)`.
     """
     with run_interactive_shell_command(command, **kwargs) as p:
@@ -89,10 +67,10 @@ def get_shell_type():  # pragma: no cover
              Powershell is detected, "cmd" if command prompt is been
              detected or "sh" if it's neither of these.
     """
-    out_hostname, _ = run_shell_command(["echo", "$host.name"], shell=True)
+    out_hostname, _ = run_shell_command(["echo", "$host.name"])
     if out_hostname.strip() == "ConsoleHost":
         return "powershell"
-    out_0, _ = run_shell_command(["echo", "$0"], shell=True)
+    out_0, _ = run_shell_command(["echo", "$0"])
     if out_0.strip() == "" and out_0.strip() == "":
         return "cmd"
     return "sh"

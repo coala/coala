@@ -78,10 +78,12 @@ class RunShellCommandTest(unittest.TestCase):
 
     @staticmethod
     def construct_testscript_command(scriptname):
-        return (sys.executable,
+        return " ".join(
+            escape_path_argument(s) for s in (
+                sys.executable,
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),
                              "run_shell_command_testfiles",
-                             scriptname))
+                             scriptname)))
 
     def test_run_interactive_shell_command(self):
         command = RunShellCommandTest.construct_testscript_command(
@@ -103,7 +105,7 @@ class RunShellCommandTest(unittest.TestCase):
 
         # Test one of the forbidden parameters.
         with self.assertRaises(TypeError):
-            with run_interactive_shell_command("some_command", stdout=None):
+            with run_interactive_shell_command("some_command", shell=False):
                 pass
 
     def test_run_shell_command_without_stdin(self):
