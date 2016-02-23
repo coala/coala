@@ -1,4 +1,8 @@
 import sys
+from coalib.misc import Constants
+
+
+__version__ = Constants.VERSION
 
 
 def assert_supported_version():  # pragma: no cover
