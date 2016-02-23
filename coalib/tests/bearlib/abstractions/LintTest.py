@@ -1,4 +1,5 @@
 import os
+import platform
 import unittest
 
 from coalib.bearlib.abstractions.Lint import Lint
@@ -70,7 +71,12 @@ class LintTest(unittest.TestCase):
         with prepare_file(["abcd", "efgh"], None) as (lines, filename):
             # Use more which is a command that can take stdin and show it.
             # This is available in windows and unix.
-            self.uut.executable = "more"
+            if platform.system() == "Windows":
+                # Windows maps `more.com` to `more` only in shell, but `Lint`
+                # doesn't use it.
+                self.uut.executable = "more.com"
+            else:
+                self.uut.executable = "more"
             self.uut.use_stdin = True
             self.uut.use_stderr = False
             self.uut.process_output = lambda output, filename, file: output
