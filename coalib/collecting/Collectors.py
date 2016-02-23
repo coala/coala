@@ -173,7 +173,8 @@ def collect_all_bears_from_sections(sections, log_printer):
             bear_dirs,
             ["**"],
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
-            log_printer)
+            log_printer,
+            warn_if_unused_glob=False)
     return local_bears, global_bears
 
 
