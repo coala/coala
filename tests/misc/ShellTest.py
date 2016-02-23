@@ -1,5 +1,7 @@
+from contextlib import ExitStack
 import os
 import sys
+from tempfile import NamedTemporaryFile
 import unittest
 
 from coalib.misc.Shell import (
@@ -95,15 +97,38 @@ class RunShellCommandTest(unittest.TestCase):
             self.assertEqual(p.stdout.readline(), "33\n")
             self.assertEqual(p.stdout.readline(), "Exiting program.\n")
 
+            self.assertEqual(p.stdout.read(), "")
+            self.assertEqual(p.stderr.read(), "")
+
+    def test_run_interactive_shell_command_custom_streams(self):
+        command = RunShellCommandTest.construct_testscript_command(
+            "test_interactive_program.py")
+
+        with ExitStack() as stack:
+            streams = {s: stack.enter_context(NamedTemporaryFile(mode="w+"))
+                       for s in ["stdout", "stderr", "stdin"]}
+
+            with run_interactive_shell_command(command, **streams) as p:
+                streams["stdin"].write("712\n")
+                streams["stdin"].flush()
+                streams["stdin"].seek(0)
+
+            self.assertFalse(streams["stdout"].closed)
+            self.assertFalse(streams["stderr"].closed)
+            self.assertFalse(streams["stdin"].closed)
+
+            streams["stdout"].seek(0)
+            self.assertEqual(streams["stdout"].read(),
+                             "test_program X\nType in a number:\n712\n"
+                             "Exiting program.\n")
+
+            streams["stderr"].seek(0)
+            self.assertEqual(streams["stderr"].read(), "")
+
     def test_run_interactive_shell_command_kwargs_delegation(self):
         with self.assertRaises(TypeError):
             with run_interactive_shell_command("some_command",
                                                weird_parameter=30):
-                pass
-
-        # Test one of the forbidden parameters.
-        with self.assertRaises(TypeError):
-            with run_interactive_shell_command("some_command", stdout=None):
                 pass
 
     def test_run_shell_command_without_stdin(self):
@@ -135,10 +160,6 @@ class RunShellCommandTest(unittest.TestCase):
     def test_run_shell_command_kwargs_delegation(self):
         with self.assertRaises(TypeError):
             run_shell_command("super-cool-command", weird_parameter2="abc")
-
-        # Test one of the forbidden parameters.
-        with self.assertRaises(TypeError):
-            run_shell_command("super-cool-command", universal_newlines=False)
 
 
 class PrepareStringArgumentTest(unittest.TestCase):
