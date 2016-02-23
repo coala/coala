@@ -50,6 +50,24 @@ each file:
                 file):
             self.debug("Hello World! Checking file", filename, ".")
 
+The Bear so created is of the type LocalBear which can only read from a single file.
+
+To write a code which can read and extract facts from multiple files,
+A bear of type GlobalBear needs to be created.Here is a simple example 
+for GlobalBear:
+
+.. code:: python
+
+    from coalib.bears.GlobalBear import GlobalBear
+
+
+    class HelloWorldBear(GlobalBear):
+        def run(self,
+                filename,
+                file):
+            self.debug("Hello World! Checking file", filename, ".")
+
+
 This bear is stored at ``./bears/HelloWorldBear``
 
 In order to let coala execute this bear you need to let coala know where
