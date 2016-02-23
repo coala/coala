@@ -107,7 +107,8 @@ class Lint(Bear):
 
         stdin_input = "".join(file) if self.use_stdin else None
         stdout_output, stderr_output = run_shell_command(self.command,
-                                                         stdin=stdin_input)
+                                                         stdin=stdin_input,
+                                                         shell=True)
         self.stdout_output = tuple(stdout_output.splitlines(keepends=True))
         self.stderr_output = tuple(stderr_output.splitlines(keepends=True))
         results_output = (self.stderr_output if self.use_stderr
