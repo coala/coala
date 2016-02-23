@@ -4,8 +4,8 @@ import sys
 import unittest
 
 from coalib.misc.ContextManagers import (
-    make_temp, prepare_file, retrieve_stdout, simulate_console_inputs,
-    subprocess_timeout, suppress_stdout)
+    make_temp, prepare_file, retrieve_stdout, retrieve_stderr,
+    simulate_console_inputs, subprocess_timeout, suppress_stdout)
 from coalib.processes.Processing import create_process_group
 
 
@@ -75,7 +75,12 @@ class ContextManagersTest(unittest.TestCase):
 
     def test_retrieve_stdout(self):
         with retrieve_stdout() as sio:
-            print("test")
+            print("test", file=sys.stdout)
+            self.assertEqual(sio.getvalue(), "test\n")
+
+    def test_retrieve_stderr(self):
+        with retrieve_stderr() as sio:
+            print("test", file=sys.stderr)
             self.assertEqual(sio.getvalue(), "test\n")
 
     def test_simulate_console_inputs(self):

@@ -69,6 +69,20 @@ def replace_stdout(replacement):
 
 
 @contextmanager
+def replace_stderr(replacement):
+    """
+    Replaces stderr with the replacement, yields back to the caller and then
+    reverts everything back.
+    """
+    _stderr = sys.stderr
+    sys.stderr = replacement
+    try:
+        yield
+    finally:
+        sys.stderr = _stderr
+
+
+@contextmanager
 def suppress_stdout():
     """
     Suppresses everything going to stdout.
@@ -93,6 +107,33 @@ def retrieve_stdout():
         oldprint = builtins.print
         try:
             # Overriding stdout doesn't work with libraries, this ensures even
+            # cached variables take this up. Well... it works.
+            def newprint(*args, **kwargs):
+                kwargs['file'] = sio
+                oldprint(*args, **kwargs)
+
+            builtins.print = newprint
+            yield sio
+        finally:
+            builtins.print = oldprint
+
+
+@contextmanager
+def retrieve_stderr():
+    """
+    Yields a StringIO object from which one can read everything that was
+    printed to stderr. (It won't be printed to the real stderr!)
+
+    Example usage:
+
+    with retrieve_stderr() as stderr:
+        print("something")  # Won't print to the console
+        what_was_printed = stderr.getvalue()  # Save the value
+    """
+    with closing(StringIO()) as sio, replace_stderr(sio):
+        oldprint = builtins.print
+        try:
+            # Overriding stderr doesn't work with libraries, this ensures even
             # cached variables take this up. Well... it works.
             def newprint(*args, **kwargs):
                 kwargs['file'] = sio
