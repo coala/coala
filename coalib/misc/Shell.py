@@ -99,11 +99,11 @@ def get_shell_type():  # pragma: no cover
              Powershell is detected, "cmd" if command prompt is been
              detected or "sh" if it's neither of these.
     """
-    out = run_shell_command("echo $host.name", shell=True)[0]
-    if out.strip() == "ConsoleHost":
+    out_hostname, _ = run_shell_command(["echo", "$host.name"], shell=True)
+    if out_hostname.strip() == "ConsoleHost":
         return "powershell"
-    out = run_shell_command("echo $0", shell=True)[0]
-    if out.strip() == "$0":
+    out_0, _ = run_shell_command(["echo", "$0"], shell=True)
+    if out_0.strip() == "" and out_0.strip() == "":
         return "cmd"
     return "sh"
 
