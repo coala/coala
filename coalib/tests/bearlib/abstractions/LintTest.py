@@ -1,4 +1,5 @@
 import os
+import platform
 import unittest
 
 from coalib.bearlib.abstractions.Lint import Lint
