@@ -12,54 +12,41 @@ def run_interactive_shell_command(command, **kwargs):
     streams.
 
     This function creates a context manager that sets up the process (using
-    `subprocess.Popen()`), returns to caller and waits for process to exit on
-    leaving.
+    `subprocess.Popen()`), returns to caller, closes streams and waits for
+    process to exit on leaving.
 
-    By default the process is opened in `universal_newlines` mode and creates
-    pipes for all streams (stdout, stderr and stdin) using `subprocess.PIPE`
-    special value. These pipes are closed automatically, so if you want to get
-    the contents of the streams you should retrieve them before the context
-    manager exits.
+    Shell execution is disabled by default (so no shell expansion takes place).
+    If you want to turn shell execution on, you can pass `shell=True` like you
+    would do for `subprocess.Popen()`.
 
-    >>> with run_interactive_shell_command(["echo", "TEXT"]) as p:
-    ...     stdout = p.stdout
-    ...     stdout_text = stdout.read()
-    >>> stdout_text
-    'TEXT\\n'
-    >>> stdout.closed
-    True
-
-    Custom streams provided are not closed except of `subprocess.PIPE`.
+    The process is opened in `universal_newlines` mode by default.
 
     :param command: The command to run on shell. This parameter can either
                     be a sequence of arguments that are directly passed to
                     the process or a string. A string gets splitted beforehand
                     using `shlex.split()`.
     :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
-                    that are used to spawn the process.
+                    that is used to spawn the process (except `stdout`,
+                    `stderr`, `stdin` and `universal_newlines`, a `TypeError`
+                    is raised then).
     :return:        A context manager yielding the process started from the
                     command.
     """
     if isinstance(command, str):
         command = shlex.split(command)
 
-    args = {"stdout": PIPE,
-            "stderr": PIPE,
-            "stdin": PIPE,
-            "universal_newlines": True}
-    args.update(kwargs)
-
-    process = Popen(command, **args)
+    process = Popen(command,
+                    stdout=PIPE,
+                    stderr=PIPE,
+                    stdin=PIPE,
+                    universal_newlines=True,
+                    **kwargs)
     try:
         yield process
     finally:
-        if args["stdout"] is PIPE:
-            process.stdout.close()
-        if args["stderr"] is PIPE:
-            process.stderr.close()
-        if args["stdin"] is PIPE:
-            process.stdin.close()
-
+        process.stdout.close()
+        process.stderr.close()
+        process.stdin.close()
         process.wait()
 
 
@@ -68,8 +55,11 @@ def run_shell_command(command, stdin=None, **kwargs):
     Runs a single command in shell and returns the read stdout and stderr data.
 
     This function waits for the process (created using `subprocess.Popen()`) to
-    exit. Effectively it wraps `run_interactive_shell_command()` and uses
-    `communicate()` on the process.
+    exit.
+
+    Shell execution is disabled by default (so no shell expansion takes place).
+    If you want to turn shell execution on, you can pass `shell=True` like you
+    would do for `subprocess.Popen()`.
 
     See also `run_interactive_shell_command()`.
 
@@ -79,7 +69,9 @@ def run_shell_command(command, stdin=None, **kwargs):
                     using `shlex.split()`.
     :param stdin:   Initial input to send to the process.
     :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
-                    that is used to spawn the process.
+                    that is used to spawn the process (except `stdout`,
+                    `stderr`, `stdin` and `universal_newlines`, a `TypeError`
+                    is raised then).
     :return:        A tuple with `(stdoutstring, stderrstring)`.
     """
     with run_interactive_shell_command(command, **kwargs) as p:
