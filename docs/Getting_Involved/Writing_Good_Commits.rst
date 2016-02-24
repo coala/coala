@@ -16,31 +16,6 @@ A good commit is atomic. It describes but only one logical change and
 not more. Why do we do that? Because we find more bugs if we do! Also it
 features a good commit message.
 
-Why Do We Need Good Commits?
-----------------------------
-
--  An atomic commit is way easier to review. The reviewer thus will be
-   able to review faster and find more bugs due to the lower complexity
-   of the change.
--  Atomic commits are like good objects in object oriented programming -
-   you can split up a bigger thing into many small objects. Reducing
-   complexity is the key to developing good software and finding its bug
-   before they occur.
--  Good commit messages make it easy to check at a glance what happened
-   in a time range.
--  It is way easier to revert single changes without side effects.
-   Reverting multiple commits at a time is easy, reverting a part of a
-   commit is not.
--  ``git blame`` will be much more effective. It is the best
-   documentation you can get. The older your code is, the more
-   documentation it has. The better the commit messages are, the better
-   is your hidden documentation. Your commit messages document the
-   reason for every single change you did to any line.
--  ``git bisect`` will be much more effective. If you bisect through
-   atomic commits to find the commit which caused a bug, you should be
-   able to identify the real cause of the bug fastly. Good commit
-   messages and atomicity of commits are key to that ability.
-
 How to Write Good Commit Messages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -90,3 +65,28 @@ Example
     install it by itself.
 
     Fixes https://github.com/coala-analyzer/coala/issues/269
+
+Why Do We Need Good Commits?
+----------------------------
+
+-  An atomic commit is way easier to review. The reviewer thus will be
+   able to review faster and find more bugs due to the lower complexity
+   of the change.
+-  Atomic commits are like good objects in object oriented programming -
+   you can split up a bigger thing into many small objects. Reducing
+   complexity is the key to developing good software and finding its bug
+   before they occur.
+-  Good commit messages make it easy to check at a glance what happened
+   in a time range.
+-  It is way easier to revert single changes without side effects.
+   Reverting multiple commits at a time is easy, reverting a part of a
+   commit is not.
+-  ``git blame`` will be much more effective. It is the best
+   documentation you can get. The older your code is, the more
+   documentation it has. The better the commit messages are, the better
+   is your hidden documentation. Your commit messages document the
+   reason for every single change you did to any line.
+-  ``git bisect`` will be much more effective. If you bisect through
+   atomic commits to find the commit which caused a bug, you should be
+   able to identify the real cause of the bug fastly. Good commit
+   messages and atomicity of commits are key to that ability.
