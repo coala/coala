@@ -55,8 +55,7 @@ recommend setting it to ``true``.
 
 coala will now check the code and, in case you use the tutorial code,
 yield two results. In the case of the SpaceConsistencyBear you will
-probably not be able to see those trailing whitespace errors on your
-console (yet, we're working on that).
+see trailing whitespace errors on your console.
 
 Feel free to experiment a bit. You've successfully analysed some code!
 But don't stop reading - you don't have to enter all those values again!
