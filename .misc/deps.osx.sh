@@ -26,6 +26,3 @@ source .misc/env_variables.sh
 # Install packages with pip
 pip install -q -r test-requirements.txt
 pip install -q -r requirements.txt
-
-# Calling setup.py will download checkstyle automatically so tests may succeed
-python3 setup.py --help
