@@ -33,6 +33,9 @@ information about the installation and dependencies, take a look at our
 The latest code from master is automatically deployed to PyPI as a
 development version. Get it with ``pip install coala --pre``.
 
+To get the supported bears along with coala, check out
+`coala-bears <https://github.com/coala-analyzer/coala-bears>`__.
+
 |PyPI|
 
 USAGE
