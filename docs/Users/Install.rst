@@ -16,7 +16,7 @@ with recent python versions by default.
 System wide installation
 ------------------------
 
-The simplest way to install coa ais to do it system-wide. But, This is
+The simplest way to install coala is to do it system-wide. But, This is
 generally discouraged in favor or using a virtualenv.
 
 To install the latest most stable version of coala and supported bears
