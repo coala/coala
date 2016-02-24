@@ -41,15 +41,6 @@ class Lint(Bear):
     http://coala.readthedocs.org/en/latest/Users/Tutorials/Linter_Bears.html
 
     :param executable:      The executable to run the linter.
-    :param arguments:       The arguments to supply to the linter, such
-                            that the file name to be analyzed can be
-                            appended to the end. Note that we use .format()
-                            on the arguments - so, `{abc}` needs to be given
-                            as `{{abc}}`.
-                            Currently, the following will be replaced:
-                            {filename}    - the filename passed to lint()
-                            {config_file} - The config file created using
-                                            config_file()
     :param shell:           Whether to execute the executable in shell. `False`
                             by default.
     :param output_regex:    The regex which will match the output of the linter
@@ -78,7 +69,6 @@ class Lint(Bear):
     """
     check_prerequisites = classmethod(is_binary_present)
     executable = None
-    arguments = ""
     shell = False
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)\|'
                               r'(?P<severity>\d+): (?P<message>.*)')
@@ -89,36 +79,43 @@ class Lint(Bear):
     gives_corrected = False
     severity_map = None
 
-    def lint(self, filename=None, file=None):
+    def lint(self, executable_args, **kwargs):
         """
         Takes a file and lints it using the linter variables defined apriori.
 
-        :param filename:      The name of the file to execute.
-        :param file:          The contents of the file as a list of strings.
-        :raises RuntimeError: Raised under following conditions:
-                              - `self.use_stdin` is `True` but no file-content
-                                was provided via `file`.
-                              - `self.use_stdin` is `False` and no `filename`
-                                was provided the underlying tool can be invoked
-                                with.
+        If `use_stdin` is `True` it's mandatory to provide `file` as `kwargs`
+        that contains the file-contents as a string to send to the underlying
+        tool.
+
+        :param executable_args: The arguments to pass to the executable. This
+                                can be either a sequence or a string (in this
+                                case the arguments are splitted using
+                                `shlex.split()`).
+
+                                Sequences are preferred as `shlex.split()`
+                                resembles linux-shell behaviour which
+                                recognizes backslash as an escape character. On
+                                Windows paths are separated using backslashes,
+                                so passing the path directly inside a sequence
+                                avoids correctly escaping paths.
+        :param kwargs:          Special key-value arguments used for specific
+                                settings. See details of `lint()`.
+        :raises RuntimeError:   Raised when `self.use_stdin` is `True` but no
+                                file-content was provided via in `kwargs` with
+                                `file`.
         """
-        if (
-                (not self.use_stdin or file is None) and
-                (self.use_stdin or filename is None)):
-            raise RuntimeError("Illegal combination: use_stdin={}, "
-                               "filename is None={}, file is None={}".format(
-                                   self.use_stdin,
-                                   filename is None,
-                                   file is None))
+        if self.use_stdin and not "file" in kwargs:
+            raise RuntimeError("use_stdin specified but no `file` provided"
+                               "inside `kwargs`.")
 
         config_file = self.generate_config_file()
-        self.command = self._create_command(filename=filename,
-                                            config_file=config_file)
 
-        stdin_input = "".join(file) if self.use_stdin else None
-        stdout_output, stderr_output = run_shell_command(self.command,
-                                                         stdin=stdin_input,
-                                                         shell=self.shell)
+        stdin_input = kwargs["file"] if self.use_stdin else None
+        stdout_output, stderr_output = run_shell_command(
+            self._create_command(executable_args),
+            stdin=stdin_input,
+            shell=self.shell)
+
         self.stdout_output = tuple(stdout_output.splitlines(keepends=True))
         self.stderr_output = tuple(stderr_output.splitlines(keepends=True))
         results_output = (self.stderr_output if self.use_stderr
@@ -165,11 +162,11 @@ class Lint(Bear):
             groups["severity"] = self.severity_map[groups["severity"]]
         return groups
 
-    def _create_command(self, **kwargs):
-        command = self.executable + ' ' + self.arguments
-        for key in ("filename", "config_file"):
-            kwargs[key] = escape_path_argument(kwargs.get(key, "") or "")
-        return command.format(**kwargs)
+    def _create_command(self, args):
+        if isinstance(args, str):
+            return self.executable + " " + self.arguments
+        else:
+            return (self.executable,) + tuple(args)
 
     def _print_errors(self, errors):
         for line in filter(lambda error: bool(error.strip()), errors):
