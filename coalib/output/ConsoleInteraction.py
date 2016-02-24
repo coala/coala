@@ -233,8 +233,9 @@ def print_results_formatted(log_printer,
         "format_str",
         "id:{id}:origin:{origin}:file:{file}:from_line:{line}:from_column:"
         "{column}:to_line:{end_line}:to_column:{end_column}:severity:"
-        "{severity}:msg:{message}"))
+        "{severity}:severity_str:{severity_str}:msg:{message}"))
     for result in result_list:
+        severity_str = RESULT_SEVERITY.__str__(result.severity)
         try:
             if len(result.affected_code) == 0:
                 print(format_str.format(file=None,
@@ -242,6 +243,7 @@ def print_results_formatted(log_printer,
                                         end_line=None,
                                         column=None,
                                         end_column=None,
+                                        severity_str=severity_str,
                                         **result.__dict__))
                 continue
 
@@ -251,6 +253,7 @@ def print_results_formatted(log_printer,
                                         end_line=range.end.line,
                                         column=range.start.column,
                                         end_column=range.end.column,
+                                        severity_str=severity_str,
                                         **result.__dict__))
         except KeyError as exception:
             log_printer.log_exception(
