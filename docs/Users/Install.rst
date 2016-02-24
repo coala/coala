@@ -25,10 +25,6 @@ To install the latest most stable version of coala system-wide, use:
 
     $ pip3 install coala
 
-
-
-To install the nightly build from our master branch, you can do:
-
 .. note::
 
     For this and all future steps, some steps require root access
@@ -40,6 +36,8 @@ To install the nightly build from our master branch, you can do:
 
     **Windows** - The easiest way on windows is to start a
     command prompt as an administrator and start ``setup.py``.
+
+To install the nightly build from our master branch, you can do:
 
 ::
 
