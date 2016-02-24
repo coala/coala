@@ -19,11 +19,12 @@ System wide installation
 The simplest way to install coa ais to do it system-wide. But, This is
 generally discouraged in favor or using a virtualenv.
 
-To install the latest most stable version of coala system-wide, use:
+To install the latest most stable version of coala and supported bears
+system-wide, use:
 
 ::
 
-    $ pip3 install coala
+    $ pip3 install coala-bears
 
 .. note::
 
@@ -41,7 +42,16 @@ To install the nightly build from our master branch, you can do:
 
 ::
 
-    $ pip3 install coala --pre
+    $ pip3 install coala-bears --pre
+
+To install only coala (without any bears), you can do:
+
+::
+
+    $ pip3 install coala
+
+With ``--pre`` you can install the nightly build of the coala base
+without bears.
 
 Installing inside a virtualenv
 ------------------------------
@@ -80,11 +90,12 @@ the corresponding environment.
 
         $ venv\scripts\activate
 
-Finally, you install coala inside the activated vertualenv with:
+Finally, you install coala and supported bears inside the activated
+vertualenv with:
 
 ::
 
-    $ pip3 install coala
+    $ pip3 install coala-bears
 
 Installing coala from source
 ----------------------------
@@ -104,8 +115,8 @@ with the following command:
 
 ::
 
-    git clone https://github.com/coala-analyzer/coala/
-    cd coala
+    git clone https://github.com/coala-analyzer/coala-bears/
+    cd coala-bears
 
 You can now install coala with a simple:
 
