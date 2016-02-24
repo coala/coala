@@ -93,11 +93,23 @@ class Lint(Bear):
         """
         Takes a file and lints it using the linter variables defined apriori.
 
-        :param filename:  The name of the file to execute.
-        :param file:      The contents of the file as a list of strings.
+        :param filename:      The name of the file to execute.
+        :param file:          The contents of the file as a list of strings.
+        :raises RuntimeError: Raised under following conditions:
+                              - `self.use_stdin` is `True` but no file-content
+                                was provided via `file`.
+                              - `self.use_stdin` is `False` and no `filename`
+                                was provided the underlying tool can be invoked
+                                with.
         """
-        assert ((self.use_stdin and file is not None) or
-                (not self.use_stdin and filename is not None))
+        if (
+                (not self.use_stdin or file is None) and
+                (self.use_stdin or filename is None)):
+            raise RuntimeError("Illegal combination: use_stdin={}, "
+                               "filename is None={}, file is None={}".format(
+                                   self.use_stdin,
+                                   filename is None,
+                                   file is None))
 
         config_file = self.generate_config_file()
         self.command = self._create_command(filename=filename,
