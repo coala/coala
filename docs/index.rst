@@ -38,6 +38,7 @@ Welcome to the coala documentation!
    First Step <Users/Tutorials/Tutorial>
    Writing Bears <Users/Tutorials/Writing_Bears>
    Linter Bears <Users/Tutorials/Linter_Bears>
+   Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
 
 .. toctree::
    :caption: Getting Involved
