@@ -23,8 +23,9 @@ test:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true
-    - make -C docs/ clean
-    - make -C docs/ html
+    - rm -rf docs/API && make -C docs clean
+    - sphinx-apidoc -f -o docs/API/ coalib coalib/tests
+    - make -C docs html SPHINXOPTS=-W
 
 notify:
   webhooks:
