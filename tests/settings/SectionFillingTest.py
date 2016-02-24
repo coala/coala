@@ -9,7 +9,7 @@ from coalib.output.ConsoleInteraction import acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import Setting, fill_section, fill_settings
-from coalib.tests.TestUtilities import bear_test_module
+from tests.TestUtilities import bear_test_module
 
 
 class GlobalTestBear(GlobalBear):

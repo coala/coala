@@ -10,7 +10,7 @@ from coalib import coala_ci
 from coalib.misc.ContextManagers import make_temp, prepare_file
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.Tagging import get_tag_path
-from coalib.tests.TestUtilities import bear_test_module, execute_coala
+from tests.TestUtilities import bear_test_module, execute_coala
 
 
 class coalaCITest(unittest.TestCase):
