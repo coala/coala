@@ -111,8 +111,8 @@ class StringProcessingTestBase(unittest.TestCase):
                              postprocess=lambda result: result):
         """
         Tests each given invocation against the given results with the
-        specified function. This is an extended version of assertResultsEqual()
-        that supports also **kwargs.
+        specified function. This is an extended version of
+        ``assertResultsEqual()`` that supports also ``**kwargs``.
 
         :param func:                   The function to test.
         :param invocation_and_results: A dict containing the invocation tuple

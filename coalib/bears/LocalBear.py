@@ -13,10 +13,11 @@ class LocalBear(Bear):
     file, which is better to grasp for the user. coala takes care of all that.
 
     Examples for LocalBear's could be:
-    - A SpaceConsistencyBear that checks every line for trailing whitespaces,
-      tabs, ...
-    - A VariableNameBear that checks variable names and constant names for
-      certain conditions
+
+    -   A SpaceConsistencyBear that checks every line for trailing whitespaces,
+        tabs, etc.
+    -   A VariableNameBear that checks variable names and constant names for
+        certain conditions
     """
 
     @staticmethod

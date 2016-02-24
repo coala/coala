@@ -43,28 +43,33 @@ class Lint(Bear):
     :param executable:      The executable to run the linter.
     :param arguments:       The arguments to supply to the linter, such
                             that the file name to be analyzed can be
-                            appended to the end. Note that we use .format()
-                            on the arguments - so, `{abc}` needs to be given
-                            as `{{abc}}`.
+                            appended to the end. Note that we use ``.format()``
+                            on the arguments - so, ``{abc}`` needs to be given
+                            as ``{{abc}}``.
                             Currently, the following will be replaced:
-                            {filename}    - the filename passed to lint()
-                            {config_file} - The config file created using
-                                            config_file()
+
+                             - ``{filename}`` - The filename passed to
+                               ``lint()``
+                             - ``{config_file}`` - The config file created
+                               using ``config_file()``
+
     :param output_regex:    The regex which will match the output of the linter
-                            to get results. This regex should give out the
-                            following variables:
-                             line - The line where the issue starts.
-                             column - The column where the issue starts.
-                             end_line - The line where the issue ends.
-                             end_column - The column where the issue ends.
-                             severity - The severity of the issue.
-                             message - The message of the result.
-                             origin - The origin of the issue.
-                            This is not used if `gives_corrected` is set.
+                            to get results. This is not used if
+                            ``gives_corrected`` is set. This regex should give
+                            out the following variables:
+
+                             - line - The line where the issue starts.
+                             - column - The column where the issue starts.
+                             - end_line - The line where the issue ends.
+                             - end_column - The column where the issue ends.
+                             - severity - The severity of the issue.
+                             - message - The message of the result.
+                             - origin - The origin of the issue.
+
     :param diff_severity:   The severity to use for all results if
-                            `gives_corrected` is set.
+                            ``gives_corrected`` is set.
     :param diff_message:    The message to use for all results if
-                            `gives_corrected` is set.
+                            ``gives_corrected`` is set.
     :param use_stderr:      Uses stderr as the output stream is it's True.
     :param use_stdin:       Sends file as stdin instead of giving the file name.
     :param gives_corrected: True if the executable gives the corrected file

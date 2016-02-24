@@ -421,10 +421,14 @@ def acquire_settings(log_printer, settings_names_dict):
     :param settings:    a dictionary with the settings name as key and a list
                         containing a description in [0] and the name of the
                         bears who need this setting in [1] and following.
-                     Example:
-    {"UseTabs": ["describes whether tabs should be used instead of spaces",
-                 "SpaceConsistencyBear",
-                 "SomeOtherBear"]}
+
+                        Example:
+
+    ::
+
+        {"UseTabs": ["describes whether tabs should be used instead of spaces",
+                     "SpaceConsistencyBear",
+                     "SomeOtherBear"]}
 
     :return:            a dictionary with the settings name as key and the
                         given value as value.
