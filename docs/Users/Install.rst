@@ -176,6 +176,12 @@ If a bear still doesn't work for you, please make sure that you have a
 decent version of ``npm`` installed. Many linux distributions ship a
 very old one.
 
+.. note::
+
+    If using coala from source you can just do ``npm install`` or
+    ``npm install -g`` to use the ``package.json`` which is shipped with
+    coala.
+
 Binary Dependencies
 ~~~~~~~~~~~~~~~~~~~
 
