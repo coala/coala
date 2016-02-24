@@ -83,6 +83,7 @@ the creative name CommunicationBear:
 
 
     class CommunicationBear(LocalBear):
+
         def run(self,
                 filename,
                 file,
@@ -96,9 +97,9 @@ the creative name CommunicationBear:
                 ui=user_input,
                 type=type(user_input)))
 
-            yield Result(message="A hello world result.",
-                         origin=self,
-                         file=filename)
+            return [Result.from_values(message="A hello world result.",
+                                       origin=self,
+                                       file=filename)]
 
 Try executing it:
 
