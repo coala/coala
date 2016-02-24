@@ -43,7 +43,7 @@ class PyTestCommand(TestCommand):
 
 class BuildDocsCommand(setuptools.command.build_py.build_py):
     apidoc_command = ('sphinx-apidoc', '-f', '-o', 'docs/API/',
-                      'coalib', 'coalib/tests')
+                      'coalib', 'tests')
     doc_command = ('make', '-C', 'docs', 'html')
 
     def run(self):

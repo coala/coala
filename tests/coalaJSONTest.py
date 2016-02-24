@@ -6,7 +6,7 @@ import unittest
 
 from coalib import coala_json
 from coalib.misc.ContextManagers import prepare_file
-from coalib.tests.TestUtilities import bear_test_module, execute_coala
+from tests.TestUtilities import bear_test_module, execute_coala
 
 
 class coalaJSONTest(unittest.TestCase):
