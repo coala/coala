@@ -42,16 +42,19 @@ class PyTestCommand(TestCommand):
 
 
 class BuildDocsCommand(setuptools.command.build_py.build_py):
+    apidoc_command = ('sphinx-apidoc', '-f', '-o', 'docs/API/',
+                      'coalib', 'coalib/tests')
+    doc_command = ('make', '-C', 'docs', 'html')
 
     def run(self):
-        call(['sphinx-apidoc', '-f', '-o', 'docs/API/', '.'])
-        call(['make', '-C', 'docs', 'html'])
+        call(self.apidoc_command)
+        call(self.doc_command)
 
 
 # Generate API documentation only if we are running on readthedocs.org
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
-    call(['sphinx-apidoc', '-f', '-o', 'docs/API/', '.'])
+    call(BuildDocsCommand.apidoc_command)
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
