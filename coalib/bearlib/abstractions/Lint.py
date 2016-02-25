@@ -79,6 +79,12 @@ class Lint(Bear):
     gives_corrected = False
     severity_map = None
 
+    # TODO: Lint IS ONLY FOR SINGLE FILE INPUT!!!
+    # TODO: When refactoring to functions, provide a setup_lint() function
+    #       that uses functools.partial() to cache fixed parameters (like
+    #       use_stdin or the severity_map). Whether to only allow
+    #       executable_args to be passed then or also other kwargs needs to
+    #       be investigated^^
     def lint(self, executable_args, **kwargs):
         """
         Takes a file and lints it using the linter variables defined apriori.
