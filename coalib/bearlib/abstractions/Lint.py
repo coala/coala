@@ -105,7 +105,7 @@ class Lint(Bear):
                                 `file`.
         """
         if self.use_stdin and not "file" in kwargs:
-            raise RuntimeError("use_stdin specified but no `file` provided"
+            raise RuntimeError("use_stdin specified but no `file` provided "
                                "inside `kwargs`.")
 
         config_file = self.generate_config_file()
