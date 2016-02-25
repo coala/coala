@@ -3,7 +3,7 @@ import re
 import shutil
 import tempfile
 
-from coalib.bears.Bear import Bear
+from coalib.bears.LocalBear import LocalBear
 from coalib.misc.Shell import escape_path_argument, run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -31,6 +31,93 @@ def is_binary_present(cls):
     except AttributeError:
         # Happens when `executable` does not exist in `cls`.
         return True
+
+
+class FunctionPipeline:
+    pass
+    # TODO Look for existing classes inside python...
+
+# TODO Dynamic kwargs usage. Context depending signature.
+def Linter(executable, **kwargs):
+           #shell=False, #TODO ??????
+           #output_regex=r'(?P<line>\d+)\.(?P<column>\d+)\|'
+           #             r'(?P<severity>\d+): (?P<message>.*)',
+           #use_stderr=False,
+           #use_stdin=False,
+           #provides_correction=False,
+           #diff_severity=RESULT_SEVERITY.NORMAL,
+           #diff_message='',
+           #severity_map=None):
+    kwargs["executable"] = executable
+    def create_linter(cls):
+        class Linter(LocalBear):
+            handler = cls
+            workflow_pipeline = FunctionPipeline()
+
+            def check_stdin_file(self):
+                pass
+
+            def process_output(self):
+                pass
+
+            def process_correction(self):
+
+            if kwargs.get("use_stdin", False):
+                workflow_pipeline.push(check_stdin_file)
+
+            # workflow_pipeline.push(result_to_param_converter)
+
+            if provides_correction:
+                workflow_pipeline.push(process_correction)
+            else:
+                workflow_pipeline.push(process_output)
+
+            executable = kwargs["executable"]
+            shell = kwargs["shell"]
+            output_regex = re.compile(kwargs["output_regex"])
+            use_stderr = kwargs["use_stderr"]
+            use_stdin = kwargs["use_stdin"]
+            provides_correction = kwargs["provides_correction"]
+
+            diff_severity = diff_severity
+            diff_message = diff_message
+            severity_map = severity_map
+
+            def run(self):
+                return self.workflow_pipeline()
+
+                #-----------------------------------------------------------
+                if self.use_stdin and not "file" in kwargs:
+                    raise RuntimeError("use_stdin specified but no `file` provided "
+                                       "inside `kwargs`.")
+
+                config_file = self.generate_config_file()
+
+                stdin_input = kwargs["file"] if self.use_stdin else None
+                stdout_output, stderr_output = run_shell_command(
+                    self._create_command(executable_args),
+                    stdin=stdin_input,
+                    shell=self.shell)
+
+                self.stdout_output = tuple(stdout_output.splitlines(keepends=True))
+                self.stderr_output = tuple(stderr_output.splitlines(keepends=True))
+                results_output = (self.stderr_output if self.use_stderr
+                                  else self.stdout_output)
+                results = self.process_output(results_output, filename, file)
+                if not self.use_stderr:
+                    self._print_errors(self.stderr_output)
+
+                if config_file:
+                    os.remove(config_file)
+
+                return results
+
+            def create_arguments(self):
+                pass
+
+        return Linter
+
+    return create_linter
 
 
 class Lint(Bear):
@@ -86,7 +173,7 @@ class Lint(Bear):
     #       executable_args to be passed then or also other kwargs needs to
     #       be investigated^^
     # TODO: Document whether gives_corrected also requires `file` for kwargs!
-    def lint(self, executable_args, filename=None, **kwargs):
+    def lint(self, executable_args, filename, **kwargs):
         """
         Takes a file and lints it using the linter variables defined apriori.
 
