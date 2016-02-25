@@ -85,7 +85,8 @@ class Lint(Bear):
     #       use_stdin or the severity_map). Whether to only allow
     #       executable_args to be passed then or also other kwargs needs to
     #       be investigated^^
-    def lint(self, executable_args, **kwargs):
+    # TODO: Document whether gives_corrected also requires `file` for kwargs!
+    def lint(self, executable_args, filename=None, **kwargs):
         """
         Takes a file and lints it using the linter variables defined apriori.
 
