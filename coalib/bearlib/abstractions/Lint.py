@@ -65,14 +65,53 @@ def Linter(executable, **kwargs):
                 return run_shell_command((kwargs["executable"],) + tuple(args),
                                          stdin=stdin)
 
+            def match_to_result(self, match, filename):
+                """
+                Converts a regex match's groups into a result.
+
+                :param match:    The match got from regex parsing.
+                :param filename: The name of the file from which this match is got.
+                """
+                groups = self._get_groupdict(match)
+
+                # Pre process the groups
+                for variable in ("line", "column", "end_line", "end_column"):
+                    if variable in groups and groups[variable]:
+                        groups[variable] = int(groups[variable])
+
+                if "origin" in groups:
+                    groups['origin'] = "{} ({})".format(str(self.__class__.__name__),
+                                                        str(groups["origin"]))
+
+                return Result.from_values(
+                    origin=groups.get("origin", self),
+                    message=groups.get("message", ""),
+                    file=filename,
+                    severity=int(groups.get("severity", RESULT_SEVERITY.NORMAL)),
+                    line=groups.get("line", None),
+                    column=groups.get("column", None),
+                    end_line=groups.get("end_line", None),
+                    end_column=groups.get("end_column", None))
+
             if kwargs["provides_correction"]:
-                @staticmethod
-                def _process_output(output, filename, file):
-                    pass  # Process an entire corrected file from output
+                def _process_output(self, output, filename, file):
+                    for diff in Diff.from_string_arrays(file,
+                                                        output).split_diff():
+                        yield Result(self,
+                                     self.diff_message,
+                                     affected_code=(diff.range(filename),),
+                                     diffs={filename: diff},
+                                     severity=self.diff_severity)
             else:
-                @staticmethod
-                def _process_output(output, filename, file):
-                    pass  # Process normal issue warnings
+                def _process_output(self, output, filename, file):
+                    regex = self.output_regex
+                    if isinstance(regex, str):
+                        regex = regex % {"file_name": filename}
+
+                    # Note: We join `output` because the regex may want to capture
+                    #       multiple lines also.
+                    for match in re.finditer(regex, "".join(output)):
+                        yield self.match_to_result(match, filename)
 
             if kwargs["use_stderr"]:
                 @staticmethod
@@ -97,7 +136,7 @@ def Linter(executable, **kwargs):
                 stdout, stderr = self._execute_command(
                     self.handler.create_arguments(filename, file),
                     stdin=self._pass_file_as_stdin_if_needed(file))
-                output = self._grab_output(stdout, stderr)
+                output = self._grab_output(stdout, stderr).splitlines(True)
                 self._process_output(output, filename, file)
 
         return Linter
