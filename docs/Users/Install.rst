@@ -153,6 +153,10 @@ If you want to install coala to an alternate location you can e.g. call
 options are documented on
 https://docs.python.org/3.3/install/#alternate-installation.
 
+..note::
+
+    Make sure you do not use any proxy at installation.
+
 Dependencies
 ------------
 
