@@ -33,87 +33,72 @@ def is_binary_present(cls):
         return True
 
 
-class FunctionPipeline:
-    pass
-    # TODO Look for existing classes inside python...
+class LinterHandler:
+    def create_arguments(self, filename, file, config_file): # TODO Also file???
+        raise NotImplementedError
+
+    def generate_config(self):
+        return None
+
 
 # TODO Dynamic kwargs usage. Context depending signature.
+# TODO --> But maybe not, this allows for @enforce_signature
+# TODO ------> Or "hybrid" approach, needed arguments are optional, if one activates
+# TODO ------> further options these get passed by kwargs
 def Linter(executable, **kwargs):
-           #shell=False, #TODO ??????
-           #output_regex=r'(?P<line>\d+)\.(?P<column>\d+)\|'
-           #             r'(?P<severity>\d+): (?P<message>.*)',
-           #use_stderr=False,
-           #use_stdin=False,
-           #provides_correction=False,
-           #diff_severity=RESULT_SEVERITY.NORMAL,
-           #diff_message='',
-           #severity_map=None):
-    kwargs["executable"] = executable
+    kwargs["executable"] = executable # TODO Sucks...
     def create_linter(cls):
         class Linter(LocalBear):
-            handler = cls
-            workflow_pipeline = FunctionPipeline()
 
-            def check_stdin_file(self):
-                pass
+            # TODO Override __repr__ since the name of the class shall be the
+            # TODO same like the one used for the LinterHandler
 
-            def process_output(self):
-                pass
+            @property
+            def handler(self):
+                return cls # TODO Directly import functions? Rethink design maybe then...
+            @property
+            def executable(self):
+                return kwargs["executable"] # TODO This needs to be solved more elegant...
 
-            def process_correction(self):
+            def _execute_command(self, args, stdin=None):
+                # TODO Also more elegance...
+                return run_shell_command((kwargs["executable"],) + tuple(args),
+                                         stdin=stdin)
 
-            if kwargs.get("use_stdin", False):
-                workflow_pipeline.push(check_stdin_file)
-
-            # workflow_pipeline.push(result_to_param_converter)
-
-            if provides_correction:
-                workflow_pipeline.push(process_correction)
+            if kwargs["provides_correction"]:
+                @staticmethod
+                def _process_output(output, filename, file):
+                    pass  # Process an entire corrected file from output
             else:
-                workflow_pipeline.push(process_output)
+                @staticmethod
+                def _process_output(output, filename, file):
+                    pass  # Process normal issue warnings
 
-            executable = kwargs["executable"]
-            shell = kwargs["shell"]
-            output_regex = re.compile(kwargs["output_regex"])
-            use_stderr = kwargs["use_stderr"]
-            use_stdin = kwargs["use_stdin"]
-            provides_correction = kwargs["provides_correction"]
+            if kwargs["use_stderr"]:
+                @staticmethod
+                def _grab_output(stdout, stderr):
+                    return stderr
+            else:
+                @staticmethod
+                def _grab_output(stdout, stderr):
+                    return stdout
 
-            diff_severity = diff_severity
-            diff_message = diff_message
-            severity_map = severity_map
+            if kwargs["use_stdin"]:
+                @staticmethod
+                def _pass_file_as_stdin_if_needed(file):
+                    return file
+            else:
+                @staticmethod
+                def _pass_file_as_stdin_if_needed(file):
+                    return None
 
-            def run(self):
-                return self.workflow_pipeline()
-
-                #-----------------------------------------------------------
-                if self.use_stdin and not "file" in kwargs:
-                    raise RuntimeError("use_stdin specified but no `file` provided "
-                                       "inside `kwargs`.")
-
-                config_file = self.generate_config_file()
-
-                stdin_input = kwargs["file"] if self.use_stdin else None
-                stdout_output, stderr_output = run_shell_command(
-                    self._create_command(executable_args),
-                    stdin=stdin_input,
-                    shell=self.shell)
-
-                self.stdout_output = tuple(stdout_output.splitlines(keepends=True))
-                self.stderr_output = tuple(stderr_output.splitlines(keepends=True))
-                results_output = (self.stderr_output if self.use_stderr
-                                  else self.stdout_output)
-                results = self.process_output(results_output, filename, file)
-                if not self.use_stderr:
-                    self._print_errors(self.stderr_output)
-
-                if config_file:
-                    os.remove(config_file)
-
-                return results
-
-            def create_arguments(self):
-                pass
+            def run(self, filename, file):
+                # TODO Generate config_file here if used
+                stdout, stderr = self._execute_command(
+                    self.handler.create_arguments(filename, file),
+                    stdin=self._pass_file_as_stdin_if_needed(file))
+                output = self._grab_output(stdout, stderr)
+                self._process_output(output, filename, file)
 
         return Linter
 
