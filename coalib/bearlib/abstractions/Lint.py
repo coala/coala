@@ -34,7 +34,9 @@ def is_binary_present(cls):
 
 
 class LinterHandler:
-    def create_arguments(self, filename, file, config_file): # TODO Also file???
+    # TODO Damn fuck what about required section settings....
+    # TODO Doing the handler stuff below static? see line above^^
+    def create_arguments(self, filename, file, config_file):
         raise NotImplementedError
 
     def generate_config(self):
@@ -131,10 +133,20 @@ def Linter(executable, **kwargs):
                 def _pass_file_as_stdin_if_needed(file):
                     return None
 
+            def generate_config(self):
+                content = self.handler.generate_config()
+                if content is None:
+                    return None
+                else:
+                    pass
+                    # Create temporary file here with contents and return the
+                    # path.
+
             def run(self, filename, file):
-                # TODO Generate config_file here if used
                 stdout, stderr = self._execute_command(
-                    self.handler.create_arguments(filename, file),
+                    self.handler.create_arguments(filename,
+                                                  file,
+                                                  self.generate_config()),
                     stdin=self._pass_file_as_stdin_if_needed(file))
                 output = self._grab_output(stdout, stderr).splitlines(True)
                 self._process_output(output, filename, file)
