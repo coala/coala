@@ -35,6 +35,9 @@ def is_binary_present(cls):
 
 class LinterHandler:
     # TODO Damn fuck what about required section settings....
+    # TODO --> Maybe it's possible to insert metadata after instantation?
+    # TODO --> should be possible, bear has such a function...
+    # TODO ------> But how should setting-names, types and default values look?
     # TODO Doing the handler stuff below static? see line above^^
     def create_arguments(self, filename, file, config_file):
         raise NotImplementedError
@@ -48,6 +51,7 @@ class LinterHandler:
 # TODO ------> Or "hybrid" approach, needed arguments are optional, if one activates
 # TODO ------> further options these get passed by kwargs
 def Linter(executable, **kwargs):
+    # TODO Precompile output_regex
     kwargs["executable"] = executable # TODO Sucks...
     def create_linter(cls):
         class Linter(LocalBear):
@@ -97,8 +101,9 @@ def Linter(executable, **kwargs):
 
             if kwargs["provides_correction"]:
                 def _process_output(self, output, filename, file):
-                    for diff in Diff.from_string_arrays(file,
-                                                        output).split_diff():
+                    for diff in Diff.from_string_arrays(
+                            file,
+                            output.splitlines(keepends=True)).split_diff():
                         yield Result(self,
                                      self.diff_message,
                                      affected_code=(diff.range(filename),),
@@ -106,13 +111,9 @@ def Linter(executable, **kwargs):
                                      severity=self.diff_severity)
             else:
                 def _process_output(self, output, filename, file):
-                    regex = self.output_regex
-                    if isinstance(regex, str):
-                        regex = regex % {"file_name": filename}
-
-                    # Note: We join `output` because the regex may want to capture
-                    #       multiple lines also.
-                    for match in re.finditer(regex, "".join(output)):
+                    for match in self.output_regex.finditer(output):
+                        # TODO Inline match_to_result? I'm really not sure,
+                        # TODO this function makes sense...
                         yield self.match_to_result(match, filename)
 
             if kwargs["use_stderr"]:
@@ -148,7 +149,7 @@ def Linter(executable, **kwargs):
                                                   file,
                                                   self.generate_config()),
                     stdin=self._pass_file_as_stdin_if_needed(file))
-                output = self._grab_output(stdout, stderr).splitlines(True)
+                output = self._grab_output(stdout, stderr)
                 self._process_output(output, filename, file)
 
         return Linter
