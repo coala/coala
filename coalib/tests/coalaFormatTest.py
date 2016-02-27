@@ -23,7 +23,7 @@ class coalaFormatTest(unittest.TestCase):
                                            "-c", os.devnull,
                                            "-f", re.escape(filename),
                                            "-b", "LineCountTestBear")
-            self.assertRegex(output, r'msg:This file has [0-9]+ lines.',
+            self.assertRegex(output, r'message:This file has [0-9]+ lines.',
                              "coala-format output for line count should "
                              "not be empty")
             self.assertEqual(retval, 1,

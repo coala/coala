@@ -231,9 +231,9 @@ def print_results_formatted(log_printer,
                             *args):
     format_str = str(section.get(
         "format_str",
-        "id:{id}:origin:{origin}:file:{file}:from_line:{line}:from_column:"
-        "{column}:to_line:{end_line}:to_column:{end_column}:severity:"
-        "{severity}:severity_str:{severity_str}:msg:{message}"))
+        "id:{id}:origin:{origin}:file:{file}:line:{line}:column:"
+        "{column}:end_line:{end_line}:end_column:{end_column}:severity:"
+        "{severity}:severity_str:{severity_str}:message:{message}"))
     for result in result_list:
         severity_str = RESULT_SEVERITY.__str__(result.severity)
         try:
