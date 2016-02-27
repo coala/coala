@@ -35,7 +35,7 @@ Please take a look at the other files in this directory for getting
 started with specific parts of coala.
 
 We appreciate any help. (Partially with words, partially with chocolate
-if you live near hamburg.)
+if you live near Hamburg.)
 
 Modularity, clean good code as well as a high usability for both users
 and developers of analyse routines (called bears) stand in the
