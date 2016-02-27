@@ -153,6 +153,19 @@ If you want to install coala to an alternate location you can e.g. call
 options are documented on
 https://docs.python.org/3.3/install/#alternate-installation.
 
+.. note::
+
+    If you are using a proxy, follow these steps:
+
+    -  Set up your system-wide proxy.
+    -  Use ``sudo -E pip install coala``(the ``-E`` flag takes the
+       existing environment variables into the ``sudo`` environment).
+
+    You could also set your pip.conf file to use a proxy, to know more
+    read
+    http://stackoverflow.com/questions/14149422/using-pip-behind-a-proxy
+    for further clarification.
+
 Dependencies
 ------------
 
