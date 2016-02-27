@@ -50,10 +50,10 @@ To get coverage information, you can run:
 
     $ py.test --cov
 
-You can view the coverage report as html by running:
+You can view the coverage report as HTML by running:
 
 ::
 
     $ py.test --cov --cov-report html
 
-The html report will be saved ``.htmlreport`` inside the coala repository.
+The HTML report will be saved ``.htmlreport`` inside the coala repository.

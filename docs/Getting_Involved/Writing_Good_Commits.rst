@@ -46,7 +46,7 @@ Example:
 
 -  Maximum of 50 characters.
 -  Should describe the *change* - the action being done in the commit.
--  Should have a tag and and a short description separated by a colon (``:``)
+-  Should have a tag and-and a short description separated by a colon (``:``)
 
    -  **Tag**
 
@@ -75,7 +75,7 @@ Example:
 -  Maximum of 72 chars excluding newline for *each* line.
 -  Not mandatory - but helps explain what you're doing.
 -  Should describe the reasoning for your changes. This is especially
-   important for complex changes that are not self explanatory. This is also
+   important for complex changes that are not self-explanatory. This is also
    the right place to write about related bugs.
 
 Issue reference
