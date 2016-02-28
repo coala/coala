@@ -30,6 +30,7 @@ Welcome to the coala documentation!
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>
    Git Hooks <Users/Git_Hooks>
+   Git Help <Users/Git_Help>
 
 .. toctree::
    :caption: Tutorials
