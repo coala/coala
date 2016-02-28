@@ -91,7 +91,7 @@ the corresponding environment.
         $ venv\scripts\activate
 
 Finally, you install coala and supported bears inside the activated
-vertualenv with:
+virtualenv with:
 
 ::
 
