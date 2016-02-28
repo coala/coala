@@ -145,6 +145,14 @@ changes easily. To do this run:
 This essentially lets you install coala in a way that allows you to make
 changes to the code and see the changes take effect immediately.
 
+.. note::
+
+pip version from 1.5 and above creates problem in installing.
+One can go through the link for installation
+https://stackoverflow.com/questions/21242107/pip-install-pil-dont-install-into-virtualenv
+https://github.com/pypa/pip/blob/c2361e72da2c31a3596d49dc5fccb7d2bdb8c032/CHANGES.txt#L12-L15
+
+
 Alternate installation
 ~~~~~~~~~~~~~~~~~~~~~~
 
