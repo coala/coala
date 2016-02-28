@@ -642,9 +642,9 @@ class PrintFormattedResultsTest(unittest.TestCase):
         self.section = Section("t")
 
     def test_default_format(self):
-        expected_string = ("id:-?[0-9]+:origin:1:file:None:from_line:None:"
-                           "from_column:None:to_line:None:to_column:None:"
-                           "severity:1:msg:2\n")
+        expected_string = ("id:-?[0-9]+:origin:1:file:None:line:None:"
+                           "column:None:end_line:None:end_column:None:"
+                           "severity:1:severity_str:NORMAL:message:2\n")
         with retrieve_stdout() as stdout:
             print_results_formatted(self.logger,
                                     self.section,
@@ -655,12 +655,12 @@ class PrintFormattedResultsTest(unittest.TestCase):
 
     def test_multiple_ranges(self):
         expected_string = (
-            "id:-?[0-9]+:origin:1:.*file:.*another_file:from_line:5:"
-            "from_column:3:to_line:5:to_column:5:"
-            "severity:1:msg:2\n"
-            "id:-?[0-9]+:origin:1:.*file:.*some_file:from_line:5:"
-            "from_column:None:to_line:7:to_column:None:"
-            "severity:1:msg:2\n")
+            "id:-?[0-9]+:origin:1:.*file:.*another_file:line:5:"
+            "column:3:end_line:5:end_column:5:"
+            "severity:1:severity_str:NORMAL:message:2\n"
+            "id:-?[0-9]+:origin:1:.*file:.*some_file:line:5:"
+            "column:None:end_line:7:end_column:None:"
+            "severity:1:severity_str:NORMAL:message:2\n")
         affected_code = (SourceRange.from_values("some_file", 5, end_line=7),
                          SourceRange.from_values("another_file", 5, 3, 5, 5))
         with retrieve_stdout() as stdout:

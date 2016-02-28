@@ -16,6 +16,106 @@ A good commit is atomic. It describes but only one logical change and
 not more. Why do we do that? Because we find more bugs if we do! Also it
 features a good commit message.
 
+How to Write Good Commit Messages
+---------------------------------
+
+A commit message consists of 3 parts - The shortlog (short description),
+the long description and the issue reference. There should have an empty
+line between each section.
+
+::
+
+    This is the shortlog - one line only
+
+    This is the long description which can extend to multiple lines
+    of text.
+
+    And can have multiple paragraphs which explain things in more
+    detail too.
+
+    Next is the issue reference
+
+Shortlog
+~~~~~~~~
+
+Example:
+
+::
+
+    setup: Install .coafile via package_data
+
+-  Maximum of 50 characters.
+-  Should describe the *change* - the action being done in the commit.
+-  Should have a tag and and a short description separated by a colon (``:``)
+
+   -  **Tag**
+
+      -  The file or class or package being modified.
+      -  Not mandatory.
+
+   -  **Short Description**
+
+      - Starts with a capital letter.
+      - Written in imperative present tense (i.e. ``Add something``, not
+        ``Adding something`` or ``Added something``).
+      - No trailing period.
+
+Long Description
+~~~~~~~~~~~~~~~~
+
+Example:
+
+::
+
+    When installing the .coafile to distutils.sysconfig.get_python_lib, we
+    ignore that this is not the installation directory in every case. Thus
+    it is easier, more reliable and platform independent to let distutils
+    install it by itself.
+
+-  Maximum of 72 chars excluding newline for *each* line.
+-  Not mandatory - but helps explain what you're doing.
+-  Should describe the reasoning for your changes. This is especially
+   important for complex changes that are not self explanatory. This is also
+   the right place to write about related bugs.
+
+Issue reference
+~~~~~~~~~~~~~~~
+
+Example:
+
+::
+
+    Fixes https://github.com/coala-analyzer/coala/issues/269
+
+-  Should use the ``Fixes`` keyword.
+-  Should use full URL to the issue.
+-  There should be a single space between the ``Fixes`` and the URL.
+
+.. note::
+
+    -  The issue reference will automatically add the link of the commit in
+       the issue.
+    -  It will also automatically close the issue when the commit is
+       accepted into coala.
+
+.. seealso::
+
+    https://wiki.gnome.org/Git/CommitMessages
+
+Example
+~~~~~~~
+
+::
+
+    setup: Install .coafile via package_data
+
+    When installing the .coafile to distutils.sysconfig.get_python_lib, we
+    ignore that this is not the installation directory in every case. Thus
+    it is easier, more reliable and platform independent to let distutils
+    install it by itself.
+
+    Fixes https://github.com/coala-analyzer/coala/issues/269
+
 Why Do We Need Good Commits?
 ----------------------------
 
@@ -40,53 +140,3 @@ Why Do We Need Good Commits?
    atomic commits to find the commit which caused a bug, you should be
    able to identify the real cause of the bug fastly. Good commit
    messages and atomicity of commits are key to that ability.
-
-How to Write Good Commit Messages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-There are a few things to consider when writing a commit message,
-namely:
-
--  The first line may hold up to 50 chars excluding newline and is
-   called shortlog.
--  The shortlog should have a tag and must have a short description:
-   ``tag: Short description``.
--  The tag is usually the affected class or package and not mandatory.
-   It gives context to the commit.
--  The short description starts with a big letter and is written in
-   imperative present tense (i.e. ``Add something``, not
-   ``Adding something`` or ``Added something``). It has no trailing
-   period.
--  The second line must be empty.
--  All following lines may hold up to 72 chars excluding newline.
--  These lines are the long description. The long description is not
-   mandatory but may help expressing what you're doing.
--  The shortlog shall describe the *change* as exactly as possible. If
-   it is a bugfix, don't describe the bug but the *change*.
--  In the long description you can add reasoning for your changes. This
-   is especially important for complex changes that are not self
-   explanatory. This is also the right place to explain related bugs.
--  If the commit fixes a bug, add the following line at the end:
-   ``Fixes https://github.com/coala-analyzer/coala/issues/###``, this
-   way the commit will appear at the bug and several revisions can be
-   tracked this way.
--  Be sure to use the full URL, if we move from github, the links should
-   still work.
--  This will automatically close the according bug when pushed to master
-   if you have the permissions on GitHub.
-
-Also see: https://wiki.gnome.org/Git/CommitMessages
-
-Example
-~~~~~~~
-
-::
-
-    setup: Install .coafile via package_data
-
-    When installing the .coafile to distutils.sysconfig.get_python_lib, we
-    ignore that this is not the installation directory in every case. Thus
-    it is easier, more reliable and platform independent to let distutils
-    install it by itself.
-
-    Fixes https://github.com/coala-analyzer/coala/issues/269

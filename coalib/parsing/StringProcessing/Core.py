@@ -99,7 +99,7 @@ def split(pattern,
           remove_empty_matches=False,
           use_regex=False):
     """
-    Splits the given string by the specified pattern. The return character (\n)
+    Splits the given string by the specified pattern. The return character (\\n)
     is not a natural split pattern (if you don't specify it yourself).
     This function ignores escape sequences.
 
@@ -131,7 +131,7 @@ def unescaped_split(pattern,
                     remove_empty_matches=False,
                     use_regex=False):
     """
-    Splits the given string by the specified pattern. The return character (\n)
+    Splits the given string by the specified pattern. The return character (\\n)
     is not a natural split pattern (if you don't specify it yourself).
     This function handles escaped split-patterns (and so splits only patterns
     that are unescaped).
@@ -166,13 +166,13 @@ def search_in_between(begin,
                       use_regex=False):
     """
     Searches for a string enclosed between a specified begin- and end-sequence.
-    Also enclosed \n are put into the result. Doesn't handle escape sequences.
+    Also enclosed \\n are put into the result. Doesn't handle escape sequences.
 
     :param begin:                A pattern that defines where to start
                                  matching.
     :param end:                  A pattern that defines where to end matching.
     :param string:               The string where to search in.
-    :param max_matches           Defines the maximum number of matches. If 0 or
+    :param max_matches:          Defines the maximum number of matches. If 0 or
                                  less is provided, the number of matches is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
@@ -231,20 +231,23 @@ def unescaped_search_in_between(begin,
                                 use_regex=False):
     """
     Searches for a string enclosed between a specified begin- and end-sequence.
-    Also enclosed \n are put into the result.
+    Also enclosed \\n are put into the result.
     Handles escaped begin- and end-sequences (and so only patterns that are
     unescaped).
-    CAUTION: Using the escaped character '\' in the begin- or end-sequences
-             the function can return strange results. The backslash can
-             interfere with the escaping regex-sequence used internally to
-             match the enclosed string.
+
+    .. warning::
+
+        Using the escaped character '\\' in the begin- or end-sequences
+        the function can return strange results. The backslash can
+        interfere with the escaping regex-sequence used internally to
+        match the enclosed string.
 
     :param begin:                A regex pattern that defines where to start
                                  matching.
     :param end:                  A regex pattern that defines where to end
                                  matching.
     :param string:               The string where to search in.
-    :param max_matches           Defines the maximum number of matches. If 0 or
+    :param max_matches:          Defines the maximum number of matches. If 0 or
                                  less is provided, the number of matches is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should
@@ -388,7 +391,7 @@ def _nested_search_in_between(begin, end, string):
     Matches infinite times.
 
     This is a function specifically designed to be invoked from
-    nested_search_in_between().
+    ``nested_search_in_between()``.
 
     :param begin:  A regex pattern that defines where to start matching.
     :param end:    A regex pattern that defines where to end matching.
@@ -440,7 +443,7 @@ def nested_search_in_between(begin,
                              use_regex=False):
     """
     Searches for a string enclosed between a specified begin- and end-sequence.
-    Also enclosed \n are put into the result. Doesn't handle escape sequences,
+    Also enclosed \\n are put into the result. Doesn't handle escape sequences,
     but supports nesting.
 
     Nested sequences are ignored during the match. Means you get only the first
@@ -453,7 +456,7 @@ def nested_search_in_between(begin,
                                  matching.
     :param end:                  A pattern that defines where to end matching.
     :param string:               The string where to search in.
-    :param max_matches           Defines the maximum number of matches. If 0 or
+    :param max_matches:          Defines the maximum number of matches. If 0 or
                                  less is provided, the number of splits is not
                                  limited.
     :param remove_empty_matches: Defines whether empty entries should

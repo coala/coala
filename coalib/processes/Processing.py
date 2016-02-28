@@ -64,7 +64,7 @@ def create_process_group(command_array, **kwargs):
 
 def get_default_actions(section):
     """
-    Parses the key `default_actions` in the given section.
+    Parses the key ``default_actions`` in the given section.
 
     :param section:    The section where to parse from.
     :return:           A dict with the bearname as keys and their default
@@ -375,6 +375,7 @@ def instantiate_processes(section,
 def get_ignore_scope(line, keyword):
     """
     Retrieves the bears that are to be ignored defined in the given line.
+
     :param line:    The line containing the ignore declaration.
     :param keyword: The keyword that was found. Everything after the rightmost
                     occurrence of it will be considered for the scope.
@@ -407,12 +408,16 @@ def yield_ignore_ranges(file_dict):
                     yield (bears,
                            SourceRange.from_values(filename,
                                                    start,
-                                                   end_line=line_number))
+                                                   1,
+                                                   line_number,
+                                                   len(file[line_number-1])))
             elif "ignore " in line:
                 yield (get_ignore_scope(line, "ignore "),
                        SourceRange.from_values(filename,
                                                line_number,
-                                               end_line=line_number+1))
+                                               1,
+                                               line_number+1,
+                                               len(file[line_number])))
 
 
 def process_queues(processes,
@@ -527,7 +532,7 @@ def process_queues(processes,
 
 def simplify_section_result(section_result):
     """
-    Takes in a section's result from `execute_section` and simplifies it
+    Takes in a section's result from ``execute_section`` and simplifies it
     for easy usage in other functions.
 
     :param section_result: The result of a section which was executed.
@@ -561,9 +566,10 @@ def execute_section(section,
     Executes the section with the given bears.
 
     The execute_section method does the following things:
+
     1. Prepare a Process
-      * Load files
-      * Create queues
+       -  Load files
+       -  Create queues
     2. Spawn up one or more Processes
     3. Output results from the Processes
     4. Join all processes

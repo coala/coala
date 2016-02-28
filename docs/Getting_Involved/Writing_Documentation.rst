@@ -21,4 +21,4 @@ for an explanation of the syntax.
 You can test the documentation locally through simply running
 ``make html`` in the coala ``docs`` directory. This generates
 ``docs\_build\html\index.html`` that you can view on your browser. (Use
-``pip install sphinx`` if you do not have ``sphinx`` yet.)
+``pip3 install sphinx`` if you do not have ``sphinx`` yet.)

@@ -26,13 +26,3 @@ source .misc/env_variables.sh
 # Install packages with pip
 pip install -q -r test-requirements.txt
 pip install -q -r requirements.txt
-
-# Install packages from source
-cd .misc
-if [ "$python_implementation" == "CPython" ] ; then
-  bash install.python-dbus.sh
-fi
-cd ..
-
-# Calling setup.py will download checkstyle automatically so tests may succeed
-python3 setup.py --help

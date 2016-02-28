@@ -1,5 +1,6 @@
 import copy
 import os
+import sys
 from collections import OrderedDict
 
 from coalib.collecting.Collectors import collect_registered_bears_dirs
@@ -62,6 +63,11 @@ class Section:
 
     def bear_dirs(self):
         bear_dirs = path_list(self.get("bear_dirs", ""))
+        for bear_dir in bear_dirs:
+            sys.path.append(bear_dir)
+        bear_dirs = [
+            os.path.join(bear_dir, "**")
+            for bear_dir in bear_dirs]
         bear_dirs += [
             os.path.join(bear_dir, "**")
             for bear_dir in collect_registered_bears_dirs('coalabears')]

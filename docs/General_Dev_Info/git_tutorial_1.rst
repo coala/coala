@@ -9,7 +9,7 @@ What is This?
 
 This post tries to provide a **gentle introduction** to git. While it is
 aimed at **newcomers** it is also meant to give a rather **good overview
-and understanding** about what one can do with git and thus **is
+and understanding** of what one can do with git and thus **is
 extensive**. It follows the premise:
 
     If you know how a thing works, you can make it do what you want it
@@ -214,9 +214,9 @@ that?
 As I've hinted before, our git repository **does not contain files** but
 only **changes** - so how do we make a change out of our file?
 
-The answer lies in (1) ``git add`` and (2) ``git commit`` which allow us
+The answer lies in (1) ``git add`` and (2) ``git commit`` which allows us
 to (1) specify what files/file changes we want to add to the change and
-(2) that we want to pack those file changes into a so called **commit**.
+(2) that we want to pack those file changes into a so-called **commit**.
 Git also offers a helper command so we can see what will be added to our
 commit: ``git status``.
 
@@ -295,7 +295,7 @@ You should now get your editor with contents similar to this:
 Since we're about to create a change, git asks us for a **description**.
 
 .. note::
-    Git actually allows to create commits without a description with
+    Git actually allows creating commits without a description with
     a special argument. This is not recommended for productive
     collaborative work!)
 
@@ -610,7 +610,7 @@ We did some basic git commands:
 
 -  ``git config``: accessing git configuration
 -  ``git init``: creating a repository
--  ``git status``: getting current status of files, staging and so on
+-  ``git status``: getting the current status of files, staging and so on
 -  ``git add``: staging files for the commit
 -  ``git diff``: showing the difference between the current commit and
    what we have on our file system

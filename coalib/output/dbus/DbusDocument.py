@@ -90,11 +90,12 @@ class DbusDocument(dbus.service.Object):
 
         :return: The output is a list with an element for each section.
                  It contains:
-                 - The name of the section
-                 - Boolean which is true if all bears in the section executed
-                   successfully
-                 - List of results where each result is a string dictionary
-                   which contains: id, origin, message, file, line_nr, severity
+
+                 -  The name of the section
+                 -  Boolean which is true if all bears in the section executed
+                    successfully
+                 -  List of results where each result is a string dictionary
+                    which contains: id, origin, message, file, line_nr, severity
         """
         retval = []
         if self.path == "" or self.config_file == "":

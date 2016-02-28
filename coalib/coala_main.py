@@ -3,7 +3,6 @@ import os
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib import coala_delete_orig
-from coalib.collecting.Collectors import collect_all_bears_from_sections
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -19,7 +18,6 @@ def run_coala(log_printer=None,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
-              show_bears=do_nothing,
               autoapply=True):
     """
     This is a main method that should be usable for almost all purposes and
@@ -42,14 +40,6 @@ def run_coala(log_printer=None,
     :param nothing_done:            A callback that will be called with only a
                                     log printer that shall indicate that
                                     nothing was done.
-    :param show_bears:              A callback that will be called with first
-                                    a list of local bears, second a list of
-                                    global bears to output them. A third bool
-                                    parameter may be used to indicate if a
-                                    compressed output (True) or a normal output
-                                    (False) is desired, the former being used
-                                    for showing all available bears to the
-                                    user.
     :param autoapply:               Set to False to autoapply nothing by
                                     default; this is overridable via any
                                     configuration file/CLI.
@@ -71,43 +61,33 @@ def run_coala(log_printer=None,
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
         config_file = os.path.abspath(str(sections["default"].get("config")))
-        show_all_bears = bool(sections['default'].get('show_all_bears', False))
-        show_bears_ = bool(sections["default"].get("show_bears", "False"))
 
         # Deleting all .orig files, so the latest files are up to date!
         coala_delete_orig.main(log_printer, sections["default"])
 
         delete_tagged_results(dtag, config_file, log_printer)
 
-        if show_bears_ or show_all_bears:
-            if show_all_bears:
-                (local_bears,
-                 global_bears) = collect_all_bears_from_sections(sections,
-                                                                 log_printer)
-            show_bears(local_bears, global_bears, show_all_bears)
+        results = {}
+        for section_name, section in sections.items():
+            if not section.is_enabled(targets):
+                continue
+
+            print_section_beginning(section)
+            section_result = execute_section(
+                section=section,
+                global_bear_list=global_bears[section_name],
+                local_bear_list=local_bears[section_name],
+                print_results=print_results,
+                log_printer=log_printer)
+            yielded, yielded_unfixed, results[section_name] = (
+                simplify_section_result(section_result))
+
+            yielded_results = yielded_results or yielded
+            yielded_unfixed_results = (
+                yielded_unfixed_results or yielded_unfixed)
             did_nothing = False
-        else:
-            results = {}
-            for section_name, section in sections.items():
-                if not section.is_enabled(targets):
-                    continue
 
-                print_section_beginning(section)
-                section_result = execute_section(
-                    section=section,
-                    global_bear_list=global_bears[section_name],
-                    local_bear_list=local_bears[section_name],
-                    print_results=print_results,
-                    log_printer=log_printer)
-                yielded, yielded_unfixed, results[section_name] = (
-                    simplify_section_result(section_result))
-
-                yielded_results = yielded_results or yielded
-                yielded_unfixed_results = (
-                    yielded_unfixed_results or yielded_unfixed)
-                did_nothing = False
-
-            tag_results(tag, config_file, results, log_printer)
+        tag_results(tag, config_file, results, log_printer)
 
         if did_nothing:
             nothing_done(log_printer)

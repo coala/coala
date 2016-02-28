@@ -11,19 +11,27 @@ class SectionCreatable:
     can provide default arguments via the lower case keyword arguments.
 
     Example:
+
+    ::
+
         SpacingHelper.from_section(section, tabwidth=8)
+
     creates a SpacingHelper and if the "tabwidth" setting is needed and not
     contained in section, 8 will be taken.
 
     It is recommended to write the prototype of the __init__ method according
     to this example:
+
+    ::
+
         def __init__(self, setting_one: int, setting_two: bool=False):
             pass  # Implementation
 
     This way the get_optional_settings and the get_non_optional_settings method
-    will extract automatically that
-     * setting_one should be an integer
-     * setting_two should be a bool and defaults to False
+    will extract automatically that:
+
+    -  setting_one should be an integer
+    -  setting_two should be a bool and defaults to False
 
     If you write a documentation comment, you can use :param to add
     descriptions to your parameters. These will be available too automatically.

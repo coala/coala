@@ -67,7 +67,7 @@ is used to get the final output (which may be suggestions or
 auto-corrections).
 
 Let's try this bear out. Create a new file called ``sample.cpp``. Contents of
-``sameple.cpp`` are:
+``sample.cpp`` are:
 
 ::
 

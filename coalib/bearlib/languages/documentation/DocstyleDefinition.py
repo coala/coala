@@ -73,31 +73,31 @@ class DocstyleDefinition:
         Marker sets consist of 3 entries where the first is the start-marker,
         the second one the each-line marker and the last one the end-marker.
         For example a marker tuple with a single marker set
-        `(("/**", "*", "*/"),)` would match following documentation comment:
+        ``(("/**", "*", "*/"),)`` would match following documentation comment:
 
-        ```
-        /**
-         * This is documentation.
-         */
-        ```
+        ::
+
+            /**
+             * This is documentation.
+             */
 
         It's also possible to supply an empty each-line marker
-        (`("/**", "", "*/")`):
+        (``("/**", "", "*/")``):
 
-        ```
-        /**
-         This is more documentation.
-         */
-        ```
+        ::
+
+            /**
+             This is more documentation.
+             */
 
         Markers are matched "greedy", that means it will match as many
         each-line markers as possible. I.e. for `("///", "///", "///")`):
 
-        ```
-        /// Brief documentation.
-        ///
-        /// Detailed documentation.
-        ```
+        ::
+
+            /// Brief documentation.
+            ///
+            /// Detailed documentation.
 
         :return: A tuple of marker/delimiter string tuples that identify a
                  documentation comment.
@@ -108,7 +108,7 @@ class DocstyleDefinition:
     @enforce_signature
     def load(cls, language: str, docstyle: str):
         """
-        Loads a `DocstyleDefinition` from the coala docstyle definition files.
+        Loads a ``DocstyleDefinition`` from the coala docstyle definition files.
 
         This function considers all settings inside the according coalang-files
         as markers.

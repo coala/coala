@@ -33,6 +33,9 @@ information about the installation and dependencies, take a look at our
 The latest code from master is automatically deployed to PyPI as a
 development version. Get it with ``pip install coala --pre``.
 
+To get the supported bears along with coala, check out
+`coala-bears <https://github.com/coala-analyzer/coala-bears>`__.
+
 |PyPI|
 
 USAGE
@@ -97,8 +100,8 @@ information.
    :target: https://pypi.python.org/pypi/coala
 .. |Linux Build Status| image:: https://img.shields.io/circleci/project/coala-analyzer/coala/master.svg?label=linux%20build
    :target: https://circleci.com/gh/coala-analyzer/coala
-.. |Windows Build status| image:: https://img.shields.io/appveyor/ci/sils1297/coala/master.svg?label=windows%20build
-   :target: https://ci.appveyor.com/project/sils1297/coala/branch/master
+.. |Windows Build status| image:: https://img.shields.io/appveyor/ci/coala/coala/master.svg?label=windows%20build
+   :target: https://ci.appveyor.com/project/coala/coala/branch/master
 .. |OSX Build status| image:: https://img.shields.io/travis/coala-analyzer/coala/master.svg?label=osx%20build
    :target: https://travis-ci.org/coala-analyzer/coala
 .. |Scrutinizer Code Quality| image:: https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer%20quality

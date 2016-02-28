@@ -181,15 +181,16 @@ def fnmatch(name, patterns):
     :return:         Boolean: Whether or not name is matched by pattern
 
     Glob Syntax:
-    '[seq]':         Matches any character in seq. Cannot be empty.
-                     Any special character looses its special meaning in a set.
-   '[!seq]':         Matches any character not in seq. Cannot be empty
-                     Any special character looses its special meaning in a set.
-    '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
-                     More than two or just one sequence can be given.
-    '?':             Matches any single character.
-    '*':             Matches everything but os.sep.
-    '**':            Matches everything.
+
+    -  '[seq]':         Matches any character in seq. Cannot be empty. Any
+                        special character looses its special meaning in a set.
+    -  '[!seq]':        Matches any character not in seq. Cannot be empty. Any
+                        special character looses its special meaning in a set.
+    -  '(seq_a|seq_b)': Matches either sequence_a or sequence_b as a whole.
+                        More than two or just one sequence can be given.
+    -  '?':             Matches any single character.
+    -  '*':             Matches everything but os.sep.
+    -  '**':            Matches everything.
     """
     if isinstance(patterns, str):
         patterns = [patterns]

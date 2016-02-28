@@ -30,6 +30,7 @@ bears = LineLengthBear
 bears = SpaceConsistencyBear, LineLengthBear
 
 files = docs/**/*.rst, CONTRIBUTING.md, README.rst
+ignore = docs/API/**
 ignore_length_regex = ^.*https?://
 default_actions = SpaceConsistencyBear: ApplyPatchAction
 

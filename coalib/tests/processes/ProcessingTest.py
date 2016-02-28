@@ -14,7 +14,8 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
     ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
     execute_section, filter_raising_callables, get_default_actions,
-    get_file_dict, print_result, process_queues, simplify_section_result)
+    get_file_dict, print_result, process_queues, simplify_section_result,
+    yield_ignore_ranges)
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -182,13 +183,13 @@ class ProcessingTest(unittest.TestCase):
                  third_local,
                  # The following are to be ignored
                  Result('o', 'm', severity=RESULT_SEVERITY.INFO),
-                 Result.from_values("ABear", "u", file="f", line=2),
-                 Result.from_values("ABear", "u", file="f", line=3)],
+                 Result.from_values("ABear", "u", "f", 2, 1),
+                 Result.from_values("ABear", "u", "f", 3, 1)],
              2: [fourth_local,
                  # The following are to be ignored
                  HiddenResult("t", "c"),
-                 Result.from_values("ABear", "u", file="f", line=5),
-                 Result.from_values("ABear", "u", file="f", line=6)]},
+                 Result.from_values("ABear", "u", "f", 5, 1),
+                 Result.from_values("ABear", "u", "f", 6, 1)]},
             {1: [first_global]},
             {"f": ["first line  # stop ignoring, invalid ignore range\n",
                    "second line  # ignore all\n",
@@ -342,6 +343,41 @@ class ProcessingTest(unittest.TestCase):
         ranges = [(['something', 'else', 'origin'],
                    SourceRange.from_values("e", 1, 1, 2, 2))]
         self.assertTrue(check_result_ignore(result, ranges))
+
+    def test_yield_ignore_ranges(self):
+        test_file_dict_a = {'f':
+                            ('# Ignore aBear\n',
+                             'a_string = "This string should be ignored"\n')}
+        test_ignore_range_a = list(yield_ignore_ranges(test_file_dict_a))
+        for test_bears, test_source_range in test_ignore_range_a:
+            self.assertEqual(test_bears, ['abear'])
+            self.assertEqual(test_source_range.start.line, 1)
+            self.assertEqual(test_source_range.start.column, 1)
+            self.assertEqual(test_source_range.end.line, 2)
+            self.assertEqual(test_source_range.end.column, 43)
+
+        test_file_dict_b = {'f':
+                            ('# start Ignoring bBear\n',
+                             'b_string = "This string should be ignored"\n',
+                             '# stop ignoring\n')}
+        test_ignore_range_b = list(yield_ignore_ranges(test_file_dict_b))
+        for test_bears, test_source_range in test_ignore_range_b:
+            self.assertEqual(test_bears, ['bbear'])
+            self.assertEqual(test_source_range.start.line, 1)
+            self.assertEqual(test_source_range.start.column, 1)
+            self.assertEqual(test_source_range.end.line, 3)
+            self.assertEqual(test_source_range.end.column, 16)
+
+        test_file_dict_c = {'f':
+                            ('# Start ignoring cBear\n',
+                             '# Stop ignoring cBear This & prev ignored\n')}
+        test_ignore_range_c = list(yield_ignore_ranges(test_file_dict_c))
+        for test_bears, test_source_range in test_ignore_range_c:
+            self.assertEqual(test_bears, ['cbear'])
+            self.assertEqual(test_source_range.start.line, 1)
+            self.assertEqual(test_source_range.start.column, 1)
+            self.assertEqual(test_source_range.end.line, 2)
+            self.assertEqual(test_source_range.end.column, 42)
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):

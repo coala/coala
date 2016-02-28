@@ -40,7 +40,7 @@ class LineParser:
 
     def parse(self, line):
         """
-        Note that every value in the returned touple _besides the value_ is
+        Note that every value in the returned touple *besides the value* is
         unescaped. This is so since the value is meant to be put into a Setting
         later thus the escapes may be needed there.
 

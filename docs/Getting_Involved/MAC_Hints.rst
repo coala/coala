@@ -34,8 +34,8 @@ Coverage Installation Hints for OSX Users:
 ::
 
     # Installation
-    pip install virtualenv
-    pip install virtualenvwrapper
+    pip3 install virtualenv
+    pip3 install virtualenvwrapper
 
     # Folder to contain Virtual Environments
     mkdir ~/.virtualenvs

@@ -214,15 +214,18 @@ def gather_configuration(acquire_settings,
     settings, saves back if needed and warns about non-existent targets.
 
     This function:
-    - Reads and merges all settings in sections from
-        - Default config
-        - User config
-        - Configuration file
-        - CLI
-    - Collects all the bears
-    - Fills up all needed settings
-    - Writes back the new sections to the configuration file if needed
-    - Gives all information back to caller
+
+    -  Reads and merges all settings in sections from
+
+       -  Default config
+       -  User config
+       -  Configuration file
+       -  CLI
+
+    -  Collects all the bears
+    -  Fills up all needed settings
+    -  Writes back the new sections to the configuration file if needed
+    -  Gives all information back to caller
 
     :param acquire_settings: The method to use for requesting settings. It will
                              get a parameter which is a dictionary with the
@@ -235,12 +238,13 @@ def gather_configuration(acquire_settings,
                              overridable via any configuration file/CLI.
     :param arg_list:         CLI args to use
     :return:                 A tuple with the following contents:
-                              * A dictionary with the sections
-                              * Dictionary of list of local bears for each
+
+                             -  A dictionary with the sections
+                             -  Dictionary of list of local bears for each
                                 section
-                              * Dictionary of list of global bears for each
+                             -  Dictionary of list of global bears for each
                                 section
-                              * The targets list
+                             -  The targets list
     """
     # Note: arg_list can also be []. Hence we cannot use
     # `arg_list = arg_list or default_list`
@@ -252,7 +256,7 @@ def gather_configuration(acquire_settings,
     save_sections(sections)
     warn_nonexistent_targets(targets, sections, log_printer)
 
-    if not autoapply is None:
+    if autoapply is not None:
         if not autoapply and 'autoapply' not in sections['default']:
             sections['default']['autoapply'] = "False"
 

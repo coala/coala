@@ -38,18 +38,19 @@ Welcome to the coala documentation!
    First Step <Users/Tutorials/Tutorial>
    Writing Bears <Users/Tutorials/Writing_Bears>
    Linter Bears <Users/Tutorials/Linter_Bears>
+   Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
 
 .. toctree::
    :caption: Getting Involved
    :hidden:
 
    Introduction <Getting_Involved/README>
-   Review <Getting_Involved/Review>
    Codestyle <Getting_Involved/Codestyle>
+   Commit Style <Getting_Involved/Writing_Good_Commits>
    Executing Tests <Getting_Involved/Testing>
+   Review <Getting_Involved/Review>
    Writing Tests <Getting_Involved/Writing_Tests>
    Writing Documentation <Getting_Involved/Writing_Documentation>
-   Writing Good Commits <Getting_Involved/Writing_Good_Commits>
    MAC Hints <Getting_Involved/MAC_Hints>
 
 .. toctree::
