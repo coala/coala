@@ -44,6 +44,7 @@ Welcome to the coala documentation!
    :caption: Getting Involved
    :hidden:
 
+   Newcomers <Getting_Involved/Newcomers>
    Introduction <Getting_Involved/README>
    Codestyle <Getting_Involved/Codestyle>
    Commit Style <Getting_Involved/Writing_Good_Commits>
