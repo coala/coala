@@ -1,4 +1,6 @@
-from coalib.misc.Decorators import enforce_signature
+from os.path import relpath
+
+from coalib.misc.Decorators import enforce_signature, get_public_members
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.TextRange import TextRange
 
@@ -80,3 +82,9 @@ class SourceRange(TextRange):
                                        tr.start.column,
                                        tr.end.line,
                                        tr.end.column)
+
+    def __json__(self, use_relpath=False):
+        _dict = get_public_members(self)
+        if use_relpath:
+            _dict['file'] = relpath(_dict['file'])
+        return _dict

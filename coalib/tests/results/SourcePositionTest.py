@@ -1,6 +1,8 @@
 import unittest
+from os.path import relpath
 
 from coalib.results.SourcePosition import SourcePosition
+from coalib.misc.ContextManagers import prepare_file
 
 
 class SourcePositionTest(unittest.TestCase):
@@ -29,6 +31,12 @@ class SourcePositionTest(unittest.TestCase):
             repr(uut),
             "<SourcePosition object\\(file='.*None', line=None, column=None\\) "
                 "at 0x[0-9a-fA-F]+>")
+
+    def test_json(self):
+        with prepare_file([""], None) as (_, filename):
+            uut = SourcePosition(filename, 1)
+            self.assertEqual(uut.__json__(use_relpath=True)
+                             ['file'], relpath(filename))
 
     def assert_equal(self, first, second):
         self.assertGreaterEqual(first, second)
