@@ -1,6 +1,7 @@
 import unittest
 
 from coalib.misc.Exceptions import get_exitcode
+from pkg_resources import ContextualVersionConflict
 
 
 class ExceptionsTest(unittest.TestCase):
@@ -10,4 +11,5 @@ class ExceptionsTest(unittest.TestCase):
         self.assertEqual(get_exitcode(AssertionError()), 255)
         self.assertEqual(get_exitcode(SystemExit(999)), 999)
         self.assertEqual(get_exitcode(EOFError()), 0)
+        self.assertEqual(get_exitcode(ContextualVersionConflict()), 777)
         self.assertEqual(get_exitcode(None), 0)
