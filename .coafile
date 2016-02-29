@@ -34,6 +34,29 @@ ignore = docs/API/**
 ignore_length_regex = ^.*https?://
 default_actions = SpaceConsistencyBear: ApplyPatchAction
 
+[languagetool]
+enabled = False
+
+bears = LanguageToolBear
+files = docs/**/*.rst, CONTRIBUTING.md, README.rst
+ignore = docs/API/**
+languagetool_disable_rules =
+    EN_QUOTES,                          # `` for links in rst files
+    WHITESPACE_RULE,                    # Indents in code
+    UPPERCASE_SENTENCE_START,           # Sentences start with "coala"
+    COMMA_PARENTHESIS_WHITESPACE,       # Confuses .coafile
+    DOUBLE_PUNCTUATION,                 # Used in `.. note::`
+    SENTENCE_WHITESPACE,                # Thinks coalib.xyz should have space
+    THE_PUNCT,                          # Confused by symbols in code
+    EN_A_VS_AN,                         # Mistakes variable `a` to be an article
+    EN_UNPAIRED_BRACKETS,               # Confused with brackets in code
+    ENGLISH_WORD_REPEAT_BEGINNING_RULE, # Confuses itself in regex
+    CD_NN,                              # index -> indices
+    SENT_START_CONJUNCTIVE_LINKING_ADVERB_COMMA,
+    SENTENCE_FRAGMENT,                  # Thinks headings are sentences
+    ENGLISH_WORD_REPEAT_RULE,           # Found in code
+    POSSESIVE_APOSTROPHE                # Confused by directory name "objects"
+
 [commit]
 bears = GitCommitBear
 
