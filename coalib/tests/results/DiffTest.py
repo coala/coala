@@ -2,7 +2,7 @@ import json
 import unittest
 from unittest.case import SkipTest
 
-from coalib.output.JSONEncoder import JSONEncoder
+from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.Diff import ConflictError, Diff, SourceRange
 
 
@@ -167,6 +167,7 @@ class DiffTest(unittest.TestCase):
         self.assertNotEqual(diff_1, diff_2)
 
     def test_json_export(self):
+        JSONEncoder = create_json_encoder()
         a = ["first\n", "second\n", "third\n"]
         b = ["first\n", "third\n"]
         diff = Diff.from_string_arrays(a, b)

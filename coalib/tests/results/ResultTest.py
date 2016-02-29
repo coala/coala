@@ -1,9 +1,11 @@
 import unittest
+import json
 from os.path import abspath
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.SourceRange import SourceRange
+from coalib.output.JSONEncoder import create_json_encoder
 
 
 class ResultTest(unittest.TestCase):
@@ -129,3 +131,25 @@ class ResultTest(unittest.TestCase):
                          SourceRange.from_values('f'))
         result_d = Result("o", "m", affected_code=affected_code)
         self.assertEqual(result_d.location_repr(), "'f'")
+
+    def test_json_diff(self):
+        file_dict = {
+            "f_a": ["1", "2", "3"],
+            "f_b": ["1", "2", "3"]
+        }
+        expected_file = {
+            "f_a": ["1", "3_changed"],
+            "f_b": ["1", "2", "3"]
+        }
+        diff = Diff(file_dict['f_a'])
+        diff.delete_line(2)
+        diff.change_line(3, "3", "3_changed")
+        uut = Result("origin", "msg", diffs={"f_a": diff}).__json__(True)
+        self.assertEqual(uut["diffs"]['f_a'].__json__(), "--- \n"
+                                                         "+++ \n"
+                                                         "@@ -1,3 +1,2 @@\n"
+                                                         " 1-2-3+3_changed")
+        JSONEncoder = create_json_encoder(use_relpath=True)
+        json_dump = json.dumps(diff, cls=JSONEncoder, sort_keys=True)
+        self.assertEqual(
+            json_dump, '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1-2-3+3_changed"')
