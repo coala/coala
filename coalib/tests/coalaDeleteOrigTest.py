@@ -18,10 +18,8 @@ class coalaDeleteOrigTest(unittest.TestCase):
     def test_nonexistent_coafile(self):
         old_getcwd = os.getcwd
         os.getcwd = lambda *args: None
-        with retrieve_stdout() as stdout:
-            retval = coala_delete_orig.main()
-            self.assertIn("Can only delete .orig files if ", stdout.getvalue())
-            self.assertEqual(retval, 255)
+        retval = coala_delete_orig.main()
+        self.assertEqual(retval, 255)
         os.getcwd = old_getcwd
 
     def test_remove_exception(self):

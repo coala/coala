@@ -13,7 +13,6 @@ def main(log_printer=None, section: Section=None):
     log_printer = log_printer or LogPrinter(ConsolePrinter())
 
     if start_path is None:
-        log_printer.err("Can only delete .orig files if .coafile is found")
         return 255
 
     orig_files = Globbing.glob(os.path.abspath(
