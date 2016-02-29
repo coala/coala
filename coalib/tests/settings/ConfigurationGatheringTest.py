@@ -47,8 +47,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
                               "-s"]))
 
         self.assertEqual(str(sections["default"]),
-                         "Default {config : " + repr(temporary) + ", save : "
-                         "'True', test : '5'}")
+                         "Default {config : " +
+                         repr(temporary) + ", relpath : 'False'"
+                         ", save : 'True', test : '5'}")
 
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (
@@ -186,8 +187,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         with open(filename, "r") as f:
             lines = f.readlines()
-        self.assertEqual(["[Default]\n", "config = some_bad_filename\n"],
-                         lines)
+        self.assertEqual(["[Default]\n", "config = some_bad_filename\n",
+                          "relpath = False\n"], lines)
 
         gather_configuration(
             lambda *args: True,
@@ -204,7 +205,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             filename = escape(filename, '\\')
         self.assertEqual(["[Default]\n",
                           "config = " + filename + "\n",
-                          "\n",
+                          "relpath = False\n", "\n",
                           "[test]\n",
                           "value = 5\n"], lines)
 

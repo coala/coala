@@ -2,7 +2,7 @@ import json
 import unittest
 from datetime import datetime
 
-from coalib.output.JSONEncoder import JSONEncoder
+from coalib.output.JSONEncoder import create_json_encoder
 
 
 class TestClass1(object):
@@ -51,6 +51,7 @@ class JSONAbleClass(object):
 
 
 class JSONEncoderTest(unittest.TestCase):
+    JSONEncoder = create_json_encoder(use_relpath=True)
     kw = {"cls": JSONEncoder, "sort_keys": True}
 
     def test_builtins(self):

@@ -65,6 +65,11 @@ class SourceRangeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             SourceRange(self.result_fileB_noline, self.result_fileB_line2) < 1
 
+    def test_json(self):
+        uut = SourceRange.from_values("B", start_line=2,
+                                      end_line=4).__json__(use_relpath=True)
+        self.assertEqual(uut['start'], self.result_fileB_line2)
+
 
 class SourceRangeExpandTest(unittest.TestCase):
 

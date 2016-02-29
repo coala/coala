@@ -2,7 +2,7 @@ import uuid
 from os.path import relpath
 
 from coalib.misc.Decorators import (
-    enforce_signature, generate_ordering, generate_repr)
+    enforce_signature, generate_ordering, generate_repr, get_public_members)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -201,3 +201,10 @@ class Result:
 
         return ', '.join(repr(relpath(range_path))
                          for range_path in sorted(range_paths))
+
+    def __json__(self, use_relpath=False):
+        _dict = get_public_members(self)
+        if use_relpath and _dict['diffs']:
+            _dict['diffs'] = {relpath(file): diff
+                              for file, diff in _dict['diffs'].items()}
+        return _dict

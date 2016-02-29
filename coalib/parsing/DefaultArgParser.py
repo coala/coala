@@ -170,5 +170,9 @@ def default_arg_parser(formatter_class=None):
                             const=True,
                             help="Deactivate creation of .orig files,"
                                  ".orig backup files before applying patches")
+    arg_parser.add_argument('-r',
+                            '--relpath',
+                            action='store_true',
+                            help="return relative paths for files")
 
     return arg_parser
