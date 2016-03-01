@@ -172,7 +172,8 @@ def default_arg_parser(formatter_class=None):
                                  ".orig backup files before applying patches")
     arg_parser.add_argument('-r',
                             '--relpath',
-                            action='store_true',
+                            nargs='?',
+                            const=True,
                             help="return relative paths for files")
 
     return arg_parser
