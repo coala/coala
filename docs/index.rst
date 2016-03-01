@@ -30,7 +30,6 @@ Welcome to the coala documentation!
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>
    Git Hooks <Users/Git_Hooks>
-   Git Help <Users/Git_Help>
 
 .. toctree::
    :caption: Tutorials
@@ -40,6 +39,7 @@ Welcome to the coala documentation!
    Writing Bears <Users/Tutorials/Writing_Bears>
    Linter Bears <Users/Tutorials/Linter_Bears>
    Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
+   Git Help <Users/Tutorials/Git_Help>
 
 .. toctree::
    :caption: Getting Involved
