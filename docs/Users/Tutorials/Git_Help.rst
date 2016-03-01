@@ -174,28 +174,18 @@ Now you would like to get your commit into the actual master branch. Making
 your changes available to all future users of the project. For this, you will
 have to create a Pull Request. To do this, you will have to go on github, on
 your fork page. You should change to branch to the one you have worked on and
-submitted the commit on. It should say that it is "1 commit ahead of the master
-branch". In case it says something else, such as it is MORE commits ahead or
-a few commits behind the master branch, you will have to fix this before you are
-creating the Pull Request.
-
-In case your branch is a few commits behind the master branch, it means that
-in the meantime, somebody else got an accepted commit, and you need to rebase
-it on your local repository. You can do this by typing:
-
-::
-
-    $ git pull origin master
-
-This will try to merge your current branch with the origin master one.
-Now it should say your branch is up-to-date. You can keep working now, push it
-again online and go ahead and create a Pull Request.
-
-You can create a Pull Request by clicking ``New Pull Request`` button in the
-pull request tab.
+submitted the commit on. Now you can create a Pull Request by clicking
+``New Pull Request`` button in the pull request tab.
 
 **Congratulations!** You have just created your first Pull Request!
 You are awesome!
+
+.. note::
+    If you see any error like ``1 commit ahead of the master branch`` you need
+    to sync your local fork with the remote repository before sending
+    a pull request.
+
+    More information regarding syncing can be found `here <http://coala.readthedocs.org/en/latest/Users/Tutorials/Git_Help.html#keeping-your-fork-in-sync>`_.
 
 Follow-up
 ---------
@@ -229,6 +219,35 @@ This will edit your last commit message. If your commit message was considered
 fine by our reviewers, you can simply send it again like this. If not, edit it
 and send it.
 Now you have successfully edited your last commit!
+
+Keeping your fork in sync
+-------------------------
+
+As people work on coala new commits will be added. This will result in your
+local fork going out of sync with the remote repository.
+To sync your changes with the remote repository run the following commands in
+the desired branch:
+
+::
+
+    $ git fetch origin
+    $ git rebase origin/master
+
+This will fetch the commits from the remote repository and will merge it into
+the branch where you are currently working, and move all of the local commits
+that are ahead of the rebased branch to the top of the history on that branch.
+
+.. note::
+
+    After following these instructions when you try to push to remote you may
+    get fast-forwarding error. If that is the case, then you will have to
+    force push since you are attempting to rewrite the git commit history.
+    To do that append the ``--force`` argument in the push command:
+
+    ``$ git push myfork --force``
+
+    **Warning:** Never force-push on the master branch, or any branch not
+    owned by you.
 
 Useful Git commands
 -------------------
@@ -281,6 +300,12 @@ files are untracked with git status and remove them manually. Like an ordinary
 rm command, ``git clean`` is not undoable, so make sure you really want to
 delete the untracked files before you run it.
 
+::
+
+    $ git checkout <branch>
+
+The ``git checkout`` command is used to switch to another branch in the
+repository. Here <branch> is the name of the branch you want to switch to.
 
 ::
 
