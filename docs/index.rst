@@ -30,6 +30,7 @@ Welcome to the coala documentation!
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>
    Git Hooks <Users/Git_Hooks>
+   Git Help <Users/Git_Help>
 
 .. toctree::
    :caption: Tutorials
@@ -44,6 +45,7 @@ Welcome to the coala documentation!
    :caption: Getting Involved
    :hidden:
 
+   Newcomers <Getting_Involved/Newcomers>
    Introduction <Getting_Involved/README>
    Codestyle <Getting_Involved/Codestyle>
    Commit Style <Getting_Involved/Writing_Good_Commits>
