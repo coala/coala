@@ -31,7 +31,7 @@ system-wide, use:
     For this and all future steps, some steps require root access
     (also known as administrative privileges in Windows).
 
-    **Unix based** (Max, Linux) - This can be achieved by using ``sudo``
+    **Unix based** (Mac, Linux) - This can be achieved by using ``sudo``
     in front of the command ``sudo command_name`` instead of
     ``command_name``
 
