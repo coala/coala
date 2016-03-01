@@ -139,11 +139,16 @@ functionalities coala provides in their applications.
 
 See :doc:`External APIs <Users/External_APIs>` for more information.
 
-Status of the Project
----------------------
+Status and Stability of the Project
+-----------------------------------
 
-We are currently working hard to make this project reality. coala is
-currently usable, in an alpha stage and already provides many features.
+We are currently working hard to make this project reality. coala is currently
+usable, in beta stage and already provides more features than most
+language dependent alternatives. Every single commit is fully reviewed and
+checked with various automated methode including our testsuite covering all
+braches. Our master branch is continuously prereleased to our users so you can
+rely on the upcoming release being rock stable.
+
 If you want to see how the development progresses, check out
 
 https://github.com/coala-analyzer/coala
