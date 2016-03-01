@@ -96,7 +96,7 @@ def get_public_members(obj):
     are publicly exposed.
 
     :param obj: The object to probe.
-    :return:    A dictionary with objects as keys and its attributes as values.
+    :return:    A dictionary with objects as keys and its attributes as values. 
     """
     return {attr: getattr(obj, attr) for attr in dir(obj)
             if not attr.startswith("_")
