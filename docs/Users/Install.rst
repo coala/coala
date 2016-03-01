@@ -186,7 +186,7 @@ order for them to be usable, you need to install them via ``npm``
     npm install -g jshint alex remark dockerfile_lint csslint coffeelint
 
 If a bear still doesn't work for you, please make sure that you have a
-decent version of ``npm`` installed. Many linux distributions ship a
+recent version of ``npm`` installed. Many linux distributions ship a
 very old one.
 
 .. note::
