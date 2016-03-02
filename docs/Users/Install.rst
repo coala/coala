@@ -158,7 +158,7 @@ https://docs.python.org/3.3/install/#alternate-installation.
     If you are using a proxy, follow these steps:
 
     -  Set up your system-wide proxy.
-    -  Use ``sudo -E pip install coala``(the ``-E`` flag takes the
+    -  Use ``sudo -E pip3 install coala`` (the ``-E`` flag takes the
        existing environment variables into the ``sudo`` environment).
 
     You could also set your pip.conf file to use a proxy, to know more
