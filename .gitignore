@@ -36,4 +36,4 @@ node_modules
 .vendor
 Goopfile.lock
 docs/API/
-vnev
+venv
