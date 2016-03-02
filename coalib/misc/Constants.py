@@ -6,12 +6,12 @@ import platform
 THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
                  "Please contact the developers for assistance.")
 
-CRASH_MESSAGE = ("An unknown error occurred. This is a bug. We are "
-                 "sorry for the inconvenience. Please contact the "
-                 "developers for assistance. During execution of "
-                 "coala an exception was raised. This should never "
-                 "happen. When asked for, the following information "
-                 "may help investigating:")
+CRASH_MESSAGE = ("An unknown error occurred. This is a bug. We are \n"
+                 "sorry for the inconvenience. Please contact the \n"
+                 "developers for assistance. During execution of \n"
+                 "coala an exception was raised. This should never \n"
+                 "happen. When asked for, the following information \n"
+                 "may help investigating:\n")
 
 OBJ_NOT_ACCESSIBLE = "{} is not accessible and will be ignored!"
 
