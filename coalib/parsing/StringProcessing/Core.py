@@ -237,7 +237,7 @@ def unescaped_search_in_between(begin,
 
     .. warning::
 
-        Using the escaped character '\\' in the begin- or end-sequences
+        Using the escape character '\\' in the begin- or end-sequences
         the function can return strange results. The backslash can
         interfere with the escaping regex-sequence used internally to
         match the enclosed string.
