@@ -20,6 +20,7 @@ from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import path_list
+from coalib.parsing.Globbing import fnmatch
 
 ACTIONS = [ApplyPatchAction,
            PrintDebugMessageAction,
@@ -168,11 +169,13 @@ def check_result_ignore(result, ignore_ranges):
                           cased affected bearnames and a SourceRange to
                           ignore. If any of the bearname lists is empty, it
                           is considered an ignore range for all bears.
+                          This may be a list of globbed bear wildcards.
     :return:              True if the result has to be ignored.
     """
     for bears, range in ignore_ranges:
-        if ((len(bears) == 0 or result.origin.lower() in bears) and
-                result.overlaps(range)):
+        orig = result.origin.lower()
+        if (result.overlaps(range) and
+                (len(bears) == 0 or orig in bears or fnmatch(orig, bears))):
             return True
 
     return False

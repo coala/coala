@@ -344,6 +344,40 @@ class ProcessingTest(unittest.TestCase):
                    SourceRange.from_values("e", 1, 1, 2, 2))]
         self.assertTrue(check_result_ignore(result, ranges))
 
+    def test_ignore_glob(self):
+        result = Result.from_values("LineLengthBear",
+                                    "message",
+                                    file="d",
+                                    line=1,
+                                    column=1,
+                                    end_line=2,
+                                    end_column=2)
+        ranges = [(["(line*|space*)", "py*"],
+                   SourceRange.from_values("d", 1, 1, 2, 2))]
+        self.assertTrue(check_result_ignore(result, ranges))
+
+        result = Result.from_values("SpaceConsistencyBear",
+                                    "message",
+                                    file="d",
+                                    line=1,
+                                    column=1,
+                                    end_line=2,
+                                    end_column=2)
+        ranges = [(["(line*|space*)", "py*"],
+                   SourceRange.from_values("d", 1, 1, 2, 2))]
+        self.assertTrue(check_result_ignore(result, ranges))
+
+        result = Result.from_values("XMLBear",
+                                    "message",
+                                    file="d",
+                                    line=1,
+                                    column=1,
+                                    end_line=2,
+                                    end_column=2)
+        ranges = [(["(line*|space*)", "py*"],
+                   SourceRange.from_values("d", 1, 1, 2, 2))]
+        self.assertFalse(check_result_ignore(result, ranges))
+
     def test_yield_ignore_ranges(self):
         test_file_dict_a = {'f':
                             ('# Ignore aBear\n',
