@@ -114,6 +114,17 @@ don't worry, that's just how it works. It helps us keep coala
 
     `Review Process <http://coala.readthedocs.org/en/latest/Getting_Involved/Review.html>`_.
 
+Do not forget to rebase your local repository. Any PR accepted by us will make
+your forked repo "a commit behind", so follow these steps (assuming you have
+already `setup a remote <http://coala.readthedocs.org/en/latest/Users/Tutorials/Git_Help.html#getting-to-work>`_):
+
+1. ``git fetch <remote name>``,
+    Fetches the <remote name>/master.
+2. ``git rebase <remote name>/master``,
+    Re-applies your commits onto the newest changes from <remote name>/master
+3. ``git push -f``,
+    Force-pushes your changes and overwrites your commit history.
+
 Now if you need to modify your code, you can simply edit it again, add it and
 commit it using
 
