@@ -10,7 +10,8 @@ convenient, functional and bug free.
 
 To begin contributing have a look at the open issues labeled with
 difficulty/newcomer -
-[newcomer issues](https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer).
+[newcomer issues]
+(https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer).
 
 Follow the instructions
 [here](http://coala.readthedocs.org/en/latest/Getting_Involved/README.html)

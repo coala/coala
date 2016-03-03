@@ -8,7 +8,8 @@ Meet the community!
 -------------------
 
 To get started, the first step is to meet the community. We use gitter to
-communicate, and there the helpful community will guide you. Join us at `coala gitter <https://gitter.im/coala-analyzer/coala/>`_.
+communicate, and there the helpful community will guide you. Join us at 
+`coala gitter <https://gitter.im/coala-analyzer/coala/>`_.
 The newcomers should ping us "Hello World" to let us know they are here
 because we care!
 
