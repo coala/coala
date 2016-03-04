@@ -107,7 +107,7 @@ class LintTest(unittest.TestCase):
         out = tuple(self.uut.process_output(["a", "b"], "filename", ["a"]))
         self.assertEqual(len(out), 1)
 
-    def test_missing_binary(self):
+    def test_missing_executable(self):
         old_binary = Lint.executable
         invalid_binary = "invalid_binary_which_doesnt_exist"
         Lint.executable = invalid_binary
@@ -119,10 +119,19 @@ class LintTest(unittest.TestCase):
         Lint.executable = "echo"
         self.assertTrue(Lint.check_prerequisites())
 
-        del Lint.executable
+        Lint.executable = old_binary
+
+        old_command = Lint.prerequisite_command
+        invalid_command = ["cat", "SOPA"]
+        Lint.prerequisite_command = invalid_command
+
+        self.assertEqual(Lint.check_prerequisites(), Lint.prerequisite_fail_msg)
+
+        Lint.prerequisite_command = ["cat", "requirements.txt"]
+
         self.assertTrue(Lint.check_prerequisites())
 
-        Lint.executable = old_binary
+        Lint.prerequisite_command = old_command
 
     def test_config_file_generator(self):
         self.uut.executable = "echo"
