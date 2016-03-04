@@ -2,6 +2,7 @@
 comment\ delimiter = //
 multiline\ comment\ delimiters = /*: */
 string\ delimiters = ": "
+indent\ types = { : }
 
 [C]
 extensions = .c, .h

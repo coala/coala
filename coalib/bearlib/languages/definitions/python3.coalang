@@ -5,6 +5,7 @@ comment\ delimiter = #
 multiline\ comment\ delimiters =
 string\ delimiters = ": ", ': '
 multiline\ string\ delimiters = """: """, ''': '''
+indent\ types = \:
 
 [PYTHON3]
 
