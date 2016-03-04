@@ -1,12 +1,12 @@
 [DEFAULT]
-comment delimiter = //
-multiline comment delimiters = /*: */
-string delimiters = ": "
+comment\ delimiter = //
+multiline\ comment\ delimiters = /*: */
+string\ delimiters = ": "
 
 [C]
 extensions = .c, .h
-multiline string delimiters =
+multiline\ string\ delimiters =
 
 [CPP]
 extensions = .c, .cpp, .h, .hpp
-multiline string delimiters = R(": )"
+multiline\ string\ delimiters = R(": )"

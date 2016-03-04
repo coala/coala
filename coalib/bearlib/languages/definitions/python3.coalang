@@ -1,10 +1,10 @@
 [DEFAULT]
 extensions = .py
 
-comment delimiter = #
-multiline comment delimiters =
-string delimiters = ": ", ': '
-multiline string delimiters = """: """, ''': '''
+comment\ delimiter = #
+multiline\ comment\ delimiters =
+string\ delimiters = ": ", ': '
+multiline\ string\ delimiters = """: """, ''': '''
 
 [PYTHON3]
 
