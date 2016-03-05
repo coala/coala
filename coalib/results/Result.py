@@ -49,8 +49,9 @@ class Result:
                                 category of issues.
         :param debug_msg:       A message which may help the user find out why
                                 this result was yielded.
-        :param diffs:           A dictionary associating a Diff object with each
-                                filename.
+        :param diffs:           A dictionary with filenames as key and a
+                                sequence of ``Diff`` objects associated with
+                                them as values.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -102,8 +103,9 @@ class Result:
                                 information about the issue and/or how to fix
                                 it. You can use this like a manual entry for a
                                 category of issues.
-        :param diffs:           A dictionary with filenames as key and Diff
-                                objects associated with them.
+        :param diffs:           A dictionary with filenames as key and a
+                                sequence of ``Diff`` objects associated with
+                                them as values.
         """
         range = SourceRange.from_values(file,
                                         line,
