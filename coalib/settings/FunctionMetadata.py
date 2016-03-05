@@ -43,7 +43,7 @@ class FunctionMetadata:
         self.retval_desc = retval_desc
         self._non_optional_params = non_optional_params
         self._optional_params = optional_params
-        self.omit = set(omit)
+        self.omit = frozenset(omit)
 
     def _filter_out_omitted(self, params):
         """
