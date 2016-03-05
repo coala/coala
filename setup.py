@@ -4,6 +4,8 @@ import locale
 import sys
 from os import getenv
 from subprocess import call
+from pip.req import parse_requirements
+from pip.download import PipSession
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
 from coalib import assert_supported_version
@@ -56,11 +58,10 @@ on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
 
-with open('requirements.txt') as requirements:
-    required = requirements.read().splitlines()
-
-with open('test-requirements.txt') as requirements:
-    test_required = requirements.read().splitlines()
+install_file = parse_requirements('requirements.txt', session=PipSession())
+install_reqs = [str(req.req) for req in install_file]
+test_file = parse_requirements('test-requirements.txt', session=PipSession())
+test_reqs = [str(req.req) for req in test_file]
 
 
 if __name__ == "__main__":
@@ -78,8 +79,8 @@ if __name__ == "__main__":
           url='http://coala.rtfd.org/',
           platforms='any',
           packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
-          install_requires=required,
-          tests_require=test_required,
+          install_requires=install_reqs,
+          tests_require=test_reqs,
           package_data={'coalib': ['default_coafile', "VERSION",
                                    'bearlib/languages/definitions/*.coalang']},
           license="AGPL-3.0",
