@@ -27,9 +27,13 @@ except (ValueError, UnicodeError):
 class BuildPyCommand(setuptools.command.build_py.build_py):
 
     def run(self):
-        self.run_command('build_manpage')
-        self.run_command('build_dbus')
-        setuptools.command.build_py.build_py.run(self)
+        if platform.system == "Windows":
+            self.run_command('build_dbus')
+            setuptools.command.build_py.build_py.run(self)
+        else:
+            self.run_command('build_manpage')
+            self.run_command('build_dbus')
+            setuptools.command.build_py.build_py.run(self)
 
 
 class PyTestCommand(TestCommand):
