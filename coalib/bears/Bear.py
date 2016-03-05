@@ -2,6 +2,7 @@ import traceback
 
 from pyprint.Printer import Printer
 
+from coalib.bears.BearSetting import BearSetting
 from coalib.misc.Decorators import enforce_signature
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
@@ -167,6 +168,19 @@ class Bear(Printer, LogPrinter):
                  text and annotation as values
         """
         return cls.get_metadata().non_optional_params
+
+    @classmethod
+    def get_settings(cls):
+        metadata = FunctionMetadata.from_function(
+            cls.run,
+            omit={"self", "dependency_results"})
+
+        return (tuple(BearSetting(name, description, typ)
+                      for name, (description, typ) in
+                          metadata.non_optional_params.items()) +
+                tuple(BearSetting(name, description, typ, default)
+                      for name, (description, typ, default) in
+                          metadata.optional_params.items()))
 
     @classmethod
     def check_prerequisites(cls):
