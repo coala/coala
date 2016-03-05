@@ -245,6 +245,7 @@ def generate_ordering(*members):
     return decorator
 
 
+# TODO Move to another module since it's no decorator?
 def assert_right_type(value, types, argname):
     if isinstance(types, type) or types is None:
         types = (types,)
