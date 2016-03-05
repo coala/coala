@@ -337,6 +337,16 @@ shows:
 -  The sections which uses it
 -  The settings it uses (optional and required)
 
+There are two types of Bears which are there-
+- Global 
+- Local
+
+The Local Bear can analyze only one file at once. It can
+not analyze semantical facts over multiple files, which makes Local Bear
+easy to parrallelize.
+
+The Global Bear can analyze multiple files at the same time.
+
 Integrating coala into Your Project
 -----------------------------------
 
