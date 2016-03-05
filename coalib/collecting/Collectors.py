@@ -102,6 +102,7 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
     Collect all bears from bear directories that have a matching kind.
 
     :param bear_dirs:   directory name or list of such that can contain bears
+                        this may include globbed paths
     :param bear_globs:  globs of bears to collect
     :param kinds:       list of bear kinds to be collected
     :param log_printer: log_printer to handle logging
@@ -132,8 +133,7 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
     Collect all bears from bear directories that have a matching kind
     matching the given globs.
 
-    :param bear_dirs:           Directory name or list of such that can contain
-                                bears.
+    :param bear_dirs:           List of globbed paths that may contain bears.
     :param bear_globs:          Globs of bears to collect.
     :param kinds:               List of bear kinds to be collected.
     :param log_printer:         LogPrinter to handle logging.
