@@ -12,4 +12,6 @@ Currently defined keys are:
   multiline_comment_delimiters
   string_delimiters
   multiline_string_delimiters
+  keywords
+  special_chars
 """

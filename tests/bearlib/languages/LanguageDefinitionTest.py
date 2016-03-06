@@ -25,3 +25,8 @@ class LanguageDefinitionTest(unittest.TestCase):
     def test_loading(self):
         uut = LanguageDefinition.from_section(self.section)
         self.assertEqual(list(uut["extensions"]), [".c", ".cpp", ".h", ".hpp"])
+
+    def test_key_contains(self):
+        uut = LanguageDefinition.from_section(self.section)
+        self.assertIn("extensions", uut)
+        self.assertNotIn("randomstuff", uut)
