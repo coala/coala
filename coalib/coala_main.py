@@ -49,7 +49,7 @@ def run_coala(log_printer=None,
     log_printer = log_printer or LogPrinter(ConsolePrinter())
 
     exitcode = 0
-    results = None
+    results = {}
     file_dicts = {}
     try:
         yielded_results = yielded_unfixed_results = False
@@ -68,7 +68,6 @@ def run_coala(log_printer=None,
 
         delete_tagged_results(dtag, config_file, log_printer)
 
-        results = {}
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
                 continue
