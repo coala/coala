@@ -86,6 +86,12 @@ enabled = False
 
 bears = LineCountBear
 
+[invalidlinks]
+enabled = False
+files = docs/**/*.rst
+ignore = docs/API
+bears = InvalidLinkBear
+
 [TODOS]
 enabled = False
 
