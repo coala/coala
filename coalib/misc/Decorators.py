@@ -245,7 +245,7 @@ def generate_ordering(*members):
     return decorator
 
 
-def _assert_right_type(value, types, argname):
+def assert_right_type(value, types, argname):
     if isinstance(types, type) or types is None:
         types = (types,)
 
@@ -289,11 +289,11 @@ def enforce_signature(function):
     def decorated(*args, **kwargs):
         for i, annotation in unnamed_annotations.items():
             if i < len(args):
-                _assert_right_type(args[i], annotation[0], annotation[1])
+                assert_right_type(args[i], annotation[0], annotation[1])
 
         for argname, argval in kwargs.items():
             if argname in annotations:
-                _assert_right_type(argval, annotations[argname], argname)
+                assert_right_type(argval, annotations[argname], argname)
 
         return function(*args, **kwargs)
 
