@@ -116,7 +116,7 @@ class BuildManPageTest(unittest.TestCase):
         self.assertRaises(DistutilsOptionError, uut.finalize_options)
         with make_temp() as uut.output:
             self.assertRaises(DistutilsOptionError, uut.finalize_options)
-            uut.parser = "coalib.tests.misc.BuildManPageTest:test_arg_parser"
+            uut.parser = "tests.misc.BuildManPageTest:test_arg_parser"
 
             uut.finalize_options()
             self.assertIsInstance(uut._parser, argparse.ArgumentParser)

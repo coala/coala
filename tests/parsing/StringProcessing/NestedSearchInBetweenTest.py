@@ -1,6 +1,6 @@
 from coalib.parsing.StringProcessing import (
     InBetweenMatch, nested_search_in_between)
-from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
+from tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
 
 

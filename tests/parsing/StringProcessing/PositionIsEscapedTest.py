@@ -1,6 +1,6 @@
 
 from coalib.parsing.StringProcessing import position_is_escaped
-from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
+from tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
 
 
