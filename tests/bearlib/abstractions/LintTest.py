@@ -141,7 +141,7 @@ class LintTest(unittest.TestCase):
             self.uut._create_command(config_file="configfile").strip(),
             "echo -c " + escape_path_argument("configfile"))
 
-    def test_config_file_generator(self):
+    def test_generate_config_file_generator(self):
         self.uut.executable = "echo"
         self.uut.config_file = lambda: ["config line1"]
         config_filename = self.uut.generate_config_file()
