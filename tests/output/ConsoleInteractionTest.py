@@ -128,21 +128,19 @@ class ConsoleInteractionTest(unittest.TestCase):
         print_spaces_tabs_in_unicode(printer, "\the\tllo world   ")
         self.assertEqual(printer.string, "--->he->llo•world•••")
 
-        _old_print = StringPrinter.print
-
+        # Test the case when the bullet can't be printed because of encoding
+        # problems.
         def hijack_print(text, *args, **kwargs):
-            if text == "•":
-                raise UnicodeEncodeError
+            if "•" in text:
+                raise UnicodeEncodeError("test-codec", "", 0, 1, "")
             else:
-                return _old_print(text, **kwargs)
+                return StringPrinter.print(printer, text, **kwargs)
 
-        StringPrinter.print = hijack_print
+        printer.print = hijack_print
 
         printer.clear()
         print_spaces_tabs_in_unicode(printer, " he\tllo  world ")
-        self.assertEqual(printer.string, ".he>llo..world..")
-
-        StringPrinter.print = _old_print
+        self.assertEqual(printer.string, ".he>llo..world.")
 
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
