@@ -125,8 +125,8 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_spaces_tabs_in_unicode(self):
         printer = StringPrinter()
 
-        result = print_spaces_tabs_in_unicode(printer, "\the\tllo world   ",)
-        self.assertEqual(result, "--->he->llo•world•••")
+        print_spaces_tabs_in_unicode(printer, "\the\tllo world   ")
+        self.assertEqual(printer.string, "--->he->llo•world•••")
 
         def hijack_print(text, **kwargs):
             if text == "•":
@@ -137,8 +137,9 @@ class ConsoleInteractionTest(unittest.TestCase):
         _old_print = StringPrinter.print
         StringPrinter.print = hijack_print
 
-        result = print_spaces_tabs_in_unicode(printer, " he\tllo  world ",)
-        self.assertEqual(result, ".he>llo..world..")
+        printer.clear()
+        print_spaces_tabs_in_unicode(printer, " he\tllo  world ")
+        self.assertEqual(printer.string, ".he>llo..world..")
 
         StringPrinter.print = _old_print
 
