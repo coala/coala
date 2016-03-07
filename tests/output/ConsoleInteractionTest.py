@@ -128,13 +128,14 @@ class ConsoleInteractionTest(unittest.TestCase):
         print_spaces_tabs_in_unicode(printer, "\the\tllo world   ")
         self.assertEqual(printer.string, "--->he->llo•world•••")
 
+        _old_print = StringPrinter.print
+
         def hijack_print(text, *args, **kwargs):
             if text == "•":
                 raise UnicodeEncodeError
             else:
-                return StringPrinter.print(text, **kwargs)
+                return _old_print(text, **kwargs)
 
-        _old_print = StringPrinter.print
         StringPrinter.print = hijack_print
 
         printer.clear()
