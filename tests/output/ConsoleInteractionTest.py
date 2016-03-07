@@ -125,8 +125,22 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_spaces_tabs_in_unicode(self):
         printer = StringPrinter()
 
-        #result = print_spaces_tabs_in_unicode(printer, "\the\tllo world   ",)
-        #self.assertEqual()
+        result = print_spaces_tabs_in_unicode(printer, "\the\tllo world   ",)
+        self.assertEqual(result, "--->he->llo•world•••")
+
+        def hijack_print(text, **kwargs):
+            if text == "•":
+                raise UnicodeEncodeError
+            else:
+                return StringPrinter.print(text, **kwargs)
+
+        _old_print = StringPrinter.print
+        StringPrinter.print = hijack_print
+
+        result = print_spaces_tabs_in_unicode(printer, " he\tllo  world ",)
+        self.assertEqual(result, ".he>llo..world..")
+
+        StringPrinter.print = _old_print
 
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
