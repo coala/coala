@@ -128,7 +128,11 @@ def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
     """
     for char in line:
         if char == " ":
-            console_printer.print("•", color='cyan', end='')
+            print_kwargs = {"color": "cyan", "end": ""}
+            try:
+                console_printer.print("•", **print_kwargs)
+            except UnicodeEncodeError:
+                console_printer.print(".", **print_kwargs)
         elif char == '\t' and tab_dict:
             tab_count = tab_dict[index]
             console_printer.print(
