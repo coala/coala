@@ -113,29 +113,30 @@ def acquire_actions_and_apply(console_printer,
             break
 
 
-def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
-                                 tab_width, color, index=0):
+def print_spaces_tabs_in_unicode(console_printer,
+                                 line,
+                                 tab_width=SpacingHelper.DEFAULT_TAB_WIDTH,
+                                 color=None):
     """
     Prints the lines with tabs and spaces replaced by unicode
     symbols.
 
-    :param console_printer: Object to print messages on the console.
-    :param line:            The line to print to the console.
-    :param tab_dict:        A dictionary containing the tab index and length.
-    :param tab_width:       The default tab width of the system.
-    :color:                 The color to print the lines with.
-    :index:                 The index from where to start the printing.
+    :param console_printer: The ``Printer`` object to print to.
+    :param line:            The line-text to print to the console.
+    :param tab_width:       The width of tabs.
+    :param color:           The color to print the line with (except for spaces
+                            and tabs.
     """
-    for char in line:
+    tab_dict = dict(SpacingHelper(tab_width).yield_tab_lengths(line))
+    for i, char in enumerate(line):
         if char == " ":
             console_printer.print("•", color='cyan', end='')
         elif char == '\t' and tab_dict:
-            tab_count = tab_dict[index]
+            tab_count = tab_dict[i]
             console_printer.print(
                 '-'*(tab_count-1) + '>', color='cyan', end='')
         else:
             console_printer.print(char, color=color, end='')
-        index += 1
 
 
 def print_lines(console_printer,
@@ -157,30 +158,37 @@ def print_lines(console_printer,
                               color=FILE_LINES_COLOR,
                               end='')
         line = file_dict[sourcerange.file][i - 1].rstrip("\n")
-        tab_width = int(section.get('tab_width', 4))
-        s = SpacingHelper(tab_width)
-        tab_dict = dict(s.yield_tab_lengths(line))
+        tab_width = int(section.get('tab_width',
+                                    SpacingHelper.DEFAULT_TAB_WIDTH))
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
             print_spaces_tabs_in_unicode(
-                console_printer, line[:sourcerange.start.column-1],
-                tab_dict, tab_width, FILE_LINES_COLOR)
+                console_printer,
+                line[:sourcerange.start.column-1],
+                tab_width,
+                FILE_LINES_COLOR)
 
             printed_chars = sourcerange.start.column-1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             print_spaces_tabs_in_unicode(
-                console_printer, line[printed_chars:sourcerange.end.column-1],
-                tab_dict, tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+                console_printer,
+                line[printed_chars:sourcerange.end.column-1],
+                tab_width,
+                HIGHLIGHTED_CODE_COLOR)
 
             print_spaces_tabs_in_unicode(
-                console_printer, line[sourcerange.end.column-1:],
-                tab_dict, tab_width, FILE_LINES_COLOR, sourcerange.end.column)
+                console_printer,
+                line[sourcerange.end.column-1:],
+                tab_width,
+                FILE_LINES_COLOR)
             console_printer.print("")
         else:
             print_spaces_tabs_in_unicode(
-                console_printer, line[printed_chars:], tab_dict,
-                tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+                console_printer,
+                line[printed_chars:],
+                tab_width,
+                HIGHLIGHTED_CODE_COLOR)
             console_printer.print("")
 
 
