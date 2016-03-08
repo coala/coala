@@ -1,5 +1,5 @@
 from coalib.parsing.StringProcessing import escape
-from coalib.tests.parsing.StringProcessing.StringProcessingTestBase import (
+from tests.parsing.StringProcessing.StringProcessingTestBase import (
     StringProcessingTestBase)
 
 

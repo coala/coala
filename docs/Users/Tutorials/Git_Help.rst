@@ -249,6 +249,30 @@ that are ahead of the rebased branch to the top of the history on that branch.
     **Warning:** Never force-push on the master branch, or any branch not
     owned by you.
 
+Squashing your commits
+-------------------------
+
+It's possible that you have more than one commits which you want them to be
+squashed into single commit. You can take your series of commits and squash
+them down into a single commit with the interactive rebasing tool. To squash
+your commits run the following command:
+
+::
+
+    $ git rebase -i master
+
+.. note::
+
+    master is the SHA1 hash of the commit before which you want to squash all
+    the commits and make sure that rebase is done onto master branch.
+
+An editor will be fired up with all the commits in your current branch (ignoring
+merge commits), which come after the given commit. Keep the first one as "pick"
+and on the second and subsequent commits with "squash". After saving, another
+editor will be fired up with all the messages of commits which you want to
+squash. Clean up all the messages and add a new message which you want to be
+displayed for the single commit.
+
 Useful Git commands
 -------------------
 

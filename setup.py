@@ -48,7 +48,7 @@ class PyTestCommand(TestCommand):
 
 class BuildDocsCommand(setuptools.command.build_py.build_py):
     apidoc_command = ('sphinx-apidoc', '-f', '-o', 'docs/API/',
-                      'coalib', 'coalib/tests')
+                      'coalib')
     doc_command = ('make', '-C', 'docs', 'html')
 
     def run(self):
@@ -82,7 +82,7 @@ if __name__ == "__main__":
                             'makman@alice.de'),
           url='http://coala.rtfd.org/',
           platforms='any',
-          packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
+          packages=find_packages(exclude=["build.*", "tests", "tests.*"]),
           install_requires=required,
           tests_require=test_required,
           package_data={'coalib': ['default_coafile', "VERSION",

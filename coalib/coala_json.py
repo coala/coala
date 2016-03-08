@@ -28,7 +28,7 @@ def main():
     args = arg_parser.parse_args()
 
     log_printer = None if args.text_logs else ListLogPrinter()
-    results, exitcode = run_coala(log_printer=log_printer, autoapply=False)
+    results, exitcode, _ = run_coala(log_printer=log_printer, autoapply=False)
 
     retval = {"results": results}
     if not args.text_logs:
