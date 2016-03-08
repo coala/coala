@@ -4,6 +4,7 @@ import locale
 import sys
 from os import getenv
 from subprocess import call
+import platform
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
 from coalib import assert_supported_version
@@ -27,10 +28,14 @@ except (ValueError, UnicodeError):
 class BuildPyCommand(setuptools.command.build_py.build_py):
 
     def run(self):
-        self.run_command('build_manpage')
-        self.run_command('build_dbus')
-        setuptools.command.build_py.build_py.run(self)
-
+        if platform.system == "Windows":
+            pass
+        else:
+            self.run_command('build_manpage')
+    self.run_command('build_dbus')
+    setuptools.command.build_py.build_py.run(self)
+    
+    
 
 class PyTestCommand(TestCommand):
 
