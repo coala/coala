@@ -464,11 +464,10 @@ def get_action_info(section, action):
         raise ValueError("section has to be intializied.")
 
     for param_name in params:
-        if param_name not in section:
-            question = format_lines(
-                "Please enter a value for the parameter '{}' ({}): "
-                .format(param_name, params[param_name][0]))
-            section.append(Setting(param_name, input(question)))
+          question = format_lines(
+              "Please enter a value for the parameter '{}' ({}): "
+              .format(param_name, params[param_name][0]))
+          section.append(Setting(param_name, input(question)))
 
     return action.name, section
 
