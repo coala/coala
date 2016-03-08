@@ -3,7 +3,7 @@ set -x
 
 # Install packages with brew
 brew update >/dev/null
-brew outdated pyenv || brew upgrade --quiet pyenv
+brew outdated pyenv || brew upgrade pyenv
 brew install espeak
 brew install libffi && brew link libffi --force
 brew install cairo
@@ -24,5 +24,5 @@ python --version
 source .misc/env_variables.sh
 
 # Install packages with pip
-pip install -q -r test-requirements.txt
-pip install -q -r requirements.txt
+pip install -r test-requirements.txt
+pip install -r requirements.txt
