@@ -1,5 +1,9 @@
+from itertools import chain
+import re
+
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.misc.Decorators import enforce_signature
+from coalib.misc.Iterators import pairwise
 
 
 class SpacingHelper(SectionCreatable):
@@ -118,3 +122,60 @@ class SpacingHelper(SectionCreatable):
         result += currspaces*" "
 
         return result
+
+    @enforce_signature
+    def highlight_whitespaces(self,
+                              line: str,
+                              show_spaces: bool=True,
+                              space_replacement="•",
+                              show_tabs: bool=True,
+                              use_colors=False,
+                              whitespace_color="cyan"):
+        # TODO Dynamic kwargs? --> Yes
+
+        match_patterns = []
+        if show_spaces:
+            match_patterns.append(" ")
+        if show_tabs:
+            match_patterns.append(r"\t")
+
+        pattern_match_regex = "".join(match_patterns)
+        complete_regex = ("([" + pattern_match_regex + "]+)([^" +
+                          pattern_match_regex + "]+)")
+
+        # We need to know the first match beforehand, that's why we keep the
+        # iterator and reassemble the old sequence inside the for-loop later
+        # using `chain()`.
+        it = re.finditer(complete_regex, line)
+        first_match = next(it)
+
+        # The first non-whitespace-characters are not matched by the regex, so
+        # let's prepend them beforehand.
+        result_string = line[:first_match.start]
+
+        # Process all matches, the first group matched are whitespaces that
+        # shall be replaced and the second one is following
+        # non-whitespace-text. Each match is then concatenated.
+        for match in chain((first_match,), it):
+            highlighted_match_string = match.group(1)
+
+            if show_spaces:
+                highlighted_match_string = highlighted_match_string.replace(
+                    " ", space_replacement)
+
+            if show_tabs:
+                tab_it = self.yield_tab_lengths(highlighted_match_string)
+                first_tab = next(tab_it)
+
+                highlighted_match_string = (
+                    highlighted_match_string[:first_tab[0]] + "".join(
+                        "-" * (tab_length1 - 1) + ">" + highlighted_match_string[pos1+1:pos2]
+                        for (pos1, tab_length1), (pos2, tab_length2)
+                        in pairwise(
+                            chain((first_tab,),
+                                  tab_it,
+                                  ((len(highlighted_match_string), 0),)))))
+
+            result_string += highlighted_match_string + match.group(2)
+
+        return result_string
