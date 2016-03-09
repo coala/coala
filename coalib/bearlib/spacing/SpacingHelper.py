@@ -123,6 +123,31 @@ class SpacingHelper(SectionCreatable):
 
         return result
 
+    # Helper used inside `highlight_whitespaces()`.
+    class _ColorAnnotatedStringBuilder:
+
+        def __init__(self):
+            self._items = [["", None]]
+
+        def append(self, string, color):
+            if self._items[-1][1] is color:
+                self._items[-1][0] += string
+            else:
+                self._items.append([string, color])
+
+        def get_string_and_annotation(self):
+            # Could be that the initial empty string still remained inside
+            # the list.
+            if self._items[0][0] == "":
+                slice = self._items[1:]
+            else:
+                slice = self._items
+            return [(string, color) for string, color in slice]
+
+        def get_plain_string(self):
+            return "".join(elem[0]
+                           for elem in self.get_string_and_annotation())
+
     @enforce_signature
     def highlight_whitespaces(self,
                               string: str,
@@ -156,7 +181,7 @@ class SpacingHelper(SectionCreatable):
 
         >>> sh = SpacingHelper()
         >>> sh.highlight_whitespaces("\tsome spaces!", use_colors=True)
-        [('cyan', '--->'), (None, 'some'), ('cyan', ' '), (None, 'spaces!')]
+        [('--->', 'cyan'), ('some', None), (' ', 'cyan'), ('spaces!', None)]
 
         :param string:            The string to highlight whitespaces in.
         :param show_spaces:       Whether to visualize spaces with
@@ -175,7 +200,7 @@ class SpacingHelper(SectionCreatable):
                                   list of tuples with the first element as the
                                   color annotation and the second one as the
                                   annotated string (e.g.
-                                  ``[('cyan', '--->'), (None, 'text')]``).
+                                  ``[('--->', 'cyan'), ('text', None)]``).
                                   ``None`` is annotated for non-whitespace
                                   characters as a color.
         :param whitespace_color:  Arbitrary type to use as color-annotation
@@ -184,61 +209,27 @@ class SpacingHelper(SectionCreatable):
                                   strings annotated with ``whitespace_color``.
                                   See ``use_colors`` for more details.
         """
-        match_patterns = []
-        if show_spaces:
-            match_patterns.append(" ")
+        highlighted_string_and_colors = self._ColorAnnotatedStringBuilder()
+
         if show_tabs:
-            match_patterns.append(r"\t")
+            tabs = self.yield_tab_lengths(string)
+            current_tab = next(tabs, None)
 
-        pattern_match_regex = "".join(match_patterns)
-        complete_regex = ("([" + pattern_match_regex + "]+)([^" +
-                          pattern_match_regex + "]+)")
-
-        # We need to know the first match beforehand, that's why we keep the
-        # iterator and reassemble the old sequence inside the for-loop later
-        # using `chain()`.
-        it = re.finditer(complete_regex, string)
-        first_match = next(it)
-
-        # The first non-whitespace-characters are not matched by the regex, so
-        # let's prepend them beforehand.
-        result = [(None, string[:first_match.start()])]
-
-        # Process all matches, the first group matched are whitespaces that
-        # shall be replaced and the second one is following
-        # non-whitespace-text. Each match is then concatenated.
-        for match in chain((first_match,), it):
-            highlighted_match_string = match.group(1)
-
-            if show_spaces:
-                highlighted_match_string = highlighted_match_string.replace(
-                    " ", space_replacement)
-
-            if show_tabs:
-                tab_it = self.yield_tab_lengths(highlighted_match_string)
-                try:
-                    # May raise a StopIteration when no tabs are inside the
-                    # whitespace match. In this case we don't need to do
-                    # anything.
-                    first_tab = next(tab_it)
-
-                    # This replaces all tabs with arrows like `--->`.
-                    highlighted_match_string = (
-                        highlighted_match_string[:first_tab[0]] + "".join(
-                            "-" * (tab_length1 - 1) + ">" +
-                            highlighted_match_string[pos1+1:pos2]
-                            for (pos1, tab_length1), (pos2, tab_length2)
-                            in pairwise(
-                                chain((first_tab,),
-                                      tab_it,
-                                      ((len(highlighted_match_string), 0),)))))
-                except StopIteration:
-                    pass
-
-            result.append((whitespace_color, highlighted_match_string))
-            result.append((None, match.group(2)))
+        for char in string:
+            if show_spaces and char == " ":
+                highlighted_string_and_colors.append(space_replacement,
+                                                     whitespace_color)
+            elif show_tabs and char == "\t":
+                # We don't need to fear that `current_tab` is `None`, because
+                # if there's a tab, `yield_tab_lengths()` finds it too.
+                highlighted_string_and_colors.append(
+                    "-" * (current_tab[1] - 1) + ">",
+                    whitespace_color)
+                current_tab = next(tabs, None)
+            else:
+                highlighted_string_and_colors.append(char, None)
 
         if use_colors:
-            return result
+            return highlighted_string_and_colors.get_string_and_annotation()
         else:
-            return "".join(elem[1] for elem in result)
+            return highlighted_string_and_colors.get_plain_string()

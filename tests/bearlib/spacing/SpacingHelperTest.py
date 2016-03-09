@@ -126,6 +126,6 @@ class SpacingHelperTest(unittest.TestCase):
             self.uut.highlight_whitespaces(test_string,
                                            use_colors=True,
                                            whitespace_color="red"),
-            [("red", "--->--->"), (None, "plain"), ("red", "••"),
-             (None, "text"), ("red", ">•-->•"), (None, "+"), ("red", "••"),
-             (None, "stuff"), ("red", "-->•")])
+            [("--->--->", "red"), ("plain", None), ("••", "red"),
+             ("text", None), (">•-->•", "red"), ("+", None), ("••", "red"),
+             ("stuff", None), ("-->•", "red")])
