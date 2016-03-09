@@ -125,14 +125,65 @@ class SpacingHelper(SectionCreatable):
 
     @enforce_signature
     def highlight_whitespaces(self,
-                              line: str,
+                              string: str,
                               show_spaces: bool=True,
                               space_replacement="•",
                               show_tabs: bool=True,
                               use_colors=False,
                               whitespace_color="cyan"):
-        # TODO Dynamic kwargs? --> Yes
+        """
+        Highlight whitespaces inside the given string using characters
+        representing whitespaces.
 
+        Spaces are replaced using ``space_replacement`` and is by default a
+        bullet character. Tabs get arrow like visualization (like ``--->``).
+        Depending on ``self.tab_width`` and the position of the tab, the arrow
+        can be shorter or longer.
+
+        >>> sh = SpacingHelper()
+        >>> sh.highlight_whitespaces("\t\tstring where to highlight spaces.")
+        '--->--->string•where•to•highlight•spaces.'
+
+        Sometimes bullets are not the right choice, maybe dots are better:
+
+        >>> sh = SpacingHelper()
+        >>> sh.highlight_whitespaces("    white spaces!    ",
+        >>>                          space_replacement='.')
+        '....white.spaces!....'
+
+        Often you print such highlighting to console. To display the spaces
+        even better, some wants to use colors:
+
+        >>> sh = SpacingHelper()
+        >>> sh.highlight_whitespaces("\tsome spaces!", use_colors=True)
+        [('cyan', '--->'), (None, 'some'), ('cyan', ' '), (None, 'spaces!')]
+
+        :param string:            The string to highlight whitespaces in.
+        :param show_spaces:       Whether to visualize spaces with
+                                  ``space_replacement``.
+        :param space_replacement: The character/string to replace spaces with
+                                  when ``show_spaces`` is enabled.
+        :param show_tabs:         Whether to use arrows (like ``--->``) to
+                                  visualize tabs.
+        :param use_colors:        Whether to annotate the string with colors
+                                  that highlight the whitespaces.
+
+                                  If ``False``, this functions returns a plain
+                                  string. But if ``True``, portions of the
+                                  given string are annotated with
+                                  ``whitespace_color`` and this functions a
+                                  list of tuples with the first element as the
+                                  color annotation and the second one as the
+                                  annotated string (e.g.
+                                  ``[('cyan', '--->'), (None, 'text')]``).
+                                  ``None`` is annotated for non-whitespace
+                                  characters as a color.
+        :param whitespace_color:  Arbitrary type to use as color-annotation
+                                  for each substring. See ``use_colors``.
+        :return:                  The highlighted string or a list of parts of
+                                  strings annotated with ``whitespace_color``.
+                                  See ``use_colors`` for more details.
+        """
         match_patterns = []
         if show_spaces:
             match_patterns.append(" ")
@@ -146,12 +197,12 @@ class SpacingHelper(SectionCreatable):
         # We need to know the first match beforehand, that's why we keep the
         # iterator and reassemble the old sequence inside the for-loop later
         # using `chain()`.
-        it = re.finditer(complete_regex, line)
+        it = re.finditer(complete_regex, string)
         first_match = next(it)
 
         # The first non-whitespace-characters are not matched by the regex, so
         # let's prepend them beforehand.
-        result_string = line[:first_match.start]
+        result = [(None, string[:first_match.start()])]
 
         # Process all matches, the first group matched are whitespaces that
         # shall be replaced and the second one is following
@@ -165,17 +216,29 @@ class SpacingHelper(SectionCreatable):
 
             if show_tabs:
                 tab_it = self.yield_tab_lengths(highlighted_match_string)
-                first_tab = next(tab_it)
+                try:
+                    # May raise a StopIteration when no tabs are inside the
+                    # whitespace match. In this case we don't need to do
+                    # anything.
+                    first_tab = next(tab_it)
 
-                highlighted_match_string = (
-                    highlighted_match_string[:first_tab[0]] + "".join(
-                        "-" * (tab_length1 - 1) + ">" + highlighted_match_string[pos1+1:pos2]
-                        for (pos1, tab_length1), (pos2, tab_length2)
-                        in pairwise(
-                            chain((first_tab,),
-                                  tab_it,
-                                  ((len(highlighted_match_string), 0),)))))
+                    # This replaces all tabs with arrows like `--->`.
+                    highlighted_match_string = (
+                        highlighted_match_string[:first_tab[0]] + "".join(
+                            "-" * (tab_length1 - 1) + ">" +
+                            highlighted_match_string[pos1+1:pos2]
+                            for (pos1, tab_length1), (pos2, tab_length2)
+                            in pairwise(
+                                chain((first_tab,),
+                                      tab_it,
+                                      ((len(highlighted_match_string), 0),)))))
+                except StopIteration:
+                    pass
 
-            result_string += highlighted_match_string + match.group(2)
+            result.append((whitespace_color, highlighted_match_string))
+            result.append((None, match.group(2)))
 
-        return result_string
+        if use_colors:
+            return result
+        else:
+            return "".join(elem[1] for elem in result)

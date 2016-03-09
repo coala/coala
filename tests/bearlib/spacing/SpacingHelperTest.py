@@ -88,3 +88,44 @@ class SpacingHelperTest(unittest.TestCase):
             self.uut.replace_spaces_with_tabs(" \t   a_text   another"),
             "\t   a_text\tanother")
         self.assertEqual(self.uut.replace_spaces_with_tabs("d  d"), "d  d")
+
+    def test_highlight_whitespaces(self):
+        test_string = "\t\tplain  text\t \t +  stuff\t "
+
+        self.assertEqual(self.uut.highlight_whitespaces(test_string),
+                         "--->--->plain••text>•-->•+••stuff-->•")
+
+        # Use some bigger tab-width.
+        uut = SpacingHelper(8)
+        self.assertEqual(
+            uut.highlight_whitespaces(test_string),
+            "------->------->plain••text---->•------>•+••stuff------>•")
+
+        # Test the space_replacement string.
+        self.assertEqual(
+            self.uut.highlight_whitespaces(test_string, space_replacement="."),
+            "--->--->plain..text>.-->.+..stuff-->.")
+
+        # Test disabling of specific whitespaces.
+        self.assertEqual(
+            self.uut.highlight_whitespaces(test_string, show_spaces=False),
+            "--->--->plain  text> --> +  stuff--> ")
+
+        self.assertEqual(
+            self.uut.highlight_whitespaces(test_string, show_tabs=False),
+            "\t\tplain••text\t•\t•+••stuff\t•")
+
+        self.assertEqual(
+            self.uut.highlight_whitespaces(test_string,
+                                           show_spaces=False,
+                                           show_tabs=False),
+            test_string)
+
+        # Test color annotation
+        self.assertEqual(
+            self.uut.highlight_whitespaces(test_string,
+                                           use_colors=True,
+                                           whitespace_color="red"),
+            [("red", "--->--->"), (None, "plain"), ("red", "••"),
+             (None, "text"), ("red", ">•-->•"), (None, "+"), ("red", "••"),
+             (None, "stuff"), ("red", "-->•")])
