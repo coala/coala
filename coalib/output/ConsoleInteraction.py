@@ -164,8 +164,28 @@ def print_lines(console_printer,
         line = file_dict[sourcerange.file][i - 1].rstrip("\n")
         tab_width = int(section.get('tab_width',
                                     SpacingHelper.DEFAULT_TAB_WIDTH))
+
+        try:
+            line = SpacingHelper(tab_width).highlight_whitespaces(
+                line, use_colors=True)
+        except UnicodeEncodeError:
+            line = SpacingHelper(tab_width).highlight_whitespaces(
+                line, use_colors=True, space_replacement=".")
+
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
+            stringlen = 0
+            for string, color in line:
+                stringlen += len(string)
+                if stringlen:
+                    pass
+                # TODO
+
+                # TODO Implement for PyPrint a color-annotation-string or so
+                # TODO with convenience functions like append(text, color),
+                # TODO setcolor(from, to), prepend(text, color) whatsoever...
+                console_printer.print(line)
+
             print_spaces_tabs_in_unicode(
                 console_printer,
                 line[:sourcerange.start.column-1],
