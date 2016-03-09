@@ -116,15 +116,16 @@ def acquire_actions_and_apply(console_printer,
 def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
                                  tab_width, color, index=0):
     """
-    Prints the lines with tabs and spaces replaced by unicode
-    symbols.
+    Prints the lines with tabs and spaces replaced by unicode symbols.
 
-    :param console_printer: Object to print messages on the console.
-    :param line:            The line to print to the console.
-    :param tab_dict:        A dictionary containing the tab index and length.
-    :param tab_width:       The default tab width of the system.
-    :color:                 The color to print the lines with.
-    :index:                 The index from where to start the printing.
+    :param console_printer: The ``Printer`` object to print to.
+    :param line:            The line-text to print to ``console_printer``.
+    :param tab_dict:        A dictionary containing the indices of tabs inside
+                            ``line`` as keys and the tab-length as values.
+    :param tab_width:       The width of tabs.
+    :param color:           The color to print the line with (except for spaces
+                            and tabs.
+    :param index:           The index from where to start the printing.
     """
     for char in line:
         if char == " ":
