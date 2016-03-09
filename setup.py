@@ -78,7 +78,7 @@ if __name__ == "__main__":
           maintainer_email=('lasse.schuirmann@gmail.com, '
                             'fabian@neuschmidt.de, '
                             'makman@alice.de'),
-          url='http://coala.rtfd.org/',
+          url='http://coala-analyzer.org/',
           platforms='any',
           packages=find_packages(exclude=["build.*", "tests", "tests.*"]),
           install_requires=required,
