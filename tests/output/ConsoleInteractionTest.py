@@ -6,6 +6,7 @@ from os.path import abspath, relpath
 from pyprint.ConsolePrinter import ConsolePrinter
 from pyprint.NullPrinter import NullPrinter
 
+from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.Bear import Bear
 from coalib.misc.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
@@ -13,7 +14,7 @@ from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
     print_affected_files, print_bears, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
-    show_bears)
+    print_spaces_tabs_in_unicode, show_bears)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.Diff import Diff
@@ -120,6 +121,39 @@ class ConsoleInteractionTest(unittest.TestCase):
     def tearDown(self):
         OpenEditorAction.is_applicable = self.old_open_editor_applicable
         ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
+
+    def test_print_spaces_tabs_in_unicode(self):
+        printer = StringPrinter()
+
+        sh = SpacingHelper(4)
+
+        test_string = "\the\tllo world   "
+        print_spaces_tabs_in_unicode(
+            printer,
+            test_string,
+            dict(sh.yield_tab_lengths(test_string)),
+            4,
+            "red")
+        self.assertEqual(printer.string, "--->he->llo•world•••")
+
+        # Test the case when the bullet can't be printed because of encoding
+        # problems.
+        def hijack_print(text, *args, **kwargs):
+            if "•" in text:
+                raise UnicodeEncodeError("test-codec", "", 0, 1, "")
+            else:
+                return StringPrinter.print(printer, text, *args, **kwargs)
+
+        printer.print = hijack_print
+
+        printer.clear()
+        test_string = " he\tllo  world "
+        print_spaces_tabs_in_unicode(printer,
+                                     test_string,
+                                     dict(sh.yield_tab_lengths(test_string)),
+                                     4,
+                                     "red")
+        self.assertEqual(printer.string, ".he>llo..world.")
 
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
