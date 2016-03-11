@@ -15,7 +15,7 @@ Actually Writing a Test
 -----------------------
 
 So how do you implement a test in coala? First up, tests are placed into
-the ``bears/tests`` (if you want to write a test for a bear) or
+the ``tests`` (if you want to write a test for a bear) or
 ``tests`` (if you test a component written for the coalib)
 directory. They are also written in python (version 3) and get
 automatically executed by running:
@@ -257,7 +257,7 @@ This section contains a concluding and simple example that you can use
 as a kickstart for test-writing.
 
 Put the code under the desired folder inside ``tests`` or
-``bears/tests``, modify it to let it test your stuff and run the test from
+``tests``, modify it to let it test your stuff and run the test from
 the coala root folder ``py.test``.
 
 .. code:: python
