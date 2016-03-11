@@ -505,3 +505,22 @@ class ResultFilterTest(unittest.TestCase):
         expected_diff = Diff.from_string_arrays(test_file, ["abc"])
 
         self.assertEqual(result_diff, expected_diff)
+
+    def test_file_created(self):
+        original_file_dict = {'unrelated': 'unrelated'}
+        modified_file_dict = {'unrelated': 'unrelated', 'file': ['line 1\n']}
+        original_results = [
+            Result.from_values('origin', 'message', 'unrelated')]
+
+        new_results = [
+            Result.from_values('origin', 'message', 'file'),
+            Result.from_values('origin', 'message', 'file', 1)]
+        modified_results = [
+            Result.from_values('origin', 'message', 'unrelated')]
+        modified_results.extend(new_results)
+
+        self.assertEqual(filter_results(original_file_dict,
+                                        modified_file_dict,
+                                        original_results,
+                                        modified_results),
+                         new_results)

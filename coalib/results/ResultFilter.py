@@ -22,8 +22,9 @@ def filter_results(original_file_dict,
     # diffs_dict[file] is a diff between the original and modified file
     diffs_dict = {}
     for file in original_file_dict:
-        diffs_dict[file] = Diff.from_string_arrays(original_file_dict[file],
-                                                   modified_file_dict[file])
+        diffs_dict[file] = Diff.from_string_arrays(
+            original_file_dict.get(file, []),
+            modified_file_dict.get(file, []))
 
     orig_result_diff_dict_dict = remove_result_ranges_diffs(original_results,
                                                             original_file_dict)
@@ -192,7 +193,7 @@ def remove_result_ranges_diffs(result_list, file_dict):
 
         for source_range in source_ranges:
             file_name = source_range.file
-            new_file = remove_range(mod_file_dict[file_name],
+            new_file = remove_range(mod_file_dict.get(file_name, []),
                                     source_range)
             mod_file_dict[file_name] = new_file
 
@@ -200,7 +201,7 @@ def remove_result_ranges_diffs(result_list, file_dict):
         for file_name in file_dict:
             diff_dict[file_name] = Diff.from_string_arrays(
                 file_dict[file_name],
-                mod_file_dict[file_name])
+                mod_file_dict.get(file_name, []))
 
         result_diff_dict_dict[original_result] = diff_dict
 
