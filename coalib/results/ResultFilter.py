@@ -21,15 +21,19 @@ def filter_results(original_file_dict,
 
     # diffs_dict[file] is a diff between the original and modified file
     diffs_dict = {}
-    for file in original_file_dict:
+    affected_files = set(original_file_dict.keys())
+    affected_files |= set(modified_file_dict.keys())
+    for file in affected_files:
         diffs_dict[file] = Diff.from_string_arrays(
             original_file_dict.get(file, []),
             modified_file_dict.get(file, []))
 
-    orig_result_diff_dict_dict = remove_result_ranges_diffs(original_results,
+    orig_result_diff_dict_dict = remove_result_ranges_diffs(affected_files,
+                                                            original_results,
                                                             original_file_dict)
 
-    mod_result_diff_dict_dict = remove_result_ranges_diffs(modified_results,
+    mod_result_diff_dict_dict = remove_result_ranges_diffs(affected_files,
+                                                           modified_results,
                                                            modified_file_dict)
 
     unique_results = []
@@ -73,20 +77,20 @@ def basics_match(original_result,
                for member in ['origin', 'message', 'severity', 'debug_msg'])
 
 
-def source_ranges_match(original_file_dict,
+def source_ranges_match(affected_files,
                         diff_dict,
                         original_result_diff_dict,
                         modified_result_diff_dict):
     """
     Checks whether the SourceRanges of two results match
 
-    :param original_file_dict: Dict of lists of file contents before changes
+    :param affected_files:     List of files affected by all results.
     :param diff_dict:          Dict of diffs describing the changes per file
     :param original_result_diff_dict: diff for each file for this result
     :param modified_result_diff_dict: guess
     :return:                     Boolean value whether the SourceRanges match
     """
-    for file_name in original_file_dict:
+    for file_name in affected_files:
 
         try:  # fails if the affected range of the result get's modified
             original_total_diff = (diff_dict[file_name] +
@@ -153,16 +157,17 @@ def remove_range(file_contents, source_range):
     return newfile
 
 
-def remove_result_ranges_diffs(result_list, file_dict):
+def remove_result_ranges_diffs(affected_files, result_list, file_dict):
     """
     Calculates the diffs to all files in file_dict that describe the removal of
     each respective result's affected code.
 
-    :param result_list: list of results
-    :param file_dict:   dict of file contents
-    :return:            returnvalue[result][file] is a diff of the changes the
-                        removal of this result's affected code would cause for
-                        the file.
+    :param affected_files: List of files affected by all results.
+    :param result_list:    List of results.
+    :param file_dict:      Dict of file contents.
+    :return:               returnvalue[result][file] is a diff of the changes
+                           the removal of this result's affected code would
+                           cause for the file.
     """
     result_diff_dict_dict = {}
     for original_result in result_list:
@@ -198,9 +203,9 @@ def remove_result_ranges_diffs(result_list, file_dict):
             mod_file_dict[file_name] = new_file
 
         diff_dict = {}
-        for file_name in file_dict:
+        for file_name in affected_files:
             diff_dict[file_name] = Diff.from_string_arrays(
-                file_dict[file_name],
+                file_dict.get(file_name, []),
                 mod_file_dict.get(file_name, []))
 
         result_diff_dict_dict[original_result] = diff_dict

@@ -467,6 +467,7 @@ class ResultFilterTest(unittest.TestCase):
                              (source_range1, source_range2, source_range3))
 
         result_diff = remove_result_ranges_diffs(
+            test_file_dict.keys(),
             [test_result],
             test_file_dict)[test_result][abspath("test_file")]
         expected_diff = Diff.from_string_arrays(test_file, ["789\n"])
@@ -485,6 +486,7 @@ class ResultFilterTest(unittest.TestCase):
                              (source_range1, source_range2))
 
         result_diff = remove_result_ranges_diffs(
+            test_file_dict.keys(),
             [test_result],
             test_file_dict)[test_result][abspath("test_file")]
         expected_diff = Diff.from_string_arrays(test_file,
@@ -500,6 +502,7 @@ class ResultFilterTest(unittest.TestCase):
                              "message")
 
         result_diff = remove_result_ranges_diffs(
+            test_file_dict.keys(),
             [test_result],
             test_file_dict)[test_result][abspath("test_file")]
         expected_diff = Diff.from_string_arrays(test_file, ["abc"])
