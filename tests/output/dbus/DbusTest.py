@@ -52,7 +52,7 @@ class DbusTest(unittest.TestCase):
                          "testcode.c"))
 
         self.subprocess = make_test_server()
-        trials_left = 10
+        trials_left = 50
 
         while trials_left > 0:
             time.sleep(0.1)
