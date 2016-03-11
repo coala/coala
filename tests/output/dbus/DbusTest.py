@@ -30,13 +30,18 @@ import dbus.mainloop.glib
 from gi.repository import GLib
 from coalib.output.dbus.DbusServer import DbusServer
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+print('Creating session bus ...')
 session_bus = dbus.SessionBus()
 dbus_name = dbus.service.BusName("org.coala_analyzer.v1.test", session_bus)
+print('Creating DbbusServer object ...')
 dbus_server = DbusServer(session_bus, "/org/coala_analyzer/v1/test",
                          on_disconnected=lambda: GLib.idle_add(sys.exit))
 mainloop = GLib.MainLoop()
+print('Starting GLib mainloop ...')
 mainloop.run()
-"""])
+"""],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
 
 
 class DbusTest(unittest.TestCase):
@@ -62,6 +67,10 @@ class DbusTest(unittest.TestCase):
                 continue
             except dbus.exceptions.DBusException as exception:
                 if trials_left == 0:
+                    print("Stdout:")
+                    print(self.subprocess.stdout.read().decode("utf-8"))
+                    print("Stderr:")
+                    print(self.subprocess.stderr.read().decode("utf-8"))
                     raise exception
 
     def connect_to_test_server(self):
