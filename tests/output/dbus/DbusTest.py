@@ -96,7 +96,29 @@ class DbusTest(unittest.TestCase):
 
         analysis = self.document_object.Analyze(
             dbus_interface="org.coala_analyzer.v1")
+
         self.maxDiff = None
+        print(analysis)
+
+        # Run some basic analysis with good debug messages.
+        self.assertEqual(analysis[0], 1, "Exit code was not 1.")
+        self.assertEqual(len(analysis[1]), 0, "Unexpected log messages found.")
+
+        sections = analysis[2]
+        self.assertEqual(len(sections), 1, "Expected only 1 section to run.")
+
+        section = sections[0]
+        self.assertEqual(section[0], "default",
+                         "Expected section to be named 'default'.")
+        self.assertTrue(section[1], "Section did not execute successfully.")
+        self.assertEqual(len(section[2]), 2, "Expected 2 results in section.")
+
+        # Remove the ids as they are hashes and cannot be asserted.
+        for result in section[2]:
+            result['id'] = 0
+
+        # We also test as a dictionary as dbus should be able to convert
+        # it into the correct python types.
         self.assertEqual(analysis,
                          (1,
                           [],
@@ -104,14 +126,14 @@ class DbusTest(unittest.TestCase):
                             True,
                             [{'debug_msg': '',
                               'file': '',
-                              'id': analysis[2][0][2][0]['id'],
+                              'id': 0,
                               'line_nr': "",
                               'message': 'test msg',
                               'origin': 'LocalTestBear',
                               'severity': 'NORMAL'},
                              {'debug_msg': '',
                               'file': self.testcode_c_path,
-                              'id': analysis[2][0][2][1]['id'],
+                              'id': 0,
                               'line_nr': "",
                               'message': 'test msg',
                               'origin': 'GlobalTestBear',
