@@ -14,7 +14,7 @@ from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
     print_affected_files, print_bears, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
-    print_spaces_tabs_in_unicode, show_bears)
+    print_spaces_tabs_in_unicode, show_bears, ask_for_action_and_apply)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.Diff import Diff
@@ -242,7 +242,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                 os.remove(testfile_path + ".orig")
 
                 name, section = get_action_info(curr_section,
-                                                TestAction().get_metadata())
+                                                TestAction().get_metadata(),
+                                                failed_actions=set())
                 self.assertEqual(input_generator.last_input, 4)
                 self.assertEqual(str(section), " {param : '3'}")
                 self.assertEqual(name, "TestAction")
@@ -340,6 +341,34 @@ class ConsoleInteractionTest(unittest.TestCase):
                 self.assertEqual(sio.getvalue().count(apply_path_desc), 1)
 
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
+
+    def test_ask_for_actions_and_apply(self):
+
+        testfile_path = '~/home/path/to_somewhere/'
+        file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
+        diff = Diff(file_dict[testfile_path])
+        diff.delete_line(2)
+        diff.change_line(3, "3\n", "3_changed\n")
+        metadata_list = [OpenEditorAction.get_metadata()]
+        action_dict = {'OpenEditorAction': OpenEditorAction()}
+        failed_actions = set()
+        section = Section("")
+
+        args = [self.log_printer, self.console_printer, section,
+                metadata_list, action_dict, failed_actions,
+                Result("origin", "message", diffs={testfile_path: diff}),
+                self.file_diff_dict, file_dict]
+
+        with simulate_console_inputs(1, 'failing_input', 1, 'echo') \
+                as generator, retrieve_stdout() as sio:
+            OpenEditorAction.is_applicable = staticmethod(
+                    lambda *args: True)
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertIn('OpenEditorAction', failed_actions)
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 3)
+            self.assertNotIn('OpenEditorAction', failed_actions)
 
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:
