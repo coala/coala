@@ -1,8 +1,0 @@
-config = coalib/tests/settings/section_manager_test_files/other_coafile
-[test]
-value = 1
-[test-2]
-files =
-bears = LineCountBear,testBear
-[test-3]
-files = MakeFile

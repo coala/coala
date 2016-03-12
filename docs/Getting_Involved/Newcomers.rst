@@ -54,7 +54,7 @@ Now pick an issue which isn't assigned, and if you want to fix
 it, then leave a comment that you would like to get assigned. This way
 we don't have multiple people working on the same issue at the same time.
 Now you can start working on it.
-For more info on how to work correctly with git, try `this <https://github.com/coala-analyzer/coala/wiki/Getting-Started-to-Contribute#a-little-git-advice>`_.
+For more info on how to work correctly with git, try `this <http://coala.readthedocs.org/en/latest/Users/Tutorials/Git_Help.html>`_.
 
 .. note::
 

@@ -88,14 +88,17 @@ class DbusDocument(dbus.service.Object):
         """
         This method analyzes the document and sends back the result
 
-        :return: The output is a list with an element for each section.
-                 It contains:
+        :return: The output is structure which has 3 items:
+                 -  The exitcode from the analysis.
+                 -  List of logs from the analysis.
+                 -  List of information about each section that contains:
 
-                 -  The name of the section
-                 -  Boolean which is true if all bears in the section executed
-                    successfully
-                 -  List of results where each result is a string dictionary
-                    which contains: id, origin, message, file, line_nr, severity
+                    -  The name of the section.
+                    -  Boolean which is true if all bears in the section
+                       executed successfully.
+                    -  List of results where each result is a string
+                       dictionary which contains:
+                       id, origin, message, file, line_nr, severity
         """
         retval = []
         if self.path == "" or self.config_file == "":

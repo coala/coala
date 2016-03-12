@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import subprocess
 import tempfile
 
 from coalib.bears.Bear import Bear
@@ -10,29 +11,6 @@ from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
-def is_binary_present(cls):
-    """
-    Checks whether the needed binary is present.
-
-    The function is intended be used with classes
-    having an executable member which will be checked.
-
-    :return: True if binary is present, or is not required.
-             not True otherwise, with a string containing a
-             detailed description of what's missing.
-    """
-    try:
-        if cls.executable is None:
-            return True
-        if shutil.which(cls.executable) is None:
-            return repr(cls.executable) + " is not installed."
-        else:
-            return True
-    except AttributeError:
-        # Happens when `executable` does not exist in `cls`.
-        return True
-
-
 class Lint(Bear):
     """
     Deals with the creation of linting bears.
@@ -40,18 +18,22 @@ class Lint(Bear):
     For the tutorial see:
     http://coala.readthedocs.org/en/latest/Users/Tutorials/Linter_Bears.html
 
-    :param executable:      The executable to run the linter.
-    :param arguments:       The arguments to supply to the linter, such
-                            that the file name to be analyzed can be
-                            appended to the end. Note that we use ``.format()``
-                            on the arguments - so, ``{abc}`` needs to be given
-                            as ``{{abc}}``.
-                            Currently, the following will be replaced:
+    :param executable:                  The executable to run the linter.
+    :param prerequisite_command:        The command to run as a prerequisite.
+    :param prerequisites_fail_msg:      The message to be displayed if the
+                                        prerequisite fails.
+    :param arguments:                   The arguments to supply to the linter,
+                                        such that the file name to be analyzed
+                                        can be appended to the end. Note that
+                                        we use ``.format()`` on the arguments -
+                                        so, ``{abc}`` needs to be given as
+                                        ``{{abc}}``. Currently, the following
+                                        will be replaced:
 
-                             - ``{filename}`` - The filename passed to
-                               ``lint()``
-                             - ``{config_file}`` - The config file created
-                               using ``config_file()``
+                                         - ``{filename}`` - The filename passed
+                                           to ``lint()``
+                                         - ``{config_file}`` - The config file
+                                           created using ``config_file()``
 
     :param output_regex:    The regex which will match the output of the linter
                             to get results. This is not used if
@@ -79,8 +61,9 @@ class Lint(Bear):
                             severity of the coala Result to set it to. If it is
                             not a dict, it is ignored.
     """
-    check_prerequisites = classmethod(is_binary_present)
     executable = None
+    prerequisite_command = None
+    prerequisite_fail_msg = 'Unknown failure.'
     arguments = ""
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)\|'
                               r'(?P<severity>\d+): (?P<message>.*)')
@@ -199,6 +182,56 @@ class Lint(Bear):
             column=groups.get("column", None),
             end_line=groups.get("end_line", None),
             end_column=groups.get("end_column", None))
+
+    @classmethod
+    def check_prerequisites(cls):
+        """
+        Checks for prerequisites required by the Linter Bear.
+        """
+        return cls._check_command(executable=cls.executable,
+                                  command=cls.prerequisite_command,
+                                  fail_msg=cls.prerequisite_fail_msg)
+
+    @classmethod
+    def _check_command(cls, executable, command, fail_msg):
+        """
+        Checks whether the required executable is found and the
+        required command succesfully executes.
+
+        The function is intended be used with classes having an
+        executable, prerequisite_command and prerequisite_fail_msg.
+
+        :param executable:   The executable to check for.
+        :param command:      The command to check as a prerequisite.
+        :param fail_msg:     The fail message to display when the
+                             command doesn't return an exitcode of zero.
+
+        :return: True if command successfully executes, or is not required.
+                 not True otherwise, with a string containing a
+                 detailed description of the error.
+        """
+        if cls._check_executable(executable):
+            if command is None:
+                return True  # when there are no prerequisites
+            exitcode = subprocess.call(command)
+            return True if exitcode == 0 else fail_msg
+        else:
+            return repr(executable) + " is not installed."
+
+    @staticmethod
+    def _check_executable(executable):
+        """
+        Checks whether the needed executable is present in the system.
+
+        :param executable: The executable to check for.
+
+        :return: True if binary is present, or is not required.
+                 not True otherwise, with a string containing a
+                 detailed description of what's missing.
+        """
+        if executable is None:
+            return True
+        return shutil.which(executable) is not None
 
     def generate_config_file(self):
         """

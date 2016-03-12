@@ -43,7 +43,7 @@ class PyTestCommand(TestCommand):
 
 class BuildDocsCommand(setuptools.command.build_py.build_py):
     apidoc_command = ('sphinx-apidoc', '-f', '-o', 'docs/API/',
-                      'coalib', 'coalib/tests')
+                      'coalib')
     doc_command = ('make', '-C', 'docs', 'html')
 
     def run(self):
@@ -62,6 +62,9 @@ with open('requirements.txt') as requirements:
 with open('test-requirements.txt') as requirements:
     test_required = requirements.read().splitlines()
 
+with open("README.rst") as readme:
+    long_description = readme.read()
+
 
 if __name__ == "__main__":
     data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
@@ -75,25 +78,16 @@ if __name__ == "__main__":
           maintainer_email=('lasse.schuirmann@gmail.com, '
                             'fabian@neuschmidt.de, '
                             'makman@alice.de'),
-          url='http://coala.rtfd.org/',
+          url='http://coala-analyzer.org/',
           platforms='any',
-          packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
+          packages=find_packages(exclude=["build.*", "tests", "tests.*"]),
           install_requires=required,
           tests_require=test_required,
           package_data={'coalib': ['default_coafile', "VERSION",
                                    'bearlib/languages/definitions/*.coalang']},
           license="AGPL-3.0",
           data_files=data_files,
-          long_description="coala is a simple COde AnaLysis Application. Its "
-                           "goal is to make static code analysis easy while "
-                           "remaining completely modular and therefore "
-                           "extendable and language independent. Code analysis"
-                           " happens in python scripts while coala manages "
-                           "these, tries to provide helpful libraries and "
-                           "provides a user interface. Please visit "
-                           "http://coala.rtfd.org/ for more information or "
-                           "our development repository on "
-                           "https://github.com/coala-analyzer/coala/.",
+          long_description=long_description,
           entry_points={
               "console_scripts": [
                   "coala = coalib.coala:main",
