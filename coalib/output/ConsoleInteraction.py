@@ -517,6 +517,7 @@ def print_actions(console_printer, section, actions, failed_actions):
     """
     Prints the given actions and lets the user choose.
 
+    :param console_printer: Object to print messages on the console.
     :param actions:         A list of FunctionMetadata objects.
     :param failed_actions:  A set of all actions that have failed. A failed
                             action remains in the list until it is
