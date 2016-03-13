@@ -11,7 +11,8 @@ from coalib.misc.ContextManagers import make_temp
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.StringProcessing import escape
 from coalib.settings.ConfigurationGathering import (
-    find_user_config, gather_configuration, get_config_directory)
+    find_user_config, gather_configuration, get_config_directory,
+    load_configuration)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
@@ -249,6 +250,48 @@ class ConfigurationGatheringTest(unittest.TestCase):
             self.assertEqual(bool(sections["default"]['find_config']), True)
         finally:
             os.chdir(old_cwd)
+
+    def test_no_config(self):
+        orig_dir = os.getcwd()
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        child_dir = os.path.join(current_dir,
+                                 "section_manager_test_files",
+                                 "child_dir")
+        os.chdir(child_dir)
+
+        sections, targets = load_configuration([], self.log_printer)
+        self.assertIn('value', sections["default"])
+
+        sections, targets = load_configuration(
+            ['--no-config'],
+            self.log_printer)
+        self.assertNotIn('value', sections["default"])
+
+        sections, targets = load_configuration(
+            ['--no-config', '-S', 'use_spaces=True'],
+            self.log_printer)
+        self.assertIn('use_spaces', sections["default"])
+        self.assertNotIn('values', sections["default"])
+
+        sections, targets = load_configuration(
+            ['--no-config', 'False', '-S', 'use_spaces=True'],
+            self.log_printer)
+        self.assertIn('use_spaces', sections["default"])
+        self.assertIn('value', sections["default"])
+
+        with self.assertRaises(SystemExit) as cm:
+            sections, target = load_configuration(
+                ['--no-config', '--save'],
+                self.log_printer)
+            self.assertEqual(cm.exception.code, 2)
+
+        with self.assertRaises(SystemExit) as cm:
+            sections, target = load_configuration(
+                ['--no-config', '--find-config'],
+                self.log_printer)
+            self.assertEqual(cm.exception.code, 2)
+
+        os.chdir(orig_dir)
 
     def test_get_config_directory(self):
         old_isfile = os.path.isfile

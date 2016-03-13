@@ -50,6 +50,12 @@ def default_arg_parser(formatter_class=None):
                             const=True,
                             metavar='BOOL',
                             help=FIND_CONFIG_HELP)
+    arg_parser.add_argument('-I',
+                            '--no-config',
+                            nargs='?',
+                            const=True,
+                            metavar='BOOL',
+                            help="Run without using any config file")
     arg_parser.add_argument('-f',
                             '--files',
                             nargs='+',
