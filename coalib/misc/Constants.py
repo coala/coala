@@ -71,3 +71,5 @@ with open(VERSION_FILE, 'r') as ver:
 BUS_NAME = "org.coala_analyzer.v1"
 
 TAGS_DIR = appdirs.user_data_dir('coala', version=VERSION)
+
+GLOBBING_SPECIAL_CHARS = "()[]|?*"
