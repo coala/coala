@@ -213,8 +213,11 @@ class Lint(Bear):
         if cls._check_executable(executable):
             if command is None:
                 return True  # when there are no prerequisites
-            exitcode = subprocess.call(command)
-            return True if exitcode == 0 else fail_msg
+            try:
+                subprocess.check_call(command)
+                return True
+            except (OSError, subprocess.CalledProcessError):
+                return fail_msg
         else:
             return repr(executable) + " is not installed."
 
