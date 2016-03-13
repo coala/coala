@@ -68,7 +68,7 @@ Project Status
 
 |Scrutinizer Code Quality| |codecov.io|
 
-|Documentation Status|
+|Documentation Status| |Gitmate|
 
 GETTING INVOLVED
 ================
@@ -114,3 +114,6 @@ information.
    :target: https://gitter.im/coala-analyzer/coala
 .. |AGPL| image:: https://img.shields.io/github/license/coala-analyzer/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
+.. |Gitmate| image:: https://img.shields.io/badge/Gitmate-0%20issues-brightgreen.svg
+   :target: http://gitmate.com/
+
