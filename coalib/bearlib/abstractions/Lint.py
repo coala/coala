@@ -5,6 +5,7 @@ import subprocess
 import tempfile
 
 from coalib.bears.Bear import Bear
+from coalib.misc.Decorators import enforce_signature
 from coalib.misc.Shell import escape_path_argument, run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -19,7 +20,8 @@ class Lint(Bear):
     http://coala.readthedocs.org/en/latest/Users/Tutorials/Linter_Bears.html
 
     :param executable:                  The executable to run the linter.
-    :param prerequisite_command:        The command to run as a prerequisite.
+    :param prerequisite_command:        The command to run as a prerequisite
+                                        and is of type ``list``.
     :param prerequisites_fail_msg:      The message to be displayed if the
                                         prerequisite fails.
     :param arguments:                   The arguments to supply to the linter,
@@ -193,7 +195,8 @@ class Lint(Bear):
                                   fail_msg=cls.prerequisite_fail_msg)
 
     @classmethod
-    def _check_command(cls, executable, command, fail_msg):
+    @enforce_signature
+    def _check_command(cls, executable, command: (list, tuple, None), fail_msg):
         """
         Checks whether the required executable is found and the
         required command succesfully executes.

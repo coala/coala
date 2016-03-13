@@ -126,6 +126,9 @@ class LintTest(unittest.TestCase):
         Lint.prerequisite_command = ["command_which_doesnt_exist"]
         self.assertEqual(Lint.check_prerequisites(), Lint.prerequisite_fail_msg)
 
+        Lint.prerequisite_command = "command_which_isnt_a_list"
+        self.assertRaises(TypeError, Lint.check_prerequisites)
+
         Lint.prerequisite_command = ["cd",
                                      os.path.join('non', 'existent', 'path')]
         self.assertEqual(Lint.check_prerequisites(), Lint.prerequisite_fail_msg)
