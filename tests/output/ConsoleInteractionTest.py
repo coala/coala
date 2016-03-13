@@ -25,6 +25,7 @@ from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
+from tests.TestUtilities import raise_error
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")
@@ -344,21 +345,21 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_ask_for_actions_and_apply(self):
         failed_actions = set()
+        action = TestAction()
         args = [self.log_printer, self.console_printer, Section(""),
-                [OpenEditorAction.get_metadata()],
-                {'OpenEditorAction': OpenEditorAction()}, failed_actions,
-                Result("origin", "message"), self.file_diff_dict, {}]
-        OpenEditorAction.is_applicable = lambda *args: True
+                [action.get_metadata()], {'TestAction': action},
+                failed_actions, Result("origin", "message"), {}, {}]
 
-        with simulate_console_inputs(1, 'failing_input',
-                                     1, 'echo') as generator:
+        with simulate_console_inputs(1, 'param1', 1, 'param2') as generator:
+            action.apply = lambda *args, **kwargs: raise_error(AssertionError)
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 1)
-            self.assertIn('OpenEditorAction', failed_actions)
+            self.assertIn('TestAction', failed_actions)
 
+            action.apply = lambda *args, **kwargs: {}
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 3)
-            self.assertNotIn('OpenEditorAction', failed_actions)
+            self.assertNotIn('TestAction', failed_actions)
 
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:

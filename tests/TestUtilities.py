@@ -51,3 +51,7 @@ def bear_test_module():
         yield
     finally:
         pkg_resources.iter_entry_points = old_iter
+
+
+def raise_error(error, *args, **kwargs):
+    raise error(*args, **kwargs)
