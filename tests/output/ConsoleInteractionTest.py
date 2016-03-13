@@ -359,8 +359,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                 Result("origin", "message", diffs={testfile_path: diff}),
                 self.file_diff_dict, file_dict]
 
-        with simulate_console_inputs(1, 'failing_input', 1, 'echo') \
-                as generator, retrieve_stdout() as sio:
+        with simulate_console_inputs(1, 'failing_input',
+                                     1, 'echo') as generator:
             OpenEditorAction.is_applicable = staticmethod(
                     lambda *args: True)
             ask_for_action_and_apply(*args)
