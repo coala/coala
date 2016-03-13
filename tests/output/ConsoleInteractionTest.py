@@ -343,29 +343,19 @@ class ConsoleInteractionTest(unittest.TestCase):
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
 
     def test_ask_for_actions_and_apply(self):
-
-        testfile_path = '~/home/path/to_somewhere/'
-        file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
-        diff = Diff(file_dict[testfile_path])
-        diff.delete_line(2)
-        diff.change_line(3, "3\n", "3_changed\n")
-        metadata_list = [OpenEditorAction.get_metadata()]
-        action_dict = {'OpenEditorAction': OpenEditorAction()}
         failed_actions = set()
-        section = Section("")
-
-        args = [self.log_printer, self.console_printer, section,
-                metadata_list, action_dict, failed_actions,
-                Result("origin", "message", diffs={testfile_path: diff}),
-                self.file_diff_dict, file_dict]
+        args = [self.log_printer, self.console_printer, Section(""),
+                [OpenEditorAction.get_metadata()],
+                {'OpenEditorAction': OpenEditorAction()}, failed_actions,
+                Result("origin", "message"), self.file_diff_dict, {}]
+        OpenEditorAction.is_applicable = lambda *args: True
 
         with simulate_console_inputs(1, 'failing_input',
                                      1, 'echo') as generator:
-            OpenEditorAction.is_applicable = staticmethod(
-                    lambda *args: True)
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 1)
             self.assertIn('OpenEditorAction', failed_actions)
+
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('OpenEditorAction', failed_actions)
