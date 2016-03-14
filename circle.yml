@@ -3,9 +3,7 @@ dependencies:
     - ~/.pyenv/versions/3.3.6
     - ~/.pyenv/versions/3.4.3
     - ~/.pyenv/versions/3.5.1
-    - ~/coala/node_modules
   pre:
-    - echo 'export PATH=$PATH:~/coala/node_modules/.bin' >> ~/.circlerc
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
     - nvm alias default node
   override:
