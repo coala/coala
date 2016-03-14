@@ -6,7 +6,7 @@ for the coala project.
 
 Documentation is written in reStructuredText and rendered by readthedocs.org to
 our lovely users. You can view the current documentation on
-http://coala.rtfd.org.
+http://coala.readthedocs.org/en/latest/.
 
 After getting the coala source code (see :doc:`Installation
 Instructions <../Users/Install>`), you can start hacking on

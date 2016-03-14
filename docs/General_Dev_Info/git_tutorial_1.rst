@@ -374,7 +374,7 @@ So, let's look in our repository!
 Now let's look into it further to get to know what it is a bit more. I
 will try to cover only important parts here, if you're interested even
 deeper, you can try DuckDuckGo or take a look at this:
-http://git-scm.com/docs/gitrepository-layout
+https://git-scm.com/docs/gitrepository-layout
 
 The config file
 ---------------
@@ -390,7 +390,7 @@ The objects directory is an important one: It contains our commits.
 
 One could do a full tutorial on those things but that's not covered
 here. If you want that, check out:
-http://git-scm.com/book/en/v2/Git-Internals-Git-Objects
+https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
 
 We just saw the **ID** of the commit we made:
 ``ec6c903a0a18960cd73df18897e56738c4c6bb51``
@@ -549,7 +549,7 @@ In order to generally **ignore certain patterns** of files (e.g. it's
     README~  # Ignore gedit temporary files
     *.o  # Ignore compiled object files
 
-The **exact pattern** is defined here: http://git-scm.com/docs/gitignore
+The **exact pattern** is defined here: https://git-scm.com/docs/gitignore
 
 Files matching this pattern will:
 

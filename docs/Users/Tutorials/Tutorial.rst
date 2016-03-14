@@ -18,10 +18,12 @@ In order to perform a static code analysis on your code you will need
 some code to check. If you do not have own code you want to check, you
 can retrieve our tutorial samples:
 
+.. Start ignoring InvalidLinkBear
 ::
 
     git clone https://github.com/coala-analyzer/coala-tutorial.git
 
+.. Stop ignoring InvalidLinkBear
 Please note that the commands given in this tutorial are intended for
 use with this sample code and may need minor adjustments.
 
@@ -345,6 +347,7 @@ developers even to install coala using git submodules. This also has the
 advantage that all your developers are using exactly the same version of
 coala. You can try it out in the coala-tutorial repository:
 
+.. Start ignoring InvalidLinkBear
 ::
 
     git submodule add https://github.com/coala-analyzer/coala.git
@@ -352,6 +355,7 @@ coala. You can try it out in the coala-tutorial repository:
     git add .coafile
     git commit -m 'Add .coafile'
 
+.. Stop ignoring InvalidLinkBear
 You can now use ``coala/coala`` as if it were the installed binary.
 Here's the instructions for your developers:
 
