@@ -133,7 +133,6 @@ class ConsoleInteractionTest(unittest.TestCase):
             printer,
             test_string,
             dict(sh.yield_tab_lengths(test_string)),
-            4,
             "red")
         self.assertEqual(printer.string, "--->he->llo•world•••")
 
@@ -152,7 +151,6 @@ class ConsoleInteractionTest(unittest.TestCase):
         print_spaces_tabs_in_unicode(printer,
                                      test_string,
                                      dict(sh.yield_tab_lengths(test_string)),
-                                     4,
                                      "red")
         self.assertEqual(printer.string, ".he>llo..world.")
 

@@ -116,7 +116,7 @@ def acquire_actions_and_apply(console_printer,
 
 
 def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
-                                 tab_width, color, index=0):
+                                 color, index=0):
     """
     Prints the lines with tabs and spaces replaced by unicode symbols.
 
@@ -124,7 +124,6 @@ def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
     :param line:            The line-text to print to ``console_printer``.
     :param tab_dict:        A dictionary containing the indices of tabs inside
                             ``line`` as keys and the tab-length as values.
-    :param tab_width:       The width of tabs.
     :param color:           The color to print the line with (except for spaces
                             and tabs.
     :param index:           The index from where to start the printing.
@@ -170,23 +169,23 @@ def print_lines(console_printer,
         if i == sourcerange.start.line and sourcerange.start.column:
             print_spaces_tabs_in_unicode(
                 console_printer, line[:sourcerange.start.column-1],
-                tab_dict, tab_width, FILE_LINES_COLOR)
+                tab_dict, FILE_LINES_COLOR)
 
             printed_chars = sourcerange.start.column-1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             print_spaces_tabs_in_unicode(
                 console_printer, line[printed_chars:sourcerange.end.column-1],
-                tab_dict, tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+                tab_dict, HIGHLIGHTED_CODE_COLOR, printed_chars)
 
             print_spaces_tabs_in_unicode(
                 console_printer, line[sourcerange.end.column-1:],
-                tab_dict, tab_width, FILE_LINES_COLOR, sourcerange.end.column)
+                tab_dict, FILE_LINES_COLOR, sourcerange.end.column)
             console_printer.print("")
         else:
             print_spaces_tabs_in_unicode(
                 console_printer, line[printed_chars:], tab_dict,
-                tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+                HIGHLIGHTED_CODE_COLOR, printed_chars)
             console_printer.print("")
 
 
