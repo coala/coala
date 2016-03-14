@@ -108,5 +108,5 @@ def check_conflicts(sections):
             if len(intersection) > 0:
                 ArgumentParser().exit(2,
                                       key + " cannot be given at the same "
-                                      "time with " + (', '.join(intersection)))
+                                      "time with " + ', '.join(intersection))
     return True
