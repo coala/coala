@@ -38,8 +38,12 @@ to contact us on gitter, and we will help you!
 Start working
 -------------
 
+.. Start ignoring InvalidLinkBear
+
 Now is the time to pick an issue.
 Here is the link that will lead you to `Newcomers issues <https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+user%3Acoala-analyzer+label%3Adifficulty%2Fnewcomer>`_.
+
+.. Stop ignoring InvalidLinkBear
 
 .. seealso::
 

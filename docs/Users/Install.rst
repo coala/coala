@@ -6,11 +6,11 @@ platforms are Linux and Windows. coala is known to work on OS X as well.
 coala is tested against CPython 3.3, 3.4 and 3.5.
 
 In order to run coala you need to install Python. It is recommended,
-that you install Python3 >= 3.3 from http://www.python.org.
+that you install Python3 >= 3.3 from https://www.python.org/.
 
 The easiest way to install coala is using pip (Pip Installs Packages).
 If you don't already have pip, you can install it like described on
-https://pip.pypa.io/en/stable/installing.html. Note that pip is shipped
+https://pip.pypa.io/en/stable/installing/. Note that pip is shipped
 with recent python versions by default.
 
 System wide installation
@@ -58,7 +58,7 @@ Installing inside a virtualenv
 
 Virtualenv is probably what you want to use during development,
 you’ll probably want to use it there, too. You can read more about
-it at their documentation - http://virtualenv.readthedocs.org
+it at their documentation - http://virtualenv.readthedocs.org/en/latest/
 
 First, we need to install virtualenv to the system. This can be done
 with ``pip3`` easily:
@@ -101,7 +101,7 @@ Installing coala from source
 ----------------------------
 
 In order to install coala from source, it is recommended to install git.
-See http://git-scm.com/ for further information and a downloadable
+See https://git-scm.com/ for further information and a downloadable
 installer or use your package manager on linux to get it.
 
 .. note::
@@ -179,7 +179,7 @@ JS Dependencies
 
 coala features a lot of bears that use linters written in JavaScript. In
 order for them to be usable, you need to install them via ``npm``
-(http://nodejs.org/):
+(https://nodejs.org/en/):
 
 ::
 

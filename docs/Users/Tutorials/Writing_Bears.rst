@@ -8,10 +8,11 @@ tutorial!
 The sample sources for this tutorial lie at our coala-tutorial
 repository, go clone it with:
 
+.. Start ignoring InvalidLinkBear
 ::
 
     git clone https://github.com/coala-analyzer/coala-tutorial.git
-
+.. Stop ignoring InvalidLinkBear
 All paths and commands given here are meant to be executed from the root
 directory of the coala-tutorial repository.
 
