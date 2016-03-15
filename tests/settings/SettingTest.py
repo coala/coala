@@ -4,7 +4,9 @@ import unittest
 from collections import OrderedDict
 
 from coalib.settings.Setting import (
-    Setting, path, path_list, url, typed_dict, typed_list, typed_ordered_dict)
+    Setting, path, path_list, url, typed_dict, typed_list, typed_ordered_dict,
+    glob, glob_list)
+from coalib.parsing.Globbing import glob_escape
 
 
 class SettingTest(unittest.TestCase):
@@ -28,6 +30,12 @@ class SettingTest(unittest.TestCase):
                               origin="test" + os.path.sep),
                          os.path.abspath(os.path.join("test", "22")))
 
+    def test_glob(self):
+        self.uut = Setting("key", ".",
+                           origin=os.path.join("test (1)", "somefile"))
+        self.assertEqual(glob(self.uut),
+                         glob_escape(os.path.abspath("test (1)")))
+
     def test_path_list(self):
         abspath = os.path.abspath(".")
         # Need to escape backslashes since we use list conversion
@@ -43,6 +51,16 @@ class SettingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             uut = Setting("key", "abc")
             url(uut)
+
+    def test_glob_list(self):
+        abspath = glob_escape(os.path.abspath("."))
+        # Need to escape backslashes since we use list conversion
+        self.uut = Setting("key", "., " + abspath.replace("\\", "\\\\"),
+                           origin=os.path.join("test (1)", "somefile"))
+        self.assertEqual(
+            glob_list(self.uut),
+            [glob_escape(os.path.abspath(os.path.join("test (1)", "."))),
+             abspath])
 
     def test_typed_list(self):
         self.uut = Setting("key", "1, 2, 3")
