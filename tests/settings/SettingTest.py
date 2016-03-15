@@ -4,7 +4,7 @@ import unittest
 from collections import OrderedDict
 
 from coalib.settings.Setting import (
-    Setting, path, path_list, typed_dict, typed_list, typed_ordered_dict)
+    Setting, path, path_list, url, typed_dict, typed_list, typed_ordered_dict)
 
 
 class SettingTest(unittest.TestCase):
@@ -35,6 +35,14 @@ class SettingTest(unittest.TestCase):
                            origin="test" + os.path.sep + "somefile")
         self.assertEqual(path_list(self.uut),
                          [os.path.abspath(os.path.join("test", ".")), abspath])
+
+    def test_url(self):
+        uut = Setting("key", "http://google.com")
+        self.assertEqual(url(uut), "http://google.com")
+
+        with self.assertRaises(ValueError):
+            uut = Setting("key", "abc")
+            url(uut)
 
     def test_typed_list(self):
         self.uut = Setting("key", "1, 2, 3")

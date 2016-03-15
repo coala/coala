@@ -13,6 +13,10 @@ def path_list(obj, *args, **kwargs):
     return obj.__path_list__(*args, **kwargs)
 
 
+def url(obj, *args, **kwargs):
+    return obj.__url__(*args, **kwargs)
+
+
 def typed_list(conversion_func):
     """
     Creates a function that converts a setting into a list of elements each
