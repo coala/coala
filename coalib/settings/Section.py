@@ -6,7 +6,7 @@ from collections import OrderedDict
 from coalib.collecting.Collectors import collect_registered_bears_dirs
 from coalib.misc.Decorators import enforce_signature, generate_repr
 from coalib.misc.DictUtilities import update_ordered_dict_key
-from coalib.settings.Setting import Setting, path_list
+from coalib.settings.Setting import Setting, glob_list
 
 
 def append_to_sections(sections,
@@ -62,7 +62,7 @@ class Section:
         self.contents = OrderedDict()
 
     def bear_dirs(self):
-        bear_dirs = path_list(self.get("bear_dirs", ""))
+        bear_dirs = glob_list(self.get("bear_dirs", ""))
         for bear_dir in bear_dirs:
             sys.path.append(bear_dir)
         bear_dirs = [

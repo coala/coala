@@ -10,7 +10,7 @@ from coalib.processes.Processing import execute_section
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import (
     find_user_config, gather_configuration)
-from coalib.settings.Setting import path_list
+from coalib.settings.Setting import glob_list
 
 
 class DbusDocument(dbus.service.Object):
@@ -124,7 +124,7 @@ class DbusDocument(dbus.service.Object):
                     continue
 
                 if any([fnmatch(self.path, file_pattern)
-                        for file_pattern in path_list(section["files"])]):
+                        for file_pattern in glob_list(section["files"])]):
 
                     section["files"].value = self.path
                     section_result = execute_section(

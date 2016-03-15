@@ -19,7 +19,7 @@ from coalib.results.result_actions.PrintDebugMessageAction import (
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
-from coalib.settings.Setting import path_list
+from coalib.settings.Setting import glob_list
 from coalib.parsing.Globbing import fnmatch
 
 ACTIONS = [ApplyPatchAction,
@@ -335,10 +335,10 @@ def instantiate_processes(section,
                              the same for each object.
     """
     filename_list = collect_files(
-        path_list(section.get('files', "")),
+        glob_list(section.get('files', "")),
         log_printer,
-        ignored_file_paths=path_list(section.get('ignore', "")),
-        limit_file_paths=path_list(section.get('limit_files', "")))
+        ignored_file_paths=glob_list(section.get('ignore', "")),
+        limit_file_paths=glob_list(section.get('limit_files', "")))
     file_dict = get_file_dict(filename_list, log_printer)
 
     manager = multiprocessing.Manager()
