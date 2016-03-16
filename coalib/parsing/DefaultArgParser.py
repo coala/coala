@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 
 from coalib.misc import Constants
@@ -15,7 +16,7 @@ def default_arg_parser(formatter_class=None):
 
     entry_point = sys.argv[0]
     for entry in ['coala-ci', 'coala-dbus', 'coala-format', 'coala-json',
-                  'coala-delete-orig']:
+                  'coala-html', 'coala-delete-orig']:
         if entry_point.endswith(entry):
             parser_type = entry
             break
@@ -119,6 +120,26 @@ def default_arg_parser(formatter_class=None):
                                 metavar='BOOL',
                                 help='Write the logs as json to a file '
                                 'where filename is specified as argument.')
+    if parser_type == 'coala-html':
+        arg_parser.add_argument('-N',
+                                '--noupdate',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                default=False,
+                                help='Launch webpage from existing results.')
+        arg_parser.add_argument('--dir',
+                                nargs='?',
+                                metavar='FILE',
+                                default=os.path.expanduser('~/_coalahtml'),
+                                help='Absolute path for storing webpages in '
+                                'directory.')
+        arg_parser.add_argument('--nolaunch',
+                                nargs='?',
+                                const=True,
+                                metavar='BOOL',
+                                default=False,
+                                help='Launch webpage')
     if parser_type == 'coala':
         SHOW_BEARS_HELP = ("Display bears and its metadata with the sections "
                            "that they belong to")
