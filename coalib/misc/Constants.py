@@ -13,6 +13,15 @@ CRASH_MESSAGE = ("An unknown error occurred. This is a bug. We are "
                  "happen. When asked for, the following information "
                  "may help investigating:")
 
+VERSION_CONFLICT_MESSAGE = ("There is a conflict in the version of a "
+                            "dependency you have installed and the "
+                            "requirements of coala. This may be resolved by "
+                            "creating a separate virtual environment for "
+                            "coala or running `pip install %s`. Be aware "
+                            "that the latter solution might break other "
+                            "python packages that depend on the currently "
+                            "installed version.")
+
 OBJ_NOT_ACCESSIBLE = "{} is not accessible and will be ignored!"
 
 TRUE_STRINGS = ['1',
