@@ -55,6 +55,17 @@ extendable and language independent. coala is written with a lower case
 
 Read more at our `documentation <http://coala.rtfd.org/>`__.
 
+Why use coala?
+--------------
+
+- coala provides *built-in checking routines* (named bears in coala).
+- *Serves your requirement*: You can easily write your own checks (using bears).
+- coala provides *user-friendly interfaces* like json, formatted and interactive
+  output in the CLI and *plugins for various editors* are available as well.
+- *Optimal performance*: coala manages parallelizing the checking-routines
+  without you having to worry.
+- *Unified interface*: One tool for all programming languages.
+
 Authors
 -------
 
