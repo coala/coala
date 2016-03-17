@@ -23,6 +23,8 @@ pyenv global $PYTHON_VERSION
 python --version
 source .misc/env_variables.sh
 
+# Upgrade pip to make sure PEP440 is supported i. e. ~= for versioning
+pip install -U pip
 # Install packages with pip
 pip install -r test-requirements.txt
 pip install -r requirements.txt
