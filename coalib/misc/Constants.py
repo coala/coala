@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import platform
+import appdirs
 
 THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
                  "Please contact the developers for assistance.")
@@ -70,9 +70,4 @@ with open(VERSION_FILE, 'r') as ver:
 
 BUS_NAME = "org.coala_analyzer.v1"
 
-if platform.system() == 'Windows':  # pragma: no cover
-    USER_DIR = os.path.join(os.getenv("APPDATA"), "coala")
-else:
-    USER_DIR = os.path.join(os.path.expanduser("~"), ".local", "coala")
-
-TAGS_DIR = os.path.join(USER_DIR, "tags")
+TAGS_DIR = appdirs.user_data_dir('coala', version=VERSION)
