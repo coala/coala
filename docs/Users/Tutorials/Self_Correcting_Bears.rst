@@ -8,7 +8,7 @@ before reading this.
 Some executables (like ``indent`` or ``autopep8``) can generate a corrected
 file from the original. We can use such executables so that ``coala``, using
 these bears, can suggest and also make automatic corrections. Here's an
-example bear. (IndentBear)
+example bear. (GNUIndentBear)
 
 ::
 
@@ -19,7 +19,7 @@ example bear. (IndentBear)
     from coalib.bears.LocalBear import LocalBear
 
 
-    class IndentBear(Lint, LocalBear):
+    class GNUIndentBear(Lint, LocalBear):
         executable = "indent" if platform.system() != "Darwin" else "gindent"
         diff_message = "Indentation can be improved."
         use_stdin = True
@@ -85,9 +85,9 @@ And, run the following command:
 
 ::
 
-    coala --bear-dirs=. --bears=IndentBear --files=sample.cpp -s
+    coala --bear-dirs=. --bears=GNUIndentBear --files=sample.cpp -s
 
-Make sure that both ``IndentBear.py`` and ``sample.cpp`` are in your current
+Make sure that both ``GNUIndentBear.py`` and ``sample.cpp`` are in your current
 folder. Also make sure that ``indent`` is installed (**not** the pip package,
 but the gnu one which can be installed using your system package manager).
 
