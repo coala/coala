@@ -17,7 +17,7 @@ test:
         parallel: true
     - pip install coala-bears --pre -U:
         parallel: true
-    - coala-ci:
+    - coala-ci -L DEBUG:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true
