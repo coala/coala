@@ -1,5 +1,33 @@
-coala 0.5.0
-===========
+coala 0.5.0 - joey
+==================
+
+::
+     .o88Oo._
+    d8P         .ooOO8bo._
+    88                  '*Y8bo.
+    YA                      '*Y8b   __
+     YA                        68o68**8Oo.
+      "8D                       *"'    "Y8o
+       Y8     'YB                       .8D
+       '8               d8'             8D
+        8       d8888b          d      AY
+        Y,     d888888         d'  _.oP"
+        ,q.    Y8888P'        d8,
+        d "q.  `Y88P'       d8" b
+        Y,   Y           ,o8P  ,Y
+        8q.       oooo888P"   .p8
+        8 "qo._           _.op" 8
+        8   '"P8866ooo6688P"'   8
+        8                       8
+        8                       8
+        8.                     .8
+        "b                     d"
+        'b                     d'
+         8                     8
+         q.                   .p
+          q.                 .p
+          "qo._           _.op"
+            '"P8866ooo6688P"'
 
 With this release we declare coala proudly as beta. Most features are now
 available and coala is ready for daily use.
@@ -122,8 +150,24 @@ Notable internal changes:
 -  Loads of new integration tests have been written. We're keeping our 100% test
    coverage promise even for all executables now.
 
-coala 0.4.0
-===========
+coala 0.4.0 - eucalyptus
+========================
+
+::
+        88        .o88Oo._
+       8 |8      d8P         .ooOO8bo._
+      8  | 8     88                  '*Y8bo.
+      8\ | /8    YA                      '*Y8b   __
+     8  \|/ 8     YA                        68o68**8Oo.
+     8\  Y  8      "8D                       *"'    "Y8o
+     8 \ | /8       Y8     'YB                       .8D
+    8   \|/ /8     '8               d8'             8D
+    8\   Y / 8       8       d8888b          d      AY
+    8 \ / /  8       Y,     d888888         d'  _.oP"
+    8  \|/  8         q.    Y8888P'        d8
+    8   Y   8          "q.  `Y88P'       d8"
+     8  |  8             Y           ,o8P
+      8 | 8                    oooo888P"
 
 New features:
 
@@ -147,8 +191,8 @@ Bugfixes:
 -  Results from global bears slipped through our processing facility.
    Should not happen any more.
 
-coala 0.3.0
-===========
+coala 0.3.0 - platypus
+======================
 
 We are dropping Python 3.2 support (and so PyPy). Also we are removing
 translations, the default language is English.
@@ -187,8 +231,25 @@ Bear changes:
 -  SpaceConsistencyBear offers more verbose and precise information
    about the problem.
 
-coala 0.2.0
-===========
+coala 0.2.0 - wombat
+====================
+
+::
+     .o88Oo._
+    d8P         .ooOO8bo._
+    88                  '*Y8bo.
+                          '*Y8b   __
+     YA                        68o68**8Oo.     _.o888PY88o.o8
+      "8D                       *"'    "Y8o.o88P*'         Y.
+       Y8     'YB                       .8D                 Y.
+       '8               d8'             8D             o     8
+        8       d8888b          d      AY   o               d'
+        Y,     d888888         d'  _.oP"         d88b       8
+         q.    Y8888P'        d8       Y,       d8888       P
+          "q.  `Y88P'       d8"         q.      Y888P     .d'
+             Y           ,o8P            "q      `"'    ,oP
+                  oooo888P"               `Y         .o8P"
+                                              8ooo888P"
 
 This release features the following feature changes:
 
