@@ -10,12 +10,14 @@ as before. If you want to use the coala official bears, make sure to install the
 ``coala-bears`` package and if needed follow the instructions to install linters
 needed by the bears for your language.
 
-According to ``git shortlog -s -n 5fad168..`` 48 people contributed to this
+According to ``git shortlog -s -n 5fad168..`` 56 people contributed to this
 release. We sadly cannot name all the new coalaians here but every single
 one of them helped making coala as awesome and polished as it is today.
 
 New features:
 
+-  ``--no-config`` allows to ignore existing coafiles in the current directory.
+   (https://github.com/coala-analyzer/coala/issues/1838)
 -  In-file ignore directives now support globs.
    (https://github.com/coala-analyzer/coala/issues/1781)
 -  ``coala-json`` supports the ``--relpath`` argument so the JSON output can be
@@ -61,6 +63,15 @@ Exitcode changes:
 
 Bugfixes:
 
+-  Package version conflicts are now handled with own error code ``13``.
+   (https://github.com/coala-analyzer/coala/issues/1748)
+-  Previously inputted values for actions are not stored any more if the action
+   fails.
+   (https://github.com/coala-analyzer/coala/issues/1825)
+-  coala doesn't crash any more on Windows when displaying a diff. Happened due
+   to the special chars used for whitespace-highlighting Windows terminals do
+   not support by default.
+   (https://github.com/coala-analyzer/coala/issues/1832)
 -  Escaped characters are written back to the ``.coafile`` correctly.
    (https://github.com/coala-analyzer/coala/issues/921)
 -  ``coala-json`` doesn't show logs when invoked with ``-v`` or ``-h`` anymore
@@ -79,6 +90,12 @@ Bugfixes:
 
 For bear writers:
 
+-  A new built-in type is available from ``Setting`` for using inside ``run()``
+   signature: ``url``.
+-  ``Lint`` based bears have a new argument which can be set to test whether a
+   command runs without errors. E.g. this can be used to check existence of a
+   Java module.
+   (https://github.com/coala-analyzer/coala/issues/1803)
 -  The ``CorrectionBasedBear`` and ``Lint`` class have been merged into the new
    and more powerful ``Lint`` class to make linter integration even easier. It
    also supports you if you need to generate an actual configuration file for
