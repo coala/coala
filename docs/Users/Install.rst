@@ -201,7 +201,7 @@ Binary Dependencies
 Some bears need some dependencies available:
 
 -  PHPLintBear: Install ``php``
--  IndentBear: Install ``indent`` (be sure to use GNU Indent, Mac ships
+-  GNUIndentBear: Install ``indent`` (be sure to use GNU Indent, Mac ships
    a non-GNU version that lacks some functionality.)
 -  CSharpLintBear: Install ``mono-mcs``
 
