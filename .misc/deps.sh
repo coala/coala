@@ -24,6 +24,8 @@ for dep_version in "${dep_versions[@]}" ; do
 
   pip install -r test-requirements.txt
   pip install -r requirements.txt
+  # Force install this version, needed for radon, issue filed upstream
+  pip install colorama==0.3.6 -U
 
   cd .misc
   bash install.python-gi.sh
