@@ -342,8 +342,9 @@ Continuing the Journey
 
 If you want to know about more options, take a look at our help with
 ``coala -h``. If you liked or disliked this tutorial, feel free to drop
-us a note at our bug tracker (github) or mailing list
-(https://groups.google.com/forum/#!forum/coala-devel).
+us a note at our `bug tracker
+<https://github.com/coala-analyzer/coala/issues>`_ or `mailing list
+<https://groups.google.com/forum/#!forum/coala-devel>`_.
 
 If you need more flexibility, know that coala is extensible in many ways
 due to its modular design:
