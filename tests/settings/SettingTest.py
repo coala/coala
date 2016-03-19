@@ -40,7 +40,7 @@ class SettingTest(unittest.TestCase):
         abspath = os.path.abspath(".")
         # Need to escape backslashes since we use list conversion
         self.uut = Setting("key", "., " + abspath.replace("\\", "\\\\"),
-                           origin="test" + os.path.sep + "somefile")
+                           origin=os.path.join("test", "somefile"))
         self.assertEqual(path_list(self.uut),
                          [os.path.abspath(os.path.join("test", ".")), abspath])
 
