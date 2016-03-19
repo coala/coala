@@ -113,7 +113,7 @@ class Setting(StringConverter):
                                            last part will be stripped of. If
                                            you want to specify a directory as
                                            origin be sure to end it with a
-                                           directory seperator.
+                                           directory separator.
         :param strip_whitespaces:          Whether to strip whitespaces from
                                            the value or not
         :param list_delimiters:            Delimiters for list conversion
