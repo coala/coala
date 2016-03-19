@@ -7,7 +7,7 @@ from pyprint.ClosableObject import close_objects
 from pyprint.NullPrinter import NullPrinter
 
 from coalib.misc import Constants
-from coalib.misc.ContextManagers import make_temp
+from coalib.misc.ContextManagers import make_temp, change_directory
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.StringProcessing import escape
 from coalib.settings.ConfigurationGathering import (
@@ -240,58 +240,50 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                       "child_dir",
                                       ".coafile"), retval)
 
-        old_cwd = os.getcwd()
-        try:
-            os.chdir(child_dir)
+        with change_directory(child_dir):
             sections, _, _, _ = gather_configuration(
                 lambda *args: True,
                 self.log_printer,
                 arg_list=["--find-config"])
             self.assertEqual(bool(sections["default"]['find_config']), True)
-        finally:
-            os.chdir(old_cwd)
 
     def test_no_config(self):
-        orig_dir = os.getcwd()
         current_dir = os.path.abspath(os.path.dirname(__file__))
         child_dir = os.path.join(current_dir,
                                  "section_manager_test_files",
                                  "child_dir")
-        os.chdir(child_dir)
+        with change_directory(child_dir):
+            sections, targets = load_configuration([], self.log_printer)
+            self.assertIn('value', sections["default"])
 
-        sections, targets = load_configuration([], self.log_printer)
-        self.assertIn('value', sections["default"])
-
-        sections, targets = load_configuration(
-            ['--no-config'],
-            self.log_printer)
-        self.assertNotIn('value', sections["default"])
-
-        sections, targets = load_configuration(
-            ['--no-config', '-S', 'use_spaces=True'],
-            self.log_printer)
-        self.assertIn('use_spaces', sections["default"])
-        self.assertNotIn('values', sections["default"])
-
-        sections, targets = load_configuration(
-            ['--no-config', 'False', '-S', 'use_spaces=True'],
-            self.log_printer)
-        self.assertIn('use_spaces', sections["default"])
-        self.assertIn('value', sections["default"])
-
-        with self.assertRaises(SystemExit) as cm:
-            sections, target = load_configuration(
-                ['--no-config', '--save'],
+            sections, targets = load_configuration(
+                ['--no-config'],
                 self.log_printer)
-            self.assertEqual(cm.exception.code, 2)
+            self.assertNotIn('value', sections["default"])
 
-        with self.assertRaises(SystemExit) as cm:
-            sections, target = load_configuration(
-                ['--no-config', '--find-config'],
+            sections, targets = load_configuration(
+                ['--no-config', '-S', 'use_spaces=True'],
                 self.log_printer)
-            self.assertEqual(cm.exception.code, 2)
+            self.assertIn('use_spaces', sections["default"])
+            self.assertNotIn('values', sections["default"])
 
-        os.chdir(orig_dir)
+            sections, targets = load_configuration(
+                ['--no-config', 'False', '-S', 'use_spaces=True'],
+                self.log_printer)
+            self.assertIn('use_spaces', sections["default"])
+            self.assertIn('value', sections["default"])
+
+            with self.assertRaises(SystemExit) as cm:
+                sections, target = load_configuration(
+                    ['--no-config', '--save'],
+                    self.log_printer)
+                self.assertEqual(cm.exception.code, 2)
+
+            with self.assertRaises(SystemExit) as cm:
+                sections, target = load_configuration(
+                    ['--no-config', '--find-config'],
+                    self.log_printer)
+                self.assertEqual(cm.exception.code, 2)
 
     def test_get_config_directory(self):
         old_isfile = os.path.isfile

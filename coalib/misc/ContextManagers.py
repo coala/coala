@@ -235,3 +235,13 @@ def prepare_file(lines,
             yield lines, filename
     else:
         yield lines, filename
+
+
+@contextmanager
+def change_directory(path):
+    old_dir = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(old_dir)

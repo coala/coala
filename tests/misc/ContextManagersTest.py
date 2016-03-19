@@ -1,11 +1,13 @@
 import os
 import subprocess
 import sys
+from tempfile import TemporaryDirectory
 import unittest
 
 from coalib.misc.ContextManagers import (
-    make_temp, prepare_file, retrieve_stdout, retrieve_stderr,
-    simulate_console_inputs, subprocess_timeout, suppress_stdout)
+    change_directory, make_temp, prepare_file, retrieve_stdout,
+    retrieve_stderr, simulate_console_inputs, subprocess_timeout,
+    suppress_stdout)
 from coalib.processes.Processing import create_process_group
 
 
@@ -137,3 +139,11 @@ class ContextManagersTest(unittest.TestCase):
                           force_linebreaks=False,
                           create_tempfile=False) as (lines, filename):
             self.assertEqual(filename, "dummy_file_name")
+
+    def test_change_directory(self):
+        old_dir = os.getcwd()
+        with TemporaryDirectory("temp") as tempdir:
+            tempdir = os.path.realpath(tempdir)
+            with change_directory(tempdir):
+                self.assertEqual(os.getcwd(), tempdir)
+        self.assertEqual(os.getcwd(), old_dir)
