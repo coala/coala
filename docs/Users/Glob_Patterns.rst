@@ -6,6 +6,13 @@ input of multiple files without requiring a large number of filenames,
 coala supports a number of wildcards. These are based on the unix-style
 glob syntax and they are *not* the same as regular expressions.
 
+.. note::
+
+    Any glob that does not start with a ``/`` in Linux or a drive letter
+    ``X:`` in Windows will be interpreted as a relative path. Please use comma
+    separated values instead of absolute path globs that start with a
+    glob expression.
+
 Syntax
 ------
 
