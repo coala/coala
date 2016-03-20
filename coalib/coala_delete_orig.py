@@ -6,6 +6,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing import Globbing
 from coalib.settings.ConfigurationGathering import get_config_directory
 from coalib.settings.Section import Section
+from coalib.parsing.Globbing import glob_escape
 
 
 def main(log_printer=None, section: Section=None):
@@ -15,8 +16,9 @@ def main(log_printer=None, section: Section=None):
     if start_path is None:
         return 255
 
-    orig_files = Globbing.glob(os.path.abspath(
-        os.path.join(start_path, '**', '*.orig')))
+    # start_path may have unintended glob characters
+    orig_files = Globbing.glob(os.path.join(
+        glob_escape(start_path), '**', '*.orig'))
 
     not_deleted = 0
     for ofile in orig_files:
