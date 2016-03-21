@@ -1,7 +1,7 @@
 import os
 import re
 import shutil
-from subprocess import check_call, CalledProcessError
+from subprocess import check_call, CalledProcessError, DEVNULL
 import tempfile
 
 from coalib.bears.Bear import Bear
@@ -217,7 +217,7 @@ class Lint(Bear):
             if command is None:
                 return True  # when there are no prerequisites
             try:
-                check_call(command)
+                check_call(command, stdout=DEVNULL, stderr=DEVNULL)
                 return True
             except (OSError, CalledProcessError):
                 return fail_msg
