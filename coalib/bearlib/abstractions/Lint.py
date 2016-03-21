@@ -1,7 +1,7 @@
 import os
 import re
 import shutil
-import subprocess
+from subprocess import check_call, CalledProcessError
 import tempfile
 
 from coalib.bears.Bear import Bear
@@ -217,9 +217,9 @@ class Lint(Bear):
             if command is None:
                 return True  # when there are no prerequisites
             try:
-                subprocess.check_call(command)
+                check_call(command)
                 return True
-            except (OSError, subprocess.CalledProcessError):
+            except (OSError, CalledProcessError):
                 return fail_msg
         else:
             return repr(executable) + " is not installed."
