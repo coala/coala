@@ -8,7 +8,7 @@ def fail_acquire_settings(log_printer, settings_names_dict):
                             name of the bears who need this setting in [1]
                             and following.
     :raises AssertionError: If any setting is required.
-    :raises TypeError:      If `settings_names_dict` is not a dictionary.
+    :raises TypeError:      If ``settings_names_dict`` is not a dictionary.
     """
     if not isinstance(settings_names_dict, dict):
         raise TypeError("The settings_names_dict parameter has to be a "

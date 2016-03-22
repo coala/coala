@@ -6,7 +6,7 @@ from coalib.misc import Constants
 
 class BuildDbusService(Command):
     """
-    Add a `build_dbus` command  to your setup.py.
+    Add a ``build_dbus`` command  to your setup.py.
     To use this Command class add a command to call this class::
 
         # For setuptools

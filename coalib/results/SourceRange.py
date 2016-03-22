@@ -16,7 +16,7 @@ class SourceRange(TextRange):
 
         :param start:       A SourcePosition indicating the start of the range.
         :param end:         A SourcePosition indicating the end of the range.
-                            If `None` is given, the start object will be used
+                            If ``None`` is given, the start object will be used
                             here. end must be in the same file and be greater
                             than start as negative ranges are not allowed.
         :raises TypeError:  Raised when

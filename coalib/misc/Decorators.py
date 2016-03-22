@@ -105,9 +105,9 @@ def get_public_members(obj):
 
 def generate_repr(*members):
     """
-    Decorator that binds an auto-generated `__repr__()` function to a class.
+    Decorator that binds an auto-generated ``__repr__()`` function to a class.
 
-    The generated `__repr__()` function prints in following format:
+    The generated ``__repr__()`` function prints in following format:
     <ClassName object(field1=1, field2='A string', field3=[1, 2, 3]) at 0xAAAA>
 
     Note that this decorator modifies the given class in place!
@@ -122,8 +122,8 @@ def generate_repr(*members):
                             can also pass a tuple where the first element
                             contains the member to print and the second one the
                             representation function (which defaults to the
-                            built-in `repr()`). Using None as representation
-                            function is the same as using `repr()`.
+                            built-in ``repr()``). Using None as representation
+                            function is the same as using ``repr()``.
 
                             Supported members are fields/variables, properties
                             and getter-like functions (functions that accept no

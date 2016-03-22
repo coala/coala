@@ -46,7 +46,8 @@ def load_config_file(filename, log_printer, silent=False):
     :param silent:      Whether or not to warn the user/exit if the file
                         doesn't exist.
     :raises SystemExit: Exits when given filename is invalid and is not the
-                        default coafile. Only raised when `silent` is `False`.
+                        default coafile. Only raised when ``silent`` is
+                        ``False``.
     """
     filename = os.path.abspath(filename)
 

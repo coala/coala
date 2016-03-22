@@ -148,7 +148,7 @@ def retrieve_stderr():
 @contextmanager
 def simulate_console_inputs(*inputs):
     """
-    Does some magic to simulate the given inputs to any calls to the `input`
+    Does some magic to simulate the given inputs to any calls to the ``input``
     builtin. This yields back an InputGenerator object so you can check
     which input was already used and append any additional inputs you want.
     Example:

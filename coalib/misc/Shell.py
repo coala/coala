@@ -12,13 +12,13 @@ def run_interactive_shell_command(command, **kwargs):
     This function creates a context manager that sets up the process, returns
     to caller, closes streams and waits for process to exit on leaving.
 
-    The process is opened in `universal_newlines` mode.
+    The process is opened in ``universal_newlines`` mode.
 
     :param command: The command to run on shell.
-    :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
-                    that is used to spawn the process (except `shell`,
-                    `stdout`, `stderr`, `stdin` and `universal_newlines`, a
-                    `TypeError` is raised then).
+    :param kwargs:  Additional keyword arguments to pass to ``subprocess.Popen``
+                    that is used to spawn the process (except ``shell``,
+                    ``stdout``, ``stderr``, ``stdin`` and
+                    ``universal_newlines``, a ``TypeError`` is raised then).
     :return:        A context manager yielding the process started from the
                     command.
     """
@@ -46,11 +46,11 @@ def run_shell_command(command, stdin=None, **kwargs):
 
     :param command: The command to run on shell.
     :param stdin:   Initial input to send to the process.
-    :param kwargs:  Additional keyword arguments to pass to `subprocess.Popen`
-                    that is used to spawn the process (except `shell`,
-                    `stdout`, `stderr`, `stdin` and `universal_newlines`, a
-                    `TypeError` is raised then).
-    :return:        A tuple with `(stdoutstring, stderrstring)`.
+    :param kwargs:  Additional keyword arguments to pass to ``subprocess.Popen``
+                    that is used to spawn the process (except ``shell``,
+                    ``stdout``, ``stderr``, ``stdin`` and
+                    ``universal_newlines``, a ``TypeError`` is raised then).
+    :return:        A tuple with ``(stdoutstring, stderrstring)``.
     """
     with run_interactive_shell_command(command, **kwargs) as p:
         ret = p.communicate(stdin)
@@ -80,7 +80,7 @@ def prepare_string_argument(string, shell=get_shell_type()):
     """
     Prepares a string argument for being passed as a parameter on shell.
 
-    On `sh` this function effectively encloses the given string
+    On ``sh`` this function effectively encloses the given string
     with quotes (either '' or "", depending on content).
 
     :param string: The string to prepare for shell.

@@ -72,7 +72,7 @@ def parse_custom_settings(sections,
                           origin,
                           line_parser):
     """
-    Parses the custom settings given to coala via `-S something=value`.
+    Parses the custom settings given to coala via ``-S something=value``.
 
     :param sections:             The Section dictionary to add to (mutable).
     :param custom_settings_list: The list of settings strings.
