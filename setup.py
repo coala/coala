@@ -6,6 +6,7 @@ from coalib import assert_supported_version
 assert_supported_version()
 # Stop ignoring
 
+import datetime
 import locale
 import sys
 from os import getenv
@@ -55,6 +56,12 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
+    if "dev" in Constants.VERSION:
+        current_version = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
+              '-b {}'.format(current_version)])
+        with open(Constants.VERSION_FILE, 'r') as ver:
+            Constants.VERSION = ver.readline().strip()
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
