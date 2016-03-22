@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-import locale
-import sys
-from os import getenv
-from subprocess import call
-
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
 from coalib import assert_supported_version
 
 assert_supported_version()
 # Stop ignoring
+
+import locale
+import sys
+from os import getenv
+from subprocess import call
 
 import setuptools.command.build_py
 from coalib.misc import Constants
