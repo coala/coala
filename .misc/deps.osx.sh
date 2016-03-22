@@ -4,7 +4,6 @@ set -x
 # Install packages with brew
 brew update >/dev/null
 brew outdated pyenv || brew upgrade pyenv
-brew install espeak
 brew install libffi && brew link libffi --force
 brew install cairo
 brew install sqlite && brew link sqlite --force
