@@ -46,28 +46,9 @@ The name of the test file has to end with ``Test.py`` (for example
     ``py.test -h``
 
 Coming to the test file structure. Every test script starts with your
-system imports, i.e.:
-
-.. code:: python
-
-    # Imports the python 're' package for regex processing.
-    import re
-    import unittest
-    # ...
-
-As said before, in the next line your own imports follow. So just import
-what you need from coala:
-
-.. code:: python
-
-    import coalib.your_component.component1
-    import coalib.your_component.component2
-    # ...
-
-.. note::
-
-    You can use system imports here also, but the coala codestyle
-    suggests to place them above the three setup lines, like before.
+imports. According to the coala code style (and pep8 style) we first do
+system imports (like ``re`` or ``subprocessing``), followed by first party
+imports (like ``coalib.result.Result``).
 
 Then the actual test suite class follows, that contains the tests. Each
 test suite is made up of test cases, where the test suite checks the
