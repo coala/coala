@@ -89,8 +89,10 @@ and pass the result to the overall test-suite-invoking-instance, that
 manages all tests in coala. The result is processed and you get a
 message if something went wrong in your test.
 
-Available assert functions are listed in the section **Assertions**
-below.
+.. seealso::
+
+    `unittest assert-methods <https://docs.python.org/3/library/unittest.html#assert-methods>`_
+        Documentation on the assert functions from python's inbuilt unittest.
 
 So an example test that succeeds would be:
 
@@ -168,72 +170,6 @@ when the test suite finished running all test cases. Declare it like
         def tearDown(self):
             # Deinitialization, release calls etc.
             pass
-
-Assertions
-----------
-
-Here follows a list of all available assertion functions supported when
-inheriting from ``unittest.TestCase``:
-
--  ``assertEqual(a, b)``
-
-Checks whether expression ``a`` equals expression ``b``.
-
--  ``assertNotEqual(a, b)``
-
-Checks whether expression ``a`` **not** equals expression ``b``.
-
--  ``assertTrue(a)``
-
-Checks whether expression ``a`` is True.
-
--  ``assertFalse(a)``
-
-Checks whether expression ``a`` is False.
-
--  ``assertIs(a, b)``
-
-Checks whether expression ``a`` is ``b``.
-
--  ``assertIsNot(a, b)``
-
-Checks whether expression ``a`` is not ``b``.
-
--  ``assertIsNone(a)``
-
-Checks whether expression ``a`` is None.
-
--  ``assertIsNotNone(a)``
-
-Checks whether expression ``a`` is not None.
-
--  ``assertIn(a, list)``
-
-Checks whether expression ``a`` is an element inside ``list``.
-
--  ``assertNotIn(a, list)``
-
-Checks whether expression ``a`` is not an element inside ``list``.
-
--  ``assertIsInstance(a, type)``
-
-Checks whether expression ``a`` is of type ``type``.
-
--  ``assertNotIsInstance(a, type)``
-
-Checks whether expression ``a`` is not of type ``type``.
-
--  ``assertRaises(error, function, *args, **kwargs)``
-
-Checks whether ``function`` throws the specific ``error``. When calling
-this assert it invokes the function with the specified ``*args`` and
-``**kwargs``.
-
-If you want more information about the python ``unittest``-module, refer
-to the `official
-documentation <https://docs.python.org/3/library/unittest.html>`__ and
-for asserts the subsection [assert-methods]
-(https://docs.python.org/3/library/unittest.html#assert-methods).
 
 Kickstart
 ---------
