@@ -187,7 +187,6 @@ the coala root folder ``py.test``.
     import sys
     import unittest
 
-    sys.path.insert(0, ".")
     # Import here your needed coala components.
 
 
