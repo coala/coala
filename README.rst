@@ -49,16 +49,16 @@ please take a look at our
 Installation
 ------------
 
-coala can be installed with ``pip install coala``. If you need more
-information about the installation and dependencies, take a look at our
-`installation documentation
+To install coala with the official set of analysis routines with a simple
+``pip install coala-bears``.
+
+coala only, without the official bears, can be installed witt
+``pip install coala``. If you need more information about the installation and
+dependencies, take a look at our `installation documentation
 <http://coala.rtfd.org/en/latest/Users/Install.html>`__.
 
 The latest code from master is automatically deployed to PyPI as a
 development version. Get it with ``pip install coala --pre``.
-
-To get the supported bears along with coala, check out
-`coala-bears <https://github.com/coala-analyzer/coala-bears>`__.
 
 |PyPI|
 
