@@ -22,6 +22,10 @@ You can then execute our tests with
 
     $ py.test
 
+.. note::
+    If ``py.test`` seems to give errors, try running ``python3 -m pytest``
+    instead.
+
 and report any errors you get!
 
 To run our tests, you can also use ``python3 setup.py test``

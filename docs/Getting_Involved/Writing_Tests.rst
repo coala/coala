@@ -29,6 +29,10 @@ The name of the test file has to end with ``Test.py`` (for example
 ``MyCustomTest.py``, but not ``MyCustomTestSuite.py``).
 
 .. note::
+    If ``py.test`` seems to give errors, try running ``python3 -m pytest``
+    instead.
+
+.. note::
 
     Often you don't want to run all available tests. To run your
     specific one, type (in the coala root folder):
