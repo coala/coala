@@ -5,6 +5,7 @@ from os.path import abspath, relpath
 
 from pyprint.ConsolePrinter import ConsolePrinter
 from pyprint.NullPrinter import NullPrinter
+from pyprint.StringPrinter import StringPrinter
 
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.Bear import Bear
@@ -16,7 +17,6 @@ from coalib.output.ConsoleInteraction import (
     print_results_formatted, print_results_no_input, print_section_beginning,
     print_spaces_tabs_in_unicode, show_bears, ask_for_action_and_apply)
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.StringPrinter import StringPrinter
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
