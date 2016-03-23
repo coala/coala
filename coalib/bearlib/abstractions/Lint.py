@@ -13,6 +13,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
 class Lint(Bear):
+
     """
     Deals with the creation of linting bears.
 
@@ -254,13 +255,15 @@ class Lint(Bear):
 
         :return: True is all checks are valid, else False.
         """
-        return cls._check_command(executable=cls.executable,
-                                  command=cls.prerequisite_command,
-                                  fail_msg=cls.prerequisite_fail_msg)
+        return cls._check_executable_command(
+            executable=cls.executable,
+            command=cls.prerequisite_command,
+            fail_msg=cls.prerequisite_fail_msg)
 
     @classmethod
     @enforce_signature
-    def _check_command(cls, executable, command: (list, tuple, None), fail_msg):
+    def _check_executable_command(cls, executable,
+                                  command: (list, tuple, None), fail_msg):
         """
         Checks whether the required executable is found and the
         required command succesfully executes.
