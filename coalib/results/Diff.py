@@ -11,17 +11,19 @@ class Diff:
     A Diff result represents a difference for one file.
     """
 
-    def __init__(self, file_list, rename=False):
+    def __init__(self, file_list, rename=False, delete=False):
         """
         Creates an empty diff for the given file.
 
         :param file_list: The original (unmodified) file as a list of its
                           lines.
         :param rename:    False or str containing new name of file.
+        :param delete:    True if file is set to be deleted.
         """
         self._changes = {}
         self._file = file_list
         self.rename = rename
+        self.delete = delete
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2):
@@ -133,6 +135,21 @@ class Diff:
         self._rename = rename
 
     @property
+    def delete(self):
+        """
+        :return: True if file is set to be deleted.
+        """
+        return self._delete
+
+    @delete.setter
+    @enforce_signature
+    def delete(self, delete: bool):
+        """
+        :param delete: True if file is set to be deleted, False otherwise.
+        """
+        self._delete = delete
+
+    @property
     def original(self):
         """
         Retrieves the original file.
@@ -145,6 +162,10 @@ class Diff:
         Calculates the modified file, after applying the Diff to the original.
         """
         result = []
+
+        if self.delete:
+            return result
+
         current_line = 0
 
         # Note that line_nr counts from _1_ although 0 is possible when
@@ -225,11 +246,12 @@ class Diff:
                          two changed lines so they get yielded as one diff.
         """
         last_line = -1
-        this_diff = Diff(self._file, rename=self.rename)
+        this_diff = Diff(self._file, rename=self.rename, delete=self.delete)
         for line in sorted(self._changes.keys()):
             if line > last_line + distance + 1 and len(this_diff._changes) > 0:
                 yield this_diff
-                this_diff = Diff(self._file, rename=self.rename)
+                this_diff = Diff(self._file, rename=self.rename,
+                                 delete=self.delete)
 
             last_line = line
             this_diff._changes[line] = self._changes[line]
@@ -266,6 +288,7 @@ class Diff:
 
         result = copy.deepcopy(self)
         result.rename = self.rename or other.rename
+        result.delete = self.delete or other.delete
 
         for line_nr in other._changes:
             change = other._changes[line_nr]
@@ -320,4 +343,5 @@ class Diff:
     def __eq__(self, other):
         return ((self._file == other._file) and
                 (self.modified == other.modified) and
-                (self.rename == other.rename))
+                (self.rename == other.rename) and
+                (self.delete == other.delete))

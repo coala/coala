@@ -93,6 +93,7 @@ class DiffTest(unittest.TestCase):
         self.uut.add_lines(0, ["0.1", "0.2"])
         self.uut.add_lines(1, ["1.1"])
         self.uut.change_line(3, "3", "3.changed")
+
         self.assertEqual(self.uut.modified, result_file)
         self.assertEqual(self.uut.original, self.file)
 
@@ -197,6 +198,10 @@ class DiffTest(unittest.TestCase):
         self.assertNotEqual(diff_1, diff_2)
         diff_1.rename = False
 
+        diff_1.delete = True
+        self.assertNotEqual(diff_1, diff_2)
+        diff_1.delete = False
+
         diff_1.add_lines(1, ["1"])
         self.assertNotEqual(diff_1, diff_2)
 
@@ -221,3 +226,16 @@ class DiffTest(unittest.TestCase):
             self.uut.rename = True
         with self.assertRaises(TypeError):
             self.uut.rename = 1234
+
+    def test_delete(self):
+        self.uut.delete = True
+        self.uut.delete = False
+        # Double deletion is allowed
+        self.uut.delete = False
+        with self.assertRaises(TypeError):
+            self.uut.delete = "abcd"
+
+        # If delete is True then modified returns an empty list
+        self.uut.delete = True
+        self.assertEqual(self.uut.modified, [])
+        self.uut.delete = False
