@@ -36,7 +36,7 @@ class DiffTest(unittest.TestCase):
 
         self.uut.delete_line(1)
         # Line was deleted, unchangeable
-        self.assertRaises(AssertionError, self.uut.change_line, 1, "1", "2")
+        self.assertRaises(ConflictError, self.uut.change_line, 1, "1", "2")
 
     def test_affected_code(self):
         self.assertEqual(self.uut.affected_code("file"), [])

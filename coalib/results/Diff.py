@@ -1,12 +1,8 @@
 import copy
 import difflib
 
-from coalib.results.LineDiff import LineDiff
+from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
-
-
-class ConflictError(Exception):
-    pass
 
 
 class Diff:
