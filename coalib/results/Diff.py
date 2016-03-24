@@ -3,6 +3,7 @@ import difflib
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
+from coalib.misc.Decorators import enforce_signature
 
 
 class Diff:
@@ -10,15 +11,17 @@ class Diff:
     A Diff result represents a difference for one file.
     """
 
-    def __init__(self, file_list):
+    def __init__(self, file_list, rename=False):
         """
         Creates an empty diff for the given file.
 
         :param file_list: The original (unmodified) file as a list of its
                           lines.
+        :param rename:    False or str containing new name of file.
         """
         self._changes = {}
         self._file = file_list
+        self.rename = rename
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2):
@@ -115,6 +118,21 @@ class Diff:
         return sum(self.stats())
 
     @property
+    def rename(self):
+        """
+        :return: string containing new name of the file.
+        """
+        return self._rename
+
+    @rename.setter
+    @enforce_signature
+    def rename(self, rename: (str, False)):
+        """
+        :param rename: False or string containing new name of file.
+        """
+        self._rename = rename
+
+    @property
     def original(self):
         """
         Retrieves the original file.
@@ -156,7 +174,10 @@ class Diff:
         Note that the unified diff is not deterministic and thus not suitable
         for equality comparison.
         """
-        return ''.join(difflib.unified_diff(self.original, self.modified))
+        return ''.join(difflib.unified_diff(
+            self.original,
+            self.modified,
+            tofile=self.rename if isinstance(self.rename, str) else ''))
 
     def __json__(self):
         """
@@ -204,11 +225,11 @@ class Diff:
                          two changed lines so they get yielded as one diff.
         """
         last_line = -1
-        this_diff = Diff(self._file)
+        this_diff = Diff(self._file, rename=self.rename)
         for line in sorted(self._changes.keys()):
             if line > last_line + distance + 1 and len(this_diff._changes) > 0:
                 yield this_diff
-                this_diff = Diff(self._file)
+                this_diff = Diff(self._file, rename=self.rename)
 
             last_line = line
             this_diff._changes[line] = self._changes[line]
@@ -239,7 +260,12 @@ class Diff:
         if not isinstance(other, Diff):
             raise TypeError("Only diffs can be added to a diff.")
 
+        if self.rename != other.rename and False not in (self.rename,
+                                                         other.rename):
+            raise ConflictError("Diffs contain conflicting renamings.")
+
         result = copy.deepcopy(self)
+        result.rename = self.rename or other.rename
 
         for line_nr in other._changes:
             change = other._changes[line_nr]
@@ -293,4 +319,5 @@ class Diff:
 
     def __eq__(self, other):
         return ((self._file == other._file) and
-                (self.modified == other.modified))
+                (self.modified == other.modified) and
+                (self.rename == other.rename))

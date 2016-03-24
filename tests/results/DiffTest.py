@@ -125,6 +125,20 @@ class DiffTest(unittest.TestCase):
         # Make sure it didn't happen in place!
         self.assertNotEqual(self.uut.modified, result_file)
 
+    def test_addition_rename(self):
+        uut = Diff(self.file, rename=False)
+        other = Diff(self.file, rename=False)
+        self.assertEqual((other + uut).rename, False)
+
+        other.rename = "some.py"
+        self.assertEqual((other + uut).rename, "some.py")
+
+        uut.rename = "some.py"
+        self.assertEqual((other + uut).rename, "some.py")
+
+        uut.rename = "other.py"
+        self.assertRaises(ConflictError, other.__add__, uut)
+
     def test_from_string_arrays(self):
         a = ["q", "a", "b", "x", "c", "d"]
         b = ["a", "b", "y", "c", "d", "f"]
@@ -179,6 +193,10 @@ class DiffTest(unittest.TestCase):
         diff_2 = Diff.from_string_arrays(a, b)
         self.assertEqual(diff_1, diff_2)
 
+        diff_1.rename = "abcd"
+        self.assertNotEqual(diff_1, diff_2)
+        diff_1.rename = False
+
         diff_1.add_lines(1, ["1"])
         self.assertNotEqual(diff_1, diff_2)
 
@@ -195,3 +213,11 @@ class DiffTest(unittest.TestCase):
             ' first\\n'
             '-second\\n'
             ' third\\n"')
+
+    def test_rename(self):
+        self.uut.rename = False
+        self.uut.rename = "1234"
+        with self.assertRaises(TypeError):
+            self.uut.rename = True
+        with self.assertRaises(TypeError):
+            self.uut.rename = 1234
