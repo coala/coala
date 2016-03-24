@@ -3,6 +3,7 @@ import difflib
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
+from coalib.misc.Decorators import enforce_signature
 
 
 class Diff:
@@ -10,15 +11,17 @@ class Diff:
     A Diff result represents a difference for one file.
     """
 
-    def __init__(self, file_list):
+    def __init__(self, file_list, rename=False):
         """
         Creates an empty diff for the given file.
 
         :param file_list: The original (unmodified) file as a list of its
                           lines.
+        :param rename:    False or str containing new name of file.
         """
         self._changes = {}
         self._file = file_list
+        self.rename = rename
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2):
@@ -93,6 +96,21 @@ class Diff:
 
     def __len__(self):
         return len(self._changes)
+
+    @property
+    def rename(self):
+        """
+        :return: string containing new name of the file.
+        """
+        return self._rename
+
+    @rename.setter
+    @enforce_signature
+    def rename(self, rename: (str, False)):
+        """
+        :param rename: False or string containing new name of file.
+        """
+        self._rename = rename
 
     @property
     def original(self):
@@ -253,4 +271,5 @@ class Diff:
 
     def __eq__(self, other):
         return ((self._file == other._file) and
-                (self.modified == other.modified))
+                (self.modified == other.modified) and
+                (self.rename == other.rename))

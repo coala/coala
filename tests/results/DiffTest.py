@@ -163,6 +163,10 @@ class DiffTest(unittest.TestCase):
         diff_2 = Diff.from_string_arrays(a, b)
         self.assertEqual(diff_1, diff_2)
 
+        diff_1.rename = "abcd"
+        self.assertNotEqual(diff_1, diff_2)
+        diff_1.rename = False
+
         diff_1.add_lines(1, ["1"])
         self.assertNotEqual(diff_1, diff_2)
 
@@ -179,3 +183,11 @@ class DiffTest(unittest.TestCase):
             ' first\\n'
             '-second\\n'
             ' third\\n"')
+
+    def test_rename(self):
+        self.uut.rename = False
+        self.uut.rename = "1234"
+        with self.assertRaises(TypeError):
+            self.uut.rename = True
+        with self.assertRaises(TypeError):
+            self.uut.rename = 1234
