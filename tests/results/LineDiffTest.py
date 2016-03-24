@@ -1,6 +1,6 @@
 import unittest
 
-from coalib.results.LineDiff import LineDiff
+from coalib.results.LineDiff import LineDiff, ConflictError
 
 
 class LineDiffTest(unittest.TestCase):
@@ -11,7 +11,7 @@ class LineDiffTest(unittest.TestCase):
         self.assertRaises(TypeError, LineDiff, add_after=5)
         self.assertRaises(TypeError, LineDiff, change=True)
         self.assertRaises(TypeError, LineDiff, add_after=True)
-        self.assertRaises(AssertionError,
+        self.assertRaises(ConflictError,
                           LineDiff,
                           change=("1", "2"),
                           delete=True)
@@ -24,10 +24,10 @@ class LineDiffTest(unittest.TestCase):
 
         uut = LineDiff()
         uut.delete = True
-        self.assertRaises(AssertionError, setattr, uut, "change", ("1", "2"))
+        self.assertRaises(ConflictError, setattr, uut, "change", ("1", "2"))
         uut.delete = False
         uut.change = ("1", "2")
-        self.assertRaises(AssertionError, setattr, uut, "delete", True)
+        self.assertRaises(ConflictError, setattr, uut, "delete", True)
 
     def test_equality(self):
         self.assertEqual(LineDiff(), LineDiff())
