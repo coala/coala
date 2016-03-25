@@ -1,6 +1,3 @@
-README
-======
-
 .. Start ignoring LineLengthBear
 
 ::
@@ -22,31 +19,10 @@ README
 
 .. Stop ignoring LineLengthBear
 
-INSTALLATION
-============
+Get coala to lint all your languages in your project with one tool and config!
 
-coala can be installed with ``pip install coala``. If you need more
-information about the installation and dependencies, take a look at our
-`installation documentation
-<http://coala.rtfd.org/en/latest/Users/Install.html>`__.
-
-The latest code from master is automatically deployed to PyPI as a
-development version. Get it with ``pip install coala --pre``.
-
-To get the supported bears along with coala, check out
-`coala-bears <https://github.com/coala-analyzer/coala-bears>`__.
-
-|PyPI|
-
-USAGE
-=====
-
-If you want to learn more about coala, its functionality and its usage,
-please take a look at our
-`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorials/Tutorial.html>`__.
-
-ABOUT
-=====
+About
+-----
 
 coala is a simple COde AnaLysis Application. Its goal is to make static
 code analysis easy while remaining completely modular and therefore
@@ -66,6 +42,26 @@ Why use coala?
   without you having to worry.
 - *Unified interface*: One tool for all programming languages.
 
+If you want to learn more about coala, its functionality and its usage,
+please take a look at our
+`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorials/Tutorial.html>`__.
+
+Installation
+------------
+
+To install coala with the official set of analysis routines with a simple
+``pip install coala-bears``.
+
+coala only, without the official bears, can be installed witt
+``pip install coala``. If you need more information about the installation and
+dependencies, take a look at our `installation documentation
+<http://coala.rtfd.org/en/latest/Users/Install.html>`__.
+
+The latest code from master is automatically deployed to PyPI as a
+development version. Get it with ``pip install coala --pre``.
+
+|PyPI|
+
 Authors
 -------
 
@@ -81,8 +77,8 @@ Project Status
 
 |Documentation Status| |Gitmate|
 
-GETTING INVOLVED
-================
+Getting Involved
+----------------
 
 If you want to contribute to coala, please take a look at the `Getting
 Involved Information
@@ -92,8 +88,8 @@ We appreciate any help!
 
 |https://gitter.im/coala-analyzer/coala|
 
-LICENSE
-=======
+License
+-------
 
 |AGPL|
 
