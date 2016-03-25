@@ -87,27 +87,27 @@ to be used, create a commit and push it to your fork, using:
 
     $ git push origin fix-branch
 
-Creating a Pull Request
------------------------
+Creating a ``Pull Request``
+---------------------------
 
 Now that your commit has been sent to your fork, it is time
-to do a Pull Request. It can be done by accessing your fork on github and
-clicking "New Pull Request".
+to do a ``Pull Request``. It can be done by accessing your fork on github and
+clicking ``New Pull Request``.
 
-**Congratulations!** You have now created your first Pull Request!
+**Congratulations!** You have now created your first ``Pull Request``!
 
-What to do after creating a PR
-------------------------------
+What to do after creating a ``Pull Request``
+--------------------------------------------
 
-After creating your Pull Request, there's two options:
+After creating your ``Pull Request``, there's two options:
 
-- your Pull Request gets accepted, and your commit will get merged into the
+- your ``Pull Request`` gets accepted, and your commit will get merged into the
   master branch
-- your Pull Request doesn't, and therefore you will need to to modify it as per
-  the review comments
+- your ``Pull Request`` doesn't, and therefore you will need to to modify it as
+  per the review comments
 
-It's highly unlikely that your PR will be accepted on the first attempt - but
-don't worry, that's just how it works. It helps us keep coala
+It's highly unlikely that your ``Pull Request`` will be accepted on the first
+attempt - but don't worry, that's just how it works. It helps us keep coala
 **clean** and **stable**.
 
 .. seealso::
