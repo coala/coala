@@ -3,9 +3,10 @@ import difflib
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
-from coalib.misc.Decorators import enforce_signature
+from coalib.misc.Decorators import enforce_signature, generate_eq
 
 
+@generate_eq("_file", "modified", "rename", "delete")
 class Diff:
     """
     A Diff result represents a difference for one file.
@@ -339,9 +340,3 @@ class Diff:
 
         linediff.change = (original_line, replacement)
         self._changes[line_nr] = linediff
-
-    def __eq__(self, other):
-        return ((self._file == other._file) and
-                (self.modified == other.modified) and
-                (self.rename == other.rename) and
-                (self.delete == other.delete))
