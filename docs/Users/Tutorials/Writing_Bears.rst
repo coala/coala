@@ -57,6 +57,13 @@ to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
 ``coala -f src/*.c -d bears -b HelloWorldBear -L DEBUG``
 
+.. note::
+
+    The given bear directories must not have any glob expressions in them. Any
+    character that could be interpreted as a part of a glob expression will be
+    escaped. Please use comma separated values to give several such
+    directories instead.
+
 You should now see the debug message for our sample file.
 
 The Bear class also supports ``warn`` and ``err``.
