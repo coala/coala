@@ -1,7 +1,10 @@
 import unittest
+import os
 
 from coalib.misc import Constants
 from coalib.settings.Section import Section, Setting, append_to_sections
+from coalib.settings.ConfigurationGathering import get_config_directory
+from coalib.parsing.Globbing import glob_escape
 
 
 class SectionTest(unittest.TestCase):
@@ -176,5 +179,9 @@ class SectionTest(unittest.TestCase):
     def test_bear_dirs(self):
         section = Section("section", None)
         empty_bear_dirs_len = len(section.bear_dirs())
-        section.append(Setting("bear_dirs", "test1, test2"))
+        section.append(Setting("bear_dirs", "test1, test2 (1)"))
         self.assertEqual(len(section.bear_dirs()), empty_bear_dirs_len + 2)
+        # Verify if bear directories are properly escaped
+        root = get_config_directory(section)
+        path = os.path.join(glob_escape(root), glob_escape("test2 (1)"), "**")
+        self.assertIn(path, section.bear_dirs())
