@@ -155,8 +155,9 @@ The Setting does support some very basic types:
 -  Dict of strings (``dict``, values will be split by comma and colon)
 
 If you need another type, you can write the conversion function yourself
-and use this function as the annotation. We've provided a few advanced
-conversions for you:
+and use this function as the annotation (if you cannot convert value, be
+sure to throw ``TypeError`` or ``ValueError``). We've provided a few
+advanced conversions for you:
 
 -  ``coalib.settings.Setting.path``, converts to an absolute file path
    relative to the file/command where the setting was set
