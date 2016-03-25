@@ -22,8 +22,8 @@ class LineParserTest(unittest.TestCase):
         self.check_data_set("#", output_comment="#")
 
     def test_section_override(self):
-        self.check_data_set("a.b, \\a\\.\\b\\ c=",
-                            output_keys=[("a", "b"), ("", "a.b c")])
+        self.check_data_set(r"a.b, \a\.\b\ c=",
+                            output_keys=[("a", "b"), ("", r"\a.\b c")])
 
     def test_multi_value_parsing(self):
         self.check_data_set(
