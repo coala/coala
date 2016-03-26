@@ -56,8 +56,8 @@ To install coala with the official set of analysis routines you can simply run
 
 coala only, without the official bears, can be installed with
 ``pip3 install coala``. If you need more information about the installation and
- +dependencies, take a look at our `installation documentation
-<http://coala.rtfd.org/en/latest/Users/Install.html>`_.
+dependencies, take a look at our `installation documentation
+<http://coala.rtfd.org/en/latest/Users/Install.html>`__.
 
 The latest code from master is automatically deployed to PyPI as a
 development version. Get it with ``pip3 install coala --pre``.
