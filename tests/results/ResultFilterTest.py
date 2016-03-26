@@ -5,7 +5,10 @@ from os.path import abspath
 from coalib.results.Diff import Diff
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.ResultFilter import (
-    filter_results, remove_range, remove_result_ranges_diffs)
+    ensure_files_present,
+    filter_results,
+    remove_range,
+    remove_result_ranges_diffs)
 from coalib.results.SourceRange import SourceRange
 
 
@@ -505,3 +508,57 @@ class ResultFilterTest(unittest.TestCase):
         expected_diff = Diff.from_string_arrays(test_file, ["abc"])
 
         self.assertEqual(result_diff, expected_diff)
+
+    def test_removed_file(self):
+        test_file = ["abc"]
+        test_file_dict = {"test_file": test_file}
+        test_mod_file_dict = {}
+
+        ensure_files_present(test_file_dict, test_mod_file_dict)
+
+        self.assertEqual(
+            test_mod_file_dict,
+            {"test_file": []})
+
+    def test_added_file(self):
+        test_file = ["abc"]
+        test_file_dict = {}
+        test_mod_file_dict = {"test_file": test_file}
+
+        ensure_files_present(test_file_dict, test_mod_file_dict)
+
+        self.assertEqual(
+            test_file_dict,
+            {"test_file": []})
+
+    def test_new_file_with_result(self):
+        testfile_1 = ['1\n', '2\n']
+        testfile_2_new = ['0\n', '1\n', '2\n']
+        tf1 = abspath('tf1')
+        tf2 = abspath('tf2')
+        old_result = Result.from_values('origin', 'message', 'tf1', 1)
+        new_result = Result.from_values('origin', 'message', 'tf2', 1)
+        original_file_dict = {tf1: testfile_1}
+        modified_file_dict = {tf1: testfile_1, tf2: testfile_2_new}
+
+        new_results = filter_results(original_file_dict, modified_file_dict,
+                                     [old_result], [new_result])
+        self.assertEqual(new_results, [new_result])
+
+    def test_delete_file_with_result(self):
+        testfile_1 = ['1\n', '2\n']
+        testfile_2 = ['0\n', '1\n', '2\n']
+        testfile_1_new = ['0\n', '1\n', '2\n']
+        tf1 = abspath('tf1')
+        tf2 = abspath('tf2')
+        old_result_tf1 = Result.from_values('origin', 'message', 'tf1', 1)
+        old_result_tf2 = Result.from_values('origin', 'message', 'tf2', 1)
+        new_result = Result.from_values('origin', 'message', 'tf1', 1)
+        original_file_dict = {tf1: testfile_1, tf2: testfile_2}
+        modified_file_dict = {tf1: testfile_1_new}
+
+        new_results = filter_results(original_file_dict,
+                                     modified_file_dict,
+                                     [old_result_tf1, old_result_tf2],
+                                     [new_result])
+        self.assertEqual(new_results, [new_result])
