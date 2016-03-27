@@ -160,3 +160,77 @@ class FunctionMetadata:
                    non_optional_params=non_optional_params,
                    optional_params=optional_params,
                    omit=omit)
+
+    @classmethod
+    def merge(cls, *metadatas):
+        """
+        Merges signatures of ``FunctionMetadata`` objects.
+
+        Parameter (either optional or non-optional) and non-parameter
+        descriptions are merged from left to right, meaning the right hand
+        metadata overrides the left hand one.
+
+        >>> def a(x, y):
+        ...     '''
+        ...     desc of *a*
+        ...     :param x: x of a
+        ...     :param y: y of a
+        ...     :return:  5*x*y
+        ...     '''
+        ...     return 5 * x * y
+        >>> def b(x):
+        ...     '''
+        ...     desc of *b*
+        ...     :param x: x of b
+        ...     :return:  100*x
+        ...     '''
+        ...     return 100 * x
+        >>> metadata1 = FunctionMetadata.from_function(a)
+        >>> metadata2 = FunctionMetadata.from_function(b)
+        >>> merged = FunctionMetadata.merge(metadata1, metadata2)
+        >>> merged.name
+        "<Merged signature of 'a', 'b'>"
+        >>> merged.desc
+        'desc of *b*'
+        >>> merged.retval_desc
+        '100*x'
+        >>> merged.non_optional_params['x'][0]
+        'x of b'
+        >>> merged.non_optional_params['y'][0]
+        'y of a'
+
+        :param metadatas:
+            The sequence of metadatas to merge.
+        :return:
+            A ``FunctionMetadata`` object containing the merged signature of
+            all given metadatas.
+        """
+        # Collect the metadatas, as we operate on them more often and we want
+        # to support arbitrary sequences.
+        metadatas = tuple(metadatas)
+
+        merged_name = ("<Merged signature of " +
+                       ", ".join(repr(metadata.name)
+                                 for metadata in metadatas) +
+                       ">")
+
+        merged_desc = next((m.desc for m in reversed(metadatas) if m.desc), "")
+        merged_retval_desc = next(
+            (m.retval_desc for m in reversed(metadatas) if m.retval_desc), "")
+        merged_non_optional_params = {}
+        merged_optional_params = {}
+
+        for metadata in metadatas:
+            # Use the fields and not the properties to get also omitted
+            # parameters.
+            merged_non_optional_params.update(metadata._non_optional_params)
+            merged_optional_params.update(metadata._optional_params)
+
+        merged_omit = set.union(*(metadata.omit for metadata in metadatas))
+
+        return cls(merged_name,
+                   merged_desc,
+                   merged_retval_desc,
+                   merged_non_optional_params,
+                   merged_optional_params,
+                   merged_omit)
