@@ -103,6 +103,7 @@ class ContextManagersTest(unittest.TestCase):
         with make_temp() as f_a:
             self.assertTrue(os.path.isfile(f_a))
             self.assertTrue(os.path.basename(f_a).startswith("tmp"))
+        self.assertFalse(os.path.isfile(f_a))
 
         with make_temp(suffix=".orig", prefix="pre") as f_b:
             self.assertTrue(f_b.endswith(".orig"))
