@@ -6,13 +6,12 @@ from os import getenv
 from subprocess import call
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version, VERSION
+from coalib import assert_supported_version, VERSION, BUS_NAME
 
 assert_supported_version()
 # Stop ignoring
 
 import setuptools.command.build_py
-from coalib.misc.Constants import BUS_NAME
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from setuptools import find_packages, setup
