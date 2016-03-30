@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version, VERSION, VERSION_FILE
+from coalib import assert_supported_version, VERSION, VERSION_FILE, BUS_NAME
 
 assert_supported_version()
 # Stop ignoring
@@ -13,7 +13,6 @@ from os import getenv
 from subprocess import call
 
 import setuptools.command.build_py
-from coalib.misc.Constants import BUS_NAME
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from setuptools import find_packages, setup

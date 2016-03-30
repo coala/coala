@@ -3,7 +3,11 @@
 import os
 import appdirs
 
+# Start ignoring PyImportSortBear, PyLintBear as BUS_NAME is imported as a
+# constant from other files.
+from coalib import BUS_NAME
 from coalib import VERSION
+# Stop ignoring
 
 
 THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
@@ -66,8 +70,6 @@ system_coafile = os.path.join(coalib_root, "default_coafile")
 user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
 
 default_coafile = ".coafile"
-
-BUS_NAME = "org.coala_analyzer.v1"
 
 TAGS_DIR = appdirs.user_data_dir('coala', version=VERSION)
 
