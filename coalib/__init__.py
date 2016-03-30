@@ -1,8 +1,10 @@
 import sys
-from coalib.misc import Constants
+from os.path import join, dirname
 
 
-__version__ = Constants.VERSION
+VERSION_FILE = join(dirname(__file__), "VERSION")
+with open(VERSION_FILE, 'r') as ver:
+    VERSION = ver.readline().strip()
 
 
 def assert_supported_version():  # pragma: no cover

@@ -3,6 +3,9 @@
 import os
 import appdirs
 
+from coalib import VERSION
+
+
 THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
                  "Please contact the developers for assistance.")
 
@@ -63,10 +66,6 @@ system_coafile = os.path.join(coalib_root, "default_coafile")
 user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
 
 default_coafile = ".coafile"
-
-VERSION_FILE = os.path.join(coalib_root, "VERSION")
-with open(VERSION_FILE, 'r') as ver:
-    VERSION = ver.readline().strip()
 
 BUS_NAME = "org.coala_analyzer.v1"
 

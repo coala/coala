@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version
+from coalib import assert_supported_version, VERSION, VERSION_FILE
 
 assert_supported_version()
 # Stop ignoring
@@ -13,7 +13,7 @@ from os import getenv
 from subprocess import call
 
 import setuptools.command.build_py
-from coalib.misc import Constants
+from coalib.misc.Constants import BUS_NAME
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from setuptools import find_packages, setup
@@ -56,12 +56,12 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
-    if "dev" in Constants.VERSION:
+    if "dev" in VERSION:
         current_version = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
-        with open(Constants.VERSION_FILE, 'r') as ver:
-            Constants.VERSION = ver.readline().strip()
+        with open(VERSION_FILE, 'r') as ver:
+            VERSION = ver.readline().strip()
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
@@ -74,10 +74,10 @@ with open("README.rst") as readme:
 
 
 if __name__ == "__main__":
-    data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
+    data_files = [('.', ['coala.1']), ('.', [BUS_NAME + '.service'])]
 
     setup(name='coala',
-          version=Constants.VERSION,
+          version=VERSION,
           description='Code Analysis Application (coala)',
           author="The coala developers",
           maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
