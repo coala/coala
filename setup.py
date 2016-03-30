@@ -6,13 +6,13 @@ from os import getenv
 from subprocess import call
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version
+from coalib import assert_supported_version, VERSION
 
 assert_supported_version()
 # Stop ignoring
 
 import setuptools.command.build_py
-from coalib.misc import Constants
+from coalib.misc.Constants import BUS_NAME
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from setuptools import find_packages, setup
@@ -67,10 +67,10 @@ with open("README.rst") as readme:
 
 
 if __name__ == "__main__":
-    data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
+    data_files = [('.', ['coala.1']), ('.', [BUS_NAME + '.service'])]
 
     setup(name='coala',
-          version=Constants.VERSION,
+          version=VERSION,
           description='Code Analysis Application (coala)',
           author="The coala developers",
           maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
