@@ -473,7 +473,7 @@ are in our **repository**. (So if you added **another file** which is
 
 ::
 
-    git commit -a -v
+    $ git commit -a -v
 
 Well, you know the game. Can you come up with a **good message** on your
 own?
@@ -583,7 +583,7 @@ value:
 
 ::
 
-    git config --global --edit
+    $ git config --global --edit
 
 You can add aliases through the ``[alias]`` section, here are the
 aliases I suggest:
