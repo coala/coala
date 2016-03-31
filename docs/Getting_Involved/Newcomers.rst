@@ -39,7 +39,7 @@ Start working
 -------------
 
 Now is the time to pick an issue.
-Here is the link that will lead you to `Newcomers issues <https://github.com/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+user%3Acoala-analyzer+label%3Adifficulty%2Fnewcomer>`_.
+Here is the link that will lead you to `Newcomers issues <http://tinyurl.com/coala-new>`_.
 
 .. seealso::
 
