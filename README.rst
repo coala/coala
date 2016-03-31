@@ -79,16 +79,16 @@ Project Status
 
 |Documentation Status| |Gitmate|
 
-Getting Involved
-----------------
+Newcomers Guide and Getting Involved
+------------------------------------
 
-If you want to contribute to coala, please take a look at the `Getting
-Involved Information
-<http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__.
+If you are new and would like to contribute, read our `Getting Involved Site
+<http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__!
 
-We appreciate any help!
+We appreciate any help! Feel free to message us on
+`gitter <https://gitter.im/coala-analyzer/coala>`__. If you have any
+questions we're happy to help you!
 
-|https://gitter.im/coala-analyzer/coala|
 
 License
 -------
