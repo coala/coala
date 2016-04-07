@@ -15,6 +15,7 @@ GlobTestDir
 └── File3.z
 """
 import os
+import re
 import unittest
 
 from coalib.parsing.Globbing import (
@@ -218,7 +219,8 @@ class GlobTest(unittest.TestCase):
     def _test_glob(self, pattern, file_list):
         results = sorted([os.path.normcase(g) for g in glob(pattern)])
         file_list = sorted([os.path.normcase(f) for f in file_list])
-        self.assertEqual([i for i in results if "__pycache__" not in i],
+        self.assertEqual([i for i in results
+                          if re.search(r"(__pycache__|\.pyc)", i) is None],
                          file_list)
 
     def test_collect_files(self):
@@ -331,7 +333,8 @@ class GlobTest(unittest.TestCase):
         results = sorted([os.path.normcase(os.path.join(os.curdir, g))
                           for g in glob(pattern)])
         file_list = sorted([os.path.normcase(f) for f in file_list])
-        self.assertEqual([i for i in results if "__pycache__" not in i],
+        self.assertEqual([i for i in results
+                          if re.search(r"(__pycache__|\.pyc)", i) is None],
                          file_list)
         os.curdir = old_curdir
 
