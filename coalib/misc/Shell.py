@@ -71,7 +71,7 @@ def get_shell_type():  # pragma: no cover
     if out.strip() == "ConsoleHost":
         return "powershell"
     out = run_shell_command("echo $0")[0]
-    if out.strip() == "" and out.strip() == "":
+    if out.strip() == "$0":
         return "cmd"
     return "sh"
 
