@@ -3,6 +3,7 @@ from collections import namedtuple
 
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.SourceRange import SourceRange
+from coalib.results.AbsolutePosition import AbsolutePosition
 
 
 class SourceRangeTest(unittest.TestCase):
@@ -37,6 +38,19 @@ class SourceRangeTest(unittest.TestCase):
 
         uut = SourceRange.from_clang_range(ClangRange(start, end))
         compare = SourceRange.from_values("t.c", 1, 2, 3, 4)
+        self.assertEqual(uut, compare)
+
+    def test_from_absolute_position(self):
+        text = ("a\n", "b\n")
+        start = AbsolutePosition(text, 0)
+        end = AbsolutePosition(text, 2)
+
+        uut = SourceRange.from_absolute_position("F", start, end)
+        compare = SourceRange.from_values("F", 1, 1, 2, 1)
+        self.assertEqual(uut, compare)
+
+        uut = SourceRange.from_absolute_position("F", start, None)
+        compare = SourceRange(SourcePosition("F", 1, 1), None)
         self.assertEqual(uut, compare)
 
     def test_file_property(self):

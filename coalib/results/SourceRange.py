@@ -3,6 +3,7 @@ from os.path import relpath
 from coalib.misc.Decorators import enforce_signature, get_public_members
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.TextRange import TextRange
+from coalib.results.AbsolutePosition import AbsolutePosition
 
 
 class SourceRange(TextRange):
@@ -56,6 +57,25 @@ class SourceRange(TextRange):
                                range.start.column,
                                range.end.line,
                                range.end.column)
+
+    @classmethod
+    @enforce_signature
+    def from_absolute_position(cls,
+                               file: str,
+                               position_start: AbsolutePosition,
+                               position_end: (AbsolutePosition, None)=None):
+        """
+        Creates a SourceRange from a start and end positions.
+
+        :param file:           Name of the file.
+        :param position_start: Start of range given by AbsolutePosition.
+        :param position_end:   End of range given by AbsolutePosition or None.
+        """
+        start = SourcePosition(file, position_start.line, position_start.column)
+        end = None
+        if position_end:
+            end = SourcePosition(file, position_end.line, position_end.column)
+        return cls(start, end)
 
     @property
     def file(self):
