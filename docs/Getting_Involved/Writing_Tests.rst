@@ -9,7 +9,15 @@ characteristic to be undiscoverable (or only discoverable after dozens
 of hours of searching). Try to test as much as possible! The more tests
 you write the more you can be sure you did everything correct.
 Especially if someone else modifies your component, he can be sure with
-your tests that he doesn't introduce a bug.
+your tests that he doesn't introduce a bug. Keep these points in your mind
+when you're writing a test:
+
+- 100% test-coverage
+- zero redundancy
+
+A patch will not be accepted unless there is a 100% branch coverage.
+Redundant tests are a waste of effort because you are testing the same piece
+of code again and again, which is unnecessary.
 
 Actually Writing a Test
 -----------------------
