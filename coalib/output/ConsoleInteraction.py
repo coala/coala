@@ -490,27 +490,26 @@ def choose_action(console_printer, actions):
     :param actions:         Actions available to the user.
     :return:                Return choice of action of user.
     """
+    print_colors = ["red", "yellow", "green", "cyan"]
     console_printer.print(format_lines(
         "The following actions are applicable to this result:"))
 
     while True:
-        console_printer.print(format_lines(" 0: " +
-                                           "Apply no further actions."))
+        console_printer.print(format_lines("(e)xit."), color=print_colors[0])
         for i, action in enumerate(actions, 1):
-            console_printer.print(format_lines("{:>2}: {}".format(
-                i,
-                action.desc)))
+            console_printer.print(format_lines(
+                action.desc), color=print_colors[i])
 
         try:
-            line = format_lines("Please enter the number of the action "
-                                "you want to execute. ")
-            choice = int(input(line))
-            if 0 <= choice <= len(actions):
+            line = format_lines("Please enter the alphabet for the action "
+                                "you want to execute: ")
+            choice = input(line)
+            if choice in {'e', 'o', 'a', 's'}:
                 return choice
         except ValueError:
             pass
 
-        console_printer.print(format_lines("Please enter a valid number."))
+        console_printer.print(format_lines("Please enter a valid alphabet."))
 
 
 def print_actions(console_printer, section, actions, failed_actions):
@@ -530,9 +529,14 @@ def print_actions(console_printer, section, actions, failed_actions):
     """
     choice = choose_action(console_printer, actions)
 
-    if choice == 0:
+    if choice == 'e':
         return None, None
-
+    elif choice == 'o':
+        choice = 1
+    elif choice == 'a':
+        choice = 2
+    else:
+        choice = 3
     return get_action_info(section, actions[choice - 1], failed_actions)
 
 

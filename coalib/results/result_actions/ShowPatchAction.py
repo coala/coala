@@ -73,7 +73,7 @@ class ShowPatchAction(ResultAction):
               file_diff_dict,
               colored: bool=True):
         '''
-        Print a diff of the patch that would be applied.
+        (s)how patch that would be applied.
 
         :param colored: Wether or not to use colored output.
         '''

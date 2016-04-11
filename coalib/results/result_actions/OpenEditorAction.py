@@ -24,7 +24,7 @@ class OpenEditorAction(ApplyPatchAction):
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         '''
-        Open the affected file(s) in an editor.
+        (o)pen the affected file in an editor.
 
         :param editor: The editor to open the file with.
         '''
