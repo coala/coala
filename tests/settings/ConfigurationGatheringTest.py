@@ -182,7 +182,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             lambda *args: True,
             self.log_printer,
             arg_list=['-S',
-                      "save=" + re.escape(filename),
+                      "save=" + escape(filename, '\\'),
                       "-c=some_bad_filename"])
 
         with open(filename, "r") as f:
@@ -194,7 +194,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             self.log_printer,
             arg_list=['-S',
                       "save=true",
-                      "config=" + re.escape(filename),
+                      "config=" + escape(filename, '\\'),
                       "test.value=5"])
 
         with open(filename, "r") as f:
