@@ -103,19 +103,11 @@ class ContextManagersTest(unittest.TestCase):
         with make_temp() as f_a:
             self.assertTrue(os.path.isfile(f_a))
             self.assertTrue(os.path.basename(f_a).startswith("tmp"))
+            self.assertFalse(os.path.isfile(temporary))
 
         with make_temp(suffix=".orig", prefix="pre") as f_b:
             self.assertTrue(f_b.endswith(".orig"))
             self.assertTrue(os.path.basename(f_b).startswith("pre"))
-
-    def test_temp_file_existence(self):
-        """
-        Test that the temporary file created exists only within the with
-        statement context and not outside it
-        """
-        with make_temp() as temporary:
-            self.assertTrue(os.path.isfile(temporary))
-        self.assertFalse(os.path.isfile(temporary))
 
     def test_prepare_file(self):
         with prepare_file(['line1', 'line2\n'],
