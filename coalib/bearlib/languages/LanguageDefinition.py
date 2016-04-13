@@ -32,6 +32,3 @@ class LanguageDefinition(SectionCreatable):
 
     def __getitem__(self, item):
         return self.lang_dict[item]
-
-    def __contains__(self, item):
-        return item in self.lang_dict

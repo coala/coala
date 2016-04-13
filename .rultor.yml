@@ -1,5 +1,8 @@
 install:
   - if ! pip3 -V ; then wget -O - https://bootstrap.pypa.io/get-pip.py | python3; fi
+  - sudo apt-get update -y
+  - sudo apt-get install espeak libclang1-3.4 python3-gi python3-dbus -y
+  - pip3 install setuptools twine wheel munkres3 coverage pylint language-check pytest tox
 
 docker:
   as_root: true
@@ -16,3 +19,4 @@ release:
 
 decrypt:
   rultor_secrets.sh: "repo/.misc/rultor_secrets.sh.asc"
+

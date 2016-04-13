@@ -10,7 +10,7 @@ from coalib.processes.Processing import execute_section
 from coalib.results.HiddenResult import HiddenResult
 from coalib.settings.ConfigurationGathering import (
     find_user_config, gather_configuration)
-from coalib.settings.Setting import glob_list
+from coalib.settings.Setting import path_list
 
 
 class DbusDocument(dbus.service.Object):
@@ -88,17 +88,14 @@ class DbusDocument(dbus.service.Object):
         """
         This method analyzes the document and sends back the result
 
-        :return: The output is structure which has 3 items:
-                 -  The exitcode from the analysis.
-                 -  List of logs from the analysis.
-                 -  List of information about each section that contains:
+        :return: The output is a list with an element for each section.
+                 It contains:
 
-                    -  The name of the section.
-                    -  Boolean which is true if all bears in the section
-                       executed successfully.
-                    -  List of results where each result is a string
-                       dictionary which contains:
-                       id, origin, message, file, line_nr, severity
+                 -  The name of the section
+                 -  Boolean which is true if all bears in the section executed
+                    successfully
+                 -  List of results where each result is a string dictionary
+                    which contains: id, origin, message, file, line_nr, severity
         """
         retval = []
         if self.path == "" or self.config_file == "":
@@ -124,7 +121,7 @@ class DbusDocument(dbus.service.Object):
                     continue
 
                 if any([fnmatch(self.path, file_pattern)
-                        for file_pattern in glob_list(section["files"])]):
+                        for file_pattern in path_list(section["files"])]):
 
                     section["files"].value = self.path
                     section_result = execute_section(

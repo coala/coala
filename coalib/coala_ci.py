@@ -25,9 +25,8 @@ def main():
     partial_print_sec_beg = functools.partial(
         print_section_beginning,
         console_printer)
-    results, exitcode, _ = run_coala(
-        autoapply=False,
-        print_results=print_results_no_input,
-        print_section_beginning=partial_print_sec_beg)
+    results, exitcode = run_coala(autoapply=False,
+                                  print_results=print_results_no_input,
+                                  print_section_beginning=partial_print_sec_beg)
 
     return exitcode

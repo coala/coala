@@ -7,7 +7,6 @@ from coalib.collecting.Collectors import collect_registered_bears_dirs
 from coalib.misc.Decorators import enforce_signature, generate_repr
 from coalib.misc.DictUtilities import update_ordered_dict_key
 from coalib.settings.Setting import Setting, path_list
-from coalib.parsing.Globbing import glob_escape
 
 
 def append_to_sections(sections,
@@ -66,13 +65,13 @@ class Section:
         bear_dirs = path_list(self.get("bear_dirs", ""))
         for bear_dir in bear_dirs:
             sys.path.append(bear_dir)
-        bear_dir_globs = [
-            os.path.join(glob_escape(bear_dir), "**")
+        bear_dirs = [
+            os.path.join(bear_dir, "**")
             for bear_dir in bear_dirs]
-        bear_dir_globs += [
-            os.path.join(glob_escape(bear_dir), "**")
+        bear_dirs += [
+            os.path.join(bear_dir, "**")
             for bear_dir in collect_registered_bears_dirs('coalabears')]
-        return bear_dir_globs
+        return bear_dirs
 
     def is_enabled(self, targets):
         """

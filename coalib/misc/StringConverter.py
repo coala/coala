@@ -1,5 +1,4 @@
 import re
-import validators
 from collections import Iterable, OrderedDict
 
 from coalib.misc import Constants
@@ -56,19 +55,6 @@ class StringConverter:
 
     def __float__(self):
         return float(str(self))
-
-    def __url__(self):
-        """
-        Determines the url validity of this setting.
-
-        :return:            url string
-        :raises ValueError: If the url is not valid.
-        """
-        strrep = str(self).strip()
-        if validators.url(strrep):
-            return strrep
-
-        raise ValueError(repr(strrep) + " is not a valid url.")
 
     def __iter__(self, remove_backslashes=True):
         """

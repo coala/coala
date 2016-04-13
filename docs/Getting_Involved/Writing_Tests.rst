@@ -9,22 +9,14 @@ characteristic to be undiscoverable (or only discoverable after dozens
 of hours of searching). Try to test as much as possible! The more tests
 you write the more you can be sure you did everything correct.
 Especially if someone else modifies your component, he can be sure with
-your tests that he doesn't introduce a bug. Keep these points in your mind
-when you're writing a test:
-
-- 100% test-coverage
-- zero redundancy
-
-A patch will not be accepted unless there is a 100% branch coverage.
-Redundant tests are a waste of effort because you are testing the same piece
-of code again and again, which is unnecessary.
+your tests that he doesn't introduce a bug.
 
 Actually Writing a Test
 -----------------------
 
 So how do you implement a test in coala? First up, tests are placed into
-the ``coala-bears/tests`` (if you want to write a test for a bear) or
-``coala/tests`` (if you test a component written for the coalib)
+the ``bears/tests`` (if you want to write a test for a bear) or
+``coalib/tests`` (if you test a component written for the coalib)
 directory. They are also written in python (version 3) and get
 automatically executed by running:
 
@@ -35,10 +27,6 @@ automatically executed by running:
 There's only one constraint:
 The name of the test file has to end with ``Test.py`` (for example
 ``MyCustomTest.py``, but not ``MyCustomTestSuite.py``).
-
-.. note::
-    If ``py.test`` seems to give errors, try running ``python3 -m pytest``
-    instead.
 
 .. note::
 
@@ -54,9 +42,28 @@ The name of the test file has to end with ``Test.py`` (for example
     ``py.test -h``
 
 Coming to the test file structure. Every test script starts with your
-imports. According to the coala code style (and pep8 style) we first do
-system imports (like ``re`` or ``subprocessing``), followed by first party
-imports (like ``coalib.result.Result``).
+system imports, i.e.:
+
+.. code:: python
+
+    # Imports the python 're' package for regex processing.
+    import re
+    import unittest
+    # ...
+
+As said before, in the next line your own imports follow. So just import
+what you need from coala:
+
+.. code:: python
+
+    import coalib.your_component.component1
+    import coalib.your_component.component2
+    # ...
+
+.. note::
+
+    You can use system imports here also, but the coala codestyle
+    suggests to place them above the three setup lines, like before.
 
 Then the actual test suite class follows, that contains the tests. Each
 test suite is made up of test cases, where the test suite checks the
@@ -97,10 +104,8 @@ and pass the result to the overall test-suite-invoking-instance, that
 manages all tests in coala. The result is processed and you get a
 message if something went wrong in your test.
 
-.. seealso::
-
-    `unittest assert-methods <https://docs.python.org/3/library/unittest.html#assert-methods>`_
-        Documentation on the assert functions from python's inbuilt unittest.
+Available assert functions are listed in the section **Assertions**
+below.
 
 So an example test that succeeds would be:
 
@@ -179,14 +184,80 @@ when the test suite finished running all test cases. Declare it like
             # Deinitialization, release calls etc.
             pass
 
+Assertions
+----------
+
+Here follows a list of all available assertion functions supported when
+inheriting from ``unittest.TestCase``:
+
+-  ``assertEqual(a, b)``
+
+Checks whether expression ``a`` equals expression ``b``.
+
+-  ``assertNotEqual(a, b)``
+
+Checks whether expression ``a`` **not** equals expression ``b``.
+
+-  ``assertTrue(a)``
+
+Checks whether expression ``a`` is True.
+
+-  ``assertFalse(a)``
+
+Checks whether expression ``a`` is False.
+
+-  ``assertIs(a, b)``
+
+Checks whether expression ``a`` is ``b``.
+
+-  ``assertIsNot(a, b)``
+
+Checks whether expression ``a`` is not ``b``.
+
+-  ``assertIsNone(a)``
+
+Checks whether expression ``a`` is None.
+
+-  ``assertIsNotNone(a)``
+
+Checks whether expression ``a`` is not None.
+
+-  ``assertIn(a, list)``
+
+Checks whether expression ``a`` is an element inside ``list``.
+
+-  ``assertNotIn(a, list)``
+
+Checks whether expression ``a`` is not an element inside ``list``.
+
+-  ``assertIsInstance(a, type)``
+
+Checks whether expression ``a`` is of type ``type``.
+
+-  ``assertNotIsInstance(a, type)``
+
+Checks whether expression ``a`` is not of type ``type``.
+
+-  ``assertRaises(error, function, *args, **kwargs)``
+
+Checks whether ``function`` throws the specific ``error``. When calling
+this assert it invokes the function with the specified ``*args`` and
+``**kwargs``.
+
+If you want more information about the python ``unittest``-module, refer
+to the `official
+documentation <https://docs.python.org/3/library/unittest.html>`__ and
+for asserts the subsection [assert-methods]
+(https://docs.python.org/3/library/unittest.html#assert-methods).
+
 Kickstart
 ---------
 
 This section contains a concluding and simple example that you can use
 as a kickstart for test-writing.
 
-Put the code under the desired folder inside ``tests``,
-modify it to let it test your stuff and run the test from
+Put the code under the desired folder inside ``coalib/tests`` or
+``bears/tests``, modify it to let it test your stuff and run the test from
 the coala root folder ``py.test``.
 
 .. code:: python
@@ -195,6 +266,7 @@ the coala root folder ``py.test``.
     import sys
     import unittest
 
+    sys.path.insert(0, ".")
     # Import here your needed coala components.
 
 

@@ -104,7 +104,7 @@ Example:
 
 Example
 ~~~~~~~
-Example 1:
+
 ::
 
     setup: Install .coafile via package_data
@@ -115,15 +115,6 @@ Example 1:
     install it by itself.
 
     Fixes https://github.com/coala-analyzer/coala/issues/269
-
-Example 2:
-::
-
-    .travis.yml: Fix typo xontainer -> container
-
-    Fix a minor typo in the file for better readability.
-
-    Fixes https://github.com/coala-analyzer/coala/issues/xxx
 
 Why Do We Need Good Commits?
 ----------------------------

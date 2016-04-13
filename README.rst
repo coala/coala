@@ -1,3 +1,6 @@
+README
+======
+
 .. Start ignoring LineLengthBear
 
 ::
@@ -19,10 +22,31 @@
 
 .. Stop ignoring LineLengthBear
 
-Get coala to lint all your languages in your project with one tool and config!
+INSTALLATION
+============
 
-About
------
+coala can be installed with ``pip install coala``. If you need more
+information about the installation and dependencies, take a look at our
+`installation documentation
+<http://coala.rtfd.org/en/latest/Users/Install.html>`__.
+
+The latest code from master is automatically deployed to PyPI as a
+development version. Get it with ``pip install coala --pre``.
+
+To get the supported bears along with coala, check out
+`coala-bears <https://github.com/coala-analyzer/coala-bears>`__.
+
+|PyPI|
+
+USAGE
+=====
+
+If you want to learn more about coala, its functionality and its usage,
+please take a look at our
+`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorials/Tutorial.html>`__.
+
+ABOUT
+=====
 
 coala is a simple COde AnaLysis Application. Its goal is to make static
 code analysis easy while remaining completely modular and therefore
@@ -30,39 +54,6 @@ extendable and language independent. coala is written with a lower case
 "c".
 
 Read more at our `documentation <http://coala.rtfd.org/>`__.
-
-Why use coala?
---------------
-
-- coala provides **built-in checking routines** (named bears in coala).
-- **Serves your requirement**: You can easily write your own checks (using
-  bears).
-- coala provides **user-friendly interfaces** like json, formatted and
-  interactive output in the CLI and *plugins for various editors* are
-  available as well.
-- **Optimal performance**: coala manages parallelizing the checking-routines
-  without you having to worry.
-- **Unified interface**: One tool for all programming languages.
-
-If you want to learn more about coala, its functionality and its usage,
-please take a look at our
-`tutorial <http://coala.rtfd.org/en/latest/Users/Tutorials/Tutorial.html>`__.
-
-Installation
-------------
-
-To install coala with the official set of analysis routines you can simply run
-``pip3 install coala-bears``.
-
-coala only, without the official bears, can be installed with
-``pip3 install coala``. If you need more information about the installation and
-dependencies, take a look at our `installation documentation
-<http://coala.rtfd.org/en/latest/Users/Install.html>`__.
-
-The latest code from master is automatically deployed to PyPI as a
-development version. Get it with ``pip3 install coala --pre``.
-
-|PyPI|
 
 Authors
 -------
@@ -77,21 +68,21 @@ Project Status
 
 |Scrutinizer Code Quality| |codecov.io|
 
-|Documentation Status| |Gitmate|
+|Documentation Status|
 
-Newcomers Guide and Getting Involved
-------------------------------------
+GETTING INVOLVED
+================
 
-If you are new and would like to contribute, read our `Getting Involved Site
-<http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__!
+If you want to contribute to coala, please take a look at the `Getting
+Involved Information
+<http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__.
 
-We appreciate any help! Feel free to message us on
-`gitter <https://gitter.im/coala-analyzer/coala>`__. If you have any
-questions we're happy to help you!
+We appreciate any help!
 
+|https://gitter.im/coala-analyzer/coala|
 
-License
--------
+LICENSE
+=======
 
 |AGPL|
 
@@ -123,5 +114,3 @@ information.
    :target: https://gitter.im/coala-analyzer/coala
 .. |AGPL| image:: https://img.shields.io/github/license/coala-analyzer/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
-.. |Gitmate| image:: https://img.shields.io/badge/Gitmate-0%20issues-brightgreen.svg
-   :target: http://gitmate.com/

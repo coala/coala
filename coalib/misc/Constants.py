@@ -1,14 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import os
-import appdirs
-
-# Start ignoring PyImportSortBear, PyLintBear as BUS_NAME is imported as a
-# constant from other files.
-from coalib import BUS_NAME
-from coalib import VERSION
-# Stop ignoring
-
+import platform
 
 THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
                  "Please contact the developers for assistance.")
@@ -19,15 +10,6 @@ CRASH_MESSAGE = ("An unknown error occurred. This is a bug. We are "
                  "coala an exception was raised. This should never "
                  "happen. When asked for, the following information "
                  "may help investigating:")
-
-VERSION_CONFLICT_MESSAGE = ("There is a conflict in the version of a "
-                            "dependency you have installed and the "
-                            "requirements of coala. This may be resolved by "
-                            "creating a separate virtual environment for "
-                            "coala or running `pip install %s`. Be aware "
-                            "that the latter solution might break other "
-                            "python packages that depend on the currently "
-                            "installed version.")
 
 OBJ_NOT_ACCESSIBLE = "{} is not accessible and will be ignored!"
 
@@ -71,6 +53,15 @@ user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
 
 default_coafile = ".coafile"
 
-TAGS_DIR = appdirs.user_data_dir('coala', version=VERSION)
+VERSION_FILE = os.path.join(coalib_root, "VERSION")
+with open(VERSION_FILE, 'r') as ver:
+    VERSION = ver.readline().strip()
 
-GLOBBING_SPECIAL_CHARS = "()[]|?*"
+BUS_NAME = "org.coala_analyzer.v1"
+
+if platform.system() == 'Windows':  # pragma: no cover
+    USER_DIR = os.path.join(os.getenv("APPDATA"), "coala")
+else:
+    USER_DIR = os.path.join(os.path.expanduser("~"), ".local", "coala")
+
+TAGS_DIR = os.path.join(USER_DIR, "tags")

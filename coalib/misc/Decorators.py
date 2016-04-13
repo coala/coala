@@ -92,11 +92,11 @@ def _construct_repr_string(obj, members):
 
 def get_public_members(obj):
     """
-    Retrieves a dictionary of member-like objects (members or properties) that
-    are publicly exposed.
+    Retrieves a list of member-like objects (members or properties) that are
+    publically exposed.
 
     :param obj: The object to probe.
-    :return:    A dictionary with objects as keys and its attributes as values.
+    :return:    A list of strings.
     """
     return {attr: getattr(obj, attr) for attr in dir(obj)
             if not attr.startswith("_")
@@ -105,9 +105,9 @@ def get_public_members(obj):
 
 def generate_repr(*members):
     """
-    Decorator that binds an auto-generated ``__repr__()`` function to a class.
+    Decorator that binds an auto-generated `__repr__()` function to a class.
 
-    The generated ``__repr__()`` function prints in following format:
+    The generated `__repr__()` function prints in following format:
     <ClassName object(field1=1, field2='A string', field3=[1, 2, 3]) at 0xAAAA>
 
     Note that this decorator modifies the given class in place!
@@ -122,8 +122,8 @@ def generate_repr(*members):
                             can also pass a tuple where the first element
                             contains the member to print and the second one the
                             representation function (which defaults to the
-                            built-in ``repr()``). Using None as representation
-                            function is the same as using ``repr()``.
+                            built-in `repr()`). Using None as representation
+                            function is the same as using `repr()`.
 
                             Supported members are fields/variables, properties
                             and getter-like functions (functions that accept no
@@ -245,7 +245,7 @@ def generate_ordering(*members):
     return decorator
 
 
-def assert_right_type(value, types, argname):
+def _assert_right_type(value, types, argname):
     if isinstance(types, type) or types is None:
         types = (types,)
 
@@ -289,11 +289,11 @@ def enforce_signature(function):
     def decorated(*args, **kwargs):
         for i, annotation in unnamed_annotations.items():
             if i < len(args):
-                assert_right_type(args[i], annotation[0], annotation[1])
+                _assert_right_type(args[i], annotation[0], annotation[1])
 
         for argname, argval in kwargs.items():
             if argname in annotations:
-                assert_right_type(argval, annotations[argname], argname)
+                _assert_right_type(argval, annotations[argname], argname)
 
         return function(*args, **kwargs)
 

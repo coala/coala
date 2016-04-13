@@ -102,7 +102,7 @@ class FunctionMetadata:
 
         try:
             return annotation(section[param])
-        except (TypeError, ValueError):
+        except:
             raise ValueError("Unable to convert parameter {} into type "
                              "{}.".format(repr(param), annotation))
 

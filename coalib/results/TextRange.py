@@ -15,9 +15,9 @@ class TextRange:
         Creates a new TextRange.
 
         :param start:       A TextPosition indicating the start of the range.
-                            Can't be ``None``.
+                            Can't be `None`.
         :param end:         A TextPosition indicating the end of the range. If
-                            ``None`` is given, the start object will be used
+                            `None` is given, the start object will be used
                             here.
         :raises TypeError:  Raised when
                             - start is no TextPosition or None.
@@ -46,7 +46,7 @@ class TextRange:
         :param start_column: The column number of the start position. The first
                              column is 1.
         :param end_line:     The line number of the end position. If this
-                             parameter is ``None``, then the end position is set
+                             parameter is `None`, then the end position is set
                              the same like start position and end_column gets
                              ignored.
         :param end_column:   The column number of the end position.

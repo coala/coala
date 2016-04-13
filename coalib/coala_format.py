@@ -16,6 +16,6 @@ from coalib.output.ConsoleInteraction import print_results_formatted
 
 
 def main():
-    results, exitcode, _ = run_coala(print_results=print_results_formatted)
+    results, exitcode = run_coala(print_results=print_results_formatted)
 
     return exitcode

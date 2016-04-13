@@ -32,7 +32,7 @@ class ApplyPatchAction(ResultAction):
         """
         Apply the patch automatically.
 
-        :param no_orig: Whether or not to create .orig backup files
+        :param no_orig: Wether or not to create .orig backup files
         """
         for filename in result.diffs:
             if filename in file_diff_dict:

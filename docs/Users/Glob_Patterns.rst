@@ -6,42 +6,35 @@ input of multiple files without requiring a large number of filenames,
 coala supports a number of wildcards. These are based on the unix-style
 glob syntax and they are *not* the same as regular expressions.
 
-.. note::
-
-    Any glob that does not start with a ``/`` in Linux or a drive letter
-    ``X:`` in Windows will be interpreted as a relative path. Please use comma
-    separated values instead of absolute path globs that start with a
-    glob expression.
-
 Syntax
 ------
 
 The special characters used in shell-style wildcards are:
 
-+-------------------+---------------------------------------------------------+
-| PATTERN           | MEANING                                                 |
-+===================+=========================================================+
-| ``[seq]``         | Matches any character in seq. Cannot be empty. Any      |
-|                   | special character looses its special meaning in a set.  |
-+-------------------+---------------------------------------------------------+
-| ``[!seq]``        | Matches any character not in seq. Cannot be empty. Any  |
-|                   | special character looses its special meaning in a set.  |
-+-------------------+---------------------------------------------------------+
-| ``(seq_a|seq_b)`` | Matches either sequence_a or sequence_b as a whole. More|
-|                   | than two or just one sequence can be given.             |
-+-------------------+---------------------------------------------------------+
-| ``?``             | Matches any single character.                           |
-+-------------------+---------------------------------------------------------+
-| ``*``             | Matches everything but the directory separator.         |
-+-------------------+---------------------------------------------------------+
-| ``**``            | Matches everything.                                     |
-+-------------------+---------------------------------------------------------+
++-----------------+-----------------------------------------------------------+
+| PATTERN         | MEANING                                                   |
++=================+===========================================================+
+| '[seq]'         | Matches any character in seq. Cannot be empty. Any special|
+|                 | character looses its special meaning in a set.            |
++-----------------+-----------------------------------------------------------+
+| '[!seq]'        | Matches any character not in seq. Cannot be empty. Any    |
+|                 | special character looses its special meaning in a set.    |
++-----------------+-----------------------------------------------------------+
+| '(seq_a|seq_b)' | Matches either sequence_a or sequence_b as a whole. More  |
+|                 | than two or just one sequence can be given.               |
++-----------------+-----------------------------------------------------------+
+| '?'             | Matches any single character.                             |
++-----------------+-----------------------------------------------------------+
+| '*'             | Matches everything but the directory separator            |
++-----------------+-----------------------------------------------------------+
+| '**'            | Matches everything.                                       |
++-----------------+-----------------------------------------------------------+
 
 Examples
 --------
 
-``[seq]``
-~~~~~~~~~
+'[seq]'
+~~~~~~~
 
     Matches any character in seq. Cannot be empty. Any special character
     looses its special meaning in a set.
@@ -73,8 +66,8 @@ brackets have to be placed at the first position.
     >>> fnmatch("a[]a", "a[]a")
     True
 
-``[!seq]``
-~~~~~~~~~~
+'[!seq]'
+~~~~~~~~
 
     Matches any character not in seq. Cannot be empty. Any special
     character looses its special meaning in a set.
@@ -96,15 +89,15 @@ brackets have to be placed at the first position.
     >>> fnmatch("a[!]a", "a[!]a")
     True
 
-``(seq\_a\|seq\_b)``
-~~~~~~~~~~~~~~~~~~~~
+'(seq\_a\|seq\_b)'
+~~~~~~~~~~~~~~~~~~
 
     Matches either sequence\_a or sequence\_b as a whole. More than two
     or just one sequence can be given.
 
 Parentheses cannot be part of an alternative, unless they are escaped by
 brackets. Parentheses that have no match are ignored as well as
-``|``-separators that are not inside matching parentheses.
+'\|'-separators that are not inside matching parentheses
 
 ::
 
@@ -135,8 +128,8 @@ brackets. Parentheses that have no match are ignored as well as
     >>> fnmatch("", "(abc|)")
     True
 
-``?``
-~~~~~
+'?'
+~~~
 
     Matches any single character.
 
@@ -155,15 +148,15 @@ brackets. Parentheses that have no match are ignored as well as
     >>> fnmatch("ac", "a?c")
     False
 
-``\*``
-~~~~~~
+'\*'
+~~~~
 
-    Matches everything but the directory separator.
+    Matches everything but the directory separator
 
 .. note::
 
-    The directory separator is platform specific. ``/`` is never
-    matched by ``\*``. ``\\`` is matched on Linux, but not on Windows.
+    The directory separator is platform specific. '/' is never
+    matched by '\*'. '\\' is matched on Linux, but not on Windows.
 
 ::
 
@@ -178,8 +171,8 @@ brackets. Parentheses that have no match are ignored as well as
     >>> fnmatch("ac", "a*c")
     True
 
-``\*\*``
-~~~~~~~~
+'\*\*'
+~~~~~~
 
     Matches everything.
 

@@ -1,6 +1,6 @@
 language:
   # The `objective-c` language by default uses a OSX build container. This
-  # is the currently supported method of using a OSX container.
+  # is the currently supported method of using a OSX xontainer.
   - objective-c
 
 env:

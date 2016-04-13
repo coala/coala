@@ -87,7 +87,7 @@ def _extract_doc_comment_continuous(content, line, column, markers):
     if content[line - 1][-1] == "\n":
         column = 0
     else:
-        # This case can appear on end-of-document without a ``\n``.
+        # This case can appear on end-of-document without a `\n`.
         line -= 1
         column = len(content[line])
 
@@ -207,7 +207,7 @@ def extract_documentation_with_markers(content, markers):
 
     :param content: The source-code-string where to extract documentation from.
                     Needs to be a list or tuple where each string item is a
-                    single line (including ending whitespaces like ``\\n``).
+                    single line (including ending whitespaces like `\\n`).
     :param markers: The list/tuple of marker-sets that identify a
                     documentation-comment. Low-index markers have higher
                     priority than high-index markers.
@@ -227,7 +227,7 @@ def extract_documentation_with_markers(content, markers):
             marker_dict[marker_set[0]].append(marker_set)
 
     # Using regexes to perform a variable match is faster than finding each
-    # substring with ``str.find()`` choosing the lowest match.
+    # substring with `str.find()` choosing the lowest match.
     begin_regex = _compile_multi_match_regex(
         marker_set[0] for marker_set in markers)
 
@@ -248,7 +248,7 @@ def extract_documentation(content, language, docstyle):
     Extracts all documentation texts inside the given source-code-string using
     the coala docstyle definition files.
 
-    The documentation texts are sorted by their order appearing in ``content``.
+    The documentation texts are sorted by their order appearing in `content`.
 
     For more information about how documentation comments are identified and
     extracted, see DocstyleDefinition.doctypes enumeration.
@@ -256,7 +256,7 @@ def extract_documentation(content, language, docstyle):
     :param content:            The source-code-string where to extract
                                documentation from. Needs to be a list or tuple
                                where each string item is a single line
-                               (including ending whitespaces like ``\\n``).
+                               (including ending whitespaces like `\\n`).
     :param language:           The programming language used.
     :param docstyle:           The documentation style/tool used
                                (e.g. doxygen).

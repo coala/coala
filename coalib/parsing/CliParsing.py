@@ -1,6 +1,5 @@
 import os
 import sys
-from argparse import ArgumentParser
 from collections import OrderedDict
 
 from coalib.parsing.DefaultArgParser import default_arg_parser
@@ -72,7 +71,7 @@ def parse_custom_settings(sections,
                           origin,
                           line_parser):
     """
-    Parses the custom settings given to coala via ``-S something=value``.
+    Parses the custom settings given to coala via `-S something=value`.
 
     :param sections:             The Section dictionary to add to (mutable).
     :param custom_settings_list: The list of settings strings.
@@ -88,25 +87,3 @@ def parse_custom_settings(sections,
                                origin=origin,
                                section_name=key_touple[0],
                                from_cli=True)
-
-
-def check_conflicts(sections):
-    '''
-    Checks if there are any conflicting aruments passed
-
-    :return:            True if no conflicts
-    :raises SystemExit: If there are conflicting arguments (exit code: 2)
-    '''
-    conflicts = {'no_config': {'save', 'find_config'}}
-    conflicting_keys = conflicts.keys()
-
-    for section in sections:
-        keys = set(sections[section])
-        possible_conflicts = keys & conflicting_keys
-        for key in possible_conflicts:
-            intersection = keys & conflicts[key]
-            if len(intersection) > 0:
-                ArgumentParser().exit(2,
-                                      key + " cannot be given at the same "
-                                      "time with " + ', '.join(intersection))
-    return True

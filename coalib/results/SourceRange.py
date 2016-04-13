@@ -1,9 +1,6 @@
-from os.path import relpath
-
-from coalib.misc.Decorators import enforce_signature, get_public_members
+from coalib.misc.Decorators import enforce_signature
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.TextRange import TextRange
-from coalib.results.AbsolutePosition import AbsolutePosition
 
 
 class SourceRange(TextRange):
@@ -17,7 +14,7 @@ class SourceRange(TextRange):
 
         :param start:       A SourcePosition indicating the start of the range.
         :param end:         A SourcePosition indicating the end of the range.
-                            If ``None`` is given, the start object will be used
+                            If `None` is given, the start object will be used
                             here. end must be in the same file and be greater
                             than start as negative ranges are not allowed.
         :raises TypeError:  Raised when
@@ -58,25 +55,6 @@ class SourceRange(TextRange):
                                range.end.line,
                                range.end.column)
 
-    @classmethod
-    @enforce_signature
-    def from_absolute_position(cls,
-                               file: str,
-                               position_start: AbsolutePosition,
-                               position_end: (AbsolutePosition, None)=None):
-        """
-        Creates a SourceRange from a start and end positions.
-
-        :param file:           Name of the file.
-        :param position_start: Start of range given by AbsolutePosition.
-        :param position_end:   End of range given by AbsolutePosition or None.
-        """
-        start = SourcePosition(file, position_start.line, position_start.column)
-        end = None
-        if position_end:
-            end = SourcePosition(file, position_end.line, position_end.column)
-        return cls(start, end)
-
     @property
     def file(self):
         return self.start.file
@@ -102,9 +80,3 @@ class SourceRange(TextRange):
                                        tr.start.column,
                                        tr.end.line,
                                        tr.end.column)
-
-    def __json__(self, use_relpath=False):
-        _dict = get_public_members(self)
-        if use_relpath:
-            _dict['file'] = relpath(_dict['file'])
-        return _dict

@@ -1,7 +1,7 @@
-from os.path import relpath, abspath
+import os
 
 from coalib.misc.Decorators import (
-    enforce_signature, generate_ordering, generate_repr, get_public_members)
+    enforce_signature, generate_ordering, generate_repr)
 from coalib.results.TextPosition import TextPosition
 
 
@@ -25,14 +25,8 @@ class SourcePosition(TextPosition):
         """
         TextPosition.__init__(self, line, column)
 
-        self._file = abspath(file)
+        self._file = os.path.abspath(file)
 
     @property
     def file(self):
         return self._file
-
-    def __json__(self, use_relpath=False):
-        _dict = get_public_members(self)
-        if use_relpath:
-            _dict['file'] = relpath(_dict['file'])
-        return _dict

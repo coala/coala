@@ -6,7 +6,6 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing import Globbing
 from coalib.settings.ConfigurationGathering import get_config_directory
 from coalib.settings.Section import Section
-from coalib.parsing.Globbing import glob_escape
 
 
 def main(log_printer=None, section: Section=None):
@@ -14,11 +13,11 @@ def main(log_printer=None, section: Section=None):
     log_printer = log_printer or LogPrinter(ConsolePrinter())
 
     if start_path is None:
+        log_printer.err("Can only delete .orig files if .coafile is found")
         return 255
 
-    # start_path may have unintended glob characters
-    orig_files = Globbing.glob(os.path.join(
-        glob_escape(start_path), '**', '*.orig'))
+    orig_files = Globbing.glob(os.path.abspath(
+        os.path.join(start_path, '**', '*.orig')))
 
     not_deleted = 0
     for ofile in orig_files:
@@ -28,7 +27,7 @@ def main(log_printer=None, section: Section=None):
             os.remove(ofile)
         except OSError as oserror:
             not_deleted += 1
-            log_printer.warn("Couldn't delete {}. {}".format(
+            log_printer.warn("Couldn't delete... {}. {}".format(
                 os.path.relpath(ofile), oserror.strerror))
 
     if not_deleted:

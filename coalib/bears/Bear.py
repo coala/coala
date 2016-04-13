@@ -42,10 +42,10 @@ class Bear(Printer, LogPrinter):
 
         :param section:       The section object where bear settings are
                               contained.
-        :param message_queue: The queue object for messages. Can be ``None``.
+        :param message_queue: The queue object for messages. Can be `None`.
         :param timeout:       The time the bear is allowed to run. To set no
                               time limit, use 0.
-        :raises TypeError:    Raised when ``message_queue`` is no queue.
+        :raises TypeError:    Raised when `message_queue` is no queue.
         :raises RuntimeError: Raised when bear requirements are not fulfilled.
         """
         Printer.__init__(self)
@@ -117,9 +117,9 @@ class Bear(Printer, LogPrinter):
     @classmethod
     def get_metadata(cls):
         """
-        :return: Metadata for the run function. However parameters like
-                 ``self`` or parameters implicitly used by coala (e.g.
-                 filename for local bears) are already removed.
+        :return: Metadata for the run function. However parameters like `self`
+                 or parameters implicitly used by coala (e.g. filename for
+                 local bears) are already removed.
         """
         return FunctionMetadata.from_function(
             cls.run,
@@ -176,7 +176,7 @@ class Bear(Printer, LogPrinter):
         This function gets executed at construction and returns True by
         default.
 
-        Section value requirements shall be checked inside the ``run`` method.
+        Section value requirements shall be checked inside the `run` method.
 
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
