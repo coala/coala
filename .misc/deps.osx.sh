@@ -27,3 +27,5 @@ pip install -U pip
 # Install packages with pip
 pip install -r test-requirements.txt
 pip install -r requirements.txt
+# Downloading nltk data that's required for nltk to run
+bash .misc/deps.nltk.sh
