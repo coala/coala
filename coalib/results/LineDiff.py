@@ -3,10 +3,6 @@ import collections
 from coalib.misc.Decorators import generate_repr
 
 
-class ConflictError(Exception):
-    pass
-
-
 @generate_repr('change', 'delete', 'add_after')
 class LineDiff:
     """
@@ -44,8 +40,8 @@ class LineDiff:
             raise TypeError("change must be False or a tuple with an original "
                             "and a replacement string.")
         if value is not False and self.delete is not False:
-            raise ConflictError("A line cannot be changed and deleted "
-                                "at the same time.")
+            raise AssertionError("A line cannot be changed and deleted "
+                                 "at the same time.")
 
         self._change = value
 
@@ -58,8 +54,8 @@ class LineDiff:
         if not isinstance(value, bool):
             raise TypeError("delete can only be a boolean value.")
         if value is not False and self.change is not False:
-            raise ConflictError("A line cannot be changed and deleted "
-                                "at the same time.")
+            raise AssertionError("A line cannot be changed and deleted "
+                                 "at the same time.")
 
         self._delete = value
 

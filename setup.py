@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 
-# Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version, VERSION, VERSION_FILE, BUS_NAME
-
-assert_supported_version()
-# Stop ignoring
-
-import datetime
 import locale
 import sys
 from os import getenv
 from subprocess import call
 
+# Start ignoring PyImportSortBear as imports below may yield syntax errors
+from coalib import assert_supported_version
+
+assert_supported_version()
+# Stop ignoring
+
 import setuptools.command.build_py
+from coalib.misc import Constants
 from coalib.misc.BuildManPage import BuildManPage
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 from setuptools import find_packages, setup
@@ -43,7 +43,7 @@ class PyTestCommand(TestCommand):
 
 class BuildDocsCommand(setuptools.command.build_py.build_py):
     apidoc_command = ('sphinx-apidoc', '-f', '-o', 'docs/API/',
-                      'coalib')
+                      'coalib', 'coalib/tests')
     doc_command = ('make', '-C', 'docs', 'html')
 
     def run(self):
@@ -55,12 +55,6 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
-    if "dev" in VERSION:
-        current_version = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-        call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
-              '-b {}'.format(current_version)])
-        with open(VERSION_FILE, 'r') as ver:
-            VERSION = ver.readline().strip()
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
@@ -68,15 +62,12 @@ with open('requirements.txt') as requirements:
 with open('test-requirements.txt') as requirements:
     test_required = requirements.read().splitlines()
 
-with open("README.rst") as readme:
-    long_description = readme.read()
-
 
 if __name__ == "__main__":
-    data_files = [('.', ['coala.1']), ('.', [BUS_NAME + '.service'])]
+    data_files = [('.', ['coala.1']), ('.', [Constants.BUS_NAME + '.service'])]
 
     setup(name='coala',
-          version=VERSION,
+          version=Constants.VERSION,
           description='Code Analysis Application (coala)',
           author="The coala developers",
           maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
@@ -84,16 +75,24 @@ if __name__ == "__main__":
           maintainer_email=('lasse.schuirmann@gmail.com, '
                             'fabian@neuschmidt.de, '
                             'makman@alice.de'),
-          url='http://coala-analyzer.org/',
+          url='http://coala.rtfd.org/',
           platforms='any',
-          packages=find_packages(exclude=["build.*", "tests", "tests.*"]),
+          packages=find_packages(exclude=["build.*", "*.tests.*", "*.tests"]),
           install_requires=required,
           tests_require=test_required,
-          package_data={'coalib': ['default_coafile', "VERSION",
-                                   'bearlib/languages/definitions/*.coalang']},
+          package_data={'coalib': ['default_coafile', "VERSION"]},
           license="AGPL-3.0",
           data_files=data_files,
-          long_description=long_description,
+          long_description="coala is a simple COde AnaLysis Application. Its "
+                           "goal is to make static code analysis easy while "
+                           "remaining completely modular and therefore "
+                           "extendable and language independent. Code analysis"
+                           " happens in python scripts while coala manages "
+                           "these, tries to provide helpful libraries and "
+                           "provides a user interface. Please visit "
+                           "http://coala.rtfd.org/ for more information or "
+                           "our development repository on "
+                           "https://github.com/coala-analyzer/coala/.",
           entry_points={
               "console_scripts": [
                   "coala = coalib.coala:main",

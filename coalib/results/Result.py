@@ -2,12 +2,11 @@ import uuid
 from os.path import relpath
 
 from coalib.misc.Decorators import (
-    enforce_signature, generate_ordering, generate_repr, get_public_members)
+    enforce_signature, generate_ordering, generate_repr)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
 
-# Omit additional info, debug message and diffs for brevity
 @generate_repr(("id", hex),
                "origin",
                "affected_code",
@@ -17,7 +16,6 @@ from coalib.results.SourceRange import SourceRange
                    "severity",
                    "origin",
                    "message",
-                   "additional_info",
                    "debug_msg",
                    "diffs")
 class Result:
@@ -33,25 +31,19 @@ class Result:
                  message: str,
                  affected_code: (tuple, list)=(),
                  severity: int=RESULT_SEVERITY.NORMAL,
-                 additional_info: str="",
                  debug_msg="",
                  diffs: (dict, None)=None):
         """
-        :param origin:          Class name or class of the creator of this
-                                object.
-        :param message:         Message to show with this result.
-        :param affected_code:   A tuple of SourceRange objects pointing to
-                                related positions in the source code.
-        :param severity:        Severity of this result.
-        :param additional_info: A long description holding additional
-                                information about the issue and/or how to fix
-                                it. You can use this like a manual entry for a
-                                category of issues.
-        :param debug_msg:       A message which may help the user find out why
-                                this result was yielded.
-        :param diffs:           A dictionary with filenames as key and a
-                                sequence of ``Diff`` objects associated with
-                                them as values.
+        :param origin:        Class name or class of the creator of this
+                              object.
+        :param message:       Message to show with this result.
+        :param affected_code: A tuple of SourceRange objects pointing to
+                              related positions in the source code.
+        :param severity:      Severity of this result.
+        :param debug_msg:     A message which may help the user find out why
+                              this result was yielded.
+        :param diffs:         A dictionary associating a Diff object with each
+                              filename.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -62,7 +54,6 @@ class Result:
         self.origin = origin
         self.message = message
         self.debug_msg = debug_msg
-        self.additional_info = additional_info
         # Sorting is important for tuple comparison
         self.affected_code = tuple(sorted(affected_code))
         self.severity = severity
@@ -80,32 +71,25 @@ class Result:
                     end_line: (int, None)=None,
                     end_column: (int, None)=None,
                     severity: int=RESULT_SEVERITY.NORMAL,
-                    additional_info: str="",
                     debug_msg="",
                     diffs: (dict, None)=None):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
 
-        :param origin:          Class name or class of the creator of this
-                                object.
-        :param message:         A message to explain the result.
-        :param file:            The related file.
-        :param line:            The first related line in the file.
-                                (First line is 1)
-        :param column:          The column indicating the first character.
-                                (First character is 1)
-        :param end_line:        The last related line in the file.
-        :param end_column:      The column indicating the last character.
-        :param severity:        A RESULT_SEVERITY object.
-        :param debug_msg:       Another message for debugging purposes.
-        :param additional_info: A long description holding additional
-                                information about the issue and/or how to fix
-                                it. You can use this like a manual entry for a
-                                category of issues.
-        :param diffs:           A dictionary with filenames as key and a
-                                sequence of ``Diff`` objects associated with
-                                them as values.
+        :param origin:     Class name or class of the creator of this object.
+        :param message:    A message to explain the result.
+        :param file:       The related file.
+        :param line:       The first related line in the file.
+                           (First line is 1)
+        :param column:     The column indicating the first character. (First
+                           character is 1)
+        :param end_line:   The last related line in the file.
+        :param end_column: The column indicating the last character.
+        :param severity:   A RESULT_SEVERITY object.
+        :param debug_msg:  Another message for debugging purposes.
+        :param diffs:      A dictionary with filenames as key and Diff objects
+                           associated with them.
         """
         range = SourceRange.from_values(file,
                                         line,
@@ -117,7 +101,6 @@ class Result:
                    message=message,
                    affected_code=(range,),
                    severity=severity,
-                   additional_info=additional_info,
                    debug_msg=debug_msg,
                    diffs=diffs)
 
@@ -135,7 +118,6 @@ class Result:
         retval = {}
 
         members = ["id",
-                   "additional_info",
                    "debug_msg",
                    "message",
                    "origin"]
@@ -219,10 +201,3 @@ class Result:
 
         return ', '.join(repr(relpath(range_path))
                          for range_path in sorted(range_paths))
-
-    def __json__(self, use_relpath=False):
-        _dict = get_public_members(self)
-        if use_relpath and _dict['diffs']:
-            _dict['diffs'] = {relpath(file): diff
-                              for file, diff in _dict['diffs'].items()}
-        return _dict

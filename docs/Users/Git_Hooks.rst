@@ -1,4 +1,4 @@
-﻿Git Hooks
+Git Hooks
 =========
 
 This document is a guide on how to add coala as a git hook. Using git hooks
@@ -17,9 +17,9 @@ repository and add the lines:
 
 .. code:: bash
 
-    $ #!/bin/sh
-    $ set -e
-    $ coala
+    #!/bin/sh
+    set -e
+    coala
 
 You can also specify arguments like ``-S autoapply=false`` which tells
 coala to not apply any patch by itself. Or you can run specific sections with

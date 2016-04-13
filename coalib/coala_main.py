@@ -49,8 +49,7 @@ def run_coala(log_printer=None,
     log_printer = log_printer or LogPrinter(ConsolePrinter())
 
     exitcode = 0
-    results = {}
-    file_dicts = {}
+    results = None
     try:
         yielded_results = yielded_unfixed_results = False
         did_nothing = True
@@ -68,6 +67,7 @@ def run_coala(log_printer=None,
 
         delete_tagged_results(dtag, config_file, log_printer)
 
+        results = {}
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
                 continue
@@ -87,8 +87,6 @@ def run_coala(log_printer=None,
                 yielded_unfixed_results or yielded_unfixed)
             did_nothing = False
 
-            file_dicts[section_name] = section_result[3]
-
         tag_results(tag, config_file, results, log_printer)
 
         if did_nothing:
@@ -100,4 +98,4 @@ def run_coala(log_printer=None,
     except BaseException as exception:  # pylint: disable=broad-except
         exitcode = exitcode or get_exitcode(exception, log_printer)
 
-    return results, exitcode, file_dicts
+    return results, exitcode

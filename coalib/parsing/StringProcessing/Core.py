@@ -237,7 +237,7 @@ def unescaped_search_in_between(begin,
 
     .. warning::
 
-        Using the escape character '\\' in the begin- or end-sequences
+        Using the escaped character '\\' in the begin- or end-sequences
         the function can return strange results. The backslash can
         interfere with the escaping regex-sequence used internally to
         match the enclosed string.
@@ -326,37 +326,6 @@ def escape(string, escape_chars, escape_with="\\"):
         string = string.replace(chr, escape_with + chr)
 
     return string
-
-
-def convert_to_raw(string, exceptions=""):
-    """
-    Converts a string to its raw form, converting all backslash to double
-    backslash except when the backslash escapes a character given in
-    exceptions.
-
-    :param string:     The given string that needs to be converted
-    :param exceptions: A list of characters that if escaped with backslash
-                       should not be converted to double backslash.
-    :return:           Returns the corresponding raw string.
-    """
-    i = 0
-    length = len(string)
-    output = ""
-
-    while i < length:
-        if (string[i] == '\\' and
-                i + 1 < length and string[i + 1] not in exceptions):
-            output += "\\"
-            # If the next character is a ``\`` then we need to write it now
-            # itself since otherwise it will be interpreted as a newly started
-            # escape sequence - thereby escaping the character at i + 2,
-            # which is unintended behavior
-            if string[i + 1] == '\\':
-                i += 1
-        output += string[i]
-        i += 1
-
-    return output
 
 
 def unescape(string):

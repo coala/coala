@@ -1,8 +1,12 @@
 import copy
 import difflib
 
-from coalib.results.LineDiff import LineDiff, ConflictError
+from coalib.results.LineDiff import LineDiff
 from coalib.results.SourceRange import SourceRange
+
+
+class ConflictError(Exception):
+    pass
 
 
 class Diff:
@@ -65,7 +69,7 @@ class Diff:
         """
         Creates a Diff object from a given clang fixit and the file contents.
 
-        :param fixit: A cindex.Fixit object.
+        :param fixit: A cindex.Fixit obejct.
         :param file:  A list of lines in the file to apply the fixit to.
         :return:      The corresponding Diff object.
         """

@@ -3,7 +3,8 @@ set -x
 
 # Install packages with brew
 brew update >/dev/null
-brew outdated pyenv || brew upgrade pyenv
+brew outdated pyenv || brew upgrade --quiet pyenv
+brew install espeak
 brew install libffi && brew link libffi --force
 brew install cairo
 brew install sqlite && brew link sqlite --force
@@ -22,10 +23,6 @@ pyenv global $PYTHON_VERSION
 python --version
 source .misc/env_variables.sh
 
-# Upgrade pip to make sure PEP440 is supported i. e. ~= for versioning
-pip install -U pip
 # Install packages with pip
-pip install -r test-requirements.txt
-pip install -r requirements.txt
-# Downloading nltk data that's required for nltk to run
-bash .misc/deps.nltk.sh
+pip install -q -r test-requirements.txt
+pip install -q -r requirements.txt

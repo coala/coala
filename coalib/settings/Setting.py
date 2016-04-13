@@ -3,7 +3,6 @@ from collections import OrderedDict
 
 from coalib.misc.Decorators import generate_repr
 from coalib.misc.StringConverter import StringConverter
-from coalib.parsing.Globbing import glob_escape
 
 
 def path(obj, *args, **kwargs):
@@ -12,33 +11,6 @@ def path(obj, *args, **kwargs):
 
 def path_list(obj, *args, **kwargs):
     return obj.__path_list__(*args, **kwargs)
-
-
-def url(obj, *args, **kwargs):
-    return obj.__url__(*args, **kwargs)
-
-
-def glob(obj, *args, **kwargs):
-    """
-    Creates a path in which all special glob characters in all the
-    parent directories in the given setting are properly escaped.
-
-    :param obj: The ``Setting`` object from which the key is obtained.
-    :return:    Returns a path in which special glob characters are escaped.
-    """
-    return obj.__glob__(*args, **kwargs)
-
-
-def glob_list(obj, *args, **kwargs):
-    """
-    Creates a list of paths in which all special glob characters in all the
-    parent directories of all paths in the given setting are properly escaped.
-
-    :param obj: The ``Setting`` object from which the key is obtained.
-    :return:    Returns a list of paths in which special glob characters are
-                escaped.
-    """
-    return obj.__glob_list__(*args, **kwargs)
 
 
 def typed_list(conversion_func):
@@ -113,7 +85,7 @@ class Setting(StringConverter):
                                            last part will be stripped of. If
                                            you want to specify a directory as
                                            origin be sure to end it with a
-                                           directory separator.
+                                           directory seperator.
         :param strip_whitespaces:          Whether to strip whitespaces from
                                            the value or not
         :param list_delimiters:            Delimiters for list conversion
@@ -136,23 +108,20 @@ class Setting(StringConverter):
         self.key = key
         self.origin = str(origin)
 
-    def __path__(self, origin=None, glob_escape_origin=False):
+    def __path__(self, origin=None):
         """
         Determines the path of this setting.
 
         Note: You can also use this function on strings, in that case the
         origin argument will be taken in every case.
 
-        :param origin:             The origin file to take if no origin is
-                                   specified for the given setting. If you
-                                   want to provide a directory, make sure it
-                                   ends with a directory separator.
-        :param glob_escape_origin: When this is set to true, the origin of
-                                   this setting will be escaped with
-                                   ``glob_escape``.
-        :return:                   An absolute path.
-        :raises ValueError:        If no origin is specified in the setting
-                                   nor the given origin parameter.
+        :param origin:      the origin file to take if no origin is specified
+                            for the given setting. If you want to provide a
+                            directory, make sure it ends with a directory
+                            seperator.
+        :return:            An absolute path.
+        :raises ValueError: If no origin is specified in the setting nor the
+                            given origin parameter.
         """
         strrep = str(self).strip()
         if os.path.isabs(strrep):
@@ -164,30 +133,7 @@ class Setting(StringConverter):
         if origin is None:
             raise ValueError("Cannot determine path without origin.")
 
-        # We need to get full path before escaping since the full path
-        # may introduce unintended glob characters
-        origin = os.path.abspath(os.path.dirname(origin))
-
-        if glob_escape_origin:
-            origin = glob_escape(origin)
-
-        return os.path.normpath(os.path.join(origin, strrep))
-
-    def __glob__(self, origin=None):
-        """
-        Determines the path of this setting with proper escaping of its
-        parent directories.
-
-        :param origin:      The origin file to take if no origin is specified
-                            for the given setting. If you want to provide a
-                            directory, make sure it ends with a directory
-                            separator.
-        :return:            An absolute path in which the parent directories
-                            are escaped.
-        :raises ValueError: If no origin is specified in the setting nor the
-                            given origin parameter.
-        """
-        return Setting.__path__(self, origin, glob_escape_origin=True)
+        return os.path.abspath(os.path.join(os.path.dirname(origin), strrep))
 
     def __path_list__(self):
         """
@@ -197,16 +143,6 @@ class Setting(StringConverter):
         :return: A list of absolute paths.
         """
         return [Setting.__path__(elem, self.origin) for elem in self]
-
-    def __glob_list__(self):
-        """
-        Splits the value into a list and creates a path out of each item in
-        which the special glob characters in origin are escaped.
-
-        :return: A list of absolute paths in which the special characters in
-                 the parent directories of the setting are escaped.
-        """
-        return [Setting.__glob__(elem, self.origin) for elem in self]
 
     @property
     def key(self):

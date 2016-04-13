@@ -19,13 +19,13 @@ class DocstyleDefinition:
         Instantiates a new DocstyleDefinition.
 
         :param language: The case insensitive programming language of the
-                         documentation comment, e.g. ``"CPP"`` for C++ or
-                         ``"PYTHON3"``.
+                         documentation comment, e.g. `"CPP"` for C++ or
+                         `"PYTHON3"`.
         :param docstyle: The case insensitive documentation style/tool used
-                         to document code, e.g. ``"default"`` or ``"doxygen"``.
+                         to document code, e.g. `"default"` or `"doxygen"`.
         :param markers:  An iterable of marker/delimiter string iterables
                          or a single marker/delimiter string iterable that
-                         identify a documentation comment. See ``markers``
+                         identify a documentation comment. See `markers`
                          property for more details on markers.
         """
         self._language = language.lower()
@@ -91,7 +91,7 @@ class DocstyleDefinition:
              */
 
         Markers are matched "greedy", that means it will match as many
-        each-line markers as possible. I.e. for ``("///", "///", "///")``):
+        each-line markers as possible. I.e. for `("///", "///", "///")`):
 
         ::
 
@@ -117,12 +117,12 @@ class DocstyleDefinition:
                                    the documentation comment as a string.
         :param docstyle:           The case insensitive documentation
                                    style/tool used to document code, e.g.
-                                   ``"default"`` or ``"doxygen"``.
+                                   `"default"` or `"doxygen"`.
         :raises FileNotFoundError: Raised when the given docstyle was not
                                    found.
         :raises KeyError:          Raised when the given language is not
                                    defined for given docstyle.
-        :return:                   The ``DocstyleDefinition`` for given language
+        :return:                   The `DocstyleDefinition` for given language
                                    and docstyle.
         """
 

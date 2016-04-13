@@ -5,7 +5,7 @@ import sys
 from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.CliParsing import parse_cli, check_conflicts
+from coalib.parsing.CliParsing import parse_cli
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import fill_settings
@@ -46,8 +46,7 @@ def load_config_file(filename, log_printer, silent=False):
     :param silent:      Whether or not to warn the user/exit if the file
                         doesn't exist.
     :raises SystemExit: Exits when given filename is invalid and is not the
-                        default coafile. Only raised when ``silent`` is
-                        ``False``.
+                        default coafile. Only raised when `silent` is `False`.
     """
     filename = os.path.abspath(filename)
 
@@ -115,7 +114,6 @@ def load_configuration(arg_list, log_printer):
                         indicated after colon.)
     """
     cli_sections = parse_cli(arg_list=arg_list)
-    check_conflicts(cli_sections)
 
     if (
             bool(cli_sections["default"].get("find_config", "False")) and
@@ -128,37 +126,33 @@ def load_configuration(arg_list, log_printer):
     for item in list(cli_sections["default"].contents.pop("targets", "")):
         targets.append(item.lower())
 
-    if bool(cli_sections["default"].get("no_config", "False")):
-        sections = cli_sections
-    else:
-        default_sections = load_config_file(Constants.system_coafile,
-                                            log_printer)
-        user_sections = load_config_file(
-            Constants.user_coafile,
-            log_printer,
-            silent=True)
+    default_sections = load_config_file(Constants.system_coafile,
+                                        log_printer)
 
-        default_config = str(
-            default_sections["default"].get("config", ".coafile"))
-        user_config = str(user_sections["default"].get(
-            "config", default_config))
-        config = os.path.abspath(
-            str(cli_sections["default"].get("config", user_config)))
+    user_sections = load_config_file(
+        Constants.user_coafile,
+        log_printer,
+        silent=True)
 
-        try:
-            save = bool(cli_sections["default"].get("save", "False"))
-        except ValueError:
-            # A file is deposited for the save parameter, means we want to save
-            # but to a specific file.
-            save = True
+    default_config = str(default_sections["default"].get("config", ".coafile"))
+    user_config = str(user_sections["default"].get("config", default_config))
+    config = os.path.abspath(
+        str(cli_sections["default"].get("config", user_config)))
 
-        coafile_sections = load_config_file(config, log_printer, silent=save)
+    try:
+        save = bool(cli_sections["default"].get("save", "False"))
+    except ValueError:
+        # A file is deposited for the save parameter, means we want to save but
+        # to a specific file.
+        save = True
 
-        sections = merge_section_dicts(default_sections, user_sections)
+    coafile_sections = load_config_file(config, log_printer, silent=save)
 
-        sections = merge_section_dicts(sections, coafile_sections)
+    sections = merge_section_dicts(default_sections, user_sections)
 
-        sections = merge_section_dicts(sections, cli_sections)
+    sections = merge_section_dicts(sections, coafile_sections)
+
+    sections = merge_section_dicts(sections, cli_sections)
 
     for section in sections:
         if section != "default":
