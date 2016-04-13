@@ -3,6 +3,7 @@ import platform
 import re
 
 from coalib.misc.Decorators import yield_once
+from coalib.misc.Constants import GLOBBING_SPECIAL_CHARS
 
 
 def _end_of_set_index(string, start_index):
@@ -27,6 +28,26 @@ def _end_of_set_index(string, start_index):
         closing_index += 1
 
     return closing_index
+
+
+def glob_escape(input_string):
+    """
+    Escapes the given string with ``[c]`` pattern. Examples:
+
+    >>> from coalib.parsing.Globbing import glob_escape
+    >>> glob_escape('test (1)')
+    'test [(]1[)]'
+    >>> glob_escape('test folder?')
+    'test folder[?]'
+    >>> glob_escape('test*folder')
+    'test[*]folder'
+
+    :param input_string: String that is to be escaped with ``[ ]``.
+    :return:             Escaped string in which all the special glob characters
+                         ``()[]|?*`` are escaped.
+    """
+    return re.sub("(?P<char>[" + re.escape(GLOBBING_SPECIAL_CHARS) + "])",
+                  "[\\g<char>]", input_string)
 
 
 def _position_is_bracketed(string, position):

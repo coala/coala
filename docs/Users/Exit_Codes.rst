@@ -11,6 +11,8 @@ The following is a list of coalas exit codes and their meanings:
 -  ``4`` - coala was executed with an unsupported version of python
 -  ``5`` - coala executed successfully. Results were found but patches
    to the results were applied successfully
+-  ``13`` - There is a conflict in the version of a dependency you have
+   installed and the requirements of coala.
 -  ``130`` - A KeyboardInterrupt (Ctrl+C) was pressed during the
    execution of coala.
 -  ``255`` - Any other general errors.

@@ -10,11 +10,11 @@ case $CIRCLE_NODE_INDEX in
 esac
 
 # apt-get commands
-sudo apt-get -qq update
-deps="espeak indent libclang1-3.4"
+sudo apt-get update
+deps="indent libclang1-3.4"
 deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
-sudo apt-get -qq install $deps $deps_python_gi $deps_python_dbus
+sudo apt-get install $deps $deps_python_gi $deps_python_dbus
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
@@ -22,8 +22,10 @@ for dep_version in "${dep_versions[@]}" ; do
   python --version
   source .misc/env_variables.sh
 
-  pip install -q -r test-requirements.txt
-  pip install -q -r requirements.txt
+  pip install -r test-requirements.txt
+  pip install -r requirements.txt
+  # Downloading nltk data that's required for nltk to run
+  bash .misc/deps.nltk.sh
 
   cd .misc
   bash install.python-gi.sh
@@ -32,5 +34,5 @@ for dep_version in "${dep_versions[@]}" ; do
 done
 
 if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
-  pip install -q -r docs-requirements.txt
+  pip install -r docs-requirements.txt
 fi

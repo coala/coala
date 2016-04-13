@@ -6,7 +6,7 @@ from distutils.errors import DistutilsOptionError
 
 class BuildManPage(Command):
     """
-    Add a `build_manpage` command  to your setup.py.
+    Add a ``build_manpage`` command  to your setup.py.
     To use this Command class add a command to call this class::
 
         # For setuptools

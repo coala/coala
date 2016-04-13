@@ -85,6 +85,7 @@ def acquire_actions_and_apply(console_printer,
     :param cli_actions:     The list of cli actions available.
     """
     cli_actions = cli_actions or CLI_ACTIONS
+    failed_actions = set()
     while True:
         actions = []
         for action in cli_actions:
@@ -107,6 +108,7 @@ def acquire_actions_and_apply(console_printer,
                                         section,
                                         metadata_list,
                                         action_dict,
+                                        failed_actions,
                                         result,
                                         file_diff_dict,
                                         file_dict):
@@ -114,21 +116,24 @@ def acquire_actions_and_apply(console_printer,
 
 
 def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
-                                 tab_width, color, index=0):
+                                 color, index=0):
     """
-    Prints the lines with tabs and spaces replaced by unicode
-    symbols.
+    Prints the lines with tabs and spaces replaced by unicode symbols.
 
-    :param console_printer: Object to print messages on the console.
-    :param line:            The line to print to the console.
-    :param tab_dict:        A dictionary containing the tab index and length.
-    :param tab_width:       The default tab width of the system.
-    :color:                 The color to print the lines with.
-    :index:                 The index from where to start the printing.
+    :param console_printer: The ``Printer`` object to print to.
+    :param line:            The line-text to print to ``console_printer``.
+    :param tab_dict:        A dictionary containing the indices of tabs inside
+                            ``line`` as keys and the tab-length as values.
+    :param color:           The color to print the line with (except for spaces
+                            and tabs.
+    :param index:           The index from where to start the printing.
     """
     for char in line:
         if char == " ":
-            console_printer.print("•", color='cyan', end='')
+            try:
+                console_printer.print("•", color='cyan', end='')
+            except UnicodeEncodeError:
+                console_printer.print(".", color='cyan', end='')
         elif char == '\t' and tab_dict:
             tab_count = tab_dict[index]
             console_printer.print(
@@ -164,23 +169,23 @@ def print_lines(console_printer,
         if i == sourcerange.start.line and sourcerange.start.column:
             print_spaces_tabs_in_unicode(
                 console_printer, line[:sourcerange.start.column-1],
-                tab_dict, tab_width, FILE_LINES_COLOR)
+                tab_dict, FILE_LINES_COLOR)
 
             printed_chars = sourcerange.start.column-1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             print_spaces_tabs_in_unicode(
                 console_printer, line[printed_chars:sourcerange.end.column-1],
-                tab_dict, tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+                tab_dict, HIGHLIGHTED_CODE_COLOR, printed_chars)
 
             print_spaces_tabs_in_unicode(
                 console_printer, line[sourcerange.end.column-1:],
-                tab_dict, tab_width, FILE_LINES_COLOR, sourcerange.end.column)
+                tab_dict, FILE_LINES_COLOR, sourcerange.end.column)
             console_printer.print("")
         else:
             print_spaces_tabs_in_unicode(
                 console_printer, line[printed_chars:], tab_dict,
-                tab_width, HIGHLIGHTED_CODE_COLOR, printed_chars)
+                HIGHLIGHTED_CODE_COLOR, printed_chars)
             console_printer.print("")
 
 
@@ -449,14 +454,17 @@ def acquire_settings(log_printer, settings_names_dict):
     return result
 
 
-def get_action_info(section, action):
+def get_action_info(section, action, failed_actions):
     """
     Get all the required Settings for an action. It updates the section with
     the Settings.
 
-    :param section: The section the action corresponds to.
-    :param action:  The action to get the info for.
-    :return:        Action name and the updated section.
+    :param section:         The section the action corresponds to.
+    :param action:          The action to get the info for.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :return:                Action name and the updated section.
     """
     params = action.non_optional_params
 
@@ -464,7 +472,7 @@ def get_action_info(section, action):
         raise ValueError("section has to be intializied.")
 
     for param_name in params:
-        if param_name not in section:
+        if param_name not in section or action.name in failed_actions:
             question = format_lines(
                 "Please enter a value for the parameter '{}' ({}): "
                 .format(param_name, params[param_name][0]))
@@ -505,22 +513,27 @@ def choose_action(console_printer, actions):
         console_printer.print(format_lines("Please enter a valid number."))
 
 
-def print_actions(console_printer, section, actions):
+def print_actions(console_printer, section, actions, failed_actions):
     """
     Prints the given actions and lets the user choose.
 
-    :param actions: A list of FunctionMetadata objects.
-    :return:        A touple with the name member of the FunctionMetadata
-                    object chosen by the user and a Section containing at
-                    least all needed values for the action. If the user did
-                    choose to do nothing, return (None, None).
+    :param console_printer: Object to print messages on the console.
+    :param actions:         A list of FunctionMetadata objects.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is
+                            successfully executed.
+    :return:                A touple with the name member of the
+                            FunctionMetadata object chosen by the user
+                            and a Section containing at least all needed
+                            values for the action. If the user did
+                            choose to do nothing, return (None, None).
     """
     choice = choose_action(console_printer, actions)
 
     if choice == 0:
         return None, None
 
-    return get_action_info(section, actions[choice - 1])
+    return get_action_info(section, actions[choice - 1], failed_actions)
 
 
 def ask_for_action_and_apply(log_printer,
@@ -528,6 +541,7 @@ def ask_for_action_and_apply(log_printer,
                              section,
                              metadata_list,
                              action_dict,
+                             failed_actions,
                              result,
                              file_diff_dict,
                              file_dict):
@@ -540,6 +554,9 @@ def ask_for_action_and_apply(log_printer,
     :param metadata_list:   Contains metadata for all the actions.
     :param action_dict:     Contains the action names as keys and their
                             references as values.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
     :param result:          Result corresponding to the actions.
     :param file_diff_dict:  If its an action which applies a patch, this
                             contains the diff of the patch to be applied to
@@ -550,9 +567,8 @@ def ask_for_action_and_apply(log_printer,
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
     """
-    action_name, section = print_actions(console_printer,
-                                         section,
-                                         metadata_list)
+    action_name, section = print_actions(console_printer, section,
+                                         metadata_list, failed_actions)
     if action_name is None:
         return False
 
@@ -565,11 +581,13 @@ def ask_for_action_and_apply(log_printer,
         console_printer.print(
             format_lines(chosen_action.success_message),
             color=SUCCESS_COLOR)
+        failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
         log_printer.log_exception("Failed to execute the action "
                                   "{} with error: {}.".format(action_name,
                                                               exception),
                                   exception)
+        failed_actions.add(action_name)
     return True
 
 

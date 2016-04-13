@@ -3,9 +3,8 @@ dependencies:
     - ~/.pyenv/versions/3.3.6
     - ~/.pyenv/versions/3.4.3
     - ~/.pyenv/versions/3.5.1
-    - ~/coala/node_modules
+    - ~/nltk_data
   pre:
-    - echo 'export PATH=$PATH:~/coala/node_modules/.bin' >> ~/.circlerc
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
     - nvm alias default node
   override:
@@ -17,14 +16,14 @@ test:
         parallel: true
     - python setup.py install:
         parallel: true
-    - pip install coala-bears --pre -U:
+    - pip install coala-bears colorama==0.3.6 --pre -U:
         parallel: true
-    - coala-ci:
+    - coala-ci -L DEBUG:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true
     - rm -rf docs/API && make -C docs clean
-    - sphinx-apidoc -f -o docs/API/ coalib coalib/tests
+    - sphinx-apidoc -f -o docs/API/ coalib
     - make -C docs html SPHINXOPTS=-W
 
 notify:

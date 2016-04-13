@@ -13,9 +13,9 @@ class InBetweenMatch:
         """
         Instantiates a new InBetweenMatch.
 
-        :param begin:  The `Match` of the start pattern.
-        :param inside: The `Match` between start and end.
-        :param end:    The `Match` of the end pattern.
+        :param begin:  The ``Match`` of the start pattern.
+        :param inside: The ``Match`` between start and end.
+        :param end:    The ``Match`` of the end pattern.
         """
         if begin > inside or inside > end:
             raise ValueError("The inside match must be enclosed by the begin "

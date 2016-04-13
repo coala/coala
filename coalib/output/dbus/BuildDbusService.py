@@ -1,12 +1,12 @@
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
-from coalib.misc import Constants
+from coalib import BUS_NAME
 
 
 class BuildDbusService(Command):
     """
-    Add a `build_dbus` command  to your setup.py.
+    Add a ``build_dbus`` command  to your setup.py.
     To use this Command class add a command to call this class::
 
         # For setuptools
@@ -42,7 +42,7 @@ class BuildDbusService(Command):
     def run(self):
         dist = self.distribution
         dbus_service = ("[D-BUS Service]\n"
-                        "Names=" + Constants.BUS_NAME + "\n"
+                        "Names=" + BUS_NAME + "\n"
                         "Exec=coala-dbus")
 
         with open(self.output, 'w') as f:

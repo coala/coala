@@ -14,7 +14,7 @@
 import json
 
 from coalib.coala_main import run_coala
-from coalib.output.JSONEncoder import JSONEncoder
+from coalib.output.JSONEncoder import create_json_encoder
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
@@ -28,12 +28,12 @@ def main():
     args = arg_parser.parse_args()
 
     log_printer = None if args.text_logs else ListLogPrinter()
-    results, exitcode = run_coala(log_printer=log_printer, autoapply=False)
+    results, exitcode, _ = run_coala(log_printer=log_printer, autoapply=False)
 
     retval = {"results": results}
     if not args.text_logs:
         retval["logs"] = log_printer.logs
-
+    JSONEncoder = create_json_encoder(use_relpath=args.relpath)
     if args.output:
         filename = str(args.output)
         with open(filename, 'w+') as fp:

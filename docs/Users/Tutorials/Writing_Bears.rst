@@ -57,6 +57,13 @@ to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
 ``coala -f src/*.c -d bears -b HelloWorldBear -L DEBUG``
 
+.. note::
+
+    The given bear directories must not have any glob expressions in them. Any
+    character that could be interpreted as a part of a glob expression will be
+    escaped. Please use comma separated values to give several such
+    directories instead.
+
 You should now see the debug message for our sample file.
 
 The Bear class also supports ``warn`` and ``err``.
@@ -148,8 +155,9 @@ The Setting does support some very basic types:
 -  Dict of strings (``dict``, values will be split by comma and colon)
 
 If you need another type, you can write the conversion function yourself
-and use this function as the annotation. We've provided a few advanced
-conversions for you:
+and use this function as the annotation (if you cannot convert value, be
+sure to throw ``TypeError`` or ``ValueError``). We've provided a few
+advanced conversions for you:
 
 -  ``coalib.settings.Setting.path``, converts to an absolute file path
    relative to the file/command where the setting was set
@@ -188,3 +196,76 @@ yield them and write the method as a generator.
     about how bears will look in the future, please read up on
     https://github.com/coala-analyzer/coala/issues/725 or ask us on
     https://gitter.im/coala-analyzer/coala.
+
+Bears Depending on Other Bears
+------------------------------
+
+So we've got a result, but what if we need our Bear to depend on results from
+a different Bear?
+
+Well coala has an efficient dependency management system that would run the
+other Bear before your Bear and get its results for you. All you need to do is
+to tell coala which Bear(s) you want to run before your Bear.
+
+So let's see how you could tell coala which Bears to run before yours:
+
+.. code:: python
+
+    from coalib.bears.LocalBear import LocalBear
+    from bears.somePathTo.OtherBear import OtherBear
+
+    class DependentBear(LocalBear):
+
+        def run(self, filename, file, dependency_results):
+            results = dependency_results[OtherBear.__name__]
+
+        @staticmethod
+        def get_dependencies():
+            return [OtherBear]
+
+As you can see we have a :meth:`~coalib.bears.Bear.Bear.get_dependencies`
+method which returns a list of bears we wish to depend on.
+In this case it is a list with 1 item: "OtherBear".
+
+.. note::
+    The list must have classes of the bear itself, not the name as a string.
+
+coala searches for the ``get_dependencies`` function before executing
+the ``DependentBear`` and runs all the Bears which are returned by it.
+
+After running these bears, coala gives all the results returned by the Bears
+in the ``dependency_results`` dictionary, which has the Bear's name as a key
+and a list of results as the value. E.g. in this case, we would have
+``dependency_results ==
+{'OtherBear' : [list containing results of OtherBear]]}``.
+
+.. note::
+    ``dependency_results`` is a keyword here and it cannot be called by
+    any other name.
+
+Hidden Results
+--------------
+Apart from regular Results, coala provides HiddenResults, which are used
+to share data between Bears as well as giving results which are not shown to
+the user. This feature is specifically for Bears that are dependencies of other
+Bears, and do not want to return Results which would be displayed when the
+bear is run.
+
+Let's see how we can use HiddenResults in our Bear:
+
+.. code:: python
+
+    from coalib.bears.LocalBear import LocalBear
+    from coalib.results.HiddenResult import HiddenResult
+
+    class OtherBear(LocalBear):
+
+        def run(self, filename, file):
+            yield HiddenResult(self, ["Some Content", "Some Other Content"])
+
+Here we see that this Bear (unlike normal Bears) yields a
+:class:`~coalib.results.HiddenResult` instead of a ``Result``. The first
+parameter in ``HiddenResult`` should be the instance of the Bear that yields
+this result (in this case ``self``), and second argument should be the content
+we want to transfer between the Bears. Here we use a list of strings as content
+but it can be any object.

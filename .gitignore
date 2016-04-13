@@ -1,3 +1,4 @@
+.DS_Store
 .directory
 .idea
 .kdev4
@@ -36,3 +37,4 @@ node_modules
 .vendor
 Goopfile.lock
 docs/API/
+venv/

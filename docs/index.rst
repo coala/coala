@@ -39,11 +39,13 @@ Welcome to the coala documentation!
    Writing Bears <Users/Tutorials/Writing_Bears>
    Linter Bears <Users/Tutorials/Linter_Bears>
    Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
+   Git Help <Users/Tutorials/Git_Help>
 
 .. toctree::
    :caption: Getting Involved
    :hidden:
 
+   Newcomers <Getting_Involved/Newcomers>
    Introduction <Getting_Involved/README>
    Codestyle <Getting_Involved/Codestyle>
    Commit Style <Getting_Involved/Writing_Good_Commits>
@@ -137,11 +139,16 @@ functionalities coala provides in their applications.
 
 See :doc:`External APIs <Users/External_APIs>` for more information.
 
-Status of the Project
----------------------
+Status and Stability of the Project
+-----------------------------------
 
-We are currently working hard to make this project reality. coala is
-currently usable, in an alpha stage and already provides many features.
+We are currently working hard to make this project reality. coala is currently
+usable, in beta stage and already provides more features than most
+language dependent alternatives. Every single commit is fully reviewed and
+checked with various automated methods including our testsuite covering all
+braches. Our master branch is continuously prereleased to our users so you can
+rely on the upcoming release being rock stable.
+
 If you want to see how the development progresses, check out
 
 https://github.com/coala-analyzer/coala

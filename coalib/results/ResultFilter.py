@@ -18,6 +18,8 @@ def filter_results(original_file_dict,
     :return:                   List of results from new files that are unique
                                from all those that existed in the old changes
     """
+
+    ensure_files_present(original_file_dict, modified_file_dict)
     # diffs_dict[file] is a diff between the original and modified file
     diffs_dict = {}
     for file in original_file_dict:
@@ -112,7 +114,7 @@ def remove_range(file_contents, source_range):
     if not file_contents:
         return []
 
-    newfile = copy.deepcopy(file_contents)
+    newfile = list(file_contents)
     # attention: line numbers in the SourceRange are human-readable,
     # list indices start with 0
 
@@ -204,3 +206,19 @@ def remove_result_ranges_diffs(result_list, file_dict):
         result_diff_dict_dict[original_result] = diff_dict
 
     return result_diff_dict_dict
+
+
+def ensure_files_present(original_file_dict, modified_file_dict):
+    """
+    Ensures that all files are available as keys in both dicts.
+
+    :param original_file_dict: Dict of lists of file contents before  changes
+    :param modified_file_dict: Dict of lists of file contents after changes
+    """
+    affected_files = set(original_file_dict.keys()).union(
+        set(modified_file_dict.keys()))
+    for file in affected_files:
+        if file not in original_file_dict:
+            original_file_dict[file] = []
+        if file not in modified_file_dict:
+            modified_file_dict[file] = []

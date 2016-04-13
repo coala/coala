@@ -86,7 +86,7 @@ Our ``output_regex`` should look like this
 
     (line):(column): (severity): (message)
 
-Or in `python regex <https://docs.python.org/2/library/re.html>`__
+Or in `python regex <https://docs.python.org/3/library/re.html>`__
 
 .. Start ignoring LineLengthBear
 

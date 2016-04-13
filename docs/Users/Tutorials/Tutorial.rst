@@ -269,6 +269,21 @@ You can also conditionally combine ignore rules! Bear names will be
 split by comma and spaces, invalid bear names like ``and`` will be
 ignored.
 
+Also note that in the bear names delimited by commas and spaces, you may
+specify glob wildcards that match several bears:
+
+::
+
+    # Start ignoring Line*, Py*
+    unwrappable_string_2 = unwrappable_string + "yeah it goes even further..."
+    another_unwrappable_string = unwrappable_string + unwrappable_string_2
+    # Stop ignoring
+
+In the above example all bears matching the glob `Line*` and `Py*` will
+be ignored. You may also specify more complex globs here such as
+`# Start ignoring (Line*|P[yx]*)` which will ignore all bears start with
+`Line`, `Py`, and `Px`.
+
 ::
 
     # Ignore LineLengthBear and SpaceConsistencyBear
@@ -322,37 +337,14 @@ shows:
 -  The sections which uses it
 -  The settings it uses (optional and required)
 
-Integrating coala into Your Project
------------------------------------
-
-It's easy to add coala to your project in a way that does not force your
-developers even to install coala using git submodules. This also has the
-advantage that all your developers are using exactly the same version of
-coala. You can try it out in the coala-tutorial repository:
-
-::
-
-    git submodule add https://github.com/coala-analyzer/coala.git
-    git commit -m 'Add coala submodule'
-    git add .coafile
-    git commit -m 'Add .coafile'
-
-You can now use ``coala/coala`` as if it were the installed binary.
-Here's the instructions for your developers:
-
-::
-
-    git submodule init
-    git submodule update
-    coala/coala
-
 Continuing the Journey
 ----------------------
 
 If you want to know about more options, take a look at our help with
 ``coala -h``. If you liked or disliked this tutorial, feel free to drop
-us a note at our bug tracker (github) or mailing list
-(https://groups.google.com/forum/#!forum/coala-devel).
+us a note at our `bug tracker
+<https://github.com/coala-analyzer/coala/issues>`_ or `mailing list
+<https://groups.google.com/forum/#!forum/coala-devel>`_.
 
 If you need more flexibility, know that coala is extensible in many ways
 due to its modular design:

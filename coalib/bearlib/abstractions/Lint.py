@@ -1,57 +1,42 @@
 import os
 import re
 import shutil
+from subprocess import check_call, CalledProcessError, DEVNULL
 import tempfile
 
 from coalib.bears.Bear import Bear
+from coalib.misc.Decorators import enforce_signature
 from coalib.misc.Shell import escape_path_argument, run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 
-def is_binary_present(cls):
-    """
-    Checks whether the needed binary is present.
-
-    The function is intended be used with classes
-    having an executable member which will be checked.
-
-    :return: True if binary is present, or is not required.
-             not True otherwise, with a string containing a
-             detailed description of what's missing.
-    """
-    try:
-        if cls.executable is None:
-            return True
-        if shutil.which(cls.executable) is None:
-            return repr(cls.executable) + " is not installed."
-        else:
-            return True
-    except AttributeError:
-        # Happens when `executable` does not exist in `cls`.
-        return True
-
-
 class Lint(Bear):
+
     """
     Deals with the creation of linting bears.
 
     For the tutorial see:
     http://coala.readthedocs.org/en/latest/Users/Tutorials/Linter_Bears.html
 
-    :param executable:      The executable to run the linter.
-    :param arguments:       The arguments to supply to the linter, such
-                            that the file name to be analyzed can be
-                            appended to the end. Note that we use ``.format()``
-                            on the arguments - so, ``{abc}`` needs to be given
-                            as ``{{abc}}``.
-                            Currently, the following will be replaced:
+    :param executable:                  The executable to run the linter.
+    :param prerequisite_command:        The command to run as a prerequisite
+                                        and is of type ``list``.
+    :param prerequisites_fail_msg:      The message to be displayed if the
+                                        prerequisite fails.
+    :param arguments:                   The arguments to supply to the linter,
+                                        such that the file name to be analyzed
+                                        can be appended to the end. Note that
+                                        we use ``.format()`` on the arguments -
+                                        so, ``{abc}`` needs to be given as
+                                        ``{{abc}}``. Currently, the following
+                                        will be replaced:
 
-                             - ``{filename}`` - The filename passed to
-                               ``lint()``
-                             - ``{config_file}`` - The config file created
-                               using ``config_file()``
+                                         - ``{filename}`` - The filename passed
+                                           to ``lint()``
+                                         - ``{config_file}`` - The config file
+                                           created using ``config_file()``
 
     :param output_regex:    The regex which will match the output of the linter
                             to get results. This is not used if
@@ -79,8 +64,9 @@ class Lint(Bear):
                             severity of the coala Result to set it to. If it is
                             not a dict, it is ignored.
     """
-    check_prerequisites = classmethod(is_binary_present)
     executable = None
+    prerequisite_command = None
+    prerequisite_fail_msg = 'Unknown failure.'
     arguments = ""
     output_regex = re.compile(r'(?P<line>\d+)\.(?P<column>\d+)\|'
                               r'(?P<severity>\d+): (?P<message>.*)')
@@ -107,7 +93,8 @@ class Lint(Bear):
 
         stdin_input = "".join(file) if self.use_stdin else None
         stdout_output, stderr_output = run_shell_command(self.command,
-                                                         stdin=stdin_input)
+                                                         stdin=stdin_input,
+                                                         shell=True)
         self.stdout_output = tuple(stdout_output.splitlines(keepends=True))
         self.stderr_output = tuple(stderr_output.splitlines(keepends=True))
         results_output = (self.stderr_output if self.use_stderr
@@ -122,12 +109,38 @@ class Lint(Bear):
         return results
 
     def process_output(self, output, filename, file):
+        """
+        Take the output (from stdout or stderr) and use it to create Results.
+        If the class variable ``gives_corrected`` is set to True, the
+        ``_process_corrected()`` is called. If it is False,
+        ``_process_issues()`` is called.
+
+        :param output:   The output to be used to obtain Results from. The
+                         output is either stdout or stderr depending on the
+                         class variable ``use_stderr``.
+        :param filename: The name of the file whose output is being processed.
+        :param file:     The contents of the file whose output is being
+                         processed.
+        :return:         Generator which gives Results produced based on this
+                         output.
+        """
         if self.gives_corrected:
             return self._process_corrected(output, filename, file)
         else:
             return self._process_issues(output, filename)
 
     def _process_corrected(self, output, filename, file):
+        """
+        Process the output and use it to create Results by creating diffs.
+        The diffs are created by comparing the output and the original file.
+
+        :param output:   The corrected file contents.
+        :param filename: The name of the file.
+        :param file:     The original contents of the file.
+        :return:         Generator which gives Results produced based on the
+                         diffs created by comparing the original and corrected
+                         contents.
+        """
         for diff in self.__yield_diffs(file, output):
             yield Result(self,
                          self.diff_message,
@@ -136,16 +149,42 @@ class Lint(Bear):
                          severity=self.diff_severity)
 
     def _process_issues(self, output, filename):
+        """
+        Process the output using the regex provided in ``output_regex`` and
+        use it to create Results by using named captured groups from the regex.
+
+        :param output:   The output to be parsed by regex.
+        :param filename: The name of the file.
+        :param file:     The original contents of the file.
+        :return:         Generator which gives Results produced based on regex
+                         matches using the ``output_regex`` provided and the
+                         ``output`` parameter.
+        """
         regex = self.output_regex
         if isinstance(regex, str):
             regex = regex % {"file_name": filename}
 
-        # Note: We join `output` because the regex may want to capture
+        # Note: We join ``output`` because the regex may want to capture
         #       multiple lines also.
         for match in re.finditer(regex, "".join(output)):
             yield self.match_to_result(match, filename)
 
     def _get_groupdict(self, match):
+        """
+        Convert a regex match's groups into a dictionary with data to be used
+        to create a Result. This is used internally in ``match_to_result``.
+
+        :param match:    The match got from regex parsing.
+        :param filename: The name of the file from which this match is got.
+        :return:         The dictionary containing the information:
+                         - line - The line where the result starts.
+                         - column - The column where the result starts.
+                         - end_line - The line where the result ends.
+                         - end_column - The column where the result ends.
+                         - severity - The severity of the result.
+                         - message - The message of the result.
+                         - origin - The origin of the result.
+        """
         groups = match.groupdict()
         if (
                 isinstance(self.severity_map, dict) and
@@ -174,10 +213,11 @@ class Lint(Bear):
 
     def match_to_result(self, match, filename):
         """
-        Converts a regex match's groups into a result.
+        Convert a regex match's groups into a coala Result object.
 
         :param match:    The match got from regex parsing.
         :param filename: The name of the file from which this match is got.
+        :return:         The Result object.
         """
         groups = self._get_groupdict(match)
 
@@ -199,6 +239,73 @@ class Lint(Bear):
             column=groups.get("column", None),
             end_line=groups.get("end_line", None),
             end_column=groups.get("end_column", None))
+
+    @classmethod
+    def check_prerequisites(cls):
+        """
+        Checks for prerequisites required by the Linter Bear.
+
+        It uses the class variables:
+        -  ``executable`` - Checks that it is available in the PATH using
+        ``shutil.which``.
+        -  ``prerequisite_command`` - Checks that when this command is run,
+        the exitcode is 0. If it is not zero, ``prerequisite_fail_msg``
+        is gives as the failure message.
+
+        If either of them is set to ``None`` that check is ignored.
+
+        :return: True is all checks are valid, else False.
+        """
+        return cls._check_executable_command(
+            executable=cls.executable,
+            command=cls.prerequisite_command,
+            fail_msg=cls.prerequisite_fail_msg)
+
+    @classmethod
+    @enforce_signature
+    def _check_executable_command(cls, executable,
+                                  command: (list, tuple, None), fail_msg):
+        """
+        Checks whether the required executable is found and the
+        required command succesfully executes.
+
+        The function is intended be used with classes having an
+        executable, prerequisite_command and prerequisite_fail_msg.
+
+        :param executable:   The executable to check for.
+        :param command:      The command to check as a prerequisite.
+        :param fail_msg:     The fail message to display when the
+                             command doesn't return an exitcode of zero.
+
+        :return: True if command successfully executes, or is not required.
+                 not True otherwise, with a string containing a
+                 detailed description of the error.
+        """
+        if cls._check_executable(executable):
+            if command is None:
+                return True  # when there are no prerequisites
+            try:
+                check_call(command, stdout=DEVNULL, stderr=DEVNULL)
+                return True
+            except (OSError, CalledProcessError):
+                return fail_msg
+        else:
+            return repr(executable) + " is not installed."
+
+    @staticmethod
+    def _check_executable(executable):
+        """
+        Checks whether the needed executable is present in the system.
+
+        :param executable: The executable to check for.
+
+        :return: True if binary is present, or is not required.
+                 not True otherwise, with a string containing a
+                 detailed description of what's missing.
+        """
+        if executable is None:
+            return True
+        return shutil.which(executable) is not None
 
     def generate_config_file(self):
         """
@@ -223,9 +330,9 @@ class Lint(Bear):
     def config_file():
         """
         Returns a configuation file from the section given to the bear.
-        The section is available in `self.section`. To add the config
+        The section is available in ``self.section``. To add the config
         file's name generated by this function to the arguments,
-        use `{config_file}`.
+        use ``{config_file}``.
 
         :return: A list of lines of the config file to be used or None.
         """
