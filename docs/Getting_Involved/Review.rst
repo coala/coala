@@ -1,13 +1,13 @@
 Reviewing
 =========
 
-This document is a guide to coalas review process. It will be extended
+This document is a guide to *coala*'s review process. It will be extended
 over time.
 
 Review Process
 --------------
 
-The review process for coala is as follows:
+The review process for *coala* is as follows:
 
 1. Anyone can submit commits for review. This usually happens on WIP
    branches, submitting goes via GitHub Pull Requests.

@@ -1,16 +1,16 @@
 Getting Involved
 ================
 
-We are working hard to make coala reality. If you want to help us you
+We are working hard to make *coala* reality. If you want to help us you
 can do the following things:
 
 -  Join us on our mailing list.
--  coala developer list:
+-  *coala* developer list:
    https://groups.google.com/forum/#!forum/coala-devel
 
    -  coala-devel@googlegroups.com
 
--  coala announcement list:
+-  *coala* announcement list:
    https://groups.google.com/forum/#!forum/coala-announcements
 
    -  coala-announcements@googlegroups.com
@@ -32,7 +32,7 @@ can do the following things:
    Please get in contact with us so we can coordinate coding together.
 
 Please take a look at the other files in this directory for getting
-started with specific parts of coala.
+started with specific parts of *coala*.
 
 We appreciate any help. (Partially with words, partially with chocolate
 if you live near hamburg.)

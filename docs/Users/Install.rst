@@ -1,14 +1,14 @@
 ﻿coala Installation
 ==================
 
-This document contains information on how to install coala. Supported
-platforms are Linux and Windows. coala is known to work on OS X as well.
-coala is tested against CPython 3.3, 3.4 and 3.5.
+This document contains information on how to install *coala*. Supported
+platforms are Linux and Windows. *coala* is known to work on OS X as well.
+*coala* is tested against CPython 3.3, 3.4 and 3.5.
 
-In order to run coala you need to install Python. It is recommended,
+In order to run *coala* you need to install Python. It is recommended,
 that you install Python3 >= 3.3 from http://www.python.org.
 
-The easiest way to install coala is using pip (Pip Installs Packages).
+The easiest way to install *coala* is using pip (Pip Installs Packages).
 If you don't already have pip, you can install it like described on
 https://pip.pypa.io/en/stable/installing.html. Note that pip is shipped
 with recent python versions by default.
@@ -16,10 +16,10 @@ with recent python versions by default.
 System wide installation
 ------------------------
 
-The simplest way to install coala is to do it system-wide. But, This is
+The simplest way to install *coala* is to do it system-wide. But, This is
 generally discouraged in favor or using a virtualenv.
 
-To install the latest most stable version of coala and supported bears
+To install the latest most stable version of *coala* and supported bears
 system-wide, use:
 
 ::
@@ -44,13 +44,13 @@ To install the nightly build from our master branch, you can do:
 
     $ pip3 install coala-bears --pre
 
-To install only coala (without any bears), you can do:
+To install only *coala* (without any bears), you can do:
 
 ::
 
     $ pip3 install coala
 
-With ``--pre`` you can install the nightly build of the coala base
+With ``--pre`` you can install the nightly build of the *coala* base
 without bears.
 
 Installing inside a virtualenv
@@ -90,7 +90,7 @@ the corresponding environment.
 
         $ venv\scripts\activate
 
-Finally, you install coala and supported bears inside the activated
+Finally, you install *coala* and supported bears inside the activated
 virtualenv with:
 
 ::
@@ -100,17 +100,17 @@ virtualenv with:
 Installing coala from source
 ----------------------------
 
-In order to install coala from source, it is recommended to install git.
+In order to install *coala* from source, it is recommended to install git.
 See http://git-scm.com/ for further information and a downloadable
 installer or use your package manager on linux to get it.
 
 .. note::
 
-    Again, here it is recommended to install coala inside a virtualenv.
+    Again, here it is recommended to install *coala* inside a virtualenv.
     This can be done by creating a virtualenv and running the installation
     commands after the virtualenv has been activated.
 
-After having git installed, you can download the source code of coala
+After having git installed, you can download the source code of *coala*
 with the following command:
 
 ::
@@ -118,7 +118,7 @@ with the following command:
     $ git clone https://github.com/coala-analyzer/coala-bears/
     $ cd coala-bears
 
-You can now install coala with a simple:
+You can now install *coala* with a simple:
 
 ::
 
@@ -131,18 +131,18 @@ installed by running
 
     $ pip3 install setuptools
 
-You will have coala installed into your python scripts directory. On an
+You will have *coala* installed into your python scripts directory. On an
 unixoid system it is probably already available on your command line
 globally.
 
-You may also install a development version of coala to test and make
+You may also install a development version of *coala* to test and make
 changes easily. To do this run:
 
 ::
 
     $ python3 setup.py develop
 
-This essentially lets you install coala in a way that allows you to make
+This essentially lets you install *coala* in a way that allows you to make
 changes to the code and see the changes take effect immediately.
 
 Alternate installation
@@ -169,7 +169,7 @@ https://docs.python.org/3.3/install/#alternate-installation.
 Dependencies
 ------------
 
-This section lists dependencies of coala that are not automatically
+This section lists dependencies of *coala* that are not automatically
 installed. On Windows, you can get many with ``nuget``
 (https://www.nuget.org/), on Mac Homebrew will help you installing
 dependencies (http://brew.sh/).
@@ -191,7 +191,7 @@ very old one.
 
 .. note::
 
-    If using coala from source you can just do ``npm install`` or
+    If using *coala* from source you can just do ``npm install`` or
     ``npm install -g`` to use the ``package.json`` which is shipped with
     coala.
 
@@ -208,7 +208,7 @@ Some bears need some dependencies available:
 Clang
 ~~~~~
 
-coala features some bears that make use of Clang. In order for them to
+*coala* features some bears that make use of Clang. In order for them to
 work, you need to install libclang:
 
 -  Ubuntu: ``apt-get install libclang1``
@@ -235,7 +235,7 @@ Replace "XXX" with the ClangSharp version you received from nuget.
 Generating Documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-coala documentation can be generated by fetching the documentation
+*coala* documentation can be generated by fetching the documentation
 requirements. This can be achieved by
 
 ::

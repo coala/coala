@@ -2,7 +2,7 @@ The .coafile Specification
 ==========================
 
 This document gives a short introduction into the specification of a
-coala configuration file. It is meant to be rather factual, if you wish
+*coala* configuration file. It is meant to be rather factual, if you wish
 to learn by example, please take a look at the :doc:`Tutorials/Tutorial`.
 
 Naming, Scope and Location
@@ -35,8 +35,8 @@ projects executed with that user.
 
 All settings specified here override only settings given by the system
 wide coafile which has the lowest priority. The ``default_coafile`` must
-lie in the coala installation directory and is valid for everyone using
-this coala installation
+lie in the *coala* installation directory and is valid for everyone using
+this *coala* installation.
 
 Setting Inheritance
 -------------------

@@ -2,10 +2,10 @@ Guide to Write a Bear
 =====================
 
 Welcome. This document presents information on how to write a bear for
-coala. It assumes you know how to use coala. If not please read our main
+*coala*. It assumes you know how to use *coala*. If not please read our main
 tutorial!
 
-The sample sources for this tutorial lie at our coala-tutorial
+The sample sources for this tutorial lie at our *coala-tutorial*
 repository, go clone it with:
 
 ::
@@ -13,13 +13,13 @@ repository, go clone it with:
     git clone https://github.com/coala-analyzer/coala-tutorial.git
 
 All paths and commands given here are meant to be executed from the root
-directory of the coala-tutorial repository.
+directory of the *coala-tutorial* repository.
 
 What is a bear?
 ---------------
 
 A bear is meant to do some analysis on source code. The source code will
-be provided by coala so the bear doesn't have to care where it comes from
+be provided by *coala* so the bear doesn't have to care where it comes from
 or where it goes.
 
 A bear can communicate with the user via two ways:
@@ -52,7 +52,7 @@ each file:
 
 This bear is stored at ``./bears/HelloWorldBear``
 
-In order to let coala execute this bear you need to let coala know where
+In order to let *coala* execute this bear you need to let *coala* know where
 to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
 ``coala -f src/*.c -d bears -b HelloWorldBear -L DEBUG``
@@ -117,13 +117,13 @@ Try executing it:
 Hey, we'll get asked for the user\_input! Wasn't that easy? Go ahead,
 enter something and observe the output.
 
-So, what did coala do here?
+So, what did *coala* do here?
 
-First, coala looked at the parameters of the run method and found that
+First, *coala* looked at the parameters of the run method and found that
 we need some value named user\_input. Then it parsed our documentation
 comment and found a description for the parameter which was shown to us
 to help us choose the right value. After the needed values are provided,
-coala converts us the value into a string because we've provided the
+*coala* converts us the value into a string because we've provided the
 ``str`` annotation for this parameter. If no annotation is given or the
 value isn't convertible into the desired data type, you will get a
 ``coalib.settings.Setting.Setting``.
@@ -174,11 +174,11 @@ advanced conversions for you:
 Results
 -------
 
-In the end we've got a result. If a file is provided, coala will show
-the file, if a line is provided, coala will also show a few lines before
+In the end we've got a result. If a file is provided, *coala* will show
+the file, if a line is provided, *coala* will also show a few lines before
 the affecting line. There are a few parameters to the Result
 constructor, so you can e.g. create a result that proposes a code change
-to the user. If the user likes it, coala will apply it automatically -
+to the user. If the user likes it, *coala* will apply it automatically -
 you don't need to care.
 
 Your function needs to return an iterable of ``Result`` objects: that
@@ -203,11 +203,11 @@ Bears Depending on Other Bears
 So we've got a result, but what if we need our Bear to depend on results from
 a different Bear?
 
-Well coala has an efficient dependency management system that would run the
+Well *coala* has an efficient dependency management system that would run the
 other Bear before your Bear and get its results for you. All you need to do is
-to tell coala which Bear(s) you want to run before your Bear.
+to tell *coala* which Bear(s) you want to run before your Bear.
 
-So let's see how you could tell coala which Bears to run before yours:
+So let's see how you could tell *coala* which Bears to run before yours:
 
 .. code:: python
 
@@ -230,10 +230,10 @@ In this case it is a list with 1 item: "OtherBear".
 .. note::
     The list must have classes of the bear itself, not the name as a string.
 
-coala searches for the ``get_dependencies`` function before executing
+*coala* searches for the ``get_dependencies`` function before executing
 the ``DependentBear`` and runs all the Bears which are returned by it.
 
-After running these bears, coala gives all the results returned by the Bears
+After running these bears, *coala* gives all the results returned by the Bears
 in the ``dependency_results`` dictionary, which has the Bear's name as a key
 and a list of results as the value. E.g. in this case, we would have
 ``dependency_results ==
@@ -245,7 +245,7 @@ and a list of results as the value. E.g. in this case, we would have
 
 Hidden Results
 --------------
-Apart from regular Results, coala provides HiddenResults, which are used
+Apart from regular Results, *coala* provides HiddenResults, which are used
 to share data between Bears as well as giving results which are not shown to
 the user. This feature is specifically for Bears that are dependencies of other
 Bears, and do not want to return Results which would be displayed when the

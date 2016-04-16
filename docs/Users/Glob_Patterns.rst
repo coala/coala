@@ -1,9 +1,9 @@
 Glob - Extended unix style pathname expansion
 =============================================
 
-In coala, files and directories are specified by file name. To allow
+In *coala*, files and directories are specified by file name. To allow
 input of multiple files without requiring a large number of filenames,
-coala supports a number of wildcards. These are based on the unix-style
+*coala* supports a number of wildcards. These are based on the unix-style
 glob syntax and they are *not* the same as regular expressions.
 
 .. note::
@@ -195,4 +195,3 @@ brackets. Parentheses that have no match are ignored as well as
     True
     >>> fnmatch("ac", "a**c")
     True
-

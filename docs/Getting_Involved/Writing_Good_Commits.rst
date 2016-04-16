@@ -1,7 +1,7 @@
 Introduction
 ============
 
-At coala we are looking heavily at the maintainability of the code.
+At *coala* we are looking heavily at the maintainability of the code.
 
     Code is more often read than written!
 
@@ -96,7 +96,7 @@ Example:
     -  The issue reference will automatically add the link of the commit in
        the issue.
     -  It will also automatically close the issue when the commit is
-       accepted into coala.
+       accepted into *coala*.
 
 .. seealso::
 

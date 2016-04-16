@@ -116,7 +116,7 @@ We can now compile and add our regex using the ``re`` python library like so
             r'(?P<severity>Error|Warning|Info):\s(?P<message>.+)'
         )
 
-coala uses three types of severities
+*coala* uses three types of severities
 
 -  INFO
 -  NORMAL
@@ -125,12 +125,12 @@ coala uses three types of severities
 which are defined in ``coalib.results.RESULT_SEVERITY``. In order to use
 the severity group from the regex we will first have to map the output
 severities (as seen in the linter and as used in the regex above
-``Info``, ``Warning``, ``Error``) to the defined coala severities
+``Info``, ``Warning``, ``Error``) to the defined *coala* severities
 (above stated ``INFO``, ``NORMAL``, ``MAJOR``).
 
 Luckily for us the Lint class provides us with the ``severity_map``
 property. ``severity_map`` is just a dictionary of strings that
-should be mapped to the define coala severities. Let's go ahead and import
+should be mapped to the define *coala* severities. Let's go ahead and import
 ``coalib.results.RESULT_SEVERITY`` and write our ``severity_map``. Our code
 could look like this
 
@@ -177,7 +177,7 @@ We can test our bear like this
 
     In order for the above command to work we should have 2 files in
     our current dir: ``HTMLTutorialBear.py`` and our ``sample.html``.
-    Naming is **very** important in coala. coala will look for bears
+    Naming is **very** important in *coala*. *coala* will look for bears
     by their **filename** and display them based on their
     **classname**.
 
@@ -224,7 +224,7 @@ We will give the param a sugestive name like ``htmllint_ignore``.
 
 .. note::
 
-    The documentation of the param is parsed by coala and it will be used
+    The documentation of the param is parsed by *coala* and it will be used
     as help to the user for that specific setting.
 
 The last thing we need to do is join the strings in the ``html_ignore``,
@@ -307,7 +307,7 @@ By running
 
     $ coala --bear-dirs=. --bears=HTMLTutorialBear -B
 
-We can see that our Bear setting is documented properly. To use coala
+We can see that our Bear setting is documented properly. To use *coala*
 with our Bear on `sample.html` we run
 
 ::

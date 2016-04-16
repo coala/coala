@@ -1,25 +1,25 @@
 External APIs
 =============
 
-Use coala to make your application better.
+Use *coala* to make your application better.
 
 DBus
 ----
 
-The coala DBus API essentially creates a server which can have multiple
-clients connected to it. The clients communicate to the coala server
-using DBus. To start the server, first install coala and then simple run
+The *coala* DBus API essentially creates a server which can have multiple
+clients connected to it. The clients communicate to the *coala* server
+using DBus. To start the server, first install *coala* and then simple run
 ``coala-dbus``.
 
 This spawns a bus with the name ``org.coala_analyzer.v1`` as a
 SessionBus and can be verified and tested using a DBus debugger like
 `DFeet <https://wiki.gnome.org/Apps/DFeet>`__. The bus has 1 object-path
 by default - ``/org/coala_analyzer/v1``. This is the first point of
-contact with coala for any client.
+contact with *coala* for any client.
 
 The object-path ``/org/coala_analyzer/v1`` has the interface
 ``org.coala_analyzer.v1`` which contains the two methods -
-``CreateDocument`` and ``DisposeDocument``. These are used to tell coala
+``CreateDocument`` and ``DisposeDocument``. These are used to tell *coala*
 about the documents you wish to analyze.
 
 ``CreateDocument``
@@ -44,7 +44,7 @@ It disposes the object-path corresponding to the given path.
 
 Now, the object-path returned by the ``CreateDocument`` method also has
 the interface ``org.coala_analyzer.v1``. This interface is used to
-handle which config file coala will use to analyze the document, and the
+handle which config file *coala* will use to analyze the document, and the
 function to get analysis results. It contains 4 functions:
 
 ``GetConfigFile``

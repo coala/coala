@@ -6,7 +6,7 @@ Bears That Can Suggest And Make Corrections
 before reading this.
 
 Some executables (like ``indent`` or ``autopep8``) can generate a corrected
-file from the original. We can use such executables so that ``coala``, using
+file from the original. We can use such executables so that *coala*, using
 these bears, can suggest and also make automatic corrections. Here's an
 example bear. (GNUIndentBear)
 

@@ -24,8 +24,8 @@ Getting started with coala
 
 First of all, you have to fork the repository you are going to contribute to.
 This will basically give you a clone of the repository to your own repository.
-You can do this by opening `this to fork the coala website <https://github.com/coala-analyzer/coala>`_
-or `this to fork the coala-bears website <https://github.com/coala-analyzer/coala-bears>`_
+You can do this by opening `this to fork the *coala* website <https://github.com/coala-analyzer/coala>`_
+or `this to fork the *coala-bears* website <https://github.com/coala-analyzer/coala-bears>`_
 and then clicking 'Fork' in the upper right corner.
 
 Grabbing coala on your local machine
@@ -33,7 +33,7 @@ Grabbing coala on your local machine
 
 Now you should clone the repository to your local machine so that you can have
 access to all the code and start fixing issues!
-To do this, you can use these to clone the coala / coala-bears repositories:
+To do this, you can use these to clone the *coala* / *coala-bears* repositories:
 
 ::
 
@@ -123,7 +123,7 @@ Then type:
     $ git commit
 
 This will lead you to a text editor. Now you need to write your commit message.
-We are very strict about writing commit messages as they help us keep coala
+We are very strict about writing commit messages as they help us keep *coala*
 **clean** and **stable**. Commit messages usually consists of three main
 parts. They should have a newline between them.
 
@@ -201,7 +201,7 @@ Now after you have created the Pull Request, there are two possibilities:
       - Reviewer wants something changed (This also causes gitmate to fail)
 
 It's highly unlikely that your PR will be accepted on the first attempt - but
-don't worry that's just how it works. It helps us keeping coala
+don't worry that's just how it works. It helps us keeping *coala*
 **clean** and **stable**.
 
 .. seealso::
@@ -223,7 +223,7 @@ Now you have successfully edited your last commit!
 Keeping your fork in sync
 -------------------------
 
-As people work on coala new commits will be added. This will result in your
+As people work on *coala* new commits will be added. This will result in your
 local fork going out of sync with the remote repository.
 To sync your changes with the remote repository run the following commands in
 the desired branch:

@@ -2,7 +2,7 @@ Welcome to the Newcomers guide!
 ===============================
 
 This guide will help you to get involved and teach you how to make your first
-contribution to coala!
+contribution to *coala*!
 
 Meet the community!
 -------------------
@@ -65,7 +65,7 @@ Things to do before pushing
 
 Now you need to make sure your change is actually working. For this, you will
 need to test it locally before pushing it to your fork, and checking it with
-concrete examples. So basically, run tests and run coala by simply typing
+concrete examples. So basically, run tests and run *coala* by simply typing
 
 ::
 
@@ -107,7 +107,7 @@ After creating your ``Pull Request``, there's two options:
   per the review comments
 
 It's highly unlikely that your ``Pull Request`` will be accepted on the first
-attempt - but don't worry, that's just how it works. It helps us keep coala
+attempt - but don't worry, that's just how it works. It helps us keep *coala*
 **clean** and **stable**.
 
 .. seealso::

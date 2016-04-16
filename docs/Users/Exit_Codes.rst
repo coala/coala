@@ -1,7 +1,7 @@
 Exit Codes
 ==========
 
-The following is a list of coalas exit codes and their meanings:
+The following is a list of *coala*'s exit codes and their meanings:
 
 -  ``0`` - coala executed succesfully but yielded no results.
 -  ``1`` - coala executed succesfully but yielded results.

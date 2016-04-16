@@ -2,7 +2,7 @@ Introduction
 ============
 
 Tests are an essential element to check if your written components in
-coala really do work like they should. Even when you think "I really
+*coala* really do work like they should. Even when you think "I really
 looked over my code, no need for tests" you are wrong! Bugs introduced
 when not writing tests are often the most horrible ones, they have the
 characteristic to be undiscoverable (or only discoverable after dozens
@@ -22,7 +22,7 @@ of code again and again, which is unnecessary.
 Actually Writing a Test
 -----------------------
 
-So how do you implement a test in coala? First up, tests are placed into
+So how do you implement a test in *coala*? First up, tests are placed into
 the ``coala-bears/tests`` (if you want to write a test for a bear) or
 ``coala/tests`` (if you test a component written for the coalib)
 directory. They are also written in python (version 3) and get
@@ -43,7 +43,7 @@ The name of the test file has to end with ``Test.py`` (for example
 .. note::
 
     Often you don't want to run all available tests. To run your
-    specific one, type (in the coala root folder):
+    specific one, type (in the *coala* root folder):
 
     .. code:: shell
 
@@ -54,7 +54,7 @@ The name of the test file has to end with ``Test.py`` (for example
     ``py.test -h``
 
 Coming to the test file structure. Every test script starts with your
-imports. According to the coala code style (and pep8 style) we first do
+imports. According to the *coala* code style (and pep8 style) we first do
 system imports (like ``re`` or ``subprocessing``), followed by first party
 imports (like ``coalib.result.Result``).
 
@@ -94,7 +94,7 @@ it?
 But how do you actually test if your component is correct? For that
 purpose you have asserts. Asserts check whether a condition is fulfilled
 and pass the result to the overall test-suite-invoking-instance, that
-manages all tests in coala. The result is processed and you get a
+manages all tests in *coala*. The result is processed and you get a
 message if something went wrong in your test.
 
 .. seealso::
@@ -121,7 +121,7 @@ So an example test that succeeds would be:
 
 .. note::
 
-    Tests in coala are evaluated against their coverage, means how many
+    Tests in *coala* are evaluated against their coverage, means how many
     statements will be executed from your component when invoking your
     test cases. A branch coverage of 100% is needed for any commit in
     order to be pushed to master - please ask us on gitter if you need
@@ -187,7 +187,7 @@ as a kickstart for test-writing.
 
 Put the code under the desired folder inside ``tests``,
 modify it to let it test your stuff and run the test from
-the coala root folder ``py.test``.
+the *coala* root folder ``py.test``.
 
 .. code:: python
 
