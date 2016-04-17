@@ -2,7 +2,7 @@ import traceback
 
 from pyprint.Printer import Printer
 
-from coalib.misc.Decorators import enforce_signature
+from coalib.misc.Decorators import enforce_signature, classproperty
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
@@ -31,6 +31,13 @@ class Bear(Printer, LogPrinter):
 
     Settings are available at all times through self.section.
     """
+
+    @classproperty
+    def name(cls):
+        """
+        :return: The name of the bear
+        """
+        return cls.__name__
 
     @enforce_signature
     def __init__(self,
