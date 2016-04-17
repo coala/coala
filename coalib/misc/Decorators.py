@@ -298,3 +298,29 @@ def enforce_signature(function):
         return function(*args, **kwargs)
 
     return decorated
+
+
+class classproperty(property):
+    """
+    Decorator to set a class function to a class property.
+
+    Given a class like:
+
+    >>> class test:
+    ...     @classproperty
+    ...     def func(self):
+    ...         return 1
+
+    We can now access the class property using the class name:
+
+    >>> test.func
+    1
+
+    And we can still have the same behaviour with an instance:
+
+    >>> test().func
+    1
+    """
+
+    def __get__(self, obj, type_):
+        return self.fget.__get__(None, type_)(type_)
