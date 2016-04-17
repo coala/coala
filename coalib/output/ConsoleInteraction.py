@@ -634,7 +634,7 @@ def show_bear(console_printer, bear, sections, metadata):
     :param sections:        The sections to which the bear belongs.
     :param metadata:        Metadata about the bear.
     """
-    console_printer.print("{bear}:".format(bear=bear.__name__))
+    console_printer.print("{bear}:".format(bear=bear.name))
     console_printer.print("  " + metadata.desc + "\n")
 
     show_enumeration(console_printer,
@@ -667,12 +667,12 @@ def print_bears(console_printer, bears, compress):
     if not bears:
         console_printer.print("No bears to show.")
     elif compress:
-        bear_list = sorted(bears.keys(), key=lambda bear: bear.__name__)
+        bear_list = sorted(bears.keys(), key=lambda bear: bear.name)
         for bear in bear_list:
-            console_printer.print(" *", bear.__name__)
+            console_printer.print(" *", bear.name)
     else:
         for bear in sorted(bears.keys(),
-                           key=lambda bear: bear.__name__):
+                           key=lambda bear: bear.name):
             show_bear(console_printer,
                       bear,
                       bears[bear],

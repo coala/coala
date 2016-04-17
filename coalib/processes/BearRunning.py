@@ -98,7 +98,7 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
     if kwargs.get("dependency_results", True) is None:
         del kwargs["dependency_results"]
 
-    name = bear_instance.__class__.__name__
+    name = bear_instance.name
 
     try:
         result_list = bear_instance.execute(*args, **kwargs)
@@ -363,7 +363,7 @@ def get_next_global_bear(timeout,
         if dependency_results is False:
             global_bear_queue.put(bear_id)
 
-    return bear, bear.__class__.__name__, dependency_results
+    return bear, dependency_results
 
 
 def task_done(obj):
@@ -450,11 +450,12 @@ def run_global_bears(message_queue,
     """
     try:
         while True:
-            bear, bearname, dep_results = (
+            bear, dep_results = (
                 get_next_global_bear(timeout,
                                      global_bear_queue,
                                      global_bear_list,
                                      global_result_dict))
+            bearname = bear.__class__.__name__
             result = run_global_bear(message_queue, timeout, bear, dep_results)
             if result:
                 global_result_dict[bearname] = result

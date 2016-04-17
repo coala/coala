@@ -67,7 +67,7 @@ class Bear(Printer, LogPrinter):
 
         cp = type(self).check_prerequisites()
         if cp is not True:
-            error_string = ("The bear " + type(self).__name__ +
+            error_string = ("The bear " + self.name +
                             " does not fulfill all requirements.")
             if cp is not False:
                 error_string += " " + cp
@@ -91,13 +91,13 @@ class Bear(Printer, LogPrinter):
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
             self.warn("The bear {} cannot be executed.".format(
-                type(self).__name__), str(err))
+                self.name), str(err))
             return
 
         return self.run(*args, **kwargs)
 
     def execute(self, *args, **kwargs):
-        name = type(self).__name__
+        name = self.name
         try:
             self.debug("Running bear {}...".format(name))
             # If it's already a list it won't change it

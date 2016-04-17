@@ -217,7 +217,7 @@ So let's see how you could tell *coala* which Bears to run before yours:
     class DependentBear(LocalBear):
 
         def run(self, filename, file, dependency_results):
-            results = dependency_results[OtherBear.__name__]
+            results = dependency_results[OtherBear.name]
 
         @staticmethod
         def get_dependencies():

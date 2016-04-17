@@ -227,7 +227,7 @@ class Lint(Bear):
                 groups[variable] = int(groups[variable])
 
         if "origin" in groups:
-            groups['origin'] = "{} ({})".format(str(self.__class__.__name__),
+            groups['origin'] = "{} ({})".format(str(self.name),
                                                 str(groups["origin"]))
 
         return Result.from_values(

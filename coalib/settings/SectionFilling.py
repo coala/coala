@@ -74,10 +74,10 @@ def fill_section(section, acquire_settings, log_printer, bears):
             needed = bear.get_non_optional_settings()
             for key in needed:
                 if key in prel_needed_settings:
-                    prel_needed_settings[key].append(bear.__name__)
+                    prel_needed_settings[key].append(bear.name)
                 else:
                     prel_needed_settings[key] = [needed[key][0],
-                                                 bear.__name__]
+                                                 bear.name]
 
     # Strip away existent settings.
     needed_settings = {}
