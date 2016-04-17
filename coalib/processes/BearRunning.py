@@ -136,7 +136,7 @@ def get_local_dependency_results(local_result_list, bear_instance):
                               results are picked.
     :param bear_instance:     The instance of a local bear to get the
                               dependencies from.
-    :return:                  Return none if their are no dependencies for the
+    :return:                  Return none if there are no dependencies for the
                               bear. Else return a dictionary containing
                               dependency results.
     """
