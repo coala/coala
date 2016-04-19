@@ -25,7 +25,3 @@ test:
     - rm -rf docs/API && make -C docs clean
     - sphinx-apidoc -f -o docs/API/ coalib
     - make -C docs html SPHINXOPTS=-W
-
-notify:
-  webhooks:
-    - url: https://webhooks.gitter.im/e/9f718e67e18393c83881
