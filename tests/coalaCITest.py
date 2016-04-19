@@ -105,6 +105,9 @@ class coalaCITest(unittest.TestCase):
              make_temp(suffix='.coafile', prefix='', dir=tempdir) as coafile,\
              make_temp(dir=tempdir) as unrelated_file:
             orig_file.close()
+            with open(coafile, mode="w") as file:
+                file.write("files = something\n")
+
             execute_coala(coala_ci.main, "coala-ci",
                           "-c", re.escape(coafile))
             self.assertFalse(os.path.isfile(orig_file.name))

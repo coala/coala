@@ -1,5 +1,6 @@
 import multiprocessing
 import unittest
+from os.path import abspath
 
 from coalib.bears.Bear import Bear
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -169,6 +170,6 @@ class BearTest(unittest.TestCase):
 
     def test_get_config_dir(self):
         section = Section("default")
-        section.append(Setting("config", "/path/to/dir/config"))
+        section.append(Setting("files", "**", "/path/to/dir/config"))
         uut = TestBear(section, None)
-        self.assertEqual(uut.get_config_dir(), "/path/to/dir")
+        self.assertEqual(uut.get_config_dir(), abspath("/path/to/dir"))

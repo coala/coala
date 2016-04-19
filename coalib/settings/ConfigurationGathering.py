@@ -200,15 +200,46 @@ def find_user_config(file_path, max_trials=10):
 
 
 def get_config_directory(section):
+    """
+    Retrieves the configuration directory for the given section.
+
+    Given an empty section:
+
+    >>> section = Section("name")
+
+    The configuration directory is not defined and will therefore fallback to
+    the current directory:
+
+    >>> get_config_directory(section) == os.path.abspath(".")
+    True
+
+    If the ``files`` setting is given with an originating coafile, the directory
+    of the coafile will be assumed the configuration directory:
+
+    >>> section.append(Setting("files", "**", origin="/tmp/.coafile"))
+    >>> get_config_directory(section) == os.path.abspath('/tmp/')
+    True
+
+    However if its origin is already a directory this will be preserved:
+
+    >>> section['files'].origin = os.path.abspath('/tmp/dir/')
+    >>> os.makedirs(section['files'].origin, exist_ok=True)
+    >>> get_config_directory(section) == section['files'].origin
+    True
+
+    If no section is given, the current directory is returned:
+
+    >>> get_config_directory(None) == os.path.abspath(".")
+    True
+
+    :param section: The section to inspect.
+    :return: The directory where the project is lying.
+    """
     if section is None:
         return os.getcwd()
-    try:
-        path = str(section["config"])
-        return path if os.path.isdir(path) else os.path.dirname(path)
-    except IndexError:
-        if os.path.isfile(os.path.join(os.getcwd(), '.coafile')):
-            return os.getcwd()
-        return None
+
+    path = os.path.abspath(section.get('files', '').origin)
+    return path if os.path.isdir(path) else os.path.dirname(path)
 
 
 def gather_configuration(acquire_settings,

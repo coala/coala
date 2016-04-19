@@ -11,10 +11,7 @@ from coalib.misc.ContextManagers import make_temp, change_directory
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.StringProcessing import escape
 from coalib.settings.ConfigurationGathering import (
-    find_user_config, gather_configuration, get_config_directory,
-    load_configuration)
-from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
+    find_user_config, gather_configuration, load_configuration)
 
 
 class ConfigurationGatheringTest(unittest.TestCase):
@@ -284,39 +281,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
                     ['--no-config', '--find-config'],
                     self.log_printer)
                 self.assertEqual(cm.exception.code, 2)
-
-    def test_get_config_directory(self):
-        old_isfile = os.path.isfile
-        old_isdir = os.path.isdir
-
-        section = Section("default")
-
-        # Without section
-        config_dir = get_config_directory(None)
-        self.assertEqual(config_dir, os.getcwd())
-
-        # With section, but without "config"
-        os.path.isfile = lambda *args: True
-        config_dir = get_config_directory(section)
-        self.assertEqual(config_dir, os.getcwd())
-
-        os.path.isfile = lambda *args: False
-        config_dir = get_config_directory(section)
-        self.assertEqual(config_dir, None)
-
-        # With "config" in section
-        section.append(Setting("config", "/path/to/dir/config"))
-
-        os.path.isdir = lambda *args: True
-        config_dir = get_config_directory(section)
-        self.assertEqual(config_dir, "/path/to/dir/config")
-
-        os.path.isdir = lambda *args: False
-        config_dir = get_config_directory(section)
-        self.assertEqual(config_dir, "/path/to/dir")
-
-        os.path.isdir = old_isdir
-        os.path.isfile = old_isfile
 
     def test_autoapply_arg(self):
         sections, _, _, _ = gather_configuration(
