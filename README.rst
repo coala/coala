@@ -21,6 +21,22 @@
 
 Get coala to lint all your languages in your project with one tool and config!
 
+Introduction
+------------
+
+coala is a language independent analysis toolkit. It empowers developers
+to create rules which a project's code should conform to. coala takes care
+of showing these issues to users in a friendly manner, is versatile and
+can be used in any environment. Patches to automatically fix code will
+be managed too. coala has a set of official bears (plugins) to provide
+an out-of-the-box analysis functionality for many popular languages in
+addition to some generically applicable algorithms.
+
+For information on the languages supported by coala-bears, refer to this link
+`here <https://gist.github.com/Adrianzatreanu/cf334ae9f19976e2d5d7>`__. For
+information on the various bears supported by coala, refer to the link
+`here <https://gist.github.com/Adrianzatreanu/cf2d0c8b2ecd542a4860>`__.
+
 About
 -----
 
