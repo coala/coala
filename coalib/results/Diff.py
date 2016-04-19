@@ -69,6 +69,7 @@ class Diff:
         :param file:  A list of lines in the file to apply the fixit to.
         :return:      The corresponding Diff object.
         """
+        assert isinstance(file, (list, tuple))
 
         oldvalue = '\n'.join(file[fixit.range.start.line-1:
                                   fixit.range.end.line])
@@ -78,7 +79,7 @@ class Diff:
                     fixit.value +
                     oldvalue[endindex:])
         new_file = (file[:fixit.range.start.line-1] +
-                    newvalue.splitlines(True) +
+                    type(file)(newvalue.splitlines(True)) +
                     file[fixit.range.end.line:])
 
         return cls.from_string_arrays(file, new_file)
