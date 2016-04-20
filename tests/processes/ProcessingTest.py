@@ -413,6 +413,17 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 42)
 
+        test_file_dict_d = {'f':
+                            ('# Start ignoring cBear\n',
+                             'All of this ignored\n')}
+        test_ignore_range_d = list(yield_ignore_ranges(test_file_dict_d))
+        for test_bears, test_source_range in test_ignore_range_d:
+            self.assertEqual(test_bears, ['cbear'])
+            self.assertEqual(test_source_range.start.line, 1)
+            self.assertEqual(test_source_range.start.column, 1)
+            self.assertEqual(test_source_range.end.line, 2)
+            self.assertEqual(test_source_range.end.column, 20)
+
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):
 

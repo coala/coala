@@ -401,12 +401,14 @@ def yield_ignore_ranges(file_dict):
     for filename, file in file_dict.items():
         start = None
         bears = []
+        stop_ignoring = False
         for line_number, line in enumerate(file, start=1):
             line = line.lower()
             if "start ignoring " in line:
                 start = line_number
                 bears = get_ignore_scope(line, "start ignoring ")
             elif "stop ignoring" in line:
+                stop_ignoring = True
                 if start:
                     yield (bears,
                            SourceRange.from_values(filename,
@@ -421,6 +423,13 @@ def yield_ignore_ranges(file_dict):
                                                1,
                                                line_number+1,
                                                len(file[line_number])))
+        if stop_ignoring is False and start is not None:
+            yield (bears,
+                   SourceRange.from_values(filename,
+                                           start,
+                                           1,
+                                           len(file),
+                                           len(file[-1])))
 
 
 def process_queues(processes,
