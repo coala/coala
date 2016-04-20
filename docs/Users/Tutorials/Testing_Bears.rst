@@ -1,8 +1,7 @@
 How to use LocalBearTestHelper to test your bears
 =================================================
 
-*coala* has an awesome testing framework so you can write tests for bears
-with ease.
+*coala* has an awesome testing framework to write tests for bears with ease.
 
 You can use the following to test your bears:
 
