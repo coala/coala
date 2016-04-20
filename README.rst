@@ -21,6 +21,14 @@
 
 Get coala to lint all your languages in your project with one tool and config!
 
+Demo (Click to View)
+--------------------
+
+|asciicast|
+
+.. |asciicast| image:: https://asciinema.org/a/42945.png
+   :target: https://asciinema.org/a/42945?speed=2
+
 About
 -----
 
