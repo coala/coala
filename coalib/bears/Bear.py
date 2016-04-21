@@ -30,7 +30,15 @@ class Bear(Printer, LogPrinter):
     before/after every run invocation.
 
     Settings are available at all times through self.section.
+
+    To indicate which languages your bear supports, just give it the
+    ``LANGUAGES`` value:
+
+    >>> class SomeBear(Bear):
+    ...     LANGUAGES = ('C', 'CPP','C#', 'D')
     """
+
+    LANGUAGES = ()
 
     @classproperty
     def name(cls):
