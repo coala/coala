@@ -43,6 +43,8 @@ class TestAction(ResultAction):
 
 class TestBear(Bear):
 
+    LANGUAGES = ('F#', 'Shakespearean Programming Language')
+
     def run(self, setting1, setting2: int=None):
         """
         Test bear Description.
@@ -595,6 +597,9 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "TestBear:\n"
             expected_string += "  Test bear Description.\n\n"
+            expected_string += "  Supported languages:\n"
+            expected_string += "   * F#\n"
+            expected_string += "   * Shakespearean Programming Language\n\n"
             expected_string += "  Used in:\n"
             expected_string += "   * default\n"
             expected_string += "   * docs\n\n"
@@ -613,6 +618,8 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeBear:\n"
             expected_string += "  Some Description.\n\n"
+            expected_string += ("  The bear does not provide information "
+                                "about which languages it can analyze.\n\n")
             expected_string += "  Used in:\n"
             expected_string += "   * default\n\n"
             expected_string += "  No needed settings.\n\n"
@@ -626,6 +633,8 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeOtherBear:\n"
             expected_string += "  This is a Bear.\n\n"
+            expected_string += ("  The bear does not provide information "
+                                "about which languages it can analyze.\n\n")
             expected_string += "  Used in:\n"
             expected_string += "   * test\n\n"
             expected_string += "  No needed settings.\n\n"
@@ -642,6 +651,8 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "TestBear2:\n"
             expected_string += "  Test bear 2 description.\n\n"
+            expected_string += ("  The bear does not provide information "
+                                "about which languages it can analyze.\n\n")
             expected_string += "  Used in:\n"
             expected_string += "   * test\n\n"
             expected_string += "  Needed Settings:\n"
@@ -656,6 +667,8 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "SomeBear:\n"
             expected_string += "  Some Description.\n\n"
+            expected_string += ("  The bear does not provide information "
+                                "about which languages it can analyze.\n\n")
             expected_string += "  No sections.\n\n"
             expected_string += "  No needed settings.\n\n"
             expected_string += "  No optional settings.\n\n"
