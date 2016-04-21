@@ -298,7 +298,7 @@ class ProcessingTest(unittest.TestCase):
                          tuple,
                          msg="files in file_dict should not be editable")
 
-        # Non existent file
+    def test_get_file_dict_non_existent_file(self):
         file_dict = get_file_dict(["non_existent_file"], self.log_printer)
         self.assertEqual(file_dict, {})
         self.assertIn(("Failed to read file 'non_existent_file' because of "
