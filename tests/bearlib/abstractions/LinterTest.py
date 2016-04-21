@@ -448,6 +448,18 @@ class LinterComponentTest(unittest.TestCase):
                 self.assertEqual(fl.read(), "config_value = 88")
         self.assertFalse(os.path.isfile(config_file))
 
+    def test_metaclass_repr(self):
+        uut = linter("my-tool")(self.ManualProcessingTestLinter)
+        self.assertEqual(
+            repr(uut),
+            "<ManualProcessingTestLinter linter class (wrapping 'my-tool')>")
+
+        # Test also whether derivatives change the class name accordingly.
+        class DerivedLinter(uut):
+            pass
+        self.assertEqual(repr(DerivedLinter),
+                         "<DerivedLinter linter class (wrapping 'my-tool')>")
+
 
 class LinterReallifeTest(unittest.TestCase):
 

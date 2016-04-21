@@ -109,7 +109,13 @@ def _prepare_options(options):
 
 
 def _create_linter(klass, options):
-    class LinterBase(LocalBear):
+    class LinterMeta(type):
+
+        def __repr__(cls):
+            return "<{} linter class (wrapping {})>".format(
+                cls.__name__, repr(options["executable"]))
+
+    class LinterBase(LocalBear, metaclass=LinterMeta):
 
         @staticmethod
         def generate_config(filename, file):
