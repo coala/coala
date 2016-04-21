@@ -297,6 +297,8 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(type(file_dict[self.testcode_c_path]),
                          tuple,
                          msg="files in file_dict should not be editable")
+        self.assertEqual("Files that will be checked:\n" + self.testcode_c_path,
+                         self.log_printer.log_queue.get().message)
 
     def test_get_file_dict_non_existent_file(self):
         file_dict = get_file_dict(["non_existent_file"], self.log_printer)

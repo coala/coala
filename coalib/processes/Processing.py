@@ -259,6 +259,8 @@ def get_file_dict(filename_list, log_printer):
                                       exception,
                                       log_level=LOG_LEVEL.WARNING)
 
+    log_printer.debug("Files that will be checked:\n" +
+                      "\n".join(file_dict.keys()))
     return file_dict
 
 
