@@ -149,8 +149,8 @@ class FunctionMetadata:
             else:
                 optional_params[arg] = (
                     doc_comment.param_dict.get(arg, cls.str_nodesc) + " (" +
-                    cls.str_optional.format(str(defaults[i-num_non_defaults]))
-                    + ")",
+                    cls.str_optional.format(
+                        str(defaults[i-num_non_defaults])) + ")",
                     argspec.annotations.get(arg, None),
                     defaults[i-num_non_defaults])
 
