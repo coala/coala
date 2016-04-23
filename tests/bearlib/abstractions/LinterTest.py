@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import unittest
 from unittest.mock import ANY, Mock
@@ -459,6 +460,16 @@ class LinterComponentTest(unittest.TestCase):
             pass
         self.assertEqual(repr(DerivedLinter),
                          "<DerivedLinter linter class (wrapping 'my-tool')>")
+
+    def test_repr(self):
+        uut = (linter(sys.executable)
+               (self.ManualProcessingTestLinter)
+               (self.section, None))
+
+        self.assertRegex(
+            repr(uut),
+            "<ManualProcessingTestLinter linter object \\(wrapping " +
+            re.escape(repr(sys.executable)) + "\\) at 0x[a-fA-F0-9]+>")
 
 
 class LinterReallifeTest(unittest.TestCase):

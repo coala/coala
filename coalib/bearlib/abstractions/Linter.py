@@ -451,6 +451,10 @@ def _create_linter(klass, options):
                 return self.process_output(output, filename, file,
                                            **process_output_kwargs)
 
+        def __repr__(self):
+            return "<{} linter object (wrapping {}) at {}>".format(
+                type(self).__name__, repr(self.get_executable()), hex(id(self)))
+
     # Mixin the linter into the user-defined interface, otherwise
     # `create_arguments` and other methods would be overridden by the
     # default version.
