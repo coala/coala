@@ -161,6 +161,34 @@ class FunctionMetadata:
                    optional_params=optional_params,
                    omit=omit)
 
+    def filter_parameters(self, dct):
+        """
+        Filters the given dict for keys that are declared as parameters inside
+        this metadata (either optional or non-optional).
+
+        You can use this function to safely pass parameters from a given
+        dictionary:
+
+        >>> def multiply(a, b=2, c=0):
+        ...     return a * b + c
+        >>> metadata = FunctionMetadata.from_function(multiply)
+        >>> args = metadata.filter_parameters({'a': 10, 'b': 20, 'd': 30})
+
+        You can safely pass the arguments to the function now:
+
+        >>> multiply(**args)  # 10 * 20
+        200
+
+        :param dct:
+            The dict to filter.
+        :return:
+            A new dict containing the filtered items.
+        """
+        return {key: dct[key]
+                for key in (self.non_optional_params.keys() |
+                            self.optional_params.keys())
+                if key in dct}
+
     @classmethod
     def merge(cls, *metadatas):
         """
