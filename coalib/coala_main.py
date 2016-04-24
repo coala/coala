@@ -48,7 +48,8 @@ def run_coala(log_printer=None,
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
-    log_printer = log_printer or LogPrinter(ConsolePrinter())
+
+    log_printer = LogPrinter(ConsolePrinter()) if log_printer is None else log_printer
 
     exitcode = 0
     results = {}
@@ -88,7 +89,8 @@ def run_coala(log_printer=None,
             yielded, yielded_unfixed, results[section_name] = (
                 simplify_section_result(section_result))
 
-            yielded_results = yielded_results or yielded
+            
+	    yielded_results = yielded if yielded_results is None else yielded_results
             yielded_unfixed_results = (
                 yielded_unfixed_results or yielded_unfixed)
             did_nothing = False

@@ -7,7 +7,7 @@ from pkg_resources import VersionConflict
 
 
 def get_exitcode(exception, log_printer=None):
-    log_printer = log_printer or LogPrinter(NullPrinter())
+    log_printer  = LogPrinter(NullPrinter()) if log_printer is None else log_printer
 
     if isinstance(exception, KeyboardInterrupt):  # Ctrl+C
         print("Program terminated by user.")
