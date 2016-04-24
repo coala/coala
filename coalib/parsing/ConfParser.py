@@ -15,7 +15,8 @@ class ConfParser:
                  key_delimiters=(',', ' '),
                  section_name_surroundings=None,
                  remove_empty_iter_elements=True):
-        section_name_surroundings = section_name_surroundings or {"[": "]"}
+        
+	section_name_surroundings = {"[": "]"} if section_name_surroundings is None else section_name_surroundings
 
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,

@@ -11,7 +11,8 @@ from coalib.parsing.Globbing import glob_escape
 
 def main(log_printer=None, section: Section=None):
     start_path = get_config_directory(section)
-    log_printer = log_printer or LogPrinter(ConsolePrinter())
+
+    log_printer = LogPrinter(ConsolePrinter()) if log_printer is None else log_printer
 
     if start_path is None:
         return 255

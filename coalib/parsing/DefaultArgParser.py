@@ -11,7 +11,8 @@ def default_arg_parser(formatter_class=None):
     :param formatter_class: Formatting the arg_parser output into a specific
                             form. For example: In the manpage format.
     """
-    formatter_class = formatter_class or argparse.RawDescriptionHelpFormatter
+
+    formatter_class = argparse.RawDescriptionHelpFormatter if formatter_class is None else formatter_class
 
     entry_point = sys.argv[0]
     for entry in ['coala-ci', 'coala-dbus', 'coala-format', 'coala-json',
