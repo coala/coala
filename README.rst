@@ -32,10 +32,21 @@ Demo (Click to View)
 About
 -----
 
-*coala* is a simple COde AnaLysis Application. Its goal is to make static
-code analysis easy while remaining completely modular and therefore
-extendable and language independent. *coala* is written with a lower case
-"c".
+*coala* is a language independent analysis toolkit. It empowers developers
+to create rules which a project's code should conform to. coala takes care
+of showing these issues to users in a friendly manner, is versatile and can be
+used in any environment. Patches to automatically fix code will be managed too.
+*coala* has a set of official bears (plugins) to provide an out-of-the-box
+analysis functionality for many popular languages in addition to some
+generically applicable algorithms.
+
+For information on the languages supported by *coala-bears*, refer to
+`this link <https://github.com/coala-analyzer/coala-bears/wiki/Supported-languages>`__.
+
+For information on the various bears supported by *coala*, refer to the link
+`here <https://github.com/coala-analyzer/coala-bears/wiki/Available-bears>`__.
+
+*coala* is written with a lower case "c".
 
 Read more at our `documentation <http://coala.rtfd.org/>`__.
 
