@@ -47,15 +47,50 @@ def _has_all(obj, attribute_names):
     return True
 
 
-def _is_defined_in(obj, file_path):
+def object_defined_in(obj, file_path):
+    """
+    Check if the object is defined in the given file.
+
+    >>> object_defined_in(object_defined_in, __file__)
+    True
+    >>> object_defined_in(object_defined_in, "somewhere else")
+    False
+
+    Builtins are always defined outside any given file:
+
+    >>> object_defined_in(False, __file__)
+    False
+
+    :param obj:       The object to check.
+    :param file_path: The path it might be defined in.
+    :return:          True if the object is defined in the file.
+    """
     try:
         source = inspect.getfile(obj)
         if (platform.system() == 'Windows' and
                 source.lower() == file_path.lower() or
                 source == file_path):
             return True
-    except TypeError:  # Bool values and others
+    except TypeError:  # Builtin values don't have a source location
         pass
+
+    return False
+
+
+def _is_defined_in(obj, file_path):
+    """
+    Chek if a class is defined in the given file.
+
+    Any class is considered to be defined in the given file if any of it's
+    parent classes or the class itself is defined in it.
+    """
+    if not inspect.isclass(obj):
+        return object_defined_in(obj, file_path)
+
+    for base in inspect.getmro(obj):
+        if object_defined_in(base, file_path):
+            return True
+
     return False
 
 

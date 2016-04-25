@@ -49,7 +49,7 @@ class coalaTest(unittest.TestCase):
 
             lines = output.splitlines()
             bear_lines = sum(1 for line in lines if line.startswith(" * "))
-            self.assertEqual(bear_lines, 2)
+            self.assertEqual(bear_lines, 3)
 
             for line in lines:
                 self.assertNotIn("WARNING", line)
