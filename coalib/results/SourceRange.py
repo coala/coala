@@ -38,10 +38,11 @@ class SourceRange(TextRange):
                     end_line=None,
                     end_column=None):
         start = SourcePosition(file, start_line, start_column)
-        if not end_line:
-            end = None
+        if end_line or (end_column and end_column > start_column):
+            end = SourcePosition(file, end_line if end_line else start_line,
+                                 end_column)
         else:
-            end = SourcePosition(file, end_line, end_column)
+            end = None
 
         return cls(start, end)
 
