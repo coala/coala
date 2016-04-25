@@ -17,6 +17,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.coala_main import run_coala
 from coalib.collecting.Collectors import collect_all_bears_from_sections
+from coalib.misc.Exceptions import get_exitcode
 from coalib.output.ConsoleInteraction import (
     acquire_settings, nothing_done, print_results, print_section_beginning,
     show_bears)
@@ -34,18 +35,22 @@ def main():
     console_printer = ConsolePrinter()
     if args.show_bears or args.show_all_bears:
         log_printer = LogPrinter(console_printer)
-        sections, _ = load_configuration(arg_list=None, log_printer=log_printer)
-        if args.show_all_bears:
-            local_bears, global_bears = collect_all_bears_from_sections(
-                sections, log_printer)
-        else:
-            # We ignore missing settings as it's not important.
-            local_bears, global_bears = fill_settings(
-                sections,
-                acquire_settings=lambda *args, **kwargs: {},
-                log_printer=log_printer)
-        show_bears(local_bears, global_bears, args.show_all_bears,
-                   console_printer)
+        try:
+            sections, _ = load_configuration(arg_list=None,
+                                             log_printer=log_printer)
+            if args.show_all_bears:
+                local_bears, global_bears = collect_all_bears_from_sections(
+                    sections, log_printer)
+            else:
+                # We ignore missing settings as it's not important.
+                local_bears, global_bears = fill_settings(
+                    sections,
+                    acquire_settings=lambda *args, **kwargs: {},
+                    log_printer=log_printer)
+            show_bears(local_bears, global_bears, args.show_all_bears,
+                       console_printer)
+        except BaseException as exception:  # pylint: disable=broad-except
+            return get_exitcode(exception, log_printer)
         return 0
 
     partial_print_sec_beg = functools.partial(
