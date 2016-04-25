@@ -83,3 +83,16 @@ class coalaTest(unittest.TestCase):
             retval, output = execute_coala(coala.main, "coala", "-A")
             self.assertEqual(retval, 0)
             self.assertIn("Unable to collect bears from", output)
+
+            import_fn.side_effect = (
+                lambda *args, **kwargs: raise_error(VersionConflict,
+                                                    "msg1", "msg2"))
+            retval, output = execute_coala(coala.main, "coala", "-A")
+            # Note that bear version conflicts don't give exitcode=13,
+            # they just give a warning with traceback in log_level debug.
+            self.assertEqual(retval, 0)
+            self.assertRegex(output,
+                             "Unable to collect bears from .* because there "
+                             "is a conflict with the version of a dependency "
+                             "you have installed")
+            self.assertIn("pip install msg2", output)  # Check recommendation
