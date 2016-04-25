@@ -120,6 +120,18 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
                 try:
                     for bear in _import_bears(matching_file, kinds):
                         yield bear, bear_glob
+                except pkg_resources.VersionConflict as exception:
+                    log_printer.log_exception(
+                        ("Unable to collect bears from {file} because there "
+                         "is a conflict with the version of a dependency "
+                         "you have installed. This may be resolved by "
+                         "creating a separate virtual environment for coala "
+                         "or running `pip install {pkg}`. Be aware that the "
+                         "latter solution might break other python packages "
+                         "that depend on the currently installed "
+                         "version.").format(file=matching_file,
+                                            pkg=str(exception.req)),
+                        exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
                     log_printer.log_exception(
                         "Unable to collect bears from {file}. Probably the "
