@@ -641,8 +641,8 @@ def show_bear(console_printer, bear, sections, metadata):
                      "Supported languages:",
                      bear.LANGUAGES,
                      "  ",
-                     "The bear does not provide information about which "
-                     "languages it can analyze.")
+                     "(The bear does not provide information about which "
+                     "languages it can analyze.)")
     show_enumeration(console_printer,
                      "Used in:",
                      sections,
