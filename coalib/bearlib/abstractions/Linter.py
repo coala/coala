@@ -437,10 +437,14 @@ def _create_linter(klass, options):
                     FunctionMetadata.filter_parameters(
                         self._get_create_arguments_metadata(), kwargs))
 
-                output = run_shell_command(
-                    (self.get_executable(),) + tuple(self.create_arguments(
+                arguments = (self.get_executable(),) + tuple(
+                    self.create_arguments(
                         filename, file, config_file,
-                        **create_arguments_kwargs)),
+                        **create_arguments_kwargs))
+                self.debug("Running '{}'".format(' '.join(arguments)))
+
+                output = run_shell_command(
+                    arguments,
                     stdin="".join(file) if options["use_stdin"] else None)
 
                 output = tuple(compress(
