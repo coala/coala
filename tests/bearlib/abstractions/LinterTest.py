@@ -332,6 +332,20 @@ class LinterComponentTest(unittest.TestCase):
 
         self.assertEqual(results, expected)
 
+    def test_minimal_regex(self):
+        uut = (linter(sys.executable,
+                      output_format="regex",
+                      output_regex="an_issue")
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        results = list(uut.process_output(['not an issue'], 'file', [""]))
+        self.assertEqual(results, [])
+
+        results = list(uut.process_output(['an_issue'], 'file', [""]))
+        self.assertEqual(results, [Result.from_values("EmptyTestLinter", "",
+                                                      file="file")])
+
     def test_get_non_optional_settings(self):
         class Handler(self.ManualProcessingTestLinter):
 

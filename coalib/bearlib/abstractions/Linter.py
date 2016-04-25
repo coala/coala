@@ -239,14 +239,17 @@ def _create_linter(klass, options):
             # Pre process the groups
             groups = match.groupdict()
 
-            try:
-                groups["severity"] = severity_map[
-                    groups["severity"].lower()]
-            except KeyError:
-                self.warn(
-                    repr(groups["severity"]) + " not found in severity-map. "
-                    "Assuming `RESULT_SEVERITY.NORMAL`.")
-                groups["severity"] = RESULT_SEVERITY.NORMAL
+            if 'severity' in groups:
+                try:
+                    groups["severity"] = severity_map[
+                        groups["severity"].lower()]
+                except KeyError:
+                    self.warn(
+                        repr(groups["severity"]) + " not found in "
+                        "severity-map. Assuming `RESULT_SEVERITY.NORMAL`.")
+                    groups["severity"] = RESULT_SEVERITY.NORMAL
+            else:
+                groups['severity'] = RESULT_SEVERITY.NORMAL
 
             for variable in ("line", "column", "end_line", "end_column"):
                 groups[variable] = (None
