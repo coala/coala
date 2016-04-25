@@ -2,12 +2,14 @@ import os
 import re
 import sys
 import unittest
+import unittest.mock
+from pkg_resources import VersionConflict
 
 from coalib import coala
 from coalib.misc.ContextManagers import prepare_file
 from tests.test_bears.LineCountTestBear import (
     LineCountTestBear)
-from tests.TestUtilities import execute_coala, bear_test_module
+from tests.TestUtilities import execute_coala, bear_test_module, raise_error
 
 
 class coalaTest(unittest.TestCase):
@@ -60,3 +62,15 @@ class coalaTest(unittest.TestCase):
                 "-c", os.devnull)
             self.assertEqual(retval, 0)
             self.assertIn(LineCountTestBear.run.__doc__.strip(), output)
+
+    @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
+    def test_version_conflict_in_collecting_bears(self, import_fn):
+        with bear_test_module():
+            import_fn.side_effect = (
+                lambda *args, **kwargs: raise_error(VersionConflict,
+                                                    "msg1", "msg2"))
+            retval, output = execute_coala(coala.main, "coala", "-A")
+            self.assertEqual(retval, 13)
+            self.assertIn(("There is a conflict in the version of a "
+                           "dependency you have installed"), output)
+            self.assertIn("pip install msg2", output)  # Check recommendation
