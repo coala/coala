@@ -253,7 +253,7 @@ def _create_linter(klass, options):
 
             for variable in ("line", "column", "end_line", "end_column"):
                 groups[variable] = (None
-                                    if groups.get(variable, "") == "" else
+                                    if groups.get(variable, None) is None else
                                     int(groups[variable]))
 
             if "origin" in groups:
