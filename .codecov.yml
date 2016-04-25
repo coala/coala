@@ -1,0 +1,12 @@
+codecov:
+  coverage:
+    status:
+      project: 
+        enabled: true
+        target: auto
+        threshold: 100%
+      patch:
+        enabled: false
+      change:
+        enabled: false
+  comment: #ToDO - Disable comments on PR by codecov.
