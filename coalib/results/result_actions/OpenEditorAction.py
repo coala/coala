@@ -45,15 +45,7 @@ class OpenEditorAction(ResultAction):
 
         for filename in filenames:
             with open(filename, encoding='utf-8') as file:
-                new_file = file.readlines()
-
-            original_file = original_file_dict[filename]
-            try:
-                current_file = file_diff_dict[filename].modified
-            except KeyError:
-                current_file = original_file
-
-            file_diff_dict[filename] = Diff.from_string_arrays(original_file,
-                                                               new_file)
+                file_diff_dict[filename] = Diff.from_string_arrays(
+                    original_file_dict[filename], file.readlines())
 
         return file_diff_dict
