@@ -27,6 +27,7 @@ Demo (Click to View)
 |asciicast|
 
 .. |asciicast| image:: https://asciinema.org/a/42968.png
+   :width: 200 px
    :target: https://asciinema.org/a/42968?autoplay=1
 
 About
