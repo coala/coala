@@ -27,7 +27,7 @@ class Diff:
         self.delete = delete
 
     @classmethod
-    def from_string_arrays(cls, file_array_1, file_array_2):
+    def from_string_arrays(cls, file_array_1, file_array_2, rename=False):
         """
         Creates a Diff object from two arrays containing strings.
 
@@ -36,8 +36,9 @@ class Diff:
 
         :param file_array_1: Original array
         :param file_array_2: Array to compare
+        :param rename:       False or str containing new name of file.
         """
-        result = cls(file_array_1)
+        result = cls(file_array_1, rename=rename)
 
         matcher = difflib.SequenceMatcher(None, file_array_1, file_array_2)
         # We use this because its faster (generator) and doesnt yield as much
