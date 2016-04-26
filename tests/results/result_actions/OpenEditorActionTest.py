@@ -108,8 +108,8 @@ class OpenEditorActionTest(unittest.TestCase):
         result1 = Result("", "")
         result2 = Result.from_values("", "", "")
         invalid_result = ""
-        self.assertFalse(OpenEditorAction.is_applicable(result1, None, None))
-        self.assertTrue(OpenEditorAction.is_applicable(result2, None, None))
+        self.assertFalse(OpenEditorAction.is_applicable(result1, None, {}))
+        self.assertTrue(OpenEditorAction.is_applicable(result2, None, {}))
 
         self.assertFalse(
-            OpenEditorAction.is_applicable(invalid_result, None, None))
+            OpenEditorAction.is_applicable(invalid_result, None, {}))
