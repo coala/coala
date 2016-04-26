@@ -52,7 +52,7 @@ def print_beautified_diff(difflines, printer):
 
 class ShowPatchAction(ResultAction):
 
-    success_message = "Displayed patch successfully."
+    SUCCESS_MESSAGE = "Displayed patch successfully."
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):

@@ -7,7 +7,7 @@ from coalib.results.result_actions.ResultAction import ResultAction
 
 class ApplyPatchAction(ResultAction):
 
-    success_message = "Patch applied successfully."
+    SUCCESS_MESSAGE = "Patch applied successfully."
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
