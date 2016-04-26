@@ -15,6 +15,8 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
+from coalib.results.result_actions.PrintMoreInfoAction import (
+    PrintMoreInfoAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
@@ -33,6 +35,7 @@ SUCCESS_COLOR = 'green'
 CLI_ACTIONS = [OpenEditorAction(),
                ApplyPatchAction(),
                PrintDebugMessageAction(),
+               PrintMoreInfoAction(),
                ShowPatchAction()]
 
 
