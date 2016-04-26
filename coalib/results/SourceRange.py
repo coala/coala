@@ -82,6 +82,21 @@ class SourceRange(TextRange):
     def file(self):
         return self.start.file
 
+    @enforce_signature
+    def renamed_file(self, file_diff_dict: dict):
+        """
+        Retrieves the filename this source range refers to while taking the
+        possible file renamings in the given file_diff_dict into account:
+
+        :param file_diff_dict: A dictionary with filenames as key and their
+                               associated Diff objects as values.
+        """
+        diff = file_diff_dict.get(self.file)
+        if diff is None:
+            return self.file
+
+        return diff.rename if diff.rename is not False else self.file
+
     def expand(self, file_contents):
         """
         Passes a new SourceRange that covers the same area of a file as this

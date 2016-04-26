@@ -1,9 +1,11 @@
 import unittest
 from collections import namedtuple
+from os.path import abspath
 
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.SourceRange import SourceRange
 from coalib.results.AbsolutePosition import AbsolutePosition
+from coalib.results.Diff import Diff
 
 
 class SourceRangeTest(unittest.TestCase):
@@ -83,6 +85,19 @@ class SourceRangeTest(unittest.TestCase):
         uut = SourceRange.from_values("B", start_line=2,
                                       end_line=4).__json__(use_relpath=True)
         self.assertEqual(uut['start'], self.result_fileB_line2)
+
+    def test_renamed_file(self):
+        src_range = SourceRange(SourcePosition("test_file"))
+        self.assertEqual(src_range.renamed_file({}), abspath('test_file'))
+
+        self.assertEqual(
+            src_range.renamed_file({abspath('test_file'): Diff([])}),
+            abspath('test_file'))
+
+        self.assertEqual(
+            src_range.renamed_file(
+                {abspath('test_file'): Diff([], rename='another_file')}),
+            'another_file')
 
 
 class SourceRangeExpandTest(unittest.TestCase):
