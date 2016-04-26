@@ -2,7 +2,7 @@ import subprocess
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
-from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.ResultAction import ResultAction
 
 EDITOR_ARGS = {
     "subl": "--wait",
@@ -14,7 +14,7 @@ EDITOR_ARGS = {
 GUI_EDITORS = ["kate", "gedit", "subl", "atom"]
 
 
-class OpenEditorAction(ApplyPatchAction):
+class OpenEditorAction(ResultAction):
 
     SUCCESS_MESSAGE = "Changes saved successfully."
 
