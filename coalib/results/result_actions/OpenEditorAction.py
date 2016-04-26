@@ -16,7 +16,7 @@ GUI_EDITORS = ["kate", "gedit", "subl", "atom"]
 
 class OpenEditorAction(ApplyPatchAction):
 
-    success_message = "Changes saved successfully."
+    SUCCESS_MESSAGE = "Changes saved successfully."
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
