@@ -637,12 +637,13 @@ def show_bear(console_printer, bear, sections, metadata):
     console_printer.print("{bear}:".format(bear=bear.name))
     console_printer.print("  " + metadata.desc + "\n")
 
-    show_enumeration(console_printer,
-                     "Supported languages:",
-                     bear.LANGUAGES,
-                     "  ",
-                     "The bear does not provide information about which "
-                     "languages it can analyze.")
+    show_enumeration(
+        console_printer, "Supported languages:",
+        ((bear.LANGUAGES,) if isinstance(bear.LANGUAGES, str)
+         else bear.LANGUAGES),
+        "  ",
+        "The bear does not provide information about which languages "
+        "it can analyze.")
     show_enumeration(console_printer,
                      "Used in:",
                      sections,
