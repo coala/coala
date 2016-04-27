@@ -50,10 +50,6 @@ def run_coala(log_printer=None,
     """
     log_printer = log_printer or LogPrinter(ConsolePrinter())
 
-    log_printer.debug("Platform {} -- Python {}, pip {}, coalib {}"
-                      .format(platform.system(), platform.python_version(),
-                              pip.__version__, VERSION))
-
     exitcode = 0
     results = {}
     file_dicts = {}
@@ -64,6 +60,10 @@ def run_coala(log_printer=None,
             acquire_settings,
             log_printer,
             autoapply=autoapply)
+
+        log_printer.debug("Platform {} -- Python {}, pip {}, coalib {}"
+                          .format(platform.system(), platform.python_version(),
+                                  pip.__version__, VERSION))
 
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))
