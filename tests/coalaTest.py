@@ -7,8 +7,7 @@ from pkg_resources import VersionConflict
 
 from coalib import coala
 from coalib.misc.ContextManagers import prepare_file
-from tests.test_bears.LineCountTestBear import (
-    LineCountTestBear)
+from tests.test_bears.LineCountTestBear import LineCountTestBear
 from tests.TestUtilities import execute_coala, bear_test_module, raise_error
 
 
