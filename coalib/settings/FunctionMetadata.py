@@ -2,6 +2,7 @@ from collections import OrderedDict
 from copy import copy
 from inspect import getfullargspec, ismethod
 
+from coalib.misc.Decorators import enforce_signature
 from coalib.settings.DocumentationComment import DocumentationComment
 
 
@@ -9,13 +10,14 @@ class FunctionMetadata:
     str_nodesc = "No description given."
     str_optional = "Optional, defaults to '{}'."
 
+    @enforce_signature
     def __init__(self,
-                 name,
-                 desc="",
-                 retval_desc="",
-                 non_optional_params=None,
-                 optional_params=None,
-                 omit=frozenset()):
+                 name: str,
+                 desc: str="",
+                 retval_desc: str="",
+                 non_optional_params: (dict, None)=None,
+                 optional_params: (dict, None)=None,
+                 omit: (set, tuple, list, frozenset)=frozenset()):
         """
         Creates the FunctionMetadata object.
 
