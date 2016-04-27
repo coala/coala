@@ -1,8 +1,10 @@
 import os
+import platform
 
+import pip
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib import coala_delete_orig
+from coalib import coala_delete_orig, VERSION
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -47,6 +49,10 @@ def run_coala(log_printer=None,
                                     for all analyzed sections as key.
     """
     log_printer = log_printer or LogPrinter(ConsolePrinter())
+
+    log_printer.debug("Platform {} -- Python {}, pip {}, coalib {}"
+                      .format(platform.system(), platform.python_version(),
+                              pip.__version__, VERSION))
 
     exitcode = 0
     results = {}
