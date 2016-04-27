@@ -1,5 +1,4 @@
 import re
-import validators
 from collections import Iterable, OrderedDict
 
 from coalib.misc import Constants
@@ -65,7 +64,7 @@ class StringConverter:
         :raises ValueError: If the url is not valid.
         """
         strrep = str(self).strip()
-        if validators.url(strrep):
+        if Constants.URL_REGEX.match(strrep):
             return strrep
 
         raise ValueError(repr(strrep) + " is not a valid url.")
