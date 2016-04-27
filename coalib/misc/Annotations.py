@@ -22,6 +22,16 @@ def typechain(*args):
     ValueError: Couldn't convert value 'str' to any specified type or find it \
 in specified values.
 
+    To typechain a set of accpetable values, *args can be used:
+
+    >>> accepted = [None, 1, 2, 3]
+    >>> function = typechain(*accepted, str)
+    >>> function(None)
+    >>> function(2)
+    2
+    >>> function(4)
+    '4'
+
     :raises TypeError:  Raises when either no functions are specified for
                         checking.
     """
