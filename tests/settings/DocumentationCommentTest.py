@@ -23,17 +23,17 @@ class DocumentationCommentParserTest(unittest.TestCase):
         Main description
 
         @param p1: this is
+
         a multiline desc for p1
 
-        main description continues.
         :param p2: p2 description
 
         @return: retval description
         :return: retval description
         override
-        """, desc="Main description main description continues.", param_dict={
-            "p1": "this is a multiline desc for p1",
-            "p2": "p2 description"
+        """, desc="Main description", param_dict={
+            "p1": "this is\na multiline desc for p1\n",
+            "p2": "p2 description\n"
         }, retval_desc="retval description override")
 
     def test_str(self):
@@ -67,4 +67,5 @@ class DocumentationCommentParserTest(unittest.TestCase):
         doc_comment = DocumentationComment.from_docstring(docstring)
         self.assertEqual(doc_comment.desc, desc)
         self.assertEqual(doc_comment.param_dict, param_dict)
+
         self.assertEqual(doc_comment.retval_desc, retval_desc)
