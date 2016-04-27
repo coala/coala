@@ -5,6 +5,8 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 class LineCountTestBear(LocalBear):
 
+    LANGUAGES = 'all'
+
     def run(self, filename, file):
         '''
         Counts the lines of each file.

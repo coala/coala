@@ -170,6 +170,31 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
     return bears_found
 
 
+def filter_section_bears_by_languages(bears, languages):
+    """
+    Filters the bears by languages.
+
+    :param bears:       the dictionary of the sections as keys and list of
+                        bears as values.
+    :param languages:   languages that bears are being filtered on.
+    :return:            new dictionary with filtered out bears that don't match
+                        any language from languages.
+    """
+    new_bears = {}
+    languages = set(x.lower() for x in languages)
+    for section in bears.keys():
+        filtered = []
+        for bear in bears[section]:
+            bear_languages = getattr(bear, 'LANGUAGES', tuple())
+            if isinstance(bear_languages, str):
+                bear_languages = (bear_languages,)
+            supported_languages = set(x.lower() for x in bear_languages)
+            if supported_languages & languages or 'all' in supported_languages:
+                filtered.append(bear)
+        new_bears[section] = filtered
+    return new_bears
+
+
 def collect_all_bears_from_sections(sections, log_printer):
     """
     Collect all kinds of bears from bear directories given in the sections.

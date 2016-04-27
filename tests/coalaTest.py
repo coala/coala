@@ -8,6 +8,9 @@ from pkg_resources import VersionConflict
 from coalib import coala
 from coalib.misc.ContextManagers import prepare_file
 from tests.test_bears.LineCountTestBear import LineCountTestBear
+from tests.test_bears.internal_folder.SpaceConsistencyTestBear import (
+    SpaceConsistencyTestBear)
+from tests.test_bears.JavaTestBear import JavaTestBear
 from tests.TestUtilities import execute_coala, bear_test_module, raise_error
 
 
@@ -50,7 +53,7 @@ class coalaTest(unittest.TestCase):
 
             lines = output.splitlines()
             bear_lines = sum(1 for line in lines if line.startswith(" * "))
-            self.assertEqual(bear_lines, 3)
+            self.assertEqual(bear_lines, 4)
 
             for line in lines:
                 self.assertNotIn("WARNING", line)
@@ -61,6 +64,19 @@ class coalaTest(unittest.TestCase):
                 "-c", os.devnull)
             self.assertEqual(retval, 0)
             self.assertIn(LineCountTestBear.run.__doc__.strip(), output)
+
+    def test_show_language_bears(self):
+        with bear_test_module():
+            retval, output = execute_coala(coala.main, "coala", "-l", "java")
+            self.assertEqual(retval, 0)
+            lines = output.splitlines()
+            bear_missing_lines = sum(1 for line in lines if "WARNING" in line)
+            self.assertEqual(bear_missing_lines, 0)
+
+            self.assertIn(JavaTestBear.run.__doc__.strip(), output)
+            self.assertIn(LineCountTestBear.run.__doc__.strip(), output)
+            self.assertNotIn(SpaceConsistencyTestBear.run.__doc__.strip(),
+                             output)
 
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
     def test_version_conflict_in_collecting_bears(self, import_fn):

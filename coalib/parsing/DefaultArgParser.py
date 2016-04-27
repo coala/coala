@@ -134,6 +134,12 @@ def default_arg_parser(formatter_class=None):
                                 const=True,
                                 metavar='BOOL',
                                 help="Display all bears.")
+        arg_parser.add_argument('-l',
+                                '--show-language-bears',
+                                nargs='+',
+                                metavar='LANG',
+                                help="Display all bears for the given "
+                                "languages.")
     SAVE_HELP = ('Filename of file to be saved to, if provided with no '
                  'arguments, settings will be stored back to the file given '
                  'by -c')

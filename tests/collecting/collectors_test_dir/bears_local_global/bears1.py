@@ -7,4 +7,4 @@ class Test1LocalBear(LocalBear):
 
 
 class Test1GlobalBear(GlobalBear):
-    pass
+    LANGUAGES = 'All'
