@@ -465,7 +465,9 @@ def _create_linter(klass, options):
     # Mixin the linter into the user-defined interface, otherwise
     # `create_arguments` and other methods would be overridden by the
     # default version.
-    return type(klass.__name__, (klass, LinterBase), {})
+    result_klass = type(klass.__name__, (klass, LinterBase), {})
+    result_klass.__doc__ = klass.__doc__ if klass.__doc__ else ""
+    return result_klass
 
 
 @enforce_signature
