@@ -314,6 +314,7 @@ def _create_linter(klass, options):
                     "error": RESULT_SEVERITY.MAJOR,
                     "warning": RESULT_SEVERITY.NORMAL,
                     "warn": RESULT_SEVERITY.NORMAL,
+                    "information": RESULT_SEVERITY.INFO,
                     "info": RESULT_SEVERITY.INFO})):
             """
             Processes the executable's output using a regex.
