@@ -1,3 +1,71 @@
+coala 0.6.0 - honeybadger
+=========================
+
+::
+
+     .o88Oo._                                .".      "     .".
+    d8P         .ooOO8bo._                   dPo.    O#O   .oPb
+    88                  '*Y8bo.              88o.   .o#o.  .o88
+    YA                      '*Y8b   __       Y88o.   .8.  .o88Y
+     YA                        68o68**8Oo.    W8888O888888888W
+      "8D                       *"'    "Y8o    w8888'88'8888w
+       Y8     'YB                       .8D     `o88:88:88o'
+      '8               d8'             8D        .O8`88'8O.
+        8       d8888b          d      AY        oO8I88I8Oo
+        Y,     d888888         d'  _.oP"         oO8|88|Oo
+         q.    Y8888P'        d8                 oO8.88.8Oo
+          "q.  `Y88P'       d8"                  .oO.88.Oo.
+            Y           ,o8P                    .oO888888Oo.
+                  oooo888P"                    .oO8      8Oo.
+                                               +oO8+    +8Oo+
+                                               'bo.      .od'
+
+This release is shaped a lot by working on high quality bear writing tools. Our
+codebase has matured further (improved tests, various internal improvements)
+and key features for writing and organizing bears were introduced.
+
+Over the last 1.5 months, 22 unique contributors have helped us at the coala
+core project.
+
+This time, the release logo is carefully hand crafted by Max Scholz!
+
+New features:
+
+-  Smart globbing: use backslashes without an extra escape now if they don't
+   escape delimiters.
+-  Results now can have additional information appended.
+-  Bears expose information on which languages they support. You can query for
+   bears e.g. with ``coala --show-language-bears C++`` for C++.
+
+Bugfixes:
+
+-  Linters suppress the output correctly now when checking for linter
+   availibility. (https://github.com/coala-analyzer/coala/issues/1888)
+-  The result filter algorithms can handle file additions and deletions now.
+   (https://github.com/coala-analyzer/coala/issues/1866)
+-  Ignore statements without a stop statement are now accepted as well
+   (https://github.com/coala-analyzer/coala/issues/2003).
+
+For bear writers:
+
+-  A tutorial for managing bear dependencies is available in our documentation
+   now.
+-  The Result object has a field ``additional_info`` which can be used to give
+   an elaborate description of the problem.
+-  A ``typechain()`` function is now available for easy conditional type
+   conversion. (https://github.com/coala-analyzer/coala/issues/1859)
+-  Bears have a ``name()`` shortcut now which provides the bear class name.
+-  A ``get_config_directory()`` function is available that returns the root
+   directory of the project guessed by coala or provided (overridden) by the
+   user.
+-  A new ``linter`` decorator makes it even easier to write new linter
+   wrappers. (https://github.com/coala-analyzer/coala/issues/1928)
+
+Notable internal/API changes:
+
+-  ``FunctionMetadata`` has a new ``merge`` function that can be used to merge
+   function signatures and documentation comments.
+
 coala 0.5.0 - joey
 ==================
 
