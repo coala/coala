@@ -41,11 +41,26 @@ class FunctionMetadata:
             optional_params = OrderedDict()
 
         self.name = name
-        self.desc = desc
+        self._desc = desc
         self.retval_desc = retval_desc
         self._non_optional_params = non_optional_params
         self._optional_params = optional_params
         self.omit = set(omit)
+
+    @property
+    def desc(self):
+        """
+        Returns description of the function.
+        """
+        return self._desc
+
+    @desc.setter
+    @enforce_signature
+    def desc(self, new_desc: str):
+        """
+        Set's the description to the new_desc.
+        """
+        self._desc = new_desc
 
     def _filter_out_omitted(self, params):
         """
