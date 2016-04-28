@@ -10,7 +10,7 @@ coala 0.6.0 - honeybadger
      YA                        68o68**8Oo.    W8888O888888888W
       "8D                       *"'    "Y8o    w8888'88'8888w
        Y8     'YB                       .8D     `o88:88:88o'
-      '8               d8'             8D        .O8`88'8O.
+       '8               d8'             8D       .O8`88'8O.
         8       d8888b          d      AY        oO8I88I8Oo
         Y,     d888888         d'  _.oP"         oO8|88|Oo
          q.    Y8888P'        d8                 oO8.88.8Oo
