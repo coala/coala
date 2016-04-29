@@ -178,7 +178,7 @@ def find_user_config(file_path, max_trials=10):
 
     :param file_path:  The path of the file whose user config needs to be found
     :param max_trials: The maximum number of directories to go down to.
-    :return:           The config file's path
+    :return:           The config file's path, empty string if none was found
     """
     file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
         file_path)))
