@@ -3,8 +3,8 @@ from coalib.bears.LocalBear import LocalBear
 
 
 class Test2LocalBear(LocalBear):
-    pass
+    LANGUAGES = ('C', 'Java')
 
 
 class Test2GlobalBear(GlobalBear):
-    pass
+    LANGUAGES = ('C', )

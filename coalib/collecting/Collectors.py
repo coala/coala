@@ -120,6 +120,18 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
                 try:
                     for bear in _import_bears(matching_file, kinds):
                         yield bear, bear_glob
+                except pkg_resources.VersionConflict as exception:
+                    log_printer.log_exception(
+                        ("Unable to collect bears from {file} because there "
+                         "is a conflict with the version of a dependency "
+                         "you have installed. This may be resolved by "
+                         "creating a separate virtual environment for coala "
+                         "or running `pip install {pkg}`. Be aware that the "
+                         "latter solution might break other python packages "
+                         "that depend on the currently installed "
+                         "version.").format(file=matching_file,
+                                            pkg=str(exception.req)),
+                        exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
                     log_printer.log_exception(
                         "Unable to collect bears from {file}. Probably the "
@@ -156,6 +168,31 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
         _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
                              "No bears were found matching '{}'.")
     return bears_found
+
+
+def filter_section_bears_by_languages(bears, languages):
+    """
+    Filters the bears by languages.
+
+    :param bears:       the dictionary of the sections as keys and list of
+                        bears as values.
+    :param languages:   languages that bears are being filtered on.
+    :return:            new dictionary with filtered out bears that don't match
+                        any language from languages.
+    """
+    new_bears = {}
+    languages = set(x.lower() for x in languages)
+    for section in bears.keys():
+        filtered = []
+        for bear in bears[section]:
+            bear_languages = getattr(bear, 'LANGUAGES', tuple())
+            if isinstance(bear_languages, str):
+                bear_languages = (bear_languages,)
+            supported_languages = set(x.lower() for x in bear_languages)
+            if supported_languages & languages or 'all' in supported_languages:
+                filtered.append(bear)
+        new_bears[section] = filtered
+    return new_bears
 
 
 def collect_all_bears_from_sections(sections, log_printer):

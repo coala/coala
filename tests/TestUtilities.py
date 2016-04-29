@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 import os
-import pkg_resources
 import sys
+import unittest.mock
 
 from coalib.misc.ContextManagers import retrieve_stdout
 
@@ -24,33 +24,24 @@ def execute_coala(func, binary, *args):
 @contextmanager
 def bear_test_module():
     """
-    This function replaces the pkg_resources.iter_entry_points()
+    This function mocks the ``pkg_resources.iter_entry_points()``
     to use the testing bear module we have. Hence, it doesn't test
     the collection of entry points.
     """
-    old_iter = pkg_resources.iter_entry_points
     bears_test_module = os.path.join(os.path.dirname(__file__),
-                                     "test_bears",
-                                     "__init__.py")
+                                     "test_bears", "__init__.py")
 
-    def test_iter_entry_points(name):
-        assert name == "coalabears"
+    class EntryPoint:
 
-        class EntryPoint:
+        @staticmethod
+        def load():
+            class PseudoPlugin:
+                __file__ = bears_test_module
+            return PseudoPlugin()
 
-            @staticmethod
-            def load():
-                class PseudoPlugin:
-                    __file__ = bears_test_module
-                return PseudoPlugin()
-
-        return iter([EntryPoint()])
-
-    pkg_resources.iter_entry_points = test_iter_entry_points
-    try:
+    with unittest.mock.patch("pkg_resources.iter_entry_points",
+                             return_value=[EntryPoint()]) as mocked:
         yield
-    finally:
-        pkg_resources.iter_entry_points = old_iter
 
 
 def raise_error(error, *args, **kwargs):

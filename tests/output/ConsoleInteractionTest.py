@@ -57,6 +57,8 @@ class TestBear(Bear):
 
 class TestBear2(Bear):
 
+    LANGUAGES = 'TestLanguage'
+
     def run(self, setting1):
         """
         Test bear 2 description.
@@ -651,8 +653,8 @@ some_file
             print_bears(self.log_printer.printer, bears, False)
             expected_string = "TestBear2:\n"
             expected_string += "  Test bear 2 description.\n\n"
-            expected_string += ("  The bear does not provide information "
-                                "about which languages it can analyze.\n\n")
+            expected_string += "  Supported languages:\n"
+            expected_string += "   * TestLanguage\n\n"
             expected_string += "  Used in:\n"
             expected_string += "   * test\n\n"
             expected_string += "  Needed Settings:\n"

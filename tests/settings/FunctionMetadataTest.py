@@ -107,3 +107,46 @@ class FunctionMetadataTest(unittest.TestCase):
         self.assertEqual(metadata.retval_desc, retval_desc)
         self.assertEqual(metadata.non_optional_params, non_optional_params)
         self.assertEqual(metadata.optional_params, optional_params)
+
+    def test_merge(self):
+        metadata1 = FunctionMetadata(
+            "main",
+            "Desc of main.\n",
+            "Returns 0 on success",
+            {"argc": ("argc desc", None), "argv": ("argv desc", None)},
+            {"opt": ("opt desc", int, 88)},
+            {"self", "A"})
+
+        metadata2 = FunctionMetadata(
+            "process",
+            "Desc of process.\n",
+            "Returns the processed stuff.",
+            {"argc": ("argc desc from process", int),
+             "to_process": ("to_process desc", int)},
+            {"opt2": ("opt2 desc", str, "hello")},
+            {"self", "B"})
+
+        metadata3 = FunctionMetadata("nodesc", "", "", {}, {})
+
+        merged_metadata = FunctionMetadata.merge(metadata1,
+                                                 metadata2,
+                                                 metadata3)
+
+        self.assertEqual(
+            merged_metadata.name,
+            "<Merged signature of 'main', 'process', 'nodesc'>")
+        self.assertEqual(merged_metadata.desc, "Desc of process.\n")
+        self.assertEqual(merged_metadata.retval_desc,
+                         "Returns the processed stuff.")
+        self.assertEqual(
+            merged_metadata.non_optional_params,
+            {"argc": ("argc desc from process", int),
+             "argv": ("argv desc", None),
+             "to_process": ("to_process desc", int)})
+        self.assertEqual(
+            merged_metadata.optional_params,
+            {"opt": ("opt desc", int, 88),
+             "opt2": ("opt2 desc", str, "hello")})
+        self.assertEqual(
+            merged_metadata.omit,
+            frozenset({"self", "A", "B"}))

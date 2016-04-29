@@ -41,11 +41,6 @@ class DocumentationComment:
         for line in lines:
             line = line.strip()
 
-            if line == "":
-                parse_mode = cls._ParseMode.DESCRIPTION
-
-                continue
-
             if line.startswith(":param ") or line.startswith("@param "):
                 parse_mode = cls._ParseMode.PARAM
                 splitted = line[7:].split(":", 1)
@@ -60,12 +55,19 @@ class DocumentationComment:
 
                 continue
 
+            def concat_doc_parts(old: str, new: str):
+                if new != '' and not old.endswith('\n'):
+                    return old + ' ' + new
+
+                return old + (new if new != '' else '\n')
+
             if parse_mode == cls._ParseMode.RETVAL:
-                retval_desc += " " + line
+                retval_desc = concat_doc_parts(retval_desc, line)
             elif parse_mode == cls._ParseMode.PARAM:
-                param_dict[cur_param] += " " + line
+                param_dict[cur_param] = concat_doc_parts(param_dict[cur_param],
+                                                         line)
             else:
-                desc += " " + line
+                desc = concat_doc_parts(desc, line)
 
         return (cls(desc=desc.strip(),
                     param_dict=param_dict,

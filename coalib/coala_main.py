@@ -1,8 +1,10 @@
 import os
+import platform
 
+import pip
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib import coala_delete_orig
+from coalib import coala_delete_orig, VERSION
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -59,6 +61,10 @@ def run_coala(log_printer=None,
             acquire_settings,
             log_printer,
             autoapply=autoapply)
+
+        log_printer.debug("Platform {} -- Python {}, pip {}, coalib {}"
+                          .format(platform.system(), platform.python_version(),
+                                  pip.__version__, VERSION))
 
         tag = str(sections['default'].get('tag', None))
         dtag = str(sections['default'].get('dtag', None))

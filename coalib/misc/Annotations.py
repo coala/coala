@@ -1,5 +1,3 @@
-
-
 def typechain(*args):
     """
     Returns function which applies the first transformation it can from args

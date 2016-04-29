@@ -85,6 +85,7 @@ pylint_disable = missing-docstring, # Lots of functions don't need docstrings
 enabled = False
 
 bears = LineCountBear
+max_lines_per_file = 1000
 
 [invalidlinks]
 enabled = False

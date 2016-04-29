@@ -9,7 +9,7 @@ from coalib.parsing.CliParsing import parse_cli, check_conflicts
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import fill_settings
-from coalib.settings.Setting import Setting
+from coalib.settings.Setting import Setting, path
 
 
 def merge_section_dicts(lower, higher):
@@ -178,7 +178,7 @@ def find_user_config(file_path, max_trials=10):
 
     :param file_path:  The path of the file whose user config needs to be found
     :param max_trials: The maximum number of directories to go down to.
-    :return:           The config file's path
+    :return:           The config file's path, empty string if none was found
     """
     file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
         file_path)))
@@ -227,10 +227,25 @@ def get_config_directory(section):
     >>> get_config_directory(section) == section['files'].origin
     True
 
+    The user can manually set a project directory with the ``project_dir``
+    setting:
+
+    >>> section.append(Setting('project_dir', os.path.abspath('/tmp'), '/'))
+    >>> get_config_directory(section) == os.path.abspath('/tmp')
+    True
+
     If no section is given, the current directory is returned:
 
     >>> get_config_directory(None) == os.path.abspath(".")
     True
+
+    To summarize, the config directory will be chosen by the following
+    priorities if possible in that order:
+
+    - the ``project_dir`` setting
+    - the origin of the ``files`` setting, if it's a directory
+    - the directory of the origin of the ``files`` setting
+    - the current directory
 
     :param section: The section to inspect.
     :return: The directory where the project is lying.
@@ -238,8 +253,11 @@ def get_config_directory(section):
     if section is None:
         return os.getcwd()
 
-    path = os.path.abspath(section.get('files', '').origin)
-    return path if os.path.isdir(path) else os.path.dirname(path)
+    if 'project_dir' in section:
+        return path(section.get('project_dir'))
+
+    config = os.path.abspath(section.get('files', '').origin)
+    return config if os.path.isdir(config) else os.path.dirname(config)
 
 
 def gather_configuration(acquire_settings,

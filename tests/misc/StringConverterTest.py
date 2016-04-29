@@ -176,3 +176,38 @@ class StringConverterTest(unittest.TestCase):
         self.assertNotEqual(StringConverter(""),
                             StringConverter("i dont know "))
         self.assertNotEqual(5, StringConverter("i dont know "))
+
+    def test_url(self):
+        valid_urls = (
+            # Scheme tests
+            "http://url.com", "https://url.com", "url.com", "ftp://url.com",
+            "ftps://url.com",
+            # Domain tests
+            "http://sub.subsub.url.com", "http://sub.url.com",
+            "http://url.co.cc", "http://localhost", "http://sub.url123.com",
+            "http://url123.co.cc", "http://1.1.1.1",
+            "sub.subsub.url.com", "sub.url.com", "url.co.cc", "localhost",
+            "1.1.1.1", "255.255.255.255", "url123.com", "url123.co.cc",
+            "sub.url123.com",
+            # Port number
+            "localhost:8888", "1.1.1.1:80", "url.com:123456",
+            # Paths
+            "url.com/", "url.co.in/", "url.com/path/to/something",
+            "url.co.in/path/to/something", "url.com/path/to/file.php")
+        invalid_urls = (
+            # Invalid types
+            123, True, None,
+            # Invalid links
+            "unknown://url.com", "123", "abcd", "url.unknown",
+            "user:pass@url.com", "http://unknownlocalhost",
+            "local_host/path")
+
+        for url in valid_urls:
+            try:
+                StringConverter(url).__url__()
+            except ValueError as exception:
+                print(exception)
+                self.fail("URL {} raised ValueError unexpectedly.".format(url))
+
+        for url in invalid_urls:
+            self.assertRaises(ValueError, self.uut.__url__)

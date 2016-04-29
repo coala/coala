@@ -32,10 +32,14 @@ class Bear(Printer, LogPrinter):
     Settings are available at all times through self.section.
 
     To indicate which languages your bear supports, just give it the
-    ``LANGUAGES`` value:
+    ``LANGUAGES`` value which can either be a string (if the bear supports
+    only 1 language) or a tuple of strings:
 
     >>> class SomeBear(Bear):
     ...     LANGUAGES = ('C', 'CPP','C#', 'D')
+
+    >>> class SomeBear(Bear):
+    ...     LANGUAGES = "Java"
     """
 
     LANGUAGES = ()
