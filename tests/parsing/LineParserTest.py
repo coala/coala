@@ -69,8 +69,7 @@ class LineParserTest(unittest.TestCase):
                        output_keys=None,
                        output_value='',
                        output_comment=''):
-        
-	output_keys = [] if output_keys is None else output_keys
+        output_keys = [] if output_keys is None else output_keys
 
         section_name, keys, value, comment = self.uut.parse(line)
 

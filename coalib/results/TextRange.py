@@ -104,11 +104,11 @@ class TextRange:
         :param text_lines: File contents of the applicable file
         :return:           TextRange with absolute values
         """
-        
-	start_line = 1 if self.start.line is None else self.start.line
+        start_line = 1 if self.start.line is None else self.start.line
         start_column = 1 if self.start.column is None else self.start.column
         end_line = len(text_lines) if self.end.line is None else self.end.line
-        end_column = len(text_lines[end_line - 1]) if self.end.column is None else self.end.column
+        end_column = (len(text_lines[end_line - 1]) if self.end.column is None
+                      else self.end.column)
 
         return TextRange.from_values(start_line,
                                      start_column,
