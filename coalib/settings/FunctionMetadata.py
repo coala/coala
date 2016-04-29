@@ -144,8 +144,7 @@ class FunctionMetadata:
             metadata.omit = omit
             return metadata
 
-       
-	doc = "" if func.__doc__ is None else func.__doc__
+        doc = "" if func.__doc__ is None else func.__doc__
         doc_comment = DocumentationComment.from_docstring(doc)
 
         non_optional_params = OrderedDict()

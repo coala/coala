@@ -16,8 +16,8 @@ class ConfWriter(ClosableObject):
                  section_name_surroundings=None,
                  section_override_delimiters=(".",),
                  unsavable_keys=("save",)):
-
- 	section_name_surroundings = {"[": "]"} if section_name_surroundings is None else section_name_surroundings
+        section_name_surroundings = ({"[": "]"} if section_name_surroundings is
+                                     None else section_name_surroundings)
         ClosableObject.__init__(self)
         self.__file_name = file_name
         self.__file = open(self.__file_name, "w")

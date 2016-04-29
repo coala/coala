@@ -98,9 +98,9 @@ class FunctionMetadataTest(unittest.TestCase):
                                          retval_desc="",
                                          non_optional_params=None,
                                          optional_params=None):
-
-	non_optional_params = {} if non_optional_params is None else non_optional_params
-	optional_params = {} if optional_params is None else optional_params
+        non_optional_params = ({} if non_optional_params is None 
+                               else non_optional_params)
+    	optional_params = {} if optional_params is None else optional_params
 
         self.assertEqual(metadata.name, name)
         self.assertEqual(metadata.desc, desc)

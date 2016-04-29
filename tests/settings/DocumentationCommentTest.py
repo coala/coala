@@ -59,8 +59,7 @@ class DocumentationCommentParserTest(unittest.TestCase):
                                      desc="",
                                      param_dict=None,
                                      retval_desc=""):
-        
-	param_dict = {} if param_dict is None else param_dict
+        param_dict = {} if param_dict is None else param_dict
 
         self.assertIsInstance(docstring,
                               str,

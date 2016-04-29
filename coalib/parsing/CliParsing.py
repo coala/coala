@@ -36,7 +36,6 @@ def parse_cli(arg_list=None,
                                         as value.
     """
     # Note: arg_list can also be []. Hence we cannot use
-    
     arg_list = sys.argv[1:] if arg_list is None else arg_list
     arg_parser = default_arg_parser() if arg_parser is None else arg_parser
     origin += os.path.sep
