@@ -88,8 +88,13 @@ def run_coala(log_printer=None,
                 log_printer=log_printer)
             yielded, yielded_unfixed, results[section_name] = (
                 simplify_section_result(section_result))
+<<<<<<< HEAD
             yielded_results = (
                 yielded if yielded_results is None else yielded_results)
+=======
+            yielded_results = (yielded if yielded_results is None
+                               else yielded_results)
+>>>>>>> fe6a916b73f291c7cc55d9d4d6a5bcbe721d6f4a
             yielded_unfixed_results = (
                 yielded_unfixed_results or yielded_unfixed)
             did_nothing = False
