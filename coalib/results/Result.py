@@ -57,7 +57,7 @@ class Result:
         if not isinstance(origin, str):
             origin = origin.__class__.__name__
         if severity not in RESULT_SEVERITY.reverse:
-            raise ValueError("severity is no valid RESULT_SEVERITY")
+            raise ValueError("severity is not a valid RESULT_SEVERITY")
 
         self.origin = origin
         self.message = message
