@@ -98,7 +98,7 @@ class Result:
         :param end_line:        The last related line in the file.
         :param end_column:      The column indicating the last character.
         :param severity:        A RESULT_SEVERITY object.
-        :param debug_msg:       Another message for debugging purposes.
+        :param debug_msg:       Another object useful for debugging purposes.
         :param additional_info: A long description holding additional
                                 information about the issue and/or how to fix
                                 it. You can use this like a manual entry for a
