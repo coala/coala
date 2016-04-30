@@ -79,7 +79,7 @@ def object_defined_in(obj, file_path):
 
 def _is_defined_in(obj, file_path):
     """
-    Chek if a class is defined in the given file.
+    Check if a class is defined in the given file.
 
     Any class is considered to be defined in the given file if any of it's
     parent classes or the class itself is defined in it.
