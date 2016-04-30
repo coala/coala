@@ -188,4 +188,11 @@ def default_arg_parser(formatter_class=None):
                             const=True,
                             help="return relative paths for files")
 
+    try:  # pragma: no cover
+        # Auto completion should be optional, because of somewhat complicated
+        # setup.
+        import argcomplete
+        argcomplete.autocomplete(arg_parser)
+    except ImportError:
+        pass
     return arg_parser
