@@ -78,8 +78,9 @@ class coalaTest(unittest.TestCase):
             self.assertNotIn(SpaceConsistencyTestBear.run.__doc__.strip(),
                              output)
 
+    @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
-    def test_version_conflict_in_collecting_bears(self, import_fn):
+    def test_version_conflict_in_collecting_bears(self, import_fn, _):
         with bear_test_module():
             import_fn.side_effect = (
                 lambda *args, **kwargs: raise_error(VersionConflict,

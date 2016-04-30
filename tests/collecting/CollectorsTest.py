@@ -6,10 +6,12 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
-    collect_registered_bears_dirs, filter_section_bears_by_languages)
+    collect_registered_bears_dirs, filter_section_bears_by_languages,
+    get_all_bears_names)
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
+from tests.TestUtilities import bear_test_module
 
 
 class CollectFilesTest(unittest.TestCase):
@@ -293,3 +295,12 @@ class CollectorsTests(unittest.TestCase):
         self.assertEqual(len(global_bears['test_section']), 1)
         self.assertEqual(str(global_bears['test_section'][0]),
                          "<class 'bears1.Test1GlobalBear'>")
+
+    def test_get_all_bears_names(self):
+        with bear_test_module():
+            self.assertSetEqual(
+                set(get_all_bears_names()),
+                {'EchoBear',
+                 'LineCountTestBear',
+                 'JavaTestBear',
+                 'SpaceConsistencyTestBear'})

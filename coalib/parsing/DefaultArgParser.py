@@ -2,6 +2,15 @@ import argparse
 import sys
 
 from coalib.misc import Constants
+from coalib.collecting.Collectors import get_all_bears_names
+
+try:
+    from argcomplete.completers import ChoicesCompleter
+except ImportError:
+    class ChoicesCompleter:
+
+        def __init__(self, *args, **kwargs):
+            pass
 
 
 def default_arg_parser(formatter_class=None):
@@ -76,7 +85,8 @@ def default_arg_parser(formatter_class=None):
                             '--bears',
                             nargs='+',
                             metavar='NAME',
-                            help='Names of bears to use')
+                            help='Names of bears to use').completer =\
+        ChoicesCompleter(get_all_bears_names())
     BEAR_DIRS_HELP = 'Additional directories where bears may lie'
     arg_parser.add_argument('-d',
                             '--bear-dirs',

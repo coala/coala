@@ -1,12 +1,15 @@
 import functools
 import os
 import pkg_resources
+import itertools
+from pyprint.NullPrinter import NullPrinter
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
 from coalib.misc.Decorators import yield_once
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
+from coalib.output.printers.LogPrinter import LogPrinter
 
 
 def _get_kind(bear_class):
@@ -193,6 +196,18 @@ def filter_section_bears_by_languages(bears, languages):
                 filtered.append(bear)
         new_bears[section] = filtered
     return new_bears
+
+
+def get_all_bears_names():
+    from coalib.settings.Section import Section
+    printer = LogPrinter(NullPrinter())
+    local_bears, global_bears = collect_bears(
+        Section("").bear_dirs(),
+        ["**"],
+        [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
+        printer,
+        warn_if_unused_glob=False)
+    return [bear.name for bear in itertools.chain(local_bears, global_bears)]
 
 
 def collect_all_bears_from_sections(sections, log_printer):
