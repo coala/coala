@@ -368,6 +368,71 @@ class ResultFilterTest(unittest.TestCase):
                                                        new_result_list)),
                                  sorted(unique_new_result_list))
 
+    def test_affected_code_rename_files(self):
+
+        # ORIGINAL SOURCE RANGES:
+        sr0_pre_change = SourceRange.from_values("file_name",
+                                                 start_line=8,
+                                                 start_column=1,
+                                                 end_line=8,
+                                                 end_column=3)
+
+        # ORIGINAL RESULTS:
+        res0_pre_change = Result(origin="origin",
+                                 message="message",
+                                 affected_code=(sr0_pre_change,))
+
+        # NEW SOURCE RANGES:
+        sr1_pre_change = SourceRange.from_values("file_name_new",
+                                                 start_line=7,
+                                                 start_column=1,
+                                                 end_line=7,
+                                                 end_column=3)
+        sr1_change = SourceRange.from_values("file_name_new",
+                                             start_line=4,
+                                             start_column=8,
+                                             end_line=4,
+                                             end_column=13)
+
+        # NEW RESULTS:
+        res1_pre_change = Result(origin="origin",
+                                 message="message",
+                                 affected_code=(sr1_pre_change,))
+        res1_change = Result(origin="origin",
+                             message="message",
+                             affected_code=(sr1_change,))
+        res1_whole_remove = Result.from_values(origin="origin",
+                                               message="message",
+                                               file="file_name_new",
+                                               line=6,
+                                               column=1,
+                                               end_line=7,
+                                               end_column=5)
+
+        original_result_list = [res0_pre_change]
+
+        new_result_list = [res1_pre_change,
+                           res1_change,
+                           res1_whole_remove]
+
+        unique_new_result_list = [res1_change,
+                                  res1_whole_remove]
+
+        with open(self.original_file_name, "r") as original_file:
+            original_file_dict = {
+                abspath("file_name"): original_file.readlines()}
+
+            with open(self.modified_file_name, "r") as modified_file:
+                modified_file_dict = {
+                    abspath("file_name_new"): modified_file.readlines()}
+
+                # 'TIS THE IMPORTANT PART
+                self.assertEqual(sorted(filter_results(original_file_dict,
+                                                       modified_file_dict,
+                                                       original_result_list,
+                                                       new_result_list)),
+                                 sorted(unique_new_result_list))
+
     def test_unrelated_file_change(self):
         testfile_1 = ['1\n', '2\n']
         testfile_2 = ['1\n', '2\n']
