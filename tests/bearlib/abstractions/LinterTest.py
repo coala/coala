@@ -366,6 +366,33 @@ class LinterComponentTest(unittest.TestCase):
                          {"param_x": ("No description given.", int),
                           "superparam": ("A superparam!", None)})
 
+    def test_process_output_metadata_omits_on_builtin_formats(self):
+        uut = (linter(executable='', output_format='corrected')
+               (self.EmptyTestLinter))
+        # diff_severity and diff_message should now not occur inside the
+        # metadata definition.
+        self.assertNotIn("diff_severity", uut.get_metadata().optional_params)
+        self.assertNotIn("diff_message", uut.get_metadata().optional_params)
+        self.assertNotIn("diff_severity",
+                         uut.get_metadata().non_optional_params)
+        self.assertNotIn("diff_message",
+                         uut.get_metadata().non_optional_params)
+
+        # But every parameter manually defined in process_output shall appear
+        # inside the metadata signature.
+        class Handler:
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                pass
+
+            @staticmethod
+            def process_output(output, filename, file, diff_severity):
+                pass
+
+        uut = linter(executable='')(Handler)
+        self.assertIn("diff_severity", uut.get_metadata().non_optional_params)
+
     def test_section_settings_forwarding(self):
         create_arguments_mock = Mock()
         generate_config_mock = Mock()

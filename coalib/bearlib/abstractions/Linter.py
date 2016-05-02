@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from functools import partial
 import inspect
-from itertools import compress
+from itertools import chain, compress
 import re
 import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
@@ -207,9 +207,18 @@ def _create_linter(klass, options):
 
         @classmethod
         def _get_process_output_metadata(cls):
-            return FunctionMetadata.from_function(
-                cls.process_output,
-                omit={"self", "output", "filename", "file"})
+            metadata = FunctionMetadata.from_function(cls.process_output)
+
+            if options["output_format"] is None:
+                omitted = {"self", "output", "filename", "file"}
+            else:
+                # If a specific output format is provided, function signatures
+                # from process_output functions should not appear in the help.
+                omitted = set(chain(metadata.non_optional_params,
+                                    metadata.optional_params))
+
+            metadata.omit = omitted
+            return metadata
 
         @classmethod
         def get_metadata(cls):
