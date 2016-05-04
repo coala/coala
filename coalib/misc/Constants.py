@@ -72,7 +72,7 @@ user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
 
 default_coafile = ".coafile"
 
-TAGS_DIR = appdirs.user_data_dir('coala', version=VERSION)
+USER_DATA_DIR = appdirs.user_data_dir('coala', version=VERSION)
 
 GLOBBING_SPECIAL_CHARS = "()[]|?*"
 

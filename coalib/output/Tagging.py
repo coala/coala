@@ -5,13 +5,13 @@ import pickle
 from coalib.misc import Constants
 
 
-def get_tags_dir(log_printer):
+def get_user_data_dir(log_printer, action="tagging"):
     try:
-        os.makedirs(Constants.TAGS_DIR, exist_ok=True)
-        return Constants.TAGS_DIR
+        os.makedirs(Constants.USER_DATA_DIR, exist_ok=True)
+        return Constants.USER_DATA_DIR
     except PermissionError:
-        log_printer.err("Unable to create tags directory '{}'. Continuing "
-                        "without tagging.".format(Constants.TAGS_DIR))
+        log_printer.err("Unable to create user data directory '{}'. Continuing"
+                        " without {}.".format(Constants.USER_DATA_DIR, action))
     return None
 
 
@@ -27,7 +27,7 @@ def get_tag_path(tag, project, log_printer):
     """
     path = os.path.join(project, tag)
     hash = hashlib.sha224(path.encode()).hexdigest()
-    tags_dir = get_tags_dir(log_printer)
+    tags_dir = get_user_data_dir(log_printer)
     if tags_dir is not None:
         return os.path.join(tags_dir, hash)
     return None
