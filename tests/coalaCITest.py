@@ -9,7 +9,6 @@ from pyprint.NullPrinter import NullPrinter
 from coalib import coala_ci
 from coalib.misc.ContextManagers import make_temp, prepare_file
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.Tagging import get_tag_path
 from tests.TestUtilities import bear_test_module, execute_coala
 
 
@@ -69,26 +68,6 @@ class coalaCITest(unittest.TestCase):
             self.assertEqual(retval, 5,
                              "coala-ci must return exitcode 5 when it "
                              "autofixes the code.")
-
-    def test_tagging(self):
-        with bear_test_module(), \
-                prepare_file(["\t#include <a>"], None) as (lines, filename):
-            log_printer = LogPrinter(NullPrinter())
-            execute_coala(coala_ci.main, "coala-ci", "default",
-                          "-c", self.coafile,
-                          "-f", re.escape(filename),
-                          "-b", "SpaceConsistencyTestBear",
-                          "-S", "tag=test_tag")
-            tag_path = get_tag_path("test_tag",
-                                    self.unescaped_coafile,
-                                    log_printer)
-            self.assertTrue(os.path.exists(tag_path))
-            execute_coala(coala_ci.main, "coala-ci", "default",
-                          "-c", self.coafile,
-                          "-f", re.escape(filename),
-                          "-b", "SpaceConsistencyTestBear",
-                          "-S", "dtag=test_tag")
-            self.assertFalse(os.path.exists(tag_path))
 
     def test_fail_acquire_settings(self):
         with bear_test_module():

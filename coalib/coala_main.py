@@ -9,7 +9,6 @@ from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.output.Tagging import delete_tagged_results, tag_results
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
 
@@ -68,14 +67,10 @@ def run_coala(log_printer=None,
                           .format(platform.system(), platform.python_version(),
                                   pip.__version__, VERSION))
 
-        tag = str(sections['default'].get('tag', None))
-        dtag = str(sections['default'].get('dtag', None))
         config_file = os.path.abspath(str(sections["default"].get("config")))
 
         # Deleting all .orig files, so the latest files are up to date!
         coala_delete_orig.main(log_printer, sections["default"])
-
-        delete_tagged_results(dtag, config_file, log_printer)
 
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
@@ -97,8 +92,6 @@ def run_coala(log_printer=None,
             did_nothing = False
 
             file_dicts[section_name] = section_result[3]
-
-        tag_results(tag, config_file, results, log_printer)
 
         if did_nothing:
             nothing_done(log_printer)

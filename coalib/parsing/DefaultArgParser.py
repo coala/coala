@@ -249,25 +249,6 @@ def default_arg_parser(formatter_class=None):
                             action='store_const',
                             help=NO_ORIG_HELP)
 
-    deprecated_group = arg_parser.add_argument_group('Deprecated')
-
-    TAG_HELP = ('Tag results with a specific name. You can access the results '
-                'later with that tag.')
-    deprecated_group.add_argument('-t',
-                                  '--tag',
-                                  nargs='?',
-                                  const=True,
-                                  metavar='STRING',
-                                  help=TAG_HELP)
-
-    DELETE_TAG_HELP = 'Delete pre-tagged results with tag name.'
-    deprecated_group.add_argument('-g',
-                                  '--dtag',
-                                  nargs='?',
-                                  const=True,
-                                  metavar='STRING',
-                                  help=DELETE_TAG_HELP)
-
     try:  # pragma: no cover
         # Auto completion should be optional, because of somewhat complicated
         # setup.
