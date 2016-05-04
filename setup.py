@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version, VERSION, VERSION_FILE, BUS_NAME
+from coalib import assert_supported_version, VERSION, get_version, BUS_NAME
 
 assert_supported_version()
 # Stop ignoring
@@ -59,8 +59,7 @@ if on_rtd:
         current_version = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
-        with open(VERSION_FILE, 'r') as ver:
-            VERSION = ver.readline().strip()
+        VERSION = get_version()
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
