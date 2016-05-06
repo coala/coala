@@ -92,6 +92,22 @@ class Diff:
 
         return self._changes.get(line_nr, LineDiff())
 
+    def stats(self):
+        """
+        Returns tuple containing number of additions and deletions in the diff.
+        """
+        additions = 0
+        deletions = 0
+        for line_diff in self._changes.values():
+            if line_diff.change:
+                additions += 1
+                deletions += 1
+            elif line_diff.delete:
+                deletions += 1
+            if line_diff.add_after:
+                additions += len(line_diff.add_after)
+        return additions, deletions
+
     def __len__(self):
         return len(self._changes)
 

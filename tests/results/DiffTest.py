@@ -65,6 +65,14 @@ class DiffTest(unittest.TestCase):
             SourceRange.from_values('file', start_line=6)]
         self.assertEqual(self.uut.affected_code("file"), affected_code)
 
+    def test_stats(self):
+        self.uut.delete_line(2)
+        self.assertEqual(self.uut.stats(), (0, 1))
+        self.uut.add_lines(2, ["2.3", "2.5", "2.6"])
+        self.assertEqual(self.uut.stats(), (3, 1))
+        self.uut.change_line(1, "1", "1.1")
+        self.assertEqual(self.uut.stats(), (4, 2))
+
     def test_modified(self):
         result_file = ["0.1",
                        "0.2",
