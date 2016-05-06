@@ -32,11 +32,12 @@ FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
 HIGHLIGHTED_CODE_COLOR = 'red'
 SUCCESS_COLOR = 'green'
-CLI_ACTIONS = [OpenEditorAction(),
+CLI_ACTIONS = (OpenEditorAction(),
                ApplyPatchAction(),
                PrintDebugMessageAction(),
                PrintMoreInfoAction(),
-               ShowPatchAction()]
+               ShowPatchAction())
+DIFF_EXCERPT_MAX_SIZE = 4
 
 
 def format_lines(lines, line_nr=""):
@@ -225,12 +226,37 @@ def print_result(console_printer,
     console_printer.print(format_lines(result.message), delimiter="\n")
 
     if interactive:
+        cli_actions = CLI_ACTIONS
+        show_patch_action = ShowPatchAction()
+        if show_patch_action.is_applicable(result, file_dict, file_diff_dict):
+            diff_size = sum(len(diff) for diff in result.diffs.values())
+            if diff_size <= DIFF_EXCERPT_MAX_SIZE:
+                show_patch_action.apply_from_section(result,
+                                                     file_dict,
+                                                     file_diff_dict,
+                                                     section)
+                cli_actions = tuple(action for action in cli_actions
+                                    if not isinstance(action, ShowPatchAction))
+            else:
+                print_diffs_info(result.diffs, console_printer)
         acquire_actions_and_apply(console_printer,
                                   log_printer,
                                   section,
                                   file_diff_dict,
                                   result,
-                                  file_dict)
+                                  file_dict,
+                                  cli_actions)
+
+
+def print_diffs_info(diffs, printer):
+    for filename, diff in sorted(diffs.items()):
+        additions, deletions = diff.stats()
+        printer.print(
+            format_lines("+{additions} -{deletions} in {file}".format(
+                file=filename,
+                additions=additions,
+                deletions=deletions)),
+            color='green')
 
 
 def print_results_formatted(log_printer,

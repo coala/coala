@@ -1,5 +1,6 @@
 import os
 import unittest
+from unittest.mock import patch
 from collections import OrderedDict
 from os.path import abspath, relpath
 
@@ -15,7 +16,8 @@ from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
     print_affected_files, print_bears, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
-    print_spaces_tabs_in_unicode, show_bears, ask_for_action_and_apply)
+    print_spaces_tabs_in_unicode, show_bears, ask_for_action_and_apply,
+    print_diffs_info)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -112,6 +114,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.log_printer = LogPrinter(ConsolePrinter(print_colored=False))
         self.console_printer = ConsolePrinter(print_colored=False)
         self.file_diff_dict = {}
+        self.section = Section("t")
         self.local_bears = OrderedDict([("default", [SomelocalBear]),
                                         ("test", [SomelocalBear])])
         self.global_bears = OrderedDict([("default", [SomeglobalBear]),
@@ -183,6 +186,64 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             self.assertEqual(generator.last_input, 2)
 
+    def test_print_diffs_info(self):
+        file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
+        diff_dict = {"a": Diff(file_dict['a']),
+                     "b": Diff(file_dict['b'])}
+        diff_dict["a"].add_lines(1, ["test\n"])
+        diff_dict["a"].delete_line(3)
+        diff_dict["b"].add_lines(0, ["first\n"])
+        previous_diffs = {"a": Diff(file_dict['a'])}
+        previous_diffs["a"].change_line(2, "b\n", "b_changed\n")
+        with retrieve_stdout() as stdout:
+            print_diffs_info(diff_dict, self.console_printer)
+            self.assertEqual(stdout.getvalue(),
+                             "|    | +1 -1 in a\n"
+                             "|    | +1 -0 in b\n")
+
+    @patch("coalib.output.ConsoleInteraction.acquire_actions_and_apply")
+    @patch("coalib.output.ConsoleInteraction.ShowPatchAction."
+           "apply_from_section")
+    def test_print_result_interactive_small_patch(self, apply_from_section, _):
+        file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
+        diff_dict = {"a": Diff(file_dict['a']),
+                     "b": Diff(file_dict['b'])}
+        diff_dict["a"].add_lines(1, ["test\n"])
+        diff_dict["a"].delete_line(3)
+        result = Result("origin", "msg", diffs=diff_dict)
+        section = Section("test")
+
+        print_result(self.console_printer,
+                     self.log_printer,
+                     section,
+                     self.file_diff_dict,
+                     result,
+                     file_dict,
+                     True)
+        apply_from_section.assert_called_once_with(
+            result, file_dict, self.file_diff_dict, section)
+
+    @patch("coalib.output.ConsoleInteraction.acquire_actions_and_apply")
+    @patch("coalib.output.ConsoleInteraction.print_diffs_info")
+    def test_print_result_interactive_big_patch(self, diffs_info, _):
+        file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
+        diff_dict = {"a": Diff(file_dict['a']),
+                     "b": Diff(file_dict['b'])}
+        diff_dict["a"].add_lines(1, ["test\n", "test1\n", "test2\n"])
+        diff_dict["a"].delete_line(3)
+        diff_dict["a"].add_lines(3, ["3test\n"])
+        result = Result("origin", "msg", diffs=diff_dict)
+        section = Section("test")
+
+        print_result(self.console_printer,
+                     self.log_printer,
+                     section,
+                     self.file_diff_dict,
+                     result,
+                     file_dict,
+                     True)
+        diffs_info.assert_called_once_with(diff_dict, self.console_printer)
+
     def test_print_result(self):
         print_result(self.console_printer,
                      self.log_printer,
@@ -194,7 +255,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         with simulate_console_inputs(0):
             print_result(self.console_printer,
                          self.log_printer,
-                         None,
+                         self.section,
                          self.file_diff_dict,
                          Result("origin", "msg", diffs={}),
                          {})
