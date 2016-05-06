@@ -162,8 +162,6 @@ class Diff:
         altered lines are still together in one diff. All subdiffs will be
         yielded.
         """
-        diffs = []
-
         last_line = -1
         this_diff = Diff(self._file)
         for line in sorted(self._changes.keys()):
