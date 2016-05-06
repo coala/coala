@@ -208,16 +208,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
 
-            with simulate_console_inputs(1), self.assertRaises(ValueError):
-                ApplyPatchAction.is_applicable = staticmethod(
-                    lambda *args: True)
-                print_result(self.console_printer,
-                             self.log_printer,
-                             None,
-                             self.file_diff_dict,
-                             Result("origin", "msg", diffs={
-                                    testfile_path: diff}),
-                             file_dict)
+            ApplyPatchAction.is_applicable = staticmethod(
+                lambda *args: True)
 
             # Interaction must be closed by the user with `0` if it's not a
             # param

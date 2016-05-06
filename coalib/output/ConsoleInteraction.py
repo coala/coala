@@ -471,9 +471,6 @@ def get_action_info(section, action, failed_actions):
     """
     params = action.non_optional_params
 
-    if section is None:
-        raise ValueError("section has to be intializied.")
-
     for param_name in params:
         if param_name not in section or action.name in failed_actions:
             question = format_lines(
