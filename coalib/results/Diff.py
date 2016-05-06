@@ -109,7 +109,10 @@ class Diff:
         return additions, deletions
 
     def __len__(self):
-        return len(self._changes)
+        """
+        Returns total number of additions and deletions in diff.
+        """
+        return sum(self.stats())
 
     @property
     def original(self):
