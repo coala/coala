@@ -3,8 +3,8 @@ Exit Codes
 
 The following is a list of ``coala``'s exit codes and their meanings:
 
--  ``0`` - ``coala`` executed succesfully but yielded no results.
--  ``1`` - ``coala`` executed succesfully but yielded results.
+-  ``0`` - ``coala`` executed successfully but yielded no results.
+-  ``1`` - ``coala`` executed successfully but yielded results.
 -  ``2`` - Invalid arguments were passed to ``coala`` in the command line.
 -  ``3`` - The file collector exits with this code if an invalid pattern
    is passed to it.
