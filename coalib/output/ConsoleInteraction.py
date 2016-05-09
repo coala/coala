@@ -703,7 +703,10 @@ def print_bears(console_printer, bears, compress):
     elif compress:
         bear_list = sorted(bears.keys(), key=lambda bear: bear.name)
         for bear in bear_list:
-            console_printer.print(" *", bear.name)
+            console_printer.print(bear.name)
+            console_printer.print("=" * len(bear.name))
+
+            console_printer.print(bear.get_metadata().desc + "\n")
     else:
         for bear in sorted(bears.keys(),
                            key=lambda bear: bear.name):

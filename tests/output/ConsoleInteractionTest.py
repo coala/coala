@@ -749,8 +749,14 @@ some_file
                        self.global_bears,
                        True,
                        self.log_printer.printer)
-            self.assertEqual(" * SomeglobalBear\n"
-                             " * SomelocalBear\n", stdout.getvalue())
+            self.assertEqual("SomeglobalBear\n"
+                             "==============\n"
+                             "Some global-bear Description.\n"
+                             "\n"
+                             "SomelocalBear\n"
+                             "=============\n"
+                             "Some local-bear Description.\n\n",
+                             stdout.getvalue())
 
 
 # Own test because this is easy and not tied to the rest

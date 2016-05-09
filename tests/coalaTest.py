@@ -52,7 +52,7 @@ class coalaTest(unittest.TestCase):
             self.assertEqual(retval, 0)
 
             lines = output.splitlines()
-            bear_lines = sum(1 for line in lines if line.startswith(" * "))
+            bear_lines = sum(1 for line in lines if line.startswith("==="))
             self.assertEqual(bear_lines, 4)
 
             for line in lines:
