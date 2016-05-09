@@ -55,7 +55,7 @@ def main():
                     sections,
                     acquire_settings=lambda *args, **kwargs: {},
                     log_printer=log_printer)
-            show_bears(local_bears, global_bears, args.show_all_bears,
+            show_bears(local_bears, global_bears, args.show_bears,
                        console_printer)
         except BaseException as exception:  # pylint: disable=broad-except
             return get_exitcode(exception, log_printer)
