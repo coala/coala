@@ -39,10 +39,16 @@ argument of *coala* like demonstrated below. For all file paths, you can
 specify (recursive) globs.
 
 Because analysis routines can do many various things we named them
-*Bears*. Thus you can specify the kind of analysis with the ``--bears``
-argument.
+*Bears*. A bear can check your code for potential problems, calculate metrics
+and even provide corrections for your code. Let's find out what bears are
+available for C:
 
-Please type the following commands into the console:
+::
+
+    coala --show-language-bears C
+
+coala now lists all bears that can operate on C code. You can specify the
+kind of analysis with the ``--bears`` argument:
 
 ::
 
