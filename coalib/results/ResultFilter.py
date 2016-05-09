@@ -228,18 +228,21 @@ def ensure_files_present(original_file_dict, modified_file_dict):
     affected_files = original_files | modified_files
     original_unique_files = affected_files - modified_files
     renamed_files_dict = {}
-    for file in affected_files:
-        if file not in original_files:
-            for comparable_file in original_unique_files:
-                s = SequenceMatcher(
-                    None,
-                    ''.join(modified_file_dict[file]),
-                    ''.join(original_file_dict[comparable_file]))
-                if s.real_quick_ratio() >= 0.5 and s.ratio() > 0.5:
-                    renamed_files_dict[comparable_file] = file
-                    break
-            else:
-                original_file_dict[file] = []
-        if file not in modified_files:
-            modified_file_dict[file] = []
+    for file in filter(
+            lambda filter_file: filter_file not in original_files,
+            affected_files):
+        for comparable_file in original_unique_files:
+            s = SequenceMatcher(
+                None,
+                ''.join(modified_file_dict[file]),
+                ''.join(original_file_dict[comparable_file]))
+            if s.real_quick_ratio() >= 0.5 and s.ratio() > 0.5:
+                renamed_files_dict[comparable_file] = file
+                break
+        else:
+            original_file_dict[file] = []
+    for file in filter(
+            lambda filter_file: filter_file not in modified_files,
+            affected_files):
+        modified_file_dict[file] = []
     return renamed_files_dict
