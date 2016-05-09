@@ -1,5 +1,6 @@
 ---
 codecov:
+  comment: false
   coverage:
     status:
       project:
@@ -10,5 +11,3 @@ codecov:
         enabled: false
       change:
         enabled: false
-
-# TODO - Disable comments on PR by codecov.
