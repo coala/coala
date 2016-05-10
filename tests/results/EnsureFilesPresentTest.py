@@ -9,6 +9,28 @@ class EnsureFilesPresentTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
+    def test_removed_file(self):
+        test_file = ["abc"]
+        test_file_dict = {"test_file": test_file}
+        test_mod_file_dict = {}
+
+        ensure_files_present(test_file_dict, test_mod_file_dict)
+
+        self.assertEqual(
+            test_mod_file_dict,
+            {"test_file": []})
+
+    def test_added_file(self):
+        test_file = ["abc"]
+        test_file_dict = {}
+        test_mod_file_dict = {"test_file": test_file}
+
+        ensure_files_present(test_file_dict, test_mod_file_dict)
+
+        self.assertEqual(
+            test_file_dict,
+            {"test_file": []})
+
     def test_file_renaming(self):
         testfile_1 = ['1\n', '2\n']
         testfile_2 = ['3\n', '4\n', '5\n']

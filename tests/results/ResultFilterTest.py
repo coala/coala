@@ -5,7 +5,6 @@ from os.path import abspath
 from coalib.results.Diff import Diff
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.ResultFilter import (
-    ensure_files_present,
     filter_results,
     remove_range,
     remove_result_ranges_diffs)
@@ -573,28 +572,6 @@ class ResultFilterTest(unittest.TestCase):
         expected_diff = Diff.from_string_arrays(test_file, ["abc"])
 
         self.assertEqual(result_diff, expected_diff)
-
-    def test_removed_file(self):
-        test_file = ["abc"]
-        test_file_dict = {"test_file": test_file}
-        test_mod_file_dict = {}
-
-        ensure_files_present(test_file_dict, test_mod_file_dict)
-
-        self.assertEqual(
-            test_mod_file_dict,
-            {"test_file": []})
-
-    def test_added_file(self):
-        test_file = ["abc"]
-        test_file_dict = {}
-        test_mod_file_dict = {"test_file": test_file}
-
-        ensure_files_present(test_file_dict, test_mod_file_dict)
-
-        self.assertEqual(
-            test_file_dict,
-            {"test_file": []})
 
     def test_new_file_with_result(self):
         testfile_1 = ['1\n', '2\n']
