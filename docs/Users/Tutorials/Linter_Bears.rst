@@ -1,8 +1,8 @@
 Linter Bears
 ============
 
-Welcome. This tutorial aims to show you how to use the Lint
-class in order to integrate linters in your bears.
+Welcome. This tutorial aims to show you how to use the ``@linter`` decorator in
+order to integrate linters in your bears.
 
 Why is This Useful?
 -------------------
@@ -14,172 +14,204 @@ need to implement it on your own. Don't worry, it's easy!
 What do we Need?
 ----------------
 
-First of all, we need the linter that we are going to use.
-In this tutorial we will build the HTMLTutorialBear so we need an html
-linter.
-`This <https://github.com/deezer/html-linter>`__ one will do.
+First of all, we need the linter executable that we are going to use.
+In this tutorial we will build the PylintTutorialBear so we need Pylint, a
+common linter for Python. It can be found `here <https://www.pylint.org/>`__.
 Since it is a python package we can go ahead and install it with
 
 ::
 
-    $ pip install html-linter
+    $ pip3 install pylint
 
 Writing the Bear
 ----------------
 
-Since we are going to use the Lint class we should go ahead and
-import it together with LocalBear (all bears that handle only one file
-inherit from LocalBear). Also we will go ahead and write the class
-head. It should inherit both LocalBear and Lint.
+To write a linter bear, we need to create a class that interfaces with our
+linter-bear infrastructure, that is provided via the ``@linter`` decorator.
 
 ::
 
-    from coalib.bearlib.abstractions.Lint import Lint
-    from coalib.bears.LocalBear import LocalBear
+    from coalib.bearlib.abstractions.Linter import linter
 
-    class HTMLTutorialBear(LocalBear, Lint):
+    @linter(executable='pylint')
+    class PylintTutorialBear:
+        pass
 
-To make our bear use a linter we will have to overwrite some of the
-predefined values of the Lint class. Some of the most important are
-``executable`` and ``output_regex``.
+As you can see ``pylint`` is already provided as an executable name which gets
+invoked on the files you are going to lint. This is a mandatory argument for
+the decorator.
 
-We use ``executable`` to specify the linter executable. In our case it would
-be
-
-::
-
-    executable = 'html_lint.py'
-
-The ``output_regex`` is used to group parts of the output (such as ``lines``,
-``columns``, ``severity`` and ``message``) so it can be used by the Lint
-class to yield Results (more on communicating with the user
-:doc:`Writing Bears <Writing_Bears>`).
-
-In order to figure out the ``output_regex`` we have to first see how the
-linter output looks. I will use this file as ``sample.html``
+The linter class is only capable of processing one file at a time, for this
+purpose ``pylint`` or the external tool needs to be invoked every time with the
+appropriate parameters. This is done inside ``create_arguments``,
 
 ::
 
-    <html>
-      <body>
-        <h1>Hello, world!</h1>
-      </body>
-    </html>
+    @linter(executable='pylint')
+    class PylintTutorialBear:
+        @staticmethod
+        def create_arguments(filename, file, config_file):
+            pass
 
-Now we can run
+``create_arguments`` accepts three parameters:
 
-.. Start ignoring LineLengthBear
+- ``filename``: The absolute path to the file that gets processed.
+- ``file``: The contents of the file to process, given as a list of lines
+  (including the return character).
+- ``config_file``: The absolute path to a config file to use. If no config file
+  is used, this parameter is ``None``. More on that later.
 
-::
+You can use these parameters to construct the command line arguments. The
+linter expects from you to return an argument sequence here. A tuple is
+preferred. We will do this soon for ``PylintTutorialBear``.
 
-    $ html_lint.py sample.html
-    1:1: Info: Optional Tags: Omit optional tags (optional): You may remove the opening "html" tag.
-    2:3: Info: Optional Tags: Omit optional tags (optional): You may remove the opening "body" tag.
-    4:3: Info: Optional Tags: Omit optional tags (optional): You may remove the closing "body" tag.
-    5:1: Info: Optional Tags: Omit optional tags (optional): You may remove the closing "html" tag.
+So which are the exact command line arguments we need to provide? It depends on
+the output format of the linter. The ``@linter`` decorator is capable of
+handling different output formats:
 
-.. Stop ignoring LineLengthBear
+- ``regex``: This parses issue messages yielded by the underlying executable.
+- ``corrected``: Auto-generates results from a fixed/corrected file provided by
+  the tool.
 
-Our ``output_regex`` should look like this
+In this tutorial we are going to use the ``regex`` output format. But before we
+continue with modifying our bear, we need to figure out how exactly output from
+Pylint looks like so we can parse it accordingly.
 
-::
-
-    (line):(column): (severity): (message)
-
-Or in `python regex <https://docs.python.org/3/library/re.html>`__
-
-.. Start ignoring LineLengthBear
-
-::
-
-    (?P<line>\d+):(?P<column>\d+):\s(?P<severity>Error|Warning|Info):\s(?P<message>.+)
-
-.. Stop ignoring LineLengthBear
-
-Now that we found out our ``output_regex`` (we might want to test it just
-to be sure, https://regex101.com/#python is a great tool for this purpose).
-We can now compile and add our regex using the ``re`` python library like so
-(the regex was split into 2 lines to focus on readability)
+We get some promising output when invoking Pylint with
 
 ::
 
-    import re
+    $ pylint --msg-template="L{line}C{column}: {msg_id} - {msg}" --reports=n
 
-    from coalib.bearlib.abstractions.Lint import Lint
-    from coalib.bears.LocalBear import LocalBear
+Sample output looks like this:
 
+::
 
-    class HTMLTutorialBear(LocalBear, Lint):
-        executable = 'html_lint.py'
-        output_regex = re.compile(
-            r'(?P<line>\d+):(?P<column>\d+):\s'
-            r'(?P<severity>Error|Warning|Info):\s(?P<message>.+)'
-        )
+    No config file found, using default configuration
+    ************* Module coalib.bearlib.abstractions.Linter
+    L1C0: C0111 - Missing module docstring
+    L42C48: E1101 - Class 'Enum' has no 'reverse' member
+    L77C32: E1101 - Class 'Enum' has no 'reverse' member
+    L21C0: R0912 - Too many branches (16/12)
+    L121C28: W0613 - Unused argument 'filename'
 
-*coala* uses three types of severities
+This is something we can parse easily with a regex. So let's implement
+everything we've found out so far:
+
+::
+
+    @linter(executable='pylint',
+            output_format='regex',
+            output_regex=r'L(?P<line>\d+)C(?P<column>\d+): (?P<message>.*)')
+    class PylintTutorialBear:
+        @staticmethod
+        def create_arguments(filename, file, config_file):
+            return ('--msg_template="L{line}C{column}: {msg_id} - {msg}"',
+                    '--reports=n', filename)
+
+As you can see, the ``output_regex`` parameter consists of named groups. These
+are important to construct a meaningful result that contains the information
+that is printed out.
+
+For the exact list of named groups ``@linter`` recognizes, see the API
+documentation.
+
+For more info generally on regexes, see `Python re module
+<https://docs.python.org/3/library/re.html>`_.
+
+Let's brush up our ``output_regex`` a bit to use even more information:
+
+::
+
+    @linter(...
+            output_regex=r'L(?P<line>\d+)C(?P<column>\d+): '
+                         r'(?P<message>(?P<origin>.\d+) - .*)'),
+            ...)
+
+Now we use the issue identification as the origin so we are able to deactivate
+single rules via ignore statements inside code.
+
+This class is already fully functional and allows to parse issues yielded by
+Pylint!
+
+Using Severities
+----------------
+
+*coala* uses three types of severities, that categorize the importance of a
+result:
 
 -  INFO
 -  NORMAL
 -  MAJOR
 
-which are defined in ``coalib.results.RESULT_SEVERITY``. In order to use
-the severity group from the regex we will first have to map the output
-severities (as seen in the linter and as used in the regex above
-``Info``, ``Warning``, ``Error``) to the defined *coala* severities
-(above stated ``INFO``, ``NORMAL``, ``MAJOR``).
-
-Luckily for us the Lint class provides us with the ``severity_map``
-property. ``severity_map`` is just a dictionary of strings that
-should be mapped to the define *coala* severities. Let's go ahead and import
-``coalib.results.RESULT_SEVERITY`` and write our ``severity_map``. Our code
-could look like this
+which are defined in ``coalib.results.RESULT_SEVERITY``. Pylint output contains
+severity information we can use:
 
 ::
 
-    import re
+    L1C0: C0111 - Missing module docstring
 
-    from coalib.bearlib.abstractions.Lint import Lint
-    from coalib.bears.LocalBear import LocalBear
+The letter before the error code is the severity. In order to make use of the
+severity, we need to define it inside the ``output_regex`` parameter using the
+named group ``severity``:
+
+::
+
+    @linter(...
+            output_regex=r'L(?P<line>\d+)C(?P<column>\d+): (?P<message>'
+                         r'(?P<origin>(?P<severity>[WFECRI])\d+) - .*)',
+            ...)
+
+So we want to take up the severities denoted by the letters ``W``, ``F``,
+``E``, ``C``, ``R`` or ``I``. In order to use this severity value, we will
+first have to provide a map that takes the matched severity letter and maps it
+to a severity value of ``coalib.results.RESULT_SEVERITY`` so *coala*
+understands it. This is possible via the ``severity_map`` parameter of
+``@linter``:
+
+::
+
     from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
+    @linter(...
+            severity_map={'W': RESULT_SEVERITY.NORMAL,
+                          'F': RESULT_SEVERITY.MAJOR,
+                          'E': RESULT_SEVERITY.MAJOR,
+                          'C': RESULT_SEVERITY.NORMAL,
+                          'R': RESULT_SEVERITY.NORMAL,
+                          'I': RESULT_SEVERITY.INFO},
+            ...)
 
-    class HTMLTutorialBear(LocalBear, Lint):
-        executable = 'html_lint.py'
-        output_regex = re.compile(
-            r'(?P<line>\d+):(?P<column>\d+):\s'
-            r'(?P<severity>Error|Warning|Info):\s(?P<message>.+)'
-        )
-        severity_map = {
-            "Info": RESULT_SEVERITY.INFO,
-            "Warning": RESULT_SEVERITY.NORMAL,
-            "Error": RESULT_SEVERITY.MAJOR
-        }
-
-As with every other bear (see :doc:`Writing Bears <Writing_Bears>`) we have
-to define our run method.
-
-::
-
-    def run(self, filename, file):
-
-        return self.lint(filename)
-
-And that should be enough. The lint() method of the Lint class will do the
-rest for us.
+``coalib.results.RESULT_SEVERITY`` contains three different values, ``Info``,
+``Warning`` and ``Error`` you can use.
 
 We can test our bear like this
 
 ::
 
-    $ coala --bear-dirs=. --bears=HTMLTutorialBear --files=sample.html
+    $ coala --bear-dirs=. --bears=PylintTutorialBear --files=sample.py
 
 .. note::
 
     In order for the above command to work we should have 2 files in
-    our current dir: ``HTMLTutorialBear.py`` and our ``sample.html``.
+    our current dir: ``PylintTutorialBear.py`` and our ``sample.py``.
     Naming is **very** important in *coala*. *coala* will look for bears
     by their **filename** and display them based on their
     **classname**.
+
+Using the ``corrected`` Output Format
+-------------------------------------
+
+This output format is very simple to use and doesn't require further setup from
+your side inside the bear:
+
+::
+
+    @linter(...
+            output_format='corrected')
+
+If your underlying tool generates a corrected file, the class automatically
+generates patches for the changes made and yields results accordingly.
 
 Adding Settings to our Bear
 ---------------------------
@@ -188,115 +220,120 @@ If we run
 
 ::
 
-    $ html_lint.py -h
+    $ pylint --help
 
-We can see that there is a ``--disable`` option which lets us disable some
-checks. Let's add that functionality to our bear.
-
-First of all we have to import the setting that we are going to use from
-coalib. Since ``--disable`` needs a comma separated list we can use a list
-to keep our options. For that we will import ``typed_list`` like so
+We can see that there is a ``--rcfile`` option which lets us specify a
+configuration file for Pylint. Let's add that functionality to our bear.
 
 ::
 
-    from coalib.settings.Setting import typed_list
+    import os
 
-``typed_list(item_type)`` is a function that converts the given input
-(which the user will pass to the Bear as a setting) into a list of
-items and afterwards will apply a conversion to type ``item_type`` to each
-item in the list (you can also use basic types like ``int``, ``bool``, etc.
-see :doc:`Writing Bears <Writing_Bears>`)
-Next, we have to add our setting as a parameter for the ``run()`` method
-of our bear.
-We will give the param a sugestive name like ``htmllint_ignore``.
+    from coalib.bearlib.abstractions.Linter import linter
+    from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+
+    @linter(executable='pylint',
+            output_format='regex',
+            output_regex=r'L(?P<line>\d+)C(?P<column>\d+): '
+                         r'(?P<message>(?P<severity>[WFECRI]).*)',
+            severity_map={'W': RESULT_SEVERITY.NORMAL,
+                          'F': RESULT_SEVERITY.MAJOR,
+                          'E': RESULT_SEVERITY.MAJOR,
+                          'C': RESULT_SEVERITY.NORMAL,
+                          'R': RESULT_SEVERITY.NORMAL,
+                          'I': RESULT_SEVERITY.INFO})
+    class PylintTutorialBear:
+        @staticmethod
+        def create_arguments(filename, file, config_file,
+                             pylint_rcfile: str=os.devnull):
+            return ('--msg_template="L{line}C{column}: {msg_id} - {msg}"',
+                    '--reports=n', '--rcfile=' + pylint_rcfile, filename)
+
+Just adding the needed parameter to the ``create_arguments`` signature
+suffices, like you would do for other bears inside ``run``! Additional
+parameters are automatically queried from the coafile. Let's add also some
+documentation together with the ``LANGUAGE`` attribute:
 
 ::
 
-    def run(self,
-            filename,
-            file,
-            htmllint_ignore: typed_list(str)=[]):
-        '''
-        Checks the code with `html_lint.py` on each file separately.
+    @linter(...)
+    class PylintTutorialBear:
+        """
+        Lints your Python files!
 
-        :param htmllint_ignore: List of checkers to ignore.
-        '''
+        Check for codings standards (like well-formed variable names), detects
+        semantical errors (like true implementation of declared interfaces or
+        membership via type inference), duplicated code.
+
+        See http://pylint-messages.wikidot.com/all-messages for a list of all
+        checks and error codes.
+        """
+
+        LANGUAGE = ("Python", "Python 2", "Python 3")
+
+        @staticmethod
+        def create_arguments(filename, file, config_file,
+                             pylint_rcfile: str=os.devnull):
+            """
+            :param pylint_rcfile:
+                The configuration file Pylint shall use.
+            """
+            ...
 
 .. note::
 
     The documentation of the param is parsed by *coala* and it will be used
     as help to the user for that specific setting.
 
-The last thing we need to do is join the strings in the ``html_ignore``,
-append them to ``--disable=`` and add it as an argument. There are alot
-of ways of doing that.
-
-::
-
-    ignore = ','.join(part.strip() for part in htmllint_ignore)
-    self.arguments = '--disable=' + ignore
-    return self.lint(filename)
-
-Right place for '{filename}'
-----------------------------
-
-Depending on where the executable (``html_lint.py`` in this case) wants the
-file-name (eg. ``sample.html``) to be present in the command which does the
-linting, we add ``'{filename}'`` to the arguments. When we run
-``html_lint.py -h``, we can see that the command signature is:
-``html5_lint.py [--disable=DISABLE] FILENAME...``
-
-So, we want ``'{filename}'`` at the end of the arguments.
-
-::
-
-    self.arguments = '--disable=' + ignore
-    self.arguments += ' {filename}'
-    return self.lint(filename)
-
-
 Finished Bear
 -------------
 
 Well done, you made it this far! Now you should have built a fully
-functional HTML Lint Bear. If you followed the code from this tutorial
+functional Python linter Bear. If you followed the code from this tutorial
 it should look something like this
 
 ::
 
-    import re
+    import os
 
-    from coalib.bearlib.abstractions.Lint import Lint
-    from coalib.bears.LocalBear import LocalBear
-    from coalib.settings.Setting import typed_list
+    from coalib.bearlib.abstractions.Linter import linter
     from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
+    @linter(executable='pylint',
+            output_format='regex',
+            output_regex=r'L(?P<line>\d+)C(?P<column>\d+): '
+                         r'(?P<message>(?P<severity>[WFECRI]).*)',
+            severity_map={'W': RESULT_SEVERITY.NORMAL,
+                          'F': RESULT_SEVERITY.MAJOR,
+                          'E': RESULT_SEVERITY.MAJOR,
+                          'C': RESULT_SEVERITY.NORMAL,
+                          'R': RESULT_SEVERITY.NORMAL,
+                          'I': RESULT_SEVERITY.INFO})
+    class PylintTutorialBear:
+        """
+        Lints your Python files!
 
-    class HTMLTutorialBear(LocalBear, Lint):
-        executable = 'html_lint.py'
-        output_regex = re.compile(
-            r'(?P<line>\d+):(?P<column>\d+):\s'
-            r'(?P<severity>Error|Warning|Info):\s(?P<message>.+)'
-        )
-        severity_map = {
-            "Info": RESULT_SEVERITY.INFO,
-            "Warning": RESULT_SEVERITY.NORMAL,
-            "Error": RESULT_SEVERITY.MAJOR
-        }
+        Check for codings standards (like well-formed variable names), detects
+        semantical errors (like true implementation of declared interfaces or
+        membership via type inference), duplicated code.
 
-        def run(self,
-                filename,
-                file,
-                htmllint_ignore: typed_list(str)=[]):
-            '''
-            Checks the code with `html_lint.py` on each file separately.
+        See http://pylint-messages.wikidot.com/all-messages for a list of all
+        checks and error codes.
 
-            :param htmllint_ignore: List of checkers to ignore.
-            '''
-            ignore = ','.join(part.strip() for part in htmllint_ignore)
-            self.arguments = '--disable=' + ignore
-            self.arguments += ' {filename}'
-            return self.lint(filename)
+        https://pylint.org/
+        """
+
+        LANGUAGE = ("Python", "Python 2", "Python 3")
+
+        @staticmethod
+        def create_arguments(filename, file, config_file,
+                             pylint_rcfile: str=os.devnull):
+            """
+            :param pylint_rcfile:
+                The configuration file Pylint shall use.
+            """
+            return ('--msg_template="L{line}C{column}: {msg_id} - {msg}"',
+                    '--reports=n', '--rcfile=' + pylint_rcfile, filename)
 
 Running and Testing our Bear
 ----------------------------
@@ -305,25 +342,29 @@ By running
 
 ::
 
-    $ coala --bear-dirs=. --bears=HTMLTutorialBear -B
+    $ coala --bear-dirs=. --bears=PylintTutorialBear -B
 
 We can see that our Bear setting is documented properly. To use *coala*
-with our Bear on `sample.html` we run
+with our Bear on `sample.py` we run
 
 ::
 
-    $ coala --bear-dirs=. --bears=HTMLTutorialBear --files=sample.html
+    $ coala --bear-dirs=. --bears=PylintTutorialBear --files=sample.py
 
-To use our `htmllint_ignore` setting we can do
+To use our `pylint_rcfile` setting we can do
 
 ::
 
-    $ coala --bear-dirs=. --bears=HTMLTutorialBear \
-    > -S htmllint_ignore=optional_tag --files=sample.html
-
-This will not output anything because all the messages had the
-`optional_tag`.
+    $ coala --bear-dirs=. --bears=PythonTutorialBear \
+    > -S rcfile=my_rcfile --files=sample.py
 
 You now know how to write a linter Bear and also how to use it in your
 project.
+
 Congratulations!
+
+Where to Find More...
+---------------------
+
+If you need more information about the ``@linter`` decorator, refer to the API
+documentation. It's more versatile than described in this little tutorial.
