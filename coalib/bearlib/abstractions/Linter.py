@@ -20,7 +20,7 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 
 def _prepare_options(options):
     """
-    Prepares options for ``Linter`` for a given options dict in-place.
+    Prepares options for ``linter`` for a given options dict in-place.
 
     :param options:
         The options dict that contains user/developer inputs.
@@ -527,7 +527,7 @@ def linter(executable: str,
     ...         return arguments
 
     Sometimes your tool requires an actual file that contains configuration.
-    ``Linter`` allows you to just define the contents the configuration shall
+    ``linter`` allows you to just define the contents the configuration shall
     contain via ``generate_config()`` and handles everything else for you.
 
     >>> @linter("xlint", output_format="regex", output_regex="...")
@@ -554,7 +554,7 @@ def linter(executable: str,
 
     As you can see you don't need to copy additional keyword-arguments you
     introduced from ``create_arguments()`` to ``generate_config()`` and
-    vice-versa. ``Linter`` takes care of forwarding the right arguments to the
+    vice-versa. ``linter`` takes care of forwarding the right arguments to the
     right place, so you are able to avoid signature duplication.
 
     If you override ``process_output``, you have the same feature like above
