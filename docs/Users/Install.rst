@@ -166,6 +166,28 @@ https://docs.python.org/3.3/install/#alternate-installation.
     http://stackoverflow.com/questions/14149422/using-pip-behind-a-proxy
     for further clarification.
 
+Error handling
+~~~~~~~~~~~~~~~~
+
+In case you are getting
+``ValueError:('Expected version spec in', 'appdirs ~=1.4.0', 'at', ' ~=1.4.0')``
+then don't panic. It happens when you are using an outdated version of pip
+that doesn't support our version specifiers yet.
+
+
+    Ideally, you have to create a virtual environment with a newer pip:
+
+    ::
+
+        $ pip3 install virtualenv
+        $ virtualenv -p python3 ~/venvs/coala
+        $ . ~/venv/coala/bin/activate
+        $ pip install -U pip
+        $ pip install coala-bears
+
+You have to activate this virtualenv on every terminal session you want to use
+coala though (tip: add it to bashrc!)
+
 Dependencies
 ------------
 
