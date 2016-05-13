@@ -605,7 +605,7 @@ def ask_for_action_and_apply(log_printer,
                                          file_diff_dict,
                                          section)
         console_printer.print(
-            format_lines(chosen_action.success_message),
+            format_lines(chosen_action.SUCCESS_MESSAGE),
             color=SUCCESS_COLOR)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except

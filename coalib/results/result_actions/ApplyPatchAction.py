@@ -1,5 +1,6 @@
 import shutil
 from os.path import isfile
+from os import remove
 
 from coalib.results.Diff import ConflictError
 from coalib.results.result_actions.ResultAction import ResultAction
@@ -7,7 +8,7 @@ from coalib.results.result_actions.ResultAction import ResultAction
 
 class ApplyPatchAction(ResultAction):
 
-    success_message = "Patch applied successfully."
+    SUCCESS_MESSAGE = "Patch applied successfully."
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
@@ -35,19 +36,27 @@ class ApplyPatchAction(ResultAction):
         :param no_orig: Whether or not to create .orig backup files
         """
         for filename in result.diffs:
+            diff = file_diff_dict[filename]
+            pre_patch_filename = (diff.rename
+                                  if diff.rename is not False
+                                  else filename)
             if filename in file_diff_dict:
                 file_diff_dict[filename] += result.diffs[filename]
             else:
                 file_diff_dict[filename] = result.diffs[filename]
 
-            new_file = file_diff_dict[filename].modified
+            # Backup file, backups are deleted on startup -> don't override
+            if not no_orig and not isfile(pre_patch_filename + ".orig"):
+                shutil.copy2(pre_patch_filename, pre_patch_filename + ".orig")
 
-            # Backup original file, override old backup if needed
-            if not no_orig and not isfile(filename + ".orig"):
-                shutil.copy2(filename, filename + ".orig")
-
-            # Write new contents
-            with open(filename, mode='w', encoding='utf-8') as file:
-                file.writelines(new_file)
+            diff = file_diff_dict[filename]
+            if diff.delete:
+                remove(pre_patch_filename)
+            else:
+                new_filename = (diff.rename
+                                if diff.rename is not False
+                                else filename)
+                with open(new_filename, mode='w', encoding='utf-8') as file:
+                    file.writelines(diff.modified)
 
         return file_diff_dict

@@ -93,6 +93,12 @@ class DiffTest(unittest.TestCase):
         self.uut.add_lines(0, ["0.1", "0.2"])
         self.uut.add_lines(1, ["1.1"])
         self.uut.change_line(3, "3", "3.changed")
+
+        # If delete is True then modified returns an empty list
+        self.uut.delete = True
+        self.assertEqual(self.uut.modified, [])
+        self.uut.delete = False
+
         self.assertEqual(self.uut.modified, result_file)
         self.assertEqual(self.uut.original, self.file)
 
@@ -124,6 +130,20 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(result.modified, result_file)
         # Make sure it didn't happen in place!
         self.assertNotEqual(self.uut.modified, result_file)
+
+    def test_addition_rename(self):
+        uut = Diff(self.file, rename=False)
+        other = Diff(self.file, rename=False)
+        self.assertEqual((other + uut).rename, False)
+
+        other.rename = "some.py"
+        self.assertEqual((other + uut).rename, "some.py")
+
+        uut.rename = "some.py"
+        self.assertEqual((other + uut).rename, "some.py")
+
+        uut.rename = "other.py"
+        self.assertRaises(ConflictError, other.__add__, uut)
 
     def test_from_string_arrays(self):
         a = ["q", "a", "b", "x", "c", "d"]
@@ -179,6 +199,14 @@ class DiffTest(unittest.TestCase):
         diff_2 = Diff.from_string_arrays(a, b)
         self.assertEqual(diff_1, diff_2)
 
+        diff_1.rename = "abcd"
+        self.assertNotEqual(diff_1, diff_2)
+        diff_1.rename = False
+
+        diff_1.delete = True
+        self.assertNotEqual(diff_1, diff_2)
+        diff_1.delete = False
+
         diff_1.add_lines(1, ["1"])
         self.assertNotEqual(diff_1, diff_2)
 
@@ -195,3 +223,19 @@ class DiffTest(unittest.TestCase):
             ' first\\n'
             '-second\\n'
             ' third\\n"')
+
+    def test_rename(self):
+        self.uut.rename = False
+        self.uut.rename = "1234"
+        with self.assertRaises(TypeError):
+            self.uut.rename = True
+        with self.assertRaises(TypeError):
+            self.uut.rename = 1234
+
+    def test_delete(self):
+        self.uut.delete = True
+        self.uut.delete = False
+        # Double deletion is allowed
+        self.uut.delete = False
+        with self.assertRaises(TypeError):
+            self.uut.delete = "abcd"

@@ -364,7 +364,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                            testfile_path: diff}),
                                           file_dict)
                 self.assertEqual(generator.last_input, 1)
-                self.assertIn(ApplyPatchAction.success_message, sio.getvalue())
+                self.assertIn(ApplyPatchAction.SUCCESS_MESSAGE, sio.getvalue())
 
             class InvalidateTestAction(ResultAction):
 
