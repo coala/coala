@@ -529,7 +529,7 @@ def choose_action(console_printer, actions):
 
         try:
             line = format_lines("Please enter the number of the action "
-                                "you want to execute. ")
+                                "you want to execute (Ctrl-D to exit). ")
             choice = int(input(line))
             if 0 <= choice <= len(actions):
                 return choice
