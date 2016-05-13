@@ -471,6 +471,18 @@ class LinterComponentTest(unittest.TestCase):
         process_output_mock.assert_called_once_with(
             "hello\n", "def.py", [], -50)
 
+    def test_invalid_arguments(self):
+
+        class InvalidArgumentsLinter(self.ManualProcessingTestLinter):
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                return None
+
+        uut = (linter(sys.executable)(InvalidArgumentsLinter)
+               (self.section, None))
+        self.assertEqual(uut.run("", []), None)
+
     def test_generate_config(self):
         uut = linter("")(self.ManualProcessingTestLinter)
         with uut._create_config("filename", []) as config_file:

@@ -447,10 +447,17 @@ def _create_linter(klass, options):
                     FunctionMetadata.filter_parameters(
                         self._get_create_arguments_metadata(), kwargs))
 
-                arguments = (self.get_executable(),) + tuple(
-                    self.create_arguments(
-                        filename, file, config_file,
-                        **create_arguments_kwargs))
+                args = self.create_arguments(filename, file, config_file,
+                                             **create_arguments_kwargs)
+
+                try:
+                    args = tuple(args)
+                except TypeError:
+                    self.err("The given arguments "
+                             "{!r} are not iterable.".format(args))
+                    return
+
+                arguments = (self.get_executable(),) + args
                 self.debug("Running '{}'".format(' '.join(arguments)))
 
                 output = run_shell_command(
