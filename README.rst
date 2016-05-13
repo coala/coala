@@ -131,8 +131,6 @@ information.
    :target: https://circleci.com/gh/coala-analyzer/coala
 .. |Windows Build status| image:: https://img.shields.io/appveyor/ci/coala/coala/master.svg?label=windows%20build
    :target: https://ci.appveyor.com/project/coala/coala/branch/master
-.. |OSX Build status| image:: https://img.shields.io/travis/coala-analyzer/coala/master.svg?label=osx%20build
-   :target: https://travis-ci.org/coala-analyzer/coala
 .. |Scrutinizer Code Quality| image:: https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer%20quality
    :target: https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master
 .. |codecov.io| image:: https://img.shields.io/codecov/c/github/coala-analyzer/coala/master.svg?label=branch%20coverage
