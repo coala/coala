@@ -43,7 +43,7 @@ When filing an issue, please use this template:
 
 For a PR to be merged, the following statements must hold true:
 
-- All CI services pass. (CircleCI, TravisCi, AppVeyor, Scrutinizer, CodeCov)
+- All CI services pass. (CircleCI, AppVeyor, Scrutinizer, CodeCov)
 - All commits must have been reviewed and approved by GitMate and a *coala*
   maintainer who is not the author of the PR.
 - Commits shall comply to the commit guidelines as outlined in the docs.

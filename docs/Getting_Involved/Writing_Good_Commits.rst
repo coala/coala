@@ -119,7 +119,7 @@ Example 1:
 Example 2:
 ::
 
-    .travis.yml: Fix typo xontainer -> container
+    Readme: Fix typo begining -> beginning
 
     Fix a minor typo in the file for better readability.
 
