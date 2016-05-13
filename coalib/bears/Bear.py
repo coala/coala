@@ -51,6 +51,14 @@ class Bear(Printer, LogPrinter):
         """
         return cls.__name__
 
+    @classproperty
+    def supported_languages(cls):
+        """
+        :return: The languages supported by the bear.
+        """
+        return (cls.LANGUAGES if isinstance(
+            cls.LANGUAGES, tuple) else (cls.LANGUAGES,))
+
     @enforce_signature
     def __init__(self,
                  section: Section,
