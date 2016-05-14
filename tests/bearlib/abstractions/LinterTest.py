@@ -8,6 +8,7 @@ from coalib.bearlib.abstractions.Linter import linter
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
 
 
@@ -648,24 +649,18 @@ class LinterReallifeTest(unittest.TestCase):
             self.testfile_content,
             expected_correction).split_diff())
 
-        expected = [Result.from_values(uut,
-                                       "Custom message",
-                                       self.testfile_path,
-                                       4, None, 4, None,
-                                       RESULT_SEVERITY.INFO,
-                                       diffs={self.testfile_path: diffs[0]}),
-                    Result.from_values(uut,
-                                       "Custom message",
-                                       self.testfile_path,
-                                       6, None, 6, None,
-                                       RESULT_SEVERITY.INFO,
-                                       diffs={self.testfile_path: diffs[1]}),
+        expected = [Result(uut, "Custom message",
+                           affected_code=(
+                               SourceRange.from_values(self.testfile_path, 4),
+                               SourceRange.from_values(self.testfile_path, 6)),
+                           severity=RESULT_SEVERITY.INFO,
+                           diffs={self.testfile_path: diffs[0]}),
                     Result.from_values(uut,
                                        "Custom message",
                                        self.testfile_path,
                                        10, None, 10, None,
                                        RESULT_SEVERITY.INFO,
-                                       diffs={self.testfile_path: diffs[2]})]
+                                       diffs={self.testfile_path: diffs[1]})]
 
         self.assertEqual(results, expected)
         create_arguments_mock.assert_called_once_with(

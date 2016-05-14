@@ -173,18 +173,40 @@ class Diff:
         :param filename: The filename to associate the SourceRange's to.
         :return:         A list of all related SourceRange objects.
         """
-        return list(diff.range(filename) for diff in self.split_diff())
+        return list(diff.range(filename)
+                    for diff in self.split_diff(distance=0))
 
-    def split_diff(self):
+    def split_diff(self, distance=1):
         """
         Splits this diff into small pieces, such that several continuously
         altered lines are still together in one diff. All subdiffs will be
         yielded.
+
+        A diff like this with changes being together closely won't be splitted:
+
+        >>> diff = Diff.from_string_arrays([     'b', 'c', 'e'],
+        ...                                ['a', 'b', 'd', 'f'])
+        >>> len(list(diff.split_diff()))
+        1
+
+        If we set the distance to 0, it will be splitted:
+
+        >>> len(list(diff.split_diff(distance=0)))
+        2
+
+        If a negative distance is given, every change will be yielded as an own
+        diff, even if they are right beneath each other:
+
+        >>> len(list(diff.split_diff(distance=-1)))
+        3
+
+        :param distance: Number of unchanged lines that are allowed in between
+                         two changed lines so they get yielded as one diff.
         """
         last_line = -1
         this_diff = Diff(self._file)
         for line in sorted(self._changes.keys()):
-            if line != last_line + 1 and len(this_diff._changes) > 0:
+            if line > last_line + distance + 1 and len(this_diff._changes) > 0:
                 yield this_diff
                 this_diff = Diff(self._file)
 

@@ -313,7 +313,7 @@ def _create_linter(klass, options):
                         string.splitlines(keepends=True)).split_diff():
                     yield Result(self,
                                  diff_message,
-                                 affected_code=(diff.range(filename),),
+                                 affected_code=diff.affected_code(filename),
                                  diffs={filename: diff},
                                  severity=diff_severity)
 
