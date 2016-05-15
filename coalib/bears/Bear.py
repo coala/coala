@@ -1,4 +1,8 @@
 import traceback
+from os import makedirs
+from os.path import join, abspath
+
+from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
 
@@ -40,6 +44,13 @@ class Bear(Printer, LogPrinter):
 
     >>> class SomeBear(Bear):
     ...     LANGUAGES = "Java"
+
+    Every bear has a data directory which is unique to that particular bear:
+
+    >>> class SomeBear(Bear): pass
+    >>> class SomeOtherBear(Bear): pass
+    >>> SomeBear.data_dir == SomeOtherBear.data_dir
+    False
     """
 
     LANGUAGES = ()
@@ -217,3 +228,14 @@ class Bear(Printer, LogPrinter):
         :return: Directory of the config file
         """
         return get_config_directory(self.section)
+
+    @classproperty
+    def data_dir(cls):
+        """
+        Returns a directory that may be used by the bear to store stuff. Every
+        bear has an own directory dependent on his name.
+        """
+        data_dir = abspath(join(user_data_dir('coala-bears'), cls.name))
+
+        makedirs(data_dir, exist_ok=True)
+        return data_dir
