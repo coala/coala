@@ -4,9 +4,7 @@ import sys
 from tempfile import NamedTemporaryFile
 import unittest
 
-from coalib.misc.Shell import (prepare_string_argument,
-                               run_interactive_shell_command,
-                               run_shell_command)
+from coalib.misc.Shell import run_interactive_shell_command, run_shell_command
 
 
 class RunShellCommandTest(unittest.TestCase):
@@ -93,31 +91,3 @@ class RunShellCommandTest(unittest.TestCase):
     def test_run_shell_command_kwargs_delegation(self):
         with self.assertRaises(TypeError):
             run_shell_command("super-cool-command", weird_parameter2="abc")
-
-
-class PrepareStringArgumentTest(unittest.TestCase):
-
-    def setUp(self):
-        self.test_strings = ("normal_string",
-                             "string with spaces",
-                             'string with quotes"a',
-                             "string with s-quotes'b",
-                             "bsn \n A",
-                             "unrecognized \\q escape")
-
-    def test_prepare_string_argument_sh(self):
-        expected_results = ('"normal_string"',
-                            '"string with spaces"',
-                            '"string with quotes\\"a"',
-                            '"string with s-quotes\'b"',
-                            '"bsn \n A"',
-                            '"unrecognized \\q escape"')
-
-        for string, result in zip(self.test_strings, expected_results):
-            self.assertEqual(prepare_string_argument(string, "sh"),
-                             result)
-
-    def test_prepare_string_argument_unsupported(self):
-        for string in self.test_strings:
-            self.assertEqual(prepare_string_argument(string, "WeIrD_O/S"),
-                             string)

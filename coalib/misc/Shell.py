@@ -2,8 +2,6 @@ from contextlib import contextmanager
 import shlex
 from subprocess import PIPE, Popen
 
-from coalib.parsing.StringProcessing import escape
-
 
 @contextmanager
 def run_interactive_shell_command(command, **kwargs):
@@ -116,22 +114,3 @@ def get_shell_type():  # pragma: no cover
     if out.strip() == "$0":
         return "cmd"
     return "sh"
-
-
-def prepare_string_argument(string, shell=get_shell_type()):
-    """
-    Prepares a string argument for being passed as a parameter on shell.
-
-    On ``sh`` this function effectively encloses the given string
-    with quotes (either '' or "", depending on content).
-
-    :param string: The string to prepare for shell.
-    :param shell:  The shell platform to prepare string argument for.
-                   If it is not "sh" it will be ignored and return the
-                   given string without modification.
-    :return:       The shell-prepared string.
-    """
-    if shell == "sh":
-        return '"' + escape(string, '"') + '"'
-    else:
-        return string
