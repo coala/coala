@@ -98,6 +98,7 @@ class Bear(Printer, LogPrinter):
         self.message_queue = message_queue
         self.timeout = timeout
 
+        self.setup_dependencies()
         cp = type(self).check_prerequisites()
         if cp is not True:
             error_string = ("The bear " + self.name +
@@ -207,6 +208,14 @@ class Bear(Printer, LogPrinter):
                  text and annotation as values
         """
         return cls.get_metadata().non_optional_params
+
+    @staticmethod
+    def setup_dependencies():
+        """
+        This is a user defined function that can download and set up
+        dependencies (via download_cached_file or arbitary other means) in an OS
+        independent way.
+        """
 
     @classmethod
     def check_prerequisites(cls):
