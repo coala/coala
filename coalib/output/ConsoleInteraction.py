@@ -324,7 +324,7 @@ def print_affected_files(console_printer,
                 log_printer.warn("The context for the result ({}) cannot "
                                  "be printed because it refers to a file "
                                  "that doesn't seem to exist ({})"
-                                 ".".format(str(result), sourcerange.file))
+                                 ".".format(result, sourcerange.file))
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
@@ -436,7 +436,7 @@ def require_setting(log_printer, setting_name, arr):
     if not isinstance(arr, list) or len(arr) < 2:
         log_printer.log(LOG_LEVEL.WARNING,
                         "One of the given settings ({}) is not properly "
-                        "described.".format(str(setting_name)))
+                        "described.".format(setting_name))
 
         return None
 
@@ -445,9 +445,7 @@ def require_setting(log_printer, setting_name, arr):
     else:
         needed = ", ".join(arr[1:-1]) + " and " + arr[-1]
 
-    return input(STR_GET_VAL_FOR_SETTING.format(str(setting_name),
-                                                str(arr[0]),
-                                                needed))
+    return input(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed))
 
 
 def acquire_settings(log_printer, settings_names_dict):
@@ -660,7 +658,7 @@ def show_bear(console_printer, bear, sections, metadata):
     :param sections:        The sections to which the bear belongs.
     :param metadata:        Metadata about the bear.
     """
-    console_printer.print("{bear}:".format(bear=bear.name))
+    console_printer.print(bear.name + ":")
     console_printer.print("  " + metadata.desc + "\n")
 
     show_enumeration(

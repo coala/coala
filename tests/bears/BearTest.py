@@ -80,7 +80,7 @@ class BearTest(unittest.TestCase):
     def test_message_queue(self):
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG,
-                           "Running bear {}...".format("TestBear"))
+                           "Running bear TestBear...")
         self.check_message(LOG_LEVEL.DEBUG, "set=up")
         self.check_message(LOG_LEVEL.ERROR, "teardown")
 

@@ -69,7 +69,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
             log_printer.log(
                 LOG_LEVEL.WARNING,
                 "One of the given bears ({}) has no attribute "
-                "get_non_optional_settings.".format(str(bear)))
+                "get_non_optional_settings.".format(bear))
         else:
             needed = bear.get_non_optional_settings()
             for key in needed:

@@ -75,8 +75,8 @@ class ManPageFormatterTest(unittest.TestCase):
     def test_mk_footer(self):
         uut = ManPageFormatter(app_name, ext_sections=sections)
         self.assertEqual(uut._mk_footer(),
-                         ".SH {0}\n"
-                         " {1}".format(section_name.upper(), section_text))
+                         ".SH {}\n {}".format(
+                             section_name.upper(), section_text))
         uut = ManPageFormatter(app_name, ext_sections=None)
         self.assertEqual(uut._mk_footer(), "")
 

@@ -112,8 +112,7 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,
-                 "Traceback for error in bear {bear}:"
-                 .format(bear=name),
+                 "Traceback for error in bear {}:".format(name),
                  traceback.format_exc(),
                  delimiter="\n")
 

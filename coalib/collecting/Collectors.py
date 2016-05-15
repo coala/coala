@@ -133,7 +133,7 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
                          "latter solution might break other python packages "
                          "that depend on the currently installed "
                          "version.").format(file=matching_file,
-                                            pkg=str(exception.req)),
+                                            pkg=exception.req),
                         exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
                     log_printer.log_exception(
