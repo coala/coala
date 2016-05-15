@@ -188,6 +188,13 @@ class LinterComponentTest(unittest.TestCase):
         self.assertEqual(uut.check_prerequisites(),
                          "'invalid_nonexisting_programv412' is not installed.")
 
+        uut = (linter("invalid_nonexisting_programv412",
+                      executable_check_fail_info="You can't install it.")
+               (self.ManualProcessingTestLinter))
+        self.assertEqual(uut.check_prerequisites(),
+                         "'invalid_nonexisting_programv412' is not installed. "
+                         "You can't install it.")
+
         uut = (linter(sys.executable,
                       prerequisite_check_command=(sys.executable, "--version"))
                (self.ManualProcessingTestLinter))

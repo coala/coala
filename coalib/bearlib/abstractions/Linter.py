@@ -31,6 +31,7 @@ def _prepare_options(options):
                        "use_stdout",
                        "use_stderr",
                        "config_suffix",
+                       "executable_check_fail_info",
                        "prerequisite_check_command"}
 
     if not options["use_stdout"] and not options["use_stderr"]:
@@ -184,7 +185,10 @@ def _create_linter(klass, options):
                 True if operational, otherwise a string containing more info.
             """
             if shutil.which(cls.get_executable()) is None:
-                return repr(cls.get_executable()) + " is not installed."
+                return (repr(cls.get_executable()) + " is not installed." +
+                        (" " + options["executable_check_fail_info"]
+                         if options["executable_check_fail_info"] else
+                         ""))
             else:
                 if options["prerequisite_check_command"]:
                     try:
@@ -508,6 +512,7 @@ def linter(executable: str,
            use_stdout: bool=True,
            use_stderr: bool=False,
            config_suffix: str="",
+           executable_check_fail_info: str="",
            prerequisite_check_command: tuple=(),
            output_format: (str, None)=None,
            **options):
@@ -608,6 +613,9 @@ def linter(executable: str,
         created when ``generate_config`` is supplied. Useful if your executable
         expects getting a specific file-type with specific file-ending for the
         configuration file.
+    :param executable_check_fail_info:
+        Information that is provided together with the fail message from the
+        normal executable check. By default no additional info is printed.
     :param prerequisite_check_command:
         A custom command to check for when ``check_prerequisites`` gets
         invoked (via ``subprocess.check_call()``). Must be an ``Iterable``.
@@ -688,6 +696,7 @@ def linter(executable: str,
     options["use_stdout"] = use_stdout
     options["use_stderr"] = use_stderr
     options["config_suffix"] = config_suffix
+    options["executable_check_fail_info"] = executable_check_fail_info
     options["prerequisite_check_command"] = prerequisite_check_command
 
     _prepare_options(options)
