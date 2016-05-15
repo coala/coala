@@ -124,8 +124,7 @@ def _create_linter(klass, options):
         @staticmethod
         def generate_config(filename, file):
             """
-            Generates the content of a config-file the linter-tool might
-            need.
+            Generates the content of a config-file the linter-tool might need.
 
             The contents generated from this function are written to a
             temporary file and the path is provided inside
