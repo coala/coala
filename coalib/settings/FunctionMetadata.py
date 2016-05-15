@@ -3,7 +3,7 @@ from copy import copy
 from inspect import getfullargspec, ismethod
 
 from coalib.misc.Decorators import enforce_signature
-from coalib.settings.DocumentationComment import DocumentationComment
+from coalib.settings.DocstringMetadata import DocstringMetadata
 
 
 class FunctionMetadata:
@@ -145,7 +145,7 @@ class FunctionMetadata:
             return metadata
 
         doc = func.__doc__ or ""
-        doc_comment = DocumentationComment.from_docstring(doc)
+        doc_comment = DocstringMetadata.from_docstring(doc)
 
         non_optional_params = OrderedDict()
         optional_params = OrderedDict()

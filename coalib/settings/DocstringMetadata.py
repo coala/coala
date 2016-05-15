@@ -4,12 +4,12 @@ from collections import OrderedDict
 from coalib.misc.Enum import enum
 
 
-class DocumentationComment:
+class DocstringMetadata:
     _ParseMode = enum("DESCRIPTION", "PARAM", "RETVAL")
 
     def __init__(self, desc, param_dict, retval_desc):
         """
-        Represents a documentation comment of a python class or function.
+        Represents a docstring of a python class or function.
 
         :param desc:        A description as string.
         :param param_dict:  A dictionary containing parameter names as key and

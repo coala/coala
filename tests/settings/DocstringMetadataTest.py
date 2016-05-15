@@ -1,9 +1,9 @@
 import unittest
 
-from coalib.settings.DocumentationComment import DocumentationComment
+from coalib.settings.DocstringMetadata import DocstringMetadata
 
 
-class DocumentationCommentParserTest(unittest.TestCase):
+class DocstringMetadataTest(unittest.TestCase):
 
     def test_from_docstring(self):
         self.check_from_docstring_dataset("")
@@ -37,14 +37,14 @@ class DocumentationCommentParserTest(unittest.TestCase):
         }, retval_desc="retval description override")
 
     def test_str(self):
-        uut = DocumentationComment.from_docstring(
+        uut = DocstringMetadata.from_docstring(
             '''
             Description of something. No params.
             ''')
 
         self.assertEqual(str(uut), "Description of something. No params.")
 
-        uut = DocumentationComment.from_docstring(
+        uut = DocstringMetadata.from_docstring(
             '''
             Description of something with params.
 
@@ -64,7 +64,7 @@ class DocumentationCommentParserTest(unittest.TestCase):
         self.assertIsInstance(docstring,
                               str,
                               "docstring needs to be a string for this test.")
-        doc_comment = DocumentationComment.from_docstring(docstring)
+        doc_comment = DocstringMetadata.from_docstring(docstring)
         self.assertEqual(doc_comment.desc, desc)
         self.assertEqual(doc_comment.param_dict, param_dict)
 
