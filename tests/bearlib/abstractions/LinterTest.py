@@ -276,6 +276,19 @@ class LinterComponentTest(unittest.TestCase):
                                           original))
         self.assertEqual(results, 2 * expected)
 
+        # Test diff_distance
+
+        uut = (linter(sys.executable,
+                      output_format="corrected",
+                      diff_distance=-1)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        results = list(uut.process_output(fixed_string,
+                                          "some-file.c",
+                                          original))
+        self.assertEqual(len(results), 2)
+
     def test_process_output_regex(self):
         # Also test the case when an unknown severity is matched.
         test_output = ("12:4-14:0-Serious issue (error) -> ORIGIN=X\n"
