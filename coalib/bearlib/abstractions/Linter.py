@@ -284,7 +284,8 @@ def _create_linter(klass, options):
                 line=groups["line"],
                 column=groups["column"],
                 end_line=groups["end_line"],
-                end_column=groups["end_column"])
+                end_column=groups["end_column"],
+                additional_info=groups.get("additional_info", "").strip())
 
         def process_output_corrected(self,
                                      output,
@@ -360,6 +361,7 @@ def _create_linter(klass, options):
                 - severity - The severity of the issue.
                 - message - The message of the result.
                 - origin - The origin of the issue.
+                - additional_info - Additional info provided by the issue.
 
                 The groups ``line``, ``column``, ``end_line`` and
                 ``end_column`` don't have to match numbers only, they can
@@ -638,6 +640,7 @@ def linter(executable: str,
         - severity - The severity of the issue.
         - message - The message of the result.
         - origin - The origin of the issue.
+        - additional_info - Additional info provided by the issue.
 
         The groups ``line``, ``column``, ``end_line`` and ``end_column`` don't
         have to match numbers only, they can also match nothing, the generated

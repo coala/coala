@@ -291,14 +291,14 @@ class LinterComponentTest(unittest.TestCase):
 
     def test_process_output_regex(self):
         # Also test the case when an unknown severity is matched.
-        test_output = ("12:4-14:0-Serious issue (error) -> ORIGIN=X\n"
-                       "0:0-0:1-This is a warning (warning) -> ORIGIN=Y\n"
-                       "813:77-1024:32-Just a note (info) -> ORIGIN=Z\n"
-                       "0:0-0:0-Some unknown sev (???) -> ORIGIN=W\n")
+        test_output = ("12:4-14:0-Serious issue (error) -> ORIGIN=X -> D\n"
+                       "0:0-0:1-This is a warning (warning) -> ORIGIN=Y -> A\n"
+                       "813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n"
+                       "0:0-0:0-Some unknown sev (???) -> ORIGIN=W -> B\n")
         regex = (r"(?P<line>\d+):(?P<column>\d+)-"
                  r"(?P<end_line>\d+):(?P<end_column>\d+)-"
                  r"(?P<message>.*) \((?P<severity>.*)\) -> "
-                 r"ORIGIN=(?P<origin>.*)")
+                 r"ORIGIN=(?P<origin>.*) -> (?P<additional_info>.*)")
 
         uut = (linter(sys.executable,
                       output_format="regex",
@@ -313,22 +313,26 @@ class LinterComponentTest(unittest.TestCase):
                                        "Serious issue",
                                        sample_file,
                                        12, 4, 14, 0,
-                                       RESULT_SEVERITY.MAJOR),
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info="D"),
                     Result.from_values("EmptyTestLinter (Y)",
                                        "This is a warning",
                                        sample_file,
                                        0, 0, 0, 1,
-                                       RESULT_SEVERITY.NORMAL),
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info="A"),
                     Result.from_values("EmptyTestLinter (Z)",
                                        "Just a note",
                                        sample_file,
                                        813, 77, 1024, 32,
-                                       RESULT_SEVERITY.INFO),
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info="C"),
                     Result.from_values("EmptyTestLinter (W)",
                                        "Some unknown sev",
                                        sample_file,
                                        0, 0, 0, 0,
-                                       RESULT_SEVERITY.NORMAL)]
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info="B")]
 
         self.assertEqual(results, expected)
         uut.warn.assert_called_once_with(
@@ -336,13 +340,15 @@ class LinterComponentTest(unittest.TestCase):
             "`RESULT_SEVERITY.NORMAL`.")
 
         # Test when providing a sequence as output.
-        test_output = ["", "12:4-14:0-Serious issue (error) -> ORIGIN=X\n"]
+        test_output = ["",
+                       "12:4-14:0-Serious issue (error) -> ORIGIN=X -> XYZ\n"]
         results = list(uut.process_output(test_output, sample_file, [""]))
         expected = [Result.from_values("EmptyTestLinter (X)",
                                        "Serious issue",
                                        sample_file,
                                        12, 4, 14, 0,
-                                       RESULT_SEVERITY.MAJOR)]
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info="XYZ")]
 
         self.assertEqual(results, expected)
 
