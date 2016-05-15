@@ -273,12 +273,12 @@ def _create_linter(klass, options):
 
             if "origin" in groups:
                 groups["origin"] = "{} ({})".format(klass.__name__,
-                                                    groups["origin"])
+                                                    groups["origin"].strip())
 
             # Construct the result.
             return Result.from_values(
                 origin=groups.get("origin", self),
-                message=groups.get("message", ""),
+                message=groups.get("message", "").strip(),
                 file=filename,
                 severity=groups["severity"],
                 line=groups["line"],
