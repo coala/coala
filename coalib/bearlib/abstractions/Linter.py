@@ -229,7 +229,10 @@ def _create_linter(klass, options):
                 cls._get_process_output_metadata(),
                 cls._get_generate_config_metadata(),
                 cls._get_create_arguments_metadata())
-            merged_metadata.desc = inspect.getdoc(cls)
+            merged_metadata.desc = (
+                "{}\n\nThis bear uses the {!r} tool.".format(
+                    inspect.getdoc(cls), cls.get_executable()))
+
             return merged_metadata
 
         def _convert_output_regex_match_to_result(self,
