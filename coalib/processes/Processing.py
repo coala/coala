@@ -114,10 +114,9 @@ def autoapply_actions(results,
     default_actions, invalid_actions = get_default_actions(section)
 
     for bearname, actionname in invalid_actions.items():
-        log_printer.warn("Selected default action {} for bear {} does "
-                         "not exist. Ignoring action.".format(
-                             repr(actionname),
-                             repr(bearname)))
+        log_printer.warn("Selected default action {!r} for bear {!r} does "
+                         "not exist. Ignoring action.".format(actionname,
+                                                              bearname))
 
     if len(default_actions) == 0:
         # There's nothing to auto-apply.
@@ -132,10 +131,9 @@ def autoapply_actions(results,
             continue
 
         if not action.is_applicable(result, file_dict, file_diff_dict):
-            log_printer.warn("Selected default action {} for bear {} is not "
-                             "applicable. Action not applied.".format(
-                                 repr(action.get_metadata().name),
-                                 repr(result.origin)))
+            log_printer.warn("Selected default action {!r} for bear {!r} is "
+                             "not applicable. Action not applied.".format(
+                                 action.get_metadata().name, result.origin))
             not_processed_results.append(result)
             continue
 
@@ -144,16 +142,15 @@ def autoapply_actions(results,
                                         file_dict,
                                         file_diff_dict,
                                         section)
-            log_printer.info("Applied {} on {} from {}.".format(
-                repr(action.get_metadata().name),
+            log_printer.info("Applied {!r} on {} from {!r}.".format(
+                action.get_metadata().name,
                 result.location_repr(),
-                repr(result.origin)))
+                result.origin))
         except Exception as ex:
             not_processed_results.append(result)
             log_printer.log_exception(
-                "Failed to execute action {} with error: {}.".format(
-                    repr(action.get_metadata().name),
-                    ex),
+                "Failed to execute action {!r} with error: {}.".format(
+                    action.get_metadata().name, ex),
                 ex)
             log_printer.debug("-> for result " + repr(result) + ".")
 

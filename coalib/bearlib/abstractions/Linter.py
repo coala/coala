@@ -73,14 +73,14 @@ def _prepare_options(options):
                     assert_right_type(value, int, "<severity_map dict-value>")
                 except TypeError:
                     raise TypeError(
-                        "The value {} for key {} inside given severity-map is "
-                        "no valid severity value.".format(repr(value),
-                                                          repr(key)))
+                        "The value {!r} for key {!r} inside given "
+                        "severity-map is no valid severity value.".format(
+                            value, key))
 
                 if value not in RESULT_SEVERITY.reverse:
                     raise TypeError(
-                        "Invalid severity value {} for key {} inside given "
-                        "severity-map.".format(repr(value), repr(key)))
+                        "Invalid severity value {!r} for key {!r} inside "
+                        "given severity-map.".format(value, key))
 
             # Auto-convert keys to lower-case. This creates automatically a new
             # dict which prevents runtime-modifications.
@@ -115,8 +115,8 @@ def _create_linter(klass, options):
     class LinterMeta(type):
 
         def __repr__(cls):
-            return "<{} linter class (wrapping {})>".format(
-                cls.__name__, repr(options["executable"]))
+            return "<{} linter class (wrapping {!r})>".format(
+                cls.__name__, options["executable"])
 
     class LinterBase(LocalBear, metaclass=LinterMeta):
 
@@ -382,7 +382,7 @@ def _create_linter(klass, options):
             # Check if user supplied a `process_output` override.
             if not callable(getattr(klass, "process_output", None)):
                 raise ValueError("`process_output` not provided by given "
-                                 "class {}.".format(repr(klass.__name__)))
+                                 "class {!r}.".format(klass.__name__))
                 # No need to assign to `process_output` here, the class mixing
                 # below automatically does that.
         else:
@@ -391,10 +391,9 @@ def _create_linter(klass, options):
             # set-up `process_output`.
             if hasattr(klass, "process_output"):
                 raise ValueError("Found `process_output` already defined "
-                                 "by class {}, but {} output-format is "
-                                 "specified.".format(
-                                     repr(klass.__name__),
-                                     repr(options["output_format"])))
+                                 "by class {!r}, but {!r} output-format is "
+                                 "specified.".format(klass.__name__,
+                                                     options["output_format"]))
 
             if options["output_format"] == "corrected":
                 process_output_args = {
@@ -487,8 +486,8 @@ def _create_linter(klass, options):
                                            **process_output_kwargs)
 
         def __repr__(self):
-            return "<{} linter object (wrapping {}) at {}>".format(
-                type(self).__name__, repr(self.get_executable()), hex(id(self)))
+            return "<{} linter object (wrapping {!r}) at {}>".format(
+                type(self).__name__, self.get_executable(), hex(id(self)))
 
     # Mixin the linter into the user-defined interface, otherwise
     # `create_arguments` and other methods would be overridden by the

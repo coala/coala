@@ -141,8 +141,8 @@ class DocstyleDefinition:
         try:
             docstyle_settings = docstyle_settings[language]
         except KeyError:
-            raise KeyError("Language {} is not defined for docstyle {}."
-                           .format(repr(language), repr(docstyle)))
+            raise KeyError("Language {!r} is not defined for docstyle {!r}."
+                           .format(language, docstyle))
 
         marker_sets = (tuple(value)
                        for key, value in

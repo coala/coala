@@ -120,8 +120,8 @@ class FunctionMetadata:
         try:
             return annotation(section[param])
         except (TypeError, ValueError):
-            raise ValueError("Unable to convert parameter {} into type "
-                             "{}.".format(repr(param), annotation))
+            raise ValueError("Unable to convert parameter {!r} into type "
+                             "{}.".format(param, annotation))
 
     @classmethod
     def from_function(cls, func, omit=frozenset()):

@@ -254,7 +254,7 @@ def assert_right_type(value, types, argname):
             return
 
     raise TypeError("{} must be an instance of one of {} (provided value: "
-                    "{})".format(argname, types, repr(value)))
+                    "{!r})".format(argname, types, value))
 
 
 def enforce_signature(function):
