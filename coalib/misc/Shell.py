@@ -135,26 +135,3 @@ def prepare_string_argument(string, shell=get_shell_type()):
         return '"' + escape(string, '"') + '"'
     else:
         return string
-
-
-def escape_path_argument(path, shell=get_shell_type()):
-    """
-    Makes a raw path ready for using as parameter in a shell command (escapes
-    illegal characters, surrounds with quotes etc.).
-
-    :param path:  The path to make ready for shell.
-    :param shell: The shell platform to escape the path argument for. Possible
-                  values are "sh", "powershell", and "cmd" (others will be
-                  ignored and return the given path without modification).
-    :return:      The escaped path argument.
-    """
-    if shell == "cmd":
-        # If a quote (") occurs in path (which is illegal for NTFS file
-        # systems, but maybe for others), escape it by preceding it with
-        # a caret (^).
-        return '"' + escape(path, '"', '^') + '"'
-    elif shell == "sh":
-        return shlex.quote(path)
-    else:
-        # Any other non-supported system doesn't get a path escape.
-        return path

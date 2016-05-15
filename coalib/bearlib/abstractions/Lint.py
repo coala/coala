@@ -1,15 +1,40 @@
 import os
 import re
+import shlex
 import shutil
+from coalib.parsing.StringProcessing import escape
 from subprocess import check_call, CalledProcessError, DEVNULL
 import tempfile
 
 from coalib.bears.Bear import Bear
 from coalib.misc.Decorators import enforce_signature
-from coalib.misc.Shell import escape_path_argument, run_shell_command
+from coalib.misc.Shell import run_shell_command, get_shell_type
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+
+
+def escape_path_argument(path, shell=get_shell_type()):
+    """
+    Makes a raw path ready for using as parameter in a shell command (escapes
+    illegal characters, surrounds with quotes etc.).
+
+    :param path:  The path to make ready for shell.
+    :param shell: The shell platform to escape the path argument for. Possible
+                  values are "sh", "powershell", and "cmd" (others will be
+                  ignored and return the given path without modification).
+    :return:      The escaped path argument.
+    """
+    if shell == "cmd":
+        # If a quote (") occurs in path (which is illegal for NTFS file
+        # systems, but maybe for others), escape it by preceding it with
+        # a caret (^).
+        return '"' + escape(path, '"', '^') + '"'
+    elif shell == "sh":
+        return shlex.quote(path)
+    else:
+        # Any other non-supported system doesn't get a path escape.
+        return path
 
 
 class Lint(Bear):
