@@ -46,7 +46,10 @@ def _prepare_options(options):
         if "diff_message" in options:
             assert_right_type(options["diff_message"], str, "diff_message")
 
-        allowed_options |= {"diff_severity", "diff_message"}
+        if "diff_distance" in options:
+            assert_right_type(options["diff_distance"], int, "diff_distance")
+
+        allowed_options |= {"diff_severity", "diff_message", "diff_distance"}
     elif options["output_format"] == "regex":
         if "output_regex" not in options:
             raise ValueError("`output_regex` needed when specified "
@@ -285,7 +288,8 @@ def _create_linter(klass, options):
                                      filename,
                                      file,
                                      diff_severity=RESULT_SEVERITY.NORMAL,
-                                     diff_message="Inconsistency found."):
+                                     diff_message="Inconsistency found.",
+                                     diff_distance=1):
             """
             Processes the executable's output as a corrected file.
 
@@ -300,6 +304,11 @@ def _create_linter(klass, options):
                 The severity to use for generating results.
             :param diff_message:
                 The message to use for generating results.
+            :param diff_distance:
+                Number of unchanged lines that are allowed in between two
+                changed lines so they get yielded as one diff. If a negative
+                distance is given, every change will be yielded as an own diff,
+                even if they are right beneath each other.
             :return:
                 An iterator returning results containing patches for the
                 file to correct.
@@ -310,7 +319,8 @@ def _create_linter(klass, options):
             for string in output:
                 for diff in Diff.from_string_arrays(
                         file,
-                        string.splitlines(keepends=True)).split_diff():
+                        string.splitlines(keepends=True)).split_diff(
+                            distance=diff_distance):
                     yield Result(self,
                                  diff_message,
                                  affected_code=diff.affected_code(filename),
@@ -389,7 +399,8 @@ def _create_linter(klass, options):
             if options["output_format"] == "corrected":
                 process_output_args = {
                     key: options[key]
-                    for key in ("diff_message", "diff_severity")
+                    for key in ("diff_message", "diff_severity",
+                                "diff_distance")
                     if key in options}
 
                 process_output = partialmethod(
@@ -652,6 +663,12 @@ def linter(executable: str,
     :param diff_message:
         The message-string to use for all results if ``output_format`` is
         ``'corrected'``. By default this value is ``"Inconsistency found."``.
+    :param diff_distance:
+        Number of unchanged lines that are allowed in between two changed lines
+        so they get yielded as one diff if ``corrected`` output-format is
+        given. If a negative distance is given, every change will be yielded as
+        an own diff, even if they are right beneath each other. By default this
+        value is ``1``.
     :raises ValueError:
         Raised when invalid options are supplied.
     :raises TypeError:
