@@ -1,6 +1,8 @@
 import traceback
 from os import makedirs
-from os.path import join, abspath
+from os.path import join, abspath, exists
+from shutil import copyfileobj
+from urllib.request import urlopen
 
 from appdirs import user_data_dir
 
@@ -228,6 +230,44 @@ class Bear(Printer, LogPrinter):
         :return: Directory of the config file
         """
         return get_config_directory(self.section)
+
+    def download_cached_file(self, url, filename):
+        """
+        Downloads the file if needed and caches it for the next time. If a
+        download happens, the user will be informed.
+
+        Take a sane simple bear:
+
+        >>> from queue import Queue
+        >>> bear = Bear(Section("a section"), Queue())
+
+        We can now carelessly query for a neat file that doesn't exist yet:
+
+        >>> from os import remove
+        >>> if exists(join(bear.data_dir, "a_file")):
+        ...     remove(join(bear.data_dir, "a_file"))
+        >>> file = bear.download_cached_file("http://gitmate.com/", "a_file")
+
+        If we download it again, it'll be much faster as no download occurs:
+
+        >>> newfile = bear.download_cached_file("http://gitmate.com/", "a_file")
+        >>> newfile == file
+        True
+
+        :param url:      The URL to download the file from.
+        :param filename: The filename it should get, e.g. "test.txt".
+        :return:         A full path to the file ready for you to use!
+        """
+        filename = join(self.data_dir, filename)
+        if exists(filename):
+            return filename
+
+        self.info("Downloading {filename!r} for bear {bearname} from {url}."
+                  .format(filename=filename, bearname=self.name, url=url))
+
+        with urlopen(url) as response, open(filename, 'wb') as out_file:
+            copyfileobj(response, out_file)
+        return filename
 
     @classproperty
     def data_dir(cls):
