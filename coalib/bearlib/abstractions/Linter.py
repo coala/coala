@@ -612,9 +612,9 @@ def linter(executable: str,
         A custom command to check for when ``check_prerequisites`` gets
         invoked (via ``subprocess.check_call()``). Must be an ``Iterable``.
     :param prerequisite_check_fail_message:
-        A custom command to check for when ``check_prerequisites`` gets
-        invoked. Must be provided only together with
-        ``prerequisite_check_command``.
+        A custom message that gets displayed when ``check_prerequisites``
+        fails while invoking ``prerequisite_check_command``. Can only be
+        provided together with ``prerequisite_check_command``.
     :param output_format:
         The output format of the underlying executable. Valid values are
 
