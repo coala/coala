@@ -1,4 +1,5 @@
 import unittest
+import os
 from os.path import isfile
 
 from coalib.misc.ContextManagers import make_temp
@@ -90,6 +91,57 @@ class ApplyPatchActionTest(unittest.TestCase):
                 file_dict[filename] = file_diff_dict[filename].modified
 
             self.assertEqual(file_dict, expected_file_dict)
+
+    def test_apply_rename(self):
+        uut = ApplyPatchAction()
+        with make_temp() as f_a:
+            file_dict = {f_a: ["1\n", "2\n", "3\n"]}
+            expected_file_dict = {f_a+".renamed":
+                                      ["1\n", "2_changed\n", "3_changed\n"]}
+            file_diff_dict = {}
+            diff = Diff(file_dict[f_a], rename=f_a+".renamed")
+            diff.change_line(3, "3\n", "3_changed\n")
+            uut.apply(Result("origin", "msg", diffs={f_a: diff}),
+                      file_dict,
+                      file_diff_dict)
+            self.assertTrue(isfile(f_a+".orig"))
+            self.assertTrue(isfile(f_a+".renamed"))
+            self.assertFalse(isfile(f_a))
+
+            diff = Diff(file_dict[f_a])
+            diff.change_line(2, "2\n", "2_changed\n")
+            uut.apply(Result("origin", "msg", diffs={f_a: diff}),
+                      file_dict,
+                      file_diff_dict)
+            self.assertTrue(isfile(f_a+".renamed.orig"))
+
+            file_dict = {f_a+".renamed": open(f_a+".renamed").readlines()}
+
+            self.assertEqual(file_dict, expected_file_dict)
+            # Recreate file so that context manager make_temp() can delete it
+            open(f_a, 'w').close()
+
+    def test_apply_delete(self):
+        uut = ApplyPatchAction()
+        with make_temp() as f_a:
+            file_dict = {f_a: ["1\n", "2\n", "3\n"]}
+            file_diff_dict = {}
+            diff = Diff(file_dict[f_a], delete=True)
+            uut.apply(Result("origin", "msg", diffs={f_a: diff}),
+                      file_dict,
+                      file_diff_dict)
+            self.assertFalse(isfile(f_a))
+            self.assertTrue(isfile(f_a+".orig"))
+            os.remove(f_a+".orig")
+
+            diff = Diff(file_dict[f_a])
+            diff.change_line(3, "3\n", "3_changed\n")
+            uut.apply(Result("origin", "msg", diffs={f_a: diff}),
+                      file_dict,
+                      file_diff_dict)
+            self.assertFalse(isfile(f_a+".orig"))
+            # Recreate file so that context manager make_temp() can delete it
+            open(f_a, 'w').close()
 
     def test_is_applicable(self):
         diff = Diff(["1\n", "2\n", "3\n"])
