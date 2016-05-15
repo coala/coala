@@ -197,7 +197,7 @@ def _create_linter(klass, options):
         def _get_create_arguments_metadata(cls):
             return FunctionMetadata.from_function(
                 cls.create_arguments,
-                omit={"filename", "file", "config_file"})
+                omit={"self", "filename", "file", "config_file"})
 
         @classmethod
         def _get_generate_config_metadata(cls):
