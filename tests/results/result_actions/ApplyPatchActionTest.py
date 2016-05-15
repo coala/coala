@@ -86,6 +86,11 @@ class ApplyPatchActionTest(unittest.TestCase):
             self.assertFalse(isfile(f_a+".orig"))
             self.assertTrue(isfile(f_b+".orig"))
 
+            for filename in file_diff_dict:
+                file_dict[filename] = file_diff_dict[filename].modified
+
+            self.assertEqual(file_dict, expected_file_dict)
+
     def test_is_applicable(self):
         diff = Diff(["1\n", "2\n", "3\n"])
         diff.delete_line(2)
