@@ -161,6 +161,12 @@ class LinterComponentTest(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             linter("some-executable",
+                   output_format="regex",
+                   output_regex="(?P<message>)",
+                   result_message=None)
+
+        with self.assertRaises(TypeError):
+            linter("some-executable",
                    output_format="corrected",
                    result_message=list())
 
@@ -353,6 +359,24 @@ class LinterComponentTest(unittest.TestCase):
         results = list(uut.process_output(test_output, sample_file, [""]))
         expected = [Result.from_values("EmptyTestLinter (X)",
                                        "Serious issue",
+                                       sample_file,
+                                       12, 4, 14, 0,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info="XYZ")]
+
+        self.assertEqual(results, expected)
+
+        # Test with using `result_message` parameter.
+        uut = (linter(sys.executable,
+                      output_format="regex",
+                      output_regex=regex,
+                      result_message="Hello world")
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        results = list(uut.process_output(test_output, sample_file, [""]))
+        expected = [Result.from_values("EmptyTestLinter (X)",
+                                       "Hello world",
                                        sample_file,
                                        12, 4, 14, 0,
                                        RESULT_SEVERITY.MAJOR,
@@ -715,7 +739,8 @@ class LinterReallifeTest(unittest.TestCase):
                       use_stderr=True,
                       output_format="regex",
                       output_regex=self.test_program_regex,
-                      severity_map=self.test_program_severity_map)
+                      severity_map=self.test_program_severity_map,
+                      result_message="Invalid char provided!")
                (Handler)
                (self.section, None))
 
@@ -723,17 +748,17 @@ class LinterReallifeTest(unittest.TestCase):
                                self.testfile_content,
                                some_val=33))
         expected = [Result.from_values(uut,
-                                       "Invalid char ('0')",
+                                       "Invalid char provided!",
                                        self.testfile_path,
                                        3, 0, 3, 1,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
-                                       "Invalid char ('.')",
+                                       "Invalid char provided!",
                                        self.testfile_path,
                                        5, 0, 5, 1,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
-                                       "Invalid char ('p')",
+                                       "Invalid char provided!",
                                        self.testfile_path,
                                        9, 0, 9, 1,
                                        RESULT_SEVERITY.MAJOR)]

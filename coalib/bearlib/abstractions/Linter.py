@@ -89,7 +89,10 @@ def _prepare_options(options):
                 key.lower(): value
                 for key, value in options["severity_map"].items()}
 
-        allowed_options |= {"output_regex", "severity_map"}
+        if "result_message" in options:
+            assert_right_type(options["result_message"], str, "result_message")
+
+        allowed_options |= {"output_regex", "severity_map", "result_message"}
     elif options["output_format"] is not None:
         raise ValueError("Invalid `output_format` specified.")
 
@@ -241,7 +244,8 @@ def _create_linter(klass, options):
         def _convert_output_regex_match_to_result(self,
                                                   match,
                                                   filename,
-                                                  severity_map):
+                                                  severity_map,
+                                                  result_message):
             """
             Converts the matched named-groups of ``output_regex`` to an actual
             ``Result``.
@@ -253,6 +257,10 @@ def _create_linter(klass, options):
             :param severity_map:
                 The dict to use to map the severity-match to an actual
                 ``RESULT_SEVERITY``.
+            :param result_message:
+                The static message to use for results instead of grabbing it
+                from the executable output via the ``message`` named regex
+                group.
             """
             # Pre process the groups
             groups = match.groupdict()
@@ -281,7 +289,8 @@ def _create_linter(klass, options):
             # Construct the result.
             return Result.from_values(
                 origin=groups.get("origin", self),
-                message=groups.get("message", "").strip(),
+                message=(groups.get("message", "").strip()
+                         if result_message is None else result_message),
                 file=filename,
                 severity=groups["severity"],
                 line=groups["line"],
@@ -341,7 +350,8 @@ def _create_linter(klass, options):
                     "warning": RESULT_SEVERITY.NORMAL,
                     "warn": RESULT_SEVERITY.NORMAL,
                     "information": RESULT_SEVERITY.INFO,
-                    "info": RESULT_SEVERITY.INFO})):
+                    "info": RESULT_SEVERITY.INFO}),
+                result_message=None):
             """
             Processes the executable's output using a regex.
 
@@ -375,6 +385,10 @@ def _create_linter(klass, options):
                 A dict used to map a severity string (captured from the
                 ``output_regex`` with the named group ``severity``) to an
                 actual ``coalib.results.RESULT_SEVERITY`` for a result.
+            :param result_message:
+                The static message to use for results instead of grabbing it
+                from the executable output via the ``message`` named regex
+                group.
             :return:
                 An iterator returning results.
             """
@@ -384,7 +398,8 @@ def _create_linter(klass, options):
             for string in output:
                 for match in re.finditer(output_regex, string):
                     yield self._convert_output_regex_match_to_result(
-                        match, filename, severity_map=severity_map)
+                        match, filename, severity_map=severity_map,
+                        result_message=result_message)
 
         if options["output_format"] is None:
             # Check if user supplied a `process_output` override.
@@ -418,7 +433,8 @@ def _create_linter(klass, options):
 
                 process_output_args = {
                     key: options[key]
-                    for key in ("output_regex", "severity_map")
+                    for key in ("output_regex", "severity_map",
+                                "result_message")
                     if key in options}
 
                 process_output = partialmethod(
@@ -673,8 +689,11 @@ def linter(executable: str,
         ``coalib.results.RESULT_SEVERITY.NORMAL``. The given value needs to be
         defined inside ``coalib.results.RESULT_SEVERITY``.
     :param result_message:
-        The message-string to use for all results if ``output_format`` is
-        ``'corrected'``. By default this value is ``"Inconsistency found."``.
+        The message-string to use for all results. Can be used only together
+        with ``corrected`` or ``regex`` output format. When using
+        ``corrected``, the default value is ``"Inconsistency found."``, while
+        for ``regex`` this static message is disabled and the message matched
+        by ``output_regex`` is used instead.
     :param diff_distance:
         Number of unchanged lines that are allowed in between two changed lines
         so they get yielded as one diff if ``corrected`` output-format is
