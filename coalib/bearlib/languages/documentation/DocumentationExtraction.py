@@ -181,7 +181,8 @@ def _compile_multi_match_regex(strings):
     return re.compile("|".join(re.escape(s) for s in strings))
 
 
-def _extract_doc_comment_from_line(content, line, column, regex, marker_dict):
+def _extract_doc_comment_from_line(content, line, column, regex,
+                                   marker_dict, language, docstyle):
     begin_match = regex.search(content[line], column)
     if begin_match:
         column = begin_match.end()
@@ -194,14 +195,15 @@ def _extract_doc_comment_from_line(content, line, column, regex, marker_dict):
                                             begin_match.start() + 1,
                                             end_line + 1,
                                             end_column + 1)
-                doc = DocumentationComment(documentation, marker, rng)
+                doc = DocumentationComment(documentation, language,
+                                           docstyle, marker, rng)
 
                 return end_line, end_column, doc
 
     return line + 1, 0, None
 
 
-def extract_documentation_with_markers(content, markers):
+def extract_documentation_with_markers(content, markers, language, docstyle):
     """
     Extracts all documentation texts inside the given source-code-string.
 
@@ -238,7 +240,9 @@ def extract_documentation_with_markers(content, markers):
                                                            line,
                                                            column,
                                                            begin_regex,
-                                                           marker_dict)
+                                                           marker_dict,
+                                                           language,
+                                                           docstyle)
         if doc:
             yield doc
 
@@ -271,4 +275,5 @@ def extract_documentation(content, language, docstyle):
     """
     docstyle_definition = DocstyleDefinition.load(language, docstyle)
     return extract_documentation_with_markers(content,
-                                              docstyle_definition.markers)
+                                              docstyle_definition.markers,
+                                              language, docstyle)
