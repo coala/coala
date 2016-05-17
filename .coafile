@@ -100,3 +100,13 @@ bears = KeywordBear
 
 ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
+
+[CPP]
+enabled = False
+files = **/*.cpp
+
+bears = CPPCleanBear, CPPLintBear
+
+default_actions = SpaceConsistencyBear: ApplyPatchAction
+
+max_line_length = 80
