@@ -44,13 +44,13 @@ def _prepare_options(options):
             raise TypeError("Invalid value for `diff_severity`: " +
                             repr(options["diff_severity"]))
 
-        if "diff_message" in options:
-            assert_right_type(options["diff_message"], str, "diff_message")
+        if "result_message" in options:
+            assert_right_type(options["result_message"], str, "result_message")
 
         if "diff_distance" in options:
             assert_right_type(options["diff_distance"], int, "diff_distance")
 
-        allowed_options |= {"diff_severity", "diff_message", "diff_distance"}
+        allowed_options |= {"diff_severity", "result_message", "diff_distance"}
     elif options["output_format"] == "regex":
         if "output_regex" not in options:
             raise ValueError("`output_regex` needed when specified "
@@ -295,7 +295,7 @@ def _create_linter(klass, options):
                                      filename,
                                      file,
                                      diff_severity=RESULT_SEVERITY.NORMAL,
-                                     diff_message="Inconsistency found.",
+                                     result_message="Inconsistency found.",
                                      diff_distance=1):
             """
             Processes the executable's output as a corrected file.
@@ -309,7 +309,7 @@ def _create_linter(klass, options):
                 The contents of the file currently being corrected.
             :param diff_severity:
                 The severity to use for generating results.
-            :param diff_message:
+            :param result_message:
                 The message to use for generating results.
             :param diff_distance:
                 Number of unchanged lines that are allowed in between two
@@ -329,7 +329,7 @@ def _create_linter(klass, options):
                         string.splitlines(keepends=True)).split_diff(
                             distance=diff_distance):
                     yield Result(self,
-                                 diff_message,
+                                 result_message,
                                  affected_code=diff.affected_code(filename),
                                  diffs={filename: diff},
                                  severity=diff_severity)
@@ -406,7 +406,7 @@ def _create_linter(klass, options):
             if options["output_format"] == "corrected":
                 process_output_args = {
                     key: options[key]
-                    for key in ("diff_message", "diff_severity",
+                    for key in ("result_message", "diff_severity",
                                 "diff_distance")
                     if key in options}
 
@@ -672,7 +672,7 @@ def linter(executable: str,
         ``'corrected'``. By default this value is
         ``coalib.results.RESULT_SEVERITY.NORMAL``. The given value needs to be
         defined inside ``coalib.results.RESULT_SEVERITY``.
-    :param diff_message:
+    :param result_message:
         The message-string to use for all results if ``output_format`` is
         ``'corrected'``. By default this value is ``"Inconsistency found."``.
     :param diff_distance:

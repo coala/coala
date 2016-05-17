@@ -52,9 +52,10 @@ class LinterComponentTest(unittest.TestCase):
                          "Invalid keyword arguments provided: 'diff_severity'")
 
         with self.assertRaises(ValueError) as cm:
-            linter("some-executable", diff_message="Custom message")
+            linter("some-executable", result_message="Custom message")
         self.assertEqual(str(cm.exception),
-                         "Invalid keyword arguments provided: 'diff_message'")
+                         "Invalid keyword arguments provided: "
+                         "'result_message'")
 
         with self.assertRaises(ValueError) as cm:
             linter("some-executable",
@@ -161,7 +162,7 @@ class LinterComponentTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             linter("some-executable",
                    output_format="corrected",
-                   diff_message=list())
+                   result_message=list())
 
         with self.assertRaises(TypeError) as cm:
             linter("some-executable",
@@ -396,13 +397,13 @@ class LinterComponentTest(unittest.TestCase):
     def test_process_output_metadata_omits_on_builtin_formats(self):
         uut = (linter(executable='', output_format='corrected')
                (self.EmptyTestLinter))
-        # diff_severity and diff_message should now not occur inside the
+        # diff_severity and result_message should now not occur inside the
         # metadata definition.
         self.assertNotIn("diff_severity", uut.get_metadata().optional_params)
-        self.assertNotIn("diff_message", uut.get_metadata().optional_params)
+        self.assertNotIn("result_message", uut.get_metadata().optional_params)
         self.assertNotIn("diff_severity",
                          uut.get_metadata().non_optional_params)
-        self.assertNotIn("diff_message",
+        self.assertNotIn("result_message",
                          uut.get_metadata().non_optional_params)
 
         # But every parameter manually defined in process_output shall appear
@@ -662,7 +663,7 @@ class LinterReallifeTest(unittest.TestCase):
         uut = (linter(sys.executable,
                       output_format="corrected",
                       diff_severity=RESULT_SEVERITY.INFO,
-                      diff_message="Custom message")
+                      result_message="Custom message")
                (Handler)
                (self.section, None))
 
