@@ -93,7 +93,7 @@ meta information in `setup.py <setup.py>`__ for current maintainers.
 Project Status
 --------------
 
-|Linux Build Status| |Windows Build status| |OSX Build status|
+|Linux Build Status| |Windows Build status|
 
 |Scrutinizer Code Quality| |codecov.io|
 
