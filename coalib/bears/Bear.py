@@ -8,7 +8,7 @@ from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
 
-from coalib.misc.Decorators import enforce_signature, classproperty
+from coala_decorators.decorators import enforce_signature, classproperty
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section

@@ -1,5 +1,5 @@
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
-from coalib.misc.Decorators import enforce_signature
+from coala_decorators.decorators import enforce_signature
 
 
 class SpacingHelper(SectionCreatable):

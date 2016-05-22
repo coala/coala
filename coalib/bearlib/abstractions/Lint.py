@@ -7,7 +7,7 @@ from subprocess import check_call, CalledProcessError, DEVNULL
 import tempfile
 
 from coalib.bears.Bear import Bear
-from coalib.misc.Decorators import enforce_signature
+from coala_decorators.decorators import enforce_signature
 from coalib.misc.Shell import run_shell_command, get_shell_type
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result

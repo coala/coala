@@ -1,6 +1,6 @@
 from os.path import relpath, abspath
 
-from coalib.misc.Decorators import (
+from coala_decorators.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
 from coalib.results.TextPosition import TextPosition
 

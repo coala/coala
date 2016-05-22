@@ -1,6 +1,7 @@
 import os.path
 
-from coalib.misc.Decorators import enforce_signature, generate_eq, generate_repr
+from coala_decorators.decorators import (
+    enforce_signature, generate_eq, generate_repr)
 from coalib.parsing.ConfParser import ConfParser
 
 

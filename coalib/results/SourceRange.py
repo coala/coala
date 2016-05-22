@@ -1,6 +1,6 @@
 from os.path import relpath
 
-from coalib.misc.Decorators import enforce_signature, get_public_members
+from coala_decorators.decorators import enforce_signature, get_public_members
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.TextRange import TextRange
 from coalib.results.AbsolutePosition import AbsolutePosition

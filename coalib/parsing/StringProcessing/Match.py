@@ -1,4 +1,4 @@
-from coalib.misc.Decorators import generate_ordering, generate_repr
+from coala_decorators.decorators import generate_ordering, generate_repr
 
 
 @generate_repr("match", "range")

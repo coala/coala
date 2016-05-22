@@ -3,7 +3,7 @@ A ResultAction is an action that is applicable to at least some results. This
 file serves the base class for all result actions, thus providing a unified
 interface for all actions.
 """
-from coalib.misc.Decorators import enforce_signature
+from coala_decorators.decorators import enforce_signature
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 

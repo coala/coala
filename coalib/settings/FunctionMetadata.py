@@ -2,7 +2,7 @@ from collections import OrderedDict
 from copy import copy
 from inspect import getfullargspec, ismethod
 
-from coalib.misc.Decorators import enforce_signature
+from coala_decorators.decorators import enforce_signature
 from coalib.settings.DocstringMetadata import DocstringMetadata
 
 
