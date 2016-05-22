@@ -103,7 +103,7 @@ def warn_nonexistent_targets(targets, sections, log_printer):
                 "Thus it cannot be executed.".format(section=target))
 
 
-def load_configuration(arg_list, log_printer):
+def load_configuration(arg_list, log_printer, arg_parser=None):
     """
     Parses the CLI args and loads the config file accordingly, taking
     default_coafile and the users .coarc into account.
@@ -114,7 +114,7 @@ def load_configuration(arg_list, log_printer):
                         dict(str, Section), targets: list(str)). (Types
                         indicated after colon.)
     """
-    cli_sections = parse_cli(arg_list=arg_list)
+    cli_sections = parse_cli(arg_list=arg_list, arg_parser=arg_parser)
     check_conflicts(cli_sections)
 
     if (
@@ -263,7 +263,8 @@ def get_config_directory(section):
 def gather_configuration(acquire_settings,
                          log_printer,
                          autoapply=None,
-                         arg_list=None):
+                         arg_list=None,
+                         arg_parser=None):
     """
     Loads all configuration files, retrieves bears and all needed
     settings, saves back if needed and warns about non-existent targets.
@@ -304,7 +305,7 @@ def gather_configuration(acquire_settings,
     # Note: arg_list can also be []. Hence we cannot use
     # `arg_list = arg_list or default_list`
     arg_list = sys.argv[1:] if arg_list is None else arg_list
-    sections, targets = load_configuration(arg_list, log_printer)
+    sections, targets = load_configuration(arg_list, log_printer, arg_parser)
     local_bears, global_bears = fill_settings(sections,
                                               acquire_settings,
                                               log_printer)

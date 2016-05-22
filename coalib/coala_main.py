@@ -20,7 +20,8 @@ def run_coala(log_printer=None,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
-              autoapply=True):
+              autoapply=True,
+              arg_parser=None):
     """
     This is a main method that should be usable for almost all purposes and
     reduces executing coala to one function call.
@@ -59,7 +60,8 @@ def run_coala(log_printer=None,
         sections, local_bears, global_bears, targets = gather_configuration(
             acquire_settings,
             log_printer,
-            autoapply=autoapply)
+            autoapply=autoapply,
+            arg_parser=arg_parser)
 
         log_printer.debug("Platform {} -- Python {}, pip {}, coalib {}"
                           .format(platform.system(), platform.python_version(),
