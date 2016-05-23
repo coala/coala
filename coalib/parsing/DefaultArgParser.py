@@ -81,6 +81,21 @@ def default_arg_parser(formatter_class=None):
                             help='Files that will be analyzed will be '
                                  'restricted to those in the globs listed '
                                  'in this argument as well the files setting')
+    arg_parser.add_argument('-C',
+                            '--caching',
+                            nargs='?',
+                            const=True,
+                            metavar='BOOL',
+                            help='Run coala only on files that have changed '
+                                 'since the last time coala was run. Note: '
+                                 'Caching is currently experimental and '
+                                 'will be enabled by default from the next '
+                                 'release (this option will be removed)')
+    arg_parser.add_argument('--flush-cache',
+                            nargs='?',
+                            const=True,
+                            metavar='BOOL',
+                            help='Rebuild the file cache')
     arg_parser.add_argument('-b',
                             '--bears',
                             nargs='+',

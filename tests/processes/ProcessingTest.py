@@ -26,6 +26,7 @@ from coalib.results.SourceRange import SourceRange
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
+from coalib.misc.Caching import FileCache
 
 
 process_group_test_code = """
@@ -90,10 +91,13 @@ class ProcessingTest(unittest.TestCase):
 
     def test_run(self):
         self.sections['default'].append(Setting('jobs', "1"))
+        self.sections['default'].append(Setting('caching', True))
+        cache = FileCache(self.log_printer, "coala_test", flush_cache=True)
         results = execute_section(self.sections["default"],
                                   self.global_bears["default"],
                                   self.local_bears["default"],
                                   lambda *args: self.result_queue.put(args[2]),
+                                  cache,
                                   self.log_printer)
         self.assertTrue(results[0])
 
@@ -130,6 +134,7 @@ class ProcessingTest(unittest.TestCase):
                                   [],
                                   [],
                                   lambda *args: self.result_queue.put(args[2]),
+                                  None,
                                   self.log_printer)
         # No results
         self.assertFalse(results[0])
@@ -200,6 +205,7 @@ class ProcessingTest(unittest.TestCase):
                    "seventh"]},
             lambda *args: self.queue.put(args[2]),
             section,
+            None,
             self.log_printer)
 
         self.assertEqual(self.queue.get(timeout=0), ([first_local,
@@ -221,6 +227,7 @@ class ProcessingTest(unittest.TestCase):
             ctrlq, {}, {}, {},
             lambda *args: self.queue.put(args[2]),
             Section(""),
+            None,
             self.log_printer)
         with self.assertRaises(queue.Empty):
             self.queue.get(timeout=0)
@@ -234,6 +241,7 @@ class ProcessingTest(unittest.TestCase):
             ctrlq, {}, {}, {},
             lambda *args: self.queue.put(args[2]),
             Section(""),
+            None,
             self.log_printer)
         with self.assertRaises(queue.Empty):
             self.queue.get(timeout=0)

@@ -11,6 +11,9 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.Tagging import delete_tagged_results, tag_results
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
+from coalib.misc.Caching import FileCache
+from coalib.misc.CachingUtilities import (
+    settings_changed, update_settings_db, get_settings_hash)
 
 do_nothing = lambda *args: True
 
@@ -71,31 +74,39 @@ def run_coala(log_printer=None,
         dtag = str(sections['default'].get('dtag', None))
         config_file = os.path.abspath(str(sections["default"].get("config")))
 
+        settings_hash = get_settings_hash(sections)
+        flush_cache = (sections['default'].get('flush_cache', False) or
+                       settings_changed(log_printer, settings_hash))
+
         # Deleting all .orig files, so the latest files are up to date!
         coala_delete_orig.main(log_printer, sections["default"])
 
         delete_tagged_results(dtag, config_file, log_printer)
 
-        for section_name, section in sections.items():
-            if not section.is_enabled(targets):
-                continue
+        with FileCache(log_printer, os.getcwd(), flush_cache) as cache:
+            for section_name, section in sections.items():
+                if not section.is_enabled(targets):
+                    continue
 
-            print_section_beginning(section)
-            section_result = execute_section(
-                section=section,
-                global_bear_list=global_bears[section_name],
-                local_bear_list=local_bears[section_name],
-                print_results=print_results,
-                log_printer=log_printer)
-            yielded, yielded_unfixed, results[section_name] = (
-                simplify_section_result(section_result))
+                print_section_beginning(section)
+                section_result = execute_section(
+                    section=section,
+                    global_bear_list=global_bears[section_name],
+                    local_bear_list=local_bears[section_name],
+                    print_results=print_results,
+                    cache=cache,
+                    log_printer=log_printer)
+                yielded, yielded_unfixed, results[section_name] = (
+                    simplify_section_result(section_result))
 
-            yielded_results = yielded_results or yielded
-            yielded_unfixed_results = (
-                yielded_unfixed_results or yielded_unfixed)
-            did_nothing = False
+                yielded_results = yielded_results or yielded
+                yielded_unfixed_results = (
+                    yielded_unfixed_results or yielded_unfixed)
+                did_nothing = False
 
-            file_dicts[section_name] = section_result[3]
+                file_dicts[section_name] = section_result[3]
+
+        update_settings_db(log_printer, settings_hash)
 
         tag_results(tag, config_file, results, log_printer)
 
