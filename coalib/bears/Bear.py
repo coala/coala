@@ -9,6 +9,8 @@ from appdirs import user_data_dir
 from pyprint.Printer import Printer
 
 from coala_decorators.decorators import enforce_signature, classproperty
+from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.PythonRequirement import PythonRequirement
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
@@ -47,6 +49,29 @@ class Bear(Printer, LogPrinter):
     >>> class SomeBear(Bear):
     ...     LANGUAGES = "Java"
 
+    To indicate the requirements of the bear, assign ``REQUIREMENTS`` a tuple
+    with instances of ``PackageRequirements``.
+
+    >>> class SomeBear(Bear):
+    ...     REQUIREMENTS = (
+    ...         PackageRequirement('pip', 'coala_decorators', '0.2.1'),)
+
+    If your bear uses requirements from a manager we have a subclass from,
+    you can use the subclass, such as ``PythonRequirement``, without specifying
+    manager:
+
+    >>> class SomeBear(Bear):
+    ...     REQUIREMENTS = (PythonRequirement('coala_decorators', '0.2.1'),)
+
+    To specify multiple requirements using ``pip``, you can use the multiple
+    method. This can receive both tuples of strings, in case you want a specific
+    version, or a simple string, in case you want the latest version to be
+    specified.
+
+    >>> class SomeBear(Bear):
+    ...     REQUIREMENTS = PythonRequirement.multiple(
+    ...         ('colorama', '0.1'), 'coala_decorators')
+
     Every bear has a data directory which is unique to that particular bear:
 
     >>> class SomeBear(Bear): pass
@@ -56,6 +81,7 @@ class Bear(Printer, LogPrinter):
     """
 
     LANGUAGES = ()
+    REQUIREMENTS = ()
 
     @classproperty
     def name(cls):
