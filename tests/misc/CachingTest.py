@@ -1,4 +1,5 @@
 import unittest
+import re
 import os
 from unittest.mock import patch
 
@@ -8,6 +9,9 @@ from coalib.misc.Caching import FileCache
 from coalib.misc.CachingUtilities import pickle_load, pickle_dump
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import coala
+from coalib.misc.ContextManagers import prepare_file
+from coalib.misc.ContextManagers import simulate_console_inputs
+from tests.TestUtilities import execute_coala, bear_test_module
 
 
 class CachingTest(unittest.TestCase):
@@ -88,3 +92,43 @@ class CachingTest(unittest.TestCase):
 
         cache = FileCache(self.log_printer, "coala_test2", flush_cache=False)
         self.assertFalse("file.c" in cache.data)
+
+    def test_caching_results(self):
+        """
+        A simple integration test to assert that results are not dropped
+        when coala is ran multiple times with caching enabled.
+        """
+        with bear_test_module(), \
+                prepare_file(["a=(5,6)"], None) as (lines, filename):
+            with simulate_console_inputs("0"):
+                retval, output = execute_coala(
+                    coala.main,
+                    "coala",
+                    "-c", os.devnull,
+                    "--flush-cache",
+                    "--changed-files",
+                    "-f", re.escape(filename),
+                    "-b", "LineCountTestBear",
+                    "-L", "DEBUG")
+                self.assertIn("This file has", output)
+
+            # Due to the change in configuration from the removal of
+            # ``--flush-cache`` this run will not be sufficient to
+            # assert this behavior.
+            retval, output = execute_coala(
+                coala.main,
+                "coala",
+                "-c", os.devnull,
+                "--changed-files",
+                "-f", re.escape(filename),
+                "-b", "LineCountTestBear")
+            self.assertIn("This file has", output)
+
+            retval, output = execute_coala(
+                coala.main,
+                "coala",
+                "-c", os.devnull,
+                "--changed-files",
+                "-f", re.escape(filename),
+                "-b", "LineCountTestBear")
+            self.assertIn("This file has", output)

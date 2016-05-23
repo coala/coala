@@ -110,6 +110,21 @@ def default_arg_parser(formatter_class=None):
                               metavar='FILE',
                               help=SAVE_HELP)
 
+    CACHING_HELP = ('Run coala only on files that have changed '
+                    'since the last time coala was run. Note: '
+                    'Caching is currently experimental and '
+                    'will be enabled by default from the next '
+                    'release (this option will be removed)')
+    config_group.add_argument('-C',
+                              '--changed-files',
+                              const=True,
+                              action='store_const',
+                              help=CACHING_HELP)
+    config_group.add_argument('--flush-cache',
+                              const=True,
+                              action='store_const',
+                              help='Rebuild the file cache')
+
     inputs_group = arg_parser.add_argument_group('Inputs')
 
     inputs_group.add_argument('-b',

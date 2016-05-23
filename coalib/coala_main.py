@@ -11,6 +11,9 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
+from coalib.misc.Caching import FileCache
+from coalib.misc.CachingUtilities import (
+    settings_changed, update_settings_db, get_settings_hash)
 
 do_nothing = lambda *args: True
 
@@ -69,9 +72,14 @@ def run_coala(log_printer=None,
 
         config_file = os.path.abspath(str(sections["default"].get("config")))
 
+        settings_hash = get_settings_hash(sections)
+        flush_cache = bool(sections["default"].get("flush_cache", False) or
+                           settings_changed(log_printer, settings_hash))
+
         # Deleting all .orig files, so the latest files are up to date!
         coala_delete_orig.main(log_printer, sections["default"])
 
+        cache = FileCache(log_printer, os.getcwd(), flush_cache)
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
                 continue
@@ -82,6 +90,7 @@ def run_coala(log_printer=None,
                 global_bear_list=global_bears[section_name],
                 local_bear_list=local_bears[section_name],
                 print_results=print_results,
+                cache=cache,
                 log_printer=log_printer)
             yielded, yielded_unfixed, results[section_name] = (
                 simplify_section_result(section_result))
@@ -92,6 +101,10 @@ def run_coala(log_printer=None,
             did_nothing = False
 
             file_dicts[section_name] = section_result[3]
+
+        update_settings_db(log_printer, settings_hash)
+        if sections["default"].get("changed_files", False):
+            cache.write()
 
         if did_nothing:
             nothing_done(log_printer)

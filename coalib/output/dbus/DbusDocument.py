@@ -127,11 +127,13 @@ class DbusDocument(dbus.service.Object):
                         for file_pattern in glob_list(section["files"])]):
 
                     section["files"].value = self.path
+                    # TODO: Integrate with caching
                     section_result = execute_section(
                         section=section,
                         global_bear_list=global_bears[section_name],
                         local_bear_list=local_bears[section_name],
                         print_results=lambda *args: True,
+                        cache=None,
                         log_printer=log_printer)
                     yielded_results = yielded_results or section_result[0]
 
