@@ -154,7 +154,7 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
                                 bears.
     :param bear_globs:          Globs of bears to collect.
     :param kinds:               List of bear kinds to be collected.
-    :param log_printer:         LogPrinter to handle logging.
+    :param log_printer:         log_printer to handle logging.
     :param warn_if_unused_glob: True if warning message should be shown if a
                                 glob didn't give any bears.
     :return:                    Tuple of list of matching bear classes based on
@@ -214,7 +214,7 @@ def collect_all_bears_from_sections(sections, log_printer):
     """
     Collect all kinds of bears from bear directories given in the sections.
 
-    :param bear_dirs:   directory name or list of such that can contain bears
+    :param sections:    list of sections from which bears are to be collected
     :param log_printer: log_printer to handle logging
     :return:            tuple of dictionaries of local and global bears
                         The dictionary key is section class and
@@ -254,7 +254,7 @@ def collect_registered_bears_dirs(entrypoint):
     Searches setuptools for the entrypoint and returns the bear
     directories given by the module.
 
-    :param entrypoint: The endpoint to find packages with.
+    :param entrypoint: The entrypoint to find packages with.
     :return:           List of bear directories.
     """
     collected_dirs = []
