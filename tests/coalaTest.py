@@ -11,7 +11,7 @@ from tests.test_bears.LineCountTestBear import LineCountTestBear
 from tests.test_bears.internal_folder.SpaceConsistencyTestBear import (
     SpaceConsistencyTestBear)
 from tests.test_bears.JavaTestBear import JavaTestBear
-from tests.TestUtilities import execute_coala, bear_test_module, raise_error
+from tests.TestUtilities import execute_coala, bear_test_module
 
 
 class coalaTest(unittest.TestCase):
@@ -82,9 +82,7 @@ class coalaTest(unittest.TestCase):
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
     def test_version_conflict_in_collecting_bears(self, import_fn, _):
         with bear_test_module():
-            import_fn.side_effect = (
-                lambda *args, **kwargs: raise_error(VersionConflict,
-                                                    "msg1", "msg2"))
+            import_fn.side_effect = VersionConflict("msg1", "msg2")
             retval, output = execute_coala(coala.main, "coala", "-A")
             self.assertEqual(retval, 13)
             self.assertIn(("There is a conflict in the version of a "
@@ -94,15 +92,12 @@ class coalaTest(unittest.TestCase):
     @unittest.mock.patch('coalib.collecting.Collectors._import_bears')
     def test_unimportable_bear(self, import_fn):
         with bear_test_module():
-            import_fn.side_effect = (
-                lambda *args, **kwargs: raise_error(SyntaxError))
+            import_fn.side_effect = SyntaxError
             retval, output = execute_coala(coala.main, "coala", "-A")
             self.assertEqual(retval, 0)
             self.assertIn("Unable to collect bears from", output)
 
-            import_fn.side_effect = (
-                lambda *args, **kwargs: raise_error(VersionConflict,
-                                                    "msg1", "msg2"))
+            import_fn.side_effect = VersionConflict("msg1", "msg2")
             retval, output = execute_coala(coala.main, "coala", "-A")
             # Note that bear version conflicts don't give exitcode=13,
             # they just give a warning with traceback in log_level debug.

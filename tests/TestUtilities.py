@@ -42,7 +42,3 @@ def bear_test_module():
     with unittest.mock.patch("pkg_resources.iter_entry_points",
                              return_value=[EntryPoint()]) as mocked:
         yield
-
-
-def raise_error(error, *args, **kwargs):
-    raise error(*args, **kwargs)

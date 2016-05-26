@@ -27,7 +27,6 @@ from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-from tests.TestUtilities import raise_error
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")
@@ -406,7 +405,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 failed_actions, Result("origin", "message"), {}, {}]
 
         with simulate_console_inputs(1, 'param1', 1, 'param2') as generator:
-            action.apply = lambda *args, **kwargs: raise_error(AssertionError)
+            action.apply = unittest.mock.Mock(side_effect=AssertionError)
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 1)
             self.assertIn('TestAction', failed_actions)

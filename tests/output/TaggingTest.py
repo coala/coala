@@ -6,7 +6,6 @@ from pyprint.NullPrinter import NullPrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.Tagging import (
     delete_tagged_results, get_tag_path, load_tagged_results, tag_results)
-from tests.TestUtilities import raise_error
 
 
 class TaggingTest(unittest.TestCase):
@@ -57,9 +56,9 @@ class TaggingTest(unittest.TestCase):
 
         os.remove(none_path)
 
-    def test_permission_error(self):
-        old_makedirs = os.makedirs
-        os.makedirs = lambda *args, **kwargs: raise_error(PermissionError)
+    @unittest.mock.patch("os.makedirs")
+    def test_permission_error(self, makedirs):
+        makedirs.side_effect = PermissionError
 
         self.assertEqual(get_tag_path("a", "b", self.log_printer), None)
         tag_results("test_tag", "test_path", {}, self.log_printer)
@@ -67,5 +66,3 @@ class TaggingTest(unittest.TestCase):
                                       "test_path",
                                       self.log_printer)
         self.assertEqual(results, None)
-
-        os.makedirs = old_makedirs
