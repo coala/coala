@@ -47,6 +47,11 @@ class PythonRequirement(PackageRequirement):
         >>> REQUIREMENTS = PythonRequirement.multiple(
         ...     'coala_decorators', ('setuptools', '19.2'))
 
+        Lists are also valid arguments:
+
+        >>> REQUIREMENTS = PythonRequirement.multiple(
+        ...     ['coala_decorators', '19.2'],)
+
         In case you provide too many arguments into the tuple, an error will be
         raised:
 
@@ -54,16 +59,7 @@ class PythonRequirement(PackageRequirement):
         ...     'coala_decorators', ('setuptools', '19.2', 'colorama'))
         Traceback (most recent call last):
         ...
-        TypeError: The tuple must have 2 elements.
-
-        The same would happen in case you provide something different than a
-        string or a tuple:
-
-        >>> x = [1, 2, 3, 4]
-        >>> REQUIREMENTS = PythonRequirement.multiple(x)
-        Traceback (most recent call last):
-        ...
-        TypeError: The arguments need to be tuples or strings.
+        TypeError: Too many elements provided.
 
         :param args:       Should be tuples of strings: ``('packageName',
                            'version')`` or strings: ``'packageName'`` if latest
@@ -76,13 +72,10 @@ class PythonRequirement(PackageRequirement):
         reqs = []
         for requirement in args:
             if isinstance(requirement, str):
-                reqs.append(cls(requirement),)
-            elif isinstance(requirement, tuple):
-                try:
-                    name, version = requirement
-                    reqs.append(cls(name, version),)
-                except ValueError:
-                    raise TypeError('The tuple must have 2 elements.')
+                reqs.append(cls(requirement))
+            elif len(requirement) == 2:
+                name, version = requirement
+                reqs.append(cls(name, version))
             else:
-                raise TypeError('The arguments need to be tuples or strings.')
+                raise TypeError('Too many elements provided.')
         return tuple(reqs)
