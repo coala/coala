@@ -61,13 +61,12 @@ class PythonRequirement(PackageRequirement):
         ...
         TypeError: Too many elements provided.
 
-        :param args:       Should be tuples of strings: ``('packageName',
-                           'version')`` or strings: ``'packageName'`` if latest
-                           version is wanted.
+        :param args:       Should be iterables with two elements:
+                           ``('packageName', 'version')`` or strings:
+                           ``'packageName'`` if latest version is wanted.
         :return:           A tuple containing ``PythonRequirements``.
-        :raises TypeError: In case the tuples contain more or less than two
-                           elements. Also raised when arguments are neither
-                           tuples nor strings.
+        :raises TypeError: In case the iterables contain more than two
+                           elements.
         """
         reqs = []
         for requirement in args:
