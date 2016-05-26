@@ -6,6 +6,7 @@ import unittest
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.settings.Section import Section, Setting
 
 
@@ -89,6 +90,41 @@ class OpenEditorActionTest(unittest.TestCase):
 
         self.assertEqual(file_dict, expected_file_dict)
 
+    def test_apply_rename(self):
+        # Initial file contents, *before* a patch was applied
+        file_dict = {
+            self.fa: ["1\n", "2\n", "3\n"]}
+
+        # A patch that was applied for some reason to make things complicated
+        file_diff_dict = {}
+        diff = Diff(file_dict[self.fa], rename=self.fa+".renamed")
+        diff.change_line(3, "3\n", "3_changed\n")
+        ApplyPatchAction().apply(
+            Result("origin", "msg", diffs={self.fa: diff}),
+            file_dict,
+            file_diff_dict)
+        # End file contents after the patch and the OpenEditorAction was
+        # applied
+        expected_file_dict = {
+            self.fa: ["1\n", "3_changed\n"]}
+
+        section = Section("")
+        section.append(Setting("editor", ""))
+        uut = OpenEditorAction()
+        subprocess.call = self.fake_edit
+        diff_dict = uut.apply_from_section(
+            Result.from_values("origin", "msg", self.fa),
+            file_dict,
+            file_diff_dict,
+            section)
+
+        for filename in diff_dict:
+            file_dict[filename] = (
+                file_diff_dict[filename].modified)
+
+        self.assertEqual(file_dict, expected_file_dict)
+        open(self.fa, 'w').close()
+
     def test_subl(self):
         file_dict = {self.fa: []}
         section = Section("")
@@ -107,9 +143,12 @@ class OpenEditorActionTest(unittest.TestCase):
     def test_is_applicable(self):
         result1 = Result("", "")
         result2 = Result.from_values("", "", "")
+        result3 = Result.from_values("", "", "file")
         invalid_result = ""
-        self.assertFalse(OpenEditorAction.is_applicable(result1, None, None))
-        self.assertTrue(OpenEditorAction.is_applicable(result2, None, None))
+        self.assertFalse(OpenEditorAction.is_applicable(result1, None, {}))
+        self.assertTrue(OpenEditorAction.is_applicable(result2, None, {}))
+        # Check non-existent file
+        self.assertFalse(OpenEditorAction.is_applicable(result3, None, {}))
 
         self.assertFalse(
-            OpenEditorAction.is_applicable(invalid_result, None, None))
+            OpenEditorAction.is_applicable(invalid_result, None, {}))

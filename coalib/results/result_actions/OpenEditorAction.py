@@ -1,4 +1,5 @@
 import subprocess
+from os.path import exists
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -20,7 +21,16 @@ class OpenEditorAction(ResultAction):
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
-        return isinstance(result, Result) and len(result.affected_code) > 0
+        """
+        For being applicable, the result has to point to a number of files
+        that have to exist i.e. have not been previously deleted.
+        """
+        if not isinstance(result, Result) or not len(result.affected_code) > 0:
+            return False
+
+        filenames = set(src.renamed_file(file_diff_dict)
+                        for src in result.affected_code)
+        return all(exists(filename) for filename in filenames)
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         '''
@@ -29,9 +39,10 @@ class OpenEditorAction(ResultAction):
         :param editor: The editor to open the file with.
         '''
         # Use set to remove duplicates
-        filenames = set(src.file for src in result.affected_code)
+        filenames = {src.file: src.renamed_file(file_diff_dict)
+                     for src in result.affected_code}
 
-        editor_args = [editor] + list(filenames)
+        editor_args = [editor] + list(filenames.values())
         arg = EDITOR_ARGS.get(editor.strip(), None)
         if arg:
             editor_args.append(arg)
@@ -43,9 +54,10 @@ class OpenEditorAction(ResultAction):
         else:
             subprocess.call(editor_args)
 
-        for filename in filenames:
+        for original_name, filename in filenames.items():
             with open(filename, encoding='utf-8') as file:
-                file_diff_dict[filename] = Diff.from_string_arrays(
-                    original_file_dict[filename], file.readlines())
+                file_diff_dict[original_name] = Diff.from_string_arrays(
+                    original_file_dict[original_name], file.readlines(),
+                    rename=False if original_name == filename else filename)
 
         return file_diff_dict
