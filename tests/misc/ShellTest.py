@@ -23,7 +23,7 @@ class RunShellCommandTest(unittest.TestCase):
         with run_interactive_shell_command(command) as p:
             self.assertEqual(p.stdout.readline(), "test_program X\n")
             self.assertEqual(p.stdout.readline(), "Type in a number:\n")
-            p.stdin.write("33\n")
+            p.stdin.close("33\n")
             p.stdin.flush()
             self.assertEqual(p.stdout.readline(), "33\n")
             self.assertEqual(p.stdout.readline(), "Exiting program.\n")
@@ -40,7 +40,7 @@ class RunShellCommandTest(unittest.TestCase):
                        for s in ["stdout", "stderr", "stdin"]}
 
             with run_interactive_shell_command(command, **streams) as p:
-                streams["stdin"].write("712\n")
+                streams["stdin"].close("712\n")
                 streams["stdin"].flush()
                 streams["stdin"].seek(0)
 

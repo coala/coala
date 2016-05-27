@@ -37,7 +37,7 @@ class CachingTest(unittest.TestCase):
         data = self.cache.data
         self.assertEqual(data["test2.c"], -1)
 
-        self.cache.write()
+        self.cache.close()
         data = self.cache.data
         self.assertNotEqual(data["test2.c"], -1)
 
@@ -47,23 +47,23 @@ class CachingTest(unittest.TestCase):
         data = self.cache.data
         self.assertEqual(data["test3.c"], -1)
 
-        self.cache.write()
+        self.cache.close()
         data = self.cache.data
         old_time = data["test3.c"]
-        self.cache.add_to_changed_files({"test3.c"})
-        self.cache.write()
+        self.cache.untrack_file({"test3.c"})
+        self.cache.close()
         data = self.cache.data
         self.assertEqual(old_time, data["test3.c"])
 
         self.cache.track_new_files(["a.c", "b.c"])
-        self.cache.write()
+        self.cache.close()
         old_data = copy.deepcopy(self.cache.data)
         time.sleep(1)
         # To simulate a new run, we need to create a new object.
         self.cache = FileCache(
             self.log_printer, "coala_test", flush_cache=False)
-        self.cache.add_to_changed_files({"a.c"})
-        self.cache.write()
+        self.cache.untrack_file({"a.c"})
+        self.cache.close()
         new_data = self.cache.data
         # Since b.c had not changed, the time would have been updated.
         self.assertNotEqual(old_data["b.c"], new_data["b.c"])
@@ -74,7 +74,7 @@ class CachingTest(unittest.TestCase):
     def test_time_travel(self):
         cache = FileCache(self.log_printer, "coala_test", flush_cache=True)
         cache.track_new_files(["a.c"])
-        cache.write()
+        cache.close()
         self.assertTrue(time_consistent(self.log_printer, cache.md5sum))
 
         # Back to the future :)
@@ -97,7 +97,7 @@ class CachingTest(unittest.TestCase):
             open(file_path, "w").close()
         self.assertEqual(cache.get_changed_files(file_paths), file_paths)
 
-        cache.write()
+        cache.close()
         time.sleep(1)
         changed_file = file_paths[1]
         open(changed_file, "w").close()

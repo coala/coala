@@ -1,16 +1,15 @@
-import calendar
 import time
-import hashlib
 import os
 
 from coalib.misc.CachingUtilities import (
-    pickle_load, pickle_dump, time_consistent, update_time_db,
-    delete_cache_files)
+    pickle_load, pickle_dump)
+from coalib.output.printers.LogPrinter import LogPrinter
 
 
 class FileCache:
     """
-    Example/Tutorial:
+    This object is a cache that helps figuring out if a file was modified
+    since the last run of a program.
 
     >>> from pyprint.NullPrinter import NullPrinter
     >>> from coalib.output.printers.LogPrinter import LogPrinter
@@ -29,7 +28,7 @@ class FileCache:
     explicitly write the cache to disk for persistence in future uses:
     (Note: The cache will automatically figure out the write location)
 
-    >>> cache.write()
+    >>> cache.close()
 
     Let's go into the future:
 
@@ -43,11 +42,11 @@ class FileCache:
 
     We can mark a file as changed by doing:
 
-    >>> cache.add_to_changed_files({"a.c"})
+    >>> cache.untrack_file({"a.c"})
 
     Again write to disk after calculating the new cache times for each file:
 
-    >>> cache.write()
+    >>> cache.close()
     >>> new_data = cache.data
 
     Since we marked 'a.c' as a changed file:
@@ -62,7 +61,8 @@ class FileCache:
     True
     """
 
-    def __init__(self, log_printer, project_dir, flush_cache=False):
+    @enforce_signature
+    def __init__(self, log_printer: LogPrinter, project_dir: str, flush_cache: bool=False):
         """
         Initialize FileCache.
 
@@ -73,90 +73,84 @@ class FileCache:
         """
         self.log_printer = log_printer
         self.project_dir = project_dir
-        self.md5sum = hashlib.md5(self.project_dir.encode("utf-8")).hexdigest()
-        self.current_time = calendar.timegm(time.gmtime())
-        if not flush_cache and not time_consistent(log_printer, self.md5sum):
+        self.current_time = time.time()
+
+        last_time, self.data = pickle_load(log_printer, self.project_dir, (-1, {}))
+
+        if last_time > self.current_time:
             log_printer.warn("It seems like you went back in time - your "
                              "system time is behind the last recorded run "
                              "time on this project. The cache will "
-                             "be flushed and rebuilt.")
+                             "be force flushed.")
             flush_cache = True
-        if not flush_cache:
-            self.data = pickle_load(log_printer, self.md5sum, {})
-        else:
-            self.data = {}
-            delete_cache_files(log_printer, [self.md5sum])
-            log_printer.info("The file cache was successfully flushed.")
-        self.changed_files = set()
+
+        if flush_cache:
+            self.flush_cache()
+
+    def flush_cache(self):
+        """
+        Flushes the cache! Yeah!
+        """
+        self.data = {}
+        self.log_printer.info("The cache was flushed successfully.")
 
     def __enter__(self):
         return self
 
-    def write(self):
+    def close(self):
         """
-        Update the last run time on the project for each file
-        to the current time.
+        Closes the cache (like a file object). You may not rely on the cache
+        being persistent if this method is called. Using this object as a
+        context manager is preferred and will call this method automatically
+        on exit.
         """
         for file_name in self.data:
             if file_name not in self.changed_files:
                 self.data[file_name] = self.current_time
-        pickle_dump(self.log_printer, self.md5sum, self.data)
-        update_time_db(self.log_printer, self.md5sum, self.current_time)
-        self.changed_files = set()
+        pickle_dump(self.log_printer, self.md5sum, (self.current_time, self.data))
 
     def __exit__(self, type, value, traceback):
         """
         Update the last run time on the project for each file
         to the current time.
         """
-        self.write()
+        self.close()
 
-    def add_to_changed_files(self, changed_files):
+    def untrack_files(self, files):
         """
-        Keep track of changed files in ``changed_files`` for future use in
-        ``write``.
+        Removes the given files from the cache so they are no longer considered
+        cached for this and the next run.
+        """
+        for file in files:
+            if file in self.data:
+                del self.data[file]
 
-        :param changed_files: A set of files that had changed since the last
-                              run time.
+    def track_files(self, files):
         """
-        self.changed_files.update(changed_files)
+        Tracks the given files with the cache. Files will be shown as changed
+        for this run but will appear cached in the next run.
 
-    def track_new_files(self, new_files):
-        """
-        Start tracking new files given in ``new_files`` by adding them to the
-        database.
+        >>> TODO!
 
-        :param new_files: The list of new files that need to be tracked.
-                          These files are initialized with their last
-                          modified tag as -1.
+        :param files:
+        :return:
         """
-        for new_file in new_files:
-            self.data[new_file] = -1
+        for file in files:
+            if file not in self.data:
+                self.data[file] = -1
 
-    def get_changed_files(self, files):
+    def get_uncached_files(self, files):
         """
-        Extract the list of files that had changed (or are new) with respect to
-        the cache data available.
+        Returns the set of files that are not in the cache or have been modified since the last run. This function does
+        not
 
         :param files: The list of collected files.
         :return:      The list of files that had changed since the last cache.
         """
-        changed_files = []
-
         if self.data == {}:
-            # The first run on this project. So all files are new
-            # and must be returned irrespective of whether caching is turned on.
-            new_files = files
+            return files
         else:
-            new_files = []
-            for file_path in files:
-                if file_path in self.data and self.data[file_path] > -1:
-                    if int(os.path.getmtime(file_path)) > self.data[file_path]:
-                        changed_files.append(file_path)
-                else:
-                    new_files.append(file_path)
-
-        self.track_new_files(new_files)
-        self.add_to_changed_files(changed_files)
-
-        return changed_files + new_files
+            return {file
+                    for file in files
+                    if (file not in self.data or
+                        int(os.path.getmtime(file)) > self.data[file])}
