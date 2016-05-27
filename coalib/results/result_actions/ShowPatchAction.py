@@ -80,6 +80,8 @@ class ShowPatchAction(ResultAction):
         printer = ConsolePrinter(colored)
 
         for filename, this_diff in sorted(result.diffs.items()):
+            to_filename = this_diff.rename if this_diff.rename else filename
+            to_filename = "/dev/null" if this_diff.delete else to_filename
             original_file = original_file_dict[filename]
             try:
                 current_file = file_diff_dict[filename].modified
@@ -91,7 +93,7 @@ class ShowPatchAction(ResultAction):
             print_beautified_diff(difflib.unified_diff(current_file,
                                                        new_file,
                                                        fromfile=filename,
-                                                       tofile=filename),
+                                                       tofile=to_filename),
                                   printer)
 
         return file_diff_dict
