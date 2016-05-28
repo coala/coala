@@ -123,8 +123,8 @@ Then type:
     $ git commit
 
 This will lead you to a text editor. Now you need to write your commit message.
-We are very strict about writing commit messages as they help us keep *coala*
-**clean** and **stable**. Commit messages usually consists of three main
+We are very strict about writing commit messages as they help us maintain
+*coala* **clean** and **stable**. Commit messages usually consists of three main
 parts. They should have a newline between them.
 
 - **The header**
@@ -201,7 +201,7 @@ Now after you have created the Pull Request, there are two possibilities:
       - Reviewer wants something changed (This also causes gitmate to fail)
 
 It's highly unlikely that your PR will be accepted on the first attempt - but
-don't worry that's just how it works. It helps us keeping *coala*
+don't worry that's just how it works. It helps us maintain *coala*
 **clean** and **stable**.
 
 .. seealso::

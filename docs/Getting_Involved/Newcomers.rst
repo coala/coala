@@ -107,8 +107,8 @@ After creating your ``Pull Request``, there's two options:
   per the review comments
 
 It's highly unlikely that your ``Pull Request`` will be accepted on the first
-attempt - but don't worry, that's just how it works. It helps us keep *coala*
-**clean** and **stable**.
+attempt - but don't worry, that's just how it works. It helps us maintain
+*coala* **clean** and **stable**.
 
 .. seealso::
 
