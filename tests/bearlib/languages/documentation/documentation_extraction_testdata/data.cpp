@@ -23,7 +23,7 @@ int foobar(int xyz)  {
 void alternatestyle()
 {}
 
-    /** ends instantly */
+	/** ends instantly */
 void boofar()
 {
     return "foobar is happy";

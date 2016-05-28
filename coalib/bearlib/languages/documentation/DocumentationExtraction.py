@@ -183,8 +183,10 @@ def _compile_multi_match_regex(strings):
 
 def _extract_doc_comment_from_line(content, line, column, regex,
                                    marker_dict, language, docstyle):
-    begin_match = regex.search(content[line], column)
+    cur_line = content[line]
+    begin_match = regex.search(cur_line, column)
     if begin_match:
+        indent = cur_line[:begin_match.start()]
         column = begin_match.end()
         for marker in marker_dict[begin_match.group()]:
             doc_comment = _extract_doc_comment(content, line, column, marker)
@@ -196,7 +198,7 @@ def _extract_doc_comment_from_line(content, line, column, regex,
                                             end_line + 1,
                                             end_column + 1)
                 doc = DocumentationComment(documentation, language,
-                                           docstyle, marker, rng)
+                                           docstyle, indent, marker, rng)
 
                 return end_line, end_column, doc
 
