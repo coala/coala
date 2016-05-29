@@ -1,7 +1,7 @@
 [Default]
 files = *.py, coalib/**/*.py, ./coala, tests/**/*.py
 ignore =
-    tests/bearlib/languages/documentation/documentation_extraction_testdata/data.py,
+    tests/bearlib/languages/documentation/documentation_extraction_testdata/*.py,
     tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
 
 max_line_length = 80

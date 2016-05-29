@@ -1,7 +1,10 @@
+import os
 import unittest
 
 from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
+from coalib.bearlib.languages.documentation.DocumentationExtraction import (
+    extract_documentation)
 
 
 class DocumentationCommentTest(unittest.TestCase):
@@ -36,3 +39,89 @@ class DocumentationCommentTest(unittest.TestCase):
         self.assertEqual(str(uut), "qwertzuiop")
         self.assertEqual(uut.marker, ("##", "#", "#"))
         self.assertEqual(uut.range, None)
+
+
+class PythonDocumentationCommentTest(unittest.TestCase):
+
+    Description = DocumentationComment.Description
+    Parameter = DocumentationComment.Parameter
+    ReturnValue = DocumentationComment.ReturnValue
+
+    def check_docstring(self, docstring, expected=[]):
+        self.assertIsInstance(docstring,
+                              str,
+                              "expected needs to be a string for this test.")
+
+        self.assertIsInstance(expected,
+                              list,
+                              "expected needs to be a list for this test.")
+
+        doc_comment = DocumentationComment(docstring, "python", "default",
+                                           None, None, None)
+        parsed_metadata = doc_comment.parse()
+        self.assertEqual(parsed_metadata, expected)
+
+    def load_testdata(self, filename):
+        filename = (os.path.dirname(os.path.realpath(__file__)) +
+                    "/documentation_extraction_testdata/" + filename)
+        with open(filename, "r") as fl:
+            data = fl.read()
+
+        return data.splitlines(keepends=True)
+
+    def test_empty_docstring(self):
+        self.check_docstring("", [])
+
+    def test_description(self):
+        doc = " description only "
+        self.check_docstring(doc, [self.Description(desc=' description only ')])
+
+    def test_params_default(self):
+        self.maxDiff = None
+        doc = (" :param test:  test description1 \n"
+               " :param test:  test description2 \n")
+        expected = [self.Parameter(name='test', desc=' test description1 \n'),
+                    self.Parameter(name='test', desc=' test description2 \n')]
+        self.check_docstring(doc, expected)
+
+    def test_return_values_default(self):
+        doc = (" :return: something1 \n"
+               " :return: something2 ")
+        expected = [self.ReturnValue(desc='something1 \n'),
+                    self.ReturnValue(desc='something2 ')]
+        self.check_docstring(doc, expected)
+
+    def test_python_default(self):
+        data = self.load_testdata("default.py")
+
+        parsed_docs = [doc.parse() for doc in
+                       extract_documentation(data, "python", "default")]
+
+        expected = [
+            [self.Description(desc='\nModule description.\n\n'
+                                   'Some more foobar-like text.\n')],
+            [self.Description(desc='\nA nice and neat way of '
+                                   'documenting code.\n'),
+             self.Parameter(name='radius', desc='The explosion radius.\n')],
+            [self.Description(desc='\nA function that returns 55.\n')],
+            [self.Description(desc='\nDocstring with layouted text.\n\n    '
+                                   'layouts inside docs are preserved.'
+                                   '\nthis is intended.\n')],
+            [self.Description(desc=' Docstring inline with triple quotes.\n'
+                                   '    Continues here. ')],
+            [self.Description(desc='\nThis is the best docstring ever!\n'),
+             self.Parameter(name='param1:',
+                            desc='    Very Very Long Parameter description.\n'),
+             self.Parameter(name='param2:',
+                            desc='    Short Param description.\n'),
+             self.ReturnValue(desc='Long Return Description That Makes No Sense'
+                                   ' And Will\n         Cut to the Next'
+                                   ' Line.\n')]]
+
+        self.assertEqual(parsed_docs, expected)
+
+    def test_not_implemented(self):
+        not_implemented = DocumentationComment("some docs", "nolang", "doxygen",
+                                               None, None, None)
+        with self.assertRaises(NotImplementedError):
+            not_implemented.parse()
