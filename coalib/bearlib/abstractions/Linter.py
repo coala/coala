@@ -346,11 +346,21 @@ def _create_linter(klass, options):
         def process_output_regex(
                 self, output, filename, file, output_regex,
                 severity_map=MappingProxyType({
+                    "critical": RESULT_SEVERITY.MAJOR,
+                    "c": RESULT_SEVERITY.MAJOR,
+                    "fatal": RESULT_SEVERITY.MAJOR,
+                    "fail": RESULT_SEVERITY.MAJOR,
+                    "f": RESULT_SEVERITY.MAJOR,
                     "error": RESULT_SEVERITY.MAJOR,
+                    "err": RESULT_SEVERITY.MAJOR,
+                    "e": RESULT_SEVERITY.MAJOR,
                     "warning": RESULT_SEVERITY.NORMAL,
                     "warn": RESULT_SEVERITY.NORMAL,
+                    "w": RESULT_SEVERITY.NORMAL,
                     "information": RESULT_SEVERITY.INFO,
-                    "info": RESULT_SEVERITY.INFO}),
+                    "info": RESULT_SEVERITY.INFO,
+                    "i": RESULT_SEVERITY.INFO,
+                    "suggestion": RESULT_SEVERITY.INFO}),
                 result_message=None):
             """
             Processes the executable's output using a regex.
