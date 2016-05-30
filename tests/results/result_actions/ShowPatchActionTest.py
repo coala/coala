@@ -1,4 +1,5 @@
 import unittest
+from os.path import join
 
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.results.Diff import Diff
@@ -47,6 +48,32 @@ class ShowPatchActionTest(unittest.TestCase):
                              "|    |++++| b\n"
                              "|    |   1|+first\n"
                              "|   1|   2| old_first\n")
+
+    def test_apply_renaming_only(self):
+        with retrieve_stdout() as stdout:
+            test_result = Result("origin", "message",
+                                 diffs={'a': Diff([], rename='b')})
+            file_dict = {'a': []}
+            self.assertEqual(self.uut.apply_from_section(test_result,
+                                                         file_dict,
+                                                         {},
+                                                         self.section),
+                             {})
+            self.assertEqual(stdout.getvalue(),
+                             '|----|    | ' + join('a', 'a') + '\n'
+                             '|    |++++| ' + join('b', 'b') + '\n')
+
+    def test_apply_empty(self):
+        with retrieve_stdout() as stdout:
+            test_result = Result("origin", "message",
+                                 diffs={'a': Diff([])})
+            file_dict = {'a': []}
+            self.assertEqual(self.uut.apply_from_section(test_result,
+                                                         file_dict,
+                                                         {},
+                                                         self.section),
+                             {})
+            self.assertEqual(stdout.getvalue(), '')
 
     def test_apply_with_previous_patches(self):
         with retrieve_stdout() as stdout:

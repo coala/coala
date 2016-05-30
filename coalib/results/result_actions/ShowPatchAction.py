@@ -1,4 +1,5 @@
 import difflib
+from os.path import relpath, join
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
@@ -15,6 +16,14 @@ def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
                                          line.rstrip("\n"))
 
 
+def print_from_name(printer, line):
+    printer.print(format_line(line, real_nr="----"), color="red")
+
+
+def print_to_name(printer, line):
+    printer.print(format_line(line, mod_nr="++++"), color="green")
+
+
 def print_beautified_diff(difflines, printer):
     current_line_added = None
     current_line_subtracted = None
@@ -25,10 +34,9 @@ def print_beautified_diff(difflines, printer):
             current_line_added = int(added.split(",")[0][1:])
             current_line_subtracted = int(subtracted.split(",")[0][1:])
         elif line.startswith("---"):
-            printer.print(format_line(line[4:], real_nr="----"), color="red")
+            print_from_name(printer, line[4:])
         elif line.startswith("+++"):
-            printer.print(format_line(line[4:], mod_nr="++++"),
-                          color="green")
+            print_to_name(printer, line[4:])
         elif line.startswith("+"):
             printer.print(format_line(line[1:],
                                       mod_nr=current_line_added,
@@ -90,10 +98,14 @@ class ShowPatchAction(ResultAction):
                 current_file = original_file
                 new_file = this_diff.modified
 
-            print_beautified_diff(difflib.unified_diff(current_file,
-                                                       new_file,
-                                                       fromfile=filename,
-                                                       tofile=to_filename),
-                                  printer)
+            if tuple(current_file) != tuple(new_file):
+                print_beautified_diff(difflib.unified_diff(current_file,
+                                                           new_file,
+                                                           fromfile=filename,
+                                                           tofile=to_filename),
+                                      printer)
+            elif filename != to_filename:
+                print_from_name(printer, join('a', relpath(filename)))
+                print_to_name(printer, join('b', relpath(to_filename)))
 
         return file_diff_dict
