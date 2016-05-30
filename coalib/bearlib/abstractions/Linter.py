@@ -124,6 +124,10 @@ def _create_linter(klass, options):
 
     class LinterBase(LocalBear, metaclass=LinterMeta):
 
+        def __init__(self, *args, **kwargs):
+            LocalBear.__init__(self, *args, **kwargs)
+            self._full_executable_path = shutil.which(self.get_executable())
+
         @staticmethod
         def generate_config(filename, file):
             """
@@ -501,7 +505,7 @@ def _create_linter(klass, options):
                              "{!r} are not iterable.".format(args))
                     return
 
-                arguments = (self.get_executable(),) + args
+                arguments = (self._full_executable_path,) + args
                 self.debug("Running '{}'".format(' '.join(arguments)))
 
                 output = run_shell_command(
