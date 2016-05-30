@@ -244,9 +244,22 @@ class Diff:
         >>> len(list(diff.split_diff(distance=-1)))
         3
 
+        If a file gets renamed or deleted only, it will be yielded as is:
+
+        >>> len(list(Diff([], rename='test').split_diff()))
+        1
+
+        An empty diff will not yield any diffs:
+
+        >>> len(list(Diff([]).split_diff()))
+        0
+
         :param distance: Number of unchanged lines that are allowed in between
                          two changed lines so they get yielded as one diff.
         """
+        if not self:
+            return
+
         last_line = -1
         this_diff = Diff(self._file, rename=self.rename, delete=self.delete)
         for line in sorted(self._changes.keys()):
@@ -258,8 +271,10 @@ class Diff:
             last_line = line
             this_diff._changes[line] = self._changes[line]
 
-        if len(this_diff._changes) > 0:
-            yield this_diff
+        # If the diff contains no line changes, the loop above will not be run
+        # else, this_diff will never be empty and thus this has to be yielded
+        # always.
+        yield this_diff
 
     def range(self, filename):
         """
@@ -267,9 +282,20 @@ class Diff:
         added after the 0th line (i.e. before the first line) the first line
         will be included in the SourceRange.
 
+        The range of an empty diff will only affect the filename:
+
+        >>> range = Diff([]).range("file")
+        >>> range.file is None
+        False
+        >>> print(range.start.line)
+        None
+
         :param filename: The filename to associate the SourceRange with.
         :return:         A SourceRange object.
         """
+        if len(self._changes) == 0:
+            return SourceRange.from_values(filename)
+
         start = min(self._changes.keys())
         end = max(self._changes.keys())
         return SourceRange.from_values(filename,
