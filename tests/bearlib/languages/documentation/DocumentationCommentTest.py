@@ -120,6 +120,29 @@ class PythonDocumentationCommentTest(unittest.TestCase):
 
         self.assertEqual(parsed_docs, expected)
 
+    def test_python_doxygen(self):
+        data = self.load_testdata("doxygen.py")
+
+        parsed_docs = [doc.parse() for doc in
+                       extract_documentation(data, "python", "doxygen")]
+
+        expected = [
+            [self.Description(desc=' @package pyexample\n  Documentation for'
+                                   ' this module.\n\n  More details.\n')],
+            [self.Description(
+                desc=' Documentation for a class.\n\n More details.\n')],
+            [self.Description(desc=' The constructor.\n')],
+            [self.Description(desc=' Documentation for a method.\n'),
+             self.Parameter(name='self', desc='The object pointer.\n')],
+            [self.Description(desc=' A class variable.\n')],
+            [self.Description(desc=' @var _memVar\n  a member variable\n')],
+            [self.Description(desc=' This is the best docstring ever!\n\n'),
+             self.Parameter(name='param1', desc='Parameter 1\n'),
+             self.Parameter(name='param2', desc='Parameter 2\n'),
+             self.ReturnValue(desc='Nothing\n')]]
+
+        self.assertEqual(parsed_docs, expected)
+
     def test_not_implemented(self):
         not_implemented = DocumentationComment("some docs", "nolang", "doxygen",
                                                None, None, None)
