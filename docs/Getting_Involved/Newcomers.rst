@@ -103,8 +103,8 @@ After creating your ``Pull Request``, there's two options:
 
 - your ``Pull Request`` gets accepted, and your commit will get merged into the
   master branch
-- your ``Pull Request`` doesn't, and therefore you will need to to modify it as
-  per the review comments
+- your ``Pull Request`` doesn't get accepted, and therefore you will
+  need to to modify it as per the review comments
 
 It's highly unlikely that your ``Pull Request`` will be accepted on the first
 attempt - but don't worry, that's just how it works. It helps us maintain
