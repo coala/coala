@@ -1,12 +1,6 @@
-[DEFAULT]
 extensions = .py
-
 comment_delimiter = \#
 multiline_comment_delimiters =
 string_delimiters = ": ", ': '
 multiline_string_delimiters = """: """, ''': '''
 indent_types = \:
-
-[PYTHON3]
-
-[PYTHON2]
