@@ -5,6 +5,7 @@ import unittest
 
 from pyprint.ClosableObject import close_objects
 from pyprint.NullPrinter import NullPrinter
+import pytest
 
 from coalib.misc import Constants
 from coalib.misc.ContextManagers import make_temp, change_directory
@@ -14,6 +15,7 @@ from coalib.settings.ConfigurationGathering import (
     find_user_config, gather_configuration, load_configuration)
 
 
+@pytest.mark.usefixtures("disable_bears")
 class ConfigurationGatheringTest(unittest.TestCase):
 
     def setUp(self):
