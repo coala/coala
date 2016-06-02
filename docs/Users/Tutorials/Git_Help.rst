@@ -104,7 +104,7 @@ It will give you an idea about what files are currently modified.
     that contain the syntax.
 
 .. seealso::
-    For more information about tests, check `this link <http://coala.readthedocs.org/en/latest/Getting_Involved/Writing_Tests.html>`_.
+    For more information about tests, check `this link <http://coala.readthedocs.io/en/latest/Getting_Involved/Writing_Tests.html>`_.
 
 Adding the files and commiting
 ------------------------------
@@ -149,7 +149,7 @@ parts. They should have a newline between them.
 .. seealso::
 
   For more information about writing commit messages, check this
-  `link <http://coala.readthedocs.org/en/latest/Getting_Involved/Writing_Good_Commits.html>`_.
+  `link <http://coala.readthedocs.io/en/latest/Getting_Involved/Writing_Good_Commits.html>`_.
 
 Now that your message is written, you will have to save the file. Press escape
 to exit insert mode, and save the file (in Vim that is being done by pressing
@@ -185,7 +185,7 @@ You are awesome!
     to sync your local fork with the remote repository before sending
     a pull request.
 
-    More information regarding syncing can be found `here <http://coala.readthedocs.org/en/latest/Users/Tutorials/Git_Help.html#keeping-your-fork-in-sync>`_.
+    More information regarding syncing can be found `here <http://coala.readthedocs.io/en/latest/Users/Tutorials/Git_Help.html#keeping-your-fork-in-sync>`_.
 
 Follow-up
 ---------
@@ -206,7 +206,7 @@ don't worry that's just how it works. It helps us maintain *coala*
 
 .. seealso::
 
-     `Review Process <http://coala.readthedocs.org/en/latest/Getting_Involved/Review.html>`_.
+     `Review Process <http://coala.readthedocs.io/en/latest/Getting_Involved/Review.html>`_.
 
 Now if you need to modify your code, you can simply edit it again, add it and
 commit it using

@@ -43,7 +43,7 @@ class Lint(Bear):
     Deals with the creation of linting bears.
 
     For the tutorial see:
-    http://coala.readthedocs.org/en/latest/Users/Tutorials/Linter_Bears.html
+    http://coala.readthedocs.io/en/latest/Users/Tutorials/Linter_Bears.html
 
     :param executable:                  The executable to run the linter.
     :param prerequisite_command:        The command to run as a prerequisite

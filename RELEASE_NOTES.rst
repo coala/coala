@@ -132,7 +132,7 @@ New features:
 -  Actions that are not applicable multiple times are not shown after applying
    them anymore. (https://github.com/coala-analyzer/coala/issues/1064)
 -  Documentation about how to add coala as a pre commit hook has been added:
-   http://coala.readthedocs.org/en/latest/Users/Git_Hooks.html
+   http://coala.readthedocs.io/en/latest/Users/Git_Hooks.html
 -  Actions emit a success message now that is shown to the user and improves
    usability and intuitivity of actions.
 -  A warning is emitted if a bear or file glob does not match any bears or
@@ -208,7 +208,7 @@ For bear writers:
 Notable internal changes:
 
 -  API documentation is now available at
-   http://coala.readthedocs.org/en/latest/API/modules.html
+   http://coala.readthedocs.io/en/latest/API/modules.html
 -  coala switched to PyTest. Our old own framework is no longer maintained.
    (https://github.com/coala-analyzer/coala/issues/875)
 -  As always loads of refactorings to make the code more stable, readable and
@@ -345,7 +345,7 @@ This release features the following feature changes:
 -  Changed logging API in Bears (now: debug/warn/err).
 -  clang python bindings were added to the bearlib.
 -  Exitcodes were organized and documented.
-   (http://coala.readthedocs.org/en/latest/Users/Exit_Codes.html)
+   (http://coala.readthedocs.io/en/latest/Users/Exit_Codes.html)
 -  Handling of EOF/Keyboard Interrupt was improved.
 -  Console output is now colored.
 -  Bears can now easily convert settings to typed lists or dicts.
@@ -366,7 +366,7 @@ This release features the following feature changes:
 -  The StringProcessing libary is there to help bear writers deal with
    regexes and similar things.
 -  A new glob syntax was introduced and documented.
-   (http://coala.readthedocs.org/en/latest/Users/Glob_Patterns.html)
+   (http://coala.readthedocs.io/en/latest/Users/Glob_Patterns.html)
 -  The ``--apply-changes`` argument was removed as its concept does not
    fit anymore.
 -  Bears can now return any iterable. This makes it possible to
