@@ -41,7 +41,7 @@ Welcome to the coala documentation!
    Linter Bears <Users/Tutorials/Linter_Bears>
    Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
    Git Help <Users/Tutorials/Git_Help>
-   Auto completion <Users/Tutorials/Auto_Completion>
+   Shell Autocompletion <Users/Tutorials/Shell_Autocompletion>
 
 .. toctree::
    :caption: Getting Involved

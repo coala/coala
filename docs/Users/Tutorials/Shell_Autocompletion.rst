@@ -1,8 +1,8 @@
-Auto completion
-===============
+Shell Autocompletion
+====================
 
-If you're using bash or zsh you can setup them to have coala auto command
-completion.
+If you're using bash or zsh you can set them up to have tab completion for coala
+arguments and bear names.
 
 Install ``argcomplete``:
 
@@ -28,6 +28,5 @@ If you're using *zsh*, add the following to your ``.zshrc``:
     bashcompinit
     eval "$(register-python-argcomplete `which coala`)"
 
-Make sure that coala is added to the PATH at that point. If you want, or you
-are unsure if coala is in the PATH, you can replace ```which coala``` with the
-path to your coala executable.
+If you're seeing issues about ```which coala``` not being able to find coala,
+you could replace it with the path to your coala executable.
