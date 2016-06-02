@@ -696,7 +696,9 @@ def print_bears(console_printer, bears, compress):
                                 show bear names as a list)
     """
     if not bears:
-        console_printer.print("No bears to show.")
+        console_printer.print("No bears to show. Did you forget to install "
+                              "the `coala-bears` package? Try `pip3 install "
+                              "coala-bears`.")
     elif compress:
         bear_list = sorted(bears.keys(), key=lambda bear: bear.name)
         for bear in bear_list:

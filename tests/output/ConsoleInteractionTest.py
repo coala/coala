@@ -639,11 +639,11 @@ some_file
         with retrieve_stdout() as stdout:
             bears = {}
             print_bears(self.log_printer.printer, bears, True)
-            self.assertEqual("No bears to show.\n", stdout.getvalue())
+            self.assertIn("No bears to show.", stdout.getvalue())
         with retrieve_stdout() as stdout:
             bears = {}
             print_bears(self.log_printer.printer, bears, False)
-            self.assertEqual("No bears to show.\n", stdout.getvalue())
+            self.assertIn("No bears to show.", stdout.getvalue())
 
     def test_print_bears(self):
         with retrieve_stdout() as stdout:
