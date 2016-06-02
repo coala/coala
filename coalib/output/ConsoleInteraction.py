@@ -659,7 +659,7 @@ def show_bear(console_printer, bear, sections, metadata):
     :param metadata:        Metadata about the bear.
     """
     console_printer.print(bear.name + ":")
-    console_printer.print("  " + metadata.desc + "\n")
+    console_printer.print("  " + metadata.desc.replace("\n", "\n  ") + "\n")
 
     show_enumeration(
         console_printer, "Supported languages:",
