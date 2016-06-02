@@ -13,16 +13,16 @@ class SourceRange(TextRange):
                  start: SourcePosition,
                  end: (SourcePosition, None)=None):
         """
-        Creates a new SourceRange.
+        Creates a new SourceRange object.
 
-        :param start:       A SourcePosition indicating the start of the range.
-        :param end:         A SourcePosition indicating the end of the range.
-                            If ``None`` is given, the start object will be used
-                            here. end must be in the same file and be greater
-                            than start as negative ranges are not allowed.
-        :raises TypeError:  Raised when
-                            - start is no SourcePosition or None.
-                            - end is no SourcePosition.
+        :param start:       A SourcePosition object indicating the start of the
+                            range.
+        :param end:         A SourcePosition object indicating the end of the
+                            range. If ``None`` is given, the start object will
+                            be used here. end must be in the same file and be
+                            greater than start as negative ranges are not
+                            allowed.
+        :raises TypeError:  Raised when start or end are not valid objects.
         :raises ValueError: Raised when file of start and end mismatch.
         """
         TextRange.__init__(self, start, end)
