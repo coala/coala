@@ -13,6 +13,23 @@ except ImportError:
             pass
 
 
+class CustomFormatter(argparse.RawDescriptionHelpFormatter):
+    """
+    A Custom Formatter that will keep the metavars in the usage but remove them
+    in the more detailed arguments section.
+    """
+
+    def _format_action_invocation(self, action):
+        if not action.option_strings:
+            # For arguemnts that don't have options strings
+            metavar, = self._metavar_formatter(action, action.dest)(1)
+            return metavar
+        else:
+            # Option string arguments (like "-f, --files")
+            parts = action.option_strings
+            return ', '.join(parts)
+
+
 def default_arg_parser(formatter_class=None):
     """
     This function creates an ArgParser to parse command line arguments.
@@ -20,7 +37,7 @@ def default_arg_parser(formatter_class=None):
     :param formatter_class: Formatting the arg_parser output into a specific
                             form. For example: In the manpage format.
     """
-    formatter_class = formatter_class or argparse.RawDescriptionHelpFormatter
+    formatter_class = formatter_class or CustomFormatter
 
     entry_point = sys.argv[0]
     for entry in ['coala-ci', 'coala-dbus', 'coala-format', 'coala-json',
