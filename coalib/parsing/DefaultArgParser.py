@@ -55,15 +55,13 @@ def default_arg_parser(formatter_class=None):
                         'ignored if --config is also given')
     arg_parser.add_argument('-F',
                             '--find-config',
-                            nargs='?',
-                            const=True,
-                            metavar='BOOL',
+                            default=None,
+                            action='store_true',
                             help=FIND_CONFIG_HELP)
     arg_parser.add_argument('-I',
                             '--no-config',
-                            nargs='?',
-                            const=True,
-                            metavar='BOOL',
+                            default=None,
+                            action='store_true',
                             help="Run without using any config file")
     arg_parser.add_argument('-f',
                             '--files',
@@ -117,9 +115,8 @@ def default_arg_parser(formatter_class=None):
                             help=SETTINGS_HELP)
     if parser_type == 'coala-json':
         arg_parser.add_argument('--text-logs',
-                                nargs='?',
-                                const=True,
-                                metavar='BOOL',
+                                default=None,
+                                action='store_true',
                                 help='Don\'t display logs as json, display '
                                      'them as we normally do in the console.')
         arg_parser.add_argument('-o',
@@ -134,15 +131,13 @@ def default_arg_parser(formatter_class=None):
                            "that they belong to")
         arg_parser.add_argument('-B',
                                 '--show-bears',
-                                nargs='?',
-                                const=True,
-                                metavar='BOOL',
+                                default=None,
+                                action='store_true',
                                 help=SHOW_BEARS_HELP)
         arg_parser.add_argument('-A',
                                 '--show-all-bears',
-                                nargs='?',
-                                const=True,
-                                metavar='BOOL',
+                                default=None,
+                                action='store_true',
                                 help="Display all bears.")
         arg_parser.add_argument('-l',
                                 '--show-language-bears',
