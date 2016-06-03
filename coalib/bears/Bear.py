@@ -1,4 +1,5 @@
 import traceback
+from functools import partial
 from os import makedirs
 from os.path import join, abspath, exists
 from shutil import copyfileobj
@@ -12,6 +13,7 @@ from coala_decorators.decorators import enforce_signature, classproperty
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
 from coalib.bears.requirements.PythonRequirement import PythonRequirement
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
@@ -314,3 +316,10 @@ class Bear(Printer, LogPrinter):
 
         makedirs(data_dir, exist_ok=True)
         return data_dir
+
+    @property
+    def new_result(self):
+        """
+        Returns a partial for creating a result with this bear already bound.
+        """
+        return partial(Result.from_values, self)

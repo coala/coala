@@ -3,6 +3,7 @@ import unittest
 from os.path import abspath
 
 from coalib.bears.Bear import Bear
+from coalib.results.Result import Result
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Section import Section
@@ -173,3 +174,9 @@ class BearTest(unittest.TestCase):
         section.append(Setting("files", "**", "/path/to/dir/config"))
         uut = TestBear(section, None)
         self.assertEqual(uut.get_config_dir(), abspath("/path/to/dir"))
+
+    def test_new_result(self):
+        bear = Bear(self.settings, None)
+        result = bear.new_result('test message', '/tmp/testy')
+        expected = Result.from_values(bear, 'test message', '/tmp/testy')
+        self.assertEqual(result, expected)
