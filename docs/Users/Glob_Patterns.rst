@@ -37,6 +37,11 @@ The special characters used in shell-style wildcards are:
 | ``**``            | Matches everything.                                     |
 +-------------------+---------------------------------------------------------+
 
+.. note::
+
+    If you're looking for a negation pattern to exclude paths, check out the
+    ``--ignore`` argument or ``ignore`` .coafile option!
+
 Examples
 --------
 
