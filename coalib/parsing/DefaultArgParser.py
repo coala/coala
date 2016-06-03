@@ -141,9 +141,8 @@ def default_arg_parser(formatter_class=None):
                                      'them as we normally do in the console.')
         arg_parser.add_argument('-o',
                                 '--output',
-                                nargs='?',
-                                const=True,
-                                metavar='BOOL',
+                                nargs=1,
+                                metavar='FILE',
                                 help='Write the logs as json to a file '
                                 'where filename is specified as argument.')
     if parser_type == 'coala':
