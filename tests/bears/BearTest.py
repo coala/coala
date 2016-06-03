@@ -2,9 +2,7 @@ import multiprocessing
 import unittest
 from os.path import abspath
 
-from coalib.bears.Bear import Bear
-from coalib.results.Result import Result
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.bears import Bear, Result, LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
