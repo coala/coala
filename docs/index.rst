@@ -4,9 +4,9 @@
    contain the root `toctree` directive.
 
 .. meta::
-   :description: coala is a simple COde AnaLysis Application. Its goal is
-                 to make static code analysis easy while remaining completely
-                 modular and therefore extendable and language independent.
+   :description: coala provides a common command-line interface for linting and
+                 fixing all your code, regardless of the programming languages
+                 you use.
    :keywords:    coala, code analysis, static code analysis, linter,
                  language agnostic, python3, linux, unix, windows, bears,
                  coala-bears
@@ -93,10 +93,9 @@ Welcome to the coala documentation!
 What is coala?
 --------------
 
-coala is a simple COde AnaLysis Application. Its goal is to make static
-code analysis easy while remaining completely modular and therefore
-extendable and language independent. coala is written with a lower case
-"c".
+coala provides a common command-line interface for linting and fixing all your
+code, regardless of the programming languages you use. coala is written with a
+lower case "c".
 
 Code analysis happens in python scripts while coala manages these, tries
 to provide helpful libraries and provides multiple user interfaces.
