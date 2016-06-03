@@ -25,23 +25,23 @@ Welcome to the coala documentation!
    :hidden:
 
    Installation <Users/Install>
+   Getting Started with Coala <Users/Tutorials/Tutorial>
    coafile Specification <Users/coafile>
    Glob Patterns <Users/Glob_Patterns>
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>
    Git Hooks <Users/Git_Hooks>
+   Shell Autocompletion <Users/Tutorials/Shell_Autocompletion>
 
 .. toctree::
-   :caption: Tutorials
+   :caption: Developer Tutorials
    :hidden:
 
-   First Step <Users/Tutorials/Tutorial>
    Writing Bears <Users/Tutorials/Writing_Bears>
    Testing Bears <Users/Tutorials/Testing_Bears>
    Linter Bears <Users/Tutorials/Linter_Bears>
    Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
    Git Help <Users/Tutorials/Git_Help>
-   Shell Autocompletion <Users/Tutorials/Shell_Autocompletion>
 
 .. toctree::
    :caption: Getting Involved
