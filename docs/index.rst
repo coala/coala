@@ -69,6 +69,8 @@ Welcome to the coala documentation!
 
    List of Modules<API/modules>
 
+You might also want to look at `our website <http://coala-analyzer.org/>`_.
+
 .. Start ignoring LineLengthBear
 
 ::
