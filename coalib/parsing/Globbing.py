@@ -280,7 +280,10 @@ def relative_wildcard_glob(dirname, pattern):
     if not dirname:
         dirname = os.curdir
     try:
-        names = os.listdir(dirname)
+        if '**' in pattern:
+            names = list(_iter_relative_dirs(dirname))
+        else:
+            names = os.listdir(dirname)
     except OSError:
         return []
     result = []

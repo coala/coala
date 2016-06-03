@@ -312,6 +312,12 @@ class GlobTest(unittest.TestCase):
                      TestFiles.dir2]
         self._test_glob(pattern, file_list)
 
+    def test_collect_recursive_part_of_basename(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, "**.py")
+        file_list = [TestFiles.file11,
+                     TestFiles.file12]
+        self._test_glob(pattern, file_list)
+
     def test_collect_invalid(self):
         pattern = "NOPE"
         file_list = []
