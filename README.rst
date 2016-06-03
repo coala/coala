@@ -1,3 +1,5 @@
+You might also want to visit `our website <http://coala-analyzer.org/>`_.
+
 .. Start ignoring LineLengthBear
 
 ::
