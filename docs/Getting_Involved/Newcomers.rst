@@ -44,7 +44,7 @@ Here is the link that will lead you to `Newcomers issues <http://tinyurl.com/coa
 
 .. seealso::
 
-    For more information about what bears are, please check the following link: `Writing bears <http://coala.readthedocs.org/en/latest/Users/Tutorials/Writing_Bears.html>`_
+    For more information about what bears are, please check the following link: `Writing bears <http://coala.readthedocs.io/en/latest/Users/Tutorials/Writing_Bears.html>`_
 
 The easy issues that will help you get started are labeled as
 "difficulty/newcomer" and are only there to give you a glimpse of how it is
@@ -54,12 +54,12 @@ Now pick an issue which isn't assigned, and if you want to fix
 it, then leave a comment that you would like to get assigned. This way
 we don't have multiple people working on the same issue at the same time.
 Now you can start working on it.
-For more info on how to work correctly with git, try `this <http://coala.readthedocs.org/en/latest/Users/Tutorials/Git_Help.html>`_.
+For more info on how to work correctly with git, try `this <http://coala.readthedocs.io/en/latest/Users/Tutorials/Git_Help.html>`_.
 
 .. note::
 
     Before starting to write your first commit, check out this link:
-    `Writing good commits <http://coala.readthedocs.org/en/latest/Getting_Involved/Writing_Good_Commits.html>`_
+    `Writing good commits <http://coala.readthedocs.io/en/latest/Getting_Involved/Writing_Good_Commits.html>`_
 
 Things to do before pushing
 ---------------------------
@@ -76,7 +76,7 @@ into your bash. This will analyze your code and help you fix it.
 
 .. seealso::
 
-    `Executing tests <http://coala.readthedocs.org/en/latest/Getting_Involved/Testing.html>`_
+    `Executing tests <http://coala.readthedocs.io/en/latest/Getting_Involved/Testing.html>`_
 
 Sending your changes
 --------------------
@@ -113,7 +113,7 @@ attempt - but don't worry, that's just how it works. It helps us maintain
 
 .. seealso::
 
-    `Review Process <http://coala.readthedocs.org/en/latest/Getting_Involved/Review.html>`_.
+    `Review Process <http://coala.readthedocs.io/en/latest/Getting_Involved/Review.html>`_.
 
 Now if you need to modify your code, you can simply edit it again, add it and
 commit it using
@@ -136,5 +136,5 @@ and send it. You have successfully edited your last commit!
     $ git push --force origin
 
 **Congratulations!** Your PR just got accepted! You're awesome.
-Now try `writing a bear <http://coala.readthedocs.org/en/latest/Users/Tutorials/Writing_Bears.html>`_,
+Now try `writing a bear <http://coala.readthedocs.io/en/latest/Users/Tutorials/Writing_Bears.html>`_,
 they are really rewarding!

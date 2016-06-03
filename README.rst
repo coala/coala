@@ -103,7 +103,7 @@ Newcomers Guide and Getting Involved
 ------------------------------------
 
 If you are new and would like to contribute, read our `Getting Involved Site
-<http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__!
+<http://coala.readthedocs.io/en/latest/Getting_Involved/README.html>`__!
 
 We appreciate any help! Feel free to message us on
 `gitter <https://gitter.im/coala-analyzer/coala>`__. If you have any
