@@ -40,14 +40,8 @@ class coalaTest(unittest.TestCase):
         self.assertEqual(retval, 0)
         self.assertIn("No existent section was targeted or enabled", output)
 
-    def test_show_bears(self):
+    def test_show_all_bears(self):
         with bear_test_module():
-            retval, output = execute_coala(coala.main, "coala", "-A")
-            self.assertEqual(retval, 0)
-            lines = output.splitlines()
-            bear_missing_lines = sum(1 for line in lines if "WARNING" in line)
-            self.assertEqual(bear_missing_lines, 0)
-
             retval, output = execute_coala(coala.main, "coala", "-A")
             self.assertEqual(retval, 0)
 
@@ -58,6 +52,8 @@ class coalaTest(unittest.TestCase):
             for line in lines:
                 self.assertNotIn("WARNING", line)
 
+    def test_show_bears(self):
+        with bear_test_module():
             retval, output = execute_coala(
                 coala.main, "coala", "-B",
                 "-b", "LineCountTestBear, SpaceConsistencyTestBear",
