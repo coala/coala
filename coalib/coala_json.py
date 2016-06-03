@@ -35,7 +35,7 @@ def main():
         retval["logs"] = log_printer.logs
     JSONEncoder = create_json_encoder(use_relpath=args.relpath)
     if args.output:
-        filename = str(args.output)
+        filename = str(args.output[0])
         with open(filename, 'w+') as fp:
             json.dump(retval, fp,
                       cls=JSONEncoder,
