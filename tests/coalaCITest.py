@@ -28,7 +28,7 @@ class coalaCITest(unittest.TestCase):
             coala_ci.main, "coala-ci", "-c", 'nonex', "test")
         self.assertRegex(
             output,
-            ".*\\[ERROR\\].*The requested coafile '.*' does not exist.\n")
+            ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
 
     def test_find_no_issues(self):
         with bear_test_module(), \
