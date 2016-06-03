@@ -86,8 +86,6 @@ the creative name CommunicationBear:
 .. code:: python
 
     from coalib.bears.LocalBear import LocalBear
-    from coalib.results.Result import Result
-
 
     class CommunicationBear(LocalBear):
 
@@ -104,9 +102,9 @@ the creative name CommunicationBear:
                 ui=user_input,
                 type=type(user_input)))
 
-            return [Result.from_values(message="A hello world result.",
-                                       origin=self,
-                                       file=filename)]
+            yield self.new_result(message="A hello world result.",
+                                  origin=self,
+                                  file=filename)
 
 Try executing it:
 
