@@ -150,9 +150,8 @@ def default_arg_parser(formatter_class=None):
                                 metavar='LANG',
                                 help="Display all bears for the given "
                                 "languages.")
-    SAVE_HELP = ('Filename of file to be saved to, if provided with no '
-                 'arguments, settings will be stored back to the file given '
-                 'by -c')
+    SAVE_HELP = ('Save the used arguments to a config file at the given path, '
+                 "or at the value of -c, which is '.coafile' by default.")
     arg_parser.add_argument('-s',
                             '--save',
                             nargs='?',
