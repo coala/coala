@@ -31,3 +31,7 @@ def main():
         print_section_beginning=partial_print_sec_beg)
 
     return exitcode
+
+
+if __name__ == '__main__':  # pragma: no cover
+    main()

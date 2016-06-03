@@ -37,3 +37,7 @@ def main(log_printer=None, section: Section=None):
                          " to do so. coala may not be able to create"
                          " backup files when patches are applied.")
     return 0
+
+
+if __name__ == '__main__':  # pragma: no cover
+    main()

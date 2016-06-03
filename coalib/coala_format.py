@@ -19,3 +19,7 @@ def main():
     results, exitcode, _ = run_coala(print_results=print_results_formatted)
 
     return exitcode
+
+
+if __name__ == '__main__':  # pragma: no cover
+    main()

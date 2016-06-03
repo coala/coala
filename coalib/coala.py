@@ -72,3 +72,7 @@ def main():
         nothing_done=nothing_done)
 
     return exitcode
+
+
+if __name__ == '__main__':  # pragma: no cover
+    main()
