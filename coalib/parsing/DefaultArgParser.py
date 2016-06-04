@@ -91,9 +91,8 @@ def default_arg_parser(formatter_class=None):
                         'ignored if --config is also given')
     config_group.add_argument('-F',
                               '--find-config',
-                              nargs='?',
+                              action='store_const',
                               const=True,
-                              metavar='BOOL',
                               help=FIND_CONFIG_HELP)
 
     config_group.add_argument('-I',
@@ -173,16 +172,14 @@ def default_arg_parser(formatter_class=None):
                            "that they belong to")
         outputs_group.add_argument('-B',
                                    '--show-bears',
-                                   nargs='?',
                                    const=True,
-                                   metavar='BOOL',
+                                   action='store_const',
                                    help=SHOW_BEARS_HELP)
 
         outputs_group.add_argument('-A',
                                    '--show-all-bears',
-                                   nargs='?',
                                    const=True,
-                                   metavar='BOOL',
+                                   action='store_const',
                                    help="Display all bears.")
 
         SHOW_LANGUAGE_BEARS = ("Display all bears for the given languages.")
@@ -234,8 +231,8 @@ def default_arg_parser(formatter_class=None):
                     'files before applying patches')
     misc_group.add_argument('-n',
                             '--no-orig',
-                            nargs='?',
                             const=True,
+                            action='store_const',
                             help=NO_ORIG_HELP)
 
     deprecated_group = arg_parser.add_argument_group('Deprecated')
