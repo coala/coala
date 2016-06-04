@@ -21,7 +21,8 @@ You might also want to visit `our website <http://coala-analyzer.org/>`_.
 
 .. Stop ignoring LineLengthBear
 
-Get coala to lint all your languages in your project with one tool and config!
+Get *coala* to lint all your languages in your project with one tool and
+config!
 
 Demo (Click to View)
 --------------------
@@ -36,7 +37,7 @@ About
 -----
 
 *coala* is a language independent analysis toolkit. It empowers developers
-to create rules which a project's code should conform to. coala takes care
+to create rules which a project's code should conform to. *coala* takes care
 of showing these issues to users in a friendly manner, is versatile and can be
 used in any environment. Patches to automatically fix code will be managed too.
 *coala* has a set of official bears (plugins) to provide an out-of-the-box
