@@ -24,10 +24,11 @@ def _import_module(file_path):
                 module_name = cased_module_name
                 break
 
-    if module_dir not in sys.path:
-        sys.path.insert(0, module_dir)
-
-    return __import__(module_name)
+    sys.path.insert(1, module_dir)
+    try:
+        return __import__(module_name)
+    finally:
+        sys.path.pop(1)
 
 
 def _is_subclass(test_class, superclasses):
