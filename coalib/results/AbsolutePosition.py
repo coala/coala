@@ -1,5 +1,5 @@
 from coalib.results.TextPosition import TextPosition
-from coala_decorators.decorators import enforce_signature
+from coala_decorators import enforce_signature
 
 
 class AbsolutePosition(TextPosition):

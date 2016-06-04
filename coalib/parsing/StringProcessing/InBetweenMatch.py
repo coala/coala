@@ -1,4 +1,4 @@
-from coala_decorators.decorators import generate_ordering, generate_repr
+from coala_decorators import generate_ordering, generate_repr
 from coalib.parsing.StringProcessing import Match
 
 

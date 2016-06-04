@@ -1,6 +1,6 @@
 import copy
 
-from coala_decorators.decorators import (
+from coala_decorators import (
     enforce_signature, generate_ordering, generate_repr)
 from coalib.results.TextPosition import TextPosition
 

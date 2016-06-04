@@ -2,7 +2,7 @@ import os
 import platform
 import re
 
-from coala_decorators.decorators import yield_once
+from coala_decorators import yield_once
 from coalib.misc.Constants import GLOBBING_SPECIAL_CHARS
 
 

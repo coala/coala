@@ -1,4 +1,4 @@
-from coala_decorators.decorators import generate_eq, generate_repr
+from coala_decorators import generate_eq, generate_repr
 
 
 @generate_eq("manager", "package", "version")

@@ -1,6 +1,6 @@
 import unittest
 
-from coala_decorators.decorators import (
+from coala_decorators import (
     arguments_to_lists, enforce_signature, generate_eq, generate_ordering,
     generate_repr, yield_once)
 

@@ -1,4 +1,4 @@
-from coala_decorators.decorators import (
+from coala_decorators import (
     enforce_signature, generate_ordering, generate_repr)
 
 
