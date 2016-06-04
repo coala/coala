@@ -8,6 +8,7 @@ from coalib import coala_delete_orig, VERSION
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Tagging import delete_tagged_results, tag_results
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
@@ -49,7 +50,7 @@ def run_coala(log_printer=None,
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
-    log_printer = log_printer or LogPrinter(ConsolePrinter())
+    log_printer = log_printer or LogPrinter(ConsolePrinter(), LOG_LEVEL.DEBUG)
 
     exitcode = 0
     results = {}
