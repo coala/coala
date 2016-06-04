@@ -14,9 +14,6 @@ def _import_module(file_path):
     module_name = os.path.splitext(os.path.basename(file_path))[0]
     module_dir = os.path.dirname(file_path)
 
-    if module_dir not in sys.path:
-        sys.path.insert(0, module_dir)
-
     # Ugly inconsistency: Python will insist on correctly cased module names
     # independent of whether the OS is case-sensitive or not.
     # We want all cases to match though.
@@ -26,6 +23,9 @@ def _import_module(file_path):
             if cased_module_name.lower() == module_name.lower():
                 module_name = cased_module_name
                 break
+
+    if module_dir not in sys.path:
+        sys.path.insert(0, module_dir)
 
     return __import__(module_name)
 
