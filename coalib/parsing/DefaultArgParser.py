@@ -54,164 +54,209 @@ def default_arg_parser(formatter_class=None):
         description="coala is a simple COde AnaLysis Application. Its goal "
                     "is to make static code analysis easy and convenient "
                     "for all languages. coala uses bears, which are analysis "
-                    "routines that can be combined arbitrarily.")
+                    "routines that can be combined arbitrarily.",
+        # Use our own help so that we can put it in the group we want
+        add_help=False)
 
     arg_parser.add_argument('TARGETS',
                             nargs='*',
                             help="Sections to be executed exclusively.")
-    arg_parser.add_argument('-c',
-                            '--config',
-                            nargs=1,
-                            metavar='FILE',
-                            help='Configuration file to be used, defaults to '
-                                 + repr(Constants.default_coafile))
+
+    info_group = arg_parser.add_argument_group('Info')
+
+    info_group.add_argument('-h',
+                            '--help',
+                            action='help',
+                            help='show this help message and exit')
+
+    info_group.add_argument('-v',
+                            '--version',
+                            action='version',
+                            version=Constants.VERSION)
+
+    config_group = arg_parser.add_argument_group('Configuration')
+
+    CONFIG_HELP = ('Configuration file to be used, defaults to '
+                   + repr(Constants.default_coafile))
+    config_group.add_argument('-c',
+                              '--config',
+                              nargs=1,
+                              metavar='FILE',
+                              help=CONFIG_HELP)
+
     FIND_CONFIG_HELP = ('Attempt to find config file by checking parent '
                         'directories of the current working directory. It is '
                         'assumed that the config file is named '
                         + repr(Constants.default_coafile) + '. This arg is '
                         'ignored if --config is also given')
-    arg_parser.add_argument('-F',
-                            '--find-config',
-                            nargs='?',
-                            const=True,
-                            metavar='BOOL',
-                            help=FIND_CONFIG_HELP)
-    arg_parser.add_argument('-I',
-                            '--no-config',
-                            nargs='?',
-                            const=True,
-                            metavar='BOOL',
-                            help="Run without using any config file")
-    arg_parser.add_argument('-f',
-                            '--files',
-                            nargs='+',
-                            metavar='FILE',
-                            help='Files that should be checked')
-    arg_parser.add_argument('-i',
-                            '--ignore',
-                            nargs='+',
-                            metavar='FILE',
-                            help='Files that should be ignored')
-    arg_parser.add_argument('--limit-files',
-                            nargs='+',
-                            metavar='FILE',
-                            help='Files that will be analyzed will be '
-                                 'restricted to those in the globs listed '
-                                 'in this argument as well the files setting')
-    arg_parser.add_argument('-b',
-                            '--bears',
-                            nargs='+',
-                            metavar='NAME',
-                            help='Names of bears to use').completer =\
+    config_group.add_argument('-F',
+                              '--find-config',
+                              nargs='?',
+                              const=True,
+                              metavar='BOOL',
+                              help=FIND_CONFIG_HELP)
+
+    config_group.add_argument('-I',
+                              '--no-config',
+                              nargs='?',
+                              const=True,
+                              metavar='BOOL',
+                              help="Run without using any config file")
+
+    SAVE_HELP = ('Save the used arguments to a config file at the given path, '
+                 "or at the value of -c, which is '.coafile' by default.")
+    config_group.add_argument('-s',
+                              '--save',
+                              nargs='?',
+                              const=True,
+                              metavar='FILE',
+                              help=SAVE_HELP)
+
+    inputs_group = arg_parser.add_argument_group('Inputs')
+
+    inputs_group.add_argument('-b',
+                              '--bears',
+                              nargs='+',
+                              metavar='NAME',
+                              help='Names of bears to use').completer =\
         ChoicesCompleter(get_all_bears_names())
+
+    inputs_group.add_argument('-f',
+                              '--files',
+                              nargs='+',
+                              metavar='FILE',
+                              help='Files that should be checked')
+
+    inputs_group.add_argument('-i',
+                              '--ignore',
+                              nargs='+',
+                              metavar='FILE',
+                              help='Files that should be ignored')
+
+    LIMIT_FILES_HELP = ('Files that will be analyzed will be restricted to '
+                        'those in the globs listed in this argument as well '
+                        'the files setting')
+    inputs_group.add_argument('--limit-files',
+                              nargs='+',
+                              metavar='FILE',
+                              help=LIMIT_FILES_HELP)
+
     BEAR_DIRS_HELP = 'Additional directories where bears may lie'
-    arg_parser.add_argument('-d',
-                            '--bear-dirs',
-                            nargs='+',
-                            metavar='DIR',
-                            help=BEAR_DIRS_HELP)
+    inputs_group.add_argument('-d',
+                              '--bear-dirs',
+                              nargs='+',
+                              metavar='DIR',
+                              help=BEAR_DIRS_HELP)
+
+    outputs_group = arg_parser.add_argument_group('Outputs')
+
     LOG_LEVEL_HELP = ("Enum('ERROR','INFO','WARNING','DEBUG') to set level of "
                       "log output")
-    arg_parser.add_argument('-L',
-                            '--log-level',
-                            nargs=1,
-                            choices=['ERROR', 'INFO', 'WARNING', 'DEBUG'],
-                            metavar='ENUM',
-                            help=LOG_LEVEL_HELP)
+    outputs_group.add_argument('-L',
+                               '--log-level',
+                               nargs=1,
+                               choices=['ERROR', 'INFO', 'WARNING', 'DEBUG'],
+                               metavar='ENUM',
+                               help=LOG_LEVEL_HELP)
+
     MIN_SEVERITY_HELP = ("Enum('INFO', 'NORMAL', 'MAJOR') to set the minimal "
                          "result severity.")
-    arg_parser.add_argument('-m',
-                            '--min-severity',
-                            nargs=1,
-                            choices=('INFO', 'NORMAL', 'MAJOR'),
-                            metavar='ENUM',
-                            help=MIN_SEVERITY_HELP)
+    outputs_group.add_argument('-m',
+                               '--min-severity',
+                               nargs=1,
+                               choices=('INFO', 'NORMAL', 'MAJOR'),
+                               metavar='ENUM',
+                               help=MIN_SEVERITY_HELP)
+
+    # The following are "coala" specific arguments
+    if parser_type == 'coala':
+        SHOW_BEARS_HELP = ("Display bears and its metadata with the sections "
+                           "that they belong to")
+        outputs_group.add_argument('-B',
+                                   '--show-bears',
+                                   nargs='?',
+                                   const=True,
+                                   metavar='BOOL',
+                                   help=SHOW_BEARS_HELP)
+
+        outputs_group.add_argument('-A',
+                                   '--show-all-bears',
+                                   nargs='?',
+                                   const=True,
+                                   metavar='BOOL',
+                                   help="Display all bears.")
+
+        SHOW_LANGUAGE_BEARS = ("Display all bears for the given languages.")
+        outputs_group.add_argument('-l',
+                                   '--show-language-bears',
+                                   nargs='+',
+                                   metavar='LANG',
+                                   help=SHOW_LANGUAGE_BEARS)
+
+    # The following are "coala-json" specific arguments
+    if parser_type == 'coala-json':
+        TEXT_LOGS_HELP = ("Don't display logs as json, display them as we "
+                          "normally do in the console.")
+        outputs_group.add_argument('--text-logs',
+                                   nargs='?',
+                                   const=True,
+                                   metavar='BOOL',
+                                   help=TEXT_LOGS_HELP)
+
+        OUTPUT_HELP = ('Write the logs as json to a file where filename is '
+                       'specified as argument.')
+        outputs_group.add_argument('-o',
+                                   '--output',
+                                   nargs=1,
+                                   metavar='FILE',
+                                   help=OUTPUT_HELP)
+
+        outputs_group.add_argument('-r',
+                                   '--relpath',
+                                   nargs='?',
+                                   const=True,
+                                   help="Return relative paths for files")
+
+    misc_group = arg_parser.add_argument_group('Miscellaneous')
+
     SETTINGS_HELP = 'Arbitrary settings in the form of section.key=value'
-    arg_parser.add_argument('-S',
+    misc_group.add_argument('-S',
                             '--settings',
                             nargs='+',
                             metavar='SETTING',
                             help=SETTINGS_HELP)
-    if parser_type == 'coala-json':
-        arg_parser.add_argument('--text-logs',
-                                nargs='?',
-                                const=True,
-                                metavar='BOOL',
-                                help='Don\'t display logs as json, display '
-                                     'them as we normally do in the console.')
-        arg_parser.add_argument('-o',
-                                '--output',
-                                nargs=1,
-                                metavar='FILE',
-                                help='Write the logs as json to a file '
-                                'where filename is specified as argument.')
-    if parser_type == 'coala':
-        SHOW_BEARS_HELP = ("Display bears and its metadata with the sections "
-                           "that they belong to")
-        arg_parser.add_argument('-B',
-                                '--show-bears',
-                                nargs='?',
-                                const=True,
-                                metavar='BOOL',
-                                help=SHOW_BEARS_HELP)
-        arg_parser.add_argument('-A',
-                                '--show-all-bears',
-                                nargs='?',
-                                const=True,
-                                metavar='BOOL',
-                                help="Display all bears.")
-        arg_parser.add_argument('-l',
-                                '--show-language-bears',
-                                nargs='+',
-                                metavar='LANG',
-                                help="Display all bears for the given "
-                                "languages.")
-    SAVE_HELP = ('Save the used arguments to a config file at the given path, '
-                 "or at the value of -c, which is '.coafile' by default.")
-    arg_parser.add_argument('-s',
-                            '--save',
-                            nargs='?',
-                            const=True,
-                            metavar='FILE',
-                            help=SAVE_HELP)
-    TAG_HELP = ('Tag results with a specific name. You can access the results'
-                ' later with that tag.')
-    arg_parser.add_argument('-t',
-                            '--tag',
-                            nargs='?',
-                            const=True,
-                            metavar='STRING',
-                            help=TAG_HELP)
 
-    DELETE_TAG_HELP = 'Delete pre-tagged results with tag name.'
-    arg_parser.add_argument('-g',
-                            '--dtag',
-                            nargs='?',
-                            const=True,
-                            metavar='STRING',
-                            help=DELETE_TAG_HELP)
-
-    arg_parser.add_argument("-j",
+    misc_group.add_argument("-j",
                             "--jobs",
                             type=int,
                             help="Number of jobs to use in parallel.")
 
-    arg_parser.add_argument('-v',
-                            '--version',
-                            action='version',
-                            version=Constants.VERSION)
-
-    arg_parser.add_argument('-n',
+    NO_ORIG_HELP = ('Deactivate creation of .orig files and .orig backup '
+                    'files before applying patches')
+    misc_group.add_argument('-n',
                             '--no-orig',
                             nargs='?',
                             const=True,
-                            help="Deactivate creation of .orig files,"
-                                 ".orig backup files before applying patches")
-    arg_parser.add_argument('-r',
-                            '--relpath',
-                            nargs='?',
-                            const=True,
-                            help="return relative paths for files")
+                            help=NO_ORIG_HELP)
+
+    deprecated_group = arg_parser.add_argument_group('Deprecated')
+
+    TAG_HELP = ('Tag results with a specific name. You can access the results '
+                'later with that tag.')
+    deprecated_group.add_argument('-t',
+                                  '--tag',
+                                  nargs='?',
+                                  const=True,
+                                  metavar='STRING',
+                                  help=TAG_HELP)
+
+    DELETE_TAG_HELP = 'Delete pre-tagged results with tag name.'
+    deprecated_group.add_argument('-g',
+                                  '--dtag',
+                                  nargs='?',
+                                  const=True,
+                                  metavar='STRING',
+                                  help=DELETE_TAG_HELP)
 
     try:  # pragma: no cover
         # Auto completion should be optional, because of somewhat complicated
