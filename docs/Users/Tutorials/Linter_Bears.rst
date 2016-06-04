@@ -31,7 +31,7 @@ linter-bear infrastructure, that is provided via the ``@linter`` decorator.
 
 ::
 
-    from coalib.bearlib.abstractions.Linter import linter
+    from coalib.bears import linter
 
     @linter(executable='pylint')
     class PylintTutorialBear:
@@ -171,7 +171,7 @@ understands it. This is possible via the ``severity_map`` parameter of
 
 ::
 
-    from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+    from coalib.bears import RESULT_SEVERITY
 
     @linter(...
             severity_map={'W': RESULT_SEVERITY.NORMAL,
@@ -229,8 +229,7 @@ configuration file for Pylint. Let's add that functionality to our bear.
 
     import os
 
-    from coalib.bearlib.abstractions.Linter import linter
-    from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+    from coalib.bears import linter, RESULT_SEVERITY
 
     @linter(executable='pylint',
             output_format='regex',
@@ -296,8 +295,7 @@ it should look something like this
 
     import os
 
-    from coalib.bearlib.abstractions.Linter import linter
-    from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+    from coalib.bears import linter, RESULT_SEVERITY
 
     @linter(executable='pylint',
             output_format='regex',

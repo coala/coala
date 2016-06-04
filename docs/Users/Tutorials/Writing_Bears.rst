@@ -41,7 +41,7 @@ each file:
 
 .. code:: python
 
-    from coalib.bears.LocalBear import LocalBear
+    from coalib.bears import LocalBear
 
 
     class HelloWorldBear(LocalBear):
@@ -85,7 +85,7 @@ the creative name CommunicationBear:
 
 .. code:: python
 
-    from coalib.bears.LocalBear import LocalBear
+    from coalib.bears import LocalBear
 
     class CommunicationBear(LocalBear):
 
@@ -209,7 +209,7 @@ So let's see how you could tell *coala* which Bears to run before yours:
 
 .. code:: python
 
-    from coalib.bears.LocalBear import LocalBear
+    from coalib.bears import LocalBear
     from bears.somePathTo.OtherBear import OtherBear
 
     class DependentBear(LocalBear):
@@ -253,8 +253,7 @@ Let's see how we can use HiddenResults in our Bear:
 
 .. code:: python
 
-    from coalib.bears.LocalBear import LocalBear
-    from coalib.results.HiddenResult import HiddenResult
+    from coalib.bears import LocalBear, HiddenResult
 
     class OtherBear(LocalBear):
 
