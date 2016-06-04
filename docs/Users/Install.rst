@@ -53,6 +53,8 @@ To install only *coala* (without any bears), you can do:
 With ``--pre`` you can install the nightly build of the *coala* base
 without bears.
 
+.. _venv-setup:
+
 Installing inside a virtualenv
 ------------------------------
 
@@ -95,55 +97,22 @@ virtualenv with:
 
 ::
 
-    $ pip3 install coala-bears
+    (venv)$ pip3 install coala-bears
 
 Installing coala from source
 ----------------------------
 
-In order to install *coala* from source, it is recommended to install git.
-See http://git-scm.com/ for further information and a downloadable
-installer or use your package manager on linux to get it.
+If you would like to develop coala, you should read our :ref:`dev-notes`
+section.
 
-.. note::
-
-    Again, here it is recommended to install *coala* inside a virtualenv.
-    This can be done by creating a virtualenv and running the installation
-    commands after the virtualenv has been activated.
-
-After having git installed, you can download the source code of *coala*
-with the following command:
+If you only desire to use the latest development version of coala, then you
+can run
 
 ::
 
-    $ git clone https://github.com/coala-analyzer/coala-bears/
-    $ cd coala-bears
+    (venv)$ pip3 install coala-bears --pre
 
-You can now install *coala* with a simple:
-
-::
-
-    $ python3 setup.py install
-
-For the above to work, you may also need to install `setuptools` which can be
-installed by running
-
-::
-
-    $ pip3 install setuptools
-
-You will have *coala* installed into your python scripts directory. On an
-unixoid system it is probably already available on your command line
-globally.
-
-You may also install a development version of *coala* to test and make
-changes easily. To do this run:
-
-::
-
-    $ python3 setup.py develop
-
-This essentially lets you install *coala* in a way that allows you to make
-changes to the code and see the changes take effect immediately.
+which will always install the most recent code from our master branch.
 
 Alternate installation
 ~~~~~~~~~~~~~~~~~~~~~~

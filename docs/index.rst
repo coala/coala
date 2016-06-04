@@ -37,6 +37,7 @@ Welcome to the coala documentation!
    :caption: Developer Tutorials
    :hidden:
 
+   Development Setup <Users/Tutorials/Development_Setup>
    Writing Bears <Users/Tutorials/Writing_Bears>
    Testing Bears <Users/Tutorials/Testing_Bears>
    Linter Bears <Users/Tutorials/Linter_Bears>
