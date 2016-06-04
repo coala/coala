@@ -5,6 +5,9 @@ Bears That Can Suggest And Make Corrections
 <http://coala.readthedocs.org/en/latest/Users/Tutorials/Linter_Bears.html>`_
 before reading this.
 
+**Warning**: This tutorial uses the deprecated ``Lint`` object. Please use
+``linter`` instead, it works similar. We will update this soon.
+
 Some executables (like ``indent`` or ``autopep8``) can generate a corrected
 file from the original. We can use such executables so that *coala*, using
 these bears, can suggest and also make automatic corrections. Here's an
