@@ -1,7 +1,6 @@
 import inspect
 import os
 import platform
-import sys
 
 from coalib.misc.ContextManagers import suppress_stdout
 from coala_decorators.decorators import arguments_to_lists, yield_once
@@ -13,9 +12,6 @@ def _import_module(file_path):
 
     module_name = os.path.splitext(os.path.basename(file_path))[0]
     module_dir = os.path.dirname(file_path)
-
-    if module_dir not in sys.path:
-        sys.path.insert(0, module_dir)
 
     # Ugly inconsistency: Python will insist on correctly cased module names
     # independent of whether the OS is case-sensitive or not.
