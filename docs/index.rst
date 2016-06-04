@@ -34,7 +34,7 @@ Welcome to the coala documentation!
    Shell Autocompletion <Users/Tutorials/Shell_Autocompletion>
 
 .. toctree::
-   :caption: Developer Tutorials
+   :caption: Developer Resources
    :hidden:
 
    Development Setup <Users/Tutorials/Development_Setup>
