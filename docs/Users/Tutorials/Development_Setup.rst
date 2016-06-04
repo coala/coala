@@ -4,26 +4,27 @@ Development Setup Notes
 =======================
 
 The following are some useful notes for setting up an environment to work on
-coala.
+*coala*.
 
 Virtualenv
 ----------
 
-We highly recommend installing coala in a virtualenv for development. This
-will allow you to have a contained environment in which to modify coala,
-separate from any other installation of coala that you may not want to break.
-For more information about virtualenvs, please refer to the :ref:`virtualenv
-setup <venv-setup>` section for information on setting one up.
+We highly recommend installing *coala* in a virtualenv for development. This
+will allow you to have a contained environment in which to modify *coala*,
+separate from any other installation of *coala* that you may not want to
+break. For more information about virtualenvs, please refer to the
+:ref:`virtualenv setup <venv-setup>` section for information on setting one
+up.
 
 Repositories
 ------------
 
-If you are interested in contributing to coala, we recommend that you read our
-:ref:`newcomers' guide <newcomer-guide>` to familiarize yourself with our
+If you are interested in contributing to *coala*, we recommend that you read
+our :ref:`newcomers' guide <newcomer-guide>` to familiarize yourself with our
 workflow, and perhaps with github itself.
 
 You will most likely need to work only in the ``coala`` or ``coala-bears``
-repository. The former is the core of coala, and the latter contains the set
+repository. The former is the core of *coala*, and the latter contains the set
 of standard bears. You can fork and clone the repositories from:
 
 https://github.com/coala-analyzer/coala
@@ -32,7 +33,7 @@ https://github.com/coala-analyzer/coala-bears
 Installing from Git
 -------------------
 
-We recommend first installing the latest development snapshot of coala's
+We recommend first installing the latest development snapshot of *coala*'s
 master branch from and all of its dependencies with pip using
 
 ::
@@ -62,5 +63,5 @@ You will need to install the following packages to build the documentation:
     (venv)$ pip3 install sphinx sphinx_rtd_theme
 
 Once you have done so, you can build the documentation by entering the docs
-directory and running ``make``. The documentation on the coala website is in
+directory and running ``make``. The documentation on the *coala* website is in
 the ``coala`` (not ``coala-bears``) repository.

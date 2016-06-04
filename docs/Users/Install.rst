@@ -62,7 +62,8 @@ Virtualenv is probably what you want to use during development,
 you’ll probably want to use it there, too. You can read more about
 it at their documentation - http://virtualenv.readthedocs.org
 
-First, we need to install virtualenv to the system. This can be done
+First, we need to install virtualenv to the system. You may already have this
+installed as ``virtualenv`` or ``pyvenv``. If you do not, this can be done
 with ``pip3`` easily:
 
 ::
@@ -102,10 +103,10 @@ virtualenv with:
 Installing coala from source
 ----------------------------
 
-If you would like to develop coala, you should read our :ref:`dev-notes`
+If you would like to develop *coala*, you should read our :ref:`dev-notes`
 section.
 
-If you only desire to use the latest development version of coala, then you
+If you only desire to use the latest development version of *coala*, then you
 can run
 
 ::
