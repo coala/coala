@@ -106,6 +106,20 @@ def warn_nonexistent_targets(targets, sections, log_printer):
                 "Thus it cannot be executed.".format(section=target))
 
 
+def warn_config_absent(sections, argument, log_printer):
+    """
+    Checks if the given argument is present somewhere in the sections and emits
+    a warning that code analysis can not be run without it.
+
+    :param sections:    A dictionary of sections.
+    :param argument:    The argument to check for, e.g. "files".
+    :param log_printer: A log printer to emit the warning to.
+    """
+    if all(argument not in section for section in sections.values()):
+        log_printer.warn("coala will not run any analysis. Did you forget "
+                         "to give the `--{}` argument?".format(argument))
+
+
 def load_configuration(arg_list, log_printer, arg_parser=None):
     """
     Parses the CLI args and loads the config file accordingly, taking
@@ -170,6 +184,9 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     str_log_level = str(sections["default"].get("log_level", "")).upper()
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
                                                    LOG_LEVEL.INFO)
+
+    warn_config_absent(sections, 'files', log_printer)
+    warn_config_absent(sections, 'bears', log_printer)
 
     return sections, targets
 
