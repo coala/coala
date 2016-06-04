@@ -98,9 +98,8 @@ def default_arg_parser(formatter_class=None):
 
     config_group.add_argument('-I',
                               '--no-config',
-                              nargs='?',
                               const=True,
-                              metavar='BOOL',
+                              action='store_const',
                               help="Run without using any config file")
 
     SAVE_HELP = ('Save the used arguments to a config file at the given path, '

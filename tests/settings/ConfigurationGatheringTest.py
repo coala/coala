@@ -266,12 +266,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
             self.assertIn('use_spaces', sections["default"])
             self.assertNotIn('values', sections["default"])
 
-            sections, targets = load_configuration(
-                ['--no-config', 'False', '-S', 'use_spaces=True'],
-                self.log_printer)
-            self.assertIn('use_spaces', sections["default"])
-            self.assertIn('value', sections["default"])
-
             with self.assertRaises(SystemExit) as cm:
                 sections, target = load_configuration(
                     ['--no-config', '--save'],
