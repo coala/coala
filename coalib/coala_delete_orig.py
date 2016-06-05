@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
@@ -16,20 +17,22 @@ def main(log_printer=None, section: Section=None):
     if start_path is None:
         return 255
 
+    path = pathlib.Path(start_path)
+
     # start_path may have unintended glob characters
-    orig_files = Globbing.glob(os.path.join(
-        glob_escape(start_path), '**', '*.orig'))
+    pathlib_orig_files = path.glob("**/*.orig")
+
 
     not_deleted = 0
-    for ofile in orig_files:
+    for ofile in pathlib_orig_files:
         log_printer.info("Deleting old backup file... "
-                         + os.path.relpath(ofile))
+                         + str(ofile))
         try:
-            os.remove(ofile)
-        except OSError as oserror:
+            ofile.unlink()
+        except (FileNotFoundError, PermissionError, OSError) as error:
             not_deleted += 1
             log_printer.warn("Couldn't delete {}. {}".format(
-                os.path.relpath(ofile), oserror.strerror))
+                str(ofile), error.strerror))
 
     if not_deleted:
         log_printer.warn(str(not_deleted) + " .orig backup files could not be"

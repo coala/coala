@@ -383,7 +383,7 @@ def get_ignore_scope(line, keyword):
                     occurrence of it will be considered for the scope.
     :return:        A list of lower cased bearnames or an empty list (-> "all")
     """
-    toignore = line[line.rfind(keyword) + len(keyword):]
+    toignore = line[line.rfind(keyword) + len(keyword):].lower()
     if toignore.startswith("all"):
         return []
     else:
@@ -402,11 +402,12 @@ def yield_ignore_ranges(file_dict):
         bears = []
         stop_ignoring = False
         for line_number, line in enumerate(file, start=1):
-            line = line.lower()
-            if "start ignoring " in line:
+            # Don't check first char, it might be upper case and we don't want
+            # to lower all lines for performance
+            if "tart ignoring " in line:
                 start = line_number
-                bears = get_ignore_scope(line, "start ignoring ")
-            elif "stop ignoring" in line:
+                bears = get_ignore_scope(line, "tart ignoring ")
+            elif "top ignoring" in line:
                 stop_ignoring = True
                 if start:
                     yield (bears,
@@ -415,8 +416,8 @@ def yield_ignore_ranges(file_dict):
                                                    1,
                                                    line_number,
                                                    len(file[line_number-1])))
-            elif "ignore " in line:
-                yield (get_ignore_scope(line, "ignore "),
+            elif "gnore " in line:
+                yield (get_ignore_scope(line, "gnore "),
                        SourceRange.from_values(filename,
                                                line_number,
                                                1,
