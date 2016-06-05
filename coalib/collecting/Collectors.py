@@ -64,7 +64,7 @@ def collect_files(file_paths, log_printer, ignored_file_paths=None,
     :param limit_file_paths:   list of globs that the files are limited to
     :return:                   list of paths of all matching files
     """
-    limit_fnmatch = (functools.partial(fnmatch, patterns=limit_file_paths)
+    limit_fnmatch = (functools.partial(fnmatch, globs=limit_file_paths)
                      if limit_file_paths else lambda fname: True)
 
     valid_files = list(filter(lambda fname: os.path.isfile(fname[0]),

@@ -1,6 +1,7 @@
 import os
 import platform
 import re
+from functools import lru_cache
 
 from coala_decorators.decorators import yield_once
 from coalib.misc.Constants import GLOBBING_SPECIAL_CHARS
@@ -193,13 +194,13 @@ def translate(pattern):
     return regex + '\\Z(?ms)'
 
 
-def fnmatch(name, patterns):
+def fnmatch(name, globs):
     """
-    Tests whether name matches pattern
+    Tests whether name matches one of the given globs.
 
-    :param name:     File or directory name
-    :param patterns: Glob string with wildcards or list of globs
-    :return:         Boolean: Whether or not name is matched by pattern
+    :param name:  File or directory name
+    :param globs: Glob string with wildcards or list of globs
+    :return:      Boolean: Whether or not name is matched by glob
 
     Glob Syntax:
 
@@ -213,20 +214,23 @@ def fnmatch(name, patterns):
     -  '*':             Matches everything but os.sep.
     -  '**':            Matches everything.
     """
-    if isinstance(patterns, str):
-        patterns = [patterns]
-    if len(patterns) == 0:
+    globs = (globs,) if isinstance(globs, str) else tuple(globs)
+
+    if len(globs) == 0:
         return True
 
     name = os.path.normcase(name)
-    for pattern in patterns:
-        for pat in _iter_alternatives(pattern):
-            pat = os.path.expanduser(pat)
-            pat = os.path.normcase(pat)
-            match = re.compile(translate(pat)).match
-            if match(name) is not None:
-                return True
-    return False
+
+    return any(compiled_pattern.match(name)
+               for glob in globs
+               for compiled_pattern in _compile_pattern(glob))
+
+
+@lru_cache()
+def _compile_pattern(pattern):
+    return tuple(re.compile(translate(os.path.normcase(
+                     os.path.expanduser(pat))))
+                 for pat in _iter_alternatives(pattern))
 
 
 def _absolute_flat_glob(pattern):
