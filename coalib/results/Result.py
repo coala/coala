@@ -1,7 +1,7 @@
 import uuid
 from os.path import relpath
 
-from coala_decorators.decorators import (
+from coala_decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange

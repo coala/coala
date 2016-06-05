@@ -3,7 +3,7 @@ import difflib
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
-from coala_decorators.decorators import enforce_signature, generate_eq
+from coala_decorators import enforce_signature, generate_eq
 
 
 @generate_eq("_file", "modified", "rename", "delete")
