@@ -97,16 +97,12 @@ def check_conflicts(sections):
     :return:            True if no conflicts
     :raises SystemExit: If there are conflicting arguments (exit code: 2)
     '''
-    conflicts = {'no_config': {'save', 'find_config'}}
-    conflicting_keys = conflicts.keys()
+    for section in sections.values():
+        if (
+                section.get('no_config', False) and
+                (section.get('save', False) or
+                 section.get('find_config', False))):
+            ArgumentParser().error(
+                "'no_config' cannot be set together 'save' or 'find_config'.")
 
-    for section in sections:
-        keys = set(sections[section])
-        possible_conflicts = keys & conflicting_keys
-        for key in possible_conflicts:
-            intersection = keys & conflicts[key]
-            if len(intersection) > 0:
-                ArgumentParser().exit(2,
-                                      key + " cannot be given at the same "
-                                      "time with " + ', '.join(intersection))
     return True
