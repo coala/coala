@@ -58,3 +58,39 @@ Reviewing Commits
    pass:
 -  Coverage shall not fall.
 -  Scrutinizer oftentimes yields helpful results.
+
+As you perform your review of each commit, please make comments on the
+relevant lines of code in the GitHub pull request.  After performing your
+review, please comment on the pull request directly as follows:
+
+-  If any commit passed review, make a comment that begins with "ack",
+   "reack", or "ready" (all case-insensitive) and contains at least the
+   first 6 characters of each passing commit hash delimited by spaces,
+   commas, or forward slashes (the commit URLs from GitHub satisfy the
+   commit hash requirements).
+
+-  If any commit failed to pass review, make a comment that begins with
+   "unack" or "needs work" (all case-insensitive) and contains at least
+   the first 6 characters of each passing commit hash delimited by
+   spaces, commas, or forward slashes (the commit URLs from GitHub
+   satisfy the commit hash requirements).
+
+Example:
+
+.. code-block:: none
+
+   unack 14e3ae1 823e363 342700d
+
+If you have a large number of commits to ack, you can easily generate a
+list with ``git log --oneline master..`` and write a message like this
+example:
+
+.. code-block:: none
+
+   reack
+   a8cde5b  Docs: Clarify that users may have pyvenv
+   5a05253  Docs: Change Developer Tutorials -> Resources
+   c3acb62  Docs: Create a set of notes for development setup
+
+   Rebased on top of changes that are not affected by documentation
+   changes.
