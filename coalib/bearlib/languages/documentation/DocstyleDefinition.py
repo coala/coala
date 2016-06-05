@@ -107,7 +107,7 @@ class DocstyleDefinition:
 
     @classmethod
     @enforce_signature
-    def load(cls, language: str, docstyle: str):
+    def load(cls, language: str, docstyle: str, coalang_path=None):
         """
         Loads a ``DocstyleDefinition`` from the coala docstyle definition files.
 
@@ -119,6 +119,7 @@ class DocstyleDefinition:
         :param docstyle:           The case insensitive documentation
                                    style/tool used to document code, e.g.
                                    ``"default"`` or ``"doxygen"``.
+        :coalang_path:             Path to coalang definition for language.
         :raises FileNotFoundError: Raised when the given docstyle was not
                                    found.
         :raises KeyError:          Raised when the given language is not
@@ -130,9 +131,13 @@ class DocstyleDefinition:
         docstyle = docstyle.lower()
 
         language_config_parser = ConfParser(remove_empty_iter_elements=False)
+        if not coalang_path:
+            filename = os.path.dirname(__file__) + "/" + docstyle + ".coalang"
+        else:
+            filename = coalang_path
         try:
-            docstyle_settings = language_config_parser.parse(
-                os.path.dirname(__file__) + "/" + docstyle + ".coalang")
+            docstyle_settings = language_config_parser.parse(filename)
+
         except FileNotFoundError:
             raise FileNotFoundError("Docstyle definition " + repr(docstyle) +
                                     " not found.")
