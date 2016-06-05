@@ -1,3 +1,5 @@
+import os.path
+from tempfile import TemporaryDirectory
 import unittest
 
 from coalib.bearlib.languages.LanguageDefinition import LanguageDefinition
@@ -25,3 +27,12 @@ class LanguageDefinitionTest(unittest.TestCase):
         uut = LanguageDefinition.from_section(self.section)
         self.assertIn("extensions", uut)
         self.assertNotIn("randomstuff", uut)
+
+    def test_external_coalang(self):
+        with TemporaryDirectory() as directory:
+            coalang_file = os.path.join(directory, 'random_language.coalang')
+            with open(coalang_file, 'w') as file:
+                file.write('extensions = .lol, .ROFL')
+            uut = LanguageDefinition("random_language", coalang_dir=directory)
+            self.assertIn("extensions", uut)
+            self.assertEqual(list(uut["extensions"]), [".lol", ".ROFL"])

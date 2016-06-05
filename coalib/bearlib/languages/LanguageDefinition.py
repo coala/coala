@@ -7,7 +7,7 @@ from coalib.parsing.ConfParser import ConfParser
 
 class LanguageDefinition(SectionCreatable):
 
-    def __init__(self, language: str):
+    def __init__(self, language: str, coalang_dir=None):
         """
         Creates a new LanguageDefinition object from file.
 
@@ -17,6 +17,9 @@ class LanguageDefinition(SectionCreatable):
         language.
 
         :param language:           The actual language (e.g. C++).
+        :param coalang_dir:        Path to directory with coalang language
+                                   definition files. This replaces the default
+                                   path if given.
         :raises FileNotFoundError: Raised when no definition is available for
                                    the given family.
         :raises KeyError:          Raised when no definition is available for
@@ -24,9 +27,12 @@ class LanguageDefinition(SectionCreatable):
         """
         SectionCreatable.__init__(self)
         self.language = language.lower()
-        filename = os.path.join(Constants.language_definitions,
-                                language.lower() + ".coalang")
-        self.lang_dict = ConfParser().parse(filename)["default"]
+
+        coalang_file = os.path.join(
+            coalang_dir or Constants.language_definitions,
+            self.language + ".coalang")
+
+        self.lang_dict = ConfParser().parse(coalang_file)["default"]
 
     def __getitem__(self, item):
         return self.lang_dict[item]
