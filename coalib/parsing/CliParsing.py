@@ -91,12 +91,14 @@ def parse_custom_settings(sections,
 
 
 def check_conflicts(sections):
-    '''
-    Checks if there are any conflicting aruments passed
+    """
+    Checks if there are any conflicting arguments passed.
 
-    :return:            True if no conflicts
+    :param sections:    The ``{section_name: section_object}`` dictionary to
+                        check conflicts for.
+    :return:            True if no conflicts occur.
     :raises SystemExit: If there are conflicting arguments (exit code: 2)
-    '''
+    """
     for section in sections.values():
         if (
                 section.get('no_config', False) and
