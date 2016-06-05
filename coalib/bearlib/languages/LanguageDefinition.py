@@ -21,8 +21,6 @@ class LanguageDefinition(SectionCreatable):
                                    definition files. This replaces the default
                                    path if given.
         :raises FileNotFoundError: Raised when no definition is available for
-                                   the given family.
-        :raises KeyError:          Raised when no definition is available for
                                    the given language.
         """
         SectionCreatable.__init__(self)
