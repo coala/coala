@@ -2,6 +2,7 @@ import unittest
 
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
+from coalib.misc.ContextManagers import make_temp
 
 
 class DocstyleDefinitionTest(unittest.TestCase):
@@ -70,3 +71,13 @@ class DocstyleDefinitionTest(unittest.TestCase):
         self.assertEqual(result.language, "python3")
         self.assertEqual(result.docstyle, "default")
         self.assertEqual(result.markers, (('"""', '', '"""'),))
+
+        # Test external coalang
+        with make_temp() as coalang:
+            with open(coalang, "w") as file:
+                file.write("[COOL]\ndoc-markers = @@,@@,@@\n")
+            result = DocstyleDefinition.load(
+                                       "cool", "custom", coalang_path=coalang)
+            self.assertEqual(result.language, "cool")
+            self.assertEqual(result.docstyle, "custom")
+            self.assertEqual(result.markers, (('@@', '@@', '@@'),))
