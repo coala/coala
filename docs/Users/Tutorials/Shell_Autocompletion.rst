@@ -1,8 +1,8 @@
 Shell Autocompletion
 ====================
 
-If you're using bash or zsh you can set them up to have tab completion for coala
-arguments and bear names.
+If you're using bash or zsh you can set them up to have tab completion for
+``coala`` arguments and bear names.
 
 Install ``argcomplete``:
 
@@ -28,5 +28,5 @@ If you're using *zsh*, add the following to your ``.zshrc``:
     bashcompinit
     eval "$(register-python-argcomplete `which coala`)"
 
-If you're seeing issues about ```which coala``` not being able to find coala,
-you could replace it with the path to your coala executable.
+If you're seeing issues about ```which coala``` not being able to find
+``coala``, you could replace it with the path to your ``coala`` executable.

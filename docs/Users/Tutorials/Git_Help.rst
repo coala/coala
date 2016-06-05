@@ -19,8 +19,8 @@ this will do:
 
     $ sudo apt-get install git-all
 
-Getting started with coala
---------------------------
+Getting started with *coala*
+----------------------------
 
 First of all, you have to fork the repository you are going to contribute to.
 This will basically give you a clone of the repository to your own repository.
@@ -28,8 +28,8 @@ You can do this by opening `this to fork the *coala* website <https://github.com
 or `this to fork the *coala-bears* website <https://github.com/coala-analyzer/coala-bears>`_
 and then clicking 'Fork' in the upper right corner.
 
-Grabbing coala on your local machine
-------------------------------------
+Grabbing *coala* on your local machine
+--------------------------------------
 
 Now you should clone the repository to your local machine so that you can have
 access to all the code and start fixing issues!

@@ -1,5 +1,5 @@
-coala Tutorial
-==============
+*coala* Tutorial
+================
 
 Welcome to this little tutorial. It is meant to be a gentle introduction
 to the usage of *coala*.
@@ -47,7 +47,7 @@ available for C:
 
     coala --show-language-bears C
 
-coala now lists all bears that can operate on C code. You can specify the
+*coala* now lists all bears that can operate on C code. You can specify the
 kind of analysis with the ``--bears`` argument:
 
 ::

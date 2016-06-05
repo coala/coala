@@ -1,5 +1,5 @@
-Codestyle for coala
-===================
+Codestyle for *coala*
+=====================
 
 *coala* follows the `PEP8
 codestyle <https://www.python.org/dev/peps/pep-0008/>`__ with a maximum
