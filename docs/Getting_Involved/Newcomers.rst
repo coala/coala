@@ -32,7 +32,7 @@ If you are familiar with git, you can skip the next section and pick an issue.
 Get help with git
 -----------------
 
-We use github to manage our repository. If you're not familiar with git, we
+We use GitHub to manage our repository. If you're not familiar with git, we
 strongly recommend following a tutorial, such as `this one <https://try.github.io/levels/1/challenges/1>`_.
 
 If there's anything unclear, or you are encountering problems, feel free
@@ -94,7 +94,7 @@ Creating a ``Pull Request``
 ---------------------------
 
 Now that your commit has been sent to your fork, it is time
-to do a ``Pull Request``. It can be done by accessing your fork on github and
+to do a ``Pull Request``. It can be done by accessing your fork on GitHub and
 clicking ``New Pull Request``.
 
 **Congratulations!** You have now created your first ``Pull Request``!
