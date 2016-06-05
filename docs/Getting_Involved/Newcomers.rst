@@ -99,6 +99,11 @@ clicking ``New Pull Request``.
 
 **Congratulations!** You have now created your first ``Pull Request``!
 
+If you know you have more work to do on this pull request before it is
+ready to be accepted, you can optionally indicate this to other
+developers by starting your pull request title with "wip"
+(case-insensitive).
+
 What to do after creating a ``Pull Request``
 --------------------------------------------
 
