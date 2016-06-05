@@ -1,3 +1,4 @@
+from collections import Iterable
 import os.path
 
 from coala_decorators.decorators import (
@@ -15,7 +16,7 @@ class DocstyleDefinition:
     """
 
     @enforce_signature
-    def __init__(self, language: str, docstyle: str, markers):
+    def __init__(self, language: str, docstyle: str, markers: (Iterable, str)):
         """
         Instantiates a new DocstyleDefinition.
 
