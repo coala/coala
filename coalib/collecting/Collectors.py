@@ -214,7 +214,7 @@ def collect_all_bears_from_sections(sections, log_printer):
     """
     Collect all kinds of bears from bear directories given in the sections.
 
-    :param sections:    list of sections from which bears are to be collected
+    :param sections:    list of sections so bear_dirs are taken into account
     :param log_printer: log_printer to handle logging
     :return:            tuple of dictionaries of local and global bears
                         The dictionary key is section class and
