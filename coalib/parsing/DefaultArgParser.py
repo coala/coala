@@ -228,6 +228,14 @@ def default_arg_parser(formatter_class=None):
                             metavar='SETTING',
                             help=SETTINGS_HELP)
 
+    misc_group.add_argument('-a',
+                            '--apply-patches',
+                            action='store_const',
+                            dest='default_actions',
+                            const='*: ApplyPatchAction',
+                            help='Applies all patches automatically if '
+                                 'possible.')
+
     misc_group.add_argument("-j",
                             "--jobs",
                             type=int,
