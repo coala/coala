@@ -42,44 +42,23 @@ class coalaTest(unittest.TestCase):
 
     def test_show_all_bears(self):
         with bear_test_module():
-            retval, output = execute_coala(coala.main, "coala", "-A")
+            retval, output = execute_coala(coala.main, "coala", "-B")
             self.assertEqual(retval, 0)
-
-            lines = output.splitlines()
-            bear_lines = sum(1 for line in lines if line.startswith("==="))
-            self.assertEqual(bear_lines, 4)
-
-            for line in lines:
-                self.assertNotIn("WARNING", line)
-
-    def test_show_bears(self):
-        with bear_test_module():
-            retval, output = execute_coala(
-                coala.main, "coala", "-B",
-                "-b", "LineCountTestBear, SpaceConsistencyTestBear",
-                "-c", os.devnull)
-            self.assertEqual(retval, 0)
-            self.assertIn(LineCountTestBear.run.__doc__.strip(), output)
+            self.assertEqual(len(output.splitlines()), 4)
 
     def test_show_language_bears(self):
         with bear_test_module():
-            retval, output = execute_coala(coala.main, "coala", "-l", "java")
+            retval, output = execute_coala(
+                coala.main, "coala", "-B", "-l", "java")
             self.assertEqual(retval, 0)
-            lines = output.splitlines()
-            bear_missing_lines = sum(1 for line in lines if "WARNING" in line)
-            self.assertEqual(bear_missing_lines, 0)
-
-            self.assertIn(JavaTestBear.run.__doc__.strip(), output)
-            self.assertIn(LineCountTestBear.run.__doc__.strip(), output)
-            self.assertNotIn(SpaceConsistencyTestBear.run.__doc__.strip(),
-                             output)
+            self.assertEqual(len(output.splitlines()), 2)
 
     @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
     def test_version_conflict_in_collecting_bears(self, import_fn, _):
         with bear_test_module():
             import_fn.side_effect = VersionConflict("msg1", "msg2")
-            retval, output = execute_coala(coala.main, "coala", "-A")
+            retval, output = execute_coala(coala.main, "coala", "-B")
             self.assertEqual(retval, 13)
             self.assertIn(("There is a conflict in the version of a "
                            "dependency you have installed"), output)
@@ -89,12 +68,12 @@ class coalaTest(unittest.TestCase):
     def test_unimportable_bear(self, import_fn):
         with bear_test_module():
             import_fn.side_effect = SyntaxError
-            retval, output = execute_coala(coala.main, "coala", "-A")
+            retval, output = execute_coala(coala.main, "coala", "-B")
             self.assertEqual(retval, 0)
             self.assertIn("Unable to collect bears from", output)
 
             import_fn.side_effect = VersionConflict("msg1", "msg2")
-            retval, output = execute_coala(coala.main, "coala", "-A")
+            retval, output = execute_coala(coala.main, "coala", "-B")
             # Note that bear version conflicts don't give exitcode=13,
             # they just give a warning with traceback in log_level debug.
             self.assertEqual(retval, 0)

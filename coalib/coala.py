@@ -29,38 +29,32 @@ from coalib.settings.SectionFilling import fill_settings
 
 
 def main():
-    # Note: We parse the args here once to check whether to show bears or not.
-    arg_parser = default_arg_parser()
-    args = arg_parser.parse_args()
-
-    console_printer = ConsolePrinter()
-    if args.show_bears or args.show_all_bears or args.show_language_bears:
+    try:
+        console_printer = ConsolePrinter()
         log_printer = LogPrinter(console_printer)
-        try:
+        # Note: We parse the args here once to check whether to show bears or
+        # not.
+        args = default_arg_parser().parse_args()
+
+        if args.show_bears:
             sections, _ = load_configuration(arg_list=None,
                                              log_printer=log_printer)
-            if args.show_language_bears:
-                local_bears, global_bears = collect_all_bears_from_sections(
-                    sections, log_printer)
+            local_bears, global_bears = collect_all_bears_from_sections(
+                sections, log_printer)
+            if args.filter_language is not None:
                 local_bears = filter_section_bears_by_languages(
-                    local_bears, args.show_language_bears)
+                    local_bears, args.filter_language)
                 global_bears = filter_section_bears_by_languages(
-                    global_bears, args.show_language_bears)
-            elif args.show_all_bears:
-                local_bears, global_bears = collect_all_bears_from_sections(
-                    sections, log_printer)
-            else:
-                # We ignore missing settings as it's not important.
-                local_bears, global_bears = fill_settings(
-                    sections,
-                    acquire_settings=lambda *args, **kwargs: {},
-                    log_printer=log_printer)
-            show_bears(local_bears, global_bears, True,
-                       not (args.show_language_bears or args.show_all_bears),
+                    global_bears, args.filter_language)
+
+            show_bears(local_bears,
+                       global_bears,
+                       args.show_description or args.show_details,
+                       args.show_details,
                        console_printer)
-        except BaseException as exception:  # pylint: disable=broad-except
-            return get_exitcode(exception, log_printer)
-        return 0
+            return 0
+    except BaseException as exception:  # pylint: disable=broad-except
+        return get_exitcode(exception, log_printer)
 
     partial_print_sec_beg = functools.partial(
         print_section_beginning,
