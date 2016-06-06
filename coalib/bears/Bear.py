@@ -166,8 +166,8 @@ class Bear(Printer, LogPrinter):
             return list(self.run_bear_from_section(args, kwargs) or [])
         except:
             self.warn(
-                "Bear {} failed to run. Take a look at debug messages for "
-                "further information.".format(name))
+                "Bear {} failed to run. Take a look at debug messages (`-L "
+                "DEBUG`) for further information.".format(name))
             self.debug(
                 "The bear {bear} raised an exception. If you are the writer "
                 "of this bear, please make sure to catch all exceptions. If "
