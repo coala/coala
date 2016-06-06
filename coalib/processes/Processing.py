@@ -125,10 +125,16 @@ def autoapply_actions(results,
     not_processed_results = []
     for result in results:
         try:
+            # Match full bear names deterministically, prioritized!
             action = default_actions[result.origin]
         except KeyError:
-            not_processed_results.append(result)
-            continue
+            for bear_glob in default_actions:
+                if fnmatch(result.origin, bear_glob):
+                    action = default_actions[bear_glob]
+                    break
+            else:
+                not_processed_results.append(result)
+                continue
 
         if not action.is_applicable(result, file_dict, file_diff_dict):
             log_printer.warn("Selected default action {!r} for bear {!r} is "

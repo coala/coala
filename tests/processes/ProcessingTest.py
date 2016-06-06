@@ -525,7 +525,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
 
         ACTIONS.append(TestAction)
 
-        self.section.append(Setting("default_actions", "ZBear: TestAction"))
+        self.section.append(Setting("default_actions", "Z*: TestAction"))
         ret = autoapply_actions(self.results,
                                 {},
                                 {},
