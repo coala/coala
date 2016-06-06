@@ -729,25 +729,36 @@ some_file
 
             self.assertEqual(expected_string, stdout.getvalue())
 
-    def test_show_bears(self):
+
+class ShowBearsTest(unittest.TestCase):
+
+    def setUp(self):
+        self.console_printer = ConsolePrinter(print_colored=False)
+        self.local_bears = OrderedDict([("default", [SomelocalBear]),
+                                        ("test", [SomelocalBear])])
+        self.global_bears = OrderedDict([("default", [SomeglobalBear]),
+                                         ("test", [SomeglobalBear])])
+
+    def test_show_bears_uncompressed(self):
         with retrieve_stdout() as stdout:
             bears = {SomelocalBear: ['default', 'test'],
                      SomeglobalBear: ['default', 'test']}
-            print_bears(self.log_printer.printer, bears, False)
+            print_bears(self.console_printer, bears, False)
             expected_string = stdout.getvalue()
-        self.maxDiff = None
-        with retrieve_stdout() as stdout:
-            show_bears(self.local_bears,
-                       self.global_bears,
-                       False,
-                       self.log_printer.printer)
-            self.assertEqual(expected_string, stdout.getvalue())
 
         with retrieve_stdout() as stdout:
             show_bears(self.local_bears,
                        self.global_bears,
+                       False,
+                       self.console_printer)
+            self.assertEqual(expected_string, stdout.getvalue())
+
+    def test_show_bears_compressed(self):
+        with retrieve_stdout() as stdout:
+            show_bears(self.local_bears,
+                       self.global_bears,
                        True,
-                       self.log_printer.printer)
+                       self.console_printer)
             self.assertEqual("SomeglobalBear\n"
                              "==============\n"
                              "Some global-bear Description.\n"
