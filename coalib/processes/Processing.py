@@ -402,26 +402,30 @@ def yield_ignore_ranges(file_dict):
         bears = []
         stop_ignoring = False
         for line_number, line in enumerate(file, start=1):
-            line = line.lower()
-            if "start ignoring " in line:
-                start = line_number
-                bears = get_ignore_scope(line, "start ignoring ")
-            elif "stop ignoring" in line:
-                stop_ignoring = True
-                if start:
-                    yield (bears,
+            # Before lowering all lines ever read, first look for the biggest
+            # common substring, case sensitive: I*gnor*e, start i*gnor*ing.
+            if 'gnor' in line:
+                line = line.lower()
+                if "start ignoring " in line:
+                    start = line_number
+                    bears = get_ignore_scope(line, "start ignoring ")
+                elif "stop ignoring" in line:
+                    stop_ignoring = True
+                    if start:
+                        yield (bears,
+                               SourceRange.from_values(
+                                   filename,
+                                   start,
+                                   1,
+                                   line_number,
+                                   len(file[line_number-1])))
+                elif "ignore " in line:
+                    yield (get_ignore_scope(line, "ignore "),
                            SourceRange.from_values(filename,
-                                                   start,
-                                                   1,
                                                    line_number,
-                                                   len(file[line_number-1])))
-            elif "ignore " in line:
-                yield (get_ignore_scope(line, "ignore "),
-                       SourceRange.from_values(filename,
-                                               line_number,
-                                               1,
-                                               line_number+1,
-                                               len(file[line_number])))
+                                                   1,
+                                                   line_number+1,
+                                                   len(file[line_number])))
         if stop_ignoring is False and start is not None:
             yield (bears,
                    SourceRange.from_values(filename,
