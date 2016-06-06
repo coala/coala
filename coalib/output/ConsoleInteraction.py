@@ -649,88 +649,105 @@ def show_enumeration(console_printer,
     console_printer.print()
 
 
-def show_bear(console_printer, bear, sections, metadata):
+def show_bear(bear,
+              sections,
+              show_description,
+              show_params,
+              console_printer):
     """
     Display all information about a bear.
 
-    :param console_printer: Object to print messages on the console.
-    :param bear:            The bear to be displayed.
-    :param sections:        The sections to which the bear belongs.
-    :param metadata:        Metadata about the bear.
+    :param bear:             The bear to be displayed.
+    :param sections:         A list of sections to which the bear belongs.
+    :param show_description: True if the main description should be shown.
+    :param show_params:      True if the details should be shown.
+    :param console_printer:  Object to print messages on the console.
     """
-    console_printer.print(bear.name + ":")
-    console_printer.print("  " + metadata.desc.replace("\n", "\n  ") + "\n")
+    console_printer.print(bear.name)
 
-    show_enumeration(
-        console_printer, "Supported languages:",
-        bear.supported_languages,
-        "  ",
-        "The bear does not provide information about which languages "
-        "it can analyze.")
-    show_enumeration(console_printer,
-                     "Used in:",
-                     sections,
-                     "  ",
-                     "No sections.")
+    if not show_description and not show_params:
+        return
 
-    show_enumeration(console_printer,
-                     "Needed Settings:",
-                     metadata.non_optional_params,
-                     "  ",
-                     "No needed settings.")
-    show_enumeration(console_printer,
-                     "Optional Settings:",
-                     metadata.optional_params,
-                     "  ",
-                     "No optional settings.")
+    metadata = bear.get_metadata()
+
+    if show_description:
+        console_printer.print(
+            "  " + metadata.desc.replace("\n", "\n  "))
+
+    if show_params:
+        console_printer.print()  # Add a newline
+        show_enumeration(
+            console_printer, "Supported languages:",
+            bear.supported_languages,
+            "  ",
+            "The bear does not provide information about which languages "
+            "it can analyze.")
+        show_enumeration(console_printer,
+                         "Used in:",
+                         sections,
+                         "  ",
+                         "No sections.")
+        show_enumeration(console_printer,
+                         "Needed Settings:",
+                         metadata.non_optional_params,
+                         "  ",
+                         "No needed settings.")
+        show_enumeration(console_printer,
+                         "Optional Settings:",
+                         metadata.optional_params,
+                         "  ",
+                         "No optional settings.")
 
 
-def print_bears(console_printer, bears, compress):
+def print_bears(bears,
+                show_description,
+                show_params,
+                console_printer):
     """
     Presents all bears being used in a stylized manner.
 
-    :param console_printer: Object to print messages on the console.
-    :param bears:           Its a dictionary with bears as keys and list of
-                            sections containing those bears as values.
-    :param compress:            If set to true, output will be compressed (just
-                                show bear names as a list)
+    :param bears:            It's a dictionary with bears as keys and list of
+                             sections containing those bears as values.
+    :param show_description: True if the main description of the bears should
+                             be shown.
+    :param show_params:      True if the parameters and their description
+                             should be shown.
+    :param console_printer:  Object to print messages on the console.
     """
     if not bears:
         console_printer.print("No bears to show. Did you forget to install "
                               "the `coala-bears` package? Try `pip3 install "
                               "coala-bears`.")
-    elif compress:
-        bear_list = sorted(bears.keys(), key=lambda bear: bear.name)
-        for bear in bear_list:
-            console_printer.print(bear.name)
-            console_printer.print("=" * len(bear.name))
+        return
 
-            console_printer.print(bear.get_metadata().desc + "\n")
-    else:
-        for bear in sorted(bears.keys(),
-                           key=lambda bear: bear.name):
-            show_bear(console_printer,
-                      bear,
-                      bears[bear],
-                      bear.get_metadata())
+    for bear, sections in sorted(bears.items(),
+                                 key=lambda bear_tuple: bear_tuple[0].name):
+        show_bear(bear,
+                  sections,
+                  show_description,
+                  show_params,
+                  console_printer)
 
 
-def show_bears(local_bears, global_bears, compress, console_printer):
+def show_bears(local_bears,
+               global_bears,
+               show_description,
+               show_params,
+               console_printer):
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
 
-    :param local_bears:         Dictionary of local bears with section names
-                                as keys and bear list as values.
-    :param global_bears:        Dictionary of global bears with section
-                                names as keys and bear list as values.
-    :param compress:            If set to true, output will be compressed (just
-                                show bear names as a list)
-    :param show_bears_callback: The callback that is used to print these
-                                bears. It will get one parameter holding
-                                bears as key and the list of section names
-                                where it's used as values.
+    :param local_bears:      Dictionary of local bears with section names
+                             as keys and bear list as values.
+    :param global_bears:     Dictionary of global bears with section
+                             names as keys and bear list as values.
+    :param show_description: True if the main description of the bears should
+                             be shown.
+    :param show_params:      True if the parameters and their description
+                             should be shown.
+    :param console_printer:  Object to print messages on the console.
     """
     bears = inverse_dicts(local_bears, global_bears)
 
-    print_bears(console_printer, bears, compress)
+    print_bears(bears, show_description, show_params, console_printer)

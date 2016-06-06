@@ -14,10 +14,10 @@ from coalib.misc.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
-    print_affected_files, print_bears, print_result, print_results,
+    print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
-    print_spaces_tabs_in_unicode, show_bears, ask_for_action_and_apply,
-    print_diffs_info)
+    print_spaces_tabs_in_unicode, show_bear, show_bears,
+    ask_for_action_and_apply, print_diffs_info)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -635,138 +635,83 @@ some_file
                 "|    | msg\n",
                 stdout.getvalue())
 
-    def test_print_bears_empty(self):
-        with retrieve_stdout() as stdout:
-            bears = {}
-            print_bears(self.log_printer.printer, bears, True)
-            self.assertIn("No bears to show.", stdout.getvalue())
-        with retrieve_stdout() as stdout:
-            bears = {}
-            print_bears(self.log_printer.printer, bears, False)
-            self.assertIn("No bears to show.", stdout.getvalue())
-
-    def test_print_bears(self):
-        with retrieve_stdout() as stdout:
-            bears = {TestBear: ["default", "docs"]}
-            print_bears(self.log_printer.printer, bears, False)
-            expected_string = "TestBear:\n"
-            expected_string += "  Test bear Description.\n\n"
-            expected_string += "  Supported languages:\n"
-            expected_string += "   * F#\n"
-            expected_string += "   * Shakespearean Programming Language\n\n"
-            expected_string += "  Used in:\n"
-            expected_string += "   * default\n"
-            expected_string += "   * docs\n\n"
-            expected_string += "  Needed Settings:\n"
-            expected_string += "   * setting1: Required Setting.\n\n"
-            expected_string += "  Optional Settings:\n"
-            expected_string += "   * setting2: Optional Setting. ("
-            expected_string += "Optional, defaults to 'None'."
-            expected_string += ")\n\n"
-
-            self.assertEqual(expected_string, stdout.getvalue())
-
-    def test_print_bears_no_settings(self):
-        with retrieve_stdout() as stdout:
-            bears = {SomeBear: ["default"]}
-            print_bears(self.log_printer.printer, bears, False)
-            expected_string = "SomeBear:\n"
-            expected_string += "  Some Description.\n\n"
-            expected_string += ("  The bear does not provide information "
-                                "about which languages it can analyze.\n\n")
-            expected_string += "  Used in:\n"
-            expected_string += "   * default\n\n"
-            expected_string += "  No needed settings.\n\n"
-            expected_string += "  No optional settings.\n\n"
-
-            self.assertEqual(expected_string, stdout.getvalue())
-
-    def test_print_bears_no_needed_settings(self):
-        with retrieve_stdout() as stdout:
-            bears = {SomeOtherBear: ["test"]}
-            print_bears(self.log_printer.printer, bears, False)
-            expected_string = "SomeOtherBear:\n"
-            expected_string += "  This is a Bear.\n\n"
-            expected_string += ("  The bear does not provide information "
-                                "about which languages it can analyze.\n\n")
-            expected_string += "  Used in:\n"
-            expected_string += "   * test\n\n"
-            expected_string += "  No needed settings.\n\n"
-            expected_string += "  Optional Settings:\n"
-            expected_string += "   * setting: This is an optional setting. ("
-            expected_string += "Optional, defaults to 'None'."
-            expected_string += ")\n\n"
-
-            self.assertEqual(expected_string, stdout.getvalue())
-
-    def test_print_bears_no_optional_settings(self):
-        with retrieve_stdout() as stdout:
-            bears = {TestBear2: ["test"]}
-            print_bears(self.log_printer.printer, bears, False)
-            expected_string = "TestBear2:\n"
-            expected_string += "  Test bear 2 description.\n\n"
-            expected_string += "  Supported languages:\n"
-            expected_string += "   * TestLanguage\n\n"
-            expected_string += "  Used in:\n"
-            expected_string += "   * test\n\n"
-            expected_string += "  Needed Settings:\n"
-            expected_string += "   * setting1: Required Setting.\n\n"
-            expected_string += "  No optional settings.\n\n"
-
-            self.assertEqual(expected_string, stdout.getvalue())
-
-    def test_print_bears_no_sections(self):
-        with retrieve_stdout() as stdout:
-            bears = {SomeBear: []}
-            print_bears(self.log_printer.printer, bears, False)
-            expected_string = "SomeBear:\n"
-            expected_string += "  Some Description.\n\n"
-            expected_string += ("  The bear does not provide information "
-                                "about which languages it can analyze.\n\n")
-            expected_string += "  No sections.\n\n"
-            expected_string += "  No needed settings.\n\n"
-            expected_string += "  No optional settings.\n\n"
-
-            self.assertEqual(expected_string, stdout.getvalue())
-
 
 class ShowBearsTest(unittest.TestCase):
 
     def setUp(self):
         self.console_printer = ConsolePrinter(print_colored=False)
-        self.local_bears = OrderedDict([("default", [SomelocalBear]),
-                                        ("test", [SomelocalBear])])
-        self.global_bears = OrderedDict([("default", [SomeglobalBear]),
-                                         ("test", [SomeglobalBear])])
 
-    def test_show_bears_uncompressed(self):
+    def test_show_bear_minimal(self):
         with retrieve_stdout() as stdout:
-            bears = {SomelocalBear: ['default', 'test'],
-                     SomeglobalBear: ['default', 'test']}
-            print_bears(self.console_printer, bears, False)
-            expected_string = stdout.getvalue()
+            show_bear(
+                SomelocalBear, ['one'], False, False, self.console_printer)
+            self.assertEqual(stdout.getvalue(), 'SomelocalBear\n')
 
+    def test_show_bear_desc_only(self):
         with retrieve_stdout() as stdout:
-            show_bears(self.local_bears,
-                       self.global_bears,
-                       False,
-                       self.console_printer)
-            self.assertEqual(expected_string, stdout.getvalue())
+            show_bear(
+                SomelocalBear, ['one'], True, False, self.console_printer)
+            self.assertEqual(stdout.getvalue(),
+                             'SomelocalBear\n  Some local-bear Description.\n')
 
-    def test_show_bears_compressed(self):
+    def test_show_bear_details_only(self):
         with retrieve_stdout() as stdout:
-            show_bears(self.local_bears,
-                       self.global_bears,
-                       True,
-                       self.console_printer)
-            self.assertEqual("SomeglobalBear\n"
-                             "==============\n"
-                             "Some global-bear Description.\n"
-                             "\n"
-                             "SomelocalBear\n"
-                             "=============\n"
-                             "Some local-bear Description.\n\n",
-                             stdout.getvalue())
+            show_bear(
+                SomelocalBear, [], False, True, self.console_printer)
+            self.assertEqual(stdout.getvalue(),
+                             'SomelocalBear\n\n'
+                             '  The bear does not provide information about '
+                             'which languages it can analyze.\n\n'
+                             '  No sections.\n\n'
+                             '  No needed settings.\n\n'
+                             '  No optional settings.\n\n')
+
+    def test_show_bear_long_without_content(self):
+        with retrieve_stdout() as stdout:
+            show_bear(
+                SomelocalBear, [], True, True, self.console_printer)
+            self.assertEqual(stdout.getvalue(),
+                             'SomelocalBear\n'
+                             '  Some local-bear Description.\n\n'
+                             '  The bear does not provide information about '
+                             'which languages it can analyze.\n\n'
+                             '  No sections.\n\n'
+                             '  No needed settings.\n\n'
+                             '  No optional settings.\n\n')
+
+    def test_show_bear_with_content(self):
+        with retrieve_stdout() as stdout:
+            show_bear(TestBear, ['section'], True, True, self.console_printer)
+            self.assertEqual(stdout.getvalue(),
+                             "TestBear\n"
+                             "  Test bear Description.\n\n"
+                             "  Supported languages:\n"
+                             "   * F#\n"
+                             "   * Shakespearean Programming Language\n\n"
+                             "  Used in:\n"
+                             "   * section\n\n"
+                             "  Needed Settings:\n"
+                             "   * setting1: Required Setting.\n\n"
+                             "  Optional Settings:\n"
+                             "   * setting2: Optional Setting. ("
+                             "Optional, defaults to 'None'."
+                             ")\n\n")
+
+    def test_show_bears_empty(self):
+        with retrieve_stdout() as stdout:
+            show_bears({}, {}, True, True, self.console_printer)
+            self.assertIn("No bears to show.", stdout.getvalue())
+
+    @patch('coalib.output.ConsoleInteraction.show_bear')
+    def test_show_bears(self, show_bear):
+        local_bears = OrderedDict([("default", [SomelocalBear]),
+                                   ("test", [SomelocalBear])])
+        show_bears(local_bears, {}, True, True, self.console_printer)
+        show_bear.assert_called_once_with(SomelocalBear,
+                                          ['default', 'test'],
+                                          True,
+                                          True,
+                                          self.console_printer)
 
 
 # Own test because this is easy and not tied to the rest
