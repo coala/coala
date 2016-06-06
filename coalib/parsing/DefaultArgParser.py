@@ -197,18 +197,25 @@ def default_arg_parser(formatter_class=None):
                                    action='store_const',
                                    help=SHOW_BEARS_HELP)
 
-        outputs_group.add_argument('-A',
-                                   '--show-all-bears',
-                                   const=True,
-                                   action='store_const',
-                                   help="Display all bears.")
-
-        SHOW_LANGUAGE_BEARS = ("Display all bears for the given languages.")
         outputs_group.add_argument('-l',
-                                   '--show-language-bears',
+                                   '--filter-by-language',
                                    nargs='+',
                                    metavar='LANG',
-                                   help=SHOW_LANGUAGE_BEARS)
+                                   help="Filters the output of `--show-bears` "
+                                        "by the given languages.")
+
+        outputs_group.add_argument('-D',
+                                   '--show-description',
+                                   const=True,
+                                   action='store_const',
+                                   help="Shows bear descriptions for the "
+                                        "`--show-bears` output.")
+        outputs_group.add_argument('--show-details',
+                                   const=True,
+                                   action='store_const',
+                                   help='Shows bear details for the '
+                                        '`--show-bears` output, e.g '
+                                        'parameters and supported languages.')
 
     # The following are "coala-json" specific arguments
     if parser_type == 'coala-json':
