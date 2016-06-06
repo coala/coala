@@ -148,6 +148,12 @@ def default_arg_parser(formatter_class=None):
 
     outputs_group = arg_parser.add_argument_group('Outputs')
 
+    outputs_group.add_argument('-V',
+                               '--verbose',
+                               action='store_const',
+                               dest='log_level',
+                               const='DEBUG',
+                               help="Alias for `-L DEBUG`.")
     LOG_LEVEL_HELP = ("Enum('ERROR','INFO','WARNING','DEBUG') to set level of "
                       "log output")
     outputs_group.add_argument('-L',
