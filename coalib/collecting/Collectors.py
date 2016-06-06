@@ -187,15 +187,9 @@ def filter_section_bears_by_languages(bears, languages):
     # All bears with "all" languages supported shall be shown
     languages = set(x.lower() for x in languages) | {'all'}
     for section in bears.keys():
-        filtered = []
-        for bear in bears[section]:
-            bear_languages = getattr(bear, 'LANGUAGES', tuple())
-            if isinstance(bear_languages, str):
-                bear_languages = (bear_languages,)
-            supported_languages = set(x.lower() for x in bear_languages)
-            if supported_languages & languages:
-                filtered.append(bear)
-        new_bears[section] = filtered
+        new_bears[section] = tuple(
+            bear for bear in bears[section]
+            if set(x.lower() for x in bear.supported_languages) & languages)
     return new_bears
 
 
