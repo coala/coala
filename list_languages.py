@@ -1,3 +1,5 @@
+from itertools import chain
+
 from coalib.collecting.Collectors import collect_bears, \
     collect_all_bears_from_sections
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -9,6 +11,9 @@ if __name__ == '__main__':
     local_bears, global_bears = collect_all_bears_from_sections(
         {'default': Section('default')}, log_printer)
 
-    
-    for bear in local_bears:
-        print(bear.supported_languages)
+    languages = set()
+    for bear in chain(*list(chain(*[local_bears.values()],
+                                  *[global_bears.values()]))):
+        languages |= set(bear.supported_languages)
+
+    print(languages)
