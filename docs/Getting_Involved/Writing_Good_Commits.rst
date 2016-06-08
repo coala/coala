@@ -87,9 +87,11 @@ Example:
 
     Fixes https://github.com/coala-analyzer/coala/issues/269
 
--  Should use the ``Fixes`` keyword.
+-  Should use the ``Fixes`` or the ``Closes`` keyword, depending if it is a bug
+   or a feature request that is closed.
 -  Should use full URL to the issue.
--  There should be a single space between the ``Fixes`` and the URL.
+-  There should be a single space between the ``Fixes`` or ``Closes`` and the
+   URL.
 
 .. note::
 
@@ -104,7 +106,7 @@ Example:
 
 Example
 ~~~~~~~
-Example 1:
+Example 1 (fixed bug):
 ::
 
     setup: Install .coafile via package_data
@@ -116,14 +118,14 @@ Example 1:
 
     Fixes https://github.com/coala-analyzer/coala/issues/269
 
-Example 2:
+Example 2 (implemented feature):
 ::
 
-    Readme: Fix typo begining -> beginning
+    Linter: Output command on debug
 
-    Fix a minor typo in the file for better readability.
+    This massively helps debugging linters.
 
-    Fixes https://github.com/coala-analyzer/coala/issues/xxx
+    Closes https://github.com/coala-analyzer/coala/issues/2060
 
 Why Do We Need Good Commits?
 ----------------------------
