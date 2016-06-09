@@ -12,8 +12,8 @@ if __name__ == '__main__':
         {'default': Section('default')}, log_printer)
 
     languages = set()
-    for bear in chain(*list(chain(*[local_bears.values()],
-                                  *[global_bears.values()]))):
+    for bear in chain(*list(local_bears.values()),
+                      *list(global_bears.values())):
         languages |= set(bear.supported_languages)
 
-    print(languages)
+    print(', '.join(sorted(languages ^ {'All'})))
