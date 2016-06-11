@@ -603,7 +603,7 @@ def ask_for_action_and_apply(log_printer,
                                          file_diff_dict,
                                          section)
         console_printer.print(
-            format_lines(chosen_action.success_message),
+            format_lines(chosen_action.SUCCESS_MESSAGE),
             color=SUCCESS_COLOR)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
@@ -659,7 +659,7 @@ def show_bear(console_printer, bear, sections, metadata):
     :param metadata:        Metadata about the bear.
     """
     console_printer.print(bear.name + ":")
-    console_printer.print("  " + metadata.desc + "\n")
+    console_printer.print("  " + metadata.desc.replace("\n", "\n  ") + "\n")
 
     show_enumeration(
         console_printer, "Supported languages:",
@@ -696,7 +696,9 @@ def print_bears(console_printer, bears, compress):
                                 show bear names as a list)
     """
     if not bears:
-        console_printer.print("No bears to show.")
+        console_printer.print("No bears to show. Did you forget to install "
+                              "the `coala-bears` package? Try `pip3 install "
+                              "coala-bears`.")
     elif compress:
         bear_list = sorted(bears.keys(), key=lambda bear: bear.name)
         for bear in bear_list:

@@ -3,19 +3,28 @@ from functools import partial
 import inspect
 from itertools import chain, compress
 import re
+import os
 import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
 from types import MappingProxyType
-
+from coalib.settings.Section import Section
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.ContextManagers import make_temp
-from coalib.misc.Decorators import assert_right_type, enforce_signature
+from coalib.misc.Extensions import exts
+from coala_decorators.decorators import assert_right_type, enforce_signature
 from coalib.misc.Future import partialmethod
 from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.FunctionMetadata import FunctionMetadata
+from coalib.collecting.Collectors import (
+    collect_all_bears_from_sections, filter_section_bears_by_languages)
+from pyprint.ConsolePrinter import ConsolePrinter
+from pyprint.NullPrinter import NullPrinter
+from coalib.settings.ConfigurationGathering import load_configuration
+from coalib.misc.DictUtilities import inverse_dicts
 
 
 def _prepare_options(options):
@@ -346,11 +355,21 @@ def _create_linter(klass, options):
         def process_output_regex(
                 self, output, filename, file, output_regex,
                 severity_map=MappingProxyType({
+                    "critical": RESULT_SEVERITY.MAJOR,
+                    "c": RESULT_SEVERITY.MAJOR,
+                    "fatal": RESULT_SEVERITY.MAJOR,
+                    "fail": RESULT_SEVERITY.MAJOR,
+                    "f": RESULT_SEVERITY.MAJOR,
                     "error": RESULT_SEVERITY.MAJOR,
+                    "err": RESULT_SEVERITY.MAJOR,
+                    "e": RESULT_SEVERITY.MAJOR,
                     "warning": RESULT_SEVERITY.NORMAL,
                     "warn": RESULT_SEVERITY.NORMAL,
+                    "w": RESULT_SEVERITY.NORMAL,
                     "information": RESULT_SEVERITY.INFO,
-                    "info": RESULT_SEVERITY.INFO}),
+                    "info": RESULT_SEVERITY.INFO,
+                    "i": RESULT_SEVERITY.INFO,
+                    "suggestion": RESULT_SEVERITY.INFO}),
                 result_message=None):
             """
             Processes the executable's output using a regex.
@@ -467,6 +486,38 @@ def _create_linter(klass, options):
                     yield config_file
 
         def run(self, filename, file, **kwargs):
+            printer = ConsolePrinter()
+            log_printer = LogPrinter(NullPrinter())
+            sections, _ = load_configuration(None, log_printer)
+            local_bears, global_bears = collect_all_bears_from_sections(
+                sections, log_printer)
+            bears = inverse_dicts(local_bears, global_bears)
+            ext = os.path.splitext(filename)[1]
+            lang_map = {"all": "All"}
+            lang_map[exts[ext].lower()] = exts[ext]
+            relevant_bears = {"All": []}
+            relevant_bears[exts[ext]] = []
+            for bear in bears:
+                if isinstance(bear.LANGUAGES, tuple):
+                    bear_languages = [lang.lower() for lang in bear.LANGUAGES]
+                else:
+                    bear_languages = [bear.LANGUAGES.lower()]
+                for bear_lang in bear_languages:
+                    if bear_lang in lang_map and lang_map[bear_lang]in relevant_bears:
+                        relevant_bears[lang_map[bear_lang]].append(bear)
+            if isinstance(self.LANGUAGES, tuple):
+                supported_languages = [lang.lower() for lang in self.LANGUAGES]
+            else:
+                supported_languages = [self.LANGUAGES.lower()]
+            if exts[ext].lower() not in supported_languages:
+                printer.print("Warning: This Bear doesn't support this language"
+                              ". Consider using the following bears:",
+                              color="yellow")
+                for language in relevant_bears:
+                    printer.print("[" + language + "]", color="green")
+                    for bear in relevant_bears[language]:
+                        printer.print("\t" + bear.name, color="cyan")
+
             # Get the **kwargs params to forward to `generate_config()`
             # (from `_create_config()`).
             generate_config_kwargs = FunctionMetadata.filter_parameters(
