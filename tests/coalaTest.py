@@ -40,14 +40,16 @@ class coalaTest(unittest.TestCase):
         with bear_test_module():
             retval, output = execute_coala(coala.main, "coala", "-B")
             self.assertEqual(retval, 0)
-            self.assertEqual(len(output.splitlines()), 4)
+            # 4 bears plus 1 line holding the closing colour escape sequence
+            self.assertEqual(len(output.strip().splitlines()), 5)
 
     def test_show_language_bears(self):
         with bear_test_module():
             retval, output = execute_coala(
                 coala.main, "coala", "-B", "-l", "java")
             self.assertEqual(retval, 0)
-            self.assertEqual(len(output.splitlines()), 2)
+            # 2 bears plus 1 line holding the closing colour escape sequence
+            self.assertEqual(len(output.splitlines()), 3)
 
     @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')

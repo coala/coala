@@ -663,7 +663,7 @@ def show_bear(bear,
     :param show_params:      True if the details should be shown.
     :param console_printer:  Object to print messages on the console.
     """
-    console_printer.print(bear.name)
+    console_printer.print(bear.name, color="blue")
 
     if not show_description and not show_params:
         return
