@@ -3,6 +3,7 @@ import platform
 import re
 from functools import lru_cache
 
+from coalib.misc.Future import list_dir_contents
 from coala_decorators.decorators import yield_once
 from coalib.misc.Constants import GLOBBING_SPECIAL_CHARS
 
@@ -263,7 +264,7 @@ def _iter_relative_dirs(dirname):
     if not dirname:
         dirname = os.curdir
     try:
-        files_or_dirs = os.listdir(dirname)
+        files_or_dirs = list_dir_contents(dirname)
     except os.error:
         return
     for file_or_dir in files_or_dirs:
@@ -287,7 +288,7 @@ def relative_wildcard_glob(dirname, pattern):
         if '**' in pattern:
             names = list(_iter_relative_dirs(dirname))
         else:
-            names = os.listdir(dirname)
+            names = list_dir_contents(dirname)
     except OSError:
         return []
     result = []
