@@ -4,11 +4,8 @@ import sys
 import unittest
 from tempfile import NamedTemporaryFile, TemporaryDirectory
 
-from pyprint.NullPrinter import NullPrinter
-
 from coalib import coala_ci
 from coalib.misc.ContextManagers import make_temp, prepare_file
-from coalib.output.printers.LogPrinter import LogPrinter
 from tests.TestUtilities import bear_test_module, execute_coala
 
 
