@@ -651,15 +651,16 @@ class ShowBearsTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             show_bear(
                 SomelocalBear, ['one'], True, False, self.console_printer)
-            self.assertEqual(stdout.getvalue(),
-                             'SomelocalBear\n  Some local-bear Description.\n')
+            self.assertEqual(
+                stdout.getvalue(),
+                'SomelocalBear\n  Some local-bear Description.\n\n')
 
     def test_show_bear_details_only(self):
         with retrieve_stdout() as stdout:
             show_bear(
                 SomelocalBear, [], False, True, self.console_printer)
             self.assertEqual(stdout.getvalue(),
-                             'SomelocalBear\n\n'
+                             'SomelocalBear\n'
                              '  The bear does not provide information about '
                              'which languages it can analyze.\n\n'
                              '  No sections.\n\n'

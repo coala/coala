@@ -673,9 +673,9 @@ def show_bear(bear,
     if show_description:
         console_printer.print(
             "  " + metadata.desc.replace("\n", "\n  "))
+        console_printer.print()  # Add a newline
 
     if show_params:
-        console_printer.print()  # Add a newline
         show_enumeration(
             console_printer, "Supported languages:",
             bear.supported_languages,
