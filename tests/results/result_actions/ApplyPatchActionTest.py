@@ -113,7 +113,7 @@ class ApplyPatchActionTest(unittest.TestCase):
             uut.apply(Result("origin", "msg", diffs={f_a: diff}),
                       file_dict,
                       file_diff_dict)
-            self.assertTrue(isfile(f_a+".renamed.orig"))
+            self.assertFalse(isfile(f_a+".renamed.orig"))
 
             file_dict = {f_a+".renamed": open(f_a+".renamed").readlines()}
 

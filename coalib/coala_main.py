@@ -4,7 +4,7 @@ import platform
 import pip
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib import coala_delete_orig, VERSION
+from coalib import VERSION
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -75,9 +75,6 @@ def run_coala(log_printer=None,
         settings_hash = get_settings_hash(sections)
         flush_cache = bool(sections["default"].get("flush_cache", False) or
                            settings_changed(log_printer, settings_hash))
-
-        # Deleting all .orig files, so the latest files are up to date!
-        coala_delete_orig.main(log_printer, sections["default"])
 
         cache = FileCache(log_printer, os.getcwd(), flush_cache)
         for section_name, section in sections.items():

@@ -2,10 +2,9 @@ import os
 import re
 import sys
 import unittest
-from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 from coalib import coala_ci
-from coalib.misc.ContextManagers import make_temp, prepare_file
+from coalib.misc.ContextManagers import prepare_file
 from tests.TestUtilities import bear_test_module, execute_coala
 
 
@@ -72,17 +71,3 @@ class coalaCITest(unittest.TestCase):
                                            "-b", 'SpaceConsistencyTestBear',
                                            '-c', os.devnull)
             self.assertIn("During execution, we found that some", output)
-
-    def test_coala_delete_orig(self):
-        with TemporaryDirectory() as tempdir,\
-             NamedTemporaryFile(suffix='.orig',
-                                dir=tempdir,
-                                delete=False) as orig_file,\
-             make_temp(suffix='.coafile', prefix='', dir=tempdir) as coafile,\
-             make_temp(dir=tempdir) as unrelated_file:
-            orig_file.close()
-
-            execute_coala(coala_ci.main, "coala-ci", "-S",
-                          "project_dir=" + os.path.dirname(coafile))
-            self.assertFalse(os.path.isfile(orig_file.name))
-            self.assertTrue(os.path.isfile(unrelated_file))

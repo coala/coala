@@ -46,11 +46,11 @@ class ApplyPatchAction(ResultAction):
             else:
                 file_diff_dict[filename] = result.diffs[filename]
 
-            # Backup original file, override old backup if needed
-            if (not no_orig and
-                    isfile(pre_patch_filename) and
-                    not isfile(pre_patch_filename + ".orig")):
-                shutil.copy2(pre_patch_filename, pre_patch_filename + ".orig")
+                # Backup original file, only if there was no previous patch
+                # from this run though!
+                if not no_orig and isfile(pre_patch_filename):
+                    shutil.copy2(pre_patch_filename,
+                                 pre_patch_filename + ".orig")
 
             diff = file_diff_dict[filename]
             if diff.delete or diff.rename:
