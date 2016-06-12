@@ -9,10 +9,14 @@ Executing our Tests
 *coala* has a big test suite. It is meant to work on every platform on
 every PC. If you just execute our tests you are doing us a favor
 
-Before you run tests, make sure you `install coala <http://coala.readthedocs.io/en/latest/Users/Install.html/>`_. 
+Before you run tests, make sure you 
+`install coala <http://coala.readthedocs.io/en/latest/Users/Install.html/>`_.
 
-To run tests, you will need to open a file located in the default coala directory
-If you have not already, you can start by cloneing a copy of the project to your local machine. 
+To run tests, you will need to open a file located in the default coala 
+directory
+If you have not already, you can start by 
+cloneing a copy of the project to your local machine.
+
 Either fork the repo on Github https://github.com/coala-analyzer/coala, 
 or clone it directly from coala
 
