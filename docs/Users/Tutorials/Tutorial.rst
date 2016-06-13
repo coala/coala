@@ -77,6 +77,10 @@ file readily prepared for you. Go, take a look at it:
 
     cat .coafile
 
+.. note::
+
+    If you are using Windows, you should use ``type .coafile`` instead!
+
 This should yield something like this:
 
 ::
