@@ -45,10 +45,10 @@ analysis functionality for many popular languages in addition to some
 generically applicable algorithms.
 
 For information on the languages supported by *coala-bears*, refer to
-`this link <https://github.com/coala-analyzer/coala-bears/wiki/Supported-languages>`__.
+`this link <https://github.com/coala-analyzer/coala/wiki/Supported-Languages>`__.
 
 For information on the various bears supported by *coala*, refer to the link
-`here <https://github.com/coala-analyzer/coala-bears/wiki/Available-bears>`__.
+`here <https://github.com/coala-analyzer/coala/wiki/Available-bears>`__.
 
 *coala* is written with a lower case "c".
 
