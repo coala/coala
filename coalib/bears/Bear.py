@@ -74,6 +74,21 @@ class Bear(Printer, LogPrinter):
     ...     REQUIREMENTS = PythonRequirement.multiple(
     ...         ('colorama', '0.1'), 'coala_decorators')
 
+    To specify additional attributes to your bear, use the following:
+
+    >>> class SomeBear(Bear):
+    ...     AUTHORS = {'Jon Snow'}
+    ...     AUTHORS_EMAIL = {'jon_snow@gmail.com'}
+    ...     MAINTAINERS = {'Catelyn Stark'}
+    ...     MAINTAINERS_EMAILS = {'catelyn_stark@gmail.com'}
+    ...     LICENSE = 'AGPL-3.0'
+
+    If your bear needs to include local files, then specify it giving strings
+    containing relative file paths to the INCLUDE_LOCAL_FILES set:
+
+    >>> class SomeBear(Bear):
+    ...     INCLUDE_LOCAL_FILES = {'checkstyle.jar', 'google_checks.xml'}
+
     Every bear has a data directory which is unique to that particular bear:
 
     >>> class SomeBear(Bear): pass
@@ -84,6 +99,13 @@ class Bear(Printer, LogPrinter):
 
     LANGUAGES = ()
     REQUIREMENTS = ()
+    AUTHORS = set()
+    AUTHORS_EMAILS = set()
+    MAINTAINERS = set()
+    MAINTAINERS_EMAILS = set()
+    PLATFORMS = {'any'}
+    LICENSE = ''
+    INCLUDE_LOCAL_FILES = set()
 
     @classproperty
     def name(cls):
