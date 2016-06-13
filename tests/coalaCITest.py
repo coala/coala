@@ -42,6 +42,7 @@ class coalaCITest(unittest.TestCase):
                 prepare_file(["#fixme"], None) as (lines, filename):
             retval, output = execute_coala(coala_ci.main, "coala-ci",
                                            "-c", os.devnull,
+                                           "-d", "tests/test_bears",
                                            "-b", "LineCountTestBear",
                                            "-f", re.escape(filename))
             self.assertIn("This file has 1 lines.",
@@ -57,6 +58,7 @@ class coalaCITest(unittest.TestCase):
                 coala_ci.main, "coala-ci",
                 "-c", os.devnull,
                 "-f", re.escape(filename),
+                "-d", "tests/test_bears/internal_folder",
                 "-b", "SpaceConsistencyTestBear",
                 "--settings", "autoapply=true", "use_spaces=True",
                 "default_actions=SpaceConsistencyTestBear:ApplyPatchAction")

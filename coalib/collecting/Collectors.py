@@ -2,7 +2,7 @@ import functools
 import os
 import pkg_resources
 import itertools
-from pyprint.NullPrinter import NullPrinter
+import sys
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
@@ -10,6 +10,8 @@ from coala_decorators.decorators import yield_once
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
 from coalib.output.printers.LogPrinter import LogPrinter
+
+from pyprint.NullPrinter import NullPrinter
 
 
 def _get_kind(bear_class):
@@ -115,13 +117,14 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
                                      icollect(bear_dirs)):
         # Since we get a real directory here and since we
         # pass this later to iglob, we need to escape this.
-        bear_dir = glob_escape(bear_dir)
         for bear_glob in bear_globs:
+            sys.path.append(bear_dir)
+
             for matching_file in iglob(
-                    os.path.join(bear_dir, bear_glob + '.py')):
+                    os.path.join(glob_escape(bear_dir), bear_glob + '.py')):
 
                 try:
-                    for bear in _import_bears(matching_file, kinds):
+                    for bear in _import_bears({matching_file: bear_dir}, kinds):
                         yield bear, bear_glob
                 except pkg_resources.VersionConflict as exception:
                     log_printer.log_exception(
