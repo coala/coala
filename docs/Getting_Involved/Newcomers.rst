@@ -38,8 +38,8 @@ strongly recommend following a tutorial, such as `this one <https://try.github.i
 If there's anything unclear, or you are encountering problems, feel free
 to contact us on gitter, and we will help you!
 
-Start working
--------------
+Picking up an issue
+-------------------
 
 Now is the time to pick an issue.
 Here is the link that will lead you to `Newcomers issues <http://tinyurl.com/coala-new>`_.
