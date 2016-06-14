@@ -1,3 +1,5 @@
+from contextlib import ExitStack
+from importlib.machinery import SourceFileLoader
 import inspect
 import os
 import platform
@@ -7,28 +9,25 @@ from coalib.misc.ContextManagers import suppress_stdout
 from coala_decorators.decorators import arguments_to_lists, yield_once
 
 
-def _import_module(file_path):
+def _import_module(file_path, base_path):
     if not os.path.exists(file_path):
         raise ImportError
 
-    module_name = os.path.splitext(os.path.basename(file_path))[0]
-    module_dir = os.path.dirname(file_path)
+    module_path_without_extension = os.path.splitext(file_path)[0]
 
     # Ugly inconsistency: Python will insist on correctly cased module names
     # independent of whether the OS is case-sensitive or not.
     # We want all cases to match though.
     if platform.system() == 'Windows':  # pragma: nocover
-        for cased_file_path in os.listdir(module_dir):
+        for cased_file_path in os.listdir(os.path.dirname(file_path)):
             cased_module_name = os.path.splitext(cased_file_path)[0]
+            module_name = os.path.basename(module_path_without_extension)
             if cased_module_name.lower() == module_name.lower():
-                module_name = cased_module_name
+                module_name = cased_module_name # TODO this sucks completely now...
                 break
 
-    sys.path.insert(1, module_dir)
-    try:
-        return __import__(module_name)
-    finally:
-        sys.path.pop(1)
+    import_fullname = os.path.relpath(module_path_without_extension, base_path).replace(os.path.sep, ".")
+    return SourceFileLoader(import_fullname, file_path).load_module()
 
 
 def _is_subclass(test_class, superclasses):
@@ -101,7 +100,7 @@ def _iimport_objects(file_paths, names, types, supers, attributes, local):
     """
     Import all objects from the given modules that fulfill the requirements
 
-    :param file_paths: File path(s) from which objects will be imported
+    :param file_paths: dict of file paths and their base import paths from which objects will be imported.
     :param names:      Name(s) an objects need to have one of
     :param types:      Type(s) an objects need to be out of
     :param supers:     Class(es) objects need to be a subclass of
@@ -112,20 +111,16 @@ def _iimport_objects(file_paths, names, types, supers, attributes, local):
     :raises Exception: Any exception that is thrown in module code or an
                        ImportError if paths are erroneous.
     """
-    if (file_paths == [] or
-            (names == [] and
-             types == [] and
-             supers == [] and
-             attributes == [])):
-        raise StopIteration
+    if not (file_paths and (names or types or supers or attributes)):
+        return
 
-    for file_path in file_paths:
+    for file_path, base_path in file_paths.items():
         module = _import_module(file_path)
         for obj_name, obj in inspect.getmembers(module):
-            if ((names == [] or obj_name in names) and
-                    (types == [] or isinstance(obj, tuple(types))) and
-                    (supers == [] or _is_subclass(obj, supers)) and
-                    (attributes == [] or _has_all(obj, attributes)) and
+            if ((not names or obj_name in names) and
+                    (not types or isinstance(obj, tuple)) and
+                    (not supers or _is_subclass(obj, supers)) and
+                    (not attributes or _has_all(obj, attributes)) and
                     (local[0] is False or _is_defined_in(obj, file_path))):
                 yield obj
 
@@ -135,23 +130,26 @@ def iimport_objects(file_paths, names=None, types=None, supers=None,
     """
     Import all objects from the given modules that fulfill the requirements
 
-    :param file_paths: File path(s) from which objects will be imported
+    :param file_paths: dict of file paths and their base import paths from which objects will be imported.
     :param names:      Name(s) an objects need to have one of
     :param types:      Type(s) an objects need to be out of
     :param supers:     Class(es) objects need to be a subclass of
     :param attributes: Attribute(s) an object needs to (all) have
     :param local:      if True: Objects need to be defined in the file they
                        appear in to be collected
+    :param verbose:    Whether verbose logs shall be displayed on console or not.
     :return:           iterator that yields all matching python objects
     :raises Exception: Any exception that is thrown in module code or an
                        ImportError if paths are erroneous.
     """
-    if not verbose:
-        with suppress_stdout():
-            for obj in _iimport_objects(file_paths, names, types, supers,
-                                        attributes, local):
-                yield obj
-    else:
+    with ExitStack() as stack:
+        #if verbose:
+        #    stack.enter_context(suppress_stdout())
+
+        print("------------------------")
+        print(type(file_paths))
+        print("------------------------")
+
         for obj in _iimport_objects(file_paths, names, types, supers,
                                     attributes, local):
             yield obj
