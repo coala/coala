@@ -44,11 +44,8 @@ used in any environment. Patches to automatically fix code will be managed too.
 analysis functionality for many popular languages in addition to some
 generically applicable algorithms.
 
-For information on the languages supported by *coala-bears*, refer to
-`this link <https://github.com/coala-analyzer/coala/wiki/Supported-Languages>`__.
-
-For information on the various bears supported by *coala*, refer to the link
-`here <https://github.com/coala-analyzer/coala/wiki/Available-bears>`__.
+To see what coala can do for you and your language, take a look at
+`our capabilities listing <https://github.com/coala-analyzer/bear-docs/blob/master/README.rst>`__.
 
 *coala* is written with a lower case "c".
 
