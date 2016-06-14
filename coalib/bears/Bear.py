@@ -89,6 +89,22 @@ class Bear(Printer, LogPrinter):
     >>> class SomeBear(Bear):
     ...     INCLUDE_LOCAL_FILES = {'checkstyle.jar', 'google_checks.xml'}
 
+    To keep track easier of what a bear can do, simply tell it to the CAN_FIX
+    and the CAN_DETECT sets. Possible values:
+
+    >>> CAN_DETECT = {'Syntax', 'Formatting', 'Security', 'Complexity', 'Smell',
+    ... 'Redundancy', 'Simplification', 'Variable Misuse', 'Spelling', 'Other'}
+    >>> CAN_FIX = {'Syntax', ...}
+
+    Specifying something to CAN_FIX makes it obvious that it can be detected
+    too, so it may be omitted:
+
+    >>> class SomeBear(Bear):
+    ...     CAN_DETECT = {'Syntax', 'Security'}
+    ...     CAN_FIX = {'Simplification'}
+    >>> list(sorted(SomeBear.can_detect))
+    ['Security', 'Simplification', 'Syntax']
+
     Every bear has a data directory which is unique to that particular bear:
 
     >>> class SomeBear(Bear): pass
@@ -106,6 +122,8 @@ class Bear(Printer, LogPrinter):
     PLATFORMS = {'any'}
     LICENSE = ''
     INCLUDE_LOCAL_FILES = set()
+    CAN_DETECT = set()
+    CAN_FIX = set()
 
     @classproperty
     def name(cls):
@@ -121,6 +139,14 @@ class Bear(Printer, LogPrinter):
         """
         return (cls.LANGUAGES if isinstance(
             cls.LANGUAGES, tuple) else (cls.LANGUAGES,))
+
+    @classproperty
+    def can_detect(cls):
+        """
+        :return: A set that contains everything a bear can detect, gathering
+                 information from what it can fix too.
+        """
+        return cls.CAN_DETECT | cls.CAN_FIX
 
     @enforce_signature
     def __init__(self,
