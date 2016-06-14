@@ -678,7 +678,7 @@ def show_bear(bear,
     if show_params:
         show_enumeration(
             console_printer, "Supported languages:",
-            bear.supported_languages,
+            bear.LANGUAGES,
             "  ",
             "The bear does not provide information about which languages "
             "it can analyze.")

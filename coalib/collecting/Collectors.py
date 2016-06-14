@@ -189,7 +189,7 @@ def filter_section_bears_by_languages(bears, languages):
     for section in bears.keys():
         new_bears[section] = tuple(
             bear for bear in bears[section]
-            if set(x.lower() for x in bear.supported_languages) & languages)
+            if {x.lower() for x in bear.LANGUAGES} & languages)
     return new_bears
 
 

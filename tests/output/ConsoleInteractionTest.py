@@ -44,7 +44,7 @@ class TestAction(ResultAction):
 
 class TestBear(Bear):
 
-    LANGUAGES = ('F#', 'Shakespearean Programming Language')
+    LANGUAGES = list(sorted({'F#', 'Shakespearean Programming Language'}))
 
     def run(self, setting1, setting2: int=None):
         """
@@ -58,7 +58,7 @@ class TestBear(Bear):
 
 class TestBear2(Bear):
 
-    LANGUAGES = 'TestLanguage'
+    LANGUAGES = {'TestLanguage'}
 
     def run(self, setting1):
         """

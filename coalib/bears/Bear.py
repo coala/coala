@@ -42,14 +42,10 @@ class Bear(Printer, LogPrinter):
     Settings are available at all times through self.section.
 
     To indicate which languages your bear supports, just give it the
-    ``LANGUAGES`` value which can either be a string (if the bear supports
-    only 1 language) or a tuple of strings:
+    ``LANGUAGES`` value which should be a set of string(s):
 
     >>> class SomeBear(Bear):
-    ...     LANGUAGES = ('C', 'CPP','C#', 'D')
-
-    >>> class SomeBear(Bear):
-    ...     LANGUAGES = "Java"
+    ...     LANGUAGES = {'C', 'CPP','C#', 'D'}
 
     To indicate the requirements of the bear, assign ``REQUIREMENTS`` a tuple
     with instances of ``PackageRequirements``.
@@ -113,7 +109,7 @@ class Bear(Printer, LogPrinter):
     False
     """
 
-    LANGUAGES = ()
+    LANGUAGES = set()
     REQUIREMENTS = ()
     AUTHORS = set()
     AUTHORS_EMAILS = set()
@@ -131,14 +127,6 @@ class Bear(Printer, LogPrinter):
         :return: The name of the bear
         """
         return cls.__name__
-
-    @classproperty
-    def supported_languages(cls):
-        """
-        :return: The languages supported by the bear.
-        """
-        return (cls.LANGUAGES if isinstance(
-            cls.LANGUAGES, tuple) else (cls.LANGUAGES,))
 
     @classproperty
     def can_detect(cls):

@@ -2,7 +2,7 @@ from coalib.bears.LocalBear import LocalBear
 
 
 class JavaTestBear(LocalBear):
-    LANGUAGES = 'java'
+    LANGUAGES = {'java'}
 
     def run(self, filename, file):
         """

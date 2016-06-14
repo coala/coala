@@ -5,7 +5,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 class LineCountTestBear(LocalBear):
 
-    LANGUAGES = 'all'
+    LANGUAGES = {'all'}
 
     def run(self, filename, file):
         """
