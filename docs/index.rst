@@ -107,6 +107,9 @@ to provide helpful libraries and provides multiple user interfaces.
 One could say coala unites all language independent parts of a linter
 and is arbitrarily extensible.
 
+To see what coala can do for you and your language, take a look at
+`our capabilities listing <https://github.com/coala-analyzer/bear-docs/blob/master/README.rst>`__.
+
 To get started, take a look at our :doc:`Installation
 Instructions <Users/Install>` and the
 :doc:`Tutorial <Users/Tutorials/Tutorial>`.
