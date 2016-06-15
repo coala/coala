@@ -22,6 +22,7 @@ from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import glob_list
 from coalib.parsing.Globbing import fnmatch
 
+
 ACTIONS = [ApplyPatchAction,
            PrintDebugMessageAction,
            ShowPatchAction]
