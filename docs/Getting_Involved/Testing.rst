@@ -14,7 +14,7 @@ done by executing:
 
 ::
 
-    $ pip3 install -r test-requirements.txt
+    $ pip3 install -r test-requirements.txt -r requirements.txt
 
 You can then execute our tests with
 
