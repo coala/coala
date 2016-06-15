@@ -81,11 +81,3 @@ if sys.version_info < (3, 4):
             return getattr(self.func, "__isabstractmethod__", False)
 else:
     from functools import partialmethod
-
-if sys.version_info < (3, 5):
-    from os import listdir as list_dir_contents
-else:
-    from os import scandir
-
-    def list_dir_contents(dir):
-        return [x.name for x in scandir(dir)]
