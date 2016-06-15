@@ -132,7 +132,7 @@ def _iimport_objects(file_paths, names, types, supers, attributes, local):
 
 
 def iimport_objects(file_paths, names=None, types=None, supers=None,
-                    attributes=None, local=False, verbose=False):
+                    attributes=None, local=False, suppress_output=False):
     """
     Import all objects from the given modules that fulfill the requirements
 
@@ -149,6 +149,8 @@ def iimport_objects(file_paths, names=None, types=None, supers=None,
     :param local:
         If True: Objects need to be defined in the file they appear in to be
         collected.
+    :param suppress_output:
+        Whether console output from stdout shall be suppressed or not.
     :return:
         An iterator that yields all matching python objects.
     :raises Exception:
@@ -156,7 +158,7 @@ def iimport_objects(file_paths, names=None, types=None, supers=None,
         are erroneous.
     """
     with ExitStack() as stack:
-        if not verbose:
+        if not suppress_output:
             stack.enter_context(suppress_stdout())
 
         yield from _iimport_objects(file_paths, names, types, supers,
