@@ -2,6 +2,7 @@ import functools
 import os
 import pkg_resources
 import itertools
+
 from pyprint.NullPrinter import NullPrinter
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
