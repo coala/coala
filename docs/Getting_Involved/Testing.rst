@@ -14,6 +14,9 @@ done by executing:
 
 ::
 
+    $ # Use https://github.com/coala-analyzer/coala-bears.git for coala bears
+    $ git clone https://github.com/coala-analyzer/coala.git
+    $ cd coala  # cd coala-bears when testing bears
     $ pip3 install -r test-requirements.txt -r requirements.txt
 
 You can then execute our tests with
