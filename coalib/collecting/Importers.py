@@ -113,20 +113,19 @@ def _iimport_objects(file_paths, names, types, supers, attributes, local):
     :raises Exception: Any exception that is thrown in module code or an
                        ImportError if paths are erroneous.
     """
-    if (file_paths == [] or
-            (names == [] and
-             types == [] and
-             supers == [] and
-             attributes == [])):
-        raise StopIteration
+    if not file_paths or (not names and
+                          not types and
+                          not supers and
+                          not attributes):
+        return
 
     for file_path in file_paths:
         module = _import_module(file_path)
         for obj_name, obj in inspect.getmembers(module):
-            if ((names == [] or obj_name in names) and
-                    (types == [] or isinstance(obj, tuple(types))) and
-                    (supers == [] or _is_subclass(obj, supers)) and
-                    (attributes == [] or _has_all(obj, attributes)) and
+            if ((not names or obj_name in names) and
+                    (not types or isinstance(obj, tuple(types))) and
+                    (not supers or _is_subclass(obj, supers)) and
+                    (not attributes or _has_all(obj, attributes)) and
                     (local[0] is False or _is_defined_in(obj, file_path))):
                 yield obj
 
