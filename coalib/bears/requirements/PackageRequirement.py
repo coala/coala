@@ -53,7 +53,7 @@ class PackageRequirement:
     @classmethod
     def multiple(cls, *args):
         """
-        Creates a tuple of multiple instances of a class.
+        Creates a set of multiple instances of a class.
 
         Should not be instances of ``PackageRequirement``, as this is an
         abstract class:
@@ -118,4 +118,4 @@ class PackageRequirement:
                     reqs.append(cls(name, version))
                 else:
                     raise TypeError('Too many elements provided.')
-            return tuple(reqs)
+            return set(reqs)

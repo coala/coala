@@ -47,19 +47,19 @@ class Bear(Printer, LogPrinter):
     >>> class SomeBear(Bear):
     ...     LANGUAGES = {'C', 'CPP','C#', 'D'}
 
-    To indicate the requirements of the bear, assign ``REQUIREMENTS`` a tuple
+    To indicate the requirements of the bear, assign ``REQUIREMENTS`` a set
     with instances of ``PackageRequirements``.
 
     >>> class SomeBear(Bear):
-    ...     REQUIREMENTS = (
-    ...         PackageRequirement('pip', 'coala_decorators', '0.2.1'),)
+    ...     REQUIREMENTS = {
+    ...         PackageRequirement('pip', 'coala_decorators', '0.2.1')}
 
     If your bear uses requirements from a manager we have a subclass from,
     you can use the subclass, such as ``PythonRequirement``, without specifying
     manager:
 
     >>> class SomeBear(Bear):
-    ...     REQUIREMENTS = (PythonRequirement('coala_decorators', '0.2.1'),)
+    ...     REQUIREMENTS = {PythonRequirement('coala_decorators', '0.2.1')}
 
     To specify multiple requirements using ``pip``, you can use the multiple
     method. This can receive both tuples of strings, in case you want a specific
@@ -120,7 +120,7 @@ class Bear(Printer, LogPrinter):
     """
 
     LANGUAGES = set()
-    REQUIREMENTS = ()
+    REQUIREMENTS = set()
     AUTHORS = set()
     AUTHORS_EMAILS = set()
     MAINTAINERS = set()
