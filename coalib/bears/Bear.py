@@ -74,7 +74,7 @@ class Bear(Printer, LogPrinter):
 
     >>> class SomeBear(Bear):
     ...     AUTHORS = {'Jon Snow'}
-    ...     AUTHORS_EMAIL = {'jon_snow@gmail.com'}
+    ...     AUTHORS_EMAILS = {'jon_snow@gmail.com'}
     ...     MAINTAINERS = {'Catelyn Stark'}
     ...     MAINTAINERS_EMAILS = {'catelyn_stark@gmail.com'}
     ...     LICENSE = 'AGPL-3.0'
