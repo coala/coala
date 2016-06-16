@@ -74,10 +74,20 @@ class Bear(Printer, LogPrinter):
 
     >>> class SomeBear(Bear):
     ...     AUTHORS = {'Jon Snow'}
-    ...     AUTHORS_EMAIL = {'jon_snow@gmail.com'}
+    ...     AUTHORS_EMAILS = {'jon_snow@gmail.com'}
     ...     MAINTAINERS = {'Catelyn Stark'}
     ...     MAINTAINERS_EMAILS = {'catelyn_stark@gmail.com'}
     ...     LICENSE = 'AGPL-3.0'
+
+    If the maintainers are the same as the authors, they can be omitted:
+    
+    >>> class SomeBear(Bear):
+    ...     AUTHORS = {'Jon Snow'}
+    ...     AUTHORS_EMAILS = {'jon_snow@gmail.com'}
+    >>> SomeBear.maintainers
+    {'Jon Snow'}
+    >>> SomeBear.maintainers_emails
+    {'jon_snow@gmail.com'}
 
     If your bear needs to include local files, then specify it giving strings
     containing relative file paths to the INCLUDE_LOCAL_FILES set:
@@ -135,6 +145,19 @@ class Bear(Printer, LogPrinter):
                  information from what it can fix too.
         """
         return cls.CAN_DETECT | cls.CAN_FIX
+
+    @classproperty
+    def maintainers(cls):
+        """
+        """
+        return cls.AUTHORS if cls.MAINTAINERS == set() else cls.MAINTAINERS
+
+    @classproperty
+    def maintainers_emails(cls):
+        """
+        """
+        return (cls.AUTHORS_EMAILS if cls.MAINTAINERS_EMAILS == set()
+                else cls.MAINTAINERS)
 
     @enforce_signature
     def __init__(self,
