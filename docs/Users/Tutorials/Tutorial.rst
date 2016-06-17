@@ -45,7 +45,7 @@ available for C:
 
 ::
 
-    coala --show-language-bears C
+    coala --show-bears --filter-by-language C
 
 *coala* now lists all bears that can operate on C code. You can specify the
 kind of analysis with the ``--bears`` argument:
