@@ -25,6 +25,7 @@ default_actions = PEP8Bear: ApplyPatchAction
 
 [linelength]  # Sometimes autopep8 makes too long lines, need to check after!
 bears = LineLengthBear
+ignore_length_regex = ^.*https?://
 
 [DOCS]
 bears = SpaceConsistencyBear, LineLengthBear

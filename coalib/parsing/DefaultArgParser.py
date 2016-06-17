@@ -48,13 +48,30 @@ def default_arg_parser(formatter_class=None):
     else:
         parser_type = 'coala'
 
+    description = """
+coala provides a common command-line interface for linting and fixing all your
+code, regardless of the programming languages you use.
+
+To find out what kind of analysis coala offers for the languages you use, visit
+<https://github.com/coala-analyzer/bear-docs/blob/master/README.rst#supported-languages>
+or run:
+
+    $ coala --show-bears --filter-by-language C Python
+
+To perform code analysis, simply specify the analysis routines (bears) and the
+files you want it to run on, for example:
+
+    $ coala --bears SpaceConsistencyBear --files **.py
+
+coala can also automatically fix your code:
+
+    $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
+"""
+
     arg_parser = argparse.ArgumentParser(
         formatter_class=formatter_class,
         prog="coala",
-        description="coala is a simple COde AnaLysis Application. Its goal "
-                    "is to make static code analysis easy and convenient "
-                    "for all languages. coala uses bears, which are analysis "
-                    "routines that can be combined arbitrarily.",
+        description=description,
         # Use our own help so that we can put it in the group we want
         add_help=False)
 
