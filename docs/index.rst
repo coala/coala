@@ -68,7 +68,7 @@ Welcome to the coala documentation!
    :caption: API Documentation
    :hidden:
 
-   List of Modules<API/modules>
+   List of Modules (Generated)<API/modules>
 
 You might also want to look at `our website <http://coala-analyzer.org/>`_.
 
