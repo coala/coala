@@ -55,6 +55,12 @@ kind of analysis with the ``--bears`` argument:
     cd coala-tutorial
     coala --files=src/\*.c --bears=SpaceConsistencyBear --save
 
+.. note::
+
+    You can use comma seperated values to specify more than one item in
+    arguments! Do not use spaces as that would start a new argument.
+    Example: ``SpaceConsistencyBear,PEP8Bear``
+
 *coala* will now ask you for missing values that are needed to perform the
 analysis, which in this case is only the ``use_spaces`` setting. We
 recommend setting it to ``true``.
