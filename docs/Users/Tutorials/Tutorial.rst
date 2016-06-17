@@ -71,6 +71,8 @@ see trailing whitespace errors on your console.
 
 Feel free to experiment a bit. You've successfully analysed some code!
 But don't stop reading - you don't have to enter all those values again!
+We have given *coala* the ``--save`` argument, which means that it will
+automatically generate a ``.coafile`` into the current directory. Read on!
 
 Configuration Files
 ~~~~~~~~~~~~~~~~~~~
