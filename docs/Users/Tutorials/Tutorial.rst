@@ -160,7 +160,8 @@ Auto-applying results
 Often you don't want to look at trivial results like spacing issues. For
 that purpose *coala* includes a special setting called ``default_actions``
 that allows you to set the action for a bear that shall be automatically
-applied on run.
+applied on run. We have a command line alias ``--apply-patches`` to make it
+easier to use.
 
 Let's automatically fix python code. Take a look at our sample python
 code:
@@ -187,24 +188,13 @@ That looks horrible, doesn't it? Let's fix it!
 ::
 
     $ coala -S python.bears=PEP8Bear python.files=\*\*/\*.py \
-    python.default_actions=PEP8Bear:ApplyPatchAction --save
+    --apply-patches --save
     # other output ...
     Executing section python...
     [INFO][11:03:37] Applied 'ApplyPatchAction' for 'PEP8Bear'.
     [INFO][11:03:37] Applied 'ApplyPatchAction' for 'PEP8Bear'.
 
 *coala* would now fix all spacing issues and without bothering you again.
-
-Currently following actions are available:
-
--  ``ApplyPatchAction``: Applies a given patch (if existent).
--  ``ShowPatchAction``: Just displays a given patch (if existent)
-   without doing something.
-
-For debugging purposes:
-
--  ``PrintDebugMessageAction``: Prints a debug message for the appearing
-   result.
 
 Setting Inheritance
 -------------------
