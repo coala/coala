@@ -232,7 +232,9 @@ any routines yield false positives.
 Ignoring Files
 ~~~~~~~~~~~~~~
 
-*coala* lets you ignore whole files through the ``ignore`` setting:
+*coala* lets you ignore whole files through the ``ignore`` setting. In
+addition to normal globs, *coala* offers ``**`` to match all directories and
+subdirectories:
 
 ::
 
