@@ -1,3 +1,6 @@
+.. image:: https://badge.waffle.io/coala-analyzer/coala.png?label=ready&title=Ready 
+ :target: https://waffle.io/coala-analyzer/coala
+ :alt: 'Stories in Ready'
 You might also want to visit `our website <http://coala-analyzer.org/>`_.
 
 .. Start ignoring LineLengthBear
