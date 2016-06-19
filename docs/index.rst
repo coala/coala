@@ -32,6 +32,7 @@ Welcome to the coala documentation!
    External APIs <Users/External_APIs>
    Git Hooks <Users/Git_Hooks>
    Shell Autocompletion <Users/Tutorials/Shell_Autocompletion>
+   coala in Docker <Users/Container>
 
 .. toctree::
    :caption: Developer Resources
