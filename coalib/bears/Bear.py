@@ -11,7 +11,7 @@ from pyprint.Printer import Printer
 
 from coala_decorators.decorators import enforce_signature, classproperty
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
-from coalib.bears.requirements.PythonRequirement import PythonRequirement
+from coalib.bears.requirements.PipRequirement import PipRequirement
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
@@ -55,11 +55,11 @@ class Bear(Printer, LogPrinter):
     ...         PackageRequirement('pip', 'coala_decorators', '0.2.1')}
 
     If your bear uses requirements from a manager we have a subclass from,
-    you can use the subclass, such as ``PythonRequirement``, without specifying
+    you can use the subclass, such as ``PipRequirement``, without specifying
     manager:
 
     >>> class SomeBear(Bear):
-    ...     REQUIREMENTS = {PythonRequirement('coala_decorators', '0.2.1')}
+    ...     REQUIREMENTS = {PipRequirement('coala_decorators', '0.2.1')}
 
     To specify multiple requirements using ``pip``, you can use the multiple
     method. This can receive both tuples of strings, in case you want a specific
@@ -67,7 +67,7 @@ class Bear(Printer, LogPrinter):
     specified.
 
     >>> class SomeBear(Bear):
-    ...     REQUIREMENTS = PythonRequirement.multiple(
+    ...     REQUIREMENTS = PipRequirement.multiple(
     ...         ('colorama', '0.1'), 'coala_decorators')
 
     To specify additional attributes to your bear, use the following:

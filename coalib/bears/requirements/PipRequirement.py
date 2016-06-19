@@ -1,7 +1,7 @@
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
 
 
-class PythonRequirement(PackageRequirement):
+class PipRequirement(PackageRequirement):
     """
     This class is a subclass of ``PackageRequirement``, and helps specifying
     requirements from ``pip``, without using the manager name.
@@ -9,10 +9,10 @@ class PythonRequirement(PackageRequirement):
 
     def __init__(self, package, version=""):
         """
-        Constructs a new ``PythonRequirement``, using the ``PackageRequirement``
+        Constructs a new ``PipRequirement``, using the ``PackageRequirement``
         constructor.
 
-        >>> pr = PythonRequirement('setuptools', '19.2')
+        >>> pr = PipRequirement('setuptools', '19.2')
         >>> pr.manager
         'pip'
         >>> pr.package
