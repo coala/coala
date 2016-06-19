@@ -96,10 +96,11 @@ class Bear(Printer, LogPrinter):
     ...     INCLUDE_LOCAL_FILES = {'checkstyle.jar', 'google_checks.xml'}
 
     To keep track easier of what a bear can do, simply tell it to the CAN_FIX
-    and the CAN_DETECT sets. Possible values:
+    and the CAN_DETECT sets. Possible values but not limited to:
 
     >>> CAN_DETECT = {'Syntax', 'Formatting', 'Security', 'Complexity', 'Smell',
-    ... 'Redundancy', 'Simplification', 'Variable Misuse', 'Spelling', 'Other'}
+    ... 'Redundancy', 'Simplification', 'Variable Misuse', 'Spelling',
+    ... 'Unused Code', 'Memory Insufficiency', 'Unreachable Code'}
     >>> CAN_FIX = {'Syntax', ...}
 
     Specifying something to CAN_FIX makes it obvious that it can be detected
