@@ -1,10 +1,13 @@
 import tempfile
 import unittest
+import os
+import re
 
 from coalib import coala_delete_orig
 from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
+from coalib.misc.ContextManagers import make_temp
 
 
 class coalaDeleteOrigTest(unittest.TestCase):
@@ -37,3 +40,13 @@ class coalaDeleteOrigTest(unittest.TestCase):
             output = stdout.getvalue()
             self.assertEqual(retval, 0)
             self.assertIn("Couldn't delete", output)
+
+    def test_normal_running(self):
+        with tempfile.TemporaryDirectory() as directory:
+            temporary = tempfile.mkstemp(suffix=".orig", dir=directory)
+            os.close(temporary[0])
+            section = Section("")
+            section.append(Setting("project_dir", re.escape(directory)))
+            retval = coala_delete_orig.main(section=section)
+            self.assertEqual(retval, 0)
+            self.assertFalse(os.path.isfile(temporary[1]))
