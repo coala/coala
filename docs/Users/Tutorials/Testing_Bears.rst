@@ -18,8 +18,7 @@ Let us understand how to write tests for ``TooManyLinesBear`` in ``some_dir``.
 
 .. code::
 
-    from coalib.results.Result import Result
-    from coalib.bears.LocalBear import LocalBear
+    from coalib.bears import LocalBear, Result
 
 
     class TooManyLinesBear(LocalBear):
@@ -111,7 +110,7 @@ passed.
 
     from bears.some_dir.TooManyLinesBear import TooManyLinesBear
     from tests.LocalBearTestHelper import LocalBearTestHelper
-    from coalib.results.Result import Result
+    from coalib.bears import Result
     from coalib.settings.Section import Section
 
 
