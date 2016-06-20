@@ -4,6 +4,7 @@ coverage:
     changes: false
     patch: false
     project:
-      enabled: true
-      target: auto
-      threshold: 100%
+      default:
+        enabled: true
+        target: auto
+        threshold: 100%
