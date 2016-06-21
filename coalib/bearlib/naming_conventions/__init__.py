@@ -74,3 +74,36 @@ def to_snakecase(string):
     return re.sub("[A-Z]",
                   lambda match: "_" + match.group(0).lower(),
                   string)
+
+
+def to_spacecase(string):
+    """
+    Converts the given string to space-case.
+
+    >>> to_spacecase('helloWorld')
+    'Hello World'
+    >>> to_spacecase('__Init__File__')
+    'Init File'
+    >>> to_spacecase('')
+    ''
+    >>> to_spacecase('Already Space Case')
+    'Already Space Case'
+
+    :param string: The string to convert.
+    :return:       The space-cased string.
+    """
+    string = re.sub("(_)",
+                    lambda match: ' ',
+                    string)
+    string = re.sub("^(\s*)(.)",
+                    lambda match: match.group(2).upper(),
+                    string)
+    string = re.sub("(\s*)$",
+                    lambda match: '',
+                    string)
+    string = re.sub("(?<=[^\s])\s+([^\s])",
+                    lambda match: ' ' + match.group(1).upper(),
+                    string)
+    return re.sub("(?<=[^\s])([A-Z])",
+                  lambda match: ' ' + match.group(1),
+                  string)
