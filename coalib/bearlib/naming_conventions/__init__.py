@@ -51,7 +51,7 @@ def to_pascalcase(string):
 
 def to_snakecase(string):
     """
-    Converts the given to string to snake-case.
+    Converts the given string to snake-case.
 
     >>> to_snakecase('HelloWorld')
     'hello_world'
