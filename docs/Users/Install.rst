@@ -6,12 +6,19 @@ platforms are Linux and Windows. *coala* is known to work on OS X as well.
 *coala* is tested against CPython 3.3, 3.4 and 3.5.
 
 In order to run *coala* you need to install Python. It is recommended,
-that you install Python3 >= 3.3 from http://www.python.org.
+that you install Python3 >= 3.3 from `here <https://www.python.org/downloads/>`_.
 
 The easiest way to install *coala* is using pip (Pip Installs Packages).
-If you don't already have pip, you can install it like described on
-https://pip.pypa.io/en/stable/installing.html. Note that pip is shipped
-with recent python versions by default.
+If you don't already have pip, you can install it like described in the
+`pip installation guide <https://pip.pypa.io/en/stable/installing.html>`_. Note
+that pip is shipped with recent python versions by default.
+
+To check whether you have pip installed, type the following command which will
+also show you more information about your current pip version:
+::
+
+    $ pip show pip
+
 
 System wide installation
 ------------------------
@@ -60,7 +67,7 @@ Installing inside a virtualenv
 
 Virtualenv is probably what you want to use during development,
 you’ll probably want to use it there, too. You can read more about
-it at their documentation - http://virtualenv.readthedocs.org
+it at the `virtualenv documentation <http://virtualenv.readthedocs.org>`_.
 
 First, we need to install virtualenv to the system. You may already have this
 installed as ``virtualenv`` or ``pyvenv``. If you do not, this can be done
@@ -119,9 +126,9 @@ Alternate installation
 ~~~~~~~~~~~~~~~~~~~~~~
 
 If you want to install *coala* to an alternate location you can e.g. call
-``python3 setup.py install --prefix=/your/prefix/location``. Other
-options are documented on
-https://docs.python.org/3.3/install/#alternate-installation.
+``python3 setup.py install --prefix=/your/prefix/location``. Other installation
+options are documented in the
+`Python docs <https://docs.python.org/3.3/install/#alternate-installation>`_.
 
 .. note::
 
@@ -132,8 +139,8 @@ https://docs.python.org/3.3/install/#alternate-installation.
        existing environment variables into the ``sudo`` environment).
 
     You could also set your pip.conf file to use a proxy, to know more
-    read
-    http://stackoverflow.com/questions/14149422/using-pip-behind-a-proxy
+    read `Using pip behind a proxy on StackOverflow
+    <http://stackoverflow.com/questions/14149422/using-pip-behind-a-proxy>`_
     for further clarification.
 
 Error handling
