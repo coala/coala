@@ -1,5 +1,24 @@
-coala 0.7.0
-===========
+coala 0.7.0 - baloo
+===================
+
+::
+
+              ,o8b,         .o88Oo._
+             P    d        d8P         .ooOO8bo._
+            d'    p        88                  '*Y8bo.
+           .Y    ."         YA                      '*Y8b   __
+       db, d" _ooQ.dPQ,     YA                        68o68**8Oo.
+     .8'  YI.Y"   b   B      "8D                       *"'    "Y8o
+    .Y    ;L 8,    Yq.8       Y8     'YB                       .8D
+    B .db_.L  q,   q "q       '8               d8'             8D
+    8"    qp   8,  8           8       d8888b          d      AY
+           8    ",dP           Y,     d888888         d'  _.oP"
+           "q    8;             q.    Y8888P'        d8
+            '8    b              "q.  `Y88P'       d8"
+             'D,  ,8                Y           ,o8P
+               'odY'                     oooo888P"
+
+(Release logo by Fabian Neuschmidt)
 
 For this release, 32 people from all over the world have contributed about 200
 commits over almost two months.
