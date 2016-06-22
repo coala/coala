@@ -13,10 +13,15 @@ def to_camelcase(string):
     ''
     >>> to_camelcase('alreadyCamelCase')
     'alreadyCamelCase'
+    >>> to_camelcase('   string')
+    '___string'
 
     :param string: The string to convert.
     :return:       The camel-cased string.
     """
+    string = re.sub("(\s)",
+                    lambda match: '_',
+                    string)
     string = re.sub("^(_*)(.)",
                     lambda match: match.group(1) + match.group(2).lower(),
                     string)
@@ -37,10 +42,15 @@ def to_pascalcase(string):
     ''
     >>> to_pascalcase('AlreadyPascalCase')
     'AlreadyPascalCase'
+    >>> to_pascalcase('   string')
+    '___String'
 
     :param string: The string to convert.
     :return:       The pascal-cased string.
     """
+    string = re.sub("(\s)",
+                    lambda match: '_',
+                    string)
     string = re.sub("^(_*)(.)",
                     lambda match: match.group(1) + match.group(2).upper(),
                     string)
@@ -61,10 +71,15 @@ def to_snakecase(string):
     ''
     >>> to_snakecase('already_snake_case')
     'already_snake_case'
+    >>> to_snakecase('   string  ')
+    '___string__'
 
     :param string: The string to convert.
     :return:       The snake-cased string.
     """
+    string = re.sub("(\s)",
+                    lambda match: '_',
+                    string)
     string = re.sub("^(_*)([^_])",
                     lambda match: match.group(1) + match.group(2).lower(),
                     string)
@@ -88,6 +103,8 @@ def to_spacecase(string):
     ''
     >>> to_spacecase('Already Space Case')
     'Already Space Case'
+    >>> to_spacecase('  string  ')
+    'String'
 
     :param string: The string to convert.
     :return:       The space-cased string.
