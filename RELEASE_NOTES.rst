@@ -1,3 +1,76 @@
+coala 0.7.0
+===========
+
+For this release, 32 people from all over the world have contributed about 200
+commits over almost two months.
+
+The focus of this release is certainly on the usability of coala. Usability
+testing has made us aware of some important difficulties, users have to face
+when trying out coala. We have implemented a lot of countermeasures to lower
+this barrier.
+
+The changelog below summarizes the most important user facing changes. Not
+listed are especially lots of internal improvements and documentation fixes.
+
+New Features:
+
+- `Shell Autocompletion <http://coala.readthedocs.io/en/latest/Users/Tutorials/Shell_Autocompletion.html>`_
+- Patches are shown without prompting the user if small enough, otherwise
+  diffstats.
+- Bears have metadata and can be browsed. Browse the
+  `bear documentation <https://github.com/coala-analyzer/bear-docs>`_
+  repository for more information on all the bears.
+- Lots of usability improvements! coala will suggest using certain options if
+  no meaningful configuration was supplied.
+- The help was revamped completely and is way easier to read.
+- A ``--verbose`` alias is available for ``-L DEBUG``.
+- The ``default_actions`` setting accepts globs for bears now.
+- The ``--apply-patches`` argument was added to automatically apply all
+  patches.
+- coala supports experimental caching. This can lower the run time to a
+  fraction of the time needed to perform the full analysis. It will be enabled
+  by default in the next release. To use it, invoke coala with
+  ``--changed-files``.
+- Bear showing is divided into a new set of settings: ``--show-bears`` shows
+  all bears, ``--filter-by-language`` allows to filter them, ``--show-details``
+  and ``--show-description`` allow changing verbosity of the output.
+
+Feature Removals:
+
+- Tagging was removed.
+- ``linter`` does no longer show the executable of the bear by default.
+
+Performance Improvements:
+
+- Globs will be internally cached now so they don't need to be retranslated
+  every time. This may show improvements of several seconds when working with
+  a large set of files.
+- coala supports experimental caching. See ``New Features`` for more
+  information.
+- coala does not delete ``*.orig`` files on startup anymore. This was a huge
+  performance hit especially on HDDs or big file trees. The cleanup can be
+  performed manually by running ``coala-delete-orig``. Instead coala will
+  keep track of ``*.orig`` files more smartly.
+
+Bugfixes:
+
+- ``**.py`` can again be used instead ``**/*.py``.
+- If errors happen before the initialization of logging, tracebacks will be
+  shown.
+
+For bear writers:
+
+- Bears can have a number of attributes now, including author information,
+  supported languages or categories. A requirements attribute will help
+  generating requirements definition files more easily in the future.
+- The ``linter`` wrapper provides a ``result_severity`` and a
+  ``result_message`` parameter now.
+- Bears can now delete and rename files.
+- The ``LanguageDefinition`` doesn't need a ``language_family`` anymore to
+  load language definitions.
+- Results can be created directly from the Bear class more conveniently
+  with ``self.new_result(...)``.
+
 coala 0.6.0 - honeybadger
 =========================
 
