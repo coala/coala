@@ -30,7 +30,7 @@ ignore_length_regex = ^.*https?://
 [DOCS]
 bears = SpaceConsistencyBear, LineLengthBear
 
-files = docs/**/*.rst, CONTRIBUTING.md, README.rst
+files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
 ignore = docs/API/**
 ignore_length_regex = ^.*https?://
 default_actions = SpaceConsistencyBear: ApplyPatchAction
@@ -39,7 +39,7 @@ default_actions = SpaceConsistencyBear: ApplyPatchAction
 enabled = False
 
 bears = LanguageToolBear
-files = docs/**/*.rst, CONTRIBUTING.md, README.rst
+files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
 ignore = docs/API/**
 languagetool_disable_rules =
     EN_QUOTES,                          # `` for links in rst files
