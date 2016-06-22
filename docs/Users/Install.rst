@@ -137,7 +137,7 @@ https://docs.python.org/3.3/install/#alternate-installation.
     for further clarification.
 
 Error handling
-~~~~~~~~~~~~~~~~
+--------------
 
 In case you are getting
 ``ValueError:('Expected version spec in', 'appdirs ~=1.4.0', 'at', ' ~=1.4.0')``
