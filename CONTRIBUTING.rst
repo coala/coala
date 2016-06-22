@@ -1,7 +1,7 @@
 How to contribute
 =================
 
-Welcome to *coala*! The following guidelines will give you a short overview 
+Welcome to *coala*! The following guidelines will give you a short overview
 over how we handle issues and PRs in this repository. *coala* is maintained
 by a growing community and newcomers are always welcome!
 
@@ -9,11 +9,11 @@ We appreciate all valuable contributions - bug reports, documentation and
 design enhancements issues as well as pull Requests to make *coala* more
 convenient, functional and bug free.
 
-To begin contributing have a look at the open issues labeled with difficulty/newcomer -
-`newcomer issues <https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer>`__.
+To begin contributing have a look at the open issues labeled with
+difficulty/newcomer - `newcomer issues <https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer>`__.
 
 Follow the instructions
-`here <http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__ 
+`here <http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__
 and get involved to help us make a better software.
 
 Filing Issues
@@ -62,4 +62,3 @@ shall be amended so the history is not cluttered by “fixup commits”.
 
 For further information/queries feel free to discuss with us on
 `gitter <https://gitter.im/coala-analyzer/coala>`__.
-
