@@ -9,6 +9,24 @@ from coalib.bearlib.languages.documentation.DocumentationExtraction import (
 
 class DocumentationCommentTest(unittest.TestCase):
 
+    Description = DocumentationComment.Description
+    Parameter = DocumentationComment.Parameter
+    ReturnValue = DocumentationComment.ReturnValue
+
+    def load_testdata(self, filename):
+        filename = os.path.join(os.path.dirname(
+            os.path.realpath(__file__)),
+            os.path.join("documentation_extraction_testdata",
+                         filename))
+
+        with open(filename, "r") as test_file:
+            data = test_file.read()
+
+        return data.splitlines(keepends=True)
+
+
+class GeneralDocumentationCommentTest(DocumentationCommentTest):
+
     def test_fields(self):
         uut = DocumentationComment("my doc",
                                    "c",
@@ -40,12 +58,14 @@ class DocumentationCommentTest(unittest.TestCase):
         self.assertEqual(uut.marker, ("##", "#", "#"))
         self.assertEqual(uut.range, None)
 
+    def test_not_implemented(self):
+        not_implemented = DocumentationComment(
+            "some docs", "nolang", "doxygen", None, None, None)
+        with self.assertRaises(NotImplementedError):
+            not_implemented.parse()
 
-class PythonDocumentationCommentTest(unittest.TestCase):
 
-    Description = DocumentationComment.Description
-    Parameter = DocumentationComment.Parameter
-    ReturnValue = DocumentationComment.ReturnValue
+class PythonDocumentationCommentTest(DocumentationCommentTest):
 
     def check_docstring(self, docstring, expected=[]):
         self.assertIsInstance(docstring,
@@ -60,14 +80,6 @@ class PythonDocumentationCommentTest(unittest.TestCase):
                                            None, None, None)
         parsed_metadata = doc_comment.parse()
         self.assertEqual(parsed_metadata, expected)
-
-    def load_testdata(self, filename):
-        filename = (os.path.dirname(os.path.realpath(__file__)) +
-                    "/documentation_extraction_testdata/" + filename)
-        with open(filename, "r") as fl:
-            data = fl.read()
-
-        return data.splitlines(keepends=True)
 
     def test_empty_docstring(self):
         self.check_docstring("", [])
@@ -142,9 +154,3 @@ class PythonDocumentationCommentTest(unittest.TestCase):
              self.ReturnValue(desc='Nothing\n')]]
 
         self.assertEqual(parsed_docs, expected)
-
-    def test_not_implemented(self):
-        not_implemented = DocumentationComment("some docs", "nolang", "doxygen",
-                                               None, None, None)
-        with self.assertRaises(NotImplementedError):
-            not_implemented.parse()
