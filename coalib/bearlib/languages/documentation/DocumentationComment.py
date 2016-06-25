@@ -57,6 +57,9 @@ class DocumentationComment:
         elif self.language == "python" and self.docstyle == "doxygen":
             return self._parse_documentation_with_symbols(
                 ("@param ", " "), "@return ")
+        elif self.language == "java" and self.docstyle == "default":
+            return self._parse_documentation_with_symbols(
+                ("@param  ", " "), "@return ")
         else:
             raise NotImplementedError(
                 "Documentation parsing for {0.language!r} in {0.docstyle!r}"

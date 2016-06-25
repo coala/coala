@@ -154,3 +154,22 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
              self.ReturnValue(desc='Nothing\n')]]
 
         self.assertEqual(parsed_docs, expected)
+
+
+class JavaDocumentationCommentTest(DocumentationCommentTest):
+
+    def test_java_default(self):
+        data = self.load_testdata("default.java")
+
+        parsed_docs = [doc.parse() for doc in
+                       extract_documentation(data, "java", "default")]
+
+        expected = [[self.Description(
+                     desc='\n Returns an String that says Hello with the name'
+                          ' argument.\n\n'),
+                     self.Parameter(name='name',
+                                    desc='the name to which to say hello\n'),
+                     self.ReturnValue(
+                         desc='     the concatenated string\n')]]
+
+        self.assertEqual(expected, parsed_docs)

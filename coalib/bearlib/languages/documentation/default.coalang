@@ -3,3 +3,7 @@ doc-marker = """, , """
 
 [PYTHON3]
 doc-marker = """, , """
+
+[JAVA]
+doc-marker1 = /**, \ *, \ */
+doc-marker2 = /**, , \ */
