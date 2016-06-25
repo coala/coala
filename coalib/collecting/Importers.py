@@ -136,16 +136,24 @@ def iimport_objects(file_paths, names=None, types=None, supers=None,
     """
     Import all objects from the given modules that fulfill the requirements
 
-    :param file_paths: File path(s) from which objects will be imported
-    :param names:      Name(s) an objects need to have one of
-    :param types:      Type(s) an objects need to be out of
-    :param supers:     Class(es) objects need to be a subclass of
-    :param attributes: Attribute(s) an object needs to (all) have
-    :param local:      if True: Objects need to be defined in the file they
-                       appear in to be collected
-    :return:           iterator that yields all matching python objects
-    :raises Exception: Any exception that is thrown in module code or an
-                       ImportError if paths are erroneous.
+    :param file_paths:
+        File path(s) from which objects will be imported.
+    :param names:
+        Name(s) an objects need to have one of.
+    :param types:
+        Type(s) an objects need to be out of.
+    :param supers:
+        Class(es) objects need to be a subclass of.
+    :param attributes:
+        Attribute(s) an object needs to (all) have.
+    :param local:
+        If True: Objects need to be defined in the file they appear in to be
+        collected.
+    :return:
+        An iterator that yields all matching python objects.
+    :raises Exception:
+        Any exception that is thrown in module code or an ImportError if paths
+        are erroneous.
     """
     with ExitStack() as stack:
         if not verbose:
