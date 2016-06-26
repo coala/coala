@@ -14,7 +14,8 @@ sudo apt-get update
 deps="indent libclang1-3.4"
 deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
-sudo apt-get install $deps $deps_python_gi $deps_python_dbus
+deps_ruby_npm="ruby gem nodejs"
+sudo apt-get install $deps $deps_python_gi $deps_python_dbus $deps_ruby_npm
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
