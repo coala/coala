@@ -1,6 +1,9 @@
 from contextlib import contextmanager
 import shlex
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen, call, DEVNULL
+import functools
+
+call_without_output = functools.partial(call, stdout=DEVNULL, stderr=DEVNULL)
 
 
 @contextmanager

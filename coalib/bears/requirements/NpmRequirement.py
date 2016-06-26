@@ -1,4 +1,5 @@
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.misc.Shell import call_without_output
 
 
 class NpmRequirement(PackageRequirement):
@@ -24,3 +25,22 @@ class NpmRequirement(PackageRequirement):
         :param version: A version string. Leave empty to specify latest version.
         """
         PackageRequirement.__init__(self, 'npm', package, version)
+
+    def install_command(self):
+        """
+        Creates the installation command for the instance of the class.
+
+        >>> NpmRequirement('alex', '2').install_command()
+        'npm install alex@2'
+
+        :param return: A string with the installation command.
+        """
+        return "npm install {}@{}".format(self.package, self.version)
+
+    def is_installed(self):
+        """
+        Checks if the dependency is installed.
+
+        :param return: True if dependency is installed, false otherwise.
+        """
+        return not call_without_output(['npm', 'show', self.package])
