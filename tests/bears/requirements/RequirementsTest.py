@@ -38,7 +38,7 @@ class NpmRequirementTestCase(unittest.TestCase):
 class GemRequirementTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.GemRequirement = GemRequirement('ruby')
+        self.GemRequirement = GemRequirement('gem')
         self.GemRequirementBad = PipRequirement('some_bad_package')
 
     @unittest.skipIf(shutil.which('gem') is None, "Ruby is not installed.")
