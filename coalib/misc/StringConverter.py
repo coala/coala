@@ -16,11 +16,9 @@ class StringConverter:
     def __init__(self,
                  value,
                  strip_whitespaces=True,
-                 list_delimiters=None,
+                 list_delimiters=(',', ';'),
                  dict_delimiter=":",
                  remove_empty_iter_elements=True):
-        if list_delimiters is None:
-            list_delimiters = [",", ";"]
 
         if not isinstance(list_delimiters, Iterable):
             raise TypeError("list_delimiters has to be an Iterable.")
