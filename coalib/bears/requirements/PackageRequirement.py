@@ -1,4 +1,5 @@
 from coala_decorators.decorators import generate_eq, generate_repr
+import os
 
 
 @generate_eq("manager", "package", "version")
@@ -119,3 +120,19 @@ class PackageRequirement:
                 else:
                     raise TypeError('Too many elements provided.')
             return set(reqs)
+
+    @classmethod
+    def upload(self):
+        """
+        An upload method which uploads a conda package containing the command
+        to install the corresponding package.
+        """
+        name = self.package
+        if not os.path.exists(name):
+            os.mkdir(name)
+        file = open(name + '/' + name + '.py', 'a')
+        file.write(self.manager + ' ' + self.package)
+        file.close()
+        meta = open(name + '/meta.yaml', 'w')
+        # also create all the scripts here, for windows and OS X
+        meta.close()
