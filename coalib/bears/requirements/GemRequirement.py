@@ -1,4 +1,6 @@
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.misc.Shell import call_without_output
+import platform
 
 
 class GemRequirement(PackageRequirement):
@@ -29,3 +31,31 @@ class GemRequirement(PackageRequirement):
         """
         PackageRequirement.__init__(self, 'gem', package, version)
         self.require = require
+
+    def install_command(self):
+        """
+        Creates the installation command for the instance of the class.
+
+        >>> GemRequirement('rubocop').install_command()
+        "gem install 'rubocop'"
+
+        >>> GemRequirement('scss_lint', '', 'false').install_command()
+        "gem install 'scss_lint', require: false"
+
+        :param return: A string with the installation command.
+        """
+        result = "gem install '{}'".format(self.package)
+        if self.require:
+            result += ", require: {}".format(self.require)
+        return result
+
+    def is_installed(self):
+        """
+        Checks if the dependency is installed.
+
+        :param return: True if dependency is installed, false otherwise.
+        """
+        cmd = ['gem', 'list', '-i', self.package]
+        if platform.system() == 'Windows':  # pragma: no cover
+            cmd = ['cmd', '/c'] + cmd
+        return not call_without_output(cmd)
