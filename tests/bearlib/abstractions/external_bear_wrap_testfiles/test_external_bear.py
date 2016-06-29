@@ -1,5 +1,14 @@
+import os
 import sys
 import json
+
+sys.path.append(os.path.join(os.path.dirname(__file__),
+                             "..", "..", "..", ".."))
+
+from coalib.results.Result import Result
+from coalib.results.SourceRange import SourceRange
+from coalib.output.JSONEncoder import create_json_encoder
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
 if __name__ == "__main__":
 
@@ -7,26 +16,32 @@ if __name__ == "__main__":
     args = json.loads(line)
     settings = args['settings']
 
-    out = [{
-            'message': "This is wrong",
-            'file': args['filename'],
-            'severity': "MAJOR",
-            'line': 1
-        }, {
-            'message': "This is wrong too",
-            'file': args['filename'],
-            'severity': "INFO",
-            'line': 3}]
+    results = [
+        Result(
+            origin="TestBear",
+            message="This is wrong",
+            affected_code=(SourceRange.from_values(args['filename'], 1),),
+            severity=RESULT_SEVERITY.MAJOR),
+        Result(
+            origin="TestBear",
+            message="This is wrong too",
+            affected_code=(SourceRange.from_values(args['filename'], 3),),
+            severity=RESULT_SEVERITY.INFO)]
 
     if settings['a']:
-        for res in out:
-            res['severity'] = "NORMAL"
+        for res in results:
+            res.severity = RESULT_SEVERITY.NORMAL
 
     if settings['b']:
-        out[0]['debug_msg'] = "Sample debug message"
+        results[0].debug_msg = "Sample debug message"
 
     if not settings['c']:
-        out[1]['message'] = "Different message"
+        results[1].message = "Different message"
 
-    json_dump = json.dumps(out)
+    out = {}
+    out['results'] = results
+
+    JSONEncoder = create_json_encoder()
+
+    json_dump = json.dumps(out, cls=JSONEncoder)
     sys.stdout.write(json_dump)

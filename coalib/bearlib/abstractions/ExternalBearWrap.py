@@ -8,6 +8,7 @@ from coala_decorators.decorators import enforce_signature
 from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
+from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
@@ -145,22 +146,6 @@ def _create_wrapper(klass, options):
                 if setting_name not in settings:
                     settings[setting_name] = description[2]
 
-        @staticmethod
-        def get_severity(result):
-            """
-            Returns the severity corresponding to the one from the
-            parsed JSON.
-
-            :param result:
-                A result dict extracted from the parsed JSON.
-            :return:
-                A RESULT_SEVERITY value.
-            :raises KeyError:
-                Raised when an invalid severity is specified.
-            """
-            return (RESULT_SEVERITY.str_dict[result['severity']]
-                    if 'severity' in result else RESULT_SEVERITY.NORMAL)
-
         def parse_output(self, out, filename):
             """
             Parses the output JSON into Result objects.
@@ -175,16 +160,20 @@ def _create_wrapper(klass, options):
             """
             output = json.loads(out)
 
-            for result in output:
-                yield Result.from_values(
-                    origin=self,
+            for result in output['results']:
+                affected_code = tuple(
+                    SourceRange.from_values(
+                        code_range['file'],
+                        code_range['start']['line'],
+                        code_range['start'].get('column'),
+                        code_range.get('end', {}).get('line'),
+                        code_range.get('end', {}).get('column'))
+                    for code_range in result['affected_code'])
+                yield Result(
+                    origin=result['origin'],
                     message=result['message'],
-                    file=filename,
-                    line=result['line'],
-                    end_line=result.get('end_line', None),
-                    column=result.get('column', None),
-                    end_column=result.get('end_column', None),
-                    severity=self.get_severity(result),
+                    affected_code=affected_code,
+                    severity=result.get('severity', 1),
                     debug_msg=result.get('debug_msg', ""),
                     additional_info=result.get('additional_info', ""))
 

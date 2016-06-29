@@ -7,6 +7,7 @@ from coalib.bearlib.abstractions.ExternalBearWrap import external_bear_wrap
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.settings.Section import Section
+from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
@@ -66,25 +67,6 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         uut = (external_bear_wrap("exec")(self.TestBear))
         self.assertEqual(uut.get_executable(), "exec")
 
-    def test_get_severity(self):
-        uut = (external_bear_wrap("exec")(self.Dummy))
-        result_major = {'severity': "MAJOR"}
-        result_normal = {'severity': "NORMAL"}
-        result_info = {'severity': "INFO"}
-        result_none = {}
-        result_wrong = {'severity': "Info"}
-
-        self.assertEqual(uut.get_severity(result_major),
-                         RESULT_SEVERITY.MAJOR)
-        self.assertEqual(uut.get_severity(result_normal),
-                         RESULT_SEVERITY.NORMAL)
-        self.assertEqual(uut.get_severity(result_info),
-                         RESULT_SEVERITY.INFO)
-        self.assertEqual(uut.get_severity(result_none),
-                         RESULT_SEVERITY.NORMAL)
-        with self.assertRaises(KeyError):
-            uut.get_severity(result_wrong)
-
     def test_create_arguments_fail(self):
         uut = (external_bear_wrap("exec")(self.Dummy))
         self.assertEqual(uut.create_arguments(), ())
@@ -137,36 +119,32 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         results = list(uut.run(self.testfile_path, self.testfile_content,
                                a=False))
         expected = [
-            Result.from_values(
+            Result(
                 origin=uut,
                 message="This is wrong",
-                file=self.testfile_path,
-                line=1,
+                affected_code=(SourceRange.from_values(self.testfile_path, 1),),
                 severity=RESULT_SEVERITY.MAJOR
                 ),
-            Result.from_values(
+            Result(
                 origin=uut,
                 message="This is wrong too",
-                file=self.testfile_path,
-                line=3,
+                affected_code=(SourceRange.from_values(self.testfile_path, 3),),
                 severity=RESULT_SEVERITY.INFO)]
         self.assertEqual(results, expected)
 
         results = list(uut.run(self.testfile_path, self.testfile_content,
                                a=True))
         expected = [
-            Result.from_values(
+            Result(
                 origin=uut,
                 message="This is wrong",
-                file=self.testfile_path,
-                line=1,
+                affected_code=(SourceRange.from_values(self.testfile_path, 1),),
                 severity=RESULT_SEVERITY.NORMAL
                 ),
-            Result.from_values(
+            Result(
                 origin=uut,
                 message="This is wrong too",
-                file=self.testfile_path,
-                line=3,
+                affected_code=(SourceRange.from_values(self.testfile_path, 3),),
                 severity=RESULT_SEVERITY.NORMAL)]
         self.assertEqual(results, expected)
 
@@ -180,18 +158,16 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         results = list(uut.run(self.testfile_path, self.testfile_content,
                                a=False, b=True, c=False))
         expected = [
-            Result.from_values(
+            Result(
                 origin=uut,
                 message="This is wrong",
-                file=self.testfile_path,
-                line=1,
+                affected_code=(SourceRange.from_values(self.testfile_path, 1),),
                 severity=RESULT_SEVERITY.MAJOR,
                 debug_msg="Sample debug message"
                 ),
-            Result.from_values(
+            Result(
                 origin=uut,
                 message="Different message",
-                file=self.testfile_path,
-                line=3,
+                affected_code=(SourceRange.from_values(self.testfile_path, 3),),
                 severity=RESULT_SEVERITY.INFO)]
         self.assertEqual(results, expected)
