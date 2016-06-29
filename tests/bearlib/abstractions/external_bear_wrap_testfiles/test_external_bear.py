@@ -28,14 +28,14 @@ if __name__ == "__main__":
             affected_code=(SourceRange.from_values(args['filename'], 3),),
             severity=RESULT_SEVERITY.INFO)]
 
-    if settings['a']:
+    if settings['set_normal_severity']:
         for res in results:
             res.severity = RESULT_SEVERITY.NORMAL
 
-    if settings['b']:
+    if settings['set_sample_dbg_msg']:
         results[0].debug_msg = "Sample debug message"
 
-    if not settings['c']:
+    if not settings['not_set_different_msg']:
         results[1].message = "Different message"
 
     out = {}

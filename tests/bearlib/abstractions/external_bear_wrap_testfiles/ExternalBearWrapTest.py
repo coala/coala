@@ -110,14 +110,14 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
                          FunctionMetadata.str_optional.format(None))
 
     def test_optional_settings(self):
-        uut = (external_bear_wrap(sys.executable,
-                                  settings={"a": ("", bool),
-                                            "b": ("", bool, False),
-                                            "c": ("", bool, True)})
+        uut = (external_bear_wrap(sys.executable, settings={
+            "set_normal_severity": ("", bool),
+            "set_sample_dbg_msg": ("", bool, False),
+            "not_set_different_msg": ("", bool, True)})
                (self.TestBear)
                (self.section, None))
         results = list(uut.run(self.testfile_path, self.testfile_content,
-                               a=False))
+                               set_normal_severity=False))
         expected = [
             Result(
                 origin=uut,
@@ -133,7 +133,7 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         self.assertEqual(results, expected)
 
         results = list(uut.run(self.testfile_path, self.testfile_content,
-                               a=True))
+                               set_normal_severity=True))
         expected = [
             Result(
                 origin=uut,
@@ -149,14 +149,16 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         self.assertEqual(results, expected)
 
     def test_settings(self):
-        uut = (external_bear_wrap(sys.executable,
-                                  settings={"a": ("", bool),
-                                            "b": ("", bool, False),
-                                            "c": ("", bool, True)})
+        uut = (external_bear_wrap(sys.executable, settings={
+            "set_normal_severity": ("", bool),
+            "set_sample_dbg_msg": ("", bool, False),
+            "not_set_different_msg": ("", bool, True)})
                (self.TestBear)
                (self.section, None))
         results = list(uut.run(self.testfile_path, self.testfile_content,
-                               a=False, b=True, c=False))
+                               set_normal_severity=False,
+                               set_sample_dbg_msg=True,
+                               not_set_different_msg=False))
         expected = [
             Result(
                 origin=uut,
