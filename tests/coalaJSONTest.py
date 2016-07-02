@@ -3,6 +3,8 @@ import os
 import re
 import sys
 import unittest
+import unittest.mock
+from pkg_resources import VersionConflict
 
 from coalib import coala_json
 from coalib.misc.ContextManagers import prepare_file
@@ -50,6 +52,46 @@ class coalaJSONTest(unittest.TestCase):
                 if "During execution, we found that some" in msg["message"]:
                     found = True
             self.assertTrue(found, "Missing settings not logged")
+
+    def test_show_all_bears(self):
+        with bear_test_module():
+            retval, output = execute_coala(coala_json.main, 'coala-json', '-B')
+            self.assertEqual(retval, 0)
+            output = json.loads(output)
+            self.assertEqual(len(output["bears"]), 4)
+
+    def test_show_language_bears(self):
+        with bear_test_module():
+            retval, output = execute_coala(
+                coala_json.main, 'coala-json', '-B', '-l', 'java')
+            self.assertEqual(retval, 0)
+            output = json.loads(output)
+            self.assertEqual(len(output["bears"]), 2)
+
+    def test_show_bears_attributes(self):
+        with bear_test_module():
+            retval, output = execute_coala(coala_json.main, 'coala-json', '-B')
+            self.assertEqual(retval, 0)
+            output = json.loads(output)
+            # Get JavaTestBear
+            bear = ([bear for bear in output["bears"]
+                     if bear["name"] == "JavaTestBear"][0])
+            self.assertTrue(bear, "JavaTestBear was not found.")
+            self.assertEqual(bear["LANGUAGES"], ["java"])
+            self.assertEqual(bear["LICENSE"], "AGPL-3.0")
+            self.assertEqual(bear["metadata"]["desc"],
+                             "Bear to test that collecting of languages works."
+                             )
+            self.assertTrue(bear["metadata"]["optional_params"])
+            self.assertFalse(bear["metadata"]["non_optional_params"])
+
+    @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
+    @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
+    def test_version_conflict_in_collecting_bears(self, import_fn, _):
+        with bear_test_module():
+            import_fn.side_effect = VersionConflict("msg1", "msg2")
+            retval, _ = execute_coala(coala_json.main, 'coala-json', '-B')
+            self.assertEqual(retval, 13)
 
     def test_version(self):
         with self.assertRaises(SystemExit):

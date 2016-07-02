@@ -180,6 +180,14 @@ coala can also automatically fix your code:
     # The following are "coala-json" specific arguments
     if parser_type == 'coala-json':
         outputs_group.add_argument(
+            '-B', '--show-bears', const=True, action='store_const',
+            help='list all bears')
+
+        outputs_group.add_argument(
+            '-l', '--filter-by-language', nargs='+', metavar='LANG',
+            help="filters `--show-bears` by the given languages")
+
+        outputs_group.add_argument(
             '-o', '--output', nargs=1, metavar='FILE',
             help='write JSON logs to the given file')
 

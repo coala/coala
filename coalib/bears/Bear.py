@@ -9,7 +9,8 @@ from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
 
-from coala_decorators.decorators import enforce_signature, classproperty
+from coala_decorators.decorators import (
+    enforce_signature, classproperty, get_public_members)
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
 from coalib.bears.requirements.PipRequirement import PipRequirement
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -259,6 +260,28 @@ class Bear(Printer, LogPrinter):
         return FunctionMetadata.from_function(
             cls.run,
             omit={"self", "dependency_results"})
+
+    @classmethod
+    def __json__(cls):
+        """
+        Override JSON export of ``Bear`` object.
+        """
+        _dict = get_public_members(cls)
+        metadata = cls.get_metadata()
+        non_optional_params = metadata.non_optional_params
+        optional_params = metadata.optional_params
+        _dict["metadata"] = {
+            "desc": metadata.desc,
+            "non_optional_params": ({param: non_optional_params[param][0]}
+                                    for param in non_optional_params),
+            "optional_params": ({param: optional_params[param][0]}
+                                for param in optional_params)}
+
+        # Delete attributes that cannot be serialized
+        unserializable_attributes = ["new_result", "printer"]
+        for attribute in unserializable_attributes:
+            _dict.pop(attribute, None)
+        return _dict
 
     @classmethod
     def missing_dependencies(cls, lst):
