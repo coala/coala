@@ -1,3 +1,5 @@
+from termcolor import colored
+
 try:
     # This import has side effects and is needed to make input() behave nicely
     import readline  # pylint: disable=unused-import
@@ -9,7 +11,6 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -22,6 +23,26 @@ from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
 from coalib.settings.Setting import Setting
 
+from pygments import highlight
+from pygments.util import ClassNotFound
+from pygments.formatters import TerminalFormatter, TerminalTrueColorFormatter
+from pygments.filters import VisibleWhitespaceFilter
+from pygments.lexers import TextLexer, get_lexer_for_filename
+from pygments.style import Style
+from pygments.token import Token
+
+
+class BackgroundStyle(Style):
+    '''
+    Sub class of ``Style``.
+
+    This class sets styling properties such as ``background color``,
+    ``text-color`` and ``bold`` on the text.
+    '''
+    styles = {
+        Token: 'bold bg:#eee #111'
+    }
+
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")
 STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
@@ -30,8 +51,10 @@ STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
 STR_PROJECT_WIDE = "Project wide:"
 FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
+CAPABILITY_COLOR = "green"
 HIGHLIGHTED_CODE_COLOR = 'red'
 SUCCESS_COLOR = 'green'
+REQUIRED_SETTINGS_COLOR = 'green'
 CLI_ACTIONS = (OpenEditorAction(),
                ApplyPatchAction(),
                PrintDebugMessageAction(),
@@ -119,34 +142,6 @@ def acquire_actions_and_apply(console_printer,
             break
 
 
-def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
-                                 color, index=0):
-    """
-    Prints the lines with tabs and spaces replaced by unicode symbols.
-
-    :param console_printer: The ``Printer`` object to print to.
-    :param line:            The line-text to print to ``console_printer``.
-    :param tab_dict:        A dictionary containing the indices of tabs inside
-                            ``line`` as keys and the tab-length as values.
-    :param color:           The color to print the line with (except for spaces
-                            and tabs.
-    :param index:           The index from where to start the printing.
-    """
-    for char in line:
-        if char == " ":
-            try:
-                console_printer.print("•", color='cyan', end='')
-            except UnicodeEncodeError:
-                console_printer.print(".", color='cyan', end='')
-        elif char == '\t' and tab_dict:
-            tab_count = tab_dict[index]
-            console_printer.print(
-                '-'*(tab_count-1) + '>', color='cyan', end='')
-        else:
-            console_printer.print(char, color=color, end='')
-        index += 1
-
-
 def print_lines(console_printer,
                 file_dict,
                 section,
@@ -166,31 +161,17 @@ def print_lines(console_printer,
                               color=FILE_LINES_COLOR,
                               end='')
         line = file_dict[sourcerange.file][i - 1].rstrip("\n")
-        tab_width = int(section.get('tab_width', 4))
-        s = SpacingHelper(tab_width)
-        tab_dict = dict(s.yield_tab_lengths(line))
-        printed_chars = 0
-        if i == sourcerange.start.line and sourcerange.start.column:
-            print_spaces_tabs_in_unicode(
-                console_printer, line[:sourcerange.start.column-1],
-                tab_dict, FILE_LINES_COLOR)
-
-            printed_chars = sourcerange.start.column-1
-
-        if i == sourcerange.end.line and sourcerange.end.column:
-            print_spaces_tabs_in_unicode(
-                console_printer, line[printed_chars:sourcerange.end.column-1],
-                tab_dict, HIGHLIGHTED_CODE_COLOR, printed_chars)
-
-            print_spaces_tabs_in_unicode(
-                console_printer, line[sourcerange.end.column-1:],
-                tab_dict, FILE_LINES_COLOR, sourcerange.end.column)
-            console_printer.print("")
-        else:
-            print_spaces_tabs_in_unicode(
-                console_printer, line[printed_chars:], tab_dict,
-                HIGHLIGHTED_CODE_COLOR, printed_chars)
-            console_printer.print("")
+        # Get suitable lexer depending on filename's extension and if not found
+        # use ``TextLexer`` as default.
+        try:
+            lexer = get_lexer_for_filename(os.path.relpath(sourcerange.file))
+        except ClassNotFound:
+            lexer = TextLexer()
+        lexer.add_filter(VisibleWhitespaceFilter(spaces="•", tabs='>',
+                                                 tabsize=4))
+        # highlight() combines lexer and formatter to output a ``str`` object.
+        line = (highlight(line, lexer, TerminalFormatter()))
+        console_printer.print(line, end='')
 
 
 def print_result(console_printer,
@@ -223,8 +204,11 @@ def print_result(console_printer,
     console_printer.print(format_lines("[{sev}] {bear}:".format(
         sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
         color=RESULT_SEVERITY_COLORS[result.severity])
+    lexer = TextLexer()
+    result.message = (highlight(result.message, lexer,
+                                TerminalTrueColorFormatter(style=BackgroundStyle
+                                                           )))
     console_printer.print(format_lines(result.message), delimiter="\n")
-
     if interactive:
         cli_actions = CLI_ACTIONS
         show_patch_action = ShowPatchAction()
@@ -414,7 +398,8 @@ def print_affected_lines(console_printer, file_dict, section, sourcerange):
 
     if sourcerange.start.line is not None:
         if len(file_dict[sourcerange.file]) < sourcerange.end.line:
-            console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST))
+            console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
+                                               line_nr=sourcerange.end.line))
         else:
             print_lines(console_printer,
                         file_dict,
@@ -422,30 +407,25 @@ def print_affected_lines(console_printer, file_dict, section, sourcerange):
                         sourcerange)
 
 
-def require_setting(log_printer, setting_name, arr):
+def require_setting(setting_name, arr):
     """
     This method is responsible for prompting a user about a missing setting and
     taking its value as input from the user.
 
-    :param log_printer:  Printer responsible for logging the messages.
     :param setting_name: Name od the setting missing
-    :param arr:          a list containing a description in [0] and the name
+    :param arr:          A list containing a description in [0] and the name
                          of the bears who need this setting in [1] and
                          following.
     """
-    if not isinstance(arr, list) or len(arr) < 2:
-        log_printer.log(LOG_LEVEL.WARNING,
-                        "One of the given settings ({}) is not properly "
-                        "described.".format(setting_name))
-
-        return None
-
     if len(arr) == 2:
         needed = arr[1]
     else:
         needed = ", ".join(arr[1:-1]) + " and " + arr[-1]
 
-    return input(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed))
+    # Don't use input, it can't deal with escapes!
+    print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed),
+                  REQUIRED_SETTINGS_COLOR))
+    return input()
 
 
 def acquire_settings(log_printer, settings_names_dict):
@@ -453,7 +433,8 @@ def acquire_settings(log_printer, settings_names_dict):
     This method prompts the user for the given settings.
 
     :param log_printer: Printer responsible for logging the messages.
-    :param settings:    a dictionary with the settings name as key and a list
+                        This is needed to comply with the interface.
+    :param settings:    A dictionary with the settings name as key and a list
                         containing a description in [0] and the name of the
                         bears who need this setting in [1] and following.
 
@@ -465,7 +446,7 @@ def acquire_settings(log_printer, settings_names_dict):
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
 
-    :return:            a dictionary with the settings name as key and the
+    :return:            A dictionary with the settings name as key and the
                         given value as value.
     """
     if not isinstance(settings_names_dict, dict):
@@ -474,9 +455,8 @@ def acquire_settings(log_printer, settings_names_dict):
 
     result = {}
     for setting_name, arr in settings_names_dict.items():
-        value = require_setting(log_printer, setting_name, arr)
-        if value is not None:
-            result[setting_name] = value
+        value = require_setting(setting_name, arr)
+        result.update({setting_name: value} if value is not None else {})
 
     return result
 
@@ -546,7 +526,7 @@ def print_actions(console_printer, section, actions, failed_actions):
     :param failed_actions:  A set of all actions that have failed. A failed
                             action remains in the list until it is
                             successfully executed.
-    :return:                A touple with the name member of the
+    :return:                A tuple with the name member of the
                             FunctionMetadata object chosen by the user
                             and a Section containing at least all needed
                             values for the action. If the user did
@@ -623,7 +603,7 @@ def show_enumeration(console_printer,
     """
     This function takes as input an iterable object (preferably a list or
     a dict). And prints in a stylized format. If the iterable object is
-    empty, it prints a specific statement give by the user. An e.g :
+    empty, it prints a specific statement given by the user. An e.g :
 
     <indentation>Title:
     <indentation> * Item 1
@@ -697,6 +677,18 @@ def show_bear(bear,
                          metadata.optional_params,
                          "  ",
                          "No optional settings.")
+        show_enumeration(console_printer,
+                         "Can detect:",
+                         bear.can_detect,
+                         "  ",
+                         "This bear does not provide information about what "
+                         "categories it can detect.")
+        show_enumeration(console_printer,
+                         "Can fix:",
+                         bear.CAN_FIX,
+                         "  ",
+                         "This bear cannot fix issues or does not provide "
+                         "information about what categories it can fix.")
 
 
 def print_bears(bears,
@@ -751,3 +743,37 @@ def show_bears(local_bears,
     bears = inverse_dicts(local_bears, global_bears)
 
     print_bears(bears, show_description, show_params, console_printer)
+
+
+def show_language_bears_capabilities(language_bears_capabilities,
+                                     console_printer):
+    """
+    Display what the bears can detect and fix.
+
+    :param language_bears_capabilities:
+        Dictionary with languages as keys and their bears' capabilities as
+        values. The capabilities are stored in a tuple of two elements where the
+        first one represents what the bears can detect, and the second one what
+        they can fix.
+    :param console_printer:
+        Object to print messages on the console.
+    """
+    if not language_bears_capabilities:
+        console_printer.print("There is no bear available for this language")
+    else:
+        for language, capabilities in language_bears_capabilities.items():
+            if capabilities[0]:
+                console_printer.print('coala can do the following for ', end='')
+                console_printer.print(language.upper(), color="blue")
+                console_printer.print("    Can detect only: ", end='')
+                console_printer.print(
+                    ', '.join(sorted(capabilities[0])), color=CAPABILITY_COLOR)
+                if capabilities[1]:
+                    console_printer.print("    Can fix        : ", end='')
+                    console_printer.print(
+                        ', '.join(sorted(capabilities[1])),
+                        color=CAPABILITY_COLOR)
+            else:
+                console_printer.print('coala does not support ', color='red',
+                                      end='')
+                console_printer.print(language, color='blue')
