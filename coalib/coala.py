@@ -16,15 +16,13 @@ import functools
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.coala_main import run_coala
-from coalib.collecting.Collectors import (
-    collect_all_bears_from_sections, filter_section_bears_by_languages)
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.ConsoleInteraction import (
     acquire_settings, nothing_done, print_results, print_section_beginning,
     show_bears)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
-from coalib.settings.ConfigurationGathering import load_configuration
+from coalib.settings.ConfigurationGathering import get_filtered_bears
 
 
 def main():
@@ -36,15 +34,8 @@ def main():
         args = default_arg_parser().parse_args()
 
         if args.show_bears:
-            sections, _ = load_configuration(arg_list=None,
-                                             log_printer=log_printer)
-            local_bears, global_bears = collect_all_bears_from_sections(
-                sections, log_printer)
-            if args.filter_by_language:
-                local_bears = filter_section_bears_by_languages(
-                    local_bears, args.filter_by_language)
-                global_bears = filter_section_bears_by_languages(
-                    global_bears, args.filter_by_language)
+            local_bears, global_bears = get_filtered_bears(
+                args.filter_by_language, log_printer)
 
             show_bears(local_bears,
                        global_bears,
