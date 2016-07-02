@@ -99,7 +99,7 @@ class Bear(Printer, LogPrinter):
     and the CAN_DETECT sets. Possible values:
 
     >>> CAN_DETECT = {'Syntax', 'Formatting', 'Security', 'Complexity', 'Smell',
-    ... 'Unused Code', 'Simplification', 'Variable Misuse', 'Spelling',
+    ... 'Unused Code', 'Redundancy', 'Variable Misuse', 'Spelling',
     ... 'Memory Leak', 'Documentation', 'Duplication', 'Commented Code',
     ... 'Grammar', 'Missing Import', 'Unreachable Code', 'Undefined Element'}
     >>> CAN_FIX = {'Syntax', ...}
@@ -109,9 +109,9 @@ class Bear(Printer, LogPrinter):
 
     >>> class SomeBear(Bear):
     ...     CAN_DETECT = {'Syntax', 'Security'}
-    ...     CAN_FIX = {'Simplification'}
+    ...     CAN_FIX = {'Redundancy'}
     >>> list(sorted(SomeBear.can_detect))
-    ['Security', 'Simplification', 'Syntax']
+    ['Redundancy', 'Security', 'Syntax']
 
     Every bear has a data directory which is unique to that particular bear:
 
