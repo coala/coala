@@ -101,7 +101,8 @@ class Bear(Printer, LogPrinter):
     >>> CAN_DETECT = {'Syntax', 'Formatting', 'Security', 'Complexity', 'Smell',
     ... 'Unused Code', 'Redundancy', 'Variable Misuse', 'Spelling',
     ... 'Memory Leak', 'Documentation', 'Duplication', 'Commented Code',
-    ... 'Grammar', 'Missing Import', 'Unreachable Code', 'Undefined Element'}
+    ... 'Grammar', 'Missing Import', 'Unreachable Code', 'Undefined Element',
+    ... 'Code Simplification'}
     >>> CAN_FIX = {'Syntax', ...}
 
     Specifying something to CAN_FIX makes it obvious that it can be detected
