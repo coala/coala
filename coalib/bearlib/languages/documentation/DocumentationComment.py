@@ -53,7 +53,7 @@ class DocumentationComment:
         """
         if self.language == "python" and self.docstyle == "default":
             return self._parse_documentation_with_symbols(
-                (":param ", ": "), ":return: ")
+                (":param ", ":"), ":return:")
         elif self.language == "python" and self.docstyle == "doxygen":
             return self._parse_documentation_with_symbols(
                 ("@param ", " "), "@return ")

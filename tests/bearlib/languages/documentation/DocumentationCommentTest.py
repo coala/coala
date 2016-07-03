@@ -92,15 +92,15 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         self.maxDiff = None
         doc = (" :param test:  test description1 \n"
                " :param test:  test description2 \n")
-        expected = [self.Parameter(name='test', desc=' test description1 \n'),
-                    self.Parameter(name='test', desc=' test description2 \n')]
+        expected = [self.Parameter(name='test', desc='  test description1 \n'),
+                    self.Parameter(name='test', desc='  test description2 \n')]
         self.check_docstring(doc, expected)
 
     def test_return_values_default(self):
         doc = (" :return: something1 \n"
                " :return: something2 ")
-        expected = [self.ReturnValue(desc='something1 \n'),
-                    self.ReturnValue(desc='something2 ')]
+        expected = [self.ReturnValue(desc=' something1 \n'),
+                    self.ReturnValue(desc=' something2 ')]
         self.check_docstring(doc, expected)
 
     def test_python_default(self):
@@ -114,7 +114,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                                    'Some more foobar-like text.\n')],
             [self.Description(desc='\nA nice and neat way of '
                                    'documenting code.\n'),
-             self.Parameter(name='radius', desc='The explosion radius.\n')],
+             self.Parameter(name='radius', desc=' The explosion radius.\n')],
             [self.Description(desc='\nA function that returns 55.\n')],
             [self.Description(desc='\nDocstring with layouted text.\n\n    '
                                    'layouts inside docs are preserved.'
@@ -122,12 +122,13 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
             [self.Description(desc=' Docstring inline with triple quotes.\n'
                                    '    Continues here. ')],
             [self.Description(desc='\nThis is the best docstring ever!\n\n'),
-             self.Parameter(name='param1:',
-                            desc='    Very Very Long Parameter description.\n'),
-             self.Parameter(name='param2:',
-                            desc='    Short Param description.\n\n'),
-             self.ReturnValue(desc='Long Return Description That Makes No Sense'
-                                   ' And Will\n         Cut to the Next'
+             self.Parameter(name='param1',
+                            desc='\n    Very Very Long Parameter '
+                                 'description.\n'),
+             self.Parameter(name='param2',
+                            desc='\n    Short Param description.\n\n'),
+             self.ReturnValue(desc=' Long Return Description That Makes No '
+                                   'Sense And Will\n         Cut to the Next'
                                    ' Line.\n')]]
 
         self.assertEqual(parsed_docs, expected)
