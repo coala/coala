@@ -98,12 +98,8 @@ class DocumentationComment:
                     param_identifiers[0]) + len(param_identifiers[0])
                 splitted = line[param_offset:].split(param_identifiers[1], 1)
                 cur_param = splitted[0].strip()
-                # For cases where the param description is not on the
-                # same line, but on subsequent lines.
-                try:
-                    param_desc = splitted[1]
-                except IndexError:
-                    param_desc = ""
+
+                param_desc = splitted[1]
                 parsed.append(self.Parameter(name=cur_param, desc=param_desc))
 
             elif stripped_line.startswith(return_identifiers):
