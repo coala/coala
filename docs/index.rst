@@ -25,7 +25,7 @@ Welcome to the coala documentation!
    :hidden:
 
    Installation <Users/Install>
-   Getting Started with Coala <Users/Tutorials/Tutorial>
+   Getting Started with coala <Users/Tutorials/Tutorial>
    coafile Specification <Users/coafile>
    Glob Patterns <Users/Glob_Patterns>
    Exit Codes <Users/Exit_Codes>
