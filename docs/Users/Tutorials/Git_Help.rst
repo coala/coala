@@ -124,8 +124,11 @@ Then type:
 
 This will lead you to a text editor. Now you need to write your commit message.
 We are very strict about writing commit messages as they help us maintain
-*coala* **clean** and **stable**. Commit messages usually consists of three main
-parts. They should have a newline between them.
+*coala* **clean** and **stable**. Commit messages usually consist of three
+main parts. They should have a newline between them. We'll try to offer some
+suggestions for improvement and you can try to commit again after making the
+relevant changes. Sometimes it may take several interactions of going back
+and forth before the changes will be accepted.
 
 - **The header**
 
