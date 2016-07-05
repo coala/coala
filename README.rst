@@ -51,6 +51,8 @@ To see what coala can do for you and your language, take a look at
 
 Read more at our `documentation <http://coala.rtfd.org/>`__.
 
+To consult our list of Frequently Asked Questions, simply visit `this link <http://coala.readthedocs.io/en/latest/Users/FAQ.html>`__.
+
 Why use coala?
 --------------
 

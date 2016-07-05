@@ -26,6 +26,7 @@ Welcome to the coala documentation!
 
    Installation <Users/Install>
    Getting Started with coala <Users/Tutorials/Tutorial>
+   Frequently Asked Questions <Users/FAQ>
    coafile Specification <Users/coafile>
    Glob Patterns <Users/Glob_Patterns>
    Exit Codes <Users/Exit_Codes>
