@@ -51,7 +51,7 @@ Welcome to the coala documentation!
    :hidden:
 
    Newcomers <Getting_Involved/Newcomers>
-   Introduction <Getting_Involved/README>
+   How To Get In Touch With Us <Getting_Involved/README>
    Codestyle <Getting_Involved/Codestyle>
    Commit Style <Getting_Involved/Writing_Good_Commits>
    Executing Tests <Getting_Involved/Testing>
