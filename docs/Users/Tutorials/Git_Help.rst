@@ -220,6 +220,10 @@ fine by our reviewers, you can simply send it again like this. If not, edit it
 and send it.
 Now you have successfully edited your last commit!
 
+If you need to rebase, or want to edit an older commit from your branch, we
+have an amazing `tutorial that you can watch <https://asciinema.org/a/78683>`__
+to understand how it works.
+
 Keeping your fork in sync
 -------------------------
 
