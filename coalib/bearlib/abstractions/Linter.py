@@ -9,7 +9,7 @@ from types import MappingProxyType
 
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.ContextManagers import make_temp
-from coala_decorators.decorators import assert_right_type, enforce_signature
+from coala_utils.decorators import assert_right_type, enforce_signature
 from coalib.misc.Future import partialmethod
 from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff

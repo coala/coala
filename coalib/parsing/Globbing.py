@@ -3,7 +3,7 @@ import platform
 import re
 from functools import lru_cache
 
-from coala_decorators.decorators import yield_once
+from coala_utils.decorators import yield_once
 from coalib.misc.Constants import GLOBBING_SPECIAL_CHARS
 
 

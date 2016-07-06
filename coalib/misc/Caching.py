@@ -1,7 +1,7 @@
 import time
 import os
 
-from coala_decorators.decorators import enforce_signature
+from coala_utils.decorators import enforce_signature
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.misc.CachingUtilities import (
     pickle_load, pickle_dump, delete_files)

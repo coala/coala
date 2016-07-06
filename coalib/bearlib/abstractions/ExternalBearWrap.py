@@ -4,7 +4,7 @@ from functools import partial
 from collections import OrderedDict
 
 from coalib.bears.LocalBear import LocalBear
-from coala_decorators.decorators import enforce_signature
+from coala_utils.decorators import enforce_signature
 from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result

@@ -7,7 +7,7 @@ from pyprint.NullPrinter import NullPrinter
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
-from coala_decorators.decorators import yield_once
+from coala_utils.decorators import yield_once
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
 from coalib.output.printers.LogPrinter import LogPrinter

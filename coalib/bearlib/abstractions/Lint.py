@@ -2,12 +2,12 @@ import os
 import re
 import shlex
 import shutil
-from coalib.parsing.StringProcessing import escape
+from coala_utils.string_processing import escape
 from subprocess import check_call, CalledProcessError, DEVNULL
 import tempfile
 
 from coalib.bears.Bear import Bear
-from coala_decorators.decorators import enforce_signature
+from coala_utils.decorators import enforce_signature
 from coalib.misc.Shell import run_shell_command, get_shell_type
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
