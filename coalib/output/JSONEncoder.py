@@ -2,7 +2,7 @@ import collections
 import json
 from datetime import datetime
 
-from coala_decorators.decorators import get_public_members
+from coala_utils.decorators import get_public_members
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 

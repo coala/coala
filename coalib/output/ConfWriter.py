@@ -2,7 +2,7 @@ from itertools import chain
 
 from pyprint.ClosableObject import ClosableObject
 
-from coalib.parsing.StringProcessing import escape
+from coala_utils.string_processing import escape
 from coalib.settings.Section import Section
 
 
