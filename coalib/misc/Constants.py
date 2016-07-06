@@ -41,7 +41,9 @@ TRUE_STRINGS = ['1',
                 'true',
                 'definitely',
                 'yup',
-                "right"]
+                "right",
+                "aye",
+                "positive"]
 
 FALSE_STRINGS = ['0',
                  'off',
@@ -50,7 +52,10 @@ FALSE_STRINGS = ['0',
                  'nope',
                  'nah',
                  'false',
-                 "wrong"]
+                 "wrong",
+                 'none',
+                 'nay',
+                 'negative']
 
 # This string contains many unicode characters to challenge tests.
 COMPLEX_TEST_STRING = ("4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ "
