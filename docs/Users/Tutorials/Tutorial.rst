@@ -15,8 +15,8 @@ Get Some Code
 -------------
 
 In order to perform a static code analysis on your code you will need
-some code to check. If you do not have own code you want to check, you
-can retrieve our tutorial samples:
+some code to check. If you do not have your own code you want to check,
+you can retrieve our tutorial samples:
 
 ::
 
