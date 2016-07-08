@@ -1,4 +1,5 @@
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.misc.Shell import call_without_output
 
 
 class JuliaRequirement(PackageRequirement):
@@ -29,3 +30,24 @@ class JuliaRequirement(PackageRequirement):
         """
         PackageRequirement.__init__(self, 'julia', package, version)
         self.flag = flag
+
+    def install_command(self):
+        """
+        Creates the installation command for the instance of the class.
+
+        >>> JuliaRequirement("Lint").install_command()
+        'julia -e "Pkg.add(\"Lint\")'
+
+        :param return: A string with the installation command.
+        """
+        return 'julia {} "Pkg.add(\"{}\")'.format(self.flag, self.package)
+
+    def is_installed(self):
+        """
+        Checks if the dependency is installed.
+
+        :param return: True if dependency is installed, false otherwise.
+        """
+
+        return not call_without_output(
+         ('julia', '-e', '"Pkg.installed(\"' + self.package + '\")"'))
