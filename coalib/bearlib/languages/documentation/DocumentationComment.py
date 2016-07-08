@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from coala_decorators.decorators import generate_eq, generate_repr
+from coala_utils.decorators import generate_eq, generate_repr
 
 
 @generate_repr()

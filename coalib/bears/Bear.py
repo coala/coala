@@ -9,7 +9,7 @@ from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
 
-from coala_decorators.decorators import enforce_signature, classproperty
+from coala_utils.decorators import enforce_signature, classproperty
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
 from coalib.bears.requirements.PipRequirement import PipRequirement
 from coalib.output.printers.LogPrinter import LogPrinter

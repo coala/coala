@@ -1,7 +1,7 @@
 from collections import Iterable
 import os.path
 
-from coala_decorators.decorators import (
+from coala_utils.decorators import (
     enforce_signature, generate_eq, generate_repr)
 from coalib.parsing.ConfParser import ConfParser
 

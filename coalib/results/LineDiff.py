@@ -1,6 +1,6 @@
 import collections
 
-from coala_decorators.decorators import generate_repr
+from coala_utils.decorators import generate_repr
 
 
 class ConflictError(Exception):

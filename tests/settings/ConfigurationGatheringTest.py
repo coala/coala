@@ -10,7 +10,7 @@ import pytest
 from coalib.misc import Constants
 from coalib.misc.ContextManagers import make_temp, change_directory
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.parsing.StringProcessing import escape
+from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
     find_user_config, gather_configuration, load_configuration)
 

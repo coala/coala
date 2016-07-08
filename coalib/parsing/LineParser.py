@@ -1,5 +1,5 @@
-from coalib.misc.StringConverter import StringConverter
-from coalib.parsing.StringProcessing import unescape, convert_to_raw
+from coala_utils.string_processing.StringConverter import StringConverter
+from coala_utils.string_processing import unescape, convert_to_raw
 
 
 class LineParser:

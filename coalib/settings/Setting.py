@@ -1,8 +1,8 @@
 import os
 from collections import OrderedDict
 
-from coala_decorators.decorators import generate_repr
-from coalib.misc.StringConverter import StringConverter
+from coala_utils.decorators import generate_repr
+from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.parsing.Globbing import glob_escape
 
 
