@@ -7,25 +7,20 @@ class JuliaRequirement(PackageRequirement):
     requirements from ``julia``, without using the manager name.
     """
 
-    def __init__(self, package, version="", flag=""):
+    def __init__(self, package, version=""):
         """
         Constructs a new ``JuliaRequirement``, using the ``PackageRequirement``
         constructor.
 
-        >>> pr = JuliaRequirement('"Pkg.add(\"Lint\")"', '19.2', '-e')
+        >>> pr = JuliaRequirement('Lint', '19.2')
         >>> pr.manager
         'julia'
         >>> pr.package
-        '"Pkg.add(\"Lint\")"'
+        'Lint'
         >>> pr.version
         '19.2'
-        >>> pr.flag
-        '-e'
 
         :param package: A string with the name of the package to be installed.
         :param version: A version string. Leave empty to specify latest version.
-        :param flag:    A string that specifies any additional flags, that
-                        are passed to the manager.
         """
         PackageRequirement.__init__(self, 'julia', package, version)
-        self.flag = flag
