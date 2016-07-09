@@ -13,6 +13,7 @@
 
 import json
 
+from coalib.coala import display_bears
 from coalib.coala_main import run_coala
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
@@ -28,12 +29,34 @@ def main():
     args = arg_parser.parse_args()
 
     log_printer = None if args.text_logs else ListLogPrinter()
+    JSONEncoder = create_json_encoder(use_relpath=args.relpath)
+
+    if args.show_bears:
+        results = display_bears(args=args,
+                                log_printer=log_printer,
+                                show_json=True)
+        retval = {"results": results}
+        if args.output:
+            filename = str(args.output[0])
+            with open(filename, 'w+') as fp:
+                json.dump(retval, fp,
+                          cls=JSONEncoder,
+                          sort_keys=True,
+                          indent=2,
+                          separators=(',', ': '))
+        else:
+            print(json.dumps(retval,
+                             cls=JSONEncoder,
+                             sort_keys=True,
+                             indent=2,
+                             separators=(',', ': ')))
+        return 0
+
     results, exitcode, _ = run_coala(log_printer=log_printer, autoapply=False)
 
     retval = {"results": results}
     if not args.text_logs:
         retval["logs"] = log_printer.logs
-    JSONEncoder = create_json_encoder(use_relpath=args.relpath)
     if args.output:
         filename = str(args.output[0])
         with open(filename, 'w+') as fp:

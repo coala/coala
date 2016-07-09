@@ -159,8 +159,8 @@ coala can also automatically fix your code:
         choices=('INFO', 'NORMAL', 'MAJOR'), metavar='ENUM',
         help="set minimal result severity to INFO/NORMAL/MAJOR")
 
-    # The following are "coala" specific arguments
-    if parser_type == 'coala':
+    # The following are "coala" and "coala-json" specific arguments
+    if parser_type == 'coala' or parser_type == 'coala-json':
         outputs_group.add_argument(
             '-B', '--show-bears', const=True, action='store_const',
             help='list all bears')

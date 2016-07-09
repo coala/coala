@@ -653,7 +653,8 @@ def show_bear(bear,
               sections,
               show_description,
               show_params,
-              console_printer):
+              console_printer,
+              show_json):
     """
     Display all information about a bear.
 
@@ -662,7 +663,30 @@ def show_bear(bear,
     :param show_description: True if the main description should be shown.
     :param show_params:      True if the details should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param show_json:        True if console output is a json else False.
+    :return:                 A json data if `show_json` is True
     """
+    if show_json:
+        bear_json_data = {'name': '',
+                          'description': '',
+                          'params': ''}
+
+        bear_json_data['name'] = bear.name
+
+        if show_description or show_params:
+            metadata = bear.get_metadata()
+            if show_description:
+                bear_json_data['description'] = metadata.desc
+            if show_params:
+                bear_json_data['params'] = {'Llnguages': bear.LANGUAGES,
+                                            'use': sections,
+                                            'needed settings':
+                                            metadata.non_optional_params,
+                                            'optional settings':
+                                            metadata.optional_params}
+
+        return bear_json_data
+
     console_printer.print(bear.name, color="blue")
 
     if not show_description and not show_params:
@@ -702,7 +726,8 @@ def show_bear(bear,
 def print_bears(bears,
                 show_description,
                 show_params,
-                console_printer):
+                console_printer,
+                show_json):
     """
     Presents all bears being used in a stylized manner.
 
@@ -713,27 +738,41 @@ def print_bears(bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param show_json:        True if console output is a json else False.
+    :return:                 A list of json data if `show_json` is True.
     """
     if not bears:
         console_printer.print("No bears to show. Did you forget to install "
                               "the `coala-bears` package? Try `pip3 install "
                               "coala-bears`.")
         return
-
+    bear_json_list = []
     for bear, sections in sorted(bears.items(),
                                  key=lambda bear_tuple: bear_tuple[0].name):
-        show_bear(bear,
-                  sections,
-                  show_description,
-                  show_params,
-                  console_printer)
+        if show_json:
+            bear_json_list.append(show_bear(bear,
+                                            sections,
+                                            show_description,
+                                            show_params,
+                                            console_printer,
+                                            show_json))
+        else:
+            show_bear(bear,
+                      sections,
+                      show_description,
+                      show_params,
+                      console_printer,
+                      show_json)
+    if show_json:
+        return bear_json_list
 
 
 def show_bears(local_bears,
                global_bears,
                show_description,
                show_params,
-               console_printer):
+               console_printer,
+               show_json=False):
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
@@ -747,7 +786,12 @@ def show_bears(local_bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param show_json:        True if the console output is json
+    else False.
+    :return:                 A list of json data if `show_json` is True.
     """
     bears = inverse_dicts(local_bears, global_bears)
-
-    print_bears(bears, show_description, show_params, console_printer)
+    print_bears_data = print_bears(bears, show_description, show_params,
+                                   console_printer, show_json)
+    if show_json:
+        return print_bears_data
