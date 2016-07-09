@@ -27,6 +27,34 @@ from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.settings.ConfigurationGathering import load_configuration
 
 
+def display_bears(args,
+                  log_printer,
+                  console_printer=ConsolePrinter(),
+                  show_json=False):
+    """
+    Display the bears.
+    :param is_json: True for coala-json else False.
+    """
+    sections, _ = load_configuration(arg_list=None,
+                                     log_printer=log_printer)
+    local_bears, global_bears = collect_all_bears_from_sections(
+        sections, log_printer)
+    if args.filter_by_language:
+        local_bears = filter_section_bears_by_languages(
+            local_bears, args.filter_by_language)
+        global_bears = filter_section_bears_by_languages(
+            global_bears, args.filter_by_language)
+
+    show_bears_data = show_bears(local_bears,
+                                 global_bears,
+                                 args.show_description or args.show_details,
+                                 args.show_details,
+                                 console_printer,
+                                 show_json)
+    if show_json:
+        return show_bears_data
+
+
 def main():
     try:
         console_printer = ConsolePrinter()
@@ -36,21 +64,9 @@ def main():
         args = default_arg_parser().parse_args()
 
         if args.show_bears:
-            sections, _ = load_configuration(arg_list=None,
-                                             log_printer=log_printer)
-            local_bears, global_bears = collect_all_bears_from_sections(
-                sections, log_printer)
-            if args.filter_by_language:
-                local_bears = filter_section_bears_by_languages(
-                    local_bears, args.filter_by_language)
-                global_bears = filter_section_bears_by_languages(
-                    global_bears, args.filter_by_language)
-
-            show_bears(local_bears,
-                       global_bears,
-                       args.show_description or args.show_details,
-                       args.show_details,
-                       console_printer)
+            display_bears(args,
+                          log_printer,
+                          console_printer)
             return 0
     except BaseException as exception:  # pylint: disable=broad-except
         return get_exitcode(exception, log_printer)
