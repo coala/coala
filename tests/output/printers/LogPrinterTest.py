@@ -72,8 +72,8 @@ class LogPrinterTest(unittest.TestCase):
         uut = LogPrinter()
         state = uut.__getstate__()
         uut.__setstate__(state)
-        self.assertIs(uut.logger, logging.getLogger('coala.raw'))
+        self.assertIs(uut.logger, logging.getLogger())
 
     def test_no_printer(self):
         uut = LogPrinter()
-        self.assertIs(uut.logger, logging.getLogger('coala.raw'))
+        self.assertIs(uut.logger, logging.getLogger())

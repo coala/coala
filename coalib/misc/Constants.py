@@ -143,24 +143,28 @@ def configure_logging():
     logging.config.dictConfig({
         'version': 1,
         'handlers': {
-            'raw': {
+            'colored': {
                 'class': 'logging.StreamHandler',
-                'formatter': 'raw',
+                'formatter': 'colored',
                 'stream': sys.stdout
             }
         },
         'root': {
-            'level': 'DEBUG'
-        },
-        'loggers': {
-            'coala.raw': {
-                'handlers': ['raw']
-            }
+            'level': 'DEBUG',
+            'handlers': ['colored']
         },
         'formatters': {
-            'raw': {
-                'format': '[%(levelname)s][%(asctime)s] %(message)s',
-                'datefmt': '%X'
+            'colored': {
+                '()': 'colorlog.ColoredFormatter',
+                'format': '%(log_color)s[%(levelname)s]%(reset)s[%(asctime)s]'
+                          ' %(message)s',
+                'datefmt': '%X',
+                'log_colors': {
+                    'ERROR': 'red',
+                    'WARNING': 'yellow',
+                    'INFO': 'blue',
+                    'DEBUG': 'green'
+                }
             }
         }
     })

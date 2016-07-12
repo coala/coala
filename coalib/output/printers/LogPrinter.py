@@ -94,7 +94,8 @@ class LogPrinterMixin:
 class LogPrinter(LogPrinterMixin):
     """
     This class is deprecated and will be soon removed. To get logger use
-    logging.getLogger('coala.raw').
+    logging.getLogger(__name__). Make sure that you're getting it when the
+    logging configuration is loaded.
 
     The LogPrinter class allows to print log messages to an underlying Printer.
 
@@ -117,8 +118,7 @@ class LogPrinter(LogPrinterMixin):
         :param timestamp_format: The format string for the
                                  datetime.today().strftime(format) method.
         """
-        self.logger_name = 'coala.raw'
-        self.logger = logging.getLogger(self.logger_name)
+        self.logger = logging.getLogger()
 
         self._printer = printer
         self.log_level = log_level
@@ -159,4 +159,4 @@ class LogPrinter(LogPrinterMixin):
     def __setstate__(self, newdict):
         self.__dict__.update(newdict)
         # restore logger by name
-        self.logger = logging.getLogger(self.logger_name)
+        self.logger = logging.getLogger()
