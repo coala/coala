@@ -81,7 +81,7 @@ def _extract_doc_comment_continuous(content, line, column, markers):
         if pos == -1:
             return line, 0, doc_comment
         else:
-            doc_comment += content[line][pos+marker_len:]
+            doc_comment += content[line][pos + marker_len:]
 
         line += 1
 
@@ -134,12 +134,13 @@ def _extract_doc_comment_standard(content, line, column, markers):
                 # If the first text occurrence is not the each-line marker
                 # now we violate the doc-comment layout.
                 return None
-            doc_comment += content[line][each_line_pos+len(markers[1]):]
+            doc_comment += content[line][each_line_pos + len(markers[1]):]
         else:
             # If no each-line marker found or it's located past the end marker:
             # extract no further and end the doc-comment.
             if each_line_pos != -1 and each_line_pos + 1 < pos:
-                doc_comment += content[line][each_line_pos+len(markers[1]):pos]
+                doc_comment += content[line][each_line_pos +
+                                             len(markers[1]):pos]
 
             return line, pos + len(markers[2]), doc_comment
 
