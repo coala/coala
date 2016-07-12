@@ -15,8 +15,8 @@ class DocumentationComment:
     ReturnValue = namedtuple('ReturnValue', 'desc')
     Description = namedtuple('Description', 'desc')
 
-    def __init__(self, documentation, language,
-                 docstyle, indent, marker, range):
+    def __init__(self, documentation, docstyle_definition,
+                 indent, marker, range):
         """
         Instantiates a new DocumentationComment.
 
@@ -30,14 +30,25 @@ class DocumentationComment:
         :param range:         The position range of type TextRange.
         """
         self.documentation = documentation
-        self.language = language.lower()
-        self.docstyle = docstyle.lower()
+        self.docstyle_definition = docstyle_definition
         self.indent = indent
         self.marker = marker
         self.range = range
 
     def __str__(self):
         return self.documentation
+
+    @property
+    def language(self):
+        return self.docstyle_definition.language
+
+    @property
+    def docstyle(self):
+        return self.docstyle_definition.docstyle
+
+    @property
+    def metadata(self):
+        return self.docstyle_definition.metadata
 
     def parse(self):
         """

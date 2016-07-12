@@ -184,7 +184,7 @@ def _compile_multi_match_regex(strings):
 
 
 def _extract_doc_comment_from_line(content, line, column, regex,
-                                   marker_dict, language, docstyle):
+                                   marker_dict, docstyle_definition):
     cur_line = content[line]
     begin_match = regex.search(cur_line, column)
     if begin_match:
@@ -199,15 +199,15 @@ def _extract_doc_comment_from_line(content, line, column, regex,
                                             begin_match.start() + 1,
                                             end_line + 1,
                                             end_column + 1)
-                doc = DocumentationComment(documentation, language,
-                                           docstyle, indent, marker, rng)
+                doc = DocumentationComment(documentation, docstyle_definition,
+                                           indent, marker, rng)
 
                 return end_line, end_column, doc
 
     return line + 1, 0, None
 
 
-def extract_documentation_with_markers(content, markers, language, docstyle):
+def extract_documentation_with_markers(content, docstyle_definition):
     """
     Extracts all documentation texts inside the given source-code-string.
 
@@ -225,6 +225,8 @@ def extract_documentation_with_markers(content, markers, language, docstyle):
     # begin sequence we initially want to search for in source code. Then
     # the possible found documentation match is processed further with the
     # rest markers.
+    markers = docstyle_definition.markers
+
     marker_dict = {}
     for marker_set in markers:
         if marker_set[0] not in marker_dict:
@@ -240,13 +242,13 @@ def extract_documentation_with_markers(content, markers, language, docstyle):
     line = 0
     column = 0
     while line < len(content):
-        line, column, doc = _extract_doc_comment_from_line(content,
-                                                           line,
-                                                           column,
-                                                           begin_regex,
-                                                           marker_dict,
-                                                           language,
-                                                           docstyle)
+        line, column, doc = _extract_doc_comment_from_line(
+            content,
+            line,
+            column,
+            begin_regex,
+            marker_dict,
+            docstyle_definition)
         if doc:
             yield doc
 
@@ -278,6 +280,4 @@ def extract_documentation(content, language, docstyle):
                                found in the content.
     """
     docstyle_definition = DocstyleDefinition.load(language, docstyle)
-    return extract_documentation_with_markers(content,
-                                              docstyle_definition.markers,
-                                              language, docstyle)
+    return extract_documentation_with_markers(content, docstyle_definition)
