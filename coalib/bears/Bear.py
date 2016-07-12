@@ -282,7 +282,9 @@ class Bear(Printer, LogPrinter):
         """
         Override JSON export of ``Bear`` object.
         """
-        _dict = get_public_members(cls)
+        # json cannot serialize properties, so drop them
+        _dict = {key: value for key, value in get_public_members(cls).items()
+                 if not isinstance(value, property)}
         metadata = cls.get_metadata()
         non_optional_params = metadata.non_optional_params
         optional_params = metadata.optional_params
@@ -292,11 +294,6 @@ class Bear(Printer, LogPrinter):
                                     for param in non_optional_params),
             "optional_params": ({param: optional_params[param][0]}
                                 for param in optional_params)}
-
-        # Delete attributes that cannot be serialized
-        unserializable_attributes = ["new_result", "printer"]
-        for attribute in unserializable_attributes:
-            _dict.pop(attribute, None)
         return _dict
 
     @classmethod
