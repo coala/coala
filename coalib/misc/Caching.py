@@ -14,8 +14,10 @@ class FileCache:
 
     >>> from pyprint.NullPrinter import NullPrinter
     >>> from coalib.output.printers.LogPrinter import LogPrinter
+    >>> import logging
     >>> import copy, time
-    >>> log_printer = LogPrinter(NullPrinter())
+    >>> log_printer = LogPrinter()
+    >>> log_printer.log_level = logging.CRITICAL
 
     To initialize the cache create an instance for the project:
 

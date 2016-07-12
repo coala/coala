@@ -1,8 +1,7 @@
 import traceback
+import logging
 
-from pyprint.ColorPrinter import ColorPrinter
-
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL, LOG_LEVEL_COLORS
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 
 
@@ -94,6 +93,9 @@ class LogPrinterMixin:
 
 class LogPrinter(LogPrinterMixin):
     """
+    This class is deprecated and will be soon removed. To get logger use
+    logging.getLogger('coala.raw').
+
     The LogPrinter class allows to print log messages to an underlying Printer.
 
     This class is an adapter, means you can create a LogPrinter from every
@@ -101,8 +103,8 @@ class LogPrinter(LogPrinterMixin):
     """
 
     def __init__(self,
-                 printer,
-                 log_level=LOG_LEVEL.INFO,
+                 printer=None,
+                 log_level=LOG_LEVEL.DEBUG,
                  timestamp_format="%X"):
         """
         Creates a new log printer from an existing Printer.
@@ -115,9 +117,26 @@ class LogPrinter(LogPrinterMixin):
         :param timestamp_format: The format string for the
                                  datetime.today().strftime(format) method.
         """
+        self.logger_name = 'coala.raw'
+        self.logger = logging.getLogger(self.logger_name)
+
         self._printer = printer
         self.log_level = log_level
         self.timestamp_format = timestamp_format
+
+    @property
+    def log_level(self):
+        """
+        Returns current log_level used in logger.
+        """
+        return self.logger.getEffectiveLevel()
+
+    @log_level.setter
+    def log_level(self, log_level):
+        """
+        Sets log_level for logger.
+        """
+        self.logger.setLevel(log_level)
 
     @property
     def printer(self):
@@ -126,44 +145,18 @@ class LogPrinter(LogPrinterMixin):
         """
         return self._printer
 
-    def _get_log_prefix(self, log_level, timestamp):
-        datetime_string = timestamp.strftime(self.timestamp_format)
-
-        if datetime_string != "":
-            datetime_string = "[" + datetime_string + "]"
-
-        return '[{}]{}'.format(LOG_LEVEL.reverse.get(log_level, "ERROR"),
-                               datetime_string)
-
     def log_message(self, log_message, **kwargs):
         if not isinstance(log_message, LogMessage):
             raise TypeError("log_message should be of type LogMessage.")
+        self.logger.log(log_message.log_level, log_message.message)
 
-        if log_message.log_level < self.log_level:
-            return
+    def __getstate__(self):
+        # on Windows there are problems with serializing loggers, so omit it
+        oldict = self.__dict__.copy()
+        del oldict['logger']
+        return oldict
 
-        self._print_log_message(
-            self._get_log_prefix(log_message.log_level, log_message.timestamp),
-            log_message,
-            **kwargs)
-
-    def _print_log_message(self, prefix, log_message, **kwargs):
-        """
-        Override this if you want to influence how the log message is printed.
-
-        If the underlying printer is a ColorPrinter, then colored logging is
-        used. You can turn it off in the underlying ColorPrinter if you want to
-        print uncolored.
-
-        :param prefix:      The prefix to print (as string).
-        :param log_message: The LogMessage object to print.
-        :param kwargs:      Any other keyword arguments.
-        """
-        if isinstance(self._printer, ColorPrinter):
-            self.printer.print(prefix,
-                               end=" ",
-                               color=LOG_LEVEL_COLORS[log_message.log_level],
-                               **kwargs)
-            self.printer.print(log_message.message, **kwargs)
-        else:
-            self.printer.print(prefix, log_message.message, **kwargs)
+    def __setstate__(self, newdict):
+        self.__dict__.update(newdict)
+        # restore logger by name
+        self.logger = logging.getLogger(self.logger_name)

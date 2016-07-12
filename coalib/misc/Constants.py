@@ -132,3 +132,35 @@ URL_REGEX = re.compile(
     r'(?::\d+)?'  # optional port number
     r'(?:/?|[/?]\S+)$',  # path
     re.IGNORECASE)
+
+
+def configure_logging():
+    """
+    Configures the logging with hard coded dictionary.
+    """
+    import sys
+    import logging.config
+    logging.config.dictConfig({
+        'version': 1,
+        'handlers': {
+            'raw': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'raw',
+                'stream': sys.stdout
+            }
+        },
+        'root': {
+            'level': 'DEBUG'
+        },
+        'loggers': {
+            'coala.raw': {
+                'handlers': ['raw']
+            }
+        },
+        'formatters': {
+            'raw': {
+                'format': '[%(levelname)s][%(asctime)s] %(message)s',
+                'datefmt': '%X'
+            }
+        }
+    })

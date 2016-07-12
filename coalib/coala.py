@@ -16,6 +16,7 @@ import functools
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.coala_main import run_coala
+from coalib.misc.Constants import configure_logging
 from coalib.misc.Exceptions import get_exitcode
 from coalib.collecting.Collectors import filter_capabilities_by_languages
 from coalib.output.ConsoleInteraction import (
@@ -27,6 +28,8 @@ from coalib.settings.ConfigurationGathering import get_filtered_bears
 
 
 def main():
+    configure_logging()
+
     try:
         console_printer = ConsolePrinter()
         log_printer = LogPrinter(console_printer)

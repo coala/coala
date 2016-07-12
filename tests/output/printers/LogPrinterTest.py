@@ -1,9 +1,9 @@
 import unittest
-from datetime import datetime
+from unittest import mock
+import logging
 
 from pyprint.NullPrinter import NullPrinter
 from pyprint.Printer import Printer
-from pyprint.StringPrinter import StringPrinter
 
 from coalib.misc import Constants
 from coalib.output.printers.LogPrinter import LogPrinter, LogPrinterMixin
@@ -18,16 +18,8 @@ class LogPrinterMixinTest(unittest.TestCase):
 
 
 class LogPrinterTest(unittest.TestCase):
-    timestamp = datetime.today()
     log_message = LogMessage(LOG_LEVEL.ERROR,
-                             Constants.COMPLEX_TEST_STRING,
-                             timestamp=timestamp)
-
-    def test_interface(self):
-        uut = LogPrinter(Printer())
-        self.assertRaises(NotImplementedError,
-                          uut.log_message,
-                          self.log_message)
+                             Constants.COMPLEX_TEST_STRING)
 
     def test_get_printer(self):
         self.assertIs(LogPrinter(None).printer, None)
@@ -35,106 +27,53 @@ class LogPrinterTest(unittest.TestCase):
         self.assertIs(LogPrinter(printer).printer, printer)
 
     def test_logging(self):
-        uut = LogPrinter(StringPrinter(), timestamp_format="")
-        uut.log_message(self.log_message, end="")
-        self.assertEqual(uut.printer.string, str(self.log_message))
+        uut = LogPrinter(timestamp_format="")
+        uut.logger = mock.MagicMock()
+        uut.log_message(self.log_message)
 
-        uut = LogPrinter(StringPrinter(), log_level=LOG_LEVEL.DEBUG)
-        uut.log_message(self.log_message, end="")
-        self.assertEqual(
-            uut.printer.string,
-            "[ERROR][" + self.timestamp.strftime("%X") + "] " +
-            Constants.COMPLEX_TEST_STRING)
+        msg = Constants.COMPLEX_TEST_STRING
+        uut.logger.log.assert_called_with(logging.ERROR, msg)
 
-        uut.printer.clear()
-        uut.log(LOG_LEVEL.ERROR,
-                Constants.COMPLEX_TEST_STRING,
-                timestamp=self.timestamp,
-                end="")
-        self.assertEqual(
-            uut.printer.string,
-            "[ERROR][" + self.timestamp.strftime("%X") + "] " +
-            Constants.COMPLEX_TEST_STRING)
+        uut = LogPrinter(log_level=LOG_LEVEL.DEBUG)
+        uut.logger = mock.MagicMock()
 
-        uut.printer.clear()
-        uut.debug(Constants.COMPLEX_TEST_STRING,
-                  "d",
-                  timestamp=self.timestamp,
-                  end="")
-        self.assertEqual(
-            uut.printer.string,
-            "[DEBUG][" + self.timestamp.strftime("%X") + "] " +
-            Constants.COMPLEX_TEST_STRING + " d")
+        uut.log(LOG_LEVEL.ERROR, Constants.COMPLEX_TEST_STRING)
+        uut.logger.log.assert_called_with(logging.ERROR, msg)
 
-        uut.printer.clear()
-        uut.log_level = LOG_LEVEL.INFO
-        uut.debug(Constants.COMPLEX_TEST_STRING,
-                  timestamp=self.timestamp,
-                  end="")
-        self.assertEqual(uut.printer.string, "")
-
-        uut.printer.clear()
-        uut.info(Constants.COMPLEX_TEST_STRING,
-                 "d",
-                 timestamp=self.timestamp,
-                 end="")
-        self.assertEqual(
-            uut.printer.string,
-            "[INFO][" + self.timestamp.strftime("%X") + "] " +
-            Constants.COMPLEX_TEST_STRING + " d")
-
-        uut.log_level = LOG_LEVEL.WARNING
-        uut.printer.clear()
-        uut.debug(Constants.COMPLEX_TEST_STRING,
-                  timestamp=self.timestamp,
-                  end="")
-        self.assertEqual(uut.printer.string, "")
-
-        uut.printer.clear()
-        uut.warn(Constants.COMPLEX_TEST_STRING,
-                 "d",
-                 timestamp=self.timestamp,
-                 end="")
-        self.assertEqual(
-            uut.printer.string,
-            "[WARNING][" + self.timestamp.strftime("%X") + "] " +
-            Constants.COMPLEX_TEST_STRING + " d")
-
-        uut.printer.clear()
-        uut.err(Constants.COMPLEX_TEST_STRING,
-                "d",
-                timestamp=self.timestamp,
-                end="")
-        self.assertEqual(
-            uut.printer.string,
-            "[ERROR][" + self.timestamp.strftime("%X") + "] " +
-            Constants.COMPLEX_TEST_STRING + " d")
+        uut.debug(Constants.COMPLEX_TEST_STRING, "d")
+        uut.logger.log.assert_called_with(logging.DEBUG, msg + " d")
 
         uut.log_level = LOG_LEVEL.DEBUG
-        uut.printer.clear()
-        uut.log_exception(
-            "Something failed.",
-            NotImplementedError(Constants.COMPLEX_TEST_STRING),
-            timestamp=self.timestamp)
-        self.assertTrue(uut.printer.string.startswith(
-            "[ERROR][" + self.timestamp.strftime("%X") +
-            "] Something failed.\n" +
-            "[INFO][" + self.timestamp.strftime("%X") +
-            "] Exception was:"))
-
-        uut.log_level = LOG_LEVEL.INFO
-        uut.printer.clear()
-        logged = uut.log_exception(
-            "Something failed.",
-            NotImplementedError(Constants.COMPLEX_TEST_STRING),
-            timestamp=self.timestamp,
-            end="")
-        self.assertTrue(uut.printer.string.startswith(
-            "[ERROR][" + self.timestamp.strftime("%X") +
-            "] Something failed."))
+        uut.log_exception("Something failed.", NotImplementedError(msg))
+        uut.logger.log.assert_any_call(logging.ERROR, "Something failed.")
+        uut.logger.log.assert_called_with(
+            logging.INFO,
+            "Exception was:\n{exception}: {msg}".format(
+                exception="NotImplementedError",
+                msg=msg))
 
     def test_raises(self):
         uut = LogPrinter(NullPrinter())
         self.assertRaises(TypeError, uut.log, 5)
         self.assertRaises(TypeError, uut.log_exception, "message", 5)
         self.assertRaises(TypeError, uut.log_message, 5)
+
+    def test_log_level(self):
+        uut = LogPrinter()
+        self.assertEqual(uut.log_level, logging.DEBUG)
+        uut.log_level = logging.INFO
+        self.assertEqual(uut.log_level, logging.INFO)
+
+    def test_get_state(self):
+        uut = LogPrinter()
+        self.assertNotIn('logger', uut.__getstate__())
+
+    def test_set_state(self):
+        uut = LogPrinter()
+        state = uut.__getstate__()
+        uut.__setstate__(state)
+        self.assertIs(uut.logger, logging.getLogger('coala.raw'))
+
+    def test_no_printer(self):
+        uut = LogPrinter()
+        self.assertIs(uut.logger, logging.getLogger('coala.raw'))
