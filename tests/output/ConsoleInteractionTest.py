@@ -17,7 +17,8 @@ from coalib.output.ConsoleInteraction import (
     print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
     print_spaces_tabs_in_unicode, show_bear, show_bears,
-    ask_for_action_and_apply, print_diffs_info)
+    ask_for_action_and_apply, print_diffs_info,
+    show_language_bears_capabilities)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -728,8 +729,33 @@ class ShowBearsTest(unittest.TestCase):
                                           True,
                                           self.console_printer)
 
-
+    def test_show_bears_capabilities(self):
+        with retrieve_stdout() as stdout:
+            show_language_bears_capabilities(
+                {'some_language': ({'Formatting', 'Security'}, {'Formatting'})},
+                self.console_printer)
+            self.assertIn('coala can do the following for SOME_LANGUAGE\n'
+                          '    Can detect only: Formatting, Security\n'
+                          '    Can fix        : Formatting\n',
+                          stdout.getvalue())
+            show_language_bears_capabilities(
+                {'some_language': (set(), set())}, self.console_printer)
+            self.assertIn('coala does not support some_language',
+                          stdout.getvalue())
+            show_language_bears_capabilities(
+                {}, self.console_printer)
+            self.assertIn(
+                'There is no bear available for this language',
+                stdout.getvalue())
+            show_language_bears_capabilities(
+                {'some_language': ({'Formatting', 'Security'}, set())},
+                self.console_printer)
+            self.assertIn('coala can do the following for SOME_LANGUAGE\n'
+                          '    Can detect only: Formatting, Security\n',
+                          stdout.getvalue())
 # Own test because this is easy and not tied to the rest
+
+
 class PrintFormattedResultsTest(unittest.TestCase):
 
     def setUp(self):

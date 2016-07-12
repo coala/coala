@@ -162,6 +162,10 @@ coala can also automatically fix your code:
             help="filters `--show-bears` by the given languages")
 
         outputs_group.add_argument(
+            '-p', '--show-capabilities', nargs='+', metavar='LANG',
+            help="show what coala can fix and detect for the given languages")
+
+        outputs_group.add_argument(
             '-D', '--show-description', const=True, action='store_const',
             help="show bear descriptions for `--show-bears`")
 

@@ -30,6 +30,7 @@ STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
 STR_PROJECT_WIDE = "Project wide:"
 FILE_NAME_COLOR = "blue"
 FILE_LINES_COLOR = "blue"
+CAPABILITY_COLOR = "green"
 HIGHLIGHTED_CODE_COLOR = 'red'
 SUCCESS_COLOR = 'green'
 CLI_ACTIONS = (OpenEditorAction(),
@@ -763,3 +764,37 @@ def show_bears(local_bears,
     bears = inverse_dicts(local_bears, global_bears)
 
     print_bears(bears, show_description, show_params, console_printer)
+
+
+def show_language_bears_capabilities(language_bears_capabilities,
+                                     console_printer):
+    """
+    Display what the bears can detect and fix.
+
+    :param language_bears_capabilities:
+        Dictionary with languages as keys and their bears' capabilities as
+        values. The capabilities are stored in a tuple of two elements where the
+        first one represents what the bears can detect, and the second one what
+        they can fix.
+    :param console_printer:
+        Object to print messages on the console.
+    """
+    if not language_bears_capabilities:
+        console_printer.print("There is no bear available for this language")
+    else:
+        for language, capabilities in language_bears_capabilities.items():
+            if capabilities[0]:
+                console_printer.print('coala can do the following for ', end='')
+                console_printer.print(language.upper(), color="blue")
+                console_printer.print("    Can detect only: ", end='')
+                console_printer.print(
+                    ', '.join(sorted(capabilities[0])), color=CAPABILITY_COLOR)
+                if capabilities[1]:
+                    console_printer.print("    Can fix        : ", end='')
+                    console_printer.print(
+                        ', '.join(sorted(capabilities[1])),
+                        color=CAPABILITY_COLOR)
+            else:
+                console_printer.print('coala does not support ', color='red',
+                                      end='')
+                console_printer.print(language, color='blue')

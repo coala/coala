@@ -194,6 +194,37 @@ def filter_section_bears_by_languages(bears, languages):
     return new_bears
 
 
+def filter_capabilities_by_languages(bears, languages):
+    """
+    Filters the bears capabilities by languages.
+
+    :param bears:       Dictionary with sections as keys and list of bears as
+                        values.
+    :param languages:   Languages that bears are being filtered on.
+    :return:            New dictionary with languages as keys and their bears
+                        capabilities as values. The capabilities are stored in a
+                        tuple of two elements where the first one represents
+                        what the bears can detect, and the second one what they
+                        can fix.
+    """
+    languages = set(language.lower() for language in languages)
+    language_bears_capabilities = {language: (
+        set(), set()) for language in languages}
+    for section_bears in bears.values():
+        for bear in section_bears:
+            bear_language = (
+                ({language.lower() for language in bear.LANGUAGES} | {'all'}) &
+                languages)
+            language = bear_language.pop() if bear_language else ''
+            capabilities = (language_bears_capabilities[language]
+                            if language else tuple())
+            language_bears_capabilities.update(
+                {language: (capabilities[0] | bear.can_detect,
+                            capabilities[1] | bear.CAN_FIX)}
+                            if language else {})
+    return language_bears_capabilities
+
+
 def get_all_bears_names():
     from coalib.settings.Section import Section
     printer = LogPrinter(NullPrinter())

@@ -51,6 +51,13 @@ class coalaTest(unittest.TestCase):
             # 2 bears plus 1 line holding the closing colour escape sequence
             self.assertEqual(len(output.splitlines()), 3)
 
+    def test_show_capabilities_with_supported_language(self):
+        with bear_test_module():
+            retval, output = execute_coala(
+                coala.main, "coala", "-p", "R")
+            self.assertEqual(retval, 0)
+            self.assertEqual(len(output.splitlines()), 2)
+
     @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
     def test_version_conflict_in_collecting_bears(self, import_fn, _):
