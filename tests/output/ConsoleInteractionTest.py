@@ -44,6 +44,8 @@ class TestAction(ResultAction):
 
 class TestBear(Bear):
 
+    CAN_DETECT = {'Formatting'}
+    CAN_FIX = {'Formatting'}
     LANGUAGES = list(sorted({'F#', 'Shakespearean Programming Language'}))
 
     def run(self, setting1, setting2: int=None):
@@ -665,7 +667,12 @@ class ShowBearsTest(unittest.TestCase):
                              'which languages it can analyze.\n\n'
                              '  No sections.\n\n'
                              '  No needed settings.\n\n'
-                             '  No optional settings.\n\n')
+                             '  No optional settings.\n\n'
+                             '  This bear does not provide information about '
+                             'what categories it can detect.\n\n'
+                             '  This bear cannot fix issues or does not '
+                             'provide information about what categories it '
+                             'can fix.\n\n')
 
     def test_show_bear_long_without_content(self):
         with retrieve_stdout() as stdout:
@@ -678,7 +685,12 @@ class ShowBearsTest(unittest.TestCase):
                              'which languages it can analyze.\n\n'
                              '  No sections.\n\n'
                              '  No needed settings.\n\n'
-                             '  No optional settings.\n\n')
+                             '  No optional settings.\n\n'
+                             '  This bear does not provide information about '
+                             'what categories it can detect.\n\n'
+                             '  This bear cannot fix issues or does not '
+                             'provide information about what categories it '
+                             'can fix.\n\n')
 
     def test_show_bear_with_content(self):
         with retrieve_stdout() as stdout:
@@ -696,7 +708,9 @@ class ShowBearsTest(unittest.TestCase):
                              "  Optional Settings:\n"
                              "   * setting2: Optional Setting. ("
                              "Optional, defaults to 'None'."
-                             ")\n\n")
+                             ")\n\n"
+                             '  Can detect:\n   * Formatting\n\n'
+                             '  Can fix:\n   * Formatting\n\n')
 
     def test_show_bears_empty(self):
         with retrieve_stdout() as stdout:

@@ -697,6 +697,18 @@ def show_bear(bear,
                          metadata.optional_params,
                          "  ",
                          "No optional settings.")
+        show_enumeration(console_printer,
+                         "Can detect:",
+                         bear.can_detect,
+                         "  ",
+                         "This bear does not provide information about what "
+                         "categories it can detect.")
+        show_enumeration(console_printer,
+                         "Can fix:",
+                         bear.CAN_FIX,
+                         "  ",
+                         "This bear cannot fix issues or does not provide "
+                         "information about what categories it can fix.")
 
 
 def print_bears(bears,
