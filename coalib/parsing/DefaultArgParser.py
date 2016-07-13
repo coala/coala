@@ -4,14 +4,6 @@ import sys
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
 
-try:
-    from argcomplete.completers import ChoicesCompleter
-except ImportError:
-    class ChoicesCompleter:
-
-        def __init__(self, *args, **kwargs):
-            pass
-
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
     """
@@ -123,8 +115,8 @@ coala can also automatically fix your code:
 
     inputs_group.add_argument(
         '-b', '--bears', nargs='+', metavar='NAME',
-        help='names of bears to use').completer =\
-        ChoicesCompleter(get_all_bears_names())
+        help='names of bears to use').completer = (
+            lambda *args, **kwargs: get_all_bears_names())  # pragma: no cover
 
     inputs_group.add_argument(
         '-f', '--files', nargs='+', metavar='FILE',
