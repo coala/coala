@@ -12,9 +12,11 @@ from coalib.results.SourceRange import SourceRange
                "origin",
                "affected_code",
                ("severity", RESULT_SEVERITY.reverse.get),
+               "confidence",
                "message")
 @generate_ordering("affected_code",
                    "severity",
+                   "confidence",
                    "origin",
                    "message",
                    "additional_info",
@@ -35,7 +37,8 @@ class Result:
                  severity: int=RESULT_SEVERITY.NORMAL,
                  additional_info: str="",
                  debug_msg="",
-                 diffs: (dict, None)=None):
+                 diffs: (dict, None)=None,
+                 confidence: int=100):
         """
         :param origin:          Class name or class of the creator of this
                                 object.
@@ -52,6 +55,8 @@ class Result:
         :param diffs:           A dictionary with filenames as key and a
                                 sequence of ``Diff`` objects associated with
                                 them as values.
+        :param confidence:      A number between 0 and 100 describing the
+                                likelihood of this result being a real issue.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -66,6 +71,7 @@ class Result:
         # Sorting is important for tuple comparison
         self.affected_code = tuple(sorted(affected_code))
         self.severity = severity
+        self.confidence = confidence
         self.diffs = diffs
         self.id = uuid.uuid4().int
 
@@ -82,7 +88,8 @@ class Result:
                     severity: int=RESULT_SEVERITY.NORMAL,
                     additional_info: str="",
                     debug_msg="",
-                    diffs: (dict, None)=None):
+                    diffs: (dict, None)=None,
+                    confidence: int=100):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
@@ -106,6 +113,8 @@ class Result:
         :param diffs:           A dictionary with filenames as key and a
                                 sequence of ``Diff`` objects associated with
                                 them as values.
+        :param confidence:      A number between 0 and 100 describing the
+                                likelihood of this result being a real issue.
         """
         range = SourceRange.from_values(file,
                                         line,
@@ -119,7 +128,8 @@ class Result:
                    severity=severity,
                    additional_info=additional_info,
                    debug_msg=debug_msg,
-                   diffs=diffs)
+                   diffs=diffs,
+                   confidence=confidence)
 
     def to_string_dict(self):
         """
@@ -138,7 +148,8 @@ class Result:
                    "additional_info",
                    "debug_msg",
                    "message",
-                   "origin"]
+                   "origin",
+                   "confidence"]
 
         for member in members:
             value = getattr(self, member)

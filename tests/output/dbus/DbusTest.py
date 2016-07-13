@@ -140,7 +140,8 @@ class DbusTest(unittest.TestCase):
                               'line_nr': "",
                               'message': 'test msg',
                               'origin': 'LocalTestBear',
-                              'severity': 'NORMAL'},
+                              'severity': 'NORMAL',
+                              'confidence': '100'},
                              {'debug_msg': '',
                               'additional_info': '',
                               'file': self.testcode_c_path,
@@ -148,7 +149,8 @@ class DbusTest(unittest.TestCase):
                               'line_nr': "",
                               'message': 'test msg',
                               'origin': 'GlobalTestBear',
-                              'severity': 'NORMAL'}])]))
+                              'severity': 'NORMAL',
+                              'confidence': '100'}])]))
 
         config_file = self.document_object.SetConfigFile(
             self.config_path + "2",

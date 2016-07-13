@@ -64,7 +64,8 @@ class DbusDocumentTest(unittest.TestCase):
                               'line_nr': '',
                               'message': 'test msg',
                               'origin': 'LocalTestBear',
-                              'severity': 'NORMAL'},
+                              'severity': 'NORMAL',
+                              'confidence': '100'},
                              {'debug_msg': '',
                               'additional_info': '',
                               'file': self.testcode_c_path,
@@ -72,7 +73,8 @@ class DbusDocumentTest(unittest.TestCase):
                               'line_nr': '',
                               'message': 'test msg',
                               'origin': 'GlobalTestBear',
-                              'severity': 'NORMAL'}]]]))
+                              'severity': 'NORMAL',
+                              'confidence': '100'}]]]))
 
         uut.path = "test.unknown_extension"
         output = uut.Analyze()
