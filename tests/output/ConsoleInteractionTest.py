@@ -526,7 +526,7 @@ Project wide:
                                               file="file",
                                               line=2)],
                           {abspath("file"): ["test line\n",
-                                             "line 2\n",
+                                             "\t\n",
                                              "line 3\n",
                                              "line 4\n",
                                              "line 5\t\n"]},
@@ -535,7 +535,7 @@ Project wide:
 
             self.assertEqual("""
 file
-|   2| line•2
+|   2| --->
 |    | [NORMAL] SpaceConsistencyBear:
 |    | Trailing whitespace found
 

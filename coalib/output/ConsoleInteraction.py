@@ -184,7 +184,7 @@ def print_lines(console_printer,
 
             print_spaces_tabs_in_unicode(
                 console_printer, line[sourcerange.end.column-1:],
-                tab_dict, FILE_LINES_COLOR, sourcerange.end.column)
+                tab_dict, FILE_LINES_COLOR, sourcerange.end.column-1)
             console_printer.print("")
         else:
             print_spaces_tabs_in_unicode(
