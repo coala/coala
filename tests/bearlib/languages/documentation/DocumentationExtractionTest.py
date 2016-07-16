@@ -1,4 +1,3 @@
-import os.path
 import unittest
 
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
@@ -7,6 +6,8 @@ from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
 from coalib.bearlib.languages.documentation.DocumentationExtraction import (
     extract_documentation)
+from tests.bearlib.languages.documentation.TestUtils import (
+    load_testdata)
 from coalib.results.TextRange import TextRange
 
 
@@ -16,17 +17,8 @@ class DocumentationExtractionTest(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             tuple(extract_documentation("", "PYTHON", "INVALID"))
 
-    @staticmethod
-    def load_testdata(filename):
-        filename = (os.path.dirname(os.path.realpath(__file__)) +
-                    "/documentation_extraction_testdata/" + filename)
-        with open(filename, "r") as fl:
-            data = fl.read()
-
-        return data.splitlines(keepends=True)
-
     def test_extract_documentation_C(self):
-        data = DocumentationExtractionTest.load_testdata("data.c")
+        data = load_testdata("data.c")
 
         # No built-in documentation for C.
         with self.assertRaises(KeyError):
@@ -83,7 +75,7 @@ class DocumentationExtractionTest(unittest.TestCase):
                                   TextRange.from_values(1, 1, 2, 21))])
 
     def test_extract_documentation_CPP(self):
-        data = DocumentationExtractionTest.load_testdata("data.cpp")
+        data = load_testdata("data.cpp")
 
         # No built-in documentation for C++.
         with self.assertRaises(KeyError):
@@ -127,7 +119,7 @@ class DocumentationExtractionTest(unittest.TestCase):
                               TextRange.from_values(32, 1, 37, 1))))
 
     def test_extract_documentation_CPP_2(self):
-        data = DocumentationExtractionTest.load_testdata("data2.cpp")
+        data = load_testdata("data2.cpp")
 
         docstyle_CPP_doxygen = DocstyleDefinition.load("CPP", "doxygen")
 
@@ -140,7 +132,7 @@ class DocumentationExtractionTest(unittest.TestCase):
                           TextRange.from_values(1, 1, 3, 4)),))
 
     def test_extract_documentation_PYTHON3(self):
-        data = DocumentationExtractionTest.load_testdata("data.py")
+        data = load_testdata("data.py")
         docstyle_PYTHON3_default = DocstyleDefinition.load("PYTHON3",
                                                            "default")
         docstyle_PYTHON3_doxygen = DocstyleDefinition.load("PYTHON3",

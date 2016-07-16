@@ -1,10 +1,11 @@
-import os
 import unittest
 
 from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
 from coalib.bearlib.languages.documentation.DocumentationExtraction import (
     extract_documentation)
+from tests.bearlib.languages.documentation.TestUtils import (
+    load_testdata)
 
 
 class DocumentationCommentTest(unittest.TestCase):
@@ -12,17 +13,6 @@ class DocumentationCommentTest(unittest.TestCase):
     Description = DocumentationComment.Description
     Parameter = DocumentationComment.Parameter
     ReturnValue = DocumentationComment.ReturnValue
-
-    def load_testdata(self, filename):
-        filename = os.path.join(os.path.dirname(
-            os.path.realpath(__file__)),
-            os.path.join("documentation_extraction_testdata",
-                         filename))
-
-        with open(filename, "r") as test_file:
-            data = test_file.read()
-
-        return data.splitlines(keepends=True)
 
 
 class GeneralDocumentationCommentTest(DocumentationCommentTest):
@@ -104,7 +94,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         self.check_docstring(doc, expected)
 
     def test_python_default(self):
-        data = self.load_testdata("default.py")
+        data = load_testdata("default.py")
 
         parsed_docs = [doc.parse() for doc in
                        extract_documentation(data, "python", "default")]
@@ -134,7 +124,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(parsed_docs, expected)
 
     def test_python_doxygen(self):
-        data = self.load_testdata("doxygen.py")
+        data = load_testdata("doxygen.py")
 
         parsed_docs = [doc.parse() for doc in
                        extract_documentation(data, "python", "doxygen")]
@@ -160,7 +150,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
 class JavaDocumentationCommentTest(DocumentationCommentTest):
 
     def test_java_default(self):
-        data = self.load_testdata("default.java")
+        data = load_testdata("default.java")
 
         parsed_docs = [doc.parse() for doc in
                        extract_documentation(data, "java", "default")]
