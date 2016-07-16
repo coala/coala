@@ -22,6 +22,11 @@ from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
 from coalib.settings.Setting import Setting
 
+from pygments.lexers import guess_lexer, guess_lexer_for_filename, PythonLexer
+from pygments import highlight
+from pygments.formatters import TerminalFormatter
+
+
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")
 STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
@@ -141,7 +146,7 @@ def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
         elif char == '\t' and tab_dict:
             tab_count = tab_dict[index]
             console_printer.print(
-                '-'*(tab_count-1) + '>', color='cyan', end='')
+                '-' * (tab_count - 1) + '>', color='cyan', end='')
         else:
             console_printer.print(char, color=color, end='')
         index += 1
@@ -165,25 +170,27 @@ def print_lines(console_printer,
         console_printer.print(format_lines(lines='', line_nr=i),
                               color=FILE_LINES_COLOR,
                               end='')
+
         line = file_dict[sourcerange.file][i - 1].rstrip("\n")
+        print(highlight(line, PythonLexer(), TerminalFormatter()))
         tab_width = int(section.get('tab_width', 4))
         s = SpacingHelper(tab_width)
         tab_dict = dict(s.yield_tab_lengths(line))
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
             print_spaces_tabs_in_unicode(
-                console_printer, line[:sourcerange.start.column-1],
+                console_printer, line[:sourcerange.start.column - 1],
                 tab_dict, FILE_LINES_COLOR)
 
-            printed_chars = sourcerange.start.column-1
+            printed_chars = sourcerange.start.column - 1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             print_spaces_tabs_in_unicode(
-                console_printer, line[printed_chars:sourcerange.end.column-1],
+                console_printer, line[printed_chars:sourcerange.end.column - 1],
                 tab_dict, HIGHLIGHTED_CODE_COLOR, printed_chars)
 
             print_spaces_tabs_in_unicode(
-                console_printer, line[sourcerange.end.column-1:],
+                console_printer, line[sourcerange.end.column - 1:],
                 tab_dict, FILE_LINES_COLOR, sourcerange.end.column)
             console_printer.print("")
         else:
