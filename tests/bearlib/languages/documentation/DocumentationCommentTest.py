@@ -121,11 +121,11 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                                    '\nthis is intended.\n')],
             [self.Description(desc=' Docstring inline with triple quotes.\n'
                                    '    Continues here. ')],
-            [self.Description(desc='\nThis is the best docstring ever!\n'),
+            [self.Description(desc='\nThis is the best docstring ever!\n\n'),
              self.Parameter(name='param1:',
                             desc='    Very Very Long Parameter description.\n'),
              self.Parameter(name='param2:',
-                            desc='    Short Param description.\n'),
+                            desc='    Short Param description.\n\n'),
              self.ReturnValue(desc='Long Return Description That Makes No Sense'
                                    ' And Will\n         Cut to the Next'
                                    ' Line.\n')]]
