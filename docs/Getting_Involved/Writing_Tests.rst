@@ -8,8 +8,8 @@ when not writing tests are often the most horrible ones, they have the
 characteristic to be undiscoverable (or only discoverable after dozens
 of hours of searching). Try to test as much as possible! The more tests
 you write the more you can be sure you did everything correct.
-Especially if someone else modifies your component, he can be sure with
-your tests that he doesn't introduce a bug. Keep these points in your mind
+Especially if someone else modifies your component, they can be sure with
+your tests that they don't introduce a bug. Keep these points in your mind
 when you're writing a test:
 
 - 100% test-coverage

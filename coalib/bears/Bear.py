@@ -400,7 +400,7 @@ class Bear(Printer, LogPrinter):
     def data_dir(cls):
         """
         Returns a directory that may be used by the bear to store stuff. Every
-        bear has an own directory dependent on his name.
+        bear has an own directory dependent on their name.
         """
         data_dir = abspath(join(user_data_dir('coala-bears'), cls.name))
 

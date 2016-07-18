@@ -43,8 +43,8 @@ following and understanding the indications
 It is meant for newcomers, and it does not require you to have any precedent
 knowledge regarding coala.
 
-How do I get in touch with you guys?
-====================================
+How do I get in touch with the coala team?
+==========================================
 
 We are very active on our
 `gitter channel <https://gitter.im/coala-analyzer/coala>`__

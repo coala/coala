@@ -77,7 +77,7 @@ Lets say:
 -  We want some information from the user (e.g. the tab width if we rely
    on indentation)
 -  We've got some useful information for the user and want to show it to
-   him. This might be some issue with his code or just an information
+   them. This might be some issue with their code or just an information
    like the number of lines.
 
 So let's extend our HelloWorldBear a bit, I've named the new bear with
