@@ -15,7 +15,6 @@ import functools
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.coala_main import run_coala
 from coalib.misc.Exceptions import get_exitcode
 from coalib.collecting.Collectors import filter_capabilities_by_languages
 from coalib.output.ConsoleInteraction import (
@@ -23,7 +22,6 @@ from coalib.output.ConsoleInteraction import (
     show_bears, show_language_bears_capabilities)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
-from coalib.settings.ConfigurationGathering import get_filtered_bears
 
 
 def main():
@@ -35,9 +33,12 @@ def main():
         args = default_arg_parser().parse_args()
 
         if args.show_bears:
+            from coalib.settings.ConfigurationGathering import (
+                get_filtered_bears)
             local_bears, global_bears = get_filtered_bears(
                 args.filter_by_language, log_printer)
 
+            from coalib.output.ConsoleInteraction import show_bears
             show_bears(local_bears,
                        global_bears,
                        args.show_description or args.show_details,
@@ -56,6 +57,11 @@ def main():
 
     except BaseException as exception:  # pylint: disable=broad-except
         return get_exitcode(exception, log_printer)
+
+    # Defer import so it's only done when needed
+    from coalib.coala_main import run_coala
+    from coalib.output.ConsoleInteraction import (
+        acquire_settings, nothing_done, print_results, print_section_beginning)
 
     partial_print_sec_beg = functools.partial(
         print_section_beginning,
