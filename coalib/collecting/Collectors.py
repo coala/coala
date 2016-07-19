@@ -2,6 +2,7 @@ import functools
 import os
 import pkg_resources
 import itertools
+from importlib import find_loader
 
 from pyprint.NullPrinter import NullPrinter
 
@@ -284,13 +285,9 @@ def collect_registered_bears_dirs(entrypoint):
     :param entrypoint: The entrypoint to find packages with.
     :return:           List of bear directories.
     """
-    collected_dirs = []
-    for ep in pkg_resources.iter_entry_points(entrypoint):
-        registered_package = None
-        try:
-            registered_package = ep.load()
-        except pkg_resources.DistributionNotFound:
-            continue
-        collected_dirs.append(os.path.abspath(
-            os.path.dirname(registered_package.__file__)))
-    return collected_dirs
+    eps = {find_loader("bears")
+           for ep in pkg_resources.iter_entry_points(entrypoint)
+           if ep}
+    return [os.path.dirname(elem.path)
+            for elem in eps
+            if elem]
