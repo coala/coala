@@ -38,6 +38,15 @@ class DiffTest(unittest.TestCase):
         # Line was deleted, unchangeable
         self.assertRaises(ConflictError, self.uut.change_line, 1, "1", "2")
 
+    def test_double_changes_with_same_diff(self):
+        self.uut.change_line(2, "1", "2")
+
+        # Double addition when diff is equal is allowed
+        try:
+            self.uut.change_line(2, "1", "2")
+        except Exception:
+            self.fail('We should not have a conflict on same diff!')
+
     def test_affected_code(self):
         self.assertEqual(self.uut.affected_code("file"), [])
 

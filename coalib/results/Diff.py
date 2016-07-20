@@ -379,7 +379,7 @@ class Diff:
         be there instead.
         """
         linediff = self._get_change(line_nr)
-        if linediff.change is not False:
+        if linediff.change is not False and linediff.change[1] != replacement:
             raise ConflictError("An already changed line cannot be changed.")
 
         linediff.change = (original_line, replacement)
