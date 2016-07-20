@@ -65,19 +65,13 @@ def fill_section(section, acquire_settings, log_printer, bears):
     # Retrieve needed settings.
     prel_needed_settings = {}
     for bear in bears:
-        if not hasattr(bear, "get_non_optional_settings"):
-            log_printer.log(
-                LOG_LEVEL.WARNING,
-                "One of the given bears ({}) has no attribute "
-                "get_non_optional_settings.".format(bear))
-        else:
-            needed = bear.get_non_optional_settings()
-            for key in needed:
-                if key in prel_needed_settings:
-                    prel_needed_settings[key].append(bear.name)
-                else:
-                    prel_needed_settings[key] = [needed[key][0],
-                                                 bear.name]
+        needed = bear.get_non_optional_settings()
+        for key in needed:
+            if key in prel_needed_settings:
+                prel_needed_settings[key].append(bear.name)
+            else:
+                prel_needed_settings[key] = [needed[key][0],
+                                             bear.name]
 
     # Strip away existent settings.
     needed_settings = {}

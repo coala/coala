@@ -69,8 +69,7 @@ class SectionFillingTest(unittest.TestCase):
                                        acquire_settings,
                                        self.log_printer,
                                        [LocalTestBear,
-                                        GlobalTestBear,
-                                        "an inappropriate string object here"])
+                                        GlobalTestBear])
 
         self.assertEqual(int(new_section["local name"]), 0)
         self.assertEqual(int(new_section["global name"]), 0)
