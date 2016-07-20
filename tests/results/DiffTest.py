@@ -17,6 +17,9 @@ class DiffTest(unittest.TestCase):
         self.uut.add_lines(0, ["t"])
         self.uut.add_lines(0, [])
 
+    def test_double_addition(self):
+        self.uut.add_lines(0, ["t"])
+
         # No double addition allowed
         self.assertRaises(ConflictError, self.uut.add_lines, 0, ["t"])
         self.assertRaises(ValueError, self.uut.add_lines, -1, ["t"])
