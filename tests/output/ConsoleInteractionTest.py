@@ -165,7 +165,6 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
-        self.assertEqual(acquire_settings(self.log_printer, {0: 0}), {})
 
         with simulate_console_inputs(0, 1, 2) as generator:
             self.assertEqual(acquire_settings(self.log_printer,

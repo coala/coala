@@ -9,7 +9,6 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -423,24 +422,16 @@ def print_affected_lines(console_printer, file_dict, section, sourcerange):
                         sourcerange)
 
 
-def require_setting(log_printer, setting_name, arr):
+def require_setting(setting_name, arr):
     """
     This method is responsible for prompting a user about a missing setting and
     taking its value as input from the user.
 
-    :param log_printer:  Printer responsible for logging the messages.
     :param setting_name: Name od the setting missing
     :param arr:          a list containing a description in [0] and the name
                          of the bears who need this setting in [1] and
                          following.
     """
-    if not isinstance(arr, list) or len(arr) < 2:
-        log_printer.log(LOG_LEVEL.WARNING,
-                        "One of the given settings ({}) is not properly "
-                        "described.".format(setting_name))
-
-        return None
-
     if len(arr) == 2:
         needed = arr[1]
     else:
@@ -454,6 +445,7 @@ def acquire_settings(log_printer, settings_names_dict):
     This method prompts the user for the given settings.
 
     :param log_printer: Printer responsible for logging the messages.
+                        This is needed to comply with the interface.
     :param settings:    a dictionary with the settings name as key and a list
                         containing a description in [0] and the name of the
                         bears who need this setting in [1] and following.
@@ -475,7 +467,7 @@ def acquire_settings(log_printer, settings_names_dict):
 
     result = {}
     for setting_name, arr in settings_names_dict.items():
-        value = require_setting(log_printer, setting_name, arr)
+        value = require_setting(setting_name, arr)
         if value is not None:
             result[setting_name] = value
 
