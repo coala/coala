@@ -195,7 +195,8 @@ class Bear(Printer, LogPrinter):
         self.timeout = timeout
 
         self.setup_dependencies()
-        cp = type(self).check_prerequisites()
+
+        cp = type(self)._check_reqs_and_prerequisites()
         if cp is not True:
             error_string = ("The bear " + self.name +
                             " does not fulfill all requirements.")
@@ -334,6 +335,14 @@ class Bear(Printer, LogPrinter):
         dependencies (via download_cached_file or arbitary other means) in an OS
         independent way.
         """
+
+    @classmethod
+    def _check_reqs_and_prerequisites(cls):
+        message = cls._check_requirements()
+        if message is not True:
+            return message
+
+        return cls.check_prerequisites()
 
     @classmethod
     def check_prerequisites(cls):
