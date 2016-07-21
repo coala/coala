@@ -6,5 +6,4 @@ coverage:
     project:
       default:
         enabled: true
-        target: auto
-        threshold: 100%
+        target: 100%
