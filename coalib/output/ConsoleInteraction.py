@@ -473,8 +473,7 @@ def acquire_settings(log_printer, settings_names_dict):
     result = {}
     for setting_name, arr in settings_names_dict.items():
         value = require_setting(setting_name, arr)
-        if value is not None:
-            result[setting_name] = value
+        result.update({setting_name: value} if value is not None else {})
 
     return result
 
