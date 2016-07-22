@@ -512,7 +512,7 @@ def process_queues(processes,
                                output medium.
     :param cache:              An instance of ``misc.Caching.FileCache`` to use
                                as a file cache buffer.
-    :return:                   Return True if all bears execute succesfully and
+    :return:                   Return True if all bears execute successfully and
                                Results were delivered to the user. Else False.
     """
     file_diff_dict = {}
