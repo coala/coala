@@ -13,7 +13,7 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter):
 
     def _format_action_invocation(self, action):
         if not action.option_strings:
-            # For arguemnts that don't have options strings
+            # For arguments that don't have options strings
             metavar, = self._metavar_formatter(action, action.dest)(1)
             return metavar
         else:
