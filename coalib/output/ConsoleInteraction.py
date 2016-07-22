@@ -543,7 +543,7 @@ def print_actions(console_printer, section, actions, failed_actions):
     :param failed_actions:  A set of all actions that have failed. A failed
                             action remains in the list until it is
                             successfully executed.
-    :return:                A touple with the name member of the
+    :return:                A tuple with the name member of the
                             FunctionMetadata object chosen by the user
                             and a Section containing at least all needed
                             values for the action. If the user did
