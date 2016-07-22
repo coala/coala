@@ -7,7 +7,7 @@ from coalib.bears.requirements.GemRequirement import GemRequirement
 class GemRequirementTestCase(unittest.TestCase):
 
     def test_installed_requirement(self):
-        self.assertTrue(GemRequirement('gem').is_installed())
+        self.assertTrue(GemRequirement('ruby').is_installed())
 
     def test_not_installed_requirement(self):
         self.assertFalse(GemRequirement('some_bad_package').is_installed())
