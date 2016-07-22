@@ -41,7 +41,7 @@ class Diff:
         result = cls(file_array_1, rename=rename)
 
         matcher = difflib.SequenceMatcher(None, file_array_1, file_array_2)
-        # We use this because its faster (generator) and doesnt yield as much
+        # We use this because its faster (generator) and doesn't yield as much
         # useless information as get_opcodes.
         for change_group in matcher.get_grouped_opcodes(1):
             for (tag,
