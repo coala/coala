@@ -431,7 +431,7 @@ def require_setting(setting_name, arr):
     taking its value as input from the user.
 
     :param setting_name: Name od the setting missing
-    :param arr:          a list containing a description in [0] and the name
+    :param arr:          A list containing a description in [0] and the name
                          of the bears who need this setting in [1] and
                          following.
     """
@@ -451,7 +451,7 @@ def acquire_settings(log_printer, settings_names_dict):
 
     :param log_printer: Printer responsible for logging the messages.
                         This is needed to comply with the interface.
-    :param settings:    a dictionary with the settings name as key and a list
+    :param settings:    A dictionary with the settings name as key and a list
                         containing a description in [0] and the name of the
                         bears who need this setting in [1] and following.
 
@@ -463,7 +463,7 @@ def acquire_settings(log_printer, settings_names_dict):
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
 
-    :return:            a dictionary with the settings name as key and the
+    :return:            A dictionary with the settings name as key and the
                         given value as value.
     """
     if not isinstance(settings_names_dict, dict):
