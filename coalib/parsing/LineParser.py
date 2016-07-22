@@ -6,18 +6,18 @@ class LineParser:
 
     def __init__(self,
                  key_value_delimiters=('=',),
-                 comment_seperators=('#',),
+                 comment_separators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=None,
                  section_override_delimiters=(".",)):
         """
-        Creates a new line parser. Please note that no delimiter or seperator
+        Creates a new line parser. Please note that no delimiter or separator
         may be an "o" or you may encounter undefined behaviour with the
         escapes.
 
         :param key_value_delimiters:        Delimiters that delimit a key from
                                             a value
-        :param comment_seperators:          Used to initiate a comment
+        :param comment_separators:          Used to initiate a comment
         :param key_delimiters:              Delimiters between several keys
         :param section_name_surroundings:   Dictionary, e.g. {"[", "]"} means a
                                             section name is surrounded by [].
@@ -33,7 +33,7 @@ class LineParser:
         section_name_surroundings = section_name_surroundings or {"[": "]"}
 
         self.key_value_delimiters = key_value_delimiters
-        self.comment_seperators = comment_seperators
+        self.comment_separators = comment_separators
         self.key_delimiters = key_delimiters
         self.section_name_surroundings = section_name_surroundings
         self.section_override_delimiters = section_override_delimiters
@@ -48,9 +48,9 @@ class LineParser:
         :return:     section_name (empty string if it's no section name),
                      [(section_override, key), ...], value, comment
         """
-        line, comment = self.__seperate_by_first_occurrence(
+        line, comment = self.__separate_by_first_occurrence(
             line,
-            self.comment_seperators)
+            self.comment_separators)
         comment = unescape(comment)
         if line == "":
             return '', [], '', comment
@@ -65,7 +65,7 @@ class LineParser:
         # Add all the delimiters that stored as tuples
         all_delimiters = self.key_value_delimiters
         all_delimiters += self.key_delimiters
-        all_delimiters += self.comment_seperators
+        all_delimiters += self.comment_separators
         all_delimiters += self.section_override_delimiters
         all_delimiters = "".join(all_delimiters)
 
@@ -79,7 +79,7 @@ class LineParser:
         key_touples = []
         for key in keys:
             key = convert_to_raw(key, all_delimiters)
-            section, key = self.__seperate_by_first_occurrence(
+            section, key = self.__separate_by_first_occurrence(
                 key,
                 self.section_override_delimiters,
                 True,
@@ -89,15 +89,15 @@ class LineParser:
         return '', key_touples, value, comment
 
     @staticmethod
-    def __seperate_by_first_occurrence(string,
+    def __separate_by_first_occurrence(string,
                                        delimiters,
                                        strip_delim=False,
                                        return_second_part_nonempty=False):
         """
-        Seperates a string by the first of all given delimiters. Any whitespace
+        separates a string by the first of all given delimiters. Any whitespace
         characters will be stripped away from the parts.
 
-        :param string:                      The string to seperate.
+        :param string:                      The string to separate.
         :param delimiters:                  The delimiters.
         :param strip_delim:                 Strips the delimiter from the
                                             result if true.
@@ -139,7 +139,7 @@ class LineParser:
         return ''
 
     def __extract_keys_and_value(self, line):
-        key_part, value = self.__seperate_by_first_occurrence(
+        key_part, value = self.__separate_by_first_occurrence(
             line,
             self.key_value_delimiters,
             True,
