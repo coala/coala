@@ -620,7 +620,7 @@ def show_enumeration(console_printer,
     """
     This function takes as input an iterable object (preferably a list or
     a dict). And prints in a stylized format. If the iterable object is
-    empty, it prints a specific statement give by the user. An e.g :
+    empty, it prints a specific statement given by the user. An e.g :
 
     <indentation>Title:
     <indentation> * Item 1
