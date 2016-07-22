@@ -93,7 +93,7 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
     :param kwargs:        The keyword arguments that are to be passed to the
                           bear.
     :return:              Returns a valid list of objects of the type Result
-                          if the bear executed succesfully. None otherwise.
+                          if the bear executed successfully. None otherwise.
     """
     if kwargs.get("dependency_results", True) is None:
         del kwargs["dependency_results"]
