@@ -24,7 +24,8 @@ def run_coala(log_printer=None,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
               autoapply=True,
-              arg_parser=None):
+              arg_parser=None,
+              arg_list=None):
     """
     This is a main method that should be usable for almost all purposes and
     reduces executing coala to one function call.
@@ -49,6 +50,7 @@ def run_coala(log_printer=None,
     :param autoapply:               Set to False to autoapply nothing by
                                     default; this is overridable via any
                                     configuration file/CLI.
+    :param arg_list:                The CLI argument list.
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
@@ -64,7 +66,8 @@ def run_coala(log_printer=None,
             acquire_settings,
             log_printer,
             autoapply=autoapply,
-            arg_parser=arg_parser)
+            arg_parser=arg_parser,
+            arg_list=arg_list)
 
         log_printer.debug("Platform {} -- Python {}, pip {}, coalib {}"
                           .format(platform.system(), platform.python_version(),
