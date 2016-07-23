@@ -79,7 +79,12 @@ def run_coala(log_printer=None,
         flush_cache = bool(sections["default"].get("flush_cache", False) or
                            settings_changed(log_printer, settings_hash))
 
-        cache = FileCache(log_printer, os.getcwd(), flush_cache)
+        disable_caching = bool(sections["default"].get(
+            "disable_caching", False))
+        cache = None
+        if not sections["default"].get("disable_caching", False):
+            cache = FileCache(log_printer, os.getcwd(), flush_cache)
+
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
                 continue
@@ -103,7 +108,7 @@ def run_coala(log_printer=None,
             file_dicts[section_name] = section_result[3]
 
         update_settings_db(log_printer, settings_hash)
-        if sections["default"].get("changed_files", False):
+        if cache:
             cache.write()
 
         if did_nothing:

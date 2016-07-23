@@ -354,7 +354,7 @@ def instantiate_processes(section,
     complete_filename_list = filename_list
 
     # Start tracking all the files
-    if cache and section.get('changed_files', False):
+    if cache:
         cache.track_files(set(complete_filename_list))
         changed_files = cache.get_uncached_files(
             set(filename_list)) if cache else filename_list

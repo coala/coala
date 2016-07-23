@@ -1,3 +1,4 @@
+import copy
 import hashlib
 import os
 import pickle
@@ -127,16 +128,23 @@ def hash_id(text):
     return hashlib.md5(text.encode("utf-8")).hexdigest()
 
 
-def get_settings_hash(sections):
+def get_settings_hash(sections, ignore_settings: list=["disable_caching"]):
     """
     Compute and return a unique hash for the settings.
 
-    :param sections: A dict containing the settings for each section.
-    :return:         A MD5 hash that is unique to the settings used.
+    :param sections:        A dict containing the settings for each section.
+    :param ignore_settings: Setting keys to remove from sections before
+                            hashing.
+    :return:                A MD5 hash that is unique to the settings used.
     """
     settings = []
     for section in sections:
-        settings.append(str(sections[section]))
+        section_copy = copy.deepcopy(sections[section])
+        for setting in ignore_settings:
+            if setting in section_copy:
+                section_copy.delete_setting(setting)
+        settings.append(str(section_copy))
+
     return hash_id(str(settings))
 
 
@@ -160,9 +168,9 @@ def settings_changed(log_printer, settings_hash):
     result = settings_hash_db[project_hash] != settings_hash
     if result:
         del settings_hash_db[project_hash]
-        log_printer.warn("Since the configuration settings have "
-                         "changed since the last run, the "
-                         "cache will be flushed and rebuilt.")
+        log_printer.debug("Since the configuration settings have "
+                          "changed since the last run, the "
+                          "cache will be flushed and rebuilt.")
 
     return result
 

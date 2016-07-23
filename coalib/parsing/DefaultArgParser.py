@@ -105,8 +105,8 @@ coala can also automatically fix your code:
              "or at the value of -c".format(Constants.default_coafile))
 
     config_group.add_argument(
-        '-C', '--changed-files', const=True, action='store_const',
-        help='check only files that have changed since last run')
+        '--disable-caching', const=True, action='store_const',
+        help='run on all files even if unchanged')
     config_group.add_argument(
         '--flush-cache', const=True, action='store_const',
         help='rebuild the file cache')

@@ -91,7 +91,6 @@ class ProcessingTest(unittest.TestCase):
 
     def test_run(self):
         self.sections['default'].append(Setting('jobs', "1"))
-        self.sections['default'].append(Setting('changed_files', True))
         cache = FileCache(self.log_printer, "coala_test", flush_cache=True)
         results = execute_section(self.sections["default"],
                                   self.global_bears["default"],

@@ -105,8 +105,8 @@ class CachingTest(unittest.TestCase):
                     coala.main,
                     "coala",
                     "-c", os.devnull,
+                    "--disable-caching",
                     "--flush-cache",
-                    "--changed-files",
                     "-f", re.escape(filename),
                     "-b", "LineCountTestBear",
                     "-L", "DEBUG")
@@ -119,7 +119,6 @@ class CachingTest(unittest.TestCase):
                 coala.main,
                 "coala",
                 "-c", os.devnull,
-                "--changed-files",
                 "-f", re.escape(filename),
                 "-b", "LineCountTestBear")
             self.assertIn("This file has", output)
@@ -128,7 +127,6 @@ class CachingTest(unittest.TestCase):
                 coala.main,
                 "coala",
                 "-c", os.devnull,
-                "--changed-files",
                 "-f", re.escape(filename),
                 "-b", "LineCountTestBear")
             self.assertIn("This file has", output)

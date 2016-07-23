@@ -103,7 +103,7 @@ class FileCache:
         """
         self.data = {}
         delete_files(self.log_printer, [self.project_dir])
-        self.log_printer.info("The file cache was successfully flushed.")
+        self.log_printer.debug("The file cache was successfully flushed.")
 
     def __enter__(self):
         return self
