@@ -48,7 +48,7 @@ class LineParser:
         :return:     section_name (empty string if it's no section name),
                      [(section_override, key), ...], value, comment
         """
-        line, comment = self.__seperate_by_first_occurrence(
+        line, comment = self.__separate_by_first_occurrence(
             line,
             self.comment_seperators)
         comment = unescape(comment)
@@ -79,7 +79,7 @@ class LineParser:
         key_touples = []
         for key in keys:
             key = convert_to_raw(key, all_delimiters)
-            section, key = self.__seperate_by_first_occurrence(
+            section, key = self.__separate_by_first_occurrence(
                 key,
                 self.section_override_delimiters,
                 True,
@@ -89,15 +89,15 @@ class LineParser:
         return '', key_touples, value, comment
 
     @staticmethod
-    def __seperate_by_first_occurrence(string,
+    def __separate_by_first_occurrence(string,
                                        delimiters,
                                        strip_delim=False,
                                        return_second_part_nonempty=False):
         """
-        Seperates a string by the first of all given delimiters. Any whitespace
+        Separates a string by the first of all given delimiters. Any whitespace
         characters will be stripped away from the parts.
 
-        :param string:                      The string to seperate.
+        :param string:                      The string to separate.
         :param delimiters:                  The delimiters.
         :param strip_delim:                 Strips the delimiter from the
                                             result if true.
@@ -139,7 +139,7 @@ class LineParser:
         return ''
 
     def __extract_keys_and_value(self, line):
-        key_part, value = self.__seperate_by_first_occurrence(
+        key_part, value = self.__separate_by_first_occurrence(
             line,
             self.key_value_delimiters,
             True,
