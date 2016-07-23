@@ -7,6 +7,7 @@ from coalib.misc.CachingUtilities import (
     get_settings_hash, settings_changed, update_settings_db,
     get_data_path, pickle_load, pickle_dump, delete_files)
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.settings.Section import Section
 
 
 class CachingUtilitiesTest(unittest.TestCase):
@@ -61,6 +62,6 @@ class SettingsTest(unittest.TestCase):
         update_settings_db(self.log_printer, settings_hash)
         self.assertFalse(settings_changed(self.log_printer, settings_hash))
 
-        sections = {"a": 1}
+        sections = {"a": Section("a")}
         settings_hash = get_settings_hash(sections)
         self.assertTrue(settings_changed(self.log_printer, settings_hash))
