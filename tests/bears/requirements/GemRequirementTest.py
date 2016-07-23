@@ -1,9 +1,16 @@
+import platform
 import shutil
 import unittest
 from coalib.bears.requirements.GemRequirement import GemRequirement
+from coalib.misc.Shell import call_without_output
+
+cmd = ['gem', 'list', '-i', 'ruby']
+if platform.system() == 'Windows':  # pragma: no cover
+    cmd = ['cmd', '/c'] + cmd
 
 
-@unittest.skipIf(shutil.which('gem') is None, "Gem is not installed.")
+@unittest.skipIf(shutil.which('gem') is None or bool(call_without_output(cmd)),
+                 "Gem is not installed.")
 class GemRequirementTestCase(unittest.TestCase):
 
     def test_installed_requirement(self):
