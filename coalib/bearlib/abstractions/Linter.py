@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from functools import partial
+from functools import partial, partialmethod
 import inspect
 from itertools import chain, compress
 import re
@@ -10,7 +10,6 @@ from types import MappingProxyType
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc.ContextManagers import make_temp
 from coala_utils.decorators import assert_right_type, enforce_signature
-from coalib.misc.Future import partialmethod
 from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result

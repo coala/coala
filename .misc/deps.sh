@@ -3,9 +3,8 @@ set -x
 
 # Choose the python versions to install deps for
 case $CIRCLE_NODE_INDEX in
- 0) dep_versions=( "3.3.6" "3.4.3" "3.5.1" ) ;;
+ 0) dep_versions=( "3.4.3" "3.5.1" ) ;;
  1) dep_versions=( "3.4.3" ) ;;
- 2) dep_versions=( "3.3.6" ) ;;
  *) dep_versions=( "3.5.1" ) ;;
 esac
 
