@@ -70,8 +70,8 @@ def pickle_load(log_printer, identifier, fallback=None):
     True
     >>> pickle_load(log_printer, "test_project")
     {'answer': 42}
-    >>> pickle_load(log_printer, "nonexistant_project")
-    >>> pickle_load(log_printer, "nonexistant_project", fallback=42)
+    >>> pickle_load(log_printer, "nonexistent_project")
+    >>> pickle_load(log_printer, "nonexistent_project", fallback=42)
     42
 
     :param log_printer: A LogPrinter object to use for logging.
