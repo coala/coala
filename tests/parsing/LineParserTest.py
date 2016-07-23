@@ -6,7 +6,7 @@ from coalib.parsing.LineParser import LineParser
 class LineParserTest(unittest.TestCase):
 
     def setUp(self):
-        self.uut = LineParser(comment_seperators=('#', ';'))
+        self.uut = LineParser(comment_separators=('#', ';'))
 
     def test_empty_line(self):
         self.check_data_set("")

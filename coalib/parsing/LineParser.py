@@ -6,18 +6,18 @@ class LineParser:
 
     def __init__(self,
                  key_value_delimiters=('=',),
-                 comment_seperators=('#',),
+                 comment_separators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=None,
                  section_override_delimiters=(".",)):
         """
-        Creates a new line parser. Please note that no delimiter or seperator
+        Creates a new line parser. Please note that no delimiter or separator
         may be an "o" or you may encounter undefined behaviour with the
         escapes.
 
         :param key_value_delimiters:        Delimiters that delimit a key from
                                             a value
-        :param comment_seperators:          Used to initiate a comment
+        :param comment_separators:          Used to initiate a comment
         :param key_delimiters:              Delimiters between several keys
         :param section_name_surroundings:   Dictionary, e.g. {"[", "]"} means a
                                             section name is surrounded by [].
@@ -33,7 +33,7 @@ class LineParser:
         section_name_surroundings = section_name_surroundings or {"[": "]"}
 
         self.key_value_delimiters = key_value_delimiters
-        self.comment_seperators = comment_seperators
+        self.comment_separators = comment_separators
         self.key_delimiters = key_delimiters
         self.section_name_surroundings = section_name_surroundings
         self.section_override_delimiters = section_override_delimiters
@@ -50,7 +50,7 @@ class LineParser:
         """
         line, comment = self.__separate_by_first_occurrence(
             line,
-            self.comment_seperators)
+            self.comment_separators)
         comment = unescape(comment)
         if line == "":
             return '', [], '', comment
@@ -65,7 +65,7 @@ class LineParser:
         # Add all the delimiters that stored as tuples
         all_delimiters = self.key_value_delimiters
         all_delimiters += self.key_delimiters
-        all_delimiters += self.comment_seperators
+        all_delimiters += self.comment_separators
         all_delimiters += self.section_override_delimiters
         all_delimiters = "".join(all_delimiters)
 
