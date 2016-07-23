@@ -20,7 +20,8 @@ from coalib.results.SourceRange import SourceRange
                    "origin",
                    "message",
                    "additional_info",
-                   "debug_msg")
+                   "debug_msg",
+                   "diffs")
 class Result:
     """
     A result is anything that has an origin and a message.
