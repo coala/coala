@@ -361,10 +361,9 @@ def instantiate_processes(section,
 
         # If caching is enabled then the local bears should process only the
         # changed files.
-        # FIXME: Log this to the debug channel instead.
-        log_printer.info("coala is run only on changed files, bears' log "
-                         "messages from previous runs may not appear. You may "
-                         "use the `--flush-cache` flag to see them.")
+        log_printer.debug("coala is run only on changed files, bears' log "
+                          "messages from previous runs may not appear. You may "
+                          "use the `--flush-cache` flag to see them.")
         filename_list = changed_files
 
     # Note: the complete file dict is given as the file dict to bears and
