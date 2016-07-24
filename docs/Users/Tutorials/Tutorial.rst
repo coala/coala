@@ -162,6 +162,12 @@ As you see, sections provide a way to have different configurations for
 possibly different languages in one file. They are executed
 sequentially.
 
+.. note::
+
+	For a list of configuration options for the bears, take a look at our
+	`bear-docs <https://github.com/coala-analyzer/bear-docs>`_ documentation.
+
+
 Auto-applying results
 ---------------------
 
