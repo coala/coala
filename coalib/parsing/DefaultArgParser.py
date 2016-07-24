@@ -151,8 +151,8 @@ coala can also automatically fix your code:
         choices=('INFO', 'NORMAL', 'MAJOR'), metavar='ENUM',
         help="set minimal result severity to INFO/NORMAL/MAJOR")
 
-    # The following are "coala" specific arguments
-    if parser_type == 'coala':
+    # Specific arguments
+    if parser_type in ('coala', 'coala-json'):
         outputs_group.add_argument(
             '-B', '--show-bears', const=True, action='store_const',
             help='list all bears')
@@ -165,6 +165,7 @@ coala can also automatically fix your code:
             '-p', '--show-capabilities', nargs='+', metavar='LANG',
             help="show what coala can fix and detect for the given languages")
 
+    if parser_type == 'coala':
         outputs_group.add_argument(
             '-D', '--show-description', const=True, action='store_const',
             help="show bear descriptions for `--show-bears`")
@@ -175,14 +176,6 @@ coala can also automatically fix your code:
 
     # The following are "coala-json" specific arguments
     if parser_type == 'coala-json':
-        outputs_group.add_argument(
-            '-B', '--show-bears', const=True, action='store_const',
-            help='list all bears')
-
-        outputs_group.add_argument(
-            '-l', '--filter-by-language', nargs='+', metavar='LANG',
-            help="filters `--show-bears` by the given languages")
-
         outputs_group.add_argument(
             '-o', '--output', nargs=1, metavar='FILE',
             help='write JSON logs to the given file')
