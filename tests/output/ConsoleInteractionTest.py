@@ -3,9 +3,9 @@ import unittest
 from unittest.mock import patch
 from collections import OrderedDict
 from os.path import abspath, relpath
+import logging
 
 from pyprint.ConsolePrinter import ConsolePrinter
-from pyprint.NullPrinter import NullPrinter
 from pyprint.StringPrinter import StringPrinter
 
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
@@ -22,6 +22,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
                                               highlight_text)
+from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -124,7 +125,7 @@ class SomelocalBear(Bear):
 class ConsoleInteractionTest(unittest.TestCase):
 
     def setUp(self):
-        self.log_printer = LogPrinter(ConsolePrinter(print_colored=False))
+        self.log_printer = ListLogPrinter()
         self.console_printer = ConsolePrinter(print_colored=False)
         self.file_diff_dict = {}
         self.section = Section("t")
@@ -441,11 +442,10 @@ Project wide:
             self.assertEqual(stdout.getvalue(), "Executing section name...\n")
 
     def test_nothing_done(self):
-        with retrieve_stdout() as stdout:
-            nothing_done(self.log_printer)
-            self.assertIn("No existent section was targeted or enabled. "
-                          "Nothing to do.\n",
-                          stdout.getvalue())
+        nothing_done(self.log_printer)
+        self.assertEqual(["No existent section was targeted or enabled. "
+                          "Nothing to do."],
+                         [log.message for log in self.log_printer.logs])
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
@@ -586,7 +586,7 @@ some_file
                 stdout.getvalue())
 
     def test_print_results_missing_file(self):
-        self.log_printer = LogPrinter(NullPrinter())
+        self.log_printer.log_level = logging.CRITICAL
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,
@@ -766,8 +766,7 @@ class ShowBearsTest(unittest.TestCase):
 class PrintFormattedResultsTest(unittest.TestCase):
 
     def setUp(self):
-        self.printer = StringPrinter()
-        self.logger = LogPrinter(self.printer)
+        self.logger = ListLogPrinter()
         self.section = Section("t")
 
     def test_default_format(self):
@@ -807,7 +806,8 @@ class PrintFormattedResultsTest(unittest.TestCase):
                                 [Result("1", "2")],
                                 None,
                                 None)
-        self.assertRegex(self.printer.string, ".*Unable to print.*")
+        self.assertRegex(''.join(log.message for log in self.logger.logs),
+                         ".*Unable to print.*")
 
     def test_good_format(self):
         self.section.append(Setting("format_str", "{origin}"))
