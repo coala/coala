@@ -15,6 +15,11 @@ repository, go clone it with:
 All paths and commands given here are meant to be executed from the root
 directory of the *coala-tutorial* repository.
 
+.. note::
+
+    If you want to wrap an already existing tool, please refer to
+    :doc:`this tutorial instead<Linter_Bears>`.
+
 What is a bear?
 ---------------
 
