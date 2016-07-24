@@ -440,9 +440,10 @@ def require_setting(setting_name, arr):
     else:
         needed = ", ".join(arr[1:-1]) + " and " + arr[-1]
 
-    return input(
-        colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed),
-                REQUIRED_SETTINGS_COLOR))
+    # Don't use input, it can't deal with escapes!
+    print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed),
+                  REQUIRED_SETTINGS_COLOR))
+    return input()
 
 
 def acquire_settings(log_printer, settings_names_dict):
