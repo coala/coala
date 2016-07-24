@@ -356,6 +356,7 @@ def _create_linter(klass, options):
                     "information": RESULT_SEVERITY.INFO,
                     "info": RESULT_SEVERITY.INFO,
                     "i": RESULT_SEVERITY.INFO,
+                    "note": RESULT_SEVERITY.INFO,
                     "suggestion": RESULT_SEVERITY.INFO}),
                 result_message=None):
             """
