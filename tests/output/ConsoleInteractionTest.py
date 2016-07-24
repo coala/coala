@@ -617,7 +617,7 @@ some_file
                              "|    | msg\n"
                              "\n"
                              "file\n"
-                             "|    | {}\n"
+                             "|   6| {}\n"
                              "|    | [NORMAL] t:\n"
                              "|    | msg\n".format(STR_LINE_DOESNT_EXIST),
                              stdout.getvalue())
