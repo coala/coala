@@ -503,7 +503,8 @@ def _create_linter(klass, options):
 
                 output = run_shell_command(
                     arguments,
-                    stdin="".join(file) if options["use_stdin"] else None)
+                    stdin="".join(file) if options["use_stdin"] else None,
+                    cwd=self.get_config_dir())
 
                 output = tuple(compress(
                     output,
