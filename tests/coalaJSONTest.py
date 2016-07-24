@@ -68,6 +68,14 @@ class coalaJSONTest(unittest.TestCase):
             output = json.loads(output)
             self.assertEqual(len(output["bears"]), 2)
 
+    def test_show_capabilities(self):
+        with bear_test_module():
+            retval, output = execute_coala(
+                coala_json.main, 'coala-json', '-p', 'java')
+            self.assertEqual(retval, 0)
+            output = json.loads(output)
+            self.assertEqual(len(output["capabilities Can detect/Can fix"]), 1)
+
     def test_show_bears_attributes(self):
         with bear_test_module():
             retval, output = execute_coala(coala_json.main, 'coala-json', '-B')

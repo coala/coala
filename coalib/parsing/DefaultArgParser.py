@@ -184,6 +184,10 @@ coala can also automatically fix your code:
             help="filters `--show-bears` by the given languages")
 
         outputs_group.add_argument(
+            '-p', '--show-capabilities', nargs='+', metavar='LANG',
+            help="show what coala can fix and detect for the given languages")
+
+        outputs_group.add_argument(
             '-o', '--output', nargs=1, metavar='FILE',
             help='write JSON logs to the given file')
 

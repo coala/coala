@@ -20,6 +20,7 @@ from coalib.output.JSONEncoder import create_json_encoder
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.settings.ConfigurationGathering import get_filtered_bears
+from coalib.collecting.Collectors import filter_capabilities_by_languages
 
 
 def main():
@@ -45,11 +46,18 @@ def main():
                 results.append(bear)
         except BaseException as exception:  # pylint: disable=broad-except
             return get_exitcode(exception, log_printer)
+    elif args.show_capabilities:
+        local_bears, global_bears = get_filtered_bears(
+            args.filter_by_language, log_printer)
+        capabilities = filter_capabilities_by_languages(
+            local_bears, args.show_capabilities)
     else:
         results, exitcode, _ = run_coala(
             log_printer=log_printer, autoapply=False)
 
-    retval = {"bears": results} if args.show_bears else {"results": results}
+    retval_ = ({"capabilities Can detect/Can fix": capabilities}
+               if args.show_capabilities else {"results": results})
+    retval = {"bears": results} if args.show_bears else retval_
     if not args.text_logs:
         retval["logs"] = log_printer.logs
     if args.output:
@@ -67,7 +75,7 @@ def main():
                          indent=2,
                          separators=(',', ': ')))
 
-    return 0 if args.show_bears else exitcode
+    return 0 if args.show_bears or args.show_capabilities else exitcode
 
 
 if __name__ == '__main__':  # pragma: no cover
