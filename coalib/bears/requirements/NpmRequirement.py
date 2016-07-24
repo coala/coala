@@ -32,16 +32,15 @@ class NpmRequirement(PackageRequirement):
         Creates the installation command for the instance of the class.
 
         >>> NpmRequirement('alex', '2').install_command()
-        'npm install alex@2'
+        ['npm', 'install', 'alex@2']
 
         >>> NpmRequirement('alex').install_command()
-        'npm install alex'
+        ['npm', 'install', 'alex']
 
         :param return: A string with the installation command.
         """
-        result = "npm install {}".format(self.package)
-        if self.version:
-            result += "@{}".format(self.version)
+        result = ['npm', 'install', self.package + "@" + self.version
+                  if self.version else self.package]
         return result
 
     def is_installed(self):

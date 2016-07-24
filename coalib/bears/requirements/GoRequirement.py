@@ -37,11 +37,11 @@ class GoRequirement(PackageRequirement):
 
         >>> GoRequirement(
         ...     'github.com/golang/lint/golint', '' , '-u' ).install_command()
-        'go get -u github.com/golang/lint/golint'
+        ['go', 'get', '-u', 'github.com/golang/lint/golint']
 
         :param return: A string with the installation command.
         """
-        return "go get {} {}".format(self.flag, self.package)
+        return ['go', 'get', self.flag, self.package]
 
     def is_installed(self):
         """

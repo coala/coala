@@ -9,8 +9,6 @@ class PipRequirement(PackageRequirement):
     requirements from ``pip``, without using the manager name.
     """
 
-    MANAGER = sys.executable + ' -m pip'
-
     def __init__(self, package, version=""):
         """
         Constructs a new ``PipRequirement``, using the ``PackageRequirement``
@@ -33,11 +31,11 @@ class PipRequirement(PackageRequirement):
         """
         Creates the installation command for the instance of the class.
 
-        :param return: A string with the installation command.
+        :param return: A list with the installation command parameters.
         """
-        result = "{} install {}".format(self.MANAGER, self.package)
-        if self.version:
-            result += "=={}".format(self.version)
+        result = [sys.executable, '-m', 'pip', 'install',
+                  self.package + '==' + self.version if self.version
+                  else self.package]
         return result
 
     def is_installed(self):

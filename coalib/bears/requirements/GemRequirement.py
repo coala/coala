@@ -37,16 +37,15 @@ class GemRequirement(PackageRequirement):
         Creates the installation command for the instance of the class.
 
         >>> GemRequirement('rubocop').install_command()
-        "gem install 'rubocop'"
+        ['gem', 'install', 'rubocop']
 
         >>> GemRequirement('scss_lint', '', 'false').install_command()
-        "gem install 'scss_lint', require: false"
+        ['gem', 'install', 'scss_lint, require: false']
 
         :param return: A string with the installation command.
         """
-        result = "gem install '{}'".format(self.package)
-        if self.require:
-            result += ", require: {}".format(self.require)
+        result = ['gem', 'install', self.package + ', require: ' + self.require
+                  if self.require else self.package]
         return result
 
     def is_installed(self):

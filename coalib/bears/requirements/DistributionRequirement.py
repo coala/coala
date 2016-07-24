@@ -42,9 +42,8 @@ class DistributionRequirement(PackageRequirement):
                 manager_dict[platform.linux_distribution()[0]]
                 in self.package.keys()):
             manager = manager_dict[platform.linux_distribution()[0]]
-            result = "{} install {}".format(manager.replace("_", "-"),
-                                            self.package[manager])
-            return result
+            return [manager.replace("_", "-"),
+                    'install', self.package[manager]]
         else:
             package_possibilites = (
                 {package for package in self.package.values()})

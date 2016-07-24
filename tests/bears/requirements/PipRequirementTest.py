@@ -1,5 +1,6 @@
 import unittest
 import shutil
+import sys
 from coalib.bears.requirements.PipRequirement import PipRequirement
 
 
@@ -7,12 +8,13 @@ from coalib.bears.requirements.PipRequirement import PipRequirement
 class PipRequirementTestCase(unittest.TestCase):
 
     def test_install_command_with_version(self):
-        self.assertIn('-m pip install setuptools==19.2',
-                      PipRequirement('setuptools', '19.2').install_command())
+        self.assertEqual(
+            [sys.executable, '-m', 'pip', 'install', 'setuptools==19.2'],
+            PipRequirement('setuptools', '19.2').install_command())
 
     def test_install_command_without_version(self):
-        self.assertIn('-m pip install setuptools',
-                      PipRequirement('setuptools').install_command())
+        self.assertEqual([sys.executable, '-m', 'pip', 'install', 'setuptools'],
+                         PipRequirement('setuptools').install_command())
 
     def test_installed_requirement(self):
         self.assertTrue(PipRequirement('pip').is_installed())
