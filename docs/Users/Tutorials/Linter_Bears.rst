@@ -258,7 +258,7 @@ configuration file for Pylint. Let's add that functionality to our bear.
 Just adding the needed parameter to the ``create_arguments`` signature
 suffices, like you would do for other bears inside ``run``! Additional
 parameters are automatically queried from the coafile. Let's add also some
-documentation together with the ``LANGUAGE`` attribute:
+documentation together with the metadata attributes:
 
 ::
 
@@ -275,7 +275,7 @@ documentation together with the ``LANGUAGE`` attribute:
         checks and error codes.
         """
 
-        LANGUAGE = ("Python", "Python 2", "Python 3")
+        LANGUAGES = ("Python", "Python 2", "Python 3")
 
         @staticmethod
         def create_arguments(filename, file, config_file,
@@ -329,7 +329,7 @@ it should look something like this
         https://pylint.org/
         """
 
-        LANGUAGE = ("Python", "Python 2", "Python 3")
+        LANGUAGES = ("Python", "Python 2", "Python 3")
 
         @staticmethod
         def create_arguments(filename, file, config_file,
