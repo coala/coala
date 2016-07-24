@@ -42,8 +42,8 @@ class LinterComponentTest(unittest.TestCase):
             return '/'
 
         def process_output(self, output, *args, **kwargs):
-            assert output == ('/\n', ), ("The linter doesn't run the command "
-                                         "in the right directory!")
+            assert output == '/\n', ("The linter doesn't run the command in "
+                                     "the right directory!")
 
     class ManualProcessingTestLinter:
 
@@ -254,8 +254,7 @@ class LinterComponentTest(unittest.TestCase):
                (self.section, None))
         uut.run("", [])
 
-        process_output_mock.assert_called_once_with(
-            ("hello stdout\n", ), "", [])
+        process_output_mock.assert_called_once_with("hello stdout\n", "", [])
         process_output_mock.reset_mock()
 
         uut = (linter(sys.executable, use_stdout=False, use_stderr=True)
@@ -263,8 +262,7 @@ class LinterComponentTest(unittest.TestCase):
                (self.section, None))
         uut.run("", [])
 
-        process_output_mock.assert_called_once_with(
-            ("hello stderr\n", ), "", [])
+        process_output_mock.assert_called_once_with("hello stderr\n", "", [])
         process_output_mock.reset_mock()
 
         uut = (linter(sys.executable, use_stdout=True, use_stderr=True)
@@ -285,7 +283,7 @@ class LinterComponentTest(unittest.TestCase):
         fixed = ["void main()\n", "{\n", "return 9;\n", "}\n"]
         fixed_string = "".join(fixed)
 
-        results = list(uut.process_output((fixed_string, ),
+        results = list(uut.process_output(fixed_string,
                                           "some-file.c",
                                           original))
 
@@ -314,7 +312,7 @@ class LinterComponentTest(unittest.TestCase):
                (self.EmptyTestLinter)
                (self.section, None))
 
-        results = list(uut.process_output((fixed_string, ),
+        results = list(uut.process_output(fixed_string,
                                           "some-file.c",
                                           original))
         self.assertEqual(len(results), 2)
@@ -324,7 +322,7 @@ class LinterComponentTest(unittest.TestCase):
         test_output = ("12:4-14:0-Serious issue (error) -> ORIGIN=X -> D\n"
                        "0:0-0:1-This is a warning (warning) -> ORIGIN=Y -> A\n"
                        "813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n"
-                       "0:0-0:0-Some unknown sev (???) -> ORIGIN=W -> B\n", )
+                       "0:0-0:0-Some unknown sev (???) -> ORIGIN=W -> B\n")
         regex = (r"(?P<line>\d+):(?P<column>\d+)-"
                  r"(?P<end_line>\d+):(?P<end_column>\d+)-"
                  r"(?P<message>.*) \((?P<severity>.*)\) -> "
@@ -494,7 +492,7 @@ class LinterComponentTest(unittest.TestCase):
             "some_file.cs", [], None, 109)
         generate_config_mock.assert_called_once_with("some_file.cs", [], 88)
         process_output_mock.assert_called_once_with(
-            ("coala!\n", ), "some_file.cs", [], "is cool")
+            "coala!\n", "some_file.cs", [], "is cool")
 
     def test_section_settings_defaults_forwarding(self):
         create_arguments_mock = Mock()
@@ -524,7 +522,7 @@ class LinterComponentTest(unittest.TestCase):
         create_arguments_mock.assert_called_once_with("abc.py", [], None, 3)
         generate_config_mock.assert_called_once_with("abc.py", [], "x")
         process_output_mock.assert_called_once_with(
-            ("hello\n", ), "abc.py", [], 64)
+            "hello\n", "abc.py", [], 64)
 
         create_arguments_mock.reset_mock()
         generate_config_mock.reset_mock()
@@ -537,7 +535,7 @@ class LinterComponentTest(unittest.TestCase):
         create_arguments_mock.assert_called_once_with("def.py", [], None, 1000)
         generate_config_mock.assert_called_once_with("def.py", [], "xyz")
         process_output_mock.assert_called_once_with(
-            ("hello\n", ), "def.py", [], -50)
+            "hello\n", "def.py", [], -50)
 
     def test_invalid_arguments(self):
 
