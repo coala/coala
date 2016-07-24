@@ -489,7 +489,7 @@ def process_queues(processes,
                    cache,
                    log_printer):
     """
-    Iterate the control queue and send the results recieved to the print_result
+    Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
 
     :param processes:          List of processes which can be used to run
