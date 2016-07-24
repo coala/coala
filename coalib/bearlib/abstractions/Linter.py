@@ -306,8 +306,7 @@ def _create_linter(klass, options):
             Processes the executable's output as a corrected file.
 
             :param output:
-                The output of the program. This can be either a single
-                string or a sequence of strings.
+                The output of the program. This is a sequence of strings.
             :param filename:
                 The filename of the file currently being corrected.
             :param file:
@@ -325,9 +324,6 @@ def _create_linter(klass, options):
                 An iterator returning results containing patches for the
                 file to correct.
             """
-            if isinstance(output, str):
-                output = (output,)
-
             for string in output:
                 for diff in Diff.from_string_arrays(
                         file,
@@ -363,8 +359,7 @@ def _create_linter(klass, options):
             Processes the executable's output using a regex.
 
             :param output:
-                The output of the program. This can be either a single
-                string or a sequence of strings.
+                The output of the program. This is a sequence of strings.
             :param filename:
                 The filename of the file currently being corrected.
             :param file:
@@ -399,9 +394,6 @@ def _create_linter(klass, options):
             :return:
                 An iterator returning results.
             """
-            if isinstance(output, str):
-                output = (output,)
-
             for string in output:
                 for match in re.finditer(output_regex, string):
                     yield self._convert_output_regex_match_to_result(
@@ -509,8 +501,6 @@ def _create_linter(klass, options):
                 output = tuple(compress(
                     output,
                     (options["use_stdout"], options["use_stderr"])))
-                if len(output) == 1:
-                    output = output[0]
 
                 process_output_kwargs = FunctionMetadata.filter_parameters(
                     self._get_process_output_metadata(), kwargs)
