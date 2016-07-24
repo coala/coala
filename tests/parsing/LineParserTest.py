@@ -25,6 +25,12 @@ class LineParserTest(unittest.TestCase):
         self.check_data_set(r"a.b, \a\.\b\ c=",
                             output_keys=[("a", "b"), ("", r"\a.\b c")])
 
+    def test_escaping(self):
+        self.check_data_set("hello = world\ # yes here's a space",
+                            output_keys=[('', 'hello')],
+                            output_value='world\\ ',
+                            output_comment="# yes here's a space")
+
     def test_multi_value_parsing(self):
         self.check_data_set(
             "a, b\\ \\=, section.c= = :()&/ \\\\#heres a comment \n",

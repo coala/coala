@@ -1,5 +1,7 @@
 from coala_utils.string_processing.StringConverter import StringConverter
-from coala_utils.string_processing import unescape, convert_to_raw
+from coala_utils.string_processing import (unescape, convert_to_raw,
+                                           position_is_escaped,
+                                           unescaped_rstrip)
 
 
 class LineParser:
@@ -127,10 +129,16 @@ class LineParser:
         if return_second_part_nonempty and delim_pos == len(string):
             return "", string.strip(" \n")
 
-        return (
-            string[:delim_pos].strip(" \n"),
-            string[delim_pos + (len(used_delim) if strip_delim else 0):].strip(
-                " \n"))
+        first_part = string[:delim_pos]
+        second_part = string[delim_pos + (
+            len(used_delim) if strip_delim else 0):]
+
+        if not position_is_escaped(second_part, len(second_part) - 1):
+            first_part = unescaped_rstrip(first_part)
+            second_part = unescaped_rstrip(second_part)
+
+        return (first_part.lstrip().rstrip("\n"),
+                second_part.lstrip().rstrip("\n"))
 
     def __get_section_name(self, line):
         for begin, end in self.section_name_surroundings.items():
