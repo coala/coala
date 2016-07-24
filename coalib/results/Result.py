@@ -217,7 +217,7 @@ class Result:
         the affected code of the result.
 
         :return: A string containing all of the affected files
-                 seperated by a comma.
+                 separated by a comma.
         """
 
         if not self.affected_code:
