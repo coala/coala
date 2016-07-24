@@ -8,8 +8,8 @@ from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
     collect_registered_bears_dirs, filter_section_bears_by_languages,
     get_all_bears_names)
-from coalib.misc.ContextManagers import retrieve_stdout
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
 from tests.TestUtilities import bear_test_module
 
@@ -20,18 +20,16 @@ class CollectFilesTest(unittest.TestCase):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
-        self.log_printer = LogPrinter(ConsolePrinter())
+        self.log_printer = ListLogPrinter()
 
     def test_file_empty(self):
         self.assertRaises(TypeError, collect_files)
 
     def test_file_invalid(self):
-        with retrieve_stdout() as sio:
-            self.assertEqual(collect_files(["invalid_path"],
-                                           self.log_printer), [])
-            self.assertRegex(sio.getvalue(),
-                             ".*\\[WARNING\\].*No files matching "
-                             "'invalid_path' were found.\n")
+        self.assertEqual(collect_files(["invalid_path"],
+                                       self.log_printer), [])
+        self.assertEqual([log.message for log in self.log_printer.logs],
+                         ["No files matching 'invalid_path' were found."])
 
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
@@ -202,22 +200,20 @@ class CollectBearsTest(unittest.TestCase):
         self.collectors_test_dir = os.path.join(current_dir,
                                                 "collectors_test_dir")
 
-        self.log_printer = LogPrinter(ConsolePrinter())
+        self.log_printer = ListLogPrinter()
 
     def test_bear_empty(self):
         self.assertRaises(TypeError, collect_bears)
 
     def test_bear_invalid(self):
-        with retrieve_stdout() as sio:
-            self.assertEqual(collect_bears(["invalid_paths"],
-                                           ["invalid_name"],
-                                           ["invalid kind"],
-                                           self.log_printer), ([],))
-            self.assertRegex(sio.getvalue(),
-                             ".*\\[WARNING\\].*No bears were found "
-                             "matching 'invalid_name'. Make sure you "
-                             "have coala-bears installed or you have "
-                             "typed the name correctly.\n")
+        self.assertEqual(collect_bears(["invalid_paths"],
+                                       ["invalid_name"],
+                                       ["invalid kind"],
+                                       self.log_printer), ([],))
+        self.assertEqual([log.message for log in self.log_printer.logs],
+                         ["No bears were found matching 'invalid_name'. Make "
+                          "sure you have coala-bears installed or you have "
+                          "typed the name correctly."])
 
         self.assertEqual(collect_bears(["invalid_paths"],
                                        ["invalid_name"],
