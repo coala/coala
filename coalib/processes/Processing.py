@@ -452,12 +452,13 @@ def yield_ignore_ranges(file_dict):
                                    line_number,
                                    len(file[line_number-1])))
                 elif "ignore " in line:
+                    end_line = min(line_number + 1, len(file))
                     yield (get_ignore_scope(line, "ignore "),
-                           SourceRange.from_values(filename,
-                                                   line_number,
-                                                   1,
-                                                   line_number+1,
-                                                   len(file[line_number])))
+                           SourceRange.from_values(
+                               filename,
+                               line_number, 1,
+                               end_line, len(file[end_line - 1])))
+
         if stop_ignoring is False and start is not None:
             yield (bears,
                    SourceRange.from_values(filename,

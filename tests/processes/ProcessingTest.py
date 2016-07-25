@@ -433,6 +433,19 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 20)
 
+        # This case was a bug.
+        test_file_dict_single_line = {'f': ('# ignore XBEAR',)}
+        test_ignore_range_single_line = list(yield_ignore_ranges(
+            test_file_dict_single_line))
+
+        self.assertEqual(len(test_ignore_range_single_line), 1)
+        bears, source_range = test_ignore_range_single_line[0]
+        self.assertEqual(bears, ['xbear'])
+        self.assertEqual(source_range.start.line, 1)
+        self.assertEqual(source_range.start.column, 1)
+        self.assertEqual(source_range.end.line, 1)
+        self.assertEqual(source_range.end.column, 14)
+
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):
 
