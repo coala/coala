@@ -581,7 +581,7 @@ def ask_for_action_and_apply(log_printer,
                             action remains in the list until it is successfully
                             executed.
     :param result:          Result corresponding to the actions.
-    :param file_diff_dict:  If its an action which applies a patch, this
+    :param file_diff_dict:  If it is an action which applies a patch, this
                             contains the diff of the patch to be applied to
                             the file with filename as keys.
     :param file_dict:       Dictionary with filename as keys and its contents
