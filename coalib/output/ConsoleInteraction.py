@@ -23,6 +23,36 @@ from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
 from coalib.settings.Setting import Setting
 
+from pygments import highlight
+from pygments.formatters import (TerminalTrueColorFormatter,
+                                 TerminalFormatter)
+from pygments.filters import VisibleWhitespaceFilter
+from pygments.lexers import TextLexer, get_lexer_for_filename
+from pygments.style import Style
+from pygments.token import Token
+from pygments.util import ClassNotFound
+
+
+class BackgroundSourceRangeStyle(Style):
+    styles = {
+        Token: 'bold bg:#BB4D3E #111'
+    }
+
+
+class BackgroundMessageStyle(Style):
+    styles = {
+        Token: 'bold bg:#eee #111'
+    }
+
+
+def highlight_text(text, lexer=TextLexer(), style=None):
+    if style:
+        formatter = TerminalTrueColorFormatter(style=style)
+    else:
+        formatter = TerminalTrueColorFormatter()
+    return highlight(text, lexer, formatter)[:-1]
+
+
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")
 STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
@@ -122,34 +152,6 @@ def acquire_actions_and_apply(console_printer,
             break
 
 
-def print_spaces_tabs_in_unicode(console_printer, line, tab_dict,
-                                 color, index=0):
-    """
-    Prints the lines with tabs and spaces replaced by unicode symbols.
-
-    :param console_printer: The ``Printer`` object to print to.
-    :param line:            The line-text to print to ``console_printer``.
-    :param tab_dict:        A dictionary containing the indices of tabs inside
-                            ``line`` as keys and the tab-length as values.
-    :param color:           The color to print the line with (except for spaces
-                            and tabs.
-    :param index:           The index from where to start the printing.
-    """
-    for char in line:
-        if char == " ":
-            try:
-                console_printer.print("•", color='cyan', end='')
-            except UnicodeEncodeError:
-                console_printer.print(".", color='cyan', end='')
-        elif char == '\t' and tab_dict:
-            tab_count = tab_dict[index]
-            console_printer.print(
-                '-'*(tab_count-1) + '>', color='cyan', end='')
-        else:
-            console_printer.print(char, color=color, end='')
-        index += 1
-
-
 def print_lines(console_printer,
                 file_dict,
                 section,
@@ -169,31 +171,36 @@ def print_lines(console_printer,
         console_printer.print(format_lines(lines='', line_nr=i),
                               color=FILE_LINES_COLOR,
                               end='')
+
         line = file_dict[sourcerange.file][i - 1].rstrip("\n")
-        tab_width = int(section.get('tab_width', 4))
-        s = SpacingHelper(tab_width)
-        tab_dict = dict(s.yield_tab_lengths(line))
+        try:
+            lexer = get_lexer_for_filename(sourcerange.file)
+        except ClassNotFound:
+            lexer = TextLexer()
+        lexer.add_filter(VisibleWhitespaceFilter(
+            spaces="•", tabs=True,
+            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+        # highlight() combines lexer and formatter to output a ``str``
+        # object.
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
-            print_spaces_tabs_in_unicode(
-                console_printer, line[:sourcerange.start.column-1],
-                tab_dict, FILE_LINES_COLOR)
+            console_printer.print(highlight_text(
+                line[:sourcerange.start.column-1], lexer), end='')
 
             printed_chars = sourcerange.start.column-1
 
         if i == sourcerange.end.line and sourcerange.end.column:
-            print_spaces_tabs_in_unicode(
-                console_printer, line[printed_chars:sourcerange.end.column-1],
-                tab_dict, HIGHLIGHTED_CODE_COLOR, printed_chars)
+            console_printer.print(highlight_text(
+                line[printed_chars:sourcerange.end.column-1],
+                lexer, BackgroundSourceRangeStyle), end='')
 
-            print_spaces_tabs_in_unicode(
-                console_printer, line[sourcerange.end.column-1:],
-                tab_dict, FILE_LINES_COLOR, sourcerange.end.column-1)
+            console_printer.print(highlight_text(
+                line[sourcerange.end.column-1:], lexer), end='')
             console_printer.print("")
+
         else:
-            print_spaces_tabs_in_unicode(
-                console_printer, line[printed_chars:], tab_dict,
-                HIGHLIGHTED_CODE_COLOR, printed_chars)
+            console_printer.print(highlight_text(
+                line[printed_chars:], lexer), end='')
             console_printer.print("")
 
 
@@ -227,7 +234,10 @@ def print_result(console_printer,
     console_printer.print(format_lines("[{sev}] {bear}:".format(
         sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
         color=RESULT_SEVERITY_COLORS[result.severity])
-    console_printer.print(format_lines(result.message), delimiter="\n")
+    lexer = TextLexer()
+    result.message = highlight_text(result.message, lexer,
+                                    BackgroundMessageStyle)
+    console_printer.print(format_lines(result.message))
 
     if interactive:
         cli_actions = CLI_ACTIONS

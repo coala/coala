@@ -16,10 +16,12 @@ from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
     print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
-    print_spaces_tabs_in_unicode, show_bear, show_bears,
-    ask_for_action_and_apply, print_diffs_info,
+    show_bear, show_bears, ask_for_action_and_apply, print_diffs_info,
     show_language_bears_capabilities)
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
+                                              BackgroundMessageStyle,
+                                              highlight_text)
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -28,6 +30,15 @@ from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
+
+from pygments import highlight
+from pygments.formatters import (TerminalTrueColorFormatter,
+                                 TerminalFormatter)
+from pygments.filters import VisibleWhitespaceFilter
+from pygments.lexers import TextLexer
+from pygments.style import Style
+from pygments.token import Token
+
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
                            "needed by {}: ")
@@ -127,41 +138,15 @@ class ConsoleInteractionTest(unittest.TestCase):
 
         self.old_apply_patch_applicable = ApplyPatchAction.is_applicable
         ApplyPatchAction.is_applicable = staticmethod(lambda *args: False)
+        self.lexer = TextLexer()
+        self.lexer.add_filter(VisibleWhitespaceFilter(
+            spaces="•",
+            tabs=True,
+            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
 
     def tearDown(self):
         OpenEditorAction.is_applicable = self.old_open_editor_applicable
         ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
-
-    def test_print_spaces_tabs_in_unicode(self):
-        printer = StringPrinter()
-
-        sh = SpacingHelper(4)
-
-        test_string = "\the\tllo world   "
-        print_spaces_tabs_in_unicode(
-            printer,
-            test_string,
-            dict(sh.yield_tab_lengths(test_string)),
-            "red")
-        self.assertEqual(printer.string, "--->he->llo•world•••")
-
-        # Test the case when the bullet can't be printed because of encoding
-        # problems.
-        def hijack_print(text, *args, **kwargs):
-            if "•" in text:
-                raise UnicodeEncodeError("test-codec", "", 0, 1, "")
-            else:
-                return StringPrinter.print(printer, text, *args, **kwargs)
-
-        printer.print = hijack_print
-
-        printer.clear()
-        test_string = " he\tllo  world "
-        print_spaces_tabs_in_unicode(printer,
-                                     test_string,
-                                     dict(sh.yield_tab_lengths(test_string)),
-                                     "red")
-        self.assertEqual(printer.string, ".he>llo..world.")
 
     def test_require_settings(self):
         self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
@@ -333,7 +318,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_print_affected_files(self):
         with retrieve_stdout() as stdout, \
-             make_temp() as some_file:
+                make_temp() as some_file:
             file_dict = {some_file: ["1\n", "2\n", "3\n"]}
             affected_code = (SourceRange.from_values(some_file),)
             print_affected_files(self.console_printer,
@@ -356,13 +341,13 @@ class ConsoleInteractionTest(unittest.TestCase):
             with simulate_console_inputs(1, 0) as generator, \
                     retrieve_stdout() as sio:
                 ApplyPatchAction.is_applicable = staticmethod(
-                        lambda *args: True)
+                    lambda *args: True)
                 acquire_actions_and_apply(self.console_printer,
                                           self.log_printer,
                                           Section(""),
                                           self.file_diff_dict,
                                           Result("origin", "message", diffs={
-                                           testfile_path: diff}),
+                                              testfile_path: diff}),
                                           file_dict)
                 self.assertEqual(generator.last_input, 1)
                 self.assertIn(ApplyPatchAction.SUCCESS_MESSAGE, sio.getvalue())
@@ -426,7 +411,7 @@ class ConsoleInteractionTest(unittest.TestCase):
             with simulate_console_inputs(1, 2, 3) as generator, \
                     retrieve_stdout() as stdout:
                 ApplyPatchAction.is_applicable = staticmethod(
-                      lambda *args: True)
+                    lambda *args: True)
                 print_results_no_input(self.log_printer,
                                        Section("someSection"),
                                        [Result("origin", "message", diffs={
@@ -439,8 +424,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                  """
 Project wide:
 |    | [NORMAL] origin:
-|    | message
-""")
+|    | {}\n""".format(highlight_text("message", style=BackgroundMessageStyle)))
 
     def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
@@ -468,8 +452,9 @@ Project wide:
                           {},
                           color=False)
             self.assertEqual(
-                "\n{}\n|    | [NORMAL] origin:\n|    | message"
-                "\n".format(STR_PROJECT_WIDE),
+                "\n{}\n|    | [NORMAL] origin:\n|    | {}\n".format(
+                    STR_PROJECT_WIDE,
+                    highlight_text("message", style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
     def test_print_results_for_file(self):
@@ -485,11 +470,12 @@ Project wide:
                 {},
                 color=False)
             self.assertEqual("""\nfilename
-|   2| line•2
+|   2| {}
 |    | [NORMAL] SpaceConsistencyBear:
-|    | Trailing whitespace found
-""",
-                             stdout.getvalue())
+|    | {}\n""".format(highlight_text('line 2', self.lexer),
+                      highlight_text("Trailing whitespace found",
+                                     style=BackgroundMessageStyle)),
+                stdout.getvalue())
 
         with retrieve_stdout() as stdout:
             print_results(
@@ -507,11 +493,12 @@ Project wide:
                 {},
                 color=False)
             self.assertEqual("""\nfilename
-|   5| line•5
+|   5| {}
 |    | [NORMAL] SpaceConsistencyBear:
-|    | Trailing whitespace found
-""",
-                             stdout.getvalue())
+|    | {}\n""".format(highlight_text('line 5', self.lexer),
+                      highlight_text("Trailing whitespace found",
+                                     style=BackgroundMessageStyle)),
+                stdout.getvalue())
 
     def test_print_results_sorting(self):
         with retrieve_stdout() as stdout:
@@ -535,16 +522,18 @@ Project wide:
 
             self.assertEqual("""
 file
-|   2| --->
+|   2| {0}
 |    | [NORMAL] SpaceConsistencyBear:
-|    | Trailing whitespace found
+|    | {1}
 
 file
-|   5| line•5->
+|   5| {2}
 |    | [NORMAL] SpaceConsistencyBear:
-|    | Trailing whitespace found
-""",
-                             stdout.getvalue())
+|    | {1}\n""".format(highlight_text('\t', self.lexer),
+                       highlight_text("Trailing whitespace found",
+                                      style=BackgroundMessageStyle),
+                       highlight_text('line 5\t', self.lexer)),
+                stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
         affected_code = (
@@ -560,25 +549,32 @@ file
                         affected_code)],
                 {abspath("some_file"): ["line " + str(i + 1) + "\n"
                                         for i in range(10)],
-                 abspath("another_file"): ["line " + str(i + 1) + "\n"
+                 abspath("another_file"): ["line " + str(i + 1)
                                            for i in range(10)]},
                 {},
                 color=False)
             self.assertEqual("""
 another_file
-|   1| line•1
+|   1| li{0}{1}
 
 another_file
-|   3| line•3
+|   3| li{0}{2}
 
 some_file
-|   5| line•5
-|   6| line•6
-|   7| line•7
+|   5| {3}
+|   6| {4}
+|   7| {5}
 |    | [NORMAL] ClangCloneDetectionBear:
-|    | Clone Found
-""",
-                             stdout.getvalue())
+|    | {6}\n""".format(highlight_text('ne', self.lexer,
+                                      BackgroundSourceRangeStyle),
+                       highlight_text(' 1', self.lexer),
+                       highlight_text(' 3', self.lexer),
+                       highlight_text('line 5', self.lexer),
+                       highlight_text('line 6', self.lexer),
+                       highlight_text('line 7', self.lexer),
+                       highlight_text("Clone Found",
+                                      style=BackgroundMessageStyle)),
+                stdout.getvalue())
 
     def test_print_results_missing_file(self):
         self.log_printer = LogPrinter(NullPrinter())
@@ -593,12 +589,15 @@ some_file
                 color=False)
             self.assertEqual("\n" + STR_PROJECT_WIDE + "\n"
                              "|    | [NORMAL] t:\n"
-                             "|    | msg\n"
+                             "|    | {0}\n"
                              # Second results file isn't there, no context is
                              # printed, only a warning log message which we
                              # don't catch
                              "|    | [NORMAL] t:\n"
-                             "|    | msg\n", stdout.getvalue())
+                             "|    | {0}\n".format(
+                                 highlight_text("msg",
+                                                style=BackgroundMessageStyle)),
+                             stdout.getvalue())
 
     def test_print_results_missing_line(self):
         with retrieve_stdout() as stdout:
@@ -612,14 +611,18 @@ some_file
                 color=False)
             self.assertEqual("\n"
                              "file\n"
-                             "|   5| line•5\n"
+                             "|   5| {0}\n"
                              "|    | [NORMAL] t:\n"
-                             "|    | msg\n"
+                             "|    | {1}\n"
                              "\n"
                              "file\n"
-                             "|   6| {}\n"
+                             "|   6| {2}\n"
                              "|    | [NORMAL] t:\n"
-                             "|    | msg\n".format(STR_LINE_DOESNT_EXIST),
+                             "|    | {1}\n".format(
+                                 highlight_text('line 5', self.lexer),
+                                 highlight_text("msg",
+                                                style=BackgroundMessageStyle),
+                                 STR_LINE_DOESNT_EXIST),
                              stdout.getvalue())
 
     def test_print_results_without_line(self):
@@ -634,7 +637,8 @@ some_file
             self.assertEqual(
                 "\nfile\n"
                 "|    | [NORMAL] t:\n"
-                "|    | msg\n",
+                "|    | {}\n".format(highlight_text(
+                    "msg", style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
 
