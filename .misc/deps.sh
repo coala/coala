@@ -10,7 +10,7 @@ esac
 
 # apt-get commands
 sudo apt-get update
-deps="indent libclang1-3.4"
+deps="indent libclang1-3.4 r-base"
 deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
 deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
 deps_ruby_npm="gem nodejs"
