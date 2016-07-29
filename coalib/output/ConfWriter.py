@@ -11,7 +11,7 @@ class ConfWriter(ClosableObject):
     def __init__(self,
                  file_name,
                  key_value_delimiters=('=',),
-                 comment_seperators=('#',),
+                 comment_separators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=None,
                  section_override_delimiters=(".",),
@@ -21,7 +21,7 @@ class ConfWriter(ClosableObject):
         self.__file_name = file_name
         self.__file = open(self.__file_name, "w")
         self.__key_value_delimiters = key_value_delimiters
-        self.__comment_seperators = comment_seperators
+        self.__comment_separators = comment_separators
         self.__key_delimiters = key_delimiters
         self.__section_name_surroundings = section_name_surroundings
         self.__section_override_delimiters = section_override_delimiters
@@ -97,11 +97,11 @@ class ConfWriter(ClosableObject):
         # Add escape characters as appropriate
         keys = [escape(key, chain(['\\'],
                                   self.__key_value_delimiters,
-                                  self.__comment_seperators,
+                                  self.__comment_separators,
                                   self.__key_delimiters,
                                   self.__section_override_delimiters))
                 for key in keys]
-        val = escape(val, chain(['\\'], self.__comment_seperators))
+        val = escape(val, chain(['\\'], self.__comment_separators))
 
         self.__file.write((self.__key_delimiter + " ").join(keys) + " " +
                           self.__key_value_delimiter + " " + val + "\n")
