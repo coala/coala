@@ -591,7 +591,8 @@ class LinterComponentTest(unittest.TestCase):
             re.escape(repr(sys.executable)) + "\\) at 0x[a-fA-F0-9]+>")
 
     @skipIf(platform.system() == "Windows",
-            "Nobody can sanely test things on windows")
+            "`pwd` does not exist in Windows-cmd and `cd` is a built-in "
+            "command which fails the executable-existence check from @linter.")
     def test_process_directory(self):
         """
         The linter shall run the process in the right directory so tools can
