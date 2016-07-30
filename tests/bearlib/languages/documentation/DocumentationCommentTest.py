@@ -132,8 +132,8 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                                    'Some more foobar-like text.\n')],
             [self.Description(desc='\nA nice and neat way of '
                                    'documenting code.\n'),
-             self.Parameter(name='radius', desc=' The explosion radius.\n')],
-            [self.Description(desc='\nA function that returns 55.\n')],
+             self.Parameter(name='radius', desc=' The explosion radius. ')],
+            [self.Description(desc='A function that returns 55.')],
             [self.Description(desc='\nDocstring with layouted text.\n\n    '
                                    'layouts inside docs are preserved.'
                                    '\nthis is intended.\n')],
@@ -192,3 +192,20 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
                          desc='     the concatenated string\n')]]
 
         self.assertEqual(expected, parsed_docs)
+
+
+class DocumentationAssemblyTest(unittest.TestCase):
+
+    def test_python_assembly(self):
+        data = load_testdata("default.py")
+        docs = "".join(data)
+
+        for doc in extract_documentation(data, "python", "default"):
+            self.assertIn(doc.assemble(), docs)
+
+    def test_c_assembly(self):
+        data = load_testdata("default.c")
+        docs = "".join(data)
+
+        for doc in extract_documentation(data, "c", "doxygen"):
+            self.assertIn(doc.assemble(), docs)

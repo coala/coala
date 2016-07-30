@@ -7,12 +7,9 @@ Some more foobar-like text.
 def foobar_explosion(radius):
     """
     A nice and neat way of documenting code.
-    :param radius: The explosion radius.
-    """
+    :param radius: The explosion radius. """
     def get_55():
-        """
-        A function that returns 55.
-        """
+        """A function that returns 55."""
         return 55
     return get_55() * radius
 
