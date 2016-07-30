@@ -1,8 +1,9 @@
-import traceback
+import logging
 
 from pyprint.ColorPrinter import ColorPrinter
 
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL, LOG_LEVEL_COLORS
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL_COLORS
 from coalib.processes.communication.LogMessage import LogMessage
 
 
@@ -50,42 +51,24 @@ class LogPrinter:
                                datetime_string)
 
     def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        self.log_message(LogMessage(LOG_LEVEL.DEBUG,
-                                    *messages,
-                                    delimiter=delimiter,
-                                    timestamp=timestamp),
-                         **kwargs)
+        logging.debug(self._compile_message(*messages, delimiter=delimiter))
 
     def info(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        self.log_message(LogMessage(LOG_LEVEL.INFO,
-                                    *messages,
-                                    delimiter=delimiter,
-                                    timestamp=timestamp),
-                         **kwargs)
+        logging.info(self._compile_message(*messages, delimiter=delimiter))
 
     def warn(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        self.log_message(LogMessage(LOG_LEVEL.WARNING,
-                                    *messages,
-                                    delimiter=delimiter,
-                                    timestamp=timestamp),
-                         **kwargs)
+        logging.warning(self._compile_message(*messages, delimiter=delimiter))
 
     def err(self, *messages, delimiter=" ", timestamp=None, **kwargs):
-        self.log_message(LogMessage(LOG_LEVEL.ERROR,
-                                    *messages,
-                                    delimiter=delimiter,
-                                    timestamp=timestamp),
-                         **kwargs)
+        logging.error(self._compile_message(*messages, delimiter=delimiter))
 
-    def log(self, log_level, message, timestamp=None, **kwargs):
-        self.log_message(LogMessage(log_level,
-                                    message,
-                                    timestamp=timestamp),
-                         **kwargs)
+    def _compile_message(self, *messages, delimiter):
+        return str(delimiter).join(str(message)
+                                   for message in messages).rstrip()
 
     def log_exception(self,
                       message,
-                      exception,
+                      exception: BaseException,
                       log_level=LOG_LEVEL.ERROR,
                       timestamp=None,
                       **kwargs):
@@ -108,47 +91,4 @@ class LogPrinter:
             raise TypeError("log_exception can only log derivatives of "
                             "BaseException.")
 
-        traceback_str = "\n".join(
-            traceback.format_exception(type(exception),
-                                       exception,
-                                       exception.__traceback__))
-
-        self.log(log_level, message, timestamp=timestamp, **kwargs)
-        self.log_message(
-            LogMessage(LOG_LEVEL.DEBUG,
-                       "Exception was:" + "\n" + traceback_str,
-                       timestamp=timestamp),
-            **kwargs)
-
-    def log_message(self, log_message, **kwargs):
-        if not isinstance(log_message, LogMessage):
-            raise TypeError("log_message should be of type LogMessage.")
-
-        if log_message.log_level < self.log_level:
-            return
-
-        self._print_log_message(
-            self._get_log_prefix(log_message.log_level, log_message.timestamp),
-            log_message,
-            **kwargs)
-
-    def _print_log_message(self, prefix, log_message, **kwargs):
-        """
-        Override this if you want to influence how the log message is printed.
-
-        If the underlying printer is a ColorPrinter, then colored logging is
-        used. You can turn it off in the underlying ColorPrinter if you want to
-        print uncolored.
-
-        :param prefix:      The prefix to print (as string).
-        :param log_message: The LogMessage object to print.
-        :param kwargs:      Any other keyword arguments.
-        """
-        if isinstance(self._printer, ColorPrinter):
-            self.printer.print(prefix,
-                               end=" ",
-                               color=LOG_LEVEL_COLORS[log_message.log_level],
-                               **kwargs)
-            self.printer.print(log_message.message, **kwargs)
-        else:
-            self.printer.print(prefix, log_message.message, **kwargs)
+        logging.exception(message, exc_info=exception)
