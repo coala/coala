@@ -141,3 +141,59 @@ class DocumentationComment:
                 parsed.append(self.Description(desc=desc))
 
         return parsed
+
+    @classmethod
+    def from_metadata(cls, doccomment, docstyle_definition,
+                      marker, indent, range):
+        r"""
+        Assembles a list of parsed documentation comment metadata.
+
+        This function just assembles the documentation comment
+        itself, without the markers and indentation.
+
+        >>> from coalib.bearlib.languages.documentation.DocumentationComment \
+        ...     import DocumentationComment
+        >>> from coalib.bearlib.languages.documentation.DocstyleDefinition \
+        ...     import DocstyleDefinition
+        >>> from coalib.results.TextRange import TextRange
+        >>> Description = DocumentationComment.Description
+        >>> Parameter = DocumentationComment.Parameter
+        >>> python_default = DocstyleDefinition.load("python3", "default")
+        >>> parsed_doc = [Description(desc='\nDescription\n'),
+        ...               Parameter(name='age', desc=' Age\n')]
+        >>> str(DocumentationComment.from_metadata(
+        ...         parsed_doc, python_default,
+        ...         python_default.markers[0], 4,
+        ...         TextRange.from_values(0, 0, 0, 0)))
+        '\nDescription\n:param age: Age\n'
+
+        :param doccomment:
+            The list of parsed documentation comment metadata.
+        :param docstyle_definition:
+            The ``DocstyleDefinition`` instance that defines what docstyle is
+            being used in a documentation comment.
+        :param marker:
+            The markers to be used in the documentation comment.
+        :param indent:
+            The indentation to be used in the documentation comment.
+        :param range:
+            The range of the documentation comment.
+        :return:
+            A ``DocumentationComment`` instance of the assembled documentation.
+        """
+        assembled_doc = ""
+        for section in doccomment:
+            section_desc = section.desc.splitlines(keepends=True)
+
+            if isinstance(section, cls.Parameter):
+                assembled_doc += (docstyle_definition.metadata.param_start +
+                                  section.name +
+                                  docstyle_definition.metadata.param_end)
+
+            elif isinstance(section, cls.ReturnValue):
+                assembled_doc += docstyle_definition.metadata.return_sep
+
+            assembled_doc += ''.join(section_desc)
+
+        return DocumentationComment(assembled_doc, docstyle_definition, indent,
+                                    marker, range)
