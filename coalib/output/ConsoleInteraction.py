@@ -91,7 +91,7 @@ def acquire_actions_and_apply(console_printer,
                             key.
     :param cli_actions:     The list of cli actions available.
     """
-    cli_actions = cli_actions or CLI_ACTIONS
+    cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     while True:
         actions = []

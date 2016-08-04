@@ -197,7 +197,7 @@ def _create_wrapper(klass, options):
             return self.parse_output(out, filename)
 
     result_klass = type(klass.__name__, (klass, ExternalBearWrapBase), {})
-    result_klass.__doc__ = klass.__doc__ if klass.__doc__ else ""
+    result_klass.__doc__ = klass.__doc__ or ""
     return result_klass
 
 

@@ -19,7 +19,7 @@ class LogMessage:
             raise ValueError("Empty log messages are not allowed.")
 
         self.log_level = log_level
-        self.timestamp = timestamp or datetime.today()
+        self.timestamp = datetime.today() if timestamp is None else timestamp
 
     def __str__(self):
         log_level = LOG_LEVEL.reverse.get(self.log_level, "ERROR")

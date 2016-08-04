@@ -151,8 +151,8 @@ class FunctionMetadata:
         optional_params = OrderedDict()
 
         argspec = getfullargspec(func)
-        args = argspec.args or ()
-        defaults = argspec.defaults or ()
+        args = () if argspec.args is None else argspec.args
+        defaults = () if argspec.defaults is None else argspec.defaults
         num_non_defaults = len(args) - len(defaults)
         for i, arg in enumerate(args):
             # Implicit self argument or omitted explicitly

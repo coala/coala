@@ -30,7 +30,9 @@ class LineParser:
                                             "section" despite of the current
                                             section.
         """
-        section_name_surroundings = section_name_surroundings or {"[": "]"}
+        section_name_surroundings = (
+            {"[": "]"} if section_name_surroundings is None
+            else section_name_surroundings)
 
         self.key_value_delimiters = key_value_delimiters
         self.comment_separators = comment_separators

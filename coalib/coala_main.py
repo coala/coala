@@ -54,7 +54,9 @@ def run_coala(log_printer=None,
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
-    log_printer = log_printer or LogPrinter(ConsolePrinter(), LOG_LEVEL.DEBUG)
+    log_printer = (
+        LogPrinter(ConsolePrinter(), LOG_LEVEL.DEBUG) if log_printer is None
+        else log_printer)
 
     exitcode = 0
     results = {}
