@@ -44,6 +44,7 @@ Welcome to the coala documentation!
    Testing Bears <Users/Tutorials/Testing_Bears>
    Linter Bears <Users/Tutorials/Linter_Bears>
    Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
+   External Bears <Users/Tutorials/External_Bears>
    Git Help <Users/Tutorials/Git_Help>
 
 .. toctree::
