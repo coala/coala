@@ -58,7 +58,7 @@ Features
   `Sublime Text <https://github.com/coala-analyzer/coala-sublime>`__,
   `Atom <https://github.com/coala-analyzer/coala-atom>`__,
   `Vim <https://github.com/coala-analyzer/coala-vim>`__ and
-  `Emacs <https://github.com/coala-analyzer/coala-vim>`__.
+  `Emacs <https://github.com/coala-analyzer/coala-emacs>`__.
 * Optimized performace with multi-threading to parallelize the routines - can
   complete a 26000 line python repository in less than 3 seconds.
 * File caching support - run only on changed files (experimental).
