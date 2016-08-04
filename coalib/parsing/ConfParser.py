@@ -1,5 +1,6 @@
 import os
 from collections import OrderedDict
+from types import MappingProxyType
 
 from coalib.misc import Constants
 from coalib.parsing.LineParser import LineParser
@@ -13,12 +14,8 @@ class ConfParser:
                  key_value_delimiters=('=',),
                  comment_seperators=('#',),
                  key_delimiters=(',', ' '),
-                 section_name_surroundings=None,
+                 section_name_surroundings=MappingProxyType({"[": "]"}),
                  remove_empty_iter_elements=True):
-        section_name_surroundings = (
-            {"[": "]"} if section_name_surroundings is None
-            else section_name_surroundings)
-
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
                                       key_delimiters,
