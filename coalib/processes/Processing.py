@@ -369,8 +369,10 @@ def instantiate_processes(section,
     # Note: the complete file dict is given as the file dict to bears and
     # the whole project is accessible to every bear. However, local bears are
     # run only for the changed files if caching is enabled.
-    file_dict = get_file_dict(filename_list, log_printer)
     complete_file_dict = get_file_dict(complete_filename_list, log_printer)
+    file_dict = {filename: complete_file_dict[filename]
+                 for filename in filename_list
+                 if filename in complete_file_dict}
 
     manager = multiprocessing.Manager()
     global_bear_queue = multiprocessing.Queue()
