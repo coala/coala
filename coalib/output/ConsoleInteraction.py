@@ -426,6 +426,29 @@ def print_affected_lines(console_printer, file_dict, section, sourcerange):
                         sourcerange)
 
 
+def join_names(values):
+    """
+    Produces a string by concatenating the items in ``values`` with
+    commas, except the last element, which is concatenated with an "and".
+
+    >>> join_names(["apples", "bananas", "oranges"])
+    'apples, bananas and oranges'
+    >>> join_names(["apples", "bananas"])
+    'apples and bananas'
+    >>> join_names(["apples"])
+    'apples'
+
+    :param values:
+        A list of strings.
+    :return:
+        The concatenated string.
+    """
+    if len(values) > 1:
+        return ", ".join(values[:-1]) + " and " + values[-1]
+    else:
+        return values[0]
+
+
 def require_setting(setting_name, arr):
     """
     This method is responsible for prompting a user about a missing setting and
@@ -436,10 +459,7 @@ def require_setting(setting_name, arr):
                          of the bears who need this setting in [1] and
                          following.
     """
-    if len(arr) == 2:
-        needed = arr[1]
-    else:
-        needed = ", ".join(arr[1:-1]) + " and " + arr[-1]
+    needed = join_names(arr[1:])
 
     # Don't use input, it can't deal with escapes!
     print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed),
@@ -473,7 +493,8 @@ def acquire_settings(log_printer, settings_names_dict):
                         "dictionary.")
 
     result = {}
-    for setting_name, arr in settings_names_dict.items():
+    for setting_name, arr in sorted(settings_names_dict.items(),
+                                    key=lambda x: join_names(x[1][1:])):
         value = require_setting(setting_name, arr)
         result.update({setting_name: value} if value is not None else {})
 
