@@ -426,26 +426,26 @@ def _create_linter(klass, options):
                                                      options["output_format"]))
 
             if options["output_format"] == "corrected":
-                process_output_args = {
+                _process_output_args = {
                     key: options[key]
                     for key in ("result_message", "diff_severity",
                                 "diff_distance")
                     if key in options}
 
                 process_output = partialmethod(
-                    process_output_corrected, **process_output_args)
+                    process_output_corrected, **_process_output_args)
 
             else:
                 assert options["output_format"] == "regex"
 
-                process_output_args = {
+                _process_output_args = {
                     key: options[key]
                     for key in ("output_regex", "severity_map",
                                 "result_message")
                     if key in options}
 
                 process_output = partialmethod(
-                    process_output_regex, **process_output_args)
+                    process_output_regex, **_process_output_args)
 
         @classmethod
         @contextmanager
