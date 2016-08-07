@@ -20,8 +20,9 @@ class TextRange:
                             ``None`` is given, the start object will be used
                             here.
         :raises TypeError:  Raised when
-                            - start is no TextPosition or None.
-                            - end is no TextPosition.
+                            - start is not of type TextPosition.
+                            - end is neither of type TextPosition, nor is it
+                              None.
         :raises ValueError: Raised when end position is smaller than start
                             position, because negative ranges are not allowed.
         """
