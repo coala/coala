@@ -21,8 +21,9 @@ class SourceRange(TextRange):
                             here. end must be in the same file and be greater
                             than start as negative ranges are not allowed.
         :raises TypeError:  Raised when
-                            - start is no SourcePosition or None.
-                            - end is no SourcePosition.
+                            - start is not of type SourcePosition.
+                            - end is neither of type SourcePosition, nor is it
+                              None.
         :raises ValueError: Raised when file of start and end mismatch.
         """
         TextRange.__init__(self, start, end)
