@@ -80,6 +80,7 @@ class Bear(Printer, LogPrinter):
     ...     MAINTAINERS = {'Catelyn Stark'}
     ...     MAINTAINERS_EMAILS = {'catelyn_stark@gmail.com'}
     ...     LICENSE = 'AGPL-3.0'
+    ...     ASCIINEMA_URL = 'https://asciinema.org/a/80761'
 
     If the maintainers are the same as the authors, they can be omitted:
 
@@ -135,6 +136,7 @@ class Bear(Printer, LogPrinter):
     INCLUDE_LOCAL_FILES = set()
     CAN_DETECT = set()
     CAN_FIX = set()
+    ASCIINEMA_URL = ''
 
     @classproperty
     def name(cls):
