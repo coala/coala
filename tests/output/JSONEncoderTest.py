@@ -1,4 +1,5 @@
 import json
+import re
 import unittest
 from datetime import datetime
 
@@ -74,6 +75,11 @@ class JSONEncoderTest(unittest.TestCase):
         tf = datetime.today()
         self.assertEquals('"' + tf.isoformat() + '"',
                           json.dumps(tf, **self.kw))
+
+    def test_re_object(self):
+        uut = re.compile('x')
+        self.assertEqual('"' + uut.pattern + '"',
+                         json.dumps(uut, **self.kw))
 
     def test_class1(self):
         tc1 = TestClass1()
