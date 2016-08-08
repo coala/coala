@@ -38,34 +38,37 @@ class SectionFillingTest(unittest.TestCase):
 
     def setUp(self):
         self.log_printer = LogPrinter(ConsolePrinter())
-        self.section = Section("test")
-        self.section.append(Setting("key", "val"))
+        self.section1 = Section("test1")
+        self.section2 = Section("test2")
+        self.section1.append(Setting("key", "val"))
+        self.section2.append(Setting("key", "val"))
 
     def test_fill_settings(self):
-        sections = {"test": self.section}
+        sections = {"test1": self.section1, "test2": self.section2}
         with simulate_console_inputs() as generator:
             fill_settings(sections,
                           acquire_settings,
                           self.log_printer)
             self.assertEqual(generator.last_input, -1)
 
-        self.section.append(Setting("bears", "SpaceConsistencyTestBear"))
+        self.section1.append(Setting("bears", "SpaceConsistencyTestBear"))
 
         with simulate_console_inputs("True"), bear_test_module():
             local_bears, global_bears = fill_settings(sections,
                                                       acquire_settings,
                                                       self.log_printer)
-            self.assertEqual(len(local_bears["test"]), 1)
-            self.assertEqual(len(global_bears["test"]), 0)
 
-        self.assertEqual(bool(self.section["use_spaces"]), True)
-        self.assertEqual(len(self.section.contents), 3)
+            self.assertEqual(len(local_bears["test1"]), 1)
+            self.assertEqual(len(global_bears["test1"]), 0)
+
+        self.assertEqual(bool(self.section1["use_spaces"]), True)
+        self.assertEqual(len(self.section1.contents), 3)
 
     def test_fill_section(self):
         # Use the same value for both because order isn't predictable (uses
         # dict)
         with simulate_console_inputs(0, 0):
-            new_section = fill_section(self.section,
+            new_section = fill_section(self.section1,
                                        acquire_settings,
                                        self.log_printer,
                                        [LocalTestBear,
@@ -77,7 +80,7 @@ class SectionFillingTest(unittest.TestCase):
         self.assertEqual(len(new_section.contents), 3)
 
         # Shouldnt change anything the second time
-        new_section = fill_section(self.section,
+        new_section = fill_section(self.section1,
                                    acquire_settings,
                                    self.log_printer,
                                    [LocalTestBear, GlobalTestBear])
@@ -88,9 +91,9 @@ class SectionFillingTest(unittest.TestCase):
         self.assertEqual(len(new_section.contents), 3)
 
     def test_dependency_resolving(self):
-        sections = {"test": self.section}
-        self.section['bears'] = "DependentBear"
+        sections = {"test": self.section1}
+        self.section1['bears'] = "DependentBear"
         with simulate_console_inputs("True"), bear_test_module():
             fill_settings(sections, acquire_settings, self.log_printer)
 
-        self.assertEqual(bool(self.section["use_spaces"]), True)
+        self.assertEqual(bool(self.section1["use_spaces"]), True)
