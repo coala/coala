@@ -10,6 +10,15 @@ from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
 
+class BadTestBear(Bear):
+
+    def __init__(self, section, queue):
+        Bear.__init__(self, section, queue)
+
+    def run(self):
+        raise NotImplementedError
+
+
 class TestBear(Bear):
 
     def __init__(self, section, queue):
@@ -23,15 +32,6 @@ class TestBear(Bear):
     @staticmethod
     def get_dependencies():
         return [BadTestBear]
-
-
-class BadTestBear(Bear):
-
-    def __init__(self, section, queue):
-        Bear.__init__(self, section, queue)
-
-    def run(self):
-        raise NotImplementedError
 
 
 class TypedTestBear(Bear):
