@@ -6,40 +6,37 @@ from coalib.collecting import Dependencies
 
 class ResolvableBear1(Bear):
 
-    @staticmethod
-    def get_dependencies():
-        return [Bear]
+    BEAR_DEPS = {Bear}
 
 
 class ResolvableBear2(Bear):
 
-    @staticmethod
-    def get_dependencies():
-        return [ResolvableBear1, Bear]
+    BEAR_DEPS = {ResolvableBear1, Bear}
 
 
 class UnresolvableBear1(Bear):
 
-    @staticmethod
-    def get_dependencies():
-        return [ResolvableBear1, Bear, UnresolvableBear3]
+    BEAR_DEPS = {ResolvableBear1, Bear}
 
 
 class UnresolvableBear2(Bear):
 
-    @staticmethod
-    def get_dependencies():
-        return [ResolvableBear1, Bear, UnresolvableBear1]
+    BEAR_DEPS = {ResolvableBear1, Bear, UnresolvableBear1}
 
 
 class UnresolvableBear3(Bear):
 
-    @staticmethod
-    def get_dependencies():
-        return [ResolvableBear1, Bear, UnresolvableBear2]
+    BEAR_DEPS = {ResolvableBear1, Bear, UnresolvableBear2}
 
 
 class DependenciesTest(unittest.TestCase):
+
+    def setUp(self):
+        # We can set this attribute properly only after UnresolvableBear3 is
+        # declared.
+        setattr(UnresolvableBear1, 'BEAR_DEPS', {ResolvableBear1,
+                                                 Bear,
+                                                 UnresolvableBear3})
 
     def test_no_deps(self):
         self.assertEqual(

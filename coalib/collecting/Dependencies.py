@@ -17,7 +17,7 @@ def _resolve(bears, resolved_bears, seen):
             continue
 
         missing = bear.missing_dependencies(resolved_bears)
-        if missing == []:
+        if not missing:
             resolved_bears.append(bear)
             continue
 

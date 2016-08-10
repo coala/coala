@@ -123,6 +123,18 @@ class Bear(Printer, LogPrinter):
     >>> class SomeOtherBear(Bear): pass
     >>> SomeBear.data_dir == SomeOtherBear.data_dir
     False
+
+    BEAR_DEPS contains bear classes that are to be executed before this bear
+    gets executed. The results of these bears will then be passed to the
+    run method as a dict via the dependency_results argument. The dict
+    will have the name of the Bear as key and the list of its results as
+    results:
+
+    >>> class SomeBear(Bear): pass
+    >>> class SomeOtherBear(Bear):
+    ...     BEAR_DEPS = {SomeBear}
+    >>> SomeOtherBear.BEAR_DEPS
+    {<class 'coalib.bears.Bear.SomeBear'>}
     """
 
     LANGUAGES = set()
@@ -137,6 +149,7 @@ class Bear(Printer, LogPrinter):
     CAN_DETECT = set()
     CAN_FIX = set()
     ASCIINEMA_URL = ''
+    BEAR_DEPS = set()
 
     @classproperty
     def name(cls):
@@ -294,28 +307,9 @@ class Bear(Printer, LogPrinter):
 
         :param lst: A list of all already resolved bear classes (not
                     instances).
-        :return:    A list of missing dependencies.
+        :return:    A set of missing dependencies.
         """
-        dep_classes = cls.get_dependencies()
-
-        for item in lst:
-            if item in dep_classes:
-                dep_classes.remove(item)
-
-        return dep_classes
-
-    @staticmethod
-    def get_dependencies():
-        """
-        Retrieves bear classes that are to be executed before this bear gets
-        executed. The results of these bears will then be passed to the
-        run method as a dict via the dependency_results argument. The dict
-        will have the name of the Bear as key and the list of its results as
-        results.
-
-        :return: A list of bear classes.
-        """
-        return []
+        return set(cls.BEAR_DEPS) - set(lst)
 
     @classmethod
     def get_non_optional_settings(cls):

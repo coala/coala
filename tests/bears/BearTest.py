@@ -21,6 +21,8 @@ class BadTestBear(Bear):
 
 class TestBear(Bear):
 
+    BEAR_DEPS = {BadTestBear}
+
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
 
@@ -28,10 +30,6 @@ class TestBear(Bear):
         self.print("set", "up", delimiter="=")
         self.err("teardown")
         self.err()
-
-    @staticmethod
-    def get_dependencies():
-        return [BadTestBear]
 
 
 class TypedTestBear(Bear):
@@ -124,17 +122,17 @@ class BearTest(unittest.TestCase):
         uut.execute()  # No exceptions
 
     def test_dependencies(self):
-        self.assertEqual(Bear.get_dependencies(), [])
-        self.assertEqual(Bear.missing_dependencies([]), [])
-        self.assertEqual(Bear.missing_dependencies([BadTestBear]), [])
+        self.assertEqual(Bear.BEAR_DEPS, set())
+        self.assertEqual(Bear.missing_dependencies([]), set())
+        self.assertEqual(Bear.missing_dependencies([BadTestBear]), set())
 
-        self.assertEqual(TestBear.missing_dependencies([]), [BadTestBear])
-        self.assertEqual(TestBear.missing_dependencies([BadTestBear]), [])
+        self.assertEqual(TestBear.missing_dependencies([]), {BadTestBear})
+        self.assertEqual(TestBear.missing_dependencies([BadTestBear]), set())
         self.assertEqual(TestBear.missing_dependencies([TestBear]),
-                         [BadTestBear])
+                         {BadTestBear})
         self.assertEqual(TestBear.missing_dependencies([TestBear,
                                                         BadTestBear]),
-                         [])
+                         set())
 
     def test_check_prerequisites(self):
         uut = BearWithPrerequisites(self.settings, self.queue, True)

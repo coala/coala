@@ -43,6 +43,8 @@ class SimpleBear(LocalBear):
 
 class DependentBear(LocalBear):
 
+    BEAR_DEPS = {SimpleBear}
+
     def run(self,
             filename,
             file,
@@ -50,10 +52,6 @@ class DependentBear(LocalBear):
             dependency_results=None,
             **kwargs):
         assert len(dependency_results["SimpleBear"]) == 2
-
-    @staticmethod
-    def get_dependencies():
-        return [SimpleBear]
 
 
 class SimpleGlobalBear(GlobalBear):
@@ -70,15 +68,13 @@ class SimpleGlobalBear(GlobalBear):
 
 class DependentGlobalBear(GlobalBear):
 
+    BEAR_DEPS = {SimpleGlobalBear}
+
     def run(self,
             *args,
             dependency_results=None,
             **kwargs):
         assert len(dependency_results["SimpleGlobalBear"]) == 3
-
-    @staticmethod
-    def get_dependencies():
-        return [SimpleGlobalBear]
 
 
 class GlobalTestBear(GlobalBear):

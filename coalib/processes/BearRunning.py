@@ -139,8 +139,8 @@ def get_local_dependency_results(local_result_list, bear_instance):
                               bear. Else return a dictionary containing
                               dependency results.
     """
-    deps = bear_instance.get_dependencies()
-    if deps == []:
+    deps = bear_instance.BEAR_DEPS
+    if not deps:
         return None
 
     dependency_results = {}
@@ -313,8 +313,8 @@ def get_global_dependency_results(global_result_dict, bear_instance):
                                otherwise.
     """
     try:
-        deps = bear_instance.get_dependencies()
-        if deps == []:
+        deps = bear_instance.BEAR_DEPS
+        if not deps:
             return None
     except AttributeError:
         # When this occurs we have an invalid bear and a warning will be
