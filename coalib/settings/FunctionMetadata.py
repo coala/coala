@@ -91,6 +91,21 @@ class FunctionMetadata:
         """
         return self._filter_out_omitted(self._optional_params)
 
+    def add_alias(self, original, alias):
+        """
+        Adds an alias for the original setting. The alias setting will have
+        the same metadata as the original one. If the original setting is not
+        optional, the alias will default to ``None``.
+
+        :param original:  The name of the original setting.
+        :param alias:     The name of the alias for the original.
+        :raises KeyError: If the new setting doesn't exist in the metadata.
+        """
+        self._optional_params[alias] = (
+            self._optional_params[original]
+            if original in self._optional_params
+            else self._non_optional_params[original] + (None, ))
+
     def create_params_from_section(self, section):
         """
         Create a params dictionary for this function that holds all values the

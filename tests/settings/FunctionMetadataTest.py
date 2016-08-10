@@ -107,6 +107,22 @@ class FunctionMetadataTest(unittest.TestCase):
         self.assertEqual(metadata.non_optional_params, non_optional_params)
         self.assertEqual(metadata.optional_params, optional_params)
 
+    def test_add_alias(self):
+        uut = FunctionMetadata(
+            "test",
+            non_optional_params={'not_optional': ('desc', str)},
+            optional_params={'optional': ('desc2', str, 'default')})
+
+        uut.add_alias('optional', 'old_optional')
+        uut.add_alias('not_optional', 'old_not_optional')
+
+        self.assertEqual(uut.non_optional_params,
+                         {'not_optional': ('desc', str)})
+        self.assertEqual(uut.optional_params,
+                         {'optional': ('desc2', str, 'default'),
+                          'old_optional': ('desc2', str, 'default'),
+                          'old_not_optional': ('desc', str, None)})
+
     def test_merge(self):
         metadata1 = FunctionMetadata(
             "main",
