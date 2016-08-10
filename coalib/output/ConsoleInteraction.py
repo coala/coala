@@ -165,6 +165,7 @@ def print_lines(console_printer,
                             lines to print.
     """
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
+        # Print affected file's line number in the sidebar.
         console_printer.print(format_lines(lines='', line_nr=i),
                               color=FILE_LINES_COLOR,
                               end='')
