@@ -25,6 +25,19 @@ def deprecate_settings(**depr_args):
      >>> run(new="Hello world!")
      Hello world!
 
+     This example represents the case where the old setting name needs to be
+     modified to match the new one.
+
+     >>> @deprecate_settings(new=('old', lambda a: a + 'coala!'))
+     ... def func(new):
+     ...     print(new)
+
+     >>> func(old="Welcome to ")
+     The setting `old` is deprecated. Please use `new` instead.
+     Welcome to coala!
+     >>> func(new='coala!')
+     coala!
+
      The metadata for coala has been adjusted as well:
 
      >>> list(run.__metadata__.non_optional_params.keys())
@@ -41,16 +54,23 @@ def deprecate_settings(**depr_args):
     def _deprecate_decorator(func):
 
         def wrapping_function(*args, **kwargs):
-            for arg, deprecated_arg in depr_args.items():
+            for arg, depr_arg_and_modifier in depr_args.items():
+                deprecated_arg, _func = (
+                    depr_arg_and_modifier
+                    if isinstance(depr_arg_and_modifier, tuple)
+                    else (depr_arg_and_modifier, lambda x: x))
                 if deprecated_arg in kwargs and arg not in kwargs:
                     print("The setting `{}` is deprecated. Please use `{}` "
                           "instead.".format(deprecated_arg, arg))
-                    kwargs[arg] = kwargs[deprecated_arg]
+                    kwargs[arg] = _func.__call__(kwargs[deprecated_arg])
                     del kwargs[deprecated_arg]
             return func(*args, **kwargs)
 
         new_metadata = FunctionMetadata.from_function(func)
-        for arg, deprecated_arg in depr_args.items():
+        for arg, depr_arg_and_modifier in depr_args.items():
+            deprecated_arg = (depr_arg_and_modifier[0]
+                              if isinstance(depr_arg_and_modifier, tuple)
+                              else depr_arg_and_modifier)
             new_metadata.add_alias(arg, deprecated_arg)
         wrapping_function.__metadata__ = new_metadata
 
