@@ -108,7 +108,6 @@ the creative name CommunicationBear:
                 type=type(user_input)))
 
             yield self.new_result(message="A hello world result.",
-                                  origin=self,
                                   file=filename)
 
 Try executing it:
