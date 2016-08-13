@@ -56,6 +56,7 @@ class Result:
                                 them as values.
         :param confidence:      A number between 0 and 100 describing the
                                 likelihood of this result being a real issue.
+        :raises ValueError:     Raised when confidence is not between 0 and 100.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -70,7 +71,10 @@ class Result:
         # Sorting is important for tuple comparison
         self.affected_code = tuple(sorted(affected_code))
         self.severity = severity
-        self.confidence = confidence
+        if confidence < 0 or confidence > 100:
+            raise ValueError('Value of confidence should be between 0 and 100.')
+        else:
+            self.confidence = confidence
         self.diffs = diffs
         self.id = uuid.uuid4().int
 

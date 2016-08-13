@@ -24,6 +24,12 @@ class ResultTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             Result("o", "m", severity=-5)
 
+    def test_invalid_confidence(self):
+        with self.assertRaises(ValueError):
+            Result("o", "m", confidence=-1)
+        with self.assertRaises(ValueError):
+            Result("o", "m", confidence=101)
+
     def test_string_dict(self):
         uut = Result(None, "")
         output = uut.to_string_dict()
