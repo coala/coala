@@ -246,7 +246,6 @@ d
 
         self.file_name_queue.put(self.file1)
         self.file_name_queue.put(self.file2)
-        self.file_name_queue.put("invalid file")
         self.local_bear_list.append(LocalTestBear(self.settings,
                                                   self.message_queue))
         self.local_bear_list.append("not a valid bear")
@@ -276,8 +275,6 @@ d
                              LOG_LEVEL.WARNING,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING]
         for msg in expected_messages:
