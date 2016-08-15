@@ -133,7 +133,8 @@ class DocstyleDefinition:
         Loads a ``DocstyleDefinition`` from the coala docstyle definition files.
 
         This function considers all settings inside the according coalang-files
-        as markers.
+        as markers, except ``param_start``, ``param_end`` and ``return_sep``
+        which are considered as special metadata markers.
 
         :param language:           The case insensitive programming language of
                                    the documentation comment as a string.
