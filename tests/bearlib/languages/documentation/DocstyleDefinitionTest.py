@@ -1,6 +1,7 @@
 import os.path
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
@@ -93,6 +94,42 @@ class DocstyleDefinitionTest(unittest.TestCase):
         self.assertEqual(result.markers, (('"""', '', '"""'),))
 
         self.assertEqual(result.metadata, self.dummy_metadata)
+
+    def test_get_available_definitions(self):
+        # Test if the basic supported docstyle-language pairs exist.
+        expected = {('default', 'python'),
+                    ('default', 'python3'),
+                    ('default', 'java'),
+                    ('doxygen', 'c'),
+                    ('doxygen', 'cpp'),
+                    ('doxygen', 'cs'),
+                    ('doxygen', 'fortran'),
+                    ('doxygen', 'java'),
+                    ('doxygen', 'python'),
+                    ('doxygen', 'python3'),
+                    ('doxygen', 'tcl'),
+                    ('doxygen', 'vhdl'),
+                    ('doxygen', 'php'),
+                    ('doxygen', 'objective-c')}
+
+        real = set(DocstyleDefinition.get_available_definitions())
+
+        self.assertTrue(expected.issubset(real))
+
+    @patch('coalib.bearlib.languages.documentation.DocstyleDefinition.iglob')
+    @patch('coalib.bearlib.languages.documentation.DocstyleDefinition'
+           '.ConfParser')
+    def test_get_available_definitions_on_wrong_files(self,
+                                                      confparser_mock,
+                                                      iglob_mock):
+        # Test the case when a coalang was provided with uppercase letters.
+        confparser_instance_mock = confparser_mock.return_value
+        confparser_instance_mock.parse.return_value = ["X"]
+        iglob_mock.return_value = ['some/CUSTOMSTYLE.coalang',
+                                   'SOME/xlang.coalang']
+
+        self.assertEqual(list(DocstyleDefinition.get_available_definitions()),
+                         [('xlang', 'x')])
 
     def test_load_external_coalang(self):
         empty_metadata = self.Metadata('', '', '')

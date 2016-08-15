@@ -1,4 +1,5 @@
 from collections import Iterable, namedtuple
+from glob import iglob
 import os.path
 
 from coala_utils.decorators import (
@@ -183,3 +184,21 @@ class DocstyleDefinition:
                        not key.startswith("comment"))
 
         return cls(language, docstyle, marker_sets, metadata)
+
+    @staticmethod
+    def get_available_definitions():
+        """
+        Returns a sequence of pairs with ``(docstyle, language)`` which are
+        available when using ``load()``.
+
+        :return: A sequence of pairs with ``(docstyle, language)``.
+        """
+        language_config_parser = ConfParser(remove_empty_iter_elements=False)
+        pattern = os.path.join(os.path.dirname(__file__), "*.coalang")
+
+        for coalang_file in iglob(pattern):
+            docstyle = os.path.splitext(os.path.basename(coalang_file))[0]
+            # Ignore files that are not lowercase, as coalang files have to be.
+            if docstyle.lower() == docstyle:
+                for language in language_config_parser.parse(coalang_file):
+                    yield docstyle, language.lower()
