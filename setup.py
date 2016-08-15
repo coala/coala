@@ -89,7 +89,9 @@ if __name__ == "__main__":
           install_requires=required,
           tests_require=test_required,
           package_data={'coalib': ['default_coafile', "VERSION",
-                                   'bearlib/languages/definitions/*.coalang']},
+                                   'bearlib/languages/definitions/*.coalang',
+                                   'bearlib/languages/documentation/*.coalang']
+                        },
           license="AGPL-3.0",
           data_files=data_files,
           long_description=long_description,
