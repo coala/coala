@@ -292,7 +292,7 @@ class Lint(Bear):
                                   command: (list, tuple, None), fail_msg):
         """
         Checks whether the required executable is found and the
-        required command succesfully executes.
+        required command successfully executes.
 
         The function is intended be used with classes having an
         executable, prerequisite_command and prerequisite_fail_msg.
