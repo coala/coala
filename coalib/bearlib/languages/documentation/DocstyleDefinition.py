@@ -136,6 +136,11 @@ class DocstyleDefinition:
         as markers, except ``param_start``, ``param_end`` and ``return_sep``
         which are considered as special metadata markers.
 
+        .. note::
+
+            When placing new coala docstyle definition files, these must
+            consist of only lowercase letters and end with ``.coalang``!
+
         :param language:           The case insensitive programming language of
                                    the documentation comment as a string.
         :param docstyle:           The case insensitive documentation
