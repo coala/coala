@@ -342,7 +342,7 @@ To get help on using a bear or to get a description of the bear, use the
 
 ::
 
-    coala --bears=SpaceConsistencyBear --show-bears
+    coala --bears=SpaceConsistencyBear --show-bears --show-description
 
 This will display a large amount of information regarding the bears that
 have been specified (in the ``.coafile`` of in the CLI arguments). It

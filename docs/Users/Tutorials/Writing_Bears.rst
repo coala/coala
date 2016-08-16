@@ -137,7 +137,7 @@ Try executing
 
 ::
 
-    coala -d bears -b CommunicationBear --show-bears
+    coala -d bears -b CommunicationBear --show-bears --show-description
 
 This will show the user a bunch of information related to the bear like:
 - A description of what the bear does - The sections which uses it - The
