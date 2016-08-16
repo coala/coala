@@ -27,6 +27,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.misc.Caching import FileCache
+from coalib.files.Fileproxy import Fileproxy
 
 
 process_group_test_code = """
@@ -301,9 +302,6 @@ class ProcessingTest(unittest.TestCase):
     def test_get_file_dict(self):
         file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
         self.assertEqual(len(file_dict), 1)
-        self.assertEqual(type(file_dict[self.testcode_c_path]),
-                         tuple,
-                         msg="files in file_dict should not be editable")
         self.assertEqual("Files that will be checked:\n" + self.testcode_c_path,
                          self.log_printer.log_queue.get().message)
 

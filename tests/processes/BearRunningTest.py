@@ -11,6 +11,13 @@ from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.settings.Section import Section
 
 
+class DummyFileProxy:
+
+    def __init__(self, content):
+        self.content = content
+        self.lines = content.splitlines(True)
+
+
 class LocalTestBear(LocalBear):
 
     def run(self, filename, file):
@@ -157,7 +164,7 @@ class BearRunningUnitTest(unittest.TestCase):
         self.global_bear_queue.put(1)
         self.global_bear_queue.put(0)
         self.file_name_queue.put("t")
-        self.file_dict["t"] = []
+        self.file_dict["t"] = DummyFileProxy("")
 
         run(self.file_name_queue,
             self.local_bear_list,
@@ -180,7 +187,7 @@ class BearRunningUnitTest(unittest.TestCase):
         self.local_bear_list.append(EvilBear(self.settings,
                                              self.message_queue))
         self.file_name_queue.put("t")
-        self.file_dict["t"] = []
+        self.file_dict["t"] = DummyFileProxy("")
 
         run(self.file_name_queue,
             self.local_bear_list,
@@ -198,7 +205,7 @@ class BearRunningUnitTest(unittest.TestCase):
         self.local_bear_list.append(UnexpectedBear2(self.settings,
                                                     self.message_queue))
         self.file_name_queue.put("t")
-        self.file_dict["t"] = []
+        self.file_dict["t"] = DummyFileProxy("")
 
         run(self.file_name_queue,
             self.local_bear_list,
@@ -249,8 +256,8 @@ d
         self.local_bear_list.append(LocalTestBear(self.settings,
                                                   self.message_queue))
         self.local_bear_list.append("not a valid bear")
-        self.file_dict[self.file1] = self.example_file
-        self.file_dict[self.file2] = self.example_file
+        self.file_dict[self.file1] = DummyFileProxy(self.example_file)
+        self.file_dict[self.file2] = DummyFileProxy(self.example_file)
         self.global_bear_list.append(GlobalTestBear(self.file_dict,
                                                     self.settings,
                                                     self.message_queue))
