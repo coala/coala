@@ -80,13 +80,13 @@ def parse_custom_settings(sections,
     :param line_parser:          The LineParser to use.
     """
     for setting_definition in custom_settings_list:
-        (_, key_touples, value, _) = line_parser.parse(setting_definition)
-        for key_touple in key_touples:
+        (_, key_tuples, value, _) = line_parser.parse(setting_definition)
+        for key_tuple in key_tuples:
             append_to_sections(sections,
-                               key=key_touple[1],
+                               key=key_tuple[1],
                                value=value,
                                origin=origin,
-                               section_name=key_touple[0],
+                               section_name=key_tuple[0],
                                from_cli=True)
 
 

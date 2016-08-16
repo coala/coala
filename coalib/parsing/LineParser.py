@@ -44,7 +44,7 @@ class LineParser:
 
     def parse(self, line):
         """
-        Note that every value in the returned touple *besides the value* is
+        Note that every value in the returned tuple *besides the value* is
         unescaped. This is so since the value is meant to be put into a Setting
         later thus the escapes may be needed there.
 
@@ -80,7 +80,7 @@ class LineParser:
 
         value = convert_to_raw(value, all_delimiters)
 
-        key_touples = []
+        key_tuples = []
         for key in keys:
             key = convert_to_raw(key, all_delimiters)
             section, key = self.__separate_by_first_occurrence(
@@ -88,9 +88,9 @@ class LineParser:
                 self.section_override_delimiters,
                 True,
                 True)
-            key_touples.append((unescape(section), unescape(key)))
+            key_tuples.append((unescape(section), unescape(key)))
 
-        return '', key_touples, value, comment
+        return '', key_tuples, value, comment
 
     @staticmethod
     def __separate_by_first_occurrence(string,
@@ -108,7 +108,7 @@ class LineParser:
         :param return_second_part_nonempty: If no delimiter is found and this
                                             is true the contents of the string
                                             will be returned in the second part
-                                            of the touple instead of the first
+                                            of the tuple instead of the first
                                             one.
         :return:                            (first_part, second_part)
         """
