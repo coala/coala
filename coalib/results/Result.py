@@ -39,8 +39,7 @@ class Result:
                  diffs: (dict, None)=None,
                  confidence: int=100):
         """
-        :param origin:          Class name or class of the creator of this
-                                object.
+        :param origin:          Class name or creator object of this object.
         :param message:         Message to show with this result.
         :param affected_code:   A tuple of SourceRange objects pointing to
                                 related positions in the source code.
