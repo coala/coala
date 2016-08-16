@@ -213,7 +213,7 @@ class DiffTest(unittest.TestCase):
 
         a[1] = "else"
         diff_2 = Diff.from_string_arrays(a, b)
-        self.assertEqual(diff_1, diff_2)
+        self.assertNotEqual(diff_1, diff_2)
 
         diff_1.rename = "abcd"
         self.assertNotEqual(diff_1, diff_2)

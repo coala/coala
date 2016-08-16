@@ -383,7 +383,7 @@ def run_local_bears(filename_queue,
     :param timeout:           The queue blocks at most timeout seconds for a
                               free slot to execute the put operation on. After
                               the timeout it returns queue Full exception.
-    :param file_dict:         Dictionary that contains contents of files.
+    :param file_dict:         Dictionary that contains fileproxy objects.
     :param local_bear_list:   List of local bears to run.
     :param local_result_dict: A Manager.dict that will be used to store local
                               bear results. A list of all local bear results
@@ -491,7 +491,7 @@ def run(file_name_queue,
     :param global_bear_queue:  queue (read, write) of indexes of global bear
                                instances in the global_bear_list.
     :param file_dict:          dict of all files as {filename:file}, file as in
-                               file.readlines().
+                               the fileproxy object.
     :param local_result_dict:  A Manager.dict that will be used to store local
                                results. A list of all local results.
                                will be stored with the filename as key.

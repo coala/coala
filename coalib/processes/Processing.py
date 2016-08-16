@@ -21,6 +21,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import glob_list
 from coalib.parsing.Globbing import fnmatch
+from coalib.files.Fileproxy import Fileproxy
 
 
 ACTIONS = [ApplyPatchAction,
@@ -104,7 +105,7 @@ def autoapply_actions(results,
 
     :param results:        A list of results.
     :param file_dict:      A dictionary containing the name of files and its
-                           contents.
+                           corresponding proxy objects.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
     :param section:        The section.
@@ -199,7 +200,7 @@ def print_result(results,
 
     :param results:        A list of results.
     :param file_dict:      A dictionary containing the name of files and its
-                           contents.
+                           corresponding proxy objects.
     :param retval:         It is True if no results were yielded ever before.
                            If it is False this function will return False no
                            matter what happens. Else it depends on if this
@@ -250,8 +251,7 @@ def get_file_dict(filename_list, log_printer):
     file_dict = {}
     for filename in filename_list:
         try:
-            with open(filename, "r", encoding="utf-8") as _file:
-                file_dict[filename] = tuple(_file.readlines())
+            file_dict[filename] = Fileproxy(filename)
         except UnicodeDecodeError:
             log_printer.warn("Failed to read file '{}'. It seems to contain "
                              "non-unicode characters. Leaving it "
@@ -296,8 +296,8 @@ def instantiate_bears(section,
     :param section:          The section the bears belong to.
     :param local_bear_list:  List of local bear classes to instantiate.
     :param global_bear_list: List of global bear classes to instantiate.
-    :param file_dict:        Dictionary containing filenames and their
-                             contents.
+    :param file_dict:        A dictionary containing the name of files and its
+                             corresponding proxy objects.
     :param message_queue:    Queue responsible to maintain the messages
                              delivered by the bears.
     :return:                 The local and global bear instance lists.
@@ -429,9 +429,11 @@ def yield_ignore_ranges(file_dict):
     Yields tuples of affected bears and a SourceRange that shall be ignored for
     those.
 
-    :param file_dict: The file dictionary.
+    :param file_dict: A dictionary containing the name of files and its
+                      corresponding proxy objects.
     """
-    for filename, file in file_dict.items():
+    for filename, fileproxy in file_dict.items():
+        file = fileproxy.lines
         start = None
         bears = []
         stop_ignoring = False
@@ -508,8 +510,8 @@ def process_queues(processes,
                                global bears. It is modified by the processes
                                i.e. results are added to it by multiple
                                processes.
-    :param file_dict:          Dictionary containing file contents with
-                               filename as keys.
+    :param file_dict:          A dictionary containing the name of files and
+                               its corresponding proxy objects.
     :param print_results:      Prints all given results appropriate to the
                                output medium.
     :param cache:              An instance of ``misc.Caching.FileCache`` to use

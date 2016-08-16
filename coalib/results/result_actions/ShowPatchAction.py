@@ -94,7 +94,7 @@ class ShowPatchAction(ResultAction):
         for filename, this_diff in sorted(result.diffs.items()):
             to_filename = this_diff.rename if this_diff.rename else filename
             to_filename = "/dev/null" if this_diff.delete else to_filename
-            original_file = original_file_dict[filename]
+            original_file = original_file_dict[filename].lines
             try:
                 current_file = file_diff_dict[filename].modified
                 new_file = (file_diff_dict[filename] + this_diff).modified

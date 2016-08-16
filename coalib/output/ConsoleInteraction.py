@@ -172,7 +172,7 @@ def print_lines(console_printer,
                               color=FILE_LINES_COLOR,
                               end='')
 
-        line = file_dict[sourcerange.file][i - 1].rstrip("\n")
+        line = file_dict[sourcerange.file].lines[i - 1].rstrip("\n")
         try:
             lexer = get_lexer_for_filename(sourcerange.file)
         except ClassNotFound:
