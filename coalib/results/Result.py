@@ -72,8 +72,7 @@ class Result:
         self.severity = severity
         if confidence < 0 or confidence > 100:
             raise ValueError('Value of confidence should be between 0 and 100.')
-        else:
-            self.confidence = confidence
+        self.confidence = confidence
         self.diffs = diffs
         self.id = uuid.uuid4().int
 
