@@ -106,7 +106,7 @@ It will give you an idea about what files are currently modified.
 .. seealso::
     For more information about tests, check `this link <http://coala.readthedocs.org/en/latest/Getting_Involved/Writing_Tests.html>`_.
 
-Adding the files and commiting
+Adding the files and committing
 ------------------------------
 
 Now you can add your files/folders to the current commit:
