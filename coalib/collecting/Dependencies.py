@@ -1,14 +1,13 @@
 class CircularDependencyError(Exception):
 
-    @classmethod
-    def for_bears(cls, bears):
+    def __init__(self, bears):
         """
         Creates the CircularDependencyError with a helpful message about the
         dependency.
         """
-        bear_names = [bear.name for bear in bears]
-
-        return cls("Circular dependency detected: " + " -> ".join(bear_names))
+        bear_names = (bear.name for bear in bears)
+        super(CircularDependencyError, self).__init__(
+            "Circular dependency detected: " + " -> ".join(bear_names))
 
 
 def _resolve(bears, resolved_bears, seen):
@@ -23,7 +22,7 @@ def _resolve(bears, resolved_bears, seen):
 
         if bear in seen:
             seen.append(bear)
-            raise CircularDependencyError.for_bears(seen)
+            raise CircularDependencyError(seen)
 
         seen.append(bear)
         resolved_bears = _resolve(missing, resolved_bears, seen)
