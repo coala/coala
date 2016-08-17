@@ -72,7 +72,7 @@ our master branch. Right now we use 7 of those checks:
   given by any coala member and shows that the commit has been reviewed and
   has no problems, so it is ready to be merged. It can be done by commenting
   ``ack commit_sha``. For more information about the whole process, we have
-  it all docummented
+  it all documented
   `here <http://coala.readthedocs.io/en/latest/Getting_Involved/Review.html>`__.
 
 - **scrutinizer** Checks for the code quality, and points out all the code
