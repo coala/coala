@@ -157,7 +157,7 @@ that doesn't support our version specifiers yet.
     ::
 
         $ pip3 install virtualenv
-        $ virtualenv -p python3 ~/venvs/coala
+        $ virtualenv -p python3 ~/venv/coala
         $ . ~/venv/coala/bin/activate
         $ pip install -U pip
         $ pip install coala-bears

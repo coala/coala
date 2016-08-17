@@ -328,8 +328,8 @@ class Bear(Printer, LogPrinter):
     def setup_dependencies():
         """
         This is a user defined function that can download and set up
-        dependencies (via download_cached_file or arbitary other means) in an OS
-        independent way.
+        dependencies (via download_cached_file or arbitrary other means) in an
+        OS independent way.
         """
 
     @classmethod
