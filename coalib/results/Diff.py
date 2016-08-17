@@ -354,6 +354,13 @@ class Diff:
         linediff.delete = True
         self._changes[line_nr] = linediff
 
+    def delete_lines(self, line_nr_start, line_nr_end):
+        """
+        Delete lines in a specified range.
+        """
+        for line_nr in range(line_nr_start, line_nr_end):
+            self.delete_line(line_nr)
+
     def add_lines(self, line_nr_before, lines):
         """
         Adds lines after the given line number.

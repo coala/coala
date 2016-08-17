@@ -28,7 +28,16 @@ class DiffTest(unittest.TestCase):
     def test_delete_line(self):
         self.uut.delete_line(1)
         self.uut.delete_line(1)  # Double deletion possible without conflict
+        additions, deletions = self.uut.stats()
+        self.assertEqual(deletions, 1)
         self.assertRaises(ValueError, self.uut.delete_line, 0)
+
+    def test_delete_lines(self):
+        self.uut.delete_lines(1, 10)
+        self.uut.delete_lines(10, 20)
+        additions, deletions = self.uut.stats()
+        self.assertEqual(deletions, 19)
+        self.assertRaises(ValueError, self.uut.delete_lines, 0, 10)
 
     def test_change_line(self):
         self.assertEqual(len(self.uut), 0)
