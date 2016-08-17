@@ -1,14 +1,17 @@
+Frequently Asked Questions
+==========================
+
 This is a list of frequently asked questions, aiming to answer any possible
 questions by newcomers or even contributors.
 
 Why did you choose the name?
-============================
+----------------------------
 
 coala stands for "COde AnaLysis Application", works well with animals and thus
 is well visualizable, it's easy to memorize.
 
 Is there corporate backing behind coala? What are your intentions?
-==================================================================
+------------------------------------------------------------------
 
 coala was founded for fun. coala was, is and will always be free software and is
 developed mostly by students and there's no corporate interest and no CLA. If
@@ -16,7 +19,7 @@ you want to back us, contact us on our
 `gitter channel <https://gitter.im/coala-analyzer/coala>`__.
 
 What sort of analysis does coala do? What languages are supported?
-==================================================================
+------------------------------------------------------------------
 
 A list of all analysis routines and supported languages is
 `here <https://github.com/coala-analyzer/bear-docs/blob/master/README.rst#supported-languages>`__
@@ -30,7 +33,7 @@ your code. Their capabilities and information can be seen
 `here <https://github.com/coala-analyzer/bear-docs/blob/master/README.rst#all>`__.
 
 How do I get started with coala?
-================================
+--------------------------------
 
 If you're looking to get started using coala, we have a full tutorial
 `here <http://coala.readthedocs.io/en/latest/Users/Tutorials/Tutorial.html>`__
@@ -44,7 +47,7 @@ It is meant for newcomers, and it does not require you to have any precedent
 knowledge regarding coala.
 
 How do I get in touch with the coala team?
-==========================================
+------------------------------------------
 
 We are very active on our
 `gitter channel <https://gitter.im/coala-analyzer/coala>`__
@@ -53,7 +56,7 @@ However, for a full list of how to get in touch with us, consult
 `this link <http://coala.readthedocs.io/en/latest/Getting_Involved/README.html>`__.
 
 What are those things failing/passing on my Pull Request?
-=========================================================
+---------------------------------------------------------
 
 We use a few checks to make sure your Pull Request is ready to be merged into
 our master branch. Right now we use 7 of those checks:

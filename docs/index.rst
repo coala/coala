@@ -24,47 +24,41 @@ Welcome to the coala documentation!
    :caption: For Users
    :hidden:
 
-   Installation <Users/Install>
+   Installing coala <Users/Install>
    Getting Started with coala <Users/Tutorials/Tutorial>
-   Frequently Asked Questions <Users/FAQ>
-   coafile Specification <Users/coafile>
-   Glob Patterns <Users/Glob_Patterns>
+   Writing a coala Configuration File (coafile) <Users/coafile>
+   Using Glob Patterns <Users/Glob_Patterns>
    Exit Codes <Users/Exit_Codes>
    External APIs <Users/External_APIs>
-   Git Hooks <Users/Git_Hooks>
+   Adding coala as a Git Hook <Users/Git_Hooks>
    Shell Autocompletion <Users/Tutorials/Shell_Autocompletion>
-   coala in Docker <Users/Container>
+   coala as a Docker Image <Users/Container>
 
 .. toctree::
-   :caption: Developer Resources
+   :caption: For Developers
    :hidden:
 
+   Newcomers' Guide <Getting_Involved/Newcomers>
+   Writing Good Commit Messages <Getting_Involved/Writing_Good_Commits>
+   Codestyle <Getting_Involved/Codestyle>
+   Git Basics <Users/Tutorials/Git_Help>
+   Review <Getting_Involved/Review>
+   How To Get In Touch With Us <Getting_Involved/README>
    Development Setup <Users/Tutorials/Development_Setup>
    Writing Bears <Users/Tutorials/Writing_Bears>
+   Writing Linter Bears <Users/Tutorials/Linter_Bears>
+   Linter Bears - Suggesting Corrections <Users/Tutorials/Self_Correcting_Bears>
    Testing Bears <Users/Tutorials/Testing_Bears>
-   Linter Bears <Users/Tutorials/Linter_Bears>
-   Linter Bears - Suggest corrections <Users/Tutorials/Self_Correcting_Bears>
-   Git Help <Users/Tutorials/Git_Help>
-
-.. toctree::
-   :caption: Getting Involved
-   :hidden:
-
-   Newcomers <Getting_Involved/Newcomers>
-   How To Get In Touch With Us <Getting_Involved/README>
-   Codestyle <Getting_Involved/Codestyle>
-   Commit Style <Getting_Involved/Writing_Good_Commits>
-   Executing Tests <Getting_Involved/Testing>
-   Review <Getting_Involved/Review>
    Writing Tests <Getting_Involved/Writing_Tests>
    Writing Documentation <Getting_Involved/Writing_Documentation>
-   MAC Hints <Getting_Involved/MAC_Hints>
+   Executing Tests <Getting_Involved/Testing>
 
 .. toctree::
-   :caption: General Developer Information
+   :caption: Help
    :hidden:
 
-   A Hitchhiker's Guide to Git (1): Genesis <General_Dev_Info/git_tutorial_1>
+   Frequently Asked Questions <Users/FAQ>
+   MAC Hints <Getting_Involved/MAC_Hints>
 
 .. toctree::
    :caption: API Documentation
