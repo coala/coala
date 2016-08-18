@@ -1,4 +1,146 @@
-coala 0.7.0 - baloo
+coala 0.8.0 - grizzly
+=====================
+
+::
+
+                   -                         
+                 `Ns      :s-               
+            .     mMd`     :Nd.             
+           :h     /ss/`     +md.            
+           dN`    :NMMMy`  .ymmy. -+`       
+           dM+    dMMMMMm`.NMMMMN. +Mo      
+        `  -sddy: yMMMMMM/+MMMMMMo  dMo     
+       s/  +MMMMMy.dMMMMM-:MMMMMM+ -yhs`    
+      .Ms  /MMMMMMo /hdh:  oMMMMh`+MMMMm.   
+      -MN.  hMMMMMh  `/osssoos+-  dMMMMMs   
+       oyhho.+mMMm:+dMMMMMMMMMm+  sMMMMMs   
+       mMMMMMy``` dMMMMMMMMMMMMMh.`sMMMh`   
+       yMMMMMMy  `MMMMMMMMMMMMMMMMy:..`     
+       `yMMMMMd  yMMMMMMMMMMMMMMMMMMMMNh+`  
+         .ohhs-+mMMMMMMMMMMMMMMMMMMMMMMMMd  
+            .yMMMMMMMMMMMMMMMMMMMMMMMMMMMh  
+            mMMMMMMMMMMMMMMMMMMMMMMMMMMMh`  
+            yMMMMMMMMMMMMMMMNhssssyyyso-    
+             /dMMMMMMMMMNy+.                
+               ./syhys/-                    
+
+
+For this release, we have had 46 developers from around the world contributing
+over 150 commits in the last 9 weeks.
+
+Improving the API available for bear writers is one of the areas we've focused
+on for this release, with several new and exciting features. General performance
+has also been improved heavily with some major changes under the hood. The
+documentation has also been worked on, with an emphasis on user-friendliness
+and design.
+
+There have also been major internal changes in preparation for the complete
+decentralization of bears, which would allow the installation of individual
+bears.
+
+Below are some of the important changes introduced for this release:
+
+**New Features**
+
+- coala now supports syntax highlighting in results!
+
+- Questions are now printed in color; this will improve visibility when a lot
+  of text is written to the screen.
+
+- ``coala-json`` now supports ``--show-bears`` and ``--filter-by-language``
+
+- Added a ``--show-capabilities`` flag that displays the types of issues coala
+  can detect and fix for a particular language.
+
+- Display the line number when a line is missing; this could happen if a bear
+  that had run previously overwrites it.
+
+**For Bear Writers**
+
+- Bears now have a new ``REQUIREMENTS`` attribute which will be used to
+  automatically resolve bear dependencies. This includes:
+
+  + Native requirements (from package managers such as ``apt-get``, ``dnf``, ``pacman``, ...)
+  + Conda requirements
+  + Python requirements through ``pip``
+  + ``go`` requirements
+  + Ruby requirements through ``gem``
+  + NodeJS requirements through ``npm``
+  + RScript requirements
+  + Julia requirements
+
+- Language independent documentation parsing routines: these can be used to
+  make bears for linting documentation without having to worry about the
+  language.
+
+- ``coalang`` now supports C, C++, CSS, Java, Python3 and Vala.
+
+- A new bear creation tool has been released: with this tool, it's easier than
+  ever before to create external linter based bears for coala!
+
+- A new `ASCIINEMA_URL` attribute has been added to bears. This should
+  contain an URL to an asciinema video displaying the bear's capabilities in action.
+
+- Bear results may now have a ``confidence`` parameter: this is supposed to
+  quantify the confidence, on a scale of 1 to 100, the bear has when flagging results.
+
+- A ``deprecate_settings`` decorator has been created to deprecate old,
+  unsupported bear parameters. Please see
+  `here <https://github.com/coala-analyzer/coala/blob/fa8fe22562277762fd73ab3761ad1ec33263839a/coalib/bearlib/__init__.py#L15>`_
+  for an example usage.
+
+- ``Code Simplification`` has been added to the set of possible fixes that
+  bears can offer.
+
+**Bug Fixes**
+
+- Fixed an issue where errors were generated for lines containing only a
+  single tab character. `Issue #2180 <https://github.com/coala-analyzer/coala/issues/2180>`_
+
+- Fixed an issue with question where stray escape characters may be present.
+  `Issue #2546 <https://github.com/coala-analyzer/coala/issues/2546>`_
+
+- Group questions about missing values in a coafile by bears.
+  `Issue #2530 <https://github.com/coala-analyzer/coala/issues/2530>`_
+
+- An issue where an exception was raised wrongly when the same diff was
+  generated multiple times has been fixed.
+  `PR #2465 <https://github.com/coala-analyzer/coala/pull/2465>`_
+
+**Performance**
+
+- Caching is now enabled by default. This is a huge performance improvement
+  for HDD users - we've seen a 2x improvement when coala is run on coala.
+  To disable caching run coala with the ``--disable-caching`` flag.
+
+- An issue where coala takes over 2 seconds to print the help manual through
+  ``--help`` has been fixed.
+  `Issue #2344 <https://github.com/coala-analyzer/coala/issues/2344>`_
+
+- A small performance improvement from reusing already loaded file contents.
+
+**Documentation**
+
+- A complete overhaul to the README page with a focus on design and
+  readability.
+
+- A new `FAQ page <http://coala.readthedocs.io/en/latest/Users/FAQ.html>`_ has
+  been created.
+
+- Various other documentation pages have been improved with new resources,
+  better explanations, and some corrections.
+
+**Regressions**
+
+- Dropped Python 3.3 support
+
+**Internal Changes**
+
+- There has been a shift of several modules from coala to
+  `coala-utils <https://gitlab.com/coala/coala-utils/>`. This includes the whole
+  ``StringProcessing`` library, ``ContextManagers``, and some decorators.
+
+coala 0 7 0 - baloo
 ===================
 
 ::
