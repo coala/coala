@@ -36,7 +36,7 @@ class DiffTest(unittest.TestCase):
         self.uut.delete_lines(1, 10)
         self.uut.delete_lines(10, 20)
         additions, deletions = self.uut.stats()
-        self.assertEqual(deletions, 19)
+        self.assertEqual(deletions, 20)
         self.assertRaises(ValueError, self.uut.delete_lines, 0, 10)
 
     def test_change_line(self):

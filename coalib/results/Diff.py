@@ -358,7 +358,7 @@ class Diff:
         """
         Delete lines in a specified range.
         """
-        for line_nr in range(line_nr_start, line_nr_end):
+        for line_nr in range(line_nr_start, line_nr_end + 1):
             self.delete_line(line_nr)
 
     def add_lines(self, line_nr_before, lines):
