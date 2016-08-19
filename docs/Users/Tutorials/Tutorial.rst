@@ -57,7 +57,7 @@ kind of analysis with the ``--bears`` argument:
 
 .. note::
 
-    You can use comma seperated values to specify more than one item in
+    You can use comma separated values to specify more than one item in
     arguments! Do not use spaces as that would start a new argument.
     Example: ``SpaceConsistencyBear,PEP8Bear``
 
@@ -330,7 +330,7 @@ Specifying Targets
 If you provide positional arguments, like ``coala Makefiles``, *coala*
 will execute exclusively those sections that are specified. This will
 not get stored in your ``.coafile`` and will take precedence over all
-enabled settings. You can specify several targets seperated by a space.
+enabled settings. You can specify several targets separated by a space.
 
 What was that TODO again?
 
