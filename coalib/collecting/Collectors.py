@@ -41,9 +41,9 @@ def icollect(file_paths, ignored_globs=None):
     """
     Evaluate globs in file paths and return all matching files.
 
-    :param file_paths:    file path or list of such that can include globs
-    :param ignored_globs: list of globs to ignore when matching files
-    :return:              iterator that yields tuple of path of a matching
+    :param file_paths:    File path or list of such that can include globs
+    :param ignored_globs: List of globs to ignore when matching files
+    :return:              Iterator that yields tuple of path of a matching
                           file, the glob where it was found
     """
     if isinstance(file_paths, str):
@@ -60,10 +60,10 @@ def collect_files(file_paths, log_printer, ignored_file_paths=None,
     """
     Evaluate globs in file paths and return all matching files
 
-    :param file_paths:         file path or list of such that can include globs
-    :param ignored_file_paths: list of globs that match to-be-ignored files
-    :param limit_file_paths:   list of globs that the files are limited to
-    :return:                   list of paths of all matching files
+    :param file_paths:         File path or list of such that can include globs
+    :param ignored_file_paths: List of globs that match to-be-ignored files
+    :param limit_file_paths:   List of globs that the files are limited to
+    :return:                   List of paths of all matching files
     """
     limit_fnmatch = (functools.partial(fnmatch, globs=limit_file_paths)
                      if limit_file_paths else lambda fname: True)
@@ -87,9 +87,9 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
     """
     Evaluate globs in directory paths and return all matching directories
 
-    :param dir_paths:         file path or list of such that can include globs
-    :param ignored_dir_paths: list of globs that match to-be-ignored dirs
-    :return:                  list of paths of all matching directories
+    :param dir_paths:         File path or list of such that can include globs
+    :param ignored_dir_paths: List of globs that match to-be-ignored dirs
+    :return:                  List of paths of all matching directories
     """
     valid_dirs = list(filter(lambda fname: os.path.isdir(fname[0]),
                              icollect(dir_paths, ignored_dir_paths)))
@@ -105,11 +105,11 @@ def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
 
-    :param bear_dirs:   directory name or list of such that can contain bears
-    :param bear_globs:  globs of bears to collect
-    :param kinds:       list of bear kinds to be collected
-    :param log_printer: log_printer to handle logging
-    :return:            iterator that yields a tuple with bear class and
+    :param bear_dirs:   Directory name or list of such that can contain bears
+    :param bear_globs:  Globs of bears to collect
+    :param kinds:       List of bear kinds to be collected
+    :param log_printer: Log_printer to handle logging
+    :return:            Iterator that yields a tuple with bear class and
                         which bear_glob was used to find that bear class.
     """
     for bear_dir, dir_glob in filter(lambda x: os.path.isdir(x[0]),
@@ -178,10 +178,10 @@ def filter_section_bears_by_languages(bears, languages):
     """
     Filters the bears by languages.
 
-    :param bears:       the dictionary of the sections as keys and list of
+    :param bears:       The dictionary of the sections as keys and list of
                         bears as values.
-    :param languages:   languages that bears are being filtered on.
-    :return:            new dictionary with filtered out bears that don't match
+    :param languages:   Languages that bears are being filtered on.
+    :return:            New dictionary with filtered out bears that don't match
                         any language from languages.
     """
     new_bears = {}
@@ -241,9 +241,9 @@ def collect_all_bears_from_sections(sections, log_printer):
     """
     Collect all kinds of bears from bear directories given in the sections.
 
-    :param sections:    list of sections so bear_dirs are taken into account
-    :param log_printer: log_printer to handle logging
-    :return:            tuple of dictionaries of local and global bears
+    :param sections:    List of sections so bear_dirs are taken into account
+    :param log_printer: Log_printer to handle logging
+    :return:            Tuple of dictionaries of local and global bears
                         The dictionary key is section class and
                         dictionary value is a list of Bear classes
     """
