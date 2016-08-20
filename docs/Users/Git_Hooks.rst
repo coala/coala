@@ -9,7 +9,7 @@ Pre Commit Hooks
 ----------------
 
 The pre-commit hook can be used to run *coala* before every commit action.
-Hence, this does not allow any code not following the quality standars
+Hence, this does not allow any code not following the quality standards
 specified unless it's done by force.
 
 To enable this, just create the file ``.git/hooks/pre-commit`` under your
