@@ -35,7 +35,7 @@ class Dependencies:
         return resolved_bears
 
     @classmethod
-    def resolve(cls, bears):
+    def check_circular_dependency(cls, bears):
         """
         Collects all dependencies of the given bears. This will also remove
         duplicates.

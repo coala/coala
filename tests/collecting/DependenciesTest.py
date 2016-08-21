@@ -41,17 +41,17 @@ class DependenciesTest(unittest.TestCase):
 
     def test_no_deps(self):
         self.assertEqual(
-            len(Dependencies.resolve([Bear,
-                                      Bear])),
+            len(Dependencies.check_circular_dependency([Bear,
+                                                        Bear])),
             1)
 
     def test_resolvable_deps(self):
-        self.assertEqual(Dependencies.resolve([ResolvableBear1,
-                                               ResolvableBear2]),
-                         [Bear, ResolvableBear1, ResolvableBear2])
+        self.assertEqual(Dependencies.check_circular_dependency(
+            [ResolvableBear1, ResolvableBear2]),
+            [Bear, ResolvableBear1, ResolvableBear2])
 
     def test_unresolvable_deps(self):
         self.assertRaises(
             CircularDependencyError,
-            Dependencies.resolve,
+            Dependencies.check_circular_dependency,
             [UnresolvableBear1])
