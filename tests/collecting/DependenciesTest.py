@@ -1,7 +1,8 @@
 import unittest
 
 from coalib.bears.Bear import Bear
-from coalib.collecting import Dependencies
+from coalib.collecting.Dependencies import (CircularDependencyError,
+                                            Dependencies)
 
 
 class ResolvableBear1(Bear):
@@ -51,6 +52,6 @@ class DependenciesTest(unittest.TestCase):
 
     def test_unresolvable_deps(self):
         self.assertRaises(
-            Dependencies.CircularDependencyError,
+            CircularDependencyError,
             Dependencies.resolve,
             [UnresolvableBear1])

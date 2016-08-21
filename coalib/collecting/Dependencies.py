@@ -10,35 +10,38 @@ class CircularDependencyError(Exception):
             "Circular dependency detected: " + " -> ".join(bear_names))
 
 
-def _resolve(bears, resolved_bears, seen):
-    for bear in bears:
-        if bear in resolved_bears:
-            continue
+class Dependencies:
 
-        missing = bear.missing_dependencies(resolved_bears)
-        if not missing:
-            resolved_bears.append(bear)
-            continue
+    @classmethod
+    def _resolve(cls, bears, resolved_bears, seen):
+        for bear in bears:
+            if bear in resolved_bears:
+                continue
 
-        if bear in seen:
+            missing = bear.missing_dependencies(resolved_bears)
+            if not missing:
+                resolved_bears.append(bear)
+                continue
+
+            if bear in seen:
+                seen.append(bear)
+                raise CircularDependencyError(seen)
+
             seen.append(bear)
-            raise CircularDependencyError(seen)
+            resolved_bears = cls._resolve(missing, resolved_bears, seen)
+            resolved_bears.append(bear)
+            seen.remove(bear)  # Already resolved, no candidate for circular dep
 
-        seen.append(bear)
-        resolved_bears = _resolve(missing, resolved_bears, seen)
-        resolved_bears.append(bear)
-        seen.remove(bear)  # Already resolved, no candidate for circular dep
+        return resolved_bears
 
-    return resolved_bears
+    @classmethod
+    def resolve(cls, bears):
+        """
+        Collects all dependencies of the given bears. This will also remove
+        duplicates.
 
-
-def resolve(bears):
-    """
-    Collects all dependencies of the given bears. This will also remove
-    duplicates.
-
-    :param bears: The given bears. Will not be modified.
-    :return:      The new list of bears, sorted so that it can be executed
-                  sequentially without dependency issues.
-    """
-    return _resolve(bears, [], [])
+        :param bears: The given bears. Will not be modified.
+        :return:      The new list of bears, sorted so that it can be executed
+                      sequentially without dependency issues.
+        """
+        return cls._resolve(bears, [], [])

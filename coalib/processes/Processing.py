@@ -5,7 +5,7 @@ import queue
 import subprocess
 from itertools import chain
 
-from coalib.collecting import Dependencies
+from coalib.collecting.Dependencies import Dependencies
 from coalib.collecting.Collectors import collect_files
 from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
