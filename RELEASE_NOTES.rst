@@ -130,6 +130,10 @@ Below are some of the important changes introduced for this release:
 - Various other documentation pages have been improved with new resources,
   better explanations, and some corrections.
 
+- The whole documentation has been moved to a
+  `separate repository <https://github.com/coala-analyzer/documentation>`__.
+  Please file any documentation related issues over there.
+
 **Regressions**
 
 - Dropped Python 3.3 support
