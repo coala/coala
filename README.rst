@@ -170,12 +170,12 @@ Getting Involved
 ================
 
 If you would like to be a part of the coala community, you can check out our
-`Getting Involved <http://coala.readthedocs.io/en/latest/Getting_Involved/README.html>`__
+`Getting In Touch <http://coala.readthedocs.io/en/latest/Help/Getting_In_Touch.html>`__
 page or ask us at our active Gitter channel, where we have maintainers from
 all over the world. We appreciate any help!
 
 We also have a
-`newcomer guide <http://coala.readthedocs.io/en/latest/Getting_Involved/Newcomers.html>`__
+`newcomer guide <http://coala.readthedocs.io/en/latest/Developers/Newcomers_Guide.html>`__
 to help you get started by fixing an issue yourself! If you get stuck anywhere
 or need some help, feel free to contact us on Gitter or drop a mail at our
 `newcomer mailing list <https://groups.google.com/d/forum/coala-newcomers>`__.
