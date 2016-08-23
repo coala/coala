@@ -3,6 +3,7 @@ import unittest
 from coalib.bears.Bear import Bear
 from coalib.collecting.Dependencies import (CircularDependencyError,
                                             Dependencies)
+from coalib.settings.Section import Section
 
 
 class ResolvableBear1(Bear):
@@ -58,9 +59,11 @@ class DependenciesTest(unittest.TestCase):
             Dependencies.check_circular_dependency,
             [UnresolvableBear1])
 
-    def test_add_dependencies(self):
+    def test_dependencies_resolving(self):
         self.dep_resolver.add_bear_dependencies([ResolvableBear1])
         self.assertEqual(self.dep_resolver.dependency_dict,
                          {ResolvableBear1: {Bear}})
         self.assertEqual(self.dep_resolver.dependency_set, {Bear})
-
+        self.assertEqual(
+            self.dep_resolver.resolve(Bear(Section("Name"), None)),
+            [ResolvableBear1])

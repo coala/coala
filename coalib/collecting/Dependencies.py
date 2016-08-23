@@ -69,3 +69,26 @@ class Dependencies:
                       sequentially without dependency issues.
         """
         return cls._resolve(bears, [], [])
+
+    def resolve(self, bear_instance):
+        """
+        When a bear completes this method is called with the instance of that
+        bear. The method deletes this bear from the list of dependencies of
+        each bear in the dependency dictionary. It returns the bears which
+        have all of its dependencies resolved.
+
+        :param bear_instance: The instance of the bear.
+        :return:              Returns a list of bears whose dependencies were
+                              all resolved and are ready to be scheduled.
+        """
+        return_bears = []
+        bear_type = type(bear_instance)
+        if bear_type in self.dependency_set:
+            for bear in self.dependency_dict:
+                if bear_type in self.dependency_dict[bear]:
+                    self.dependency_dict[bear].remove(bear_type)
+                    if not self.dependency_dict[bear]:
+                        return_bears.append(bear)
+        for bear in return_bears:
+            del self.dependency_dict[bear]
+        return return_bears
