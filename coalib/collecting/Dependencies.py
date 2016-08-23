@@ -1,3 +1,6 @@
+from collections import defaultdict
+
+
 class CircularDependencyError(Exception):
 
     def __init__(self, bears):
@@ -11,6 +14,27 @@ class CircularDependencyError(Exception):
 
 
 class Dependencies:
+
+    def __init__(self):
+        self.dependency_dict = defaultdict(set)
+        self.dependency_set = set()
+
+    def _add_dependency(self, bear_instance, dependency):
+        self.dependency_dict[bear_instance].add(dependency)
+        self.dependency_set.add(dependency)
+
+    def add_bear_dependencies(self, bears):
+        """
+        Take the full bear list and check it for circular dependencies. Then
+        continue to add the dependenies of the bears to the class to be
+        resolved later.
+
+        :param bears: List of all bears.
+        """
+        self.check_circular_dependency(bears)
+        for bear_instance in bears:
+            for bear in bear_instance.BEAR_DEPS:
+                self._add_dependency(bear_instance, bear)
 
     @classmethod
     def _resolve(cls, bears, resolved_bears, seen):
