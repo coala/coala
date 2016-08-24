@@ -170,7 +170,9 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
 
     if warn_if_unused_glob:
         _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
-                             "No bears were found matching '{}'.")
+                             "No bears were found matching '{}'. Make sure you "
+                             "have coala-bears installed or you have typed the "
+                             "name correctly.")
     return bears_found
 
 
