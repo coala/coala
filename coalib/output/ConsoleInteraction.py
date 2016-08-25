@@ -508,7 +508,7 @@ def acquire_settings(log_printer, settings_names_dict):
 
     result = {}
     for setting_name, arr in sorted(settings_names_dict.items(),
-                                    key=lambda x: join_names(x[1][1:])):
+                                    key=lambda x: (join_names(x[1][1:]), x[0])):
         value = require_setting(setting_name, arr)
         result.update({setting_name: value} if value is not None else {})
 
