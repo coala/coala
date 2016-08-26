@@ -116,7 +116,7 @@ A sample ``.coafile`` will look something like this:
   python files inside the ``src/`` directory by using a glob expression.
 * The ``bears`` key specifies which bears (plugins) you want to use. We support
   a huge number of languages and you can find the whole list
-  `here <github.com/coala-analyzer/bear-docs/blob/master/README.rst>`__.
+  `here <https://github.com/coala-analyzer/bear-docs/blob/master/README.rst>`__.
   If you don't find your langauge there, we've got some
   `bears that work for all languages <https://github.com/coala-analyzer/bear-docs/blob/master/README.rst#all>`__. Or you can file an issue and we would create a bear for you!
 * ``use_spaces`` enforces spaces over tabs in the codebase. ``use_spaces`` is a
