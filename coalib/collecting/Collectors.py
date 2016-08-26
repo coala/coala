@@ -101,19 +101,19 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
 
 
 @yield_once
-def icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
+def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
     """
     Collect all bears from bear directories that have a matching kind.
 
-    :param bear_dirs:   Directory name or list of such that can contain bears
-    :param bear_globs:  Globs of bears to collect
-    :param kinds:       List of bear kinds to be collected
-    :param log_printer: Log_printer to handle logging
-    :return:            Iterator that yields a tuple with bear class and
-                        which bear_glob was used to find that bear class.
+    :param bear_dir_glob: Directory globs or list of such that can contain bears
+    :param bear_globs:    Globs of bears to collect
+    :param kinds:         List of bear kinds to be collected
+    :param log_printer:   Log_printer to handle logging
+    :return:              Iterator that yields a tuple with bear class and
+                          which bear_glob was used to find that bear class.
     """
     for bear_dir, dir_glob in filter(lambda x: os.path.isdir(x[0]),
-                                     icollect(bear_dirs)):
+                                     icollect(bear_dir_glob)):
         # Since we get a real directory here and since we
         # pass this later to iglob, we need to escape this.
         bear_dir = glob_escape(bear_dir)
