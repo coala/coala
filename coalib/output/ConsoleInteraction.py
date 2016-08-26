@@ -482,11 +482,13 @@ def acquire_settings(log_printer, settings_names_dict):
     """
     This method prompts the user for the given settings.
 
-    :param log_printer: Printer responsible for logging the messages.
-                        This is needed to comply with the interface.
-    :param settings:    A dictionary with the settings name as key and a list
-                        containing a description in [0] and the name of the
-                        bears who need this setting in [1] and following.
+    :param log_printer:
+        Printer responsible for logging the messages. This is needed to comply
+        with the interface.
+    :param settings_names_dict:
+        A dictionary with the settings name as key and a list containing a
+        description in [0] and the name of the bears who need this setting in
+        [1] and following.
 
                         Example:
 
@@ -496,8 +498,9 @@ def acquire_settings(log_printer, settings_names_dict):
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
 
-    :return:            A dictionary with the settings name as key and the
-                        given value as value.
+    :return:
+        A dictionary with the settings name as key and the given value as
+        value.
     """
     if not isinstance(settings_names_dict, dict):
         raise TypeError("The settings_names_dict parameter has to be a "
