@@ -73,7 +73,7 @@ To install the **latest stable version** run:
 
 .. code-block:: bash
 
-    $ pip3 install coala-bears
+    $ pip3 install coala
 
 |Stable|
 
@@ -81,10 +81,27 @@ To install the latest development version run:
 
 .. code-block:: bash
 
-    $ pip3 install coala-bears --pre
+    $ pip3 install coala --pre
 
 The latest code from the master branch is automatically deployed as the
 development version in PyPI.
+
+To also install all bears for coala at once run:
+
+.. code-block:: bash
+
+    $ pip3 install coala-bears
+
+You can also use ``cib`` (coala Installs Bears), which is an experimental bear
+manager that lets you install, upgrade, uninstall, check dependencies, etc.
+for bears. To install it, run:
+
+.. code-block:: bash
+
+    $ pip3 install cib
+
+For usage instructions, consult
+`this link <http://coala.readthedocs.io/en/latest/Developers/Bear_Installation_Tool.html>`__.
 
 |PyPI| |Windows| |Linux|
 
