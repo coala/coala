@@ -44,4 +44,5 @@ class PipRequirement(PackageRequirement):
 
         :param return: True if dependency is installed, false otherwise.
         """
-        return not call_without_output(('pip', 'show', self.package))
+        return not call_without_output((sys.executable, '-m', 'pip',
+                                        'show', self.package))
