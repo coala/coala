@@ -5,3 +5,4 @@ setuptools>=19.2
 libclang-py3==0.2
 appdirs~=1.4
 coala_utils~=0.4.9
+distro>=0.6.0
