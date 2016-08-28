@@ -681,7 +681,6 @@ def show_enumeration(console_printer,
 
 
 def show_bear(bear,
-              sections,
               show_description,
               show_params,
               console_printer):
@@ -689,7 +688,6 @@ def show_bear(bear,
     Display all information about a bear.
 
     :param bear:             The bear to be displayed.
-    :param sections:         A list of sections to which the bear belongs.
     :param show_description: True if the main description should be shown.
     :param show_params:      True if the details should be shown.
     :param console_printer:  Object to print messages on the console.
@@ -713,11 +711,6 @@ def show_bear(bear,
             "  ",
             "The bear does not provide information about which languages "
             "it can analyze.")
-        show_enumeration(console_printer,
-                         "Used in:",
-                         sections,
-                         "  ",
-                         "No sections.")
         show_enumeration(console_printer,
                          "Needed Settings:",
                          metadata.non_optional_params,
@@ -766,7 +759,6 @@ def print_bears(bears,
     for bear, sections in sorted(bears.items(),
                                  key=lambda bear_tuple: bear_tuple[0].name):
         show_bear(bear,
-                  sections,
                   show_description,
                   show_params,
                   console_printer)

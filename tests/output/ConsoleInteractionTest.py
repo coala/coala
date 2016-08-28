@@ -650,13 +650,13 @@ class ShowBearsTest(unittest.TestCase):
     def test_show_bear_minimal(self):
         with retrieve_stdout() as stdout:
             show_bear(
-                SomelocalBear, ['one'], False, False, self.console_printer)
+                SomelocalBear, False, False, self.console_printer)
             self.assertEqual(stdout.getvalue(), 'SomelocalBear\n')
 
     def test_show_bear_desc_only(self):
         with retrieve_stdout() as stdout:
             show_bear(
-                SomelocalBear, ['one'], True, False, self.console_printer)
+                SomelocalBear, True, False, self.console_printer)
             self.assertEqual(
                 stdout.getvalue(),
                 'SomelocalBear\n  Some local-bear Description.\n\n')
@@ -664,12 +664,11 @@ class ShowBearsTest(unittest.TestCase):
     def test_show_bear_details_only(self):
         with retrieve_stdout() as stdout:
             show_bear(
-                SomelocalBear, [], False, True, self.console_printer)
+                SomelocalBear, False, True, self.console_printer)
             self.assertEqual(stdout.getvalue(),
                              'SomelocalBear\n'
                              '  The bear does not provide information about '
                              'which languages it can analyze.\n\n'
-                             '  No sections.\n\n'
                              '  No needed settings.\n\n'
                              '  No optional settings.\n\n'
                              '  This bear does not provide information about '
@@ -681,13 +680,12 @@ class ShowBearsTest(unittest.TestCase):
     def test_show_bear_long_without_content(self):
         with retrieve_stdout() as stdout:
             show_bear(
-                SomelocalBear, [], True, True, self.console_printer)
+                SomelocalBear, True, True, self.console_printer)
             self.assertEqual(stdout.getvalue(),
                              'SomelocalBear\n'
                              '  Some local-bear Description.\n\n'
                              '  The bear does not provide information about '
                              'which languages it can analyze.\n\n'
-                             '  No sections.\n\n'
                              '  No needed settings.\n\n'
                              '  No optional settings.\n\n'
                              '  This bear does not provide information about '
@@ -698,15 +696,13 @@ class ShowBearsTest(unittest.TestCase):
 
     def test_show_bear_with_content(self):
         with retrieve_stdout() as stdout:
-            show_bear(TestBear, ['section'], True, True, self.console_printer)
+            show_bear(TestBear, True, True, self.console_printer)
             self.assertEqual(stdout.getvalue(),
                              "TestBear\n"
                              "  Test bear Description.\n\n"
                              "  Supported languages:\n"
                              "   * F#\n"
                              "   * Shakespearean Programming Language\n\n"
-                             "  Used in:\n"
-                             "   * section\n\n"
                              "  Needed Settings:\n"
                              "   * setting1: Required Setting.\n\n"
                              "  Optional Settings:\n"
@@ -727,7 +723,6 @@ class ShowBearsTest(unittest.TestCase):
                                    ("test", [SomelocalBear])])
         show_bears(local_bears, {}, True, True, self.console_printer)
         show_bear.assert_called_once_with(SomelocalBear,
-                                          ['default', 'test'],
                                           True,
                                           True,
                                           self.console_printer)
