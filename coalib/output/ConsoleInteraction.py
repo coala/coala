@@ -484,7 +484,8 @@ def acquire_settings(log_printer, settings_names_dict):
 
     :param log_printer: Printer responsible for logging the messages.
                         This is needed to comply with the interface.
-    :param settings:    A dictionary with the settings name as key and a list
+    :param settings_names_dict:
+                        A dictionary with the settings name as key and a list
                         containing a description in [0] and the name of the
                         bears who need this setting in [1] and following.
 
