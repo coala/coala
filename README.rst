@@ -1,7 +1,7 @@
 .. image:: https://cloud.githubusercontent.com/assets/7521600/15992701/ef245fd4-30ef-11e6-992d-275c5ca7c3a0.jpg
 
-coala: Language Independent Code Analysis
------------------------------------------
+coala: Linting and fixing code for all languages
+------------------------------------------------
 
 **coala provides a unified command-line interface for linting and fixing all
 your code, regardless of the programming languages you use.**
