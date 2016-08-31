@@ -14,8 +14,7 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
     ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
     execute_section, filter_raising_callables, get_default_actions,
-    get_file_dict, print_result, process_queues, simplify_section_result,
-    yield_ignore_ranges)
+    print_result, process_queues, simplify_section_result, yield_ignore_ranges)
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -27,7 +26,6 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.misc.Caching import FileCache
-from coalib.files.Fileproxy import Fileproxy
 
 
 process_group_test_code = """
@@ -70,8 +68,6 @@ class ProcessingTest(unittest.TestCase):
             os.path.dirname(__file__),
             "section_executor_test_files",
             ".coafile"))
-        self.testcode_c_path = os.path.join(os.path.dirname(config_path),
-                                            "testcode.c")
 
         self.result_queue = queue.Queue()
         self.queue = queue.Queue()
@@ -298,19 +294,6 @@ class ProcessingTest(unittest.TestCase):
         # Test whether non filtered exceptions bubble up.
         with self.assertRaises(B):
             list(filter_raising_callables(test_list, C, exc=(B, C)))
-
-    def test_get_file_dict(self):
-        file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
-        self.assertEqual(len(file_dict), 1)
-        self.assertEqual("Files that will be checked:\n" + self.testcode_c_path,
-                         self.log_printer.log_queue.get().message)
-
-    def test_get_file_dict_non_existent_file(self):
-        file_dict = get_file_dict(["non_existent_file"], self.log_printer)
-        self.assertEqual(file_dict, {})
-        self.assertIn(("Failed to read file 'non_existent_file' because of "
-                       "an unknown error."),
-                      self.log_printer.log_queue.get().message)
 
     def test_simplify_section_result(self):
         results = (True,
