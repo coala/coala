@@ -67,7 +67,7 @@ class coalaTest(unittest.TestCase):
             self.assertEqual(retval, 13)
             self.assertIn(("There is a conflict in the version of a "
                            "dependency you have installed"), output)
-            self.assertIn("pip install msg2", output)  # Check recommendation
+            self.assertIn('pip install "msg2"', output)
 
     @unittest.mock.patch('coalib.collecting.Collectors._import_bears')
     def test_unimportable_bear(self, import_fn):
@@ -86,4 +86,4 @@ class coalaTest(unittest.TestCase):
                              "Unable to collect bears from .* because there "
                              "is a conflict with the version of a dependency "
                              "you have installed")
-            self.assertIn("pip install msg2", output)  # Check recommendation
+            self.assertIn('pip install "msg2"', output)
