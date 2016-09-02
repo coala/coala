@@ -99,5 +99,5 @@ enabled = False
 
 bears = KeywordBear
 
-ci_keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
+ci_keywords, keywords_case_insensitive = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
