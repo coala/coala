@@ -86,6 +86,23 @@ class SourceRangeTest(unittest.TestCase):
                                       end_line=4).__json__(use_relpath=True)
         self.assertEqual(uut['start'], self.result_fileB_line2)
 
+    def test_contains(self):
+        a = SourceRange.from_values("test_file", 1, 2, 1, 20)
+        b = SourceRange.from_values("test_file", 1, 2, 1, 20)
+        self.assertIn(a, b)
+
+        a = SourceRange.from_values("test_file", 1, 2, 2, 20)
+        b = SourceRange.from_values("test_file", 1, 1, 2, 20)
+        self.assertIn(a, b)
+
+        a = SourceRange.from_values("test_file", 1, 2, 1, 20)
+        b = SourceRange.from_values("test_file2", 1, 2, 1, 20)
+        self.assertNotIn(a, b)
+
+        a = SourceRange.from_values("test_file", 2, 2, 64, 20)
+        b = SourceRange.from_values("test_file", 1, 1, 50, 20)
+        self.assertNotIn(a, b)
+
     def test_renamed_file(self):
         src_range = SourceRange(SourcePosition("test_file"))
         self.assertEqual(src_range.renamed_file({}), abspath('test_file'))

@@ -125,3 +125,7 @@ class SourceRange(TextRange):
         if use_relpath:
             _dict['file'] = relpath(_dict['file'])
         return _dict
+
+    def __contains__(self, item):
+        return (super().__contains__(item) and
+                self.start.file == item.start.file)
