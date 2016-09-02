@@ -87,6 +87,32 @@ class TextRangeTest(unittest.TestCase):
         self.assertTrue(uut1.overlaps(uut2))
         self.assertTrue(uut2.overlaps(uut1))
 
+    def test_contains(self):
+        range_a = TextRange.from_values(1, 1, 1, 19)
+        range_b = TextRange.from_values(1, 1, 1, 20)
+
+        self.assertIn(range_a, range_b)
+
+        range_a = TextRange.from_values(1, 1, 1, 21)
+        range_b = TextRange.from_values(1, 1, 1, 20)
+
+        self.assertNotIn(range_a, range_b)
+
+        range_a = TextRange.from_values(1, 5, 1, 5)
+        range_b = TextRange.from_values(1, 1, 1, 20)
+
+        self.assertIn(range_a, range_b)
+
+        range_a = TextRange.from_values(1, 1, 1, 18)
+        range_b = TextRange.from_values(1, 14, 1, 20)
+
+        self.assertNotIn(range_a, range_b)
+
+        range_a = TextRange.from_values(1, 1, 1, 20)
+        range_b = TextRange.from_values(1, 1, 1, 20)
+
+        self.assertIn(range_a, range_b)
+
 
 class TextRangeJoinTest(unittest.TestCase):
 

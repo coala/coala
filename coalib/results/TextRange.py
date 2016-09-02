@@ -115,3 +115,6 @@ class TextRange:
                                      start_column,
                                      end_line,
                                      end_column)
+
+    def __contains__(self, item):
+        return item.start >= self.start and item.end <= self.end
