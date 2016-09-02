@@ -65,3 +65,8 @@ class SettingsTest(unittest.TestCase):
         sections = {"a": Section("a")}
         settings_hash = get_settings_hash(sections)
         self.assertTrue(settings_changed(self.log_printer, settings_hash))
+
+    def test_targets_change(self):
+        sections = {"a": Section("a"), "b": Section("b")}
+        self.assertNotEqual(get_settings_hash(sections),
+                            get_settings_hash(sections, targets=["a"]))

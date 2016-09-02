@@ -128,22 +128,26 @@ def hash_id(text):
     return hashlib.md5(text.encode("utf-8")).hexdigest()
 
 
-def get_settings_hash(sections, ignore_settings: list=["disable_caching"]):
+def get_settings_hash(sections,
+                      targets=[],
+                      ignore_settings: list=["disable_caching"]):
     """
     Compute and return a unique hash for the settings.
 
     :param sections:        A dict containing the settings for each section.
+    :param targets:         The list of sections that are enabled.
     :param ignore_settings: Setting keys to remove from sections before
                             hashing.
     :return:                A MD5 hash that is unique to the settings used.
     """
     settings = []
     for section in sections:
-        section_copy = copy.deepcopy(sections[section])
-        for setting in ignore_settings:
-            if setting in section_copy:
-                section_copy.delete_setting(setting)
-        settings.append(str(section_copy))
+        if section in targets or targets == []:
+            section_copy = copy.deepcopy(sections[section])
+            for setting in ignore_settings:
+                if setting in section_copy:
+                    section_copy.delete_setting(setting)
+            settings.append(str(section_copy))
 
     return hash_id(str(settings))
 

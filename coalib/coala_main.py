@@ -77,7 +77,7 @@ def run_coala(log_printer=None,
 
         config_file = os.path.abspath(str(sections["default"].get("config")))
 
-        settings_hash = get_settings_hash(sections)
+        settings_hash = get_settings_hash(sections, targets)
         flush_cache = bool(sections["default"].get("flush_cache", False) or
                            settings_changed(log_printer, settings_hash))
 
