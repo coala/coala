@@ -1,6 +1,7 @@
 import copy
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
+from coalib.collecting import Dependencies
 from coalib.collecting.Collectors import collect_bears
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.settings.Setting import Setting
@@ -10,6 +11,8 @@ def fill_settings(sections, acquire_settings, log_printer):
     """
     Retrieves all bears and requests missing settings via the given
     acquire_settings method.
+
+    This will retrieve all bears and their dependencies.
 
     :param sections:         The sections to fill up, modified in place.
     :param acquire_settings: The method to use for requesting settings. It will
@@ -33,6 +36,8 @@ def fill_settings(sections, acquire_settings, log_printer):
             bears,
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
             log_printer)
+        section_local_bears = Dependencies.resolve(section_local_bears)
+        section_global_bears = Dependencies.resolve(section_global_bears)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
         fill_section(section, acquire_settings, log_printer, all_bears)
