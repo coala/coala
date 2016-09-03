@@ -648,7 +648,9 @@ def execute_section(section,
 
     :param section:          The section to execute.
     :param global_bear_list: List of global bears belonging to the section.
+                             Dependencies are already resolved.
     :param local_bear_list:  List of local bears belonging to the section.
+                             Dependencies are already resolved.
     :param print_results:    Prints all given results appropriate to the
                              output medium.
     :param cache:            An instance of ``misc.Caching.FileCache`` to use as
@@ -661,9 +663,6 @@ def execute_section(section,
                              results (bear names are key) as well as the
                              file dictionary.
     """
-    local_bear_list = Dependencies.resolve(local_bear_list)
-    global_bear_list = Dependencies.resolve(global_bear_list)
-
     try:
         running_processes = int(section['jobs'])
     except ValueError:

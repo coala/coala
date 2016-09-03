@@ -86,3 +86,11 @@ class SectionFillingTest(unittest.TestCase):
         self.assertTrue("global name" in new_section)
         self.assertEqual(new_section["key"].value, "val")
         self.assertEqual(len(new_section.contents), 3)
+
+    def test_dependency_resolving(self):
+        sections = {"test": self.section}
+        self.section['bears'] = "DependentBear"
+        with simulate_console_inputs("True"), bear_test_module():
+            fill_settings(sections, acquire_settings, self.log_printer)
+
+        self.assertEqual(bool(self.section["use_spaces"]), True)

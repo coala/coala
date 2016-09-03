@@ -302,7 +302,8 @@ class CollectorsTests(unittest.TestCase):
         with bear_test_module():
             self.assertSetEqual(
                 set(get_all_bears_names()),
-                {'EchoBear',
+                {'DependentBear',
+                 'EchoBear',
                  'LineCountTestBear',
                  'JavaTestBear',
                  'SpaceConsistencyTestBear'})
