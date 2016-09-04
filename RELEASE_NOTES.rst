@@ -1,3 +1,17 @@
+coala 0.8.1
+===========
+
+This bugfix release addressed the following issues:
+
+- The cache will be correctly invalidated when changing section targets now.
+  (https://github.com/coala-analyzer/coala/issues/2708)
+- Dependencies are resolved before asking the user for needed values. This will
+  only affect custom bears that have dependencies that require settings.
+  (https://github.com/coala-analyzer/coala/issues/2709)
+- PyPrint was updated from 0.2.4 to 0.2.5.
+- PipRequirement uses ``sys.executable`` instead of hardcoded python. This will
+  only affect coala or bear developers.
+
 coala 0.8.0 - grizzly
 =====================
 
