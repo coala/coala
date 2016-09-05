@@ -83,7 +83,7 @@ class ShowPatchAction(ResultAction):
         '''
         Print a diff of the patch that would be applied.
 
-        :param colored: Wether or not to use colored output.
+        :param colored: Whether or not to use colored output.
         '''
         printer = ConsolePrinter(colored)
 
