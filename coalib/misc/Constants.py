@@ -11,39 +11,39 @@ from coalib import VERSION
 # Stop ignoring
 
 
-THIS_IS_A_BUG = ("This is a bug. We are sorry for the inconvenience. "
-                 "Please contact the developers for assistance.")
+THIS_IS_A_BUG = ('This is a bug. We are sorry for the inconvenience. '
+                 'Please contact the developers for assistance.')
 
-CRASH_MESSAGE = ("An unknown error occurred. This is a bug. We are "
-                 "sorry for the inconvenience. Please contact the "
-                 "developers for assistance. During execution of "
-                 "coala an exception was raised. This should never "
-                 "happen. When asked for, the following information "
-                 "may help investigating:")
+CRASH_MESSAGE = ('An unknown error occurred. This is a bug. We are '
+                 'sorry for the inconvenience. Please contact the '
+                 'developers for assistance. During execution of '
+                 'coala an exception was raised. This should never '
+                 'happen. When asked for, the following information '
+                 'may help investigating:')
 
-VERSION_CONFLICT_MESSAGE = ("There is a conflict in the version of a "
-                            "dependency you have installed and the "
-                            "requirements of coala. This may be resolved by "
-                            "creating a separate virtual environment for "
-                            "coala or running `pip install \"%s\"`. Be aware "
-                            "that the latter solution might break other "
-                            "python packages that depend on the currently "
-                            "installed version.")
+VERSION_CONFLICT_MESSAGE = ('There is a conflict in the version of a '
+                            'dependency you have installed and the '
+                            'requirements of coala. This may be resolved by '
+                            'creating a separate virtual environment for '
+                            'coala or running `pip install "%s"`. Be aware '
+                            'that the latter solution might break other '
+                            'python packages that depend on the currently '
+                            'installed version.')
 
-OBJ_NOT_ACCESSIBLE = "{} is not accessible and will be ignored!"
+OBJ_NOT_ACCESSIBLE = '{} is not accessible and will be ignored!'
 
 TRUE_STRINGS = ['1',
-                "on",
+                'on',
                 'y',
                 'yes',
-                "yeah",
-                "sure",
+                'yeah',
+                'sure',
                 'true',
                 'definitely',
                 'yup',
-                "right",
-                "aye",
-                "positive"]
+                'right',
+                'aye',
+                'positive']
 
 FALSE_STRINGS = ['0',
                  'off',
@@ -52,14 +52,14 @@ FALSE_STRINGS = ['0',
                  'nope',
                  'nah',
                  'false',
-                 "wrong",
+                 'wrong',
                  'none',
                  'nay',
                  'negative']
 
 # This string contains many unicode characters to challenge tests.
-COMPLEX_TEST_STRING = ("4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ "
-                       "ĦŊħ ß°^ \\\n\u2192")
+COMPLEX_TEST_STRING = ('4 r34l ch4ll3n63: 123 ÄÖü ABc @€¥ §&% {[( ←↓→↑ '
+                       'ĦŊħ ß°^ \\\n\u2192')
 
 # Path to the coalib directory
 coalib_root = os.path.join(os.path.dirname(__file__),
@@ -67,19 +67,19 @@ coalib_root = os.path.join(os.path.dirname(__file__),
 
 # Path to the language definition files
 language_definitions = os.path.join(coalib_root,
-                                    "bearlib",
-                                    "languages",
-                                    "definitions")
+                                    'bearlib',
+                                    'languages',
+                                    'definitions')
 
-system_coafile = os.path.join(coalib_root, "default_coafile")
+system_coafile = os.path.join(coalib_root, 'default_coafile')
 
-user_coafile = os.path.join(os.path.expanduser("~"), ".coarc")
+user_coafile = os.path.join(os.path.expanduser('~'), '.coarc')
 
-default_coafile = ".coafile"
+default_coafile = '.coafile'
 
 USER_DATA_DIR = appdirs.user_data_dir('coala', version=VERSION)
 
-GLOBBING_SPECIAL_CHARS = "()[]|?*"
+GLOBBING_SPECIAL_CHARS = '()[]|?*'
 
 URL_REGEX = re.compile(
     r'^(?:(?:http|ftp)[s]?://)?'  # scheme
