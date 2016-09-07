@@ -110,13 +110,13 @@ def to_spacecase(string):
     :return:       The space-cased string.
     """
     string = re.sub("(_)",
-                    lambda match: ' ',
+                    ' ',
                     string)
     string = re.sub("^(\s*)(.)",
                     lambda match: match.group(2).upper(),
                     string)
     string = re.sub("(\s*)$",
-                    lambda match: '',
+                    '',
                     string)
     string = re.sub("(?<=[^\s])\s+([^\s])",
                     lambda match: ' ' + match.group(1).upper(),
