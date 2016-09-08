@@ -562,11 +562,15 @@ def choose_action(console_printer, actions):
         try:
             line = format_lines("Please enter the number of the action "
                                 "you want to execute (Ctrl-D to exit). ")
-            choice = int(input(line))
+            choice = input(line)
+            choice_int = int(choice)
             if 0 <= choice <= len(actions):
                 return choice
         except ValueError:
-            pass
+            if choice == "":
+                return 0
+            else:
+                pass
 
         console_printer.print(format_lines("Please enter a valid number."))
 
