@@ -402,6 +402,15 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('TestAction', failed_actions)
 
+    def test_default_input(self):
+        action = TestAction()
+        args = [self.log_printer, self.console_printer, Section(""),
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result("origin", "message"), {}, {}]
+
+        with simulate_console_inputs("") as generator:
+            self.assertFalse(ask_for_action_and_apply(*args))
+
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}

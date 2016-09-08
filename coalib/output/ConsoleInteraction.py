@@ -552,7 +552,7 @@ def choose_action(console_printer, actions):
         "The following actions are applicable to this result:"))
 
     while True:
-        console_printer.print(format_lines(" 0: " +
+        console_printer.print(format_lines("*0: " +
                                            "Apply no further actions."))
         for i, action in enumerate(actions, 1):
             console_printer.print(format_lines("{:>2}: {}".format(
@@ -562,7 +562,11 @@ def choose_action(console_printer, actions):
         try:
             line = format_lines("Please enter the number of the action "
                                 "you want to execute (Ctrl-D to exit). ")
-            choice = int(input(line))
+
+            choice = input(line)
+            if not choice:
+                return 0
+            choice = int(choice)
             if 0 <= choice <= len(actions):
                 return choice
         except ValueError:
