@@ -38,6 +38,20 @@ def deprecate_settings(**depr_args):
      >>> func(new='coala!')
      coala!
 
+     This example represents the case where the old and new settings are
+     provided to the function.
+
+     >>> @deprecate_settings(new='old')
+     ... def run(new):
+     ...     print(new)
+     >>> run(old="Hello!", new='coala is always written with lowercase `c`.')
+     The setting `old` is deprecated. Please use `new` instead.
+     The value of `old` and `new` are conflicting. `new` will be used instead.
+     coala is always written with lowercase `c`.
+     >>> run(old='Hello!', new='Hello!')
+     The setting `old` is deprecated. Please use `new` instead.
+     Hello!
+
      The metadata for coala has been adjusted as well:
 
      >>> list(run.__metadata__.non_optional_params.keys())
@@ -59,10 +73,16 @@ def deprecate_settings(**depr_args):
                     depr_arg_and_modifier
                     if isinstance(depr_arg_and_modifier, tuple)
                     else (depr_arg_and_modifier, lambda x: x))
-                if deprecated_arg in kwargs and arg not in kwargs:
+                if deprecated_arg in kwargs:
                     print("The setting `{}` is deprecated. Please use `{}` "
                           "instead.".format(deprecated_arg, arg))
-                    kwargs[arg] = _func.__call__(kwargs[deprecated_arg])
+                    depr_arg_value = _func.__call__(kwargs[deprecated_arg])
+                    if arg in kwargs and depr_arg_value != kwargs[arg]:
+                        print('The value of `{}` and `{}` are conflicting.'
+                              ' `{}` will be used instead.'.format(
+                                  deprecated_arg, arg, arg))
+                    else:
+                        kwargs[arg] = depr_arg_value
                     del kwargs[deprecated_arg]
             return func(*args, **kwargs)
 
