@@ -6,7 +6,6 @@ import subprocess
 from itertools import chain
 
 from coalib.collecting.Dependencies import Dependencies
-from coalib.collecting.Collectors import collect_files
 from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
@@ -19,7 +18,6 @@ from coalib.results.result_actions.PrintDebugMessageAction import (
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
-from coalib.settings.Setting import glob_list
 from coalib.parsing.Globbing import fnmatch
 from coalib.files.Filedict import get_file_dict
 
@@ -313,36 +311,10 @@ def instantiate_processes(section,
                              and the arguments passed to each process which are
                              the same for each object.
     """
-    filename_list = collect_files(
-        glob_list(section.get('files', "")),
-        log_printer,
-        ignored_file_paths=glob_list(section.get('ignore', "")),
-        limit_file_paths=glob_list(section.get('limit_files', "")))
-
-    # This stores all matched files irrespective of whether coala is run
-    # only on changed files or not. Global bears require all the files
-    complete_filename_list = filename_list
-
-    # Start tracking all the files
-    if cache:
-        cache.track_files(set(complete_filename_list))
-        changed_files = cache.get_uncached_files(
-            set(filename_list)) if cache else filename_list
-
-        # If caching is enabled then the local bears should process only the
-        # changed files.
-        log_printer.debug("coala is run only on changed files, bears' log "
-                          "messages from previous runs may not appear. You may "
-                          "use the `--flush-cache` flag to see them.")
-        filename_list = changed_files
-
     # Note: the complete file dict is given as the file dict to bears and
     # the whole project is accessible to every bear. However, local bears are
     # run only for the changed files if caching is enabled.
-    complete_file_dict = get_file_dict(complete_filename_list, log_printer)
-    file_dict = {filename: complete_file_dict[filename]
-                 for filename in filename_list
-                 if filename in complete_file_dict}
+    complete_file_dict, file_dict = get_file_dict(section, cache, log_printer)
 
     manager = multiprocessing.Manager()
     global_bear_queue = multiprocessing.Queue()
