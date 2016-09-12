@@ -31,7 +31,7 @@ To see what coala can do for your language, run:
 .. Start ignoring LineLengthBear
 
 ================================================= ================================================ ====================================================== =========================================================
-`Official Website <http://coala-analyzer.org/>`__ `Twitter <https://twitter.com/coala_analyzer>`__ `Facebook <https://www.facebook.com/coalaAnalyzer/>`__ `Video Demo <https://asciinema.org/a/42968?autoplay=1>`__
+`Official Website <http://coala.io/>`__ `Twitter <https://twitter.com/coala_analyzer>`__ `Facebook <https://www.facebook.com/coalaAnalyzer/>`__ `Video Demo <https://asciinema.org/a/42968?autoplay=1>`__
 ================================================= ================================================ ====================================================== =========================================================
 
 .. Stop ignoring
