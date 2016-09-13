@@ -13,7 +13,7 @@ To begin contributing have a look at the open issues labeled with
 difficulty/newcomer - `newcomer issues <https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer>`__.
 
 Follow the instructions
-`here <http://coala.readthedocs.org/en/latest/Getting_Involved/README.html>`__
+`here <http://coala.readthedocs.io/en/latest/Developers/Newcomers_Guide.html>`__
 and get involved to help us make a better software.
 
 Filing Issues
@@ -51,7 +51,7 @@ For a PR to be merged, the following statements must hold true:
    docs.
 
 Commit guidelines can be found at the
-`Good Commits page <http://coala.readthedocs.org/en/latest/Getting_Involved/Writing_Good_Commits.html>`__
+`Good Commits page <http://coala.readthedocs.io/en/latest/Developers/Writing_Good_Commits.html>`__
 
 Correcting PRs
 --------------
