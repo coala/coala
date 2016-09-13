@@ -1,0 +1,46 @@
+language: python
+python:
+  - 3.4
+  - 3.5
+  - 3.6-dev
+
+addons:
+  apt:
+    packages:
+      - r-base
+      - clang-3.4
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise
+
+before_install:
+  - sudo add-apt-repository -y ppa:staticfloat/juliareleases
+  - sudo apt-get update
+  - sudo apt-get install julia
+  # https://github.com/coala/coala/issues/3183
+  # https://github.com/coala/coala/issues/3184
+  - pip install -U py==1.4.29 pip
+  - cat test-requirements.txt docs-requirements.txt >> requirements.txt
+  - sed -i '/^-r/d' requirements.txt
+
+before_script:
+  - julia -e 'Pkg.add("Lint")'
+
+script:
+  - bash .misc/tests.sh
+  - python setup.py install
+  - pip install coala-bears --pre -U
+  # https://github.com/coala/coala-bears/issues/1037
+  - >
+    if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
+      python3 -m nltk.downloader punkt maxent_treebank_pos_tagger averaged_perceptron_tagger
+    else
+      sed -i '/bears = GitCommitBear/d' .coafile
+    fi
+  - coala --non-interactive
+  - bash .misc/deploy.coverage.sh
+  - make -C docs clean
+  - python setup.py docs
+
+notifications:
+  email: false
