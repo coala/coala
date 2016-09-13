@@ -87,4 +87,5 @@ class SpacingHelperTest(unittest.TestCase):
         self.assertEqual(
             self.uut.replace_spaces_with_tabs(" \t   a_text   another"),
             "\t   a_text\tanother")
+        self.assertEqual(self.uut.replace_spaces_with_tabs("123\t"), "123\t")
         self.assertEqual(self.uut.replace_spaces_with_tabs("d  d"), "d  d")
