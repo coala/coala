@@ -107,11 +107,11 @@ class SpacingHelper(SectionCreatable):
 
             # tabless_position is now incremented to point _after_ the current
             # char
-            if tabless_position % self.tab_width == 0:
-                if currspaces > 1:
-                    result += "\t"
+            if tabless_position % self.tab_width == 0 and currspaces:
+                if currspaces == 1 and char == " ":
+                    result += " "
                 else:
-                    result += currspaces*" "
+                    result += "\t"
 
                 currspaces = 0
 
