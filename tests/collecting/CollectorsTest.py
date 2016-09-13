@@ -123,7 +123,7 @@ class CollectDirsTest(unittest.TestCase):
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others",
                                               "py_files")),
-                os.path.normcase(self.collectors_test_dir+os.sep)]))
+                os.path.normcase(self.collectors_test_dir)]))
 
     def test_dir_string_collection(self):
         self.assertEqual(
@@ -143,7 +143,7 @@ class CollectDirsTest(unittest.TestCase):
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others",
                                               "py_files")),
-                os.path.normcase(self.collectors_test_dir+os.sep)]))
+                os.path.normcase(self.collectors_test_dir)]))
 
     def test_ignored(self):
         self.assertEqual(
@@ -165,7 +165,7 @@ class CollectDirsTest(unittest.TestCase):
                 os.path.normcase(os.path.join(self.collectors_test_dir,
                                               "others",
                                               "c_files")),
-                os.path.normcase(self.collectors_test_dir+os.sep)]))
+                os.path.normcase(self.collectors_test_dir)]))
 
     def test_collect_registered_bears_dirs(self):
         old_iter = pkg_resources.iter_entry_points
