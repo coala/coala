@@ -108,12 +108,15 @@ class SourceRangeTest(unittest.TestCase):
         self.assertEqual(src_range.renamed_file({}), abspath('test_file'))
 
         self.assertEqual(
-            src_range.renamed_file({abspath('test_file'): Diff([])}),
+            src_range.renamed_file(
+                {abspath('test_file'): Diff([], "test_file")}),
             abspath('test_file'))
 
         self.assertEqual(
             src_range.renamed_file(
-                {abspath('test_file'): Diff([], rename='another_file')}),
+                {abspath('test_file'): Diff([],
+                                            "test_file",
+                                            rename='another_file')}),
             'another_file')
 
 

@@ -536,7 +536,9 @@ class ResultFilterTest(unittest.TestCase):
         result_diff = remove_result_ranges_diffs(
             [test_result],
             test_file_dict)[test_result][abspath("test_file")]
-        expected_diff = Diff.from_string_arrays(test_file, ["789\n"])
+        expected_diff = Diff.from_string_arrays(test_file,
+                                                ["789\n"],
+                                                abspath("test_file"))
 
         self.assertEqual(result_diff, expected_diff)
 
@@ -555,7 +557,8 @@ class ResultFilterTest(unittest.TestCase):
             [test_result],
             test_file_dict)[test_result][abspath("test_file")]
         expected_diff = Diff.from_string_arrays(test_file,
-                                                ["11", "2", "5", "66"])
+                                                ["11", "2", "5", "66"],
+                                                abspath("test_file"))
 
         self.assertEqual(result_diff, expected_diff)
 
@@ -569,7 +572,9 @@ class ResultFilterTest(unittest.TestCase):
         result_diff = remove_result_ranges_diffs(
             [test_result],
             test_file_dict)[test_result][abspath("test_file")]
-        expected_diff = Diff.from_string_arrays(test_file, ["abc"])
+        expected_diff = Diff.from_string_arrays(test_file,
+                                                ["abc"],
+                                                abspath("test_file"))
 
         self.assertEqual(result_diff, expected_diff)
 

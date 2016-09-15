@@ -174,12 +174,12 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_print_diffs_info(self):
         file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        diff_dict = {"a": Diff(file_dict['a']),
-                     "b": Diff(file_dict['b'])}
+        diff_dict = {"a": Diff(file_dict['a'], "a"),
+                     "b": Diff(file_dict['b'], "b")}
         diff_dict["a"].add_lines(1, ["test\n"])
         diff_dict["a"].delete_line(3)
         diff_dict["b"].add_lines(0, ["first\n"])
-        previous_diffs = {"a": Diff(file_dict['a'])}
+        previous_diffs = {"a": Diff(file_dict['a'], "a")}
         previous_diffs["a"].change_line(2, "b\n", "b_changed\n")
         with retrieve_stdout() as stdout:
             print_diffs_info(diff_dict, self.console_printer)
@@ -192,8 +192,8 @@ class ConsoleInteractionTest(unittest.TestCase):
            "apply_from_section")
     def test_print_result_interactive_small_patch(self, apply_from_section, _):
         file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        diff_dict = {"a": Diff(file_dict['a']),
-                     "b": Diff(file_dict['b'])}
+        diff_dict = {"a": Diff(file_dict['a'], "a"),
+                     "b": Diff(file_dict['b'], "b")}
         diff_dict["a"].add_lines(1, ["test\n"])
         diff_dict["a"].delete_line(3)
         result = Result("origin", "msg", diffs=diff_dict)
@@ -213,8 +213,8 @@ class ConsoleInteractionTest(unittest.TestCase):
     @patch("coalib.output.ConsoleInteraction.print_diffs_info")
     def test_print_result_interactive_big_patch(self, diffs_info, _):
         file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        diff_dict = {"a": Diff(file_dict['a']),
-                     "b": Diff(file_dict['b'])}
+        diff_dict = {"a": Diff(file_dict['a'], "a"),
+                     "b": Diff(file_dict['b'], "b")}
         diff_dict["a"].add_lines(1, ["test\n", "test1\n", "test2\n"])
         diff_dict["a"].delete_line(3)
         diff_dict["a"].add_lines(3, ["3test\n"])
@@ -251,7 +251,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 testfile_path: ["1\n", "2\n", "3\n"],
                 "f_b": ["1", "2", "3"]
             }
-            diff = Diff(file_dict[testfile_path])
+            diff = Diff(file_dict[testfile_path], testfile_path)
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
 
@@ -335,7 +335,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_acquire_actions_and_apply(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
-            diff = Diff(file_dict[testfile_path])
+            diff = Diff(file_dict[testfile_path], testfile_path)
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
             with simulate_console_inputs(1, 0) as generator, \
@@ -414,7 +414,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
-            diff = Diff(file_dict[testfile_path])
+            diff = Diff(file_dict[testfile_path], testfile_path)
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
             with simulate_console_inputs(1, 2, 3) as generator, \

@@ -28,21 +28,21 @@ class ApplyPatchActionTest(unittest.TestCase):
 
             file_diff_dict = {}
 
-            diff = Diff(file_dict[f_a])
+            diff = Diff(file_dict[f_a], "f_a")
             diff.delete_line(2)
             uut.apply_from_section(Result("origin", "msg", diffs={f_a: diff}),
                                    file_dict,
                                    file_diff_dict,
                                    Section("t"))
 
-            diff = Diff(file_dict[f_a])
+            diff = Diff(file_dict[f_a], "f_a")
             diff.change_line(3, "3\n", "3_changed\n")
             uut.apply_from_section(Result("origin", "msg", diffs={f_a: diff}),
                                    file_dict,
                                    file_diff_dict,
                                    Section("t"))
 
-            diff = Diff(file_dict[f_b])
+            diff = Diff(file_dict[f_b], "f_b")
             diff.change_line(3, "3\n", "3_changed\n")
             uut.apply(Result("origin", "msg", diffs={f_b: diff}),
                       file_dict,
@@ -72,13 +72,13 @@ class ApplyPatchActionTest(unittest.TestCase):
                 f_b: ["1\n", "2\n", "3_changed\n"]
                 }
             file_diff_dict = {}
-            diff = Diff(file_dict[f_a])
+            diff = Diff(file_dict[f_a], f_a)
             diff.change_line(3, "3\n", "3_changed\n")
             uut.apply(Result("origin", "msg", diffs={f_a: diff}),
                       file_dict,
                       file_diff_dict,
                       no_orig=True)
-            diff = Diff(file_dict[f_b])
+            diff = Diff(file_dict[f_b], f_b)
             diff.change_line(3, "3\n", "3_changed\n")
             uut.apply(Result("origin", "msg", diffs={f_b: diff}),
                       file_dict,
@@ -99,7 +99,7 @@ class ApplyPatchActionTest(unittest.TestCase):
             expected_file_dict = {f_a+".renamed":
                                       ["1\n", "2_changed\n", "3_changed\n"]}
             file_diff_dict = {}
-            diff = Diff(file_dict[f_a], rename=f_a+".renamed")
+            diff = Diff(file_dict[f_a], f_a, rename=f_a+".renamed")
             diff.change_line(3, "3\n", "3_changed\n")
             uut.apply(Result("origin", "msg", diffs={f_a: diff}),
                       file_dict,
@@ -108,7 +108,7 @@ class ApplyPatchActionTest(unittest.TestCase):
             self.assertTrue(isfile(f_a+".renamed"))
             self.assertFalse(isfile(f_a))
 
-            diff = Diff(file_dict[f_a])
+            diff = Diff(file_dict[f_a], f_a)
             diff.change_line(2, "2\n", "2_changed\n")
             uut.apply(Result("origin", "msg", diffs={f_a: diff}),
                       file_dict,
@@ -126,7 +126,7 @@ class ApplyPatchActionTest(unittest.TestCase):
         with make_temp() as f_a:
             file_dict = {f_a: ["1\n", "2\n", "3\n"]}
             file_diff_dict = {}
-            diff = Diff(file_dict[f_a], delete=True)
+            diff = Diff(file_dict[f_a], f_a, delete=True)
             uut.apply(Result("origin", "msg", diffs={f_a: diff}),
                       file_dict,
                       file_diff_dict)
@@ -134,7 +134,7 @@ class ApplyPatchActionTest(unittest.TestCase):
             self.assertTrue(isfile(f_a+".orig"))
             os.remove(f_a+".orig")
 
-            diff = Diff(file_dict[f_a])
+            diff = Diff(file_dict[f_a], f_a)
             diff.change_line(3, "3\n", "3_changed\n")
             uut.apply(Result("origin", "msg", diffs={f_a: diff}),
                       file_dict,
@@ -144,14 +144,14 @@ class ApplyPatchActionTest(unittest.TestCase):
             open(f_a, 'w').close()
 
     def test_is_applicable(self):
-        diff = Diff(["1\n", "2\n", "3\n"])
+        diff = Diff(["1\n", "2\n", "3\n"], "f")
         diff.delete_line(2)
         patch_result = Result("", "", diffs={'f': diff})
         self.assertTrue(
             ApplyPatchAction.is_applicable(patch_result, {}, {}))
 
     def test_is_applicable_conflict(self):
-        diff = Diff(["1\n", "2\n", "3\n"])
+        diff = Diff(["1\n", "2\n", "3\n"], "f")
         diff.add_lines(2, ['a line'])
 
         conflict_result = Result("", "", diffs={'f': diff})

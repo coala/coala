@@ -287,7 +287,8 @@ class LinterComponentTest(unittest.TestCase):
                                           "some-file.c",
                                           original))
 
-        diffs = list(Diff.from_string_arrays(original, fixed).split_diff())
+        diffs = list(Diff.from_string_arrays(
+            original, fixed, "some-file.c").split_diff())
         expected = [Result.from_values(uut,
                                        "Inconsistency found.",
                                        "some-file.c",
@@ -725,7 +726,8 @@ class LinterReallifeTest(unittest.TestCase):
 
         diffs = list(Diff.from_string_arrays(
             self.testfile_content,
-            expected_correction).split_diff())
+            expected_correction,
+            self.testfile_path).split_diff())
 
         expected = [Result(uut, "Custom message",
                            affected_code=(
@@ -835,7 +837,8 @@ class LinterReallifeTest(unittest.TestCase):
 
         diffs = list(Diff.from_string_arrays(
             self.testfile2_content,
-            expected_correction).split_diff())
+            expected_correction,
+            self.testfile2_path).split_diff())
 
         expected = [Result.from_values(uut,
                                        "Inconsistency found.",
