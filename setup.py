@@ -78,8 +78,9 @@ if __name__ == "__main__":
           version=VERSION,
           description='Code Analysis Application (coala)',
           author="The coala developers",
+          author_email="coala.analyzer@gmail.com",
           maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
-                      if not on_rtd else "L.S., F.N., M.K.",
+                     if not on_rtd else "L.S., F.N., M.K.",
           maintainer_email=('lasse.schuirmann@gmail.com, '
                             'fabian@neuschmidt.de, '
                             'makman@alice.de'),

@@ -1,3 +1,10 @@
+"""
+The coalib package is a collection of various subpackages regarding
+writing, executing and editing bears. Various other packages such as
+formatting and settings are also included in coalib.
+"""
+
+
 import sys
 from os.path import join, dirname
 
