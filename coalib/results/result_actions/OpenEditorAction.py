@@ -57,7 +57,9 @@ class OpenEditorAction(ResultAction):
         for original_name, filename in filenames.items():
             with open(filename, encoding='utf-8') as file:
                 file_diff_dict[original_name] = Diff.from_string_arrays(
-                    original_file_dict[original_name], file.readlines(),
+                    original_file_dict[original_name],
+                    file.readlines(),
+                    original_name,
                     rename=False if original_name == filename else filename)
 
         return file_diff_dict

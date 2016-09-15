@@ -326,11 +326,12 @@ def _create_linter(klass, options):
             """
             for diff in Diff.from_string_arrays(
                 file,
-                output.splitlines(keepends=True)).split_diff(
+                output.splitlines(keepends=True),
+                filename).split_diff(
                     distance=diff_distance):
                 yield Result(self,
                              result_message,
-                             affected_code=diff.affected_code(filename),
+                             affected_code=diff.affected_code(),
                              diffs={filename: diff},
                              severity=diff_severity)
 
