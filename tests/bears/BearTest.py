@@ -89,7 +89,7 @@ class BearTest(unittest.TestCase):
         self.check_message(LOG_LEVEL.DEBUG)
         self.check_message(LOG_LEVEL.WARNING,
                            "Bear BadTestBear failed to run. Take a look at "
-                           "debug messages (`-L DEBUG`) for further "
+                           "debug messages (`-V`) for further "
                            "information.")
         # debug message contains custom content, dont test this here
         self.queue.get()
