@@ -25,19 +25,11 @@ class SpacingHelper(SectionCreatable):
         :param line: A string to check for indentation.
         :return:     The indentation count in spaces.
         """
-        count = 0
-        for char in line:
-            if char == ' ':
-                count += 1
-                continue
-
-            if char == '\t':
-                count += self.tab_width - (count % self.tab_width)
-                continue
-
-            break
-
-        return count
+        # TODO: maybe use line.rsplit('\t') to prevent expandtabs wasting time
+        # expanding tabs after the first non-whitespace.
+        no_tabs = line.expandtabs(self.tab_width)
+        no_indent = no_tabs.lstrip(' ')
+        return len(no_tabs)-len(no_indent)
 
     @enforce_signature
     def replace_tabs_with_spaces(self, line: str):
@@ -50,29 +42,7 @@ class SpacingHelper(SectionCreatable):
         :param line: The string with tabs to replace.
         :return:     A string with no tabs.
         """
-        for t_position, t_length in sorted(self.yield_tab_lengths(line),
-                                           reverse=True):
-            line = line[:t_position] + t_length * ' ' + line[t_position+1:]
-
-        return line
-
-    @enforce_signature
-    def yield_tab_lengths(self, input: str):
-        """
-        Yields position and size of tabs in a input string.
-
-        :param input: The string with tabs.
-        """
-        tabless_position = 0
-        for index, char in enumerate(input):
-            if char == '\t':
-                space_count = (self.tab_width - tabless_position
-                               % self.tab_width)
-                yield index, space_count
-                tabless_position += space_count
-                continue
-
-            tabless_position += 1
+        return line.expandtabs(self.tab_width)
 
     @enforce_signature
     def replace_spaces_with_tabs(self, line: str):
@@ -86,35 +56,31 @@ class SpacingHelper(SectionCreatable):
         :param line: The string with spaces to replace.
         :return:     The converted string.
         """
-        currspaces = 0
-        result = ""
-        # Tracking the index of the string isnt enough because tabs are
-        # spanning over multiple columns
-        tabless_position = 0
-        for char in line:
-            if char == " ":
-                currspaces += 1
-                tabless_position += 1
-            elif char == "\t":
-                space_count = (self.tab_width - tabless_position
-                               % self.tab_width)
-                currspaces += space_count
-                tabless_position += space_count
-            else:
-                result += currspaces*" " + char
-                currspaces = 0
-                tabless_position += 1
+        # TODO: Strip leading tabs, to optimise lines that already tab indented
 
-            # tabless_position is now incremented to point _after_ the current
-            # char
-            if tabless_position % self.tab_width == 0 and currspaces:
-                if currspaces == 1 and char == " ":
-                    result += " "
+        # Cache tab_width; also ensure it is consistent throughout algorithm
+        tab_width = self.tab_width
+        no_tabs = line.expandtabs(tab_width)
+        chunks = []
+
+        for i in range(0, len(no_tabs), tab_width):
+            chunk = no_tabs[i:i + tab_width]
+            non_whitespace = chunk.rstrip(' \t')
+
+            if len(non_whitespace) == tab_width - 1 and chunk[-1] == ' ':
+                if len(no_tabs) <= i + tab_width:
+                    chunks.append(non_whitespace + line[-1])
+                    break
+
+                lookahead = no_tabs[i + tab_width]
+
+                if lookahead in ['\t', ' ']:
+                    chunks.append(non_whitespace + '\t')
                 else:
-                    result += "\t"
+                    chunks.append(non_whitespace + ' ')
+            elif len(non_whitespace) != tab_width and len(chunk) == tab_width:
+                chunks.append(non_whitespace + '\t')
+            else:
+                chunks.append(chunk)
 
-                currspaces = 0
-
-        result += currspaces*" "
-
-        return result
+        return ''.join(chunks)
