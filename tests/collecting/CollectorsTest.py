@@ -306,4 +306,5 @@ class CollectorsTests(unittest.TestCase):
                  'EchoBear',
                  'LineCountTestBear',
                  'JavaTestBear',
-                 'SpaceConsistencyTestBear'})
+                 'SpaceConsistencyTestBear',
+                 'TestBear'})
