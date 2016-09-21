@@ -5,6 +5,7 @@ from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
+from collections import Iterable
 
 
 # Omit additional info, debug message and diffs for brevity
@@ -36,7 +37,7 @@ class Result:
                  severity: int=RESULT_SEVERITY.NORMAL,
                  additional_info: str="",
                  debug_msg="",
-                 diffs: (dict, None)=None,
+                 diffs: (Iterable, None)=None,
                  confidence: int=100):
         """
         :param origin:          Class name or creator object of this object.
@@ -63,6 +64,11 @@ class Result:
         if severity not in RESULT_SEVERITY.reverse:
             raise ValueError("severity is not a valid RESULT_SEVERITY")
 
+        if(diffs and not isinstance(diffs, dict)):
+            self.diffs = {d.filename: d for d in diffs}
+        else:
+            self.diffs = diffs
+
         self.origin = origin
         self.message = message
         self.debug_msg = debug_msg
@@ -73,7 +79,6 @@ class Result:
         if confidence < 0 or confidence > 100:
             raise ValueError('Value of confidence should be between 0 and 100.')
         self.confidence = confidence
-        self.diffs = diffs
         self.id = uuid.uuid4().int
 
     @classmethod
@@ -89,7 +94,7 @@ class Result:
                     severity: int=RESULT_SEVERITY.NORMAL,
                     additional_info: str="",
                     debug_msg="",
-                    diffs: (dict, None)=None,
+                    diffs: (Iterable, None)=None,
                     confidence: int=100):
         """
         Creates a result with only one SourceRange with the given start and end

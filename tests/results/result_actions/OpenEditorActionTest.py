@@ -50,7 +50,7 @@ class OpenEditorActionTest(unittest.TestCase):
             "f_c": ["1\n", "2\n", "3\n"]}
 
         # A patch that was applied for some reason to make things complicated
-        diff_dict = {self.fb: Diff(file_dict[self.fb])}
+        diff_dict = {self.fb: Diff(file_dict[self.fb], self.fb)}
         diff_dict[self.fb].change_line(3, "3\n", "3_changed\n")
 
         # File contents after the patch was applied, that's what's in the files
@@ -97,7 +97,7 @@ class OpenEditorActionTest(unittest.TestCase):
 
         # A patch that was applied for some reason to make things complicated
         file_diff_dict = {}
-        diff = Diff(file_dict[self.fa], rename=self.fa+".renamed")
+        diff = Diff(file_dict[self.fa], self.fa, rename=self.fa+".renamed")
         diff.change_line(3, "3\n", "3_changed\n")
         ApplyPatchAction().apply(
             Result("origin", "msg", diffs={self.fa: diff}),

@@ -12,22 +12,35 @@ class Diff:
     A Diff result represents a difference for one file.
     """
 
-    def __init__(self, file_list, rename=False, delete=False):
+    def __init__(self, file_list, filename=None, rename=False, delete=False):
         """
         Creates an empty diff for the given file.
 
+        Test to see if the deprecation warning prints properly.
+
+        >>> diff = Diff([])
+        WARNING! Initializing Diff without filename deprecated
+
         :param file_list: The original (unmodified) file as a list of its
                           lines.
+        :param filename:  None or a string containing the name of the file
         :param rename:    False or str containing new name of file.
         :param delete:    True if file is set to be deleted.
         """
         self._changes = {}
         self._file = file_list
+
+        # FIXME: Use builtin logging when it becomes available
+        if(not filename):
+            print("WARNING! Initializing Diff without filename deprecated")
+
+        self.filename = filename
         self.rename = rename
         self.delete = delete
 
     @classmethod
-    def from_string_arrays(cls, file_array_1, file_array_2, rename=False):
+    def from_string_arrays(cls, file_array_1, file_array_2, filename=None,
+                           rename=False):
         """
         Creates a Diff object from two arrays containing strings.
 
@@ -36,9 +49,10 @@ class Diff:
 
         :param file_array_1: Original array
         :param file_array_2: Array to compare
+        :param filename:     None or a string containing the name of the file
         :param rename:       False or str containing new name of file.
         """
-        result = cls(file_array_1, rename=rename)
+        result = cls(file_array_1, filename, rename=rename)
 
         matcher = difflib.SequenceMatcher(None, file_array_1, file_array_2)
         # We use this because its faster (generator) and doesn't yield as much
@@ -68,12 +82,13 @@ class Diff:
         return result
 
     @classmethod
-    def from_clang_fixit(cls, fixit, file):
+    def from_clang_fixit(cls, fixit, file, filename=None):
         """
         Creates a Diff object from a given clang fixit and the file contents.
 
-        :param fixit: A cindex.Fixit object.
-        :param file:  A list of lines in the file to apply the fixit to.
+        :param fixit:    A cindex.Fixit object.
+        :param file:     A list of lines in the file to apply the fixit to.
+        :param filename: None or a string containing the file name
         :return:      The corresponding Diff object.
         """
         assert isinstance(file, (list, tuple))
@@ -89,7 +104,7 @@ class Diff:
                     type(file)(newvalue.splitlines(True)) +
                     file[fixit.range.end.line:])
 
-        return cls.from_string_arrays(file, new_file)
+        return cls.from_string_arrays(file, new_file, filename or self.filename)
 
     def _get_change(self, line_nr, min_line=1):
         if not isinstance(line_nr, int):
@@ -209,18 +224,17 @@ class Diff:
         """
         return self.unified_diff
 
-    def affected_code(self, filename):
+    def affected_code(self):
         """
         Creates a list of SourceRange objects which point to the related code.
         Changes on continuous lines will be put into one SourceRange.
 
-        :param filename: The filename to associate the SourceRange's to.
-        :return:         A list of all related SourceRange objects.
+        :return:                A list of all related SourceRange objects.
         """
-        return list(diff.range(filename)
+        return list(diff.range()
                     for diff in self.split_diff(distance=0))
 
-    def split_diff(self, distance=1):
+    def split_diff(self, distance=1, filename=None):
         """
         Splits this diff into small pieces, such that several continuously
         altered lines are still together in one diff. All subdiffs will be
@@ -229,7 +243,8 @@ class Diff:
         A diff like this with changes being together closely won't be splitted:
 
         >>> diff = Diff.from_string_arrays([     'b', 'c', 'e'],
-        ...                                ['a', 'b', 'd', 'f'])
+        ...                                ['a', 'b', 'd', 'f'],
+        ...                                "file")
         >>> len(list(diff.split_diff()))
         1
 
@@ -246,26 +261,28 @@ class Diff:
 
         If a file gets renamed or deleted only, it will be yielded as is:
 
-        >>> len(list(Diff([], rename='test').split_diff()))
+        >>> len(list(Diff([], "file", rename='test').split_diff()))
         1
 
         An empty diff will not yield any diffs:
 
-        >>> len(list(Diff([]).split_diff()))
+        >>> len(list(Diff([], "file").split_diff()))
         0
 
         :param distance: Number of unchanged lines that are allowed in between
                          two changed lines so they get yielded as one diff.
+        :param filename: None or a string containing the name of the file
         """
         if not self:
             return
 
         last_line = -1
-        this_diff = Diff(self._file, rename=self.rename, delete=self.delete)
+        this_diff = Diff(self._file, filename or self.filename,
+                         rename=self.rename, delete=self.delete)
         for line in sorted(self._changes.keys()):
             if line > last_line + distance + 1 and len(this_diff._changes) > 0:
                 yield this_diff
-                this_diff = Diff(self._file, rename=self.rename,
+                this_diff = Diff(self._file, self.filename, rename=self.rename,
                                  delete=self.delete)
 
             last_line = line
@@ -276,7 +293,7 @@ class Diff:
         # always.
         yield this_diff
 
-    def range(self, filename):
+    def range(self, filename=None):
         """
         Calculates a SourceRange spanning over the whole Diff. If something is
         added after the 0th line (i.e. before the first line) the first line
@@ -284,21 +301,21 @@ class Diff:
 
         The range of an empty diff will only affect the filename:
 
-        >>> range = Diff([]).range("file")
+        >>> range = Diff([], filename="file").range()
         >>> range.file is None
         False
         >>> print(range.start.line)
         None
 
-        :param filename: The filename to associate the SourceRange with.
+        :param filename: None or a string containing the name of the file
         :return:         A SourceRange object.
         """
         if len(self._changes) == 0:
-            return SourceRange.from_values(filename)
+            return SourceRange.from_values(filename or self.filename)
 
         start = min(self._changes.keys())
         end = max(self._changes.keys())
-        return SourceRange.from_values(filename,
+        return SourceRange.from_values(filename or self.filename,
                                        start_line=max(1, start),
                                        end_line=max(1, end))
 
@@ -313,6 +330,9 @@ class Diff:
         if self.rename != other.rename and False not in (self.rename,
                                                          other.rename):
             raise ConflictError("Diffs contain conflicting renamings.")
+
+        if self.filename and other.filename and self.filename != other.filename:
+            raise ConflictError("Diffs are for different files")
 
         result = copy.deepcopy(self)
         result.rename = self.rename or other.rename
@@ -331,13 +351,13 @@ class Diff:
 
     def __bool__(self):
         """
-        >>> bool(Diff([]))
+        >>> bool(Diff([], "file"))
         False
-        >>> bool(Diff([], rename="some"))
+        >>> bool(Diff([], "file", rename="some"))
         True
-        >>> bool(Diff([], delete=True))
+        >>> bool(Diff([], "file", delete=True))
         True
-        >>> bool(Diff.from_string_arrays(['1'], []))
+        >>> bool(Diff.from_string_arrays(['1'], [], "file"))
         True
 
         :return: False if the patch has no effect at all when applied.

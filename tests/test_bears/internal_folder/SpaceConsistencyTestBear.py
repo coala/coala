@@ -59,7 +59,7 @@ class SpaceConsistencyTestBear(LocalBear):
                     result_texts.append("Spaces used instead of tabs.")
 
             if len(result_texts) > 0:
-                diff = Diff(file)
+                diff = Diff(file, filename)
                 diff.change_line(line_number, line, replacement)
                 inconsistencies = "".join("\n- " + string
                                           for string in result_texts)

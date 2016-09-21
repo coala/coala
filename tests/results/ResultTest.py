@@ -10,6 +10,18 @@ from coalib.output.JSONEncoder import create_json_encoder
 
 class ResultTest(unittest.TestCase):
 
+    def test_constructor(self):
+        fl = ["1", "2", "3", "4"]
+        list_diffs = [Diff(fl, filename="file"), Diff(fl, filename="file1")]
+        dict_diffs = {"file": Diff(fl, filename="file")}
+
+        uut = Result("origin", "msg", diffs=list_diffs)
+        self.assertEqual(uut.diffs["file"].filename, "file")
+        self.assertEqual(uut.diffs["file1"].filename, "file1")
+
+        uut = Result("origin", "msg", diffs=dict_diffs)
+        self.assertEqual(uut.diffs["file"], dict_diffs["file"])
+
     def test_origin(self):
         uut = Result("origin", "msg")
         self.assertEqual(uut.origin, "origin")
@@ -75,7 +87,7 @@ class ResultTest(unittest.TestCase):
             "f_a": ["1", "3_changed"],
             "f_b": ["1", "2", "3"]
         }
-        diff = Diff(file_dict['f_a'])
+        diff = Diff(file_dict['f_a'], "f_a")
         diff.delete_line(2)
         diff.change_line(3, "3", "3_changed")
 
@@ -96,15 +108,15 @@ class ResultTest(unittest.TestCase):
             "f_c": ["1", "2", "3"]
         }
 
-        diff = Diff(file_dict['f_a'])
+        diff = Diff(file_dict['f_a'], "f_a")
         diff.delete_line(2)
         uut1 = Result("origin", "msg", diffs={"f_a": diff})
 
-        diff = Diff(file_dict['f_a'])
+        diff = Diff(file_dict['f_a'], "f_a")
         diff.change_line(3, "3", "3_changed")
         uut2 = Result("origin", "msg", diffs={"f_a": diff})
 
-        diff = Diff(file_dict['f_b'])
+        diff = Diff(file_dict['f_b'], "f_a")
         diff.change_line(3, "3", "3_changed")
         uut3 = Result("origin", "msg", diffs={"f_b": diff})
 
@@ -153,7 +165,7 @@ class ResultTest(unittest.TestCase):
             "f_a": ["1", "3_changed"],
             "f_b": ["1", "2", "3"]
         }
-        diff = Diff(file_dict['f_a'])
+        diff = Diff(file_dict['f_a'], "f_a")
         diff.delete_line(2)
         diff.change_line(3, "3", "3_changed")
         uut = Result("origin", "msg", diffs={"f_a": diff}).__json__(True)

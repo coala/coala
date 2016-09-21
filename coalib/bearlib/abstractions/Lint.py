@@ -166,10 +166,10 @@ class Lint(Bear):
                          diffs created by comparing the original and corrected
                          contents.
         """
-        for diff in self.__yield_diffs(file, output):
+        for diff in self.__yield_diffs(file, output, filename):
             yield Result(self,
                          self.diff_message,
-                         affected_code=(diff.range(filename),),
+                         affected_code=(diff.range(),),
                          diffs={filename: diff},
                          severity=self.diff_severity)
 
@@ -229,9 +229,9 @@ class Lint(Bear):
             self.warn(line)
 
     @staticmethod
-    def __yield_diffs(file, new_file):
+    def __yield_diffs(file, new_file, filename):
         if tuple(new_file) != tuple(file):
-            wholediff = Diff.from_string_arrays(file, new_file)
+            wholediff = Diff.from_string_arrays(file, new_file, filename)
 
             for diff in wholediff.split_diff():
                 yield diff

@@ -10,7 +10,7 @@ class DiffTest(unittest.TestCase):
 
     def setUp(self):
         self.file = ["1", "2", "3", "4"]
-        self.uut = Diff(self.file)
+        self.uut = Diff(self.file, "file")
 
     def test_add_lines(self):
         self.uut.add_lines(0, [])
@@ -60,31 +60,32 @@ class DiffTest(unittest.TestCase):
             self.fail('We should not have a conflict on same diff!')
 
     def test_affected_code(self):
-        self.assertEqual(self.uut.affected_code("file"), [])
+        uut = Diff(self.file, "file")
+        self.assertEqual(uut.affected_code(), [])
 
-        self.uut.add_lines(0, ["test"])
+        uut.add_lines(0, ["test"])
         affected_code = [
             SourceRange.from_values("file", start_line=1)]
-        self.assertEqual(self.uut.affected_code("file"), affected_code)
+        self.assertEqual(uut.affected_code(), affected_code)
 
-        self.uut.delete_line(2)
+        uut.delete_line(2)
         affected_code = [
             SourceRange.from_values("file", start_line=1),
             SourceRange.from_values("file", start_line=2)]
-        self.assertEqual(self.uut.affected_code("file"), affected_code)
+        self.assertEqual(uut.affected_code(), affected_code)
 
-        self.uut.delete_line(3)
+        uut.delete_line(3)
         affected_code = [
             SourceRange.from_values("file", start_line=1),
             SourceRange.from_values("file", start_line=2, end_line=3)]
-        self.assertEqual(self.uut.affected_code("file"), affected_code)
+        self.assertEqual(uut.affected_code(), affected_code)
 
-        self.uut.delete_line(6)
+        uut.delete_line(6)
         affected_code = [
             SourceRange.from_values("file", start_line=1),
             SourceRange.from_values("file", start_line=2, end_line=3),
             SourceRange.from_values('file', start_line=6)]
-        self.assertEqual(self.uut.affected_code("file"), affected_code)
+        self.assertEqual(uut.affected_code(), affected_code)
 
     def test_len(self):
         self.uut.delete_line(2)
@@ -133,7 +134,7 @@ class DiffTest(unittest.TestCase):
                        "2",
                        "2"]
 
-        other = Diff(self.file)
+        other = Diff(self.file, "file")
         other.delete_line(1)
         other.change_line(2, "1", "2")
         other.add_lines(0, ["1"])
@@ -148,8 +149,8 @@ class DiffTest(unittest.TestCase):
         self.assertNotEqual(self.uut.modified, result_file)
 
     def test_addition_rename(self):
-        uut = Diff(self.file, rename=False)
-        other = Diff(self.file, rename=False)
+        uut = Diff(self.file, "file", rename=False)
+        other = Diff(self.file, "file", rename=False)
         self.assertEqual((other + uut).rename, False)
 
         other.rename = "some.py"
@@ -161,30 +162,38 @@ class DiffTest(unittest.TestCase):
         uut.rename = "other.py"
         self.assertRaises(ConflictError, other.__add__, uut)
 
+    def test_addition_filename(self):
+        uut = Diff(self.file, "file")
+        other = Diff(self.file, "file")
+        self.assertEqual((other + uut).filename, "file")
+
+        other.filename = "elif"
+        self.assertRaises(ConflictError, other.__add__, uut)
+
     def test_from_string_arrays(self):
         a = ["q", "a", "b", "x", "c", "d"]
         b = ["a", "b", "y", "c", "d", "f"]
-        self.uut = Diff.from_string_arrays(a, b)
+        self.uut = Diff.from_string_arrays(a, b, "file")
         self.assertEqual(self.uut.modified, b)
 
         a = ["first", "fourth"]
         b = ["first", "second", "third", "fourth"]
-        self.uut = Diff.from_string_arrays(a, b)
+        self.uut = Diff.from_string_arrays(a, b, "file")
         self.assertEqual(self.uut.modified, b)
 
         a = ["first", "fourth"]
         b = ["first_changed", "second", "third", "fourth"]
-        self.uut = Diff.from_string_arrays(a, b)
+        self.uut = Diff.from_string_arrays(a, b, "file")
         self.assertEqual(self.uut.modified, b)
 
         a = ["first", "second", "third", "fourth"]
         b = ["first", "fourth"]
-        self.uut = Diff.from_string_arrays(a, b)
+        self.uut = Diff.from_string_arrays(a, b, "file")
         self.assertEqual(self.uut.modified, b)
 
         a = ["first", "second", "third", "fourth"]
         b = ["first_changed", "second_changed", "fourth"]
-        self.uut = Diff.from_string_arrays(a, b)
+        self.uut = Diff.from_string_arrays(a, b, "file")
         self.assertEqual(self.uut.modified, b)
 
     def test_from_clang_fixit(self):
@@ -203,16 +212,16 @@ class DiffTest(unittest.TestCase):
             raise SkipTest(str(err))
 
         fixit = tu.diagnostics[0].fixits[0]
-        clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
+        clang_fixed_file = Diff.from_clang_fixit(fixit, file, "t.c").modified
         self.assertEqual(fixed_file, clang_fixed_file)
 
     def test_equality(self):
         a = ["first", "second", "third"]
         b = ["first", "third"]
-        diff_1 = Diff.from_string_arrays(a, b)
+        diff_1 = Diff.from_string_arrays(a, b, "file_1")
 
         a[1] = "else"
-        diff_2 = Diff.from_string_arrays(a, b)
+        diff_2 = Diff.from_string_arrays(a, b, "file_2")
         self.assertEqual(diff_1, diff_2)
 
         diff_1.rename = "abcd"
@@ -230,7 +239,7 @@ class DiffTest(unittest.TestCase):
         JSONEncoder = create_json_encoder()
         a = ["first\n", "second\n", "third\n"]
         b = ["first\n", "third\n"]
-        diff = Diff.from_string_arrays(a, b)
+        diff = Diff.from_string_arrays(a, b, "file")
         self.assertEqual(
             json.dumps(diff, cls=JSONEncoder, sort_keys=True),
             '"--- \\n'
