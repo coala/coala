@@ -10,7 +10,7 @@ class PrintDebugMessageAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """
-        Print the debug message of the result.
+        Print debug message
         """
         print(result.debug_msg)
 
