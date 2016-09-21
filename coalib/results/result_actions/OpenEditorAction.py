@@ -34,7 +34,7 @@ class OpenEditorAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         '''
-        Open the affected file(s) in an editor.
+        Open editor
 
         :param editor: The editor to open the file with.
         '''

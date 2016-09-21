@@ -10,7 +10,7 @@ class PrintMoreInfoAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """
-        Print additional information given by the result.
+        Print more info
         """
         print(result.additional_info)
 
