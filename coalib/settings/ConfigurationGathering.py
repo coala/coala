@@ -147,7 +147,19 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     for item in list(cli_sections["default"].contents.pop("targets", "")):
         targets.append(item.lower())
 
-    if bool(cli_sections["default"].get("no_config", "False")):
+    no_config_file_options = (
+        'no_config',
+        'show_bears',
+        'show_capabilities')
+
+    try:
+        do_not_load_config = any(
+            bool(cli_sections['default'].get(option, False))
+            for option in no_config_file_options)
+    except ValueError:
+        do_not_load_config = True
+
+    if do_not_load_config:
         sections = cli_sections
     else:
         default_sections = load_config_file(Constants.system_coafile,
@@ -187,8 +199,20 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
                                                    LOG_LEVEL.INFO)
 
-    warn_config_absent(sections, 'files', log_printer)
-    warn_config_absent(sections, 'bears', log_printer)
+    no_warning_options = (
+        'show_bears',
+        'show_capabilities')
+
+    try:
+        show_warnings = not any(
+            bool(cli_sections['default'].get(option, False))
+            for option in no_warning_options)
+    except ValueError:
+        show_warnings = False
+
+    if show_warnings:
+        warn_config_absent(sections, 'files', log_printer)
+        warn_config_absent(sections, 'bears', log_printer)
 
     return sections, targets
 
