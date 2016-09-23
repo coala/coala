@@ -33,11 +33,11 @@ class OpenEditorAction(ResultAction):
         return all(exists(filename) for filename in filenames)
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
-        '''
+        """
         Open the affected file(s) in an editor.
 
         :param editor: The editor to open the file with.
-        '''
+        """
         # Use set to remove duplicates
         filenames = {src.file: src.renamed_file(file_diff_dict)
                      for src in result.affected_code}
