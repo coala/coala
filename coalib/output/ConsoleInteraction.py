@@ -548,20 +548,16 @@ def choose_action(console_printer, actions):
     :param actions:         Actions available to the user.
     :return:                Return choice of action of user.
     """
-    console_printer.print(format_lines(
-        "The following actions are applicable to this result:"))
-
     while True:
         console_printer.print(format_lines("*0: " +
-                                           "Apply no further actions."))
+                                           "Do nothing"))
         for i, action in enumerate(actions, 1):
             console_printer.print(format_lines("{:>2}: {}".format(
                 i,
                 action.desc)))
 
         try:
-            line = format_lines("Please enter the number of the action "
-                                "you want to execute (Ctrl-D to exit). ")
+            line = format_lines("Enter number (Ctrl-D to exit): ")
 
             choice = input(line)
             if not choice:

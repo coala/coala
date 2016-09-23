@@ -115,7 +115,7 @@ class LogPrinter:
 
         self.log(log_level, message, timestamp=timestamp, **kwargs)
         self.log_message(
-            LogMessage(LOG_LEVEL.DEBUG,
+            LogMessage(LOG_LEVEL.INFO,
                        "Exception was:" + "\n" + traceback_str,
                        timestamp=timestamp),
             **kwargs)

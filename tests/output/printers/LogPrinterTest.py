@@ -32,7 +32,7 @@ class LogPrinterTest(unittest.TestCase):
         uut.log_message(self.log_message, end="")
         self.assertEqual(uut.printer.string, str(self.log_message))
 
-        uut = LogPrinter(StringPrinter(), log_level=LOG_LEVEL.DEBUG)
+        uut = LogPrinter(StringPrinter(), log_level=LOG_LEVEL.INFO)
         uut.log_message(self.log_message, end="")
         self.assertEqual(
             uut.printer.string,
@@ -103,7 +103,7 @@ class LogPrinterTest(unittest.TestCase):
             "[ERROR][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING + " d")
 
-        uut.log_level = LOG_LEVEL.DEBUG
+        uut.log_level = LOG_LEVEL.INFO
         uut.printer.clear()
         uut.log_exception(
             "Something failed.",

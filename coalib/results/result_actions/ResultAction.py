@@ -33,8 +33,7 @@ class ResultAction:
 
     def apply(self, result, original_file_dict, file_diff_dict, **kwargs):
         """
-        This action has no description although it should. Probably something
-        went wrong.
+        No description. Something went wrong.
         """
         raise NotImplementedError
 

@@ -18,7 +18,7 @@ test:
     - pip install coala-bears colorama==0.3.6 --pre -U:
         parallel: true
         timeout: 900  # Allow 15 mins
-    - coala-ci -V:
+    - coala-ci:
         parallel: true
     - bash .misc/deploy.coverage.sh:
         parallel: true
