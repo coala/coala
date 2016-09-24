@@ -26,6 +26,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.misc.Caching import FileCache
+from coalib.files.Filedict import get_file_dict
 
 
 process_group_test_code = """
@@ -89,12 +90,17 @@ class ProcessingTest(unittest.TestCase):
     def test_run(self):
         self.sections['default'].append(Setting('jobs', "1"))
         cache = FileCache(self.log_printer, "coala_test", flush_cache=True)
+        complete_file_dict, file_dict = get_file_dict(self.sections["default"],
+                                                      cache,
+                                                      self.log_printer)
         results = execute_section(self.sections["default"],
                                   self.global_bears["default"],
                                   self.local_bears["default"],
                                   lambda *args: self.result_queue.put(args[2]),
                                   cache,
-                                  self.log_printer)
+                                  self.log_printer,
+                                  complete_file_dict,
+                                  file_dict)
         self.assertTrue(results[0])
 
         local_results = self.result_queue.get(timeout=0)
@@ -126,12 +132,17 @@ class ProcessingTest(unittest.TestCase):
 
     def test_empty_run(self):
         self.sections['default'].append(Setting('jobs', "bogus!"))
+        complete_file_dict, file_dict = get_file_dict(self.sections["default"],
+                                                      None,
+                                                      self.log_printer)
         results = execute_section(self.sections["default"],
                                   [],
                                   [],
                                   lambda *args: self.result_queue.put(args[2]),
                                   None,
-                                  self.log_printer)
+                                  self.log_printer,
+                                  complete_file_dict,
+                                  file_dict)
         # No results
         self.assertFalse(results[0])
         # One file

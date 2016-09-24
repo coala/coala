@@ -19,7 +19,7 @@ from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.parsing.Globbing import fnmatch
-from coalib.files.Filedict import get_file_dict
+
 
 ACTIONS = [ApplyPatchAction,
            PrintDebugMessageAction,
@@ -294,8 +294,8 @@ def instantiate_processes(section,
                           local_bear_list,
                           global_bear_list,
                           job_count,
-                          cache,
-                          log_printer):
+                          complete_file_dict,
+                          file_dict):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -304,17 +304,15 @@ def instantiate_processes(section,
     :param local_bear_list:  List of local bears belonging to the section.
     :param global_bear_list: List of global bears belonging to the section.
     :param job_count:        Max number of processes to create.
-    :param cache:            An instance of ``misc.Caching.FileCache`` to use as
-                             a file cache buffer.
-    :param log_printer:      The log printer to warn to.
+    :param complete_file_dict: A dictionary containing the name of files and
+                               its corresponding proxy objects.
+    :param file_dict:          A dictionary containing the name of files and
+                               its corresponding proxy objects that have been
+                               changed if caching is enabled.
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
     """
-    # Note: the complete file dict is given as the file dict to bears and
-    # the whole project is accessible to every bear. However, local bears are
-    # run only for the changed files if caching is enabled.
-    complete_file_dict, file_dict = get_file_dict(section, cache, log_printer)
 
     manager = multiprocessing.Manager()
     global_bear_queue = multiprocessing.Queue()
@@ -576,7 +574,9 @@ def execute_section(section,
                     local_bear_list,
                     print_results,
                     cache,
-                    log_printer):
+                    log_printer,
+                    complete_file_dict,
+                    file_dict):
     """
     Executes the section with the given bears.
 
@@ -589,22 +589,24 @@ def execute_section(section,
     3. Output results from the Processes
     4. Join all processes
 
-    :param section:          The section to execute.
-    :param global_bear_list: List of global bears belonging to the section.
-                             Dependencies are already resolved.
-    :param local_bear_list:  List of local bears belonging to the section.
-                             Dependencies are already resolved.
-    :param print_results:    Prints all given results appropriate to the
-                             output medium.
-    :param cache:            An instance of ``misc.Caching.FileCache`` to use as
-                             a file cache buffer.
-    :param log_printer:      The log_printer to warn to.
-    :return:                 Tuple containing a bool (True if results were
-                             yielded, False otherwise), a Manager.dict
-                             containing all local results(filenames are key)
-                             and a Manager.dict containing all global bear
-                             results (bear names are key) as well as the
-                             file dictionary.
+    :param section:            The section to execute.
+    :param global_bear_list:   List of global bears belonging to the section.
+    :param local_bear_list:    List of local bears belonging to the section.
+    :param print_results:      Prints all given results appropriate to the
+                               output medium.
+    :param cache:              An instance of ``misc.Caching.FileCache`` to use as
+                               a file cache buffer.
+    :param log_printer:        The log_printer to warn to.
+    :param complete_file_dict: A dictionary containing the name of files and
+                               its corresponding proxy objects.
+    :param file_dict:          A dictionary containing the name of files and
+                               its corresponding proxy objects that have been
+                               changed if caching is enabled.
+    :return:                   Tuple containing a bool (True if results were
+                               yielded, False otherwise), a Manager.dict
+                               containing all local results(filenames are key)
+                               and a Manager.dict containing all global bear
+                               results (bear names are key).
     """
     local_bear_list = Dependencies.check_circular_dependency(local_bear_list)
     global_bear_list = Dependencies.check_circular_dependency(global_bear_list)
@@ -622,8 +624,8 @@ def execute_section(section,
                                                 local_bear_list,
                                                 global_bear_list,
                                                 running_processes,
-                                                cache,
-                                                log_printer)
+                                                complete_file_dict,
+                                                file_dict)
 
     logger_thread = LogPrinterThread(arg_dict["message_queue"],
                                      log_printer)
@@ -644,8 +646,7 @@ def execute_section(section,
                                cache,
                                log_printer),
                 arg_dict["local_result_dict"],
-                arg_dict["global_result_dict"],
-                arg_dict["file_dict"])
+                arg_dict["global_result_dict"])
     finally:
         logger_thread.running = False
 

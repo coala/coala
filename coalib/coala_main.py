@@ -14,6 +14,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Caching import FileCache
 from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)
+from coalib.files.Filedict import get_file_dict
 
 do_nothing = lambda *args: True
 
@@ -88,13 +89,21 @@ def run_coala(log_printer=None,
                 continue
 
             print_section_beginning(section)
+
+            # Note: the complete file dict is given as the file dict to bears
+            # and the whole project is accessible to every bear. However, local
+            #  bears are run only for the changed files if caching is enabled.
+            complete_file_dict, file_dict = get_file_dict(section, cache,
+                                                          log_printer)
             section_result = execute_section(
                 section=section,
                 global_bear_list=global_bears[section_name],
                 local_bear_list=local_bears[section_name],
                 print_results=print_results,
                 cache=cache,
-                log_printer=log_printer)
+                log_printer=log_printer,
+                complete_file_dict=complete_file_dict,
+                file_dict=file_dict)
             yielded, yielded_unfixed, results[section_name] = (
                 simplify_section_result(section_result))
 
@@ -103,7 +112,7 @@ def run_coala(log_printer=None,
                 yielded_unfixed_results or yielded_unfixed)
             did_nothing = False
 
-            file_dicts[section_name] = section_result[3]
+            file_dicts[section_name] = file_dict
 
         update_settings_db(log_printer, settings_hash)
         if cache:
