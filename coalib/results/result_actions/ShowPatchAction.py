@@ -80,11 +80,10 @@ class ShowPatchAction(ResultAction):
               original_file_dict,
               file_diff_dict,
               colored: bool=True):
-        '''
-        Show patch
-
+        """
+        Print a diff of the patch that would be applied.
         :param colored: Whether or not to use colored output.
-        '''
+        """
         printer = ConsolePrinter(colored)
 
         for filename, this_diff in sorted(result.diffs.items()):
