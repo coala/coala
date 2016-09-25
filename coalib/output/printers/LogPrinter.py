@@ -99,7 +99,7 @@ class LogPrinter:
         :param log_level: The log_level of this message (not used when
                           logging the traceback. Tracebacks always have
                           a level of DEBUG).
-        :param timestamp: The time at which this log occured. Defaults to
+        :param timestamp: The time at which this log occurred. Defaults to
                           the current time.
         :param kwargs:    Keyword arguments to be passed when logging the
                           message (not used when logging the traceback).
