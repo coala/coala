@@ -14,14 +14,14 @@ from coala_utils.decorators import (enforce_signature, classproperty,
 
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
 from coalib.bears.requirements.PipRequirement import PipRequirement
-from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
 
 
-class Bear(Printer, LogPrinter):
+class Bear(Printer, LogPrinterMixin):
     """
     A bear contains the actual subroutine that is responsible for checking
     source code for certain specifications. However it can actually do
@@ -200,7 +200,6 @@ class Bear(Printer, LogPrinter):
         :raises RuntimeError: Raised when bear requirements are not fulfilled.
         """
         Printer.__init__(self)
-        LogPrinter.__init__(self, self)
 
         if message_queue is not None and not hasattr(message_queue, "put"):
             raise TypeError("message_queue has to be a Queue or None.")

@@ -6,8 +6,15 @@ from pyprint.Printer import Printer
 from pyprint.StringPrinter import StringPrinter
 
 from coalib.misc import Constants
-from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinter, LogPrinterMixin
 from coalib.processes.communication.LogMessage import LOG_LEVEL, LogMessage
+
+
+class LogPrinterMixinTest(unittest.TestCase):
+
+    def test_log_message(self):
+        uut = LogPrinterMixin()
+        self.assertRaises(NotImplementedError, uut.log_message, None)
 
 
 class LogPrinterTest(unittest.TestCase):

@@ -6,48 +6,12 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL, LOG_LEVEL_COLORS
 from coalib.processes.communication.LogMessage import LogMessage
 
 
-class LogPrinter:
+class LogPrinterMixin:
     """
-    The LogPrinter class allows to print log messages to an underlying Printer.
-
-    This class is an adapter, means you can create a LogPrinter from every
-    existing Printer instance.
+    Provides access to the logging interfaces (e.g. err, warn, info) by routing
+    them to the log_message method, which should be implemented by descendants
+    of this class.
     """
-
-    def __init__(self,
-                 printer,
-                 log_level=LOG_LEVEL.INFO,
-                 timestamp_format="%X"):
-        """
-        Creates a new log printer from an existing Printer.
-
-        :param printer:          The underlying Printer where log messages
-                                 shall be written to. If you inherit from
-                                 LogPrinter, set it to self.
-        :param log_level:        The minimum log level, everything below will
-                                 not be logged.
-        :param timestamp_format: The format string for the
-                                 datetime.today().strftime(format) method.
-        """
-        self._printer = printer
-        self.log_level = log_level
-        self.timestamp_format = timestamp_format
-
-    @property
-    def printer(self):
-        """
-        Returns the underlying printer where logs are printed to.
-        """
-        return self._printer
-
-    def _get_log_prefix(self, log_level, timestamp):
-        datetime_string = timestamp.strftime(self.timestamp_format)
-
-        if datetime_string != "":
-            datetime_string = "[" + datetime_string + "]"
-
-        return '[{}]{}'.format(LOG_LEVEL.reverse.get(log_level, "ERROR"),
-                               datetime_string)
 
     def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
         self.log_message(LogMessage(LOG_LEVEL.DEBUG,
@@ -119,6 +83,57 @@ class LogPrinter:
                        "Exception was:" + "\n" + traceback_str,
                        timestamp=timestamp),
             **kwargs)
+
+    def log_message(self, log_message, **kwargs):
+        """
+        It is your reponsibility to implement this method, if you're using this
+        mixin.
+        """
+        raise NotImplementedError
+
+
+class LogPrinter(LogPrinterMixin):
+    """
+    The LogPrinter class allows to print log messages to an underlying Printer.
+
+    This class is an adapter, means you can create a LogPrinter from every
+    existing Printer instance.
+    """
+
+    def __init__(self,
+                 printer,
+                 log_level=LOG_LEVEL.INFO,
+                 timestamp_format="%X"):
+        """
+        Creates a new log printer from an existing Printer.
+
+        :param printer:          The underlying Printer where log messages
+                                 shall be written to. If you inherit from
+                                 LogPrinter, set it to self.
+        :param log_level:        The minimum log level, everything below will
+                                 not be logged.
+        :param timestamp_format: The format string for the
+                                 datetime.today().strftime(format) method.
+        """
+        self._printer = printer
+        self.log_level = log_level
+        self.timestamp_format = timestamp_format
+
+    @property
+    def printer(self):
+        """
+        Returns the underlying printer where logs are printed to.
+        """
+        return self._printer
+
+    def _get_log_prefix(self, log_level, timestamp):
+        datetime_string = timestamp.strftime(self.timestamp_format)
+
+        if datetime_string != "":
+            datetime_string = "[" + datetime_string + "]"
+
+        return '[{}]{}'.format(LOG_LEVEL.reverse.get(log_level, "ERROR"),
+                               datetime_string)
 
     def log_message(self, log_message, **kwargs):
         if not isinstance(log_message, LogMessage):
