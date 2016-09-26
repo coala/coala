@@ -316,7 +316,7 @@ def print_affected_files(console_printer,
                          file_dict,
                          color=True):
     """
-    Print all the afected files and affected lines within them.
+    Prints all the afected files and affected lines within them.
 
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
@@ -353,7 +353,7 @@ def print_results_no_input(log_printer,
                            file_diff_dict,
                            color=True):
     """
-    Print all non interactive results in a section
+    Prints all non interactive results in a section
 
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
@@ -391,7 +391,7 @@ def print_results(log_printer,
                   file_diff_dict,
                   color=True):
     """
-    Print all the results in a section.
+    Prints all the results in a section.
 
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
@@ -517,7 +517,7 @@ def acquire_settings(log_printer, settings_names_dict):
 
 def get_action_info(section, action, failed_actions):
     """
-    Get all the required Settings for an action. It updates the section with
+    Gets all the required Settings for an action. It updates the section with
     the Settings.
 
     :param section:         The section the action corresponds to.
@@ -656,7 +656,7 @@ def show_enumeration(console_printer,
                      no_items_text):
     """
     This function takes as input an iterable object (preferably a list or
-    a dict). And prints in a stylized format. If the iterable object is
+    a dict) and prints it in a stylized format. If the iterable object is
     empty, it prints a specific statement given by the user. An e.g :
 
     <indentation>Title:
@@ -688,7 +688,7 @@ def show_bear(bear,
               show_params,
               console_printer):
     """
-    Display all information about a bear.
+    Displays all information about a bear.
 
     :param bear:             The bear to be displayed.
     :param show_description: True if the main description should be shown.
@@ -794,7 +794,7 @@ def show_bears(local_bears,
 def show_language_bears_capabilities(language_bears_capabilities,
                                      console_printer):
     """
-    Display what the bears can detect and fix.
+    Displays what the bears can detect and fix.
 
     :param language_bears_capabilities:
         Dictionary with languages as keys and their bears' capabilities as
