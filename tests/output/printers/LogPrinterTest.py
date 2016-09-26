@@ -103,7 +103,7 @@ class LogPrinterTest(unittest.TestCase):
             "[ERROR][" + self.timestamp.strftime("%X") + "] " +
             Constants.COMPLEX_TEST_STRING + " d")
 
-        uut.log_level = LOG_LEVEL.DEBUG
+        uut.log_level = LOG_LEVEL.INFO
         uut.printer.clear()
         uut.log_exception(
             "Something failed.",
@@ -112,7 +112,7 @@ class LogPrinterTest(unittest.TestCase):
         self.assertTrue(uut.printer.string.startswith(
             "[ERROR][" + self.timestamp.strftime("%X") +
             "] Something failed.\n" +
-            "[DEBUG][" + self.timestamp.strftime("%X") +
+            "[INFO][" + self.timestamp.strftime("%X") +
             "] Exception was:"))
 
         uut.log_level = LOG_LEVEL.INFO
