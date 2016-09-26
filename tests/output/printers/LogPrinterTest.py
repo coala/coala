@@ -32,7 +32,7 @@ class LogPrinterTest(unittest.TestCase):
         uut.log_message(self.log_message, end="")
         self.assertEqual(uut.printer.string, str(self.log_message))
 
-        uut = LogPrinter(StringPrinter(), log_level=LOG_LEVEL.INFO)
+        uut = LogPrinter(StringPrinter(), log_level=LOG_LEVEL.DEBUG)
         uut.log_message(self.log_message, end="")
         self.assertEqual(
             uut.printer.string,
