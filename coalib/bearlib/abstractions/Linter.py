@@ -5,6 +5,7 @@ from itertools import chain, compress
 import re
 import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
+import warnings
 from types import MappingProxyType
 
 from coalib.bears.LocalBear import LocalBear
@@ -196,6 +197,11 @@ def _create_linter(klass, options):
                         check_call(options['prerequisite_check_command'],
                                    stdout=DEVNULL,
                                    stderr=DEVNULL)
+                        warnings.simplefilter("default")
+                        warnings.warn("The bear {} uses "
+                                      "``prerequisite_check_command`` which "
+                                      "is deprecated.".format(cls.__name__),
+                                      PendingDeprecationWarning, 12)
                         return True
                     except (OSError, CalledProcessError):
                         return options['prerequisite_check_fail_message']
