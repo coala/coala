@@ -1,4 +1,4 @@
-def fail_acquire_settings(log_printer, settings_names_dict):
+def fail_acquire_settings(log_printer, settings_names_dict, section):
     """
     This method throws an exception if any setting needs to be acquired.
 

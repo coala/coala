@@ -54,7 +54,7 @@ def highlight_text(text, lexer=TextLexer(), style=None):
 
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
-                           "needed by {}: ")
+                           "needed by {} for section \"{}\": ")
 STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
                          "cannot be printed because it refers to a line "
                          "that doesn't seem to exist in the given file.")
@@ -470,7 +470,7 @@ def join_names(values):
         return values[0]
 
 
-def require_setting(setting_name, arr):
+def require_setting(setting_name, arr, section):
     """
     This method is responsible for prompting a user about a missing setting and
     taking its value as input from the user.
@@ -479,16 +479,19 @@ def require_setting(setting_name, arr):
     :param arr:          A list containing a description in [0] and the name
                          of the bears who need this setting in [1] and
                          following.
+    :param section:      The section the action corresponds to.
     """
     needed = join_names(arr[1:])
 
     # Don't use input, it can't deal with escapes!
-    print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed),
+
+    print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed,
+                                                 section.name),
                   REQUIRED_SETTINGS_COLOR))
     return input()
 
 
-def acquire_settings(log_printer, settings_names_dict):
+def acquire_settings(log_printer, settings_names_dict, section):
     """
     This method prompts the user for the given settings.
 
@@ -508,6 +511,9 @@ def acquire_settings(log_printer, settings_names_dict):
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
 
+
+    :param section:
+        The section the action corresponds to.
     :return:
         A dictionary with the settings name as key and the given value as
         value.
@@ -519,7 +525,7 @@ def acquire_settings(log_printer, settings_names_dict):
     result = {}
     for setting_name, arr in sorted(settings_names_dict.items(),
                                     key=lambda x: (join_names(x[1][1:]), x[0])):
-        value = require_setting(setting_name, arr)
+        value = require_setting(setting_name, arr, section)
         result.update({setting_name: value} if value is not None else {})
 
     return result
