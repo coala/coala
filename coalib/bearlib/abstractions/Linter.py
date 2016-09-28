@@ -701,7 +701,7 @@ def linter(executable: str,
 
         - ``RESULT_SEVERITY.MAJOR``: Mapped by ``error``.
         - ``RESULT_SEVERITY.NORMAL``: Mapped by ``warning`` or ``warn``.
-        - ``RESULT_SEVERITY.MINOR``: Mapped by ``info``.
+        - ``RESULT_SEVERITY.INFO`: Mapped by ``info``.
 
         A ``ValueError`` is raised when the named group ``severity`` is not
         used inside ``output_regex`` and this parameter is given.
