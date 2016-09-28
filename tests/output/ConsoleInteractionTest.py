@@ -150,25 +150,30 @@ class ConsoleInteractionTest(unittest.TestCase):
         ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
 
     def test_require_settings(self):
-        self.assertRaises(TypeError, acquire_settings, self.log_printer, 0)
+        curr_section = Section("")
+        self.assertRaises(TypeError, acquire_settings,
+                          self.log_printer, 0, curr_section)
 
         with simulate_console_inputs(0, 1, 2) as generator:
             self.assertEqual(acquire_settings(self.log_printer,
                                               {"setting": ["help text",
-                                                           "SomeBear"]}),
+                                                           "SomeBear"]},
+                                              curr_section),
                              {"setting": 0})
 
             self.assertEqual(acquire_settings(self.log_printer,
                                               {"setting": ["help text",
                                                            "SomeBear",
-                                                           "AnotherBear"]}),
+                                                           "AnotherBear"]},
+                                              curr_section),
                              {"setting": 1})
 
             self.assertEqual(acquire_settings(self.log_printer,
                                               {"setting": ["help text",
                                                            "SomeBear",
                                                            "AnotherBear",
-                                                           "YetAnotherBear"]}),
+                                                           "YetAnotherBear"]},
+                                              curr_section),
                              {"setting": 2})
 
             self.assertEqual(generator.last_input, 2)
