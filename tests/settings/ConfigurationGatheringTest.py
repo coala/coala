@@ -203,7 +203,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
             filename = escape(filename, '\\')
         self.assertEqual(["[Default]\n",
                           "config = " + filename + "\n",
-                          "\n",
                           "[test]\n",
                           "value = 5\n"], lines)
 

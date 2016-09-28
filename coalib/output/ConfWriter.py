@@ -26,7 +26,6 @@ class ConfWriter(ClosableObject):
         self.__section_name_surroundings = section_name_surroundings
         self.__section_override_delimiters = section_override_delimiters
         self.__unsavable_keys = unsavable_keys
-        self.__wrote_newline = True
         self.__closed = False
 
         self.__key_delimiter = self.__key_delimiters[0]
@@ -41,7 +40,6 @@ class ConfWriter(ClosableObject):
     def write_sections(self, sections):
         assert not self.__closed
 
-        self.__wrote_newline = True
         for section in sections:
             self.write_section(sections[section])
 
@@ -76,12 +74,8 @@ class ConfWriter(ClosableObject):
     def __write_section_name(self, name):
         assert not self.__closed
 
-        if not self.__wrote_newline:
-            self.__file.write("\n")
-
         self.__file.write(self.__section_name_surrounding_beg + name +
                           self.__section_name_surrounding_end + '\n')
-        self.__wrote_newline = False
 
     def __write_key_val(self, keys, val):
         assert not self.__closed
@@ -91,7 +85,6 @@ class ConfWriter(ClosableObject):
 
         if all(self.is_comment(key) for key in keys):
             self.__file.write(val + "\n")
-            self.__wrote_newline = val == ""
             return
 
         # Add escape characters as appropriate
@@ -105,7 +98,6 @@ class ConfWriter(ClosableObject):
 
         self.__file.write((self.__key_delimiter + " ").join(keys) + " " +
                           self.__key_value_delimiter + " " + val + "\n")
-        self.__wrote_newline = False
 
     @staticmethod
     def is_comment(key):

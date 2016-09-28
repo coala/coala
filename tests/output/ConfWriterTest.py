@@ -13,6 +13,7 @@ class ConfWriterTest(unittest.TestCase):
                     "    TEST = tobeignored  # thats a comment \n"
                     "    test = push \n"
                     "    t = \n"
+                    "    [Section] \n"
                     "    [MakeFiles] \n"
                     "     j  , ANother = a \n"
                     "                   multiline \n"
@@ -51,7 +52,7 @@ class ConfWriterTest(unittest.TestCase):
                        "# thats a comment\n",
                        "test = push\n",
                        "t = \n",
-                       "\n",
+                       "[Section]\n",
                        "[MakeFiles]\n",
                        "j, ANother = a\n",
                        "multiline\n",
