@@ -211,7 +211,7 @@ class CollectBearsTest(unittest.TestCase):
                                        ["invalid kind"],
                                        self.log_printer), ([],))
         self.assertEqual([log.message for log in self.log_printer.logs],
-                         ["No bears were found matching 'invalid_name'. Make "
+                         ["No bears matching 'invalid_name' were found. Make "
                           "sure you have coala-bears installed or you have "
                           "typed the name correctly."])
 
