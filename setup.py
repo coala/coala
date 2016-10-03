@@ -51,7 +51,7 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
         call(self.doc_command)
 
 
-# Generate API documentation only if we are running on readthedocs.org
+# Generate API documentation only if we are running on readthedocs.io
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
