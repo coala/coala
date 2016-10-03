@@ -321,7 +321,7 @@ def print_affected_files(console_printer,
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
     :param section:         The section to which the results belong to.
-    :param result_list:     List containing the results
+    :param result:          The actual result
     :param file_dict:       A dictionary containing all files with filename as
                             key.
     :param color:           Boolean variable to print the results in color or
