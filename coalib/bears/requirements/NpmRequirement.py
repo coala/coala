@@ -49,7 +49,13 @@ class NpmRequirement(PackageRequirement):
 
         :param return: True if dependency is installed, false otherwise.
         """
-        cmd = ['npm', 'show', self.package]
-        if platform.system() == 'Windows':  # pragma: no cover
-            cmd = ['cmd', '/c'] + cmd
-        return not call_without_output(cmd)
+        for cmd in (['npm', 'list', self.package],
+                    ['npm', 'list', '-g', self.package]):
+
+            if platform.system() == 'Windows':  # pragma: no cover
+                cmd = ['cmd', '/c'] + cmd
+
+            if not call_without_output(cmd):
+                return True
+
+        return False
