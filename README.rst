@@ -240,7 +240,7 @@ License
    :target: https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master
 .. |codecov.io| image:: https://img.shields.io/codecov/c/github/coala-analyzer/coala/master.svg?label=branch%20coverage
    :target: https://codecov.io/github/coala-analyzer/coala?branch=master
-.. |Documentation Status| image:: https://readthedocs.org/projects/coala/badge/?version=latest
+.. |Documentation Status| image:: https://readthedocs.io/projects/coala/badge/?version=latest
    :target: http://coala.rtfd.org/
 .. |AGPL| image:: https://img.shields.io/github/license/coala-analyzer/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
