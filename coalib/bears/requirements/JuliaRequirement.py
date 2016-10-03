@@ -8,8 +8,9 @@ from coala_utils.string_processing import escape
 
 class JuliaRequirement(PackageRequirement):
     """
-    This class is a subclass of ``PackageRequirement``, and helps specifying
-    requirements from ``julia``, without using the manager name.
+    This class is a subclass of ``PackageRequirement``. It specifies the
+    proper type for ``julia`` packages automatically and provides functions to
+    check for and install the requirement.
     """
 
     def __init__(self, package, version=""):
@@ -18,7 +19,7 @@ class JuliaRequirement(PackageRequirement):
         constructor.
 
         >>> pr = JuliaRequirement('Lint', '19.2')
-        >>> pr.manager
+        >>> pr.type
         'julia'
         >>> pr.package
         'Lint'

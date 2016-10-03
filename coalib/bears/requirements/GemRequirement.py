@@ -5,8 +5,9 @@ import platform
 
 class GemRequirement(PackageRequirement):
     """
-    This class is a subclass of ``PackageRequirement``, and helps specifying
-    requirements from ``gem``, without using the manager name.
+    This class is a subclass of ``PackageRequirement``. It specifies the
+    proper type for ``ruby`` packages automatically and provides functions to
+    check for and install the requirement.
     """
 
     def __init__(self, package, version="", require=""):
@@ -15,7 +16,7 @@ class GemRequirement(PackageRequirement):
         constructor.
 
         >>> pr = GemRequirement('setuptools', '19.2', 'flag')
-        >>> pr.manager
+        >>> pr.type
         'gem'
         >>> pr.package
         'setuptools'

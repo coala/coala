@@ -13,7 +13,7 @@ from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
-from coalib.bears.requirements.PipRequirement import PipRequirement
+from coalib.bears.requirements.NpmRequirement import NpmRequirement
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
@@ -56,12 +56,11 @@ class Bear(Printer, LogPrinter):
     ...     REQUIREMENTS = {
     ...         PackageRequirement('pip', 'coala_decorators', '0.2.1')}
 
-    If your bear uses requirements from a manager we have a subclass from,
-    you can use the subclass, such as ``PipRequirement``, without specifying
-    manager:
+    If your bear uses requirements of a certain type, you can use the
+    subclass, such as ``PipRequirement``, without specifying type:
 
     >>> class SomeBear(Bear):
-    ...     REQUIREMENTS = {PipRequirement('coala_decorators', '0.2.1')}
+    ...     REQUIREMENTS = {NpmRequirement('tslint', '3')}
 
     To specify additional attributes to your bear, use the following:
 

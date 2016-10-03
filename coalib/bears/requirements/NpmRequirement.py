@@ -5,8 +5,9 @@ import platform
 
 class NpmRequirement(PackageRequirement):
     """
-    This class is a subclass of ``PackageRequirement``, and helps specifying
-    requirements from ``npm``, without using the manager name.
+    This class is a subclass of ``PackageRequirement``. It specifies the
+    proper type for ``npm`` packages automatically and provides functions to
+    check for and install the requirement.
     """
 
     def __init__(self, package, version=""):
@@ -15,7 +16,7 @@ class NpmRequirement(PackageRequirement):
         constructor.
 
         >>> pr = NpmRequirement('ramllint', '6.2')
-        >>> pr.manager
+        >>> pr.type
         'npm'
         >>> pr.package
         'ramllint'

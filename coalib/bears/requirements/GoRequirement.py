@@ -4,8 +4,9 @@ from coalib.misc.Shell import call_without_output
 
 class GoRequirement(PackageRequirement):
     """
-    This class is a subclass of ``PackageRequirement``, and helps specifying
-    requirements from ``go``, without using the manager name.
+    This class is a subclass of ``PackageRequirement``. It specifies the
+    proper type for ``go`` packages automatically and provides functions to
+    check for and install the requirement.
     """
 
     def __init__(self, package, version="", flag=""):
@@ -14,7 +15,7 @@ class GoRequirement(PackageRequirement):
         constructor.
 
         >>> pr = GoRequirement('github.com/golang/lint/golint', '19.2', '-u')
-        >>> pr.manager
+        >>> pr.type
         'go'
         >>> pr.package
         'github.com/golang/lint/golint'
