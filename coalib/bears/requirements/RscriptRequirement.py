@@ -5,8 +5,8 @@ from coalib.misc.Shell import run_shell_command
 class RscriptRequirement(PackageRequirement):
     """
     This class is a subclass of ``PackageRequirement``. It specifies the
-    proper type for ``R`` packages automatically and provides functions to
-    check for and install the requirement.
+    proper type for ``R`` packages automatically and provides a function to
+    check for the requirement.
     """
 
     def __init__(self, package, version="", flag="", repo=""):
@@ -38,21 +38,6 @@ class RscriptRequirement(PackageRequirement):
         PackageRequirement.__init__(self, 'R', package, version)
         self.flag = flag
         self.repo = repo
-
-    def install_command(self):
-        """
-        Creates the installation command for the instance of the class.
-
-        >>> RscriptRequirement(
-        ...     'formatR', '' , '-e',
-        ...     'http://cran.rstudio.com').install_command()
-        'R -e "install.packages(\"formatR\", repo=\"http://cran.rstudio.com\", dependencies=TRUE)"'
-
-        :param return: A string with the installation command.
-        """
-        return ('R {} "install.packages(\"{}\", repo=\"{}\", '
-                'dependencies=TRUE)"'.format(self.flag,
-                                             self.package, self.repo))
 
     def is_installed(self):
         """

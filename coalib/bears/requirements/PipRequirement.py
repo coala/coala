@@ -6,8 +6,8 @@ import sys
 class PipRequirement(PackageRequirement):
     """
     This class is a subclass of ``PackageRequirement``. It specifies the
-    proper type for ``python`` packages automatically and provides functions to
-    check for and install the requirement.
+    proper type for ``python`` packages automatically and provides a
+    function to check for the requirement.
     """
 
     def __init__(self, package, version=""):
@@ -27,17 +27,6 @@ class PipRequirement(PackageRequirement):
         :param version: A version string. Leave empty to specify latest version.
         """
         PackageRequirement.__init__(self, 'pip', package, version)
-
-    def install_command(self):
-        """
-        Creates the installation command for the instance of the class.
-
-        :param return: A list with the installation command parameters.
-        """
-        result = [sys.executable, '-m', 'pip', 'install',
-                  self.package + '==' + self.version if self.version
-                  else self.package]
-        return result
 
     def is_installed(self):
         """
