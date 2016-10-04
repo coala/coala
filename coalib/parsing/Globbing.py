@@ -343,6 +343,38 @@ def has_wildcard(pattern):
     return match is not None
 
 
+def _iglob(pattern):
+    dirname, basename = os.path.split(pattern)
+    if not has_wildcard(pattern):
+        for file in _absolute_flat_glob(pattern):
+            yield file
+        return
+
+    if basename == '**':
+        relative_glob_function = relative_recursive_glob
+    elif has_wildcard(basename):
+        relative_glob_function = relative_wildcard_glob
+    else:
+        relative_glob_function = relative_flat_glob
+
+    if not dirname:
+        for file in relative_glob_function(dirname, basename):
+            yield file
+        return
+
+    # Prevent an infinite recursion if a drive or UNC path contains
+    # wildcard characters (i.e. r'\\?\C:').
+    if dirname != pattern and has_wildcard(dirname):
+        dirs = iglob(dirname)
+    else:
+        dirs = [dirname]
+
+    for dirname in dirs:
+        for name in relative_glob_function(dirname, basename):
+            yield os.path.join(dirname, name)
+
+
+@yield_once
 def iglob(pattern):
     """
     Iterates all filesystem paths that get matched by the glob pattern.
@@ -354,34 +386,13 @@ def iglob(pattern):
     for pat in _iter_alternatives(pattern):
         pat = os.path.expanduser(pat)
         pat = os.path.normcase(pat)
-        dirname, basename = os.path.split(pat)
-        if not has_wildcard(pat):
-            for file in _absolute_flat_glob(pat):
-                yield file
-            return
 
-        if basename == '**':
-            relative_glob_function = relative_recursive_glob
-        elif has_wildcard(basename):
-            relative_glob_function = relative_wildcard_glob
+        if pat.endswith(os.sep):
+            for name in _iglob(pat):
+                yield name
         else:
-            relative_glob_function = relative_flat_glob
-
-        if not dirname:
-            for file in relative_glob_function(dirname, basename):
-                yield file
-            return
-
-        # Prevent an infinite recursion if a drive or UNC path contains
-        # wildcard characters (i.e. r'\\?\C:').
-        if dirname != pat and has_wildcard(dirname):
-            dirs = iglob(dirname)
-        else:
-            dirs = [dirname]
-
-        for dirname in dirs:
-            for name in relative_glob_function(dirname, basename):
-                yield os.path.join(dirname, name)
+            for name in _iglob(pat):
+                yield name.rstrip(os.sep)
 
 
 def glob(pattern):
