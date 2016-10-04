@@ -49,4 +49,4 @@ class GoRequirement(PackageRequirement):
 
         :param return: True if dependency is installed, false otherwise.
         """
-        return not call_without_output(('go', 'doc', self.package))
+        return not call_without_output(('go', 'list', self.package))
