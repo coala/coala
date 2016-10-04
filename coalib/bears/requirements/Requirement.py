@@ -3,25 +3,25 @@ from coala_utils.decorators import generate_eq, generate_repr
 
 @generate_eq("type", "package", "version")
 @generate_repr()
-class PackageRequirement:
+class Requirement:
     """
     This class helps keeping track of bear requirements. It should simply
     be appended to the REQUIREMENTS tuple inside the Bear class.
 
-    Two ``PackageRequirements`` should always be equal if they have the same
+    Two ``Requirements`` should always be equal if they have the same
     type, package and version:
 
-    >>> pr1 = PackageRequirement('pip', 'coala_decorators', '0.1.0')
-    >>> pr2 = PackageRequirement('pip', 'coala_decorators', '0.1.0')
+    >>> pr1 = Requirement('pip', 'coala_decorators', '0.1.0')
+    >>> pr2 = Requirement('pip', 'coala_decorators', '0.1.0')
     >>> pr1 == pr2
     True
     """
 
     def __init__(self, type: str, package: str, version=""):
         """
-        Constructs a new ``PackageRequirement``.
+        Constructs a new ``Requirement``.
 
-        >>> pr = PackageRequirement('pip', 'colorama', '0.1.0')
+        >>> pr = Requirement('pip', 'colorama', '0.1.0')
         >>> pr.type
         'pip'
         >>> pr.package
@@ -41,9 +41,9 @@ class PackageRequirement:
         """
         Check if the requirement is satisfied.
 
-        >>> PackageRequirement('pip', \
-                               'coala_decorators', \
-                               '0.2.1').is_installed()
+        >>> Requirement('pip', \
+                        'coala_decorators', \
+                        '0.2.1').is_installed()
         Traceback (most recent call last):
         ...
         NotImplementedError

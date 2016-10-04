@@ -12,7 +12,7 @@ from pyprint.Printer import Printer
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.Requirement import Requirement
 from coalib.bears.requirements.NpmRequirement import NpmRequirement
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.results.Result import Result
@@ -50,11 +50,11 @@ class Bear(Printer, LogPrinter):
     ...     LANGUAGES = {'C', 'CPP','C#', 'D'}
 
     To indicate the requirements of the bear, assign ``REQUIREMENTS`` a set
-    with instances of ``PackageRequirements``.
+    with instances of ``Requirement``.
 
     >>> class SomeBear(Bear):
     ...     REQUIREMENTS = {
-    ...         PackageRequirement('pip', 'coala_decorators', '0.2.1')}
+    ...         Requirement('pip', 'coala_decorators', '0.2.1')}
 
     If your bear uses requirements of a certain type, you can use the
     subclass, such as ``PipRequirement``, without specifying type:

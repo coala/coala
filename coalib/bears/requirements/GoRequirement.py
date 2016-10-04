@@ -1,17 +1,17 @@
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.Requirement import Requirement
 from coalib.misc.Shell import call_without_output
 
 
-class GoRequirement(PackageRequirement):
+class GoRequirement(Requirement):
     """
-    This class is a subclass of ``PackageRequirement``. It specifies the
+    This class is a subclass of ``Requirement``. It specifies the
     proper type for ``go`` packages automatically and provides a function to
     check for the requirement.
     """
 
     def __init__(self, package, version="", flag=""):
         """
-        Constructs a new ``GoRequirement``, using the ``PackageRequirement``
+        Constructs a new ``GoRequirement``, using the ``Requirement``
         constructor.
 
         >>> pr = GoRequirement('github.com/golang/lint/golint', '19.2', '-u')
@@ -29,7 +29,7 @@ class GoRequirement(PackageRequirement):
         :param flag:    A string that specifies any additional flags, that
                         are passed to the manager.
         """
-        PackageRequirement.__init__(self, 'go', package, version)
+        Requirement.__init__(self, 'go', package, version)
         self.flag = flag
 
     def is_installed(self):

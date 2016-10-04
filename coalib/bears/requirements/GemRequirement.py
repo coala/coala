@@ -1,18 +1,18 @@
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.Requirement import Requirement
 from coalib.misc.Shell import call_without_output
 import platform
 
 
-class GemRequirement(PackageRequirement):
+class GemRequirement(Requirement):
     """
-    This class is a subclass of ``PackageRequirement``. It specifies the
+    This class is a subclass of ``Requirement``. It specifies the
     proper type for ``ruby`` packages automatically and provides a function to
     check for the requirement.
     """
 
     def __init__(self, package, version="", require=""):
         """
-        Constructs a new ``GemRequirement``, using the ``PackageRequirement``
+        Constructs a new ``GemRequirement``, using the ``Requirement``
         constructor.
 
         >>> pr = GemRequirement('setuptools', '19.2', 'flag')
@@ -30,7 +30,7 @@ class GemRequirement(PackageRequirement):
         :param require: A string that specifies any additional flags, that
                         would be used with ``require``.
         """
-        PackageRequirement.__init__(self, 'gem', package, version)
+        Requirement.__init__(self, 'gem', package, version)
         self.require = require
 
     def is_installed(self):

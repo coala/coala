@@ -1,21 +1,21 @@
 import shlex
 
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.Requirement import Requirement
 from coalib.misc.Shell import call_without_output
 
 from coala_utils.string_processing import escape
 
 
-class JuliaRequirement(PackageRequirement):
+class JuliaRequirement(Requirement):
     """
-    This class is a subclass of ``PackageRequirement``. It specifies the
+    This class is a subclass of ``Requirement``. It specifies the
     proper type for ``julia`` packages automatically and provides a function to
     check for the requirement.
     """
 
     def __init__(self, package, version=""):
         """
-        Constructs a new ``JuliaRequirement``, using the ``PackageRequirement``
+        Constructs a new ``JuliaRequirement``, using the ``Requirement``
         constructor.
 
         >>> pr = JuliaRequirement('Lint', '19.2')
@@ -29,7 +29,7 @@ class JuliaRequirement(PackageRequirement):
         :param package: A string with the name of the package to be installed.
         :param version: A version string. Leave empty to specify latest version.
         """
-        PackageRequirement.__init__(self, 'julia', package, version)
+        Requirement.__init__(self, 'julia', package, version)
 
     def is_installed(self):
         """

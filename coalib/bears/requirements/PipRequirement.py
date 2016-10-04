@@ -1,18 +1,18 @@
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.Requirement import Requirement
 from coalib.misc.Shell import call_without_output
 import sys
 
 
-class PipRequirement(PackageRequirement):
+class PipRequirement(Requirement):
     """
-    This class is a subclass of ``PackageRequirement``. It specifies the
+    This class is a subclass of ``Requirement``. It specifies the
     proper type for ``python`` packages automatically and provides a
     function to check for the requirement.
     """
 
     def __init__(self, package, version=""):
         """
-        Constructs a new ``PipRequirement``, using the ``PackageRequirement``
+        Constructs a new ``PipRequirement``, using the ``Requirement``
         constructor.
 
         >>> pr = PipRequirement('setuptools', '19.2')
@@ -26,7 +26,7 @@ class PipRequirement(PackageRequirement):
         :param package: A string with the name of the package to be installed.
         :param version: A version string. Leave empty to specify latest version.
         """
-        PackageRequirement.__init__(self, 'pip', package, version)
+        Requirement.__init__(self, 'pip', package, version)
 
     def is_installed(self):
         """

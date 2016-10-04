@@ -1,10 +1,10 @@
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.Requirement import Requirement
 from coalib.misc.Shell import run_shell_command
 
 
-class RscriptRequirement(PackageRequirement):
+class RscriptRequirement(Requirement):
     """
-    This class is a subclass of ``PackageRequirement``. It specifies the
+    This class is a subclass of ``Requirement``. It specifies the
     proper type for ``R`` packages automatically and provides a function to
     check for the requirement.
     """
@@ -12,7 +12,7 @@ class RscriptRequirement(PackageRequirement):
     def __init__(self, package, version="", flag="", repo=""):
         """
         Constructs a new ``RscriptRequirement``, using the
-        ``PackageRequirement`` constructor.
+        ``Requirement`` constructor.
 
         >>> pr = RscriptRequirement(
         ...         'formatR', version='1.4', flag='-e',
@@ -35,7 +35,7 @@ class RscriptRequirement(PackageRequirement):
         :param repo:    The repository from which the package to be installed is
                         from.
         """
-        PackageRequirement.__init__(self, 'R', package, version)
+        Requirement.__init__(self, 'R', package, version)
         self.flag = flag
         self.repo = repo
 
