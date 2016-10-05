@@ -10,7 +10,7 @@ design enhancements issues as well as pull Requests to make *coala* more
 convenient, functional and bug free.
 
 To begin contributing have a look at the open issues labeled with
-difficulty/newcomer - `newcomer issues <https://github.com/coala-analyzer/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer>`__.
+difficulty/newcomer - `newcomer issues <https://github.com/coala/coala/issues?q=is%3Aissue+is%3Aopen+label%3Adifficulty%2Fnewcomer>`__.
 
 Follow the instructions
 `here <https://coala.io/newcomers>`__
@@ -61,4 +61,4 @@ and again cluttering our history. If a reviewer has suggestions, the commit
 shall be amended so the history is not cluttered by “fixup commits”.
 
 For further information/queries feel free to discuss with us on
-`gitter <https://gitter.im/coala-analyzer/coala>`__.
+`gitter <http://coala.io/chat>`__.
