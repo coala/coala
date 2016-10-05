@@ -68,10 +68,15 @@ class ShowPatchAction(ResultAction):
             return False
 
         try:
-            for filename in result.diffs:
-                if filename in file_diff_dict:
-                    result.diffs[filename].__add__(file_diff_dict[filename])
-            return True
+            # Needed so the addition is run for all patches -> ConflictError
+            nonempty_patches = False
+            for filename, diff in result.diffs.items():
+                if diff and (filename not in file_diff_dict or
+                             diff + file_diff_dict[filename] !=
+                             file_diff_dict[filename]):
+                    nonempty_patches = True
+
+            return nonempty_patches
         except ConflictError:
             return False
 
