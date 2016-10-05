@@ -112,8 +112,7 @@ class Result:
                                 it. You can use this like a manual entry for a
                                 category of issues.
         :param diffs:           A dictionary with filenames as key and a
-                                sequence of ``Diff`` objects associated with
-                                them as values.
+                                ``Diff`` object associated with it as value.
         :param confidence:      A number between 0 and 100 describing the
                                 likelihood of this result being a real issue.
         """
