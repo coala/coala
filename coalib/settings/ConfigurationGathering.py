@@ -47,7 +47,7 @@ def load_config_file(filename, log_printer, silent=False):
     :param log_printer: The log printer to log the warning/error to (in case).
     :param silent:      Whether or not to warn the user/exit if the file
                         doesn't exist.
-    :raises SystemExit: Exits when given filename is invalid and is not the
+    :raises SystemExit: Exits when the given filename is invalid and is not the
                         default coafile. Only raised when ``silent`` is
                         ``False``.
     """
