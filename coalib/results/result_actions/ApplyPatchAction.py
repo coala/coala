@@ -2,7 +2,7 @@ import shutil
 from os.path import isfile
 from os import remove
 
-from coalib.results.Diff import ConflictError
+from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.result_actions.ResultAction import ResultAction
 
 
@@ -10,23 +10,7 @@ class ApplyPatchAction(ResultAction):
 
     SUCCESS_MESSAGE = "Patch applied successfully."
 
-    @staticmethod
-    def is_applicable(result, original_file_dict, file_diff_dict):
-        if not result.diffs:
-            return False
-
-        try:
-            # Needed so the addition is run for all patches -> ConflictError
-            nonempty_patches = False
-            for filename, diff in result.diffs.items():
-                if diff and (filename not in file_diff_dict or
-                             diff + file_diff_dict[filename] !=
-                             file_diff_dict[filename]):
-                    nonempty_patches = True
-
-            return nonempty_patches
-        except ConflictError:
-            return False
+    is_applicable = staticmethod(ShowPatchAction.is_applicable)
 
     def apply(self,
               result,
