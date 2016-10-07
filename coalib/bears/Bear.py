@@ -1,8 +1,8 @@
-import traceback
 from functools import partial
 from os import makedirs
 from os.path import join, abspath, exists
 from shutil import copyfileobj
+import traceback
 from urllib.request import urlopen
 
 from appdirs import user_data_dir
