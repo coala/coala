@@ -149,7 +149,7 @@ class BearTest(unittest.TestCase):
                                self.queue,
                                False)
 
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            "The bear BearWithPrerequisites does not fulfill "
                            "all requirements.")
         self.assertTrue(self.queue.empty())
@@ -163,7 +163,7 @@ class BearTest(unittest.TestCase):
                                self.queue,
                                "Just because I want to.")
 
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            "The bear BearWithPrerequisites does not fulfill "
                            "all requirements. Just because I want to.")
         self.assertTrue(self.queue.empty())
