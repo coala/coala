@@ -28,8 +28,10 @@ class DistributionRequirement(PackageRequirement):
         """
         Creates the installation command for the instance of the class.
 
-        :param return: A string with the installation command. An empty string
-                       if the command could not be supplied.
+        :param return:   A sequence of shell commands with that the package can
+                         be installed with.
+        :raises OSError: Raised when the package is not installable on the
+                         current platform and thus has no install-command.
         """
         manager_dict = {'Fedora': 'dnf',
                         'Ubuntu': 'apt_get',
