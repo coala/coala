@@ -12,7 +12,8 @@ from pyprint.Printer import Printer
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.DistributionRequirement import (
+    DistributionRequirement)
 from coalib.bears.requirements.PipRequirement import PipRequirement
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.results.Result import Result
@@ -346,12 +347,31 @@ class Bear(Printer, LogPrinter):
                  that serves a more detailed description of what's missing.
         """
         for requirement in cls.REQUIREMENTS:
-            if not requirement.check():
-                error_string = (
-                    "Requirement for '{}' ({}) is not satisfied.".format(
-                        requirement.package, requirement.version))
+            try:
+                check_result = requirement.check()
+            except NotImplementedError:
+                # If `check()` is not implemented, assume that the package is
+                # supplied by the user.
+                check_result = True
 
-                if isinstance(requirement, PackageRequirement):
+            if not check_result:
+                # FIXME DistributionRequirement does not initialize the base
+                # FIXME class properly (PackageRequirement), that's why the
+                # FIXME version-field is missing. If this gets fixed, replace
+                # FIXME the condition with `requirement.version`.
+                # FIXME See https://github.com/coala/coala/issues/2844 and
+                # FIXME https://github.com/coala/coala/issues/2846
+                version = getattr(requirement, 'version', '')
+                if version:
+                    error_string = (
+                        "Package '{}' ({}) is not installed.".format(
+                            requirement.package, version))
+                else:
+                    error_string = (
+                        "Package '{}' is not installed.".format(
+                            requirement.package))
+
+                if isinstance(requirement, DistributionRequirement):
                     try:
                         # FIXME What about shell-quotation for returned
                         # FIXME `install_command`?

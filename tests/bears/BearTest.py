@@ -3,6 +3,10 @@ import unittest
 from os.path import abspath
 
 from coalib.bears.Bear import Bear
+from coalib.bears.requirements.DistributionRequirement import (
+    DistributionRequirement)
+from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.PipRequirement import PipRequirement
 from coalib.results.Result import Result
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
@@ -167,6 +171,62 @@ class BearTest(unittest.TestCase):
                            "The bear BearWithPrerequisites does not fulfill "
                            "all requirements. Just because I want to.")
         self.assertTrue(self.queue.empty())
+
+    def test_check_prerequisites_extended(self):
+        class UUT(Bear):
+            pass
+
+        class TestRequirement(PackageRequirement):
+            def __init__(self, package, version='', check_fails=False):
+                PackageRequirement.__init__(self, 'some-mgr', package, version)
+                self.check_fails = check_fails
+
+            def check(self):
+                return not self.check_fails
+
+        class TestDistributionRequirementA(DistributionRequirement):
+            def check(self):
+                return False
+
+            @property
+            def install_command(self):
+                return 'pkg install stuff'
+
+        class TestDistributionRequirementB(DistributionRequirement):
+            def check(self):
+                return False
+
+            @property
+            def install_command(self):
+                # Simulates 'no install command available on OS'.
+                raise OSError
+
+        UUT.REQUIREMENTS = {TestRequirement('pip')}
+        self.assertTrue(UUT.check_prerequisites())
+
+        UUT.REQUIREMENTS = {TestRequirement('pip', '8.0.2'),
+                            TestRequirement('bla_packageX', check_fails=True)}
+        self.assertEqual(UUT.check_prerequisites(),
+                         "Package 'bla_packageX' is not installed.")
+
+        UUT.REQUIREMENTS = {TestRequirement('bla_packageX', '1.1',
+                                            check_fails=True)}
+        self.assertEqual(UUT.check_prerequisites(),
+                         "Package 'bla_packageX' (1.1) is not installed.")
+
+        UUT.REQUIREMENTS = {TestDistributionRequirementA(pacman='libblub')}
+        self.assertEqual(UUT.check_prerequisites(),
+                         "Package 'libblub' (1.1) is not installed.\n"
+                         "You can install it using this command:\n"
+                         "pkg install stuff")
+
+        UUT.REQUIREMENTS = {TestDistributionRequirementB(pacman='libblub')}
+        self.assertEqual(UUT.check_prerequisites(),
+                         "Package 'libblub' is not installed.")
+
+        # Test the case when no `check()` is implemented.
+        UUT.REQUIREMENTS = {PackageRequirement('pip', 'setuptools')}
+        self.assertTrue(UUT.check_prerequisites())
 
     def test_get_config_dir(self):
         section = Section("default")
