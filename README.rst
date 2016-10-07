@@ -61,7 +61,7 @@ Features
   `Emacs <https://github.com/coala/coala-emacs>`__.
 * Optimized performace with multi-threading to parallelize the routines - can
   complete a 26000 line python repository in less than 3 seconds.
-* File caching support - run only on changed files (experimental).
+* File caching support - run only on changed files.
 
 -----
 
