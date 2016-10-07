@@ -24,6 +24,7 @@ class DistributionRequirement(PackageRequirement):
         """
         self.package = manager_commands
 
+    @property
     def install_command(self):
         """
         Creates the installation command for the instance of the class.
