@@ -336,14 +336,33 @@ class Bear(Printer, LogPrinter):
         """
         Checks whether needed runtime prerequisites of the bear are satisfied.
 
-        This function gets executed at construction and returns True by
-        default.
+        This function gets executed at construction and checks by default all
+        prerequisites specified in the ``REQUIREMENTS`` field. When no
+        ``REQUIREMENTS`` are specified, this function returns True.
 
         Section value requirements shall be checked inside the ``run`` method.
 
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
         """
+        for requirement in cls.REQUIREMENTS:
+            if not requirement.check():
+                error_string = (
+                    "Requirement for '{}' ({}) is not satisfied.".format(
+                        requirement.package, requirement.version))
+
+                if isinstance(requirement, PackageRequirement):
+                    try:
+                        # FIXME What about shell-quotation for returned
+                        # FIXME `install_command`?
+                        error_string += (
+                            '\nYou can install it using this command:\n' +
+                            ' '.join(requirement.install_command))
+                    except OSError:
+                        pass
+
+                return error_string
+
         return True
 
     def get_config_dir(self):
