@@ -336,6 +336,8 @@ def gather_configuration(acquire_settings,
     :param autoapply:        Set whether to autoapply patches. This is
                              overridable via any configuration file/CLI.
     :param arg_list:         CLI args to use
+    :param arg_parser:       Instance of ArgParser that is used to parse
+                             none-setting arguments.
     :return:                 A tuple with the following contents:
 
                              -  A dictionary with the sections
