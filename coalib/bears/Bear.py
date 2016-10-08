@@ -252,10 +252,10 @@ class Bear(Printer, LogPrinter):
             self.warn("Bear {} failed to run. Take a look at debug messages"
                       " (`-V`) for further information.".format(name))
             self.debug(
-                "The bear {bear} raised an exception. If you are the writer "
+                "The bear {bear} raised an exception. If you are the author "
                 "of this bear, please make sure to catch all exceptions. If "
                 "not and this error annoys you, you might want to get in "
-                "contact with the writer of this bear.\n\nTraceback "
+                "contact with the author of this bear.\n\nTraceback "
                 "information is provided below:\n\n{traceback}"
                 "\n".format(bear=name, traceback=traceback.format_exc()))
 
