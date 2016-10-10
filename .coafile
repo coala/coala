@@ -60,6 +60,8 @@ languagetool_disable_rules =
 
 [commit]
 bears = GitCommitBear
+shortlog_trailing_period = False
+shortlog_regex = ([^:]*|\S+: [A-Z0-9*].*)
 
 [Pylint]
 enabled = False

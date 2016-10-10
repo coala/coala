@@ -46,7 +46,7 @@ coala provides a common command-line interface for linting and fixing all your
 code, regardless of the programming languages you use.
 
 To find out what kind of analysis coala offers for the languages you use, visit
-<https://github.com/coala-analyzer/bear-docs/blob/master/README.rst#supported-languages>
+<https://github.com/coala/bear-docs/blob/master/README.rst#supported-languages>
 or run:
 
     $ coala --show-bears --filter-by-language C Python
