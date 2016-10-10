@@ -19,13 +19,7 @@ class ListLogPrinter(Printer, LogPrinter):
 
         self.logs = []
 
-    def log_message(self, log_message, **kwargs):
-        if not isinstance(log_message, LogMessage):
-            raise TypeError("log_message should be of type LogMessage.")
-
-        if log_message.log_level < self.log_level:
-            return
-
+    def _print_log_message(self, prefix, log_message, **kwargs):
         self.logs.append(log_message)
 
     def _print(self, output, **kwargs):
