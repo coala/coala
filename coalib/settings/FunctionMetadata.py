@@ -17,7 +17,8 @@ class FunctionMetadata:
                  retval_desc: str="",
                  non_optional_params: (dict, None)=None,
                  optional_params: (dict, None)=None,
-                 omit: (set, tuple, list, frozenset)=frozenset()):
+                 omit: (set, tuple, list, frozenset)=frozenset(),
+                 deprecated_params: (set, tuple, list, frozenset)=frozenset()):
         """
         Creates the FunctionMetadata object.
 
@@ -34,6 +35,7 @@ class FunctionMetadata:
                                     the default value. To preserve the order,
                                     use OrderedDict.
         :param omit:                A set of parameters to omit.
+        :param deprecared_params:   A list of params that are deprecated.
         """
         if non_optional_params is None:
             non_optional_params = OrderedDict()
@@ -46,6 +48,7 @@ class FunctionMetadata:
         self._non_optional_params = non_optional_params
         self._optional_params = optional_params
         self.omit = set(omit)
+        self.deprecated_params = set(deprecated_params)
 
     @property
     def desc(self):
@@ -91,7 +94,7 @@ class FunctionMetadata:
         """
         return self._filter_out_omitted(self._optional_params)
 
-    def add_alias(self, original, alias):
+    def add_deprecated_param(self, original, alias):
         """
         Adds an alias for the original setting. The alias setting will have
         the same metadata as the original one. If the original setting is not
@@ -101,6 +104,7 @@ class FunctionMetadata:
         :param alias:     The name of the alias for the original.
         :raises KeyError: If the new setting doesn't exist in the metadata.
         """
+        self.deprecated_params.add(alias)
         self._optional_params[alias] = (
             self._optional_params[original]
             if original in self._optional_params
@@ -287,10 +291,13 @@ class FunctionMetadata:
             merged_optional_params.update(metadata._optional_params)
 
         merged_omit = set.union(*(metadata.omit for metadata in metadatas))
+        merged_deprecated_params = set.union(*(
+            metadata.deprecated_params for metadata in metadatas))
 
         return cls(merged_name,
                    merged_desc,
                    merged_retval_desc,
                    merged_non_optional_params,
                    merged_optional_params,
-                   merged_omit)
+                   merged_omit,
+                   merged_deprecated_params)
