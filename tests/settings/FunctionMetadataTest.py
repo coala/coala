@@ -107,14 +107,14 @@ class FunctionMetadataTest(unittest.TestCase):
         self.assertEqual(metadata.non_optional_params, non_optional_params)
         self.assertEqual(metadata.optional_params, optional_params)
 
-    def test_add_alias(self):
+    def test_add_deprecated_param(self):
         uut = FunctionMetadata(
             "test",
             non_optional_params={'not_optional': ('desc', str)},
             optional_params={'optional': ('desc2', str, 'default')})
 
-        uut.add_alias('optional', 'old_optional')
-        uut.add_alias('not_optional', 'old_not_optional')
+        uut.add_deprecated_param('optional', 'old_optional')
+        uut.add_deprecated_param('not_optional', 'old_not_optional')
 
         self.assertEqual(uut.non_optional_params,
                          {'not_optional': ('desc', str)})
@@ -130,7 +130,8 @@ class FunctionMetadataTest(unittest.TestCase):
             "Returns 0 on success",
             {"argc": ("argc desc", None), "argv": ("argv desc", None)},
             {"opt": ("opt desc", int, 88)},
-            {"self", "A"})
+            {"self", "A"},
+            {"test1"})
 
         metadata2 = FunctionMetadata(
             "process",
@@ -139,7 +140,8 @@ class FunctionMetadataTest(unittest.TestCase):
             {"argc": ("argc desc from process", int),
              "to_process": ("to_process desc", int)},
             {"opt2": ("opt2 desc", str, "hello")},
-            {"self", "B"})
+            {"self", "B"},
+            {"test2"})
 
         metadata3 = FunctionMetadata("nodesc", "", "", {}, {})
 
@@ -165,3 +167,6 @@ class FunctionMetadataTest(unittest.TestCase):
         self.assertEqual(
             merged_metadata.omit,
             frozenset({"self", "A", "B"}))
+        self.assertEqual(
+            merged_metadata.deprecated_params,
+            frozenset({"test1", "test2"}))
