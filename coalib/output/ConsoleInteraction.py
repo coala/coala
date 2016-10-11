@@ -316,7 +316,7 @@ def print_affected_files(console_printer,
                          file_dict,
                          color=True):
     """
-    Prints all the afected files and affected lines within them.
+    Prints all the affected files and affected lines within them.
 
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
