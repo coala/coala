@@ -22,7 +22,7 @@ def _end_of_set_index(string, start_index):
     if closing_index < length and string[closing_index] == '!':
         closing_index += 1
 
-    if closing_index < length:  # the set cannot be closed by a bracket here
+    if closing_index < length:  # The set cannot be closed by a bracket here.
         closing_index += 1
 
     while closing_index < length and string[closing_index] != ']':
@@ -60,7 +60,7 @@ def _position_is_bracketed(string, position):
     :param position: Position of a char in string
     :return:         Whether or not the char is inside a valid set of brackets
     """
-    # allow negative positions and trim too long ones
+    # Allow negative positions and trim too long ones.
     position = len(string[:position])
 
     index, length = 0, len(string)
@@ -95,13 +95,13 @@ def _boundary_of_alternatives_indices(pattern):
     for match in re.finditer('\\)', pattern):
         if not _position_is_bracketed(pattern, match.start()):
             end_pos = match.start()
-            break  # break to get leftmost
+            break  # Break to get leftmost.
 
     start_pos = None
     for match in re.finditer('\\(', pattern[:end_pos]):
         if not _position_is_bracketed(pattern, match.start()):
             start_pos = match.end()
-            # no break to get rightmost
+            # No break to get rightmost.
 
     return start_pos, end_pos
 
@@ -140,12 +140,12 @@ def _iter_alternatives(pattern):
     if None in (start_pos, end_pos):
         yield pattern
     else:
-        # iterate through choices inside of parenthesis (separated by '|'):
+        # Iterate through choices inside of parenthesis (separated by '|'):
         for choice in _iter_choices(pattern[start_pos: end_pos]):
-            # put glob expression back together with alternative:
+            # Put glob expression back together with alternative:
             variant = pattern[:start_pos-1] + choice + pattern[end_pos+1:]
 
-            # iterate through alternatives outside of parenthesis
+            # Iterate through alternatives outside of parenthesis.
             # (pattern can have more alternatives elsewhere)
             for glob_pattern in _iter_alternatives(variant):
                 yield glob_pattern
@@ -167,11 +167,11 @@ def translate(pattern):
             # '**' matches everything
             if index < length and pattern[index] == '*':
                 regex += '.*'
-            # on Windows, '*' matches everything but the filesystem
+            # On Windows, '*' matches everything but the filesystem
             # separators '/' and '\'.
             elif platform.system() == 'Windows':  # pragma: nocover (Windows)
                 regex += '[^/\\\\]*'
-            # on all other (~Unix-) platforms, '*' matches everything but the
+            # On all other (~Unix-) platforms, '*' matches everything but the
             # filesystem separator, most likely '/'.
             else:
                 regex += '[^' + re.escape(os.sep) + ']*'
@@ -246,7 +246,7 @@ def _absolute_flat_glob(pattern):
         if os.path.exists(pattern):
             yield pattern
     else:
-        # Patterns ending with a slash should match only directories
+        # Patterns ending with a slash should match only directories.
         if os.path.isdir(dirname):
             yield pattern
     return
