@@ -705,7 +705,6 @@ def linter(executable: str,
         - ``RESULT_SEVERITY.NORMAL``: Mapped by ``warning``, ``warn`` or ``w``.
         - ``RESULT_SEVERITY.INFO`: Mapped by ``information``, ``info`` or ``i``.
         - ``RESULT_SEVERITY.INFO`: Mapped by ``note`` or ``suggestion``.
-
         A ``ValueError`` is raised when the named group ``severity`` is not
         used inside ``output_regex`` and this parameter is given.
     :param diff_severity:
