@@ -699,9 +699,8 @@ def linter(executable: str,
         ``coalib.results.RESULT_SEVERITY`` for a result. Severity strings are
         mapped **case-insensitive**!
 
-        - ``RESULT_SEVERITY.MAJOR``: Mapped by ``critical`` or ``c``.
-        - ``RESULT_SEVERITY.MAJOR``: Mapped by ``fatal``, ``fail`` or ``f``.
-        - ``RESULT_SEVERITY.MAJOR``: Mapped by ``error``, ``err`` or ``e``.
+        - ``RESULT_SEVERITY.MAJOR``: Mapped by ``critical``, ``c``,
+        ``fatal``, ``fail``, ``f``,``error``, ``err`` or ``e``.
         - ``RESULT_SEVERITY.NORMAL``: Mapped by ``warning``, ``warn`` or ``w``.
         - ``RESULT_SEVERITY.INFO`: Mapped by ``information``, ``info`` or ``i``.
         - ``RESULT_SEVERITY.INFO`: Mapped by ``note`` or ``suggestion``.
