@@ -45,3 +45,7 @@ class LocalBear(Bear):
         return FunctionMetadata.from_function(
             cls.run,
             omit={"self", "filename", "file", "dependency_results"})
+
+    def get_warning_msg(self,*args):
+        return "Bear {} failed to run on file {}. Take a look at debug messages"
+        " (`-V`) for further information.".format(self.name,args[0])
