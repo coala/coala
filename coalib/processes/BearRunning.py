@@ -106,9 +106,9 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
-                 "The bear {bear} failed to run on file {filename} with the arguments "
+                 "The bear {bear} failed to run with the arguments "
                  "{arglist}, {kwarglist}. Skipping bear..."
-                 .format(bear=name, filename=args[0], arglist=args, kwarglist=kwargs))
+                 .format(bear=name, arglist=args, kwarglist=kwargs))
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,

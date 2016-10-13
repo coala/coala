@@ -38,3 +38,7 @@ class GlobalBear(Bear):
         """
         raise NotImplementedError(
             "This function has to be implemented for a runnable bear.")
+
+    def get_warning_msg(self,*args):
+        return "Bear {} failed to run. Take a look at debug messages"
+        " (`-V`) for further information.".format(self.name)
