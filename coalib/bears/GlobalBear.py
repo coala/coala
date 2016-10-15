@@ -38,3 +38,15 @@ class GlobalBear(Bear):
         """
         raise NotImplementedError(
             "This function has to be implemented for a runnable bear.")
+
+    def get_warning_msg(self, *args):
+        """
+        This method is responsible to generate the warning message
+        when a GlobalBear instance fails while executing on a file.
+
+        :param args: The arguments that are to be passed to the bear.
+        :return: Returns the appropriate error message
+
+        """
+        return "Bear {} failed to run. Take a look at debug messages"
+        " (`-V`) for further information.".format(self.name)

@@ -45,3 +45,15 @@ class LocalBear(Bear):
         return FunctionMetadata.from_function(
             cls.run,
             omit={"self", "filename", "file", "dependency_results"})
+
+    def get_warning_msg(self, *args):
+        """
+        This method is responsible to generate the warning message
+        when a LocalBear instance fails while executing on a file.
+
+        :param args: The arguments that are to be passed to the bear.
+        :return: Returns the appropriate error message
+
+        """
+        return "Bear {} failed to run on file {}. Take a look at debug messages"
+        " (`-V`) for further information.".format(self.name, args[0])
