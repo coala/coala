@@ -38,16 +38,18 @@ class DistributionRequirement(PackageRequirement):
                         'redhat': 'yum',
                         'arch': 'pacman'}
 
-        if (platform.linux_distribution()[0] in manager_dict.keys() and
-                manager_dict[platform.linux_distribution()[0]]
+        if platform.system() == 'Linux':  # pragma: no cover
+            import distro
+            distro_name = distro.linux_distribution()[0]
+        if (distro_name in manager_dict.keys() and manager_dict[distro_name]
                 in self.package.keys()):
-            manager = manager_dict[platform.linux_distribution()[0]]
+            manager = manager_dict[distro_name]
             return [manager.replace("_", "-"),
                     'install', self.package[manager]]
         else:
             package_possibilites = (
                 {package for package in self.package.values()})
-            print('The package could not be automatically installed on your '
-                  'operating system. Please try installing it manually. It'
+            print('The package could not be automatically installed on your'
+                  ' operating system. Please try installing it manually. It'
                   ' should look like this: ' + repr(package_possibilites))
             raise OSError
