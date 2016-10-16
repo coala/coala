@@ -14,8 +14,7 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
     ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
     execute_section, filter_raising_callables, get_default_actions,
-    get_file_dict, print_result, process_queues, simplify_section_result,
-    yield_ignore_ranges)
+    print_result, process_queues, simplify_section_result, yield_ignore_ranges)
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -27,6 +26,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.misc.Caching import FileCache
+from coalib.files.Filedict import get_file_dict
 
 
 process_group_test_code = """
@@ -69,8 +69,6 @@ class ProcessingTest(unittest.TestCase):
             os.path.dirname(__file__),
             "section_executor_test_files",
             ".coafile"))
-        self.testcode_c_path = os.path.join(os.path.dirname(config_path),
-                                            "testcode.c")
 
         self.result_queue = queue.Queue()
         self.queue = queue.Queue()
@@ -92,12 +90,17 @@ class ProcessingTest(unittest.TestCase):
     def test_run(self):
         self.sections['default'].append(Setting('jobs', "1"))
         cache = FileCache(self.log_printer, "coala_test", flush_cache=True)
+        complete_file_dict, file_dict = get_file_dict(self.sections["default"],
+                                                      cache,
+                                                      self.log_printer)
         results = execute_section(self.sections["default"],
                                   self.global_bears["default"],
                                   self.local_bears["default"],
                                   lambda *args: self.result_queue.put(args[2]),
                                   cache,
-                                  self.log_printer)
+                                  self.log_printer,
+                                  complete_file_dict,
+                                  file_dict)
         self.assertTrue(results[0])
 
         local_results = self.result_queue.get(timeout=0)
@@ -129,12 +132,17 @@ class ProcessingTest(unittest.TestCase):
 
     def test_empty_run(self):
         self.sections['default'].append(Setting('jobs', "bogus!"))
+        complete_file_dict, file_dict = get_file_dict(self.sections["default"],
+                                                      None,
+                                                      self.log_printer)
         results = execute_section(self.sections["default"],
                                   [],
                                   [],
                                   lambda *args: self.result_queue.put(args[2]),
                                   None,
-                                  self.log_printer)
+                                  self.log_printer,
+                                  complete_file_dict,
+                                  file_dict)
         # No results
         self.assertFalse(results[0])
         # One file
@@ -297,22 +305,6 @@ class ProcessingTest(unittest.TestCase):
         # Test whether non filtered exceptions bubble up.
         with self.assertRaises(B):
             list(filter_raising_callables(test_list, C, exc=(B, C)))
-
-    def test_get_file_dict(self):
-        file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
-        self.assertEqual(len(file_dict), 1)
-        self.assertEqual(type(file_dict[self.testcode_c_path]),
-                         tuple,
-                         msg="files in file_dict should not be editable")
-        self.assertEqual("Files that will be checked:\n" + self.testcode_c_path,
-                         self.log_printer.log_queue.get().message)
-
-    def test_get_file_dict_non_existent_file(self):
-        file_dict = get_file_dict(["non_existent_file"], self.log_printer)
-        self.assertEqual(file_dict, {})
-        self.assertIn(("Failed to read file 'non_existent_file' because of "
-                       "an unknown error."),
-                      self.log_printer.log_queue.get().message)
 
     def test_simplify_section_result(self):
         results = (True,

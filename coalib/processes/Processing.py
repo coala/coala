@@ -5,8 +5,7 @@ import queue
 import subprocess
 from itertools import chain
 
-from coalib.collecting import Dependencies
-from coalib.collecting.Collectors import collect_files
+from coalib.collecting.Dependencies import Dependencies
 from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
@@ -19,7 +18,6 @@ from coalib.results.result_actions.PrintDebugMessageAction import (
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
-from coalib.settings.Setting import glob_list
 from coalib.parsing.Globbing import fnmatch
 
 
@@ -104,7 +102,7 @@ def autoapply_actions(results,
 
     :param results:        A list of results.
     :param file_dict:      A dictionary containing the name of files and its
-                           contents.
+                           corresponding proxy objects.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
     :param section:        The section.
@@ -199,7 +197,7 @@ def print_result(results,
 
     :param results:        A list of results.
     :param file_dict:      A dictionary containing the name of files and its
-                           contents.
+                           corresponding proxy objects.
     :param retval:         It is True if no results were yielded ever before.
                            If it is False this function will return False no
                            matter what happens. Else it depends on if this
@@ -238,36 +236,6 @@ def print_result(results,
     return retval or len(results) > 0, patched_results
 
 
-def get_file_dict(filename_list, log_printer):
-    """
-    Reads all files into a dictionary.
-
-    :param filename_list: List of names of paths to files to get contents of.
-    :param log_printer:   The logger which logs errors.
-    :return:              Reads the content of each file into a dictionary
-                          with filenames as keys.
-    """
-    file_dict = {}
-    for filename in filename_list:
-        try:
-            with open(filename, "r", encoding="utf-8") as _file:
-                file_dict[filename] = tuple(_file.readlines())
-        except UnicodeDecodeError:
-            log_printer.warn("Failed to read file '{}'. It seems to contain "
-                             "non-unicode characters. Leaving it "
-                             "out.".format(filename))
-        except OSError as exception:  # pragma: no cover
-            log_printer.log_exception("Failed to read file '{}' because of "
-                                      "an unknown error. Leaving it "
-                                      "out.".format(filename),
-                                      exception,
-                                      log_level=LOG_LEVEL.WARNING)
-
-    log_printer.debug("Files that will be checked:\n" +
-                      "\n".join(file_dict.keys()))
-    return file_dict
-
-
 def filter_raising_callables(it, exception, *args, **kwargs):
     """
     Filters all callable items inside the given iterator that raise the
@@ -296,8 +264,8 @@ def instantiate_bears(section,
     :param section:          The section the bears belong to.
     :param local_bear_list:  List of local bear classes to instantiate.
     :param global_bear_list: List of global bear classes to instantiate.
-    :param file_dict:        Dictionary containing filenames and their
-                             contents.
+    :param file_dict:        A dictionary containing the name of files and its
+                             corresponding proxy objects.
     :param message_queue:    Queue responsible to maintain the messages
                              delivered by the bears.
     :return:                 The local and global bear instance lists.
@@ -326,8 +294,8 @@ def instantiate_processes(section,
                           local_bear_list,
                           global_bear_list,
                           job_count,
-                          cache,
-                          log_printer):
+                          complete_file_dict,
+                          file_dict):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -336,43 +304,15 @@ def instantiate_processes(section,
     :param local_bear_list:  List of local bears belonging to the section.
     :param global_bear_list: List of global bears belonging to the section.
     :param job_count:        Max number of processes to create.
-    :param cache:            An instance of ``misc.Caching.FileCache`` to use as
-                             a file cache buffer.
-    :param log_printer:      The log printer to warn to.
+    :param complete_file_dict: A dictionary containing the name of files and
+                               its corresponding proxy objects.
+    :param file_dict:          A dictionary containing the name of files and
+                               its corresponding proxy objects that have been
+                               changed if caching is enabled.
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
     """
-    filename_list = collect_files(
-        glob_list(section.get('files', "")),
-        log_printer,
-        ignored_file_paths=glob_list(section.get('ignore', "")),
-        limit_file_paths=glob_list(section.get('limit_files', "")))
-
-    # This stores all matched files irrespective of whether coala is run
-    # only on changed files or not. Global bears require all the files
-    complete_filename_list = filename_list
-
-    # Start tracking all the files
-    if cache:
-        cache.track_files(set(complete_filename_list))
-        changed_files = cache.get_uncached_files(
-            set(filename_list)) if cache else filename_list
-
-        # If caching is enabled then the local bears should process only the
-        # changed files.
-        log_printer.debug("coala is run only on changed files, bears' log "
-                          "messages from previous runs may not appear. You may "
-                          "use the `--flush-cache` flag to see them.")
-        filename_list = changed_files
-
-    # Note: the complete file dict is given as the file dict to bears and
-    # the whole project is accessible to every bear. However, local bears are
-    # run only for the changed files if caching is enabled.
-    complete_file_dict = get_file_dict(complete_filename_list, log_printer)
-    file_dict = {filename: complete_file_dict[filename]
-                 for filename in filename_list
-                 if filename in complete_file_dict}
 
     manager = multiprocessing.Manager()
     global_bear_queue = multiprocessing.Queue()
@@ -429,13 +369,14 @@ def yield_ignore_ranges(file_dict):
     Yields tuples of affected bears and a SourceRange that shall be ignored for
     those.
 
-    :param file_dict: The file dictionary.
+    :param file_dict: A dictionary containing the name of files and its
+                      corresponding proxy objects.
     """
-    for filename, file in file_dict.items():
+    for filename, fileproxy in file_dict.items():
         start = None
         bears = []
         stop_ignoring = False
-        for line_number, line in enumerate(file, start=1):
+        for line_number, line in enumerate(fileproxy, start=1):
             # Before lowering all lines ever read, first look for the biggest
             # common substring, case sensitive: I*gnor*e, start i*gnor*ing.
             if 'gnor' in line:
@@ -452,22 +393,22 @@ def yield_ignore_ranges(file_dict):
                                    start,
                                    1,
                                    line_number,
-                                   len(file[line_number-1])))
+                                   len(list(fileproxy)[line_number-1])))
                 elif "ignore " in line:
-                    end_line = min(line_number + 1, len(file))
+                    end_line = min(line_number + 1, len(list(fileproxy)))
                     yield (get_ignore_scope(line, "ignore "),
                            SourceRange.from_values(
                                filename,
                                line_number, 1,
-                               end_line, len(file[end_line - 1])))
+                               end_line, len(list(fileproxy)[end_line - 1])))
 
         if stop_ignoring is False and start is not None:
             yield (bears,
                    SourceRange.from_values(filename,
                                            start,
                                            1,
-                                           len(file),
-                                           len(file[-1])))
+                                           len(list(fileproxy)),
+                                           len(list(fileproxy)[-1])))
 
 
 def get_file_list(results):
@@ -508,8 +449,8 @@ def process_queues(processes,
                                global bears. It is modified by the processes
                                i.e. results are added to it by multiple
                                processes.
-    :param file_dict:          Dictionary containing file contents with
-                               filename as keys.
+    :param file_dict:          A dictionary containing the name of files and
+                               its corresponding proxy objects.
     :param print_results:      Prints all given results appropriate to the
                                output medium.
     :param cache:              An instance of ``misc.Caching.FileCache`` to use
@@ -633,7 +574,9 @@ def execute_section(section,
                     local_bear_list,
                     print_results,
                     cache,
-                    log_printer):
+                    log_printer,
+                    complete_file_dict,
+                    file_dict):
     """
     Executes the section with the given bears.
 
@@ -646,23 +589,28 @@ def execute_section(section,
     3. Output results from the Processes
     4. Join all processes
 
-    :param section:          The section to execute.
-    :param global_bear_list: List of global bears belonging to the section.
-                             Dependencies are already resolved.
-    :param local_bear_list:  List of local bears belonging to the section.
-                             Dependencies are already resolved.
-    :param print_results:    Prints all given results appropriate to the
-                             output medium.
-    :param cache:            An instance of ``misc.Caching.FileCache`` to use as
-                             a file cache buffer.
-    :param log_printer:      The log_printer to warn to.
-    :return:                 Tuple containing a bool (True if results were
-                             yielded, False otherwise), a Manager.dict
-                             containing all local results(filenames are key)
-                             and a Manager.dict containing all global bear
-                             results (bear names are key) as well as the
-                             file dictionary.
+    :param section:            The section to execute.
+    :param global_bear_list:   List of global bears belonging to the section.
+    :param local_bear_list:    List of local bears belonging to the section.
+    :param print_results:      Prints all given results appropriate to the
+                               output medium.
+    :param cache:              An instance of ``misc.Caching.FileCache`` to use as
+                               a file cache buffer.
+    :param log_printer:        The log_printer to warn to.
+    :param complete_file_dict: A dictionary containing the name of files and
+                               its corresponding proxy objects.
+    :param file_dict:          A dictionary containing the name of files and
+                               its corresponding proxy objects that have been
+                               changed if caching is enabled.
+    :return:                   Tuple containing a bool (True if results were
+                               yielded, False otherwise), a Manager.dict
+                               containing all local results(filenames are key)
+                               and a Manager.dict containing all global bear
+                               results (bear names are key).
     """
+    local_bear_list = Dependencies.check_circular_dependency(local_bear_list)
+    global_bear_list = Dependencies.check_circular_dependency(global_bear_list)
+
     try:
         running_processes = int(section['jobs'])
     except ValueError:
@@ -676,8 +624,8 @@ def execute_section(section,
                                                 local_bear_list,
                                                 global_bear_list,
                                                 running_processes,
-                                                cache,
-                                                log_printer)
+                                                complete_file_dict,
+                                                file_dict)
 
     logger_thread = LogPrinterThread(arg_dict["message_queue"],
                                      log_printer)
@@ -698,8 +646,7 @@ def execute_section(section,
                                cache,
                                log_printer),
                 arg_dict["local_result_dict"],
-                arg_dict["global_result_dict"],
-                arg_dict["file_dict"])
+                arg_dict["global_result_dict"])
     finally:
         logger_thread.running = False
 

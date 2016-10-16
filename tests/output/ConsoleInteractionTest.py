@@ -48,6 +48,12 @@ STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
 STR_PROJECT_WIDE = "Project wide:"
 
 
+class DummyFileProxy:
+
+    def __init__(self, lines):
+        self.lines = lines
+
+
 class TestAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict, param):
@@ -173,13 +179,14 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 2)
 
     def test_print_diffs_info(self):
-        file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        diff_dict = {"a": Diff(file_dict['a']),
-                     "b": Diff(file_dict['b'])}
+        file_dict = {"a": DummyFileProxy(["a\n", "b\n", "c\n"]),
+                     "b": DummyFileProxy(["old_first\n"])}
+        diff_dict = {"a": Diff(file_dict['a'].lines),
+                     "b": Diff(file_dict['b'].lines)}
         diff_dict["a"].add_lines(1, ["test\n"])
         diff_dict["a"].delete_line(3)
         diff_dict["b"].add_lines(0, ["first\n"])
-        previous_diffs = {"a": Diff(file_dict['a'])}
+        previous_diffs = {"a": Diff(file_dict['a'].lines)}
         previous_diffs["a"].change_line(2, "b\n", "b_changed\n")
         with retrieve_stdout() as stdout:
             print_diffs_info(diff_dict, self.console_printer)
@@ -191,9 +198,10 @@ class ConsoleInteractionTest(unittest.TestCase):
     @patch("coalib.output.ConsoleInteraction.ShowPatchAction."
            "apply_from_section")
     def test_print_result_interactive_small_patch(self, apply_from_section, _):
-        file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        diff_dict = {"a": Diff(file_dict['a']),
-                     "b": Diff(file_dict['b'])}
+        file_dict = {"a": DummyFileProxy(["a\n", "b\n", "c\n"]),
+                     "b": DummyFileProxy(["old_first\n"])}
+        diff_dict = {"a": Diff(file_dict['a'].lines),
+                     "b": Diff(file_dict['b'].lines)}
         diff_dict["a"].add_lines(1, ["test\n"])
         diff_dict["a"].delete_line(3)
         result = Result("origin", "msg", diffs=diff_dict)
@@ -212,9 +220,10 @@ class ConsoleInteractionTest(unittest.TestCase):
     @patch("coalib.output.ConsoleInteraction.acquire_actions_and_apply")
     @patch("coalib.output.ConsoleInteraction.print_diffs_info")
     def test_print_result_interactive_big_patch(self, diffs_info, _):
-        file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        diff_dict = {"a": Diff(file_dict['a']),
-                     "b": Diff(file_dict['b'])}
+        file_dict = {"a": DummyFileProxy(["a\n", "b\n", "c\n"]),
+                     "b": DummyFileProxy(["old_first\n"])}
+        diff_dict = {"a": Diff(file_dict['a'].lines),
+                     "b": Diff(file_dict['b'].lines)}
         diff_dict["a"].add_lines(1, ["test\n", "test1\n", "test2\n"])
         diff_dict["a"].delete_line(3)
         diff_dict["a"].add_lines(3, ["3test\n"])
@@ -248,10 +257,10 @@ class ConsoleInteractionTest(unittest.TestCase):
 
         with make_temp() as testfile_path:
             file_dict = {
-                testfile_path: ["1\n", "2\n", "3\n"],
-                "f_b": ["1", "2", "3"]
+                testfile_path: DummyFileProxy(["1\n", "2\n", "3\n"]),
+                "f_b": DummyFileProxy(["1", "2", "3"])
             }
-            diff = Diff(file_dict[testfile_path])
+            diff = Diff(file_dict[testfile_path].lines)
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
 
@@ -319,7 +328,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_print_affected_files(self):
         with retrieve_stdout() as stdout, \
                 make_temp() as some_file:
-            file_dict = {some_file: ["1\n", "2\n", "3\n"]}
+            file_dict = {some_file: DummyFileProxy(["1\n", "2\n", "3\n"])}
             affected_code = (SourceRange.from_values(some_file),)
             print_affected_files(self.console_printer,
                                  self.log_printer,
@@ -334,8 +343,8 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_acquire_actions_and_apply(self):
         with make_temp() as testfile_path:
-            file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
-            diff = Diff(file_dict[testfile_path])
+            file_dict = {testfile_path: DummyFileProxy(["1\n", "2\n", "3\n"])}
+            diff = Diff(file_dict[testfile_path].lines)
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
             with simulate_console_inputs(1, 0) as generator, \
@@ -413,8 +422,8 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:
-            file_dict = {testfile_path: ["1\n", "2\n", "3\n"]}
-            diff = Diff(file_dict[testfile_path])
+            file_dict = {testfile_path: DummyFileProxy(["1\n", "2\n", "3\n"])}
+            diff = Diff(file_dict[testfile_path].lines)
             diff.delete_line(2)
             diff.change_line(3, "3\n", "3_changed\n")
             with simulate_console_inputs(1, 2, 3) as generator, \

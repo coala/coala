@@ -1,0 +1,12 @@
+{
+  "logs": [
+    {
+      "log_level": 2,
+      "message": "No bears were found matching 'LineCountTestBear'.",
+      "timestamp": "2016-09-24T12:29:16.286858"
+    }
+  ],
+  "results": {
+    "default": []
+  }
+}
