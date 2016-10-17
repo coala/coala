@@ -5,7 +5,7 @@ import unittest
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.processes.BearRunning import (
-    LOG_LEVEL, LogMessage, run, send_msg, task_done)
+    LOG_LEVEL, LogMessage, run, task_done)
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.settings.Section import Section
@@ -130,18 +130,6 @@ class BearRunningUnitTest(unittest.TestCase):
         self.message_queue.join()
 
         task_done("test")  # Should pass silently
-
-    def test_messaging(self):
-        send_msg(self.message_queue,
-                 0,
-                 LOG_LEVEL.DEBUG,
-                 "test",
-                 "messag",
-                 delimiter="-",
-                 end="e")
-
-        self.assertEqual(self.message_queue.get(),
-                         LogMessage(LOG_LEVEL.DEBUG, "test-message"))
 
     def test_dependencies(self):
         self.local_bear_list.append(SimpleBear(self.settings,

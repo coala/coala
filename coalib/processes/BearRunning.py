@@ -1,47 +1,23 @@
+import logging
 import queue
-import traceback
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc import Constants
-from coalib.processes.communication.LogMessage import LOG_LEVEL, LogMessage
+from coalib.processes.communication.LogMessage import LOG_LEVEL
+from coalib.processes.communication.LogMessage import LogMessage
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result
 
 
-def send_msg(message_queue, timeout, log_level, *args, delimiter=' ', end=''):
-    """
-    Puts message into message queue for a LogPrinter to present to the user.
-
-    :param message_queue: The queue to put the message into and which the
-                          LogPrinter reads.
-    :param timeout:       The queue blocks at most timeout seconds for a free
-                          slot to execute the put operation on. After the
-                          timeout it returns queue Full exception.
-    :param log_level:     The log_level i.e Error,Debug or Warning.It is sent
-                          to the LogPrinter depending on the message.
-    :param args:          This includes the elements of the message.
-    :param delimiter:     It is the value placed between each arg. By default
-                          it is a ' '.
-    :param end:           It is the value placed at the end of the message.
-    """
-    output = str(delimiter).join(str(arg) for arg in args) + str(end)
-    message_queue.put(LogMessage(log_level, output),
-                      timeout=timeout)
-
-
-def validate_results(message_queue, timeout, result_list, name, args, kwargs):
+def validate_results(timeout, result_list, name, args, kwargs):
     """
     Validates if the result_list passed to it contains valid set of results.
     That is the result_list must itself be a list and contain objects of the
-    instance of Result object. If any irregularity is found a message is put in
-    the message_queue to present the irregularity to the user. Each result_list
-    belongs to an execution of a bear.
+    instance of Result object. If any irregularity is found it is logged.
+    Each result_list belongs to an execution of a bear.
 
-    :param message_queue: A queue that contains messages of type
-                          errors/warnings/debug statements to be printed in the
-                          Log.
     :param timeout:       The queue blocks at most timeout seconds for a free
                           slot to execute the put operation on. After the
                           timeout it returns queue Full exception.
@@ -57,34 +33,25 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
 
     for result in result_list:
         if not isinstance(result, Result):
-            send_msg(message_queue,
-                     timeout,
-                     LOG_LEVEL.ERROR,
-                     "The results from the bear {bear} could only be "
-                     "partially processed with arguments {arglist}, "
-                     "{kwarglist}"
-                     .format(bear=name, arglist=args, kwarglist=kwargs))
-            send_msg(message_queue,
-                     timeout,
-                     LOG_LEVEL.DEBUG,
-                     "One of the results in the list for the bear {bear} is "
-                     "an instance of {ret} but it should be an instance of "
-                     "Result"
-                     .format(bear=name, ret=result.__class__))
+            logging.error(
+                "The results from the bear {bear} could only be "
+                "partially processed with arguments {arglist}, {kwarglist}"
+                .format(bear=name, arglist=args, kwarglist=kwargs))
+            logging.debug(
+                "One of the results in the list for the bear {bear} is "
+                "an instance of {ret} but it should be an instance of Result"
+                .format(bear=name, ret=result.__class__))
             result_list.remove(result)
 
     return result_list
 
 
-def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
+def run_bear(timeout, bear_instance, *args, **kwargs):
     """
     This method is responsible for executing the instance of a bear. It also
     reports or logs errors if any occur during the execution of that bear
     instance.
 
-    :param message_queue: A queue that contains messages of type
-                          errors/warnings/debug statements to be printed in the
-                          Log.
     :param timeout:       The queue blocks at most timeout seconds for a free
                           slot to execute the put operation on. After the
                           timeout it returns queue Full exception.
@@ -103,23 +70,14 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
     try:
         result_list = bear_instance.execute(*args, **kwargs)
     except:
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.ERROR,
-                 "The bear {bear} failed to run with the arguments "
-                 "{arglist}, {kwarglist}. Skipping bear..."
-                 .format(bear=name, arglist=args, kwarglist=kwargs))
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.DEBUG,
-                 "Traceback for error in bear {}:".format(name),
-                 traceback.format_exc(),
-                 delimiter="\n")
+        logging.exception(
+            "The bear {bear} failed to run with the arguments "
+            "{arglist}, {kwarglist}. Skipping bear..."
+            .format(bear=name, arglist=args, kwarglist=kwargs))
 
         return None
 
-    return validate_results(message_queue,
-                            timeout,
+    return validate_results(timeout,
                             result_list,
                             name,
                             args,
@@ -157,8 +115,7 @@ def get_local_dependency_results(local_result_list, bear_instance):
     return dependency_results
 
 
-def run_local_bear(message_queue,
-                   timeout,
+def run_local_bear(timeout,
                    local_result_list,
                    file_dict,
                    bear_instance,
@@ -167,9 +124,6 @@ def run_local_bear(message_queue,
     Runs an instance of a local bear. Checks if bear_instance is of type
     LocalBear and then passes it to the run_bear to execute.
 
-    :param message_queue:     A queue that contains messages of type
-                              errors/warnings/debug statements to be printed in
-                              the Log.
     :param timeout:           The queue blocks at most timeout seconds for a
                               free slot to execute the put operation on. After
                               the timeout it returns queue Full exception.
@@ -183,37 +137,27 @@ def run_local_bear(message_queue,
     """
     if (not isinstance(bear_instance, LocalBear) or
             bear_instance.kind() != BEAR_KIND.LOCAL):
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.WARNING,
-                 "A given local bear ({}) is not valid. Leaving "
-                 "it out...".format(bear_instance.__class__.__name__),
-                 Constants.THIS_IS_A_BUG)
+        logging.warning(
+            "A given local bear ({}) is not valid. Leaving it out...".format(
+                bear_instance.__class__.__name__) + Constants.THIS_IS_A_BUG)
 
         return None
 
     kwargs = {"dependency_results":
               get_local_dependency_results(local_result_list,
                                            bear_instance)}
-    return run_bear(message_queue,
-                    timeout,
+    return run_bear(timeout,
                     bear_instance,
                     filename,
                     file_dict[filename],
                     **kwargs)
 
 
-def run_global_bear(message_queue,
-                    timeout,
-                    global_bear_instance,
-                    dependency_results):
+def run_global_bear(timeout, global_bear_instance, dependency_results):
     """
     Runs an instance of a global bear. Checks if bear_instance is of type
     GlobalBear and then passes it to the run_bear to execute.
 
-    :param message_queue:        A queue that contains messages of type
-                                 errors/warnings/debug statements to be printed
-                                 in the Log.
     :param timeout:              The queue blocks at most timeout seconds for a
                                  free slot to execute the put operation on.
                                  After the timeout it returns queue Full
@@ -227,25 +171,20 @@ def run_global_bear(message_queue,
     """
     if (not isinstance(global_bear_instance, GlobalBear)
             or global_bear_instance.kind() != BEAR_KIND.GLOBAL):
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.WARNING,
-                 "A given global bear ({}) is not valid. Leaving it "
-                 "out..."
-                 .format(global_bear_instance.__class__.__name__),
-                 Constants.THIS_IS_A_BUG)
+        logging.warning(
+            "A given global bear ({}) is not valid. Leaving it out... "
+            .format(global_bear_instance.__class__.__name__) +
+            Constants.THIS_IS_A_BUG)
 
         return None
 
     kwargs = {"dependency_results": dependency_results}
-    return run_bear(message_queue,
-                    timeout,
+    return run_bear(timeout,
                     global_bear_instance,
                     **kwargs)
 
 
-def run_local_bears_on_file(message_queue,
-                            timeout,
+def run_local_bears_on_file(timeout,
                             file_dict,
                             local_bear_list,
                             local_result_dict,
@@ -254,9 +193,6 @@ def run_local_bears_on_file(message_queue,
     """
     This method runs a list of local bears on one file.
 
-    :param message_queue:     A queue that contains messages of type
-                              errors/warnings/debug statements to be printed
-                              in the Log.
     :param timeout:           The queue blocks at most timeout seconds for a
                               free slot to execute the put operation on. After
                               the timeout it returns queue Full exception.
@@ -274,8 +210,7 @@ def run_local_bears_on_file(message_queue,
     """
     local_result_list = []
     for bear_instance in local_bear_list:
-        result = run_local_bear(message_queue,
-                                timeout,
+        result = run_local_bear(timeout,
                                 local_result_list,
                                 file_dict,
                                 bear_instance,
@@ -363,7 +298,6 @@ def task_done(obj):
 
 
 def run_local_bears(filename_queue,
-                    message_queue,
                     timeout,
                     file_dict,
                     local_bear_list,
@@ -374,9 +308,6 @@ def run_local_bears(filename_queue,
 
     :param filename_queue:    queue (read) of file names to check with
                               local bears.
-    :param message_queue:     A queue that contains messages of type
-                              errors/warnings/debug statements to be printed
-                              in the Log.
     :param timeout:           The queue blocks at most timeout seconds for a
                               free slot to execute the put operation on. After
                               the timeout it returns queue Full exception.
@@ -394,8 +325,7 @@ def run_local_bears(filename_queue,
     try:
         while True:
             filename = filename_queue.get(timeout=timeout)
-            run_local_bears_on_file(message_queue,
-                                    timeout,
+            run_local_bears_on_file(timeout,
                                     file_dict,
                                     local_bear_list,
                                     local_result_dict,
@@ -406,8 +336,7 @@ def run_local_bears(filename_queue,
         return
 
 
-def run_global_bears(message_queue,
-                     timeout,
+def run_global_bears(timeout,
                      global_bear_queue,
                      global_bear_list,
                      global_result_dict,
@@ -415,9 +344,6 @@ def run_global_bears(message_queue,
     """
     Run all global bears.
 
-    :param message_queue:      A queue that contains messages of type
-                               errors/warnings/debug statements to be printed
-                               in the Log.
     :param timeout:            The queue blocks at most timeout seconds for a
                                free slot to execute the put operation on. After
                                the timeout it returns queue Full exception.
@@ -441,7 +367,7 @@ def run_global_bears(message_queue,
                                      global_bear_list,
                                      global_result_dict))
             bearname = bear.__class__.__name__
-            result = run_global_bear(message_queue, timeout, bear, dep_results)
+            result = run_global_bear(timeout, bear, dep_results)
             if result:
                 global_result_dict[bearname] = result
                 control_queue.put((CONTROL_ELEMENT.GLOBAL, bearname))
@@ -459,7 +385,6 @@ def run(file_name_queue,
         file_dict,
         local_result_dict,
         global_result_dict,
-        message_queue,
         control_queue,
         timeout=0):
     """
@@ -494,8 +419,6 @@ def run(file_name_queue,
     :param global_result_dict: A Manager.dict that will be used to store global
                                results. The list of results of one global bear
                                will be stored with the bear name as key.
-    :param message_queue:      queue (write) for debug/warning/error
-                               messages (type LogMessage)
     :param control_queue:      queue (write). If any result gets written to the
                                result_dict a tuple containing a CONTROL_ELEMENT
                                (to indicate what kind of event happened) and
@@ -513,7 +436,6 @@ def run(file_name_queue,
     """
     try:
         run_local_bears(file_name_queue,
-                        message_queue,
                         timeout,
                         file_dict,
                         local_bear_list,
@@ -521,8 +443,7 @@ def run(file_name_queue,
                         control_queue)
         control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
-        run_global_bears(message_queue,
-                         timeout,
+        run_global_bears(timeout,
                          global_bear_queue,
                          global_bear_list,
                          global_result_dict,

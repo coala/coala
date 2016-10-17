@@ -1,3 +1,4 @@
+import logging
 import traceback
 from functools import partial
 from os import makedirs
@@ -186,26 +187,19 @@ class Bear(Printer, LogPrinterMixin):
     @enforce_signature
     def __init__(self,
                  section: Section,
-                 message_queue,
                  timeout=0):
         """
         Constructs a new bear.
 
         :param section:       The section object where bear settings are
                               contained.
-        :param message_queue: The queue object for messages. Can be ``None``.
         :param timeout:       The time the bear is allowed to run. To set no
                               time limit, use 0.
-        :raises TypeError:    Raised when ``message_queue`` is no queue.
         :raises RuntimeError: Raised when bear requirements are not fulfilled.
         """
         Printer.__init__(self)
 
-        if message_queue is not None and not hasattr(message_queue, "put"):
-            raise TypeError("message_queue has to be a Queue or None.")
-
         self.section = section
-        self.message_queue = message_queue
         self.timeout = timeout
 
         self.setup_dependencies()
@@ -223,8 +217,7 @@ class Bear(Printer, LogPrinterMixin):
         self.debug(output)
 
     def log_message(self, log_message, timestamp=None, **kwargs):
-        if self.message_queue is not None:
-            self.message_queue.put(log_message)
+        logging.log(log_message.log_level, log_message.message)
 
     def run(self, *args, dependency_results=None, **kwargs):
         raise NotImplementedError

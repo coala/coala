@@ -11,7 +11,6 @@ from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -288,8 +287,7 @@ def filter_raising_callables(it, exception, *args, **kwargs):
 def instantiate_bears(section,
                       local_bear_list,
                       global_bear_list,
-                      file_dict,
-                      message_queue):
+                      file_dict):
     """
     Instantiates each bear with the arguments it needs.
 
@@ -298,8 +296,6 @@ def instantiate_bears(section,
     :param global_bear_list: List of global bear classes to instantiate.
     :param file_dict:        Dictionary containing filenames and their
                              contents.
-    :param message_queue:    Queue responsible to maintain the messages
-                             delivered by the bears.
     :return:                 The local and global bear instance lists.
     """
     local_bear_list = [bear
@@ -307,7 +303,6 @@ def instantiate_bears(section,
                            local_bear_list,
                            RuntimeError,
                            section,
-                           message_queue,
                            timeout=0.1)]
 
     global_bear_list = [bear
@@ -316,7 +311,6 @@ def instantiate_bears(section,
                             RuntimeError,
                             file_dict,
                             section,
-                            message_queue,
                             timeout=0.1)]
 
     return local_bear_list, global_bear_list
@@ -379,7 +373,6 @@ def instantiate_processes(section,
     filename_queue = multiprocessing.Queue()
     local_result_dict = manager.dict()
     global_result_dict = manager.dict()
-    message_queue = multiprocessing.Queue()
     control_queue = multiprocessing.Queue()
 
     bear_runner_args = {"file_name_queue": filename_queue,
@@ -389,7 +382,6 @@ def instantiate_processes(section,
                         "file_dict": file_dict,
                         "local_result_dict": local_result_dict,
                         "global_result_dict": global_result_dict,
-                        "message_queue": message_queue,
                         "control_queue": control_queue,
                         "timeout": 0.1}
 
@@ -397,8 +389,7 @@ def instantiate_processes(section,
         section,
         local_bear_list,
         global_bear_list,
-        complete_file_dict,
-        message_queue)
+        complete_file_dict)
 
     fill_queue(filename_queue, file_dict.keys())
     fill_queue(global_bear_queue, range(len(global_bear_list)))
@@ -679,11 +670,6 @@ def execute_section(section,
                                                 cache,
                                                 log_printer)
 
-    logger_thread = LogPrinterThread(arg_dict["message_queue"],
-                                     log_printer)
-    # Start and join the logger thread along with the processes to run bears
-    processes.append(logger_thread)
-
     for runner in processes:
         runner.start()
 
@@ -701,7 +687,5 @@ def execute_section(section,
                 arg_dict["global_result_dict"],
                 arg_dict["file_dict"])
     finally:
-        logger_thread.running = False
-
         for runner in processes:
             runner.join()
