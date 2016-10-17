@@ -123,6 +123,6 @@ def run_coala(log_printer=None,
         elif yielded_results:
             exitcode = 5
     except BaseException as exception:  # pylint: disable=broad-except
-        exitcode = exitcode or get_exitcode(exception, log_printer)
+        exitcode = exitcode or get_exitcode(exception)
 
     return results, exitcode, file_dicts
