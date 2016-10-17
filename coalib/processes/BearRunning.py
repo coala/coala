@@ -272,20 +272,6 @@ def run_local_bears_on_file(message_queue,
                               indicate the result will be put to the queue.
     :param filename:          The name of file on which to run the bears.
     """
-    if filename not in file_dict:
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.ERROR,
-                 "An internal error occurred.",
-                 Constants.THIS_IS_A_BUG)
-        send_msg(message_queue,
-                 timeout,
-                 LOG_LEVEL.DEBUG,
-                 "The given file through the queue is not in the file "
-                 "dictionary.")
-
-        return
-
     local_result_list = []
     for bear_instance in local_bear_list:
         result = run_local_bear(message_queue,
