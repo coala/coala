@@ -34,27 +34,69 @@ OBJ_NOT_ACCESSIBLE = '{} is not accessible and will be ignored!'
 
 TRUE_STRINGS = ['1',
                 'on',
+                'okay',
+                'ok',
+                'okey-dokey',
                 'y',
                 'yes',
                 'yeah',
+                'yea',
+                'ya',
+                'ye',
+                'yessir',
                 'sure',
                 'true',
+                'tru',
+                'uh-huh',
                 'definitely',
                 'yup',
+                'yep',
                 'right',
                 'aye',
+                'alright',
+                'alrighty',
+                'hell yeah',
+                'affirmative',
+                'certainly',
+                'definitely',
+                'absolutely',
+                'roger',
+                'righto',
+                'ja',
+                'da',
+                'si',
+                'oui',
+                'amen',
+                'totally',
+                '10-4',
                 'positive']
 
 FALSE_STRINGS = ['0',
                  'off',
                  'n',
                  'no',
+                 'nix',
                  'nope',
+                 'nop',
                  'nah',
+                 'nay',
                  'false',
+                 'uh-uh',
                  'wrong',
                  'none',
                  'nay',
+                 'hell no',
+                 'fat chance',
+                 'not a chance in hell',
+                 'not in a million years',
+                 'out of the question',
+                 'no siree',
+                 'no way',
+                 'nein',
+                 'njet',
+                 'nee',
+                 'non',
+                 'hakuna',
                  'negative']
 
 # This string contains many unicode characters to challenge tests.
@@ -90,3 +132,39 @@ URL_REGEX = re.compile(
     r'(?::\d+)?'  # optional port number
     r'(?:/?|[/?]\S+)$',  # path
     re.IGNORECASE)
+
+
+def configure_logging():
+    """
+    Configures the logging with hard coded dictionary.
+    """
+    import sys
+    import logging.config
+    logging.config.dictConfig({
+        'version': 1,
+        'handlers': {
+            'colored': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'colored',
+                'stream': sys.stdout
+            }
+        },
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['colored']
+        },
+        'formatters': {
+            'colored': {
+                '()': 'colorlog.ColoredFormatter',
+                'format': '%(log_color)s[%(levelname)s]%(reset)s[%(asctime)s]'
+                          ' %(message)s',
+                'datefmt': '%X',
+                'log_colors': {
+                    'ERROR': 'red',
+                    'WARNING': 'yellow',
+                    'INFO': 'blue',
+                    'DEBUG': 'green'
+                }
+            }
+        }
+    })

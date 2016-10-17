@@ -316,7 +316,7 @@ def print_affected_files(console_printer,
                          file_dict,
                          color=True):
     """
-    Prints all the afected files and affected lines within them.
+    Prints all the affected files and affected lines within them.
 
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
@@ -475,7 +475,7 @@ def require_setting(setting_name, arr):
     This method is responsible for prompting a user about a missing setting and
     taking its value as input from the user.
 
-    :param setting_name: Name od the setting missing
+    :param setting_name: Name of the setting missing
     :param arr:          A list containing a description in [0] and the name
                          of the bears who need this setting in [1] and
                          following.

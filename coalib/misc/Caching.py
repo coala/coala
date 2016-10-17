@@ -2,7 +2,7 @@ import time
 import os
 
 from coala_utils.decorators import enforce_signature
-from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.misc.CachingUtilities import (
     pickle_load, pickle_dump, delete_files)
 
@@ -14,8 +14,10 @@ class FileCache:
 
     >>> from pyprint.NullPrinter import NullPrinter
     >>> from coalib.output.printers.LogPrinter import LogPrinter
+    >>> import logging
     >>> import copy, time
-    >>> log_printer = LogPrinter(NullPrinter())
+    >>> log_printer = LogPrinter()
+    >>> log_printer.log_level = logging.CRITICAL
 
     To initialize the cache create an instance for the project:
 
@@ -67,13 +69,13 @@ class FileCache:
     @enforce_signature
     def __init__(
             self,
-            log_printer: LogPrinter,
+            log_printer: LogPrinterMixin,
             project_dir: str,
             flush_cache: bool=False):
         """
         Initialize FileCache.
 
-        :param log_printer: A LogPrinter object to use for logging.
+        :param log_printer: An object to use for logging.
         :param project_dir: The root directory of the project to be used
                             as a key identifier.
         :param flush_cache: Flush the cache and rebuild it.

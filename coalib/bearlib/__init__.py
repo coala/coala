@@ -91,7 +91,7 @@ def deprecate_settings(**depr_args):
             deprecated_arg = (depr_arg_and_modifier[0]
                               if isinstance(depr_arg_and_modifier, tuple)
                               else depr_arg_and_modifier)
-            new_metadata.add_alias(arg, deprecated_arg)
+            new_metadata.add_deprecated_param(arg, deprecated_arg)
         wrapping_function.__metadata__ = new_metadata
 
         return wrapping_function
