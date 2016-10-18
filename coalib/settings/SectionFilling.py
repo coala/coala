@@ -86,7 +86,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
     # Get missing ones.
     if len(needed_settings) > 0:
-        new_vals = acquire_settings(log_printer, needed_settings)
+        new_vals = acquire_settings(log_printer, needed_settings, section)
         for setting, help_text in new_vals.items():
             section.append(Setting(setting, help_text))
 
