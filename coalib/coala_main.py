@@ -78,14 +78,10 @@ def run_coala(log_printer=None,
                           .format(platform.system(), platform.python_version(),
                                   pip.__version__, VERSION))
 
-        config_file = os.path.abspath(str(sections["default"].get("config")))
-
         settings_hash = get_settings_hash(sections, targets)
         flush_cache = bool(sections["default"].get("flush_cache", False) or
                            settings_changed(log_printer, settings_hash))
 
-        disable_caching = bool(sections["default"].get(
-            "disable_caching", False))
         cache = None
         if not sections["default"].get("disable_caching", False):
             cache = FileCache(log_printer, os.getcwd(), flush_cache)
