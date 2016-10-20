@@ -43,3 +43,8 @@ class SourcePosition(TextPosition):
         elif self.column < other.column:
             return True
         return False
+
+    def __eq__(self, other):
+        if (self.line == other.line) and (self.column == other.column):
+            return True
+        return False
