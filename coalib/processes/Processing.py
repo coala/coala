@@ -461,6 +461,31 @@ def yield_ignore_ranges(file_dict):
                                line_number, 1,
                                end_line, len(file[end_line - 1])))
 
+            # Before lowering all lines ever read, first look for the biggest
+            # common substring, case sensitive: N*oqa, start n*oqa.
+            if 'oqa' in line:
+                line = line.lower()
+                if "start noqa " in line:
+                    start = line_number
+                    bears = get_ignore_scope(line, "start noqa ")
+                elif "stop noqa" in line:
+                    stop_ignoring = True
+                    if start:
+                        yield (bears,
+                               SourceRange.from_values(
+                                   filename,
+                                   start,
+                                   1,
+                                   line_number,
+                                   len(file[line_number-1])))
+                elif "noqa " in line:
+                    end_line = min(line_number + 1, len(file))
+                    yield (get_ignore_scope(line, "noqa "),
+                           SourceRange.from_values(
+                               filename,
+                               line_number, 1,
+                               end_line, len(file[end_line - 1])))
+
         if stop_ignoring is False and start is not None:
             yield (bears,
                    SourceRange.from_values(filename,
