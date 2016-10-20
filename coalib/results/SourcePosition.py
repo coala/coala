@@ -36,3 +36,10 @@ class SourcePosition(TextPosition):
         if use_relpath:
             _dict['file'] = relpath(_dict['file'])
         return _dict
+
+    def __lt__(self, other):
+        if self.line < other.line:
+            return True
+        elif self.column < other.column:
+            return True
+        return False
