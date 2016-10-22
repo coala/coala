@@ -73,6 +73,8 @@ def to_snakecase(string):
     'already_snake_case'
     >>> to_snakecase('   string  ')
     '___string__'
+    >>> to_snakecase('ABCde.F.G..H..IH')
+    'a_b_cde.f.g..h..i_h'
 
     :param string: The string to convert.
     :return:       The snake-cased string.
@@ -82,6 +84,10 @@ def to_snakecase(string):
                     string)
     string = re.sub("^(_*)([^_])",
                     lambda match: match.group(1) + match.group(2).lower(),
+                    string)
+    string = re.sub("(\w*)([.]+)([A-Z])",
+                    lambda match: (match.group(1) + match.group(2) +
+                                   match.group(3).lower()),
                     string)
     string = re.sub("(?<=[^_])_+([^_])",
                     lambda match: "_" + match.group(1).lower(),
