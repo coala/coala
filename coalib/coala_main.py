@@ -118,6 +118,7 @@ def run_coala(console_printer=None,
 
         if did_nothing:
             nothing_done(log_printer)
+            exitcode = 2
         elif yielded_unfixed_results:
             exitcode = 1
         elif yielded_results:

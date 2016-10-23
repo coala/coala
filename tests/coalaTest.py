@@ -33,7 +33,7 @@ class coalaTest(unittest.TestCase):
     def test_did_nothing(self):
         retval, output = execute_coala(coala.main, "coala", "-c", os.devnull,
                                        "-S", "default.enabled=false")
-        self.assertEqual(retval, 0)
+        self.assertEqual(retval, 2)
         self.assertIn("No existent section was targeted or enabled", output)
 
     def test_show_all_bears(self):
