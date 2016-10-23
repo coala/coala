@@ -31,10 +31,16 @@ class coalaTest(unittest.TestCase):
                           "The output should report count as 1 lines")
 
     def test_did_nothing(self):
-        retval, output = execute_coala(coala.main, "coala", "-c", os.devnull,
+        retval, output = execute_coala(coala.main, "coala", "-I",
                                        "-S", "default.enabled=false")
         self.assertEqual(retval, 2)
-        self.assertIn("No existent section was targeted or enabled", output)
+        self.assertIn("Did you forget to give the `--files`", output)
+
+        retval, output = execute_coala(coala.main, "coala", "-I",
+                                       "-b", "JavaTestBear", "-f", "*.java",
+                                       "-S", "default.enabled=false")
+        self.assertEqual(retval, 2)
+        self.assertIn("Nothing to do.", output)
 
     def test_show_all_bears(self):
         with bear_test_module():

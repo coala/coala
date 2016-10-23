@@ -21,14 +21,19 @@ class ConfigurationGatheringTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = LogPrinter(NullPrinter())
 
+        # Needed so coala doesn't error out
+        self.min_args = ['-f', '*.java', '-b', 'JavaTestBear']
+
     def tearDown(self):
         close_objects(self.log_printer)
 
     def test_gather_configuration(self):
         args = (lambda *args: True, self.log_printer)
 
-        # Passing the default coafile name only triggers a warning.
-        gather_configuration(*args, arg_list=["-c abcdefghi/invalid/.coafile"])
+        # Using incomplete settings (e.g. an invalid coafile) will error
+        with self.assertRaises(SystemExit):
+            gather_configuration(*args,
+                                 arg_list=["-c abcdefghi/invalid/.coafile"])
 
         # Using a bad filename explicitly exits coala.
         with self.assertRaises(SystemExit):
@@ -40,20 +45,19 @@ class ConfigurationGatheringTest(unittest.TestCase):
             sections, local_bears, global_bears, targets = (
                 gather_configuration(
                     *args,
-                    arg_list=["-S",
-                              "test=5",
-                              "-c",
-                              escape(temporary, "\\"),
-                              "-s"]))
+                    arg_list=["-S", "test=5", "-c", escape(temporary, "\\"),
+                              "-s"] + self.min_args))
 
-        self.assertEqual(str(sections["default"]),
-                         "Default {config : " +
-                         repr(temporary) + ", save : 'True', test : '5'}")
+        self.assertEqual(
+            str(sections["default"]),
+            "Default {bears : 'JavaTestBear', config : " + repr(temporary) +
+            ", files : '*.java', save : 'True', test : '5'}")
 
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (
                 gather_configuration(*args,
                                      arg_list=["-S test=5",
+                                               "-f *.java",
                                                "-c " + escape(temporary, "\\"),
                                                "-b LineCountBear -s"]))
 
@@ -163,11 +167,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
             sections, local_bears, global_bears, targets = (
                 gather_configuration(lambda *args: True,
                                      self.log_printer,
-                                     arg_list=["-S",
-                                               "value=1",
-                                               "test.value=2",
-                                               "-c",
-                                               escape(temporary, "\\")]))
+                                     arg_list=["-S", "value=1", "test.value=2",
+                                               "-c", escape(temporary, "\\")] +
+                                     self.min_args))
 
         self.assertEqual(sections["default"],
                          sections["test"].defaults)
@@ -177,24 +179,27 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                 "SectionManagerTestFile")
 
         # We need to use a bad filename or this will parse coalas .coafile
-        gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            arg_list=['-S',
-                      "save=" + escape(filename, '\\'),
-                      "-c=some_bad_filename"])
+        # Despite missing settings (coala isn't run) the file is saved
+        with self.assertRaises(SystemExit):
+            gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-S',
+                          "save=" + escape(filename, '\\'),
+                          "-c=some_bad_filename"])
 
         with open(filename, "r") as f:
             lines = f.readlines()
         self.assertEqual(["[Default]\n", "config = some_bad_filename\n"], lines)
 
-        gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            arg_list=['-S',
-                      "save=true",
-                      "config=" + escape(filename, '\\'),
-                      "test.value=5"])
+        with self.assertRaises(SystemExit):
+            gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-S',
+                          "save=true",
+                          "config=" + escape(filename, '\\'),
+                          "test.value=5"])
 
         with open(filename, "r") as f:
             lines = f.readlines()

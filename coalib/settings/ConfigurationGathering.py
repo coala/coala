@@ -107,6 +107,13 @@ def warn_nonexistent_targets(targets, sections, log_printer):
                 "The requested section '{section}' is not existent. "
                 "Thus it cannot be executed.".format(section=target))
 
+    # Can't be summarized as python will evaluate conditions lazily, those
+    # functions have intended side effects though.
+    files_config_absent = warn_config_absent(sections, 'files', log_printer)
+    bears_config_absent = warn_config_absent(sections, 'bears', log_printer)
+    if files_config_absent or bears_config_absent:
+        raise SystemExit(2)  # Invalid CLI options provided
+
 
 def warn_config_absent(sections, argument, log_printer):
     """
@@ -120,6 +127,9 @@ def warn_config_absent(sections, argument, log_printer):
     if all(argument not in section for section in sections.values()):
         log_printer.warn("coala will not run any analysis. Did you forget "
                          "to give the `--{}` argument?".format(argument))
+        return True
+
+    return False
 
 
 def load_configuration(arg_list, log_printer, arg_parser=None):
@@ -186,9 +196,6 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     str_log_level = str(sections["default"].get("log_level", "")).upper()
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
                                                    LOG_LEVEL.INFO)
-
-    warn_config_absent(sections, 'files', log_printer)
-    warn_config_absent(sections, 'bears', log_printer)
 
     return sections, targets
 
