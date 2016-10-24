@@ -95,7 +95,8 @@ class DocumentationComment:
         parse_mode = self.Description
 
         cur_param = ""
-
+        retval_desc = ""
+        param_desc = ""
         desc = ""
         parsed = []
 
