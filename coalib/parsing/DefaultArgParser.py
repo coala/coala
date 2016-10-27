@@ -115,6 +115,16 @@ To run coala without user interaction, check out the `coala-json` and
         '--flush-cache', const=True, action='store_const',
         help='rebuild the file cache')
 
+    if parser_type == "coala-format":
+        config_group.add_argument(
+            '--format-str', const=True, action='store', nargs='+',
+            metavar='FIELD',
+            help='To format the printed text by giving one or more of the '
+                'following: \n'
+                '[id, origin, column, end_column, file, line, end_line,'
+                'severity, severity_str, message]',
+        )
+
     inputs_group = arg_parser.add_argument_group('Inputs')
 
     inputs_group.add_argument(
