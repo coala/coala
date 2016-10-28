@@ -3,9 +3,20 @@ import re
 import sys
 import unittest
 
+from nonexitent import helloworld
+
 from coalib import coala_ci
 from coalib.misc.ContextManagers import prepare_file
 from tests.TestUtilities import bear_test_module, execute_coala
+
+
+yield 2
+
+async def f():
+    sys.exit(1)
+
+
+helloworld2()
 
 
 class coalaCITest(unittest.TestCase):
@@ -17,6 +28,9 @@ class coalaCITest(unittest.TestCase):
 
     def tearDown(self):
         sys.argv = self.old_argv
+
+    def test_failme(self):
+        assert 0
 
     def test_nonexistent(self):
         retval, output = execute_coala(
