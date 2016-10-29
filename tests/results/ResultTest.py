@@ -149,10 +149,6 @@ class ResultTest(unittest.TestCase):
             "f_a": ["1", "2", "3"],
             "f_b": ["1", "2", "3"]
         }
-        expected_file = {
-            "f_a": ["1", "3_changed"],
-            "f_b": ["1", "2", "3"]
-        }
         diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
         diff.change_line(3, "3", "3_changed")
