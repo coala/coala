@@ -84,7 +84,7 @@ def pickle_load(log_printer, identifier, fallback=None):
                         Otherwise the ``default`` value is returned.
     """
     file_path = get_data_path(log_printer, identifier)
-    if file_path == None or not os.path.isfile(file_path):
+    if file_path is None or not os.path.isfile(file_path):
         return fallback
     with open(file_path, "rb") as f:
         try:
@@ -110,7 +110,7 @@ def pickle_dump(log_printer, identifier, data):
                         False if there was a permission error in writing.
     """
     file_path = get_data_path(log_printer, identifier)
-    if file_path == None:
+    if file_path is None:
         # Exit silently since the error has been logged in ``get_data_path``
         return False
     with open(file_path, "wb") as f:
