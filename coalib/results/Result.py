@@ -153,7 +153,7 @@ class Result:
 
         for member in members:
             value = getattr(self, member)
-            retval[member] = "" if value == None else str(value)
+            retval[member] = "" if value is None else str(value)
 
         retval["severity"] = str(RESULT_SEVERITY.reverse.get(
             self.severity, ""))
