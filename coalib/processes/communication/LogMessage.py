@@ -43,7 +43,7 @@ class LogMessage:
         retval = {}
 
         retval["message"] = str(self.message)
-        retval["timestamp"] = ("" if self.timestamp == None
+        retval["timestamp"] = ("" if self.timestamp is None
                                else self.timestamp.isoformat())
         retval["log_level"] = str(LOG_LEVEL.reverse.get(self.log_level, ""))
 
