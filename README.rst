@@ -84,7 +84,7 @@ To install the **latest stable version** run:
 
     $ pip3 install coala
 
-Make sure you have Python >= 3.4 and pip >= 8.1 installed as the installation
+Make sure you have Python >= 3.4 and pip >= 8.1 installed, as the installation
 may not succeed with lower versions.
 
 |Stable|
@@ -146,8 +146,8 @@ A sample ``.coafile`` will look something like this:
 * The ``bears`` key specifies which bears (plugins) you want to use. We support
   a huge number of languages and you can find the whole list
   `here <https://github.com/coala/bear-docs/blob/master/README.rst>`__.
-  If you don't find your langauge there, we've got some
-  `bears that work for all languages <https://github.com/coala/bear-docs/blob/master/README.rst#all>`__. Or you can file an issue and we would create a bear for you!
+  If you don't find your language there, we've got some
+  `bears that work for all languages <https://github.com/coala/bear-docs/blob/master/README.rst#all>`__. Or you can file an issue and we will create a bear for you!
 * ``use_spaces`` enforces spaces over tabs in the codebase. ``use_spaces`` is a
   setting for the ``SpaceConsistencyBear``.
 
