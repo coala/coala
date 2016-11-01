@@ -50,31 +50,15 @@ class Diff:
                  a_index_2,
                  b_index_1,
                  b_index_2) in change_group:
-<<<<<<< HEAD
-                if tag == 'delete':
-                    for index in range(a_index_1+1, a_index_2+1):
-||||||| merged common ancestors
                 if tag == "delete":
                     for index in range(a_index_1+1, a_index_2+1):
-=======
-                if tag == "delete":
-                    for index in range(a_index_1 + 1, a_index_2 + 1):
->>>>>>> Diff.py: Add coala's own unified_diff method
                         result.delete_line(index)
                 elif tag == 'insert':
                     # We add after line, they add before, so dont add 1 here
                     result.add_lines(a_index_1,
                                      file_array_2[b_index_1:b_index_2])
-<<<<<<< HEAD
-                elif tag == 'replace':
-                    result.change_line(a_index_1+1,
-||||||| merged common ancestors
                 elif tag == "replace":
                     result.change_line(a_index_1+1,
-=======
-                elif tag == "replace":
-                    result.change_line(a_index_1 + 1,
->>>>>>> Diff.py: Add coala's own unified_diff method
                                        file_array_1[a_index_1],
                                        file_array_2[b_index_1])
                     result.add_lines(a_index_1 + 1,
@@ -447,7 +431,6 @@ class Diff:
 
         linediff.change = (original_line, replacement)
         self._changes[line_nr] = linediff
-<<<<<<< HEAD
 
     def replace(self, range, replacement):
         r"""
@@ -526,9 +509,6 @@ class Diff:
         :param range: The range to delete.
         """
         self.replace(range, '')
-||||||| merged common ancestors
-=======
-
 
 def coala_unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
                        tofiledate='', n=3, lineterm='\n'):
@@ -594,4 +574,3 @@ def coala_unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
                         yield no_newline_at_end_warning + lineterm
                     else:
                         yield '+' + line
->>>>>>> Diff.py: Add coala's own unified_diff method
