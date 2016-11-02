@@ -176,7 +176,7 @@ command line arguments:
 
 Note that this command does the same thing as having a coafile and running
 `coala`. The advantage of having a coafile is that you don't need to enter the
-settings as arguments everytime.
+settings as arguments every time.
 
 To get the complete list of arguments and their meaning, run:
 
