@@ -3,7 +3,7 @@ from distutils.errors import DistutilsOptionError
 
 from setuptools.dist import Distribution
 
-from coalib.misc import Constants
+from coalib import BUS_NAME
 from coalib.misc.ContextManagers import make_temp
 from coalib.output.dbus.BuildDbusService import BuildDbusService
 
@@ -23,5 +23,5 @@ class BuildDbusServiceTest(unittest.TestCase):
 
             self.assertEqual(
                 result,
-                "[D-BUS Service]\nNames=" + Constants.BUS_NAME +
+                "[D-BUS Service]\nNames=" + BUS_NAME +
                 "\nExec=coala-dbus")
