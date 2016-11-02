@@ -17,6 +17,7 @@ import sys
 
 import dbus
 import dbus.mainloop.glib
+from coalib import BUS_NAME
 from coalib.misc import Constants
 from coalib.output.dbus.DbusServer import DbusServer
 from gi.repository import GLib
@@ -37,7 +38,7 @@ def main():
     # The BusName needs to be saved to a variable, if it is not saved - the
     # Bus will be closed.
     dbus_name = dbus.service.BusName(  # pylint: disable=unused-variable
-        Constants.BUS_NAME,
+        BUS_NAME,
         session_bus)
     DbusServer(session_bus,
                '/org/coala_analyzer/v1',
