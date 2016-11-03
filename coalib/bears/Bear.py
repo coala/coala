@@ -1,8 +1,8 @@
-import traceback
 from functools import partial
 from os import makedirs
 from os.path import join, abspath, exists
 from shutil import copyfileobj
+import traceback
 from urllib.request import urlopen
 
 from appdirs import user_data_dir
@@ -12,7 +12,8 @@ from pyprint.Printer import Printer
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
+from coalib.bears.requirements.DistributionRequirement import (
+    DistributionRequirement)
 from coalib.bears.requirements.PipRequirement import PipRequirement
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
@@ -216,7 +217,7 @@ class Bear(Printer, LogPrinterMixin):
             if cp is not False:
                 error_string += " " + cp
 
-            self.warn(error_string)
+            self.err(error_string)
             raise RuntimeError(error_string)
 
     def _print(self, output, **kwargs):
@@ -332,14 +333,52 @@ class Bear(Printer, LogPrinterMixin):
         """
         Checks whether needed runtime prerequisites of the bear are satisfied.
 
-        This function gets executed at construction and returns True by
-        default.
+        This function gets executed at construction and checks by default all
+        prerequisites specified in the ``REQUIREMENTS`` field. When no
+        ``REQUIREMENTS`` are specified, this function returns True.
 
         Section value requirements shall be checked inside the ``run`` method.
 
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
         """
+        for requirement in cls.REQUIREMENTS:
+            try:
+                check_result = requirement.check()
+            except NotImplementedError:
+                # If `check()` is not implemented, assume that the package is
+                # supplied by the user.
+                check_result = True
+
+            if not check_result:
+                # FIXME DistributionRequirement does not initialize the base
+                # FIXME class properly (PackageRequirement), that's why the
+                # FIXME version-field is missing. If this gets fixed, replace
+                # FIXME the condition with `requirement.version`.
+                # FIXME See https://github.com/coala/coala/issues/2844 and
+                # FIXME https://github.com/coala/coala/issues/2846
+                version = getattr(requirement, 'version', '')
+                if version:
+                    error_string = (
+                        "Package '{}' ({}) is not installed.".format(
+                            requirement.package, version))
+                else:
+                    error_string = (
+                        "Package '{}' is not installed.".format(
+                            requirement.package))
+
+                if isinstance(requirement, DistributionRequirement):
+                    try:
+                        # FIXME What about shell-quotation for returned
+                        # FIXME `install_command`?
+                        error_string += (
+                            '\nYou can install it using this command:\n' +
+                            ' '.join(requirement.install_command))
+                    except OSError:
+                        pass
+
+                return error_string
+
         return True
 
     def get_config_dir(self):

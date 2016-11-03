@@ -12,7 +12,7 @@ class DistributionRequirementTestCase(unittest.TestCase):
     def test_install_command_mock_fedora(self, call_mock):
         self.assertEqual(platform.linux_distribution()[0], 'Fedora')
         self.assertEqual(DistributionRequirement(
-            dnf='libclang', apt_get='libclangs').install_command(),
+            dnf='libclang', apt_get='libclangs').install_command,
             ['dnf', 'install', 'libclang'])
 
     @patch('platform.linux_distribution', return_value=('bad_os',))
@@ -20,4 +20,4 @@ class DistributionRequirementTestCase(unittest.TestCase):
         self.assertEqual(platform.linux_distribution()[0], 'bad_os')
         with self.assertRaises(OSError):
             DistributionRequirement(
-                dnf='libclang', apt_get='libclangs').install_command()
+                dnf='libclang', apt_get='libclangs').install_command

@@ -185,8 +185,12 @@ def _create_linter(klass, options):
             :return:
                 True if operational, otherwise a string containing more info.
             """
+            basecheck_result = LocalBear.check_prerequisites()
+            if basecheck_result is not True:
+                return basecheck_result
+
             if shutil.which(cls.get_executable()) is None:
-                return (repr(cls.get_executable()) + " is not installed." +
+                return (repr(cls.get_executable()) + " can not be found." +
                         (" " + options["executable_check_fail_info"]
                          if options["executable_check_fail_info"] else
                          ""))
