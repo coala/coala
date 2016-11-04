@@ -37,11 +37,13 @@ class PackageRequirement:
         self.package = package
         self.version = version
 
-    def check(self):
+    def is_installed(self):
         """
         Check if the requirement is satisfied.
 
-        >>> PackageRequirement('pip', 'coala_decorators', '0.2.1').check()
+        >>> PackageRequirement('pip', \
+                               'coala_decorators', \
+                               '0.2.1').is_installed()
         Traceback (most recent call last):
         ...
         NotImplementedError
