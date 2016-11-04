@@ -248,7 +248,7 @@ class Aspect:
     def __init__(self,
                  name="Root",
                  doc=None,
-                 settings=[],
+                 settings=(),
                  parent=None):
         """
         Instantiates the ``Aspect`` object.
@@ -269,7 +269,7 @@ class Aspect:
         else:
             self.__qualname__ = self.__name__
 
-    def new_subaspect(self, name, doc, settings=[]):
+    def new_subaspect(self, name, doc, settings=()):
         """
         Creates a sub-aspect.
 
