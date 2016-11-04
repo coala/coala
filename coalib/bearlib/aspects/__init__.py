@@ -140,12 +140,12 @@ class Aspect:
 
     And of course, you can create settings for your aspects:
 
-    >>> Root.Redundancy.Clone.settings = [
+    >>> Root.Redundancy.Clone.settings = (
     ...     AspectSetting("min_clone_token",
     ...                   "The number of tokens that have to be "
     ...                   "equal for it to be detected as a code clone",
-    ...                   int, suggested_values=(20, 40, 60), default=20)
-    ... ]
+    ...                   int, suggested_values=(20, 40, 60), default=20),
+    ... )
 
     ``settings`` can be defined for any aspect by creating a list of
     ``AspectSetting`` objects with 5 params:
@@ -176,15 +176,15 @@ class Aspect:
     ...         "This aspect controls the length of a line...",
     ...         '...', '...', '...'
     ...     ),
-    ...     settings=[
+    ...     settings=(
     ...         AspectSetting(
     ...             "min_line_length",
     ...             "Maximum length allowed for a line.",
     ...             int,
     ...             suggested_values=(80, 90, 120),
     ...             default=80
-    ...         )
-    ...     ]
+    ...         ),
+    ...     )
     ... )
     >>> Root.Formatting.LineLength.settings[0].suggested_values
     (80, 90, 120)
@@ -206,12 +206,12 @@ class Aspect:
     a changes to a setting of an aspect will be reflected in every sub-aspect
     too.
 
-    >>> Root.Redundancy.Clone.settings = [
+    >>> Root.Redundancy.Clone.settings = (
     ...     AspectSetting("min_clone_token",
     ...                   "The number of tokens that have to be "
     ...                   "equal for it to be detected as a code clone",
-    ...                   int, default=30)
-    ... ]
+    ...                   int, default=30),
+    ... )
 
     >>> Root.Redundancy.Clone.settings[0].default
     30
@@ -221,12 +221,11 @@ class Aspect:
     If you don't want this, you can override the settings the particular
     sub-aspect:
 
-    >>> Root.Redundancy.Clone.Logic.settings = [
+    >>> Root.Redundancy.Clone.Logic.settings = (
     ...     AspectSetting("min_clone_token",
     ...                   "The number of tokens that have to be "
     ...                   "equal for it to be detected as a code clone",
-    ...                   int, default=40)
-    ... ]
+    ...                   int, default=40),)
 
     >>> Root.Redundancy.Clone.settings[0].default
     30
@@ -249,10 +248,11 @@ class Aspect:
     '''
 
     @generate_consistency_check('name', 'doc')
+    @enforce_signature
     def __init__(self,
                  name="Root",
                  doc=None,
-                 settings=(),
+                 settings: tuple=(),
                  parent=None):
         """
         Instantiates the ``Aspect`` object.
@@ -273,7 +273,8 @@ class Aspect:
         else:
             self.__qualname__ = self.__name__
 
-    def new_subaspect(self, name, doc, settings=()):
+    @enforce_signature
+    def new_subaspect(self, name, doc, settings: tuple=()):
         """
         Creates a sub-aspect.
 
@@ -326,7 +327,8 @@ class Aspect:
         return result
 
     @settings.setter
-    def settings(self, value):
+    @enforce_signature
+    def settings(self, value: tuple):
         self._settings = value
 
 
