@@ -173,7 +173,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         int,
         (50, 72, 80),
         72
-    ))
+    ),)
 )
 
 Root.Metadata.CommitMessage.Shortlog.new_subaspect(
@@ -208,7 +208,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         bool,
         (True, False),
         True
-    ))
+    ),)
 )
 
 Root.Metadata.CommitMessage.new_subaspect(
