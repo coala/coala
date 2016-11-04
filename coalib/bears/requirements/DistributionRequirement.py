@@ -5,8 +5,8 @@ from coalib.bears.requirements.PackageRequirement import PackageRequirement
 
 class DistributionRequirement(PackageRequirement):
     """
-    This class is a subclass of ``PackageRequirement``, and helps specifying
-    distribution specific requirements, without using the manager name.
+    This class is a subclass of ``PackageRequirement``. It specifices the
+    proper type automatically.
     """
 
     def __init__(self, **manager_commands):
@@ -20,7 +20,7 @@ class DistributionRequirement(PackageRequirement):
         >>> dr.package['dnf']
         'libclangg'
 
-        :param manager_commands: comma separated (manager='package') pairs.
+        :param manager_commands: comma separated (type='package') pairs.
         """
         self.package = manager_commands
 
