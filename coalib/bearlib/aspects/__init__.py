@@ -138,7 +138,7 @@ class Aspect:
     >>> Root.UnknownAspect is None
     Traceback (most recent call last):
       ...
-    NameError
+    NameError: No such attribute or aspect 'UnknownAspect'.
 
     And of course, you can create settings for your aspects:
 
@@ -295,7 +295,7 @@ class Aspect:
         """
         if subaspect in self.subaspects:
             return self.subaspects[subaspect]
-        raise NameError
+        raise NameError("No such attribute or aspect '{}'.".format(subaspect))
 
     @property
     def settings(self):
