@@ -5,7 +5,8 @@ documentation.
 
 from inspect import cleandoc
 
-from coala_utils.decorators import enforce_signature, generate_consistency_check
+from coala_utils.decorators import (
+    enforce_signature, generate_consistency_check, generate_eq)
 
 
 @generate_consistency_check('definition', 'example', 'example_language',
@@ -87,6 +88,7 @@ class AspectSetting:
         self.default = default
 
 
+@generate_eq('__qualname__')
 class Aspect:
     '''
     This is the ``Aspect`` base class. Each aspect may have sub-aspects,
