@@ -8,32 +8,30 @@ from inspect import cleandoc
 from coala_utils.decorators import enforce_signature, generate_consistency_check
 
 
-@generate_consistency_check('definition', 'cause', 'example',
-                            'example_language', 'importance_reason',
-                            'fix_suggestions')
+@generate_consistency_check('definition', 'example', 'example_language',
+                            'importance_reason', 'fix_suggestions')
 class AspectDocumentation:
     """
     This class contains documentation about an aspect described by the Aspect
     class.
     The documentation is consistent if all members are given:
 
-    >>> AspectDocumentation('defined', '', '', '').check_consistency()
+    >>> AspectDocumentation('defined').check_consistency()
     False
-    >>> AspectDocumentation('definition', 'cause', 'example',
+    >>> AspectDocumentation('definition', 'example',
     ...                     'example_language', 'importance',
     ...                     'fix').check_consistency()
     True
     """
 
     @enforce_signature
-    def __init__(self, definition: str='', cause: str='', example: str='',
+    def __init__(self, definition: str='', example: str='',
                  example_language: str='', importance_reason: str='',
                  fix_suggestions: str=''):
         """
         Contains documentation for an aspect.
 
         :param definition:        What is this about?
-        :param cause:             Information on how such a problem can happen.
         :param example:           An example in a well known language.
         :param example_language:  The language used for the example.
         :param importance_reason: A reason why this aspect is important.
@@ -42,7 +40,6 @@ class AspectDocumentation:
         super().__init__()
 
         self.definition = cleandoc(definition)
-        self.cause = cleandoc(cause)
         self.example = cleandoc(example)
         self.example_language = cleandoc(example_language)
         self.importance_reason = cleandoc(importance_reason)
