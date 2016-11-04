@@ -134,7 +134,7 @@ class Aspect:
     >>> Root.UnknownAspect is None
     Traceback (most recent call last):
       ...
-    NameError: No such attribute or aspect 'UnknownAspect'.
+    AttributeError: No such aspect 'UnknownAspect'.
 
     And of course, you can create settings for your aspects:
 
@@ -292,9 +292,7 @@ class Aspect:
         if subaspect in self.subaspects:
             return self.subaspects[subaspect]
 
-        if subaspect == '__wrapped__':  # pragma: no cover
-            return None  # Needed for doctest
-        raise NameError("No such attribute or aspect '{}'.".format(subaspect))
+        raise AttributeError("No such aspect '{}'.".format(subaspect))
 
     @property
     def settings(self):
