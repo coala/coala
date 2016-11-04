@@ -3,6 +3,7 @@ from os.path import relpath
 
 from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
+from coalib.bearlib.aspects import Aspect, Root
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -13,12 +14,14 @@ from coalib.results.SourceRange import SourceRange
                "affected_code",
                ("severity", RESULT_SEVERITY.reverse.get),
                "confidence",
-               "message")
+               "message",
+               "aspect")
 @generate_ordering("affected_code",
                    "severity",
                    "confidence",
                    "origin",
                    "message",
+                   "aspect",
                    "additional_info",
                    "debug_msg")
 class Result:
@@ -37,7 +40,8 @@ class Result:
                  additional_info: str="",
                  debug_msg="",
                  diffs: (dict, None)=None,
-                 confidence: int=100):
+                 confidence: int=100,
+                 aspect: Aspect=Root):
         """
         :param origin:
             Class name or creator object of this object.
@@ -61,6 +65,11 @@ class Result:
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
+        :param aspect:
+            An Aspect object which this result is associated to. Note that this
+            should be a leaf of the aspect tree! (If you have a node, spend
+            some time figuring out which of the leafs exactly your result
+            belongs to.)
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
         """
@@ -82,6 +91,7 @@ class Result:
         self.confidence = confidence
         self.diffs = diffs
         self.id = uuid.uuid4().int
+        self.aspect = aspect
 
     @classmethod
     @enforce_signature
@@ -97,7 +107,8 @@ class Result:
                     additional_info: str="",
                     debug_msg="",
                     diffs: (dict, None)=None,
-                    confidence: int=100):
+                    confidence: int=100,
+                    aspect: Aspect=Root):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
@@ -131,6 +142,11 @@ class Result:
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
+        :param aspect:
+            An Aspect object which this result is associated to. Note that this
+            should be a leaf of the aspect tree! (If you have a node, spend
+            some time figuring out which of the leafs exactly your result
+            belongs to.)
         """
         range = SourceRange.from_values(file,
                                         line,
@@ -145,7 +161,8 @@ class Result:
                    additional_info=additional_info,
                    debug_msg=debug_msg,
                    diffs=diffs,
-                   confidence=confidence)
+                   confidence=confidence,
+                   aspect=aspect)
 
     def to_string_dict(self):
         """
@@ -252,4 +269,5 @@ class Result:
         if use_relpath and _dict['diffs']:
             _dict['diffs'] = {relpath(file): diff
                               for file, diff in _dict['diffs'].items()}
+        _dict['aspect'] = self.aspect.__qualname__
         return _dict
