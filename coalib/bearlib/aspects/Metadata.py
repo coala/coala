@@ -239,3 +239,30 @@ Root.Metadata.CommitMessage.Body.new_subaspect(
         """
     )
 )
+
+Root.Metadata.CommitMessage.Body.new_subaspect(
+    "Length",
+    AspectDocumentation(
+        definition="""
+        The length of your commit message body lines.
+        """,
+        example="Some people just write very long commit messages. Too long. "
+                "Way too much actually. If they would just break their lines!",
+        example_language="English",
+        importance_reason="""
+        Git and platforms like GitHub usually break everything beyond 72
+        characters, making a message containing longer lines hard to read.
+        """,
+        fix_suggestions="""
+        Simply break your lines right before you hit the border.
+        """
+    ),
+    settings=(AspectSetting(
+        "max_body_length",
+        "The maximal number of characters the body may contain in one line. "
+        "The newline character at each line end does not count to that length.",
+        int,
+        (50, 72, 80),
+        72
+    ),)
+)
