@@ -289,6 +289,9 @@ class Aspect:
             An ``Aspect`` object corresponding to the sub-aspect. If the
             sub-aspect is not found, ``None`` is returned.
         """
+        if subaspect == "subaspects":
+            raise AttributeError  # To prevent recursion, see below
+
         if subaspect in self.subaspects:
             return self.subaspects[subaspect]
 
