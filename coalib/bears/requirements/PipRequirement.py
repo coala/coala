@@ -5,8 +5,9 @@ import sys
 
 class PipRequirement(PackageRequirement):
     """
-    This class is a subclass of ``PackageRequirement``, and helps specifying
-    requirements from ``pip``, without using the manager name.
+    This class is a subclass of ``PackageRequirement``. It specifies the proper
+    type for ``python`` packages automatically and provides functions to check
+    for and install the requirement.
     """
 
     def __init__(self, package, version=""):
@@ -15,7 +16,7 @@ class PipRequirement(PackageRequirement):
         constructor.
 
         >>> pr = PipRequirement('setuptools', '19.2')
-        >>> pr.manager
+        >>> pr.type
         'pip'
         >>> pr.package
         'setuptools'
