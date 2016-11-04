@@ -27,6 +27,23 @@ Root.Metadata.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.new_subaspect(
+    "Emptiness",
+    AspectDocumentation(
+        definition="""
+        Your commit message serves as important documentation for your source
+        code.
+        """,
+        example="(no text at all)",
+        example_language="English",
+        importance_reason="""
+        An empty commit message shows the lack of documentation for your
+        change.
+        """,
+        fix_suggestions="Write a commit message."
+    )
+)
+
+Root.Metadata.CommitMessage.new_subaspect(
     "Shortlog",
     AspectDocumentation(
         definition="""
