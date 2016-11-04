@@ -210,3 +210,12 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         True
     ))
 )
+
+Root.Metadata.CommitMessage.new_subaspect(
+    "Body",
+    AspectDocumentation(
+        definition="""
+        Your commit body may contain an elaborate description of your commit.
+        """
+    )
+)
