@@ -5,8 +5,7 @@ documentation.
 
 from inspect import cleandoc
 
-from coala_utils.decorators import (
-    classproperty, enforce_signature, generate_consistency_check)
+from coala_utils.decorators import enforce_signature, generate_consistency_check
 
 
 @generate_consistency_check('definition', 'cause', 'example',
@@ -138,7 +137,7 @@ class Aspect:
     >>> Root.UnknownAspect is None
     Traceback (most recent call last):
       ...
-    NameError
+    NameError: No such attribute or aspect 'UnknownAspect'.
 
     And of course, you can create settings for your aspects:
 
@@ -248,7 +247,7 @@ class Aspect:
     def __init__(self,
                  name="Root",
                  doc=None,
-                 settings=[],
+                 settings=(),
                  parent=None):
         """
         Instantiates the ``Aspect`` object.
@@ -269,7 +268,7 @@ class Aspect:
         else:
             self.__qualname__ = self.__name__
 
-    def new_subaspect(self, name, doc, settings=[]):
+    def new_subaspect(self, name, doc, settings=()):
         """
         Creates a sub-aspect.
 
@@ -295,7 +294,10 @@ class Aspect:
         """
         if subaspect in self.subaspects:
             return self.subaspects[subaspect]
-        raise NameError
+
+        if subaspect == '__wrapped__':  # Has to exist for doctests
+            return None
+        raise NameError("No such attribute or aspect '{}'.".format(subaspect))
 
     @property
     def settings(self):
@@ -317,3 +319,6 @@ class Aspect:
     @settings.setter
     def settings(self, value):
         self._settings = value
+
+
+Root = Aspect()
