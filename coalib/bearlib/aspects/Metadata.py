@@ -219,3 +219,23 @@ Root.Metadata.CommitMessage.new_subaspect(
         """
     )
 )
+
+Root.Metadata.CommitMessage.Body.new_subaspect(
+    "Existence",
+    AspectDocumentation(
+        definition="""
+        Forces the commit message body to exist (nonempty).
+        """,
+        example="""
+        aspects: Add CommitMessage.Body
+        """,
+        example_language="English",
+        importance_reason="""
+        Having a nonempty commit body is important if you consistently want
+        elaborate documentation on all commits.
+        """,
+        fix_suggestions="""
+        Write a commit message with a body.
+        """
+    )
+)
