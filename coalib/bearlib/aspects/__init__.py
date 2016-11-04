@@ -294,6 +294,9 @@ class Aspect:
         """
         if subaspect in self.subaspects:
             return self.subaspects[subaspect]
+
+        if subaspect == '__wrapped__':  # Has to exist for doctests
+            return None
         raise NameError("No such attribute or aspect '{}'.".format(subaspect))
 
     @property
@@ -316,3 +319,6 @@ class Aspect:
     @settings.setter
     def settings(self, value):
         self._settings = value
+
+
+Root = Aspect()
