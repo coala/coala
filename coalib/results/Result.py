@@ -39,23 +39,30 @@ class Result:
                  diffs: (dict, None)=None,
                  confidence: int=100):
         """
-        :param origin:          Class name or creator object of this object.
-        :param message:         Message to show with this result.
-        :param affected_code:   A tuple of SourceRange objects pointing to
-                                related positions in the source code.
-        :param severity:        Severity of this result.
-        :param additional_info: A long description holding additional
-                                information about the issue and/or how to fix
-                                it. You can use this like a manual entry for a
-                                category of issues.
-        :param debug_msg:       A message which may help the user find out why
-                                this result was yielded.
-        :param diffs:           A dictionary with filenames as key and a
-                                sequence of ``Diff`` objects associated with
-                                them as values.
-        :param confidence:      A number between 0 and 100 describing the
-                                likelihood of this result being a real issue.
-        :raises ValueError:     Raised when confidence is not between 0 and 100.
+        :param origin:
+            Class name or creator object of this object.
+        :param message:
+            Message to show with this result.
+        :param affected_code:
+            A tuple of SourceRange objects pointing to related positions in the
+            source code.
+        :param severity:
+            Severity of this result.
+        :param additional_info:
+            A long description holding additional information about the issue
+            and/or how to fix it. You can use this like a manual entry for a
+            category of issues.
+        :param debug_msg:
+            A message which may help the user find out why this result was
+            yielded.
+        :param diffs:
+            A dictionary with filenames as key and a sequence of ``Diff``
+            objects associated with them as values.
+        :param confidence:
+            A number between 0 and 100 describing the likelihood of this result
+            being a real issue.
+        :raises ValueError:
+            Raised when confidence is not between 0 and 100.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -95,26 +102,35 @@ class Result:
         Creates a result with only one SourceRange with the given start and end
         locations.
 
-        :param origin:          Class name or class of the creator of this
-                                object.
-        :param message:         A message to explain the result.
-        :param file:            The related file.
-        :param line:            The first related line in the file.
-                                (First line is 1)
-        :param column:          The column indicating the first character.
-                                (First character is 1)
-        :param end_line:        The last related line in the file.
-        :param end_column:      The column indicating the last character.
-        :param severity:        A RESULT_SEVERITY object.
-        :param debug_msg:       Another object useful for debugging purposes.
-        :param additional_info: A long description holding additional
-                                information about the issue and/or how to fix
-                                it. You can use this like a manual entry for a
-                                category of issues.
-        :param diffs:           A dictionary with filenames as key and a
-                                ``Diff`` object associated with it as value.
-        :param confidence:      A number between 0 and 100 describing the
-                                likelihood of this result being a real issue.
+        origin:
+            Class name or creator object of this object.
+        :param message:
+            Message to show with this result.
+        :param file:
+            The related file.
+        :param line:
+            The first related line in the file. (First line is 1)
+        :param column:
+            The column indicating the first character. (First character is 1)
+        :param end_line:
+            The last related line in the file.
+        :param end_column:
+            The column indicating the last character.
+        :param severity:
+            Severity of this result.
+        :param additional_info:
+            A long description holding additional information about the issue
+            and/or how to fix it. You can use this like a manual entry for a
+            category of issues.
+        :param debug_msg:
+            A message which may help the user find out why this result was
+            yielded.
+        :param diffs:
+            A dictionary with filenames as key and a sequence of ``Diff``
+            objects associated with them as values.
+        :param confidence:
+            A number between 0 and 100 describing the likelihood of this result
+            being a real issue.
         """
         range = SourceRange.from_values(file,
                                         line,
