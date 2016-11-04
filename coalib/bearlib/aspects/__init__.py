@@ -5,8 +5,7 @@ documentation.
 
 from inspect import cleandoc
 
-from coala_utils.decorators import (
-    classproperty, enforce_signature, generate_consistency_check)
+from coala_utils.decorators import enforce_signature, generate_consistency_check
 
 
 @generate_consistency_check('definition', 'cause', 'example',
