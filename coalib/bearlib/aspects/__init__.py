@@ -237,6 +237,12 @@ class Aspect:
     >>> Root.Redundancy.Clone.__qualname__
     'Redundancy.Clone'
 
+    As this should also identify the aspect, it serves as string representation
+    as well:
+
+    >>> Root.Redundancy.Clone
+    Redundancy.Clone
+
     The ``Root`` part of the aspect is removed for brevity.
     '''
 
@@ -296,6 +302,9 @@ class Aspect:
             return self.subaspects[subaspect]
 
         raise AttributeError("No such aspect '{}'.".format(subaspect))
+
+    def __repr__(self):
+        return self.__qualname__
 
     @property
     def settings(self):
