@@ -1,5 +1,3 @@
-import shlex
-
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
 from coalib.misc.Shell import call_without_output
 
@@ -9,8 +7,8 @@ from coala_utils.string_processing import escape
 class JuliaRequirement(PackageRequirement):
     """
     This class is a subclass of ``PackageRequirement``. It specifies the proper
-    type for ``julia`` packages automatically and provides functions to check
-    for and install the requirement.
+    type for ``julia`` packages automatically and provide a function to check
+    for the requirement.
     """
 
     def __init__(self, package, version=""):
@@ -30,19 +28,6 @@ class JuliaRequirement(PackageRequirement):
         :param version: A version string. Leave empty to specify latest version.
         """
         PackageRequirement.__init__(self, 'julia', package, version)
-
-    def install_command(self):
-        """
-        Creates the installation command for the instance of the class.
-
-        >>> JuliaRequirement('Lint').install_command()
-        'julia -e \\'Pkg.add("Lint")\\''
-
-        :return: A string with the installation command.
-        """
-        code = 'Pkg.add("{}")'.format(escape(self.package, '\\"'))
-        args = ('julia', '-e', shlex.quote(code))
-        return ' '.join(args)
 
     def is_installed(self):
         """
