@@ -45,8 +45,6 @@ install:
   - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r test-requirements.txt"
   - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r requirements.txt"
   - "%CMD_IN_ENV% pip -q install --upgrade astroid"
-  # Calling setup.py will download checkstyle automatically so tests may succeed
-  - "%CMD_IN_ENV% python setup.py --help"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
