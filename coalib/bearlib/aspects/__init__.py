@@ -180,7 +180,7 @@ class Aspect:
     ...     ),
     ...     settings=[
     ...         AspectSetting(
-    ...             "min_line_length",
+    ...             "max_line_length",
     ...             "Maximum length allowed for a line.",
     ...             int,
     ...             suggested_values=(80, 90, 120),
