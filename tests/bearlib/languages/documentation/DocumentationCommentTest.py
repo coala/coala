@@ -1,5 +1,7 @@
 import unittest
 
+from coalib.results.TextPosition import TextPosition
+from coalib.results.TextRange import TextRange
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
@@ -27,7 +29,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
                                    c_doxygen,
                                    " ",
                                    ("/**", "*", "*/"),
-                                   (25, 45))
+                                   TextPosition(1, 4))
 
         self.assertEqual(uut.documentation, "my doc")
         self.assertEqual(uut.language, "c")
@@ -35,25 +37,25 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(uut.indent, " ")
         self.assertEqual(str(uut), "my doc")
         self.assertEqual(uut.marker, ("/**", "*", "*/"))
-        self.assertEqual(uut.range, (25, 45))
+        self.assertEqual(uut.range, TextRange.from_values(1, 4, 1, 13))
 
         python_doxygen = DocstyleDefinition.load("python", "doxygen")
 
         python_doxygen_metadata = self.Metadata("@param ", " ", "@return ")
 
-        uut = DocumentationComment("qwertzuiop",
+        uut = DocumentationComment("\n qwertzuiop ",
                                    python_doxygen,
                                    "\t",
                                    ("##", "#", "#"),
-                                   None)
+                                   TextPosition(4, 8))
 
-        self.assertEqual(uut.documentation, "qwertzuiop")
+        self.assertEqual(uut.documentation, "\n qwertzuiop ")
         self.assertEqual(uut.language, "python")
         self.assertEqual(uut.docstyle, "doxygen")
         self.assertEqual(uut.indent, "\t")
-        self.assertEqual(str(uut), "qwertzuiop")
+        self.assertEqual(str(uut), "\n qwertzuiop ")
         self.assertEqual(uut.marker, ("##", "#", "#"))
-        self.assertEqual(uut.range, None)
+        self.assertEqual(uut.range, TextRange.from_values(4, 8, 5, 14))
         self.assertEqual(uut.metadata, python_doxygen_metadata)
 
     def test_not_implemented(self):

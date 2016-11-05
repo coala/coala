@@ -2,6 +2,9 @@ from collections import namedtuple
 
 from coala_utils.decorators import generate_eq, generate_repr
 
+from coalib.results.TextPosition import TextPosition
+from coalib.results.TextRange import TextRange
+
 
 @generate_repr()
 @generate_eq("documentation", "language", "docstyle",
@@ -16,7 +19,7 @@ class DocumentationComment:
     Description = namedtuple('Description', 'desc')
 
     def __init__(self, documentation, docstyle_definition,
-                 indent, marker, range):
+                 indent, marker, position):
         """
         Instantiates a new DocumentationComment.
 
@@ -27,13 +30,19 @@ class DocumentationComment:
                               of the first marker of the documentation.
         :param marker:        The three-element tuple with marker strings,
                               that identified this documentation comment.
-        :param range:         The position range of type TextRange.
+        :param position:      The start position of type TextPosition.
         """
         self.documentation = documentation
         self.docstyle_definition = docstyle_definition
         self.indent = indent
         self.marker = marker
-        self.range = range
+
+        self._assembled = self._assemble()
+        self.range = TextRange.from_values(
+            position.line,
+            position.column,
+            position.line + self._assembled.count('\n'),
+            len(self._assembled) + self._assembled.rfind('\n'))
 
     def __str__(self):
         return self.documentation
@@ -198,13 +207,7 @@ class DocumentationComment:
         return DocumentationComment(assembled_doc, docstyle_definition, indent,
                                     marker, range)
 
-    def assemble(self):
-        """
-        Assembles parsed documentation to the original documentation.
-
-        This function assembles the whole documentation comment, with the
-        given markers and indentation.
-        """
+    def _assemble(self):
         lines = self.documentation.splitlines(keepends=True)
         assembled = self.indent + self.marker[0]
         if len(lines) == 0:
@@ -216,3 +219,12 @@ class DocumentationComment:
         return (assembled +
                 (self.indent if lines[-1][-1] == '\n' else '') +
                 self.marker[2])
+
+    def assemble(self):
+        """
+        Assembles parsed documentation to the original documentation.
+
+        This function assembles the whole documentation comment, with the
+        given markers and indentation.
+        """
+        return self._assembled
