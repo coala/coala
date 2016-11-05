@@ -34,8 +34,6 @@ for dep_version in "${dep_versions[@]}" ; do
 
   pip install -r test-requirements.txt
   pip install -r requirements.txt
-  # Downloading nltk data that's required for nltk to run
-  bash .misc/deps.nltk.sh
 
   cd .misc
   bash install.python-gi.sh
