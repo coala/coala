@@ -60,7 +60,7 @@ def deprecate_settings(**depr_args):
      ['old']
 
      You cannot deprecate an already deprecated setting. Don't try. It will
-     introduce nondeterministic errors to your program.
+     introduce non-deterministic errors in your program.
 
      :param depr_args: A dictionary of settings as keys and their deprecated
                        names as values.
