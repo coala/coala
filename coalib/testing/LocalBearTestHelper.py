@@ -88,7 +88,8 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                       check_order=False,
                       force_linebreaks=True,
                       create_tempfile=True,
-                      tempfile_kwargs={}):
+                      tempfile_kwargs={},
+                      settings={}):
         """
         Asserts that a check of the given lines with the given local bear does
         yield exactly the given results.
@@ -101,6 +102,9 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                  if needed. (Bears expect a \\n for every line)
         :param create_tempfile:  Whether to save lines in tempfile if needed.
         :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        :param settings:         A dictionary of keys and values (both strings)
+                                 from which settings will be created that will
+                                 be made available for the tested bear.
         """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
@@ -117,7 +121,8 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                           force_linebreaks=force_linebreaks,
                           create_tempfile=create_tempfile,
                           tempfile_kwargs=tempfile_kwargs) as (file, fname), \
-                execute_bear(local_bear, fname, file) as bear_output:
+                execute_bear(local_bear, fname, file,
+                             **settings) as bear_output:
             msg = ("The local bear '{}' doesn't yield the right results. Or "
                    "the order may be wrong."
                    .format(local_bear.__class__.__name__))
