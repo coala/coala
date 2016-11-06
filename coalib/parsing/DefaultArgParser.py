@@ -59,6 +59,9 @@ files you want it to run on, for example:
 coala can also automatically fix your code:
 
     $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
+
+To run coala without user interaction, check out the `coala-json` and
+`coala-format` binaries.
 """
 
     arg_parser = argparse.ArgumentParser(
