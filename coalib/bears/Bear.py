@@ -63,15 +63,6 @@ class Bear(Printer, LogPrinterMixin):
     >>> class SomeBear(Bear):
     ...     REQUIREMENTS = {PipRequirement('coala_decorators', '0.2.1')}
 
-    To specify multiple requirements using ``pip``, you can use the multiple
-    method. This can receive both tuples of strings, in case you want a specific
-    version, or a simple string, in case you want the latest version to be
-    specified.
-
-    >>> class SomeBear(Bear):
-    ...     REQUIREMENTS = PipRequirement.multiple(
-    ...         ('colorama', '0.1'), 'coala_decorators')
-
     To specify additional attributes to your bear, use the following:
 
     >>> class SomeBear(Bear):
@@ -216,7 +207,7 @@ class Bear(Printer, LogPrinterMixin):
             if cp is not False:
                 error_string += " " + cp
 
-            self.warn(error_string)
+            self.err(error_string)
             raise RuntimeError(error_string)
 
     def _print(self, output, **kwargs):

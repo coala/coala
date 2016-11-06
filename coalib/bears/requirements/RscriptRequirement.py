@@ -4,8 +4,9 @@ from coalib.misc.Shell import run_shell_command
 
 class RscriptRequirement(PackageRequirement):
     """
-    This class is a subclass of ``PackageRequirement``, and helps specifying
-    requirements from ``R``, without using the manager name.
+    This class is a subclass of ``PackageRequirement``. It specifies the proper
+    type for ``R`` packages automatically and provide a function to check
+    for the requirement.
     """
 
     def __init__(self, package, version="", flag="", repo=""):
@@ -16,7 +17,7 @@ class RscriptRequirement(PackageRequirement):
         >>> pr = RscriptRequirement(
         ...         'formatR', version='1.4', flag='-e',
         ...         repo="http://cran.rstudio.com")
-        >>> pr.manager
+        >>> pr.type
         'R'
         >>> pr.package
         'formatR'
@@ -30,28 +31,13 @@ class RscriptRequirement(PackageRequirement):
         :param package: A string with the name of the package to be installed.
         :param version: A version string. Leave empty to specify latest version.
         :param flag:    A string that specifies any additional flags, that
-                        are passed to the manager.
+                        are passed to the type.
         :param repo:    The repository from which the package to be installed is
                         from.
         """
         PackageRequirement.__init__(self, 'R', package, version)
         self.flag = flag
         self.repo = repo
-
-    def install_command(self):
-        """
-        Creates the installation command for the instance of the class.
-
-        >>> RscriptRequirement(
-        ...     'formatR', '' , '-e',
-        ...     'http://cran.rstudio.com').install_command()
-        'R -e "install.packages(\"formatR\", repo=\"http://cran.rstudio.com\", dependencies=TRUE)"'
-
-        :param return: A string with the installation command.
-        """
-        return ('R {} "install.packages(\"{}\", repo=\"{}\", '
-                'dependencies=TRUE)"'.format(self.flag,
-                                             self.package, self.repo))
 
     def is_installed(self):
         """
