@@ -3,6 +3,7 @@ from os.path import relpath
 
 from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
+from coalib.bearlib.aspects import Aspect, Root
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -13,12 +14,14 @@ from coalib.results.SourceRange import SourceRange
                "affected_code",
                ("severity", RESULT_SEVERITY.reverse.get),
                "confidence",
-               "message")
+               "message",
+               "aspect")
 @generate_ordering("affected_code",
                    "severity",
                    "confidence",
                    "origin",
                    "message",
+                   "aspect",
                    "additional_info",
                    "debug_msg")
 class Result:
@@ -37,25 +40,38 @@ class Result:
                  additional_info: str="",
                  debug_msg="",
                  diffs: (dict, None)=None,
-                 confidence: int=100):
+                 confidence: int=100,
+                 aspect: Aspect=Root):
         """
-        :param origin:          Class name or creator object of this object.
-        :param message:         Message to show with this result.
-        :param affected_code:   A tuple of SourceRange objects pointing to
-                                related positions in the source code.
-        :param severity:        Severity of this result.
-        :param additional_info: A long description holding additional
-                                information about the issue and/or how to fix
-                                it. You can use this like a manual entry for a
-                                category of issues.
-        :param debug_msg:       A message which may help the user find out why
-                                this result was yielded.
-        :param diffs:           A dictionary with filenames as key and a
-                                sequence of ``Diff`` objects associated with
-                                them as values.
-        :param confidence:      A number between 0 and 100 describing the
-                                likelihood of this result being a real issue.
-        :raises ValueError:     Raised when confidence is not between 0 and 100.
+        :param origin:
+            Class name or creator object of this object.
+        :param message:
+            Message to show with this result.
+        :param affected_code:
+            A tuple of SourceRange objects pointing to related positions in the
+            source code.
+        :param severity:
+            Severity of this result.
+        :param additional_info:
+            A long description holding additional information about the issue
+            and/or how to fix it. You can use this like a manual entry for a
+            category of issues.
+        :param debug_msg:
+            A message which may help the user find out why this result was
+            yielded.
+        :param diffs:
+            A dictionary with filenames as key and a sequence of ``Diff``
+            objects associated with them as values.
+        :param confidence:
+            A number between 0 and 100 describing the likelihood of this result
+            being a real issue.
+        :param aspect:
+            An Aspect object which this result is associated to. Note that this
+            should be a leaf of the aspect tree! (If you have a node, spend
+            some time figuring out which of the leafs exactly your result
+            belongs to.)
+        :raises ValueError:
+            Raised when confidence is not between 0 and 100.
         """
         origin = origin or ""
         if not isinstance(origin, str):
@@ -75,6 +91,7 @@ class Result:
         self.confidence = confidence
         self.diffs = diffs
         self.id = uuid.uuid4().int
+        self.aspect = aspect
 
     @classmethod
     @enforce_signature
@@ -90,31 +107,46 @@ class Result:
                     additional_info: str="",
                     debug_msg="",
                     diffs: (dict, None)=None,
-                    confidence: int=100):
+                    confidence: int=100,
+                    aspect: Aspect=Root):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
 
-        :param origin:          Class name or class of the creator of this
-                                object.
-        :param message:         A message to explain the result.
-        :param file:            The related file.
-        :param line:            The first related line in the file.
-                                (First line is 1)
-        :param column:          The column indicating the first character.
-                                (First character is 1)
-        :param end_line:        The last related line in the file.
-        :param end_column:      The column indicating the last character.
-        :param severity:        A RESULT_SEVERITY object.
-        :param debug_msg:       Another object useful for debugging purposes.
-        :param additional_info: A long description holding additional
-                                information about the issue and/or how to fix
-                                it. You can use this like a manual entry for a
-                                category of issues.
-        :param diffs:           A dictionary with filenames as key and a
-                                ``Diff`` object associated with it as value.
-        :param confidence:      A number between 0 and 100 describing the
-                                likelihood of this result being a real issue.
+        origin:
+            Class name or creator object of this object.
+        :param message:
+            Message to show with this result.
+        :param file:
+            The related file.
+        :param line:
+            The first related line in the file. (First line is 1)
+        :param column:
+            The column indicating the first character. (First character is 1)
+        :param end_line:
+            The last related line in the file.
+        :param end_column:
+            The column indicating the last character.
+        :param severity:
+            Severity of this result.
+        :param additional_info:
+            A long description holding additional information about the issue
+            and/or how to fix it. You can use this like a manual entry for a
+            category of issues.
+        :param debug_msg:
+            A message which may help the user find out why this result was
+            yielded.
+        :param diffs:
+            A dictionary with filenames as key and a sequence of ``Diff``
+            objects associated with them as values.
+        :param confidence:
+            A number between 0 and 100 describing the likelihood of this result
+            being a real issue.
+        :param aspect:
+            An Aspect object which this result is associated to. Note that this
+            should be a leaf of the aspect tree! (If you have a node, spend
+            some time figuring out which of the leafs exactly your result
+            belongs to.)
         """
         range = SourceRange.from_values(file,
                                         line,
@@ -129,7 +161,8 @@ class Result:
                    additional_info=additional_info,
                    debug_msg=debug_msg,
                    diffs=diffs,
-                   confidence=confidence)
+                   confidence=confidence,
+                   aspect=aspect)
 
     def to_string_dict(self):
         """
@@ -236,4 +269,5 @@ class Result:
         if use_relpath and _dict['diffs']:
             _dict['diffs'] = {relpath(file): diff
                               for file, diff in _dict['diffs'].items()}
+        _dict['aspect'] = self.aspect.__qualname__
         return _dict

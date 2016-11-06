@@ -6,35 +6,33 @@ documentation.
 from inspect import cleandoc
 
 from coala_utils.decorators import (
-    classproperty, enforce_signature, generate_consistency_check)
+    enforce_signature, generate_consistency_check, generate_eq)
 
 
-@generate_consistency_check('definition', 'cause', 'example',
-                            'example_language', 'importance_reason',
-                            'fix_suggestions')
+@generate_consistency_check('definition', 'example', 'example_language',
+                            'importance_reason', 'fix_suggestions')
 class AspectDocumentation:
     """
     This class contains documentation about an aspect described by the Aspect
     class.
     The documentation is consistent if all members are given:
 
-    >>> AspectDocumentation('defined', '', '', '').check_consistency()
+    >>> AspectDocumentation('defined').check_consistency()
     False
-    >>> AspectDocumentation('definition', 'cause', 'example',
+    >>> AspectDocumentation('definition', 'example',
     ...                     'example_language', 'importance',
     ...                     'fix').check_consistency()
     True
     """
 
     @enforce_signature
-    def __init__(self, definition: str='', cause: str='', example: str='',
+    def __init__(self, definition: str='', example: str='',
                  example_language: str='', importance_reason: str='',
                  fix_suggestions: str=''):
         """
         Contains documentation for an aspect.
 
         :param definition:        What is this about?
-        :param cause:             Information on how such a problem can happen.
         :param example:           An example in a well known language.
         :param example_language:  The language used for the example.
         :param importance_reason: A reason why this aspect is important.
@@ -43,7 +41,6 @@ class AspectDocumentation:
         super().__init__()
 
         self.definition = cleandoc(definition)
-        self.cause = cleandoc(cause)
         self.example = cleandoc(example)
         self.example_language = cleandoc(example_language)
         self.importance_reason = cleandoc(importance_reason)
@@ -91,6 +88,7 @@ class AspectSetting:
         self.default = default
 
 
+@generate_eq('__qualname__')
 class Aspect:
     '''
     This is the ``Aspect`` base class. Each aspect may have sub-aspects,
@@ -138,16 +136,16 @@ class Aspect:
     >>> Root.UnknownAspect is None
     Traceback (most recent call last):
       ...
-    NameError
+    AttributeError: No such aspect 'UnknownAspect'.
 
     And of course, you can create settings for your aspects:
 
-    >>> Root.Redundancy.Clone.settings = [
+    >>> Root.Redundancy.Clone.settings = (
     ...     AspectSetting("min_clone_token",
     ...                   "The number of tokens that have to be "
     ...                   "equal for it to be detected as a code clone",
-    ...                   int, suggested_values=(20, 40, 60), default=20)
-    ... ]
+    ...                   int, suggested_values=(20, 40, 60), default=20),
+    ... )
 
     ``settings`` can be defined for any aspect by creating a list of
     ``AspectSetting`` objects with 5 params:
@@ -178,15 +176,15 @@ class Aspect:
     ...         "This aspect controls the length of a line...",
     ...         '...', '...', '...'
     ...     ),
-    ...     settings=[
+    ...     settings=(
     ...         AspectSetting(
     ...             "max_line_length",
     ...             "Maximum length allowed for a line.",
     ...             int,
     ...             suggested_values=(80, 90, 120),
     ...             default=80
-    ...         )
-    ...     ]
+    ...         ),
+    ...     )
     ... )
     >>> Root.Formatting.LineLength.settings[0].suggested_values
     (80, 90, 120)
@@ -208,12 +206,12 @@ class Aspect:
     a changes to a setting of an aspect will be reflected in every sub-aspect
     too.
 
-    >>> Root.Redundancy.Clone.settings = [
+    >>> Root.Redundancy.Clone.settings = (
     ...     AspectSetting("min_clone_token",
     ...                   "The number of tokens that have to be "
     ...                   "equal for it to be detected as a code clone",
-    ...                   int, default=30)
-    ... ]
+    ...                   int, default=30),
+    ... )
 
     >>> Root.Redundancy.Clone.settings[0].default
     30
@@ -223,12 +221,11 @@ class Aspect:
     If you don't want this, you can override the settings the particular
     sub-aspect:
 
-    >>> Root.Redundancy.Clone.Logic.settings = [
+    >>> Root.Redundancy.Clone.Logic.settings = (
     ...     AspectSetting("min_clone_token",
     ...                   "The number of tokens that have to be "
     ...                   "equal for it to be detected as a code clone",
-    ...                   int, default=40)
-    ... ]
+    ...                   int, default=40),)
 
     >>> Root.Redundancy.Clone.settings[0].default
     30
@@ -241,14 +238,21 @@ class Aspect:
     >>> Root.Redundancy.Clone.__qualname__
     'Redundancy.Clone'
 
+    As this should also identify the aspect, it serves as string representation
+    as well:
+
+    >>> Root.Redundancy.Clone
+    Redundancy.Clone
+
     The ``Root`` part of the aspect is removed for brevity.
     '''
 
     @generate_consistency_check('name', 'doc')
+    @enforce_signature
     def __init__(self,
                  name="Root",
                  doc=None,
-                 settings=[],
+                 settings: tuple=(),
                  parent=None):
         """
         Instantiates the ``Aspect`` object.
@@ -269,7 +273,8 @@ class Aspect:
         else:
             self.__qualname__ = self.__name__
 
-    def new_subaspect(self, name, doc, settings=[]):
+    @enforce_signature
+    def new_subaspect(self, name, doc, settings: tuple=()):
         """
         Creates a sub-aspect.
 
@@ -293,9 +298,16 @@ class Aspect:
             An ``Aspect`` object corresponding to the sub-aspect. If the
             sub-aspect is not found, ``None`` is returned.
         """
+        if subaspect == "subaspects":
+            raise AttributeError  # To prevent recursion, see below
+
         if subaspect in self.subaspects:
             return self.subaspects[subaspect]
-        raise NameError
+
+        raise AttributeError("No such aspect '{}'.".format(subaspect))
+
+    def __repr__(self):
+        return self.__qualname__
 
     @property
     def settings(self):
@@ -315,5 +327,9 @@ class Aspect:
         return result
 
     @settings.setter
-    def settings(self, value):
+    @enforce_signature
+    def settings(self, value: tuple):
         self._settings = value
+
+
+Root = Aspect()
