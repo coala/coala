@@ -65,6 +65,21 @@ class coalaCITest(unittest.TestCase):
                              "coala-ci must return exitcode 5 when it "
                              "autofixes the code.")
 
+    def test_show_patch(self):
+        with bear_test_module(), \
+             prepare_file(["\t#include <a>"], None) as (lines, filename):
+            retval, output = execute_coala(
+                coala_ci.main, "coala-ci",
+                "-c", os.devnull,
+                "-f", re.escape(filename),
+                "-b", "SpaceConsistencyTestBear",
+                "--settings", "use_spaces=True",
+                "default_actions=*:ShowPatchAction")
+            self.assertIn("Applied 'ShowPatchAction'", output)
+            self.assertEqual(retval, 5,
+                             "coala-ci must return exitcode 5 when it "
+                             "autofixes the code.")
+
     def test_fail_acquire_settings(self):
         with bear_test_module():
             retval, output = execute_coala(coala_ci.main, "coala-ci",
