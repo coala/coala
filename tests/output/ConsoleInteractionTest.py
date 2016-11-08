@@ -120,6 +120,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def setUp(self):
         self.log_printer = ListLogPrinter()
         self.console_printer = ConsolePrinter(print_colored=False)
+        self.no_color = not self.console_printer.print_colored
         self.file_diff_dict = {}
         self.section = Section("t")
         self.local_bears = OrderedDict([("default", [SomelocalBear]),
@@ -415,13 +416,14 @@ class ConsoleInteractionTest(unittest.TestCase):
                                            testfile_path: diff})],
                                        file_dict,
                                        self.file_diff_dict,
-                                       color=False)
+                                       self.console_printer)
                 self.assertEqual(generator.last_input, -1)
                 self.assertEqual(stdout.getvalue(),
                                  """
 Project wide:
 |    | [NORMAL] origin:
-|    | {}\n""".format(highlight_text("message", style=BackgroundMessageStyle)))
+|    | {}\n""".format(highlight_text(self.no_color,
+                                     "message", style=BackgroundMessageStyle)))
 
     def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
@@ -436,7 +438,8 @@ Project wide:
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
-            print_results(self.log_printer, Section(""), [], {}, {})
+            print_results(self.log_printer, Section(""), [], {}, {},
+                          self.console_printer)
             self.assertEqual(stdout.getvalue(), "")
 
     def test_print_results_project_wide(self):
@@ -446,11 +449,12 @@ Project wide:
                           [Result("origin", "message")],
                           {},
                           {},
-                          color=False)
+                          self.console_printer)
             self.assertEqual(
                 "\n{}\n|    | [NORMAL] origin:\n|    | {}\n".format(
                     STR_PROJECT_WIDE,
-                    highlight_text("message", style=BackgroundMessageStyle)),
+                    highlight_text(self.no_color,
+                                   "message", style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
     def test_print_results_for_file(self):
@@ -464,12 +468,12 @@ Project wide:
                                     line=2)],
                 {abspath("filename"): ["test line\n", "line 2\n", "line 3\n"]},
                 {},
-                color=False)
+                self.console_printer)
             self.assertEqual("""\nfilename
 |   2| {}
 |    | [NORMAL] SpaceConsistencyBear:
-|    | {}\n""".format(highlight_text('line 2', self.lexer),
-                      highlight_text("Trailing whitespace found",
+|    | {}\n""".format(highlight_text(self.no_color, 'line 2', self.lexer),
+                      highlight_text(self.no_color, "Trailing whitespace found",
                                      style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
@@ -487,12 +491,12 @@ Project wide:
                                        "line 4\n",
                                        "line 5\n"]},
                 {},
-                color=False)
+                self.console_printer)
             self.assertEqual("""\nfilename
 |   5| {}
 |    | [NORMAL] SpaceConsistencyBear:
-|    | {}\n""".format(highlight_text('line 5', self.lexer),
-                      highlight_text("Trailing whitespace found",
+|    | {}\n""".format(highlight_text(self.no_color, 'line 5', self.lexer),
+                      highlight_text(self.no_color, "Trailing whitespace found",
                                      style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
@@ -514,7 +518,7 @@ Project wide:
                                              "line 4\n",
                                              "line 5\t\n"]},
                           {},
-                          color=False)
+                          self.console_printer)
 
             self.assertEqual("""
 file
@@ -525,10 +529,11 @@ file
 file
 |   5| {2}
 |    | [NORMAL] SpaceConsistencyBear:
-|    | {1}\n""".format(highlight_text('\t', self.lexer),
-                       highlight_text("Trailing whitespace found",
+|    | {1}\n""".format(highlight_text(self.no_color, '\t', self.lexer),
+                       highlight_text(self.no_color,
+                                      "Trailing whitespace found",
                                       style=BackgroundMessageStyle),
-                       highlight_text('line 5\t', self.lexer)),
+                       highlight_text(self.no_color, 'line 5\t', self.lexer)),
                 stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
@@ -548,7 +553,7 @@ file
                  abspath("another_file"): ["line " + str(i + 1)
                                            for i in range(10)]},
                 {},
-                color=False)
+                self.console_printer)
             self.assertEqual("""
 another_file
 |   1| li{0}{1}
@@ -561,14 +566,14 @@ some_file
 |   6| {4}
 |   7| {5}
 |    | [NORMAL] ClangCloneDetectionBear:
-|    | {6}\n""".format(highlight_text('ne', self.lexer,
+|    | {6}\n""".format(highlight_text(self.no_color, 'ne', self.lexer,
                                       BackgroundSourceRangeStyle),
-                       highlight_text(' 1', self.lexer),
-                       highlight_text(' 3', self.lexer),
-                       highlight_text('line 5', self.lexer),
-                       highlight_text('line 6', self.lexer),
-                       highlight_text('line 7', self.lexer),
-                       highlight_text("Clone Found",
+                       highlight_text(self.no_color, ' 1', self.lexer),
+                       highlight_text(self.no_color, ' 3', self.lexer),
+                       highlight_text(self.no_color, 'line 5', self.lexer),
+                       highlight_text(self.no_color, 'line 6', self.lexer),
+                       highlight_text(self.no_color, 'line 7', self.lexer),
+                       highlight_text(self.no_color, "Clone Found",
                                       style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
@@ -582,7 +587,7 @@ some_file
                  Result.from_values("t", "msg", file="file", line=5)],
                 {},
                 {},
-                color=False)
+                self.console_printer)
             self.assertEqual("\n" + STR_PROJECT_WIDE + "\n"
                              "|    | [NORMAL] t:\n"
                              "|    | {0}\n"
@@ -591,7 +596,7 @@ some_file
                              # don't catch
                              "|    | [NORMAL] t:\n"
                              "|    | {0}\n".format(
-                                 highlight_text("msg",
+                                 highlight_text(self.no_color, "msg",
                                                 style=BackgroundMessageStyle)),
                              stdout.getvalue())
 
@@ -604,7 +609,7 @@ some_file
                  Result.from_values("t", "msg", file="file", line=6)],
                 {abspath("file"): ["line " + str(i + 1) for i in range(5)]},
                 {},
-                color=False)
+                self.console_printer)
             self.assertEqual("\n"
                              "file\n"
                              "|   5| {0}\n"
@@ -615,8 +620,9 @@ some_file
                              "|   6| {2}\n"
                              "|    | [NORMAL] t:\n"
                              "|    | {1}\n".format(
-                                 highlight_text('line 5', self.lexer),
-                                 highlight_text("msg",
+                                 highlight_text(self.no_color,
+                                                'line 5', self.lexer),
+                                 highlight_text(self.no_color, "msg",
                                                 style=BackgroundMessageStyle),
                                  STR_LINE_DOESNT_EXIST),
                              stdout.getvalue())
@@ -629,12 +635,12 @@ some_file
                 [Result.from_values("t", "msg", file="file")],
                 {abspath("file"): []},
                 {},
-                color=False)
+                self.console_printer)
             self.assertEqual(
                 "\nfile\n"
                 "|    | [NORMAL] t:\n"
                 "|    | {}\n".format(highlight_text(
-                    "msg", style=BackgroundMessageStyle)),
+                   self.no_color, "msg", style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
 

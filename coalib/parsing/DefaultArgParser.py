@@ -155,6 +155,10 @@ To run coala without user interaction, check out the `coala-json` and
         choices=('INFO', 'NORMAL', 'MAJOR'), metavar='ENUM',
         help="set minimal result severity to INFO/NORMAL/MAJOR")
 
+    outputs_group.add_argument(
+        '-N', '--no-color', const=True, action='store_const',
+        help="display output without coloring (excluding logs)")
+
     # Specific arguments
     if parser_type in ('coala', 'coala-json'):
         outputs_group.add_argument(

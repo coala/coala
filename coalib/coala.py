@@ -31,6 +31,7 @@ def main():
         # Note: We parse the args here once to check whether to show bears or
         # not.
         args = default_arg_parser().parse_args()
+        console_printer = ConsolePrinter(print_colored=not args.no_color)
 
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (
@@ -74,7 +75,8 @@ def main():
         print_results=print_results,
         acquire_settings=acquire_settings,
         print_section_beginning=partial_print_sec_beg,
-        nothing_done=nothing_done)
+        nothing_done=nothing_done,
+        console_printer=console_printer)
 
     return exitcode
 

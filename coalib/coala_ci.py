@@ -18,17 +18,20 @@ from pyprint.ConsolePrinter import ConsolePrinter
 from coalib.coala_main import run_coala
 from coalib.output.ConsoleInteraction import (
     print_results_no_input, print_section_beginning)
+from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
 def main():
-    console_printer = ConsolePrinter()
+    args = default_arg_parser().parse_args()
+    console_printer = ConsolePrinter(print_colored=not args.no_color)
     partial_print_sec_beg = functools.partial(
         print_section_beginning,
         console_printer)
     results, exitcode, _ = run_coala(
         print_results=print_results_no_input,
         print_section_beginning=partial_print_sec_beg,
-        force_show_patch=True)
+        force_show_patch=True,
+        console_printer=console_printer)
 
     return exitcode
 

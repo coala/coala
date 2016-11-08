@@ -9,8 +9,6 @@ except ImportError:  # pragma: no cover
     pass
 import os.path
 
-from pyprint.ConsolePrinter import ConsolePrinter
-
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
@@ -47,11 +45,19 @@ class BackgroundMessageStyle(Style):
     }
 
 
-def highlight_text(text, lexer=TextLexer(), style=None):
+class NoColorStyle(Style):
+    styles = {
+        Token: 'noinherit'
+    }
+
+
+def highlight_text(no_color, text, lexer=TextLexer(), style=None):
     if style:
         formatter = TerminalTrueColorFormatter(style=style)
     else:
         formatter = TerminalTrueColorFormatter()
+    if no_color:
+        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
     return highlight(text, lexer, formatter)[:-1]
 
 
@@ -164,6 +170,7 @@ def print_lines(console_printer,
     :param sourcerange:     The SourceRange object referring to the related
                             lines to print.
     """
+    no_color = not console_printer.print_colored
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
         console_printer.print(format_lines(lines='', line_nr=i),
@@ -183,22 +190,22 @@ def print_lines(console_printer,
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
             console_printer.print(highlight_text(
-                line[:sourcerange.start.column-1], lexer), end='')
+                no_color, line[:sourcerange.start.column-1], lexer), end='')
 
             printed_chars = sourcerange.start.column-1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             console_printer.print(highlight_text(
-                line[printed_chars:sourcerange.end.column-1],
+                no_color, line[printed_chars:sourcerange.end.column-1],
                 lexer, BackgroundSourceRangeStyle), end='')
 
             console_printer.print(highlight_text(
-                line[sourcerange.end.column-1:], lexer), end='')
+               no_color, line[sourcerange.end.column-1:], lexer), end='')
             console_printer.print("")
 
         else:
             console_printer.print(highlight_text(
-                line[printed_chars:], lexer), end='')
+                no_color, line[printed_chars:], lexer), end='')
             console_printer.print("")
 
 
@@ -221,6 +228,7 @@ def print_result(console_printer,
     :interactive:           Variable to check wether or not to
                             offer the user actions interactively.
     """
+    no_color = not console_printer.print_colored
     if not isinstance(result, Result):
         logging.warning("One of the results can not be printed since it is "
                         "not a valid derivative of the coala result "
@@ -231,8 +239,8 @@ def print_result(console_printer,
         sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
         color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
-    result.message = highlight_text(result.message, lexer,
-                                    BackgroundMessageStyle)
+    result.message = highlight_text(no_color, result.message,
+                                    lexer, BackgroundMessageStyle)
     console_printer.print(format_lines(result.message))
 
     if interactive:
@@ -340,7 +348,7 @@ def print_results_no_input(log_printer,
                            result_list,
                            file_dict,
                            file_diff_dict,
-                           color=True):
+                           console_printer):
     """
     Prints all non interactive results in a section
 
@@ -351,10 +359,8 @@ def print_results_no_input(log_printer,
                            key.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
-    :param color:          Boolean variable to print the results in color or
-                           not. Can be used for testing.
+    :param console_printer: Object to print messages on the console.
     """
-    console_printer = ConsolePrinter(print_colored=color)
     for result in result_list:
 
         print_affected_files(console_printer,
@@ -375,7 +381,7 @@ def print_results(log_printer,
                   result_list,
                   file_dict,
                   file_diff_dict,
-                  color=True):
+                  console_printer):
     """
     Prints all the results in a section.
 
@@ -386,11 +392,8 @@ def print_results(log_printer,
                            key.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
-    :param color:          Boolean variable to print the results in color or
-                           not. Can be used for testing.
+    :param console_printer: Object to print messages on the console.
     """
-    console_printer = ConsolePrinter(print_colored=color)
-
     for result in sorted(result_list):
 
         print_affected_files(console_printer,

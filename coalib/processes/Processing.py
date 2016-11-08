@@ -192,7 +192,8 @@ def print_result(results,
                  section,
                  log_printer,
                  file_diff_dict,
-                 ignore_ranges):
+                 ignore_ranges,
+                 console_printer):
     """
     Takes the results produced by each bear and gives them to the print_results
     method to present to the user.
@@ -210,6 +211,7 @@ def print_result(results,
                            diff objects as values.
     :param ignore_ranges:  A list of SourceRanges. Results that affect code in
                            any of those ranges will be ignored.
+    :param console_printer: Object to print messages on the console.
     :return:               Returns False if any results were yielded. Else
                            True.
     """
@@ -231,7 +233,8 @@ def print_result(results,
                   section,
                   patched_results,
                   file_dict,
-                  file_diff_dict)
+                  file_diff_dict,
+                  console_printer)
     return retval or len(results) > 0, patched_results
 
 
@@ -286,7 +289,8 @@ def instantiate_bears(section,
                       local_bear_list,
                       global_bear_list,
                       file_dict,
-                      message_queue):
+                      message_queue,
+                      console_printer):
     """
     Instantiates each bear with the arguments it needs.
 
@@ -297,6 +301,7 @@ def instantiate_bears(section,
                              contents.
     :param message_queue:    Queue responsible to maintain the messages
                              delivered by the bears.
+    :param console_printer:  Object to print messages on the console.
     :return:                 The local and global bear instance lists.
     """
     local_bear_list = [bear
@@ -324,7 +329,8 @@ def instantiate_processes(section,
                           global_bear_list,
                           job_count,
                           cache,
-                          log_printer):
+                          log_printer,
+                          console_printer):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -336,6 +342,7 @@ def instantiate_processes(section,
     :param cache:            An instance of ``misc.Caching.FileCache`` to use as
                              a file cache buffer.
     :param log_printer:      The log printer to warn to.
+    :param console_printer:  Object to print messages on the console.
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
@@ -395,7 +402,8 @@ def instantiate_processes(section,
         local_bear_list,
         global_bear_list,
         complete_file_dict,
-        message_queue)
+        message_queue,
+        console_printer=console_printer)
 
     fill_queue(filename_queue, file_dict.keys())
     fill_queue(global_bear_queue, range(len(global_bear_list)))
@@ -487,7 +495,8 @@ def process_queues(processes,
                    print_results,
                    section,
                    cache,
-                   log_printer):
+                   log_printer,
+                   console_printer):
     """
     Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
@@ -544,7 +553,8 @@ def process_queues(processes,
                                            section,
                                            log_printer,
                                            file_diff_dict,
-                                           ignore_ranges)
+                                           ignore_ranges,
+                                           console_printer=console_printer)
                 local_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL
@@ -565,7 +575,8 @@ def process_queues(processes,
                                    section,
                                    log_printer,
                                    file_diff_dict,
-                                   ignore_ranges)
+                                   ignore_ranges,
+                                   console_printer=console_printer)
         global_result_dict[elem] = res
 
     # One process is the logger thread
@@ -582,7 +593,8 @@ def process_queues(processes,
                                            section,
                                            log_printer,
                                            file_diff_dict,
-                                           ignore_ranges)
+                                           ignore_ranges,
+                                           console_printer)
                 global_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
@@ -630,7 +642,8 @@ def execute_section(section,
                     local_bear_list,
                     print_results,
                     cache,
-                    log_printer):
+                    log_printer,
+                    console_printer):
     """
     Executes the section with the given bears.
 
@@ -653,6 +666,7 @@ def execute_section(section,
     :param cache:            An instance of ``misc.Caching.FileCache`` to use as
                              a file cache buffer.
     :param log_printer:      The log_printer to warn to.
+    :param console_printer:  Object to print messages on the console.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
@@ -674,7 +688,8 @@ def execute_section(section,
                                                 global_bear_list,
                                                 running_processes,
                                                 cache,
-                                                log_printer)
+                                                log_printer,
+                                                console_printer=console_printer)
 
     logger_thread = LogPrinterThread(arg_dict["message_queue"],
                                      log_printer)
@@ -693,7 +708,8 @@ def execute_section(section,
                                print_results,
                                section,
                                cache,
-                               log_printer),
+                               log_printer,
+                               console_printer=console_printer),
                 arg_dict["local_result_dict"],
                 arg_dict["global_result_dict"],
                 arg_dict["file_dict"])

@@ -19,7 +19,8 @@ from coalib.misc.Constants import configure_logging
 do_nothing = lambda *args: True
 
 
-def run_coala(log_printer=None,
+def run_coala(console_printer=None,
+              log_printer=None,
               print_results=do_nothing,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
@@ -31,6 +32,7 @@ def run_coala(log_printer=None,
     This is a main method that should be usable for almost all purposes and
     reduces executing coala to one function call.
 
+    :param console_printer:         Object to print messages on the console.
     :param log_printer:             A LogPrinter object to use for logging.
     :param print_results:           A callback that takes a LogPrinter, a
                                     section, a list of results to be printed,
@@ -98,7 +100,8 @@ def run_coala(log_printer=None,
                 local_bear_list=local_bears[section_name],
                 print_results=print_results,
                 cache=cache,
-                log_printer=log_printer)
+                log_printer=log_printer,
+                console_printer=console_printer)
             yielded, yielded_unfixed, results[section_name] = (
                 simplify_section_result(section_result))
 

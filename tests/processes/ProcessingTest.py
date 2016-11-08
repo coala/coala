@@ -75,6 +75,7 @@ class ProcessingTest(unittest.TestCase):
         self.result_queue = queue.Queue()
         self.queue = queue.Queue()
         self.log_queue = queue.Queue()
+        self.console_printer = ConsolePrinter()
         log_printer = LogPrinter(ConsolePrinter())
         self.log_printer = ProcessingTestLogPrinter(self.log_queue)
 
@@ -97,7 +98,8 @@ class ProcessingTest(unittest.TestCase):
                                   self.local_bears["default"],
                                   lambda *args: self.result_queue.put(args[2]),
                                   cache,
-                                  self.log_printer)
+                                  self.log_printer,
+                                  console_printer=self.console_printer)
         self.assertTrue(results[0])
 
         local_results = self.result_queue.get(timeout=0)
@@ -134,7 +136,8 @@ class ProcessingTest(unittest.TestCase):
                                   [],
                                   lambda *args: self.result_queue.put(args[2]),
                                   None,
-                                  self.log_printer)
+                                  self.log_printer,
+                                  console_printer=self.console_printer)
         # No results
         self.assertFalse(results[0])
         # One file
@@ -205,7 +208,8 @@ class ProcessingTest(unittest.TestCase):
             lambda *args: self.queue.put(args[2]),
             section,
             None,
-            self.log_printer)
+            self.log_printer,
+            self.console_printer)
 
         self.assertEqual(self.queue.get(timeout=0), ([first_local,
                                                       second_local,
@@ -227,7 +231,8 @@ class ProcessingTest(unittest.TestCase):
             lambda *args: self.queue.put(args[2]),
             Section(""),
             None,
-            self.log_printer)
+            self.log_printer,
+            self.console_printer)
         with self.assertRaises(queue.Empty):
             self.queue.get(timeout=0)
 
@@ -241,7 +246,8 @@ class ProcessingTest(unittest.TestCase):
             lambda *args: self.queue.put(args[2]),
             Section(""),
             None,
-            self.log_printer)
+            self.log_printer,
+            self.console_printer)
         with self.assertRaises(queue.Empty):
             self.queue.get(timeout=0)
 
@@ -594,12 +600,14 @@ class ProcessingTest_PrintResult(unittest.TestCase):
     def setUp(self):
         self.section = Section('name')
         self.log_printer = LogPrinter(ConsolePrinter(), log_level=0)
+        self.console_printer = ConsolePrinter()
 
     def test_autoapply_override(self):
         """
         Tests that the default_actions aren't automatically applied when the
         autoapply setting overrides that.
         """
+
         self.section.append(Setting('default_actions',
                                     'somebear: PrintDebugMessageAction'))
 
@@ -607,5 +615,6 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         results = [5, HiddenResult('origin', []),
                    Result('somebear', 'message', debug_msg='debug')]
         retval, newres = print_result(results, {}, 0, lambda *args: None,
-                                      self.section, self.log_printer, {}, [])
+                                      self.section, self.log_printer, {}, [],
+                                      console_printer=self.console_printer)
         self.assertEqual(newres, [])
