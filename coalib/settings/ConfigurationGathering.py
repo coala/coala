@@ -305,7 +305,6 @@ def get_filtered_bears(languages, log_printer):
 
 def gather_configuration(acquire_settings,
                          log_printer,
-                         autoapply=None,
                          arg_list=None,
                          arg_parser=None):
     """
@@ -333,8 +332,6 @@ def gather_configuration(acquire_settings,
                              who need this setting in all following indexes.
     :param log_printer:      The log printer to use for logging. The log level
                              will be adjusted to the one given by the section.
-    :param autoapply:        Set whether to autoapply patches. This is
-                             overridable via any configuration file/CLI.
     :param arg_list:         CLI args to use
     :param arg_parser:       Instance of ArgParser that is used to parse
                              none-setting arguments.
@@ -356,10 +353,6 @@ def gather_configuration(acquire_settings,
                                               log_printer)
     save_sections(sections)
     warn_nonexistent_targets(targets, sections, log_printer)
-
-    if autoapply is not None:
-        if not autoapply and 'autoapply' not in sections['default']:
-            sections['default']['autoapply'] = "False"
 
     return (sections,
             local_bears,

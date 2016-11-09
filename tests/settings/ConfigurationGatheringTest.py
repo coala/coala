@@ -276,22 +276,3 @@ class ConfigurationGatheringTest(unittest.TestCase):
                     ['--no-config', '--find-config'],
                     self.log_printer)
                 self.assertEqual(cm.exception.code, 2)
-
-    def test_autoapply_arg(self):
-        sections, _, _, _ = gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            autoapply=False,
-            arg_list=[])
-
-        self.assertEqual(str(sections['default'].get('autoapply', None)),
-                         'False')
-
-        sections, _, _, _ = gather_configuration(
-            lambda *args: True,
-            self.log_printer,
-            autoapply=True,
-            arg_list=[])
-
-        self.assertEqual(str(sections['default'].get('autoapply', None)),
-                         'None')

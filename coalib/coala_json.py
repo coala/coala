@@ -46,8 +46,7 @@ def main():
         except BaseException as exception:  # pylint: disable=broad-except
             return get_exitcode(exception, log_printer)
     else:
-        results, exitcode, _ = run_coala(
-            log_printer=log_printer, autoapply=False)
+        results, exitcode, _ = run_coala(log_printer=log_printer)
 
     retval = {"bears": results} if args.show_bears else {"results": results}
     if not args.text_logs:

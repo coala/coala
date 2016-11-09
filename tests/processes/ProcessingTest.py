@@ -609,9 +609,3 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         retval, newres = print_result(results, {}, 0, lambda *args: None,
                                       self.section, self.log_printer, {}, [])
         self.assertEqual(newres, [])
-
-        # Override and verify that result is unprocessed, i.e. not gone
-        self.section.append(Setting('autoapply', 'false'))
-        retval, newres = print_result(results, {}, 0, lambda *args: None,
-                                      self.section, self.log_printer, {}, [])
-        self.assertNotEqual(newres, [])

@@ -221,14 +221,11 @@ def print_result(results,
                           not check_result_ignore(result, ignore_ranges),
                           results))
 
-    if bool(section.get('autoapply', 'true')):
-        patched_results = autoapply_actions(results,
-                                            file_dict,
-                                            file_diff_dict,
-                                            section,
-                                            log_printer)
-    else:
-        patched_results = results
+    patched_results = autoapply_actions(results,
+                                        file_dict,
+                                        file_diff_dict,
+                                        section,
+                                        log_printer)
 
     print_results(log_printer,
                   section,

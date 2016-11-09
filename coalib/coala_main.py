@@ -24,7 +24,6 @@ def run_coala(log_printer=None,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
-              autoapply=True,
               arg_parser=None,
               arg_list=None):
     """
@@ -48,9 +47,6 @@ def run_coala(log_printer=None,
     :param nothing_done:            A callback that will be called with only a
                                     log printer that shall indicate that
                                     nothing was done.
-    :param autoapply:               Set to False to autoapply nothing by
-                                    default; this is overridable via any
-                                    configuration file/CLI.
     :param arg_list:                The CLI argument list.
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
@@ -70,7 +66,6 @@ def run_coala(log_printer=None,
         sections, local_bears, global_bears, targets = gather_configuration(
             acquire_settings,
             log_printer,
-            autoapply=autoapply,
             arg_parser=arg_parser,
             arg_list=arg_list)
 

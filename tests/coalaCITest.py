@@ -58,7 +58,7 @@ class coalaCITest(unittest.TestCase):
                 "-c", os.devnull,
                 "-f", re.escape(filename),
                 "-b", "SpaceConsistencyTestBear",
-                "--settings", "autoapply=true", "use_spaces=True",
+                "--settings", "use_spaces=True",
                 "default_actions=SpaceConsistencyTestBear:ApplyPatchAction")
             self.assertIn("Applied 'ApplyPatchAction'", output)
             self.assertEqual(retval, 5,
