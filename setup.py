@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version, VERSION, get_version, BUS_NAME
+from coalib import assert_supported_version, VERSION, get_version
 
 assert_supported_version()
 # Stop ignoring
@@ -14,7 +14,6 @@ from subprocess import call
 
 import setuptools.command.build_py
 from coalib.misc.BuildManPage import BuildManPage
-from coalib.output.dbus.BuildDbusService import BuildDbusService
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
@@ -28,7 +27,6 @@ class BuildPyCommand(setuptools.command.build_py.build_py):
 
     def run(self):
         self.run_command('build_manpage')
-        self.run_command('build_dbus')
         setuptools.command.build_py.build_py.run(self)
 
 
@@ -73,7 +71,7 @@ with open("README.rst") as readme:
 
 
 if __name__ == "__main__":
-    data_files = [('.', ['coala.1']), ('.', [BUS_NAME + '.service'])]
+    data_files = [('.', ['coala.1'])]
 
     setup(name='coala',
           version=VERSION,
@@ -101,7 +99,6 @@ if __name__ == "__main__":
               "console_scripts": [
                   "coala = coalib.coala:main",
                   "coala-ci = coalib.coala_ci:main",
-                  "coala-dbus = coalib.coala_dbus:main",
                   "coala-json = coalib.coala_json:main",
                   "coala-format = coalib.coala_format:main",
                   "coala-delete-orig = coalib.coala_delete_orig:main"]},
@@ -131,7 +128,6 @@ if __name__ == "__main__":
               'Topic :: Software Development :: Quality Assurance',
               'Topic :: Text Processing :: Linguistic'],
           cmdclass={'build_manpage': BuildManPage,
-                    'build_dbus': BuildDbusService,
                     'build_py': BuildPyCommand,
                     'docs': BuildDocsCommand,
                     'test': PyTestCommand})

@@ -1,4 +1,0 @@
-[Default]
-bears = GlobalTestBear, LocalTestBear
-files = testcode.c
-bear_dirs = .

@@ -15,12 +15,10 @@ if [ "$CIRCLE_BUILD_IMAGE" = "ubuntu-12.04" ]; then
 fi
 sudo apt-get update
 deps="indent libclang1-3.4 r-base"
-deps_python_dbus="libdbus-glib-1-dev libdbus-1-dev"
-deps_python_gi="glib2.0-dev gobject-introspection libgirepository1.0-dev python3-cairo-dev"
 deps_ruby_npm="gem nodejs"
 deps_julia="julia"
 deps_julia_packages="Lint"
-sudo apt-get install $deps $deps_python_gi $deps_python_dbus $deps_ruby_npm $deps_julia
+sudo apt-get install $deps $deps_ruby_npm $deps_julia
 
 for julia_package in $deps_julia_packages ; do
   julia -e 'Pkg.add("'$julia_package'")'
@@ -34,11 +32,6 @@ for dep_version in "${dep_versions[@]}" ; do
 
   pip install -r test-requirements.txt
   pip install -r requirements.txt
-
-  cd .misc
-  bash install.python-gi.sh
-  bash install.python-dbus.sh
-  cd ..
 done
 
 if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then

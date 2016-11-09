@@ -33,7 +33,7 @@ def default_arg_parser(formatter_class=None):
                        else formatter_class)
 
     entry_point = sys.argv[0]
-    for entry in ['coala-ci', 'coala-dbus', 'coala-format', 'coala-json',
+    for entry in ['coala-ci', 'coala-format', 'coala-json',
                   'coala-delete-orig']:
         if entry_point.endswith(entry):
             parser_type = entry

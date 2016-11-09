@@ -4,11 +4,7 @@ import appdirs
 import os
 import re
 
-# Start ignoring PyImportSortBear, PyLintBear as BUS_NAME is imported as a
-# constant from other files.
-from coalib import BUS_NAME
 from coalib import VERSION
-# Stop ignoring
 
 
 THIS_IS_A_BUG = ('This is a bug. We are sorry for the inconvenience. '
