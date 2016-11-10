@@ -146,9 +146,7 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     cli_sections = parse_cli(arg_list=arg_list, arg_parser=arg_parser)
     check_conflicts(cli_sections)
 
-    if (
-            bool(cli_sections["default"].get("find_config", "False")) and
-            str(cli_sections["default"].get("config")) == ""):
+    if (str(cli_sections["default"].get("config")) == ""):
         cli_sections["default"].add_or_create_setting(
             Setting("config", re.escape(find_user_config(os.getcwd()))))
 
