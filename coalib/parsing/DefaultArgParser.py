@@ -5,6 +5,30 @@ from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
 
 
+description = """
+coala provides a common command-line interface for linting and fixing all your
+code, regardless of the programming languages you use.
+
+To find out what kind of analysis coala offers for the languages you use, visit
+<https://github.com/coala/bear-docs/blob/master/README.rst#supported-languages>
+or run:
+
+    $ coala --show-bears --filter-by-language C Python
+
+To perform code analysis, simply specify the analysis routines (bears) and the
+files you want it to run on, for example:
+
+    $ coala --bears SpaceConsistencyBear --files **.py
+
+coala can also automatically fix your code:
+
+    $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
+
+To run coala without user interaction, check out the `coala-json` and
+`coala-format` binaries.
+"""
+
+
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
     """
     A Custom Formatter that will keep the metavars in the usage but remove them
@@ -40,29 +64,6 @@ def default_arg_parser(formatter_class=None):
             break
     else:
         parser_type = 'coala'
-
-    description = """
-coala provides a common command-line interface for linting and fixing all your
-code, regardless of the programming languages you use.
-
-To find out what kind of analysis coala offers for the languages you use, visit
-<https://github.com/coala/bear-docs/blob/master/README.rst#supported-languages>
-or run:
-
-    $ coala --show-bears --filter-by-language C Python
-
-To perform code analysis, simply specify the analysis routines (bears) and the
-files you want it to run on, for example:
-
-    $ coala --bears SpaceConsistencyBear --files **.py
-
-coala can also automatically fix your code:
-
-    $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
-
-To run coala without user interaction, check out the `coala-json` and
-`coala-format` binaries.
-"""
 
     arg_parser = argparse.ArgumentParser(
         formatter_class=formatter_class,
