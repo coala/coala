@@ -1,5 +1,4 @@
 import argparse
-import sys
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
@@ -55,15 +54,6 @@ def default_arg_parser(formatter_class=None):
     """
     formatter_class = (CustomFormatter if formatter_class is None
                        else formatter_class)
-
-    entry_point = sys.argv[0]
-    for entry in ['coala-ci', 'coala-dbus', 'coala-format', 'coala-json',
-                  'coala-delete-orig']:
-        if entry_point.endswith(entry):
-            parser_type = entry
-            break
-    else:
-        parser_type = 'coala'
 
     arg_parser = argparse.ArgumentParser(
         formatter_class=formatter_class,
@@ -156,43 +146,6 @@ def default_arg_parser(formatter_class=None):
         choices=('INFO', 'NORMAL', 'MAJOR'), metavar='ENUM',
         help="set minimal result severity to INFO/NORMAL/MAJOR")
 
-    # Specific arguments
-    if parser_type in ('coala', 'coala-json'):
-        outputs_group.add_argument(
-            '-B', '--show-bears', const=True, action='store_const',
-            help='list all bears')
-
-        outputs_group.add_argument(
-            '-l', '--filter-by-language', nargs='+', metavar='LANG',
-            help="filters `--show-bears` by the given languages")
-
-        outputs_group.add_argument(
-            '-p', '--show-capabilities', nargs='+', metavar='LANG',
-            help="show what coala can fix and detect for the given languages")
-
-    if parser_type == 'coala':
-        outputs_group.add_argument(
-            '-D', '--show-description', const=True, action='store_const',
-            help="show bear descriptions for `--show-bears`")
-
-        outputs_group.add_argument(
-            '--show-details', const=True, action='store_const',
-            help='show bear details for `--show-bears`')
-
-    # The following are "coala-json" specific arguments
-    if parser_type == 'coala-json':
-        outputs_group.add_argument(
-            '-o', '--output', nargs=1, metavar='FILE',
-            help='write JSON logs to the given file')
-
-        outputs_group.add_argument(
-            '--text-logs', nargs='?', const=True, metavar='BOOL',
-            help="use regular log messages instead of JSON")
-
-        outputs_group.add_argument(
-            '-r', '--relpath', nargs='?', const=True,
-            help="return relative paths for files")
-
     misc_group = arg_parser.add_argument_group('Miscellaneous')
 
     misc_group.add_argument(
@@ -211,6 +164,116 @@ def default_arg_parser(formatter_class=None):
     misc_group.add_argument(
         '-n', '--no-orig', const=True, action='store_const',
         help="don't create .orig backup files before patching")
+
+    try:  # pragma: no cover
+        # Auto completion should be optional, because of somewhat complicated
+        # setup.
+        import argcomplete
+        argcomplete.autocomplete(arg_parser)
+    except ImportError:
+        pass
+    return arg_parser
+
+
+def interactive_arg_parser(formatter_class=None):
+    """
+    This function creates an ArgParser to parse command line arguments specific
+    to the interactive version of coala.
+
+    :param formatter_class: Formatting the arg_parser output into a specific
+                            form. For example: In the manpage format.
+    """
+
+    formatter_class = (CustomFormatter if formatter_class is None
+                       else formatter_class)
+
+    arg_parser = argparse.ArgumentParser(
+        formatter_class=formatter_class,
+        prog="coala",
+        description=description,
+        # Use our own help so that we can put it in the group we want
+        add_help=False,
+        parents=[default_arg_parser()])
+
+    metadata_group = arg_parser.add_argument_group('Metadata')
+
+    metadata_group.add_argument(
+        '-B', '--show-bears', const=True, action='store_const',
+        help='list all bears')
+
+    metadata_group.add_argument(
+        '-l', '--filter-by-language', nargs='+', metavar='LANG',
+        help="filters `--show-bears` by the given languages")
+
+    metadata_group.add_argument(
+        '-p', '--show-capabilities', nargs='+', metavar='LANG',
+        help="show what coala can fix and detect for the given languages")
+
+    metadata_group.add_argument(
+        '-D', '--show-description', const=True, action='store_const',
+        help="show bear descriptions for `--show-bears`")
+
+    metadata_group.add_argument(
+        '--show-details', const=True, action='store_const',
+        help='show bear details for `--show-bears`')
+
+    try:  # pragma: no cover
+        # Auto completion should be optional, because of somewhat complicated
+        # setup.
+        import argcomplete
+        argcomplete.autocomplete(arg_parser)
+    except ImportError:
+        pass
+    return arg_parser
+
+
+def json_arg_parser(formatter_class=None):
+    """
+    This function creates an ArgParser to parse command line arguments specific
+    to the interactive version of coala.
+
+    :param formatter_class: Formatting the arg_parser output into a specific
+                            form. For example: In the manpage format.
+    """
+
+    formatter_class = (CustomFormatter if formatter_class is None
+                       else formatter_class)
+
+    arg_parser = argparse.ArgumentParser(
+        formatter_class=formatter_class,
+        prog="coala",
+        description=description,
+        # Use our own help so that we can put it in the group we want
+        add_help=False,
+        parents=[default_arg_parser()])
+
+    metadata_group = arg_parser.add_argument_group('Metadata')
+
+    metadata_group.add_argument(
+        '-B', '--show-bears', const=True, action='store_const',
+        help='list all bears')
+
+    metadata_group.add_argument(
+        '-l', '--filter-by-language', nargs='+', metavar='LANG',
+        help="filters `--show-bears` by the given languages")
+
+    metadata_group.add_argument(
+        '-p', '--show-capabilities', nargs='+', metavar='LANG',
+        help="show what coala can fix and detect for the given languages")
+
+    json_group = arg_parser.add_argument_group('JSON')
+
+    json_group.add_argument(
+        '-o', '--output', nargs=1, metavar='FILE',
+        help='write JSON logs to the given file')
+
+    json_group.add_argument(
+        '--text-logs', nargs='?', const=True, metavar='BOOL',
+        help="use regular log messages instead of JSON")
+
+    json_group.add_argument(
+        '-r', '--relpath', nargs='?', const=True,
+        help="return relative paths for files")
 
     try:  # pragma: no cover
         # Auto completion should be optional, because of somewhat complicated

@@ -18,7 +18,7 @@ from coalib.misc.DictUtilities import inverse_dicts
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
-from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.parsing.DefaultArgParser import json_arg_parser
 from coalib.settings.ConfigurationGathering import get_filtered_bears
 
 
@@ -27,7 +27,7 @@ def main():
     #       Also, commands like -h (help) and -v (version) are executed here.
     #       The args are again parsed later to find the settings and configs
     #       to use during analysis.
-    arg_parser = default_arg_parser()
+    arg_parser = json_arg_parser()
     args = arg_parser.parse_args()
 
     log_printer = None if args.text_logs else ListLogPrinter()
@@ -46,7 +46,8 @@ def main():
         except BaseException as exception:  # pylint: disable=broad-except
             return get_exitcode(exception, log_printer)
     else:
-        results, exitcode, _ = run_coala(log_printer=log_printer)
+        results, exitcode, _ = run_coala(log_printer=log_printer,
+                                         arg_parser=json_arg_parser())
 
     retval = {"bears": results} if args.show_bears else {"results": results}
     if not args.text_logs:

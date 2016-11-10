@@ -19,7 +19,7 @@ from coalib.output.ConsoleInteraction import (
     acquire_settings, nothing_done, print_results, print_section_beginning,
     show_bears, show_language_bears_capabilities)
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.parsing.DefaultArgParser import interactive_arg_parser
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
         log_printer = LogPrinter(console_printer)
         # Note: We parse the args here once to check whether to show bears or
         # not.
-        args = default_arg_parser().parse_args()
+        args = interactive_arg_parser().parse_args()
 
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (
@@ -74,7 +74,8 @@ def main():
         print_results=print_results,
         acquire_settings=acquire_settings,
         print_section_beginning=partial_print_sec_beg,
-        nothing_done=nothing_done)
+        nothing_done=nothing_done,
+        arg_parser=interactive_arg_parser())
 
     return exitcode
 
