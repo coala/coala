@@ -21,8 +21,10 @@ def deprecate_settings(**depr_args):
      Now we can simply call the bear with the deprecated setting, we'll get a
      warning - but it still works!
 
+     >>> import sys
+     >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
      >>> run(old="Hello world!")
-     The setting `old` is deprecated. Please use `new` instead.
+     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
      Hello world!
      >>> run(new="Hello world!")
      Hello world!
@@ -35,7 +37,7 @@ def deprecate_settings(**depr_args):
      ...     print(new)
 
      >>> func(old="Welcome to ")
-     The setting `old` is deprecated. Please use `new` instead.
+     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
      Welcome to coala!
      >>> func(new='coala!')
      coala!
@@ -46,12 +48,13 @@ def deprecate_settings(**depr_args):
      >>> @deprecate_settings(new='old')
      ... def run(new):
      ...     print(new)
-     >>> run(old="Hello!", new='coala is always written with lowercase `c`.')
-     The setting `old` is deprecated. Please use `new` instead.
-     The value of `old` and `new` are conflicting. `new` will be used instead.
+     >>> # doctest: +ELLIPSIS
+     ... run(old="Hello!", new='coala is always written with lowercase `c`.')
+     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+     WARNING:root:The value of `old` and `new` are conflicting. `new` will...
      coala is always written with lowercase `c`.
      >>> run(old='Hello!', new='Hello!')
-     The setting `old` is deprecated. Please use `new` instead.
+     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
      Hello!
 
      The metadata for coala has been adjusted as well:
@@ -76,12 +79,14 @@ def deprecate_settings(**depr_args):
                     if isinstance(depr_arg_and_modifier, tuple)
                     else (depr_arg_and_modifier, lambda x: x))
                 if deprecated_arg in kwargs:
-                    print("The setting `{}` is deprecated. Please use `{}` "
-                          "instead.".format(deprecated_arg, arg))
+                    logging.warning(
+                        "The setting `{}` is deprecated. Please use `{}` "
+                        "instead.".format(deprecated_arg, arg))
                     depr_arg_value = _func.__call__(kwargs[deprecated_arg])
                     if arg in kwargs and depr_arg_value != kwargs[arg]:
-                        print('The value of `{}` and `{}` are conflicting.'
-                              ' `{}` will be used instead.'.format(
+                        logging.warning(
+                            'The value of `{}` and `{}` are conflicting.'
+                            ' `{}` will be used instead.'.format(
                                   deprecated_arg, arg, arg))
                     else:
                         kwargs[arg] = depr_arg_value
