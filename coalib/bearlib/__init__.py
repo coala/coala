@@ -4,6 +4,8 @@ as the rest of coala the bearlib is designed to be as easy to use as possible
 while offering the best possible flexibility.
 """
 
+import logging
+
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
@@ -97,3 +99,41 @@ def deprecate_settings(**depr_args):
         return wrapping_function
 
     return _deprecate_decorator
+
+
+def deprecate_bear(bear):
+    """
+    Use this to deprecate a bear. Say we have a bear:
+
+    >>> class SomeBear:
+    ...     def run(*args):
+    ...         print("I'm running!")
+
+    To change the name from ``SomeOldBear`` to ``SomeBear`` you can keep the
+    ``SomeOldBear.py`` around with those contents:
+
+    >>> @deprecate_bear
+    ... class SomeOldBear(SomeBear): pass
+
+    Now let's run the bear:
+
+    >>> import sys
+    >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    >>> SomeOldBear().run()
+    WARNING:root:The bear SomeOldBear is deprecated. Use SomeBear instead!
+    I'm running!
+
+    :param bear: An old bear class that inherits from the new one (so it gets
+                 its methods and can just contain a pass.)
+    :return: A bear class that warns about deprecation on use.
+    """
+    bear.old_run = bear.run
+
+    def warn_deprecation_and_run(*args, **kwargs):
+        logging.warning("The bear {} is deprecated. Use {} instead!".format(
+            bear.__name__, bear.__bases__[0].__name__
+        ))
+        return bear.old_run(*args, **kwargs)
+
+    bear.run = warn_deprecation_and_run
+    return bear
