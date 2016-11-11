@@ -18,9 +18,9 @@ class LineParser:
         escapes.
 
         :param key_value_delimiters:        Delimiters that delimit a key from
-                                            a value
-        :param comment_separators:          Used to initiate a comment
-        :param key_delimiters:              Delimiters between several keys
+                                            a value.
+        :param comment_separators:          Used to initiate a comment.
+        :param key_delimiters:              Delimiters between several keys.
         :param section_name_surroundings:   Dictionary, e.g. {"[", "]"} means a
                                             section name is surrounded by [].
                                             If None, {"[": "]"} is used as
@@ -48,7 +48,7 @@ class LineParser:
         unescaped. This is so since the value is meant to be put into a Setting
         later thus the escapes may be needed there.
 
-        :param line: the line to parse
+        :param line: The line to parse.
         :return:     section_name (empty string if it's no section name),
                      [(section_override, key), ...], value, comment
         """
