@@ -104,7 +104,6 @@ def nothing_done(log_printer):
 
 
 def acquire_actions_and_apply(console_printer,
-                              log_printer,
                               section,
                               file_diff_dict,
                               result,
@@ -114,7 +113,6 @@ def acquire_actions_and_apply(console_printer,
     Acquires applicable actions and applies them.
 
     :param console_printer: Object to print messages on the console.
-    :param log_printer:     Printer responsible for logging the messages.
     :param section:         Name of section to which the result belongs.
     :param file_diff_dict:  Dictionary containing filenames as keys and Diff
                             objects as values.
@@ -254,7 +252,6 @@ def print_result(console_printer,
             else:
                 print_diffs_info(result.diffs, console_printer)
         acquire_actions_and_apply(console_printer,
-                                  log_printer,
                                   section,
                                   file_diff_dict,
                                   result,

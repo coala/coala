@@ -340,7 +340,6 @@ class ConsoleInteractionTest(unittest.TestCase):
                 ApplyPatchAction.is_applicable = staticmethod(
                     lambda *args: True)
                 acquire_actions_and_apply(self.console_printer,
-                                          self.log_printer,
                                           Section(""),
                                           self.file_diff_dict,
                                           Result("origin", "message", diffs={
@@ -364,7 +363,6 @@ class ConsoleInteractionTest(unittest.TestCase):
             with simulate_console_inputs(2, 1, 0) as generator, \
                     retrieve_stdout() as sio:
                 acquire_actions_and_apply(self.console_printer,
-                                          self.log_printer,
                                           Section(""),
                                           self.file_diff_dict,
                                           Result("origin", "message",
