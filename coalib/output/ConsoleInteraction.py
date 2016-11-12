@@ -341,7 +341,6 @@ def print_affected_files(console_printer,
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
-                                     section,
                                      sourcerange)
 
 
@@ -421,14 +420,13 @@ def print_results(log_printer,
                      file_dict)
 
 
-def print_affected_lines(console_printer, file_dict, section, sourcerange):
+def print_affected_lines(console_printer, file_dict, sourcerange):
     """
     Prints the lines affected by the bears.
 
     :param console_printer:    Object to print messages on the console.
     :param file_dict:          A dictionary containing all files with filename
                                as key.
-    :param section:            The section to which the results belong to.
     :param sourcerange:        The SourceRange object referring to the related
                                lines to print.
     """
