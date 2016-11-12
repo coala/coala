@@ -105,7 +105,6 @@ class LogPrinter(LogPrinterMixin):
 
     def __init__(self,
                  printer=None,
-                 log_level=LOG_LEVEL.DEBUG,
                  timestamp_format="%X"):
         """
         Creates a new log printer from an existing Printer.
@@ -113,30 +112,13 @@ class LogPrinter(LogPrinterMixin):
         :param printer:          The underlying Printer where log messages
                                  shall be written to. If you inherit from
                                  LogPrinter, set it to self.
-        :param log_level:        The minimum log level, everything below will
-                                 not be logged.
         :param timestamp_format: The format string for the
                                  datetime.today().strftime(format) method.
         """
         self.logger = logging.getLogger()
 
         self._printer = printer
-        self.log_level = log_level
         self.timestamp_format = timestamp_format
-
-    @property
-    def log_level(self):
-        """
-        Returns current log_level used in logger.
-        """
-        return self.logger.getEffectiveLevel()
-
-    @log_level.setter
-    def log_level(self, log_level):
-        """
-        Sets log_level for logger.
-        """
-        self.logger.setLevel(log_level)
 
     @property
     def printer(self):
