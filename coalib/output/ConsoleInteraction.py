@@ -310,21 +310,16 @@ def print_results_formatted(log_printer,
 
 def print_affected_files(console_printer,
                          log_printer,
-                         section,
                          result,
-                         file_dict,
-                         color=True):
+                         file_dict):
     """
     Prints all the affected files and affected lines within them.
 
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
-    :param section:         The section to which the results belong to.
     :param result:          The result to print the context for.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
-    :param color:           Boolean variable to print the results in color or
-                            not. Can be used for testing.
     """
     if len(result.affected_code) == 0:
         console_printer.print("\n" + STR_PROJECT_WIDE,
@@ -368,10 +363,8 @@ def print_results_no_input(log_printer,
 
         print_affected_files(console_printer,
                              log_printer,
-                             section,
                              result,
-                             file_dict,
-                             color=color)
+                             file_dict)
 
         print_result(console_printer,
                      log_printer,
@@ -407,10 +400,8 @@ def print_results(log_printer,
 
         print_affected_files(console_printer,
                              log_printer,
-                             section,
                              result,
-                             file_dict,
-                             color=color)
+                             file_dict)
 
         print_result(console_printer,
                      log_printer,

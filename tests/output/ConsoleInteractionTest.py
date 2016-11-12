@@ -329,12 +329,10 @@ class ConsoleInteractionTest(unittest.TestCase):
             affected_code = (SourceRange.from_values(some_file),)
             print_affected_files(self.console_printer,
                                  self.log_printer,
-                                 Section(""),
                                  Result("origin",
                                         "message",
                                         affected_code=affected_code),
-                                 file_dict,
-                                 color=True)
+                                 file_dict)
             self.assertEqual(stdout.getvalue(),
                              "\n"+relpath(some_file)+"\n")
 
