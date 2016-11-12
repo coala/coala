@@ -84,12 +84,24 @@ class ShowPatchAction(ResultAction):
               result,
               original_file_dict,
               file_diff_dict,
-              colored: bool=True):
+              colored: bool=True,
+              show_result_on_top: bool=False):
         """
         Print a diff of the patch that would be applied.
-        :param colored: Whether or not to use colored output.
+
+        :param colored:
+            Whether or not to use colored output.
+        :param show_result_on_top:
+            Set this to True if you want to show the result info on top.
+            (Useful for e.g. coala_ci.)
         """
         printer = ConsolePrinter(colored)
+
+        if show_result_on_top:
+            from coalib.output.ConsoleInteraction import print_result
+            # Most of the params are empty because they're unneeded in
+            # noninteractive mode. Yes, this cries for a refactoring...
+            print_result(printer, None, {}, result, {}, interactive=False)
 
         for filename, this_diff in sorted(result.diffs.items()):
             to_filename = this_diff.rename if this_diff.rename else filename
