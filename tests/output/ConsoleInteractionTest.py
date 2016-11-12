@@ -384,7 +384,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_ask_for_actions_and_apply(self):
         failed_actions = set()
         action = TestAction()
-        args = [self.log_printer, self.console_printer, Section(""),
+        args = [self.console_printer, Section(""),
                 [action.get_metadata()], {'TestAction': action},
                 failed_actions, Result("origin", "message"), {}, {}]
 
@@ -401,7 +401,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input(self):
         action = TestAction()
-        args = [self.log_printer, self.console_printer, Section(""),
+        args = [self.console_printer, Section(""),
                 [action.get_metadata()], {'TestAction': action},
                 set(), Result("origin", "message"), {}, {}]
 

@@ -1,3 +1,5 @@
+import logging
+
 from termcolor import colored
 
 try:
@@ -140,8 +142,7 @@ def acquire_actions_and_apply(console_printer,
             metadata_list.append(metadata)
 
         # User can always choose no action which is guaranteed to succeed
-        if not ask_for_action_and_apply(log_printer,
-                                        console_printer,
+        if not ask_for_action_and_apply(console_printer,
                                         section,
                                         metadata_list,
                                         action_dict,
@@ -597,8 +598,7 @@ def print_actions(console_printer, section, actions, failed_actions):
     return get_action_info(section, actions[choice - 1], failed_actions)
 
 
-def ask_for_action_and_apply(log_printer,
-                             console_printer,
+def ask_for_action_and_apply(console_printer,
                              section,
                              metadata_list,
                              action_dict,
@@ -609,7 +609,6 @@ def ask_for_action_and_apply(log_printer,
     """
     Asks the user for an action and applies it.
 
-    :param log_printer:     Printer responsible for logging the messages.
     :param console_printer: Object to print messages on the console.
     :param section:         Currently active section.
     :param metadata_list:   Contains metadata for all the actions.
@@ -644,10 +643,8 @@ def ask_for_action_and_apply(log_printer,
             color=SUCCESS_COLOR)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
-        log_printer.log_exception("Failed to execute the action "
-                                  "{} with error: {}.".format(action_name,
-                                                              exception),
-                                  exception)
+        logging.error("Failed to execute the action {} with error: {}.".format(
+            action_name, exception))
         failed_actions.add(action_name)
     return True
 
