@@ -154,7 +154,6 @@ def acquire_actions_and_apply(console_printer,
 
 def print_lines(console_printer,
                 file_dict,
-                section,
                 sourcerange):
     """
     Prints the lines between the current and the result line. If needed
@@ -443,7 +442,6 @@ def print_affected_lines(console_printer, file_dict, section, sourcerange):
         else:
             print_lines(console_printer,
                         file_dict,
-                        section,
                         sourcerange)
 
 
