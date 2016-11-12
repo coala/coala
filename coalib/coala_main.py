@@ -24,6 +24,7 @@ def run_coala(log_printer=None,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
+              force_show_patch=False,
               arg_parser=None,
               arg_list=None):
     """
@@ -47,6 +48,8 @@ def run_coala(log_printer=None,
     :param nothing_done:            A callback that will be called with only a
                                     log printer that shall indicate that
                                     nothing was done.
+    :param force_show_patch:        If set to True, a patch will be always
+                                    shown. (Using ApplyPatchAction.)
     :param arg_list:                The CLI argument list.
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
@@ -84,6 +87,9 @@ def run_coala(log_printer=None,
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
                 continue
+
+            if force_show_patch:
+                section['default_actions'] = "*: ShowPatchAction"
 
             print_section_beginning(section)
             section_result = execute_section(

@@ -27,7 +27,8 @@ def main():
         console_printer)
     results, exitcode, _ = run_coala(
         print_results=print_results_no_input,
-        print_section_beginning=partial_print_sec_beg)
+        print_section_beginning=partial_print_sec_beg,
+        force_show_patch=True)
 
     return exitcode
 

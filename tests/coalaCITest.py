@@ -50,21 +50,6 @@ class coalaCITest(unittest.TestCase):
             self.assertNotEqual(retval, 0,
                                 "coala-ci was expected to return non-zero")
 
-    def test_fix_patchable_issues(self):
-        with bear_test_module(), \
-                prepare_file(["\t#include <a>"], None) as (lines, filename):
-            retval, output = execute_coala(
-                coala_ci.main, "coala-ci",
-                "-c", os.devnull,
-                "-f", re.escape(filename),
-                "-b", "SpaceConsistencyTestBear",
-                "--settings", "use_spaces=True",
-                "default_actions=SpaceConsistencyTestBear:ApplyPatchAction")
-            self.assertIn("Applied 'ApplyPatchAction'", output)
-            self.assertEqual(retval, 5,
-                             "coala-ci must return exitcode 5 when it "
-                             "autofixes the code.")
-
     def test_show_patch(self):
         with bear_test_module(), \
              prepare_file(["\t#include <a>"], None) as (lines, filename):
@@ -73,8 +58,7 @@ class coalaCITest(unittest.TestCase):
                 "-c", os.devnull,
                 "-f", re.escape(filename),
                 "-b", "SpaceConsistencyTestBear",
-                "--settings", "use_spaces=True",
-                "default_actions=*:ShowPatchAction")
+                "--settings", "use_spaces=True")
             self.assertIn("Applied 'ShowPatchAction'", output)
             self.assertEqual(retval, 5,
                              "coala-ci must return exitcode 5 when it "
