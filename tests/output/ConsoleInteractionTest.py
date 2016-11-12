@@ -199,7 +199,6 @@ class ConsoleInteractionTest(unittest.TestCase):
         section = Section("test")
 
         print_result(self.console_printer,
-                     self.log_printer,
                      section,
                      self.file_diff_dict,
                      result,
@@ -221,7 +220,6 @@ class ConsoleInteractionTest(unittest.TestCase):
         section = Section("test")
 
         print_result(self.console_printer,
-                     self.log_printer,
                      section,
                      self.file_diff_dict,
                      result,
@@ -231,7 +229,6 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_print_result(self):
         print_result(self.console_printer,
-                     self.log_printer,
                      None,
                      self.file_diff_dict,
                      "illegal value",
@@ -239,7 +236,6 @@ class ConsoleInteractionTest(unittest.TestCase):
 
         with simulate_console_inputs(0):
             print_result(self.console_printer,
-                         self.log_printer,
                          self.section,
                          self.file_diff_dict,
                          Result("origin", "msg", diffs={}),
@@ -267,7 +263,6 @@ class ConsoleInteractionTest(unittest.TestCase):
                 curr_section = Section("")
                 print_section_beginning(self.console_printer, curr_section)
                 print_result(self.console_printer,
-                             self.log_printer,
                              curr_section,
                              self.file_diff_dict,
                              Result("origin", "msg", diffs={
@@ -298,7 +293,6 @@ class ConsoleInteractionTest(unittest.TestCase):
             patch_result.file = "f_b"
 
             print_result(self.console_printer,
-                         self.log_printer,
                          curr_section,
                          self.file_diff_dict,
                          patch_result,
@@ -308,7 +302,6 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             # It shoudn't ask for parameter again
             print_result(self.console_printer,
-                         self.log_printer,
                          curr_section,
                          self.file_diff_dict,
                          patch_result,

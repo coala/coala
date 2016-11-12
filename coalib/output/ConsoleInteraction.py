@@ -203,7 +203,6 @@ def print_lines(console_printer,
 
 
 def print_result(console_printer,
-                 log_printer,
                  section,
                  file_diff_dict,
                  result,
@@ -213,7 +212,6 @@ def print_result(console_printer,
     Prints the result to console.
 
     :param console_printer: Object to print messages on the console.
-    :param log_printer:     Printer responsible for logging the messages.
     :param section:         Name of section to which the result belongs.
     :param file_diff_dict:  Dictionary containing filenames as keys and Diff
                             objects as values.
@@ -224,9 +222,9 @@ def print_result(console_printer,
                             offer the user actions interactively.
     """
     if not isinstance(result, Result):
-        log_printer.warn("One of the results can not be printed since it is "
-                         "not a valid derivative of the coala result "
-                         "class.")
+        logging.warning("One of the results can not be printed since it is "
+                        "not a valid derivative of the coala result "
+                        "class.")
         return
 
     console_printer.print(format_lines("[{sev}] {bear}:".format(
@@ -365,7 +363,6 @@ def print_results_no_input(log_printer,
                              file_dict)
 
         print_result(console_printer,
-                     log_printer,
                      section,
                      file_diff_dict,
                      result,
@@ -402,7 +399,6 @@ def print_results(log_printer,
                              file_dict)
 
         print_result(console_printer,
-                     log_printer,
                      section,
                      file_diff_dict,
                      result,
