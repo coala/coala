@@ -6,7 +6,6 @@ from os.path import abspath, relpath
 import logging
 
 from pyprint.ConsolePrinter import ConsolePrinter
-from pyprint.StringPrinter import StringPrinter
 
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.Bear import Bear
@@ -18,7 +17,6 @@ from coalib.output.ConsoleInteraction import (
     print_results_formatted, print_results_no_input, print_section_beginning,
     show_bear, show_bears, ask_for_action_and_apply, print_diffs_info,
     show_language_bears_capabilities)
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
                                               highlight_text)
@@ -32,13 +30,8 @@ from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
-from pygments import highlight
-from pygments.formatters import (TerminalTrueColorFormatter,
-                                 TerminalFormatter)
 from pygments.filters import VisibleWhitespaceFilter
 from pygments.lexers import TextLexer
-from pygments.style import Style
-from pygments.token import Token
 
 
 STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
