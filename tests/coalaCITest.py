@@ -59,6 +59,7 @@ class coalaCITest(unittest.TestCase):
                 "-f", re.escape(filename),
                 "-b", "SpaceConsistencyTestBear",
                 "--settings", "use_spaces=True")
+            self.assertIn("Line contains ", output)  # Result message is shown
             self.assertIn("Applied 'ShowPatchAction'", output)
             self.assertEqual(retval, 5,
                              "coala-ci must return exitcode 5 when it "

@@ -90,6 +90,7 @@ def run_coala(log_printer=None,
 
             if force_show_patch:
                 section['default_actions'] = "*: ShowPatchAction"
+                section['show_result_on_top'] = "yeah"
 
             print_section_beginning(section)
             section_result = execute_section(
