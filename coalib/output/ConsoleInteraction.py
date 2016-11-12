@@ -268,10 +268,36 @@ def print_diffs_info(diffs, printer):
             color='green')
 
 
-def print_results_formatted(log_printer,
-                            section,
+def print_results_formatted(section,
                             result_list,
                             *args):
+    """
+    The format string for this function can be set in a Section:
+
+    >>> from coalib.settings.Section import Section
+    >>> section = Section("default")
+    >>> section.append(Setting("format_str", "{origin}"))
+
+    Now we can print the result with the given format string:
+
+    >>> print_results_formatted(section, [Result("origin", "msg")])
+    origin
+
+    If a bad format is provided, the error will be logged:
+
+    >>> import sys
+    >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    >>> section.append(Setting("format_str", "{stupid}"))
+    >>> print_results_formatted(section, [Result("origin", "msg")])
+    ERROR:root:Unable to print the result with the given format string.
+    Traceback (most recent call last):
+     ...
+    KeyError: 'stupid'
+
+    :param section:     The section containing the format string.
+    :param result_list: The list of results to print.
+    :param args:        Any other args, will be ignored.
+    """
     format_str = str(section.get(
         "format_str",
         "id:{id}:origin:{origin}:file:{file}:line:{line}:column:"
@@ -299,20 +325,17 @@ def print_results_formatted(log_printer,
                                         severity_str=severity_str,
                                         **result.__dict__))
         except KeyError as exception:
-            log_printer.log_exception(
-                "Unable to print the result with the given format string.",
-                exception)
+            logging.exception(
+                "Unable to print the result with the given format string.")
 
 
 def print_affected_files(console_printer,
-                         log_printer,
                          result,
                          file_dict):
     """
     Prints all the affected files and affected lines within them.
 
     :param console_printer: Object to print messages on the console.
-    :param log_printer:     Printer responsible for logging the messages.
     :param result:          The result to print the context for.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
@@ -325,18 +348,17 @@ def print_affected_files(console_printer,
             if (
                     sourcerange.file is not None and
                     sourcerange.file not in file_dict):
-                log_printer.warn("The context for the result ({}) cannot "
-                                 "be printed because it refers to a file "
-                                 "that doesn't seem to exist ({})"
-                                 ".".format(result, sourcerange.file))
+                logging.warning("The context for the result ({}) cannot "
+                                "be printed because it refers to a file "
+                                "that doesn't seem to exist ({})"
+                                ".".format(result, sourcerange.file))
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
                                      sourcerange)
 
 
-def print_results_no_input(log_printer,
-                           section,
+def print_results_no_input(section,
                            result_list,
                            file_dict,
                            file_diff_dict,
@@ -344,7 +366,6 @@ def print_results_no_input(log_printer,
     """
     Prints all non interactive results in a section
 
-    :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
     :param file_dict:      A dictionary containing all files with filename as
@@ -358,7 +379,6 @@ def print_results_no_input(log_printer,
     for result in result_list:
 
         print_affected_files(console_printer,
-                             log_printer,
                              result,
                              file_dict)
 
@@ -370,8 +390,7 @@ def print_results_no_input(log_printer,
                      interactive=False)
 
 
-def print_results(log_printer,
-                  section,
+def print_results(section,
                   result_list,
                   file_dict,
                   file_diff_dict,
@@ -379,7 +398,6 @@ def print_results(log_printer,
     """
     Prints all the results in a section.
 
-    :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
     :param file_dict:      A dictionary containing all files with filename as
@@ -394,7 +412,6 @@ def print_results(log_printer,
     for result in sorted(result_list):
 
         print_affected_files(console_printer,
-                             log_printer,
                              result,
                              file_dict)
 

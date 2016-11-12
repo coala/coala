@@ -227,11 +227,7 @@ def print_result(results,
                                         section,
                                         log_printer)
 
-    print_results(log_printer,
-                  section,
-                  patched_results,
-                  file_dict,
-                  file_diff_dict)
+    print_results(section, patched_results, file_dict, file_diff_dict)
     return retval or len(results) > 0, patched_results
 
 
