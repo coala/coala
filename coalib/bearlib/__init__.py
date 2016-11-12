@@ -4,6 +4,8 @@ as the rest of coala the bearlib is designed to be as easy to use as possible
 while offering the best possible flexibility.
 """
 
+import logging
+
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
@@ -74,12 +76,14 @@ def deprecate_settings(**depr_args):
                     if isinstance(depr_arg_and_modifier, tuple)
                     else (depr_arg_and_modifier, lambda x: x))
                 if deprecated_arg in kwargs:
-                    print("The setting `{}` is deprecated. Please use `{}` "
-                          "instead.".format(deprecated_arg, arg))
+                    logging.warning("The setting `{}` is deprecated. Please "
+                                    "use `{}` instead.".format(
+                                        deprecated_arg, arg))
                     depr_arg_value = _func.__call__(kwargs[deprecated_arg])
                     if arg in kwargs and depr_arg_value != kwargs[arg]:
-                        print('The value of `{}` and `{}` are conflicting.'
-                              ' `{}` will be used instead.'.format(
+                        logging.warning(
+                            'The value of `{}` and `{}` are conflicting. '
+                            '`{}` will be used instead.'.format(
                                   deprecated_arg, arg, arg))
                     else:
                         kwargs[arg] = depr_arg_value
