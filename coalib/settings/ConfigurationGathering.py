@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 import sys
@@ -184,8 +185,8 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
             sections[section].defaults = sections["default"]
 
     str_log_level = str(sections["default"].get("log_level", "")).upper()
-    log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
-                                                   LOG_LEVEL.INFO)
+    logging.getLogger().setLevel(
+        LOG_LEVEL.str_dict.get(str_log_level, LOG_LEVEL.INFO))
 
     warn_config_absent(sections, 'files', log_printer)
     warn_config_absent(sections, 'bears', log_printer)

@@ -593,7 +593,7 @@ class ProcessingTest_PrintResult(unittest.TestCase):
 
     def setUp(self):
         self.section = Section('name')
-        self.log_printer = LogPrinter(ConsolePrinter(), log_level=0)
+        self.log_printer = LogPrinter(ConsolePrinter())
 
     def test_autoapply_override(self):
         """
