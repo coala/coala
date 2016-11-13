@@ -112,10 +112,7 @@ def _iimport_objects(file_paths, names, types, supers, attributes, local):
     :raises Exception: Any exception that is thrown in module code or an
                        ImportError if paths are erroneous.
     """
-    if not file_paths or (not names and
-                          not types and
-                          not supers and
-                          not attributes):
+    if not file_paths:
         return
 
     for file_path in file_paths:

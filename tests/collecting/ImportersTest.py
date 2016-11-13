@@ -20,7 +20,7 @@ class ImportObjectsTest(unittest.TestCase):
         self.assertEqual(import_objects([]), [])
 
     def test_no_data(self):
-        self.assertEqual(import_objects(self.testfile1_path), [])
+        self.assertEqual(len(import_objects(self.testfile1_path)), 12)
 
     def test_name_import(self):
         self.assertEqual(
