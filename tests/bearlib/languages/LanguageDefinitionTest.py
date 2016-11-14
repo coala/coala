@@ -13,16 +13,6 @@ class LanguageDefinitionTest(unittest.TestCase):
         self.section = Section("any")
         self.section.append(Setting("language", "CPP"))
 
-    def test_nonexistant_file(self):
-        self.section.append(Setting("language", "bullshit"))
-
-        with self.assertRaises(FileNotFoundError):
-            LanguageDefinition.from_section(self.section)
-
-    def test_loading(self):
-        uut = LanguageDefinition.from_section(self.section)
-        self.assertEqual(list(uut["extensions"]), [".c", ".cpp", ".h", ".hpp"])
-
     def test_key_contains(self):
         uut = LanguageDefinition.from_section(self.section)
         self.assertIn("extensions", uut)
