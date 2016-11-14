@@ -4,10 +4,9 @@ import os
 import re
 
 from coalib import coala_delete_orig
-from coalib.misc.ContextManagers import retrieve_stdout
+from coalib.misc.ContextManagers import retrieve_stderr
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
-from coalib.misc.ContextManagers import make_temp
 
 
 class coalaDeleteOrigTest(unittest.TestCase):
@@ -26,18 +25,18 @@ class coalaDeleteOrigTest(unittest.TestCase):
     def test_remove_exception(self, mock_glob):
         # Non existent file
         mock_glob.return_value = ["non_existent_file"]
-        with retrieve_stdout() as stdout:
+        with retrieve_stderr() as stderr:
             retval = coala_delete_orig.main(section=self.section)
-            output = stdout.getvalue()
+            output = stderr.getvalue()
             self.assertEqual(retval, 0)
             self.assertIn("Couldn't delete", output)
 
         # Directory instead of file
         with tempfile.TemporaryDirectory() as filename, \
-                retrieve_stdout() as stdout:
+                retrieve_stderr() as stderr:
             mock_glob.return_value = [filename]
             retval = coala_delete_orig.main(section=self.section)
-            output = stdout.getvalue()
+            output = stderr.getvalue()
             self.assertEqual(retval, 0)
             self.assertIn("Couldn't delete", output)
 

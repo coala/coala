@@ -3,7 +3,7 @@ import os
 import sys
 import unittest.mock
 
-from coalib.misc.ContextManagers import retrieve_stdout
+from coalib.misc.ContextManagers import retrieve_stdout, retrieve_stderr
 
 
 def execute_coala(func, binary, *args):
@@ -17,8 +17,9 @@ def execute_coala(func, binary, *args):
     """
     sys.argv = [binary] + list(args)
     with retrieve_stdout() as stdout:
-        retval = func()
-        return retval, stdout.getvalue()
+        with retrieve_stderr() as stderr:
+            retval = func()
+            return retval, stdout.getvalue() + '\n' + stderr.getvalue()
 
 
 @contextmanager
