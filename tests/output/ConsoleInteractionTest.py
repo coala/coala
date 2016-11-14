@@ -321,7 +321,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                         affected_code=affected_code),
                                  file_dict)
             self.assertEqual(stdout.getvalue(),
-                             "\n"+relpath(some_file)+"\n")
+                             "\n" + relpath(some_file) + "\n")
 
     def test_acquire_actions_and_apply(self):
         with make_temp() as testfile_path:
@@ -640,7 +640,7 @@ some_file
                 "\nfile\n"
                 "|    | [NORMAL] t:\n"
                 "|    | {}\n".format(highlight_text(
-                   self.no_color, "msg", style=BackgroundMessageStyle)),
+                    self.no_color, "msg", style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
 
@@ -732,7 +732,8 @@ class ShowBearsTest(unittest.TestCase):
     def test_show_bears_capabilities(self):
         with retrieve_stdout() as stdout:
             show_language_bears_capabilities(
-                {'some_language': ({'Formatting', 'Security'}, {'Formatting'})},
+                {'some_language': (
+                    {'Formatting', 'Security'}, {'Formatting'})},
                 self.console_printer)
             self.assertIn('coala can do the following for SOME_LANGUAGE\n'
                           '    Can detect only: Formatting, Security\n'
