@@ -14,6 +14,7 @@ from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
@@ -25,7 +26,8 @@ from coalib.parsing.Globbing import fnmatch
 
 ACTIONS = [ApplyPatchAction,
            PrintDebugMessageAction,
-           ShowPatchAction]
+           ShowPatchAction,
+           IgnoreResultAction]
 
 
 def get_cpu_count():
