@@ -14,6 +14,7 @@ from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.PrintMoreInfoAction import (
@@ -77,7 +78,8 @@ CLI_ACTIONS = (OpenEditorAction(),
                ApplyPatchAction(),
                PrintDebugMessageAction(),
                PrintMoreInfoAction(),
-               ShowPatchAction())
+               ShowPatchAction(),
+               IgnoreResultAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
