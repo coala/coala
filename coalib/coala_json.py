@@ -17,7 +17,7 @@ from coalib.coala_main import run_coala
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.JSONEncoder import create_json_encoder
-from coalib.output.printers.ListLogPrinter import ListLogPrinter
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.settings.ConfigurationGathering import get_filtered_bears
 
@@ -30,27 +30,24 @@ def main():
     arg_parser = default_arg_parser()
     args = arg_parser.parse_args()
 
-    log_printer = None if args.text_logs else ListLogPrinter()
     JSONEncoder = create_json_encoder(use_relpath=args.relpath)
     results = []
 
     if args.show_bears:
         try:
             local_bears, global_bears = get_filtered_bears(
-                args.filter_by_language, log_printer)
+                args.filter_by_language, LogPrinter())
             bears = inverse_dicts(local_bears, global_bears)
             for bear, _ in sorted(bears.items(),
                                   key=lambda bear_tuple:
                                   bear_tuple[0].name):
                 results.append(bear)
         except BaseException as exception:  # pylint: disable=broad-except
-            return get_exitcode(exception, log_printer)
+            return get_exitcode(exception)
     else:
-        results, exitcode, _ = run_coala(log_printer=log_printer)
+        results, exitcode, _ = run_coala()
 
     retval = {"bears": results} if args.show_bears else {"results": results}
-    if not args.text_logs:
-        retval["logs"] = log_printer.logs
     if args.output:
         filename = str(args.output[0])
         with open(filename, 'w+') as fp:

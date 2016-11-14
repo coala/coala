@@ -6,20 +6,23 @@ import unittest.mock
 from coalib.misc.ContextManagers import retrieve_stdout, retrieve_stderr
 
 
-def execute_coala(func, binary, *args):
+def execute_coala(func, binary, *args, stdout_only=False):
     """
     Executes the main function with the given argument string from given module.
 
-    :param function: A main function from coala_json, coala_ci module etc.
-    :param binary:   A binary to execute coala test
-    :return:         A tuple holding a return value first and
-                     a stdout output as second element.
+    :param function:    A main function from coala_json, coala_ci module etc.
+    :param binary:      A binary to execute coala test
+    :param stdout_only: Get the stdout output only, discard stderr
+    :return:            A tuple holding a return value first and
+                        a stdout output as second element.
     """
     sys.argv = [binary] + list(args)
     with retrieve_stdout() as stdout:
         with retrieve_stderr() as stderr:
             retval = func()
-            return retval, stdout.getvalue() + '\n' + stderr.getvalue()
+            return (retval,
+                    stdout.getvalue() if stdout_only else
+                    stdout.getvalue() + '\n' + stderr.getvalue())
 
 
 @contextmanager

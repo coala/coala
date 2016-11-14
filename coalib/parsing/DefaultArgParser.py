@@ -189,10 +189,6 @@ To run coala without user interaction, check out the `coala-json` and
             help='write JSON logs to the given file')
 
         outputs_group.add_argument(
-            '--text-logs', nargs='?', const=True, metavar='BOOL',
-            help="use regular log messages instead of JSON")
-
-        outputs_group.add_argument(
             '-r', '--relpath', nargs='?', const=True,
             help="return relative paths for files")
 
