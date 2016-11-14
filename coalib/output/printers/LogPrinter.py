@@ -91,6 +91,30 @@ class LogPrinterMixin:
         raise NotImplementedError
 
 
+class MinimalLogPrinter(LogPrinterMixin):
+    """
+    A fully functional log printer that works like our old ones which are
+    deprecated but doesn't have a log level. It's a class in between builtin
+    logging and the LogPrinter (which is deprecated) so we can make LogPrinter
+    objects without actually needing a printer!
+
+    This is just for using deprecated API and should be removed when we did the
+    full logging switch.
+
+    Use it like this:
+
+    >>> import sys
+    >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    >>> MinimalLogPrinter().warn("Yes! It works! Without a log printer!")
+    WARNING:root:Yes! It works! Without a log printer!
+    """
+
+    def log_message(self, log_message, **kwargs):
+        if not isinstance(log_message, LogMessage):
+            raise TypeError("log_message should be of type LogMessage.")
+        logging.log(log_message.log_level, log_message.message)
+
+
 class LogPrinter(LogPrinterMixin):
     """
     This class is deprecated and will be soon removed. To get logger use
