@@ -29,10 +29,13 @@ class CachingTest(unittest.TestCase):
         self.assertEqual(self.cache.data, {"test.c": -1, "file.py": -1})
 
         self.cache.untrack_files({"test.c"})
+        self.cache.track_files({"test.c"})
+        self.cache.write()
         self.assertFalse("test.c" in self.cache.data)
         self.assertTrue("file.py" in self.cache.data)
 
         self.cache.untrack_files({"test.c", "file.py"})
+        self.cache.write()
         self.assertFalse("test.c" in self.cache.data)
         self.assertFalse("file.py" in self.cache.data)
 
@@ -129,4 +132,27 @@ class CachingTest(unittest.TestCase):
                 "-c", os.devnull,
                 "-f", re.escape(filename),
                 "-b", "LineCountTestBear")
+            self.assertIn("This file has", output)
+
+    def test_caching_multi_results(self):
+        """
+        Integration test to assert that results are not dropped when coala is
+        ran multiple times with caching enabled and one section yields a result
+        and second one doesn't.
+        """
+        filename = "tests/misc/test_caching_multi_results/"
+        with bear_test_module():
+            with simulate_console_inputs("0"):
+                retval, output = execute_coala(
+                   coala.main,
+                   "coala",
+                   "-c", filename + ".coafile",
+                   "-f", filename + "test.py")
+                self.assertIn("This file has", output)
+
+            retval, output = execute_coala(
+               coala.main,
+               "coala",
+               "-c", filename + ".coafile",
+               "-f", filename + "test.py")
             self.assertIn("This file has", output)

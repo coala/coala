@@ -1,0 +1,7 @@
+[Default]
+use_spaces = True
+maxline_length = 80
+
+[LineCounting]
+bears = LineCountTestBear
+max_lines_per_file = 1
