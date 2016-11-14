@@ -1,7 +1,6 @@
 import os
 import platform
 
-import pip
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib import VERSION
@@ -74,9 +73,9 @@ def run_coala(console_printer=None,
             arg_parser=arg_parser,
             arg_list=arg_list)
 
-        log_printer.debug("Platform {} -- Python {}, pip {}, coalib {}"
+        log_printer.debug("Platform {} -- Python {}, coalib {}"
                           .format(platform.system(), platform.python_version(),
-                                  pip.__version__, VERSION))
+                                  VERSION))
 
         settings_hash = get_settings_hash(sections, targets)
         flush_cache = bool(sections["default"].get("flush_cache", False) or
