@@ -11,64 +11,64 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 
 def deprecate_settings(**depr_args):
     """
-     The purpose of this decorator is to allow passing old settings names to
-     bears due to the heavy changes in their names.
+    The purpose of this decorator is to allow passing old settings names to
+    bears due to the heavy changes in their names.
 
-     >>> @deprecate_settings(new='old')
-     ... def run(new):
-     ...     print(new)
+    >>> @deprecate_settings(new='old')
+    ... def run(new):
+    ...     print(new)
 
-     Now we can simply call the bear with the deprecated setting, we'll get a
-     warning - but it still works!
+    Now we can simply call the bear with the deprecated setting, we'll get a
+    warning - but it still works!
 
-     >>> import sys
-     >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-     >>> run(old="Hello world!")
-     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
-     Hello world!
-     >>> run(new="Hello world!")
-     Hello world!
+    >>> import sys
+    >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    >>> run(old="Hello world!")
+    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    Hello world!
+    >>> run(new="Hello world!")
+    Hello world!
 
-     This example represents the case where the old setting name needs to be
-     modified to match the new one.
+    This example represents the case where the old setting name needs to be
+    modified to match the new one.
 
-     >>> @deprecate_settings(new=('old', lambda a: a + 'coala!'))
-     ... def func(new):
-     ...     print(new)
+    >>> @deprecate_settings(new=('old', lambda a: a + 'coala!'))
+    ... def func(new):
+    ...     print(new)
 
-     >>> func(old="Welcome to ")
-     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
-     Welcome to coala!
-     >>> func(new='coala!')
-     coala!
+    >>> func(old="Welcome to ")
+    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    Welcome to coala!
+    >>> func(new='coala!')
+    coala!
 
-     This example represents the case where the old and new settings are
-     provided to the function.
+    This example represents the case where the old and new settings are
+    provided to the function.
 
-     >>> @deprecate_settings(new='old')
-     ... def run(new):
-     ...     print(new)
-     >>> # doctest: +ELLIPSIS
-     ... run(old="Hello!", new='coala is always written with lowercase `c`.')
-     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
-     WARNING:root:The value of `old` and `new` are conflicting. `new` will...
-     coala is always written with lowercase `c`.
-     >>> run(old='Hello!', new='Hello!')
-     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
-     Hello!
+    >>> @deprecate_settings(new='old')
+    ... def run(new):
+    ...     print(new)
+    >>> # doctest: +ELLIPSIS
+    ... run(old="Hello!", new='coala is always written with lowercase `c`.')
+    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    WARNING:root:The value of `old` and `new` are conflicting. `new` will...
+    coala is always written with lowercase `c`.
+    >>> run(old='Hello!', new='Hello!')
+    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    Hello!
 
-     The metadata for coala has been adjusted as well:
+    The metadata for coala has been adjusted as well:
 
-     >>> list(run.__metadata__.non_optional_params.keys())
-     ['new']
-     >>> list(run.__metadata__.optional_params.keys())
-     ['old']
+    >>> list(run.__metadata__.non_optional_params.keys())
+    ['new']
+    >>> list(run.__metadata__.optional_params.keys())
+    ['old']
 
-     You cannot deprecate an already deprecated setting. Don't try. It will
-     introduce non-deterministic errors in your program.
+    You cannot deprecate an already deprecated setting. Don't try. It will
+    introduce non-deterministic errors in your program.
 
-     :param depr_args: A dictionary of settings as keys and their deprecated
-                       names as values.
+    :param depr_args: A dictionary of settings as keys and their deprecated
+                      names as values.
     """
     def _deprecate_decorator(func):
 
