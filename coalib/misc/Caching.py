@@ -99,6 +99,12 @@ class FileCache:
         if flush_cache:
             self.flush_cache()
 
+        # store the files to be untracked and then untrack them in the end
+        # so that an untracked file is not tracked again by mistake in a
+        # later section (which will happen if that file doesn't yield a
+        # result in that section).
+        self.to_untrack = set()
+
     def flush_cache(self):
         """
         Flushes the cache and deletes the relevant file.
@@ -116,6 +122,9 @@ class FileCache:
         to the current time. Using this object as a contextmanager is
         preferred (that will automatically call this method on exit).
         """
+        for file in self.to_untrack:
+            if file in self.data:
+                del self.data[file]
         for file_name in self.data:
             self.data[file_name] = self.current_time
         pickle_dump(
@@ -137,9 +146,7 @@ class FileCache:
 
         :param files: A set of files to remove from cache.
         """
-        for file in files:
-            if file in self.data:
-                del self.data[file]
+        self.to_untrack.update(files)
 
     def track_files(self, files):
         """
