@@ -3,7 +3,7 @@ import re
 import sys
 import unittest
 
-from coalib import coala_ci
+from coalib import coala, coala_ci
 from coalib.misc.ContextManagers import prepare_file
 from tests.TestUtilities import bear_test_module, execute_coala
 
@@ -18,9 +18,14 @@ class coalaCITest(unittest.TestCase):
     def tearDown(self):
         sys.argv = self.old_argv
 
+    def test_log(self):
+        retval, output = execute_coala(
+            coala_ci.main, 'coala-ci', '--help')
+        self.assertIn('Use of `coala-ci` binary is deprecated', output)
+
     def test_nonexistent(self):
         retval, output = execute_coala(
-            coala_ci.main, 'coala-ci', '-c', 'nonex', 'test')
+            coala.main, 'coala', '--non-interactive', '-c', 'nonex', 'test')
         self.assertRegex(
             output,
             ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
@@ -28,7 +33,8 @@ class coalaCITest(unittest.TestCase):
     def test_find_no_issues(self):
         with bear_test_module(), \
                 prepare_file(['#include <a>'], None) as (lines, filename):
-            retval, output = execute_coala(coala_ci.main, 'coala-ci',
+            retval, output = execute_coala(coala.main, 'coala',
+                                           '--non-interactive',
                                            '-c', os.devnull,
                                            '-f', re.escape(filename),
                                            '-b', 'SpaceConsistencyTestBear',
@@ -40,7 +46,8 @@ class coalaCITest(unittest.TestCase):
     def test_find_issues(self):
         with bear_test_module(), \
                 prepare_file(['#fixme'], None) as (lines, filename):
-            retval, output = execute_coala(coala_ci.main, 'coala-ci',
+            retval, output = execute_coala(coala.main, 'coala',
+                                           '--non-interactive',
                                            '-c', os.devnull,
                                            '-b', 'LineCountTestBear',
                                            '-f', re.escape(filename))
@@ -54,7 +61,7 @@ class coalaCITest(unittest.TestCase):
         with bear_test_module(), \
              prepare_file(['\t#include <a>'], None) as (lines, filename):
             retval, output = execute_coala(
-                coala_ci.main, 'coala-ci',
+                coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,
                 '-f', re.escape(filename),
                 '-b', 'SpaceConsistencyTestBear',
@@ -67,7 +74,8 @@ class coalaCITest(unittest.TestCase):
 
     def test_fail_acquire_settings(self):
         with bear_test_module():
-            retval, output = execute_coala(coala_ci.main, 'coala-ci',
+            retval, output = execute_coala(coala.main, 'coala',
+                                           '--non-interactive',
                                            '-b', 'SpaceConsistencyTestBear',
                                            '-c', os.devnull)
             self.assertIn('During execution, we found that some', output)

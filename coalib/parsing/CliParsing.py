@@ -103,4 +103,11 @@ def check_conflicts(sections):
             ArgumentParser().error(
                 "'no_config' cannot be set together 'save' or 'find_config'.")
 
+        if (
+                not section.get('json', False) and
+                (str(section.get('output', '')) or
+                 section.get('relpath', False))):
+            ArgumentParser().error(
+                "'output' or 'relpath' cannot be used without `--json`.")
+
     return True

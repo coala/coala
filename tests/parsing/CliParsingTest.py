@@ -61,3 +61,13 @@ class CliParserTest(unittest.TestCase):
 
         sections = parse_cli(arg_list=['--no-config', '-S', 'val=42'])
         self.assertTrue(check_conflicts(sections))
+
+        sections = parse_cli(arg_list=['--relpath'])
+        with self.assertRaises(SystemExit) as cm:
+            check_conflicts(sections)
+            self.assertEqual(cm.exception.code, 2)
+
+        sections = parse_cli(arg_list=['--output', 'iraiseValueError'])
+        with self.assertRaises(SystemExit) as cm:
+            check_conflicts(sections)
+            self.assertEqual(cm.exception.code, 2)

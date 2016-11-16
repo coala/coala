@@ -6,7 +6,7 @@ import unittest
 import unittest.mock
 from pkg_resources import VersionConflict
 
-from coalib import coala_json
+from coalib import coala, coala_json
 from coalib.misc.ContextManagers import prepare_file
 from tests.TestUtilities import bear_test_module, execute_coala
 
@@ -19,15 +19,20 @@ class coalaJSONTest(unittest.TestCase):
     def tearDown(self):
         sys.argv = self.old_argv
 
+    def test_deprecation_log(self):
+        retval, output = execute_coala(
+            coala_json.main, 'coala-json', '--help')
+        self.assertIn('Use of `coala-json` binary is deprecated', output)
+
     def test_nonexistent(self):
         retval, output = execute_coala(
-            coala_json.main, 'coala-json', '-c', 'nonex', 'test')
+            coala.main, 'coala', '--json', '-c', 'nonex', 'test')
         self.assertRegex(output, ".*requested coafile '.*' does not exist. .+")
 
     def test_find_issues(self):
         with bear_test_module(), \
                 prepare_file(['#fixme'], None) as (lines, filename):
-            retval, output = execute_coala(coala_json.main, 'coala-json',
+            retval, output = execute_coala(coala.main, 'coala', '--json',
                                            '-c', os.devnull,
                                            '-b', 'LineCountTestBear',
                                            '-f', re.escape(filename))
@@ -40,7 +45,7 @@ class coalaJSONTest(unittest.TestCase):
 
     def test_fail_acquire_settings(self):
         with bear_test_module():
-            retval, output = execute_coala(coala_json.main, 'coala-json',
+            retval, output = execute_coala(coala.main, 'coala', '--json',
                                            '-c', os.devnull,
                                            '-b', 'SpaceConsistencyTestBear')
             self.assertIn('During execution, we found that some',
@@ -48,7 +53,7 @@ class coalaJSONTest(unittest.TestCase):
 
     def test_show_all_bears(self):
         with bear_test_module():
-            retval, output = execute_coala(coala_json.main, 'coala-json', '-B')
+            retval, output = execute_coala(coala.main, 'coala', '--json', '-B')
             self.assertEqual(retval, 0)
             output = json.loads(output)
             self.assertEqual(len(output['bears']), 6)
@@ -56,7 +61,7 @@ class coalaJSONTest(unittest.TestCase):
     def test_show_language_bears(self):
         with bear_test_module():
             retval, output = execute_coala(
-                coala_json.main, 'coala-json', '-B', '-l', 'java',
+                coala.main, 'coala', '--json', '-B', '-l', 'java',
                 stdout_only=True)
             self.assertEqual(retval, 0)
             output = json.loads(output)
@@ -64,7 +69,7 @@ class coalaJSONTest(unittest.TestCase):
 
     def test_show_bears_attributes(self):
         with bear_test_module():
-            retval, output = execute_coala(coala_json.main, 'coala-json', '-B',
+            retval, output = execute_coala(coala.main, 'coala', '--json', '-B',
                                            stdout_only=True)
             self.assertEqual(retval, 0)
             output = json.loads(output)
@@ -85,28 +90,24 @@ class coalaJSONTest(unittest.TestCase):
     def test_version_conflict_in_collecting_bears(self, import_fn, _):
         with bear_test_module():
             import_fn.side_effect = VersionConflict('msg1', 'msg2')
-            retval, _ = execute_coala(coala_json.main, 'coala-json', '-B')
+            retval, _ = execute_coala(coala.main, 'coala', '--json', '-B')
             self.assertEqual(retval, 13)
-
-    def test_version(self):
-        with self.assertRaises(SystemExit):
-            execute_coala(coala_json.main, 'coala-json', '-v')
 
     def test_text_logs(self):
         retval, output = execute_coala(
-            coala_json.main, 'coala-json', '-c', 'nonex')
+            coala.main, 'coala', '--json', '-c', 'nonex')
         self.assertRegex(
             output,
             ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
 
     def test_output_file(self):
         with prepare_file(['#todo this is todo'], None) as (lines, filename):
-            retval, output = execute_coala(coala_json.main, 'coala-json',
+            retval, output = execute_coala(coala.main, 'coala', '--json',
                                            '-c', os.devnull,
                                            '-b', 'LineCountTestBear',
                                            '-f', re.escape(filename),
                                            stdout_only=True)
-            execute_coala(coala_json.main, 'coala-json', '-c', os.devnull,
+            execute_coala(coala.main, 'coala', '--json', '-c', os.devnull,
                           '-b', 'LineCountTestBear', '-f', re.escape(filename),
                           '-o', 'file.json')
 

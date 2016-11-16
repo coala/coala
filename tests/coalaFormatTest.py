@@ -3,7 +3,7 @@ import re
 import sys
 import unittest
 
-from coalib import coala_format
+from coalib import coala, coala_format
 from coalib.misc.ContextManagers import prepare_file
 from tests.TestUtilities import bear_test_module, execute_coala
 
@@ -16,10 +16,15 @@ class coalaFormatTest(unittest.TestCase):
     def tearDown(self):
         sys.argv = self.old_argv
 
+    def test_deprecation_log(self):
+        retval, output = execute_coala(
+            coala_format.main, 'coala-format', '--help')
+        self.assertIn('Use of `coala-format` binary is deprecated', output)
+
     def test_line_count(self):
         with bear_test_module(), \
                 prepare_file(['#fixme'], None) as (lines, filename):
-            retval, output = execute_coala(coala_format.main, 'coala-format',
+            retval, output = execute_coala(coala.main, 'coala', '--format',
                                            '-c', os.devnull,
                                            '-f', re.escape(filename),
                                            '-b', 'LineCountTestBear')

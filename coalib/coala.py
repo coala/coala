@@ -13,6 +13,9 @@
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from coalib.coala_main import run_coala
+from coalib.coala_modes import (
+    mode_format, mode_json, mode_non_interactive, mode_normal)
 from coalib.misc.Constants import configure_logging
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.ConsoleInteraction import (
@@ -32,6 +35,9 @@ def main():
         # not.
         args = default_arg_parser().parse_args()
         console_printer = ConsolePrinter(print_colored=not args.no_color)
+
+        if args.json:  # needs to be checked in order to display bears in json
+            return mode_json(args)
 
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (
@@ -64,22 +70,13 @@ def main():
     except BaseException as exception:  # pylint: disable=broad-except
         return get_exitcode(exception, log_printer)
 
-    import functools
+    if args.non_interactive:
+        return mode_non_interactive(console_printer, args)
 
-    from coalib.coala_main import run_coala
+    if args.format:
+        return mode_format()
 
-    partial_print_sec_beg = functools.partial(
-        print_section_beginning,
-        console_printer)
-    results, exitcode, _ = run_coala(
-        print_results=print_results,
-        acquire_settings=acquire_settings,
-        print_section_beginning=partial_print_sec_beg,
-        nothing_done=nothing_done,
-        console_printer=console_printer)
-
-    return exitcode
-
+    return mode_normal(console_printer, log_printer)
 
 if __name__ == '__main__':  # pragma: no cover
     main()

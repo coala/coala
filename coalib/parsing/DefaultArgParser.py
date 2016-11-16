@@ -1,5 +1,4 @@
 import argparse
-import sys
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
@@ -32,15 +31,6 @@ def default_arg_parser(formatter_class=None):
     formatter_class = (CustomFormatter if formatter_class is None
                        else formatter_class)
 
-    entry_point = sys.argv[0]
-    for entry in ['coala-ci', 'coala-format', 'coala-json',
-                  'coala-delete-orig']:
-        if entry_point.endswith(entry):
-            parser_type = entry
-            break
-    else:
-        parser_type = 'coala'
-
     description = """
 coala provides a common command-line interface for linting and fixing all your
 code, regardless of the programming languages you use.
@@ -60,8 +50,8 @@ coala can also automatically fix your code:
 
     $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
 
-To run coala without user interaction, check out the `coala-json` and
-`coala-format` binaries.
+To run coala without user interaction, run the `coala --non-interactive`,
+`coala --json` and `coala --format` commands.
 """
 
     arg_parser = argparse.ArgumentParser(
@@ -86,6 +76,20 @@ To run coala without user interaction, check out the `coala-json` and
                             '--version',
                             action='version',
                             version=Constants.VERSION)
+
+    mode_group = arg_parser.add_argument_group('Mode')
+
+    mode_group.add_argument(
+        '--non-interactive', const=True, action='store_const',
+        help='run coala in non interactive mode')
+
+    mode_group.add_argument(
+        '--json', const=True, action='store_const',
+        help='mode in which coala will display output as json')
+
+    mode_group.add_argument(
+        '--format', const=True, nargs='?', metavar='STR',
+        help='mode in which coala will display output as custom format string')
 
     config_group = arg_parser.add_argument_group('Configuration')
 
@@ -159,38 +163,33 @@ To run coala without user interaction, check out the `coala-json` and
         '-N', '--no-color', const=True, action='store_const',
         help='display output without coloring (excluding logs)')
 
-    # Specific arguments
-    if parser_type in ('coala', 'coala-json'):
-        outputs_group.add_argument(
-            '-B', '--show-bears', const=True, action='store_const',
-            help='list all bears')
+    outputs_group.add_argument(
+        '-B', '--show-bears', const=True, action='store_const',
+        help='list all bears')
 
-        outputs_group.add_argument(
-            '-l', '--filter-by-language', nargs='+', metavar='LANG',
-            help='filters `--show-bears` by the given languages')
+    outputs_group.add_argument(
+        '-l', '--filter-by-language', nargs='+', metavar='LANG',
+        help='filters `--show-bears` by the given languages')
 
-        outputs_group.add_argument(
-            '-p', '--show-capabilities', nargs='+', metavar='LANG',
-            help='show what coala can fix and detect for the given languages')
+    outputs_group.add_argument(
+        '-p', '--show-capabilities', nargs='+', metavar='LANG',
+        help='show what coala can fix and detect for the given languages')
 
-    if parser_type == 'coala':
-        outputs_group.add_argument(
-            '-D', '--show-description', const=True, action='store_const',
-            help='show bear descriptions for `--show-bears`')
+    outputs_group.add_argument(
+        '-D', '--show-description', const=True, action='store_const',
+        help='show bear descriptions for `--show-bears`')
 
-        outputs_group.add_argument(
-            '--show-details', const=True, action='store_const',
-            help='show bear details for `--show-bears`')
+    outputs_group.add_argument(
+        '--show-details', const=True, action='store_const',
+        help='show bear details for `--show-bears`')
 
-    # The following are "coala-json" specific arguments
-    if parser_type == 'coala-json':
-        outputs_group.add_argument(
-            '-o', '--output', nargs=1, metavar='FILE',
-            help='write JSON logs to the given file')
+    outputs_group.add_argument(
+        '-o', '--output', nargs=1, metavar='FILE',
+        help='write JSON logs to the given file (must be called with --json)')
 
-        outputs_group.add_argument(
-            '-r', '--relpath', nargs='?', const=True,
-            help='return relative paths for files')
+    outputs_group.add_argument(
+        '-r', '--relpath', nargs='?', const=True,
+        help='return relative paths for files (must be called with --json)')
 
     misc_group = arg_parser.add_argument_group('Miscellaneous')
 
