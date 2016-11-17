@@ -321,10 +321,10 @@ class ResultFilterTest(unittest.TestCase):
                                 res0_around_addition,
                                 res0_whole_addition]
 
-        new_result_list = [res1_pre_change,       # FALSE POSITIVE (in-line)
+        new_result_list = [res1_pre_change,       # correctly filtered out
                            res1_change,           # correctly kept
-                           res1_post_change,      # FALSE POSITIVE (in-line)
-                           res1_around_change,    # FALSE POSITIVE (in-line)
+                           res1_post_change,      # correctly filtered out
+                           res1_around_change,    # correctly filtered out
                            res1_with_change,      # correctly kept
                            res1_whole_change,     # correctly kept
 
@@ -340,10 +340,7 @@ class ResultFilterTest(unittest.TestCase):
                            res1_with_addition,    # correctly kept
                            res1_whole_addition]   # correctly kept
 
-        unique_new_result_list = [res1_pre_change,       # WRONG: line-wise diff
-                                  res1_change,           # correct
-                                  res1_post_change,      # WRONG: line-wise diff
-                                  res1_around_change,    # WRONG: line-wise diff
+        unique_new_result_list = [res1_change,           # correct
                                   res1_with_change,      # correct
                                   res1_whole_change,     # correct
 

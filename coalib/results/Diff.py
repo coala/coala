@@ -381,13 +381,51 @@ class Diff:
         self._changes[line_nr_before] = linediff
 
     def change_line(self, line_nr, original_line, replacement):
-        """
+        r"""
         Changes the given line with the given line number. The replacement will
         be there instead.
+
+        Given an empty diff object:
+
+        >>> diff = Diff(['Hey there! Gorgeous.\n',
+        ...              "It's nice that we're here.\n"])
+
+        We can change a line easily:
+
+        >>> diff.change_line(1,
+        ...                  'Hey there! Gorgeous.\n',
+        ...                  'Hey there! This is sad.\n')
+        >>> diff.modified
+        ['Hey there! This is sad.\n', "It's nice that we're here.\n"]
+
+        We can even merge changes within one line:
+
+        >>> diff.change_line(1,
+        ...                  'Hey there! Gorgeous.\n',
+        ...                  'Hello. :( Gorgeous.\n')
+        >>> diff.modified
+        ['Hello. :( This is sad.\n', "It's nice that we're here.\n"]
+
+        However, if we change something that has been changed before, we'll get
+        a conflict:
+
+        >>> diff.change_line(1,  # +ELLIPSIS
+        ...                  'Hey there! Gorgeous.\n',
+        ...                  'Hello. This is not ok. Gorgeous.\n')
+        Traceback (most recent call last):
+         ...
+        coalib.results.LineDiff.ConflictError: ...
         """
         linediff = self._get_change(line_nr)
         if linediff.change is not False and linediff.change[1] != replacement:
-            raise ConflictError("An already changed line cannot be changed.")
+            if len(replacement) == len(linediff.change[1]) == 1:
+                raise ConflictError("Cannot merge the given line changes.")
+
+            orig_diff = Diff.from_string_arrays(linediff.change[0],
+                                                linediff.change[1])
+            new_diff = Diff.from_string_arrays(linediff.change[0],
+                                               replacement)
+            replacement = ''.join((orig_diff + new_diff).modified)
 
         linediff.change = (original_line, replacement)
         self._changes[line_nr] = linediff
