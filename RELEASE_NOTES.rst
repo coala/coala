@@ -1,3 +1,55 @@
+coala 0.9.0
+===========
+
+Command Line Interface Changes:
+
+- Multiple patches within one line, even from different bears, can be
+  automatically merged by coala.
+- Users can press enter to dismiss a result by default.
+- Result action descriptions have been compressed to make them easier readable.
+- The section name is now displayed when asking the user for missing settings.
+- ``coala-ci`` shows results *and* patches by default now.
+- ``coala-dbus`` has been removed as it wasn't used by anyone.
+- A ``--no-color`` argument allows to run coala with uncoloured results.
+- Log messages are printed on stderr now.
+- ``coala-json`` doesn't output log messages in JSON anymore. This is a
+  technical issue. Log messages can easily be fetched from the stderr stream.
+- Some performance improvements could be achieved.
+- A lot more strings, like ``roger`` or ``no way`` are allowed for boolean
+  values. (https://github.com/coala/coala/commit/728b7b02da8ca8f91b91c67784872244c0820a77)
+
+Bear API Changes:
+
+- The deprecated ``Lint`` class has now been removed.
+- The ``CondaRequirement`` has been removed.
+- The ``multiple`` constructor for ``PackageRequirement`` classes has been
+  removed.
+- A ``deprecate_bear`` decorator is now available so bears can be renamed
+  seamlessly.
+
+Bug Fixes:
+
+- A glob cornercase has been fixed.
+  (https://github.com/coala/coala/issues/2664)
+- An issue where empty patches have been shown to the user has been fixed.
+  (https://github.com/coala/coala/issues/2832)
+- Wrong handling of periods when changing casing has been fixed.
+  (https://github.com/coala/coala/issues/2696)
+- A caching bug where results have not been shown to the user has been fixed.
+  (https://github.com/coala/coala/issues/2987)
+
+Documentation:
+
+- API documentation is now available at http://api.coala.io/
+
+Internal Changes:
+
+- Deprecated parameters are stored in the function metadata.
+- Python builtin logging is now used.
+- Numerous changes to get started on https://coala.io/cep5 have been
+  implemented.
+- ``coalang`` files now have an alias dictionary.
+
 coala 0.8.1
 ===========
 
