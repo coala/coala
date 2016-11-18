@@ -15,7 +15,7 @@ test:
         parallel: true
     - python setup.py install:
         parallel: true
-    - pip install coala-bears colorama==0.3.6 --pre -U:
+    - pip install coala-bears==0.8 colorama==0.3.6 -U:
         parallel: true
         timeout: 900  # Allow 15 mins
     - coala-ci -L DEBUG:
