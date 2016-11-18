@@ -29,7 +29,6 @@ def test_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
 class ManPageFormatterTest(unittest.TestCase):
 
     def test_format_functions(self):
-        uut = ManPageFormatter(app_name)
         self.assertEqual(ManPageFormatter._markup("a-b"), "a\\-b")
         self.assertEqual(ManPageFormatter._underline("test"), "\\fItest\\fR")
         self.assertEqual(ManPageFormatter._bold("test"), "\\fBtest\\fR")

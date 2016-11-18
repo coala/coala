@@ -11,7 +11,6 @@ class ListLogPrinterTest(unittest.TestCase):
     def test_logging(self):
         uut = ListLogPrinter()
         ts = datetime.today()
-        ts_str = ts.strftime("%X")
 
         uut.log_level = LOG_LEVEL.INFO
         uut.warn("Test value", timestamp=ts)

@@ -93,7 +93,6 @@ class SomeOtherBear(Bear):
         This is a Bear.
         :param setting: This is an optional setting.
         """
-        setting = 1
         return None
 
 

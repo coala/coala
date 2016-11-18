@@ -76,7 +76,7 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
                (self.WrongArgsBear)
                (self.section, None))
         with self.assertRaises(TypeError):
-            res = list(uut.run(self.testfile_path, self.testfile_content))
+            list(uut.run(self.testfile_path, self.testfile_content))
 
     def test_invalid_output(self):
         broken_json = json.dumps([{'broken': "JSON"}])[:-1]
