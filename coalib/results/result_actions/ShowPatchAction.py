@@ -87,7 +87,7 @@ class ShowPatchAction(ResultAction):
               colored: bool=True,
               show_result_on_top: bool=False):
         """
-        Print a diff of the patch that would be applied.
+        Show patch
 
         :param colored:
             Whether or not to use colored output.
