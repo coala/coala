@@ -282,17 +282,19 @@ def get_config_directory(section):
     return config if os.path.isdir(config) else os.path.dirname(config)
 
 
-def get_filtered_bears(languages, log_printer):
+def get_filtered_bears(languages, log_printer, arg_parser=None):
     """
     Fetch bears and filter them based on given list of languages.
 
     :param languages:   List of languages.
     :param log_printer: The log_printer to handle logging.
+    :param arg_parser:  An ``ArgParser`` object.
     :return:            Tuple containing dictionaries of local bears
                         and global bears.
     """
     sections, _ = load_configuration(arg_list=None,
-                                     log_printer=log_printer)
+                                     log_printer=log_printer,
+                                     arg_parser=arg_parser)
     local_bears, global_bears = collect_all_bears_from_sections(
         sections, log_printer)
     if languages:
