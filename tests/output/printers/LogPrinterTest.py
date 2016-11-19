@@ -27,7 +27,7 @@ class LogPrinterTest(unittest.TestCase):
         self.assertIs(LogPrinter(printer).printer, printer)
 
     def test_logging(self):
-        uut = LogPrinter(timestamp_format="")
+        uut = LogPrinter(timestamp_format='')
         uut.logger = mock.MagicMock()
         uut.log_message(self.log_message)
 
@@ -40,22 +40,22 @@ class LogPrinterTest(unittest.TestCase):
         uut.log(LOG_LEVEL.ERROR, Constants.COMPLEX_TEST_STRING)
         uut.logger.log.assert_called_with(logging.ERROR, msg)
 
-        uut.debug(Constants.COMPLEX_TEST_STRING, "d")
-        uut.logger.log.assert_called_with(logging.DEBUG, msg + " d")
+        uut.debug(Constants.COMPLEX_TEST_STRING, 'd')
+        uut.logger.log.assert_called_with(logging.DEBUG, msg + ' d')
 
         uut.log_level = LOG_LEVEL.DEBUG
-        uut.log_exception("Something failed.", NotImplementedError(msg))
-        uut.logger.log.assert_any_call(logging.ERROR, "Something failed.")
+        uut.log_exception('Something failed.', NotImplementedError(msg))
+        uut.logger.log.assert_any_call(logging.ERROR, 'Something failed.')
         uut.logger.log.assert_called_with(
             logging.INFO,
-            "Exception was:\n{exception}: {msg}".format(
-                exception="NotImplementedError",
+            'Exception was:\n{exception}: {msg}'.format(
+                exception='NotImplementedError',
                 msg=msg))
 
     def test_raises(self):
         uut = LogPrinter(NullPrinter())
         self.assertRaises(TypeError, uut.log, 5)
-        self.assertRaises(TypeError, uut.log_exception, "message", 5)
+        self.assertRaises(TypeError, uut.log_exception, 'message', 5)
         self.assertRaises(TypeError, uut.log_message, 5)
 
     def test_log_level(self):

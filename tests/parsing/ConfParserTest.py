@@ -34,9 +34,9 @@ class ConfParserTest(unittest.TestCase):
 
     def setUp(self):
         self.tempdir = tempfile.gettempdir()
-        self.file = os.path.join(self.tempdir, ".coafile")
-        self.nonexistentfile = os.path.join(self.tempdir, "e81k7bd98t")
-        with open(self.file, "w") as file:
+        self.file = os.path.join(self.tempdir, '.coafile')
+        self.nonexistentfile = os.path.join(self.tempdir, 'e81k7bd98t')
+        with open(self.file, 'w') as file:
             file.write(self.example_file)
 
         self.uut = ConfParser()
@@ -59,7 +59,7 @@ class ConfParserTest(unittest.TestCase):
     def test_parse_nonexisting_section(self):
         self.assertRaises(IndexError,
                           self.uut.get_section,
-                          "inexistent section")
+                          'inexistent section')
 
     def test_parse_default_section(self):
         default_should = OrderedDict([
@@ -109,7 +109,7 @@ class ConfParserTest(unittest.TestCase):
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, makefiles_should)
 
-        self.assertEqual(val["comment1"].key, "comment1")
+        self.assertEqual(val['comment1'].key, 'comment1')
 
     def test_parse_empty_elem_strip_section(self):
         empty_elem_strip_should = OrderedDict([
@@ -143,22 +143,22 @@ class ConfParserTest(unittest.TestCase):
         # Test with empty-elem stripping.
         uut = ConfParser(remove_empty_iter_elements=True)
         uut.parse(self.file)
-        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["A"]),
-                         ["a", "b", "c"])
-        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["B"]),
-                         ["a", "d"])
-        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["C"]),
+        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['A']),
+                         ['a', 'b', 'c'])
+        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['B']),
+                         ['a', 'd'])
+        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['C']),
                          [])
 
         # Test without stripping.
         uut = ConfParser(remove_empty_iter_elements=False)
         uut.parse(self.file)
-        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["A"]),
-                         ["a", "b", "c"])
-        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["B"]),
-                         ["a", "", "", "d"])
-        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["C"]),
-                         ["", "", "", ""])
+        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['A']),
+                         ['a', 'b', 'c'])
+        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['B']),
+                         ['a', '', '', 'd'])
+        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['C']),
+                         ['', '', '', ''])
 
     def test_config_directory(self):
         self.uut.parse(self.tempdir)

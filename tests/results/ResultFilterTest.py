@@ -29,46 +29,46 @@ class ResultFilterTest(unittest.TestCase):
         origin_instance = Origin()
 
         original_result = Result.from_values(origin=origin_instance,
-                                             message="original",
-                                             file="original",
+                                             message='original',
+                                             file='original',
                                              severity=RESULT_SEVERITY.NORMAL,
-                                             debug_msg="original")
+                                             debug_msg='original')
 
-        clone_result = Result.from_values(origin="Origin",
-                                          message="original",
-                                          file="original",
+        clone_result = Result.from_values(origin='Origin',
+                                          message='original',
+                                          file='original',
                                           severity=RESULT_SEVERITY.NORMAL,
-                                          debug_msg="original")
+                                          debug_msg='original')
 
         wrong_origin_result = Result.from_values(
-            origin="AnotherOrigin",
-            message="original",
-            file="original",
+            origin='AnotherOrigin',
+            message='original',
+            file='original',
             severity=RESULT_SEVERITY.NORMAL,
-            debug_msg="original")
+            debug_msg='original')
 
         wrong_message_result = Result.from_values(
-            origin="Origin",
-            message="another message",
-            file="original",
+            origin='Origin',
+            message='another message',
+            file='original',
             severity=RESULT_SEVERITY.NORMAL,
-            debug_msg="original")
+            debug_msg='original')
 
         wrong_severity_result = Result.from_values(
-            origin="Origin",
-            message="original",
-            file="original",
+            origin='Origin',
+            message='original',
+            file='original',
             severity=RESULT_SEVERITY.INFO,
-            debug_msg="original")
+            debug_msg='original')
 
         wrong_debug_msg_result = Result.from_values(
-            origin="Origin",
-            message="original",
-            file="original",
+            origin='Origin',
+            message='original',
+            file='original',
             severity=RESULT_SEVERITY.NORMAL,
-            debug_msg="another debug message")
+            debug_msg='another debug message')
 
-        file_dict = {abspath("original"): []}
+        file_dict = {abspath('original'): []}
 
         self.assertEqual(sorted(filter_results(original_file_dict=file_dict,
                                                modified_file_dict=file_dict,
@@ -88,217 +88,217 @@ class ResultFilterTest(unittest.TestCase):
     def test_affected_code(self):
 
         # ORIGINAL SOURCE RANGES:
-        sr0_pre_change = SourceRange.from_values("file_name",
+        sr0_pre_change = SourceRange.from_values('file_name',
                                                  start_line=4,
                                                  start_column=1,
                                                  end_line=4,
                                                  end_column=6)
-        sr0_change = SourceRange.from_values("file_name",
+        sr0_change = SourceRange.from_values('file_name',
                                              start_line=4,
                                              start_column=8,
                                              end_line=4,
                                              end_column=13)
-        sr0_post_change = SourceRange.from_values("file_name",
+        sr0_post_change = SourceRange.from_values('file_name',
                                                   start_line=4,
                                                   start_column=15,
                                                   end_line=4,
                                                   end_column=19)
 
-        sr0_pre_remove = SourceRange.from_values("file_name",
+        sr0_pre_remove = SourceRange.from_values('file_name',
                                                  start_line=6,
                                                  start_column=1,
                                                  end_line=6,
                                                  end_column=6)
-        sr0_post_remove = SourceRange.from_values("file_name",
+        sr0_post_remove = SourceRange.from_values('file_name',
                                                   start_line=8,
                                                   start_column=1,
                                                   end_line=8,
                                                   end_column=5)
 
-        sr0_pre_addition = SourceRange.from_values("file_name",
+        sr0_pre_addition = SourceRange.from_values('file_name',
                                                    start_line=10,
                                                    start_column=1,
                                                    end_line=10,
                                                    end_column=6)
-        sr0_post_addition = SourceRange.from_values("file_name",
+        sr0_post_addition = SourceRange.from_values('file_name',
                                                     start_line=11,
                                                     start_column=1,
                                                     end_line=11,
                                                     end_column=5)
 
         # ORIGINAL RESULTS:
-        res0_pre_change = Result(origin="origin",
-                                 message="message",
+        res0_pre_change = Result(origin='origin',
+                                 message='message',
                                  affected_code=(sr0_pre_change,))
-        res0_change = Result(origin="origin",
-                             message="message",
+        res0_change = Result(origin='origin',
+                             message='message',
                              affected_code=(sr0_change,))
-        res0_post_change = Result(origin="origin",
-                                  message="message",
+        res0_post_change = Result(origin='origin',
+                                  message='message',
                                   affected_code=(sr0_post_change,))
-        res0_around_change = Result(origin="origin",
-                                    message="message",
+        res0_around_change = Result(origin='origin',
+                                    message='message',
                                     affected_code=(sr0_pre_change,
                                                    sr0_post_change))
-        res0_with_change = Result(origin="origin",
-                                  message="message",
+        res0_with_change = Result(origin='origin',
+                                  message='message',
                                   affected_code=(sr0_pre_change,
                                                  sr0_change,
                                                  sr0_post_change))
-        res0_whole_change = Result.from_values(origin="origin",
-                                               message="message",
-                                               file="file_name",
+        res0_whole_change = Result.from_values(origin='origin',
+                                               message='message',
+                                               file='file_name',
                                                line=4,
                                                column=1,
                                                end_line=4,
                                                end_column=19)
 
-        res0_pre_remove = Result(origin="origin",
-                                 message="message",
+        res0_pre_remove = Result(origin='origin',
+                                 message='message',
                                  affected_code=(sr0_pre_remove,))
-        res0_post_remove = Result(origin="origin",
-                                  message="message",
+        res0_post_remove = Result(origin='origin',
+                                  message='message',
                                   affected_code=(sr0_post_remove,))
-        res0_around_remove = Result(origin="origin",
-                                    message="message",
+        res0_around_remove = Result(origin='origin',
+                                    message='message',
                                     affected_code=(sr0_pre_remove,
                                                    sr0_post_remove))
-        res0_whole_remove = Result.from_values(origin="origin",
-                                               message="message",
-                                               file="file_name",
+        res0_whole_remove = Result.from_values(origin='origin',
+                                               message='message',
+                                               file='file_name',
                                                line=6,
                                                column=1,
                                                end_line=8,
                                                end_column=5)
 
-        res0_pre_addition = Result(origin="origin",
-                                   message="message",
+        res0_pre_addition = Result(origin='origin',
+                                   message='message',
                                    affected_code=(sr0_pre_addition,))
-        res0_post_addition = Result(origin="origin",
-                                    message="message",
+        res0_post_addition = Result(origin='origin',
+                                    message='message',
                                     affected_code=(sr0_post_addition,))
-        res0_around_addition = Result(origin="origin",
-                                      message="message",
+        res0_around_addition = Result(origin='origin',
+                                      message='message',
                                       affected_code=(sr0_pre_addition,
                                                      sr0_post_addition))
-        res0_whole_addition = Result.from_values(origin="origin",
-                                                 message="message",
-                                                 file="file_name",
+        res0_whole_addition = Result.from_values(origin='origin',
+                                                 message='message',
+                                                 file='file_name',
                                                  line=10,
                                                  column=1,
                                                  end_line=11,
                                                  end_column=5)
 
         # NEW SOURCE RANGES:
-        sr1_pre_change = SourceRange.from_values("file_name",
+        sr1_pre_change = SourceRange.from_values('file_name',
                                                  start_line=4,
                                                  start_column=1,
                                                  end_line=4,
                                                  end_column=6)
-        sr1_change = SourceRange.from_values("file_name",
+        sr1_change = SourceRange.from_values('file_name',
                                              start_line=4,
                                              start_column=8,
                                              end_line=4,
                                              end_column=13)
-        sr1_post_change = SourceRange.from_values("file_name",
+        sr1_post_change = SourceRange.from_values('file_name',
                                                   start_line=4,
                                                   start_column=15,
                                                   end_line=4,
                                                   end_column=19)
 
-        sr1_pre_remove = SourceRange.from_values("file_name",
+        sr1_pre_remove = SourceRange.from_values('file_name',
                                                  start_line=6,
                                                  start_column=1,
                                                  end_line=6,
                                                  end_column=6)
-        sr1_post_remove = SourceRange.from_values("file_name",
+        sr1_post_remove = SourceRange.from_values('file_name',
                                                   start_line=7,
                                                   start_column=1,
                                                   end_line=7,
                                                   end_column=5)
 
-        sr1_pre_addition = SourceRange.from_values("file_name",
+        sr1_pre_addition = SourceRange.from_values('file_name',
                                                    start_line=9,
                                                    start_column=1,
                                                    end_line=9,
                                                    end_column=6)
-        sr1_addition = SourceRange.from_values("file_name",
+        sr1_addition = SourceRange.from_values('file_name',
                                                start_line=10,
                                                start_column=1,
                                                end_line=10,
                                                end_column=8)
-        sr1_post_addition = SourceRange.from_values("file_name",
+        sr1_post_addition = SourceRange.from_values('file_name',
                                                     start_line=11,
                                                     start_column=1,
                                                     end_line=11,
                                                     end_column=5)
 
         # NEW RESULTS:
-        res1_pre_change = Result(origin="origin",
-                                 message="message",
+        res1_pre_change = Result(origin='origin',
+                                 message='message',
                                  affected_code=(sr1_pre_change,))
-        res1_change = Result(origin="origin",
-                             message="message",
+        res1_change = Result(origin='origin',
+                             message='message',
                              affected_code=(sr1_change,))
-        res1_post_change = Result(origin="origin",
-                                  message="message",
+        res1_post_change = Result(origin='origin',
+                                  message='message',
                                   affected_code=(sr1_post_change,))
-        res1_around_change = Result(origin="origin",
-                                    message="message",
+        res1_around_change = Result(origin='origin',
+                                    message='message',
                                     affected_code=(sr1_pre_change,
                                                    sr1_post_change))
-        res1_with_change = Result(origin="origin",
-                                  message="message",
+        res1_with_change = Result(origin='origin',
+                                  message='message',
                                   affected_code=(sr1_pre_change,
                                                  sr1_change,
                                                  sr1_post_change))
-        res1_whole_change = Result.from_values(origin="origin",
-                                               message="message",
-                                               file="file_name",
+        res1_whole_change = Result.from_values(origin='origin',
+                                               message='message',
+                                               file='file_name',
                                                line=4,
                                                column=1,
                                                end_line=4,
                                                end_column=19)
 
-        res1_pre_remove = Result(origin="origin",
-                                 message="message",
+        res1_pre_remove = Result(origin='origin',
+                                 message='message',
                                  affected_code=(sr1_pre_remove,))
-        res1_post_remove = Result(origin="origin",
-                                  message="message",
+        res1_post_remove = Result(origin='origin',
+                                  message='message',
                                   affected_code=(sr1_post_remove,))
-        res1_around_remove = Result(origin="origin",
-                                    message="message",
+        res1_around_remove = Result(origin='origin',
+                                    message='message',
                                     affected_code=(sr1_pre_remove,
                                                    sr1_post_remove))
-        res1_whole_remove = Result.from_values(origin="origin",
-                                               message="message",
-                                               file="file_name",
+        res1_whole_remove = Result.from_values(origin='origin',
+                                               message='message',
+                                               file='file_name',
                                                line=6,
                                                column=1,
                                                end_line=7,
                                                end_column=5)
 
-        res1_pre_addition = Result(origin="origin",
-                                   message="message",
+        res1_pre_addition = Result(origin='origin',
+                                   message='message',
                                    affected_code=(sr1_pre_addition,))
-        res1_addition = Result(origin="origin",
-                               message="message",
+        res1_addition = Result(origin='origin',
+                               message='message',
                                affected_code=(sr1_addition,))
-        res1_post_addition = Result(origin="origin",
-                                    message="message",
+        res1_post_addition = Result(origin='origin',
+                                    message='message',
                                     affected_code=(sr1_post_addition,))
-        res1_around_addition = Result(origin="origin",
-                                      message="message",
+        res1_around_addition = Result(origin='origin',
+                                      message='message',
                                       affected_code=(sr1_pre_addition,
                                                      sr1_post_addition))
-        res1_with_addition = Result(origin="origin",
-                                    message="message",
+        res1_with_addition = Result(origin='origin',
+                                    message='message',
                                     affected_code=(sr1_pre_addition,
                                                    sr1_addition,
                                                    sr1_post_addition))
-        res1_whole_addition = Result.from_values(origin="origin",
-                                                 message="message",
-                                                 file="file_name",
+        res1_whole_addition = Result.from_values(origin='origin',
+                                                 message='message',
+                                                 file='file_name',
                                                  line=9,
                                                  column=1,
                                                  end_line=11,
@@ -349,13 +349,13 @@ class ResultFilterTest(unittest.TestCase):
                                   res1_with_addition,    # correct
                                   res1_whole_addition]   # correct
 
-        with open(self.original_file_name, "r") as original_file:
+        with open(self.original_file_name, 'r') as original_file:
             original_file_dict = {
-                abspath("file_name"): original_file.readlines()}
+                abspath('file_name'): original_file.readlines()}
 
-            with open(self.modified_file_name, "r") as modified_file:
+            with open(self.modified_file_name, 'r') as modified_file:
                 modified_file_dict = {
-                    abspath("file_name"): modified_file.readlines()}
+                    abspath('file_name'): modified_file.readlines()}
 
                 # 'TIS THE IMPORTANT PART
                 self.assertEqual(sorted(filter_results(original_file_dict,
@@ -367,39 +367,39 @@ class ResultFilterTest(unittest.TestCase):
     def test_affected_code_rename_files(self):
 
         # ORIGINAL SOURCE RANGES:
-        sr0_pre_change = SourceRange.from_values("file_name",
+        sr0_pre_change = SourceRange.from_values('file_name',
                                                  start_line=8,
                                                  start_column=1,
                                                  end_line=8,
                                                  end_column=3)
 
         # ORIGINAL RESULTS:
-        res0_pre_change = Result(origin="origin",
-                                 message="message",
+        res0_pre_change = Result(origin='origin',
+                                 message='message',
                                  affected_code=(sr0_pre_change,))
 
         # NEW SOURCE RANGES:
-        sr1_pre_change = SourceRange.from_values("file_name_new",
+        sr1_pre_change = SourceRange.from_values('file_name_new',
                                                  start_line=7,
                                                  start_column=1,
                                                  end_line=7,
                                                  end_column=3)
-        sr1_change = SourceRange.from_values("file_name_new",
+        sr1_change = SourceRange.from_values('file_name_new',
                                              start_line=4,
                                              start_column=8,
                                              end_line=4,
                                              end_column=13)
 
         # NEW RESULTS:
-        res1_pre_change = Result(origin="origin",
-                                 message="message",
+        res1_pre_change = Result(origin='origin',
+                                 message='message',
                                  affected_code=(sr1_pre_change,))
-        res1_change = Result(origin="origin",
-                             message="message",
+        res1_change = Result(origin='origin',
+                             message='message',
                              affected_code=(sr1_change,))
-        res1_whole_remove = Result.from_values(origin="origin",
-                                               message="message",
-                                               file="file_name_new",
+        res1_whole_remove = Result.from_values(origin='origin',
+                                               message='message',
+                                               file='file_name_new',
                                                line=6,
                                                column=1,
                                                end_line=7,
@@ -414,13 +414,13 @@ class ResultFilterTest(unittest.TestCase):
         unique_new_result_list = [res1_change,
                                   res1_whole_remove]
 
-        with open(self.original_file_name, "r") as original_file:
+        with open(self.original_file_name, 'r') as original_file:
             original_file_dict = {
-                abspath("file_name"): original_file.readlines()}
+                abspath('file_name'): original_file.readlines()}
 
-            with open(self.modified_file_name, "r") as modified_file:
+            with open(self.modified_file_name, 'r') as modified_file:
                 modified_file_dict = {
-                    abspath("file_name_new"): modified_file.readlines()}
+                    abspath('file_name_new'): modified_file.readlines()}
 
                 # 'TIS THE IMPORTANT PART
                 self.assertEqual(sorted(filter_results(original_file_dict,
@@ -444,58 +444,58 @@ class ResultFilterTest(unittest.TestCase):
         self.assertEqual(new_results, [])
 
     def test_result_range(self):
-        test_file = ["123456789", "123456789", "123456789", "123456789"]
+        test_file = ['123456789', '123456789', '123456789', '123456789']
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               1,
                                                               1,
                                                               1,
                                                               1)),
-                         ["23456789", "123456789", "123456789", "123456789"])
+                         ['23456789', '123456789', '123456789', '123456789'])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               1,
                                                               9,
                                                               1,
                                                               9)),
-                         ["12345678", "123456789", "123456789", "123456789"])
+                         ['12345678', '123456789', '123456789', '123456789'])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               1,
                                                               3,
                                                               1,
                                                               7)),
-                         ["1289", "123456789", "123456789", "123456789"])
+                         ['1289', '123456789', '123456789', '123456789'])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               1,
                                                               3,
                                                               2,
                                                               7)),
-                         ["12", "89", "123456789", "123456789"])
+                         ['12', '89', '123456789', '123456789'])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               1,
                                                               3,
                                                               3,
                                                               7)),
-                         ["12", "89", "123456789"])
+                         ['12', '89', '123456789'])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               1,
                                                               3,
                                                               4,
                                                               7)),
-                         ["12", "89"])
+                         ['12', '89'])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               None,
                                                               None,
                                                               None,
@@ -503,70 +503,70 @@ class ResultFilterTest(unittest.TestCase):
                          [])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               None,
                                                               None,
                                                               3,
                                                               None)),
-                         ["123456789"])
+                         ['123456789'])
 
         self.assertEqual(remove_range(test_file,
-                                      SourceRange.from_values("file",
+                                      SourceRange.from_values('file',
                                                               3,
                                                               None,
                                                               3,
                                                               None)),
-                         ["123456789", "123456789", "123456789"])
+                         ['123456789', '123456789', '123456789'])
 
     def test_result_range_inline_overlap(self):
-        test_file = ["123456789\n"]
-        test_file_dict = {abspath("test_file"): test_file}
+        test_file = ['123456789\n']
+        test_file_dict = {abspath('test_file'): test_file}
 
-        source_range1 = SourceRange.from_values("test_file", 1, 1, 1, 4)
-        source_range2 = SourceRange.from_values("test_file", 1, 2, 1, 3)
-        source_range3 = SourceRange.from_values("test_file", 1, 3, 1, 6)
+        source_range1 = SourceRange.from_values('test_file', 1, 1, 1, 4)
+        source_range2 = SourceRange.from_values('test_file', 1, 2, 1, 3)
+        source_range3 = SourceRange.from_values('test_file', 1, 3, 1, 6)
 
-        test_result = Result("origin",
-                             "message",
+        test_result = Result('origin',
+                             'message',
                              (source_range1, source_range2, source_range3))
 
         result_diff = remove_result_ranges_diffs(
             [test_result],
-            test_file_dict)[test_result][abspath("test_file")]
-        expected_diff = Diff.from_string_arrays(test_file, ["789\n"])
+            test_file_dict)[test_result][abspath('test_file')]
+        expected_diff = Diff.from_string_arrays(test_file, ['789\n'])
 
         self.assertEqual(result_diff, expected_diff)
 
     def test_result_range_line_wise_overlap(self):
-        test_file = ["11", "22", "33", "44", "55", "66"]
-        test_file_dict = {abspath("test_file"): test_file}
+        test_file = ['11', '22', '33', '44', '55', '66']
+        test_file_dict = {abspath('test_file'): test_file}
 
-        source_range1 = SourceRange.from_values("test_file", 2, 2, 5, 1)
-        source_range2 = SourceRange.from_values("test_file", 3, 1, 4, 1)
+        source_range1 = SourceRange.from_values('test_file', 2, 2, 5, 1)
+        source_range2 = SourceRange.from_values('test_file', 3, 1, 4, 1)
 
-        test_result = Result("origin",
-                             "message",
+        test_result = Result('origin',
+                             'message',
                              (source_range1, source_range2))
 
         result_diff = remove_result_ranges_diffs(
             [test_result],
-            test_file_dict)[test_result][abspath("test_file")]
+            test_file_dict)[test_result][abspath('test_file')]
         expected_diff = Diff.from_string_arrays(test_file,
-                                                ["11", "2", "5", "66"])
+                                                ['11', '2', '5', '66'])
 
         self.assertEqual(result_diff, expected_diff)
 
     def test_no_range(self):
-        test_file = ["abc"]
-        test_file_dict = {abspath("test_file"): test_file}
+        test_file = ['abc']
+        test_file_dict = {abspath('test_file'): test_file}
 
-        test_result = Result("origin",
-                             "message")
+        test_result = Result('origin',
+                             'message')
 
         result_diff = remove_result_ranges_diffs(
             [test_result],
-            test_file_dict)[test_result][abspath("test_file")]
-        expected_diff = Diff.from_string_arrays(test_file, ["abc"])
+            test_file_dict)[test_result][abspath('test_file')]
+        expected_diff = Diff.from_string_arrays(test_file, ['abc'])
 
         self.assertEqual(result_diff, expected_diff)
 

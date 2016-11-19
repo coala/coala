@@ -18,14 +18,14 @@ class coalaFormatTest(unittest.TestCase):
 
     def test_line_count(self):
         with bear_test_module(), \
-                prepare_file(["#fixme"], None) as (lines, filename):
-            retval, output = execute_coala(coala_format.main, "coala-format",
-                                           "-c", os.devnull,
-                                           "-f", re.escape(filename),
-                                           "-b", "LineCountTestBear")
+                prepare_file(['#fixme'], None) as (lines, filename):
+            retval, output = execute_coala(coala_format.main, 'coala-format',
+                                           '-c', os.devnull,
+                                           '-f', re.escape(filename),
+                                           '-b', 'LineCountTestBear')
             self.assertRegex(output, r'message:This file has [0-9]+ lines.',
-                             "coala-format output for line count should "
-                             "not be empty")
+                             'coala-format output for line count should '
+                             'not be empty')
             self.assertEqual(retval, 1,
-                             "coala-format must return exitcode 1 when it "
-                             "yields results")
+                             'coala-format must return exitcode 1 when it '
+                             'yields results')

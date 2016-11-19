@@ -3,14 +3,14 @@ import sys
 import json
 
 sys.path.append(os.path.join(os.path.dirname(__file__),
-                             "..", "..", "..", ".."))
+                             '..', '..', '..', '..'))
 
 from coalib.results.Result import Result
 from coalib.results.SourceRange import SourceRange
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     line = sys.stdin.read()
     args = json.loads(line)
@@ -18,13 +18,13 @@ if __name__ == "__main__":
 
     results = [
         Result(
-            origin="TestBear",
-            message="This is wrong",
+            origin='TestBear',
+            message='This is wrong',
             affected_code=(SourceRange.from_values(args['filename'], 1),),
             severity=RESULT_SEVERITY.MAJOR),
         Result(
-            origin="TestBear",
-            message="This is wrong too",
+            origin='TestBear',
+            message='This is wrong too',
             affected_code=(SourceRange.from_values(args['filename'], 3),),
             severity=RESULT_SEVERITY.INFO)]
 
@@ -33,10 +33,10 @@ if __name__ == "__main__":
             res.severity = RESULT_SEVERITY.NORMAL
 
     if settings['set_sample_dbg_msg']:
-        results[0].debug_msg = "Sample debug message"
+        results[0].debug_msg = 'Sample debug message'
 
     if not settings['not_set_different_msg']:
-        results[1].message = "Different message"
+        results[1].message = 'Different message'
 
     out = {}
     out['results'] = results

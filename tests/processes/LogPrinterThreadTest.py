@@ -21,9 +21,9 @@ class LogPrinterThreadTest(unittest.TestCase):
         log_printer = TestPrinter()
         log_queue = queue.Queue()
         self.uut = LogPrinterThread(log_queue, log_printer)
-        log_queue.put(item="Sample message 1")
-        log_queue.put(item="Sample message 2")
-        log_queue.put(item="Sample message 3")
+        log_queue.put(item='Sample message 1')
+        log_queue.put(item='Sample message 2')
+        log_queue.put(item='Sample message 3')
         self.assertEqual(self.uut.message_queue.qsize(), 3)
         with retrieve_stdout() as stdout:
             self.uut.start()
@@ -32,5 +32,5 @@ class LogPrinterThreadTest(unittest.TestCase):
             self.uut.running = False
             self.uut.join()
             self.assertEqual(stdout.getvalue(),
-                             "Sample message 1\nSample message 2\nSample "
-                             "message 3\n")
+                             'Sample message 1\nSample message 2\nSample '
+                             'message 3\n')

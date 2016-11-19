@@ -4,7 +4,7 @@ import shutil
 from coalib.bears.requirements.NpmRequirement import NpmRequirement
 
 
-@unittest.skipIf(shutil.which('npm') is None, "Npm is not installed.")
+@unittest.skipIf(shutil.which('npm') is None, 'Npm is not installed.')
 class NpmRequirementTestCase(unittest.TestCase):
 
     def test_installed_requirement(self):

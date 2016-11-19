@@ -27,11 +27,11 @@ class TestClass3(object):
 
     @staticmethod
     def __getitem__(key):
-        return "val"
+        return 'val'
 
     @staticmethod
     def keys():
-        return ["key"]
+        return ['key']
 
 
 class PropertiedClass(object):
@@ -53,10 +53,10 @@ class JSONAbleClass(object):
 
 class JSONEncoderTest(unittest.TestCase):
     JSONEncoder = create_json_encoder(use_relpath=True)
-    kw = {"cls": JSONEncoder, "sort_keys": True}
+    kw = {'cls': JSONEncoder, 'sort_keys': True}
 
     def test_builtins(self):
-        self.assertEquals('"test"', json.dumps("test", **self.kw))
+        self.assertEquals('"test"', json.dumps('test', **self.kw))
         self.assertEquals('1', json.dumps(1, **self.kw))
         self.assertEquals('true', json.dumps(True, **self.kw))
         self.assertEquals('null', json.dumps(None, **self.kw))
@@ -68,8 +68,8 @@ class JSONEncoderTest(unittest.TestCase):
 
     def test_dict(self):
         self.assertEquals('{"0": 1}', json.dumps({0: 1}, **self.kw))
-        self.assertEquals('{"0": 1}', json.dumps({"0": 1}, **self.kw))
-        self.assertEquals('{"0": "1"}', json.dumps({"0": "1"}, **self.kw))
+        self.assertEquals('{"0": 1}', json.dumps({'0': 1}, **self.kw))
+        self.assertEquals('{"0": "1"}', json.dumps({'0': '1'}, **self.kw))
 
     def test_time(self):
         tf = datetime.today()

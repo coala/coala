@@ -39,25 +39,25 @@ class CliParserTest(unittest.TestCase):
             arg_parser=self.test_arg_parser)
         expected_dict = {
             'default': {
-                ("test", "taken"),
-                ("key", "only_in_default"),
-                ("default_key1", "single_value"),
-                ("default_key2", "single_value"),
-                ("default_key3", "first_value,second_value")},
+                ('test', 'taken'),
+                ('key', 'only_in_default'),
+                ('default_key1', 'single_value'),
+                ('default_key2', 'single_value'),
+                ('default_key3', 'first_value,second_value')},
             'section1': {
-                ("key1", "value1,value2")},
+                ('key1', 'value1,value2')},
             'section2': {
-                ("key2", "only_this_value"),
-                ("key2a", "k2a")}}
-        self.assertEqual(parsed_sections["default"].name, "Default")
+                ('key2', 'only_this_value'),
+                ('key2a', 'k2a')}}
+        self.assertEqual(parsed_sections['default'].name, 'Default')
         self.assertEqual(self.dict_from_sections(parsed_sections),
                          expected_dict)
 
     def test_check_conflicts(self):
-        sections = parse_cli(arg_list=["--save", "--no-config"])
+        sections = parse_cli(arg_list=['--save', '--no-config'])
         with self.assertRaises(SystemExit) as cm:
             check_conflicts(sections)
             self.assertEqual(cm.exception.code, 2)
 
-        sections = parse_cli(arg_list=["--no-config", "-S", "val=42"])
+        sections = parse_cli(arg_list=['--no-config', '-S', 'val=42'])
         self.assertTrue(check_conflicts(sections))

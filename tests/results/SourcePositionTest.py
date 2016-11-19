@@ -12,28 +12,28 @@ class SourcePositionTest(unittest.TestCase):
             SourcePosition(None, 0)
 
         with self.assertRaises(ValueError):
-            SourcePosition("file", None, 1)
+            SourcePosition('file', None, 1)
 
         # However these should work:
-        SourcePosition("file", None, None)
-        SourcePosition("file", 4, None)
-        SourcePosition("file", 4, 5)
+        SourcePosition('file', None, None)
+        SourcePosition('file', 4, None)
+        SourcePosition('file', 4, 5)
 
     def test_string_conversion(self):
-        uut = SourcePosition("filename", 1)
+        uut = SourcePosition('filename', 1)
         self.assertRegex(
             repr(uut),
             "<SourcePosition object\\(file='.*filename', line=1, "
-                "column=None\\) at 0x[0-9a-fA-F]+>")
+                'column=None\\) at 0x[0-9a-fA-F]+>')
 
-        uut = SourcePosition("None", None)
+        uut = SourcePosition('None', None)
         self.assertRegex(
             repr(uut),
             "<SourcePosition object\\(file='.*None', line=None, column=None\\) "
-                "at 0x[0-9a-fA-F]+>")
+                'at 0x[0-9a-fA-F]+>')
 
     def test_json(self):
-        with prepare_file([""], None) as (_, filename):
+        with prepare_file([''], None) as (_, filename):
             uut = SourcePosition(filename, 1)
             self.assertEqual(uut.__json__(use_relpath=True)
                              ['file'], relpath(filename))

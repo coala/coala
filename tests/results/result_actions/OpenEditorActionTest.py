@@ -20,7 +20,7 @@ class OpenEditorActionTest(unittest.TestCase):
 
         del lines[1]
 
-        with open(filename, "w") as f:
+        with open(filename, 'w') as f:
             f.writelines(lines)
 
     @staticmethod
@@ -28,7 +28,7 @@ class OpenEditorActionTest(unittest.TestCase):
         """
         Solely the declaration raises an exception if stdout not provided.
         """
-        assert ("--wait" in commands), "Did not wait for the editor to close"
+        assert ('--wait' in commands), 'Did not wait for the editor to close'
 
     def setUp(self):
         fahandle, self.fa = tempfile.mkstemp()
@@ -45,13 +45,13 @@ class OpenEditorActionTest(unittest.TestCase):
     def test_apply(self):
         # Initial file contents, *before* a patch was applied
         file_dict = {
-            self.fa: ["1\n", "2\n", "3\n"],
-            self.fb: ["1\n", "2\n", "3\n"],
-            "f_c": ["1\n", "2\n", "3\n"]}
+            self.fa: ['1\n', '2\n', '3\n'],
+            self.fb: ['1\n', '2\n', '3\n'],
+            'f_c': ['1\n', '2\n', '3\n']}
 
         # A patch that was applied for some reason to make things complicated
         diff_dict = {self.fb: Diff(file_dict[self.fb])}
-        diff_dict[self.fb].change_line(3, "3\n", "3_changed\n")
+        diff_dict[self.fb].change_line(3, '3\n', '3_changed\n')
 
         # File contents after the patch was applied, that's what's in the files
         current_file_dict = {
@@ -65,21 +65,21 @@ class OpenEditorActionTest(unittest.TestCase):
         # End file contents after the patch and the OpenEditorAction was
         # applied
         expected_file_dict = {
-            self.fa: ["1\n", "3\n"],
-            self.fb: ["1\n", "3_changed\n"],
-            "f_c": ["1\n", "2\n", "3\n"]}
+            self.fa: ['1\n', '3\n'],
+            self.fb: ['1\n', '3_changed\n'],
+            'f_c': ['1\n', '2\n', '3\n']}
 
-        section = Section("")
-        section.append(Setting("editor", ""))
+        section = Section('')
+        section.append(Setting('editor', ''))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit
         diff_dict = uut.apply_from_section(
-            Result.from_values("origin", "msg", self.fa),
+            Result.from_values('origin', 'msg', self.fa),
             file_dict,
             diff_dict,
             section)
         diff_dict = uut.apply_from_section(
-            Result.from_values("origin", "msg", self.fb),
+            Result.from_values('origin', 'msg', self.fb),
             file_dict,
             diff_dict,
             section)
@@ -93,27 +93,27 @@ class OpenEditorActionTest(unittest.TestCase):
     def test_apply_rename(self):
         # Initial file contents, *before* a patch was applied
         file_dict = {
-            self.fa: ["1\n", "2\n", "3\n"]}
+            self.fa: ['1\n', '2\n', '3\n']}
 
         # A patch that was applied for some reason to make things complicated
         file_diff_dict = {}
-        diff = Diff(file_dict[self.fa], rename=self.fa+".renamed")
-        diff.change_line(3, "3\n", "3_changed\n")
+        diff = Diff(file_dict[self.fa], rename=self.fa+'.renamed')
+        diff.change_line(3, '3\n', '3_changed\n')
         ApplyPatchAction().apply(
-            Result("origin", "msg", diffs={self.fa: diff}),
+            Result('origin', 'msg', diffs={self.fa: diff}),
             file_dict,
             file_diff_dict)
         # End file contents after the patch and the OpenEditorAction was
         # applied
         expected_file_dict = {
-            self.fa: ["1\n", "3_changed\n"]}
+            self.fa: ['1\n', '3_changed\n']}
 
-        section = Section("")
-        section.append(Setting("editor", ""))
+        section = Section('')
+        section.append(Setting('editor', ''))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit
         diff_dict = uut.apply_from_section(
-            Result.from_values("origin", "msg", self.fa),
+            Result.from_values('origin', 'msg', self.fa),
             file_dict,
             file_diff_dict,
             section)
@@ -127,12 +127,12 @@ class OpenEditorActionTest(unittest.TestCase):
 
     def test_subl(self):
         file_dict = {self.fa: []}
-        section = Section("")
-        section.append(Setting("editor", "subl"))
+        section = Section('')
+        section.append(Setting('editor', 'subl'))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit_subl
         diff_dict = uut.apply_from_section(
-            Result.from_values("origin", "msg", self.fa),
+            Result.from_values('origin', 'msg', self.fa),
             file_dict,
             {},
             section)
@@ -141,10 +141,10 @@ class OpenEditorActionTest(unittest.TestCase):
         self.assertEqual(file_dict, file_dict)
 
     def test_is_applicable(self):
-        result1 = Result("", "")
-        result2 = Result.from_values("", "", "")
-        result3 = Result.from_values("", "", "file")
-        invalid_result = ""
+        result1 = Result('', '')
+        result2 = Result.from_values('', '', '')
+        result3 = Result.from_values('', '', 'file')
+        invalid_result = ''
         self.assertFalse(OpenEditorAction.is_applicable(result1, None, {}))
         self.assertTrue(OpenEditorAction.is_applicable(result2, None, {}))
         # Check non-existent file

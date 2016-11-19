@@ -10,13 +10,13 @@ class TextPositionTest(unittest.TestCase):
             TextPosition(None, 2)
 
         with self.assertRaises(TypeError):
-            TextPosition("hello", 3)
+            TextPosition('hello', 3)
 
         with self.assertRaises(TypeError):
-            TextPosition(4, "world")
+            TextPosition(4, 'world')
 
         with self.assertRaises(TypeError):
-            TextPosition("double", "string")
+            TextPosition('double', 'string')
 
     def test_properties(self):
         uut = TextPosition(None, None)

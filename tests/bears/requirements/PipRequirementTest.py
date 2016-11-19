@@ -3,7 +3,7 @@ import shutil
 from coalib.bears.requirements.PipRequirement import PipRequirement
 
 
-@unittest.skipIf(shutil.which('pip') is None, "Pip is not installed.")
+@unittest.skipIf(shutil.which('pip') is None, 'Pip is not installed.')
 class PipRequirementTestCase(unittest.TestCase):
 
     def test_installed_requirement(self):

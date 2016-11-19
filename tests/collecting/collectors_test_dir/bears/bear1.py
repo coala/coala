@@ -7,11 +7,11 @@ from coalib.settings.Section import Section
 class TestBear(Bear):
 
     def __init__(self):
-        Bear.__init__(self, Section("settings"), multiprocessing.Queue())
+        Bear.__init__(self, Section('settings'), multiprocessing.Queue())
 
     @staticmethod
     def kind():
-        return "kind"
+        return 'kind'
 
     def origin(self):
         return __file__

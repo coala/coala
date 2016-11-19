@@ -3,7 +3,7 @@ import shutil
 from coalib.bears.requirements.GoRequirement import GoRequirement
 
 
-@unittest.skipIf(shutil.which('go') is None, "Go is not installed.")
+@unittest.skipIf(shutil.which('go') is None, 'Go is not installed.')
 class GoRequirementTestCase(unittest.TestCase):
 
     def test_installed_requirement(self):

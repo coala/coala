@@ -27,8 +27,8 @@ class TestBear(Bear):
         Bear.__init__(self, section, queue)
 
     def run(self):
-        self.print("set", "up", delimiter="=")
-        self.err("teardown")
+        self.print('set', 'up', delimiter='=')
+        self.err('teardown')
         self.err()
 
 
@@ -64,7 +64,7 @@ class BearTest(unittest.TestCase):
 
     def setUp(self):
         self.queue = multiprocessing.Queue()
-        self.settings = Section("test_settings")
+        self.settings = Section('test_settings')
         self.uut = TestBear(self.settings, self.queue)
 
     def test_simple_api(self):
@@ -79,29 +79,29 @@ class BearTest(unittest.TestCase):
     def test_message_queue(self):
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG,
-                           "Running bear TestBear...")
-        self.check_message(LOG_LEVEL.DEBUG, "set=up")
-        self.check_message(LOG_LEVEL.ERROR, "teardown")
+                           'Running bear TestBear...')
+        self.check_message(LOG_LEVEL.DEBUG, 'set=up')
+        self.check_message(LOG_LEVEL.ERROR, 'teardown')
 
     def test_bad_bear(self):
         self.uut = BadTestBear(self.settings, self.queue)
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
         self.check_message(LOG_LEVEL.WARNING,
-                           "Bear BadTestBear failed to run. Take a look at "
-                           "debug messages (`-V`) for further "
-                           "information.")
+                           'Bear BadTestBear failed to run. Take a look at '
+                           'debug messages (`-V`) for further '
+                           'information.')
         # debug message contains custom content, dont test this here
         self.queue.get()
 
     def test_inconvertible(self):
         self.uut = TypedTestBear(self.settings, self.queue)
-        self.settings.append(Setting("something", "5"))
+        self.settings.append(Setting('something', '5'))
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
         self.assertTrue(self.uut.was_executed)
 
-        self.settings.append(Setting("something", "nonsense"))
+        self.settings.append(Setting('something', 'nonsense'))
         self.uut.was_executed = False
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
@@ -142,37 +142,37 @@ class BearTest(unittest.TestCase):
         self.assertTrue(uut.was_executed)
 
         self.assertRaisesRegex(RuntimeError,
-                               "The bear BearWithPrerequisites does not "
-                               "fulfill all requirements\\.",
+                               'The bear BearWithPrerequisites does not '
+                               'fulfill all requirements\\.',
                                BearWithPrerequisites,
                                self.settings,
                                self.queue,
                                False)
 
         self.check_message(LOG_LEVEL.ERROR,
-                           "The bear BearWithPrerequisites does not fulfill "
-                           "all requirements.")
+                           'The bear BearWithPrerequisites does not fulfill '
+                           'all requirements.')
         self.assertTrue(self.queue.empty())
 
         self.assertRaisesRegex(RuntimeError,
-                               "The bear BearWithPrerequisites does not "
-                               "fulfill all requirements\\. Just because "
-                               "I want to\\.",
+                               'The bear BearWithPrerequisites does not '
+                               'fulfill all requirements\\. Just because '
+                               'I want to\\.',
                                BearWithPrerequisites,
                                self.settings,
                                self.queue,
-                               "Just because I want to.")
+                               'Just because I want to.')
 
         self.check_message(LOG_LEVEL.ERROR,
-                           "The bear BearWithPrerequisites does not fulfill "
-                           "all requirements. Just because I want to.")
+                           'The bear BearWithPrerequisites does not fulfill '
+                           'all requirements. Just because I want to.')
         self.assertTrue(self.queue.empty())
 
     def test_get_config_dir(self):
-        section = Section("default")
-        section.append(Setting("files", "**", "/path/to/dir/config"))
+        section = Section('default')
+        section.append(Setting('files', '**', '/path/to/dir/config'))
         uut = TestBear(section, None)
-        self.assertEqual(uut.get_config_dir(), abspath("/path/to/dir"))
+        self.assertEqual(uut.get_config_dir(), abspath('/path/to/dir'))
 
     def test_new_result(self):
         bear = Bear(self.settings, None)

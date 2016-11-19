@@ -8,7 +8,7 @@ class SubTestBear(ImportedTestBear):
 
     @staticmethod
     def kind():
-        return "kind"
+        return 'kind'
 
     def origin(self):
         return __file__

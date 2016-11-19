@@ -6,19 +6,19 @@ from coalib.settings.DocstringMetadata import DocstringMetadata
 class DocstringMetadataTest(unittest.TestCase):
 
     def test_from_docstring(self):
-        self.check_from_docstring_dataset("")
-        self.check_from_docstring_dataset(" description only ",
-                                          desc="description only")
-        self.check_from_docstring_dataset(" :param test:  test description ",
+        self.check_from_docstring_dataset('')
+        self.check_from_docstring_dataset(' description only ',
+                                          desc='description only')
+        self.check_from_docstring_dataset(' :param test:  test description ',
                                           param_dict={
-                                              "test": "test description"})
-        self.check_from_docstring_dataset(" @param test:  test description ",
+                                              'test': 'test description'})
+        self.check_from_docstring_dataset(' @param test:  test description ',
                                           param_dict={
-                                              "test": "test description"})
-        self.check_from_docstring_dataset(" :return: something ",
-                                          retval_desc="something")
-        self.check_from_docstring_dataset(" @return: something ",
-                                          retval_desc="something")
+                                              'test': 'test description'})
+        self.check_from_docstring_dataset(' :return: something ',
+                                          retval_desc='something')
+        self.check_from_docstring_dataset(' @return: something ',
+                                          retval_desc='something')
         self.check_from_docstring_dataset("""
         Main description
 
@@ -31,10 +31,10 @@ class DocstringMetadataTest(unittest.TestCase):
         @return: retval description
         :return: retval description
         override
-        """, desc="Main description", param_dict={
-            "p1": "this is\na multiline desc for p1\n",
-            "p2": "p2 description\n"
-        }, retval_desc="retval description override")
+        """, desc='Main description', param_dict={
+            'p1': 'this is\na multiline desc for p1\n',
+            'p2': 'p2 description\n'
+        }, retval_desc='retval description override')
 
     def test_str(self):
         uut = DocstringMetadata.from_docstring(
@@ -42,7 +42,7 @@ class DocstringMetadataTest(unittest.TestCase):
             Description of something. No params.
             ''')
 
-        self.assertEqual(str(uut), "Description of something. No params.")
+        self.assertEqual(str(uut), 'Description of something. No params.')
 
         uut = DocstringMetadata.from_docstring(
             '''
@@ -52,18 +52,18 @@ class DocstringMetadataTest(unittest.TestCase):
             :param y: x^2
             ''')
 
-        self.assertEqual(str(uut), "Description of something with params.")
+        self.assertEqual(str(uut), 'Description of something with params.')
 
     def check_from_docstring_dataset(self,
                                      docstring,
-                                     desc="",
+                                     desc='',
                                      param_dict=None,
-                                     retval_desc=""):
+                                     retval_desc=''):
         param_dict = param_dict or {}
 
         self.assertIsInstance(docstring,
                               str,
-                              "docstring needs to be a string for this test.")
+                              'docstring needs to be a string for this test.')
         doc_comment = DocstringMetadata.from_docstring(docstring)
         self.assertEqual(doc_comment.desc, desc)
         self.assertEqual(doc_comment.param_dict, param_dict)

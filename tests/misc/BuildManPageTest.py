@@ -8,11 +8,11 @@ from setuptools.dist import Distribution
 from coalib.misc.BuildManPage import BuildManPage, ManPageFormatter
 from coalib.misc.ContextManagers import make_temp
 
-app_name = "name"
-app_description = ("short description " * 2).strip()
-app_long_description = ("long description " * 80).strip()
-section_name = "sect"
-section_text = ("section text " * 5).strip()
+app_name = 'name'
+app_description = ('short description ' * 2).strip()
+app_long_description = ('long description ' * 80).strip()
+section_name = 'sect'
+section_text = ('section text ' * 5).strip()
 sections = {section_name: section_text}
 
 
@@ -29,11 +29,11 @@ def test_arg_parser(formatter_class=argparse.RawDescriptionHelpFormatter):
 class ManPageFormatterTest(unittest.TestCase):
 
     def test_format_functions(self):
-        self.assertEqual(ManPageFormatter._markup("a-b"), "a\\-b")
-        self.assertEqual(ManPageFormatter._underline("test"), "\\fItest\\fR")
-        self.assertEqual(ManPageFormatter._bold("test"), "\\fBtest\\fR")
-        self.assertEqual(ManPageFormatter._bold("\\fBtest"), "\\fBtest\\fR")
-        self.assertEqual(ManPageFormatter._bold("test\\fR"), "\\fBtest\\fR")
+        self.assertEqual(ManPageFormatter._markup('a-b'), 'a\\-b')
+        self.assertEqual(ManPageFormatter._underline('test'), '\\fItest\\fR')
+        self.assertEqual(ManPageFormatter._bold('test'), '\\fBtest\\fR')
+        self.assertEqual(ManPageFormatter._bold('\\fBtest'), '\\fBtest\\fR')
+        self.assertEqual(ManPageFormatter._bold('test\\fR'), '\\fBtest\\fR')
 
     def test_mk_title(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
@@ -44,52 +44,52 @@ class ManPageFormatterTest(unittest.TestCase):
     def test_mk_name(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         self.assertEqual(uut._mk_name(),
-                         ".SH NAME\n{}\n".format(app_name))
+                         '.SH NAME\n{}\n'.format(app_name))
 
     def test_mk_synopsis(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         self.assertEqual(
             uut._mk_synopsis(),
-            ".SH SYNOPSIS\n \\fB{}\\fR [-h] [-a A] arg1\n\n\n".format(
+            '.SH SYNOPSIS\n \\fB{}\\fR [-h] [-a A] arg1\n\n\n'.format(
                 app_name))
 
     def test_mk_description(self):
         uut = ManPageFormatter(app_name,
                                parser=test_arg_parser())
-        self.assertEqual(uut._mk_description(), "")
+        self.assertEqual(uut._mk_description(), '')
         uut = ManPageFormatter(app_name,
                                parser=test_arg_parser(),
                                long_desc=app_long_description)
         self.assertEqual(uut._mk_description(),
-                         ".SH DESCRIPTION\n{}\n".format(app_long_description))
+                         '.SH DESCRIPTION\n{}\n'.format(app_long_description))
 
     def test_mk_options(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         self.assertEqual(uut._mk_options(),
-                         ".SH OPTIONS\n"
-                         "  arg1\n\n"
-                         "  -h, --help  show this help message and exit\n"
-                         "  -a A\n")
+                         '.SH OPTIONS\n'
+                         '  arg1\n\n'
+                         '  -h, --help  show this help message and exit\n'
+                         '  -a A\n')
 
     def test_mk_footer(self):
         uut = ManPageFormatter(app_name, ext_sections=sections)
         self.assertEqual(uut._mk_footer(),
-                         ".SH {}\n {}".format(
+                         '.SH {}\n {}'.format(
                              section_name.upper(), section_text))
         uut = ManPageFormatter(app_name, ext_sections=None)
-        self.assertEqual(uut._mk_footer(), "")
+        self.assertEqual(uut._mk_footer(), '')
 
     def test_formatter(self):
         parser = test_arg_parser(ManPageFormatter)
         self.assertEqual(
             parser.format_help(),
-            "usage: {0} [-h] [-a A] arg1\n\n{1}\n\n"
-            "positional arguments:\n"
-            "  arg1\n\n"
-            "optional arguments:\n"
-            "  \\fB-h\\fR, \\fB--help\\fR\n"
-            "                        show this help message and exit\n"
-            "  \\fB-a\\fR \\fIA\\fR\n"
+            'usage: {0} [-h] [-a A] arg1\n\n{1}\n\n'
+            'positional arguments:\n'
+            '  arg1\n\n'
+            'optional arguments:\n'
+            '  \\fB-h\\fR, \\fB--help\\fR\n'
+            '                        show this help message and exit\n'
+            '  \\fB-a\\fR \\fIA\\fR\n'
             .format(app_name, app_description))
 
         parser = ManPageFormatter(app_name,
@@ -97,13 +97,13 @@ class ManPageFormatterTest(unittest.TestCase):
                                       prog=app_name))
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(parser.format_man_page(),
-                         ".TH {0} 1 {1}\n"
-                         ".SH NAME\n"
-                         "{0}\n"
-                         ".SH SYNOPSIS\n"
-                         " \\fBname\\fR [-h]\n\n\n"
-                         ".SH OPTIONS\n"
-                         "  -h, --help  show this help message and exit\n"
+                         '.TH {0} 1 {1}\n'
+                         '.SH NAME\n'
+                         '{0}\n'
+                         '.SH SYNOPSIS\n'
+                         ' \\fBname\\fR [-h]\n\n\n'
+                         '.SH OPTIONS\n'
+                         '  -h, --help  show this help message and exit\n'
                          .format(app_name, today))
 
 
@@ -115,7 +115,7 @@ class BuildManPageTest(unittest.TestCase):
         self.assertRaises(DistutilsOptionError, uut.finalize_options)
         with make_temp() as uut.output:
             self.assertRaises(DistutilsOptionError, uut.finalize_options)
-            uut.parser = "tests.misc.BuildManPageTest:test_arg_parser"
+            uut.parser = 'tests.misc.BuildManPageTest:test_arg_parser'
 
             uut.finalize_options()
             self.assertIsInstance(uut._parser, argparse.ArgumentParser)

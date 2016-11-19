@@ -8,13 +8,13 @@ class AnnotationsTest(TestCase):
     def test_empty(self):
         with self.assertRaises(TypeError) as ctx:
             typechain()
-        self.assertEqual(str(ctx.exception), "No arguments were provided.")
+        self.assertEqual(str(ctx.exception), 'No arguments were provided.')
 
     def test_with_lambda(self):
         function = typechain(lambda x: int(x) > 0)
         with self.assertRaises(ValueError):
-            function("str")
-        self.assertEqual(function("10"), True)
+            function('str')
+        self.assertEqual(function('10'), True)
 
     def test_with_function(self):
         def positive(val):
@@ -26,9 +26,9 @@ class AnnotationsTest(TestCase):
         with self.assertRaises(ValueError):
             function(0)
         with self.assertRaises(ValueError):
-            function("str")
-        self.assertEqual(function("10"), 10)
-        self.assertEqual(function("0"), 48)
+            function('str')
+        self.assertEqual(function('10'), 10)
+        self.assertEqual(function('0'), 48)
 
     def test_with_function_without_arguments(self):
         def dummy():
@@ -50,10 +50,10 @@ class AnnotationsTest(TestCase):
         function = typechain(Positive, ord)
         with self.assertRaises(ValueError):
             function(0)
-        obj = function("10")
+        obj = function('10')
         self.assertIsInstance(obj, Positive)
         self.assertEqual(obj.val, 10)
-        self.assertEqual(function("0"), 48)
+        self.assertEqual(function('0'), 48)
 
     def test_with_empty_class(self):
         class Dummy:
@@ -61,6 +61,6 @@ class AnnotationsTest(TestCase):
 
         function = typechain(Dummy)
         with self.assertRaises(ValueError):
-            function("str")
+            function('str')
         dummy = Dummy()
         self.assertEqual(function(dummy), dummy)

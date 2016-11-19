@@ -10,7 +10,7 @@ if platform.system() == 'Windows':  # pragma: no cover
 
 
 @unittest.skipIf(shutil.which('gem') is None or bool(call_without_output(cmd)),
-                 "Gem is not installed.")
+                 'Gem is not installed.')
 class GemRequirementTestCase(unittest.TestCase):
 
     def test_installed_requirement(self):

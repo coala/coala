@@ -14,13 +14,13 @@ class AbsolutePositionTest(unittest.TestCase):
                 calc_line_col(text, z_pos), (1, z_pos + 1))
 
         # newline
-        text = ("find position of\n", "'z'",)
+        text = ('find position of\n', "'z'",)
         string_text = ''.join(text)
         z_pos = string_text.find('z')
         self.assertEqual(calc_line_col(text, z_pos), (2, 2))
 
     def test_calc_line_col_unicode(self):
-        uni_pos = COMPLEX_TEST_STRING.find("↑")
+        uni_pos = COMPLEX_TEST_STRING.find('↑')
         self.assertEqual(
                 calc_line_col((COMPLEX_TEST_STRING,), uni_pos),
                 (1, uni_pos + 1))
@@ -32,7 +32,7 @@ class AbsolutePositionTest(unittest.TestCase):
 
     def test_calc_line_col_extremes(self):
         # End of Line
-        text = ("Fitst Line\n", "End of sencond line z")
+        text = ('Fitst Line\n', 'End of sencond line z')
         string_text = ''.join(text)
         z_pos = string_text.find('z')
         self.assertEqual(calc_line_col(text, z_pos),
@@ -40,17 +40,17 @@ class AbsolutePositionTest(unittest.TestCase):
 
         # Out of text
         with self.assertRaises(ValueError):
-            text = ("Some line")
+            text = ('Some line')
             calc_line_col(text, 50)
 
         # start of line
-        text = ("First Line\n", "zEnd of sencond line")
+        text = ('First Line\n', 'zEnd of sencond line')
         string_text = ''.join(text)
         z_pos = string_text.find('z')
         self.assertEqual(calc_line_col(text, z_pos), (2, 1))
 
     def test_property(self):
-        uut = AbsolutePosition(("1", "2"), 1)
+        uut = AbsolutePosition(('1', '2'), 1)
         self.assertEqual(uut.position, 1)
         self.assertEqual(uut.line, 2)
         self.assertEqual(uut.column, 1)
@@ -60,7 +60,7 @@ class AbsolutePositionTest(unittest.TestCase):
         self.assertEqual(uut.line, None)
         self.assertEqual(uut.column, None)
 
-        uut = AbsolutePosition(("a\n", "b\n"), 0)
+        uut = AbsolutePosition(('a\n', 'b\n'), 0)
         self.assertEqual(uut.position, 0)
         self.assertEqual(uut.line, 1)
         self.assertEqual(uut.column, 1)

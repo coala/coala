@@ -22,57 +22,57 @@ class DocumentationCommentTest(unittest.TestCase):
 class GeneralDocumentationCommentTest(DocumentationCommentTest):
 
     def test_fields(self):
-        c_doxygen = DocstyleDefinition.load("C", "doxygen")
-        uut = DocumentationComment("my doc",
+        c_doxygen = DocstyleDefinition.load('C', 'doxygen')
+        uut = DocumentationComment('my doc',
                                    c_doxygen,
-                                   " ",
-                                   ("/**", "*", "*/"),
+                                   ' ',
+                                   ('/**', '*', '*/'),
                                    (25, 45))
 
-        self.assertEqual(uut.documentation, "my doc")
-        self.assertEqual(uut.language, "c")
-        self.assertEqual(uut.docstyle, "doxygen")
-        self.assertEqual(uut.indent, " ")
-        self.assertEqual(str(uut), "my doc")
-        self.assertEqual(uut.marker, ("/**", "*", "*/"))
+        self.assertEqual(uut.documentation, 'my doc')
+        self.assertEqual(uut.language, 'c')
+        self.assertEqual(uut.docstyle, 'doxygen')
+        self.assertEqual(uut.indent, ' ')
+        self.assertEqual(str(uut), 'my doc')
+        self.assertEqual(uut.marker, ('/**', '*', '*/'))
         self.assertEqual(uut.range, (25, 45))
 
-        python_doxygen = DocstyleDefinition.load("python", "doxygen")
+        python_doxygen = DocstyleDefinition.load('python', 'doxygen')
 
-        python_doxygen_metadata = self.Metadata("@param ", " ", "@return ")
+        python_doxygen_metadata = self.Metadata('@param ', ' ', '@return ')
 
-        uut = DocumentationComment("qwertzuiop",
+        uut = DocumentationComment('qwertzuiop',
                                    python_doxygen,
-                                   "\t",
-                                   ("##", "#", "#"),
+                                   '\t',
+                                   ('##', '#', '#'),
                                    None)
 
-        self.assertEqual(uut.documentation, "qwertzuiop")
-        self.assertEqual(uut.language, "python")
-        self.assertEqual(uut.docstyle, "doxygen")
-        self.assertEqual(uut.indent, "\t")
-        self.assertEqual(str(uut), "qwertzuiop")
-        self.assertEqual(uut.marker, ("##", "#", "#"))
+        self.assertEqual(uut.documentation, 'qwertzuiop')
+        self.assertEqual(uut.language, 'python')
+        self.assertEqual(uut.docstyle, 'doxygen')
+        self.assertEqual(uut.indent, '\t')
+        self.assertEqual(str(uut), 'qwertzuiop')
+        self.assertEqual(uut.marker, ('##', '#', '#'))
         self.assertEqual(uut.range, None)
         self.assertEqual(uut.metadata, python_doxygen_metadata)
 
     def test_not_implemented(self):
-        raw_docstyle = DocstyleDefinition("nolang", "nostyle", ('', '', ''),
+        raw_docstyle = DocstyleDefinition('nolang', 'nostyle', ('', '', ''),
                                           self.Metadata('', '', ''))
         not_implemented = DocumentationComment(
-            "some docs", raw_docstyle, None, None, None)
+            'some docs', raw_docstyle, None, None, None)
         with self.assertRaises(NotImplementedError):
             not_implemented.parse()
 
     def test_from_metadata(self):
-        data = load_testdata("default.py")
+        data = load_testdata('default.py')
 
-        original = list(extract_documentation(data, "python", "default"))
+        original = list(extract_documentation(data, 'python', 'default'))
 
         parsed_docs = [(doc.parse(), doc.marker, doc.indent, doc.range)
                        for doc in original]
 
-        docstyle_definition = DocstyleDefinition.load("python", "default")
+        docstyle_definition = DocstyleDefinition.load('python', 'default')
 
         assembled_docs = [DocumentationComment.from_metadata(
                           doc[0], docstyle_definition, doc[1], doc[2], doc[3])
@@ -86,13 +86,13 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
     def check_docstring(self, docstring, expected=[]):
         self.assertIsInstance(docstring,
                               str,
-                              "expected needs to be a string for this test.")
+                              'expected needs to be a string for this test.')
 
         self.assertIsInstance(expected,
                               list,
-                              "expected needs to be a list for this test.")
+                              'expected needs to be a list for this test.')
 
-        python_default = DocstyleDefinition.load("python", "default")
+        python_default = DocstyleDefinition.load('python', 'default')
 
         doc_comment = DocumentationComment(docstring, python_default,
                                            None, None, None)
@@ -100,32 +100,32 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(parsed_metadata, expected)
 
     def test_empty_docstring(self):
-        self.check_docstring("", [])
+        self.check_docstring('', [])
 
     def test_description(self):
-        doc = " description only "
+        doc = ' description only '
         self.check_docstring(doc, [self.Description(desc=' description only ')])
 
     def test_params_default(self):
         self.maxDiff = None
-        doc = (" :param test:  test description1 \n"
-               " :param test:  test description2 \n")
+        doc = (' :param test:  test description1 \n'
+               ' :param test:  test description2 \n')
         expected = [self.Parameter(name='test', desc='  test description1 \n'),
                     self.Parameter(name='test', desc='  test description2 \n')]
         self.check_docstring(doc, expected)
 
     def test_return_values_default(self):
-        doc = (" :return: something1 \n"
-               " :return: something2 ")
+        doc = (' :return: something1 \n'
+               ' :return: something2 ')
         expected = [self.ReturnValue(desc=' something1 \n'),
                     self.ReturnValue(desc=' something2 ')]
         self.check_docstring(doc, expected)
 
     def test_python_default(self):
-        data = load_testdata("default.py")
+        data = load_testdata('default.py')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, "python", "default")]
+                       extract_documentation(data, 'python', 'default')]
 
         expected = [
             [self.Description(desc='\nModule description.\n\n'
@@ -152,10 +152,10 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(parsed_docs, expected)
 
     def test_python_doxygen(self):
-        data = load_testdata("doxygen.py")
+        data = load_testdata('doxygen.py')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, "python", "doxygen")]
+                       extract_documentation(data, 'python', 'doxygen')]
 
         expected = [
             [self.Description(desc=' @package pyexample\n  Documentation for'
@@ -178,10 +178,10 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
 class JavaDocumentationCommentTest(DocumentationCommentTest):
 
     def test_java_default(self):
-        data = load_testdata("default.java")
+        data = load_testdata('default.java')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, "java", "default")]
+                       extract_documentation(data, 'java', 'default')]
 
         expected = [[self.Description(
                      desc='\n Returns an String that says Hello with the name'
@@ -197,15 +197,15 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
 class DocumentationAssemblyTest(unittest.TestCase):
 
     def test_python_assembly(self):
-        data = load_testdata("default.py")
-        docs = "".join(data)
+        data = load_testdata('default.py')
+        docs = ''.join(data)
 
-        for doc in extract_documentation(data, "python", "default"):
+        for doc in extract_documentation(data, 'python', 'default'):
             self.assertIn(doc.assemble(), docs)
 
     def test_c_assembly(self):
-        data = load_testdata("default.c")
-        docs = "".join(data)
+        data = load_testdata('default.c')
+        docs = ''.join(data)
 
-        for doc in extract_documentation(data, "c", "doxygen"):
+        for doc in extract_documentation(data, 'c', 'doxygen'):
             self.assertIn(doc.assemble(), docs)

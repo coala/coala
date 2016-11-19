@@ -33,7 +33,7 @@ def bear_test_module():
     the collection of entry points.
     """
     bears_test_module = os.path.join(os.path.dirname(__file__),
-                                     "test_bears", "__init__.py")
+                                     'test_bears', '__init__.py')
 
     class EntryPoint:
 
@@ -43,6 +43,6 @@ def bear_test_module():
                 __file__ = bears_test_module
             return PseudoPlugin()
 
-    with unittest.mock.patch("pkg_resources.iter_entry_points",
+    with unittest.mock.patch('pkg_resources.iter_entry_points',
                              return_value=[EntryPoint()]) as mocked:
         yield

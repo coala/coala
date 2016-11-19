@@ -13,6 +13,6 @@ class LineCountTestBear(LocalBear):
         """
         yield Result.from_values(
             origin=self,
-            message="This file has {count} lines.".format(count=len(file)),
+            message='This file has {count} lines.'.format(count=len(file)),
             severity=RESULT_SEVERITY.INFO,
             file=filename)

@@ -10,87 +10,87 @@ from coalib.bearlib.languages.documentation.DocstyleDefinition import (
 class DocstyleDefinitionTest(unittest.TestCase):
 
     Metadata = DocstyleDefinition.Metadata
-    dummy_metadata = Metadata(":param ", ":", ":return:")
+    dummy_metadata = Metadata(':param ', ':', ':return:')
 
     def test_fail_instantation(self):
         with self.assertRaises(ValueError):
-            DocstyleDefinition("PYTHON", "doxyGEN",
-                               (("##", "#"),), self.dummy_metadata)
+            DocstyleDefinition('PYTHON', 'doxyGEN',
+                               (('##', '#'),), self.dummy_metadata)
 
         with self.assertRaises(ValueError):
-            DocstyleDefinition("WEIRD-PY",
-                               "schloxygen",
-                               (("##+", "x", "y", "z"),),
+            DocstyleDefinition('WEIRD-PY',
+                               'schloxygen',
+                               (('##+', 'x', 'y', 'z'),),
                                self.dummy_metadata)
 
         with self.assertRaises(ValueError):
-            DocstyleDefinition("PYTHON",
-                               "doxygen",
-                               (("##", "", "#"), ('"""', '"""')),
+            DocstyleDefinition('PYTHON',
+                               'doxygen',
+                               (('##', '', '#'), ('"""', '"""')),
                                self.dummy_metadata)
 
         with self.assertRaises(TypeError):
-            DocstyleDefinition(123, ["doxygen"], (('"""', '"""')),
+            DocstyleDefinition(123, ['doxygen'], (('"""', '"""')),
                                self.dummy_metadata)
 
         with self.assertRaises(TypeError):
-            DocstyleDefinition("language", ["doxygen"], (('"""', '"""')),
-                               "metdata")
+            DocstyleDefinition('language', ['doxygen'], (('"""', '"""')),
+                               'metdata')
 
     def test_properties(self):
-        uut = DocstyleDefinition("C", "doxygen",
-                                 (("/**", "*", "*/"),), self.dummy_metadata)
+        uut = DocstyleDefinition('C', 'doxygen',
+                                 (('/**', '*', '*/'),), self.dummy_metadata)
 
-        self.assertEqual(uut.language, "c")
-        self.assertEqual(uut.docstyle, "doxygen")
-        self.assertEqual(uut.markers, (("/**", "*", "*/"),))
+        self.assertEqual(uut.language, 'c')
+        self.assertEqual(uut.docstyle, 'doxygen')
+        self.assertEqual(uut.markers, (('/**', '*', '*/'),))
         self.assertEqual(uut.metadata, self.dummy_metadata)
 
-        uut = DocstyleDefinition("PYTHON", "doxyGEN",
-                                 [("##", "", "#")], self.dummy_metadata)
+        uut = DocstyleDefinition('PYTHON', 'doxyGEN',
+                                 [('##', '', '#')], self.dummy_metadata)
 
-        self.assertEqual(uut.language, "python")
-        self.assertEqual(uut.docstyle, "doxygen")
-        self.assertEqual(uut.markers, (("##", "", "#"),))
+        self.assertEqual(uut.language, 'python')
+        self.assertEqual(uut.docstyle, 'doxygen')
+        self.assertEqual(uut.markers, (('##', '', '#'),))
         self.assertEqual(uut.metadata, self.dummy_metadata)
 
-        uut = DocstyleDefinition("I2C",
-                                 "my-custom-tool",
-                                 (["~~", "/~", "/~"], (">!", ">>", ">>")),
+        uut = DocstyleDefinition('I2C',
+                                 'my-custom-tool',
+                                 (['~~', '/~', '/~'], ('>!', '>>', '>>')),
                                  self.dummy_metadata)
 
-        self.assertEqual(uut.language, "i2c")
-        self.assertEqual(uut.docstyle, "my-custom-tool")
-        self.assertEqual(uut.markers, (("~~", "/~", "/~"), (">!", ">>", ">>")))
+        self.assertEqual(uut.language, 'i2c')
+        self.assertEqual(uut.docstyle, 'my-custom-tool')
+        self.assertEqual(uut.markers, (('~~', '/~', '/~'), ('>!', '>>', '>>')))
         self.assertEqual(uut.metadata, self.dummy_metadata)
 
-        uut = DocstyleDefinition("Cpp", "doxygen",
-                                 ("~~", "/~", "/~"), self.dummy_metadata)
+        uut = DocstyleDefinition('Cpp', 'doxygen',
+                                 ('~~', '/~', '/~'), self.dummy_metadata)
 
-        self.assertEqual(uut.language, "cpp")
-        self.assertEqual(uut.docstyle, "doxygen")
-        self.assertEqual(uut.markers, (("~~", "/~", "/~"),))
+        self.assertEqual(uut.language, 'cpp')
+        self.assertEqual(uut.docstyle, 'doxygen')
+        self.assertEqual(uut.markers, (('~~', '/~', '/~'),))
         self.assertEqual(uut.metadata, self.dummy_metadata)
 
     def test_load(self):
         # Test unregistered docstyle.
         with self.assertRaises(FileNotFoundError):
-            next(DocstyleDefinition.load("PYTHON", "INVALID"))
+            next(DocstyleDefinition.load('PYTHON', 'INVALID'))
 
         # Test unregistered language in existing docstyle.
         with self.assertRaises(KeyError):
-            next(DocstyleDefinition.load("bake-a-cake", "default"))
+            next(DocstyleDefinition.load('bake-a-cake', 'default'))
 
         # Test wrong argument type.
         with self.assertRaises(TypeError):
-            next(DocstyleDefinition.load(123, ["list"]))
+            next(DocstyleDefinition.load(123, ['list']))
 
         # Test python 3 default configuration and if everything is parsed
         # right.
-        result = DocstyleDefinition.load("PYTHON3", "default")
+        result = DocstyleDefinition.load('PYTHON3', 'default')
 
-        self.assertEqual(result.language, "python3")
-        self.assertEqual(result.docstyle, "default")
+        self.assertEqual(result.language, 'python3')
+        self.assertEqual(result.docstyle, 'default')
         self.assertEqual(result.markers, (('"""', '', '"""'),))
 
         self.assertEqual(result.metadata, self.dummy_metadata)
@@ -124,7 +124,7 @@ class DocstyleDefinitionTest(unittest.TestCase):
                                                       iglob_mock):
         # Test the case when a coalang was provided with uppercase letters.
         confparser_instance_mock = confparser_mock.return_value
-        confparser_instance_mock.parse.return_value = ["X"]
+        confparser_instance_mock.parse.return_value = ['X']
         iglob_mock.return_value = ['some/CUSTOMSTYLE.coalang',
                                    'SOME/xlang.coalang']
 
@@ -134,13 +134,13 @@ class DocstyleDefinitionTest(unittest.TestCase):
     def test_load_external_coalang(self):
         empty_metadata = self.Metadata('', '', '')
         with TemporaryDirectory() as directory:
-            coalang_file = os.path.join(directory, "custom.coalang")
-            with open(coalang_file, "w") as file:
-                file.write("[COOL]\ndoc-markers = @@,@@,@@\n")
+            coalang_file = os.path.join(directory, 'custom.coalang')
+            with open(coalang_file, 'w') as file:
+                file.write('[COOL]\ndoc-markers = @@,@@,@@\n')
 
             result = DocstyleDefinition.load(
-                "cool", "custom", coalang_dir=directory)
-            self.assertEqual(result.language, "cool")
-            self.assertEqual(result.docstyle, "custom")
+                'cool', 'custom', coalang_dir=directory)
+            self.assertEqual(result.language, 'cool')
+            self.assertEqual(result.docstyle, 'custom')
             self.assertEqual(result.markers, (('@@', '@@', '@@'),))
             self.assertEqual(result.metadata, empty_metadata)

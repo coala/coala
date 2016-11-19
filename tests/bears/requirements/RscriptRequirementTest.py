@@ -4,7 +4,7 @@ from coalib.bears.requirements.RscriptRequirement import RscriptRequirement
 from coalib.misc.Shell import call_without_output
 
 
-@unittest.skipIf(shutil.which('R') is None, "R is not installed.")
+@unittest.skipIf(shutil.which('R') is None, 'R is not installed.')
 class RscriptRequirementTestCase(unittest.TestCase):
 
     def test_installed_requirement(self):

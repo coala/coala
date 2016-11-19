@@ -45,17 +45,17 @@ class GlobbingHelperFunctionsTest(unittest.TestCase):
     def test_positions(self):
         # pattern: [bracketed values]
         pattern_positions_dict = {
-            "[]": [],
-            "[a]": [1],
-            "[][]": [1, 2],
-            "[]]]": [1],
-            "[[[]": [1, 2],
-            "[[[][]]]": [1, 2, 5],
-            "][": [],
-            "][][": [],
-            "[!]": [],
-            "[!c]": [1, 2],
-            "[!": []
+            '[]': [],
+            '[a]': [1],
+            '[][]': [1, 2],
+            '[]]]': [1],
+            '[[[]': [1, 2],
+            '[[[][]]]': [1, 2, 5],
+            '][': [],
+            '][][': [],
+            '[!]': [],
+            '[!c]': [1, 2],
+            '[!': []
             }
         for pattern, bracketed_positions in pattern_positions_dict.items():
             for pos in range(len(pattern)):
@@ -67,16 +67,16 @@ class GlobbingHelperFunctionsTest(unittest.TestCase):
     def test_choices(self):
         # pattern: [choices]
         pattern_choices_dict = {
-            "": [""],
-            "a": ["a"],
-            "a|b": ["a", "b"],
-            "a|b|c": ["a", "b", "c"],
-            "a|b[|]c": ["a", "b[|]c"],
-            "a|[b|c]": ["a", "[b|c]"],
-            "a[|b|c]": ["a[|b|c]"],
-            "[a|b|c]": ["[a|b|c]"],
-            "[a]|[b]|[c]": ["[a]", "[b]", "[c]"],
-            "[[a]|[b]|[c]": ["[[a]", "[b]", "[c]"]
+            '': [''],
+            'a': ['a'],
+            'a|b': ['a', 'b'],
+            'a|b|c': ['a', 'b', 'c'],
+            'a|b[|]c': ['a', 'b[|]c'],
+            'a|[b|c]': ['a', '[b|c]'],
+            'a[|b|c]': ['a[|b|c]'],
+            '[a|b|c]': ['[a|b|c]'],
+            '[a]|[b]|[c]': ['[a]', '[b]', '[c]'],
+            '[[a]|[b]|[c]': ['[[a]', '[b]', '[c]']
             }
         for pattern, choices in pattern_choices_dict.items():
             self.assertEqual(list(_iter_choices(pattern)), choices)
@@ -84,18 +84,18 @@ class GlobbingHelperFunctionsTest(unittest.TestCase):
     def test_alternatives(self):
         # pattern: [alternatives]
         pattern_alternatives_dict = {
-            "": [""],
-            "(ab)": ["ab"],
-            "a|b": ["a|b"],
-            "()": [""],
-            "(|)": [""],
-            "(a|b)": ["a", "b"],
-            "(a|b|c)": ["a", "b", "c"],
-            "a(b|c)": ["ab", "ac"],
-            "(a|b)(c|d)": ["ac", "ad", "bc", "bd"],
-            "(a|b(c|d)": ["(a|bc", "(a|bd"],
-            "(a[|]b)": ["a[|]b"],
-            "[(]a|b)": ["[(]a|b)"],
+            '': [''],
+            '(ab)': ['ab'],
+            'a|b': ['a|b'],
+            '()': [''],
+            '(|)': [''],
+            '(a|b)': ['a', 'b'],
+            '(a|b|c)': ['a', 'b', 'c'],
+            'a(b|c)': ['ab', 'ac'],
+            '(a|b)(c|d)': ['ac', 'ad', 'bc', 'bd'],
+            '(a|b(c|d)': ['(a|bc', '(a|bd'],
+            '(a[|]b)': ['a[|]b'],
+            '[(]a|b)': ['[(]a|b)'],
             }
         for pattern, alternatives in pattern_alternatives_dict.items():
             self.assertEqual(sorted(list(_iter_alternatives(pattern))),
@@ -106,27 +106,27 @@ class GlobEscapeTest(unittest.TestCase):
 
     def test_glob_escape(self):
         input_strings = [
-            "test",
-            "test[",
-            "test []",
-            "test [[]",
-            "test ]] str [",
-            "test[][]",
-            "test(",
-            "test)",
-            "test()",
-            "test (1)"]
+            'test',
+            'test[',
+            'test []',
+            'test [[]',
+            'test ]] str [',
+            'test[][]',
+            'test(',
+            'test)',
+            'test()',
+            'test (1)']
         output_strings = [
-            "test",
-            "test[[]",
-            "test [[][]]",
-            "test [[][[][]]",
-            "test []][]] str [[]",
-            "test[[][]][[][]]",
-            "test[(]",
-            "test[)]",
-            "test[(][)]",
-            "test [(]1[)]"]
+            'test',
+            'test[[]',
+            'test [[][]]',
+            'test [[][[][]]',
+            'test []][]] str [[]',
+            'test[[][]][[][]]',
+            'test[(]',
+            'test[)]',
+            'test[(][)]',
+            'test [(]1[)]']
         for unescaped_str, escaped_str in zip(input_strings, output_strings):
             self.assertEqual(glob_escape(unescaped_str), escaped_str)
 
@@ -140,73 +140,73 @@ class FnmatchTest(unittest.TestCase):
             self.assertFalse(fnmatch(non_match, pattern))
 
     def test_circumflex_in_set(self):
-        pattern = "[^abc]"
-        matches = ["^", "a", "b", "c"]
-        non_matches = ["d", "e", "f", "g"]
+        pattern = '[^abc]'
+        matches = ['^', 'a', 'b', 'c']
+        non_matches = ['d', 'e', 'f', 'g']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_negative_set(self):
-        pattern = "[!ab]"
-        matches = ["c", "d"]
-        non_matches = ["a", "b"]
+        pattern = '[!ab]'
+        matches = ['c', 'd']
+        non_matches = ['a', 'b']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_escaped_bracket(self):
-        pattern = "[]ab]"
-        matches = ["]", "a", "b"]
-        non_matches = ["[]ab]", "ab]"]
+        pattern = '[]ab]'
+        matches = [']', 'a', 'b']
+        non_matches = ['[]ab]', 'ab]']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_empty_set(self):
-        pattern = "a[]b"
-        matches = ["a[]b"]
-        non_matches = ["a", "b", "[", "]", "ab"]
+        pattern = 'a[]b'
+        matches = ['a[]b']
+        non_matches = ['a', 'b', '[', ']', 'ab']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_home_dir(self):
-        pattern = os.path.join("~", "a", "b")
-        matches = [os.path.expanduser(os.path.join("~", "a", "b"))]
-        non_matches = [os.path.join("~", "a", "b")]
+        pattern = os.path.join('~', 'a', 'b')
+        matches = [os.path.expanduser(os.path.join('~', 'a', 'b'))]
+        non_matches = [os.path.join('~', 'a', 'b')]
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_alternatives(self):
-        pattern = "(a|b)"
-        matches = ["a", "b"]
-        non_matches = ["(a|b)", "a|b"]
+        pattern = '(a|b)'
+        matches = ['a', 'b']
+        non_matches = ['(a|b)', 'a|b']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_set_precedence(self):
-        pattern = "(a|[b)]"
-        matches = ["(a|b", "(a|)"]
-        non_matches = ["a]", "[b]"]
+        pattern = '(a|[b)]'
+        matches = ['(a|b', '(a|)']
+        non_matches = ['a]', '[b]']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_questionmark(self):
-        pattern = "a?b"
-        matches = ["axb", "ayb"]
-        non_matches = ["ab", "aXXb"]
+        pattern = 'a?b'
+        matches = ['axb', 'ayb']
+        non_matches = ['ab', 'aXXb']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_asterisk(self):
-        pattern = "a*b"
-        matches = ["axb", "ayb"]
-        non_matches = ["aXbX", os.path.join("a", "b")]
+        pattern = 'a*b'
+        matches = ['axb', 'ayb']
+        non_matches = ['aXbX', os.path.join('a', 'b')]
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_double_asterisk(self):
-        pattern = "a**b"
-        matches = ["axb", "ayb", os.path.join("a", "b")]
-        non_matches = ["aXbX"]
+        pattern = 'a**b'
+        matches = ['axb', 'ayb', os.path.join('a', 'b')]
+        non_matches = ['aXbX']
         self._test_fnmatch(pattern, matches, non_matches)
 
     def test_multiple_patterns(self):
-        pattern = ["a**b", "a**c"]
-        matches = ["axb", "axc"]
-        non_matches = ["aXbX", "aXcX"]
+        pattern = ['a**b', 'a**c']
+        matches = ['axb', 'axc']
+        non_matches = ['aXbX', 'aXcX']
         self._test_fnmatch(pattern, matches, non_matches)
 
         pattern = []
-        matches = ["anything", "anything_else"]
+        matches = ['anything', 'anything_else']
         non_matches = []
         self._test_fnmatch(pattern, matches, non_matches)
 
@@ -220,7 +220,7 @@ class GlobTest(unittest.TestCase):
         results = sorted([os.path.normcase(g) for g in glob(pattern)])
         file_list = sorted([os.path.normcase(f) for f in file_list])
         self.assertEqual([i for i in results
-                          if re.search(r"(__pycache__|\.pyc)", i) is None],
+                          if re.search(r'(__pycache__|\.pyc)', i) is None],
                          file_list)
 
     def test_collect_files(self):
@@ -290,17 +290,17 @@ class GlobTest(unittest.TestCase):
         self._test_glob(pattern, file_list)
 
     def test_collect_or(self):
-        pattern = os.path.join(TestFiles.glob_test_dir, "File?.(x|y|z)")
+        pattern = os.path.join(TestFiles.glob_test_dir, 'File?.(x|y|z)')
         file_list = [TestFiles.file1, TestFiles.file2, TestFiles.file3]
         self._test_glob(pattern, file_list)
 
     def test_wildcard_dir(self):
-        pattern = os.path.join(TestFiles.glob_test_dir, "SubDir?", "File11.py")
+        pattern = os.path.join(TestFiles.glob_test_dir, 'SubDir?', 'File11.py')
         file_list = [TestFiles.file11]
         self._test_glob(pattern, file_list)
 
     def test_collect_recursive(self):
-        pattern = os.path.join(TestFiles.glob_test_dir, "**", "*")
+        pattern = os.path.join(TestFiles.glob_test_dir, '**', '*')
         file_list = [TestFiles.file1,
                      TestFiles.file2,
                      TestFiles.file3,
@@ -313,7 +313,7 @@ class GlobTest(unittest.TestCase):
         self._test_glob(pattern, file_list)
 
     def test_collect_recursive_part_of_basename(self):
-        pattern = os.path.join(TestFiles.glob_test_dir, "**.(py|[xy])")
+        pattern = os.path.join(TestFiles.glob_test_dir, '**.(py|[xy])')
         file_list = [TestFiles.file11,
                      TestFiles.file12,
                      TestFiles.file1,
@@ -321,7 +321,7 @@ class GlobTest(unittest.TestCase):
         self._test_glob(pattern, file_list)
 
     def test_collect_invalid(self):
-        pattern = "NOPE"
+        pattern = 'NOPE'
         file_list = []
         self._test_glob(pattern, file_list)
 
@@ -342,7 +342,7 @@ class GlobTest(unittest.TestCase):
                           for g in glob(pattern)])
         file_list = sorted([os.path.normcase(f) for f in file_list])
         self.assertEqual([i for i in results
-                          if re.search(r"(__pycache__|\.pyc)", i) is None],
+                          if re.search(r'(__pycache__|\.pyc)', i) is None],
                          file_list)
         os.curdir = old_curdir
 

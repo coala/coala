@@ -12,8 +12,8 @@ from coalib.settings.Setting import Setting
 class coalaDeleteOrigTest(unittest.TestCase):
 
     def setUp(self):
-        self.section = Section("default")
-        self.section.append(Setting("config", '/path/to/file'))
+        self.section = Section('default')
+        self.section.append(Setting('config', '/path/to/file'))
 
     @unittest.mock.patch('os.getcwd')
     def test_nonexistent_coafile(self, mocked_getcwd):
@@ -24,7 +24,7 @@ class coalaDeleteOrigTest(unittest.TestCase):
     @unittest.mock.patch('coalib.parsing.Globbing.glob')
     def test_remove_exception(self, mock_glob):
         # Non existent file
-        mock_glob.return_value = ["non_existent_file"]
+        mock_glob.return_value = ['non_existent_file']
         with retrieve_stderr() as stderr:
             retval = coala_delete_orig.main(section=self.section)
             output = stderr.getvalue()
@@ -42,10 +42,10 @@ class coalaDeleteOrigTest(unittest.TestCase):
 
     def test_normal_running(self):
         with tempfile.TemporaryDirectory() as directory:
-            temporary = tempfile.mkstemp(suffix=".orig", dir=directory)
+            temporary = tempfile.mkstemp(suffix='.orig', dir=directory)
             os.close(temporary[0])
-            section = Section("")
-            section.append(Setting("project_dir", re.escape(directory)))
+            section = Section('')
+            section.append(Setting('project_dir', re.escape(directory)))
             retval = coala_delete_orig.main(section=section)
             self.assertEqual(retval, 0)
             self.assertFalse(os.path.isfile(temporary[1]))

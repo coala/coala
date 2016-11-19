@@ -29,19 +29,19 @@ class DictUtilitiesTest(unittest.TestCase):
 
     def test_update_ordered_dict_key(self):
         self.ordered_dict = OrderedDict()
-        self.ordered_dict["default"] = "Some stuff"
-        self.ordered_dict["pythoncheck"] = "Somemore stuff"
+        self.ordered_dict['default'] = 'Some stuff'
+        self.ordered_dict['pythoncheck'] = 'Somemore stuff'
         self.ordered_dict = update_ordered_dict_key(self.ordered_dict,
-                                                    "default",
-                                                    "coala")
-        self.assertTrue("coala" in self.ordered_dict)
+                                                    'default',
+                                                    'coala')
+        self.assertTrue('coala' in self.ordered_dict)
         self.assertEqual("OrderedDict([('coala', 'Some stuff'), "
                          "('pythoncheck', 'Somemore stuff')])",
                          self.ordered_dict.__str__())
         self.ordered_dict = update_ordered_dict_key(self.ordered_dict,
-                                                    "coala",
-                                                    "section")
-        self.assertTrue("section" in self.ordered_dict)
+                                                    'coala',
+                                                    'section')
+        self.assertTrue('section' in self.ordered_dict)
         self.assertEqual("OrderedDict([('section', 'Some stuff'), "
                          "('pythoncheck', 'Somemore stuff')])",
                          self.ordered_dict.__str__())

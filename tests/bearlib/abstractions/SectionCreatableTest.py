@@ -35,27 +35,27 @@ class SectionCreatableTest(unittest.TestCase):
 
     def test_needed_settings(self):
         self.assertEqual(sorted(list(TestObject.get_non_optional_settings())),
-                         sorted(["setting_one", "raw_setting"]))
+                         sorted(['setting_one', 'raw_setting']))
         self.assertEqual(
             sorted(list(TestObject.get_optional_settings())),
-            sorted(["setting_two", "setting_three", "opt_raw_set"]))
+            sorted(['setting_two', 'setting_three', 'opt_raw_set']))
 
     def test_from_section(self):
-        section = Section("name")
-        section.append(Setting("setting_one", " 5"))
-        section.append(Setting("raw_setting", " 5s"))
+        section = Section('name')
+        section.append(Setting('setting_one', ' 5'))
+        section.append(Setting('raw_setting', ' 5s'))
         uut = TestObject.from_section(section)
         self.assertEqual(uut.setting_one, 5)
-        self.assertEqual(str(uut.raw_setting), "5s")
+        self.assertEqual(str(uut.raw_setting), '5s')
         self.assertEqual(uut.setting_two, False)
         self.assertEqual(uut.setting_three, [1, 2])
-        self.assertEqual(str(uut.opt_raw_set), "5")
+        self.assertEqual(str(uut.opt_raw_set), '5')
 
-        section.append(Setting("setting_three", "2, 4"))
-        section.append(Setting("opt_raw_set", "tst ,"))
+        section.append(Setting('setting_three', '2, 4'))
+        section.append(Setting('opt_raw_set', 'tst ,'))
         uut = TestObject.from_section(section)
         self.assertEqual(uut.setting_one, 5)
-        self.assertEqual(str(uut.raw_setting), "5s")
+        self.assertEqual(str(uut.raw_setting), '5s')
         self.assertEqual(uut.setting_two, False)
-        self.assertEqual(uut.setting_three, ["2", "4"])
-        self.assertEqual(str(uut.opt_raw_set), "tst ,")
+        self.assertEqual(uut.setting_three, ['2', '4'])
+        self.assertEqual(str(uut.opt_raw_set), 'tst ,')
