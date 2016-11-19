@@ -3,6 +3,7 @@ import difflib
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
+from coalib.results.TextRange import TextRange
 from coala_utils.decorators import enforce_signature, generate_eq
 
 
@@ -462,3 +463,25 @@ class Diff:
         self.delete_lines(range.start.line, range.end.line)
         self.add_lines(range.start.line - 1,
                        (first_part + replacement + last_part).splitlines(True))
+
+    def insert(self, position, text):
+        r"""
+        Inserts (multiline) text at arbitrary position.
+
+        >>> from coalib.results.TextPosition import TextPosition
+        >>> test_text = ['123\n', '456\n', '789\n']
+        >>> def insert(position, text):
+        ...     diff = Diff(test_text)
+        ...     diff.insert(position, text)
+        ...     return diff.modified
+        >>> insert(TextPosition(2, 3), 'woopy doopy')
+        ['123\n', '45woopy doopy6\n', '789\n']
+        >>> insert(TextPosition(1, 1), 'woopy\ndoopy')
+        ['woopy\n', 'doopy123\n', '456\n', '789\n']
+        >>> insert(TextPosition(2, 4), '\nwoopy\ndoopy\n')
+        ['123\n', '456\n', 'woopy\n', 'doopy\n', '\n', '789\n']
+
+        :param position: The ``TextPosition`` where to insert text.
+        :param text:     The text to insert.
+        """
+        self.replace(TextRange(position, position), text)
