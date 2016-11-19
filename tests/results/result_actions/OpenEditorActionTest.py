@@ -2,7 +2,9 @@ import os
 import subprocess
 import tempfile
 import unittest
+from importlib import reload
 
+import coalib.results.result_actions.OpenEditorAction
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -152,3 +154,32 @@ class OpenEditorActionTest(unittest.TestCase):
 
         self.assertFalse(
             OpenEditorAction.is_applicable(invalid_result, None, {}))
+
+    def test_environ_editor(self):
+        old_environ = os.environ
+
+        file_dict = {self.fb: ['1\n', '2\n', '3\n']}
+        diff_dict = {}
+        subprocess.call = self.fake_edit
+        with open(self.fb, 'w') as handle:
+            handle.writelines(file_dict[self.fb])
+        result = Result.from_values('origin', 'msg', self.fb)
+
+        # Currently an ``editor`` param is required, so this will raise
+        # a ``TypeError``.
+        from coalib.results.result_actions.OpenEditorAction import (
+            OpenEditorAction)
+        action = OpenEditorAction()
+        with self.assertRaises(TypeError):
+            action.apply(result, file_dict, diff_dict)
+
+        # If we reload the module after setting the ``$EDITOR`` variable,
+        # we should be able apply the action without an explicit variable.
+        os.environ['EDITOR'] = 'vim'
+        reload(coalib.results.result_actions.OpenEditorAction)
+        from coalib.results.result_actions.OpenEditorAction import (
+            OpenEditorAction)
+        action = OpenEditorAction()
+        action.apply(result, file_dict, diff_dict)
+
+        os.environ = old_environ

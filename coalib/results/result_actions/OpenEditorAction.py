@@ -1,5 +1,6 @@
 import subprocess
 from os.path import exists
+from os import environ
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -61,3 +62,6 @@ class OpenEditorAction(ResultAction):
                     rename=False if original_name == filename else filename)
 
         return file_diff_dict
+
+    if 'EDITOR' in environ:
+        apply.__defaults__ = (environ['EDITOR'],)
