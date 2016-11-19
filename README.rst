@@ -75,7 +75,7 @@ To install the **latest stable version** run:
 
     $ pip3 install coala
 
-**Make sure you have Python >= 3.4 and pip >= 8.1 installed.**
+**Make sure you have Python >= 3.4 and pip >= 6 installed.**
 
 |Stable|
 
