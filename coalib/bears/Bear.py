@@ -239,8 +239,7 @@ class Bear(Printer, LogPrinterMixin):
             result = self.run_bear_from_section(args, kwargs)
             return [] if result is None else list(result)
         except:
-            self.warn("Bear {} failed to run. Take a look at debug messages"
-                      " (`-V`) for further information.".format(name))
+            self.warn(self.get_warning_msg())
             self.debug(
                 "The bear {bear} raised an exception. If you are the author "
                 "of this bear, please make sure to catch all exceptions. If "
