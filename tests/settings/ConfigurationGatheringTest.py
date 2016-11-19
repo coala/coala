@@ -243,13 +243,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                       "child_dir",
                                       ".coafile"), retval)
 
-        with change_directory(child_dir):
-            sections, _, _, _ = gather_configuration(
-                lambda *args: True,
-                self.log_printer,
-                arg_list=["--find-config"])
-            self.assertEqual(bool(sections["default"]['find_config']), True)
-
     def test_no_config(self):
         current_dir = os.path.abspath(os.path.dirname(__file__))
         child_dir = os.path.join(current_dir,

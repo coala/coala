@@ -95,11 +95,6 @@ To run coala without user interaction, check out the `coala-json` and
             Constants.default_coafile))
 
     config_group.add_argument(
-        '-F', '--find-config', action='store_const', const=True,
-        help="find {} in ancestors of the working directory".format(
-            Constants.default_coafile))
-
-    config_group.add_argument(
         '-I', '--no-config', const=True, action='store_const',
         help="run without using any config file")
 
