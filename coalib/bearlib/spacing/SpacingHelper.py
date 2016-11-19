@@ -86,11 +86,28 @@ class SpacingHelper(SectionCreatable):
         :param line: The string with spaces to replace.
         :return:     The converted string.
         """
+        def previous_whitespace():
+            # Find the previous real character, and remaining chars to fill tab
+            non_whitespace_position = tabless_position - currspaces
+            tab_fill = non_whitespace_position % self.tab_width
+
+            if tab_fill and tab_fill + currspaces >= self.tab_width:
+                whitespace = "\t"
+                remaining_spaces = currspaces - (self.tab_width - tab_fill)
+            else:
+                whitespace = ""
+                remaining_spaces = currspaces
+
+            whitespace += "\t" * (remaining_spaces // self.tab_width)
+            whitespace += " " * (remaining_spaces % self.tab_width)
+            return whitespace
+
         currspaces = 0
         result = ""
         # Tracking the index of the string isnt enough because tabs are
         # spanning over multiple columns
         tabless_position = 0
+        previous_char = None
         for char in line:
             if char == " ":
                 currspaces += 1
@@ -101,20 +118,23 @@ class SpacingHelper(SectionCreatable):
                 currspaces += space_count
                 tabless_position += space_count
             else:
-                result += currspaces*" " + char
+                if currspaces:
+                    if currspaces == 1:
+                        result += previous_char
+                    else:
+                        result += previous_whitespace()
+
+                result += char
                 currspaces = 0
                 tabless_position += 1
 
-            # tabless_position is now incremented to point _after_ the current
-            # char
-            if tabless_position % self.tab_width == 0 and currspaces:
-                if currspaces == 1 and char == " ":
-                    result += " "
-                else:
-                    result += "\t"
+            previous_char = char
 
-                currspaces = 0
-
-        result += currspaces*" "
+        if currspaces:
+            if currspaces == 1:
+                result += previous_char
+            else:
+                char = None
+                result += previous_whitespace()
 
         return result
