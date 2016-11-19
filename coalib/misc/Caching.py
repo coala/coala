@@ -86,16 +86,16 @@ class FileCache:
 
         cache_data = pickle_load(log_printer, project_dir, {})
         last_time = -1
-        if "time" in cache_data:
-            last_time = cache_data["time"]
+        if 'time' in cache_data:
+            last_time = cache_data['time']
         if not flush_cache and last_time > self.current_time:
-            log_printer.warn("It seems like you went back in time - your "
-                             "system time is behind the last recorded run "
-                             "time on this project. The cache will "
-                             "be force flushed.")
+            log_printer.warn('It seems like you went back in time - your '
+                             'system time is behind the last recorded run '
+                             'time on this project. The cache will '
+                             'be force flushed.')
             flush_cache = True
 
-        self.data = cache_data.get("files", {})
+        self.data = cache_data.get('files', {})
         if flush_cache:
             self.flush_cache()
 
@@ -111,7 +111,7 @@ class FileCache:
         """
         self.data = {}
         delete_files(self.log_printer, [self.project_dir])
-        self.log_printer.debug("The file cache was successfully flushed.")
+        self.log_printer.debug('The file cache was successfully flushed.')
 
     def __enter__(self):
         return self
@@ -130,7 +130,7 @@ class FileCache:
         pickle_dump(
             self.log_printer,
             self.project_dir,
-            {"time": self.current_time, "files": self.data})
+            {'time': self.current_time, 'files': self.data})
 
     def __exit__(self, type, value, traceback):
         """

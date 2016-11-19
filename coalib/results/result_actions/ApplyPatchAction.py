@@ -8,7 +8,7 @@ from coalib.results.result_actions.ResultAction import ResultAction
 
 class ApplyPatchAction(ResultAction):
 
-    SUCCESS_MESSAGE = "Patch applied successfully."
+    SUCCESS_MESSAGE = 'Patch applied successfully.'
 
     is_applicable = staticmethod(ShowPatchAction.is_applicable)
 
@@ -37,7 +37,7 @@ class ApplyPatchAction(ResultAction):
                 # from this run though!
                 if not no_orig and isfile(pre_patch_filename):
                     shutil.copy2(pre_patch_filename,
-                                 pre_patch_filename + ".orig")
+                                 pre_patch_filename + '.orig')
 
             diff = file_diff_dict[filename]
             if diff.delete or diff.rename:

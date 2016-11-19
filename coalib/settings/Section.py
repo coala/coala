@@ -30,8 +30,8 @@ def append_to_sections(sections,
     if key == '' or value is None:
         return
 
-    if section_name == "" or section_name is None:
-        section_name = "default"
+    if section_name == '' or section_name is None:
+        section_name = 'default'
 
     if not section_name.lower() in sections:
         sections[section_name.lower()] = Section(section_name)
@@ -54,23 +54,23 @@ class Section:
                  name,
                  defaults=None):
         if defaults is not None and not isinstance(defaults, Section):
-            raise TypeError("defaults has to be a Section object or None.")
+            raise TypeError('defaults has to be a Section object or None.')
         if defaults is self:
-            raise ValueError("defaults may not be self for non-recursivity.")
+            raise ValueError('defaults may not be self for non-recursivity.')
 
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
 
     def bear_dirs(self):
-        bear_dirs = path_list(self.get("bear_dirs", ""))
+        bear_dirs = path_list(self.get('bear_dirs', ''))
         for bear_dir in bear_dirs:
             sys.path.append(bear_dir)
         bear_dir_globs = [
-            os.path.join(glob_escape(bear_dir), "**")
+            os.path.join(glob_escape(bear_dir), '**')
             for bear_dir in bear_dirs]
         bear_dir_globs += [
-            os.path.join(glob_escape(bear_dir), "**")
+            os.path.join(glob_escape(bear_dir), '**')
             for bear_dir in collect_registered_bears_dirs('coalabears')]
         return bear_dir_globs
 
@@ -83,7 +83,7 @@ class Section:
         :return:        True or False
         """
         if len(targets) == 0:
-            return bool(self.get("enabled", "true"))
+            return bool(self.get('enabled', 'true'))
 
         return self.name.lower() in targets
 
@@ -113,7 +113,7 @@ class Section:
 
         if self.__contains__(key, ignore_defaults=True) and allow_appending:
             val = self[key]
-            val.value = str(val.value) + "\n" + setting.value
+            val.value = str(val.value) + '\n' + setting.value
         else:
             self.append(setting, custom_key=key)
 
@@ -156,24 +156,24 @@ class Section:
 
     def __getitem__(self, item, ignore_defaults=False):
         key = self.__prepare_key(item)
-        if key == "":
-            raise IndexError("Empty keys are invalid.")
+        if key == '':
+            raise IndexError('Empty keys are invalid.')
 
         res = self.contents.get(key, None)
         if res is not None:
             return res
 
         if self.defaults is None or ignore_defaults:
-            raise IndexError("Required index is unavailable.")
+            raise IndexError('Required index is unavailable.')
 
         return self.defaults[key]
 
     def __str__(self):
-        value_list = ", ".join(key + " : " + repr(str(self.contents[key]))
+        value_list = ', '.join(key + ' : ' + repr(str(self.contents[key]))
                                for key in self.contents)
-        return self.name + " {" + value_list + "}"
+        return self.name + ' {' + value_list + '}'
 
-    def get(self, key, default="", ignore_defaults=False):
+    def get(self, key, default='', ignore_defaults=False):
         """
         Retrieves the item without raising an exception. If the item is not
         available an appropriate Setting will be generated from your provided
@@ -214,7 +214,7 @@ class Section:
         :return:                self
         """
         if not isinstance(other_section, Section):
-            raise TypeError("other_section has to be a Section")
+            raise TypeError('other_section has to be a Section')
 
         self.contents.update(other_section.contents)
 

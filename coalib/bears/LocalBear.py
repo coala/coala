@@ -37,11 +37,11 @@ class LocalBear(Bear):
         :param file:     The file contents as string array
         :return:         A list of Result
         """
-        raise NotImplementedError("This function has to be implemented for a "
-                                  "runnable bear.")
+        raise NotImplementedError('This function has to be implemented for a '
+                                  'runnable bear.')
 
     @classmethod
     def get_metadata(cls):
         return FunctionMetadata.from_function(
             cls.run,
-            omit={"self", "filename", "file", "dependency_results"})
+            omit={'self', 'filename', 'file', 'dependency_results'})

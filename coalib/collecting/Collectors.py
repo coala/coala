@@ -126,21 +126,21 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
                         yield bear, bear_glob
                 except pkg_resources.VersionConflict as exception:
                     log_printer.log_exception(
-                        ("Unable to collect bears from {file} because there "
-                         "is a conflict with the version of a dependency "
-                         "you have installed. This may be resolved by "
-                         "creating a separate virtual environment for coala "
-                         "or running `pip install \"{pkg}\"`. Be aware that "
-                         "the latter solution might break other python "
-                         "packages that depend on the currently installed "
-                         "version.").format(file=matching_file,
+                        ('Unable to collect bears from {file} because there '
+                         'is a conflict with the version of a dependency '
+                         'you have installed. This may be resolved by '
+                         'creating a separate virtual environment for coala '
+                         'or running `pip install \"{pkg}\"`. Be aware that '
+                         'the latter solution might break other python '
+                         'packages that depend on the currently installed '
+                         'version.').format(file=matching_file,
                                             pkg=exception.req),
                         exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
                     log_printer.log_exception(
-                        "Unable to collect bears from {file}. Probably the "
-                        "file is malformed or the module code raises an "
-                        "exception.".format(file=matching_file),
+                        'Unable to collect bears from {file}. Probably the '
+                        'file is malformed or the module code raises an '
+                        'exception.'.format(file=matching_file),
                         exception,
                         log_level=LOG_LEVEL.WARNING)
 
@@ -171,8 +171,8 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
     if warn_if_unused_glob:
         _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
                              "No bears matching '{}' were found. Make sure you "
-                             "have coala-bears installed or you have typed the "
-                             "name correctly.")
+                             'have coala-bears installed or you have typed the '
+                             'name correctly.')
     return bears_found
 
 
@@ -231,8 +231,8 @@ def get_all_bears_names():
     from coalib.settings.Section import Section
     printer = LogPrinter(NullPrinter())
     local_bears, global_bears = collect_bears(
-        Section("").bear_dirs(),
-        ["**"],
+        Section('').bear_dirs(),
+        ['**'],
         [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
         printer,
         warn_if_unused_glob=False)
@@ -255,7 +255,7 @@ def collect_all_bears_from_sections(sections, log_printer):
         bear_dirs = sections[section].bear_dirs()
         local_bears[section], global_bears[section] = collect_bears(
             bear_dirs,
-            ["**"],
+            ['**'],
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
             log_printer,
             warn_if_unused_glob=False)

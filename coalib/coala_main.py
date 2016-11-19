@@ -73,16 +73,16 @@ def run_coala(console_printer=None,
             arg_parser=arg_parser,
             arg_list=arg_list)
 
-        log_printer.debug("Platform {} -- Python {}, coalib {}"
+        log_printer.debug('Platform {} -- Python {}, coalib {}'
                           .format(platform.system(), platform.python_version(),
                                   VERSION))
 
         settings_hash = get_settings_hash(sections, targets)
-        flush_cache = bool(sections["default"].get("flush_cache", False) or
+        flush_cache = bool(sections['default'].get('flush_cache', False) or
                            settings_changed(log_printer, settings_hash))
 
         cache = None
-        if not sections["default"].get("disable_caching", False):
+        if not sections['default'].get('disable_caching', False):
             cache = FileCache(log_printer, os.getcwd(), flush_cache)
 
         for section_name, section in sections.items():
@@ -90,8 +90,8 @@ def run_coala(console_printer=None,
                 continue
 
             if force_show_patch:
-                section['default_actions'] = "*: ShowPatchAction"
-                section['show_result_on_top'] = "yeah"
+                section['default_actions'] = '*: ShowPatchAction'
+                section['show_result_on_top'] = 'yeah'
 
             print_section_beginning(section)
             section_result = execute_section(

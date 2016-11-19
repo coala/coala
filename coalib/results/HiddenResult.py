@@ -16,6 +16,6 @@ class HiddenResult(Result):
         :param contents: Any object that is picklable since it will be
                          transferred across processes.
         """
-        Result.__init__(self, origin, "")
+        Result.__init__(self, origin, '')
 
         self.contents = contents

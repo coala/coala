@@ -2,7 +2,7 @@ from coalib.bearlib.aspects import Root, AspectDocumentation, AspectSetting
 
 
 Root.new_subaspect(
-    "Metadata",
+    'Metadata',
     AspectDocumentation(
         definition="""
         This describes any aspect that is related to metadata that is not
@@ -12,7 +12,7 @@ Root.new_subaspect(
 )
 
 Root.Metadata.new_subaspect(
-    "CommitMessage",
+    'CommitMessage',
     AspectDocumentation(
         definition="""
         Your commit message is important documentation associated with your
@@ -27,24 +27,24 @@ Root.Metadata.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.new_subaspect(
-    "Emptiness",
+    'Emptiness',
     AspectDocumentation(
         definition="""
         Your commit message serves as important documentation for your source
         code.
         """,
-        example="(no text at all)",
-        example_language="English",
+        example='(no text at all)',
+        example_language='English',
         importance_reason="""
         An empty commit message shows the lack of documentation for your
         change.
         """,
-        fix_suggestions="Write a commit message."
+        fix_suggestions='Write a commit message.'
     )
 )
 
 Root.Metadata.CommitMessage.new_subaspect(
-    "Shortlog",
+    'Shortlog',
     AspectDocumentation(
         definition="""
         Your commit shortlog is the first line of your commit message. It is
@@ -55,7 +55,7 @@ Root.Metadata.CommitMessage.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.Shortlog.new_subaspect(
-    "ColonExistence",
+    'ColonExistence',
     AspectDocumentation(
         definition="""
         Some projects force to use colons in the commit message shortlog
@@ -65,7 +65,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         FIX: Describe change further
         context: Describe change further
         """,
-        example_language="English",
+        example_language='English',
         importance_reason="""
         The colon can be a useful separator for a context (e.g. a filename) so
         the commit message makes more sense to the reader or a classification
@@ -77,8 +77,8 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         """
     ),
     settings=(AspectSetting(
-        "shortlog_colon",
-        "Whether or not the shortlog has to contain a colon.",
+        'shortlog_colon',
+        'Whether or not the shortlog has to contain a colon.',
         bool,
         (True, False),
         True
@@ -86,7 +86,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.Shortlog.new_subaspect(
-    "TrailingPeriod",
+    'TrailingPeriod',
     AspectDocumentation(
         definition="""
         Some projects force not to use trailing periods in the commit
@@ -96,7 +96,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         Describe change.
         Describe change
         """,
-        example_language="English",
+        example_language='English',
         importance_reason="""
         Consistency is key to make messages more readable. Removing a trailing
         period can also make the message shorter by a character.
@@ -107,8 +107,8 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         """
     ),
     settings=(AspectSetting(
-        "shortlog_period",
-        "Whether or not the shortlog has to contain a trailing period.",
+        'shortlog_period',
+        'Whether or not the shortlog has to contain a trailing period.',
         bool,
         (True, False),
         False
@@ -116,7 +116,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.Shortlog.new_subaspect(
-    "Tense",
+    'Tense',
     AspectDocumentation(
         definition="""
         Most projects have a convention on which tense to use in the commit
@@ -127,7 +127,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         Adding file
         Added file
         """,
-        example_language="English",
+        example_language='English',
         importance_reason="""
         Consistency is key to make messages more readable.
         """,
@@ -136,23 +136,23 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         """
     ),
     settings=(AspectSetting(
-        "shortlog_tense",
-        "The tense of the shortlog.",
+        'shortlog_tense',
+        'The tense of the shortlog.',
         str,
-        ("imperative", "present continuous", "past"),
-        "imperative"
+        ('imperative', 'present continuous', 'past'),
+        'imperative'
     ),)
 )
 
 Root.Metadata.CommitMessage.Shortlog.new_subaspect(
-    "Length",
+    'Length',
     AspectDocumentation(
         definition="""
         The length of your commit message shortlog (first line).
         """,
-        example="Some people just write very long commit messages. Too long. "
-                "Even full sentences. And more of them, too!",
-        example_language="English",
+        example='Some people just write very long commit messages. Too long. '
+                'Even full sentences. And more of them, too!',
+        example_language='English',
         importance_reason="""
         A good commit message should be quick to read and concise. Also, git
         and platforms like GitHub do cut away everything beyond 72, sometimes
@@ -168,8 +168,8 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         """
     ),
     settings=(AspectSetting(
-        "max_shortlog_length",
-        "The maximal number of characters the shortlog may contain.",
+        'max_shortlog_length',
+        'The maximal number of characters the shortlog may contain.',
         int,
         (50, 72, 80),
         72
@@ -177,7 +177,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.Shortlog.new_subaspect(
-    "FirstCharacter",
+    'FirstCharacter',
     AspectDocumentation(
         definition="""
         The first character of your commit message shortlog (first line) usually
@@ -192,9 +192,9 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         add coverage pragma
         Compatability: add coverage pragma
         """,
-        example_language="English",
-        importance_reason="Consistent commit messages are easier to read "
-                          "through.",
+        example_language='English',
+        importance_reason='Consistent commit messages are easier to read '
+                          'through.',
         fix_suggestions="""
         Convert your first character to upper/lower case. If your message starts
         with an identifier, consider rephrasing. Usually starting with a verb is
@@ -202,9 +202,9 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
         """
     ),
     settings=(AspectSetting(
-        "shortlog_starts_upper_case",
-        "Whether or not the shortlog (first line) of a commit message should "
-        "start with an upper case letter consistently.",
+        'shortlog_starts_upper_case',
+        'Whether or not the shortlog (first line) of a commit message should '
+        'start with an upper case letter consistently.',
         bool,
         (True, False),
         True
@@ -212,7 +212,7 @@ Root.Metadata.CommitMessage.Shortlog.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.new_subaspect(
-    "Body",
+    'Body',
     AspectDocumentation(
         definition="""
         Your commit body may contain an elaborate description of your commit.
@@ -221,7 +221,7 @@ Root.Metadata.CommitMessage.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.Body.new_subaspect(
-    "Existence",
+    'Existence',
     AspectDocumentation(
         definition="""
         Forces the commit message body to exist (nonempty).
@@ -229,7 +229,7 @@ Root.Metadata.CommitMessage.Body.new_subaspect(
         example="""
         aspects: Add CommitMessage.Body
         """,
-        example_language="English",
+        example_language='English',
         importance_reason="""
         Having a nonempty commit body is important if you consistently want
         elaborate documentation on all commits.
@@ -241,14 +241,14 @@ Root.Metadata.CommitMessage.Body.new_subaspect(
 )
 
 Root.Metadata.CommitMessage.Body.new_subaspect(
-    "Length",
+    'Length',
     AspectDocumentation(
         definition="""
         The length of your commit message body lines.
         """,
-        example="Some people just write very long commit messages. Too long. "
-                "Way too much actually. If they would just break their lines!",
-        example_language="English",
+        example='Some people just write very long commit messages. Too long. '
+                'Way too much actually. If they would just break their lines!',
+        example_language='English',
         importance_reason="""
         Git and platforms like GitHub usually break everything beyond 72
         characters, making a message containing longer lines hard to read.
@@ -258,9 +258,9 @@ Root.Metadata.CommitMessage.Body.new_subaspect(
         """
     ),
     settings=(AspectSetting(
-        "max_body_length",
-        "The maximal number of characters the body may contain in one line. "
-        "The newline character at each line end does not count to that length.",
+        'max_body_length',
+        'The maximal number of characters the body may contain in one line. '
+        'The newline character at each line end does not count to that length.',
         int,
         (50, 72, 80),
         72

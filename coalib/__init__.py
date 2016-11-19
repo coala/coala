@@ -9,7 +9,7 @@ import sys
 from os.path import join, dirname
 
 
-VERSION_FILE = join(dirname(__file__), "VERSION")
+VERSION_FILE = join(dirname(__file__), 'VERSION')
 
 
 def get_version():
@@ -23,5 +23,5 @@ __version__ = VERSION
 
 def assert_supported_version():  # pragma: no cover
     if not sys.version_info > (3, 3):
-        print("coala supports only python 3.4 or later.")
+        print('coala supports only python 3.4 or later.')
         exit(4)

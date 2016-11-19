@@ -60,16 +60,16 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
             send_msg(message_queue,
                      timeout,
                      LOG_LEVEL.ERROR,
-                     "The results from the bear {bear} could only be "
-                     "partially processed with arguments {arglist}, "
-                     "{kwarglist}"
+                     'The results from the bear {bear} could only be '
+                     'partially processed with arguments {arglist}, '
+                     '{kwarglist}'
                      .format(bear=name, arglist=args, kwarglist=kwargs))
             send_msg(message_queue,
                      timeout,
                      LOG_LEVEL.DEBUG,
-                     "One of the results in the list for the bear {bear} is "
-                     "an instance of {ret} but it should be an instance of "
-                     "Result"
+                     'One of the results in the list for the bear {bear} is '
+                     'an instance of {ret} but it should be an instance of '
+                     'Result'
                      .format(bear=name, ret=result.__class__))
             result_list.remove(result)
 
@@ -95,8 +95,8 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
     :return:              Returns a valid list of objects of the type Result
                           if the bear executed successfully. None otherwise.
     """
-    if kwargs.get("dependency_results", True) is None:
-        del kwargs["dependency_results"]
+    if kwargs.get('dependency_results', True) is None:
+        del kwargs['dependency_results']
 
     name = bear_instance.name
 
@@ -106,15 +106,15 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
-                 "The bear {bear} failed to run with the arguments "
-                 "{arglist}, {kwarglist}. Skipping bear..."
+                 'The bear {bear} failed to run with the arguments '
+                 '{arglist}, {kwarglist}. Skipping bear...'
                  .format(bear=name, arglist=args, kwarglist=kwargs))
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,
-                 "Traceback for error in bear {}:".format(name),
+                 'Traceback for error in bear {}:'.format(name),
                  traceback.format_exc(),
-                 delimiter="\n")
+                 delimiter='\n')
 
         return None
 
@@ -186,13 +186,13 @@ def run_local_bear(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.WARNING,
-                 "A given local bear ({}) is not valid. Leaving "
-                 "it out...".format(bear_instance.__class__.__name__),
+                 'A given local bear ({}) is not valid. Leaving '
+                 'it out...'.format(bear_instance.__class__.__name__),
                  Constants.THIS_IS_A_BUG)
 
         return None
 
-    kwargs = {"dependency_results":
+    kwargs = {'dependency_results':
               get_local_dependency_results(local_result_list,
                                            bear_instance)}
     return run_bear(message_queue,
@@ -230,14 +230,14 @@ def run_global_bear(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.WARNING,
-                 "A given global bear ({}) is not valid. Leaving it "
-                 "out..."
+                 'A given global bear ({}) is not valid. Leaving it '
+                 'out...'
                  .format(global_bear_instance.__class__.__name__),
                  Constants.THIS_IS_A_BUG)
 
         return None
 
-    kwargs = {"dependency_results": dependency_results}
+    kwargs = {'dependency_results': dependency_results}
     return run_bear(message_queue,
                     timeout,
                     global_bear_instance,
@@ -276,13 +276,13 @@ def run_local_bears_on_file(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
-                 "An internal error occurred.",
+                 'An internal error occurred.',
                  Constants.THIS_IS_A_BUG)
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,
-                 "The given file through the queue is not in the file "
-                 "dictionary.")
+                 'The given file through the queue is not in the file '
+                 'dictionary.')
 
         return
 
@@ -372,7 +372,7 @@ def task_done(obj):
 
     :param obj: Any object.
     """
-    if hasattr(obj, "task_done"):
+    if hasattr(obj, 'task_done'):
         obj.task_done()
 
 

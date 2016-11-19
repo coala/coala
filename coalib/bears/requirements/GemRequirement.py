@@ -10,7 +10,7 @@ class GemRequirement(PackageRequirement):
     for the requirement.
     """
 
-    def __init__(self, package, version="", require=""):
+    def __init__(self, package, version='', require=''):
         """
         Constructs a new ``GemRequirement``, using the ``PackageRequirement``
         constructor.

@@ -10,7 +10,7 @@ class PipRequirement(PackageRequirement):
     for the requirement.
     """
 
-    def __init__(self, package, version=""):
+    def __init__(self, package, version=''):
         """
         Constructs a new ``PipRequirement``, using the ``PackageRequirement``
         constructor.

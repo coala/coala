@@ -12,28 +12,28 @@ class LogPrinterMixin:
     of this class.
     """
 
-    def debug(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+    def debug(self, *messages, delimiter=' ', timestamp=None, **kwargs):
         self.log_message(LogMessage(LOG_LEVEL.DEBUG,
                                     *messages,
                                     delimiter=delimiter,
                                     timestamp=timestamp),
                          **kwargs)
 
-    def info(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+    def info(self, *messages, delimiter=' ', timestamp=None, **kwargs):
         self.log_message(LogMessage(LOG_LEVEL.INFO,
                                     *messages,
                                     delimiter=delimiter,
                                     timestamp=timestamp),
                          **kwargs)
 
-    def warn(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+    def warn(self, *messages, delimiter=' ', timestamp=None, **kwargs):
         self.log_message(LogMessage(LOG_LEVEL.WARNING,
                                     *messages,
                                     delimiter=delimiter,
                                     timestamp=timestamp),
                          **kwargs)
 
-    def err(self, *messages, delimiter=" ", timestamp=None, **kwargs):
+    def err(self, *messages, delimiter=' ', timestamp=None, **kwargs):
         self.log_message(LogMessage(LOG_LEVEL.ERROR,
                                     *messages,
                                     delimiter=delimiter,
@@ -68,10 +68,10 @@ class LogPrinterMixin:
                           message (not used when logging the traceback).
         """
         if not isinstance(exception, BaseException):
-            raise TypeError("log_exception can only log derivatives of "
-                            "BaseException.")
+            raise TypeError('log_exception can only log derivatives of '
+                            'BaseException.')
 
-        traceback_str = "\n".join(
+        traceback_str = '\n'.join(
             traceback.format_exception(type(exception),
                                        exception,
                                        exception.__traceback__))
@@ -79,7 +79,7 @@ class LogPrinterMixin:
         self.log(log_level, message, timestamp=timestamp, **kwargs)
         self.log_message(
             LogMessage(LOG_LEVEL.INFO,
-                       "Exception was:" + "\n" + traceback_str,
+                       'Exception was:' + '\n' + traceback_str,
                        timestamp=timestamp),
             **kwargs)
 
@@ -106,7 +106,7 @@ class LogPrinter(LogPrinterMixin):
     def __init__(self,
                  printer=None,
                  log_level=LOG_LEVEL.DEBUG,
-                 timestamp_format="%X"):
+                 timestamp_format='%X'):
         """
         Creates a new log printer from an existing Printer.
 
@@ -147,7 +147,7 @@ class LogPrinter(LogPrinterMixin):
 
     def log_message(self, log_message, **kwargs):
         if not isinstance(log_message, LogMessage):
-            raise TypeError("log_message should be of type LogMessage.")
+            raise TypeError('log_message should be of type LogMessage.')
         self.logger.log(log_message.log_level, log_message.message)
 
     def __getstate__(self):

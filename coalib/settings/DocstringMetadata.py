@@ -5,7 +5,7 @@ from coalib.misc.Enum import enum
 
 
 class DocstringMetadata:
-    _ParseMode = enum("DESCRIPTION", "PARAM", "RETVAL")
+    _ParseMode = enum('DESCRIPTION', 'PARAM', 'RETVAL')
 
     def __init__(self, desc, param_dict, retval_desc):
         """
@@ -30,26 +30,26 @@ class DocstringMetadata:
         :return
         @return
         """
-        lines = inspect.cleandoc(docstring).split("\n")
+        lines = inspect.cleandoc(docstring).split('\n')
 
         parse_mode = cls._ParseMode.DESCRIPTION
-        cur_param = ""
+        cur_param = ''
 
-        desc = ""
+        desc = ''
         param_dict = OrderedDict()
-        retval_desc = ""
+        retval_desc = ''
         for line in lines:
             line = line.strip()
 
-            if line.startswith(":param ") or line.startswith("@param "):
+            if line.startswith(':param ') or line.startswith('@param '):
                 parse_mode = cls._ParseMode.PARAM
-                splitted = line[7:].split(":", 1)
+                splitted = line[7:].split(':', 1)
                 cur_param = splitted[0]
                 param_dict[cur_param] = splitted[1].strip()
 
                 continue
 
-            if line.startswith(":return: ") or line.startswith("@return: "):
+            if line.startswith(':return: ') or line.startswith('@return: '):
                 parse_mode = cls._ParseMode.RETVAL
                 retval_desc = line[9:].strip()
 

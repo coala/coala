@@ -58,18 +58,18 @@ def load_config_file(filename, log_printer, silent=False):
     except FileNotFoundError:
         if not silent:
             if os.path.basename(filename) == Constants.default_coafile:
-                log_printer.warn("The default coafile {0!r} was not found. "
-                                 "You can generate a configuration file with "
-                                 "your current options by adding the `--save` "
-                                 "flag.".format(Constants.default_coafile))
+                log_printer.warn('The default coafile {0!r} was not found. '
+                                 'You can generate a configuration file with '
+                                 'your current options by adding the `--save` '
+                                 'flag.'.format(Constants.default_coafile))
             else:
-                log_printer.err("The requested coafile {0!r} does not exist. "
-                                "You can generate it with your current "
-                                "options by adding the `--save` flag."
+                log_printer.err('The requested coafile {0!r} does not exist. '
+                                'You can generate it with your current '
+                                'options by adding the `--save` flag.'
                                 .format(filename))
                 sys.exit(2)
 
-        return {"default": Section("default")}
+        return {'default': Section('default')}
 
 
 def save_sections(sections):
@@ -78,15 +78,15 @@ def save_sections(sections):
 
     :param sections: A section dict.
     """
-    default_section = sections["default"]
+    default_section = sections['default']
     try:
-        if bool(default_section.get("save", "false")):
+        if bool(default_section.get('save', 'false')):
             conf_writer = ConfWriter(
-                str(default_section.get("config", Constants.default_coafile)))
+                str(default_section.get('config', Constants.default_coafile)))
         else:
             return
     except ValueError:
-        conf_writer = ConfWriter(str(default_section.get("save", ".coafile")))
+        conf_writer = ConfWriter(str(default_section.get('save', '.coafile')))
 
     conf_writer.write_sections(sections)
     conf_writer.close()
@@ -105,7 +105,7 @@ def warn_nonexistent_targets(targets, sections, log_printer):
         if target not in sections:
             log_printer.warn(
                 "The requested section '{section}' is not existent. "
-                "Thus it cannot be executed.".format(section=target))
+                'Thus it cannot be executed.'.format(section=target))
 
     # Can't be summarized as python will evaluate conditions lazily, those
     # functions have intended side effects though.
@@ -125,8 +125,8 @@ def warn_config_absent(sections, argument, log_printer):
     :param log_printer: A log printer to emit the warning to.
     """
     if all(argument not in section for section in sections.values()):
-        log_printer.warn("coala will not run any analysis. Did you forget "
-                         "to give the `--{}` argument?".format(argument))
+        log_printer.warn('coala will not run any analysis. Did you forget '
+                         'to give the `--{}` argument?'.format(argument))
         return True
 
     return False
@@ -147,17 +147,17 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     check_conflicts(cli_sections)
 
     if (
-            bool(cli_sections["default"].get("find_config", "False")) and
-            str(cli_sections["default"].get("config")) == ""):
-        cli_sections["default"].add_or_create_setting(
-            Setting("config", re.escape(find_user_config(os.getcwd()))))
+            bool(cli_sections['default'].get('find_config', 'False')) and
+            str(cli_sections['default'].get('config')) == ''):
+        cli_sections['default'].add_or_create_setting(
+            Setting('config', re.escape(find_user_config(os.getcwd()))))
 
     targets = []
     # We don't want to store targets argument back to file, thus remove it
-    for item in list(cli_sections["default"].contents.pop("targets", "")):
+    for item in list(cli_sections['default'].contents.pop('targets', '')):
         targets.append(item.lower())
 
-    if bool(cli_sections["default"].get("no_config", "False")):
+    if bool(cli_sections['default'].get('no_config', 'False')):
         sections = cli_sections
     else:
         default_sections = load_config_file(Constants.system_coafile,
@@ -168,14 +168,14 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
             silent=True)
 
         default_config = str(
-            default_sections["default"].get("config", ".coafile"))
-        user_config = str(user_sections["default"].get(
-            "config", default_config))
+            default_sections['default'].get('config', '.coafile'))
+        user_config = str(user_sections['default'].get(
+            'config', default_config))
         config = os.path.abspath(
-            str(cli_sections["default"].get("config", user_config)))
+            str(cli_sections['default'].get('config', user_config)))
 
         try:
-            save = bool(cli_sections["default"].get("save", "False"))
+            save = bool(cli_sections['default'].get('save', 'False'))
         except ValueError:
             # A file is deposited for the save parameter, means we want to save
             # but to a specific file.
@@ -190,10 +190,10 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
         sections = merge_section_dicts(sections, cli_sections)
 
     for section in sections:
-        if section != "default":
-            sections[section].defaults = sections["default"]
+        if section != 'default':
+            sections[section].defaults = sections['default']
 
-    str_log_level = str(sections["default"].get("log_level", "")).upper()
+    str_log_level = str(sections['default'].get('log_level', '')).upper()
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
                                                    LOG_LEVEL.INFO)
 
@@ -214,10 +214,10 @@ def find_user_config(file_path, max_trials=10):
     old_dir = None
     base_dir = (file_path if os.path.isdir(file_path)
                 else os.path.dirname(file_path))
-    home_dir = os.path.expanduser("~")
+    home_dir = os.path.expanduser('~')
 
     while base_dir != old_dir and old_dir != home_dir and max_trials != 0:
-        config_file = os.path.join(base_dir, ".coafile")
+        config_file = os.path.join(base_dir, '.coafile')
         if os.path.isfile(config_file):
             return config_file
 
@@ -225,7 +225,7 @@ def find_user_config(file_path, max_trials=10):
         base_dir = os.path.dirname(old_dir)
         max_trials = max_trials - 1
 
-    return ""
+    return ''
 
 
 def get_config_directory(section):

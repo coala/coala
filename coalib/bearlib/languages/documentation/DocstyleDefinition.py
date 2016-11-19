@@ -8,15 +8,15 @@ from coalib.parsing.ConfParser import ConfParser
 
 
 @generate_repr()
-@generate_eq("language", "docstyle", "markers")
+@generate_eq('language', 'docstyle', 'markers')
 class DocstyleDefinition:
     """
     The DocstyleDefinition class holds values that identify a certain type of
     documentation comment (for which language, documentation style/tool used
     etc.).
     """
-    Metadata = namedtuple("Metadata", ("param_start", "param_end",
-                                       "return_sep"))
+    Metadata = namedtuple('Metadata', ('param_start', 'param_end',
+                                       'return_sep'))
 
     @enforce_signature
     def __init__(self, language: str, docstyle: str, markers: (Iterable, str),
@@ -53,8 +53,8 @@ class DocstyleDefinition:
         for marker_set in self._markers:
             length = len(marker_set)
             if length != 3:
-                raise ValueError("Length of a given marker set was not 3 (was "
-                                 "actually {}).".format(length))
+                raise ValueError('Length of a given marker set was not 3 (was '
+                                 'actually {}).'.format(length))
 
         self._metadata = metadata
 
@@ -162,32 +162,32 @@ class DocstyleDefinition:
         language_config_parser = ConfParser(remove_empty_iter_elements=False)
 
         coalang_file = os.path.join(
-            coalang_dir or os.path.dirname(__file__), docstyle + ".coalang")
+            coalang_dir or os.path.dirname(__file__), docstyle + '.coalang')
 
         try:
             docstyle_settings = language_config_parser.parse(coalang_file)
         except FileNotFoundError:
-            raise FileNotFoundError("Docstyle definition " + repr(docstyle) +
-                                    " not found.")
+            raise FileNotFoundError('Docstyle definition ' + repr(docstyle) +
+                                    ' not found.')
 
         language = language.lower()
 
         try:
             docstyle_settings = docstyle_settings[language]
         except KeyError:
-            raise KeyError("Language {!r} is not defined for docstyle {!r}."
+            raise KeyError('Language {!r} is not defined for docstyle {!r}.'
                            .format(language, docstyle))
 
-        metadata_settings = ("param_start", "param_end", "return_sep")
+        metadata_settings = ('param_start', 'param_end', 'return_sep')
 
-        metadata = cls.Metadata(*(str(docstyle_settings.get(req_setting, ""))
+        metadata = cls.Metadata(*(str(docstyle_settings.get(req_setting, ''))
                                   for req_setting in metadata_settings))
 
         marker_sets = (tuple(value)
                        for key, value in
                        docstyle_settings.contents.items()
                        if key not in metadata_settings and
-                       not key.startswith("comment"))
+                       not key.startswith('comment'))
 
         return cls(language, docstyle, marker_sets, metadata)
 
@@ -200,7 +200,7 @@ class DocstyleDefinition:
         :return: A sequence of pairs with ``(docstyle, language)``.
         """
         language_config_parser = ConfParser(remove_empty_iter_elements=False)
-        pattern = os.path.join(os.path.dirname(__file__), "*.coalang")
+        pattern = os.path.join(os.path.dirname(__file__), '*.coalang')
 
         for coalang_file in iglob(pattern):
             docstyle = os.path.splitext(os.path.basename(coalang_file))[0]

@@ -54,8 +54,8 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
-    if "dev" in VERSION:
-        current_version = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    if 'dev' in VERSION:
+        current_version = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
         VERSION = get_version()
@@ -66,42 +66,42 @@ with open('requirements.txt') as requirements:
 with open('test-requirements.txt') as requirements:
     test_required = requirements.read().splitlines()
 
-with open("README.rst") as readme:
+with open('README.rst') as readme:
     long_description = readme.read()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     data_files = [('.', ['coala.1'])]
 
     setup(name='coala',
           version=VERSION,
           description='Code Analysis Application (coala)',
-          author="The coala developers",
-          author_email="coala.analyzer@gmail.com",
-          maintainer="Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger"
-                     if not on_rtd else "L.S., F.N., M.K.",
+          author='The coala developers',
+          author_email='coala.analyzer@gmail.com',
+          maintainer='Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger'
+                     if not on_rtd else 'L.S., F.N., M.K.',
           maintainer_email=('lasse.schuirmann@gmail.com, '
                             'fabian@neuschmidt.de, '
                             'makman@alice.de'),
           url='http://coala.io/',
           platforms='any',
-          packages=find_packages(exclude=["build.*", "tests", "tests.*"]),
+          packages=find_packages(exclude=['build.*', 'tests', 'tests.*']),
           install_requires=required,
           tests_require=test_required,
-          package_data={'coalib': ['default_coafile', "VERSION",
+          package_data={'coalib': ['default_coafile', 'VERSION',
                                    'bearlib/languages/definitions/*.coalang',
                                    'bearlib/languages/documentation/*.coalang']
                         },
-          license="AGPL-3.0",
+          license='AGPL-3.0',
           data_files=data_files,
           long_description=long_description,
           entry_points={
-              "console_scripts": [
-                  "coala = coalib.coala:main",
-                  "coala-ci = coalib.coala_ci:main",
-                  "coala-json = coalib.coala_json:main",
-                  "coala-format = coalib.coala_format:main",
-                  "coala-delete-orig = coalib.coala_delete_orig:main"]},
+              'console_scripts': [
+                  'coala = coalib.coala:main',
+                  'coala-ci = coalib.coala_ci:main',
+                  'coala-json = coalib.coala_json:main',
+                  'coala-format = coalib.coala_format:main',
+                  'coala-delete-orig = coalib.coala_delete_orig:main']},
           # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
               'Development Status :: 4 - Beta',

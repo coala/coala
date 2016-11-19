@@ -6,7 +6,7 @@ from coalib.results.SourceRange import SourceRange
 from coala_utils.decorators import enforce_signature, generate_eq
 
 
-@generate_eq("_file", "modified", "rename", "delete")
+@generate_eq('_file', 'modified', 'rename', 'delete')
 class Diff:
     """
     A Diff result represents a difference for one file.
@@ -49,14 +49,14 @@ class Diff:
                  a_index_2,
                  b_index_1,
                  b_index_2) in change_group:
-                if tag == "delete":
+                if tag == 'delete':
                     for index in range(a_index_1+1, a_index_2+1):
                         result.delete_line(index)
-                elif tag == "insert":
+                elif tag == 'insert':
                     # We add after line, they add before, so dont add 1 here
                     result.add_lines(a_index_1,
                                      file_array_2[b_index_1:b_index_2])
-                elif tag == "replace":
+                elif tag == 'replace':
                     result.change_line(a_index_1+1,
                                        file_array_1[a_index_1],
                                        file_array_2[b_index_1])
@@ -93,9 +93,9 @@ class Diff:
 
     def _get_change(self, line_nr, min_line=1):
         if not isinstance(line_nr, int):
-            raise TypeError("line_nr needs to be an integer.")
+            raise TypeError('line_nr needs to be an integer.')
         if line_nr < min_line:
-            raise ValueError("The given line number is not allowed.")
+            raise ValueError('The given line number is not allowed.')
 
         return self._changes.get(line_nr, LineDiff())
 
@@ -308,11 +308,11 @@ class Diff:
         possible. (This will *not* be done in place.)
         """
         if not isinstance(other, Diff):
-            raise TypeError("Only diffs can be added to a diff.")
+            raise TypeError('Only diffs can be added to a diff.')
 
         if self.rename != other.rename and False not in (self.rename,
                                                          other.rename):
-            raise ConflictError("Diffs contain conflicting renamings.")
+            raise ConflictError('Diffs contain conflicting renamings.')
 
         result = copy.deepcopy(self)
         result.rename = self.rename or other.rename
@@ -374,8 +374,8 @@ class Diff:
 
         linediff = self._get_change(line_nr_before, min_line=0)
         if linediff.add_after is not False:
-            raise ConflictError("Cannot add lines after the given line since "
-                                "there are already lines.")
+            raise ConflictError('Cannot add lines after the given line since '
+                                'there are already lines.')
 
         linediff.add_after = lines
         self._changes[line_nr_before] = linediff
@@ -419,7 +419,7 @@ class Diff:
         linediff = self._get_change(line_nr)
         if linediff.change is not False and linediff.change[1] != replacement:
             if len(replacement) == len(linediff.change[1]) == 1:
-                raise ConflictError("Cannot merge the given line changes.")
+                raise ConflictError('Cannot merge the given line changes.')
 
             orig_diff = Diff.from_string_arrays(linediff.change[0],
                                                 linediff.change[1])

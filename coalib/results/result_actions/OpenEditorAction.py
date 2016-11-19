@@ -6,18 +6,18 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 
 EDITOR_ARGS = {
-    "subl": "--wait",
-    "gedit": "-s",
-    "atom": "--wait"
+    'subl': '--wait',
+    'gedit': '-s',
+    'atom': '--wait'
 }
 
 
-GUI_EDITORS = ["kate", "gedit", "subl", "atom"]
+GUI_EDITORS = ['kate', 'gedit', 'subl', 'atom']
 
 
 class OpenEditorAction(ResultAction):
 
-    SUCCESS_MESSAGE = "Changes saved successfully."
+    SUCCESS_MESSAGE = 'Changes saved successfully.'
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):

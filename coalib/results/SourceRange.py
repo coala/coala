@@ -29,7 +29,7 @@ class SourceRange(TextRange):
         TextRange.__init__(self, start, end)
 
         if self.start.file != self.end.file:
-            raise ValueError("File of start and end position do not match.")
+            raise ValueError('File of start and end position do not match.')
 
     @classmethod
     def from_values(cls,

@@ -2,8 +2,8 @@ from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr)
 
 
-@generate_repr("line", "column")
-@generate_ordering("line", "column")
+@generate_repr('line', 'column')
+@generate_ordering('line', 'column')
 class TextPosition:
 
     @enforce_signature
@@ -19,7 +19,7 @@ class TextPosition:
         :raises ValueError: Raised when a column is set but line is None.
         """
         if line is None and column is not None:
-            raise ValueError("A column can only be set if a line is set.")
+            raise ValueError('A column can only be set if a line is set.')
 
         self._line = line
         self._column = column

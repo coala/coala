@@ -9,7 +9,7 @@ class GoRequirement(PackageRequirement):
     for the requirement.
     """
 
-    def __init__(self, package, version="", flag=""):
+    def __init__(self, package, version='', flag=''):
         """
         Constructs a new ``GoRequirement``, using the ``PackageRequirement``
         constructor.

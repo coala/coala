@@ -5,8 +5,8 @@ from coala_utils.decorators import (
 from coalib.results.TextPosition import TextPosition
 
 
-@generate_repr("start", "end")
-@generate_ordering("start", "end")
+@generate_repr('start', 'end')
+@generate_ordering('start', 'end')
 class TextRange:
 
     @enforce_signature
@@ -72,11 +72,11 @@ class TextRange:
         """
         if not isinstance(a, cls) or not isinstance(b, cls):
             raise TypeError(
-                "only instances of {} can be joined".format(cls.__name__))
+                'only instances of {} can be joined'.format(cls.__name__))
 
         if not a.overlaps(b):
             raise ValueError(
-                    "{}s must overlap to be joined".format(cls.__name__))
+                    '{}s must overlap to be joined'.format(cls.__name__))
 
         return cls(min(a.start, b.start), max(a.end, b.end))
 

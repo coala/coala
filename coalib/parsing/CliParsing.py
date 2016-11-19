@@ -13,7 +13,7 @@ def parse_cli(arg_list=None,
               key_value_delimiters=('=', ':'),
               comment_seperators=(),
               key_delimiters=(',',),
-              section_override_delimiters=(".",)):
+              section_override_delimiters=('.',)):
     """
     Parses the CLI arguments and creates sections out of it.
 
@@ -52,7 +52,7 @@ def parse_cli(arg_list=None,
                                   line_parser)
         else:
             if isinstance(arg_value, list):
-                arg_value = ",".join([str(val) for val in arg_value])
+                arg_value = ','.join([str(val) for val in arg_value])
 
             append_to_sections(sections,
                                arg_key,

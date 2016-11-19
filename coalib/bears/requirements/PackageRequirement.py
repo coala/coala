@@ -1,7 +1,7 @@
 from coala_utils.decorators import generate_eq, generate_repr
 
 
-@generate_eq("type", "package", "version")
+@generate_eq('type', 'package', 'version')
 @generate_repr()
 class PackageRequirement:
     """
@@ -17,7 +17,7 @@ class PackageRequirement:
     True
     """
 
-    def __init__(self, type: str, package: str, version=""):
+    def __init__(self, type: str, package: str, version=''):
         """
         Constructs a new ``PackageRequirement``.
 

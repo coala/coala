@@ -10,7 +10,7 @@ class NpmRequirement(PackageRequirement):
     for the requirement.
     """
 
-    def __init__(self, package, version=""):
+    def __init__(self, package, version=''):
         """
         Constructs a new ``NpmRequirement``, using the ``PackageRequirement``
         constructor.

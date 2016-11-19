@@ -30,7 +30,7 @@ def fill_settings(sections, acquire_settings, log_printer):
 
     for section_name, section in sections.items():
         bear_dirs = section.bear_dirs()
-        bears = list(section.get("bears", ""))
+        bears = list(section.get('bears', ''))
         section_local_bears, section_global_bears = collect_bears(
             bear_dirs,
             bears,

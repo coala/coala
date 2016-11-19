@@ -4,8 +4,8 @@ from coala_utils.decorators import generate_eq, generate_repr
 
 
 @generate_repr()
-@generate_eq("documentation", "language", "docstyle",
-             "indent", "marker", "range")
+@generate_eq('documentation', 'language', 'docstyle',
+             'indent', 'marker', 'range')
 class DocumentationComment:
     """
     The DocumentationComment holds information about a documentation comment
@@ -62,19 +62,19 @@ class DocumentationComment:
             When no parsing method is present for the given language and
             docstyle.
         """
-        if self.language == "python" and self.docstyle == "default":
+        if self.language == 'python' and self.docstyle == 'default':
             return self._parse_documentation_with_symbols(
-                (":param ", ":"), ":return:")
-        elif self.language == "python" and self.docstyle == "doxygen":
+                (':param ', ':'), ':return:')
+        elif self.language == 'python' and self.docstyle == 'doxygen':
             return self._parse_documentation_with_symbols(
-                ("@param ", " "), "@return ")
-        elif self.language == "java" and self.docstyle == "default":
+                ('@param ', ' '), '@return ')
+        elif self.language == 'java' and self.docstyle == 'default':
             return self._parse_documentation_with_symbols(
-                ("@param  ", " "), "@return ")
+                ('@param  ', ' '), '@return ')
         else:
             raise NotImplementedError(
-                "Documentation parsing for {0.language!r} in {0.docstyle!r}"
-                " has not been implemented yet".format(self))
+                'Documentation parsing for {0.language!r} in {0.docstyle!r}'
+                ' has not been implemented yet'.format(self))
 
     def _parse_documentation_with_symbols(self, param_identifiers,
                                           return_identifiers):
@@ -94,9 +94,9 @@ class DocumentationComment:
 
         parse_mode = self.Description
 
-        cur_param = ""
+        cur_param = ''
 
-        desc = ""
+        desc = ''
         parsed = []
 
         for line in lines:
@@ -181,7 +181,7 @@ class DocumentationComment:
         :return:
             A ``DocumentationComment`` instance of the assembled documentation.
         """
-        assembled_doc = ""
+        assembled_doc = ''
         for section in doccomment:
             section_desc = section.desc.splitlines(keepends=True)
 

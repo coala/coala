@@ -52,7 +52,7 @@ def get_running_processes(processes):
 
 
 def create_process_group(command_array, **kwargs):
-    if platform.system() == "Windows":  # pragma: no cover
+    if platform.system() == 'Windows':  # pragma: no cover
         proc = subprocess.Popen(
             command_array,
             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
@@ -74,7 +74,7 @@ def get_default_actions(section):
                        and invalid action names.
     """
     try:
-        default_actions = dict(section["default_actions"])
+        default_actions = dict(section['default_actions'])
     except IndexError:
         return {}, {}
 
@@ -115,8 +115,8 @@ def autoapply_actions(results,
     default_actions, invalid_actions = get_default_actions(section)
 
     for bearname, actionname in invalid_actions.items():
-        log_printer.warn("Selected default action {!r} for bear {!r} does "
-                         "not exist. Ignoring action.".format(actionname,
+        log_printer.warn('Selected default action {!r} for bear {!r} does '
+                         'not exist. Ignoring action.'.format(actionname,
                                                               bearname))
 
     if len(default_actions) == 0:
@@ -138,8 +138,8 @@ def autoapply_actions(results,
                 continue
 
         if not action.is_applicable(result, file_dict, file_diff_dict):
-            log_printer.warn("Selected default action {!r} for bear {!r} is "
-                             "not applicable. Action not applied.".format(
+            log_printer.warn('Selected default action {!r} for bear {!r} is '
+                             'not applicable. Action not applied.'.format(
                                  action.get_metadata().name, result.origin))
             not_processed_results.append(result)
             continue
@@ -149,17 +149,17 @@ def autoapply_actions(results,
                                         file_dict,
                                         file_diff_dict,
                                         section)
-            log_printer.info("Applied {!r} on {} from {!r}.".format(
+            log_printer.info('Applied {!r} on {} from {!r}.'.format(
                 action.get_metadata().name,
                 result.location_repr(),
                 result.origin))
         except Exception as ex:
             not_processed_results.append(result)
             log_printer.log_exception(
-                "Failed to execute action {!r} with error: {}.".format(
+                'Failed to execute action {!r} with error: {}.'.format(
                     action.get_metadata().name, ex),
                 ex)
-            log_printer.debug("-> for result " + repr(result) + ".")
+            log_printer.debug('-> for result ' + repr(result) + '.')
 
     return not_processed_results
 
@@ -250,21 +250,21 @@ def get_file_dict(filename_list, log_printer):
     file_dict = {}
     for filename in filename_list:
         try:
-            with open(filename, "r", encoding="utf-8") as _file:
+            with open(filename, 'r', encoding='utf-8') as _file:
                 file_dict[filename] = tuple(_file.readlines())
         except UnicodeDecodeError:
             log_printer.warn("Failed to read file '{}'. It seems to contain "
-                             "non-unicode characters. Leaving it "
-                             "out.".format(filename))
+                             'non-unicode characters. Leaving it '
+                             'out.'.format(filename))
         except OSError as exception:  # pragma: no cover
             log_printer.log_exception("Failed to read file '{}' because of "
-                                      "an unknown error. Leaving it "
-                                      "out.".format(filename),
+                                      'an unknown error. Leaving it '
+                                      'out.'.format(filename),
                                       exception,
                                       log_level=LOG_LEVEL.WARNING)
 
-    log_printer.debug("Files that will be checked:\n" +
-                      "\n".join(file_dict.keys()))
+    log_printer.debug('Files that will be checked:\n' +
+                      '\n'.join(file_dict.keys()))
     return file_dict
 
 
@@ -348,10 +348,10 @@ def instantiate_processes(section,
                              the same for each object.
     """
     filename_list = collect_files(
-        glob_list(section.get('files', "")),
+        glob_list(section.get('files', '')),
         log_printer,
-        ignored_file_paths=glob_list(section.get('ignore', "")),
-        limit_file_paths=glob_list(section.get('limit_files', "")))
+        ignored_file_paths=glob_list(section.get('ignore', '')),
+        limit_file_paths=glob_list(section.get('limit_files', '')))
 
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
@@ -366,8 +366,8 @@ def instantiate_processes(section,
         # If caching is enabled then the local bears should process only the
         # changed files.
         log_printer.debug("coala is run only on changed files, bears' log "
-                          "messages from previous runs may not appear. You may "
-                          "use the `--flush-cache` flag to see them.")
+                          'messages from previous runs may not appear. You may '
+                          'use the `--flush-cache` flag to see them.')
         filename_list = changed_files
 
     # Note: the complete file dict is given as the file dict to bears and
@@ -386,16 +386,16 @@ def instantiate_processes(section,
     message_queue = multiprocessing.Queue()
     control_queue = multiprocessing.Queue()
 
-    bear_runner_args = {"file_name_queue": filename_queue,
-                        "local_bear_list": local_bear_list,
-                        "global_bear_list": global_bear_list,
-                        "global_bear_queue": global_bear_queue,
-                        "file_dict": file_dict,
-                        "local_result_dict": local_result_dict,
-                        "global_result_dict": global_result_dict,
-                        "message_queue": message_queue,
-                        "control_queue": control_queue,
-                        "timeout": 0.1}
+    bear_runner_args = {'file_name_queue': filename_queue,
+                        'local_bear_list': local_bear_list,
+                        'global_bear_list': global_bear_list,
+                        'global_bear_queue': global_bear_queue,
+                        'file_dict': file_dict,
+                        'local_result_dict': local_result_dict,
+                        'global_result_dict': global_result_dict,
+                        'message_queue': message_queue,
+                        'control_queue': control_queue,
+                        'timeout': 0.1}
 
     local_bear_list[:], global_bear_list[:] = instantiate_bears(
         section,
@@ -423,7 +423,7 @@ def get_ignore_scope(line, keyword):
     :return:        A list of lower cased bearnames or an empty list (-> "all")
     """
     toignore = line[line.rfind(keyword) + len(keyword):]
-    if toignore.startswith("all"):
+    if toignore.startswith('all'):
         return []
     else:
         return list(StringConverter(toignore, list_delimiters=', '))
@@ -445,10 +445,10 @@ def yield_ignore_ranges(file_dict):
             # common substring, case sensitive: I*gnor*e, start i*gnor*ing.
             if 'gnor' in line:
                 line = line.lower()
-                if "start ignoring " in line:
+                if 'start ignoring ' in line:
                     start = line_number
-                    bears = get_ignore_scope(line, "start ignoring ")
-                elif "stop ignoring" in line:
+                    bears = get_ignore_scope(line, 'start ignoring ')
+                elif 'stop ignoring' in line:
                     stop_ignoring = True
                     if start:
                         yield (bears,
@@ -458,9 +458,9 @@ def yield_ignore_ranges(file_dict):
                                    1,
                                    line_number,
                                    len(file[line_number-1])))
-                elif "ignore " in line:
+                elif 'ignore ' in line:
                     end_line = min(line_number + 1, len(file))
-                    yield (get_ignore_scope(line, "ignore "),
+                    yield (get_ignore_scope(line, 'ignore '),
                            SourceRange.from_values(
                                filename,
                                line_number, 1,
@@ -678,7 +678,7 @@ def execute_section(section,
         running_processes = int(section['jobs'])
     except ValueError:
         log_printer.warn("Unable to convert setting 'jobs' into a number. "
-                         "Falling back to CPU count.")
+                         'Falling back to CPU count.')
         running_processes = get_cpu_count()
     except IndexError:
         running_processes = get_cpu_count()
@@ -691,7 +691,7 @@ def execute_section(section,
                                                 log_printer,
                                                 console_printer=console_printer)
 
-    logger_thread = LogPrinterThread(arg_dict["message_queue"],
+    logger_thread = LogPrinterThread(arg_dict['message_queue'],
                                      log_printer)
     # Start and join the logger thread along with the processes to run bears
     processes.append(logger_thread)
@@ -701,18 +701,18 @@ def execute_section(section,
 
     try:
         return (process_queues(processes,
-                               arg_dict["control_queue"],
-                               arg_dict["local_result_dict"],
-                               arg_dict["global_result_dict"],
-                               arg_dict["file_dict"],
+                               arg_dict['control_queue'],
+                               arg_dict['local_result_dict'],
+                               arg_dict['global_result_dict'],
+                               arg_dict['file_dict'],
                                print_results,
                                section,
                                cache,
                                log_printer,
                                console_printer=console_printer),
-                arg_dict["local_result_dict"],
-                arg_dict["global_result_dict"],
-                arg_dict["file_dict"])
+                arg_dict['local_result_dict'],
+                arg_dict['global_result_dict'],
+                arg_dict['file_dict'])
     finally:
         logger_thread.running = False
 

@@ -36,7 +36,7 @@ def _extract_doc_comment_simple(content, line, column, markers):
     while line < len(content):
         pos = content[line].find(markers[2])
         if pos == -1:
-            doc_comment += ("\n" if content[line][align_column:] == ""
+            doc_comment += ('\n' if content[line][align_column:] == ''
                             else content[line][align_column:])
         else:
             doc_comment += content[line][align_column:pos]
@@ -85,7 +85,7 @@ def _extract_doc_comment_continuous(content, line, column, markers):
 
         line += 1
 
-    if content[line - 1][-1] == "\n":
+    if content[line - 1][-1] == '\n':
         column = 0
     else:
         # This case can appear on end-of-document without a ``\n``.
@@ -163,7 +163,7 @@ def _extract_doc_comment(content, line, column, markers):
                     line, column and the extracted documentation. If not
                     matched, returns None.
     """
-    if markers[1] == "":
+    if markers[1] == '':
         # Extract and align to start marker.
         return _extract_doc_comment_simple(content, line, column, markers)
     elif markers[1] == markers[2]:
@@ -180,7 +180,7 @@ def _compile_multi_match_regex(strings):
     :param strings: The strings to match.
     :return:        A regex object.
     """
-    return re.compile("|".join(re.escape(s) for s in strings))
+    return re.compile('|'.join(re.escape(s) for s in strings))
 
 
 def _extract_doc_comment_from_line(content, line, column, regex,

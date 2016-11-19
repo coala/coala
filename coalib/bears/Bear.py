@@ -192,8 +192,8 @@ class Bear(Printer, LogPrinterMixin):
         """
         Printer.__init__(self)
 
-        if message_queue is not None and not hasattr(message_queue, "put"):
-            raise TypeError("message_queue has to be a Queue or None.")
+        if message_queue is not None and not hasattr(message_queue, 'put'):
+            raise TypeError('message_queue has to be a Queue or None.')
 
         self.section = section
         self.message_queue = message_queue
@@ -202,10 +202,10 @@ class Bear(Printer, LogPrinterMixin):
         self.setup_dependencies()
         cp = type(self).check_prerequisites()
         if cp is not True:
-            error_string = ("The bear " + self.name +
-                            " does not fulfill all requirements.")
+            error_string = ('The bear ' + self.name +
+                            ' does not fulfill all requirements.')
             if cp is not False:
-                error_string += " " + cp
+                error_string += ' ' + cp
 
             self.err(error_string)
             raise RuntimeError(error_string)
@@ -225,7 +225,7 @@ class Bear(Printer, LogPrinterMixin):
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
-            self.warn("The bear {} cannot be executed.".format(
+            self.warn('The bear {} cannot be executed.'.format(
                 self.name), str(err))
             return
 
@@ -234,20 +234,20 @@ class Bear(Printer, LogPrinterMixin):
     def execute(self, *args, **kwargs):
         name = self.name
         try:
-            self.debug("Running bear {}...".format(name))
+            self.debug('Running bear {}...'.format(name))
             # If it's already a list it won't change it
             result = self.run_bear_from_section(args, kwargs)
             return [] if result is None else list(result)
         except:
-            self.warn("Bear {} failed to run. Take a look at debug messages"
-                      " (`-V`) for further information.".format(name))
+            self.warn('Bear {} failed to run. Take a look at debug messages'
+                      ' (`-V`) for further information.'.format(name))
             self.debug(
-                "The bear {bear} raised an exception. If you are the author "
-                "of this bear, please make sure to catch all exceptions. If "
-                "not and this error annoys you, you might want to get in "
-                "contact with the author of this bear.\n\nTraceback "
-                "information is provided below:\n\n{traceback}"
-                "\n".format(bear=name, traceback=traceback.format_exc()))
+                'The bear {bear} raised an exception. If you are the author '
+                'of this bear, please make sure to catch all exceptions. If '
+                'not and this error annoys you, you might want to get in '
+                'contact with the author of this bear.\n\nTraceback '
+                'information is provided below:\n\n{traceback}'
+                '\n'.format(bear=name, traceback=traceback.format_exc()))
 
     @staticmethod
     def kind():
@@ -265,7 +265,7 @@ class Bear(Printer, LogPrinterMixin):
         """
         return FunctionMetadata.from_function(
             cls.run,
-            omit={"self", "dependency_results"})
+            omit={'self', 'dependency_results'})
 
     @classmethod
     def __json__(cls):
@@ -278,11 +278,11 @@ class Bear(Printer, LogPrinterMixin):
         metadata = cls.get_metadata()
         non_optional_params = metadata.non_optional_params
         optional_params = metadata.optional_params
-        _dict["metadata"] = {
-            "desc": metadata.desc,
-            "non_optional_params": ({param: non_optional_params[param][0]}
+        _dict['metadata'] = {
+            'desc': metadata.desc,
+            'non_optional_params': ({param: non_optional_params[param][0]}
                                     for param in non_optional_params),
-            "optional_params": ({param: optional_params[param][0]}
+            'optional_params': ({param: optional_params[param][0]}
                                 for param in optional_params)}
         return _dict
 
@@ -372,7 +372,7 @@ class Bear(Printer, LogPrinterMixin):
         if exists(filename):
             return filename
 
-        self.info("Downloading {filename!r} for bear {bearname} from {url}."
+        self.info('Downloading {filename!r} for bear {bearname} from {url}.'
                   .format(filename=filename, bearname=self.name, url=url))
 
         with urlopen(url) as response, open(filename, 'wb') as out_file:

@@ -32,7 +32,7 @@ def subprocess_timeout(sub_process, seconds, kill_pg=False):
 
     finished = threading.Event()
 
-    if platform.system() == "Windows":  # pragma: no cover
+    if platform.system() == 'Windows':  # pragma: no cover
         kill_pg = False
 
     def kill_it():
@@ -87,7 +87,7 @@ def suppress_stdout():
     """
     Suppresses everything going to stdout.
     """
-    with open(os.devnull, "w") as devnull, replace_stdout(devnull):
+    with open(os.devnull, 'w') as devnull, replace_stdout(devnull):
         yield
 
 
@@ -173,13 +173,13 @@ def simulate_console_inputs(*inputs):
             self.inputs = inputs
 
         def generate_input(self, prompt=''):
-            print(prompt, end="")
+            print(prompt, end='')
             self.last_input += 1
             try:
                 return self.inputs[self.last_input]
             except IndexError:
-                raise ValueError("Asked for more input, but no more was "
-                                 "provided from `simulate_console_inputs`.")
+                raise ValueError('Asked for more input, but no more was '
+                                 'provided from `simulate_console_inputs`.')
 
     input_generator = InputGenerator(list(inputs))
     _input = builtins.input
@@ -191,7 +191,7 @@ def simulate_console_inputs(*inputs):
 
 
 @contextmanager
-def make_temp(suffix="", prefix="tmp", dir=None):
+def make_temp(suffix='', prefix='tmp', dir=None):
     """
     Creates a temporary file with a closed stream and deletes it when done.
 
@@ -226,7 +226,7 @@ def prepare_file(lines,
                             for line in lines)
 
     if not create_tempfile and filename is None:
-        filename = "dummy_file_name"
+        filename = 'dummy_file_name'
 
     if not isinstance(filename, str) and create_tempfile:
         with make_temp(**tempfile_kwargs) as filename:

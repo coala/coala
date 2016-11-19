@@ -41,11 +41,11 @@ class LineDiff:
     @change.setter
     def change(self, value):
         if value is not False and not isinstance(value, tuple):
-            raise TypeError("change must be False or a tuple with an original "
-                            "and a replacement string.")
+            raise TypeError('change must be False or a tuple with an original '
+                            'and a replacement string.')
         if value is not False and self.delete is not False:
-            raise ConflictError("A line cannot be changed and deleted "
-                                "at the same time.")
+            raise ConflictError('A line cannot be changed and deleted '
+                                'at the same time.')
 
         self._change = value
 
@@ -56,10 +56,10 @@ class LineDiff:
     @delete.setter
     def delete(self, value):
         if not isinstance(value, bool):
-            raise TypeError("delete can only be a boolean value.")
+            raise TypeError('delete can only be a boolean value.')
         if value is not False and self.change is not False:
-            raise ConflictError("A line cannot be changed and deleted "
-                                "at the same time.")
+            raise ConflictError('A line cannot be changed and deleted '
+                                'at the same time.')
 
         self._delete = value
 
@@ -71,7 +71,7 @@ class LineDiff:
     def add_after(self, value):
         if value is not False and not isinstance(value, collections.Iterable):
             raise TypeError(
-                "add_after must be False or a list of lines to append.")
+                'add_after must be False or a list of lines to append.')
         if isinstance(value, collections.Iterable):
             value = list(value)
         self._add_after = value if value != [] else False

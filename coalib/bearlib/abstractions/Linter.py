@@ -24,102 +24,102 @@ def _prepare_options(options):
     :param options:
         The options dict that contains user/developer inputs.
     """
-    allowed_options = {"executable",
-                       "output_format",
-                       "use_stdin",
-                       "use_stdout",
-                       "use_stderr",
-                       "config_suffix",
-                       "executable_check_fail_info",
-                       "prerequisite_check_command"}
+    allowed_options = {'executable',
+                       'output_format',
+                       'use_stdin',
+                       'use_stdout',
+                       'use_stderr',
+                       'config_suffix',
+                       'executable_check_fail_info',
+                       'prerequisite_check_command'}
 
-    if not options["use_stdout"] and not options["use_stderr"]:
-        raise ValueError("No output streams provided at all.")
+    if not options['use_stdout'] and not options['use_stderr']:
+        raise ValueError('No output streams provided at all.')
 
-    if options["output_format"] == "corrected":
+    if options['output_format'] == 'corrected':
         if (
-                "diff_severity" in options and
-                options["diff_severity"] not in RESULT_SEVERITY.reverse):
-            raise TypeError("Invalid value for `diff_severity`: " +
-                            repr(options["diff_severity"]))
+                'diff_severity' in options and
+                options['diff_severity'] not in RESULT_SEVERITY.reverse):
+            raise TypeError('Invalid value for `diff_severity`: ' +
+                            repr(options['diff_severity']))
 
-        if "result_message" in options:
-            assert_right_type(options["result_message"], str, "result_message")
+        if 'result_message' in options:
+            assert_right_type(options['result_message'], str, 'result_message')
 
-        if "diff_distance" in options:
-            assert_right_type(options["diff_distance"], int, "diff_distance")
+        if 'diff_distance' in options:
+            assert_right_type(options['diff_distance'], int, 'diff_distance')
 
-        allowed_options |= {"diff_severity", "result_message", "diff_distance"}
-    elif options["output_format"] == "regex":
-        if "output_regex" not in options:
-            raise ValueError("`output_regex` needed when specified "
+        allowed_options |= {'diff_severity', 'result_message', 'diff_distance'}
+    elif options['output_format'] == 'regex':
+        if 'output_regex' not in options:
+            raise ValueError('`output_regex` needed when specified '
                              "output-format 'regex'.")
 
-        options["output_regex"] = re.compile(options["output_regex"])
+        options['output_regex'] = re.compile(options['output_regex'])
 
         # Don't setup severity_map if one is provided by user or if it's not
         # used inside the output_regex. If one is manually provided but not
         # used in the output_regex, throw an exception.
-        if "severity_map" in options:
-            if "severity" not in options["output_regex"].groupindex:
-                raise ValueError("Provided `severity_map` but named group "
-                                 "`severity` is not used in `output_regex`.")
-            assert_right_type(options["severity_map"], dict, "severity_map")
+        if 'severity_map' in options:
+            if 'severity' not in options['output_regex'].groupindex:
+                raise ValueError('Provided `severity_map` but named group '
+                                 '`severity` is not used in `output_regex`.')
+            assert_right_type(options['severity_map'], dict, 'severity_map')
 
-            for key, value in options["severity_map"].items():
-                assert_right_type(key, str, "severity_map key")
+            for key, value in options['severity_map'].items():
+                assert_right_type(key, str, 'severity_map key')
 
                 try:
-                    assert_right_type(value, int, "<severity_map dict-value>")
+                    assert_right_type(value, int, '<severity_map dict-value>')
                 except TypeError:
                     raise TypeError(
-                        "The value {!r} for key {!r} inside given "
-                        "severity-map is no valid severity value.".format(
+                        'The value {!r} for key {!r} inside given '
+                        'severity-map is no valid severity value.'.format(
                             value, key))
 
                 if value not in RESULT_SEVERITY.reverse:
                     raise TypeError(
-                        "Invalid severity value {!r} for key {!r} inside "
-                        "given severity-map.".format(value, key))
+                        'Invalid severity value {!r} for key {!r} inside '
+                        'given severity-map.'.format(value, key))
 
             # Auto-convert keys to lower-case. This creates automatically a new
             # dict which prevents runtime-modifications.
-            options["severity_map"] = {
+            options['severity_map'] = {
                 key.lower(): value
-                for key, value in options["severity_map"].items()}
+                for key, value in options['severity_map'].items()}
 
-        if "result_message" in options:
-            assert_right_type(options["result_message"], str, "result_message")
+        if 'result_message' in options:
+            assert_right_type(options['result_message'], str, 'result_message')
 
-        allowed_options |= {"output_regex", "severity_map", "result_message"}
-    elif options["output_format"] is not None:
-        raise ValueError("Invalid `output_format` specified.")
+        allowed_options |= {'output_regex', 'severity_map', 'result_message'}
+    elif options['output_format'] is not None:
+        raise ValueError('Invalid `output_format` specified.')
 
-    if options["prerequisite_check_command"]:
-        if "prerequisite_check_fail_message" in options:
-            assert_right_type(options["prerequisite_check_fail_message"],
+    if options['prerequisite_check_command']:
+        if 'prerequisite_check_fail_message' in options:
+            assert_right_type(options['prerequisite_check_fail_message'],
                               str,
-                              "prerequisite_check_fail_message")
+                              'prerequisite_check_fail_message')
         else:
-            options["prerequisite_check_fail_message"] = (
-                "Prerequisite check failed.")
+            options['prerequisite_check_fail_message'] = (
+                'Prerequisite check failed.')
 
-        allowed_options.add("prerequisite_check_fail_message")
+        allowed_options.add('prerequisite_check_fail_message')
 
     # Check for illegal superfluous options.
     superfluous_options = options.keys() - allowed_options
     if superfluous_options:
         raise ValueError(
-            "Invalid keyword arguments provided: " +
-            ", ".join(repr(s) for s in sorted(superfluous_options)))
+            'Invalid keyword arguments provided: ' +
+            ', '.join(repr(s) for s in sorted(superfluous_options)))
 
 
 def _create_linter(klass, options):
     class LinterMeta(type):
 
         def __repr__(cls):
-            return "<{} linter class (wrapping {!r})>".format(
-                cls.__name__, options["executable"])
+            return '<{} linter class (wrapping {!r})>'.format(
+                cls.__name__, options['executable'])
 
     class LinterBase(LocalBear, metaclass=LinterMeta):
 
@@ -175,7 +175,7 @@ def _create_linter(klass, options):
             :return:
                 The executable name.
             """
-            return options["executable"]
+            return options['executable']
 
         @classmethod
         def check_prerequisites(cls):
@@ -186,39 +186,39 @@ def _create_linter(klass, options):
                 True if operational, otherwise a string containing more info.
             """
             if shutil.which(cls.get_executable()) is None:
-                return (repr(cls.get_executable()) + " is not installed." +
-                        (" " + options["executable_check_fail_info"]
-                         if options["executable_check_fail_info"] else
-                         ""))
+                return (repr(cls.get_executable()) + ' is not installed.' +
+                        (' ' + options['executable_check_fail_info']
+                         if options['executable_check_fail_info'] else
+                         ''))
             else:
-                if options["prerequisite_check_command"]:
+                if options['prerequisite_check_command']:
                     try:
-                        check_call(options["prerequisite_check_command"],
+                        check_call(options['prerequisite_check_command'],
                                    stdout=DEVNULL,
                                    stderr=DEVNULL)
                         return True
                     except (OSError, CalledProcessError):
-                        return options["prerequisite_check_fail_message"]
+                        return options['prerequisite_check_fail_message']
                 return True
 
         @classmethod
         def _get_create_arguments_metadata(cls):
             return FunctionMetadata.from_function(
                 cls.create_arguments,
-                omit={"self", "filename", "file", "config_file"})
+                omit={'self', 'filename', 'file', 'config_file'})
 
         @classmethod
         def _get_generate_config_metadata(cls):
             return FunctionMetadata.from_function(
                 cls.generate_config,
-                omit={"filename", "file"})
+                omit={'filename', 'file'})
 
         @classmethod
         def _get_process_output_metadata(cls):
             metadata = FunctionMetadata.from_function(cls.process_output)
 
-            if options["output_format"] is None:
-                omitted = {"self", "output", "filename", "file"}
+            if options['output_format'] is None:
+                omitted = {'self', 'output', 'filename', 'file'}
             else:
                 # If a specific output format is provided, function signatures
                 # from process_output functions should not appear in the help.
@@ -263,44 +263,44 @@ def _create_linter(klass, options):
 
             if 'severity' in groups:
                 try:
-                    groups["severity"] = severity_map[
-                        groups["severity"].lower()]
+                    groups['severity'] = severity_map[
+                        groups['severity'].lower()]
                 except KeyError:
                     self.warn(
-                        repr(groups["severity"]) + " not found in "
-                        "severity-map. Assuming `RESULT_SEVERITY.NORMAL`.")
-                    groups["severity"] = RESULT_SEVERITY.NORMAL
+                        repr(groups['severity']) + ' not found in '
+                        'severity-map. Assuming `RESULT_SEVERITY.NORMAL`.')
+                    groups['severity'] = RESULT_SEVERITY.NORMAL
             else:
                 groups['severity'] = RESULT_SEVERITY.NORMAL
 
-            for variable in ("line", "column", "end_line", "end_column"):
+            for variable in ('line', 'column', 'end_line', 'end_column'):
                 groups[variable] = (None
                                     if groups.get(variable, None) is None else
                                     int(groups[variable]))
 
-            if "origin" in groups:
-                groups["origin"] = "{} ({})".format(klass.__name__,
-                                                    groups["origin"].strip())
+            if 'origin' in groups:
+                groups['origin'] = '{} ({})'.format(klass.__name__,
+                                                    groups['origin'].strip())
 
             # Construct the result.
             return Result.from_values(
-                origin=groups.get("origin", self),
-                message=(groups.get("message", "").strip()
+                origin=groups.get('origin', self),
+                message=(groups.get('message', '').strip()
                          if result_message is None else result_message),
                 file=filename,
-                severity=groups["severity"],
-                line=groups["line"],
-                column=groups["column"],
-                end_line=groups["end_line"],
-                end_column=groups["end_column"],
-                additional_info=groups.get("additional_info", "").strip())
+                severity=groups['severity'],
+                line=groups['line'],
+                column=groups['column'],
+                end_line=groups['end_line'],
+                end_column=groups['end_column'],
+                additional_info=groups.get('additional_info', '').strip())
 
         def process_output_corrected(self,
                                      output,
                                      filename,
                                      file,
                                      diff_severity=RESULT_SEVERITY.NORMAL,
-                                     result_message="Inconsistency found.",
+                                     result_message='Inconsistency found.',
                                      diff_distance=1):
             """
             Processes the executable's output as a corrected file.
@@ -337,22 +337,22 @@ def _create_linter(klass, options):
         def process_output_regex(
                 self, output, filename, file, output_regex,
                 severity_map=MappingProxyType({
-                    "critical": RESULT_SEVERITY.MAJOR,
-                    "c": RESULT_SEVERITY.MAJOR,
-                    "fatal": RESULT_SEVERITY.MAJOR,
-                    "fail": RESULT_SEVERITY.MAJOR,
-                    "f": RESULT_SEVERITY.MAJOR,
-                    "error": RESULT_SEVERITY.MAJOR,
-                    "err": RESULT_SEVERITY.MAJOR,
-                    "e": RESULT_SEVERITY.MAJOR,
-                    "warning": RESULT_SEVERITY.NORMAL,
-                    "warn": RESULT_SEVERITY.NORMAL,
-                    "w": RESULT_SEVERITY.NORMAL,
-                    "information": RESULT_SEVERITY.INFO,
-                    "info": RESULT_SEVERITY.INFO,
-                    "i": RESULT_SEVERITY.INFO,
-                    "note": RESULT_SEVERITY.INFO,
-                    "suggestion": RESULT_SEVERITY.INFO}),
+                    'critical': RESULT_SEVERITY.MAJOR,
+                    'c': RESULT_SEVERITY.MAJOR,
+                    'fatal': RESULT_SEVERITY.MAJOR,
+                    'fail': RESULT_SEVERITY.MAJOR,
+                    'f': RESULT_SEVERITY.MAJOR,
+                    'error': RESULT_SEVERITY.MAJOR,
+                    'err': RESULT_SEVERITY.MAJOR,
+                    'e': RESULT_SEVERITY.MAJOR,
+                    'warning': RESULT_SEVERITY.NORMAL,
+                    'warn': RESULT_SEVERITY.NORMAL,
+                    'w': RESULT_SEVERITY.NORMAL,
+                    'information': RESULT_SEVERITY.INFO,
+                    'info': RESULT_SEVERITY.INFO,
+                    'i': RESULT_SEVERITY.INFO,
+                    'note': RESULT_SEVERITY.INFO,
+                    'suggestion': RESULT_SEVERITY.INFO}),
                 result_message=None):
             """
             Processes the executable's output using a regex.
@@ -398,40 +398,40 @@ def _create_linter(klass, options):
                     match, filename, severity_map=severity_map,
                     result_message=result_message)
 
-        if options["output_format"] is None:
+        if options['output_format'] is None:
             # Check if user supplied a `process_output` override.
-            if not callable(getattr(klass, "process_output", None)):
-                raise ValueError("`process_output` not provided by given "
-                                 "class {!r}.".format(klass.__name__))
+            if not callable(getattr(klass, 'process_output', None)):
+                raise ValueError('`process_output` not provided by given '
+                                 'class {!r}.'.format(klass.__name__))
                 # No need to assign to `process_output` here, the class mixing
                 # below automatically does that.
         else:
             # Prevent people from accidentally defining `process_output`
             # manually, as this would implicitly override the internally
             # set-up `process_output`.
-            if hasattr(klass, "process_output"):
-                raise ValueError("Found `process_output` already defined "
-                                 "by class {!r}, but {!r} output-format is "
-                                 "specified.".format(klass.__name__,
-                                                     options["output_format"]))
+            if hasattr(klass, 'process_output'):
+                raise ValueError('Found `process_output` already defined '
+                                 'by class {!r}, but {!r} output-format is '
+                                 'specified.'.format(klass.__name__,
+                                                     options['output_format']))
 
-            if options["output_format"] == "corrected":
+            if options['output_format'] == 'corrected':
                 _process_output_args = {
                     key: options[key]
-                    for key in ("result_message", "diff_severity",
-                                "diff_distance")
+                    for key in ('result_message', 'diff_severity',
+                                'diff_distance')
                     if key in options}
 
                 _processing_function = partialmethod(
                     process_output_corrected, **_process_output_args)
 
             else:
-                assert options["output_format"] == "regex"
+                assert options['output_format'] == 'regex'
 
                 _process_output_args = {
                     key: options[key]
-                    for key in ("output_regex", "severity_map",
-                                "result_message")
+                    for key in ('output_regex', 'severity_map',
+                                'result_message')
                     if key in options}
 
                 _processing_function = partialmethod(
@@ -482,8 +482,8 @@ def _create_linter(klass, options):
                 yield None
             else:
                 with make_temp(
-                        suffix=options["config_suffix"]) as config_file:
-                    with open(config_file, mode="w") as fl:
+                        suffix=options['config_suffix']) as config_file:
+                    with open(config_file, mode='w') as fl:
                         fl.write(content)
                     yield config_file
 
@@ -508,8 +508,8 @@ def _create_linter(klass, options):
                 try:
                     args = tuple(args)
                 except TypeError:
-                    self.err("The given arguments "
-                             "{!r} are not iterable.".format(args))
+                    self.err('The given arguments '
+                             '{!r} are not iterable.'.format(args))
                     return
 
                 arguments = (self.get_executable(),) + args
@@ -517,12 +517,12 @@ def _create_linter(klass, options):
 
                 output = run_shell_command(
                     arguments,
-                    stdin="".join(file) if options["use_stdin"] else None,
+                    stdin=''.join(file) if options['use_stdin'] else None,
                     cwd=self.get_config_dir())
 
                 output = tuple(compress(
                     output,
-                    (options["use_stdout"], options["use_stderr"])))
+                    (options['use_stdout'], options['use_stderr'])))
                 if len(output) == 1:
                     output = output[0]
 
@@ -532,14 +532,14 @@ def _create_linter(klass, options):
                                            **process_output_kwargs)
 
         def __repr__(self):
-            return "<{} linter object (wrapping {!r}) at {}>".format(
+            return '<{} linter object (wrapping {!r}) at {}>'.format(
                 type(self).__name__, self.get_executable(), hex(id(self)))
 
     # Mixin the linter into the user-defined interface, otherwise
     # `create_arguments` and other methods would be overridden by the
     # default version.
     result_klass = type(klass.__name__, (klass, LinterBase), {})
-    result_klass.__doc__ = klass.__doc__ or ""
+    result_klass.__doc__ = klass.__doc__ or ''
     return result_klass
 
 
@@ -548,8 +548,8 @@ def linter(executable: str,
            use_stdin: bool=False,
            use_stdout: bool=True,
            use_stderr: bool=False,
-           config_suffix: str="",
-           executable_check_fail_info: str="",
+           config_suffix: str='',
+           executable_check_fail_info: str='',
            prerequisite_check_command: tuple=(),
            output_format: (str, None)=None,
            **options):
@@ -732,14 +732,14 @@ def linter(executable: str,
     :return:
         A ``LocalBear`` derivation that lints code using an external tool.
     """
-    options["executable"] = executable
-    options["output_format"] = output_format
-    options["use_stdin"] = use_stdin
-    options["use_stdout"] = use_stdout
-    options["use_stderr"] = use_stderr
-    options["config_suffix"] = config_suffix
-    options["executable_check_fail_info"] = executable_check_fail_info
-    options["prerequisite_check_command"] = prerequisite_check_command
+    options['executable'] = executable
+    options['output_format'] = output_format
+    options['use_stdin'] = use_stdin
+    options['use_stdout'] = use_stdout
+    options['use_stderr'] = use_stderr
+    options['config_suffix'] = config_suffix
+    options['executable_check_fail_info'] = executable_check_fail_info
+    options['prerequisite_check_command'] = prerequisite_check_command
 
     _prepare_options(options)
 

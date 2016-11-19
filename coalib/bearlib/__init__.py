@@ -80,8 +80,8 @@ def deprecate_settings(**depr_args):
                     else (depr_arg_and_modifier, lambda x: x))
                 if deprecated_arg in kwargs:
                     logging.warning(
-                        "The setting `{}` is deprecated. Please use `{}` "
-                        "instead.".format(deprecated_arg, arg))
+                        'The setting `{}` is deprecated. Please use `{}` '
+                        'instead.'.format(deprecated_arg, arg))
                     depr_arg_value = _func.__call__(kwargs[deprecated_arg])
                     if arg in kwargs and depr_arg_value != kwargs[arg]:
                         logging.warning(
@@ -135,7 +135,7 @@ def deprecate_bear(bear):
     bear.old_run = bear.run
 
     def warn_deprecation_and_run(*args, **kwargs):
-        logging.warning("The bear {} is deprecated. Use {} instead!".format(
+        logging.warning('The bear {} is deprecated. Use {} instead!'.format(
             bear.__name__, bear.__bases__[0].__name__
         ))
         return bear.old_run(*args, **kwargs)

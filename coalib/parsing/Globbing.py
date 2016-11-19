@@ -47,8 +47,8 @@ def glob_escape(input_string):
     :return:             Escaped string in which all the special glob characters
                          ``()[]|?*`` are escaped.
     """
-    return re.sub("(?P<char>[" + re.escape(GLOBBING_SPECIAL_CHARS) + "])",
-                  "[\\g<char>]", input_string)
+    return re.sub('(?P<char>[' + re.escape(GLOBBING_SPECIAL_CHARS) + '])',
+                  '[\\g<char>]', input_string)
 
 
 def _position_is_bracketed(string, position):

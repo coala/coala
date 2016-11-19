@@ -66,14 +66,14 @@ To run coala without user interaction, check out the `coala-json` and
 
     arg_parser = argparse.ArgumentParser(
         formatter_class=formatter_class,
-        prog="coala",
+        prog='coala',
         description=description,
         # Use our own help so that we can put it in the group we want
         add_help=False)
 
     arg_parser.add_argument('TARGETS',
                             nargs='*',
-                            help="sections to be executed exclusively")
+                            help='sections to be executed exclusively')
 
     info_group = arg_parser.add_argument_group('Info')
 
@@ -91,22 +91,22 @@ To run coala without user interaction, check out the `coala-json` and
 
     config_group.add_argument(
         '-c', '--config', nargs=1, metavar='FILE',
-        help="configuration file to be used, defaults to {}".format(
+        help='configuration file to be used, defaults to {}'.format(
             Constants.default_coafile))
 
     config_group.add_argument(
         '-F', '--find-config', action='store_const', const=True,
-        help="find {} in ancestors of the working directory".format(
+        help='find {} in ancestors of the working directory'.format(
             Constants.default_coafile))
 
     config_group.add_argument(
         '-I', '--no-config', const=True, action='store_const',
-        help="run without using any config file")
+        help='run without using any config file')
 
     config_group.add_argument(
         '-s', '--save', nargs='?', const=True, metavar='FILE',
-        help="save used arguments to a config file to a {}, the given path, "
-             "or at the value of -c".format(Constants.default_coafile))
+        help='save used arguments to a config file to a {}, the given path, '
+             'or at the value of -c'.format(Constants.default_coafile))
 
     config_group.add_argument(
         '--disable-caching', const=True, action='store_const',
@@ -143,21 +143,21 @@ To run coala without user interaction, check out the `coala-json` and
     outputs_group.add_argument(
         '-V', '--verbose', action='store_const',
         dest='log_level', const='DEBUG',
-        help="alias for `-L DEBUG`")
+        help='alias for `-L DEBUG`')
 
     outputs_group.add_argument(
         '-L', '--log-level', nargs=1,
         choices=['ERROR', 'INFO', 'WARNING', 'DEBUG'], metavar='ENUM',
-        help="set log output level to ERROR/INFO/WARNING/DEBUG")
+        help='set log output level to ERROR/INFO/WARNING/DEBUG')
 
     outputs_group.add_argument(
         '-m', '--min-severity', nargs=1,
         choices=('INFO', 'NORMAL', 'MAJOR'), metavar='ENUM',
-        help="set minimal result severity to INFO/NORMAL/MAJOR")
+        help='set minimal result severity to INFO/NORMAL/MAJOR')
 
     outputs_group.add_argument(
         '-N', '--no-color', const=True, action='store_const',
-        help="display output without coloring (excluding logs)")
+        help='display output without coloring (excluding logs)')
 
     # Specific arguments
     if parser_type in ('coala', 'coala-json'):
@@ -167,16 +167,16 @@ To run coala without user interaction, check out the `coala-json` and
 
         outputs_group.add_argument(
             '-l', '--filter-by-language', nargs='+', metavar='LANG',
-            help="filters `--show-bears` by the given languages")
+            help='filters `--show-bears` by the given languages')
 
         outputs_group.add_argument(
             '-p', '--show-capabilities', nargs='+', metavar='LANG',
-            help="show what coala can fix and detect for the given languages")
+            help='show what coala can fix and detect for the given languages')
 
     if parser_type == 'coala':
         outputs_group.add_argument(
             '-D', '--show-description', const=True, action='store_const',
-            help="show bear descriptions for `--show-bears`")
+            help='show bear descriptions for `--show-bears`')
 
         outputs_group.add_argument(
             '--show-details', const=True, action='store_const',
@@ -190,13 +190,13 @@ To run coala without user interaction, check out the `coala-json` and
 
         outputs_group.add_argument(
             '-r', '--relpath', nargs='?', const=True,
-            help="return relative paths for files")
+            help='return relative paths for files')
 
     misc_group = arg_parser.add_argument_group('Miscellaneous')
 
     misc_group.add_argument(
         '-S', '--settings', nargs='+', metavar='SETTING',
-        help="arbitrary settings in the form of section.key=value")
+        help='arbitrary settings in the form of section.key=value')
 
     misc_group.add_argument(
         '-a', '--apply-patches', action='store_const',
@@ -204,8 +204,8 @@ To run coala without user interaction, check out the `coala-json` and
         help='apply all patches automatically if possible')
 
     misc_group.add_argument(
-        "-j", "--jobs", type=int,
-        help="number of jobs to use in parallel")
+        '-j', '--jobs', type=int,
+        help='number of jobs to use in parallel')
 
     misc_group.add_argument(
         '-n', '--no-orig', const=True, action='store_const',

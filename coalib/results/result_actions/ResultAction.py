@@ -10,7 +10,7 @@ from coalib.settings.Section import Section
 
 class ResultAction:
 
-    SUCCESS_MESSAGE = "The action was executed successfully."
+    SUCCESS_MESSAGE = 'The action was executed successfully.'
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
@@ -76,7 +76,7 @@ class ResultAction:
         """
         data = FunctionMetadata.from_function(
             cls.apply,
-            omit={"self", "result", "original_file_dict", "file_diff_dict"})
+            omit={'self', 'result', 'original_file_dict', 'file_diff_dict'})
         data.name = cls.__name__
 
         return data

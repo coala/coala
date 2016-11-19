@@ -68,9 +68,9 @@ class BuildManPage(Command):
         _license = dist.get_license()
         appname = self._parser.prog
 
-        sections = {"see also": ("Online documentation: {}".format(homepage)),
-                    "maintainer(s)": maintainer,
-                    "license": _license}
+        sections = {'see also': ('Online documentation: {}'.format(homepage)),
+                    'maintainer(s)': maintainer,
+                    'license': _license}
 
         dist = self.distribution
         mpf = ManPageFormatter(appname,
@@ -142,11 +142,11 @@ class ManPageFormatter(argparse.HelpFormatter):
 
     @staticmethod
     def _underline(string):
-        return ManPageFormatter._add_format(string, "\\fI", "\\fR")
+        return ManPageFormatter._add_format(string, '\\fI', '\\fR')
 
     @staticmethod
     def _bold(string):
-        return ManPageFormatter._add_format(string, "\\fB", "\\fR")
+        return ManPageFormatter._add_format(string, '\\fB', '\\fR')
 
     def _mk_title(self):
         return '.TH {0} {1} {2}\n'.format(self._prog,
@@ -202,7 +202,7 @@ class ManPageFormatter(argparse.HelpFormatter):
         footer = []
 
         for section in sorted(sections.keys()):
-            part = ".SH {}\n {}".format(section.upper(), sections[section])
+            part = '.SH {}\n {}'.format(section.upper(), sections[section])
             footer.append(part)
 
         return '\n'.join(footer)

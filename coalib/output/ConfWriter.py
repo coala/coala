@@ -14,12 +14,12 @@ class ConfWriter(ClosableObject):
                  key_value_delimiters=('=',),
                  comment_separators=('#',),
                  key_delimiters=(',', ' '),
-                 section_name_surroundings=MappingProxyType({"[": "]"}),
-                 section_override_delimiters=(".",),
-                 unsavable_keys=("save",)):
+                 section_name_surroundings=MappingProxyType({'[': ']'}),
+                 section_override_delimiters=('.',),
+                 unsavable_keys=('save',)):
         ClosableObject.__init__(self)
         self.__file_name = file_name
-        self.__file = open(self.__file_name, "w")
+        self.__file = open(self.__file_name, 'w')
         self.__key_value_delimiters = key_value_delimiters
         self.__comment_separators = comment_separators
         self.__key_delimiters = key_delimiters
@@ -84,7 +84,7 @@ class ConfWriter(ClosableObject):
             return
 
         if all(self.is_comment(key) for key in keys):
-            self.__file.write(val + "\n")
+            self.__file.write(val + '\n')
             return
 
         # Add escape characters as appropriate
@@ -96,9 +96,9 @@ class ConfWriter(ClosableObject):
                 for key in keys]
         val = escape(val, chain(['\\'], self.__comment_separators))
 
-        self.__file.write((self.__key_delimiter + " ").join(keys) + " " +
-                          self.__key_value_delimiter + " " + val + "\n")
+        self.__file.write((self.__key_delimiter + ' ').join(keys) + ' ' +
+                          self.__key_value_delimiter + ' ' + val + '\n')
 
     @staticmethod
     def is_comment(key):
-        return key.lower().startswith("comment")
+        return key.lower().startswith('comment')

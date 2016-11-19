@@ -55,9 +55,9 @@ class LanguageDefinition(SectionCreatable):
 
         coalang_file = os.path.join(
             coalang_dir or Constants.language_definitions,
-            self.language + ".coalang")
+            self.language + '.coalang')
 
-        self.lang_dict = ConfParser().parse(coalang_file)["default"]
+        self.lang_dict = ConfParser().parse(coalang_file)['default']
 
     def __getitem__(self, item):
         return self.lang_dict[item]

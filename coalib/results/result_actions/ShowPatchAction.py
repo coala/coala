@@ -8,59 +8,59 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 
 
-def format_line(line, real_nr="", sign="|", mod_nr="", symbol="", ):
-    return "|{:>4}{}{:>4}|{:1}{}".format(real_nr,
+def format_line(line, real_nr='', sign='|', mod_nr='', symbol='', ):
+    return '|{:>4}{}{:>4}|{:1}{}'.format(real_nr,
                                          sign,
                                          mod_nr,
                                          symbol,
-                                         line.rstrip("\n"))
+                                         line.rstrip('\n'))
 
 
 def print_from_name(printer, line):
-    printer.print(format_line(line, real_nr="----"), color="red")
+    printer.print(format_line(line, real_nr='----'), color='red')
 
 
 def print_to_name(printer, line):
-    printer.print(format_line(line, mod_nr="++++"), color="green")
+    printer.print(format_line(line, mod_nr='++++'), color='green')
 
 
 def print_beautified_diff(difflines, printer):
     current_line_added = None
     current_line_subtracted = None
     for line in difflines:
-        if line.startswith("@@"):
-            values = line[line.find("-"):line.rfind(" ")]
-            subtracted, added = tuple(values.split(" "))
-            current_line_added = int(added.split(",")[0][1:])
-            current_line_subtracted = int(subtracted.split(",")[0][1:])
-        elif line.startswith("---"):
+        if line.startswith('@@'):
+            values = line[line.find('-'):line.rfind(' ')]
+            subtracted, added = tuple(values.split(' '))
+            current_line_added = int(added.split(',')[0][1:])
+            current_line_subtracted = int(subtracted.split(',')[0][1:])
+        elif line.startswith('---'):
             print_from_name(printer, line[4:])
-        elif line.startswith("+++"):
+        elif line.startswith('+++'):
             print_to_name(printer, line[4:])
-        elif line.startswith("+"):
+        elif line.startswith('+'):
             printer.print(format_line(line[1:],
                                       mod_nr=current_line_added,
-                                      symbol="+"),
-                          color="green")
+                                      symbol='+'),
+                          color='green')
             current_line_added += 1
-        elif line.startswith("-"):
+        elif line.startswith('-'):
             printer.print(format_line(line[1:],
                                       real_nr=current_line_subtracted,
-                                      symbol="-"),
-                          color="red")
+                                      symbol='-'),
+                          color='red')
             current_line_subtracted += 1
         else:
             printer.print(format_line(line[1:],
                                       real_nr=current_line_subtracted,
                                       mod_nr=current_line_added,
-                                      symbol=" "))
+                                      symbol=' '))
             current_line_subtracted += 1
             current_line_added += 1
 
 
 class ShowPatchAction(ResultAction):
 
-    SUCCESS_MESSAGE = "Displayed patch successfully."
+    SUCCESS_MESSAGE = 'Displayed patch successfully.'
 
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
@@ -105,7 +105,7 @@ class ShowPatchAction(ResultAction):
 
         for filename, this_diff in sorted(result.diffs.items()):
             to_filename = this_diff.rename if this_diff.rename else filename
-            to_filename = "/dev/null" if this_diff.delete else to_filename
+            to_filename = '/dev/null' if this_diff.delete else to_filename
             original_file = original_file_dict[filename]
             try:
                 current_file = file_diff_dict[filename].modified

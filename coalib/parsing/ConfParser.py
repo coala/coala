@@ -14,7 +14,7 @@ class ConfParser:
                  key_value_delimiters=('=',),
                  comment_seperators=('#',),
                  key_delimiters=(',', ' '),
-                 section_name_surroundings=MappingProxyType({"[": "]"}),
+                 section_name_surroundings=MappingProxyType({'[': ']'}),
                  remove_empty_iter_elements=True):
         self.line_parser = LineParser(key_value_delimiters,
                                       comment_seperators,
@@ -44,7 +44,7 @@ class ConfParser:
         if os.path.isdir(input_data):
             input_data = os.path.join(input_data, Constants.default_coafile)
 
-        with open(input_data, "r", encoding='utf-8') as _file:
+        with open(input_data, 'r', encoding='utf-8') as _file:
             lines = _file.readlines()
 
         if overwrite:
@@ -64,7 +64,7 @@ class ConfParser:
             raise IndexError
 
         retval = self.sections[key] = Section(str(name),
-                                              self.sections["default"])
+                                              self.sections['default'])
         return retval
 
     @staticmethod
@@ -72,7 +72,7 @@ class ConfParser:
         return str(key).lower().strip()
 
     def __add_comment(self, section, comment, origin):
-        key = "comment" + str(self.__rand_helper)
+        key = 'comment' + str(self.__rand_helper)
         self.__rand_helper += 1
         section.append(Setting(
             key,
@@ -81,34 +81,34 @@ class ConfParser:
             remove_empty_iter_elements=self.__remove_empty_iter_elements))
 
     def __parse_lines(self, lines, origin):
-        current_section_name = "default"
+        current_section_name = 'default'
         current_section = self.get_section(current_section_name)
         current_keys = []
 
         for line in lines:
             section_name, keys, value, comment = self.line_parser.parse(line)
 
-            if comment != "":
+            if comment != '':
                 self.__add_comment(current_section, comment, origin)
 
-            if section_name != "":
+            if section_name != '':
                 current_section_name = section_name
                 current_section = self.get_section(current_section_name, True)
                 current_keys = []
                 continue
 
-            if comment == "" and keys == [] and value == "":
-                self.__add_comment(current_section, "", origin)
+            if comment == '' and keys == [] and value == '':
+                self.__add_comment(current_section, '', origin)
                 continue
 
             if keys != []:
                 current_keys = keys
 
             for section_override, key in current_keys:
-                if key == "":
+                if key == '':
                     continue
 
-                if section_override == "":
+                if section_override == '':
                     current_section.add_or_create_setting(
                         Setting(key,
                                 value,
@@ -131,5 +131,5 @@ class ConfParser:
 
     def __init_sections(self):
         self.sections = OrderedDict()
-        self.sections["default"] = Section("Default")
+        self.sections['default'] = Section('Default')
         self.__rand_helper = 0

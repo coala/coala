@@ -9,7 +9,7 @@ class RscriptRequirement(PackageRequirement):
     for the requirement.
     """
 
-    def __init__(self, package, version="", flag="", repo=""):
+    def __init__(self, package, version='', flag='', repo=''):
         """
         Constructs a new ``RscriptRequirement``, using the
         ``PackageRequirement`` constructor.

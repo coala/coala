@@ -16,13 +16,13 @@ def execute_bear(bear, *args, **kwargs):
     try:
         bear_output_generator = bear.execute(*args, **kwargs)
         assert bear_output_generator is not None, \
-            "Bear returned None on execution\n"
+            'Bear returned None on execution\n'
         yield bear_output_generator
     except Exception as err:
         msg = []
         while not bear.message_queue.empty():
             msg.append(bear.message_queue.get().message)
-        raise AssertionError(str(err) + " \n" + "\n".join(msg))
+        raise AssertionError(str(err) + ' \n' + '\n'.join(msg))
     return list(bear_output_generator)
 
 
@@ -60,10 +60,10 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
-                              msg="The given bear is not a local bear.")
+                              msg='The given bear is not a local bear.')
         self.assertIsInstance(lines,
                               (list, tuple),
-                              msg="The given lines are not a list.")
+                              msg='The given lines are not a list.')
 
         with prepare_file(lines, filename,
                           force_linebreaks=force_linebreaks,
@@ -76,7 +76,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                 self.assertEqual(bear_output, [], msg=msg)
             else:
                 msg = ("The local bear '{}' yields no result although it "
-                       "should.".format(local_bear.__class__.__name__))
+                       'should.'.format(local_bear.__class__.__name__))
                 self.assertNotEqual(len(bear_output), 0, msg=msg)
             return bear_output
 
@@ -109,13 +109,13 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
-                              msg="The given bear is not a local bear.")
+                              msg='The given bear is not a local bear.')
         self.assertIsInstance(lines,
                               (list, tuple),
-                              msg="The given lines are not a list.")
+                              msg='The given lines are not a list.')
         self.assertIsInstance(results,
                               list,
-                              msg="The given results are not a list.")
+                              msg='The given results are not a list.')
 
         with prepare_file(lines, filename,
                           force_linebreaks=force_linebreaks,
@@ -124,7 +124,7 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                 execute_bear(local_bear, fname, file,
                              **settings) as bear_output:
             msg = ("The local bear '{}' doesn't yield the right results. Or "
-                   "the order may be wrong."
+                   'the order may be wrong.'
                    .format(local_bear.__class__.__name__))
             if not check_order:
                 self.assertEqual(sorted(bear_output), sorted(results), msg=msg)

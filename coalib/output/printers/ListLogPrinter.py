@@ -13,7 +13,7 @@ class ListLogPrinter(Printer, LogPrinterMixin):
 
     def __init__(self,
                  log_level=LOG_LEVEL.WARNING,
-                 timestamp_format="%X"):
+                 timestamp_format='%X'):
         Printer.__init__(self)
         self.log_level = log_level
 
@@ -21,7 +21,7 @@ class ListLogPrinter(Printer, LogPrinterMixin):
 
     def log_message(self, log_message, **kwargs):
         if not isinstance(log_message, LogMessage):
-            raise TypeError("log_message should be of type LogMessage.")
+            raise TypeError('log_message should be of type LogMessage.')
 
         if log_message.log_level < self.log_level:
             return

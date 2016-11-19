@@ -24,7 +24,7 @@ in specified values.
                         checking.
     """
     if len(args) == 0:
-        raise TypeError("No arguments were provided.")
+        raise TypeError('No arguments were provided.')
 
     def annotation(value):
         """
@@ -46,5 +46,5 @@ in specified values.
                 pass
         raise ValueError(
             "Couldn't convert value {!r} to any specified type "
-            "or find it in specified values.".format(value))
+            'or find it in specified values.'.format(value))
     return annotation

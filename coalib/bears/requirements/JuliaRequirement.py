@@ -11,7 +11,7 @@ class JuliaRequirement(PackageRequirement):
     for the requirement.
     """
 
-    def __init__(self, package, version=""):
+    def __init__(self, package, version=''):
         """
         Constructs a new ``JuliaRequirement``, using the ``PackageRequirement``
         constructor.

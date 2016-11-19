@@ -11,10 +11,10 @@ def get_exitcode(exception, log_printer=None):
                    else log_printer)
 
     if isinstance(exception, KeyboardInterrupt):  # Ctrl+C
-        print("Program terminated by user.")
+        print('Program terminated by user.')
         exitcode = 130
     elif isinstance(exception, EOFError):  # Ctrl+D
-        print("Found EOF. Exiting gracefully.")
+        print('Found EOF. Exiting gracefully.')
         exitcode = 0
     elif isinstance(exception, SystemExit):
         exitcode = exception.code

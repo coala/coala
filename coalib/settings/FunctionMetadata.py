@@ -7,14 +7,14 @@ from coalib.settings.DocstringMetadata import DocstringMetadata
 
 
 class FunctionMetadata:
-    str_nodesc = "No description given."
+    str_nodesc = 'No description given.'
     str_optional = "Optional, defaults to '{}'."
 
     @enforce_signature
     def __init__(self,
                  name: str,
-                 desc: str="",
-                 retval_desc: str="",
+                 desc: str='',
+                 retval_desc: str='',
                  non_optional_params: (dict, None)=None,
                  optional_params: (dict, None)=None,
                  omit: (set, tuple, list, frozenset)=frozenset(),
@@ -139,8 +139,8 @@ class FunctionMetadata:
         try:
             return annotation(section[param])
         except (TypeError, ValueError):
-            raise ValueError("Unable to convert parameter {!r} into type "
-                             "{}.".format(param, annotation))
+            raise ValueError('Unable to convert parameter {!r} into type '
+                             '{}.'.format(param, annotation))
 
     @classmethod
     def from_function(cls, func, omit=frozenset()):
@@ -158,12 +158,12 @@ class FunctionMetadata:
         :return:     The FunctionMetadata object corresponding to the given
                      function.
         """
-        if hasattr(func, "__metadata__"):
+        if hasattr(func, '__metadata__'):
             metadata = copy(func.__metadata__)
             metadata.omit = omit
             return metadata
 
-        doc = func.__doc__ or ""
+        doc = func.__doc__ or ''
         doc_comment = DocstringMetadata.from_docstring(doc)
 
         non_optional_params = OrderedDict()
@@ -184,9 +184,9 @@ class FunctionMetadata:
                     argspec.annotations.get(arg, None))
             else:
                 optional_params[arg] = (
-                    doc_comment.param_dict.get(arg, cls.str_nodesc) + " (" +
+                    doc_comment.param_dict.get(arg, cls.str_nodesc) + ' (' +
                     cls.str_optional.format(
-                        defaults[i-num_non_defaults]) + ")",
+                        defaults[i-num_non_defaults]) + ')',
                     argspec.annotations.get(arg, None),
                     defaults[i-num_non_defaults])
 
@@ -273,14 +273,14 @@ class FunctionMetadata:
         # to support arbitrary sequences.
         metadatas = tuple(metadatas)
 
-        merged_name = ("<Merged signature of " +
-                       ", ".join(repr(metadata.name)
+        merged_name = ('<Merged signature of ' +
+                       ', '.join(repr(metadata.name)
                                  for metadata in metadatas) +
-                       ">")
+                       '>')
 
-        merged_desc = next((m.desc for m in reversed(metadatas) if m.desc), "")
+        merged_desc = next((m.desc for m in reversed(metadatas) if m.desc), '')
         merged_retval_desc = next(
-            (m.retval_desc for m in reversed(metadatas) if m.retval_desc), "")
+            (m.retval_desc for m in reversed(metadatas) if m.retval_desc), '')
         merged_non_optional_params = {}
         merged_optional_params = {}
 

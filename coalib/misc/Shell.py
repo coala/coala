@@ -58,24 +58,24 @@ def run_interactive_shell_command(command, **kwargs):
     :return:        A context manager yielding the process started from the
                     command.
     """
-    if not kwargs.get("shell", False) and isinstance(command, str):
+    if not kwargs.get('shell', False) and isinstance(command, str):
         command = shlex.split(command)
 
-    args = {"stdout": PIPE,
-            "stderr": PIPE,
-            "stdin": PIPE,
-            "universal_newlines": True}
+    args = {'stdout': PIPE,
+            'stderr': PIPE,
+            'stdin': PIPE,
+            'universal_newlines': True}
     args.update(kwargs)
 
     process = Popen(command, **args)
     try:
         yield process
     finally:
-        if args["stdout"] is PIPE:
+        if args['stdout'] is PIPE:
             process.stdout.close()
-        if args["stderr"] is PIPE:
+        if args['stderr'] is PIPE:
             process.stderr.close()
-        if args["stdin"] is PIPE:
+        if args['stdin'] is PIPE:
             process.stdin.close()
 
         process.wait()
@@ -115,10 +115,10 @@ def get_shell_type():  # pragma: no cover
              Powershell is detected, "cmd" if command prompt is been
              detected or "sh" if it's neither of these.
     """
-    out = run_shell_command("echo $host.name", shell=True)[0]
-    if out.strip() == "ConsoleHost":
-        return "powershell"
-    out = run_shell_command("echo $0", shell=True)[0]
-    if out.strip() == "$0":
-        return "cmd"
-    return "sh"
+    out = run_shell_command('echo $host.name', shell=True)[0]
+    if out.strip() == 'ConsoleHost':
+        return 'powershell'
+    out = run_shell_command('echo $0', shell=True)[0]
+    if out.strip() == '$0':
+        return 'cmd'
+    return 'sh'

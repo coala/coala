@@ -22,15 +22,15 @@ def _prepare_options(options):
     :raises ValueError:
         Raised when illegal options are specified.
     """
-    allowed_options = {"executable",
-                       "settings"}
+    allowed_options = {'executable',
+                       'settings'}
 
     # Check for illegal superfluous options.
     superfluous_options = options.keys() - allowed_options
     if superfluous_options:
         raise ValueError(
-            "Invalid keyword arguments provided: " +
-            ", ".join(repr(s) for s in sorted(superfluous_options)))
+            'Invalid keyword arguments provided: ' +
+            ', '.join(repr(s) for s in sorted(superfluous_options)))
 
     if not 'settings' in options:
         options['settings'] = {}
@@ -58,7 +58,7 @@ def _create_wrapper(klass, options):
             :return:
                 The executable name.
             """
-            return options["executable"]
+            return options['executable']
 
         @staticmethod
         def _normalize_desc(description, setting_type,
@@ -77,13 +77,13 @@ def _create_wrapper(klass, options):
             :return:
                 A value for the OrderedDict in the ``FunctionMetadata`` object.
             """
-            if description == "":
+            if description == '':
                 description = FunctionMetadata.str_nodesc
 
             if default_value is NoDefaultValue:
                 return (description, setting_type)
             else:
-                return (description + " " +
+                return (description + ' ' +
                         FunctionMetadata.str_optional.format(default_value),
                         setting_type, default_value)
 
@@ -174,8 +174,8 @@ def _create_wrapper(klass, options):
                     message=result['message'],
                     affected_code=affected_code,
                     severity=result.get('severity', 1),
-                    debug_msg=result.get('debug_msg', ""),
-                    additional_info=result.get('additional_info', ""))
+                    debug_msg=result.get('debug_msg', ''),
+                    additional_info=result.get('additional_info', ''))
 
         def run(self, filename, file, **settings):
             self._prepare_settings(settings)
@@ -187,8 +187,8 @@ def _create_wrapper(klass, options):
             try:
                 args = tuple(args)
             except TypeError:
-                self.err("The given arguments "
-                         "{!r} are not iterable.".format(args))
+                self.err('The given arguments '
+                         '{!r} are not iterable.'.format(args))
                 return
 
             shell_command = (self.get_executable(),) + args
@@ -197,14 +197,14 @@ def _create_wrapper(klass, options):
             return self.parse_output(out, filename)
 
     result_klass = type(klass.__name__, (klass, ExternalBearWrapBase), {})
-    result_klass.__doc__ = klass.__doc__ or ""
+    result_klass.__doc__ = klass.__doc__ or ''
     return result_klass
 
 
 @enforce_signature
 def external_bear_wrap(executable: str, **options):
 
-    options["executable"] = executable
+    options['executable'] = executable
     _prepare_options(options)
 
     return partial(_create_wrapper, options=options)

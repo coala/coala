@@ -47,7 +47,7 @@ def main():
     else:
         results, exitcode, _ = run_coala()
 
-    retval = {"bears": results} if args.show_bears else {"results": results}
+    retval = {'bears': results} if args.show_bears else {'results': results}
     if args.output:
         filename = str(args.output[0])
         with open(filename, 'w+') as fp:

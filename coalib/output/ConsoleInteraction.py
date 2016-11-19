@@ -61,15 +61,15 @@ def highlight_text(no_color, text, lexer=TextLexer(), style=None):
     return highlight(text, lexer, formatter)[:-1]
 
 
-STR_GET_VAL_FOR_SETTING = ("Please enter a value for the setting \"{}\" ({}) "
-                           "needed by {} for section \"{}\": ")
-STR_LINE_DOESNT_EXIST = ("The line belonging to the following result "
-                         "cannot be printed because it refers to a line "
+STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
+                           'needed by {} for section \"{}\": ')
+STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
+                         'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
-STR_PROJECT_WIDE = "Project wide:"
-FILE_NAME_COLOR = "blue"
-FILE_LINES_COLOR = "blue"
-CAPABILITY_COLOR = "green"
+STR_PROJECT_WIDE = 'Project wide:'
+FILE_NAME_COLOR = 'blue'
+FILE_LINES_COLOR = 'blue'
+CAPABILITY_COLOR = 'green'
 HIGHLIGHTED_CODE_COLOR = 'red'
 SUCCESS_COLOR = 'green'
 REQUIRED_SETTINGS_COLOR = 'green'
@@ -81,9 +81,9 @@ CLI_ACTIONS = (OpenEditorAction(),
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
-def format_lines(lines, line_nr=""):
-    return '\n'.join("|{:>4}| {}".format(line_nr, line)
-                     for line in lines.rstrip("\n").split('\n'))
+def format_lines(lines, line_nr=''):
+    return '\n'.join('|{:>4}| {}'.format(line_nr, line)
+                     for line in lines.rstrip('\n').split('\n'))
 
 
 def print_section_beginning(console_printer, section):
@@ -94,7 +94,7 @@ def print_section_beginning(console_printer, section):
     :param console_printer: Object to print messages on the console.
     :param section:         The section that will get executed now.
     """
-    console_printer.print("Executing section {name}...".format(
+    console_printer.print('Executing section {name}...'.format(
         name=section.name))
 
 
@@ -105,8 +105,8 @@ def nothing_done(log_printer):
 
     :param log_printer: A LogPrinter object.
     """
-    log_printer.warn("No existent section was targeted or enabled. "
-                     "Nothing to do.")
+    log_printer.warn('No existent section was targeted or enabled. '
+                     'Nothing to do.')
 
 
 def acquire_actions_and_apply(console_printer,
@@ -177,13 +177,13 @@ def print_lines(console_printer,
                               color=FILE_LINES_COLOR,
                               end='')
 
-        line = file_dict[sourcerange.file][i - 1].rstrip("\n")
+        line = file_dict[sourcerange.file][i - 1].rstrip('\n')
         try:
             lexer = get_lexer_for_filename(sourcerange.file)
         except ClassNotFound:
             lexer = TextLexer()
         lexer.add_filter(VisibleWhitespaceFilter(
-            spaces="•", tabs=True,
+            spaces='•', tabs=True,
             tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
         # highlight() combines lexer and formatter to output a ``str``
         # object.
@@ -201,12 +201,12 @@ def print_lines(console_printer,
 
             console_printer.print(highlight_text(
                no_color, line[sourcerange.end.column-1:], lexer), end='')
-            console_printer.print("")
+            console_printer.print('')
 
         else:
             console_printer.print(highlight_text(
                 no_color, line[printed_chars:], lexer), end='')
-            console_printer.print("")
+            console_printer.print('')
 
 
 def print_result(console_printer,
@@ -230,12 +230,12 @@ def print_result(console_printer,
     """
     no_color = not console_printer.print_colored
     if not isinstance(result, Result):
-        logging.warning("One of the results can not be printed since it is "
-                        "not a valid derivative of the coala result "
-                        "class.")
+        logging.warning('One of the results can not be printed since it is '
+                        'not a valid derivative of the coala result '
+                        'class.')
         return
 
-    console_printer.print(format_lines("[{sev}] {bear}:".format(
+    console_printer.print(format_lines('[{sev}] {bear}:'.format(
         sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
         color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
@@ -269,7 +269,7 @@ def print_diffs_info(diffs, printer):
     for filename, diff in sorted(diffs.items()):
         additions, deletions = diff.stats()
         printer.print(
-            format_lines("+{additions} -{deletions} in {file}".format(
+            format_lines('+{additions} -{deletions} in {file}'.format(
                 file=filename,
                 additions=additions,
                 deletions=deletions)),
@@ -281,10 +281,10 @@ def print_results_formatted(log_printer,
                             result_list,
                             *args):
     format_str = str(section.get(
-        "format_str",
-        "id:{id}:origin:{origin}:file:{file}:line:{line}:column:"
-        "{column}:end_line:{end_line}:end_column:{end_column}:severity:"
-        "{severity}:severity_str:{severity_str}:message:{message}"))
+        'format_str',
+        'id:{id}:origin:{origin}:file:{file}:line:{line}:column:'
+        '{column}:end_line:{end_line}:end_column:{end_column}:severity:'
+        '{severity}:severity_str:{severity_str}:message:{message}'))
     for result in result_list:
         severity_str = RESULT_SEVERITY.__str__(result.severity)
         try:
@@ -308,7 +308,7 @@ def print_results_formatted(log_printer,
                                         **result.__dict__))
         except KeyError as exception:
             log_printer.log_exception(
-                "Unable to print the result with the given format string.",
+                'Unable to print the result with the given format string.',
                 exception)
 
 
@@ -326,17 +326,17 @@ def print_affected_files(console_printer,
                             key.
     """
     if len(result.affected_code) == 0:
-        console_printer.print("\n" + STR_PROJECT_WIDE,
+        console_printer.print('\n' + STR_PROJECT_WIDE,
                               color=FILE_NAME_COLOR)
     else:
         for sourcerange in result.affected_code:
             if (
                     sourcerange.file is not None and
                     sourcerange.file not in file_dict):
-                log_printer.warn("The context for the result ({}) cannot "
-                                 "be printed because it refers to a file "
+                log_printer.warn('The context for the result ({}) cannot '
+                                 'be printed because it refers to a file '
                                  "that doesn't seem to exist ({})"
-                                 ".".format(result, sourcerange.file))
+                                 '.'.format(result, sourcerange.file))
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
@@ -418,7 +418,7 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     :param sourcerange:        The SourceRange object referring to the related
                                lines to print.
     """
-    console_printer.print("\n" + os.path.relpath(sourcerange.file),
+    console_printer.print('\n' + os.path.relpath(sourcerange.file),
                           color=FILE_NAME_COLOR)
 
     if sourcerange.start.line is not None:
@@ -449,7 +449,7 @@ def join_names(values):
         The concatenated string.
     """
     if len(values) > 1:
-        return ", ".join(values[:-1]) + " and " + values[-1]
+        return ', '.join(values[:-1]) + ' and ' + values[-1]
     else:
         return values[0]
 
@@ -503,8 +503,8 @@ def acquire_settings(log_printer, settings_names_dict, section):
         value.
     """
     if not isinstance(settings_names_dict, dict):
-        raise TypeError("The settings_names_dict parameter has to be a "
-                        "dictionary.")
+        raise TypeError('The settings_names_dict parameter has to be a '
+                        'dictionary.')
 
     result = {}
     for setting_name, arr in sorted(settings_names_dict.items(),
@@ -549,15 +549,15 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
-        console_printer.print(format_lines("*0: " +
-                                           "Do nothing"))
+        console_printer.print(format_lines('*0: ' +
+                                           'Do nothing'))
         for i, action in enumerate(actions, 1):
-            console_printer.print(format_lines("{:>2}: {}".format(
+            console_printer.print(format_lines('{:>2}: {}'.format(
                 i,
                 action.desc)))
 
         try:
-            line = format_lines("Enter number (Ctrl-D to exit): ")
+            line = format_lines('Enter number (Ctrl-D to exit): ')
 
             choice = input(line)
             if not choice:
@@ -568,7 +568,7 @@ def choose_action(console_printer, actions):
         except ValueError:
             pass
 
-        console_printer.print(format_lines("Please enter a valid number."))
+        console_printer.print(format_lines('Please enter a valid number.'))
 
 
 def print_actions(console_printer, section, actions, failed_actions):
@@ -639,7 +639,7 @@ def ask_for_action_and_apply(console_printer,
             color=SUCCESS_COLOR)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
-        logging.error("Failed to execute the action {} with error: {}.".format(
+        logging.error('Failed to execute the action {} with error: {}.'.format(
             action_name, exception))
         failed_actions.add(action_name)
     return True
@@ -671,11 +671,11 @@ def show_enumeration(console_printer,
         console_printer.print(indentation + title)
         if isinstance(items, dict):
             for key, value in items.items():
-                console_printer.print(indentation + " * " + key + ": " +
+                console_printer.print(indentation + ' * ' + key + ': ' +
                                       value[0])
         else:
             for item in items:
-                console_printer.print(indentation + " * " + item)
+                console_printer.print(indentation + ' * ' + item)
     console_printer.print()
 
 
@@ -691,7 +691,7 @@ def show_bear(bear,
     :param show_params:      True if the details should be shown.
     :param console_printer:  Object to print messages on the console.
     """
-    console_printer.print(bear.name, color="blue")
+    console_printer.print(bear.name, color='blue')
 
     if not show_description and not show_params:
         return
@@ -700,38 +700,38 @@ def show_bear(bear,
 
     if show_description:
         console_printer.print(
-            "  " + metadata.desc.replace("\n", "\n  "))
+            '  ' + metadata.desc.replace('\n', '\n  '))
         console_printer.print()  # Add a newline
 
     if show_params:
         show_enumeration(
-            console_printer, "Supported languages:",
+            console_printer, 'Supported languages:',
             bear.LANGUAGES,
-            "  ",
-            "The bear does not provide information about which languages "
-            "it can analyze.")
+            '  ',
+            'The bear does not provide information about which languages '
+            'it can analyze.')
         show_enumeration(console_printer,
-                         "Needed Settings:",
+                         'Needed Settings:',
                          metadata.non_optional_params,
-                         "  ",
-                         "No needed settings.")
+                         '  ',
+                         'No needed settings.')
         show_enumeration(console_printer,
-                         "Optional Settings:",
+                         'Optional Settings:',
                          metadata.optional_params,
-                         "  ",
-                         "No optional settings.")
+                         '  ',
+                         'No optional settings.')
         show_enumeration(console_printer,
-                         "Can detect:",
+                         'Can detect:',
                          bear.can_detect,
-                         "  ",
-                         "This bear does not provide information about what "
-                         "categories it can detect.")
+                         '  ',
+                         'This bear does not provide information about what '
+                         'categories it can detect.')
         show_enumeration(console_printer,
-                         "Can fix:",
+                         'Can fix:',
                          bear.CAN_FIX,
-                         "  ",
-                         "This bear cannot fix issues or does not provide "
-                         "information about what categories it can fix.")
+                         '  ',
+                         'This bear cannot fix issues or does not provide '
+                         'information about what categories it can fix.')
 
 
 def print_bears(bears,
@@ -750,9 +750,9 @@ def print_bears(bears,
     :param console_printer:  Object to print messages on the console.
     """
     if not bears:
-        console_printer.print("No bears to show. Did you forget to install "
-                              "the `coala-bears` package? Try `pip3 install "
-                              "coala-bears`.")
+        console_printer.print('No bears to show. Did you forget to install '
+                              'the `coala-bears` package? Try `pip3 install '
+                              'coala-bears`.')
         return
 
     for bear, sections in sorted(bears.items(),
@@ -801,17 +801,17 @@ def show_language_bears_capabilities(language_bears_capabilities,
         Object to print messages on the console.
     """
     if not language_bears_capabilities:
-        console_printer.print("There is no bear available for this language")
+        console_printer.print('There is no bear available for this language')
     else:
         for language, capabilities in language_bears_capabilities.items():
             if capabilities[0]:
                 console_printer.print('coala can do the following for ', end='')
-                console_printer.print(language.upper(), color="blue")
-                console_printer.print("    Can detect only: ", end='')
+                console_printer.print(language.upper(), color='blue')
+                console_printer.print('    Can detect only: ', end='')
                 console_printer.print(
                     ', '.join(sorted(capabilities[0])), color=CAPABILITY_COLOR)
                 if capabilities[1]:
-                    console_printer.print("    Can fix        : ", end='')
+                    console_printer.print('    Can fix        : ', end='')
                     console_printer.print(
                         ', '.join(sorted(capabilities[1])),
                         color=CAPABILITY_COLOR)

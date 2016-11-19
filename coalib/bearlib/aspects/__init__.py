@@ -250,7 +250,7 @@ class Aspect:
     @generate_consistency_check('name', 'doc')
     @enforce_signature
     def __init__(self,
-                 name="Root",
+                 name='Root',
                  doc=None,
                  settings: tuple=(),
                  parent=None):
@@ -268,8 +268,8 @@ class Aspect:
         self.subaspects = {}
         self.parent = parent
         self._settings = settings
-        if self.parent and self.parent.__name__ != "Root":
-            self.__qualname__ = self.parent.__qualname__ + "." + self.__name__
+        if self.parent and self.parent.__name__ != 'Root':
+            self.__qualname__ = self.parent.__qualname__ + '.' + self.__name__
         else:
             self.__qualname__ = self.__name__
 
@@ -298,7 +298,7 @@ class Aspect:
             An ``Aspect`` object corresponding to the sub-aspect. If the
             sub-aspect is not found, ``None`` is returned.
         """
-        if subaspect == "subaspects":
+        if subaspect == 'subaspects':
             raise AttributeError  # To prevent recursion, see below
 
         if subaspect in self.subaspects:

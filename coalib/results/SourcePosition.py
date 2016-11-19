@@ -5,8 +5,8 @@ from coala_utils.decorators import (
 from coalib.results.TextPosition import TextPosition
 
 
-@generate_repr("file", "line", "column")
-@generate_ordering("file", "line", "column")
+@generate_repr('file', 'line', 'column')
+@generate_ordering('file', 'line', 'column')
 class SourcePosition(TextPosition):
 
     @enforce_signature

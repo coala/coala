@@ -22,7 +22,7 @@ def get_data_path(log_printer, identifier):
         return os.path.join(Constants.USER_DATA_DIR, hash_id(identifier))
     except PermissionError:
         log_printer.err("Unable to create user data directory '{}'. Continuing"
-                        " without caching.".format(Constants.USER_DATA_DIR))
+                        ' without caching.'.format(Constants.USER_DATA_DIR))
 
     return None
 
@@ -49,9 +49,9 @@ def delete_files(log_printer, identifiers):
             error_files.append(hash_id(identifier))
 
     if len(error_files) > 0:
-        error_files = ", ".join(error_files)
-        log_printer.warn("There was a problem deleting the following "
-                         "files: {}. Please delete them manually from "
+        error_files = ', '.join(error_files)
+        log_printer.warn('There was a problem deleting the following '
+                         'files: {}. Please delete them manually from '
                          "'{}'.".format(error_files, Constants.USER_DATA_DIR))
         result = False
 
@@ -86,12 +86,12 @@ def pickle_load(log_printer, identifier, fallback=None):
     file_path = get_data_path(log_printer, identifier)
     if file_path is None or not os.path.isfile(file_path):
         return fallback
-    with open(file_path, "rb") as f:
+    with open(file_path, 'rb') as f:
         try:
             return pickle.load(f)
         except (pickle.UnpicklingError, EOFError) as e:
-            log_printer.warn("The given file is corrupted and will be "
-                             "removed.")
+            log_printer.warn('The given file is corrupted and will be '
+                             'removed.')
             delete_files(log_printer, [identifier])
             return fallback
 
@@ -113,7 +113,7 @@ def pickle_dump(log_printer, identifier, data):
     if file_path is None:
         # Exit silently since the error has been logged in ``get_data_path``
         return False
-    with open(file_path, "wb") as f:
+    with open(file_path, 'wb') as f:
         pickle.dump(data, f)
     return True
 
@@ -125,12 +125,12 @@ def hash_id(text):
     :param text: String to to be hashed
     :return:     A MD5 hash of the given string
     """
-    return hashlib.md5(text.encode("utf-8")).hexdigest()
+    return hashlib.md5(text.encode('utf-8')).hexdigest()
 
 
 def get_settings_hash(sections,
                       targets=[],
-                      ignore_settings: list=["disable_caching"]):
+                      ignore_settings: list=['disable_caching']):
     """
     Compute and return a unique hash for the settings.
 
@@ -163,7 +163,7 @@ def settings_changed(log_printer, settings_hash):
     """
     project_hash = hash_id(os.getcwd())
 
-    settings_hash_db = pickle_load(log_printer, "settings_hash_db", {})
+    settings_hash_db = pickle_load(log_printer, 'settings_hash_db', {})
     if project_hash not in settings_hash_db:
         # This is the first time coala is run on this project, so the cache
         # will be flushed automatically.
@@ -172,9 +172,9 @@ def settings_changed(log_printer, settings_hash):
     result = settings_hash_db[project_hash] != settings_hash
     if result:
         del settings_hash_db[project_hash]
-        log_printer.debug("Since the configuration settings have "
-                          "changed since the last run, the "
-                          "cache will be flushed and rebuilt.")
+        log_printer.debug('Since the configuration settings have '
+                          'changed since the last run, the '
+                          'cache will be flushed and rebuilt.')
 
     return result
 
@@ -188,6 +188,6 @@ def update_settings_db(log_printer, settings_hash):
     """
     project_hash = hash_id(os.getcwd())
 
-    settings_hash_db = pickle_load(log_printer, "settings_hash_db", {})
+    settings_hash_db = pickle_load(log_printer, 'settings_hash_db', {})
     settings_hash_db[project_hash] = settings_hash
-    pickle_dump(log_printer, "settings_hash_db", settings_hash_db)
+    pickle_dump(log_printer, 'settings_hash_db', settings_hash_db)

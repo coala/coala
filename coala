@@ -25,5 +25,5 @@ assert_supported_version()
 from coalib.coala import main
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())

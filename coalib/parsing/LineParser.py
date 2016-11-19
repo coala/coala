@@ -11,7 +11,7 @@ class LineParser:
                  comment_separators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=None,
-                 section_override_delimiters=(".",)):
+                 section_override_delimiters=('.',)):
         """
         Creates a new line parser. Please note that no delimiter or separator
         may be an "o" or you may encounter undefined behaviour with the
@@ -33,7 +33,7 @@ class LineParser:
                                             section.
         """
         section_name_surroundings = (
-            {"[": "]"} if section_name_surroundings is None
+            {'[': ']'} if section_name_surroundings is None
             else section_name_surroundings)
 
         self.key_value_delimiters = key_value_delimiters
@@ -56,7 +56,7 @@ class LineParser:
             line,
             self.comment_separators)
         comment = unescape(comment)
-        if line == "":
+        if line == '':
             return '', [], '', comment
 
         section_name = unescape(self.__get_section_name(line))
@@ -71,12 +71,12 @@ class LineParser:
         all_delimiters += self.key_delimiters
         all_delimiters += self.comment_separators
         all_delimiters += self.section_override_delimiters
-        all_delimiters = "".join(all_delimiters)
+        all_delimiters = ''.join(all_delimiters)
 
         # Add all keys and values in section_name_surroundings, which is
         # stored as a dict
-        all_delimiters += "".join(self.section_name_surroundings.keys())
-        all_delimiters += "".join(self.section_name_surroundings.values())
+        all_delimiters += ''.join(self.section_name_surroundings.keys())
+        all_delimiters += ''.join(self.section_name_surroundings.values())
 
         value = convert_to_raw(value, all_delimiters)
 
@@ -112,14 +112,14 @@ class LineParser:
                                             one.
         :return:                            (first_part, second_part)
         """
-        temp_string = string.replace("\\\\", "oo")
-        i = temp_string.find("\\")
+        temp_string = string.replace('\\\\', 'oo')
+        i = temp_string.find('\\')
         while i != -1:
-            temp_string = temp_string[:i] + "oo" + temp_string[i+2:]
-            i = temp_string.find("\\", i+2)
+            temp_string = temp_string[:i] + 'oo' + temp_string[i+2:]
+            i = temp_string.find('\\', i+2)
 
         delim_pos = len(string)
-        used_delim = ""
+        used_delim = ''
         for delim in delimiters:
             pos = temp_string.find(delim)
             if 0 <= pos < delim_pos:
@@ -127,7 +127,7 @@ class LineParser:
                 used_delim = delim
 
         if return_second_part_nonempty and delim_pos == len(string):
-            return "", string.strip(" \n")
+            return '', string.strip(' \n')
 
         first_part = string[:delim_pos]
         second_part = string[delim_pos + (
@@ -137,14 +137,14 @@ class LineParser:
             first_part = unescaped_rstrip(first_part)
             second_part = unescaped_rstrip(second_part)
 
-        return (first_part.lstrip().rstrip("\n"),
-                second_part.lstrip().rstrip("\n"))
+        return (first_part.lstrip().rstrip('\n'),
+                second_part.lstrip().rstrip('\n'))
 
     def __get_section_name(self, line):
         for begin, end in self.section_name_surroundings.items():
             if (line[0:len(begin)] == begin and
                     line[len(line) - len(end):len(line)] == end):
-                return line[len(begin):len(line) - len(end)].strip(" \n")
+                return line[len(begin):len(line) - len(end)].strip(' \n')
 
         return ''
 

@@ -19,13 +19,13 @@ def to_camelcase(string):
     :param string: The string to convert.
     :return:       The camel-cased string.
     """
-    string = re.sub("(\s)",
+    string = re.sub('(\s)',
                     lambda match: '_',
                     string)
-    string = re.sub("^(_*)(.)",
+    string = re.sub('^(_*)(.)',
                     lambda match: match.group(1) + match.group(2).lower(),
                     string)
-    return re.sub("(?<=[^_])_+([^_])",
+    return re.sub('(?<=[^_])_+([^_])',
                   lambda match: match.group(1).upper(),
                   string)
 
@@ -48,13 +48,13 @@ def to_pascalcase(string):
     :param string: The string to convert.
     :return:       The pascal-cased string.
     """
-    string = re.sub("(\s)",
+    string = re.sub('(\s)',
                     lambda match: '_',
                     string)
-    string = re.sub("^(_*)(.)",
+    string = re.sub('^(_*)(.)',
                     lambda match: match.group(1) + match.group(2).upper(),
                     string)
-    return re.sub("(?<=[^_])_+([^_])",
+    return re.sub('(?<=[^_])_+([^_])',
                   lambda match: match.group(1).upper(),
                   string)
 
@@ -79,21 +79,21 @@ def to_snakecase(string):
     :param string: The string to convert.
     :return:       The snake-cased string.
     """
-    string = re.sub("(\s)",
+    string = re.sub('(\s)',
                     lambda match: '_',
                     string)
-    string = re.sub("^(_*)([^_])",
+    string = re.sub('^(_*)([^_])',
                     lambda match: match.group(1) + match.group(2).lower(),
                     string)
-    string = re.sub("(\w*)([.]+)([A-Z])",
+    string = re.sub('(\w*)([.]+)([A-Z])',
                     lambda match: (match.group(1) + match.group(2) +
                                    match.group(3).lower()),
                     string)
-    string = re.sub("(?<=[^_])_+([^_])",
-                    lambda match: "_" + match.group(1).lower(),
+    string = re.sub('(?<=[^_])_+([^_])',
+                    lambda match: '_' + match.group(1).lower(),
                     string)
-    return re.sub("[A-Z]",
-                  lambda match: "_" + match.group(0).lower(),
+    return re.sub('[A-Z]',
+                  lambda match: '_' + match.group(0).lower(),
                   string)
 
 
@@ -115,18 +115,18 @@ def to_spacecase(string):
     :param string: The string to convert.
     :return:       The space-cased string.
     """
-    string = re.sub("(_)",
+    string = re.sub('(_)',
                     ' ',
                     string)
-    string = re.sub("^(\s*)(.)",
+    string = re.sub('^(\s*)(.)',
                     lambda match: match.group(2).upper(),
                     string)
-    string = re.sub("(\s*)$",
+    string = re.sub('(\s*)$',
                     '',
                     string)
-    string = re.sub("(?<=[^\s])\s+([^\s])",
+    string = re.sub('(?<=[^\s])\s+([^\s])',
                     lambda match: ' ' + match.group(1).upper(),
                     string)
-    return re.sub("(?<=[^\s])([A-Z])",
+    return re.sub('(?<=[^\s])([A-Z])',
                   lambda match: ' ' + match.group(1),
                   string)

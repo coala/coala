@@ -9,21 +9,21 @@ from coalib.results.SourceRange import SourceRange
 
 
 # Omit additional info, debug message and diffs for brevity
-@generate_repr(("id", hex),
-               "origin",
-               "affected_code",
-               ("severity", RESULT_SEVERITY.reverse.get),
-               "confidence",
-               "message",
-               "aspect")
-@generate_ordering("affected_code",
-                   "severity",
-                   "confidence",
-                   "origin",
-                   "message",
-                   "aspect",
-                   "additional_info",
-                   "debug_msg")
+@generate_repr(('id', hex),
+               'origin',
+               'affected_code',
+               ('severity', RESULT_SEVERITY.reverse.get),
+               'confidence',
+               'message',
+               'aspect')
+@generate_ordering('affected_code',
+                   'severity',
+                   'confidence',
+                   'origin',
+                   'message',
+                   'aspect',
+                   'additional_info',
+                   'debug_msg')
 class Result:
     """
     A result is anything that has an origin and a message.
@@ -37,8 +37,8 @@ class Result:
                  message: str,
                  affected_code: (tuple, list)=(),
                  severity: int=RESULT_SEVERITY.NORMAL,
-                 additional_info: str="",
-                 debug_msg="",
+                 additional_info: str='',
+                 debug_msg='',
                  diffs: (dict, None)=None,
                  confidence: int=100,
                  aspect: Aspect=Root):
@@ -73,11 +73,11 @@ class Result:
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
         """
-        origin = origin or ""
+        origin = origin or ''
         if not isinstance(origin, str):
             origin = origin.__class__.__name__
         if severity not in RESULT_SEVERITY.reverse:
-            raise ValueError("severity is not a valid RESULT_SEVERITY")
+            raise ValueError('severity is not a valid RESULT_SEVERITY')
 
         self.origin = origin
         self.message = message
@@ -104,8 +104,8 @@ class Result:
                     end_line: (int, None)=None,
                     end_column: (int, None)=None,
                     severity: int=RESULT_SEVERITY.NORMAL,
-                    additional_info: str="",
-                    debug_msg="",
+                    additional_info: str='',
+                    debug_msg='',
                     diffs: (dict, None)=None,
                     confidence: int=100,
                     aspect: Aspect=Root):
@@ -177,25 +177,25 @@ class Result:
         """
         retval = {}
 
-        members = ["id",
-                   "additional_info",
-                   "debug_msg",
-                   "message",
-                   "origin",
-                   "confidence"]
+        members = ['id',
+                   'additional_info',
+                   'debug_msg',
+                   'message',
+                   'origin',
+                   'confidence']
 
         for member in members:
             value = getattr(self, member)
-            retval[member] = "" if value is None else str(value)
+            retval[member] = '' if value is None else str(value)
 
-        retval["severity"] = str(RESULT_SEVERITY.reverse.get(
-            self.severity, ""))
+        retval['severity'] = str(RESULT_SEVERITY.reverse.get(
+            self.severity, ''))
         if len(self.affected_code) > 0:
-            retval["file"] = self.affected_code[0].file
+            retval['file'] = self.affected_code[0].file
             line = self.affected_code[0].start.line
-            retval["line_nr"] = "" if line is None else str(line)
+            retval['line_nr'] = '' if line is None else str(line)
         else:
-            retval["file"], retval["line_nr"] = "", ""
+            retval['file'], retval['line_nr'] = '', ''
 
         return retval
 
@@ -255,7 +255,7 @@ class Result:
         """
 
         if not self.affected_code:
-            return "the whole project"
+            return 'the whole project'
 
         # Set important to exclude duplicate file names
         range_paths = set(sourcerange.file

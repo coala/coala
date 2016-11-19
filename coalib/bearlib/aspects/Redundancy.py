@@ -56,8 +56,8 @@ Root.Redundancy.new_subaspect(
     ),
     settings=(AspectSetting(
         'min_clone_token',
-        "The number of tokens that have to be equal for it to"
-        " be detected as a code clone.",
+        'The number of tokens that have to be equal for it to'
+        ' be detected as a code clone.',
         int,
         (20,),
         20
@@ -76,7 +76,7 @@ Root.Redundancy.new_subaspect(
 
         print('coala is always written with lowercase c')
         """,
-        example_language="python",
+        example_language='python',
         importance_reason="""
         Redundant imports can cause a performance degrade and make code
         harder to understand when reading through it. Also it causes
@@ -163,7 +163,7 @@ Root.Redundancy.UnreachableCode.new_subaspect(
             a = (i for i in range (5))
             print (id(a))
         """,
-        example_language="python",
+        example_language='python',
         fix_suggestions="""
         These statement can be remove without harming the code.
         """
