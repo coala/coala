@@ -485,3 +485,26 @@ class Diff:
         :param text:     The text to insert.
         """
         self.replace(TextRange(position, position), text)
+
+    def remove(self, range):
+        r"""
+        Removes a piece of text in a given range.
+
+        >>> from coalib.results.TextRange import TextRange
+        >>> test_text = ['nice\n', 'try\n', 'bro\n']
+        >>> def remove(range):
+        ...     diff = Diff(test_text)
+        ...     diff.remove(range)
+        ...     return diff.modified
+        >>> remove(TextRange.from_values(1, 1, 1, 4))
+        ['e\n', 'try\n', 'bro\n']
+        >>> remove(TextRange.from_values(1, 5, 2, 1))
+        ['nicetry\n', 'bro\n']
+        >>> remove(TextRange.from_values(1, 3, 3, 2))
+        ['niro\n']
+        >>> remove(TextRange.from_values(2, 1, 2, 1))
+        ['nice\n', 'try\n', 'bro\n']
+
+        :param range: The range to delete.
+        """
+        self.replace(range, '')
