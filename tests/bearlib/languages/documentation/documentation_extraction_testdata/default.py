@@ -4,6 +4,7 @@ Module description.
 Some more foobar-like text.
 """
 
+
 def foobar_explosion(radius):
     """
     A nice and neat way of documenting code.

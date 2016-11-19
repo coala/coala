@@ -4,6 +4,7 @@ Module description.
 Some more foobar-like text.
 """
 
+
 def foobar_explosion(radius):
     """
     A nice and neat way of documenting code.
@@ -27,7 +28,7 @@ this is intended.
     Continues here. """
 
 
-## Alternate documentation style in doxygen.
+# Alternate documentation style in doxygen.
 #  Subtext
 # More subtext (not correctly aligned)
 #      sub-sub-text

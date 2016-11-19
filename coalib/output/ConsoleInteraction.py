@@ -190,17 +190,17 @@ def print_lines(console_printer,
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
             console_printer.print(highlight_text(
-                no_color, line[:sourcerange.start.column-1], lexer), end='')
+                no_color, line[:sourcerange.start.column - 1], lexer), end='')
 
-            printed_chars = sourcerange.start.column-1
+            printed_chars = sourcerange.start.column - 1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             console_printer.print(highlight_text(
-                no_color, line[printed_chars:sourcerange.end.column-1],
+                no_color, line[printed_chars:sourcerange.end.column - 1],
                 lexer, BackgroundSourceRangeStyle), end='')
 
             console_printer.print(highlight_text(
-               no_color, line[sourcerange.end.column-1:], lexer), end='')
+                no_color, line[sourcerange.end.column - 1:], lexer), end='')
             console_printer.print("")
 
         else:
@@ -805,7 +805,8 @@ def show_language_bears_capabilities(language_bears_capabilities,
     else:
         for language, capabilities in language_bears_capabilities.items():
             if capabilities[0]:
-                console_printer.print('coala can do the following for ', end='')
+                console_printer.print(
+                    'coala can do the following for ', end='')
                 console_printer.print(language.upper(), color="blue")
                 console_printer.print("    Can detect only: ", end='')
                 console_printer.print(

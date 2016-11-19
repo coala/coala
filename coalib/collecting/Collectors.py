@@ -163,7 +163,8 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
     """
     bears_found = tuple([] for i in range(len(kinds)))
     bear_globs_with_bears = set()
-    for bear, glob in icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
+    for bear, glob in icollect_bears(
+            bear_dirs, bear_globs, kinds, log_printer):
         index = kinds.index(_get_kind(bear))
         bears_found[index].append(bear)
         bear_globs_with_bears.add(glob)
@@ -223,7 +224,7 @@ def filter_capabilities_by_languages(bears, languages):
             language_bears_capabilities.update(
                 {language: (capabilities[0] | bear.can_detect,
                             capabilities[1] | bear.CAN_FIX)}
-                            if language else {})
+                if language else {})
     return language_bears_capabilities
 
 

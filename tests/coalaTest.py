@@ -22,10 +22,10 @@ class coalaTest(unittest.TestCase):
         with bear_test_module(), \
                 prepare_file(["#fixme"], None) as (lines, filename):
             retval, output = execute_coala(
-                             coala.main,
-                            "coala", "-c", os.devnull,
-                            "-f", re.escape(filename),
-                            "-b", "LineCountTestBear")
+                coala.main,
+                "coala", "-c", os.devnull,
+                "-f", re.escape(filename),
+                "-b", "LineCountTestBear")
             self.assertIn("This file has 1 lines.",
                           output,
                           "The output should report count as 1 lines")

@@ -12,10 +12,10 @@ Although practicality beats purity.
 Errors should never pass silently.
 Unless explicitly silenced.
 In the face of ambiguity, refuse the temptation to guess.
-There should be one-- and preferably only one --obvious way to do it.
+There should be one - - and preferably only one - -obvious way to do it.
 Although that way may not be obvious at first unless youre Dutch.
 Now is better than never.
-Although never is often better than *right* now.
+Although never is often better than * right * now.
 If the implementation is hard to explain, its a bad idea.
 If the implementation is easy to explain, it may be a good idea.
-Namespaces are one honking great idea -- lets do more of those!
+Namespaces are one honking great idea - - lets do more of those!

@@ -83,18 +83,19 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         uut = (external_bear_wrap("exec")(self.Dummy)(self.section, None))
         with self.assertRaises(ValueError):
             # Something needs to be done with the result otherwise
-            # parse_output will not yield and thus will not raise the ValueError
+            # parse_output will not yield and thus will not raise the
+            # ValueError
             list(uut.parse_output(broken_json, "some_file"))
 
     def test_setting_desc(self):
         uut = (external_bear_wrap("exec",
                                   settings={
-                                     "asetting": ("", bool),
-                                     "bsetting": ("", bool, True),
-                                     "csetting": ("My desc.", bool, False),
-                                     "dsetting": ("Another desc", bool),
-                                     "esetting": ("", int, None)
-                                     })(self.Dummy))
+                                      "asetting": ("", bool),
+                                      "bsetting": ("", bool, True),
+                                      "csetting": ("My desc.", bool, False),
+                                      "dsetting": ("Another desc", bool),
+                                      "esetting": ("", int, None)
+                                  })(self.Dummy))
         metadata = uut.get_metadata()
         self.assertEqual(metadata.non_optional_params["asetting"][0],
                          FunctionMetadata.str_nodesc)
@@ -114,21 +115,25 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
             "set_normal_severity": ("", bool),
             "set_sample_dbg_msg": ("", bool, False),
             "not_set_different_msg": ("", bool, True)})
-               (self.TestBear)
-               (self.section, None))
+            (self.TestBear)
+            (self.section, None))
         results = list(uut.run(self.testfile_path, self.testfile_content,
                                set_normal_severity=False))
         expected = [
             Result(
                 origin=uut,
                 message="This is wrong",
-                affected_code=(SourceRange.from_values(self.testfile_path, 1),),
+                affected_code=(
+                    SourceRange.from_values(
+                        self.testfile_path, 1),),
                 severity=RESULT_SEVERITY.MAJOR
-                ),
+            ),
             Result(
                 origin=uut,
                 message="This is wrong too",
-                affected_code=(SourceRange.from_values(self.testfile_path, 3),),
+                affected_code=(
+                    SourceRange.from_values(
+                        self.testfile_path, 3),),
                 severity=RESULT_SEVERITY.INFO)]
         self.assertEqual(results, expected)
 
@@ -138,13 +143,17 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
             Result(
                 origin=uut,
                 message="This is wrong",
-                affected_code=(SourceRange.from_values(self.testfile_path, 1),),
+                affected_code=(
+                    SourceRange.from_values(
+                        self.testfile_path, 1),),
                 severity=RESULT_SEVERITY.NORMAL
-                ),
+            ),
             Result(
                 origin=uut,
                 message="This is wrong too",
-                affected_code=(SourceRange.from_values(self.testfile_path, 3),),
+                affected_code=(
+                    SourceRange.from_values(
+                        self.testfile_path, 3),),
                 severity=RESULT_SEVERITY.NORMAL)]
         self.assertEqual(results, expected)
 
@@ -153,8 +162,8 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
             "set_normal_severity": ("", bool),
             "set_sample_dbg_msg": ("", bool, False),
             "not_set_different_msg": ("", bool, True)})
-               (self.TestBear)
-               (self.section, None))
+            (self.TestBear)
+            (self.section, None))
         results = list(uut.run(self.testfile_path, self.testfile_content,
                                set_normal_severity=False,
                                set_sample_dbg_msg=True,
@@ -163,13 +172,17 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
             Result(
                 origin=uut,
                 message="This is wrong",
-                affected_code=(SourceRange.from_values(self.testfile_path, 1),),
+                affected_code=(
+                    SourceRange.from_values(
+                        self.testfile_path, 1),),
                 severity=RESULT_SEVERITY.MAJOR,
                 debug_msg="Sample debug message"
-                ),
+            ),
             Result(
                 origin=uut,
                 message="Different message",
-                affected_code=(SourceRange.from_values(self.testfile_path, 3),),
+                affected_code=(
+                    SourceRange.from_values(
+                        self.testfile_path, 3),),
                 severity=RESULT_SEVERITY.INFO)]
         self.assertEqual(results, expected)
