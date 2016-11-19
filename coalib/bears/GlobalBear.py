@@ -16,7 +16,7 @@ class GlobalBear(Bear):
     """
 
     def __init__(self,
-                 file_dict,  # filename : file contents
+                 file_dict,  # filename : file proxies
                  section,
                  message_queue,
                  timeout=0):

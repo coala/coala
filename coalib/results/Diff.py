@@ -12,17 +12,17 @@ class Diff:
     A Diff result represents a difference for one file.
     """
 
-    def __init__(self, file_list, rename=False, delete=False):
+    def __init__(self, file_proxy, rename=False, delete=False):
         """
         Creates an empty diff for the given file.
 
-        :param file_list: The original (unmodified) file as a list of its
-                          lines.
-        :param rename:    False or str containing new name of file.
-        :param delete:    True if file is set to be deleted.
+        :param file_proxy: The original (unmodified) file as a list of its
+                           lines.
+        :param rename:     False or str containing new name of file.
+        :param delete:     True if file is set to be deleted.
         """
         self._changes = {}
-        self._file = file_list
+        self._file = list(file_proxy)
         self.rename = rename
         self.delete = delete
 

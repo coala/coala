@@ -8,13 +8,20 @@ from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.settings.Section import Section, Setting
 
 
+class DummyFileProxy:
+
+    def __init__(self, lines):
+        self.lines = lines
+
+
 class ShowPatchActionTest(unittest.TestCase):
 
     def setUp(self):
         self.uut = ShowPatchAction()
-        self.file_dict = {"a": ["a\n", "b\n", "c\n"], "b": ["old_first\n"]}
-        self.diff_dict = {"a": Diff(self.file_dict['a']),
-                          "b": Diff(self.file_dict['b'])}
+        self.file_dict = {"a": DummyFileProxy(["a\n", "b\n", "c\n"]),
+                          "b": DummyFileProxy(["old_first\n"])}
+        self.diff_dict = {"a": Diff(self.file_dict['a'].lines),
+                          "b": Diff(self.file_dict['b'].lines)}
         self.diff_dict["a"].add_lines(1, ["test\n"])
         self.diff_dict["a"].delete_line(3)
         self.diff_dict["b"].add_lines(0, ["first\n"])
@@ -53,7 +60,7 @@ class ShowPatchActionTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             test_result = Result("origin", "message",
                                  diffs={'a': Diff([], rename='b')})
-            file_dict = {'a': []}
+            file_dict = {'a': DummyFileProxy([])}
             self.assertEqual(self.uut.apply_from_section(test_result,
                                                          file_dict,
                                                          {},
@@ -67,7 +74,7 @@ class ShowPatchActionTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             test_result = Result("origin", "message",
                                  diffs={'a': Diff([])})
-            file_dict = {'a': []}
+            file_dict = {'a': DummyFileProxy([])}
             self.assertEqual(self.uut.apply_from_section(test_result,
                                                          file_dict,
                                                          {},
@@ -77,7 +84,7 @@ class ShowPatchActionTest(unittest.TestCase):
 
     def test_apply_with_previous_patches(self):
         with retrieve_stdout() as stdout:
-            previous_diffs = {"a": Diff(self.file_dict['a'])}
+            previous_diffs = {"a": Diff(self.file_dict['a'].lines)}
             previous_diffs["a"].change_line(2, "b\n", "b_changed\n")
             self.assertEqual(self.uut.apply_from_section(self.test_result,
                                                          self.file_dict,
@@ -98,11 +105,12 @@ class ShowPatchActionTest(unittest.TestCase):
 
     def test_apply_with_rename(self):
         with retrieve_stdout() as stdout:
-            previous_diffs = {"a": Diff(self.file_dict['a'])}
+            previous_diffs = {"a": Diff(self.file_dict['a'].lines)}
             previous_diffs["a"].change_line(2, "b\n", "b_changed\n")
 
-            diff_dict = {"a": Diff(self.file_dict['a'], rename="a.rename"),
-                         "b": Diff(self.file_dict['b'], delete=True)}
+            diff_dict = {"a": Diff(self.file_dict['a'].lines,
+                                   rename="a.rename"),
+                         "b": Diff(self.file_dict['b'].lines, delete=True)}
             diff_dict["a"].add_lines(1, ["test\n"])
             diff_dict["a"].delete_line(3)
             diff_dict["b"].add_lines(0, ["first\n"])

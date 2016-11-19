@@ -27,6 +27,7 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.misc.Caching import FileCache
+from coalib.files.Fileproxy import Fileproxy
 
 
 process_group_test_code = """
@@ -38,6 +39,15 @@ pgid = p.pid if platform.system() == "Windows" else os.getpgid(p.pid);
 print(p.pid, pgid)
 p.terminate()
 """
+
+
+class DummyFileProxy:
+
+    def __init__(self, lines):
+        self.lines = lines
+
+    def __len__(self):
+        return len(self.lines)
 
 
 class DummyProcess(multiprocessing.Process):
@@ -198,13 +208,14 @@ class ProcessingTest(unittest.TestCase):
                  Result.from_values("ABear", "u", "f", 5, 1),
                  Result.from_values("ABear", "u", "f", 6, 1)]},
             {1: [first_global]},
-            {"f": ["first line  # stop ignoring, invalid ignore range\n",
-                   "second line  # ignore all\n",
-                   "third line\n",
-                   "fourth line  # gnore shouldn't trigger without i!\n",
-                   "# Start ignoring ABear, BBear and CBear\n",
-                   "# Stop ignoring\n",
-                   "seventh"]},
+            {"f": DummyFileProxy(
+                ["first line  # stop ignoring, invalid ignore range\n",
+                 "second line  # ignore all\n",
+                 "third line\n",
+                 "fourth line  # gnore shouldn't trigger without i!\n",
+                 "# Start ignoring ABear, BBear and CBear\n",
+                 "# Stop ignoring\n",
+                 "seventh"])},
             lambda *args: self.queue.put(args[2]),
             section,
             None,
@@ -307,9 +318,6 @@ class ProcessingTest(unittest.TestCase):
     def test_get_file_dict(self):
         file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
         self.assertEqual(len(file_dict), 1)
-        self.assertEqual(type(file_dict[self.testcode_c_path]),
-                         tuple,
-                         msg="files in file_dict should not be editable")
         self.assertEqual("Files that will be checked:\n" + self.testcode_c_path,
                          self.log_printer.log_queue.get().message)
 
@@ -394,9 +402,9 @@ class ProcessingTest(unittest.TestCase):
         self.assertFalse(check_result_ignore(result, ranges))
 
     def test_yield_ignore_ranges(self):
-        test_file_dict_a = {'f':
-                            ('# Ignore aBear\n',
-                             'a_string = "This string should be ignored"\n')}
+        test_file_dict_a = {'f': DummyFileProxy(
+            ('# Ignore aBear\n',
+             'a_string = "This string should be ignored"\n'))}
         test_ignore_range_a = list(yield_ignore_ranges(test_file_dict_a))
         for test_bears, test_source_range in test_ignore_range_a:
             self.assertEqual(test_bears, ['abear'])
@@ -405,10 +413,10 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 43)
 
-        test_file_dict_b = {'f':
-                            ('# start Ignoring bBear\n',
-                             'b_string = "This string should be ignored"\n',
-                             '# stop ignoring\n')}
+        test_file_dict_b = {'f': DummyFileProxy(
+            ('# start Ignoring bBear\n',
+             'b_string = "This string should be ignored"\n',
+             '# stop ignoring\n'))}
         test_ignore_range_b = list(yield_ignore_ranges(test_file_dict_b))
         for test_bears, test_source_range in test_ignore_range_b:
             self.assertEqual(test_bears, ['bbear'])
@@ -417,9 +425,9 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 3)
             self.assertEqual(test_source_range.end.column, 16)
 
-        test_file_dict_c = {'f':
-                            ('# Start ignoring cBear\n',
-                             '# Stop ignoring cBear This & prev ignored\n')}
+        test_file_dict_c = {'f': DummyFileProxy(
+            ('# Start ignoring cBear\n',
+             '# Stop ignoring cBear This & prev ignored\n'))}
         test_ignore_range_c = list(yield_ignore_ranges(test_file_dict_c))
         for test_bears, test_source_range in test_ignore_range_c:
             self.assertEqual(test_bears, ['cbear'])
@@ -428,9 +436,9 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 42)
 
-        test_file_dict_d = {'f':
-                            ('# Start ignoring cBear\n',
-                             'All of this ignored\n')}
+        test_file_dict_d = {'f': DummyFileProxy(
+            ('# Start ignoring cBear\n',
+             'All of this ignored\n'))}
         test_ignore_range_d = list(yield_ignore_ranges(test_file_dict_d))
         for test_bears, test_source_range in test_ignore_range_d:
             self.assertEqual(test_bears, ['cbear'])
@@ -440,7 +448,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.column, 20)
 
         # This case was a bug.
-        test_file_dict_single_line = {'f': ('# ignore XBEAR',)}
+        test_file_dict_single_line = {'f': DummyFileProxy(('# ignore XBEAR',))}
         test_ignore_range_single_line = list(yield_ignore_ranges(
             test_file_dict_single_line))
 
