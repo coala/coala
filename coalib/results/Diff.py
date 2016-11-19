@@ -429,3 +429,36 @@ class Diff:
 
         linediff.change = (original_line, replacement)
         self._changes[line_nr] = linediff
+
+    def replace(self, range, replacement):
+        r"""
+        Replaces a part of text. Allows to span multiple lines.
+
+        This function uses ``add_lines`` and ``delete_lines`` accordingly, so
+        calls of those functions on lines given ``range`` affects after usage
+        or vice versa lead to ``ConflictError``.
+
+        >>> from coalib.results.TextRange import TextRange
+        >>> test_text = ['hello\n', 'world\n', '4lines\n', 'done\n']
+        >>> def replace(range, text):
+        ...     diff = Diff(test_text)
+        ...     diff.replace(range, text)
+        ...     return diff.modified
+        >>> replace(TextRange.from_values(1, 5, 4, 3), '\nyeah\ncool\nno')
+        ['hell\n', 'yeah\n', 'cool\n', 'none\n']
+        >>> replace(TextRange.from_values(2, 1, 3, 5), 'b')
+        ['hello\n', 'bes\n', 'done\n']
+        >>> replace(TextRange.from_values(1, 6, 4, 3), '')
+        ['hellone\n']
+
+        :param range:       The ``TextRange`` that gets replaced.
+        :param replacement: The replacement string. Can be multiline.
+        """
+        # Remaining parts of the lines not affected by the replace.
+        first_part = (
+            self.original[range.start.line - 1][:range.start.column - 1])
+        last_part = self.original[range.end.line - 1][range.end.column - 1:]
+
+        self.delete_lines(range.start.line, range.end.line)
+        self.add_lines(range.start.line - 1,
+                       (first_part + replacement + last_part).splitlines(True))
