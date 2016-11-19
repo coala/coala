@@ -1,5 +1,6 @@
 import subprocess
 from os.path import exists
+from os import environ
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -32,7 +33,7 @@ class OpenEditorAction(ResultAction):
                         for src in result.affected_code)
         return all(exists(filename) for filename in filenames)
 
-    def apply(self, result, original_file_dict, file_diff_dict, editor: str):
+    def _apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
         Open file(s)
 
@@ -61,3 +62,30 @@ class OpenEditorAction(ResultAction):
                     rename=False if original_name == filename else filename)
 
         return file_diff_dict
+
+    if "EDITOR" in environ:
+        def apply(self,
+                  result,
+                  original_file_dict,
+                  file_diff_dict,
+                  editor=environ["EDITOR"]):
+            """
+            Open file(s)
+
+            :param editor: The editor to open the file with.
+            """
+            return self._apply(
+                result, original_file_dict, file_diff_dict, editor)
+    else:
+        def apply(self,
+                  result,
+                  original_file_dict,
+                  file_diff_dict,
+                  editor: str):
+            """
+            Open file(s)
+
+            :param editor: The editor to open the file with.
+            """
+            return self._apply(
+                result, original_file_dict, file_diff_dict, editor)
