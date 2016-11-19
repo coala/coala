@@ -1,4 +1,4 @@
-import copy
+from itertools import chain
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting import Dependencies
@@ -28,19 +28,39 @@ def fill_settings(sections, acquire_settings, log_printer):
     local_bears = {}
     global_bears = {}
 
+    bears_by_section = {}
+    bear_dirs_by_section = {}
+
     for section_name, section in sections.items():
-        bear_dirs = section.bear_dirs()
-        bears = list(section.get("bears", ""))
-        section_local_bears, section_global_bears = collect_bears(
-            bear_dirs,
-            bears,
-            [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
-            log_printer)
+        bear_dirs_by_section[section_name] = section.bear_dirs()
+        bears_by_section[section_name] = list(section.get("bears", ""))
+
+    bears_to_collect = set(chain.from_iterable(bears_by_section.values()))
+    bear_dirs_to_collect = set(
+        chain.from_iterable(bear_dirs_by_section.values()))
+
+    all_local_bears, all_global_bears = collect_bears(
+        bear_dirs_to_collect,
+        bears_to_collect,
+        [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
+        log_printer)
+    all_bears = list(chain(all_local_bears, all_global_bears))
+
+    for section_name, section in sections.items():
+        section_local_bears = []
+        section_global_bears = []
+
+        for bear in all_bears:
+            if bear.name in bears_by_section[section_name]:
+                if bear.kind() == BEAR_KIND.LOCAL:
+                    section_local_bears.append(bear)
+                else:
+                    section_global_bears.append(bear)
+
         section_local_bears = Dependencies.resolve(section_local_bears)
         section_global_bears = Dependencies.resolve(section_global_bears)
-        all_bears = copy.deepcopy(section_local_bears)
-        all_bears.extend(section_global_bears)
-        fill_section(section, acquire_settings, log_printer, all_bears)
+        section_bears = section_local_bears + section_global_bears
+        fill_section(section, acquire_settings, log_printer, section_bears)
 
         local_bears[section_name] = section_local_bears
         global_bears[section_name] = section_global_bears
