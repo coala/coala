@@ -76,7 +76,7 @@ class TextRange:
 
         if not a.overlaps(b):
             raise ValueError(
-                    '{}s must overlap to be joined'.format(cls.__name__))
+                '{}s must overlap to be joined'.format(cls.__name__))
 
         return cls(min(a.start, b.start), max(a.end, b.end))
 
