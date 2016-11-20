@@ -92,14 +92,11 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         name, versions = parse_lang_str(item)
 
         language = getattr(cls, name)
-        result = None
-        for version in versions:
-            if result:
-                result |= language == version
-            else:
-                result = language == version
+        if not versions:
+            return language()
 
-        return result
+        return language(*set(chain(*((language == v).versions
+                                     for v in versions))))
 
     def __call__(cls, *args):
         if cls is Language:
@@ -176,6 +173,8 @@ class Language(metaclass=LanguageMeta):
 
     We can also parse any user given string to get the instance:
 
+    >>> Language['trumpscript']
+    TrumpScript 2.7, 3.3, 3.4, 3.5, 3.6
     >>> Language['ts 3.4, 3.6']
     TrumpScript 3.4, 3.6
     >>> Language['TS 3']
@@ -285,10 +284,6 @@ class Language(metaclass=LanguageMeta):
 
     def __or__(self, other):
         return type(self)(*chain(self.versions, other.versions))
-
-    def __ior__(self, other):
-        self.versions = self.versions + other.versions
-        return self
 
     def __contains__(self, item):
         item = Language[item]
