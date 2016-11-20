@@ -217,9 +217,9 @@ class Language(metaclass=LanguageMeta):
      ...
     AttributeError
 
-    __You now know the most important parts for writing a bear using languages.
+    **You now know the most important parts for writing a bear using languages.
     Read ahead if you want to know more about working with multiple versions of
-    programming languages!__
+    programming languages!**
 
     We can get an instance via this syntax as well:
 
