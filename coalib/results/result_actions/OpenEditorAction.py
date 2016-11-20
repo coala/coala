@@ -64,4 +64,5 @@ class OpenEditorAction(ResultAction):
         return file_diff_dict
 
     if 'EDITOR' in environ:
+        print("GIT", environ['EDITOR'])
         apply.__defaults__ = (environ['EDITOR'],)

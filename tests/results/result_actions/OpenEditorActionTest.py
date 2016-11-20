@@ -156,7 +156,7 @@ class OpenEditorActionTest(unittest.TestCase):
             OpenEditorAction.is_applicable(invalid_result, None, {}))
 
     def test_environ_editor(self):
-        old_environ = os.environ
+        old_editor = os.environ.get('EDITOR', None)
 
         file_dict = {self.fb: ['1\n', '2\n', '3\n']}
         diff_dict = {}
@@ -169,6 +169,8 @@ class OpenEditorActionTest(unittest.TestCase):
         # a ``TypeError``.
         from coalib.results.result_actions.OpenEditorAction import (
             OpenEditorAction)
+        del os.environ['EDITOR']
+        reload(coalib.results.result_actions.OpenEditorAction)
         action = OpenEditorAction()
         with self.assertRaises(TypeError):
             action.apply(result, file_dict, diff_dict)
@@ -177,9 +179,10 @@ class OpenEditorActionTest(unittest.TestCase):
         # we should be able apply the action without an explicit variable.
         os.environ['EDITOR'] = 'vim'
         reload(coalib.results.result_actions.OpenEditorAction)
-        from coalib.results.result_actions.OpenEditorAction import (
-            OpenEditorAction)
         action = OpenEditorAction()
         action.apply(result, file_dict, diff_dict)
 
-        os.environ = old_environ
+        if old_editor:
+            os.environ['EDITOR'] = old_editor
+        else:
+            del os.environ['EDITOR']
