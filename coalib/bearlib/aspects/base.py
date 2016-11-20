@@ -22,6 +22,10 @@ class aspectbase:
                 taste_values.pop(name, taste.default))
             self.__dict__[name] = value
 
+    def __eq__(self, other):
+        return (self.tastes == other.tastes and
+                type(self).__qualname__ == type(other).__qualname__)
+
     @property
     def tastes(self):
         """
