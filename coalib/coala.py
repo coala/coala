@@ -13,16 +13,10 @@
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.coala_main import run_coala
-from coalib.coala_modes import (
-    mode_format, mode_json, mode_non_interactive, mode_normal)
 from coalib.misc.Constants import configure_logging
-from coalib.misc.Exceptions import get_exitcode
-from coalib.output.ConsoleInteraction import (
-    acquire_settings, nothing_done, print_results, print_section_beginning,
-    show_bears, show_language_bears_capabilities)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.misc.Exceptions import get_exitcode
 
 
 def main():
@@ -34,6 +28,13 @@ def main():
         # Note: We parse the args here once to check whether to show bears or
         # not.
         args = default_arg_parser().parse_args()
+
+        # Defer imports so if e.g. --help is called they won't be run
+        from coalib.coala_modes import (
+            mode_format, mode_json, mode_non_interactive, mode_normal)
+        from coalib.output.ConsoleInteraction import (
+            show_bears, show_language_bears_capabilities)
+
         console_printer = ConsolePrinter(print_colored=not args.no_color)
 
         if args.json:  # needs to be checked in order to display bears in json
