@@ -221,7 +221,7 @@ class Diff:
         return list(diff.range(filename)
                     for diff in self.split_diff(distance=0))
 
-    def split_diff(self, distance=1):
+    def split_diff(self, distance=-1):
         """
         Splits this diff into small pieces, such that several continuously
         altered lines are still together in one diff. All subdiffs will be
@@ -231,7 +231,7 @@ class Diff:
 
         >>> diff = Diff.from_string_arrays([     'b', 'c', 'e'],
         ...                                ['a', 'b', 'd', 'f'])
-        >>> len(list(diff.split_diff()))
+        >>> len(list(diff.split_diff(distance=1)))
         1
 
         If we set the distance to 0, it will be splitted:
