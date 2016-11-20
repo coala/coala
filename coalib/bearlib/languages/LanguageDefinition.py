@@ -1,15 +1,7 @@
-import os
+import logging
 
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
-from coalib.misc import Constants
-from coalib.parsing.ConfParser import ConfParser
-
-
-LANGUAGE_DICT = {
-    'c++': 'cpp',
-    'python': 'python3',
-    'javascript': 'js'
-}
+from coalib.bearlib.languages import Language
 
 
 class LanguageDefinition(SectionCreatable):
@@ -17,6 +9,8 @@ class LanguageDefinition(SectionCreatable):
     def __init__(self, language: str, coalang_dir=None):
         """
         Creates a new LanguageDefinition object from file.
+
+        THIS FUNCTION IS DEPRECATED. Use the Language class instead.
 
         A Language Definition holds constants which may help parsing the
         language. If you want to write a bear you'll probably want to use those
@@ -36,10 +30,20 @@ class LanguageDefinition(SectionCreatable):
 
         If no language exists, you will get a ``FileNotFoundError``:
 
-        >>> LanguageDefinition("BULLSHIT!")  # +ELLIPSIS
+        >>> LanguageDefinition("BULLSHIT!")
         Traceback (most recent call last):
          ...
-        FileNotFoundError: ...
+        FileNotFoundError
+
+        Custom coalangs are no longer supported. You can simply register your
+        languages to the Languages decorator. When giving a custom coalang
+        directory a warning will be emitted and it will attempt to load the
+        given Language anyway through conventional means:
+
+        >>> LanguageDefinition("custom", coalang_dir='somewhere')
+        Traceback (most recent call last):
+         ...
+        FileNotFoundError
 
         :param language:           The actual language (e.g. C++).
         :param coalang_dir:        Path to directory with coalang language
@@ -48,19 +52,19 @@ class LanguageDefinition(SectionCreatable):
         :raises FileNotFoundError: Raised when no definition is available for
                                    the given language.
         """
-        SectionCreatable.__init__(self)
-        self.language = language.lower()
-        if self.language in LANGUAGE_DICT:
-            self.language = LANGUAGE_DICT[self.language]
-
-        coalang_file = os.path.join(
-            coalang_dir or Constants.language_definitions,
-            self.language + '.coalang')
-
-        self.lang_dict = ConfParser().parse(coalang_file)['default']
+        logging.debug('LanguageDefinition has been deprecated! '
+                      'Use `coalib.bearlib.languages.Language` instead.')
+        if coalang_dir:
+            logging.error(
+                'LanguageDefinition has been deprecated. The `coalang_dir` '
+                'functionality is not available anymore.')
+        try:
+            self.lang = Language[language].get_default_version()
+        except AttributeError:
+            raise FileNotFoundError
 
     def __getitem__(self, item):
-        return self.lang_dict[item]
+        return getattr(self.lang, item)
 
     def __contains__(self, item):
-        return item in self.lang_dict
+        return item in self.lang.attributes

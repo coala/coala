@@ -1,5 +1,3 @@
-import os.path
-from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
@@ -130,17 +128,3 @@ class DocstyleDefinitionTest(unittest.TestCase):
 
         self.assertEqual(list(DocstyleDefinition.get_available_definitions()),
                          [('xlang', 'x')])
-
-    def test_load_external_coalang(self):
-        empty_metadata = self.Metadata('', '', '')
-        with TemporaryDirectory() as directory:
-            coalang_file = os.path.join(directory, 'custom.coalang')
-            with open(coalang_file, 'w') as file:
-                file.write('[COOL]\ndoc-markers = @@,@@,@@\n')
-
-            result = DocstyleDefinition.load(
-                'cool', 'custom', coalang_dir=directory)
-            self.assertEqual(result.language, 'cool')
-            self.assertEqual(result.docstyle, 'custom')
-            self.assertEqual(result.markers, (('@@', '@@', '@@'),))
-            self.assertEqual(result.metadata, empty_metadata)
