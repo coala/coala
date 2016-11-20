@@ -26,10 +26,10 @@ class aspectclass(type):
         Get a dictionary of all taste names mapped to their
         :class:`coalib.bearlib.aspectclasses.Taste` instances.
         """
-        result = dict(cls._tastes)
         if cls.parent:
-            result.update(cls.parent.tastes)
-        return result
+            return dict(cls.parent.tastes, **cls._tastes)
+
+        return dict(cls._tastes)
 
     def subaspect(cls, subcls):
         """
