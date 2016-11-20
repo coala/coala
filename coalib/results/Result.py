@@ -15,7 +15,7 @@ from coalib.results.SourceRange import SourceRange
                ('severity', RESULT_SEVERITY.reverse.get),
                'confidence',
                'message',
-               'aspect')
+               ('aspect', lambda aspect: type(aspect).__qualname__))
 @generate_ordering('affected_code',
                    'severity',
                    'confidence',
@@ -269,5 +269,5 @@ class Result:
         if use_relpath and _dict['diffs']:
             _dict['diffs'] = {relpath(file): diff
                               for file, diff in _dict['diffs'].items()}
-        _dict['aspect'] = self.aspect.__qualname__
+        _dict['aspect'] = type(self.aspect).__qualname__
         return _dict
