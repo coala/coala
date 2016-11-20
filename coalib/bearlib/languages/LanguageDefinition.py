@@ -1,3 +1,4 @@
+import logging
 import os
 
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
@@ -48,6 +49,8 @@ class LanguageDefinition(SectionCreatable):
         :raises FileNotFoundError: Raised when no definition is available for
                                    the given language.
         """
+        logging.debug('LanguageDefinition has been deprecated! '
+                      'Use `coalib.bearlib.languages.Language` instead.')
         SectionCreatable.__init__(self)
         self.language = language.lower()
         if self.language in LANGUAGE_DICT:
