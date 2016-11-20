@@ -28,6 +28,6 @@ class AspectClassTest:
             """
 
             class docs:
-                example = "Example"
+                example = 'Example'
 
         assert not SubAspect.docs.check_consistency()

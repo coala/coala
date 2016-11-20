@@ -53,8 +53,8 @@ class Clone:
         """
 
     min_clone_token = Taste[int](
-        "The number of tokens that have to be equal for it to"
-        " be detected as a code clone.",
+        'The number of tokens that have to be equal for it to'
+        ' be detected as a code clone.',
         (20, ), 20)
 
 

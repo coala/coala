@@ -13,7 +13,7 @@ class TasteMeta(type):
         class Taste(cls):
             cast_type = _cast_type
 
-        Taste.__name__ = Taste.__qualname__ = "%s[%s]" % (
+        Taste.__name__ = Taste.__qualname__ = '%s[%s]' % (
             cls.__name__, _cast_type.__name__)
         return Taste
 
@@ -27,7 +27,7 @@ class Taste(metaclass=TasteMeta):
     cast_type = str
 
     @enforce_signature
-    def __init__(self, description: str="", suggested_values: tuple=(),
+    def __init__(self, description: str='', suggested_values: tuple=(),
                  default=None):
         """
         No need to specify name an cast type:

@@ -74,4 +74,4 @@ class aspectclass(type):
         return Sub
 
     def __repr__(cls):
-        return "<%s %s>" % (type(cls).__name__, repr(cls.__qualname__))
+        return '<%s %s>' % (type(cls).__name__, repr(cls.__qualname__))

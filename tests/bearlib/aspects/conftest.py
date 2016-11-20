@@ -27,11 +27,11 @@ def SubAspect_tastes():
     """
     return {
         'salty': Taste[str](
-            "The saltiness", ("high", "low"), default="low"),
+            'The saltiness', ('high', 'low'), default='low'),
         'sweet': Taste[int](
-            "The sweetness", (1, 23, 45), default=23),
+            'The sweetness', (1, 23, 45), default=23),
         'sour': Taste[bool](
-            "Is it sour?", (True, False), default=False),
+            'Is it sour?', (True, False), default=False),
     }
 
 
@@ -41,7 +41,7 @@ def SubAspect_taste_values():
     Taste definitions for an exclusive SubAspect class for unit tests.
     """
     return {
-        'salty': "high",
+        'salty': 'high',
         'sweet': 45,
         'sour': True,
     }
@@ -53,10 +53,10 @@ def SubAspect_docs():
     Docs definitions for an exclusive SubAspect class for unit tests.
     """
     class docs:
-        example = "An example"
-        example_language = "The example language"
-        importance_reason = "The reason of importance"
-        fix_suggestions = "Suggestions for fixing"
+        example = 'An example'
+        example_language = 'The example language'
+        importance_reason = 'The reason of importance'
+        fix_suggestions = 'Suggestions for fixing'
 
     return docs
 

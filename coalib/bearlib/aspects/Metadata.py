@@ -29,13 +29,13 @@ class Emptiness:
     code.
     """
     class docs:
-        example = "(no text at all)"
-        example_language = "English"
+        example = '(no text at all)'
+        example_language = 'English'
         importance_reason = """
         An empty commit message shows the lack of documentation for your
         change.
         """
-        fix_suggestions = "Write a commit message."
+        fix_suggestions = 'Write a commit message.'
 
 
 @CommitMessage.subaspect
@@ -58,7 +58,7 @@ class ColonExistence:
         FIX: Describe change further
         context: Describe change further
         """
-        example_language = "English"
+        example_language = 'English'
         importance_reason = """
         The colon can be a useful separator for a context (e.g. a filename) so
         the commit message makes more sense to the reader or a classification
@@ -70,7 +70,7 @@ class ColonExistence:
         """
 
     shortlog_colon = Taste[bool](
-        "Whether or not the shortlog has to contain a colon.",
+        'Whether or not the shortlog has to contain a colon.',
         (True, False), default=True)
 
 
@@ -85,7 +85,7 @@ class TrailingPeriod:
         Describe change.
         Describe change
         """
-        example_language = "English"
+        example_language = 'English'
         importance_reason = """
         Consistency is key to make messages more readable. Removing a trailing
         period can also make the message shorter by a character.
@@ -96,7 +96,7 @@ class TrailingPeriod:
         """
 
     shortlog_period = Taste[bool](
-        "Whether or not the shortlog has to contain a trailing period.",
+        'Whether or not the shortlog has to contain a trailing period.',
         (True, False), default=False)
 
 
@@ -112,7 +112,7 @@ class Tense:
         Adding file
         Added file
         """
-        example_language = "English"
+        example_language = 'English'
         importance_reason = """
         Consistency is key to make messages more readable.
         """
@@ -121,9 +121,9 @@ class Tense:
         """
 
     shortlog_tense = Taste[str](
-        "The tense of the shortlog.",
-        ("imperative", "present continuous", "past"),
-        default="imperative")
+        'The tense of the shortlog.',
+        ('imperative', 'present continuous', 'past'),
+        default='imperative')
 
 
 @Shortlog.subaspect
@@ -136,7 +136,7 @@ class Length:
         Some people just write very long commit messages. Too long. "
         Even full sentences. And more of them, too!
         """
-        example_language = "English"
+        example_language = 'English'
         importance_reason = """
         A good commit message should be quick to read and concise. Also, git
         and platforms like GitHub do cut away everything beyond 72, sometimes
@@ -152,7 +152,7 @@ class Length:
         """
 
     max_shortlog_length = Taste[int](
-        "The maximal number of characters the shortlog may contain.",
+        'The maximal number of characters the shortlog may contain.',
         (50, 72, 80), default=72)
 
 
@@ -172,7 +172,7 @@ class FirstCharacter:
         add coverage pragma
         Compatability: add coverage pragma
         """
-        example_language = "English"
+        example_language = 'English'
         importance_reason = """
         Consistent commit messages are easier to read through.
         """
@@ -183,8 +183,8 @@ class FirstCharacter:
         """
 
     shortlog_starts_upper_case = Taste[bool](
-        "Whether or not the shortlog (first line) of a commit message should "
-        "start with an upper case letter consistently.",
+        'Whether or not the shortlog (first line) of a commit message should '
+        'start with an upper case letter consistently.',
         (True, False), default=True)
 
 
@@ -204,7 +204,7 @@ class Existence:
         example = """
         aspects: Add CommitMessage.Body
         """
-        example_language = "English"
+        example_language = 'English'
         importance_reason = """
         Having a nonempty commit body is important if you consistently want
         elaborate documentation on all commits.
@@ -224,7 +224,7 @@ class Length:
         Some people just write very long commit messages. Too long.
         Way too much actually. If they would just break their lines!
         """
-        example_language = "English"
+        example_language = 'English'
         importance_reason = """
         Git and platforms like GitHub usually break everything beyond 72
         characters, making a message containing longer lines hard to read.
@@ -234,6 +234,6 @@ class Length:
         """
 
     max_body_length = Taste[int](
-        "The maximal number of characters the body may contain in one line. "
-        "The newline character at each line end does not count to that length.",
+        'The maximal number of characters the body may contain in one line. '
+        'The newline character at each line end does not count to that length.',
         (50, 72, 80), default=72)

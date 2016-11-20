@@ -10,11 +10,11 @@ class TasteTest:
     def test_class__getitem__(self):
         typed = Taste[int]
         assert typed.cast_type is int
-        assert typed.__name__ == typed.__qualname__ == "Taste[int]"
+        assert typed.__name__ == typed.__qualname__ == 'Taste[int]'
 
     def test__init__defaults(self):
         taste = Taste()
-        assert taste.description is ""
+        assert taste.description is ''
         assert taste.suggested_values is ()
         assert taste.default is None
 
