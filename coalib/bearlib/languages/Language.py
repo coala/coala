@@ -204,6 +204,11 @@ class Language(metaclass=LanguageMeta):
     >>> Language.TrumpScript(3.3).comment_delimiter
     '#'
 
+    If you don't know which version is the right one, just use this:
+
+    >>> Language.TrumpScript().get_default_version()
+    America is great. 3.6
+
     We can see which attributes are available also on the instance:
 
     >>> Language.TrumpScript(3.3).attributes
@@ -332,6 +337,16 @@ class Language(metaclass=LanguageMeta):
         language.
         """
         return list(self._attributes.keys())
+
+    def get_default_version(self):
+        """
+        Retrieves the latest version the user would want to choose from the
+        given versions in self.
+
+        (At a later point this might also retrieve a default version
+        specifiable by the language definition, so keep using this!)
+        """
+        return type(self)(self.versions[-1]) if self.versions else type(self)()
 
 
 def limit_versions(language, limit, operator):
