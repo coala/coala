@@ -1,5 +1,5 @@
 from itertools import chain
-from inspect import isclass
+from inspect import isclass, getmembers
 import operator
 import re
 
@@ -110,6 +110,9 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
                 __qualname__ = arg.__qualname__
                 versions = tuple(sorted(getattr(arg, 'versions', ())))
                 aliases = tuple(sorted(getattr(arg, 'aliases', ())))
+                attributes = {name: member for name, member in getmembers(arg)
+                              if not name.startswith('_')
+                              and not name in ('versions', 'aliases')}
 
             Sub.__name__ = arg.__name__
             type(cls).all.append(Sub)
@@ -154,11 +157,17 @@ class Language(metaclass=LanguageMeta):
     ... class TrumpScript:
     ...     aliases = 'ts',
     ...     versions = 2.7, 3.3, 3.4, 3.5, 3.6
+    ...     comment_delimiter = '#'
 
     Now we can access the language globally:
 
     >>> Language.TrumpScript
     <class 'coalib.bearlib.languages.Language.TrumpScript'>
+
+    We can see all attributes for the language like this:
+
+    >>> Language.TrumpScript.attributes
+    {'comment_delimiter': '#'}
 
     We can specify the version by instantiating the TrumpScript class now:
 
