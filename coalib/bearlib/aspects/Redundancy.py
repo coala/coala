@@ -1,3 +1,4 @@
+from coalib.bearlib.languages import Language
 from coalib.bearlib.aspects import Root, Taste
 
 
@@ -52,10 +53,15 @@ class Clone:
         loops.
         """
 
-    min_clone_token = Taste[int](
+    min_clone_tokens = Taste[int](
         'The number of tokens that have to be equal for it to'
         ' be detected as a code clone.',
-        (20, ), 20)
+        (20, ), default=20)
+
+    ignore_using = Taste[bool](
+        'Ignore ``using`` directives in C#.',
+        (True, False), default=False,
+        languages=(Language.CSharp, ))
 
 
 @Redundancy.subaspect
