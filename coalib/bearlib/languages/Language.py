@@ -204,6 +204,11 @@ class Language(metaclass=LanguageMeta):
     >>> Language.TrumpScript(3.3).comment_delimiter
     '#'
 
+    We can see which attributes are available also on the instance:
+
+    >>> Language.TrumpScript(3.3).attributes
+    ['comment_delimiter']
+
     We can specify the version by instantiating the TrumpScript class now:
 
     >>> str(Language.TrumpScript(3.6))
@@ -319,6 +324,14 @@ class Language(metaclass=LanguageMeta):
         item = Language[item]
         return (type(self) is type(item)
                 and set(item.versions).issubset(set(self.versions)))
+
+    @property
+    def attributes(self):
+        """
+        Retrieves the names of all attributes that are available for this
+        language.
+        """
+        return list(self._attributes.keys())
 
 
 def limit_versions(language, limit, operator):
