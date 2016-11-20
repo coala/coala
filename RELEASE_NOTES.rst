@@ -26,6 +26,10 @@ Command Line Interface Changes:
 
 Bear API Changes:
 
+- ``LanguageDefinition`` has been deprecated. Use
+  ``coalib.bearlib.languages.Language`` instead. Consult
+  http://api.coala.io/en/latest/coalib.bearlib.languages.html#module-coalib.bearlib.languages.Language
+  for usage hints.
 - The deprecated ``Lint`` class has now been removed.
 - The ``CondaRequirement`` has been removed.
 - The ``multiple`` constructor for ``PackageRequirement`` classes has been
