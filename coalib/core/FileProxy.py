@@ -1,3 +1,5 @@
+import logging
+
 from coala_utils.decorators import generate_eq
 
 
@@ -45,12 +47,24 @@ class FileProxy:
         """
         Constructs a new ``FileProxy`` object.
 
+        :raises UnicodeDecodeError:
+            Raised when non-unicode characters appear in the
+        :raises OSError:
         :param filename: The name of the file to load.
         """
         self._filename = filename
 
-        with open(filename, encoding='utf-8') as fl:
-            self._content = fl.read()
+        try:
+            with open(filename, encoding='utf-8') as fl:
+                self._content = fl.read()
+        except UnicodeDecodeError:
+            logging.warning("Failed to read file '{}'. It seems to contain "
+                            'non-unicode characters. Leaving it '
+                            'out.'.format(filename), )
+        except OSError as exception:  # pragma: no cover
+            logging.warning("Failed to read file '{}' because of an unknown "
+                            'error. Leaving it out.'.format(filename),
+                            exc_info=exception)
 
         self._lines = tuple(self._content.splitlines(True))
 
