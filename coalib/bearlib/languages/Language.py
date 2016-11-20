@@ -78,6 +78,18 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
      ...
     ValueError: No versions left
     """
+
+    def __new__(mcs, clsname, bases, clsattrs):
+        for base in bases:
+            if issubclass(base, Language) and base is not Language:
+                for name, obj in base._attributes.items():
+                    clsattrs.setdefault(name, obj)
+
+        return type.__new__(mcs, clsname, bases, clsattrs)
+
+    def __hash__(cls):
+        return type.__hash__(cls)
+
     def __getattr__(cls, item):
         try:
             return next(lang for lang in type(cls).all if item in lang)
