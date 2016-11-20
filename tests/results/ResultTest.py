@@ -153,11 +153,22 @@ class ResultTest(unittest.TestCase):
         diff.delete_line(2)
         diff.change_line(3, '3', '3_changed')
         uut = Result('origin', 'msg', diffs={'f_a': diff}).__json__(True)
-        self.assertEqual(uut['diffs']['f_a'].__json__(), '--- \n'
-                                                         '+++ \n'
-                                                         '@@ -1,3 +1,2 @@\n'
-                                                         ' 1-2-3+3_changed')
+        self.assertEqual(
+            uut['diffs']['f_a'].__json__(), '--- \n'
+            '+++ \n'
+            '@@ -1,3 +1,2 @@\n'
+            ' 1-2\n'
+            '\ No newline at end of file\n'
+            '-3\n'
+            '\ No newline at end of file\n'
+            '+3_changed\n'
+            '\ No newline at end of file\n')
         JSONEncoder = create_json_encoder(use_relpath=True)
         json_dump = json.dumps(diff, cls=JSONEncoder, sort_keys=True)
         self.assertEqual(
-            json_dump, '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1-2-3+3_changed"')
+            json_dump, '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1-2' +
+            '\\n\\\\ No newline ' +
+            'at end of file\\n-3\\n' +
+            '\\\\ No newline at end of file\\n' +
+            '+3_changed\\n\\\\ No newline ' +
+            'at end of file\\n"')
