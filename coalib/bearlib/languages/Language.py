@@ -170,16 +170,39 @@ class Language(metaclass=LanguageMeta):
     ...     versions = 2.7, 3.3, 3.4, 3.5, 3.6
     ...     comment_delimiter = '#'
 
-    Now we can access the language globally:
+    From a bear, you can simply parse the user given language string to get
+    the instance of the Language you desire:
 
-    >>> Language.TrumpScript
-    <class 'coalib.bearlib.languages.Language.America is great.'>
+    >>> Language['trumpscript']
+    America is great. 2.7, 3.3, 3.4, 3.5, 3.6
+    >>> Language['ts 3.4, 3.6']
+    America is great. 3.4, 3.6
+    >>> Language['TS 3']
+    America is great. 3.3, 3.4, 3.5, 3.6
+    >>> Language['tS 1']
+    Traceback (most recent call last):
+     ...
+    ValueError: No versions left
 
-    As you see, you can use the `__qualname__` property. This will also affect
-    the string representation and work as an implicit alias:
+    The attributes are not accessible unless you have selected one - and only
+    one - version of your language:
 
-    >>> str(Language.TrumpScript(3.4))
-    'America is great. 3.4'
+    >>> Language.TrumpScript(3.3, 3.4).comment_delimiter
+    Traceback (most recent call last):
+     ...
+    AttributeError: You have to specify ONE version ...
+    >>> Language.TrumpScript(3.3).comment_delimiter
+    '#'
+
+    If you don't know which version is the right one, just use this:
+
+    >>> Language.TrumpScript().get_default_version()
+    America is great. 3.6
+
+    To see which attributes are available, use the ``attributes`` property:
+
+    >>> Language.TrumpScript(3.3).attributes
+    ['comment_delimiter']
 
     You can access a dictionary of the attribute values for every version from
     the class:
@@ -194,50 +217,27 @@ class Language(metaclass=LanguageMeta):
      ...
     AttributeError
 
-    The attributes are not accessible unless you have selected one - and only
-    one - version of your language:
+    __You now know the most important parts for writing a bear using languages.
+    Read ahead if you want to know more about working with multiple versions of
+    programming languages!__
 
-    >>> Language.TrumpScript(3.3, 3.4).comment_delimiter  # +ELLIPSIS
-    Traceback (most recent call last):
-     ...
-    AttributeError: You have to specify ONE version ...
-    >>> Language.TrumpScript(3.3).comment_delimiter
-    '#'
-
-    If you don't know which version is the right one, just use this:
-
-    >>> Language.TrumpScript().get_default_version()
-    America is great. 3.6
-
-    We can see which attributes are available also on the instance:
-
-    >>> Language.TrumpScript(3.3).attributes
-    ['comment_delimiter']
-
-    We can specify the version by instantiating the TrumpScript class now:
-
-    >>> str(Language.TrumpScript(3.6))
-    'America is great. 3.6'
-
-    We can also parse any user given string to get the instance:
-
-    >>> Language['trumpscript']
-    America is great. 2.7, 3.3, 3.4, 3.5, 3.6
-    >>> Language['ts 3.4, 3.6']
-    America is great. 3.4, 3.6
-    >>> Language['TS 3']
-    America is great. 3.3, 3.4, 3.5, 3.6
-    >>> Language['tS 1']
-    Traceback (most recent call last):
-     ...
-    ValueError: No versions left
-
-    Similarly we can get an instance via this syntax:
+    We can get an instance via this syntax as well:
 
     >>> Language[Language.TrumpScript]
     America is great. 2.7, 3.3, 3.4, 3.5, 3.6
     >>> Language[Language.TrumpScript(3.6)]
     America is great. 3.6
+
+    As you see, you can use the `__qualname__` property. This will also affect
+    the string representation and work as an implicit alias:
+
+    >>> str(Language.TrumpScript(3.4))
+    'America is great. 3.4'
+
+    We can specify the version by instantiating the TrumpScript class now:
+
+    >>> str(Language.TrumpScript(3.6))
+    'America is great. 3.6'
 
     You can also define ranges of versions of languages:
 
