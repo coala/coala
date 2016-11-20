@@ -3,16 +3,22 @@ coala 0.9.0
 
 Command Line Interface Changes:
 
+- ``coala-ci`` and ``coala-json`` have been merged into the main binary. You
+  can now use ``coala --non-interactive`` and ``coala --json`` respectively.
 - Multiple patches within one line, even from different bears, can be
   automatically merged by coala.
+- ``coala`` returns the exitcode 2 when not passing any ``--bears`` or
+  ``--files`` as well as when no section is enabled and nothing was done.
+- coala can now automatically add ``Ignore ...Bear`` comments to your source
+  code. Simply use the ``Add ignore comment`` action when offered.
 - Users can press enter to dismiss a result by default.
 - Result action descriptions have been compressed to make them easier readable.
 - The section name is now displayed when asking the user for missing settings.
-- ``coala-ci`` shows results *and* patches by default now.
+- ``coala --non-interactive`` shows results *and* patches by default now.
 - ``coala-dbus`` has been removed as it wasn't used by anyone.
 - A ``--no-color`` argument allows to run coala with uncoloured results.
 - Log messages are printed on stderr now.
-- ``coala-json`` doesn't output log messages in JSON anymore. This is a
+- ``coala --json`` doesn't output log messages in JSON anymore. This is a
   technical issue. Log messages can easily be fetched from the stderr stream.
 - Some performance improvements could be achieved.
 - A lot more strings, like ``roger`` or ``no way`` are allowed for boolean
@@ -26,6 +32,8 @@ Bear API Changes:
   removed.
 - A ``deprecate_bear`` decorator is now available so bears can be renamed
   seamlessly.
+- The ``Diff`` object has now dedicated functions to ``replace``, ``insert``
+  and ``remove`` ``SourceRange`` objects.
 
 Bug Fixes:
 
@@ -47,7 +55,8 @@ Internal Changes:
 - Deprecated parameters are stored in the function metadata.
 - Python builtin logging is now used.
 - Numerous changes to get started on https://coala.io/cep5 have been
-  implemented.
+  implemented. The first aspects are already defined in
+  ``coalib.bearlib.aspects`` and bears can already append aspects to results.
 - ``coalang`` files now have an alias dictionary.
 
 coala 0.8.1
