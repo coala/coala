@@ -50,20 +50,20 @@ class Diff:
                  a_index_2,
                  b_index_1,
                  b_index_2) in change_group:
-                if tag == 'delete':
+                if tag == "delete":
                     for index in range(a_index_1+1, a_index_2+1):
                         result.delete_line(index)
                 elif tag == 'insert':
                     # We add after line, they add before, so dont add 1 here
                     result.add_lines(a_index_1,
                                      file_array_2[b_index_1:b_index_2])
-                elif tag == 'replace':
+                elif tag == "replace":
                     result.change_line(a_index_1+1,
                                        file_array_1[a_index_1],
                                        file_array_2[b_index_1])
-                    result.add_lines(a_index_1+1,
-                                     file_array_2[b_index_1+1:b_index_2])
-                    for index in range(a_index_1+2, a_index_2+1):
+                    result.add_lines(a_index_1 + 1,
+                                     file_array_2[b_index_1 + 1:b_index_2])
+                    for index in range(a_index_1 + 2, a_index_2 + 1):
                         result.delete_line(index)
 
         return result
@@ -79,14 +79,15 @@ class Diff:
         """
         assert isinstance(file, (list, tuple))
 
-        oldvalue = '\n'.join(file[fixit.range.start.line-1:
+        oldvalue = '\n'.join(file[fixit.range.start.line - 1:
                                   fixit.range.end.line])
-        endindex = fixit.range.end.column - len(file[fixit.range.end.line-1])-1
+        endindex = fixit.range.end.column - \
+            len(file[fixit.range.end.line - 1]) - 1
 
-        newvalue = (oldvalue[:fixit.range.start.column-1] +
+        newvalue = (oldvalue[:fixit.range.start.column - 1] +
                     fixit.value +
                     oldvalue[endindex:])
-        new_file = (file[:fixit.range.start.line-1] +
+        new_file = (file[:fixit.range.start.line - 1] +
                     type(file)(newvalue.splitlines(True)) +
                     file[fixit.range.end.line:])
 
@@ -174,10 +175,10 @@ class Diff:
         # Note that line_nr counts from _1_ although 0 is possible when
         # inserting lines before everything
         for line_nr in sorted(self._changes):
-            result.extend(self._file[current_line:max(line_nr-1, 0)])
+            result.extend(self._file[current_line:max(line_nr - 1, 0)])
             linediff = self._changes[line_nr]
             if not linediff.delete and not linediff.change and line_nr > 0:
-                result.append(self._file[line_nr-1])
+                result.append(self._file[line_nr - 1])
             elif linediff.change:
                 result.append(linediff.change[1])
 
@@ -198,7 +199,7 @@ class Diff:
         Note that the unified diff is not deterministic and thus not suitable
         for equality comparison.
         """
-        return ''.join(difflib.unified_diff(
+        return ''.join(coala_unified_diff(
             self.original,
             self.modified,
             tofile=self.rename if isinstance(self.rename, str) else ''))
@@ -508,3 +509,68 @@ class Diff:
         :param range: The range to delete.
         """
         self.replace(range, '')
+
+def coala_unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
+                       tofiledate='', n=3, lineterm='\n'):
+    r"""
+    This code is adapted from python's difflib library:
+    https://svn.python.org/projects/python/trunk/Lib/difflib.py
+
+    Compare two sequences of lines; generate the delta as a unified diff.
+
+    Unified diffs are a compact way of showing line changes and a few
+    lines of context.  The number of context lines is set by 'n' which
+    defaults to three.
+
+    By default, the diff control lines (those with ---, +++, or @@) are
+    created with a trailing newline.  This is helpful so that inputs
+    created from file.readlines() result in diffs that are suitable for
+    file.writelines() since both the inputs and outputs have trailing
+    newlines.
+
+    For inputs that do not have trailing newlines, set the lineterm
+    argument to "" so that the output will be uniformly newline free.
+
+    The unidiff format normally has a header for filenames and modification
+    times.  Any or all of these may be specified using strings for
+    'fromfile', 'tofile', 'fromfiledate', and 'tofiledate'.
+    The modification times are normally expressed in the ISO 8601 format.
+
+    If a or b misses a newline at end of file, an additional newline is
+    generated at end of last line, and an extra warning line "\ No newline
+    at end of file" is generated if warn_no_newline_at_end is True, to
+    make the patch program happy.
+    """
+
+    no_newline_at_end_warning = r'\ No newline at end of file'
+    started = False
+    for group in difflib.SequenceMatcher(None, a, b).get_grouped_opcodes(n):
+        if not started:
+            fromdate = '\t%s' % fromfiledate if fromfiledate else ''
+            todate = '\t%s' % tofiledate if tofiledate else ''
+            yield '--- %s%s%s' % (fromfile, fromdate, lineterm)
+            yield '+++ %s%s%s' % (tofile, todate, lineterm)
+            started = True
+        i1, i2, j1, j2 = group[0][
+            1], group[-1][2], group[0][3], group[-1][4]
+        yield "@@ -%d,%d +%d,%d @@%s" % (i1 + 1, i2 - i1,
+                                         j1 + 1, j2 - j1, lineterm)
+        for tag, i1, i2, j1, j2 in group:
+            if tag == 'equal':
+                for line in a[i1:i2]:
+                    yield ' ' + line
+                continue
+            if tag == 'replace' or tag == 'delete':
+                for line in a[i1:i2]:
+                    if not line.endswith(lineterm):
+                        yield '-' + line + lineterm
+                        yield no_newline_at_end_warning + lineterm
+                    else:
+                        yield '-' + line
+            if tag == 'replace' or tag == 'insert':
+                for line in b[j1:j2]:
+                    if not line.endswith(lineterm):
+                        yield '+' + line + lineterm
+                        yield no_newline_at_end_warning + lineterm
+                    else:
+                        yield '+' + line
