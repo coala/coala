@@ -45,8 +45,12 @@ class aspectclass(type):
             list(signature(Documentation).parameters.keys())[1:]})
 
         # search for tastes int the sub-aspectclass
-        subtastes = {name: member for name, member in getmembers(subcls)
-                     if isinstance(member, Taste)}
+        subtastes = {}
+        for name, member in getmembers(subcls):
+            if isinstance(member, Taste):
+                # tell the taste its own name
+                member.name = name
+                subtastes[name] = member
 
         class Sub(subcls, aspectbase, metaclass=aspectclass):
             __module__ = subcls.__module__

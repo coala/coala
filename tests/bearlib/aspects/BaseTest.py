@@ -16,4 +16,4 @@ class AspectBaseTest:
 
     def test_init_needs_aspectclass(self):
         with pytest.raises(AttributeError):
-            aspectbase()
+            aspectbase('py')

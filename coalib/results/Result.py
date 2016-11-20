@@ -3,7 +3,7 @@ from os.path import relpath
 
 from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
-from coalib.bearlib.aspects import Root, aspectbase
+from coalib.bearlib.aspects import aspectbase
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -41,7 +41,7 @@ class Result:
                  debug_msg='',
                  diffs: (dict, None)=None,
                  confidence: int=100,
-                 aspect: aspectbase=Root()):
+                 aspect: (aspectbase, None)=None):
         """
         :param origin:
             Class name or creator object of this object.
@@ -108,7 +108,7 @@ class Result:
                     debug_msg='',
                     diffs: (dict, None)=None,
                     confidence: int=100,
-                    aspect: aspectbase=Root()):
+                    aspect: (aspectbase, None)=None):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.

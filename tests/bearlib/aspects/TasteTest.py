@@ -21,8 +21,8 @@ class TasteTest:
     def test__get__(
             self, SubAspect, SubAspect_tastes, SubAspect_taste_values
     ):
-        using_default_values = SubAspect()
-        using_custom_values = SubAspect(**SubAspect_taste_values)
+        using_default_values = SubAspect('py')
+        using_custom_values = SubAspect('py', **SubAspect_taste_values)
         for name, taste in SubAspect_tastes.items():
             assert getattr(SubAspect, name) is taste
             assert getattr(using_default_values, name) == taste.default

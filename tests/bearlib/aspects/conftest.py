@@ -29,7 +29,8 @@ def SubAspect_tastes():
         'salty': Taste[str](
             'The saltiness', ('high', 'low'), default='low'),
         'sweet': Taste[int](
-            'The sweetness', (1, 23, 45), default=23),
+            'The sweetness', (1, 23, 45), default=23,
+            languages=('py', )),
         'sour': Taste[bool](
             'Is it sour?', (True, False), default=False),
     }

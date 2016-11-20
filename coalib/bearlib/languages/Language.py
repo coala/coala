@@ -88,6 +88,13 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
 
         return type.__new__(mcs, clsname, bases, clsattrs)
 
+    def __hash__(cls):
+        """
+        >>> isinstance(hash(Language), int)
+        True
+        """
+        return type.__hash__(cls)
+
     def __getattr__(cls, item):
         try:
             return next(lang for lang in type(cls).all if item in lang)
@@ -153,22 +160,22 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
                                    for version in versions))
 
     def __gt__(cls, other):
-        return cls() > other
+        return cls is not Language and cls() > other
 
     def __lt__(cls, other):
-        return cls() < other
+        return cls is not Language and cls() < other
 
     def __ge__(cls, other):
-        return cls() >= other
+        return cls is not Language and cls() >= other
 
     def __le__(cls, other):
-        return cls() <= other
+        return cls is not Language and cls() <= other
 
     def __eq__(cls, other):
-        return cls() == other
+        return cls is not Language and cls() == other
 
     def __ne__(cls, other):
-        return cls() != other
+        return cls is not Language and cls() != other
 
 
 class Language(metaclass=LanguageMeta):

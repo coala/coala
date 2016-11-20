@@ -18,9 +18,9 @@ class RootTest:
         assert Root.tastes == {}
 
     def test__eq__(self, RootAspect):
-        assert Root() == Root()
-        assert not Root() == RootAspect()
+        assert Root('py') == Root('py')
+        assert not Root('py') == RootAspect('py')
 
     def test__ne__(self, RootAspect):
-        assert not Root() != Root()
-        assert Root() != RootAspect()
+        assert not Root('py') != Root('py')
+        assert Root('py') != RootAspect('py')

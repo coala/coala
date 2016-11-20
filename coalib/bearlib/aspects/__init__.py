@@ -1,8 +1,8 @@
 from .base import aspectbase
 from .meta import aspectclass
-from .taste import Taste
+from .taste import Taste, TasteError
 
-__all__ = ['Root', 'Taste', 'aspectclass']
+__all__ = ['Root', 'Taste', 'TasteError', 'aspectclass']
 
 
 class Root(aspectbase, metaclass=aspectclass):
@@ -47,20 +47,63 @@ class Root(aspectbase, metaclass=aspectclass):
 
     >>> Formatting.tastes
     {}
-    >>> LineLength.tastes  # +ELLIPSIS
+    >>> LineLength.tastes
     {'max_line_length': <....Taste[int] object at ...>}
 
-    And instanciate the aspect with the values, they will be automatically
+    And instantiate the aspect with the values, they will be automatically
     converted:
 
-    >>> Formatting()  # +ELLIPSIS
+    >>> Formatting('Python')
     <coalib.bearlib.aspects.Root.Formatting object at 0x...>
-    >>> LineLength(max_line_length="100").tastes
+    >>> LineLength('Python', max_line_length="100").tastes
     {'max_line_length': 100}
 
     If no settings are given, the defaults will be taken>
-    >>> LineLength().tastes
+    >>> LineLength('Python').tastes
     {'max_line_length': 80}
+
+    Tastes can also be made available for only specific languages:
+
+    >>> from coalib.bearlib.languages import Language
+    >>> @Language
+    ... class GreaterTrumpScript:
+    ...     pass
+
+    >>> @Formatting.subaspect
+    ... class Greatness:
+    ...     \"""
+    ...     This aspect controls the greatness of a file...
+    ...     \"""
+    ...
+    ...     min_greatness = Taste[int](
+    ...         "Minimum greatness factor needed for a TrumpScript file. "
+    ...         "This is fact.",
+    ...         (1000000, 1000000000, 1000000000000), default=1000000,
+    ...         languages=('GreaterTrumpScript' ,))
+
+    >>> Greatness.tastes
+    {'min_greatness': <....Taste[int] object at ...>}
+    >>> Greatness('GreaterTrumpScript').tastes
+    {'min_greatness': 1000000}
+    >>> Greatness('GreaterTrumpScript', min_greatness=1000000000000).tastes
+    {'min_greatness': 1000000000000}
+
+    >>> Greatness('Python').tastes
+    {}
+
+    >>> Greatness('Python', min_greatness=1000000000)
+    ... # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+      ...
+    coalib.bearlib.aspects.taste.TasteError:
+    Root.Formatting.Greatness.min_greatness is not available ...
+
+    >>> Greatness('Python').min_greatness
+    ... # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+      ...
+    coalib.bearlib.aspects.taste.TasteError:
+    Root.Formatting.Greatness.min_greatness is not available ...
     """
     parent = None
 
