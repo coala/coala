@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from itertools import chain
 from inspect import isclass, getmembers
 import operator
@@ -103,13 +104,25 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
             assert len(args) == 1
             arg = args[0]
 
-            class Sub(Language, arg):
+            class SubLanguageMeta(type(cls)):
+                # Override __getattr__ of the LanguageMeta to get a dict with
+                # the attributes
+
+                def __getattr__(self, item):
+                    try:
+                        return OrderedDict(
+                            (version, self._attributes[item])
+                            for version in self.versions)
+                    except KeyError:
+                        raise AttributeError
+
+            class Sub(cls, metaclass=SubLanguageMeta):
                 __qualname__ = arg.__qualname__
                 versions = tuple(sorted(getattr(arg, 'versions', ())))
                 aliases = tuple(sorted(getattr(arg, 'aliases', ())))
-                attributes = {name: member for name, member in getmembers(arg)
-                              if not name.startswith('_')
-                              and not name in ('versions', 'aliases')}
+                _attributes = {name: member for name, member in getmembers(arg)
+                               if not name.startswith('_')
+                               and not name in ('versions', 'aliases')}
 
             Sub.__name__ = arg.__name__
             type(cls).all.append(Sub)
@@ -168,10 +181,28 @@ class Language(metaclass=LanguageMeta):
     >>> str(Language.TrumpScript(3.4))
     'America is great. 3.4'
 
-    We can see all attributes for the language like this:
+    You can access a dictionary of the attribute values for every version from
+    the class:
 
-    >>> Language.TrumpScript.attributes
-    {'comment_delimiter': '#'}
+    >>> Language.TrumpScript.comment_delimiter
+    OrderedDict([(2.7, '#'), (3.3, '#'), (3.4, '#'), (3.5, '#'), (3.6, '#')])
+
+    Any nonexistent item will of course not be served:
+
+    >>> Language.TrumpScript.unknown_delimiter
+    Traceback (most recent call last):
+     ...
+    AttributeError
+
+    The attributes are not accessible unless you have selected one - and only
+    one - version of your language:
+
+    >>> Language.TrumpScript(3.3, 3.4).comment_delimiter  # +ELLIPSIS
+    Traceback (most recent call last):
+     ...
+    AttributeError: You have to specify ONE version ...
+    >>> Language.TrumpScript(3.3).comment_delimiter
+    '#'
 
     We can specify the version by instantiating the TrumpScript class now:
 
@@ -249,6 +280,12 @@ class Language(metaclass=LanguageMeta):
             self.versions = type(self).versions
         else:
             self.versions = tuple(sorted(versions))
+
+    def __getattr__(self, item):
+        if len(self.versions) > 1:
+            raise AttributeError('You have to specify ONE version of your '
+                                 'language to retrieve attributes for it.')
+        return self._attributes[item]
 
     def __str__(self):
         return '{} {}'.format(type(self).__qualname__,
