@@ -21,6 +21,8 @@ class Root(aspectbase, metaclass=aspectclass):
     ...     A parent aspect for code formatting aspects...
     ...     \"""
 
+    We can now create subaspects like this:
+
     >>> @Formatting.subaspect
     ... class LineLength:
     ...     \"""
@@ -36,8 +38,29 @@ class Root(aspectbase, metaclass=aspectclass):
     ...         "Maximum length allowed for a line.",
     ...         (80, 90, 120), default=80)
 
+    The representation will show the full "path" to the leaf of the tree:
+
     >>> Root.Formatting.LineLength
     <aspectclass 'Root.Formatting.LineLength'>
+
+    We can see, which settings are availables:
+
+    >>> Formatting.tastes
+    {}
+    >>> LineLength.tastes  # +ELLIPSIS
+    {'max_line_length': <....Taste[int] object at ...>}
+
+    And instanciate the aspect with the values, they will be automatically
+    converted:
+
+    >>> Formatting()  # +ELLIPSIS
+    <coalib.bearlib.aspects.Root.Formatting object at 0x...>
+    >>> LineLength(max_line_length="100").tastes
+    {'max_line_length': 100}
+
+    If no settings are given, the defaults will be taken>
+    >>> LineLength().tastes
+    {'max_line_length': 80}
     """
     parent = None
 
