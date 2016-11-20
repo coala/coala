@@ -151,37 +151,37 @@ class Language(metaclass=LanguageMeta):
     You can define a new programming language as follows:
 
     >>> @Language
-    ... class Python:
-    ...     aliases = 'py',
+    ... class TrumpScript:
+    ...     aliases = 'ts',
     ...     versions = 2.7, 3.3, 3.4, 3.5, 3.6
 
     Now we can access the language globally:
 
-    >>> Language.Python
-    <class 'coalib.bearlib.languages.Language.Python'>
+    >>> Language.TrumpScript
+    <class 'coalib.bearlib.languages.Language.TrumpScript'>
 
-    We can specify the version by instantiating the Python class now:
+    We can specify the version by instantiating the TrumpScript class now:
 
-    >>> str(Language.Python(3.6))
-    'Python 3.6'
+    >>> str(Language.TrumpScript(3.6))
+    'TrumpScript 3.6'
 
     We can also parse any user given string to get the instance:
 
-    >>> Language['PY 3.4, 3.6']
-    Python 3.4, 3.6
-    >>> Language['PY 3']
-    Python 3.3, 3.4, 3.5, 3.6
-    >>> Language['PY 1']
+    >>> Language['ts 3.4, 3.6']
+    TrumpScript 3.4, 3.6
+    >>> Language['TS 3']
+    TrumpScript 3.3, 3.4, 3.5, 3.6
+    >>> Language['tS 1']
     Traceback (most recent call last):
      ...
     ValueError: No versions left
 
     Similarly we can get an instance via this syntax:
 
-    >>> Language[Language.Python]
-    Python 2.7, 3.3, 3.4, 3.5, 3.6
-    >>> Language[Language.Python(3.6)]
-    Python 3.6
+    >>> Language[Language.TrumpScript]
+    TrumpScript 2.7, 3.3, 3.4, 3.5, 3.6
+    >>> Language[Language.TrumpScript(3.6)]
+    TrumpScript 3.6
 
     You can simply define a qualname for your language, if it contains special
     characters:
@@ -199,38 +199,39 @@ class Language(metaclass=LanguageMeta):
 
     You can also define ranges of versions of languages:
 
-    >>> (Language.Python > 3.3) <= 3.5
-    Python 3.4, 3.5
+    >>> (Language.TrumpScript > 3.3) <= 3.5
+    TrumpScript 3.4, 3.5
 
-    >>> Language.Python == 3
-    Python 3.3, 3.4, 3.5, 3.6
+    >>> Language.TrumpScript == 3
+    TrumpScript 3.3, 3.4, 3.5, 3.6
 
     Those can be combined by the or operator:
 
-    >>> (Language.Python == 3.6) | (Language.Python == 2)
-    Python 2.7, 3.6
+    >>> (Language.TrumpScript == 3.6) | (Language.TrumpScript == 2)
+    TrumpScript 2.7, 3.6
 
     The `__contains__` operator of the class is defined as well for strings
     and instances. This is case insensitive and aliases are allowed:
 
-    >>> Language.Python(3.6) in Language.Python
+    >>> Language.TrumpScript(3.6) in Language.TrumpScript
     True
-    >>> 'pY 3.6, 3.5' in Language.Python
+    >>> 'ts 3.6, 3.5' in Language.TrumpScript
     True
-    >>> 'Python 2.6' in Language.Python
+    >>> 'TrumpScript 2.6' in Language.TrumpScript
     False
-    >>> 'Python' in Language.Python
+    >>> 'TrumpScript' in Language.TrumpScript
     True
 
     This also works on instances:
 
-    >>> 'pY 3.6, 3.5' in (Language.Python == 3)
+    >>> 'ts 3.6, 3.5' in (Language.TrumpScript == 3)
     True
-    >>> 'pY 3.6, 3.5' in ((Language.Python == 2) | (Language.Python == 3.5))
+    >>> 'ts 3.6,3.5' in ((Language.TrumpScript == 2)
+    ...                  | Language.TrumpScript(3.5))
     False
-    >>> Language.Python(2.7, 3.5) in (Language.Python == 3)
+    >>> Language.TrumpScript(2.7, 3.5) in (Language.TrumpScript == 3)
     False
-    >>> Language.Python(3.5) in (Language.Python == 3)
+    >>> Language.TrumpScript(3.5) in (Language.TrumpScript == 3)
     True
 
     Any undefined language will obviously not be available:
