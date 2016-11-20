@@ -1,5 +1,7 @@
 from coala_utils.decorators import enforce_signature
 
+from coalib.bearlib.languages import Languages
+
 
 class TasteMeta(type):
     """
@@ -9,6 +11,7 @@ class TasteMeta(type):
 
        Taste[int](...)
     """
+
     def __getitem__(cls, _cast_type):
         class Taste(cls):
             cast_type = _cast_type
@@ -28,7 +31,7 @@ class Taste(metaclass=TasteMeta):
 
     @enforce_signature
     def __init__(self, description: str='', suggested_values: tuple=(),
-                 default=None):
+                 default=None, languages: tuple=()):
         """
         No need to specify name an cast type:
 
@@ -40,3 +43,4 @@ class Taste(metaclass=TasteMeta):
         self.description = description
         self.suggested_values = suggested_values
         self.default = default
+        self.languages = Languages(languages)
