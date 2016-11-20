@@ -37,10 +37,6 @@ class Bear(Printer, LogPrinterMixin):
     err(), you are expected to also terminate the bear run-through
     immediately.
 
-    If you need some setup or teardown for your bear, feel free to overwrite
-    the set_up() and tear_down() functions. They will be invoked
-    before/after every run invocation.
-
     Settings are available at all times through self.section.
 
     To indicate which languages your bear supports, just give it the
