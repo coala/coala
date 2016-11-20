@@ -287,7 +287,7 @@ class Language(metaclass=LanguageMeta):
 
     def __contains__(self, item):
         item = Language[item]
-        return (type(self) == type(item)
+        return (type(self) is type(item)
                 and set(item.versions).issubset(set(self.versions)))
 
 
@@ -316,3 +316,30 @@ def limit_versions(language, limit, operator):
     if not versions:
         raise ValueError('No versions left')
     return type(language)(*versions)
+
+
+class Languages(tuple):
+    """
+    A ``tuple``-based container for :class:`coalib.bearlib.languages.Language`
+    instances. It supports language identifiers in any format accepted by
+    ``Language[...]``:
+
+    >>> Languages(['C#', Language.Python == 3])
+    (C# , Python 3.3, 3.4, 3.5, 3.6)
+
+    It provides :meth:`.__contains__` for checking if a given language
+    identifier is included:
+
+    >>> 'Python 2.7, 3.5' in Languages([Language.Python()])
+    True
+    >>> 'Py 3.3' in Languages(['Python 2'])
+    False
+    >>> 'csharp' in Languages(['C#', Language.Python == 3])
+    True
+    """
+
+    def __new__(cls, items):
+        return tuple.__new__(cls, (Language[i] for i in items))
+
+    def __contains__(self, item):
+        return any(item in lang for lang in self)
