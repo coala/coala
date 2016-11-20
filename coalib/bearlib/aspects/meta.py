@@ -1,4 +1,7 @@
 from inspect import getmembers
+from itertools import chain
+
+from coala_utils.decorators import generate_ordering, generate_repr
 
 from .base import aspectbase
 from .docs import Documentation
@@ -59,6 +62,10 @@ class aspectclass(type):
 
             docs = aspectdocs
             _tastes = subtastes
+
+        members = sorted(Sub.tastes)
+        if members:
+            Sub = generate_repr(*members)(generate_ordering(*members)(Sub))
 
         Sub.__name__ = aspectname
         Sub.__qualname__ = '%s.%s' % (cls.__qualname__, aspectname)
