@@ -152,6 +152,7 @@ class Language(metaclass=LanguageMeta):
 
     >>> @Language
     ... class TrumpScript:
+    ...     __qualname__ = "America is great."
     ...     aliases = 'ts',
     ...     versions = 2.7, 3.3, 3.4, 3.5, 3.6
     ...     comment_delimiter = '#'
@@ -159,7 +160,13 @@ class Language(metaclass=LanguageMeta):
     Now we can access the language globally:
 
     >>> Language.TrumpScript
-    <class 'coalib.bearlib.languages.Language.TrumpScript'>
+    <class 'coalib.bearlib.languages.Language.America is great.'>
+
+    As you see, you can use the `__qualname__` property. This will also affect
+    the string representation and work as an implicit alias:
+
+    >>> str(Language.TrumpScript(3.4))
+    'America is great. 3.4'
 
     We can see all attributes for the language like this:
 
@@ -169,16 +176,16 @@ class Language(metaclass=LanguageMeta):
     We can specify the version by instantiating the TrumpScript class now:
 
     >>> str(Language.TrumpScript(3.6))
-    'TrumpScript 3.6'
+    'America is great. 3.6'
 
     We can also parse any user given string to get the instance:
 
     >>> Language['trumpscript']
-    TrumpScript 2.7, 3.3, 3.4, 3.5, 3.6
+    America is great. 2.7, 3.3, 3.4, 3.5, 3.6
     >>> Language['ts 3.4, 3.6']
-    TrumpScript 3.4, 3.6
+    America is great. 3.4, 3.6
     >>> Language['TS 3']
-    TrumpScript 3.3, 3.4, 3.5, 3.6
+    America is great. 3.3, 3.4, 3.5, 3.6
     >>> Language['tS 1']
     Traceback (most recent call last):
      ...
@@ -187,36 +194,22 @@ class Language(metaclass=LanguageMeta):
     Similarly we can get an instance via this syntax:
 
     >>> Language[Language.TrumpScript]
-    TrumpScript 2.7, 3.3, 3.4, 3.5, 3.6
+    America is great. 2.7, 3.3, 3.4, 3.5, 3.6
     >>> Language[Language.TrumpScript(3.6)]
-    TrumpScript 3.6
-
-    You can simply define a qualname for your language, if it contains special
-    characters:
-
-    >>> @Language
-    ... class CPP:
-    ...     __qualname__ = 'C++'
-    ...     aliases = 'CXX',
-    ...     versions = 11, 14, 17
-
-    The qualname will be used for the string representation:
-
-    >>> str(CPP(11))
-    'C++ 11'
+    America is great. 3.6
 
     You can also define ranges of versions of languages:
 
     >>> (Language.TrumpScript > 3.3) <= 3.5
-    TrumpScript 3.4, 3.5
+    America is great. 3.4, 3.5
 
     >>> Language.TrumpScript == 3
-    TrumpScript 3.3, 3.4, 3.5, 3.6
+    America is great. 3.3, 3.4, 3.5, 3.6
 
     Those can be combined by the or operator:
 
     >>> (Language.TrumpScript == 3.6) | (Language.TrumpScript == 2)
-    TrumpScript 2.7, 3.6
+    America is great. 2.7, 3.6
 
     The `__contains__` operator of the class is defined as well for strings
     and instances. This is case insensitive and aliases are allowed:
