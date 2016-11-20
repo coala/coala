@@ -1,5 +1,5 @@
+from coalib.bearlib.languages import Language
 from coalib.results.result_actions.ResultAction import ResultAction
-from coalib.bearlib.languages.LanguageDefinition import LanguageDefinition
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
 from os.path import exists
@@ -26,13 +26,12 @@ class IgnoreResultAction(ResultAction):
         return any(exists(filename) for filename in filenames)
 
     def apply(self, result, original_file_dict, file_diff_dict, language: str,
-              coalang_dir: str=None, no_orig: bool=False):
+              no_orig: bool=False):
         """
         Add ignore comment
         """
-        lang_settings_dict = LanguageDefinition(
-                             language, coalang_dir=coalang_dir)
-        comment_delimiter = lang_settings_dict['comment_delimiter']
+        comment_delimiter = Language[
+            language].get_default_version().comment_delimiter
         ignore_comment = (str(comment_delimiter) + ' Ignore ' + result.origin +
                           '\n')
 
