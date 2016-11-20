@@ -3,6 +3,7 @@ from itertools import chain
 from inspect import isclass, getmembers
 import operator
 import re
+from operator import itemgetter
 
 from coalib.misc.Annotations import typechain
 
@@ -78,6 +79,15 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
      ...
     ValueError: No versions left
     """
+
+    def __new__(mcs, clsname, bases, clsattrs):
+        for base in bases:
+            if issubclass(base, Language) and base is not Language:
+                for name, obj in base._attributes.items():
+                    clsattrs.setdefault(name, obj)
+
+        return type.__new__(mcs, clsname, bases, clsattrs)
+
     def __getattr__(cls, item):
         try:
             return next(lang for lang in type(cls).all if item in lang)
@@ -116,13 +126,17 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
                     except KeyError:
                         raise AttributeError
 
+            forbidden_attributes = list(
+                chain(map(itemgetter(0), getmembers(Language)),
+                      ('versions', 'aliases')))
+
             class Sub(cls, metaclass=SubLanguageMeta):
                 __qualname__ = arg.__qualname__
                 versions = tuple(sorted(getattr(arg, 'versions', ())))
                 aliases = tuple(sorted(getattr(arg, 'aliases', ())))
                 _attributes = {name: member for name, member in getmembers(arg)
                                if not name.startswith('_')
-                               and not name in ('versions', 'aliases')}
+                               and not name in forbidden_attributes}
 
             Sub.__name__ = arg.__name__
             type(cls).all.append(Sub)
@@ -169,6 +183,7 @@ class Language(metaclass=LanguageMeta):
     ...     aliases = 'ts',
     ...     versions = 2.7, 3.3, 3.4, 3.5, 3.6
     ...     comment_delimiter = '#'
+    ...     string_delimiter = {"'": "'"}
 
     From a bear, you can simply parse the user given language string to get
     the instance of the Language you desire:
@@ -202,7 +217,7 @@ class Language(metaclass=LanguageMeta):
     To see which attributes are available, use the ``attributes`` property:
 
     >>> Language.TrumpScript(3.3).attributes
-    ['comment_delimiter']
+    ['comment_delimiter', 'string_delimiter']
 
     You can access a dictionary of the attribute values for every version from
     the class:
@@ -217,9 +232,28 @@ class Language(metaclass=LanguageMeta):
      ...
     AttributeError
 
-    __You now know the most important parts for writing a bear using languages.
+    **You now know the most important parts for writing a bear using languages.
     Read ahead if you want to know more about working with multiple versions of
-    programming languages!__
+    programming languages as well as derivative languages!**
+
+    We can define derivative languages as follows:
+
+    >>> @Language
+    ... class TrumpScriptDerivative(Language.TrumpScript):
+    ...     __qualname__ = 'Shorter'
+    ...     comment_delimiter = '//'
+    ...     keywords = None
+
+    >>> Language.TrumpScriptDerivative()
+    Shorter 2.7, 3.3, 3.4, 3.5, 3.6
+
+    >>> Language.TrumpScriptDerivative().get_default_version().attributes
+    ['comment_delimiter', 'keywords', 'string_delimiter']
+    >>> Language.TrumpScriptDerivative().get_default_version().keywords
+    >>> Language.TrumpScriptDerivative().get_default_version().comment_delimiter
+    '//'
+    >>> Language.TrumpScriptDerivative().get_default_version().string_delimiter
+    {"'": "'"}
 
     We can get an instance via this syntax as well:
 
@@ -336,7 +370,7 @@ class Language(metaclass=LanguageMeta):
         Retrieves the names of all attributes that are available for this
         language.
         """
-        return list(self._attributes.keys())
+        return sorted(self._attributes.keys())
 
     def get_default_version(self):
         """
