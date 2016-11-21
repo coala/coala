@@ -31,7 +31,7 @@ class aspectbase:
         for name, taste in type(self).tastes.items():
             if taste.languages and language not in taste.languages:
                 if name in taste_values:
-                    raise TasteError("%s.%s is not available for %s." % (
+                    raise TasteError('%s.%s is not available for %s.' % (
                         type(self).__qualname__, name, language))
             else:
                 setattr(self, name, taste_values.get(name, taste.default))

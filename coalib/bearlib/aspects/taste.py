@@ -75,7 +75,7 @@ class Taste(metaclass=TasteMeta):
         if obj is not None:
             # ==> access from aspectclass instance
             if self.languages and obj.language not in self.languages:
-                raise TasteError("%s.%s is not available for %s." % (
+                raise TasteError('%s.%s is not available for %s.' % (
                     type(obj).__qualname__, self.name, obj.language))
             return obj.__dict__[self.name]
         # ==> access from aspectclass
