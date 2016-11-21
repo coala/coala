@@ -38,5 +38,7 @@ if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
   pip install -r docs-requirements.txt
 fi
 
+bash .misc/deps.nltk.sh
+
 # gem installations
 gem install ruby

@@ -2,6 +2,7 @@ dependencies:
   cache_directories:
     - ~/.pyenv/versions/3.4.3
     - ~/.pyenv/versions/3.5.1
+    - ~/nltk_data
   pre:
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
     - nvm alias default node
