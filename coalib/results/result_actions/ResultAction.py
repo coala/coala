@@ -58,7 +58,7 @@ class ResultAction:
                                    need to use the return value.
         :param section:            The section where to retrieve the additional
                                    information.
-        :return                    The modified file_diff_dict.
+        :return:                   The modified file_diff_dict.
         """
         params = self.get_metadata().create_params_from_section(section)
         return self.apply(result, original_file_dict, file_diff_dict, **params)
