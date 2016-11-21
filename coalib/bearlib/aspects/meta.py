@@ -1,4 +1,4 @@
-from inspect import getmembers
+from inspect import getmembers, signature
 
 from coala_utils.decorators import generate_repr
 
@@ -41,12 +41,8 @@ class aspectclass(type):
 
         docs = getattr(subcls, 'docs', None)
         aspectdocs = Documentation(subcls.__doc__, **{
-            attr: getattr(docs, attr, '') for attr in [
-                'example',
-                'example_language',
-                'importance_reason',
-                'fix_suggestions',
-            ]})
+            attr: getattr(docs, attr, '') for attr in
+            list(signature(Documentation).parameters.keys())[1:]})
 
         # search for tastes int the sub-aspectclass
         subtastes = {name: member for name, member in getmembers(subcls)
