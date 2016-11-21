@@ -113,7 +113,7 @@ class Result:
         Creates a result with only one SourceRange with the given start and end
         locations.
 
-        origin:
+        :param origin:
             Class name or creator object of this object.
         :param message:
             Message to show with this result.
