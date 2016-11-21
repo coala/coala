@@ -1,7 +1,10 @@
 import logging
 
+from coala_utils.string_processing import escape
+
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.bearlib.languages import Language
+from coalib.settings.Setting import Setting
 
 
 class LanguageDefinition(SectionCreatable):
@@ -23,10 +26,13 @@ class LanguageDefinition(SectionCreatable):
         >>> list(LanguageDefinition("cpp")['extensions'])
         ['.c', '.cpp', '.h', '.hpp']
 
-        For some languages aliases exist, the name is case insensitive:
+        For some languages aliases exist, the name is case insensitive; they
+        will behave just like before and return settings:
 
-        >>> list(LanguageDefinition("C++")['extensions'])
-        ['.c', '.cpp', '.h', '.hpp']
+        >>> dict(LanguageDefinition('C++')['comment_delimiter'])
+        {'//': ''}
+        >>> dict(LanguageDefinition('C++')['string_delimiters'])
+        {'"': '"'}
 
         If no language exists, you will get a ``FileNotFoundError``:
 
@@ -44,6 +50,15 @@ class LanguageDefinition(SectionCreatable):
         Traceback (most recent call last):
          ...
         FileNotFoundError
+
+        If you need a custom language, just go like this:
+
+        >>> @Language
+        ... class MyLittlePony:
+        ...     color = 'green'
+        ...     legs = 5
+        >>> int(LanguageDefinition('mylittlepony')['legs'])
+        5
 
         :param language:           The actual language (e.g. C++).
         :param coalang_dir:        Path to directory with coalang language
@@ -64,7 +79,16 @@ class LanguageDefinition(SectionCreatable):
             raise FileNotFoundError
 
     def __getitem__(self, item):
-        return getattr(self.lang, item)
+        value = getattr(self.lang, item)
+        if isinstance(value, (list, tuple)):
+            value = Setting(item, ', '.join(escape(val, ',') for val in value))
+        elif isinstance(value, dict):
+            value = Setting(item, ', '.join(
+                escape(key, ':,') + ': ' + escape(val, ':,')
+                for key, val in value.items()))
+        else:
+            value = Setting(item, str(value))
+        return value
 
     def __contains__(self, item):
         return item in self.lang.attributes
