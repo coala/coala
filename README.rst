@@ -190,6 +190,7 @@ Awards
 
 .. image:: http://www.yegor256.com/images/award/2016/winner-sils.png
    :alt: Awards - Yegor256 2016 Winner
+
 -----
 
 ================
