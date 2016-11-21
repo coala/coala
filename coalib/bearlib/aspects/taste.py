@@ -40,7 +40,7 @@ class Taste(metaclass=TasteMeta):
     ...     (True, False), default=False,
     ...     languages=('CSharp', )
     ... ).languages
-    (C# ,)
+    (C#,)
 
     If no `languages` are given, they will be available for any language.
     See :class:`coalib.bearlib.aspectclasses.Root` for further usage.

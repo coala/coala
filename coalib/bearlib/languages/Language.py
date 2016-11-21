@@ -339,8 +339,10 @@ class Language(metaclass=LanguageMeta):
         return self._attributes[item]
 
     def __str__(self):
-        return '{} {}'.format(type(self).__qualname__,
-                              ', '.join(map(str, self.versions)))
+        result = type(self).__qualname__
+        if self.versions:
+            result += ' ' + ', '.join(map(str, self.versions))
+        return result
 
     def __repr__(self):
         return str(self)
@@ -424,7 +426,7 @@ class Languages(tuple):
     ``Language[...]``:
 
     >>> Languages(['C#', Language.Python == 3])
-    (C# , Python 3.3, 3.4, 3.5, 3.6)
+    (C#, Python 3.3, 3.4, 3.5, 3.6)
 
     It provides :meth:`.__contains__` for checking if a given language
     identifier is included:
