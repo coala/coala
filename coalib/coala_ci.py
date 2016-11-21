@@ -1,18 +1,17 @@
 import logging
-import subprocess
 import sys
+
+from coalib.coala import main as coala_main
 
 
 def main():
     logging.warning('Use of `coala-ci` binary is deprecated, use '
                     '`coala --non-interactive` instead.')
 
-    args = ['coala', '--non-interactive']
+    sys.argv.append('--non-interactive')
 
-    args += sys.argv[1:]
-
-    return subprocess.call(args, shell=True)
+    return coala_main()
 
 
 if __name__ == '__main__':  # pragma: no cover
-    main()
+    sys.exit(main())

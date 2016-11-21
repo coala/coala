@@ -1,18 +1,17 @@
 import logging
-import subprocess
 import sys
+
+from coalib.coala import main as coala_main
 
 
 def main():
     logging.warning('Use of `coala-json` binary is deprecated, use '
                     'coala --json` instead.')
 
-    args = ['coala', '--json']
+    sys.argv.append('--json')
 
-    args += sys.argv[1:]
-
-    return subprocess.call(args, shell=True)
+    return coala_main()
 
 
 if __name__ == '__main__':  # pragma: no cover
-    main()
+    sys.exit(main())
