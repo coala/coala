@@ -80,7 +80,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
     mode_group = arg_parser.add_argument_group('Mode')
 
     mode_group.add_argument(
-        '--non-interactive', const=True, action='store_const',
+        '-C', '--non-interactive', const=True, action='store_const',
         help='run coala in non interactive mode')
 
     mode_group.add_argument(
