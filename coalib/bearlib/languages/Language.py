@@ -120,6 +120,9 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         if cls is Language:
             assert len(args) == 1
             arg = args[0]
+            assert isclass(arg), \
+                'This decorator is made for classes. Did you mean to use ' \
+                '`Language[%s]`?' % (repr(arg[0]),)
 
             class SubLanguageMeta(type(cls)):
                 # Override __getattr__ of the LanguageMeta to get a dict with
