@@ -3,8 +3,8 @@ coala 0.9.0
 
 Command Line Interface Changes:
 
-- ``coala-ci`` and ``coala-json`` have been merged into the main binary. You
-  can now use ``coala --non-interactive`` and ``coala --json`` respectively.
+- ``coala-ci`` and ``coala-json`` have been deprecated. You can now use
+  ``coala --non-interactive`` and ``coala --json`` respectively.
 - Multiple patches within one line, even from different bears, can be
   automatically merged by coala.
 - ``coala`` returns the exitcode 2 when not passing any ``--bears`` or
