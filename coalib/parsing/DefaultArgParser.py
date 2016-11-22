@@ -89,7 +89,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     mode_group.add_argument(
         '--format', const=True, nargs='?', metavar='STR',
-        help='mode in which coala will display output as custom format string')
+        help='output results with a custom format string, e.g. '
+             '"Message: {message}"; possible placeholders: '
+             'id, origin, file, line, end_line, column, end_column, '
+             'severity, severity_str, message')
 
     config_group = arg_parser.add_argument_group('Configuration')
 

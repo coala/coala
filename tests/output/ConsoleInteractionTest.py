@@ -773,6 +773,15 @@ class PrintFormattedResultsTest(unittest.TestCase):
                                     None)
             self.assertRegex(stdout.getvalue(), expected_string)
 
+        self.section.append(Setting('format', 'True'))
+        with retrieve_stdout() as stdout:
+            print_results_formatted(self.logger,
+                                    self.section,
+                                    [Result('1', '2')],
+                                    None,
+                                    None)
+            self.assertRegex(stdout.getvalue(), expected_string)
+
     def test_multiple_ranges(self):
         expected_string = (
             'id:-?[0-9]+:origin:1:.*file:.*another_file:line:5:'
@@ -792,7 +801,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
             self.assertRegex(stdout.getvalue(), expected_string)
 
     def test_bad_format(self):
-        self.section.append(Setting('format_str', '{nonexistant}'))
+        self.section.append(Setting('format', '{nonexistant}'))
         print_results_formatted(self.logger,
                                 self.section,
                                 [Result('1', '2')],
@@ -802,7 +811,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
                          '.*Unable to print.*')
 
     def test_good_format(self):
-        self.section.append(Setting('format_str', '{origin}'))
+        self.section.append(Setting('format', '{origin}'))
         with retrieve_stdout() as stdout:
             print_results_formatted(self.logger,
                                     self.section,
@@ -812,7 +821,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
             self.assertEqual(stdout.getvalue(), '1\n')
 
     def test_empty_list(self):
-        self.section.append(Setting('format_str', '{origin}'))
+        self.section.append(Setting('format', '{origin}'))
         # Shouldn't attempt to format the string None and will fail badly if
         # its done wrong.
         print_results_formatted(None,

@@ -282,11 +282,15 @@ def print_results_formatted(log_printer,
                             section,
                             result_list,
                             *args):
-    format_str = str(section.get(
-        'format_str',
-        'id:{id}:origin:{origin}:file:{file}:line:{line}:column:'
-        '{column}:end_line:{end_line}:end_column:{end_column}:severity:'
-        '{severity}:severity_str:{severity_str}:message:{message}'))
+    default_format = ('id:{id}:origin:{origin}:file:{file}:line:{line}:'
+                      'column:{column}:end_line:{end_line}:end_column:'
+                      '{end_column}:severity:{severity}:severity_str:'
+                      '{severity_str}:message:{message}')
+    format_str = str(section.get('format', default_format))
+
+    if format_str == 'True':
+        format_str = default_format
+
     for result in result_list:
         severity_str = RESULT_SEVERITY.__str__(result.severity)
         try:
