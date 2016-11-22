@@ -84,6 +84,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='run coala in non interactive mode')
 
     mode_group.add_argument(
+        '--ci', action='store_const', dest='non_interactive', const=True,
+        help='continuous integration run, alias for `--non-interactive`')
+
+    mode_group.add_argument(
         '--json', const=True, action='store_const',
         help='mode in which coala will display output as json')
 
