@@ -1,5 +1,58 @@
-coala 0.9.0
-===========
+coala 0.9.0 - GlobalBear
+========================
+
+::
+
+                       __
+                 o#'9MMHb':'-,o,
+              .oH":HH$' "' ' -*R&o,
+             dMMM*""'`'      .oM"HM?.
+           ,MMM'          "HLbd< ?&H\
+          .:MH ."\          ` MM  MM&b
+         . "*H    -        &MMMMMMMMMH:
+         .    dboo        MMMMMMMMMMMM.
+         .   dMMMMMMb      *MMMMMMMMMP.
+         .    MMMMMMMP        *MMMMMP .
+              `#MMMMM           MM6P ,
+          '    `MMMP"           HM*`,
+           '    :MM             .- ,
+            '.   `#?..  .       ..'
+               -.   .         .-
+                 ''-.oo,oo.-''
+
+For this release only we had `58 different contributors
+<http://pastebin.com/raw/PpdZm7yL>`_ from all around the globe contributing way
+over 200 commits over 2.5 months to coala.
+
+**The name of this release is GlobalBear** to honour our `GlobalBear` class and
+leave a statement on how global the community grows: gone are the days when we
+visit conferences and we have to explain the project to all the people. More
+and more people know the project before we meet them and this is great! This is
+a huge step in our conquest to take over the world!
+
+The `GlobalBear` class serves our users by providing project wide "global"
+analysis. This release it will probably make its last appearance because it
+will be deprecated in favour of a `more sophisticated concept
+<https://github.com/coala/cEPs/blob/master/cEP-0002.md>`_ in the near future.
+
+We have also worked a lot towards building our dream of **letting users declare
+code analysis configuration completely language independently**: to take a
+sneak peek at what we want to do, `check this out
+<https://github.com/coala/cEPs/blob/master/cEP-0005.md>`_. You will see that
+the first aspects are already in our source code and that bears can already
+associate results with them so future versions of coala will be able to tell
+the user a plethora of facts around the type of issue pointed out.
+
+**For users**, we have added a lot of usability improvements as well as for example
+the ability to merge patches within one line: if you previously had to run
+coala multiple times because of patch conflicts, this is likely not the case
+anymore!
+
+**As a Bear writer** you now have access to our ``Language`` facilities: they
+will give you facts about programming languages that you analyse so you can
+build truly language independent bears. Also, you now can use
+http://api.coala.io/ to get more information about our classes and functions
+you work with.
 
 Command Line Interface Changes:
 
