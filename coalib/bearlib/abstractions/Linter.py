@@ -700,7 +700,7 @@ def linter(executable: str,
         mapped **case-insensitive**!
 
         - ``RESULT_SEVERITY.MAJOR``: Mapped by ``critical``, ``c``,
-          ``fatal``, ``fail``, ``f``,``error``, ``err`` or ``e``.
+          ``fatal``, ``fail``, ``f``, ``error``, ``err`` or ``e``.
         - ``RESULT_SEVERITY.NORMAL``: Mapped by ``warning``, ``warn`` or ``w``.
         - ``RESULT_SEVERITY.INFO`: Mapped by ``information``, ``info``, ``i``,
           ``note`` or ``suggestion``.
