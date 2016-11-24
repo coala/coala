@@ -1,4 +1,3 @@
-import copy
 import hashlib
 import os
 import pickle
@@ -143,7 +142,7 @@ def get_settings_hash(sections,
     settings = []
     for section in sections:
         if section in targets or targets == []:
-            section_copy = copy.deepcopy(sections[section])
+            section_copy = sections[section].copy()
             for setting in ignore_settings:
                 if setting in section_copy:
                     section_copy.delete_setting(setting)
