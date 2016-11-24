@@ -356,11 +356,11 @@ class Bear(Printer, LogPrinterMixin):
         >>> from os import remove
         >>> if exists(join(bear.data_dir, "a_file")):
         ...     remove(join(bear.data_dir, "a_file"))
-        >>> file = bear.download_cached_file("http://gitmate.com/", "a_file")
+        >>> file = bear.download_cached_file("https://github.com/", "a_file")
 
         If we download it again, it'll be much faster as no download occurs:
 
-        >>> newfile = bear.download_cached_file("http://gitmate.com/", "a_file")
+        >>> newfile = bear.download_cached_file("https://github.com/", "a_file")
         >>> newfile == file
         True
 
