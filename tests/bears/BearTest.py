@@ -1,6 +1,7 @@
 import multiprocessing
 import unittest
-from os.path import abspath
+from os.path import abspath, join
+import shutil
 
 from coalib.bears.Bear import Bear
 from coalib.results.Result import Result
@@ -179,3 +180,14 @@ class BearTest(unittest.TestCase):
         result = bear.new_result('test message', '/tmp/testy')
         expected = Result.from_values(bear, 'test message', '/tmp/testy')
         self.assertEqual(result, expected)
+
+    def test_download_cached_file(self):
+        url = 'https://google.com'
+        filename = 'google.html'
+        uut = TestBear(self.settings, None)
+        result_filename = uut.download_cached_file(url, filename)
+        expected_filename = join(uut.data_dir, filename)
+        self.assertEqual(result_filename, expected_filename)
+        result_filename = uut.download_cached_file(url, filename)
+        self.assertEqual(result_filename, expected_filename)
+        shutil.rmtree(uut.data_dir)
