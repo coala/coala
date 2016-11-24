@@ -144,8 +144,11 @@ def get_settings_hash(sections,
         if section in targets or targets == []:
             section_copy = sections[section].copy()
             for setting in ignore_settings:
-                if setting in section_copy:
+                try:
+                    section_copy.__getitem__(setting, ignore_defaults=True)
                     section_copy.delete_setting(setting)
+                except IndexError:
+                    continue
             settings.append(str(section_copy))
 
     return hash_id(str(settings))
