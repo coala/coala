@@ -8,6 +8,7 @@ assert_supported_version()
 
 import datetime
 import locale
+import platform
 import sys
 from os import getenv
 from subprocess import call
@@ -26,7 +27,8 @@ except (ValueError, UnicodeError):
 class BuildPyCommand(setuptools.command.build_py.build_py):
 
     def run(self):
-        self.run_command('build_manpage')
+        if platform.system() != 'Windows':
+            self.run_command('build_manpage')
         setuptools.command.build_py.build_py.run(self)
 
 
@@ -71,7 +73,10 @@ with open('README.rst') as readme:
 
 
 if __name__ == '__main__':
-    data_files = [('.', ['coala.1'])]
+    if platform.system() != 'Windows':
+        data_files = [('.', ['coala.1'])]
+    else:
+        data_files = [('.', [])]
 
     setup(name='coala',
           version=VERSION,
