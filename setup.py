@@ -43,7 +43,7 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
     apidoc_command = (
         'sphinx-apidoc', '-f', '-o', 'docs', '--no-toc', 'coalib'
     )
-    doc_command = ('make', '-C', 'docs', 'html')
+    doc_command = ('make', '-C', 'docs', 'html', 'SPHINXOPTS=-W')
 
     def run(self):
         call(self.apidoc_command)

@@ -23,5 +23,4 @@ test:
     - bash .misc/deploy.coverage.sh:
         parallel: true
     - make -C docs clean
-    - sphinx-apidoc -f -o docs --no-toc coalib
-    - make -C docs html SPHINXOPTS=-W
+    - python setup.py docs
