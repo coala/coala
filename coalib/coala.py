@@ -31,7 +31,8 @@ def main():
 
         # Defer imports so if e.g. --help is called they won't be run
         from coalib.coala_modes import (
-            mode_format, mode_json, mode_non_interactive, mode_normal)
+            mode_format, mode_json, mode_non_interactive, mode_normal,
+            mode_stdin)
         from coalib.output.ConsoleInteraction import (
             show_bears, show_language_bears_capabilities)
 
@@ -76,6 +77,9 @@ def main():
 
     if args.format:
         return mode_format()
+
+    if args.stdin:
+        return mode_stdin(console_printer, log_printer)
 
     return mode_normal(console_printer, log_printer)
 

@@ -92,3 +92,36 @@ def mode_format():
     _, exitcode, _ = run_coala(
             print_results=print_results_formatted)
     return exitcode
+
+
+def mode_stdin(console_printer, log_printer):
+    import functools
+    import sys
+
+    from coalib.coala_main import run_coala
+    from coalib.output.ConsoleInteraction import (
+        acquire_settings, nothing_done,
+        print_results_no_input, print_section_beginning)
+    from coalib.misc.ContextManagers import make_temp
+
+    with make_temp() as tmp_file:
+        with open(tmp_file, 'w') as tmp:
+            for line in sys.stdin:
+                tmp.write(line)
+        arg_list = sys.argv[1:] + ['-I',
+                                   '--files', tmp_file,
+                                   '--non-interactive']
+
+        partial_print_sec_beg = functools.partial(
+            print_section_beginning,
+            console_printer)
+        results, exitcode, _ = run_coala(
+            print_results=print_results_no_input,
+            acquire_settings=acquire_settings,
+            print_section_beginning=partial_print_sec_beg,
+            nothing_done=nothing_done,
+            console_printer=console_printer,
+            force_show_patch=True,
+            arg_list=arg_list)
+
+        return exitcode
