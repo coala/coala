@@ -1,6 +1,6 @@
 import multiprocessing
 import unittest
-from os.path import abspath, join
+from os.path import abspath, isfile, join, getmtime
 import shutil
 
 from coalib.bears.Bear import Bear
@@ -31,6 +31,9 @@ class TestBear(Bear):
         self.print('set', 'up', delimiter='=')
         self.err('teardown')
         self.err()
+
+    def tear_down(self):
+        shutil.rmtree(self.data_dir)
 
 
 class TypedTestBear(Bear):
@@ -185,9 +188,12 @@ class BearTest(unittest.TestCase):
         url = 'https://google.com'
         filename = 'google.html'
         uut = TestBear(self.settings, None)
-        result_filename = uut.download_cached_file(url, filename)
+        self.assertFalse(isfile(join(uut.data_dir, filename)))
         expected_filename = join(uut.data_dir, filename)
-        self.assertEqual(result_filename, expected_filename)
         result_filename = uut.download_cached_file(url, filename)
         self.assertEqual(result_filename, expected_filename)
-        shutil.rmtree(uut.data_dir)
+        expected_time = getmtime(join(uut.data_dir, filename))
+        result_filename = uut.download_cached_file(url, filename)
+        self.assertEqual(result_filename, expected_filename)
+        result_time = getmtime(join(uut.data_dir, filename))
+        self.assertEqual(result_time, expected_time)
