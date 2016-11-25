@@ -151,10 +151,13 @@ def autoapply_actions(results,
                                         file_dict,
                                         file_diff_dict,
                                         section)
-            log_printer.info('Applied {!r} on {} from {!r}.'.format(
-                action.get_metadata().name,
-                result.location_repr(),
-                result.origin))
+            if not (
+                    section.get('non_interactive', False) and
+                    action.get_metadata().name == 'ShowPatchAction'):
+                log_printer.info('Applied {!r} on {} from {!r}.'.format(
+                    action.get_metadata().name,
+                    result.location_repr(),
+                    result.origin))
         except Exception as ex:
             not_processed_results.append(result)
             log_printer.log_exception(

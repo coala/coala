@@ -67,7 +67,6 @@ class coalaCITest(unittest.TestCase):
                 '-b', 'SpaceConsistencyTestBear',
                 '--settings', 'use_spaces=True')
             self.assertIn('Line contains ', output)  # Result message is shown
-            self.assertIn("Applied 'ShowPatchAction'", output)
             self.assertEqual(retval, 5,
                              'coala-ci must return exitcode 5 when it '
                              'autofixes the code.')
