@@ -4,7 +4,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.ContextManagers import simulate_console_inputs
+from coala_utils.ContextManagers import simulate_console_inputs
 from coalib.output.ConsoleInteraction import acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section

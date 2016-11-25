@@ -6,7 +6,7 @@ import pytest
 
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
-from coalib.misc.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

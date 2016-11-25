@@ -4,7 +4,7 @@ import sys
 import unittest
 
 from coalib import coala, coala_format
-from coalib.misc.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file
 from tests.TestUtilities import bear_test_module, execute_coala
 
 

@@ -1,7 +1,7 @@
 import unittest
 from os.path import exists
 
-from coalib.misc.ContextManagers import make_temp
+from coala_utils.ContextManagers import make_temp
 from coalib.results.Result import Result
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 

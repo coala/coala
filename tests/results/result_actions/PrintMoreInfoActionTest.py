@@ -1,6 +1,6 @@
 import unittest
 
-from coalib.misc.ContextManagers import retrieve_stdout
+from coala_utils.ContextManagers import retrieve_stdout
 from coalib.results.Result import Result
 from coalib.results.result_actions.PrintMoreInfoAction import (
     PrintMoreInfoAction)

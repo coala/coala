@@ -3,7 +3,7 @@ import os
 import sys
 import unittest.mock
 
-from coalib.misc.ContextManagers import retrieve_stdout, retrieve_stderr
+from coala_utils.ContextManagers import retrieve_stdout, retrieve_stderr
 
 
 def execute_coala(func, binary, *args, stdout_only=False):

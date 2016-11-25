@@ -1,7 +1,7 @@
 import queue
 import unittest
 
-from coalib.misc.ContextManagers import retrieve_stdout
+from coala_utils.ContextManagers import retrieve_stdout
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.LogPrinterThread import LogPrinterThread
 

@@ -2,7 +2,7 @@ import unittest
 from os.path import relpath
 
 from coalib.results.SourcePosition import SourcePosition
-from coalib.misc.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file
 
 
 class SourcePositionTest(unittest.TestCase):

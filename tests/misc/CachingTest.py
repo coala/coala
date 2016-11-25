@@ -9,8 +9,8 @@ from coalib.misc.Caching import FileCache
 from coalib.misc.CachingUtilities import pickle_load, pickle_dump
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import coala
-from coalib.misc.ContextManagers import prepare_file
-from coalib.misc.ContextManagers import simulate_console_inputs
+from coala_utils.ContextManagers import prepare_file
+from coala_utils.ContextManagers import simulate_console_inputs
 from tests.TestUtilities import execute_coala, bear_test_module
 
 

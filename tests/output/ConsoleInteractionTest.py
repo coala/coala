@@ -9,7 +9,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.Bear import Bear
-from coalib.misc.ContextManagers import (
+from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,

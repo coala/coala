@@ -1,7 +1,7 @@
 import unittest
 from os.path import join
 
-from coalib.misc.ContextManagers import retrieve_stdout
+from coala_utils.ContextManagers import retrieve_stdout
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction

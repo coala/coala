@@ -8,7 +8,7 @@ from pyprint.NullPrinter import NullPrinter
 import pytest
 
 from coalib.misc import Constants
-from coalib.misc.ContextManagers import make_temp, change_directory
+from coala_utils.ContextManagers import make_temp, change_directory
 from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (

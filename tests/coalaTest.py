@@ -6,7 +6,7 @@ import unittest.mock
 from pkg_resources import VersionConflict
 
 from coalib import coala
-from coalib.misc.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file
 from tests.TestUtilities import execute_coala, bear_test_module
 
 
