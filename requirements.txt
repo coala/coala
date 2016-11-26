@@ -1,6 +1,6 @@
 PyPrint~=0.2.5
 Pygments~=2.1
-setuptools>=19.2
+setuptools~=28.8.0
 # Do *not* use 0.3 which is not backwards compatible to common clang versions
 libclang-py3~=0.2.0
 appdirs~=1.4
