@@ -13,7 +13,7 @@ test:
   override:
     - bash .misc/tests.sh:
         parallel: true
-    - python setup.py install:
+    - python3 setup.py install:
         parallel: true
     - pip install coala-bears colorama==0.3.6 --pre -U:
         parallel: true
@@ -23,4 +23,4 @@ test:
     - bash .misc/deploy.coverage.sh:
         parallel: true
     - make -C docs clean
-    - python setup.py docs
+    - python3 setup.py docs
