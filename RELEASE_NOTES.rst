@@ -1,3 +1,19 @@
+coala 0.9.1
+===========
+
+This bugfix release addressed the following issues:
+
+- A few issues interfereing with the coala docker image builds have been fixed 
+  allowing the image to be updated to coala 0.9
+  `Issue #3110 <https://github.com/coala/coala/issues/3110>`_
+  `Issue #3075 <https://github.com/coala/coala/issues/3075>`_
+- Failing windows developer builds caused by a setuptools update have been hotfixed 
+  by pinning the depedency back to the last known good version. This only affects developers
+  or people who install from source on windows.
+  `PR #3119 <https://github.com/coala/coala/pull/3119>`_
+- The requirements list was updated to use properly compatible requirements.
+  `PR #3114 <https://github.com/coala/coala/pull/3114>`_
+
 coala 0.9.0 - GlobalBear
 ========================
 
