@@ -240,7 +240,7 @@ License
 
 .. |Windows| image:: https://img.shields.io/badge/platform-Windows-brightgreen.svg
 .. |Linux| image:: https://img.shields.io/badge/platform-Linux-brightgreen.svg
-.. |Stable| image:: https://img.shields.io/badge/latest%20stable-0.8.1-green.svg
+.. |Stable| image:: https://img.shields.io/badge/latest%20stable-0.9.0-green.svg
 .. |PyPI| image:: https://img.shields.io/pypi/pyversions/coala.svg
    :target: https://pypi.python.org/pypi/coala
 .. |Linux Build Status| image:: https://img.shields.io/circleci/project/coala/coala/master.svg?label=linux%20build
