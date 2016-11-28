@@ -1,5 +1,5 @@
 coverage~=4.0
-pytest~=2.8
+pytest~=3.0
 pytest-cov~=2.2
 pytest-env~=0.6.0
 pytest-mock~=1.1
