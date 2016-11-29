@@ -5,4 +5,5 @@ colorlog~=2.7
 libclang-py3~=0.2.0
 Pygments~=2.1
 PyPrint~=0.2.5
+requests~=2.12.0
 setuptools>=19.2
