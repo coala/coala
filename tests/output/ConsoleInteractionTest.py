@@ -830,3 +830,9 @@ class PrintFormattedResultsTest(unittest.TestCase):
                                 None,
                                 None,
                                 None)
+
+    def test_good_value(self):
+        print_results_formatted(self.logger, self.section, [
+                                Result('1', '2')], None, None)
+        self.assertRegex(''.join(log.message for log in self.logger.logs),
+                         '.*There is a problem.*')
