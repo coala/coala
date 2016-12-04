@@ -136,7 +136,7 @@ Example:
     https://wiki.gnome.org/Git/CommitMessages
 
 More Examples
--------------
+~~~~~~~~~~~~~
 
 Example 1 (fixed bug):
 ::
