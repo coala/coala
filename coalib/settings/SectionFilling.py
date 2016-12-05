@@ -71,6 +71,10 @@ def fill_section(section, acquire_settings, log_printer, bears):
     prel_needed_settings = {}
     for bear in bears:
         needed = bear.get_non_optional_settings()
+        # FIXME: See https://github.com/coala/coala/issues/3149
+        for bear_dep in bear.BEAR_DEPS:
+            needed.update(bear_dep.get_non_optional_settings())
+
         for key in needed:
             if key in prel_needed_settings:
                 prel_needed_settings[key].append(bear.name)
