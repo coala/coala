@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import logging
 
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, filter_section_bears_by_languages)
@@ -153,7 +154,9 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
             bool(cli_sections['default'].get('find_config', 'False')) and
             str(cli_sections['default'].get('config')) == ''):
         cli_sections['default'].add_or_create_setting(
-            Setting('config', re.escape(find_user_config(os.getcwd()))))
+            Setting('config',
+                    re.escape(find_user_config(os.getcwd())),
+                    from_cli=True))
 
     targets = []
     # We don't want to store targets argument back to file, thus remove it
@@ -190,9 +193,16 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
 
         sections = merge_section_dicts(sections, cli_sections)
 
-    for section in sections:
-        if section != 'default':
-            sections[section].defaults = sections['default']
+    for name, section in list(sections.items()):
+        section.set_default_section(sections)
+        if name == 'default' and not all(
+                setting.from_cli for setting in section.contents.values()):
+            logging.warning('Implicit \'Default\' section inheritance is '
+                            'deprecated. It will be removed soon. To silence '
+                            'this warning remove settings in the \'Default\' '
+                            'section from your coafile. You can use dots to '
+                            'specify inheritance: the section \'all.python\' '
+                            'will inherit all settings from \'all\'.')
 
     str_log_level = str(sections['default'].get('log_level', '')).upper()
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,

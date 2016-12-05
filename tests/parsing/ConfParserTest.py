@@ -88,14 +88,7 @@ class ConfParserTest(unittest.TestCase):
             ('comment1', '# just a omment'),
             ('comment2', '# just a omment'),
             ('lastone', 'val'),
-            ('comment3', ''),
-            ('a_default', 'val'),
-            ('comment0', '# do you know that thats a comment'),
-            ('test', 'content'),
-            ('t', ''),
-            ('escaped_=equal', 'escaped_#hash'),
-            ('escaped_\\backslash', 'escaped_ space'),
-            ('escaped_,comma', 'escaped_.dot')])
+            ('comment3', '')])
 
         # Pop off the default section.
         self.sections.popitem(last=False)
@@ -116,15 +109,7 @@ class ConfParserTest(unittest.TestCase):
             ('a', 'a, b, c'),
             ('b', 'a, ,, d'),
             ('c', ',,,'),
-            ('comment4', ''),
-            ('a_default', 'val'),
-            ('another', 'val'),
-            ('comment0', '# do you know that thats a comment'),
-            ('test', 'content'),
-            ('t', ''),
-            ('escaped_=equal', 'escaped_#hash'),
-            ('escaped_\\backslash', 'escaped_ space'),
-            ('escaped_,comma', 'escaped_.dot')])
+            ('comment4', '')])
 
         # Pop off the default and makefiles section.
         self.sections.popitem(last=False)

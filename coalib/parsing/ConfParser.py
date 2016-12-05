@@ -63,8 +63,7 @@ class ConfParser:
         if not create_if_not_exists:
             raise IndexError
 
-        retval = self.sections[key] = Section(str(name),
-                                              self.sections['default'])
+        retval = self.sections[key] = Section(str(name))
         return retval
 
     @staticmethod

@@ -3,8 +3,10 @@ import tempfile
 import unittest
 
 from coalib.output.ConfWriter import ConfWriter
-from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
+from coalib.settings.ConfigurationGathering import load_configuration
+from coalib.output.printers.LogPrinter import LogPrinter
+from coala_utils.string_processing import escape
 
 
 class ConfWriterTest(unittest.TestCase):
@@ -33,7 +35,7 @@ class ConfWriterTest(unittest.TestCase):
         with open(self.file, 'w', encoding='utf-8') as file:
             file.write(self.example_file)
 
-        self.conf_parser = ConfParser()
+        self.log_printer = LogPrinter()
         self.write_file_name = os.path.join(tempfile.gettempdir(),
                                             'ConfWriterTestFile')
         self.uut = ConfWriter(self.write_file_name)
@@ -66,7 +68,10 @@ class ConfWriterTest(unittest.TestCase):
                        'key\\,comma = value,comma\n',
                        'key\\#hash = value\\#hash\n',
                        'key\\.dot = value.dot\n']
-        self.uut.write_sections(self.conf_parser.parse(self.file))
+        sections = load_configuration(['-c', escape(self.file, '\\')],
+                                      self.log_printer)[0]
+        del sections['default'].contents['config']
+        self.uut.write_sections(sections)
         self.uut.close()
 
         with open(self.write_file_name, 'r') as f:

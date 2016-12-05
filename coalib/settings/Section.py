@@ -253,3 +253,34 @@ class Section:
         :param key: The key of the setting to be deleted
         """
         del self.contents[key]
+
+    def set_default_section(self, sections, section_name=None):
+        """
+        Find and set the defaults of a section from a dictionary of sections.
+        The defaults are found on the basis of '.' in section names:
+
+        >>> sections = {'all': Section('all')}
+        >>> section = Section('all.python')
+        >>> section.set_default_section(sections)
+        >>> section.defaults.name
+        'all'
+        >>> section = Section('all.python.syntax')
+        >>> section.set_default_section(sections)
+        >>> section.defaults.name
+        'all'
+
+        :param sections:     A dictionary of sections.
+        :param section_name: Optional section name argument to find the default
+                             section for. If not given then use member section
+                             name.
+        """
+        default_section = '.'.join((section_name or self.name).split('.')[:-1])
+
+        if default_section:
+            if default_section in sections:
+                self.defaults = sections[default_section]
+            else:
+                self.set_default_section(sections, default_section)
+        elif 'default' in sections and self.name.lower() != 'default':
+            # Implicit "default" section inheritance
+            self.defaults = sections['default']

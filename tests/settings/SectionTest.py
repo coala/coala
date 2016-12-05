@@ -185,3 +185,25 @@ class SectionTest(unittest.TestCase):
         root = get_config_directory(section)
         path = os.path.join(glob_escape(root), glob_escape('test2 (1)'), '**')
         self.assertIn(path, section.bear_dirs())
+
+    def test_set_default_section(self):
+        section = Section('section')
+
+        section.set_default_section({})
+        self.assertIsNone(section.defaults)
+
+        sections = {'default': Section('default')}
+        section.set_default_section(sections)
+        self.assertEqual(section.defaults, sections['default'])
+
+        sections = {'all': Section('all'), 'all.python': Section('all.python')}
+        sections['all.python'].set_default_section(sections)
+        self.assertEqual(sections['all.python'].defaults, sections['all'])
+        sections['all.python.codestyle'] = Section('all.python.codestyle')
+        sections['all.python.codestyle'].set_default_section(sections)
+        self.assertEqual(sections['all.python.codestyle'].defaults,
+                         sections['all.python'])
+        sections['all.c.codestyle'] = Section('all.c.codestyle')
+        sections['all.c.codestyle'].set_default_section(sections)
+        self.assertEqual(sections['all.c.codestyle'].defaults,
+                         sections['all'])
