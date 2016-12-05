@@ -322,7 +322,7 @@ class Language(metaclass=LanguageMeta):
 
     Any undefined language will obviously not be available:
 
-    >>> Language.Cobol
+    >>> Language.UnidentifiedLanguage
     Traceback (most recent call last):
      ...
     AttributeError
