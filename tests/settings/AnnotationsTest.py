@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from coalib.misc.Annotations import typechain
+from coalib.settings.Annotations import typechain
 
 
 class AnnotationsTest(TestCase):

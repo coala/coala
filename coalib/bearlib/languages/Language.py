@@ -5,7 +5,7 @@ import operator
 import re
 from operator import itemgetter
 
-from coalib.misc.Annotations import typechain
+from coalib.settings.Annotations import typechain
 
 
 class LanguageUberMeta(type):
