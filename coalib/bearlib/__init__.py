@@ -53,8 +53,15 @@ def deprecate_settings(**depr_args):
     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
     WARNING:root:The value of `old` and `new` are conflicting. `new` will...
     coala is always written with lowercase `c`.
+    >>> @deprecate_settings(new='old')
+    ... def run(new):
+    ...     print(new)
     >>> run(old='Hello!', new='Hello!')
     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    Hello!
+
+    Note that messages are cached. So the same message won't be printed twice:
+    >>> run(old='Hello!', new='Hello!')
     Hello!
 
     The metadata for coala has been adjusted as well:
@@ -72,6 +79,8 @@ def deprecate_settings(**depr_args):
     """
     def _deprecate_decorator(func):
 
+        logged_deprecated_args = set()
+
         def wrapping_function(*args, **kwargs):
             for arg, depr_arg_and_modifier in depr_args.items():
                 deprecated_arg, _func = (
@@ -79,9 +88,11 @@ def deprecate_settings(**depr_args):
                     if isinstance(depr_arg_and_modifier, tuple)
                     else (depr_arg_and_modifier, lambda x: x))
                 if deprecated_arg in kwargs:
-                    logging.warning(
-                        'The setting `{}` is deprecated. Please use `{}` '
-                        'instead.'.format(deprecated_arg, arg))
+                    if deprecated_arg not in logged_deprecated_args:
+                        logging.warning(
+                            'The setting `{}` is deprecated. Please use `{}` '
+                            'instead.'.format(deprecated_arg, arg))
+                        logged_deprecated_args.add(deprecated_arg)
                     depr_arg_value = _func.__call__(kwargs[deprecated_arg])
                     if arg in kwargs and depr_arg_value != kwargs[arg]:
                         logging.warning(
