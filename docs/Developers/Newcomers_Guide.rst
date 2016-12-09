@@ -94,7 +94,7 @@ Here is the link that will lead you to `Newcomers issues <https://coala.io/new>`
 
 .. seealso::
 
-    For more information about what bears are, please check the following link: `Writing bears <http://coala.readthedocs.io/en/latest/Developers/Writing_Bears.html>`_
+    For more information about what bears are, please check the following link: `Writing bears <http://api.coala.io/en/latest/Developers/Writing_Bears.html>`_
 
 The easy issues that will help you get started are labeled as
 ``difficulty/newcomer`` and are only there to give you a glimpse of how it is
@@ -136,7 +136,7 @@ into your bash. This will analyze your code and help you fix it.
 
 .. seealso::
 
-    `Executing tests <http://coala.readthedocs.io/en/latest/Developers/Executing_Tests.html>`_
+    `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
 
 Step 5. Sending Your Changes
 ----------------------------
@@ -230,7 +230,7 @@ coala **clean** and **stable**.
 
 .. seealso::
 
-    `Review Process <http://coala.readthedocs.io/en/latest/Developers/Review.html>`_.
+    `Review Process <http://api.coala.io/en/latest/Developers/Review.html>`_.
 
 Now, if you need to modify your code, you can simply edit it again, add it and
 commit it using
