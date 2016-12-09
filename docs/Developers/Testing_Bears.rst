@@ -42,7 +42,7 @@ Let us understand how to write tests for ``TooManyLinesBear`` in ``some_dir``.
 .. code::
 
     from bears.some_dir.TooManyLinesBear import TooManyLinesBear
-    from tests.LocalBearTestHelper import verify_local_bear
+    from coalib.testing.LocalBearTestHelper import verify_local_bear
 
     good_file = '1\n2\n3\n4\n'.splitlines()
     bad_file = '1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n'.splitlines()
@@ -71,7 +71,7 @@ arguments.
     from queue import Queue
     from bears.some_dir.TooManyLinesBear import TooManyLinesBear
 
-    from tests.LocalBearTestHelper import LocalBearTestHelper
+    from coalib.testing.LocalBearTestHelper import LocalBearTestHelper
     from coalib.settings.Section import Section
     from coalib.settings.Setting import Setting
 
@@ -110,7 +110,7 @@ passed.
     from queue import Queue
 
     from bears.some_dir.TooManyLinesBear import TooManyLinesBear
-    from tests.LocalBearTestHelper import LocalBearTestHelper
+    from coalib.testing.LocalBearTestHelper import LocalBearTestHelper
     from coalib.results.Result import Result
     from coalib.settings.Section import Section
 
