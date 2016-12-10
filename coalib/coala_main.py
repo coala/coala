@@ -24,6 +24,7 @@ def run_coala(console_printer=None,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
               nothing_done=do_nothing,
+              autoapply=True,
               force_show_patch=False,
               arg_parser=None,
               arg_list=None):
@@ -49,6 +50,9 @@ def run_coala(console_printer=None,
     :param nothing_done:            A callback that will be called with only a
                                     log printer that shall indicate that
                                     nothing was done.
+    :param autoapply:               Set this to false to not autoapply any
+                                    actions. If you set this to `False`,
+                                    `force_show_patch` will be ignored.
     :param force_show_patch:        If set to True, a patch will be always
                                     shown. (Using ApplyPatchAction.)
     :param arg_parser:              Instance of ArgParser that is used to parse
@@ -91,7 +95,9 @@ def run_coala(console_printer=None,
             if not section.is_enabled(targets):
                 continue
 
-            if force_show_patch:
+            if not autoapply:
+                section['default_actions'] = ''
+            elif force_show_patch:
                 section['default_actions'] = '*: ShowPatchAction'
                 section['show_result_on_top'] = 'yeah'
 
