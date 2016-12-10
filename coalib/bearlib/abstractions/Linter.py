@@ -634,7 +634,7 @@ def linter(executable: str,
     and after that inside ``process_output``.
 
     For the tutorial see:
-    http://coala.readthedocs.io/en/latest/Developers/Writing_Linter_Bears.html
+    http://api.coala.io/en/latest/Developers/Writing_Linter_Bears.html
 
     :param executable:
         The linter tool.
