@@ -133,7 +133,7 @@ So an example test that succeeds would be:
 
     .. seealso::
 
-        Module :doc:`Executing Tests <Testing>`
+        Module :doc:`Executing Tests <http://coala.readthedocs.io/en/latest/Developers/Executing_Tests.html>`_
             Documentation of running Tests with coverage
 
     As our coverage is measured across builds against several python
