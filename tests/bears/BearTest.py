@@ -1,6 +1,6 @@
 import multiprocessing
 import unittest
-from os.path import abspath, isfile, join, getmtime
+from os.path import abspath, exists, isfile, join, getmtime
 import shutil
 
 from coalib.bears.Bear import Bear
@@ -31,9 +31,6 @@ class TestBear(Bear):
         self.print('set', 'up', delimiter='=')
         self.err('teardown')
         self.err()
-
-    def tear_down(self):
-        shutil.rmtree(self.data_dir)
 
 
 class TypedTestBear(Bear):
@@ -70,6 +67,10 @@ class BearTest(unittest.TestCase):
         self.queue = multiprocessing.Queue()
         self.settings = Section('test_settings')
         self.uut = TestBear(self.settings, self.queue)
+
+    def tearDown(self):
+        if exists(self.uut.data_dir):
+            shutil.rmtree(self.uut.data_dir)
 
     def test_simple_api(self):
         self.assertRaises(TypeError, TestBear, self.settings, 2)
@@ -187,13 +188,12 @@ class BearTest(unittest.TestCase):
     def test_download_cached_file(self):
         url = 'https://google.com'
         filename = 'google.html'
-        uut = TestBear(self.settings, None)
-        self.assertFalse(isfile(join(uut.data_dir, filename)))
-        expected_filename = join(uut.data_dir, filename)
-        result_filename = uut.download_cached_file(url, filename)
+        self.assertFalse(isfile(join(self.uut.data_dir, filename)))
+        expected_filename = join(self.uut.data_dir, filename)
+        result_filename = self.uut.download_cached_file(url, filename)
         self.assertEqual(result_filename, expected_filename)
-        expected_time = getmtime(join(uut.data_dir, filename))
-        result_filename = uut.download_cached_file(url, filename)
+        expected_time = getmtime(join(self.uut.data_dir, filename))
+        result_filename = self.uut.download_cached_file(url, filename)
         self.assertEqual(result_filename, expected_filename)
-        result_time = getmtime(join(uut.data_dir, filename))
+        result_time = getmtime(join(self.uut.data_dir, filename))
         self.assertEqual(result_time, expected_time)
