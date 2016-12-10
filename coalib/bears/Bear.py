@@ -2,8 +2,7 @@ import traceback
 from functools import partial
 from os import makedirs
 from os.path import join, abspath, exists
-from shutil import copyfileobj
-from urllib.request import urlopen
+import requests
 
 from appdirs import user_data_dir
 
@@ -343,8 +342,13 @@ class Bear(Printer, LogPrinterMixin):
 
     def download_cached_file(self, url, filename):
         """
-        Downloads the file if needed and caches it for the next time. If a
-        download happens, the user will be informed.
+        Downloads the file if needed and caches it for the next time. It
+        verifies the version of the file before downloading again using the
+        'etag' and 'last-modified' http headers. If neither header is found,
+        it downloads the file again. If a download happens, the user will be
+        informed.
+        DOES NOT SUPPORT ANY OTHER DOWNLOAD PROTOCOL OTHER THAN HTTP FAMILY
+        PROTOCOLS!
 
         Take a sane simple bear:
 
@@ -368,15 +372,38 @@ class Bear(Printer, LogPrinterMixin):
         :param filename: The filename it should get, e.g. "test.txt".
         :return:         A full path to the file ready for you to use!
         """
-        filename = join(self.data_dir, filename)
-        if exists(filename):
-            return filename
+        self.info('Scraping version of {filename!r} for bear {bearname} '
+                  'from {url}.' .format(filename=filename, bearname=self.name,
+                                        url=url))
+        scrape = requests.head(url)
 
+        versionfile = join(self.data_dir, '.' + filename + '-version.etag')
+        filename = join(self.data_dir, filename)
+        if exists(versionfile):
+            with open(versionfile, 'r') as vfile:
+                etag = vfile.readline().rstrip('\n')
+                last_modified = vfile.readline().rstrip('\n')
+            if exists(filename):
+                if 'etag' in scrape.headers:
+                    if scrape.headers['etag'] == etag:
+                        return filename
+                elif 'last-modified' in scrape.headers:
+                    if scrape.headers['last-modified'] == last_modified:
+                        return filename
+
+        with open(versionfile, 'w') as vfile:
+            if 'etag' in scrape.headers:
+                vfile.write(scrape.headers['etag'] + '\n')
+            else:
+                vfile.write('\n')
+            if 'last-modified' in scrape.headers:
+                vfile.write(scrape.headers['last-modified'] + '\n')
         self.info('Downloading {filename!r} for bear {bearname} from {url}.'
                   .format(filename=filename, bearname=self.name, url=url))
-
-        with urlopen(url) as response, open(filename, 'wb') as out_file:
-            copyfileobj(response, out_file)
+        download = requests.get(url, stream=True)
+        with open(filename, 'wb') as download_file:
+            for chunk in download.iter_content(chunk_size=128):
+                download_file.write(chunk)
         return filename
 
     @classproperty
