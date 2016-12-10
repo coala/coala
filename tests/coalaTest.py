@@ -5,8 +5,12 @@ import unittest
 import unittest.mock
 from pkg_resources import VersionConflict
 
+from coalib.coala_main import run_coala
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import assert_supported_version, coala
+from pyprint.ConsolePrinter import ConsolePrinter
 from coala_utils.ContextManagers import prepare_file
+
 from tests.TestUtilities import execute_coala, bear_test_module
 
 
@@ -108,3 +112,37 @@ class coalaTest(unittest.TestCase):
                              'is a conflict with the version of a dependency '
                              'you have installed')
             self.assertIn('pip install "msg2"', output)
+
+    def test_run_coala_no_autoapply(self):
+        with bear_test_module(), \
+                prepare_file(['#fixme  '], None) as (lines, filename):
+            self.assertEqual(
+                1,
+                len(run_coala(
+                    console_printer=ConsolePrinter(),
+                    log_printer=LogPrinter(),
+                    arg_list=(
+                        '-c', os.devnull,
+                        '-f', re.escape(filename),
+                        '-b', 'SpaceConsistencyTestBear',
+                        '--apply-patches',
+                        '-S', 'use_spaces=yeah'
+                    ),
+                    autoapply=False
+                )[0]['default'])
+            )
+
+            self.assertEqual(
+                0,
+                len(run_coala(
+                    console_printer=ConsolePrinter(),
+                    log_printer=LogPrinter(),
+                    arg_list=(
+                        '-c', os.devnull,
+                        '-f', re.escape(filename),
+                        '-b', 'SpaceConsistencyTestBear',
+                        '--apply-patches',
+                        '-S', 'use_spaces=yeah'
+                    )
+                )[0]['default'])
+            )
