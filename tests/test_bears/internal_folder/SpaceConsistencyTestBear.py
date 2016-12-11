@@ -17,13 +17,13 @@ class SpaceConsistencyTestBear(LocalBear):
         Checks the space consistency for each line.
 
         :param use_spaces:                True if spaces are to be used instead
-                                          of tabs.
+                                          of tabs
         :param allow_trailing_whitespace: Whether to allow trailing whitespace
-                                          or not.
+                                          or not
         :param tab_width:                 Number of spaces representing one
-                                          tab.
+                                          tab
         :param enforce_newline_at_EOF:    Whether to enforce a newline at the
-                                          End Of File.
+                                          End Of File
         '''
         spacing_helper = SpacingHelper(tab_width)
         result_texts = []
