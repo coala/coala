@@ -381,6 +381,16 @@ class Diff:
         linediff.add_after = lines
         self._changes[line_nr_before] = linediff
 
+    def add_line(self, line_nr_before, line):
+        """
+        Adds line after the given line number.
+
+        :param line_nr_before: Line number of the line before the addition.
+                               Use 0 to insert line before everything.
+        :param line:           Line to add.
+        """
+        return self.add_lines(line_nr_before, [line])
+
     def change_line(self, line_nr, original_line, replacement):
         r"""
         Changes the given line with the given line number. The replacement will

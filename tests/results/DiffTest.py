@@ -17,6 +17,11 @@ class DiffTest(unittest.TestCase):
         self.uut.add_lines(0, ['t'])
         self.uut.add_lines(0, [])
 
+    def test_add_line(self):
+        self.uut.add_line(0, 't')
+        self.assertRaises(ConflictError, self.uut.add_line, 0, 't')
+        self.assertEqual(self.uut.modified, ['t', '1', '2', '3', '4'])
+
     def test_double_addition(self):
         self.uut.add_lines(0, ['t'])
 
