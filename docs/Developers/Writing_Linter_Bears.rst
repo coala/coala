@@ -130,8 +130,8 @@ As you can see, the ``output_regex`` parameter consists of named groups. These
 are important to construct a meaningful result that contains the information
 that is printed out.
 
-For the exact list of named groups ``@linter`` recognizes, see the API
-documentation.
+For the exact list of named groups ``@linter`` recognizes, see the `API
+documentation <http://api.coala.io/en/latest/>`__.
 
 For more info generally on regexes, see `Python re module
 <https://docs.python.org/3/library/re.html>`_.
