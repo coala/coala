@@ -14,7 +14,11 @@ following tasks, you will become a developer at coala:
   - merge a ``difficulty/low`` Pull Request
   - review at least a ``difficulty/low`` or higher Pull Request
 
-Once you have achieved all these, just ask for being promoted on the chat and
+Once you got your first Pull Request merged successfully, fill in our
+`survey form <http://coala.io/newform>`_.
+
+Once you have achieved
+all these, just ask for being promoted on the chat and
 provide links to your reviews and merged Pull Requests. Then, you will be able
 to name yourself a coala developer!
 
