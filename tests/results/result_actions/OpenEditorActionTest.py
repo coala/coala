@@ -147,10 +147,18 @@ class OpenEditorActionTest(unittest.TestCase):
         result2 = Result.from_values('', '', '')
         result3 = Result.from_values('', '', 'file')
         invalid_result = ''
-        self.assertFalse(OpenEditorAction.is_applicable(result1, None, {}))
+
+        self.assertEqual(
+            OpenEditorAction.is_applicable(result1, None, {}),
+            'The result is not associated with any source code.')
+
         self.assertTrue(OpenEditorAction.is_applicable(result2, None, {}))
+
         # Check non-existent file
-        self.assertFalse(OpenEditorAction.is_applicable(result3, None, {}))
+        self.assertEqual(
+            OpenEditorAction.is_applicable(result3, None, {}),
+            "The result is associated with source code that doesn't "
+            'seem to exist.')
 
         with self.assertRaises(TypeError):
             OpenEditorAction.is_applicable(invalid_result, None, {})

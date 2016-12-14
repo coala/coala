@@ -9,12 +9,29 @@ from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 class IgnoreResultActionTest(unittest.TestCase):
 
     def test_is_applicable(self):
-        with self.assertRaises(TypeError):
+
+        with self.assertRaises(TypeError) as context:
             IgnoreResultAction.is_applicable('str', {}, {})
 
-        self.assertFalse(IgnoreResultAction.is_applicable(
-            Result.from_values('origin', 'msg', "file doesn't exist", 2),
-            {}, {}))
+        self.assertEqual(
+            IgnoreResultAction.is_applicable(
+                Result.from_values('origin', 'msg', "file doesn't exist", 2),
+                {},
+                {}
+            ),
+            "The result is associated with source code that doesn't "
+            'seem to exist.'
+        )
+
+        self.assertEqual(
+            IgnoreResultAction.is_applicable(
+                Result('', ''),
+                {},
+                {}
+            ),
+            'The result is not associated with any source code.'
+        )
+
         with make_temp() as f_a:
             self.assertTrue(IgnoreResultAction.is_applicable(
                 Result.from_values('origin', 'msg', f_a, 2), {}, {}))

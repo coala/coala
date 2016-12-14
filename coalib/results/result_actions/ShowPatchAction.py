@@ -67,8 +67,9 @@ class ShowPatchAction(ResultAction):
     @staticmethod
     @enforce_signature
     def is_applicable(result: Result, original_file_dict, file_diff_dict):
+
         if not result.diffs:
-            return False
+            return 'This result has no patch attached.'
 
         try:
             # Needed so the addition is run for all patches -> ConflictError
@@ -79,9 +80,13 @@ class ShowPatchAction(ResultAction):
                              file_diff_dict[filename]):
                     nonempty_patches = True
 
-            return nonempty_patches
-        except ConflictError:
-            return False
+            if nonempty_patches:
+                return True
+            return 'The given patches do not change anything anymore.'
+
+        except ConflictError as ce:
+            return ('Two or more patches conflict with '
+                    'each other: {}'.format(str(ce)))
 
     def apply(self,
               result,

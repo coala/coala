@@ -29,7 +29,11 @@ class PrintAspectActionTest(unittest.TestCase):
     def test_is_applicable(self):
         with self.assertRaises(TypeError):
             self.uut.is_applicable(1, None, None)
-        self.assertFalse(self.uut.is_applicable(Result('o', 'm'), None, None))
+
+        self.assertEqual(
+            'There is no aspect associated with the result.',
+            self.uut.is_applicable(Result('o', 'm'), None, None))
+
         self.assertTrue(self.uut.is_applicable(self.test_result, None, None))
 
     def test_apply(self):

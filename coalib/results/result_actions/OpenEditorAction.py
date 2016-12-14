@@ -8,6 +8,7 @@ from coalib.results.result_actions.ResultAction import ResultAction
 
 from coala_utils.decorators import enforce_signature
 
+
 EDITOR_ARGS = {
     'subl': '--wait',
     'gedit': '-s',
@@ -29,12 +30,16 @@ class OpenEditorAction(ResultAction):
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
         """
+
         if not len(result.affected_code) > 0:
-            return False
+            return 'The result is not associated with any source code.'
 
         filenames = set(src.renamed_file(file_diff_dict)
                         for src in result.affected_code)
-        return all(exists(filename) for filename in filenames)
+        if not all(exists(filename) for filename in filenames):
+            return ("The result is associated with source code that doesn't "
+                    'seem to exist.')
+        return True
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """

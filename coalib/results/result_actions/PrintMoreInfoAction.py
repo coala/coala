@@ -9,7 +9,9 @@ class PrintMoreInfoAction(ResultAction):
     @staticmethod
     @enforce_signature
     def is_applicable(result: Result, original_file_dict, file_diff_dict):
-        return result.additional_info != ''
+        if result.additional_info != '':
+            return True
+        return 'There is no additional info.'
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """

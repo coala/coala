@@ -24,13 +24,27 @@ class ShowPatchActionTest(unittest.TestCase):
         self.section.append(Setting('colored', 'false'))
 
     def test_is_applicable(self):
+        diff = Diff([], rename='new_name')
+        result = Result('', '', diffs={'f': diff})
+
+        # Two renames donot result in any change
+        self.assertEqual(
+            self.uut.is_applicable(result, {}, {'f': diff}),
+            'The given patches do not change anything anymore.'
+        )
+
         with self.assertRaises(TypeError):
             self.uut.is_applicable(1, None, None)
 
-        self.assertFalse(self.uut.is_applicable(Result('o', 'm'), None, None))
+        self.assertEqual(
+            self.uut.is_applicable(Result('o', 'm'), None, None),
+            'This result has no patch attached.')
+
         self.assertTrue(self.uut.is_applicable(self.test_result, {}, {}))
-        self.assertFalse(self.uut.is_applicable(self.test_result, {},
-                                                self.diff_dict))
+
+        self.assertIn(
+            'Two or more patches conflict with each other: ',
+            self.uut.is_applicable(self.test_result, {}, self.diff_dict))
 
     def test_apply(self):
         with retrieve_stdout() as stdout:

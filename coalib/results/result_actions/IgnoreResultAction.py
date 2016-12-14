@@ -22,11 +22,14 @@ class IgnoreResultAction(ResultAction):
         """
 
         if len(result.affected_code) == 0:
-            return False
+            return 'The result is not associated with any source code.'
 
         filenames = set(src.renamed_file(file_diff_dict)
                         for src in result.affected_code)
-        return any(exists(filename) for filename in filenames)
+        if any(exists(filename) for filename in filenames):
+            return True
+        return ("The result is associated with source code that doesn't "
+                'seem to exist.')
 
     def apply(self, result, original_file_dict, file_diff_dict, language: str,
               no_orig: bool=False):

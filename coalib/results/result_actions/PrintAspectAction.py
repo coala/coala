@@ -9,7 +9,9 @@ class PrintAspectAction(ResultAction):
     @staticmethod
     @enforce_signature
     def is_applicable(result: Result, original_file_dict, file_diff_dict):
-        return result.aspect is not None
+        if result.aspect is None:
+            return 'There is no aspect associated with the result.'
+        return True
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """

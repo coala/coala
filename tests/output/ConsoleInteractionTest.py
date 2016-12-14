@@ -128,10 +128,13 @@ class ConsoleInteractionTest(unittest.TestCase):
                                          ('test', [SomeglobalBear])])
 
         self.old_open_editor_applicable = OpenEditorAction.is_applicable
-        OpenEditorAction.is_applicable = staticmethod(lambda *args: False)
+        OpenEditorAction.is_applicable = staticmethod(
+            lambda *args: 'OpenEditorAction cannot be applied')
 
         self.old_apply_patch_applicable = ApplyPatchAction.is_applicable
-        ApplyPatchAction.is_applicable = staticmethod(lambda *args: False)
+        ApplyPatchAction.is_applicable = staticmethod(
+            lambda *args: 'ApplyPatchAction cannot be applied')
+
         self.lexer = TextLexer()
         self.lexer.add_filter(VisibleWhitespaceFilter(
             spaces='•',
@@ -347,7 +350,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
                 def apply(*args, **kwargs):
                     ApplyPatchAction.is_applicable = staticmethod(
-                        lambda *args: False)
+                        lambda *args: 'ApplyPatchAction cannot be applied.')
 
             old_applypatch_is_applicable = ApplyPatchAction.is_applicable
             ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)

@@ -16,11 +16,12 @@ class PrintMoreInfoActionTest(unittest.TestCase):
             additional_info='A lot of additional information can be found here')
 
     def test_is_applicable(self):
-
         with self.assertRaises(TypeError):
             self.uut.is_applicable(1, None, None)
-
-        self.assertFalse(self.uut.is_applicable(Result('o', 'm'), None, None))
+        self.assertEqual(
+            self.uut.is_applicable(Result('o', 'm'), None, None),
+            'There is no additional info.'
+        )
         self.assertTrue(self.uut.is_applicable(self.test_result, None, None))
 
     def test_apply(self):

@@ -137,7 +137,7 @@ def acquire_actions_and_apply(console_printer,
     while True:
         actions = []
         for action in cli_actions:
-            if action.is_applicable(result, file_dict, file_diff_dict):
+            if action.is_applicable(result, file_dict, file_diff_dict) is True:
                 actions.append(action)
 
         if actions == []:
@@ -251,7 +251,8 @@ def print_result(console_printer,
     if interactive:
         cli_actions = CLI_ACTIONS
         show_patch_action = ShowPatchAction()
-        if show_patch_action.is_applicable(result, file_dict, file_diff_dict):
+        if show_patch_action.is_applicable(
+                result, file_dict, file_diff_dict) is True:
             diff_size = sum(len(diff) for diff in result.diffs.values())
             if diff_size <= DIFF_EXCERPT_MAX_SIZE:
                 show_patch_action.apply_from_section(result,

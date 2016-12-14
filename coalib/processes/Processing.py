@@ -138,10 +138,9 @@ def autoapply_actions(results,
                 not_processed_results.append(result)
                 continue
 
-        if not action.is_applicable(result, file_dict, file_diff_dict):
-            log_printer.warn('Selected default action {!r} for bear {!r} is '
-                             'not applicable. Action not applied.'.format(
-                                 action.get_metadata().name, result.origin))
+        applicable = action.is_applicable(result, file_dict, file_diff_dict)
+        if applicable is not True:
+            log_printer.warn('{}: {}'.format(result.origin, applicable))
             not_processed_results.append(result)
             continue
 
