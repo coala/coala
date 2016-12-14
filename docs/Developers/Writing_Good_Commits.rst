@@ -76,7 +76,7 @@ Example:
 
 -  Maximum of 50 characters.
 -  Should describe the *change* - the action being done in the commit.
--  Should have a tag and and a short description separated by a colon (``:``)
+-  Should have a tag and a short description separated by a colon (``:``)
 
    -  **Tag**
 
