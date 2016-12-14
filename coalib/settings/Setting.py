@@ -86,7 +86,7 @@ def typed_ordered_dict(key_type, value_type, default):
         for key, value in OrderedDict(setting).items())
 
 
-@generate_repr('key', 'value', 'origin', 'from_cli')
+@generate_repr('key', 'value', 'origin', 'from_cli', 'to_append')
 class Setting(StringConverter):
     """
     A Setting consists mainly of a key and a value. It mainly offers many
@@ -100,7 +100,8 @@ class Setting(StringConverter):
                  strip_whitespaces=True,
                  list_delimiters=(',', ';'),
                  from_cli=False,
-                 remove_empty_iter_elements=True):
+                 remove_empty_iter_elements=True,
+                 to_append=False):
         """
         Initializes a new Setting,
 
@@ -121,9 +122,15 @@ class Setting(StringConverter):
                                            CliParser.
         :param remove_empty_iter_elements: Whether to remove empty elements in
                                            iterable values.
+        :param to_append:                  The boolean value if setting value
+                                           needs to be appended to a setting in
+                                           the defaults of a section.
         """
         if not isinstance(from_cli, bool):
             raise TypeError('from_cli needs to be a boolean value.')
+
+        if not isinstance(to_append, bool):
+            raise TypeError('to_append needs to be a boolean value.')
 
         StringConverter.__init__(
             self,
@@ -135,6 +142,7 @@ class Setting(StringConverter):
         self.from_cli = from_cli
         self.key = key
         self.origin = str(origin)
+        self.to_append = to_append
 
     def __path__(self, origin=None, glob_escape_origin=False):
         """
