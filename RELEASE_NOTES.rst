@@ -135,26 +135,26 @@ coala 0.8.0 - grizzly
 
 ::
 
-                   -                         
-                 `Ns      :s-               
-            .     mMd`     :Nd.             
-           :h     /ss/`     +md.            
-           dN`    :NMMMy`  .ymmy. -+`       
-           dM+    dMMMMMm`.NMMMMN. +Mo      
-        `  -sddy: yMMMMMM/+MMMMMMo  dMo     
-       s/  +MMMMMy.dMMMMM-:MMMMMM+ -yhs`    
-      .Ms  /MMMMMMo /hdh:  oMMMMh`+MMMMm.   
-      -MN.  hMMMMMh  `/osssoos+-  dMMMMMs   
-       oyhho.+mMMm:+dMMMMMMMMMm+  sMMMMMs   
-       mMMMMMy``` dMMMMMMMMMMMMMh.`sMMMh`   
-       yMMMMMMy  `MMMMMMMMMMMMMMMMy:..`     
-       `yMMMMMd  yMMMMMMMMMMMMMMMMMMMMNh+`  
-         .ohhs-+mMMMMMMMMMMMMMMMMMMMMMMMMd  
-            .yMMMMMMMMMMMMMMMMMMMMMMMMMMMh  
-            mMMMMMMMMMMMMMMMMMMMMMMMMMMMh`  
-            yMMMMMMMMMMMMMMMNhssssyyyso-    
-             /dMMMMMMMMMNy+.                
-               ./syhys/-                    
+                   -
+                 `Ns      :s-
+            .     mMd`     :Nd.
+           :h     /ss/`     +md.
+           dN`    :NMMMy`  .ymmy. -+`
+           dM+    dMMMMMm`.NMMMMN. +Mo
+        `  -sddy: yMMMMMM/+MMMMMMo  dMo
+       s/  +MMMMMy.dMMMMM-:MMMMMM+ -yhs`
+      .Ms  /MMMMMMo /hdh:  oMMMMh`+MMMMm.
+      -MN.  hMMMMMh  `/osssoos+-  dMMMMMs
+       oyhho.+mMMm:+dMMMMMMMMMm+  sMMMMMs
+       mMMMMMy``` dMMMMMMMMMMMMMh.`sMMMh`
+       yMMMMMMy  `MMMMMMMMMMMMMMMMy:..`
+       `yMMMMMd  yMMMMMMMMMMMMMMMMMMMMNh+`
+         .ohhs-+mMMMMMMMMMMMMMMMMMMMMMMMMd
+            .yMMMMMMMMMMMMMMMMMMMMMMMMMMMh
+            mMMMMMMMMMMMMMMMMMMMMMMMMMMMh`
+            yMMMMMMMMMMMMMMMNhssssyyyso-
+             /dMMMMMMMMMNy+.
+               ./syhys/-
 
 
 For this release, we have had 46 developers from around the world contributing
@@ -256,7 +256,7 @@ Below are some of the important changes introduced for this release:
 - A complete overhaul to the README page with a focus on design and
   readability.
 
-- A new `FAQ page <http://coala.readthedocs.io/en/latest/Users/FAQ.html>`_ has
+- A new `FAQ page <http://docs.coala.io/en/latest/Users/FAQ.html>`_ has
   been created.
 
 - Various other documentation pages have been improved with new resources,
@@ -311,7 +311,7 @@ listed are especially lots of internal improvements and documentation fixes.
 
 New Features:
 
-- `Shell Autocompletion <http://coala.readthedocs.io/en/latest/Users/Tutorials/Shell_Autocompletion.html>`_
+- `Shell Autocompletion <http://docs.coala.io/en/latest/Users/Tutorials/Shell_Autocompletion.html>`_
 - Patches are shown without prompting the user if small enough, otherwise
   diffstats.
 - Bears have metadata and can be browsed. Browse the
@@ -502,7 +502,7 @@ New features:
 -  Actions that are not applicable multiple times are not shown after applying
    them anymore. (https://github.com/coala-analyzer/coala/issues/1064)
 -  Documentation about how to add coala as a pre commit hook has been added:
-   http://coala.readthedocs.org/en/latest/Users/Git_Hooks.html
+   http://docs.coala.io/en/latest/Users/Git_Hooks.html
 -  Actions emit a success message now that is shown to the user and improves
    usability and intuitivity of actions.
 -  A warning is emitted if a bear or file glob does not match any bears or
@@ -578,7 +578,7 @@ For bear writers:
 Notable internal changes:
 
 -  API documentation is now available at
-   http://coala.readthedocs.org/en/latest/API/modules.html
+   http://api.coala.io
 -  coala switched to PyTest. Our old own framework is no longer maintained.
    (https://github.com/coala-analyzer/coala/issues/875)
 -  As always loads of refactorings to make the code more stable, readable and
@@ -715,7 +715,7 @@ This release features the following feature changes:
 -  Changed logging API in Bears (now: debug/warn/err).
 -  clang python bindings were added to the bearlib.
 -  Exitcodes were organized and documented.
-   (http://coala.readthedocs.org/en/latest/Users/Exit_Codes.html)
+   (http://docs.coala.io/en/latest/Users/Exit_Codes.html)
 -  Handling of EOF/Keyboard Interrupt was improved.
 -  Console output is now colored.
 -  Bears can now easily convert settings to typed lists or dicts.
@@ -736,7 +736,7 @@ This release features the following feature changes:
 -  The StringProcessing libary is there to help bear writers deal with
    regexes and similar things.
 -  A new glob syntax was introduced and documented.
-   (http://coala.readthedocs.org/en/latest/Users/Glob_Patterns.html)
+   (http://docs.coala.io/en/latest/Users/Glob_Patterns.html)
 -  The ``--apply-changes`` argument was removed as its concept does not
    fit anymore.
 -  Bears can now return any iterable. This makes it possible to

@@ -6,12 +6,12 @@ Reviewing pull requests takes a lot of time and we're all volunteers. Please mak
 
 ### Checklist
 
-- [ ] I have rebased properly. Please see [our tutorial on rebasing](http://coala.readthedocs.io/en/latest/Developers/Git_Basics.html#rebasing).
-- [ ] I have gone through the [commit guidelines](http://coala.readthedocs.io/en/latest/Developers/Writing_Good_Commits.html) and I've followed them.
-- [ ] I have followed the [guidelines for the commit shortlog](http://docs.coala.io/en/latest/Developers/Writing_Good_Commits.html#shortlog).
-- [ ] I have followed the [guidelines for the commit body](http://docs.coala.io/en/latest/Developers/Writing_Good_Commits.html#commit-body).
-- [ ] I have included the issue URL with the 'Fixes' keyword if the commit fixes a *real bug* and the 'Closes' keyword if it adds a feature or enhancement. For details, check the [issue reference section in our commit guidelines](http://docs.coala.io/en/latest/Developers/Writing_Good_Commits.html#issue-reference).
-- [ ] I have [run all the tests](http://coala.readthedocs.io/en/latest/Developers/Executing_Tests.html) and they all pass. If any CI (below) is not green, please fix them. If GitMate issues appear you will have to amend your commits, pushing new commits on top is not sufficient!
+- [ ] I have rebased properly. Please see [our tutorial on rebasing](http://coala.io/git#rebasing).
+- [ ] I have gone through the [commit guidelines](http://coala.io/commit) and I've followed them.
+- [ ] I have followed the [guidelines for the commit shortlog](http://coala.io/commit#shortlog).
+- [ ] I have followed the [guidelines for the commit body](http://coala.io/commit#commit-body).
+- [ ] I have included the issue URL with the 'Fixes' keyword if the commit fixes a *real bug* and the 'Closes' keyword if it adds a feature or enhancement. For details, check the [issue reference section in our commit guidelines](http://coala.io/commit#issue-reference).
+- [ ] I have [run all the tests](http://api.coala.io/en/latest/Developers/Executing_Tests.html) and they all pass. If any CI (below) is not green, please fix them. If GitMate issues appear you will have to amend your commits, pushing new commits on top is not sufficient!
 
 ### Reviewers
 

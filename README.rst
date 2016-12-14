@@ -7,7 +7,7 @@ coala: Linting and fixing code for all languages
 your code, regardless of the programming languages you use.**
 
 With coala, users can create
-`rules and standards <http://coala.readthedocs.io/en/latest/Users/coafile.html>`__
+`rules and standards <http://docs.coala.io/en/latest/Users/coafile.html>`__
 to be followed in the source
 code. coala has an **user-friendly interface** that is completely customizable.
 It can be used in any environment and is completely modular.
@@ -31,7 +31,7 @@ To see what coala can do for your language, run:
 .. Start ignoring LineLengthBear
 
 ======================================= ================================================ ================================================= ====================================================== =========================================================
-`Official Website <http://coala.io/>`__ `Documentation <https://coala.readthedocs.io>`__  `Twitter <https://twitter.com/coala_analyzer>`__ `Facebook <https://www.facebook.com/coalaAnalyzer/>`__ `Video Demo <https://asciinema.org/a/42968?autoplay=1>`__
+`Official Website <http://coala.io/>`__ `Documentation <https://docs.coala.io>`__  `Twitter <https://twitter.com/coala_analyzer>`__ `Facebook <https://www.facebook.com/coalaAnalyzer/>`__ `Video Demo <https://asciinema.org/a/42968?autoplay=1>`__
 ======================================= ================================================ ================================================= ====================================================== =========================================================
 
 .. Stop ignoring
@@ -103,7 +103,7 @@ for bears. To install it, run:
     $ pip3 install cib
 
 For usage instructions, consult
-`this link <http://coala.readthedocs.io/en/latest/Developers/Bear_Installation_Tool.html>`__.
+`this link <http://api.coala.io/en/latest/Developers/Bear_Installation_Tool.html>`__.
 
 |PyPI| |Windows| |Linux|
 
@@ -151,7 +151,7 @@ Store the file in the project's root directory and run coala:
     $ coala
 
 Please read our
-`coafile specification <http://coala.readthedocs.io/en/latest/Users/coafile.html>`__
+`coafile specification <http://docs.coala.io/en/latest/Users/coafile.html>`__
 to learn more.
 
 Using command-line arguments
@@ -198,7 +198,7 @@ Getting Involved
 ================
 
 If you would like to be a part of the coala community, you can check out our
-`Getting In Touch <http://coala.readthedocs.io/en/latest/Help/Getting_In_Touch.html>`__
+`Getting In Touch <http://docs.coala.io/en/latest/Help/Getting_In_Touch.html>`__
 page or ask us at our active Gitter channel, where we have maintainers from
 all over the world. We appreciate any help!
 
@@ -251,7 +251,7 @@ License
    :target: https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master
 .. |codecov.io| image:: https://img.shields.io/codecov/c/github/coala/coala/master.svg?label=branch%20coverage
    :target: https://codecov.io/github/coala/coala?branch=master
-.. |Documentation Status| image:: https://readthedocs.org/projects/coala/badge/?version=latest
+.. |Documentation Status| image:: https://docs.coala.io/projects/coala/badge/?version=latest
    :target: http://coala.rtfd.org/
 .. |AGPL| image:: https://img.shields.io/github/license/coala/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html

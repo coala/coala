@@ -4,9 +4,9 @@ Writing Documentation
 This document gives a short introduction on how to write documentation
 for the coala project.
 
-Documentation is written in reStructuredText and rendered by readthedocs.org to
-our lovely users. You can view the current documentation on
-http://coala.rtfd.org.
+Documentation is written in reStructuredText and rendered by `Read the Docs
+<https://readthedocs.io>`_ to our lovely users.
+You can view the current user documentation on http://docs.coala.io.
 
 After getting the coala source code (see `Installation
 Instructions`_), you can start hacking on
