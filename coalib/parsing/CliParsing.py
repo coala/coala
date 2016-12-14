@@ -13,7 +13,8 @@ def parse_cli(arg_list=None,
               key_value_delimiters=('=', ':'),
               comment_seperators=(),
               key_delimiters=(',',),
-              section_override_delimiters=('.',)):
+              section_override_delimiters=('.',),
+              key_value_append_delimiters=('+=',)):
     """
     Parses the CLI arguments and creates sections out of it.
 
@@ -23,13 +24,17 @@ def parse_cli(arg_list=None,
     :param arg_parser:                  Instance of ArgParser that is used to
                                         parse none-setting arguments.
     :param key_value_delimiters:        Delimiters to separate key and value
-                                        in setting arguments.
+                                        in setting arguments where settings are
+                                        being defined.
     :param comment_seperators:          Allowed prefixes for comments.
     :param key_delimiters:              Delimiter to separate multiple keys of
                                         a setting argument.
     :param section_override_delimiters: The delimiter to delimit the section
                                         from the key name (e.g. the '.' in
                                         sect.key = value).
+    :param key_value_append_delimiters: Delimiters to separate key and value
+                                        in setting arguments where settings are
+                                        being appended.
     :return:                            A dictionary holding section names
                                         as keys and the sections themselves
                                         as value.
@@ -41,7 +46,8 @@ def parse_cli(arg_list=None,
                              comment_seperators,
                              key_delimiters,
                              {},
-                             section_override_delimiters)
+                             section_override_delimiters,
+                             key_value_append_delimiters)
 
     for arg_key, arg_value in sorted(
             vars(arg_parser.parse_args(arg_list)).items()):
@@ -76,12 +82,14 @@ def parse_custom_settings(sections,
     :param line_parser:          The LineParser to use.
     """
     for setting_definition in custom_settings_list:
-        (_, key_tuples, value, _) = line_parser.parse(setting_definition)
+        (_, key_tuples, value, append, _) = line_parser._parse(
+            setting_definition)
         for key_tuple in key_tuples:
             append_to_sections(sections,
                                key=key_tuple[1],
                                value=value,
                                origin=origin,
+                               to_append=append,
                                section_name=key_tuple[0],
                                from_cli=True)
 

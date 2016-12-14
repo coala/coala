@@ -15,6 +15,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
     find_user_config, gather_configuration, load_configuration)
+from coalib.settings.Section import append_to_sections
 
 
 @pytest.mark.usefixtures('disable_bears')
@@ -304,6 +305,14 @@ class ConfigurationGatheringTest(unittest.TestCase):
                              sections['all.python'])
             self.assertEqual(sections['all.java.codestyle'].defaults,
                              sections['all'])
+            self.assertEqual(str(sections['all']['ignore']),
+                             './vendor')
+            sections['default']['ignore'] = './user'
+            self.assertEqual(str(sections['all']['ignore']),
+                             './user, ./vendor')
+            sections['default']['ignore'] = './client'
+            self.assertEqual(str(sections['all']['ignore']),
+                             './client, ./vendor')
 
     def test_default_section_deprecation_warning(self):
         logger = logging.getLogger()

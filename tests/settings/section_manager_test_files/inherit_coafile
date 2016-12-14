@@ -1,5 +1,6 @@
 [all]
 max_line_length = 80
+ignore += ./vendor
 
 [all.python]
 bears = LineLengthBear

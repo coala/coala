@@ -1,3 +1,5 @@
+import logging
+
 from coala_utils.string_processing.StringConverter import StringConverter
 from coala_utils.string_processing import (unescape, convert_to_raw,
                                            position_is_escaped,
@@ -11,7 +13,8 @@ class LineParser:
                  comment_separators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=None,
-                 section_override_delimiters=('.',)):
+                 section_override_delimiters=('.',),
+                 key_value_append_delimiters=('+=',)):
         """
         Creates a new line parser. Please note that no delimiter or separator
         may be an "o" or you may encounter undefined behaviour with the
@@ -31,12 +34,16 @@ class LineParser:
                                             puts the key into the section
                                             "section" despite of the current
                                             section.
+        :param key_value_append_delimiters: Delimiters to separate key and
+                                            value in setting arguments where
+                                            settings are being appended.
         """
         section_name_surroundings = (
             {'[': ']'} if section_name_surroundings is None
             else section_name_surroundings)
 
         self.key_value_delimiters = key_value_delimiters
+        self.key_value_append_delimiters = key_value_append_delimiters
         self.comment_separators = comment_separators
         self.key_delimiters = key_delimiters
         self.section_name_surroundings = section_name_surroundings
@@ -52,22 +59,48 @@ class LineParser:
         :return:     section_name (empty string if it's no section name),
                      [(section_override, key), ...], value, comment
         """
+        logging.warning('The parse method of LineParser is deprecated and will'
+                        ' be removed. Please use `_parse` which has a new '
+                        'return type, a tuple containing 5 values instead of '
+                        '4. Refer to the method documentation for further '
+                        'information.')
+        section_name, key_tuples, value, _, comment = self._parse(line)
+        return section_name, key_tuples, value, comment
+
+    def _parse(self, line):
+        """
+        Note that every value in the returned tuple *besides the value* is
+        unescaped. This is so since the value is meant to be put into a Setting
+        later thus the escapes may be needed there.
+
+        :param line: The line to parse.
+        :return:     section_name (empty string if it's no section name),
+                     [(section_override, key), ...], value, to_append (True if
+                     append delimiter is found else False), comment
+        """
         line, comment = self.__separate_by_first_occurrence(
             line,
             self.comment_separators)
         comment = unescape(comment)
         if line == '':
-            return '', [], '', comment
+            return '', [], '', False, comment
 
         section_name = unescape(self.__get_section_name(line))
         if section_name != '':
-            return section_name, [], '', comment
+            return section_name, [], '', False, comment
 
         # Escapes in value might be needed by the bears
-        keys, value = self.__extract_keys_and_value(line)
+        append = True
+        keys, value = self.__extract_keys_and_value(
+            line, self.key_value_append_delimiters)
+        if not value:
+            keys, value = self.__extract_keys_and_value(
+                line, self.key_value_delimiters, True)
+            append = False
 
         # Add all the delimiters that stored as tuples
         all_delimiters = self.key_value_delimiters
+        all_delimiters += self.key_value_append_delimiters
         all_delimiters += self.key_delimiters
         all_delimiters += self.comment_separators
         all_delimiters += self.section_override_delimiters
@@ -90,7 +123,7 @@ class LineParser:
                 True)
             key_tuples.append((unescape(section), unescape(key)))
 
-        return '', key_tuples, value, comment
+        return '', key_tuples, value, append, comment
 
     @staticmethod
     def __separate_by_first_occurrence(string,
@@ -148,12 +181,28 @@ class LineParser:
 
         return ''
 
-    def __extract_keys_and_value(self, line):
+    def __extract_keys_and_value(self,
+                                 line,
+                                 delimiters,
+                                 return_second_part_nonempty=False):
+        """
+        This method extracts the keys and values from the give string by
+        splitting them based on the delimiters provided.
+
+        :param line:                        The input string.
+        :param delimiters:                  A list of delimiters to split the
+                                            strings on.
+        :param return_second_part_nonempty: If no delimiter is found and this
+                                            is true the contents of the string
+                                            will be returned as value
+        :return:                            The parsed keys and values from a
+                                            line.
+        """
         key_part, value = self.__separate_by_first_occurrence(
             line,
-            self.key_value_delimiters,
+            delimiters,
             True,
-            True)
+            return_second_part_nonempty)
         keys = list(StringConverter(
             key_part,
             list_delimiters=self.key_delimiters).__iter__(

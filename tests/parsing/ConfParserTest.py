@@ -25,6 +25,7 @@ class ConfParserTest(unittest.TestCase):
     nokey. = value
     default.test = content
     makefiles.lastone = val
+    append += key
 
     [EMPTY_ELEM_STRIP]
     A = a, b, c
@@ -88,6 +89,7 @@ class ConfParserTest(unittest.TestCase):
             ('comment1', '# just a omment'),
             ('comment2', '# just a omment'),
             ('lastone', 'val'),
+            ('append', 'key'),
             ('comment3', '')])
 
         # Pop off the default section.
