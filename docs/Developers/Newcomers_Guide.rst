@@ -128,6 +128,15 @@ button from the website interface. To add it locally, simply run:
 where ``myfork`` is the name of your fork, and ``fork_link`` is a link to your
 fork repository.
 
+.. note::
+   It is important that you do not make your changes on the master branch. To
+   start working on an issue, you first need to create a new branch where you
+   will work.
+
+   ::
+
+        $ git checkout -b <branchname>
+
 Now you need to make sure your change is actually working. For this, you will
 need to test it locally before pushing it to your fork, and checking it with
 concrete examples. So basically, run tests and run coala by simply typing
