@@ -128,6 +128,14 @@ button from the website interface. To add it locally, simply run:
 where ``myfork`` is the name of your fork, and ``fork_link`` is a link to your
 fork repository.
 
+.. note::
+   It is important that you do not make your changes on the master branch. To
+   start working on an issue, you first need to create a new branch where you
+   will work.
+
+   ::
+        $ git checkout -b <branchname>
+
 Now you need to make sure your change is actually working. For this, you will
 need to test it locally before pushing it to your fork, and checking it with
 concrete examples. So basically, run tests and run coala by simply typing
@@ -144,6 +152,18 @@ into your bash. This will analyze your code and help you fix it.
 
 Step 5. Sending Your Changes
 ----------------------------
+
+.. note::
+
+   Before committing your changes, please check that you are indeed in a
+   development branch created in step 4. To check if you are in a branch, type:
+
+   ::
+
+         $ git branch
+
+   Your current branch will have an asterisk (\*) next to it. Ensure that there
+   is no asterisk next to the master branch.
 
 Now that you've fixed the issue, you've tested it and you think it is ready
 to be merged, create a commit and push it to your fork, using:
