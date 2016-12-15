@@ -108,8 +108,7 @@ We use GitHub to manage our repository. If you're not familiar with git, we
 strongly recommend following a tutorial, such as `this one <https://try.github.io/levels/1/challenges/1>`_.
 
 We also have a page dedicated to git commands that will help you learn the
-basics,
-:doc:`here <Git_Basics>`.
+basics: `here <http://coala.io/git>`_.
 
 If there's anything unclear, or you are encountering problems, feel free
 to contact us on `gitter <https://coala.io/chat>`_,
@@ -140,8 +139,8 @@ Now you can start working on it.
 
 .. note::
 
-    Before starting to write your first commit, check out this link:
-    :doc:`Writing good commits <Writing_Good_Commits>`.
+    Before starting to write your first commit, check out this
+    link: `Writing good commits <http://coala.io/commit>`_.
 
 Step 4. Creating a Fork and Testing Your Changes
 ------------------------------------------------
@@ -238,7 +237,7 @@ you can do is wait. The best thing you can do while at this step is review
 other people's PRs. Not only will this help the maintainers with the workload,
 but this is one of the three core steps towards becoming a full-norm coalaian.
 
-For more information about reviewing code, check out :doc:`this link.<Review>`
+For more information about reviewing code, check out this `link <http://coala.io/reviewing>`_.
 
 .. note::
 
