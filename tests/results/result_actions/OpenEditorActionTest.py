@@ -152,8 +152,8 @@ class OpenEditorActionTest(unittest.TestCase):
         # Check non-existent file
         self.assertFalse(OpenEditorAction.is_applicable(result3, None, {}))
 
-        self.assertFalse(
-            OpenEditorAction.is_applicable(invalid_result, None, {}))
+        with self.assertRaises(TypeError):
+            OpenEditorAction.is_applicable(invalid_result, None, {})
 
     def test_environ_editor(self):
         old_environ = os.environ

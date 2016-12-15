@@ -27,7 +27,8 @@ class PrintAspectActionTest(unittest.TestCase):
         self.test_result = Result('origin', 'message', aspect=self.test_aspect)
 
     def test_is_applicable(self):
-        self.assertFalse(self.uut.is_applicable(1, None, None))
+        with self.assertRaises(TypeError):
+            self.uut.is_applicable(1, None, None)
         self.assertFalse(self.uut.is_applicable(Result('o', 'm'), None, None))
         self.assertTrue(self.uut.is_applicable(self.test_result, None, None))
 

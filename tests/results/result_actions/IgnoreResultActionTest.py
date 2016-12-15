@@ -9,7 +9,9 @@ from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 class IgnoreResultActionTest(unittest.TestCase):
 
     def test_is_applicable(self):
-        self.assertFalse(IgnoreResultAction.is_applicable('str', {}, {}))
+        with self.assertRaises(TypeError):
+            IgnoreResultAction.is_applicable('str', {}, {})
+
         self.assertFalse(IgnoreResultAction.is_applicable(
             Result.from_values('origin', 'msg', "file doesn't exist", 2),
             {}, {}))

@@ -1,12 +1,15 @@
 from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 
+from coala_utils.decorators import enforce_signature
+
 
 class PrintAspectAction(ResultAction):
 
     @staticmethod
-    def is_applicable(result, original_file_dict, file_diff_dict):
-        return isinstance(result, Result) and (result.aspect is not None)
+    @enforce_signature
+    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+        return result.aspect is not None
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """

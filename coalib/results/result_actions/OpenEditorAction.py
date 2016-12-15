@@ -6,6 +6,8 @@ from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 
+from coala_utils.decorators import enforce_signature
+
 EDITOR_ARGS = {
     'subl': '--wait',
     'gedit': '-s',
@@ -21,12 +23,13 @@ class OpenEditorAction(ResultAction):
     SUCCESS_MESSAGE = 'Changes saved successfully.'
 
     @staticmethod
-    def is_applicable(result, original_file_dict, file_diff_dict):
+    @enforce_signature
+    def is_applicable(result: Result, original_file_dict, file_diff_dict):
         """
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
         """
-        if not isinstance(result, Result) or not len(result.affected_code) > 0:
+        if not len(result.affected_code) > 0:
             return False
 
         filenames = set(src.renamed_file(file_diff_dict)
