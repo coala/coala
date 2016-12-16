@@ -60,6 +60,16 @@ def _prepare_options(options, bear_class):
 
         options['output_regex'] = re.compile(options['output_regex'])
 
+        supported_names = {
+            'origin',
+            'message',
+            'severity',
+            'line',
+            'column',
+            'end_line',
+            'end_column',
+            'additional_info'
+        }
         no_of_non_named_groups = (options['output_regex'].groups
                                   - len(options['output_regex'].groupindex))
 
@@ -69,6 +79,14 @@ def _prepare_options(options, bear_class):
                             "You should use '(?:<pattern>)' instead of "
                             "'(<pattern>)' for your regex."
                             .format(bear_class.__name__))
+
+        for capture_group_name in options['output_regex'].groupindex:
+            if capture_group_name not in supported_names:
+                logging.warning("{}: Superfluous capturing group '{}' used. "
+                                'Is this a typo? If not, consider removing '
+                                "the capturing group to improve coala's "
+                                'performance.'.format(bear_class.__name__,
+                                                      capture_group_name))
 
         # Don't setup severity_map if one is provided by user or if it's not
         # used inside the output_regex. If one is manually provided but not

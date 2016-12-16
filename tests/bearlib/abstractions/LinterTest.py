@@ -872,7 +872,7 @@ class LinterReallifeTest(unittest.TestCase):
             @linter('some-executable',
                     use_stdout=True,
                     output_format='regex',
-                    output_regex=r'(\w+)')
+                    output_regex=r'(?P<not_supported_name>)\d+(\w+)')
             class SomeBear:
                 pass
 
@@ -880,4 +880,9 @@ class LinterReallifeTest(unittest.TestCase):
             'WARNING:root:SomeBear: Using unnecessary capturing groups '
             'affects the performance of coala. '
             "You should use '(?:<pattern>)' instead of "
-            "'(<pattern>)' for your regex."])
+            "'(<pattern>)' for your regex.",
+
+            'WARNING:root:SomeBear: Superfluous capturing group '
+            "'not_supported_name' used. Is this a typo? If not, consider "
+            "removing the capturing group to improve coala's "
+            'performance.'])
