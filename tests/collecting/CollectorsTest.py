@@ -4,10 +4,11 @@ import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from coalib.bears.Bear import Bear
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
     collect_registered_bears_dirs, filter_section_bears_by_languages,
-    get_all_bears_names)
+    get_all_bears, get_all_bears_names)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
@@ -294,10 +295,27 @@ class CollectorsTests(unittest.TestCase):
         self.assertEqual(str(global_bears['test_section'][0]),
                          "<class 'bears1.Test1GlobalBear'>")
 
+    def test_get_all_bears(self):
+        with bear_test_module():
+            bears = get_all_bears()
+            assert isinstance(bears, list)
+            for bear in bears:
+                assert issubclass(bear, Bear)
+            self.assertSetEqual(
+                {b.name for b in bears},
+                {'DependentBear',
+                 'EchoBear',
+                 'LineCountTestBear',
+                 'JavaTestBear',
+                 'SpaceConsistencyTestBear',
+                 'TestBear'})
+
     def test_get_all_bears_names(self):
         with bear_test_module():
+            names = get_all_bears_names()
+            assert isinstance(names, list)
             self.assertSetEqual(
-                set(get_all_bears_names()),
+                set(names),
                 {'DependentBear',
                  'EchoBear',
                  'LineCountTestBear',

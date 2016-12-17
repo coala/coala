@@ -227,7 +227,10 @@ def filter_capabilities_by_languages(bears, languages):
     return language_bears_capabilities
 
 
-def get_all_bears_names():
+def get_all_bears():
+    """
+    Get a ``list`` of all available bears.
+    """
     from coalib.settings.Section import Section
     printer = LogPrinter(NullPrinter())
     local_bears, global_bears = collect_bears(
@@ -236,7 +239,14 @@ def get_all_bears_names():
         [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
         printer,
         warn_if_unused_glob=False)
-    return [bear.name for bear in itertools.chain(local_bears, global_bears)]
+    return list(itertools.chain(local_bears, global_bears))
+
+
+def get_all_bears_names():
+    """
+    Get a ``list`` of names of all available bears.
+    """
+    return [bear.name for bear in get_all_bears()]
 
 
 def collect_all_bears_from_sections(sections, log_printer):
