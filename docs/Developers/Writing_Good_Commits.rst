@@ -26,6 +26,9 @@ Example of a good commit:
 - `Fixes https://github.com/coala/coala/issues/5861`: Mention the URL
    of the issue it closes or fixes.
 
+Use 'Fixes' when you fixed a bug and 'Closes' when your work is
+related to a new feature.
+
 At coala we are looking heavily at the maintainability of the code.
 
 .. note::
