@@ -1,5 +1,5 @@
-import traceback
 from functools import partial
+import logging
 from os import makedirs
 from os.path import join, abspath, exists
 from shutil import copyfileobj
@@ -7,42 +7,28 @@ from urllib.request import urlopen
 
 from appdirs import user_data_dir
 
-from pyprint.Printer import Printer
-
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
 from coalib.bears.requirements.PackageRequirement import PackageRequirement
 from coalib.bears.requirements.PipRequirement import PipRequirement
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
+from coalib.settings.ConfigurationGathering import get_config_directory
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
-from coalib.settings.ConfigurationGathering import get_config_directory
 
 
-# TODO Deprecate this bear and integrate into new core.
-class Bear(Printer, LogPrinterMixin):
+class Bear(LogPrinterMixin):
     """
     A bear contains the actual subroutine that is responsible for checking
-    source code for certain specifications. However it can actually do
-    whatever it wants with the files it gets. If you are missing some Result
-    type, feel free to contact us and/or help us extending the coalib.
+    source code for certain specifications. However, it can actually do
+    whatever it wants with the files it gets.
 
-    This is the base class for every bear. If you want to write an bear, you
-    will probably want to look at the GlobalBear and LocalBear classes that
-    inherit from this class. In any case you'll want to overwrite at least the
-    run method. You can send debug/warning/error messages through the
-    debug(), warn(), err() functions. These will send the
-    appropriate messages so that they are outputted. Be aware that if you use
-    err(), you are expected to also terminate the bear run-through
-    immediately.
-
-    If you need some setup or teardown for your bear, feel free to overwrite
-    the set_up() and tear_down() functions. They will be invoked
-    before/after every run invocation.
-
-    Settings are available at all times through self.section.
+    This is the base class for every bear. If you want to write a bear, you
+    will probably want to look at the ``ProjectBear`` and ``FileBear`` classes
+    that inherit from this class.
 
     To indicate which languages your bear supports, just give it the
     ``LANGUAGES`` value which should be a set of string(s):
@@ -90,18 +76,18 @@ class Bear(Printer, LogPrinterMixin):
     >>> class SomeBear(Bear):
     ...     INCLUDE_LOCAL_FILES = {'checkstyle.jar', 'google_checks.xml'}
 
-    To keep track easier of what a bear can do, simply tell it to the CAN_FIX
-    and the CAN_DETECT sets. Possible values:
+    To keep track easier of what a bear can do, simply tell it to the
+    ``CAN_FIX`` and the ``CAN_DETECT`` sets. Possible values are:
 
-    >>> CAN_DETECT = {'Syntax', 'Formatting', 'Security', 'Complexity', 'Smell',
-    ... 'Unused Code', 'Redundancy', 'Variable Misuse', 'Spelling',
+    >>> CAN_DETECT = {'Syntax', 'Formatting', 'Security', 'Complexity',
+    ... 'Smell', 'Unused Code', 'Redundancy', 'Variable Misuse', 'Spelling',
     ... 'Memory Leak', 'Documentation', 'Duplication', 'Commented Code',
     ... 'Grammar', 'Missing Import', 'Unreachable Code', 'Undefined Element',
     ... 'Code Simplification'}
     >>> CAN_FIX = {'Syntax', ...}
 
-    Specifying something to CAN_FIX makes it obvious that it can be detected
-    too, so it may be omitted:
+    Specifying something to ``CAN_FIX`` makes it obvious that it can be
+    detected too, so it may be omitted:
 
     >>> class SomeBear(Bear):
     ...     CAN_DETECT = {'Syntax', 'Security'}
@@ -116,8 +102,8 @@ class Bear(Printer, LogPrinterMixin):
     >>> SomeBear.data_dir == SomeOtherBear.data_dir
     False
 
-    BEAR_DEPS contains bear classes that are to be executed before this bear
-    gets executed. The results of these bears will then be passed to the
+    ``BEAR_DEPS`` contains bear classes that are to be executed before this
+    bear gets executed. The results of these bears will then be passed to the
     run method as a dict via the dependency_results argument. The dict
     will have the name of the Bear as key and the list of its results as
     results:
@@ -146,59 +132,58 @@ class Bear(Printer, LogPrinterMixin):
     @classproperty
     def name(cls):
         """
-        :return: The name of the bear
+        :return:
+            The name of the bear
         """
         return cls.__name__
 
     @classproperty
     def can_detect(cls):
         """
-        :return: A set that contains everything a bear can detect, gathering
-                 information from what it can fix too.
+        :return:
+            A set that contains everything a bear can detect, including
+            information from what it can fix too.
         """
         return cls.CAN_DETECT | cls.CAN_FIX
 
     @classproperty
     def maintainers(cls):
         """
-        :return: A set containing ``MAINTAINERS`` if specified, else takes
-                 ``AUTHORS`` by default.
+        :return:
+            A set containing ``MAINTAINERS`` if specified, else takes
+            ``AUTHORS`` by default.
         """
         return cls.AUTHORS if cls.MAINTAINERS == set() else cls.MAINTAINERS
 
     @classproperty
     def maintainers_emails(cls):
         """
-        :return: A set containing ``MAINTAINERS_EMAILS`` if specified, else
-                 takes ``AUTHORS_EMAILS`` by default.
+        :return:
+            A set containing ``MAINTAINERS_EMAILS`` if specified, else takes
+            ``AUTHORS_EMAILS`` by default.
         """
         return (cls.AUTHORS_EMAILS if cls.MAINTAINERS_EMAILS == set()
                 else cls.MAINTAINERS)
 
     @enforce_signature
-    def __init__(self,
-                 section: Section,
-                 message_queue,
-                 timeout=0):
+    def __init__(self, section: Section, file_dict: dict):
         """
         Constructs a new bear.
 
-        :param section:       The section object where bear settings are
-                              contained.
-        :param message_queue: The queue object for messages. Can be ``None``.
-        :param timeout:       The time the bear is allowed to run. To set no
-                              time limit, use 0.
-        :raises TypeError:    Raised when ``message_queue`` is no queue.
-        :raises RuntimeError: Raised when bear requirements are not fulfilled.
+        :param section:
+            The section object where bear settings are contained.
+        :param file_dict:
+            The file-dictionary containing a mapping of filenames to the
+            according file contents.
+        :raises RuntimeError:
+            Raised when bear requirements are not fulfilled.
         """
-        Printer.__init__(self)
-
-        if message_queue is not None and not hasattr(message_queue, 'put'):
-            raise TypeError('message_queue has to be a Queue or None.')
-
         self.section = section
-        self.message_queue = message_queue
-        self.timeout = timeout
+        self.file_dict = file_dict
+
+        # TODO Maybe a dict mapping bears to their results for easier access?
+        # TODO   As normally you need to filter them always for bear types...
+        self._dependency_results = tuple()
 
         self.setup_dependencies()
         cp = type(self).check_prerequisites()
@@ -208,66 +193,59 @@ class Bear(Printer, LogPrinterMixin):
             if cp is not False:
                 error_string += ' ' + cp
 
-            self.err(error_string)
+            logging.error(error_string)
             raise RuntimeError(error_string)
 
-    def _print(self, output, **kwargs):
-        self.debug(output)
+    # TODO Add method to reset dependency results?
+
+    def add_dependency_results(self, dependency_results):
+        """
+        Adds dependency results to this instance.
+
+        This function is used by the core to add dependency results as they
+        are ready.
+
+        :param dependency_results:
+            The results to add.
+        """
+        self._dependency_results += tuple(dependency_results)
+
+    @property
+    def dependency_results(self):
+        """
+        Contains all dependency results.
+
+        This variable gets set during bear execution from the core and can be
+        used from ``analyze``.
+
+        :return:
+            A list of results received from dependency bears.
+        """
+        return self._dependency_results
 
     def log_message(self, log_message, timestamp=None, **kwargs):
-        if self.message_queue is not None:
-            self.message_queue.put(log_message)
+        level_map = {LOG_LEVEL.DEBUG: logging.DEBUG,
+                     LOG_LEVEL.WARNING: logging.WARNING,
+                     LOG_LEVEL.INFO: logging.INFO,
+                     LOG_LEVEL.ERROR: logging.ERROR}
 
-    def run(self, *args, dependency_results=None, **kwargs):
-        raise NotImplementedError
+        logging.warning("Using 'self.log' of 'Bear' is deprecated. Please "
+                        "use the Python built-in 'logging' module instead.")
+        logging.log(level_map[log_message.log_level], log_message.message)
 
-    def run_bear_from_section(self, args, kwargs):
-        try:
-            kwargs.update(
-                self.get_metadata().create_params_from_section(self.section))
-        except ValueError as err:
-            self.warn('The bear {} cannot be executed.'.format(
-                self.name), str(err))
-            return
-
-        return self.run(*args, **kwargs)
-
-    def execute(self, *args, **kwargs):
-        name = self.name
-        try:
-            self.debug('Running bear {}...'.format(name))
-            # If it's already a list it won't change it
-            result = self.run_bear_from_section(args, kwargs)
-            return [] if result is None else list(result)
-        except:
-            self.warn('Bear {} failed to run. Take a look at debug messages'
-                      ' (`-V`) for further information.'.format(name))
-            self.debug(
-                'The bear {bear} raised an exception. If you are the author '
-                'of this bear, please make sure to catch all exceptions. If '
-                'not and this error annoys you, you might want to get in '
-                'contact with the author of this bear.\n\nTraceback '
-                'information is provided below:\n\n{traceback}'
-                '\n'.format(bear=name, traceback=traceback.format_exc()))
-
-    @staticmethod
-    def kind():
-        """
-        :return: The kind of the bear
-        """
-        raise NotImplementedError
-
+    # TODO ?
     @classmethod
     def get_metadata(cls):
         """
-        :return: Metadata for the run function. However parameters like
-                 ``self`` or parameters implicitly used by coala (e.g.
-                 filename for local bears) are already removed.
+        :return:
+            Metadata for the run function. However parameters like ``self`` or
+            parameters implicitly used by coala are already removed.
         """
         return FunctionMetadata.from_function(
-            cls.run,
+            cls.analyze,
             omit={'self', 'dependency_results'})
 
+    # TODO Shall I keep this??? I think there was a usage for this...
     @classmethod
     def __json__(cls):
         """
@@ -292,24 +270,12 @@ class Bear(Printer, LogPrinterMixin):
         """
         Checks if the given list contains all dependencies.
 
-        :param lst: A list of all already resolved bear classes (not
-                    instances).
-        :return:    A set of missing dependencies.
+        :param lst:
+            A list of all already resolved bear classes (not instances).
+        :return:
+            A set of missing dependencies.
         """
         return set(cls.BEAR_DEPS) - set(lst)
-
-    @classmethod
-    def get_non_optional_settings(cls):
-        """
-        This method has to determine which settings are needed by this bear.
-        The user will be prompted for needed settings that are not available
-        in the settings file so don't include settings where a default value
-        would do.
-
-        :return: A dictionary of needed settings as keys and a tuple of help
-                 text and annotation as values
-        """
-        return cls.get_metadata().non_optional_params
 
     @staticmethod
     def setup_dependencies():
@@ -329,20 +295,23 @@ class Bear(Printer, LogPrinterMixin):
 
         Section value requirements shall be checked inside the ``run`` method.
 
-        :return: True if prerequisites are satisfied, else False or a string
-                 that serves a more detailed description of what's missing.
+        :return:
+            True if prerequisites are satisfied, else False or a string that
+            serves a more detailed description of what's missing.
         """
         return True
 
     def get_config_dir(self):
         """
-        Gives the directory where the configuration file is
+        Gives the directory where the configuration file resides.
 
-        :return: Directory of the config file
+        :return:
+            Directory of the config file.
         """
         return get_config_directory(self.section)
 
-    def download_cached_file(self, url, filename):
+    @classmethod
+    def download_cached_file(cls, url, filename):
         """
         Downloads the file if needed and caches it for the next time. If a
         download happens, the user will be informed.
@@ -357,24 +326,28 @@ class Bear(Printer, LogPrinterMixin):
         >>> from os import remove
         >>> if exists(join(bear.data_dir, "a_file")):
         ...     remove(join(bear.data_dir, "a_file"))
-        >>> file = bear.download_cached_file("https://github.com/", "a_file")
+        >>> file = bear.download_cached_file("http://gitmate.com/", "a_file")
 
         If we download it again, it'll be much faster as no download occurs:
 
-        >>> newfile = bear.download_cached_file("https://github.com/", "a_file")
+        >>> newfile = bear.download_cached_file("http://gitmate.com/", "a_file")
         >>> newfile == file
         True
 
-        :param url:      The URL to download the file from.
-        :param filename: The filename it should get, e.g. "test.txt".
-        :return:         A full path to the file ready for you to use!
+        :param url:
+            The URL to download the file from.
+        :param filename:
+            The filename it should get, e.g. "test.txt".
+        :return:
+            A full path to the file ready for you to use!
         """
-        filename = join(self.data_dir, filename)
+        filename = join(cls.data_dir, filename)
+        # todo what about curls fetch-if-newer?
         if exists(filename):
             return filename
 
-        self.info('Downloading {filename!r} for bear {bearname} from {url}.'
-                  .format(filename=filename, bearname=self.name, url=url))
+        logging.info('{bearname}: Downloading {filename!r} from {url}.'
+                     .format(filename=filename, bearname=cls.name, url=url))
 
         with urlopen(url) as response, open(filename, 'wb') as out_file:
             copyfileobj(response, out_file)
@@ -391,9 +364,41 @@ class Bear(Printer, LogPrinterMixin):
         makedirs(data_dir, exist_ok=True)
         return data_dir
 
+    # TODO Different name? What about constructor method?
     @property
     def new_result(self):
         """
         Returns a partial for creating a result with this bear already bound.
         """
         return partial(Result.from_values, self)
+
+    # TODO Rename result.origin to result.bear?
+
+    def execute_task(self, args, kwargs):
+        # TODO Docs -> mention that here items are precollected into a list,
+        # TODO   as async stuff with generators - which we usually use in
+        # TODO   `analyze` - don't work.
+        return list(self.analyze(*args, **kwargs))
+
+    def analyze(self, *args, **kwargs):
+        """
+        Handles the given file.
+
+        :param file_proxy:
+            Object containing filename and contents.
+        :return:
+            An iterable of results.
+        """
+        raise NotImplementedError('This function has to be implemented for a '
+                                  'runnable bear.')
+
+    def generate_tasks(self):
+        """
+        This method is responsible for providing the job arguments ``analyze``
+        is called with.
+
+        :return:
+            An iterable containing the positional and keyword arguments
+            organized in pairs: ``(args-tuple, kwargs-dict)``
+        """
+        raise NotImplementedError
