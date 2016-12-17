@@ -342,7 +342,16 @@ class Language(metaclass=LanguageMeta):
         if len(self.versions) > 1:
             raise AttributeError('You have to specify ONE version of your '
                                  'language to retrieve attributes for it.')
-        return self._attributes[item]
+        try:
+            return self._attributes[item]
+        except KeyError:
+            if len(self.attributes) == 0:
+                message = 'There are no available attributes for this language.'
+            else:
+                message = ('This is not a valid attribute! '
+                           '\nThe following attributes are available:')
+                message += '\n'.join(self.attributes)
+            raise AttributeError(message)
 
     def __str__(self):
         result = type(self).__qualname__
