@@ -14,7 +14,7 @@ python3 setup.py sdist bdist_wheel
 # Don't block merging because pypi is in error 500 mood again
 set +e
 twine upload dist/*.whl -u "$PYPIUSER" -p "$PYPIPW"
-twine upload dist/*.tag.gz -u "$PYPIUSER" -p "$PYPIPW"
+twine upload dist/*.tar.gz -u "$PYPIUSER" -p "$PYPIPW"
 set -e
 
 echo "Installing coala from pypi"
