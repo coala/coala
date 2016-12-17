@@ -95,6 +95,9 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         """
         return type.__hash__(cls)
 
+    def __dir__(cls):
+        return super().__dir__() + [lang.__name__ for lang in type(cls).all]
+
     def __getattr__(cls, item):
         try:
             return next(lang for lang in type(cls).all if item in lang)
