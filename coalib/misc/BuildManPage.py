@@ -3,6 +3,8 @@ import datetime
 from distutils.core import Command
 from distutils.errors import DistutilsOptionError
 
+from coalib import get_version
+
 
 class BuildManPage(Command):
     """
@@ -75,7 +77,7 @@ class BuildManPage(Command):
         dist = self.distribution
         mpf = ManPageFormatter(appname,
                                desc=dist.get_description(),
-                               long_desc=dist.get_long_description(),
+                               # long_desc=dist.get_long_description(),
                                ext_sections=sections,
                                parser=self._parser)
 
@@ -149,9 +151,10 @@ class ManPageFormatter(argparse.HelpFormatter):
         return ManPageFormatter._add_format(string, '\\fB', '\\fR')
 
     def _mk_title(self):
-        return '.TH {0} {1} {2}\n'.format(self._prog,
-                                          self._section,
-                                          self._today)
+        return '.TH {0} {1} {2} "coala {3}"\n'.format(self._prog,
+                                                      self._section,
+                                                      self._today,
+                                                      get_version())
 
     def _mk_name(self):
         return '.SH NAME\n%s\n' % (self._parser.prog)
