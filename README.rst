@@ -139,7 +139,8 @@ A sample ``.coafile`` will look something like this:
   If you don't find your language there, we've got some
   `bears that work for all languages <https://github.com/coala/bear-docs/blob/master/README.rst#all>`__. Or you can file an issue and we would create a bear for you!
 * ``use_spaces`` enforces spaces over tabs in the codebase. ``use_spaces`` is a
-  setting for the ``SpaceConsistencyBear``.
+  setting for the ``SpaceConsistencyBear`` defined
+  `here <https://github.com/coala/bear-docs/blob/master/docs/SpaceConsistencyBear.rst>`__.
 
 ``[Spacing]`` is a *section*. Sections are executed in the order you
 define them.
