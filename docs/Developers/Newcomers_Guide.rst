@@ -308,6 +308,10 @@ and send it. You have successfully edited your last commit!
 
     $ git push --force myfork
 
+The meaning of ``myfork`` is explained
+`here <http://api.coala.io/en/latest/Developers/Newcomers_Guide.html#step-4-creating-a-fork-and-testing-your-changes>`_.
+The ``Pull Request`` will automatically update with the newest changes.
+
 **Congratulations!** Your PR just got accepted! You're awesome.
 Now you should `tell us about your experience <https://coala.io/newform>`_ and
 go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
