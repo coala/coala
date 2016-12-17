@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from functools import partial, partialmethod
+import logging
 import inspect
 from itertools import chain, compress
 import re
@@ -17,12 +18,14 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
-def _prepare_options(options):
+def _prepare_options(options, bear_class):
     """
     Prepares options for ``linter`` for a given options dict in-place.
 
     :param options:
         The options dict that contains user/developer inputs.
+    :param bear_class:
+        The Bear ``class`` which is being decorated by ``linter``.
     """
     allowed_options = {'executable',
                        'output_format',
@@ -56,6 +59,34 @@ def _prepare_options(options):
                              "output-format 'regex'.")
 
         options['output_regex'] = re.compile(options['output_regex'])
+
+        supported_names = {
+            'origin',
+            'message',
+            'severity',
+            'line',
+            'column',
+            'end_line',
+            'end_column',
+            'additional_info'
+        }
+        no_of_non_named_groups = (options['output_regex'].groups
+                                  - len(options['output_regex'].groupindex))
+
+        if no_of_non_named_groups:
+            logging.warning('{}: Using unnecessary capturing groups '
+                            'affects the performance of coala. '
+                            "You should use '(?:<pattern>)' instead of "
+                            "'(<pattern>)' for your regex."
+                            .format(bear_class.__name__))
+
+        for capture_group_name in options['output_regex'].groupindex:
+            if capture_group_name not in supported_names:
+                logging.warning("{}: Superfluous capturing group '{}' used. "
+                                'Is this a typo? If not, consider removing '
+                                "the capturing group to improve coala's "
+                                'performance.'.format(bear_class.__name__,
+                                                      capture_group_name))
 
         # Don't setup severity_map if one is provided by user or if it's not
         # used inside the output_regex. If one is manually provided but not
@@ -115,6 +146,9 @@ def _prepare_options(options):
 
 
 def _create_linter(klass, options):
+
+    _prepare_options(options, klass)
+
     class LinterMeta(type):
 
         def __repr__(cls):
@@ -740,7 +774,5 @@ def linter(executable: str,
     options['config_suffix'] = config_suffix
     options['executable_check_fail_info'] = executable_check_fail_info
     options['prerequisite_check_command'] = prerequisite_check_command
-
-    _prepare_options(options)
 
     return partial(_create_linter, options=options)
