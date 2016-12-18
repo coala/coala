@@ -15,7 +15,14 @@ from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)
 from coalib.misc.Constants import configure_logging
 
+
+"""
 do_nothing = lambda *args: True
+"""
+
+
+def do_nothing(*args):
+    return True
 
 
 def run_coala(console_printer=None,

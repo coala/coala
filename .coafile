@@ -17,7 +17,7 @@ language = Python
 preferred_quotation = '
 
 [autopep8]
-bears = PEP8Bear
+bears = PEP8Bear, PycodestyleBear
 
 [linelength]  # Sometimes autopep8 makes too long lines, need to check after!
 bears = LineLengthBear
