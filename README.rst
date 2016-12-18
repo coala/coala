@@ -28,13 +28,6 @@ To see what coala can do for your language, run:
 |Linux Build Status| |Windows Build status| |Scrutinizer Code Quality|
 |codecov.io| |Documentation Status| |Gitmate|
 
-.. Start ignoring LineLengthBear
-
-======================================= ================================================ ================================================= ====================================================== =========================================================
-`Official Website <http://coala.io/>`__ `Documentation <https://docs.coala.io>`__  `Twitter <https://twitter.com/coala_analyzer>`__ `Facebook <https://www.facebook.com/coalaAnalyzer/>`__ `Video Demo <https://asciinema.org/a/42968?autoplay=1>`__
-======================================= ================================================ ================================================= ====================================================== =========================================================
-
-.. Stop ignoring
 
 -----
 
@@ -252,7 +245,7 @@ License
    :target: https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master
 .. |codecov.io| image:: https://img.shields.io/codecov/c/github/coala/coala/master.svg?label=branch%20coverage
    :target: https://codecov.io/github/coala/coala?branch=master
-.. |Documentation Status| image:: https://docs.coala.io/projects/coala/badge/?version=latest
+.. |Documentation Status| image:: https://img.shields.io/badge/Documentation-updated-brightgreen.svg
    :target: http://coala.rtfd.org/
 .. |AGPL| image:: https://img.shields.io/github/license/coala/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
