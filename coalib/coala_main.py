@@ -16,11 +16,6 @@ from coalib.misc.CachingUtilities import (
 from coalib.misc.Constants import configure_logging
 
 
-"""
-do_nothing = lambda *args: True
-"""
-
-
 def do_nothing(*args):
     return True
 
