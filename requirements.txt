@@ -5,3 +5,4 @@ colorlog~=2.7
 libclang-py3~=3.4.0
 Pygments~=2.1
 PyPrint~=0.2.6
+dependency_management~=0.1.5

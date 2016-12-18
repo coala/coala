@@ -12,8 +12,9 @@ from pyprint.Printer import Printer
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
-from coalib.bears.requirements.PipRequirement import PipRequirement
+from dependency_management.requirements.PackageRequirement import (
+    PackageRequirement)
+from dependency_management.requirements.PipRequirement import PipRequirement
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
