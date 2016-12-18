@@ -335,9 +335,9 @@ class Bear(Printer, LogPrinterMixin):
 
     def get_config_dir(self):
         """
-        Gives the directory where the configuration file is
+        Gives the directory where the configuration file is.
 
-        :return: Directory of the config file
+        :return: Directory of the config file.
         """
         return get_config_directory(self.section)
 
