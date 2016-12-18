@@ -77,7 +77,7 @@ class BuildManPage(Command):
         dist = self.distribution
         mpf = ManPageFormatter(appname,
                                desc=dist.get_description(),
-                               # long_desc=dist.get_long_description(),
+                               long_desc=dist.get_long_description(),
                                ext_sections=sections,
                                parser=self._parser)
 
