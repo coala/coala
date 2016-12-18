@@ -1,5 +1,5 @@
-Documentation coala settings
-============================
+coala settings
+==============
 
 .. argparse::
    :module: coalib.parsing.DefaultArgParser
