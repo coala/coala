@@ -44,11 +44,15 @@ or run:
 To perform code analysis, simply specify the analysis routines (bears) and the
 files you want it to run on, for example:
 
-    $ coala --bears SpaceConsistencyBear --files **.py
+    spaceBear::
+
+            $ coala --bears SpaceConsistencyBear --files **.py
 
 coala can also automatically fix your code:
 
-    $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
+    spacePatchBear::
+
+            $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
 
 To run coala without user interaction, run the `coala --non-interactive`,
 `coala --json` and `coala --format` commands.

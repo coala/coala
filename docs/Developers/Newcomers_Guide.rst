@@ -96,7 +96,7 @@ invitation to our org. This is your first step towards contributing.
 A maintainer will command ``cobot`` (our gitter bot) to invite
 you and be part of the Newcomer team.
 The invitation will be sent by mail and you will have to accept
-it to join. If you don't find the invitation, accept it `here <https://github.com/coala>`_.
+it to join. If you don't find the invitation, accept it `here <https://github.com/coala>`__.
 
 Now that you are part of our organization, you can start working on issues.
 If you are familiar with git, you can skip the next section and pick an issue.
@@ -308,7 +308,7 @@ and send it. You have successfully edited your last commit!
     $ git push --force myfork
 
 The meaning of ``myfork`` is explained
-`here <http://api.coala.io/en/latest/Developers/Newcomers_Guide.html#step-4-creating-a-fork-and-testing-your-changes>`_.
+`here <http://api.coala.io/en/latest/Developers/Newcomers_Guide.html#step-4-creating-a-fork-and-testing-your-changes>`__.
 The ``Pull Request`` will automatically update with the newest changes.
 
 **Congratulations!** Your PR just got accepted! You're awesome.
