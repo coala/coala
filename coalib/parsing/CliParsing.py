@@ -10,6 +10,7 @@ from coalib.settings.Section import Section, append_to_sections
 def parse_cli(arg_list=None,
               origin=os.getcwd(),
               arg_parser=None,
+              args=None,
               key_value_delimiters=('=', ':'),
               comment_seperators=(),
               key_delimiters=(',',),
@@ -23,6 +24,7 @@ def parse_cli(arg_list=None,
                                         paths given as argument.
     :param arg_parser:                  Instance of ArgParser that is used to
                                         parse none-setting arguments.
+    :param args:                        Alternative pre-parsed CLI arguments.
     :param key_value_delimiters:        Delimiters to separate key and value
                                         in setting arguments where settings are
                                         being defined.
@@ -39,7 +41,14 @@ def parse_cli(arg_list=None,
                                         as keys and the sections themselves
                                         as value.
     """
-    arg_parser = default_arg_parser() if arg_parser is None else arg_parser
+    assert not (arg_list and args), (
+        'Either call parse_cli() with an arg_list of CLI arguments or '
+        'with pre-parsed args, but not with both.')
+
+    if args is None:
+        arg_parser = default_arg_parser() if arg_parser is None else arg_parser
+        args = arg_parser.parse_args(arg_list)
+
     origin += os.path.sep
     sections = OrderedDict(cli=Section('cli'))
     line_parser = LineParser(key_value_delimiters,
@@ -49,8 +58,7 @@ def parse_cli(arg_list=None,
                              section_override_delimiters,
                              key_value_append_delimiters)
 
-    for arg_key, arg_value in sorted(
-            vars(arg_parser.parse_args(arg_list)).items()):
+    for arg_key, arg_value in sorted(vars(args).items()):
         if arg_key == 'settings' and arg_value is not None:
             parse_custom_settings(sections,
                                   arg_value,

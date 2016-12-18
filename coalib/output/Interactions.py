@@ -23,4 +23,4 @@ def fail_acquire_settings(log_printer, settings_names_dict, section):
             msg += '{} (from {}) - {}'.format(name, setting[1], setting[0])
 
         log_printer.err(msg)
-        raise AssertionError
+        raise AssertionError(msg)

@@ -1,5 +1,4 @@
 from itertools import chain
-import multiprocessing
 import os
 import platform
 import queue
@@ -273,7 +272,7 @@ def get_file_dict(filename_list, log_printer):
     return file_dict
 
 
-def filter_raising_callables(it, exception, *args, **kwargs):
+def filter_raising_callables(it, exception, *args, debug=False, **kwargs):
     """
     Filters all callable items inside the given iterator that raise the
     given exceptions.
@@ -287,7 +286,8 @@ def filter_raising_callables(it, exception, *args, **kwargs):
         try:
             yield elem(*args, **kwargs)
         except exception:
-            pass
+            if debug:
+                raise
 
 
 def instantiate_bears(section,
@@ -295,7 +295,8 @@ def instantiate_bears(section,
                       global_bear_list,
                       file_dict,
                       message_queue,
-                      console_printer):
+                      console_printer,
+                      debug=False):
     """
     Instantiates each bear with the arguments it needs.
 
@@ -315,7 +316,8 @@ def instantiate_bears(section,
                            RuntimeError,
                            section,
                            message_queue,
-                           timeout=0.1)]
+                           timeout=0.1,
+                           debug=debug)]
 
     global_bear_list = [bear
                         for bear in filter_raising_callables(
@@ -324,7 +326,8 @@ def instantiate_bears(section,
                             file_dict,
                             section,
                             message_queue,
-                            timeout=0.1)]
+                            timeout=0.1,
+                            debug=debug)]
 
     return local_bear_list, global_bear_list
 
@@ -335,7 +338,8 @@ def instantiate_processes(section,
                           job_count,
                           cache,
                           log_printer,
-                          console_printer):
+                          console_printer,
+                          debug=False):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -348,6 +352,9 @@ def instantiate_processes(section,
                              a file cache buffer.
     :param log_printer:      The log printer to warn to.
     :param console_printer:  Object to print messages on the console.
+    :param debug:            Bypass multiprocessing and activate debug mode
+                             for bears, not catching any exceptions on running
+                             them.
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
@@ -364,13 +371,17 @@ def instantiate_processes(section,
     complete_filename_list = filename_list
     complete_file_dict = get_file_dict(complete_filename_list, log_printer)
 
-    manager = multiprocessing.Manager()
-    global_bear_queue = multiprocessing.Queue()
-    filename_queue = multiprocessing.Queue()
+    if debug:
+        from . import DebugProcessing as processing
+    else:
+        import multiprocessing as processing
+    manager = processing.Manager()
+    global_bear_queue = processing.Queue()
+    filename_queue = processing.Queue()
     local_result_dict = manager.dict()
     global_result_dict = manager.dict()
-    message_queue = multiprocessing.Queue()
-    control_queue = multiprocessing.Queue()
+    message_queue = processing.Queue()
+    control_queue = processing.Queue()
 
     loaded_local_bears_count = len(local_bear_list)
     local_bear_list[:], global_bear_list[:] = instantiate_bears(
@@ -379,7 +390,8 @@ def instantiate_processes(section,
         global_bear_list,
         complete_file_dict,
         message_queue,
-        console_printer=console_printer)
+        console_printer=console_printer,
+        debug=debug)
     loaded_valid_local_bears_count = len(local_bear_list)
     # Note: the complete file dict is given as the file dict to bears and
     # the whole project is accessible to every bear. However, local bears are
@@ -414,12 +426,13 @@ def instantiate_processes(section,
                         'global_result_dict': global_result_dict,
                         'message_queue': message_queue,
                         'control_queue': control_queue,
-                        'timeout': 0.1}
+                        'timeout': 0.1,
+                        'debug': debug}
 
     fill_queue(filename_queue, file_dict.keys())
     fill_queue(global_bear_queue, range(len(global_bear_list)))
 
-    return ([multiprocessing.Process(target=run, kwargs=bear_runner_args)
+    return ([processing.Process(target=run, kwargs=bear_runner_args)
              for i in range(job_count)],
             bear_runner_args)
 
@@ -512,7 +525,8 @@ def process_queues(processes,
                    section,
                    cache,
                    log_printer,
-                   console_printer):
+                   console_printer,
+                   debug=False):
     """
     Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
@@ -536,6 +550,8 @@ def process_queues(processes,
                                output medium.
     :param cache:              An instance of ``misc.Caching.FileCache`` to use
                                as a file cache buffer.
+    :param debug:              Run in debug mode, expecting that no logger
+                               thread is running.
     :return:                   Return True if all bears execute successfully and
                                Results were delivered to the user. Else False.
     """
@@ -550,8 +566,8 @@ def process_queues(processes,
     result_files = set()
     ignore_ranges = list(yield_ignore_ranges(file_dict))
 
-    # One process is the logger thread
-    while local_processes > 1:
+    # One process is the logger thread (if not in debug mode)
+    while local_processes > (1 if not debug else 0):
         try:
             control_elem, index = control_queue.get(timeout=0.1)
 
@@ -639,6 +655,7 @@ def simplify_section_result(section_result):
     """
     section_yielded_result = section_result[0]
     results_for_section = []
+
     for value in chain(section_result[1].values(),
                        section_result[2].values()):
         if value is None:
@@ -659,7 +676,8 @@ def execute_section(section,
                     print_results,
                     cache,
                     log_printer,
-                    console_printer):
+                    console_printer,
+                    debug=False):
     """
     Executes the section with the given bears.
 
@@ -683,6 +701,8 @@ def execute_section(section,
                              a file cache buffer.
     :param log_printer:      The log_printer to warn to.
     :param console_printer:  Object to print messages on the console.
+    :param debug:            Bypass multiprocessing and run bears in debug mode,
+                             not catching any exceptions.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
@@ -690,14 +710,17 @@ def execute_section(section,
                              results (bear names are key) as well as the
                              file dictionary.
     """
-    try:
-        running_processes = int(section['jobs'])
-    except ValueError:
-        log_printer.warn("Unable to convert setting 'jobs' into a number. "
-                         'Falling back to CPU count.')
-        running_processes = get_cpu_count()
-    except IndexError:
-        running_processes = get_cpu_count()
+    if debug:
+        running_processes = 1
+    else:
+        try:
+            running_processes = int(section['jobs'])
+        except ValueError:
+            log_printer.warn("Unable to convert setting 'jobs' into a number. "
+                             'Falling back to CPU count.')
+            running_processes = get_cpu_count()
+        except IndexError:
+            running_processes = get_cpu_count()
 
     processes, arg_dict = instantiate_processes(section,
                                                 local_bear_list,
@@ -705,12 +728,16 @@ def execute_section(section,
                                                 running_processes,
                                                 cache,
                                                 log_printer,
-                                                console_printer=console_printer)
+                                                console_printer=console_printer,
+                                                debug=debug)
 
     logger_thread = LogPrinterThread(arg_dict['message_queue'],
                                      log_printer)
     # Start and join the logger thread along with the processes to run bears
-    processes.append(logger_thread)
+    if not debug:
+        # in debug mode the logging messages are directly processed by the
+        # message_queue
+        processes.append(logger_thread)
 
     for runner in processes:
         runner.start()
@@ -725,12 +752,16 @@ def execute_section(section,
                                section,
                                cache,
                                log_printer,
-                               console_printer=console_printer),
+                               console_printer=console_printer,
+                               debug=debug),
                 arg_dict['local_result_dict'],
                 arg_dict['global_result_dict'],
                 arg_dict['file_dict'])
     finally:
-        logger_thread.running = False
+        if not debug:
+            # in debug mode multiprocessing and logger_thread are disabled
+            # ==> no need for following actions
+            logger_thread.running = False
 
-        for runner in processes:
-            runner.join()
+            for runner in processes:
+                runner.join()
