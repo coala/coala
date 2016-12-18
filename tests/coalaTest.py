@@ -5,8 +5,8 @@ import unittest
 import unittest.mock
 from pkg_resources import VersionConflict
 
-from coalib import coala
-from coalib.misc.ContextManagers import prepare_file
+from coalib import assert_supported_version, coala
+from coala_utils.ContextManagers import prepare_file
 from tests.TestUtilities import execute_coala, bear_test_module
 
 
@@ -29,6 +29,21 @@ class coalaTest(unittest.TestCase):
             self.assertIn('This file has 1 lines.',
                           output,
                           'The output should report count as 1 lines')
+
+    @unittest.mock.patch('sys.version_info', tuple((2, 7, 11)))
+    def test_python_version_27(self):
+        with self.assertRaises(SystemExit):
+            assert_supported_version()
+            self.assertEqual(cm.error_code, 4)
+
+    @unittest.mock.patch('sys.version_info', tuple((3, 3, 6)))
+    def test_python_version_33(self):
+        with self.assertRaises(SystemExit):
+            assert_supported_version()
+            self.assertEqual(cm.error_code, 4)
+
+    def test_python_version_34(self):
+        assert_supported_version()
 
     def test_did_nothing(self):
         retval, output = execute_coala(coala.main, 'coala', '-I',
