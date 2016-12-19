@@ -1,4 +1,4 @@
-.. image:: https://cloud.githubusercontent.com/assets/7521600/15992701/ef245fd4-30ef-11e6-992d-275c5ca7c3a0.jpg
+.. image:: https://cloud.githubusercontent.com/assets/15197846/21435381/96e50466-c89f-11e6-8f0c-95267da389cf.png
 
 coala: Linting and fixing code for all languages
 ------------------------------------------------
