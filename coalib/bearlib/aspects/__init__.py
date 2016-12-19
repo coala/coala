@@ -58,7 +58,8 @@ class Root(aspectbase, metaclass=aspectclass):
     >>> LineLength('Python', max_line_length="100").tastes
     {'max_line_length': 100}
 
-    If no settings are given, the defaults will be taken>
+    If no settings are given, the defaults will be taken:
+
     >>> LineLength('Python').tastes
     {'max_line_length': 80}
 
