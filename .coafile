@@ -91,6 +91,10 @@ files = docs/**/*.rst
 ignore = docs/API
 bears = InvalidLinkBear
 
+[rst]
+bears = reSTLintBear
+files = README.rst
+
 [TODOS]
 enabled = False
 
