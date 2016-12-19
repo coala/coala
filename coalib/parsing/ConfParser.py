@@ -8,6 +8,8 @@ from coalib.parsing.LineParser import LineParser
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
+__all__ = ('ConfParser', )
+
 
 class ConfParser:
 
@@ -160,3 +162,7 @@ class ConfParser:
         self.sections = OrderedDict()
         self.sections['default'] = Section('Default')
         self.__rand_helper = 0
+
+
+# Ignore PycodestyleBear (E402)
+from .SimplerConfParser import SimplerConfParser as ConfParser
