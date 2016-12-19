@@ -201,7 +201,7 @@ class ProcessingTest(unittest.TestCase):
             {1: [first_global]},
             {'f': ['first line  # stop ignoring, invalid ignore range\n',
                    'second line  # ignore all\n',
-                   "third line\n",
+                   'third line\n',
                    "fourth line  # gnore shouldn't trigger without i!\n",
                    '# Start ignoring ABear, BBear and CBear\n',
                    '# Stop ignoring\n',
