@@ -26,17 +26,10 @@ The review process for coala is as follows:
 
 5. The developers will acknowledge the commits by writing
 
-::
+    - ``ack commit_SHA``, in case the commit is ready, or
 
-    ack commit_SHA
-
-in case the commit is ready, or
-
-::
-
-    unack commit_SHA / commit_SHA needs work
-
-in case it is not ready yet and needs some more work.
+    - ``unack commit_SHA / commit_SHA needs work`` in case it is not ready yet
+      and needs some more work.
 
 6. If the commits are not linearly mergeable into master, rebase and go
    to step one.
