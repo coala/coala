@@ -443,8 +443,9 @@ def yield_ignore_ranges(file_dict):
         stop_ignoring = False
         for line_number, line in enumerate(file, start=1):
             # Before lowering all lines ever read, first look for the biggest
-            # common substring, case sensitive: I*gnor*e, start i*gnor*ing.
-            if 'gnor' in line:
+            # common substring, case sensitive: I*gnor*e, start i*gnor*ing,
+            # N*oqa*.
+            if 'gnor' in line or 'oqa' in line:
                 line = line.lower()
                 if 'start ignoring ' in line:
                     start = line_number
@@ -459,13 +460,17 @@ def yield_ignore_ranges(file_dict):
                                    1,
                                    line_number,
                                    len(file[line_number-1])))
-                elif 'ignore ' in line:
-                    end_line = min(line_number + 1, len(file))
-                    yield (get_ignore_scope(line, 'ignore '),
-                           SourceRange.from_values(
-                               filename,
-                               line_number, 1,
-                               end_line, len(file[end_line - 1])))
+
+                else:
+                    for ignore_stmt in ['ignore ', 'noqa ', 'noqa']:
+                        if ignore_stmt in line:
+                            end_line = min(line_number + 1, len(file))
+                            yield (get_ignore_scope(line, ignore_stmt),
+                                   SourceRange.from_values(
+                                       filename,
+                                       line_number, 1,
+                                       end_line, len(file[end_line-1])))
+                            break
 
         if stop_ignoring is False and start is not None:
             yield (bears,
