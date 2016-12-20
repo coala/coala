@@ -7,6 +7,7 @@ class test(list):
     def method():
         pass
 
+
 a = [1, 2, 3]
 b = [1, 2, 4]
 

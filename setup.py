@@ -51,8 +51,9 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
         errTwo = call(self.doc_command)
         sys.exit(errOne or errTwo)
 
+
 # Generate API documentation only if we are running on readthedocs.io
-on_rtd = getenv('READTHEDOCS', None) != None
+on_rtd = getenv('READTHEDOCS', None) is not None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
     if 'dev' in VERSION:

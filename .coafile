@@ -19,7 +19,7 @@ preferred_quotation = '
 default_actions = *: ApplyPatchAction
  
 [autopep8]
-bears = PEP8Bear
+bears = PEP8Bear, PycodestyleBear
 
 default_actions = PEP8Bear: ApplyPatchAction
 
