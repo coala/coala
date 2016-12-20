@@ -260,7 +260,7 @@ coala:master`` (or whichever repo you are contributing to), then you
 haven't correctly rebased yet. Otherwise, you're good to go!
 
 Squashing your commits
--------------------------
+----------------------
 
 It's possible that you have more than one commit and you want them to be
 squashed into a single commit. You can take your series of commits and squash
@@ -282,6 +282,58 @@ as "pick" and on the second and subsequent commits with "squash". After saving,
 another editor will be fired up with all the messages of commits which you want
 to squash. Clean up all the messages and add a new message to be
 displayed for the single commit.
+
+Common Git Issues
+-----------------
+
+Sometimes, you use git add-A and add files you didn't want to your push (often
+after rebasing) and push it to the remote. Here ,is a short outline of, how can
+you remove (or revert changes in) particular files from your commit even after
+pushing to remote.
+
+In your local repo, to revert the file to the state before the previous commit
+run the following:
+::
+
+    $ git checkout HEAD^ /path/to/file
+
+Now , after reverting the file(s) update your last commit, by running :
+::
+
+    $ git commit -a --amend
+
+To apply these changes to the remote you need to force update the branch :
+::
+
+    $ git push -f myfork
+
+.. note::
+
+    The procedure outlined above helps roll back changes by one commit only.
+    'myfork' mentioned above is your forked repository, where you push your
+    commits.
+
+The ``git checkout <revision sha> path/to/file`` command offers you more
+flexibility in reverting the changes in a file, done even from earlier than the
+last commit. By replacing the ``HEAD^`` by the revision number of the particular
+HEAD commit, you can refer to the required revision of the file.
+
+Might sound a little intimidating, but don't worry, an example has been
+provided for you.
+First you can check the commit's revision number, where the file was revised by
+running the following command:
+::
+
+    $ git log /path/to/file
+
+The revision number might look like ``3cdc61015724f9965575ba954c8cd4232c8b42e4``
+Now, to revert the file to that revision, run the command:
+::
+
+    $ git checkout 3cdc61015724f9965575ba954c8cd4232c8b42e4 /path/to/file.txt
+
+Now, after the file gets reverted back to the required revision, commit the
+changes and (force)push to the remote.
 
 Useful Git commands
 -------------------
