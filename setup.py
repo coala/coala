@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-# Start ignoring PyImportSortBear as imports below may yield syntax errors
+# Start ignoring PyImportSortBear and PycodestyleBear* as imports below may
+# yield syntax errors
 from coalib import assert_supported_version, VERSION, get_version
 
 assert_supported_version()
-# Stop ignoring
 
 import datetime
 import locale
@@ -17,6 +17,7 @@ import setuptools.command.build_py
 from coalib.misc.BuildManPage import BuildManPage
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
+# Stop ignoring
 
 try:
     locale.getlocale()
