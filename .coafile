@@ -95,6 +95,10 @@ bears = InvalidLinkBear
 bears = reSTLintBear
 files = README.rst
 
+[json]
+bears = JSONFormatBear
+files = coalib/schema.json
+
 [text]
 bears = SpaceConsistencyBear
 files =

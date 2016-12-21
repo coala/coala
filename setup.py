@@ -93,7 +93,7 @@ if __name__ == '__main__':
           packages=find_packages(exclude=['build.*', 'tests', 'tests.*']),
           install_requires=required,
           tests_require=test_required,
-          package_data={'coalib': ['default_coafile', 'VERSION',
+          package_data={'coalib': ['default_coafile', 'VERSION', 'schema.json',
                                    'bearlib/languages/definitions/*.coalang',
                                    'bearlib/languages/documentation/*.coalang']
                         },
