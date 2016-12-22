@@ -13,11 +13,15 @@ import sys
 from os import getenv
 from subprocess import call
 
+
+
+
+
 import setuptools.command.build_py
 from coalib.misc.BuildManPage import BuildManPage
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
-
+  
 try:
     locale.getlocale()
 except (ValueError, UnicodeError):
@@ -57,7 +61,7 @@ on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
     if 'dev' in VERSION:
-        current_version = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        current_version = 'asd'
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
         VERSION = get_version()
