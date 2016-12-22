@@ -95,6 +95,13 @@ bears = InvalidLinkBear
 bears = reSTLintBear
 files = README.rst
 
+[text]
+bears = SpaceConsistencyBear
+files =
+    LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
+    **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
+ignore = node_modules/**
+
 [TODOS]
 enabled = False
 
