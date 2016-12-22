@@ -15,14 +15,14 @@
 
 import sys
 
-# Start ignoring PyImportSortBear, we need to assert the version before
-# importing things that could cause an ImportError
+# Start ignoring PyImportSortBear and PycodestyleBear*, we need to assert the
+# version before importing things that could cause an ImportError
 from coalib import assert_supported_version
 
 assert_supported_version()
-# Stop ignoring
 
 from coalib.coala import main
+# Stop ignoring
 
 
 if __name__ == '__main__':

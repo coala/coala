@@ -113,7 +113,7 @@ class ConfParser:
                         Setting(key,
                                 value,
                                 origin,
-                                # Ignore PEP8Bear, it fails to format that
+                                # Ignore PEP8Bear and PycodestyleBear*, it fails
                                 remove_empty_iter_elements=
                                 self.__remove_empty_iter_elements),
                         allow_appending=(keys == []))
@@ -124,7 +124,7 @@ class ConfParser:
                             Setting(key,
                                     value,
                                     origin,
-                                    # Ignore PEP8Bear, it fails to format that
+                                    # Ignore PEP8Bear and PycodestyleBear*
                                     remove_empty_iter_elements=
                                     self.__remove_empty_iter_elements),
                             allow_appending=(keys == []))
