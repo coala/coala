@@ -1,0 +1,118 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "results": {
+            "type": "object",
+            "properties": {
+                "default": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "additional_info": {
+                                "type": "string"
+                            },
+                            "affected_code": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "end": {
+                                            "type": "object",
+                                            "properties": {
+                                                "column": {
+                                                    "type": "null"
+                                                },
+                                                "file": {
+                                                    "type": "string"
+                                                },
+                                                "line": {
+                                                    "type": "null"
+                                                }
+                                            },
+                                            "required": [
+                                                "column",
+                                                "file",
+                                                "line"
+                                            ]
+                                        },
+                                        "file": {
+                                            "type": "string"
+                                        },
+                                        "start": {
+                                            "type": "object",
+                                            "properties": {
+                                                "column": {
+                                                    "type": "null"
+                                                },
+                                                "file": {
+                                                    "type": "string"
+                                                },
+                                                "line": {
+                                                    "type": "null"
+                                                }
+                                            },
+                                            "required": [
+                                                "column",
+                                                "file",
+                                                "line"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "end",
+                                        "file",
+                                        "start"
+                                    ]
+                                }
+                            },
+                            "aspect": {
+                                "type": "string"
+                            },
+                            "confidence": {
+                                "type": "integer"
+                            },
+                            "debug_msg": {
+                                "type": "string"
+                            },
+                            "diffs": {
+                                "type": "null"
+                            },
+                            "id": {
+                                "type": "integer"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "origin": {
+                                "type": "string"
+                            },
+                            "severity": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "additional_info",
+                            "affected_code",
+                            "aspect",
+                            "confidence",
+                            "debug_msg",
+                            "diffs",
+                            "id",
+                            "message",
+                            "origin",
+                            "severity"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "default"
+            ]
+        }
+    },
+    "required": [
+        "results"
+    ]
+}
