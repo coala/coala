@@ -820,6 +820,22 @@ class PrintFormattedResultsTest(unittest.TestCase):
                                     None)
             self.assertEqual(stdout.getvalue(), '1\n')
 
+    def test_format_str(self):
+        self.section.append(Setting('format_str', '{origin}'))
+        print_results_formatted(self.logger,
+                                self.section,
+                                [Result('1', '2')],
+                                None,
+                                None)
+        self.assertRegex(self.logger.logs[0].message, '.*The setting '
+                         '"format_str" has been deprecated.*')
+        print_results_formatted(self.logger,
+                                self.section,
+                                [Result('1', '2')],
+                                None,
+                                None)
+        self.assertEqual(1, len(self.logger.logs))
+
     def test_empty_list(self):
         self.section.append(Setting('format', '{origin}'))
         # Shouldn't attempt to format the string None and will fail badly if
