@@ -37,6 +37,7 @@ script:
     if [[ $TRAVIS_PYTHON_VERSION_MINOR < 4 || $TRAVIS_PYTHON_VERSION_MAJOR == 2 ]]; then
       coverage run setup.py install | grep -q 'coala supports only python 3.4 or later'
     else
+      set -e
       bash .misc/tests.sh
       python setup.py install
       pip install coala-bears --pre -U
