@@ -802,7 +802,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
             print_results_formatted(self.logger,
                                     self.section,
                                     [Result('1', '2', affected_code)],
-                                    None,
+                                    {},
                                     None)
             self.assertRegex(stdout.getvalue(), expected_string)
 
@@ -836,3 +836,16 @@ class PrintFormattedResultsTest(unittest.TestCase):
                                 None,
                                 None,
                                 None)
+
+    def test_source_lines(self):
+        self.section.append(Setting(key='format', value='{source_lines}'))
+        affected_code = (SourceRange.from_values('file', 2, end_line=2),)
+        with retrieve_stdout() as stdout:
+            print_results_formatted(
+                self.logger,
+                self.section,
+                [Result('SpaceConsistencyBear', message='msg',
+                        affected_code=affected_code)],
+                {abspath('file'): ('def fun():\n', '    pass  \n')})
+            self.assertEqual(stdout.getvalue(),
+                             "('    pass  \\n',)\n")

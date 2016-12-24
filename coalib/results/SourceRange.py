@@ -120,6 +120,47 @@ class SourceRange(TextRange):
                                        tr.end.line,
                                        tr.end.column)
 
+    @enforce_signature
+    def affected_source(self, file_dict: dict):
+        r"""
+        Tells which lines are affected in a specified file within a given range.
+
+        >>> from os.path import abspath
+        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=2)
+        >>> sr.affected_source({
+        ...     abspath('file_name'): ('def fun():\n', '    x = 2  \n')
+        ... })
+        ('    x = 2  \n',)
+
+        If more than one line is affected.
+
+        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=3)
+        >>> sr.affected_source({
+        ...     abspath('file_name'): ('def fun():\n',
+        ...                            '    x = 2  \n', '    print(x)  \n')
+        ... })
+        ('    x = 2  \n', '    print(x)  \n')
+
+        If the file indicated at the source range is not in the `file_dict` or
+        the lines are not given, this will return `None`:
+
+        >>> sr = SourceRange.from_values('file_name_not_present',
+        ...     start_line=2, end_line=2)
+        >>> sr.affected_source({abspath('file_name'):
+        ...     ('def fun():\n', '    x = 2  \n')})
+
+        :param file_dict:
+            It is a dictionary where the file names are the keys and
+            the contents of the files are the values(which is of type tuple).
+        :return:
+            A tuple of affected lines in the specified file.
+            If the file is not affected or the file is not present in
+            ``file_dict`` return ``None``.
+        """
+        if self.start.file in file_dict and self.start.line and self.end.line:
+            # line number starts from 1, index starts from 0
+            return file_dict[self.start.file][self.start.line - 1:self.end.line]
+
     def __json__(self, use_relpath=False):
         _dict = get_public_members(self)
         if use_relpath:

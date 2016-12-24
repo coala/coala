@@ -292,6 +292,7 @@ def print_diffs_info(diffs, printer):
 def print_results_formatted(log_printer,
                             section,
                             result_list,
+                            file_dict,
                             *args):
     """
     Prints results through the format string from the format setting done by
@@ -329,6 +330,8 @@ def print_results_formatted(log_printer,
 
             for range in result.affected_code:
                 format_args['affected_code'] = range
+                format_args['source_lines'] = range.affected_source(file_dict)
+
                 print(format_str.format(file=range.start.file,
                                         line=range.start.line,
                                         end_line=range.end.line,
