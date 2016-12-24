@@ -47,9 +47,9 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
     doc_command = ('make', '-C', 'docs', 'html', 'SPHINXOPTS=-W')
 
     def run(self):
-        call(self.apidoc_command)
-        call(self.doc_command)
-
+        errOne = call(self.apidoc_command)
+        errTwo = call(self.doc_command)
+        sys.exit(errOne or errTwo)
 
 # Generate API documentation only if we are running on readthedocs.io
 on_rtd = getenv('READTHEDOCS', None) != None
