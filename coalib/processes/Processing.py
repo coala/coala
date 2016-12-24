@@ -4,8 +4,10 @@ import platform
 import queue
 import subprocess
 
-from coalib.collecting.Collectors import collect_files
 from coala_utils.string_processing.StringConverter import StringConverter
+from coala_utils.FileUtils import detect_encoding
+
+from coalib.collecting.Collectors import collect_files
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
@@ -260,7 +262,8 @@ def get_file_dict(filename_list, log_printer, allow_raw_files=False):
     file_dict = {}
     for filename in filename_list:
         try:
-            with open(filename, 'r', encoding='utf-8') as _file:
+            with open(filename, 'r',
+                      encoding=detect_encoding(filename)) as _file:
                 file_dict[filename] = tuple(_file.readlines())
         except UnicodeDecodeError:
             if allow_raw_files:
