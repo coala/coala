@@ -39,7 +39,8 @@ script:
     else
       set -e
       bash .misc/tests.sh
-      python setup.py install
+      python setup.py bdist_wheel
+      pip install ./dist/coala-*.whl
       pip install coala-bears --pre -U
       # https://github.com/coala/coala-bears/issues/1037
       if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then

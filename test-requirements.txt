@@ -5,3 +5,4 @@ pytest-mock~=1.1
 pytest-timeout~=1.0
 pytest-xdist~=1.14
 pytest~=3.0
+wheel~=0.29
