@@ -2,6 +2,8 @@ import shutil
 from os.path import isfile
 from os import remove
 
+from coala_utils.FileUtils import detect_encoding
+
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.result_actions.ResultAction import ResultAction
 
@@ -47,7 +49,8 @@ class ApplyPatchAction(ResultAction):
                 new_filename = (diff.rename
                                 if diff.rename is not False
                                 else filename)
-                with open(new_filename, mode='w', encoding='utf-8') as file:
+                with open(new_filename, mode='w',
+                          encoding=detect_encoding(pre_patch_filename)) as file:
                     file.writelines(diff.modified)
 
         return file_diff_dict
