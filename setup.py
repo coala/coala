@@ -50,13 +50,15 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
         call(self.apidoc_command)
         call(self.doc_command)
 
+   
+
 
 # Generate API documentation only if we are running on readthedocs.io
 on_rtd = getenv('READTHEDOCS', None) != None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
     if 'dev' in VERSION:
-        current_version = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        current_version = 'asd'
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
         VERSION = get_version()
