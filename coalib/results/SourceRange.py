@@ -126,6 +126,38 @@ class SourceRange(TextRange):
             _dict['file'] = relpath(_dict['file'])
         return _dict
 
+    def __str__(self):
+        """
+        Creates a string representation of the SourceRange object.
+
+        If the whole file is affected, then just the filename is shown.
+
+        >>> str(SourceRange.from_values('test_file', None, None, None, None))
+        '...test_file'
+
+        If the whole line is affected, then just the filename with starting
+        line number and ending line number is shown.
+
+        >>> str(SourceRange.from_values('test_file', 1, None, 2, None))
+        '...test_file: L1 : L2'
+
+        This is the general case where particular column and line are
+        specified. It shows the starting line and column and ending line
+        and column, with filename in the beginning.
+
+        >>> str(SourceRange.from_values('test_file', 1, 1, 2, 1))
+        '...test_file: L1 C1 : L2 C1'
+        """
+        if self.start.line is None and self.end.line is None:
+            format_str = '{0.start.file}'
+        elif self.start.column is None and self.end.column is None:
+            format_str = '{0.start.file}: L{0.start.line} : L{0.end.line}'
+        else:
+            format_str = ('{0.start.file}: L{0.start.line} C{0.start.column}' +
+                          ' : L{0.end.line} C{0.end.column}')
+
+        return format_str.format(self)
+
     def __contains__(self, item):
         return (super().__contains__(item) and
                 self.start.file == item.start.file)
