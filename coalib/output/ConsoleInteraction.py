@@ -304,25 +304,28 @@ def print_results_formatted(log_printer,
 
     for result in result_list:
         severity_str = RESULT_SEVERITY.__str__(result.severity)
+        format_args = vars(result)
         try:
             if len(result.affected_code) == 0:
+                format_args['affected_code'] = None
                 print(format_str.format(file=None,
                                         line=None,
                                         end_line=None,
                                         column=None,
                                         end_column=None,
                                         severity_str=severity_str,
-                                        **result.__dict__))
+                                        **format_args))
                 continue
 
             for range in result.affected_code:
+                format_args['affected_code'] = range
                 print(format_str.format(file=range.start.file,
                                         line=range.start.line,
                                         end_line=range.end.line,
                                         column=range.start.column,
                                         end_column=range.end.column,
                                         severity_str=severity_str,
-                                        **result.__dict__))
+                                        **format_args))
         except KeyError as exception:
             log_printer.log_exception(
                 'Unable to print the result with the given format string.',
