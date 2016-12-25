@@ -131,6 +131,13 @@ class ProcessingTest(unittest.TestCase):
                          ') at 0x[0-9a-fA-F]+>'.format(hex(global_result.id)))
 
     def test_empty_run(self):
+        execute_section(self.sections['default'],
+                        [],
+                        [],
+                        lambda *args: self.result_queue.put(args[2]),
+                        None,
+                        self.log_printer,
+                        console_printer=self.console_printer)
         self.sections['default'].append(Setting('jobs', 'bogus!'))
         results = execute_section(self.sections['default'],
                                   [],
