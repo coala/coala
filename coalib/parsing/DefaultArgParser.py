@@ -100,7 +100,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='output results with a custom format string, e.g. '
              '"Message: {message}"; possible placeholders: '
              'id, origin, file, line, end_line, column, end_column, '
-             'severity, severity_str, message')
+             'severity, severity_str, message, affected_code')
 
     config_group = arg_parser.add_argument_group('Configuration')
 
