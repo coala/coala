@@ -163,7 +163,7 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     if bool(cli_sections['default'].get('no_config', 'False')):
         sections = cli_sections
     else:
-        default_sections = load_config_file(Constants.system_coafile,
+        base_sections = load_config_file(Constants.system_coafile,
                                             log_printer)
         user_sections = load_config_file(
             Constants.user_coafile,
@@ -171,7 +171,7 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
             silent=True)
 
         default_config = str(
-            default_sections['default'].get('config', '.coafile'))
+            base_sections['default'].get('config', '.coafile'))
         user_config = str(user_sections['default'].get(
             'config', default_config))
         config = os.path.abspath(
@@ -186,7 +186,7 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
 
         coafile_sections = load_config_file(config, log_printer, silent=save)
 
-        sections = merge_section_dicts(default_sections, user_sections)
+        sections = merge_section_dicts(base_sections, user_sections)
 
         sections = merge_section_dicts(sections, coafile_sections)
 
