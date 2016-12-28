@@ -1,3 +1,30 @@
+coala 0.9.1
+===========
+
+This bugfix release addressed the following issues:
+
+- The installer has been fixed to only install on supported python versions.
+  `Issue #3310 <https://github.com/coala/coala/issues/3310>`_
+  `Issue #3383 <https://github.com/coala/coala/issues/3383>`_
+- The format_str option to specify a format string has ben restored to
+  coala run in format mode. This is deprecated and was only restored to
+  provide plug-in developers a grace period to switch to the replacement
+  setting ``format``.
+  `Issue #3303 <https://github.com/coala/coala/issues/3303>`_
+- Setuptools was removed from our requirements list because having it only
+  only caused dependency problems for other packages installed on the system
+  `coala Bears Issue #751 <https://github.com/coala/coala-bears/issues/751>`_
+- PyPrint dependency was updated to a version which does not pull in
+  setuptools anymore.
+- API change: An auto-apply disable option was added to run_coala to fix 
+  issue detection by unattended services that use coala when the coafile
+  contains a default_action
+  `Issue #3212 <https://github.com/coala/coala/issues/3212>`_
+- A few specific language class behaviors were changed. This should only
+  affect developers
+  `Pull #3175 <https://github.com/coala/coala/pull/3175>`_
+  `Pull #3167 <https://github.com/coala/coala/pull/3167>`_
+
 coala 0.9.0 - GlobalBear
 ========================
 
