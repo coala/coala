@@ -334,6 +334,7 @@ def print_results_formatted(log_printer,
                                         column=None,
                                         end_column=None,
                                         severity_str=severity_str,
+                                        message=result.message,
                                         **format_args))
                 continue
 
@@ -345,6 +346,7 @@ def print_results_formatted(log_printer,
                                         column=range.start.column,
                                         end_column=range.end.column,
                                         severity_str=severity_str,
+                                        message=result.message,
                                         **format_args))
         except KeyError as exception:
             log_printer.log_exception(
