@@ -83,6 +83,9 @@ CLI_ACTIONS = (OpenEditorAction(),
                ShowPatchAction(),
                IgnoreResultAction())
 DIFF_EXCERPT_MAX_SIZE = 4
+MAX_UNRELATED_CHARS = 1000
+NUM_UNRELATED_CHARS = 100
+NUM_RELATED_CHARS = 250
 
 
 def format_lines(lines, line_nr=''):
@@ -207,19 +210,39 @@ def print_lines(console_printer,
 
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
-            print_normal(line[:sourcerange.start.column - 1])
+            if sourcerange.start.column > MAX_UNRELATED_CHARS:
+                print_normal('...')
+                printed_chars = (sourcerange.start.column - 1 -
+                                 NUM_UNRELATED_CHARS)
+
+            print_normal(line[printed_chars:sourcerange.start.column - 1])
 
             printed_chars = sourcerange.start.column - 1
 
         if i == sourcerange.end.line and sourcerange.end.column:
-            print_highlighted(line[printed_chars:sourcerange.end.column - 1])
+            if sourcerange.end.column - printed_chars > MAX_UNRELATED_CHARS:
+                print_highlighted(line[printed_chars:printed_chars +
+                                       NUM_RELATED_CHARS] +
+                                  '...')
+            else:
+                print_highlighted(line[printed_chars:sourcerange.end.column-1])
 
-            print_normal(line[sourcerange.end.column - 1:])
-            console_printer.print('')
-
+                # Only print unrelated tail if related part was fully shown
+                if len(line) - sourcerange.end.column > MAX_UNRELATED_CHARS:
+                    print_normal(line[sourcerange.end.column-1:
+                                      sourcerange.end.column-1 +
+                                      NUM_UNRELATED_CHARS] + '...')
+                else:
+                    print_normal(line[sourcerange.end.column - 1:])
         else:
-            print_normal(line[printed_chars:])
-            console_printer.print('')
+            if len(line) - printed_chars > MAX_UNRELATED_CHARS:
+                print_normal(
+                    line[printed_chars:printed_chars+NUM_UNRELATED_CHARS] +
+                    '...')
+            else:
+                print_normal(line[printed_chars:])
+
+        console_printer.print('')
 
 
 def print_result(console_printer,
