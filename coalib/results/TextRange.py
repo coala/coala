@@ -89,7 +89,8 @@ class TextRange:
         return self._end
 
     def overlaps(self, other):
-        return self.start <= other.end and self.end >= other.start
+        return (other.start <= self.start <= other.end or
+                other.end >= self.end >= other.start)
 
     def expand(self, text_lines):
         """
