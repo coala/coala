@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     setup(name='coala',
           version=VERSION,
-          description='Code Analysis Application (coala)',
+          description='Linting and Fixing Code for All Languages',
           author='The coala developers',
           author_email='coala.analyzer@gmail.com',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger'

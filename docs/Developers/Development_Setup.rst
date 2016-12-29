@@ -39,7 +39,13 @@ master branch from and all of its dependencies with pip using
 
 ::
 
-    (venv)$ pip3 install coala-bears --pre
+    (venv)$ git clone https://github.com/coala/coala
+    (venv)$ cd coala
+    (venv)$ pip3 install -e .
+    (venv)$ cd -
+    (venv)$ git clone https://github.com/coala/coala-bears
+    (venv)$ cd coala-bears
+    (venv)$ pip3 install -e .
 
 Then you can install a repository-backed version of the repository you would
 like to modify using
