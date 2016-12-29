@@ -29,7 +29,7 @@ def get_testfile_name(name):
 
 class LinterComponentTest(unittest.TestCase):
 
-    PARAM_TYPERERROR_RE = '[a-z_]+ must be an instance'
+    PARAM_TYPE_ERROR_RE = '[a-z_]+ must be an instance'
 
     # Using `object` instead of an empty class results in inheritance problems
     # inside the linter decorator.
@@ -151,13 +151,13 @@ class LinterComponentTest(unittest.TestCase):
 
     def test_decorator_invalid_parameter_types(self):
         # Provide some invalid severity maps.
-        with self.assertRaisesRegex(TypeError, self.PARAM_TYPERERROR_RE):
+        with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
                    output_format='regex',
                    output_regex='(?P<severity>)',
                    severity_map=list())(self.EmptyTestLinter)
 
-        with self.assertRaisesRegex(TypeError, self.PARAM_TYPERERROR_RE):
+        with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
                    output_format='regex',
                    output_regex='(?P<severity>)',
@@ -184,13 +184,13 @@ class LinterComponentTest(unittest.TestCase):
 
         # Other type-error test cases.
 
-        with self.assertRaisesRegex(TypeError, self.PARAM_TYPERERROR_RE):
+        with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
                    output_format='regex',
                    output_regex='(?P<message>)',
                    result_message=None)(self.EmptyTestLinter)
 
-        with self.assertRaisesRegex(TypeError, self.PARAM_TYPERERROR_RE):
+        with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
                    output_format='corrected',
                    result_message=list())(self.EmptyTestLinter)
@@ -202,7 +202,7 @@ class LinterComponentTest(unittest.TestCase):
         self.assertEqual(str(cm.exception),
                          'Invalid value for `diff_severity`: 999888777')
 
-        with self.assertRaisesRegex(TypeError, self.PARAM_TYPERERROR_RE):
+        with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
                    prerequisite_check_command=('command',),
                    prerequisite_check_fail_message=382983)(self.EmptyTestLinter)
