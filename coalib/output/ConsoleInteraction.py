@@ -53,12 +53,13 @@ class NoColorStyle(Style):
 
 
 def highlight_text(no_color, text, lexer=TextLexer(), style=None):
-    if style:
+    if no_color:
+        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
+    elif style:
         formatter = TerminalTrueColorFormatter(style=style)
     else:
         formatter = TerminalTrueColorFormatter()
-    if no_color:
-        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
+
     return highlight(text, lexer, formatter)[:-1]
 
 
