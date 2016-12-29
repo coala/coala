@@ -1,3 +1,4 @@
+import shlex
 import subprocess
 from os.path import exists
 from os import environ
@@ -5,18 +6,79 @@ from os import environ
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
-
 from coala_utils.decorators import enforce_signature
 
 
-EDITOR_ARGS = {
-    'subl': '--wait',
-    'gedit': '-s',
-    'atom': '--wait'
+"""
+Data about all text editors coala knows about. New editors
+can just be added here.
+For each editor the following info is stored:
+{
+    <name/comand>: {
+        "file_arg_template":
+            A string used to generate arguments to open a file.
+            Must at least have the placeholder 'filename'
+            and can optionally use 'line' and 'column'
+            to open the file at the correct position.
+            Some editors don't support opening files at
+            a certain position if multiple files are
+            to be opened, but we try to do so anyway.
+        "args":
+            General arguments added to the call, e.g. to
+            force opening of a new window.
+        "gui":
+            Boolean. True if this is a gui editor.
+            Optional, defaults to False.
+    }
 }
+"""
+KNOWN_EDITORS = {
+    # non-gui editors
+    'vim': {
+        'file_arg_template': '{filename} +{line}',
+        'gui': False
+    },
+    'nano': {
+        'file_arg_template': '+{line},{column} {filename} ',
+        'gui': False
+    },
 
-
-GUI_EDITORS = ['kate', 'gedit', 'subl', 'atom']
+    # gui editors
+    'atom': {
+        'file_arg_template': '{filename}:{line}:{column}',
+        'args': '--wait',
+        'gui': True
+    },
+    'geany': {
+        'file_arg_template': '{filename} -l {line} --column {column}',
+        'args': '-s -i',
+        'gui': True
+    },
+    'gedit': {
+        'file_arg_template': '{filename} +{line}',
+        'args': '-s',
+        'gui': True
+    },
+    'gvim': {
+        'file_arg_template': '{filename} +{line}',
+        'gui': True
+    },
+    'kate': {
+        'file_arg_template': '{filename} -l {line} -c {column}',
+        'args': '--new',
+        'gui': True
+    },
+    'subl': {
+        'file_arg_template': '{filename}:{line}:{column}',
+        'args': '--wait',
+        'gui': True
+    },
+    'xed': {
+        'file_arg_template': '{filename} +{line}',
+        'args': '--new-window',
+        'gui': True
+    },
+}
 
 
 class OpenEditorAction(ResultAction):
@@ -41,29 +103,72 @@ class OpenEditorAction(ResultAction):
                     'seem to exist.')
         return True
 
+    def build_editor_call_args(self, editor, editor_info, filenames):
+        """
+        Create argument list which will then be used to open an editor for
+        the given files at the correct positions, if applicable.
+
+        :param editor:
+            The editor to open the file with.
+        :param editor_info:
+            A dict containing the keys ``args`` and ``file_arg_template``,
+            providing additional call arguments and a template to open
+            files at a position for this editor.
+        :param filenames:
+            A dict holding one entry for each file to be opened.
+            Keys must be ``filename``, ``line`` and ``column``.
+        """
+        call_args = [editor]
+
+        # for some editors we define extra arguments
+        if 'args' in editor_info:
+            call_args += shlex.split(editor_info['args'])
+
+        # add info for each file to be opened
+        for file_info in filenames.values():
+            file_arg = editor_info['file_arg_template'].format(
+                filename=shlex.quote(file_info['filename']),
+                line=file_info['line'], column=file_info['column']
+            )
+            call_args += shlex.split(file_arg)
+
+        return call_args
+
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
         Open file(s)
 
         :param editor: The editor to open the file with.
         """
-        # Use set to remove duplicates
-        filenames = {src.file: src.renamed_file(file_diff_dict)
-                     for src in result.affected_code}
+        try:
+            editor_info = KNOWN_EDITORS[editor.strip()]
+        except KeyError:
+            # If the editor is unknown fall back to just passing
+            # the filenames
+            editor_info = {
+                'file_arg_template': '{filename}',
+                'gui': False
+            }
 
-        editor_args = [editor] + list(filenames.values())
-        arg = EDITOR_ARGS.get(editor.strip(), None)
-        if arg:
-            editor_args.append(arg)
+        # Use dict to remove duplicates
+        filenames = {
+            src.file: {
+                'filename': src.renamed_file(file_diff_dict),
+                'line': src.start.line or 1,
+                'column': src.start.column or 1
+            }
+            for src in result.affected_code
+        }
 
-        # Dear user, you wanted an editor, so you get it. But do you really
-        # think you can do better than we?
-        if editor in GUI_EDITORS:
-            subprocess.call(editor_args, stdout=subprocess.PIPE)
+        call_args = self.build_editor_call_args(editor, editor_info, filenames)
+
+        if editor_info.get('gui', True):
+            subprocess.call(call_args, stdout=subprocess.PIPE)
         else:
-            subprocess.call(editor_args)
+            subprocess.call(call_args)
 
-        for original_name, filename in filenames.items():
+        for original_name, file_info in filenames.items():
+            filename = file_info['filename']
             with open(filename, encoding='utf-8') as file:
                 file_diff_dict[original_name] = Diff.from_string_arrays(
                     original_file_dict[original_name], file.readlines(),
