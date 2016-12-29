@@ -340,7 +340,7 @@ class ProcessingTest(unittest.TestCase):
 
     def test_ignore_results(self):
         ranges = [([], SourceRange.from_values('f', 1, 1, 2, 2))]
-        result = Result.from_values('origin',
+        result = Result.from_values('origin (Something Specific)',
                                     'message',
                                     file='e',
                                     line=1,

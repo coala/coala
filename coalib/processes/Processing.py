@@ -169,6 +169,13 @@ def check_result_ignore(result, ignore_ranges):
     """
     Determines if the result has to be ignored.
 
+    Any result will be ignored if its origin matches any bear names and its
+    SourceRange overlaps with the ignore range.
+
+    Note that everything after a space in the origin will be cut away, so the
+    user can ignore results with an origin like `CSecurityBear (buffer)` with
+    just `# Ignore CSecurityBear`.
+
     :param result:        The result that needs to be checked.
     :param ignore_ranges: A list of tuples, each containing a list of lower
                           cased affected bearnames and a SourceRange to
@@ -178,7 +185,7 @@ def check_result_ignore(result, ignore_ranges):
     :return:              True if the result has to be ignored.
     """
     for bears, range in ignore_ranges:
-        orig = result.origin.lower()
+        orig = result.origin.lower().split(' ')[0]
         if (result.overlaps(range) and
                 (len(bears) == 0 or orig in bears or fnmatch(orig, bears))):
             return True
