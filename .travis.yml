@@ -26,10 +26,14 @@ before_install:
   # https://github.com/coala/coala/issues/3183
   # https://github.com/coala/coala/issues/3184
   - pip install -U py==1.4.29 pip
+  # Travis automatically installs the `requirements.txt` in "install" stage
+  - cp requirements.txt requirements.orig
   - cat test-requirements.txt docs-requirements.txt >> requirements.txt
   - sed -i '/^-r/d' requirements.txt
 
 before_script:
+  # Restore the original requirements.txt
+  - mv requirements.orig requirements.txt
   - julia -e 'Pkg.add("Lint")'
 
 script:
