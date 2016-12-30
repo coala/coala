@@ -208,8 +208,8 @@ class Result:
         :param file_dict: A dictionary containing all files with filename as
                           key and all lines a value. Will be modified.
         """
-        for filename in self.diffs:
-            file_dict[filename] = self.diffs[filename].modified
+        for filename, diff in self.diffs.items():
+            file_dict[filename] = diff.modified
 
     def __add__(self, other):
         """
