@@ -80,7 +80,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
     # Strip away existent settings.
     needed_settings = {}
     for setting, help_text in prel_needed_settings.items():
-        if not setting in section:
+        if setting not in section:
             needed_settings[setting] = help_text
 
     # Get missing ones.

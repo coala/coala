@@ -113,9 +113,8 @@ class ConfParser:
                         Setting(key,
                                 value,
                                 origin,
-                                # Ignore PEP8Bear, it fails to format that
-                                remove_empty_iter_elements=
-                                self.__remove_empty_iter_elements),
+                                # Ignore PEP8Bear, Pycodestyle*, it fails to format that
+                                remove_empty_iter_elements=self.__remove_empty_iter_elements),
                         allow_appending=(keys == []))
                 else:
                     self.get_section(
@@ -125,8 +124,7 @@ class ConfParser:
                                     value,
                                     origin,
                                     # Ignore PEP8Bear, it fails to format that
-                                    remove_empty_iter_elements=
-                                    self.__remove_empty_iter_elements),
+                                    remove_empty_iter_elements=self.__remove_empty_iter_elements),
                             allow_appending=(keys == []))
 
     def __init_sections(self):

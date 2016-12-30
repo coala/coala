@@ -10,6 +10,7 @@ from coalib.results.SourceRange import SourceRange
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
+
 if __name__ == '__main__':
 
     line = sys.stdin.read()
