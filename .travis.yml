@@ -11,18 +11,13 @@ cache: pip
 addons:
   apt:
     packages:
-      - r-base
       - clang-3.4
     sources:
-      - ubuntu-toolchain-r-test
       - llvm-toolchain-precise
 
 before_install:
   - export TRAVIS_PYTHON_VERSION_MAJOR=${TRAVIS_PYTHON_VERSION%.[0-9]}
   - export TRAVIS_PYTHON_VERSION_MINOR=${TRAVIS_PYTHON_VERSION#[0-9].}
-  - sudo add-apt-repository -y ppa:staticfloat/juliareleases
-  - sudo apt-get update
-  - sudo apt-get install julia
   # https://github.com/coala/coala/issues/3183
   # Travis automatically installs the `requirements.txt` in "install" stage
   - cp requirements.txt requirements.orig
@@ -32,7 +27,6 @@ before_install:
 before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
-  - julia -e 'Pkg.add("Lint")'
 
 script:
   - >
