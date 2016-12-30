@@ -60,8 +60,8 @@ class Result:
             A message which may help the user find out why this result was
             yielded.
         :param diffs:
-            A dictionary with filenames as key and a sequence of ``Diff``
-            objects associated with them as values.
+            A dictionary with filename as key and ``Diff`` object
+            associated with it as value.
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
@@ -137,8 +137,8 @@ class Result:
             A message which may help the user find out why this result was
             yielded.
         :param diffs:
-            A dictionary with filenames as key and a sequence of ``Diff``
-            objects associated with them as values.
+            A dictionary with filename as key and ``Diff`` object
+            associated with it as value.
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
