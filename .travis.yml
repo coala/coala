@@ -37,7 +37,7 @@ script:
       bash .misc/tests.sh
       python setup.py bdist_wheel
       pip install ./dist/coala-*.whl
-      pip install coala-bears --pre -U
+      pip install coala-bears[alldeps] --pre -U
       # https://github.com/coala/coala-bears/issues/1037
       if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
         python3 -m nltk.downloader punkt maxent_treebank_pos_tagger averaged_perceptron_tagger
