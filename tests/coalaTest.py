@@ -3,10 +3,12 @@ import re
 import sys
 import unittest
 import unittest.mock
+import subprocess
 from pkg_resources import VersionConflict
 
 from coalib.coala_main import run_coala
 from coalib.output.printers.LogPrinter import LogPrinter
+from coalib.misc.Constants import coalib_root
 from coalib import assert_supported_version, coala
 from pyprint.ConsolePrinter import ConsolePrinter
 from coala_utils.ContextManagers import prepare_file
@@ -25,13 +27,16 @@ class coalaTest(unittest.TestCase):
     def test_coala(self):
         with bear_test_module(), \
                 prepare_file(['#fixme'], None) as (lines, filename):
-            retval, output = execute_coala(
-                             coala.main,
-                            'coala', '-c', os.devnull,
-                            '-f', re.escape(filename),
-                            '-b', 'LineCountTestBear')
+            exec_dir = os.path.abspath(os.path.join(coalib_root, os.pardir))
+            process = subprocess.Popen(
+                [sys.executable, os.path.join(exec_dir, 'coala'), '-c',
+                 os.devnull, '-f', re.escape(filename), '-b',
+                 'LineCountTestBear', '-d', os.path.join(exec_dir, 'tests',
+                                                         'test_bears')],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
             self.assertIn('This file has 1 lines.',
-                          output,
+                          str(stdout) + str(stderr),
                           'The output should report count as 1 lines')
 
     @unittest.mock.patch('sys.version_info', tuple((2, 7, 11)))
