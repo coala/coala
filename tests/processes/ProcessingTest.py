@@ -582,6 +582,15 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
 
         ApplyPatchAction.is_applicable = old_is_applicable
 
+        self.section.append(Setting(
+            'no_autoapply_warn', True))
+        autoapply_actions(self.results,
+                          {},
+                          {},
+                          self.section,
+                          self.log_printer)
+        self.assertTrue(self.log_queue.empty())
+
     def test_applicable_action(self):
         # Use a result whose action can be successfully applied.
         log_printer = self.log_printer
