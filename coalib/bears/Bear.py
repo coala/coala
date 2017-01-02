@@ -12,8 +12,9 @@ from pyprint.Printer import Printer
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
-from coalib.bears.requirements.PipRequirement import PipRequirement
+from dependency_management.requirements.PackageRequirement import (
+    PackageRequirement)
+from dependency_management.requirements.PipRequirement import PipRequirement
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
@@ -323,21 +324,37 @@ class Bear(Printer, LogPrinterMixin):
         """
         Checks whether needed runtime prerequisites of the bear are satisfied.
 
-        This function gets executed at construction and returns True by
-        default.
+        This function gets executed at construction.
 
         Section value requirements shall be checked inside the ``run`` method.
+
+        >>> class SomeBear(Bear):
+        ...     REQUIREMENTS = {PipRequirement('pip')}
+
+        >>> SomeBear.check_prerequisites()
+        True
+
+        >>> class SomeOtherBear(Bear):
+        ...     REQUIREMENTS = {PipRequirement('really_bad_package')}
+
+        >>> SomeOtherBear.check_prerequisites()
+        'really_bad_package is not installed. You can install it using ...'
 
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
         """
+        for requirement in cls.REQUIREMENTS:
+            if not requirement.is_installed():
+                return requirement.package + ' is not installed. You can ' + (
+                    'install it using ') + (
+                    ' '.join(requirement.install_command()))
         return True
 
     def get_config_dir(self):
         """
-        Gives the directory where the configuration file is
+        Gives the directory where the configuration file is.
 
-        :return: Directory of the config file
+        :return: Directory of the config file.
         """
         return get_config_directory(self.section)
 

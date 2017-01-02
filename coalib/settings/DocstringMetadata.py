@@ -57,7 +57,7 @@ class DocstringMetadata:
 
             def concat_doc_parts(old: str, new: str):
                 if new != '' and not old.endswith('\n'):
-                    return old + ' ' + new
+                    return (old + ' ' + new).strip()
 
                 return old + (new if new != '' else '\n')
 

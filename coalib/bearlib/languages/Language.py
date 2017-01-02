@@ -149,7 +149,7 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
                 aliases = tuple(sorted(getattr(arg, 'aliases', ())))
                 _attributes = {name: member for name, member in getmembers(arg)
                                if not name.startswith('_')
-                               and not name in forbidden_attributes}
+                               and name not in forbidden_attributes}
 
             Sub.__name__ = arg.__name__
             type(cls).all.append(Sub)

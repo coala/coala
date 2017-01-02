@@ -133,8 +133,10 @@ class FunctionMetadata:
 
     @staticmethod
     def _get_param(param, section, annotation):
+        def return_arg(x):
+            return x
         if annotation is None:
-            annotation = lambda x: x
+            annotation = return_arg
 
         try:
             return annotation(section[param])

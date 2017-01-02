@@ -252,8 +252,8 @@ License
    :target: https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master
 .. |codecov.io| image:: https://img.shields.io/codecov/c/github/coala/coala/master.svg?label=branch%20coverage
    :target: https://codecov.io/github/coala/coala?branch=master
-.. |Documentation Status| image:: https://docs.coala.io/projects/coala/badge/?version=latest
-   :target: http://coala.rtfd.org/
+.. |Documentation Status| image:: https://readthedocs.org/projects/coala/badge/?version=latest
+   :target: http://docs.coala.io/
 .. |AGPL| image:: https://img.shields.io/github/license/coala/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
 .. |Gitmate| image:: https://img.shields.io/badge/Gitmate-0%20issues-brightgreen.svg

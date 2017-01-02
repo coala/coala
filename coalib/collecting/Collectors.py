@@ -223,7 +223,7 @@ def filter_capabilities_by_languages(bears, languages):
             language_bears_capabilities.update(
                 {language: (capabilities[0] | bear.can_detect,
                             capabilities[1] | bear.CAN_FIX)}
-                            if language else {})
+                if language else {})
     return language_bears_capabilities
 
 

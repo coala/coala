@@ -16,8 +16,12 @@ bears = SpaceConsistencyBear, PyUnusedCodeBear, QuotesBear
 language = Python
 preferred_quotation = '
 
+default_actions = *: ApplyPatchAction
+ 
 [autopep8]
-bears = PEP8Bear
+bears = PEP8Bear, PycodestyleBear
+
+default_actions = PEP8Bear: ApplyPatchAction
 
 [linelength]  # Sometimes autopep8 makes too long lines, need to check after!
 bears = LineLengthBear
@@ -29,6 +33,8 @@ bears = SpaceConsistencyBear, LineLengthBear
 files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
 ignore = docs/API/**
 ignore_length_regex = ^.*https?://
+
+default_actions = SpaceConsistencyBear: ApplyPatchAction 
 
 [languagetool]
 enabled = False
