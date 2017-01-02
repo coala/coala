@@ -272,6 +272,12 @@ def print_result(console_printer,
 
 
 def print_diffs_info(diffs, printer):
+    """
+    Prints diffs information (number of additions and deletions) to the console.
+
+    :param diffs:    List of Diff objects containing corresponding diff info.
+    :param printer:  Object responsible for printing diffs on console.
+    """
     for filename, diff in sorted(diffs.items()):
         additions, deletions = diff.stats()
         printer.print(
@@ -289,6 +295,15 @@ def print_results_formatted(log_printer,
                             section,
                             result_list,
                             *args):
+    """
+    Prints results through the format string from the format setting done by
+    user.
+
+    :param log_printer:    Printer responsible for logging the messages.
+    :param section:        The section to which the results belong.
+    :param result_list:    List of Result objects containing the corresponding
+                           results.
+    """
     global _warn_deprecated_format_str
     default_format = ('id:{id}:origin:{origin}:file:{file}:line:{line}:'
                       'column:{column}:end_line:{end_line}:end_column:'
