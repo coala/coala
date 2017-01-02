@@ -131,6 +131,13 @@ class ProcessingTest(unittest.TestCase):
                          ') at 0x[0-9a-fA-F]+>'.format(hex(global_result.id)))
 
     def test_empty_run(self):
+        execute_section(self.sections['default'],
+                        [],
+                        [],
+                        lambda *args: self.result_queue.put(args[2]),
+                        None,
+                        self.log_printer,
+                        console_printer=self.console_printer)
         self.sections['default'].append(Setting('jobs', 'bogus!'))
         results = execute_section(self.sections['default'],
                                   [],
@@ -333,7 +340,7 @@ class ProcessingTest(unittest.TestCase):
 
     def test_ignore_results(self):
         ranges = [([], SourceRange.from_values('f', 1, 1, 2, 2))]
-        result = Result.from_values('origin',
+        result = Result.from_values('origin (Something Specific)',
                                     'message',
                                     file='e',
                                     line=1,
@@ -556,7 +563,9 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         # Use a result where no default action is supplied for and another one
         # where the action is not applicable.
         old_is_applicable = ApplyPatchAction.is_applicable
-        ApplyPatchAction.is_applicable = lambda *args: False
+        ApplyPatchAction.is_applicable = (
+            lambda *args: 'The ApplyPatchAction cannot be applied'
+        )
 
         self.section.append(Setting(
             'default_actions',
@@ -568,11 +577,19 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
                                 self.log_printer)
         self.assertEqual(ret, self.results)
         self.assertEqual(self.log_queue.get().message,
-                         "Selected default action 'ApplyPatchAction' for bear "
-                         "'YBear' is not applicable. Action not applied.")
+                         'YBear: The ApplyPatchAction cannot be applied')
         self.assertTrue(self.log_queue.empty())
 
         ApplyPatchAction.is_applicable = old_is_applicable
+
+        self.section.append(Setting(
+            'no_autoapply_warn', True))
+        autoapply_actions(self.results,
+                          {},
+                          {},
+                          self.section,
+                          self.log_printer)
+        self.assertTrue(self.log_queue.empty())
 
     def test_applicable_action(self):
         # Use a result whose action can be successfully applied.

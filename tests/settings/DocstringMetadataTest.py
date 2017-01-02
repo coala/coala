@@ -1,6 +1,7 @@
 import unittest
 
 from coalib.settings.DocstringMetadata import DocstringMetadata
+from collections import OrderedDict
 
 
 class DocstringMetadataTest(unittest.TestCase):
@@ -53,6 +54,25 @@ class DocstringMetadataTest(unittest.TestCase):
             ''')
 
         self.assertEqual(str(uut), 'Description of something with params.')
+
+    def test_unneeded_docstring_space(self):
+        uut = DocstringMetadata.from_docstring(
+            """
+            This is a description about some bear which does some amazing
+            things. This is a multiline description for this testcase.
+
+            :param language:
+                The programming language.
+            :param coalang_dir:
+                External directory for coalang file.
+            """)
+
+        expected_output = OrderedDict([('language', ('The programming '
+                                                     'language.')),
+                                       ('coalang_dir', ('External directory '
+                                                        'for coalang file.'))])
+
+        self.assertEqual(uut.param_dict, expected_output)
 
     def check_from_docstring_dataset(self,
                                      docstring,

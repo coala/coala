@@ -1,4 +1,5 @@
 import logging
+import platform
 
 from termcolor import colored
 
@@ -68,6 +69,8 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
+STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
+    'Z' if platform.system() == 'Windows' else 'D')
 FILE_NAME_COLOR = 'blue'
 FILE_LINES_COLOR = 'blue'
 CAPABILITY_COLOR = 'green'
@@ -134,7 +137,7 @@ def acquire_actions_and_apply(console_printer,
     while True:
         actions = []
         for action in cli_actions:
-            if action.is_applicable(result, file_dict, file_diff_dict):
+            if action.is_applicable(result, file_dict, file_diff_dict) is True:
                 actions.append(action)
 
         if actions == []:
@@ -248,7 +251,8 @@ def print_result(console_printer,
     if interactive:
         cli_actions = CLI_ACTIONS
         show_patch_action = ShowPatchAction()
-        if show_patch_action.is_applicable(result, file_dict, file_diff_dict):
+        if show_patch_action.is_applicable(
+                result, file_dict, file_diff_dict) is True:
             diff_size = sum(len(diff) for diff in result.diffs.values())
             if diff_size <= DIFF_EXCERPT_MAX_SIZE:
                 show_patch_action.apply_from_section(result,
@@ -268,6 +272,12 @@ def print_result(console_printer,
 
 
 def print_diffs_info(diffs, printer):
+    """
+    Prints diffs information (number of additions and deletions) to the console.
+
+    :param diffs:    List of Diff objects containing corresponding diff info.
+    :param printer:  Object responsible for printing diffs on console.
+    """
     for filename, diff in sorted(diffs.items()):
         additions, deletions = diff.stats()
         printer.print(
@@ -285,6 +295,15 @@ def print_results_formatted(log_printer,
                             section,
                             result_list,
                             *args):
+    """
+    Prints results through the format string from the format setting done by
+    user.
+
+    :param log_printer:    Printer responsible for logging the messages.
+    :param section:        The section to which the results belong.
+    :param result_list:    List of Result objects containing the corresponding
+                           results.
+    """
     global _warn_deprecated_format_str
     default_format = ('id:{id}:origin:{origin}:file:{file}:line:{line}:'
                       'column:{column}:end_line:{end_line}:end_column:'
@@ -304,15 +323,17 @@ def print_results_formatted(log_printer,
 
     for result in result_list:
         severity_str = RESULT_SEVERITY.__str__(result.severity)
+        format_args = vars(result)
         try:
             if len(result.affected_code) == 0:
+                format_args['affected_code'] = None
                 print(format_str.format(file=None,
                                         line=None,
                                         end_line=None,
                                         column=None,
                                         end_column=None,
                                         severity_str=severity_str,
-                                        **result.__dict__))
+                                        **format_args))
                 continue
 
             for source_range in result.affected_code:
@@ -322,7 +343,7 @@ def print_results_formatted(log_printer,
                                         column=source_range.start.column,
                                         end_column=source_range.end.column,
                                         severity_str=severity_str,
-                                        **result.__dict__))
+                                        **format_args))
         except KeyError as exception:
             log_printer.log_exception(
                 'Unable to print the result with the given format string.',
@@ -574,7 +595,7 @@ def choose_action(console_printer, actions):
                 action.desc)))
 
         try:
-            line = format_lines('Enter number (Ctrl-D to exit): ')
+            line = format_lines(STR_ENTER_NUMBER)
 
             choice = input(line)
             if not choice:

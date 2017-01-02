@@ -17,7 +17,7 @@ class ResultAction:
         """
         Checks whether the Action is valid for the result type.
 
-        Returns ``True`` by default.
+        Returns ``True`` or a string containing the not_applicable message.
 
         :param result:             The result from the coala run to check if an
                                    Action is applicable.

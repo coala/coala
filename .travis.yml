@@ -6,31 +6,52 @@ python:
   - 3.5
   - 3.6-dev
 
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode6.4
+      language: bash
+      python: 3.6
+      env:
+        - DYLD_LIBRARY_PATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/
+      cache:
+        directories:
+          - ~/Library/Caches/pip
+
 cache: pip
 
 addons:
   apt:
     packages:
-      - r-base
       - clang-3.4
     sources:
-      - ubuntu-toolchain-r-test
       - llvm-toolchain-precise
 
 before_install:
+  - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
   - export TRAVIS_PYTHON_VERSION_MAJOR=${TRAVIS_PYTHON_VERSION%.[0-9]}
   - export TRAVIS_PYTHON_VERSION_MINOR=${TRAVIS_PYTHON_VERSION#[0-9].}
-  - sudo add-apt-repository -y ppa:staticfloat/juliareleases
-  - sudo apt-get update
-  - sudo apt-get install julia
+
+  - >
+    if [[ $TRAVIS_OS_NAME == osx ]]; then
+      brew install python3
+      sudo ln -sf $(which python3) $(which python)
+      sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
+    fi
+
   # https://github.com/coala/coala/issues/3183
-  # https://github.com/coala/coala/issues/3184
-  - pip install -U py==1.4.29 pip
+  # Travis automatically installs the `requirements.txt` in "install" stage
+  - cp requirements.txt requirements.orig
   - cat test-requirements.txt docs-requirements.txt >> requirements.txt
-  - sed -i '/^-r/d' requirements.txt
+  - sed -i.bak '/^-r/d' requirements.txt
+
+  # OSX is not a real Travis 'python' image, so it does not install
+  # requirements.txt automatically.
+  - if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
 
 before_script:
-  - julia -e 'Pkg.add("Lint")'
+  # Restore the original requirements.txt
+  - mv requirements.orig requirements.txt
 
 script:
   - >
@@ -41,12 +62,12 @@ script:
       bash .misc/tests.sh
       python setup.py bdist_wheel
       pip install ./dist/coala-*.whl
-      pip install coala-bears --pre -U
+      pip install coala-bears[alldeps] --pre -U
       # https://github.com/coala/coala-bears/issues/1037
       if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
         python3 -m nltk.downloader punkt maxent_treebank_pos_tagger averaged_perceptron_tagger
       else
-        sed -i '/bears = GitCommitBear/d' .coafile
+        sed -i.bak '/bears = GitCommitBear/d' .coafile
       fi
       coala --non-interactive
       make -C docs clean

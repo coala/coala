@@ -14,20 +14,8 @@ case $CIRCLE_NODE_INDEX in
 esac
 
 # apt-get commands
-if [ "$CIRCLE_BUILD_IMAGE" = "ubuntu-12.04" ]; then
-  sudo add-apt-repository -y ppa:staticfloat/juliareleases
-  sudo add-apt-repository -y ppa:staticfloat/julia-deps
-fi
-sudo apt-get update
-deps="indent libclang1-3.4 r-base"
-deps_ruby_npm="gem nodejs"
-deps_julia="julia"
-deps_julia_packages="Lint"
-sudo apt-get install $deps $deps_ruby_npm $deps_julia
-
-for julia_package in $deps_julia_packages ; do
-  julia -e 'Pkg.add("'$julia_package'")'
-done
+deps="libclang1-3.4"
+sudo apt-get install $deps
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
@@ -44,6 +32,3 @@ if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
 fi
 
 bash .misc/deps.nltk.sh
-
-# gem installations
-gem install ruby

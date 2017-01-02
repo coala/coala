@@ -114,7 +114,7 @@ def autoapply_actions(results,
     """
 
     default_actions, invalid_actions = get_default_actions(section)
-
+    no_autoapply_warn = bool(section.get('no_autoapply_warn', False))
     for bearname, actionname in invalid_actions.items():
         log_printer.warn('Selected default action {!r} for bear {!r} does '
                          'not exist. Ignoring action.'.format(actionname,
@@ -138,10 +138,10 @@ def autoapply_actions(results,
                 not_processed_results.append(result)
                 continue
 
-        if not action.is_applicable(result, file_dict, file_diff_dict):
-            log_printer.warn('Selected default action {!r} for bear {!r} is '
-                             'not applicable. Action not applied.'.format(
-                                 action.get_metadata().name, result.origin))
+        applicable = action.is_applicable(result, file_dict, file_diff_dict)
+        if applicable is not True:
+            if not no_autoapply_warn:
+                log_printer.warn('{}: {}'.format(result.origin, applicable))
             not_processed_results.append(result)
             continue
 
@@ -168,6 +168,13 @@ def autoapply_actions(results,
 def check_result_ignore(result, ignore_ranges):
     """
     Determines if the result has to be ignored.
+
+    Any result will be ignored if its origin matches any bear names and its
+    SourceRange overlaps with the ignore range.
+
+    Note that everything after a space in the origin will be cut away, so the
+    user can ignore results with an origin like `CSecurityBear (buffer)` with
+    just `# Ignore CSecurityBear`.
 
     :param result:        The result that needs to be checked.
     :param ignore_ranges: A list of tuples, each containing a list of lower

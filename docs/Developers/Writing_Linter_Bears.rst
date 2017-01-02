@@ -364,7 +364,7 @@ gather information by using these values. Our bear now looks like:
   import os
 
   from coalib.bearlib.abstractions.Linter import linter
-  from coalib.bears.requirements.PipRequirement import PipRequirement
+  from dependency_management.requirements.PipRequirement import PipRequirement
   from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 
   @linter(executable='pylint',
