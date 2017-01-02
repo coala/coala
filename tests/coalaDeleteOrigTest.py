@@ -7,6 +7,7 @@ from coalib import coala_delete_orig
 from coala_utils.ContextManagers import retrieve_stderr
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
+from coala_utils.tempfile_utils import make_temp_closed
 
 
 class coalaDeleteOrigTest(unittest.TestCase):
@@ -42,10 +43,9 @@ class coalaDeleteOrigTest(unittest.TestCase):
 
     def test_normal_running(self):
         with tempfile.TemporaryDirectory() as directory:
-            temporary = tempfile.mkstemp(suffix='.orig', dir=directory)
-            os.close(temporary[0])
+            temporary = make_temp_closed(suffix='.orig', dir=directory)
             section = Section('')
             section.append(Setting('project_dir', re.escape(directory)))
             retval = coala_delete_orig.main(section=section)
             self.assertEqual(retval, 0)
-            self.assertFalse(os.path.isfile(temporary[1]))
+            self.assertFalse(os.path.isfile(temporary))
