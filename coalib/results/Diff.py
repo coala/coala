@@ -467,8 +467,11 @@ class Diff:
         """
         # Remaining parts of the lines not affected by the replace.
         first_part = (
-            self.original[source_range.start.line - 1][:source_range.start.column - 1])
-        last_part = self.original[source_range.end.line - 1][source_range.end.column - 1:]
+            self.original[
+                source_range.start.line - 1][:source_range.start.column - 1])
+        last_part = (
+            self.original[
+                source_range.end.line - 1][source_range.end.column - 1:])
 
         self.delete_lines(source_range.start.line, source_range.end.line)
         self.add_lines(source_range.start.line - 1,
