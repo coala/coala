@@ -149,10 +149,10 @@ class Result:
             belongs to.)
         """
         source_range = SourceRange.from_values(file,
-                                        line,
-                                        column,
-                                        end_line,
-                                        end_column)
+                                               line,
+                                               column,
+                                               end_line,
+                                               end_column)
 
         return cls(origin=origin,
                    message=message,
