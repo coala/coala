@@ -148,7 +148,7 @@ class Result:
             some time figuring out which of the leafs exactly your result
             belongs to.)
         """
-        range = SourceRange.from_values(file,
+        source_range = SourceRange.from_values(file,
                                         line,
                                         column,
                                         end_line,
@@ -156,7 +156,7 @@ class Result:
 
         return cls(origin=origin,
                    message=message,
-                   affected_code=(range,),
+                   affected_code=(source_range,),
                    severity=severity,
                    additional_info=additional_info,
                    debug_msg=debug_msg,
@@ -238,9 +238,9 @@ class Result:
         if isinstance(ranges, SourceRange):
             ranges = [ranges]
 
-        for range in ranges:
+        for source_range in ranges:
             for self_range in self.affected_code:
-                if range.overlaps(self_range):
+                if source_range.overlaps(self_range):
                     return True
 
         return False
