@@ -62,7 +62,9 @@ Step 0. Run coala
 As a preparation of joining the community you should find out what this project
 is about - if you didn't do this already. We highly recommend you
 `install coala <https://coala.io/install>`_ and use it on at least one of your
-projects.
+projects. Also, we recommend that you read
+`Development Setup Notes <http://coala.io/devsetup>`
+to learn how to set up an environment to work on coala.
 
 Most importantly, keep notes of what could be better to make the usage easier!
 What documentation was missing? What was hard to understand?
