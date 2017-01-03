@@ -1,3 +1,4 @@
+import logging
 import shlex
 import subprocess
 from os.path import exists
@@ -144,7 +145,19 @@ class OpenEditorAction(ResultAction):
             editor_info = KNOWN_EDITORS[editor.strip()]
         except KeyError:
             # If the editor is unknown fall back to just passing
-            # the filenames
+            # the filenames and emit a warning
+            logging.warning(
+                'The editor "{editor}" is unknown to coala. Files won\'t be'
+                ' opened at the correct positions and other quirks might'
+                ' occur. Consider opening an issue at'
+                ' https://github.com/coala/coala/issues so we'
+                ' can add support for this editor.'
+                ' Supported editors are: {supported}'.format(
+                    editor=editor, supported=', '.join(
+                        sorted(KNOWN_EDITORS.keys())
+                    )
+                )
+            )
             editor_info = {
                 'file_arg_template': '{filename}',
                 'gui': False
