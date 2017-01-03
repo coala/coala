@@ -168,7 +168,15 @@ fork repository.
 
 Now you need to make sure your change is actually working. For this, you will
 need to test it locally before pushing it to your fork, and checking it with
-concrete examples. So basically, run tests and run coala by simply typing
+concrete examples. The first time, you will need to install some requirements.
+This can be done by executing the following command while in the root of the
+coala project directory.
+
+::
+
+    $ pip3 install -r test-requirements.txt -r requirements.txt
+
+After that, you can run coala by simply typing
 
 ::
 
