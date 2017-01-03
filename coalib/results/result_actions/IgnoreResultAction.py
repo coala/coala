@@ -6,24 +6,30 @@ from os.path import exists
 from os.path import isfile
 import shutil
 
+from coala_utils.decorators import enforce_signature
+
 
 class IgnoreResultAction(ResultAction):
 
     SUCCESS_MESSAGE = 'An ignore comment was added to your source code.'
 
     @staticmethod
-    def is_applicable(result, original_file_dict, file_diff_dict):
+    @enforce_signature
+    def is_applicable(result: Result, original_file_dict, file_diff_dict):
         """
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
         """
 
-        if not isinstance(result, Result) or len(result.affected_code) == 0:
-            return False
+        if len(result.affected_code) == 0:
+            return 'The result is not associated with any source code.'
 
         filenames = set(src.renamed_file(file_diff_dict)
                         for src in result.affected_code)
-        return any(exists(filename) for filename in filenames)
+        if any(exists(filename) for filename in filenames):
+            return True
+        return ("The result is associated with source code that doesn't "
+                'seem to exist.')
 
     def apply(self, result, original_file_dict, file_diff_dict, language: str,
               no_orig: bool=False):

@@ -60,8 +60,8 @@ class Result:
             A message which may help the user find out why this result was
             yielded.
         :param diffs:
-            A dictionary with filenames as key and a sequence of ``Diff``
-            objects associated with them as values.
+            A dictionary with filename as key and ``Diff`` object
+            associated with it as value.
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
@@ -137,8 +137,8 @@ class Result:
             A message which may help the user find out why this result was
             yielded.
         :param diffs:
-            A dictionary with filenames as key and a sequence of ``Diff``
-            objects associated with them as values.
+            A dictionary with filename as key and ``Diff`` object
+            associated with it as value.
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
@@ -208,8 +208,8 @@ class Result:
         :param file_dict: A dictionary containing all files with filename as
                           key and all lines a value. Will be modified.
         """
-        for filename in self.diffs:
-            file_dict[filename] = self.diffs[filename].modified
+        for filename, diff in self.diffs.items():
+            file_dict[filename] = diff.modified
 
     def __add__(self, other):
         """
