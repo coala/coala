@@ -1,6 +1,5 @@
 import os
 import subprocess
-import tempfile
 import unittest
 from importlib import reload
 
