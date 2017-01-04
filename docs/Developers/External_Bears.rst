@@ -538,5 +538,5 @@ provide a JSON string via stdout. The specs are the following:
 
 .. note::
 
-  The output JSON spec is the same as the one that ``coala-json`` uses. If you
-  ever get lost you can run ``coala-json`` over a file and check the results.
+  The output JSON spec is the same as the one that ``coala --json`` uses. If you
+  ever get lost you can run ``coala --json`` over a file and check the results.
