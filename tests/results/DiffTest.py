@@ -1,4 +1,5 @@
 import json
+import logging
 import unittest
 from unittest.case import SkipTest
 
@@ -54,6 +55,19 @@ class DiffTest(unittest.TestCase):
         self.uut.delete_line(1)
         # Line was deleted, unchangeable
         self.assertRaises(ConflictError, self.uut.change_line, 1, '1', '2')
+
+    def test_capture_warnings(self):
+        """
+        Since this addresses the deprecated method, this testcase is
+        temporary (until the old API is fully removed).
+        """
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'DEBUG') as log:
+            self.assertEqual(len(self.uut), 0)
+            self.uut.change_line(2, '1', '2')
+        self.assertEqual(log.output, [
+            'DEBUG:root:Use of change_line method is deprecated. Instead '
+            'use modify_line method, without the original_line argument'])
 
     def test_double_changes_with_same_diff(self):
         self.uut.change_line(2, '1', '2')

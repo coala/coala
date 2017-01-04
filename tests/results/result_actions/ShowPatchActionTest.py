@@ -94,7 +94,7 @@ class ShowPatchActionTest(unittest.TestCase):
     def test_apply_with_previous_patches(self):
         with retrieve_stdout() as stdout:
             previous_diffs = {'a': Diff(self.file_dict['a'])}
-            previous_diffs['a'].change_line(2, 'b\n', 'b_changed\n')
+            previous_diffs['a'].modify_line(2, 'b_changed\n')
             self.assertEqual(self.uut.apply_from_section(self.test_result,
                                                          self.file_dict,
                                                          previous_diffs,
@@ -115,7 +115,7 @@ class ShowPatchActionTest(unittest.TestCase):
     def test_apply_with_rename(self):
         with retrieve_stdout() as stdout:
             previous_diffs = {'a': Diff(self.file_dict['a'])}
-            previous_diffs['a'].change_line(2, 'b\n', 'b_changed\n')
+            previous_diffs['a'].modify_line(2, 'b_changed\n')
 
             diff_dict = {'a': Diff(self.file_dict['a'], rename='a.rename'),
                          'b': Diff(self.file_dict['b'], delete=True)}

@@ -1,5 +1,6 @@
 import copy
 import difflib
+import logging
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
@@ -391,7 +392,7 @@ class Diff:
         """
         return self.add_lines(line_nr_before, [line])
 
-    def change_line(self, line_nr, original_line, replacement):
+    def modify_line(self, line_nr, replacement):
         r"""
         Changes the given line with the given line number. The replacement will
         be there instead.
@@ -403,16 +404,14 @@ class Diff:
 
         We can change a line easily:
 
-        >>> diff.change_line(1,
-        ...                  'Hey there! Gorgeous.\n',
+        >>> diff.modify_line(1,
         ...                  'Hey there! This is sad.\n')
         >>> diff.modified
         ['Hey there! This is sad.\n', "It's nice that we're here.\n"]
 
         We can even merge changes within one line:
 
-        >>> diff.change_line(1,
-        ...                  'Hey there! Gorgeous.\n',
+        >>> diff.modify_line(1,
         ...                  'Hello. :( Gorgeous.\n')
         >>> diff.modified
         ['Hello. :( This is sad.\n', "It's nice that we're here.\n"]
@@ -420,8 +419,7 @@ class Diff:
         However, if we change something that has been changed before, we'll get
         a conflict:
 
-        >>> diff.change_line(1,  # +ELLIPSIS
-        ...                  'Hey there! Gorgeous.\n',
+        >>> diff.modify_line(1,  # +ELLIPSIS
         ...                  'Hello. This is not ok. Gorgeous.\n')
         Traceback (most recent call last):
          ...
@@ -438,8 +436,14 @@ class Diff:
                                                replacement)
             replacement = ''.join((orig_diff + new_diff).modified)
 
-        linediff.change = (original_line, replacement)
+        linediff.change = (self._file[line_nr-1], replacement)
         self._changes[line_nr] = linediff
+
+    def change_line(self, line_nr, original_line, replacement):
+        logging.debug('Use of change_line method is deprecated. Instead '
+                      'use modify_line method, without the original_line '
+                      'argument')
+        self.modify_line(line_nr, replacement)
 
     def replace(self, range, replacement):
         r"""
