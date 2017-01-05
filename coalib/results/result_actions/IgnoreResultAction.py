@@ -5,6 +5,7 @@ from coalib.results.Diff import Diff
 from os.path import exists
 from os.path import isfile
 import shutil
+import logging
 
 from coala_utils.decorators import enforce_signature
 
@@ -36,10 +37,11 @@ class IgnoreResultAction(ResultAction):
         """
         Add ignore comment
         """
-        comment_delimiter = Language[
-            language].get_default_version().comment_delimiter
-        ignore_comment = (str(comment_delimiter) + ' Ignore ' + result.origin +
-                          '\n')
+
+        ignore_comment = self.get_ignore_comment(result.origin, language)
+
+        if not ignore_comment:
+            return file_diff_dict
 
         source_range = next(filter(lambda sr: exists(sr.file),
                                    result.affected_code))
@@ -65,3 +67,41 @@ class IgnoreResultAction(ResultAction):
             file.writelines(ignore_diff.modified)
 
         return file_diff_dict
+
+    def get_ignore_comment(self, origin, language):
+        r"""
+        Returns a string of Ignore Comment, depending on the language
+        Supports Single Line Comments
+
+        >>> IgnoreResultAction().get_ignore_comment("Bear", "css")
+        '/* Ignore Bear */\n'
+
+        And Multiline Comments
+
+        >>> IgnoreResultAction().get_ignore_comment("Bear", "c")
+        '// Ignore Bear\n'
+        """
+        try:
+            comment_delimiter = Language[
+                language].get_default_version().comment_delimiter
+            ignore_comment = (str(comment_delimiter) + ' Ignore ' +
+                              origin + '\n')
+        except AttributeError:
+            # singleline comments not supported by language
+            try:
+                multiline_comment_delimiter = Language[
+                    language].get_default_version().multiline_comment_delimiters
+                start_comment, end_comment = next(iter(
+                                        multiline_comment_delimiter.items()))
+                ignore_comment = (str(start_comment) + ' Ignore ' +
+                                  origin + ' ' +
+                                  str(end_comment) + '\n')
+            except AttributeError:
+                # multiline comments also not supported by language
+                logging.warning(
+                    'coala does not support Ignore in "{language}". Consider'
+                    ' opening an issue at https://github.com/coala/coala/issues'
+                    ' so we can add support for this language.'.format(
+                        language=language))
+                ignore_comment = None
+        return ignore_comment

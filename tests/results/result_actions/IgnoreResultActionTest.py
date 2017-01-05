@@ -71,9 +71,23 @@ class IgnoreResultActionTest(unittest.TestCase):
 
             # Apply a second patch, old patch has to stay!
             uut.apply(Result.from_values('else', 'msg', f_a, 1),
-                      file_dict, file_diff_dict, 'c')
+                      file_dict, file_diff_dict, 'css')
             self.assertEqual(
                 file_diff_dict[f_a].modified,
-                ['1  // Ignore else\n', '2  // Ignore origin\n', '3\n'])
+                ['1  /* Ignore else */\n', '2  // Ignore origin\n', '3\n'])
             with open(f_a, 'r') as f:
                 self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
+
+            import logging
+            logger = logging.getLogger()
+
+            with unittest.mock.patch('subprocess.call'):
+                with self.assertLogs(logger, 'WARNING') as log:
+                    uut.apply(Result.from_values('else', 'msg', f_a, 1),
+                              file_dict, file_diff_dict, 'dothraki')
+
+                    self.assertEqual(1, len(log.output))
+                    self.assertIn(
+                        'coala does not support Ignore in "dothraki".',
+                        log.output[0]
+                    )
