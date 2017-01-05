@@ -82,7 +82,7 @@ def save_sections(sections):
 
     :param sections: A section dict.
     """
-    default_section = sections['default']
+    default_section = sections['cli']
     try:
         if bool(default_section.get('save', 'false')):
             conf_writer = ConfWriter(
@@ -151,19 +151,17 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
     check_conflicts(cli_sections)
 
     if (
-            bool(cli_sections['default'].get('find_config', 'False')) and
-            str(cli_sections['default'].get('config')) == ''):
-        cli_sections['default'].add_or_create_setting(
-            Setting('config',
-                    re.escape(find_user_config(os.getcwd())),
-                    from_cli=True))
+            bool(cli_sections['cli'].get('find_config', 'False')) and
+            str(cli_sections['cli'].get('config')) == ''):
+        cli_sections['cli'].add_or_create_setting(
+            Setting('config', re.escape(find_user_config(os.getcwd()))))
 
     targets = []
     # We don't want to store targets argument back to file, thus remove it
-    for item in list(cli_sections['default'].contents.pop('targets', '')):
+    for item in list(cli_sections['cli'].contents.pop('targets', '')):
         targets.append(item.lower())
 
-    if bool(cli_sections['default'].get('no_config', 'False')):
+    if bool(cli_sections['cli'].get('no_config', 'False')):
         sections = cli_sections
     else:
         base_sections = load_config_file(Constants.system_coafile, log_printer)
@@ -176,10 +174,10 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
         user_config = str(user_sections['default'].get(
             'config', default_config))
         config = os.path.abspath(
-            str(cli_sections['default'].get('config', user_config)))
+            str(cli_sections['cli'].get('config', user_config)))
 
         try:
-            save = bool(cli_sections['default'].get('save', 'False'))
+            save = bool(cli_sections['cli'].get('save', 'False'))
         except ValueError:
             # A file is deposited for the save parameter, means we want to save
             # but to a specific file.
@@ -204,7 +202,10 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
                             'specify inheritance: the section \'all.python\' '
                             'will inherit all settings from \'all\'.')
 
-    str_log_level = str(sections['default'].get('log_level', '')).upper()
+    str_log_level = str(sections['cli'].get(
+        'log_level',
+        sections['default'].get('log_level', '')
+        if 'default' in sections else '')).upper()
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
                                                    LOG_LEVEL.INFO)
 

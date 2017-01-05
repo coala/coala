@@ -80,10 +80,11 @@ class ConfWriterTest(unittest.TestCase):
                        'key\\,comma = value,comma\n',
                        'key\\#hash = value\\#hash\n',
                        'key\\.dot = value.dot\n',
-                       'a_default += val2\n']
+                       'a_default += val2\n',
+                       '[cli]\n']
         sections = load_configuration(['-c', escape(self.file, '\\')],
                                       self.log_printer)[0]
-        del sections['default'].contents['config']
+        del sections['cli'].contents['config']
         self.uut.write_sections(sections)
         self.uut.close()
 
@@ -105,11 +106,12 @@ class ConfWriterTest(unittest.TestCase):
                        '[defaults.new]\n',
                        'b += 7\n',
                        'c += 6, 7\n',
-                       'a, d += 5, 6, 7\n']
+                       'a, d += 5, 6, 7\n',
+                       '[cli]\n']
 
         sections = load_configuration(['-c', escape(self.file, '\\')],
                                       self.log_printer)[0]
-        del sections['default'].contents['config']
+        del sections['cli'].contents['config']
         self.uut.write_sections(sections)
         self.uut.close()
 

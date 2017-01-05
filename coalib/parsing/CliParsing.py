@@ -41,7 +41,7 @@ def parse_cli(arg_list=None,
     """
     arg_parser = default_arg_parser() if arg_parser is None else arg_parser
     origin += os.path.sep
-    sections = OrderedDict(default=Section('Default'))
+    sections = OrderedDict(cli=Section('cli'))
     line_parser = LineParser(key_value_delimiters,
                              comment_seperators,
                              key_delimiters,
@@ -64,6 +64,7 @@ def parse_cli(arg_list=None,
                                arg_key,
                                arg_value,
                                origin,
+                               section_name='cli',
                                from_cli=True)
 
     return sections
@@ -90,7 +91,7 @@ def parse_custom_settings(sections,
                                value=value,
                                origin=origin,
                                to_append=append,
-                               section_name=key_tuple[0],
+                               section_name=(key_tuple[0] or 'cli'),
                                from_cli=True)
 
 

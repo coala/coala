@@ -40,9 +40,9 @@ class coalaJSONTest(unittest.TestCase):
                                                    '-b', 'LineCountTestBear',
                                                    '-f', re.escape(filename))
             output = json.loads(stdout)
-            self.assertEqual(output['results']['default'][0]['message'],
+            self.assertEqual(output['results']['cli'][0]['message'],
                              'This file has 1 lines.')
-            self.assertEqual(output['results']['default'][0]
+            self.assertEqual(output['results']['cli'][0]
                              ['message_arguments'],
                              {})
             self.assertNotEqual(retval, 0,

@@ -149,8 +149,7 @@ class CachingTest(unittest.TestCase):
                 retval, stdout, stderr = execute_coala(
                    coala.main,
                    'coala',
-                   '-c', filename + '.coafile',
-                   '-f', filename + 'test.py')
+                   '-c', filename + '.coafile')
                 self.assertIn('This file has', stdout)
                 self.assertIn(
                     'Implicit \'Default\' section inheritance is deprecated',
@@ -159,8 +158,7 @@ class CachingTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                coala.main,
                'coala',
-               '-c', filename + '.coafile',
-               '-f', filename + 'test.py')
+               '-c', filename + '.coafile')
             self.assertIn('This file has', stdout)
             self.assertIn('During execution of coala', stderr)
             self.assertIn(

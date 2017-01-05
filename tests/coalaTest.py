@@ -52,7 +52,7 @@ class coalaTest(unittest.TestCase):
 
     def test_did_nothing(self):
         retval, stdout, stderr = execute_coala(coala.main, 'coala', '-I',
-                                               '-S', 'default.enabled=false')
+                                               '-S', 'cli.enabled=false')
         self.assertEqual(retval, 2)
         self.assertIn('Did you forget to give the `--files`', stderr)
         self.assertFalse(stdout)
@@ -60,7 +60,7 @@ class coalaTest(unittest.TestCase):
         retval, stdout, stderr = execute_coala(coala.main, 'coala', '-I',
                                                '-b', 'JavaTestBear', '-f',
                                                '*.java',
-                                               '-S', 'default.enabled=false')
+                                               '-S', 'cli.enabled=false')
         self.assertEqual(retval, 2)
         self.assertIn('Nothing to do.', stderr)
         self.assertFalse(stdout)
@@ -140,7 +140,7 @@ class coalaTest(unittest.TestCase):
                         '-S', 'use_spaces=yeah'
                     ),
                     autoapply=False
-                )[0]['default'])
+                )[0]['cli'])
             )
 
             self.assertEqual(
@@ -155,5 +155,5 @@ class coalaTest(unittest.TestCase):
                         '--apply-patches',
                         '-S', 'use_spaces=yeah'
                     )
-                )[0]['default'])
+                )[0]['cli'])
             )
