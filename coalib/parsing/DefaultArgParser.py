@@ -198,7 +198,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     outputs_group.add_argument(
         '-o', '--output', nargs=1, metavar='FILE',
-        help='write JSON logs to the given file (must be called with --json)')
+        help='write results to the given file (must be called with --json)')
 
     outputs_group.add_argument(
         '-r', '--relpath', nargs='?', const=True,

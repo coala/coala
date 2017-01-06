@@ -62,7 +62,9 @@ Step 0. Run coala
 As a preparation of joining the community you should find out what this project
 is about - if you didn't do this already. We highly recommend you
 `install coala <https://coala.io/install>`_ and use it on at least one of your
-projects.
+projects. Also, we recommend that you read
+`Development Setup Notes <http://coala.io/devsetup>`
+to learn how to set up an environment to work on coala.
 
 Most importantly, keep notes of what could be better to make the usage easier!
 What documentation was missing? What was hard to understand?
@@ -166,7 +168,15 @@ fork repository.
 
 Now you need to make sure your change is actually working. For this, you will
 need to test it locally before pushing it to your fork, and checking it with
-concrete examples. So basically, run tests and run coala by simply typing
+concrete examples. The first time, you will need to install some requirements.
+This can be done by executing the following command while in the root of the
+coala project directory.
+
+::
+
+    $ pip3 install -r test-requirements.txt -r requirements.txt
+
+After that, you can run coala by simply typing
 
 ::
 

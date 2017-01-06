@@ -1,4 +1,5 @@
 import os
+import logging
 import subprocess
 import unittest
 from importlib import reload
@@ -213,6 +214,22 @@ class OpenEditorActionTest(unittest.TestCase):
                 ['subl', '--wait', '{0}:1:1'.format(self.fa)],
                 stdout=subprocess.PIPE
             )
+
+    def test_unknown_editor_warning(self):
+        logger = logging.getLogger()
+        uut = OpenEditorAction()
+        result_mock = Result.from_values(
+            'test', '', self.fa, line=None, column=None,
+        )
+        with unittest.mock.patch('subprocess.call'):
+            with self.assertLogs(logger, 'WARNING') as log:
+                uut.apply(result_mock, {self.fa: ''}, {}, editor='gouda-edit')
+
+                self.assertEqual(1, len(log.output))
+                self.assertIn(
+                    'The editor "gouda-edit" is unknown to coala.',
+                    log.output[0]
+                )
 
 
 def test_build_editor_call_args_spaced_filename():
