@@ -6,14 +6,14 @@
  *
  */
 
-div.sphinxsidebar .caption-text {
+.sphinxsidebar .caption-text {
     font-size: 120%;
 }
 
-img.logo {
+.logo {
     width: 100%;
 }
 
-.sphinxsidebarwrapper a.current.reference.internal {
+.sphinxsidebarwrapper .internal {
     font-weight: bold;
 }
