@@ -4,7 +4,7 @@ ignore =
     tests/bearlib/languages/documentation/documentation_extraction_testdata/*.py,
     tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
 
-max_line_length = 80
+max_line_length = 120
 use_spaces = True
 
 [python]
