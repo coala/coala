@@ -61,8 +61,8 @@ with the allowed types:
             c = ""
         return a + b + c
 
-This will raise a ``TypeError`` if ``a``, ``b`` or ``c`` are not strings
-and ``c`` is not ``None``.
+This will raise a ``TypeError`` if ``a`` or ``b`` are not strings or ``c`` is not a string
+and not ``None``.
 
 Line Continuation
 ~~~~~~~~~~~~~~~~~
