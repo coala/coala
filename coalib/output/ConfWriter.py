@@ -1,4 +1,5 @@
 from itertools import chain
+import os
 from types import MappingProxyType
 
 from pyprint.ClosableObject import ClosableObject
@@ -18,7 +19,11 @@ class ConfWriter(ClosableObject):
                  section_override_delimiters=('.',),
                  unsavable_keys=('save',)):
         ClosableObject.__init__(self)
+
         self.__file_name = file_name
+        if (os.path.isdir(self.__file_name)):
+            self.__file_name = os.path.join(self.__file_name, '.coafile')
+
         self.__file = open(self.__file_name, 'w')
         self.__key_value_delimiters = key_value_delimiters
         self.__comment_separators = comment_separators

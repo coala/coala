@@ -4,6 +4,7 @@ import unittest
 
 from coalib.output.ConfWriter import ConfWriter
 from coalib.parsing.ConfParser import ConfParser
+from coalib.settings.Section import Section
 
 
 class ConfWriterTest(unittest.TestCase):
@@ -72,3 +73,14 @@ class ConfWriterTest(unittest.TestCase):
             lines = f.readlines()
 
         self.assertEqual(result_file, lines)
+
+    def test_write_with_dir(self):
+        self.uut_dir = ConfWriter(tempfile.gettempdir())
+        self.uut_dir.write_sections({'name': Section('name')})
+        self.uut_dir.close()
+
+        with open(os.path.join(tempfile.gettempdir(), '.coafile'), 'r') as f:
+            lines = f.readlines()
+
+        self.assertEqual(['[name]\n'], lines)
+        os.remove(os.path.join(tempfile.gettempdir(), '.coafile'))
