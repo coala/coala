@@ -44,9 +44,13 @@ def mode_json(args):
     from coalib.coala_main import run_coala
     from coalib.misc.DictUtilities import inverse_dicts
     from coalib.misc.Exceptions import get_exitcode
+    from coalib.output.Logging import configure_json_logging
     from coalib.output.JSONEncoder import create_json_encoder
     from coalib.output.printers.LogPrinter import LogPrinter
     from coalib.settings.ConfigurationGathering import get_filtered_bears
+
+    if args.log_json:
+        log_stream = configure_json_logging()
 
     JSONEncoder = create_json_encoder(use_relpath=args.relpath)
     results = []
@@ -66,6 +70,11 @@ def mode_json(args):
         results, exitcode, _ = run_coala()
 
     retval = {'bears': results} if args.show_bears else {'results': results}
+
+    if args.log_json:
+        retval['logs'] = [json.loads(line) for line in
+                          log_stream.getvalue().splitlines()]
+
     if args.output:
         filename = str(args.output[0])
         with open(filename, 'w+') as fp:
