@@ -197,6 +197,11 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='show bear details for `--show-bears`')
 
     outputs_group.add_argument(
+        '--log-json', const=True, action='store_const',
+        help='output logs as json along with results'
+             ' (must be called with --json)')
+
+    outputs_group.add_argument(
         '-o', '--output', nargs=1, metavar='FILE',
         help='write results to the given file (must be called with --json)')
 

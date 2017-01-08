@@ -106,15 +106,20 @@ class coalaJSONTest(unittest.TestCase):
                                            '-c', os.devnull,
                                            '-b', 'LineCountTestBear',
                                            '-f', re.escape(filename),
+                                           '--log-json',
                                            stdout_only=True)
             execute_coala(coala.main, 'coala', '--json', '-c', os.devnull,
                           '-b', 'LineCountTestBear', '-f', re.escape(filename),
-                          '-o', 'file.json')
+                          '-o', 'file.json', '--log-json')
 
         with open('file.json') as fp:
             data = json.load(fp)
 
         output = json.loads(output)
+        # Remove 'time' key from both as we cant compare them
+        for log_index in range(len(data['logs'])):
+            del data['logs'][log_index]['timestamp']
+            del output['logs'][log_index]['timestamp']
 
         self.assertEqual(data, output)
         os.remove('file.json')
