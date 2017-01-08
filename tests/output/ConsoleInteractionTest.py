@@ -433,10 +433,11 @@ Project wide:
             self.assertEqual(stdout.getvalue(), 'Executing section name...\n')
 
     def test_nothing_done(self):
-        nothing_done(self.log_printer)
-        self.assertEqual(['No existent section was targeted or enabled. '
-                          'Nothing to do.'],
-                         [log.message for log in self.log_printer.logs])
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'WARNING') as cm:
+            nothing_done()
+        self.assertEqual(['WARNING:root:No existent section was targeted or '
+                          'enabled. Nothing to do.'], cm.output)
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
