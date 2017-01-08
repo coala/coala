@@ -79,5 +79,6 @@ def main():
 
     return mode_normal(console_printer, log_printer)
 
+
 if __name__ == '__main__':  # pragma: no cover
     main()

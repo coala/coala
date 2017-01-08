@@ -36,8 +36,7 @@ coala provides a common command-line interface for linting and fixing all your
 code, regardless of the programming languages you use.
 
 To find out what kind of analysis coala offers for the languages you use, visit
-<https://github.com/coala/bear-docs/blob/master/README.rst#supported-languages>
-or run:
+http://coala.io/languages, or run::
 
     $ coala --show-bears --filter-by-language C Python
 
@@ -129,6 +128,9 @@ To run coala without user interaction, run the `coala --non-interactive`,
     config_group.add_argument(
         '--flush-cache', const=True, action='store_const',
         help='rebuild the file cache')
+    config_group.add_argument(
+        '--no-autoapply-warn', const=True, action='store_const',
+        help='turn off warning about patches not being auto applicable')
 
     inputs_group = arg_parser.add_argument_group('Inputs')
 
@@ -196,7 +198,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     outputs_group.add_argument(
         '-o', '--output', nargs=1, metavar='FILE',
-        help='write JSON logs to the given file (must be called with --json)')
+        help='write results to the given file (must be called with --json)')
 
     outputs_group.add_argument(
         '-r', '--relpath', nargs='?', const=True,

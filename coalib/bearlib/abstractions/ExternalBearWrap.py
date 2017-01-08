@@ -32,7 +32,7 @@ def _prepare_options(options):
             'Invalid keyword arguments provided: ' +
             ', '.join(repr(s) for s in sorted(superfluous_options)))
 
-    if not 'settings' in options:
+    if 'settings' not in options:
         options['settings'] = {}
 
 

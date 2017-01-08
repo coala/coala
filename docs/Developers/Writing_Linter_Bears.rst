@@ -131,7 +131,7 @@ are important to construct a meaningful result that contains the information
 that is printed out.
 
 For the exact list of named groups ``@linter`` recognizes, see the `API
-documentation <https://api.coala.io/en/latest/>`_.
+documentation <https://api.coala.io/en/latest/>`__.
 
 For more info generally on regexes, see `Python re module
 <https://docs.python.org/3/library/re.html>`_.
@@ -440,5 +440,5 @@ Congratulations!
 Where to Find More...
 ---------------------
 
-If you need more information about the ``@linter`` decorator, refer to the API
-documentation.
+If you need more information about the ``@linter`` decorator, refer to the `API
+documentation <http://api.coala.io/en/latest/coalib.bearlib.abstractions.html#module-coalib.bearlib.abstractions.Linter>`__.

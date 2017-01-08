@@ -7,6 +7,8 @@ from coalib.results.Diff import ConflictError
 from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 
+from coala_utils.decorators import enforce_signature
+
 
 def format_line(line, real_nr='', sign='|', mod_nr='', symbol='', ):
     return '|{:>4}{}{:>4}|{:1}{}'.format(real_nr,
@@ -63,9 +65,11 @@ class ShowPatchAction(ResultAction):
     SUCCESS_MESSAGE = 'Displayed patch successfully.'
 
     @staticmethod
-    def is_applicable(result, original_file_dict, file_diff_dict):
-        if not isinstance(result, Result) or not result.diffs:
-            return False
+    @enforce_signature
+    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+
+        if not result.diffs:
+            return 'This result has no patch attached.'
 
         try:
             # Needed so the addition is run for all patches -> ConflictError
@@ -76,9 +80,13 @@ class ShowPatchAction(ResultAction):
                              file_diff_dict[filename]):
                     nonempty_patches = True
 
-            return nonempty_patches
-        except ConflictError:
-            return False
+            if nonempty_patches:
+                return True
+            return 'The given patches do not change anything anymore.'
+
+        except ConflictError as ce:
+            return ('Two or more patches conflict with '
+                    'each other: {}'.format(str(ce)))
 
     def apply(self,
               result,

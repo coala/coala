@@ -63,11 +63,11 @@ source in the future.
 Building Documentation
 ----------------------
 
-You will need to install the following packages to build the documentation:
+You should run this command before trying to build the documentation:
 
 ::
 
-    (venv)$ pip3 install sphinx sphinx_rtd_theme
+    (venv)$ pip3 install -r docs-requirements.txt
 
 Once you have done so, you can build the documentation by entering the docs
 directory and running ``make``. The documentation on the coala website is in

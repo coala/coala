@@ -14,8 +14,14 @@ class PrintDebugMessageActionTest(unittest.TestCase):
         self.test_result = Result('origin', 'message', debug_msg='DEBUG MSG')
 
     def test_is_applicable(self):
-        self.assertFalse(self.uut.is_applicable(1, None, None))
-        self.assertFalse(self.uut.is_applicable(Result('o', 'm'), None, None))
+        with self.assertRaises(TypeError):
+            self.uut.is_applicable(1, None, None)
+
+        self.assertEqual(
+            self.uut.is_applicable(Result('o', 'm'), None, None),
+            'There is no debug message.'
+        )
+
         self.assertTrue(self.uut.is_applicable(self.test_result, None, None))
 
     def test_apply(self):

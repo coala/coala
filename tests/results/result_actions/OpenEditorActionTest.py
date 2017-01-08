@@ -1,4 +1,5 @@
 import os
+import logging
 import subprocess
 import tempfile
 import unittest
@@ -24,13 +25,6 @@ class OpenEditorActionTest(unittest.TestCase):
 
         with open(filename, 'w') as f:
             f.writelines(lines)
-
-    @staticmethod
-    def fake_edit_subl(commands, stdout):
-        """
-        Solely the declaration raises an exception if stdout not provided.
-        """
-        assert ('--wait' in commands), 'Did not wait for the editor to close'
 
     def setUp(self):
         fahandle, self.fa = tempfile.mkstemp()
@@ -72,7 +66,7 @@ class OpenEditorActionTest(unittest.TestCase):
             'f_c': ['1\n', '2\n', '3\n']}
 
         section = Section('')
-        section.append(Setting('editor', ''))
+        section.append(Setting('editor', 'vim'))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit
         diff_dict = uut.apply_from_section(
@@ -111,7 +105,7 @@ class OpenEditorActionTest(unittest.TestCase):
             self.fa: ['1\n', '3_changed\n']}
 
         section = Section('')
-        section.append(Setting('editor', ''))
+        section.append(Setting('editor', 'vim'))
         uut = OpenEditorAction()
         subprocess.call = self.fake_edit
         diff_dict = uut.apply_from_section(
@@ -127,33 +121,26 @@ class OpenEditorActionTest(unittest.TestCase):
         self.assertEqual(file_dict, expected_file_dict)
         open(self.fa, 'w').close()
 
-    def test_subl(self):
-        file_dict = {self.fa: []}
-        section = Section('')
-        section.append(Setting('editor', 'subl'))
-        uut = OpenEditorAction()
-        subprocess.call = self.fake_edit_subl
-        diff_dict = uut.apply_from_section(
-            Result.from_values('origin', 'msg', self.fa),
-            file_dict,
-            {},
-            section)
-        file_dict[self.fa] = diff_dict[self.fa].modified
-
-        self.assertEqual(file_dict, file_dict)
-
     def test_is_applicable(self):
         result1 = Result('', '')
         result2 = Result.from_values('', '', '')
         result3 = Result.from_values('', '', 'file')
         invalid_result = ''
-        self.assertFalse(OpenEditorAction.is_applicable(result1, None, {}))
-        self.assertTrue(OpenEditorAction.is_applicable(result2, None, {}))
-        # Check non-existent file
-        self.assertFalse(OpenEditorAction.is_applicable(result3, None, {}))
 
-        self.assertFalse(
-            OpenEditorAction.is_applicable(invalid_result, None, {}))
+        self.assertEqual(
+            OpenEditorAction.is_applicable(result1, None, {}),
+            'The result is not associated with any source code.')
+
+        self.assertTrue(OpenEditorAction.is_applicable(result2, None, {}))
+
+        # Check non-existent file
+        self.assertEqual(
+            OpenEditorAction.is_applicable(result3, None, {}),
+            "The result is associated with source code that doesn't "
+            'seem to exist.')
+
+        with self.assertRaises(TypeError):
+            OpenEditorAction.is_applicable(invalid_result, None, {})
 
     def test_environ_editor(self):
         old_environ = os.environ
@@ -183,3 +170,107 @@ class OpenEditorActionTest(unittest.TestCase):
         action.apply(result, file_dict, diff_dict)
 
         os.environ = old_environ
+
+    def test_open_files_at_position_unknown_editor(self):
+        uut = OpenEditorAction()
+        result_mock = Result.from_values(
+            'test', '', self.fa, line=12, column=8,
+        )
+        with unittest.mock.patch('subprocess.call') as call:
+            uut.apply(result_mock, {self.fa: ''}, {}, editor='unknown_editor')
+            call.assert_called_with(
+                ['unknown_editor', self.fa]
+            )
+
+    def test_open_files_at_position_subl(self):
+        uut = OpenEditorAction()
+        result_mock = Result.from_values(
+            'test', '', self.fa, line=12, column=8,
+        )
+        with unittest.mock.patch('subprocess.call') as call:
+            uut.apply(result_mock, {self.fa: ''}, {}, editor='subl')
+            call.assert_called_with(
+                ['subl', '--wait', '{0}:12:8'.format(self.fa)],
+                stdout=subprocess.PIPE
+            )
+
+    def test_open_files_at_position_vim(self):
+        uut = OpenEditorAction()
+        result_mock = Result.from_values(
+            'test', '', self.fa, line=12, column=8,
+        )
+        with unittest.mock.patch('subprocess.call') as call:
+            uut.apply(result_mock, {self.fa: ''}, {}, editor='vim')
+            call.assert_called_with(
+                ['vim', self.fa, '+12']
+            )
+
+    def test_open_files_at_position_no_position(self):
+        uut = OpenEditorAction()
+        result_mock = Result.from_values(
+            'test', '', self.fa, line=None, column=None,
+        )
+        with unittest.mock.patch('subprocess.call') as call:
+            uut.apply(result_mock, {self.fa: ''}, {}, editor='subl')
+            call.assert_called_with(
+                ['subl', '--wait', '{0}:1:1'.format(self.fa)],
+                stdout=subprocess.PIPE
+            )
+
+    def test_unknown_editor_warning(self):
+        logger = logging.getLogger()
+        uut = OpenEditorAction()
+        result_mock = Result.from_values(
+            'test', '', self.fa, line=None, column=None,
+        )
+        with unittest.mock.patch('subprocess.call'):
+            with self.assertLogs(logger, 'WARNING') as log:
+                uut.apply(result_mock, {self.fa: ''}, {}, editor='gouda-edit')
+
+                self.assertEqual(1, len(log.output))
+                self.assertIn(
+                    'The editor "gouda-edit" is unknown to coala.',
+                    log.output[0]
+                )
+
+
+def test_build_editor_call_args_spaced_filename():
+    uut = OpenEditorAction()
+    editor_info = {
+        'args': '--bar --baz',
+        'file_arg_template': '{filename} +{line}'
+    }
+    filenames = {
+        'foo and bar.py': {
+            'filename': 'foo and bar.py',
+            'line': 10,
+            'column': 6
+        }
+    }
+    assert (
+        uut.build_editor_call_args('foo', editor_info, filenames) ==
+        ['foo', '--bar', '--baz', 'foo and bar.py', '+10']
+    )
+
+
+def test_build_editor_call_args_multiple_filename():
+    uut = OpenEditorAction()
+    editor_info = {
+        'file_arg_template': '{filename}:{line}:{column}'
+    }
+    filenames = {
+        'foo and bar.py': {
+            'filename': 'foo and bar.py',
+            'line': 10,
+            'column': 6
+        },
+        'bang bong.py': {
+            'filename': 'bang bong.py',
+            'line': 14,
+            'column': 8
+        }
+    }
+    assert (
+        set(uut.build_editor_call_args('foo', editor_info, filenames)) ==
+        set(['foo', 'foo and bar.py:10:6', 'bang bong.py:14:8'])
+    )

@@ -9,10 +9,29 @@ from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 class IgnoreResultActionTest(unittest.TestCase):
 
     def test_is_applicable(self):
-        self.assertFalse(IgnoreResultAction.is_applicable('str', {}, {}))
-        self.assertFalse(IgnoreResultAction.is_applicable(
-            Result.from_values('origin', 'msg', "file doesn't exist", 2),
-            {}, {}))
+
+        with self.assertRaises(TypeError) as context:
+            IgnoreResultAction.is_applicable('str', {}, {})
+
+        self.assertEqual(
+            IgnoreResultAction.is_applicable(
+                Result.from_values('origin', 'msg', "file doesn't exist", 2),
+                {},
+                {}
+            ),
+            "The result is associated with source code that doesn't "
+            'seem to exist.'
+        )
+
+        self.assertEqual(
+            IgnoreResultAction.is_applicable(
+                Result('', ''),
+                {},
+                {}
+            ),
+            'The result is not associated with any source code.'
+        )
+
         with make_temp() as f_a:
             self.assertTrue(IgnoreResultAction.is_applicable(
                 Result.from_values('origin', 'msg', f_a, 2), {}, {}))
@@ -52,9 +71,23 @@ class IgnoreResultActionTest(unittest.TestCase):
 
             # Apply a second patch, old patch has to stay!
             uut.apply(Result.from_values('else', 'msg', f_a, 1),
-                      file_dict, file_diff_dict, 'c')
+                      file_dict, file_diff_dict, 'css')
             self.assertEqual(
                 file_diff_dict[f_a].modified,
-                ['1  // Ignore else\n', '2  // Ignore origin\n', '3\n'])
+                ['1  /* Ignore else */\n', '2  // Ignore origin\n', '3\n'])
             with open(f_a, 'r') as f:
                 self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
+
+            import logging
+            logger = logging.getLogger()
+
+            with unittest.mock.patch('subprocess.call'):
+                with self.assertLogs(logger, 'WARNING') as log:
+                    uut.apply(Result.from_values('else', 'msg', f_a, 1),
+                              file_dict, file_diff_dict, 'dothraki')
+
+                    self.assertEqual(1, len(log.output))
+                    self.assertIn(
+                        'coala does not support Ignore in "dothraki".',
+                        log.output[0]
+                    )

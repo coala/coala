@@ -563,7 +563,9 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         # Use a result where no default action is supplied for and another one
         # where the action is not applicable.
         old_is_applicable = ApplyPatchAction.is_applicable
-        ApplyPatchAction.is_applicable = lambda *args: False
+        ApplyPatchAction.is_applicable = (
+            lambda *args: 'The ApplyPatchAction cannot be applied'
+        )
 
         self.section.append(Setting(
             'default_actions',
@@ -575,11 +577,19 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
                                 self.log_printer)
         self.assertEqual(ret, self.results)
         self.assertEqual(self.log_queue.get().message,
-                         "Selected default action 'ApplyPatchAction' for bear "
-                         "'YBear' is not applicable. Action not applied.")
+                         'YBear: The ApplyPatchAction cannot be applied')
         self.assertTrue(self.log_queue.empty())
 
         ApplyPatchAction.is_applicable = old_is_applicable
+
+        self.section.append(Setting(
+            'no_autoapply_warn', True))
+        autoapply_actions(self.results,
+                          {},
+                          {},
+                          self.section,
+                          self.log_printer)
+        self.assertTrue(self.log_queue.empty())
 
     def test_applicable_action(self):
         # Use a result whose action can be successfully applied.
