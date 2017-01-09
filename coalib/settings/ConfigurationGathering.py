@@ -57,13 +57,13 @@ def load_config_file(filename, log_printer, silent=False):
         return ConfParser().parse(filename)
     except FileNotFoundError:
         if not silent:
-            if os.path.basename(filename) == Constants.default_coafile:
+            if os.path.basename(filename) == Constants.system_coafile:
                 log_printer.warn('The default coafile {0!r} was not found. '
                                  'You can generate a configuration file with '
                                  'your current options by adding the `--save` '
                                  'flag or suppress any use of config '
                                  'files with `-I`.'
-                                 .format(Constants.default_coafile))
+                                 .format(Constants.system_coafile))
             else:
                 log_printer.err('The requested coafile {0!r} does not exist. '
                                 'You can generate it with your current '
@@ -85,7 +85,7 @@ def save_sections(sections):
     try:
         if bool(default_section.get('save', 'false')):
             conf_writer = ConfWriter(
-                str(default_section.get('config', Constants.default_coafile)))
+                str(default_section.get('config', Constants.system_coafile)))
         else:
             return
     except ValueError:
@@ -138,7 +138,7 @@ def warn_config_absent(sections, argument, log_printer):
 def load_configuration(arg_list, log_printer, arg_parser=None):
     """
     Parses the CLI args and loads the config file accordingly, taking
-    default_coafile and the users .coarc into account.
+    system_coafile and the users .coarc into account.
 
     :param arg_list:    The list of command line arguments.
     :param log_printer: The LogPrinter object for logging.
