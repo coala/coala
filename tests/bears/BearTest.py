@@ -1,7 +1,9 @@
 import multiprocessing
 import unittest
 from os.path import abspath, exists, isfile, join, getmtime
+import requests_mock
 import shutil
+from time import sleep
 
 from coalib.bears.Bear import Bear
 from coalib.results.Result import Result
@@ -186,14 +188,24 @@ class BearTest(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_download_cached_file(self):
-        url = 'https://google.com'
-        filename = 'google.html'
-        self.assertFalse(isfile(join(self.uut.data_dir, filename)))
-        expected_filename = join(self.uut.data_dir, filename)
-        result_filename = self.uut.download_cached_file(url, filename)
-        self.assertEqual(result_filename, expected_filename)
-        expected_time = getmtime(join(self.uut.data_dir, filename))
-        result_filename = self.uut.download_cached_file(url, filename)
-        self.assertEqual(result_filename, expected_filename)
-        result_time = getmtime(join(self.uut.data_dir, filename))
-        self.assertEqual(result_time, expected_time)
+        mock_url = 'https://test.com'
+        mock_text = """<html>
+            <p> lorem impsum dolor</p>
+        </hrml>"""
+        filename = 'test.html'
+        file_location = join(self.uut.data_dir, filename)
+
+        with requests_mock.Mocker() as reqmock:
+            reqmock.get(mock_url, text=mock_text)
+            self.assertFalse(isfile(file_location))
+            expected_filename = file_location
+            result_filename = self.uut.download_cached_file(mock_url, filename)
+            self.assertTrue(isfile(join(file_location)))
+            self.assertEqual(result_filename, expected_filename)
+            expected_time = getmtime(file_location)
+            sleep(0.5)
+
+            result_filename = self.uut.download_cached_file(mock_url, filename)
+            self.assertEqual(result_filename, expected_filename)
+            result_time = getmtime(file_location)
+            self.assertEqual(result_time, expected_time)
