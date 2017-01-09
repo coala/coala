@@ -141,6 +141,15 @@ Now you can start working on it.
 
 .. note::
 
+    As stated before, you should never work on an issue without any
+    assignment. Fortunately, cobot is here to help you! So, if you are
+    interested in picking up an issue just write in the gitter chat the
+    following command::
+
+        cobot assign <issue_link>
+
+    Take care to write the full link to the issue
+
     Before starting to write your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
 
