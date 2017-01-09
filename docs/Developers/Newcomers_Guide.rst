@@ -63,7 +63,7 @@ As a preparation of joining the community you should find out what this project
 is about - if you didn't do this already. We highly recommend you
 `install coala <https://coala.io/install>`_ and use it on at least one of your
 projects. Also, we recommend that you read
-`Development Setup Notes <http://coala.io/devsetup>`
+`development setup notes <http://coala.io/devsetup>`_
 to learn how to set up an environment to work on coala.
 
 Most importantly, keep notes of what could be better to make the usage easier!
