@@ -120,6 +120,11 @@ Example:
 
 -  Should use the ``Fixes`` keyword if your commit fixes a bug, or ``Closes``
    if it adds a feature/enhancement.
+-  In some certain situations, for example bugs overcome in documents, the
+   difference between ``Fixes`` and ``Closes`` may be very small and
+   subjective. Although, we believe that if a specific issue may lead to
+   an unintended behaviour from the user or from the program it should be
+   considered a bug, thus, it should be addresed with ``Fixes``.
 -  Should use full URL to the issue.
 -  There should be a single space between the ``Fixes`` or ``Closes`` and the
    URL.
