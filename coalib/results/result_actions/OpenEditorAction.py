@@ -43,6 +43,14 @@ KNOWN_EDITORS = {
         'file_arg_template': '+{line},{column} {filename} ',
         'gui': False
     },
+    'emacs': {
+        'file_arg_template': '+{line}:{column} {filename}',
+        'gui': False
+    },
+    'emacsclient': {
+        'file_arg_template': '+{line}:{column} {filename}',
+        'gui': False
+    },
 
     # gui editors
     'atom': {
