@@ -184,7 +184,7 @@ You can find a quick demo of coala here:
 
 |asciicast|
 
-.. |asciicast| image:: https://asciinema.org/a/42968.png
+.. |asciicast| image:: https://cdn.rawgit.com/coala/artwork/master/artwork/asciinema_demo/asciinema_demo.png
    :target: https://asciinema.org/a/42968?autoplay=1
    :width: 100%
 
