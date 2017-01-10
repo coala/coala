@@ -77,3 +77,7 @@ script:
 
 notifications:
   email: false
+
+branches:
+  exclude:
+    - /^sils\//
