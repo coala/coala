@@ -25,6 +25,11 @@ To see what coala can do for your language, run:
 
     $ coala --show-bears --filter-by-language Python
 
+You can generate a configuration from your command line arguments with the `-s`
+argument. Alternatively you can use
+`coala-quickstart <https://github.com/coala/coala-quickstart/blob/master/README.rst>`__
+to generate a configuration tailored for your project.
+
 |Linux Build Status| |Windows Build status| |Scrutinizer Code Quality|
 |codecov.io| |Documentation Status| |Gitmate|
 
