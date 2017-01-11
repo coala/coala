@@ -167,6 +167,20 @@ class DependencyTracker:
         """
         return set(chain.from_iterable(self._dependency_dict.values()))
 
+    @property
+    def dependencies(self):
+        """
+        Returns a set of all registered dependencies.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.add(1, 3)
+        >>> tracker.dependencies
+        {0, 1}
+        """
+        return set(self._dependency_dict.keys())
+
     def add(self, dependency, dependant):
         """
         Add a bear-dependency to another bear manually.

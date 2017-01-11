@@ -123,6 +123,19 @@ class DependencyTrackerTest(unittest.TestCase):
 
         self.assertEqual(uut.dependants, {1, 2, 3, 5})
 
+    def test_dependencies(self):
+        uut = DependencyTracker()
+
+        self.assertEqual(uut.dependencies, set())
+
+        uut.add(1, 2)
+        uut.add(2, 3)
+        uut.add(3, 4)
+        uut.add(3, 5)
+        uut.add(2, 5)
+
+        self.assertEqual(uut.dependencies, {1, 2, 3})
+
     def test_resolve(self):
         uut = DependencyTracker()
         uut.add(0, 1)
