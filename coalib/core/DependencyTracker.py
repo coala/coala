@@ -186,6 +186,24 @@ class DependencyTracker:
         """
         return set(self._dependency_dict.keys())
 
+    def __iter__(self):
+        """
+        Returns an iterator that iterates over all dependency relations.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.add(1, 2)
+        >>> for dependency, dependant in sorted(tracker):
+        ...     print(dependency, '->', dependant)
+        0 -> 1
+        0 -> 2
+        1 -> 2
+        """
+        return ((dependency, dependant)
+                for dependency, dependants in self._dependency_dict.items()
+                for dependant in dependants)
+
     def add(self, dependency, dependant):
         """
         Add a dependency relation.
