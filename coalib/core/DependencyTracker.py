@@ -142,3 +142,25 @@ class DependencyTracker:
         traverse_graph(
             self._dependency_dict.keys(),
             lambda node: self._dependency_dict.get(node, frozenset()))
+
+    @property
+    def are_dependencies_resolved(self):
+        """
+        Checks whether all dependencies in this ``DependencyTracker`` instance
+        are resolved.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.are_dependencies_resolved
+        True
+        >>> tracker.add(0, 1)
+        >>> tracker.are_dependencies_resolved
+        False
+        >>> tracker.resolve(0)
+        {1}
+        >>> tracker.are_dependencies_resolved
+        True
+
+        :return:
+            ``True`` when all dependencies resolved, ``False`` if not.
+        """
+        return not self._dependency_dict
