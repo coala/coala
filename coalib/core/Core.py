@@ -155,6 +155,9 @@ def schedule_bears(bears,
         The executor to which the bear tasks are scheduled.
     """
     for bear in bears:
+        # TODO Add has_dependencies (maybe also has_dependants) to
+        # TODO  DependencyTracker and use it here for performance improvements,
+        # TODO  get_dependencies() is fairly expensive^^
         if dependency_tracker.get_dependencies(bear):  # pragma: no cover
             logging.warning(
                 'Dependencies for {!r} not yet resolved, holding back. This '
