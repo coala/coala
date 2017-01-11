@@ -67,6 +67,31 @@ class DependencyTracker:
         except KeyError:
             return set()
 
+    def get_dependencies(self, dependant):
+        """
+        Returns all immediate dependencies of a given dependant.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.add(1, 2)
+        >>> tracker.get_dependencies(0)
+        set()
+        >>> tracker.get_dependencies(1)
+        {0}
+        >>> tracker.get_dependencies(2)
+        {0, 1}
+
+        :param dependant:
+            The dependant to retrieve all dependencies from.
+        :return:
+            A set of dependencies.
+        """
+        return set(
+            dependency
+            for dependency, dependants in self._dependency_dict.items()
+            if dependant in dependants)
+
     def add(self, dependency, dependant):
         """
         Add a bear-dependency to another bear manually.

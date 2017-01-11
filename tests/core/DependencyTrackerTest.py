@@ -36,6 +36,26 @@ class DependencyTrackerTest(unittest.TestCase):
         self.assertEqual(uut.get_dependants(0), set())
         self.assertEqual(uut.get_dependants(1), {3})
 
+    def test_get_dependencies(self):
+        uut = DependencyTracker()
+
+        self.assertEqual(uut.get_dependencies(0), set())
+
+        uut.add(0, 1)
+        uut.add(0, 2)
+        uut.add(0, 3)
+        uut.add(1, 3)
+
+        self.assertEqual(uut.get_dependencies(0), set())
+        self.assertEqual(uut.get_dependencies(1), {0})
+        self.assertEqual(uut.get_dependencies(2), {0})
+        self.assertEqual(uut.get_dependencies(3), {0, 1})
+
+        uut.resolve(0)
+
+        self.assertEqual(uut.get_dependencies(1), set())
+        self.assertEqual(uut.get_dependencies(3), {1})
+
     def test_resolve(self):
         uut = DependencyTracker()
         uut.add(0, 1)
