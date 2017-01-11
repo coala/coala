@@ -1,3 +1,6 @@
+from coalib.core.Graphs import traverse_graph
+
+
 class DependencyTracker:
     """
     A ``DependencyTracker`` allows to register and manage dependencies between
@@ -120,3 +123,22 @@ class DependencyTracker:
 
         # Remaining dependents are officially resolved.
         return possible_freed_dependants - non_free_dependants
+
+    def check_circular_dependencies(self):
+        """
+        Checks whether there are circular dependency conflicts.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(1, 0)
+        >>> tracker.check_circular_dependencies()
+        Traceback (most recent call last):
+         ...
+        coalib.core.CircularDependencyError.CircularDependencyError: ...
+
+        :raises CircularDependencyError:
+            Raised on circular dependency conflicts.
+        """
+        traverse_graph(
+            self._dependency_dict.keys(),
+            lambda node: self._dependency_dict.get(node, frozenset()))
