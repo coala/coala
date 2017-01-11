@@ -8,6 +8,11 @@ from coalib.core.DependencyTracker import DependencyTracker
 from coalib.core.Graphs import traverse_graph
 
 
+# FIXME Improve performance by using a `CoalaRunContext` class. This avoids
+# FIXME   passing always parameters around like `result_callback`,
+# FIXME   `dependency_tracker`, `event_loop`, `running_tasks` and `executor`.
+
+
 def group(iterable, key=lambda x: x):
     """
     Groups elements (out-of-order) together in the given iterable.
