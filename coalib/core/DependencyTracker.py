@@ -97,6 +97,34 @@ class DependencyTracker:
             for dependency, dependants in self._dependency_dict.items()
             if dependant in dependants)
 
+    def get_all_dependants(self, dependency):
+        """
+        Returns a set of all dependants of the given dependency, even
+        indirectly related ones.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(1, 2)
+        >>> tracker.get_all_dependants(0)
+        {1, 2}
+
+        :param dependency:
+            The dependency to get all dependants for.
+        :return:
+            A set of dependants.
+        """
+        dependants = set()
+
+        def append_to_dependants(prev, nxt):
+            dependants.add(nxt)
+
+        traverse_graph(
+            [dependency],
+            lambda node: self._dependency_dict.get(node, frozenset()),
+            append_to_dependants)
+
+        return dependants
+
     def add(self, dependency, dependant):
         """
         Add a dependency relation.
