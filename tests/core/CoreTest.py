@@ -4,7 +4,7 @@ import unittest.mock
 
 from coalib.settings.Section import Section
 from coalib.core.Bear import Bear
-from coalib.core.Core import run
+from coalib.core.Core import initialize_dependencies, run
 
 from coala_utils.decorators import generate_eq
 
@@ -57,10 +57,281 @@ class MultiTaskBear(Bear):
         return (((i,), {}) for i in range(self.tasks_count))
 
 
+class BearA(TestBearBase):
+    pass
+
+
+class BearB(TestBearBase):
+    pass
+
+
+class BearC_NeedsB(TestBearBase):
+    BEAR_DEPS = {BearB}
+
+
+class BearD_NeedsC(TestBearBase):
+    BEAR_DEPS = {BearC_NeedsB}
+
+
+class BearE_NeedsAD(TestBearBase):
+    BEAR_DEPS = {BearA, BearD_NeedsC}
+
+
 class FailingBear(TestBearBase):
 
     def analyze(self, bear, section_name, file_dict):
         raise ValueError
+
+
+def get_next_instance(typ, iterable):
+    """
+    Reads all elements in the iterable and returns the first occurrence
+    that is an instance of given type.
+
+    :param typ:
+        The type an object shall have.
+    :param iterable:
+        The iterable to search in.
+    :return:
+        The instance having ``typ`` or ``None`` if not found in
+        ``iterable``.
+    """
+    try:
+        return next(obj for obj in iterable if isinstance(obj, typ))
+    except StopIteration:
+        return None
+
+
+class InitializeDependenciesTest(unittest.TestCase):
+
+    def setUp(self):
+        self.section1 = Section('test-section1')
+        self.section2 = Section('test-section2')
+        self.filedict1 = {'f1': []}
+        self.filedict2 = {'f2': []}
+
+    def test_multi_dependencies(self):
+        # General test which makes use of the full dependency chain from the
+        # defined classes above.
+        bear_e = BearE_NeedsAD(self.section1, self.filedict1)
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_e})
+
+        self.assertEqual(len(dependency_tracker.get_dependencies(bear_e)), 2)
+        self.assertTrue(any(isinstance(bear, BearA) for bear in
+                            dependency_tracker.get_dependencies(bear_e)))
+        self.assertTrue(any(isinstance(bear, BearD_NeedsC) for bear in
+                            dependency_tracker.get_dependencies(bear_e)))
+
+        # Test path BearE -> BearA.
+        bear_a = get_next_instance(
+            BearA, dependency_tracker.get_dependencies(bear_e))
+
+        self.assertIsNotNone(bear_a)
+        self.assertIs(bear_a.section, self.section1)
+        self.assertIs(bear_a.file_dict, self.filedict1)
+        self.assertEqual(dependency_tracker.get_dependencies(bear_a), set())
+
+        # Test path BearE -> BearD.
+        bear_d = get_next_instance(
+            BearD_NeedsC, dependency_tracker.get_dependencies(bear_e))
+
+        self.assertIsNotNone(bear_d)
+        self.assertIs(bear_d.section, self.section1)
+        self.assertIs(bear_d.file_dict, self.filedict1)
+        self.assertEqual(len(dependency_tracker.get_dependencies(bear_d)), 1)
+
+        # Test path BearE -> BearD -> BearC.
+        self.assertEqual(len(dependency_tracker.get_dependencies(bear_d)), 1)
+
+        bear_c = dependency_tracker.get_dependencies(bear_d).pop()
+
+        self.assertIs(bear_c.section, self.section1)
+        self.assertIs(bear_c.file_dict, self.filedict1)
+        self.assertIsInstance(bear_c, BearC_NeedsB)
+
+        # Test path BearE -> BearD -> BearC -> BearB.
+        self.assertEqual(len(dependency_tracker.get_dependencies(bear_c)), 1)
+
+        bear_b = dependency_tracker.get_dependencies(bear_c).pop()
+
+        self.assertIs(bear_b.section, self.section1)
+        self.assertIs(bear_b.file_dict, self.filedict1)
+        self.assertIsInstance(bear_b, BearB)
+
+        # No more dependencies after BearB.
+        self.assertEqual(dependency_tracker.get_dependencies(bear_b), set())
+
+        # Finally check the bears_to_schedule
+        self.assertEqual(bears_to_schedule, {bear_a, bear_b})
+
+    def test_simple(self):
+        # Test simple case without dependencies.
+        bear_a = BearA(self.section1, self.filedict1)
+        bear_b = BearB(self.section1, self.filedict1)
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_a, bear_b})
+
+        self.assertTrue(dependency_tracker.are_dependencies_resolved)
+        self.assertEqual(bears_to_schedule, {bear_a, bear_b})
+
+    def test_reuse_instantiated_dependencies(self):
+        # Test whether pre-instantiated dependency bears are correctly
+        # (re)used.
+        bear_b = BearB(self.section1, self.filedict1)
+        bear_c = BearC_NeedsB(self.section1, self.filedict1)
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_b, bear_c})
+
+        self.assertEqual(dependency_tracker.dependants, {bear_c})
+        self.assertEqual(dependency_tracker.get_dependencies(bear_c), {bear_b})
+
+        self.assertEqual(bears_to_schedule, {bear_b})
+
+    def test_no_reuse_of_different_section_dependency(self):
+        # Test whether pre-instantiated bears which belong to different
+        # sections are not (re)used, as the sections are different.
+        bear_b = BearB(self.section1, self.filedict1)
+        bear_c = BearC_NeedsB(self.section2, self.filedict1)
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_b, bear_c})
+
+        self.assertEqual(dependency_tracker.dependants, {bear_c})
+        dependencies = dependency_tracker.dependencies
+        self.assertEqual(len(dependencies), 1)
+        dependency = dependencies.pop()
+        self.assertIsInstance(dependency, BearB)
+        self.assertIsNot(dependency, bear_b)
+
+        self.assertEqual(bears_to_schedule, {bear_b, dependency})
+
+    def test_different_sections_different_dependency_instances(self):
+        # Test whether two bears of same type but different sections get their
+        # own dependency bear instances.
+        bear_c_section1 = BearC_NeedsB(self.section1, self.filedict1)
+        bear_c_section2 = BearC_NeedsB(self.section2, self.filedict1)
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_c_section1, bear_c_section2})
+
+        # Test path for section1
+        bear_c_s1_dependencies = dependency_tracker.get_dependencies(
+            bear_c_section1)
+        self.assertEqual(len(bear_c_s1_dependencies), 1)
+        bear_b_section1 = bear_c_s1_dependencies.pop()
+        self.assertIsInstance(bear_b_section1, BearB)
+
+        # Test path for section2
+        bear_c_s2_dependencies = dependency_tracker.get_dependencies(
+            bear_c_section2)
+        self.assertEqual(len(bear_c_s2_dependencies), 1)
+        bear_b_section2 = bear_c_s2_dependencies.pop()
+        self.assertIsInstance(bear_b_section2, BearB)
+
+        # Test if both dependencies aren't the same.
+        self.assertIsNot(bear_b_section1, bear_b_section2)
+
+        # Test bears for schedule.
+        self.assertEqual(bears_to_schedule, {bear_b_section1, bear_b_section2})
+
+    def test_reuse_multiple_same_dependencies_correctly(self):
+        # Test whether two pre-instantiated dependencies with the same section
+        # and file-dictionary are correctly registered as dependencies, so only
+        # a single one of those instances should be picked as a dependency.
+        bear_c = BearC_NeedsB(self.section1, self.filedict1)
+        bear_b1 = BearB(self.section1, self.filedict1)
+        bear_b2 = BearB(self.section1, self.filedict1)
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_c, bear_b1, bear_b2})
+
+        bear_c_dependencies = dependency_tracker.get_dependencies(bear_c)
+        self.assertEqual(len(bear_c_dependencies), 1)
+        bear_c_dependency = bear_c_dependencies.pop()
+        self.assertIsInstance(bear_c_dependency, BearB)
+
+        self.assertIn(bear_c_dependency, {bear_b1, bear_b2})
+
+        self.assertEqual(bears_to_schedule, {bear_b1, bear_b2})
+
+    def test_correct_reuse_of_implicitly_instantiated_dependency(self):
+        # Test if a single dependency instance is created for two different
+        # instances pointing to the same section and file-dictionary.
+        bear_c1 = BearC_NeedsB(self.section1, self.filedict1)
+        bear_c2 = BearC_NeedsB(self.section1, self.filedict1)
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_c1, bear_c2})
+
+        # Test first path.
+        bear_c1_dependencies = dependency_tracker.get_dependencies(bear_c1)
+        self.assertEqual(len(bear_c1_dependencies), 1)
+        bear_b1 = bear_c1_dependencies.pop()
+        self.assertIsInstance(bear_b1, BearB)
+
+        # Test second path.
+        bear_c2_dependencies = dependency_tracker.get_dependencies(bear_c2)
+        self.assertEqual(len(bear_c2_dependencies), 1)
+        bear_b2 = bear_c2_dependencies.pop()
+        self.assertIsInstance(bear_b2, BearB)
+
+        # Test if both dependencies are actually the same.
+        self.assertIs(bear_b1, bear_b2)
+
+    def test_empty_case(self):
+        # Test totally empty case.
+        dependency_tracker, bears_to_schedule = initialize_dependencies(set())
+
+        self.assertTrue(dependency_tracker.are_dependencies_resolved)
+        self.assertEqual(bears_to_schedule, set())
+
+    def test_different_filedict_different_dependency_instance(self):
+        # Test whether pre-instantiated bears which have different
+        # file-dictionaries assigned are not (re)used, as they have different
+        # file-dictionaries.
+        bear_b = BearB(self.section1, self.filedict1)
+        bear_c = BearC_NeedsB(self.section1, self.filedict2)
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            {bear_b, bear_c})
+
+        self.assertEqual(dependency_tracker.dependants, {bear_c})
+        dependencies = dependency_tracker.dependencies
+        self.assertEqual(len(dependencies), 1)
+        dependency = dependencies.pop()
+        self.assertIsInstance(dependency, BearB)
+        self.assertIsNot(dependency, bear_b)
+
+        self.assertEqual(bears_to_schedule, {bear_b, dependency})
+
+    def test_out_of_order_grouping(self):
+        # Test whether the grouping supports out-of-order. Some implementations
+        # (like the Python implementation of `groupby`) don't allow
+        # out-of-order-grouping; if an element interrupts elements having the
+        # same group, the grouping restarts. This is bad and leads to worse
+        # resource allocation, as already instantiated bears could not be used
+        # accordingly as dependencies, though they are eligible.
+
+        # As `initiailize_dependencies` eliminates duplicate bears using sets,
+        # it's technically impossible to test that out-of-order-grouping works
+        # there perfectly. That's why we have to provoke the behaviour and make
+        # a false-positive-test-succeed as improbable as possible, using a
+        # huge amount of bears.
+        sections = [Section('test-section' + str(i))
+                    for i in range(1000)]
+        bears_c = [BearC_NeedsB(section, self.filedict1)
+                   for section in sections]
+        bears_b = [BearB(section, self.filedict1)
+                   for section in sections]
+
+        dependency_tracker, bears_to_schedule = initialize_dependencies(
+            set(bears_c) | set(bears_b))
+
+        self.assertEqual(set(dependency_tracker), set(zip(bears_b, bears_c)))
+        self.assertEqual(bears_to_schedule, set(bears_b))
 
 
 class CoreTest(unittest.TestCase):
