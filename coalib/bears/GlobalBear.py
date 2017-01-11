@@ -1,3 +1,5 @@
+import logging
+
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
 
@@ -15,13 +17,11 @@ class GlobalBear(Bear):
     developer.)
     """
 
-    def __init__(self,
-                 file_dict,  # filename : file contents
-                 section,
-                 message_queue,
-                 timeout=0):
-        Bear.__init__(self, section, message_queue, timeout)
-        self.file_dict = file_dict
+    def __init__(self, section, file_dict):
+        logging.warning('coalib.bears.GlobalBear is deprecated, please use '
+                        'coalib.core.ProjectBear instead.')
+
+        Bear.__init__(self, section, file_dict)
 
     @staticmethod
     def kind():

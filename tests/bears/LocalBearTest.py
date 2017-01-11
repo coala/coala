@@ -1,6 +1,6 @@
 import unittest
 
-from coalib.bears.LocalBear import BEAR_KIND, LocalBear
+from coalib.bears.LocalBear import LocalBear
 from coalib.settings.Section import Section
 
 
@@ -12,6 +12,3 @@ class LocalBearTest(unittest.TestCase):
                           test_object.run,
                           'filename',
                           ['file\n'])
-
-    def test_kind(self):
-        self.assertEqual(LocalBear.kind(), BEAR_KIND.LOCAL)

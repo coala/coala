@@ -315,6 +315,8 @@ def initialize_dependencies(bears):
 
         def instantiate_and_track(prev_bear_type, next_bear_type):
             if next_bear_type not in type_to_instance_map:
+                # FIXME Handle RuntimeExceptions at bear instantiation from
+                # FIXME   `Bear.check_prerequisites`.
                 type_to_instance_map[next_bear_type] = (
                     next_bear_type(section, file_dict))
 

@@ -1,3 +1,5 @@
+import logging
+
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.settings.FunctionMetadata import FunctionMetadata
@@ -5,6 +7,8 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 
 class LocalBear(Bear):
     """
+    **This class is deprecated, please use ``coalib.core.FileBear`` instead.**
+
     A LocalBear is a Bear that analyzes only one file at once. It therefore can
     not analyze semantical facts over multiple files.
 
@@ -19,6 +23,11 @@ class LocalBear(Bear):
     -   A VariableNameBear that checks variable names and constant names for
         certain conditions
     """
+    def __init__(self, section, file_dict):
+        logging.warning('coalib.bears.LocalBear is deprecated, please use '
+                        'coalib.core.FileBear instead.')
+
+        Bear.__init__(self, section, file_dict)
 
     @staticmethod
     def kind():

@@ -21,6 +21,11 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
 
+# TODO File issue to rename .BEAR_DEPS to .DEPENDENCIES.
+# TODO File issue to improve `new_result` or think about it again?
+# TODO Rename result.origin to result.bear?
+
+
 class Bear:
     """
     A bear contains the actual subroutine that is responsible for checking
@@ -317,6 +322,7 @@ class Bear:
 
         return non_optional_settings
 
+    # TODO Shall I keep this??? I think there was a usage for this...
     @classmethod
     def __json__(cls):
         """
@@ -494,3 +500,9 @@ class Bear:
             organized in pairs: ``(args-tuple, kwargs-dict)``
         """
         raise NotImplementedError
+
+    # TODO Old bears had a timeout functionality which was set to
+    # TODO  `bear.timeout`. This can be not kept easily, but is partially
+    # TODO  supported in the process executor for all tasks I believe. If it's
+    # TODO  even supported for single tasks, this would be great, though we
+    # TODO  need to overthink those timeouts again.
