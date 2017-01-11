@@ -572,7 +572,8 @@ def _create_linter(klass, options):
     # Mixin the linter into the user-defined interface, otherwise
     # `create_arguments` and other methods would be overridden by the
     # default version.
-    result_klass = type(klass.__name__, (klass, LinterBase), {})
+    result_klass = type(klass.__name__, (klass, LinterBase), {
+        '__module__': klass.__module__})
     result_klass.__doc__ = klass.__doc__ or ''
     return result_klass
 
