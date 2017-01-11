@@ -19,11 +19,26 @@ algorithms. To learn more about the different languages supported and the
 bears themselves,
 `click here. <https://github.com/coala/bear-docs/blob/master/README.rst>`__
 
+Website_
+
+Facebook_
+
+Documentation_
+
+Twitter_
+
+Demo_
+
 To see what coala can do for your language, run:
+
+
+
 
 .. code-block:: bash
 
     $ coala --show-bears --filter-by-language Python
+
+
 
 |Linux Build Status| |Windows Build status| |Scrutinizer Code Quality|
 |codecov.io| |Documentation Status| |Gitmate|
@@ -239,6 +254,11 @@ License
 
 |AGPL|
 
+  .. _Website: http://coala.io/
+  .. _Documentation: https://docs.coala.io
+  .. _Twitter: https://twitter.com/coala_analyzer
+  .. _Facebook: https://www.facebook.com/coalaAnalyzer/
+  .. _Demo: https://asciinema.org/a/42968?autoplay=1
 .. |Windows| image:: https://img.shields.io/badge/platform-Windows-brightgreen.svg
 .. |Linux| image:: https://img.shields.io/badge/platform-Linux-brightgreen.svg
 .. |Stable| image:: https://img.shields.io/badge/latest%20stable-0.9.0-green.svg
