@@ -47,6 +47,31 @@ class DependencyTracker:
     def __init__(self):
         self._dependency_dict = {}
 
+    def get_dependants(self, dependency):
+        """
+        Returns all immediate dependants for the given dependency.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.add(1, 3)
+        >>> tracker.get_dependants(0)
+        {1, 2}
+        >>> tracker.get_dependants(1)
+        {3}
+        >>> tracker.get_dependants(2)
+        set()
+
+        :param dependency:
+            The dependency to retrieve all dependants from.
+        :return:
+            A set of dependants.
+        """
+        try:
+            return set(self._dependency_dict[dependency])
+        except KeyError:
+            return set()
+
     def add(self, dependency, dependant):
         """
         Add a dependency relation.
