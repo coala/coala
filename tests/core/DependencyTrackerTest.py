@@ -53,3 +53,26 @@ class DependencyTrackerTest(unittest.TestCase):
 
         self.assertEqual(uut.resolve(30), set())
         self.assertEqual(uut.resolve(40), {20})
+
+    def test_are_dependencies_resolved(self):
+        uut = DependencyTracker()
+
+        self.assertTrue(uut.are_dependencies_resolved)
+
+        uut.add(0, 1)
+
+        self.assertFalse(uut.are_dependencies_resolved)
+
+        uut.resolve(0)
+
+        self.assertTrue(uut.are_dependencies_resolved)
+
+        # Test case when dependencies were forcefully resolved.
+        uut.add(0, 1)
+        uut.add(1, 2)
+
+        self.assertFalse(uut.are_dependencies_resolved)
+
+        uut.resolve(1)
+
+        self.assertTrue(uut.are_dependencies_resolved)
