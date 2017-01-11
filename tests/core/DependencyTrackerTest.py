@@ -18,6 +18,24 @@ class DependencyTrackerTest(unittest.TestCase):
         with self.assertRaises(CircularDependencyError):
             uut.check_circular_dependencies()
 
+    def test_get_dependants(self):
+        uut = DependencyTracker()
+
+        self.assertEqual(uut.get_dependants(0), set())
+
+        uut.add(0, 1)
+        uut.add(0, 2)
+        uut.add(1, 3)
+
+        self.assertEqual(uut.get_dependants(0), {1, 2})
+        self.assertEqual(uut.get_dependants(1), {3})
+        self.assertEqual(uut.get_dependants(2), set())
+
+        uut.resolve(0)
+
+        self.assertEqual(uut.get_dependants(0), set())
+        self.assertEqual(uut.get_dependants(1), {3})
+
     def test_resolve(self):
         uut = DependencyTracker()
         uut.add(0, 1)
