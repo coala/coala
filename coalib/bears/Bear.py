@@ -197,7 +197,7 @@ class Bear(Printer, LogPrinterMixin):
         self.timeout = timeout
 
         self.setup_dependencies()
-        cp = type(self).check_prerequisites()
+        cp = type(self).check_all_deps()
         if cp is not True:
             error_string = ('The bear ' + self.name +
                             ' does not fulfill all requirements.')
@@ -316,9 +316,9 @@ class Bear(Printer, LogPrinterMixin):
         """
 
     @classmethod
-    def check_prerequisites(cls):
+    def check_all_deps(cls):
         """
-        Checks whether needed runtime prerequisites of the bear are satisfied.
+        Checks whether needed runtime dependencies of the bear are satisfied.
 
         This function gets executed at construction.
 
@@ -327,16 +327,19 @@ class Bear(Printer, LogPrinterMixin):
         >>> class SomeBear(Bear):
         ...     REQUIREMENTS = {PipRequirement('pip')}
 
-        >>> SomeBear.check_prerequisites()
+        >>> SomeBear.check_all_deps()
         True
 
         >>> class SomeOtherBear(Bear):
         ...     REQUIREMENTS = {PipRequirement('really_bad_package')}
 
-        >>> SomeOtherBear.check_prerequisites()
+        >>> SomeOtherBear.check_all_deps()
         'really_bad_package is not installed. You can install it using ...'
 
-        :return: True if prerequisites are satisfied, else False or a string
+        If you have to add more dependency checks, you probably want to
+        override `check_prerequisites` instead of this method.
+
+        :return: True if all dependencies are present, else False or a string
                  that serves a more detailed description of what's missing.
         """
         for requirement in cls.REQUIREMENTS:
@@ -344,6 +347,17 @@ class Bear(Printer, LogPrinterMixin):
                 return requirement.package + ' is not installed. You can ' + (
                     'install it using ') + (
                     ' '.join(requirement.install_command()))
+        return cls.check_prerequisites()
+
+    @classmethod
+    def check_prerequisites(cls):
+        """
+        Custom method for adding more prerequisite checks before the execution
+        of the bear.
+
+        :return: True if prerequisites are satisfied, else False or a string
+                 that serves a more detailed description of what's missing.
+        """
         return True
 
     def get_config_dir(self):
