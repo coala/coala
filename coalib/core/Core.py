@@ -4,6 +4,9 @@ import functools
 import logging
 import multiprocessing
 
+from coalib.core.DependencyTracker import DependencyTracker
+from coalib.core.Graphs import traverse_graph
+
 
 def group(iterable, key=lambda x: x):
     """
@@ -198,6 +201,91 @@ def finish_task(bear,
                 logging.error(
                     'An exception was thrown during result-handling.',
                     exc_info=ex)
+
+
+def initialize_dependencies(bears):
+    """
+    Initializes and returns a ``DependencyTracker`` instance together with a
+    set of bears ready for scheduling.
+
+    This function acquires, processes and registers bear dependencies
+    accordingly using a consumer-based system, where each dependency bear has
+    only a single instance per section and file-dictionary.
+
+    The bears set returned accounts for bears that have dependencies and
+    excludes them accordingly. Dependency bears that have themselves no further
+    dependencies are included so the dependency chain can be processed
+    correctly.
+
+    :param bears:
+        The set of bears to run that serve as an entry-point.
+    :return:
+        A tuple with ``(dependency_tracker, bears_to_schedule)``.
+    """
+    # Pre-collect bears in a set as we use them more than once. Especially
+    # remove duplicate instances.
+    bears = set(bears)
+
+    dependency_tracker = DependencyTracker()
+
+    # For a consumer-based system, we have a situation which can be visualized
+    # with a graph:
+    #
+    # (section1, file_dict1) (section1, file_dict2) (section2, file_dict2)
+    #       |       |                  |                      |
+    #       V       V                  V                      V
+    #     bear1   bear2              bear3                  bear4
+    #       |       |                  |                      |
+    #       V       V                  |                      |
+    #  BearType1  BearType2            -----------------------|
+    #       |       |                                         |
+    #       |       |                                         V
+    #       ---------------------------------------------> BearType3
+    #
+    # We need to traverse this graph and instantiate dependency bears
+    # accordingly, one per section.
+
+    # Group bears by sections and file-dictionaries. These will serve as
+    # entry-points for the dependency-instantiation-graph.
+    grouping = group(bears, key=lambda bear: (bear.section, bear.file_dict))
+    for (section, file_dict), bears_per_section in grouping:
+        # Pre-collect bears as the iterator only works once.
+        bears_per_section = list(bears_per_section)
+
+        # Now traverse each edge of the graph, and instantiate a new dependency
+        # bear if not already instantiated. For the entry point bears, we hack
+        # in identity-mappings because those are already instances. Also map
+        # the types of the instantiated bears to those instances, as if the
+        # user already supplied an instance of a dependency, we reuse it
+        # accordingly.
+        type_to_instance_map = {}
+        for bear in bears_per_section:
+            type_to_instance_map[bear] = bear
+            type_to_instance_map[type(bear)] = bear
+
+        def instantiate_and_track(prev_bear_type, next_bear_type):
+            if next_bear_type not in type_to_instance_map:
+                type_to_instance_map[next_bear_type] = (
+                    next_bear_type(section, file_dict))
+
+            dependency_tracker.add(type_to_instance_map[next_bear_type],
+                                   type_to_instance_map[prev_bear_type])
+
+        traverse_graph(bears_per_section,
+                       lambda bear: bear.BEAR_DEPS,
+                       instantiate_and_track)
+
+    # Get all bears that aren't resolved and exclude those from scheduler set.
+    bears -= {bear for bear in bears
+              if dependency_tracker.get_dependencies(bear)}
+
+    # Get all bears that have no further dependencies and shall be
+    # scheduled additionally.
+    for dependency in dependency_tracker.dependencies:
+        if not dependency_tracker.get_dependencies(dependency):
+            bears.add(dependency)
+
+    return dependency_tracker, bears
 
 
 def run(bears, result_callback):
