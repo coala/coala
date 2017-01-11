@@ -73,14 +73,17 @@ def get_cpu_count():
 
 def cleanup_bear(bear,
                  result_callback,
+                 dependency_tracker,
                  running_tasks,
                  event_loop,
                  executor):
     """
     Cleans up state of an ongoing run for a bear.
 
-    - If the given bear has no running tasks left, it removes the bear from
-      the ``running_tasks`` dict.
+    - If the given bear has no running tasks left:
+      - Resolves its dependencies.
+      - Schedules dependant bears.
+      - Removes the bear from the ``running_tasks`` dict.
     - Checks whether there are any remaining tasks, and quits the event loop
       accordingly if none are left.
 
@@ -88,6 +91,8 @@ def cleanup_bear(bear,
         The bear to clean up state for.
     :param result_callback:
         The result-callback handling results from bears.
+    :param dependency_tracker:
+        The dependency-tracker holding all relations of bears.
     :param running_tasks:
         The dict of running-tasks.
     :param event_loop:
@@ -96,14 +101,32 @@ def cleanup_bear(bear,
         The executor tasks are executed on.
     """
     if not running_tasks[bear]:
+        resolved_bears = dependency_tracker.resolve(bear)
+
+        if resolved_bears:
+            schedule_bears(resolved_bears, result_callback,
+                           dependency_tracker, event_loop, running_tasks,
+                           executor)
+
         del running_tasks[bear]
 
     if not running_tasks:
+        # Check the DependencyTracker additionally for remaining
+        # dependencies.
+        resolved = dependency_tracker.all_dependencies_resolved
+        if not resolved:  # pragma: no cover
+            logging.warning(
+                'Core finished with run, but it seems some dependencies '
+                'were unresolved: {}. Ignoring them.'.format(', '.join(
+                    repr(dependant) + ' dependent on ' + repr(dependency)
+                    for dependency, dependant in dependency_tracker)))
+
         event_loop.stop()
 
 
 def schedule_bears(bears,
                    result_callback,
+                   dependency_tracker,
                    event_loop,
                    running_tasks,
                    executor):
@@ -115,6 +138,8 @@ def schedule_bears(bears,
         A list of bear instances to be scheduled onto the process pool.
     :param result_callback:
         A callback function which is called when results are available.
+    :param dependency_tracker:
+        The object that keeps track of dependencies.
     :param event_loop:
         The asyncio event loop to schedule bear tasks on.
     :param running_tasks:
@@ -125,31 +150,38 @@ def schedule_bears(bears,
         The executor to which the bear tasks are scheduled.
     """
     for bear in bears:
-        tasks = {
-            event_loop.run_in_executor(
-                executor, bear.execute_task, bear_args, bear_kwargs)
-            for bear_args, bear_kwargs in bear.generate_tasks()}
+        if dependency_tracker.get_dependencies(bear):  # pragma: no cover
+            logging.warning(
+                'Dependencies for {!r} not yet resolved, holding back. This '
+                'should not happen, the dependency tracking system should be '
+                'smarter.'.format(bear))
+        else:
+            tasks = {
+                event_loop.run_in_executor(
+                    executor, bear.execute_task, bear_args, bear_kwargs)
+                for bear_args, bear_kwargs in bear.generate_tasks()}
 
-        running_tasks[bear] = tasks
+            running_tasks[bear] = tasks
 
-        for task in tasks:
-            task.add_done_callback(functools.partial(
-                finish_task, bear, result_callback,
-                running_tasks, event_loop, executor))
+            for task in tasks:
+                task.add_done_callback(functools.partial(
+                    finish_task, bear, result_callback, dependency_tracker,
+                    running_tasks, event_loop, executor))
 
-        logging.debug('Scheduled {!r} (tasks: {})'.format(bear,
-                                                          len(tasks)))
+            logging.debug('Scheduled {!r} (tasks: {})'.format(bear,
+                                                              len(tasks)))
 
-        if not tasks:
-            # We need to recheck our runtime if something is left to
-            # process, as when no tasks were offloaded the event-loop could
-            # hang up otherwise.
-            cleanup_bear(bear, result_callback, running_tasks, event_loop,
-                         executor)
+            if not tasks:
+                # We need to recheck our runtime if something is left to
+                # process, as when no tasks were offloaded the event-loop could
+                # hang up otherwise.
+                cleanup_bear(bear, result_callback, dependency_tracker,
+                             running_tasks, event_loop, executor)
 
 
 def finish_task(bear,
                 result_callback,
+                dependency_tracker,
                 running_tasks,
                 event_loop,
                 executor,
@@ -157,12 +189,15 @@ def finish_task(bear,
     """
     The callback for when a task of a bear completes. It is responsible for
     checking if the bear completed its execution and the handling of the
-    result generated by the task.
+    result generated by the task. It also schedules new tasks if dependencies
+    get resolved.
 
     :param bear:
         The bear that the task belongs to.
     :param result_callback:
         A callback function which is called when results are available.
+    :param dependency_tracker:
+        The object that keeps track of dependencies.
     :param running_tasks:
         Dictionary that keeps track of the remaining tasks of each bear.
     :param event_loop:
@@ -174,6 +209,9 @@ def finish_task(bear,
     """
     try:
         results = task.result()
+
+        for dependant in dependency_tracker.get_dependants(bear):
+            dependant.add_dependency_results(bear, results)
     except Exception as ex:
         # FIXME Try to display only the relevant traceback of the bear if error
         # FIXME occurred there, not the complete event-loop traceback.
@@ -181,10 +219,17 @@ def finish_task(bear,
                       exc_info=ex)
 
         results = None
+
+        # Unschedule/resolve dependent bears, as these can't run any more.
+        dependants = dependency_tracker.get_all_dependants(bear)
+        for dependant in dependants:
+            dependency_tracker.resolve(dependant)
+        logging.debug('Following dependent bears were unscheduled: ' +
+                      ', '.join(repr(dependant) for dependant in dependants))
     finally:
         running_tasks[bear].remove(task)
-        cleanup_bear(bear, result_callback, running_tasks, event_loop,
-                     executor)
+        cleanup_bear(bear, result_callback, dependency_tracker, running_tasks,
+                     event_loop, executor)
 
     if results is not None:
         for result in results:
@@ -310,8 +355,12 @@ def run(bears, result_callback):
     executor = concurrent.futures.ProcessPoolExecutor(
         max_workers=get_cpu_count())
 
+    # Initialize dependency tracking.
+    dependency_tracker, bears_to_schedule = initialize_dependencies(bears)
+
     # Let's go.
-    schedule_bears(bears, result_callback, event_loop, {}, executor)
+    schedule_bears(bears_to_schedule, result_callback, dependency_tracker,
+                   event_loop, {}, executor)
     try:
         event_loop.run_forever()
     finally:
