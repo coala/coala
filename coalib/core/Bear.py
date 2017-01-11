@@ -18,6 +18,11 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
 
+# TODO File issue to rename .BEAR_DEPS to .DEPENDENCIES.
+# TODO File issue to improve `new_result` or think about it again?
+# TODO Rename result.origin to result.bear?
+
+
 class Bear:
     """
     A bear contains the actual subroutine that is responsible for checking
@@ -274,6 +279,7 @@ class Bear:
 
         return non_optional_settings
 
+    # TODO Shall I keep this??? I think there was a usage for this...
     @classmethod
     def __json__(cls):
         """

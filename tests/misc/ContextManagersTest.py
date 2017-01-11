@@ -8,7 +8,6 @@ from coala_utils.ContextManagers import (
     change_directory, make_temp, prepare_file, retrieve_stdout,
     retrieve_stderr, simulate_console_inputs, subprocess_timeout,
     suppress_stdout)
-from coalib.processes.Processing import create_process_group
 
 
 process_group_timeout_test_code = """
@@ -21,41 +20,6 @@ time.sleep(100);
 
 
 class ContextManagersTest(unittest.TestCase):
-
-    def test_subprocess_timeout(self):
-        p = subprocess.Popen([sys.executable,
-                              '-c',
-                              'import time; time.sleep(0.5);'],
-                             stderr=subprocess.PIPE)
-        with subprocess_timeout(p, 0.2) as timedout:
-            retval = p.wait()
-            p.stderr.close()
-            self.assertEqual(timedout.value, True)
-        self.assertNotEqual(retval, 0)
-
-        p = create_process_group([sys.executable,
-                                  '-c',
-                                  process_group_timeout_test_code])
-        with subprocess_timeout(p, 0.5, kill_pg=True):
-            retval = p.wait()
-            self.assertEqual(timedout.value, True)
-        self.assertNotEqual(retval, 0)
-
-        p = subprocess.Popen([sys.executable,
-                              '-c',
-                              'import time'])
-        with subprocess_timeout(p, 0.5) as timedout:
-            retval = p.wait()
-            self.assertEqual(timedout.value, False)
-        self.assertEqual(retval, 0)
-
-        p = subprocess.Popen([sys.executable,
-                              '-c',
-                              'import time'])
-        with subprocess_timeout(p, 0) as timedout:
-            retval = p.wait()
-            self.assertEqual(timedout.value, False)
-        self.assertEqual(retval, 0)
 
     def test_suppress_stdout(self):
         def print_func():

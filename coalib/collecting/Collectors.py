@@ -326,6 +326,10 @@ def _warn_if_unused_glob(globs, used_globs, message):
                         .format()
     """
     unused_globs = set(globs) - set(used_globs)
+    # TODO deprecate log printer, I don't want to use this shit for the new
+    # TODO   core...
+    if log_printer is not None:
+        logging.warning('log_printer argument is deprecated.', stack_info=True)
     for glob in unused_globs:
         logging.warning(message.format(glob))
 

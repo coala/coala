@@ -2,10 +2,7 @@ import copy
 import logging
 import multiprocessing
 import os
-import platform
 import queue
-import subprocess
-import sys
 import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
@@ -15,14 +12,13 @@ from testfixtures import LogCapture, StringComparison
 from coalib.bears.Bear import Bear
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
-from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
-    ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
-    execute_section, filter_raising_callables, get_default_actions,
-    get_file_dict, print_result, process_queues, simplify_section_result,
+    ACTIONS, autoapply_actions, check_result_ignore,
+    execute_section, get_default_actions,
+    get_file_dict, print_result, simplify_section_result,
     yield_ignore_ranges)
 from coalib.results.HiddenResult import HiddenResult
-from coalib.results.Result import RESULT_SEVERITY, Result
+from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
@@ -162,28 +158,6 @@ class ProcessingTest(unittest.TestCase):
         # No global bear
         self.assertEqual(len(results[2]), 0)
 
-    def test_mixed_run(self):
-        self.sections['mixed'].append(Setting('jobs', '1'))
-        log_printer = ListLogPrinter()
-        global_bears = self.global_bears['mixed']
-        local_bears = self.local_bears['mixed']
-        bears = global_bears + local_bears
-
-        with LogCapture() as capture:
-            execute_section(self.sections['mixed'],
-                            global_bears,
-                            local_bears,
-                            lambda *args: self.result_queue.put(args[2]),
-                            None,
-                            log_printer,
-                            console_printer=self.console_printer)
-        capture.check(
-            ('root', 'ERROR', "Bears that uses raw files can't be mixed with "
-                              'Bears that uses text files. Please move the '
-                              'following bears to their own section: ' +
-             ', '.join(bear.name for bear in bears if not bear.USE_RAW_FILES))
-        )
-
     def test_raw_run(self):
         self.sections['raw'].append(Setting('jobs', '1'))
         results = execute_section(self.sections['raw'],
@@ -221,164 +195,6 @@ class ProcessingTest(unittest.TestCase):
                          [Result.from_values('GlobalTestRawBear',
                                              'test message',
                                              self.unreadable_path)])
-
-    def test_process_queues(self):
-        ctrlq = queue.Queue()
-
-        # Append custom controlling sequences.
-
-        # Simulated process 1
-        ctrlq.put((CONTROL_ELEMENT.LOCAL, 1))
-        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
-
-        # Simulated process 2
-        ctrlq.put((CONTROL_ELEMENT.LOCAL, 2))
-
-        # Simulated process 1
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-        # Simulated process 2
-        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-        first_local = Result.from_values('o', 'The first result.', file='f')
-        second_local = Result.from_values('ABear',
-                                          'The second result.',
-                                          file='f',
-                                          line=1)
-        third_local = Result.from_values('ABear',
-                                         'The second result.',
-                                         file='f',
-                                         line=4)
-        fourth_local = Result.from_values('ABear',
-                                          'Another result.',
-                                          file='f',
-                                          line=7)
-        first_global = Result('o', 'The one and only global result.')
-        section = Section('')
-        section.append(Setting('min_severity', 'normal'))
-        process_queues(
-            [DummyProcess(control_queue=ctrlq) for i in range(3)],
-            ctrlq,
-            {1: [first_local,
-                 second_local,
-                 third_local,
-                 # The following are to be ignored
-                 Result('o', 'm', severity=RESULT_SEVERITY.INFO),
-                 Result.from_values('ABear', 'u', 'f', 2, 1),
-                 Result.from_values('ABear', 'u', 'f', 3, 1)],
-             2: [fourth_local,
-                 # The following are to be ignored
-                 HiddenResult('t', 'c'),
-                 Result.from_values('ABear', 'u', 'f', 5, 1),
-                 Result.from_values('ABear', 'u', 'f', 6, 1)]},
-            {1: [first_global]},
-            {'f': ['first line  # stop ignoring, invalid ignore range\n',
-                   'second line  # ignore all\n',
-                   'third line\n',
-                   "fourth line  # gnore shouldn't trigger without i!\n",
-                   '# Start ignoring ABear, BBear and CBear\n',
-                   '# Stop ignoring\n',
-                   'seventh']},
-            lambda *args: self.queue.put(args[2]),
-            section,
-            None,
-            self.log_printer,
-            self.console_printer)
-
-        self.assertEqual(self.queue.get(timeout=0), ([second_local,
-                                                      third_local]))
-        self.assertEqual(self.queue.get(timeout=0), ([fourth_local]))
-        self.assertEqual(self.queue.get(timeout=0), ([first_global]))
-        self.assertEqual(self.queue.get(timeout=0), ([first_global]))
-
-    def test_dead_processes(self):
-        ctrlq = queue.Queue()
-        # Not enough FINISH elements in the queue, processes start already dead
-        # Also queue elements are reversed
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
-
-        process_queues(
-            [DummyProcess(ctrlq, starts_dead=True) for i in range(3)],
-            ctrlq, {}, {}, {},
-            lambda *args: self.queue.put(args[2]),
-            Section(''),
-            None,
-            self.log_printer,
-            self.console_printer)
-        with self.assertRaises(queue.Empty):
-            self.queue.get(timeout=0)
-
-        # Not enough FINISH elements in the queue, processes start already dead
-        ctrlq.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
-        ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-
-        process_queues(
-            [DummyProcess(ctrlq, starts_dead=True) for i in range(3)],
-            ctrlq, {}, {}, {},
-            lambda *args: self.queue.put(args[2]),
-            Section(''),
-            None,
-            self.log_printer,
-            self.console_printer)
-        with self.assertRaises(queue.Empty):
-            self.queue.get(timeout=0)
-
-    def test_create_process_group(self):
-        p = create_process_group([sys.executable,
-                                  '-c',
-                                  process_group_test_code],
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
-        retval = p.wait()
-        if retval != 0:
-            for line in p.stderr:
-                print(line, end='')
-            raise Exception('Subprocess did not exit correctly')
-        output = [i for i in p.stdout]
-        p.stderr.close()
-        p.stdout.close()
-        pid, pgid = [int(i.strip()) for i_out in output for i in i_out.split()]
-        if platform.system() != 'Windows':
-            # There is no way of testing this on windows with the current
-            # python modules subprocess and os
-            self.assertEqual(p.pid, pgid)
-
-    def test_filter_raising_callables(self):
-        class A(Exception):
-            pass
-
-        class B(Exception):
-            pass
-
-        class C(Exception):
-            pass
-
-        def create_exception_raiser(exception):
-            def raiser(exc):
-                if exception in exc:
-                    raise exception
-                return exception
-            return raiser
-
-        raiseA, raiseB, raiseC = (create_exception_raiser(exc)
-                                  for exc in [A, B, C])
-
-        test_list = [raiseA, raiseC, raiseB, raiseC]
-        self.assertEqual(list(filter_raising_callables(test_list, A, (A,))),
-                         [C, B, C])
-
-        self.assertEqual(list(filter_raising_callables(test_list,
-                                                       (B, C),
-                                                       exc=(B, C))),
-                         [A])
-
-        # Test whether non filtered exceptions bubble up.
-        with self.assertRaises(B):
-            list(filter_raising_callables(test_list, C, exc=(B, C)))
 
     def test_get_file_dict(self):
         with LogCapture() as capture:

@@ -1,3 +1,5 @@
+import logging
+
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
 
@@ -14,20 +16,11 @@ class GlobalBear(Bear):
     using a LocalBear.
     """
 
-    def __init__(self,
-                 file_dict,
-                 section,
-                 message_queue,
-                 timeout=0):
-        """
-        Constructs a new GlobalBear.
+    def __init__(self, section, file_dict):
+        logging.warning('coalib.bears.GlobalBear is deprecated, please use '
+                        'coalib.core.ProjectBear instead.')
 
-        :param file_dict: The dictionary of {filename: file contents}.
-
-        See :class:`coalib.bears.Bear` for other parameters.
-        """
-        Bear.__init__(self, section, message_queue, timeout)
-        self.file_dict = file_dict
+        Bear.__init__(self, section, file_dict)
 
     @staticmethod
     def kind():

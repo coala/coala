@@ -1,9 +1,7 @@
+from coalib.core.Core import run
+
 from itertools import chain
 import logging
-import os
-import platform
-import queue
-import subprocess
 
 from coala_utils.string_processing.StringConverter import StringConverter
 from coala_utils.FileUtils import detect_encoding
@@ -11,9 +9,6 @@ from coala_utils.FileUtils import detect_encoding
 from coalib.collecting.Collectors import collect_files
 from coalib.misc.Exceptions import log_exception
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.processes.BearRunning import run
-from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.results.Result import Result
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -38,39 +33,6 @@ ACTIONS = [DoNothingAction,
            IgnoreResultAction,
            ShowAppliedPatchesAction,
            GeneratePatchesAction]
-
-
-def get_cpu_count():
-    # cpu_count is not implemented for some CPU architectures/OSes
-    return os.cpu_count() or 2
-
-
-def fill_queue(queue_fill, any_list):
-    """
-    Takes element from a list and populates a queue with those elements.
-
-    :param queue_fill: The queue to be filled.
-    :param any_list:   List containing the elements.
-    """
-    for elem in any_list:
-        queue_fill.put(elem)
-
-
-def get_running_processes(processes):
-    return sum((1 if process.is_alive() else 0) for process in processes)
-
-
-def create_process_group(command_array, **kwargs):
-    if platform.system() == 'Windows':  # pragma posix: no cover
-        proc = subprocess.Popen(
-            command_array,
-            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-            **kwargs)
-    else:  # pragma nt: no cover
-        proc = subprocess.Popen(command_array,
-                                preexec_fn=os.setsid,
-                                **kwargs)
-    return proc
 
 
 def get_default_actions(section):
@@ -291,95 +253,36 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
     return file_dict
 
 
-def filter_raising_callables(it, exception, *args, debug=False, **kwargs):
-    """
-    Filters all callable items inside the given iterator that raise the
-    given exceptions.
-
-    :param it:        The iterator to filter.
-    :param exception: The (tuple of) exception(s) to filter for.
-    :param args:      Positional arguments to pass to the callable.
-    :param kwargs:    Keyword arguments to pass to the callable.
-    """
-    for elem in it:
-        try:
-            yield elem(*args, **kwargs)
-        except exception:
-            if debug:
-                raise
-
-
-def instantiate_bears(section,
-                      local_bear_list,
-                      global_bear_list,
-                      file_dict,
-                      message_queue,
-                      console_printer,
-                      debug=False):
+def instantiate_bears(bear_classes, section, file_dict):
     """
     Instantiates each bear with the arguments it needs.
 
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bear classes to instantiate.
-    :param global_bear_list: List of global bear classes to instantiate.
-    :param file_dict:        Dictionary containing filenames and their
-                             contents.
-    :param message_queue:    Queue responsible to maintain the messages
-                             delivered by the bears.
-    :param console_printer:  Object to print messages on the console.
-    :return:                 The local and global bear instance lists.
+    :param bear_classes:
+        An iterable of bear classes/types that shall be instantiated.
+    :param section:
+        The section the bears belong to.
+    :param file_dict:
+        Dictionary containing filenames and their contents.
+    :return:
+        A set of instantiated bears.
     """
-    local_bear_list = [bear
-                       for bear in filter_raising_callables(
-                           local_bear_list,
-                           RuntimeError,
-                           section,
-                           message_queue,
-                           timeout=0.1,
-                           debug=debug)]
+    # TODO merge local and global bear list to instantiate.
 
-    global_bear_list = [bear
-                        for bear in filter_raising_callables(
-                            global_bear_list,
-                            RuntimeError,
-                            file_dict,
-                            section,
-                            message_queue,
-                            timeout=0.1,
-                            debug=debug)]
+    bears = set()
 
-    return local_bear_list, global_bear_list
+    # TODO What about other exceptions? Shall the core run?
+    for bear_class in bear_classes:
+        try:
+            bears.add(bear_class(section, file_dict))
+        # TODO Shall we introduce an own exception? In this case I dislike
+        # TODO   using a built-in for prerequisite checking...
+        except RuntimeError:
+            pass
+
+    return bears
 
 
-def instantiate_processes(section,
-                          local_bear_list,
-                          global_bear_list,
-                          job_count,
-                          cache,
-                          log_printer,
-                          console_printer,
-                          debug=False,
-                          use_raw_files=False):
-    """
-    Instantiate the number of processes that will run bears which will be
-    responsible for running bears in a multiprocessing environment.
-
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bears belonging to the section.
-    :param global_bear_list: List of global bears belonging to the section.
-    :param job_count:        Max number of processes to create.
-    :param cache:            An instance of ``misc.Caching.FileCache`` to use as
-                             a file cache buffer.
-    :param log_printer:      The log printer to warn to.
-    :param console_printer:  Object to print messages on the console.
-    :param debug:            Bypass multiprocessing and activate debug mode
-                             for bears, not catching any exceptions on running
-                             them.
-    :param use_raw_files:    Allow the usage of raw files (non text files)
-    :return:                 A tuple containing a list of processes,
-                             and the arguments passed to each process which are
-                             the same for each object.
-    """
+def load_files():
     filename_list = collect_files(
         glob_list(section.get('files', '')),
         None,
@@ -440,24 +343,7 @@ def instantiate_processes(section,
                  for filename in filename_list
                  if filename in complete_file_dict}
 
-    bear_runner_args = {'file_name_queue': filename_queue,
-                        'local_bear_list': local_bear_list,
-                        'global_bear_list': global_bear_list,
-                        'global_bear_queue': global_bear_queue,
-                        'file_dict': file_dict,
-                        'local_result_dict': local_result_dict,
-                        'global_result_dict': global_result_dict,
-                        'message_queue': message_queue,
-                        'control_queue': control_queue,
-                        'timeout': 0.1,
-                        'debug': debug}
-
-    fill_queue(filename_queue, file_dict.keys())
-    fill_queue(global_bear_queue, range(len(global_bear_list)))
-
-    return ([processing.Process(target=run, kwargs=bear_runner_args)
-             for i in range(job_count)],
-            bear_runner_args)
+    return file_dict
 
 
 def get_ignore_scope(line, keyword):
@@ -543,141 +429,6 @@ def get_file_list(results):
     """
     return {code.file for result in results for code in result.affected_code}
 
-
-def process_queues(processes,
-                   control_queue,
-                   local_result_dict,
-                   global_result_dict,
-                   file_dict,
-                   print_results,
-                   section,
-                   cache,
-                   log_printer,
-                   console_printer,
-                   debug=False,
-                   apply_single=False):
-    """
-    Iterate the control queue and send the results received to the print_result
-    method so that they can be presented to the user.
-
-    :param processes:          List of processes which can be used to run
-                               Bears.
-    :param control_queue:      Containing control elements that indicate
-                               whether there is a result available and which
-                               bear it belongs to.
-    :param local_result_dict:  Dictionary containing results respective to
-                               local bears. It is modified by the processes
-                               i.e. results are added to it by multiple
-                               processes.
-    :param global_result_dict: Dictionary containing results respective to
-                               global bears. It is modified by the processes
-                               i.e. results are added to it by multiple
-                               processes.
-    :param file_dict:          Dictionary containing file contents with
-                               filename as keys.
-    :param print_results:      Prints all given results appropriate to the
-                               output medium.
-    :param cache:              An instance of ``misc.Caching.FileCache`` to use
-                               as a file cache buffer.
-    :param debug:              Run in debug mode, expecting that no logger
-                               thread is running.
-    :param apply_single:       The action that should be applied for all
-                               results. If it's not selected, has a value of
-                               False.
-    :return:                   Return True if all bears execute successfully and
-                               Results were delivered to the user. Else False.
-    """
-    file_diff_dict = {}
-    retval = False
-    # Number of processes working on local/global bears. They are count down
-    # when the last queue element of that process is processed which may be
-    # *after* the process has ended!
-    local_processes = len(processes)
-    global_processes = len(processes)
-    global_result_buffer = []
-    result_files = set()
-    ignore_ranges = list(yield_ignore_ranges(file_dict))
-
-    # One process is the logger thread (if not in debug mode)
-    while local_processes > (1 if not debug else 0):
-        try:
-            control_elem, index = control_queue.get(timeout=0.1)
-
-            if control_elem == CONTROL_ELEMENT.LOCAL_FINISHED:
-                local_processes -= 1
-            elif control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED:
-                global_processes -= 1
-            elif control_elem == CONTROL_ELEMENT.LOCAL:
-                assert local_processes != 0
-                result_files.update(get_file_list(local_result_dict[index]))
-                retval, res = print_result(local_result_dict[index],
-                                           file_dict,
-                                           retval,
-                                           print_results,
-                                           section,
-                                           None,
-                                           file_diff_dict,
-                                           ignore_ranges,
-                                           console_printer=console_printer,
-                                           apply_single=apply_single
-                                           )
-                local_result_dict[index] = res
-            else:
-                assert control_elem == CONTROL_ELEMENT.GLOBAL
-                global_result_buffer.append(index)
-        except queue.Empty:
-            if get_running_processes(processes) < 2:  # pragma: no cover
-                # Recover silently, those branches are only
-                # nondeterministically covered.
-                break
-
-    # Flush global result buffer
-    for elem in global_result_buffer:
-        result_files.update(get_file_list(global_result_dict[elem]))
-        retval, res = print_result(global_result_dict[elem],
-                                   file_dict,
-                                   retval,
-                                   print_results,
-                                   section,
-                                   None,
-                                   file_diff_dict,
-                                   ignore_ranges,
-                                   console_printer=console_printer,
-                                   apply_single=apply_single)
-        global_result_dict[elem] = res
-
-    # One process is the logger thread
-    while global_processes > 1:
-        try:
-            control_elem, index = control_queue.get(timeout=0.1)
-
-            if control_elem == CONTROL_ELEMENT.GLOBAL:
-                result_files.update(get_file_list(global_result_dict[index]))
-                retval, res = print_result(global_result_dict[index],
-                                           file_dict,
-                                           retval,
-                                           print_results,
-                                           section,
-                                           None,
-                                           file_diff_dict,
-                                           ignore_ranges,
-                                           console_printer,
-                                           apply_single)
-                global_result_dict[index] = res
-            else:
-                assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
-                global_processes -= 1
-        except queue.Empty:
-            if get_running_processes(processes) < 2:  # pragma: no cover
-                # Recover silently, those branches are only
-                # nondeterministically covered.
-                break
-
-    if cache:
-        cache.untrack_files(result_files)
-    return retval
-
-
 def simplify_section_result(section_result):
     """
     Takes in a section's result from ``execute_section`` and simplifies it
@@ -751,75 +502,15 @@ def execute_section(section,
                              results (bear names are key) as well as the
                              file dictionary.
     """
-    if debug:
-        running_processes = 1
-    else:
-        try:
-            running_processes = int(section['jobs'])
-        except ValueError:
-            logging.warning("Unable to convert setting 'jobs' into a number. "
-                            'Falling back to CPU count.')
-            running_processes = get_cpu_count()
-        except IndexError:
-            running_processes = get_cpu_count()
+    # TODO reuse int(section['jobs'])
+    #try:
+    #    running_processes = int(section['jobs'])
+    #except ValueError:
+    #    log_printer.warn("Unable to convert setting 'jobs' into a number. "
+    #                     'Falling back to CPU count.')
+    #    running_processes = get_cpu_count()
+    #except IndexError:
+    #    running_processes = get_cpu_count()
 
-    bears = global_bear_list + local_bear_list
-    use_raw_files = set(bear.USE_RAW_FILES for bear in bears)
-
-    if len(use_raw_files) > 1:
-        logging.error("Bears that uses raw files can't be mixed with Bears "
-                      'that uses text files. Please move the following bears '
-                      'to their own section: ' +
-                      ', '.join(bear.name for bear in bears
-                                if not bear.USE_RAW_FILES))
-        return ((), {}, {}, {})
-
-    # use_raw_files is expected to be only one object.
-    # The if statement is to ensure this doesn't fail when
-    # it's running on an empty run
-    use_raw_files = use_raw_files.pop() if len(use_raw_files) > 0 else False
-
-    processes, arg_dict = instantiate_processes(section,
-                                                local_bear_list,
-                                                global_bear_list,
-                                                running_processes,
-                                                cache,
-                                                None,
-                                                console_printer=console_printer,
-                                                debug=debug,
-                                                use_raw_files=use_raw_files)
-
-    logger_thread = LogPrinterThread(arg_dict['message_queue'])
-    # Start and join the logger thread along with the processes to run bears
-    if not debug:
-        # in debug mode the logging messages are directly processed by the
-        # message_queue
-        processes.append(logger_thread)
-
-    for runner in processes:
-        runner.start()
-
-    try:
-        return (process_queues(processes,
-                               arg_dict['control_queue'],
-                               arg_dict['local_result_dict'],
-                               arg_dict['global_result_dict'],
-                               arg_dict['file_dict'],
-                               print_results,
-                               section,
-                               cache,
-                               None,
-                               console_printer=console_printer,
-                               debug=debug,
-                               apply_single=apply_single),
-                arg_dict['local_result_dict'],
-                arg_dict['global_result_dict'],
-                arg_dict['file_dict'])
-    finally:
-        if not debug:
-            # in debug mode multiprocessing and logger_thread are disabled
-            # ==> no need for following actions
-            logger_thread.running = False
-
-            for runner in processes:
-                runner.join()
+    # TODO + maybe keep namespace: Core.run()
+    run()
