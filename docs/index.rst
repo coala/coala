@@ -44,6 +44,7 @@ If you're trying to **use** coala, you should have a look at our
    Writing Tests <Developers/Writing_Tests>
    Writing Documentation <Developers/Writing_Documentation>
    Executing Tests <Developers/Executing_Tests>
+   Useful Links <Developers/Useful_Links>
 
 
 .. _user documentation: https://docs.coala.io
