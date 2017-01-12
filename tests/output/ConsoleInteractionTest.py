@@ -137,7 +137,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
         self.lexer = TextLexer()
         self.lexer.add_filter(VisibleWhitespaceFilter(
-            spaces='•',
+            spaces=True,
             tabs=True,
             tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
 
