@@ -189,7 +189,7 @@ def print_lines(console_printer,
         except ClassNotFound:
             lexer = TextLexer()
         lexer.add_filter(VisibleWhitespaceFilter(
-            spaces='•', tabs=True,
+            spaces=True, tabs=True,
             tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
         # highlight() combines lexer and formatter to output a ``str``
         # object.
