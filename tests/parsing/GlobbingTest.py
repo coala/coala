@@ -181,6 +181,12 @@ class FnmatchTest(unittest.TestCase):
         non_matches = ['a]', '[b]']
         self._test_fnmatch(pattern, matches, non_matches)
 
+    def test_single_sequence(self):
+        pattern = '([ab])'
+        matches = ['a', 'b']
+        non_matches = ['[ab]', 'ab']
+        self._test_fnmatch(pattern, matches, non_matches)
+
     def test_questionmark(self):
         pattern = 'a?b'
         matches = ['axb', 'ayb']
