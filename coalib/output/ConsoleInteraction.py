@@ -24,6 +24,7 @@ from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
 from coalib.settings.Setting import Setting
+from coala_utils.string_processing.Core import join_names
 
 from pygments import highlight
 from pygments.formatters import (TerminalTrueColorFormatter,
@@ -468,29 +469,6 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
             print_lines(console_printer,
                         file_dict,
                         sourcerange)
-
-
-def join_names(values):
-    """
-    Produces a string by concatenating the items in ``values`` with
-    commas, except the last element, which is concatenated with an "and".
-
-    >>> join_names(["apples", "bananas", "oranges"])
-    'apples, bananas and oranges'
-    >>> join_names(["apples", "bananas"])
-    'apples and bananas'
-    >>> join_names(["apples"])
-    'apples'
-
-    :param values:
-        A list of strings.
-    :return:
-        The concatenated string.
-    """
-    if len(values) > 1:
-        return ', '.join(values[:-1]) + ' and ' + values[-1]
-    else:
-        return values[0]
 
 
 def require_setting(setting_name, arr, section):
