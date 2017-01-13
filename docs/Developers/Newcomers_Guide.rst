@@ -128,7 +128,7 @@ Here is the link that will lead you to `Newcomers issues <https://coala.io/new>`
 
 .. seealso::
 
-    For more information about what bears are, please check the following link: `Writing bears <http://api.coala.io/en/latest/Developers/Writing_Bears.html>`_
+    For more information about what bears are, please check the following link: `Writing Native bears <http://api.coala.io/en/latest/Developers/Writing_Native_Bears.html>`_
 
 The easy issues that will help you get started are labeled as
 ``difficulty/newcomer`` and are only there to give you a glimpse of how it is

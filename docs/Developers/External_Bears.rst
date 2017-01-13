@@ -9,7 +9,7 @@ than Python.
 
   This tutorial assumes that you already know the basics. If you are new,
   please refer to the
-  :doc:`Writing Bears<Writing_Bears>` section.
+  :doc:`Writing Native Bears<Writing_Native_Bears>` section.
 
   If you are planning to create a bear that uses an already existing tool (aka
   linter), please refer to the

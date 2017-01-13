@@ -1,5 +1,5 @@
-Guide to Writing a Bear
-=======================
+Guide to Writing a Native Bear
+==============================
 
 Welcome. This document presents information on how to write a bear for
 coala. It assumes you know how to use coala. If not, please read our

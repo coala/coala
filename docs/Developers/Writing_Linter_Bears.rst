@@ -7,7 +7,8 @@ order to integrate linters in your bears.
 .. note::
 
   If you are planning to create a bear that does static code analysis without
-  wrapping a tool, please refer to :doc:`this link instead<Writing_Bears>`.
+  wrapping a tool, please refer to
+  :doc:`this link instead<Writing_Native_Bears>`.
 
 Why is This Useful?
 -------------------

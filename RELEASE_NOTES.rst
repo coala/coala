@@ -842,7 +842,7 @@ https://github.com/coala-analyzer/coala/blob/v0.1.0-alpha/TUTORIAL.md
 
 If you want to write static code analysis routines, please check out
 this guide:
-https://github.com/coala-analyzer/coala/blob/v0.1.0-alpha/doc/getting\_involved/WRITING\_BEARS.md
+https://github.com/coala-analyzer/coala/blob/v0.1.0-alpha/doc/getting\_involved/WRITING\_NATIVE\_BEARS.md
 
 We love bugs - if you find some, be sure to share them with us:
 https://github.com/coala-analyzer/coala/issues
