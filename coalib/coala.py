@@ -13,7 +13,7 @@
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from coalib.misc.Constants import configure_logging
+from coalib.output.Logging import configure_logging
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.misc.Exceptions import get_exitcode
