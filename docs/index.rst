@@ -15,6 +15,7 @@ If you're trying to **use** coala, you should have a look at our
    :hidden:
 
    Welcome <self>
+   Code of Conduct <http://coala.io/coc>
 
 
 .. toctree::

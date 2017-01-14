@@ -8,6 +8,9 @@ work on it as well and we might have no choice but reject one of your Pull
 Requests - we hate it if anyone wastes their time. For your own sake, please
 follow this guide. We put a lot of work into this for you!
 
+Everyone in the coala community is expected to follow our
+`Code of Conduct <http://coala.io/coc>`_.
+
 To become part of the coala developers team, there's a few steps you need
 to complete. The newcomer process is as it follows:
 
