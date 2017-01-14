@@ -13,7 +13,6 @@ from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Caching import FileCache
 from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)
-from coalib.misc.Constants import configure_logging
 
 
 def do_nothing(*args):
@@ -63,7 +62,6 @@ def run_coala(console_printer=None,
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
-    configure_logging()
 
     log_printer = (
         LogPrinter(ConsolePrinter(), LOG_LEVEL.DEBUG) if log_printer is None
