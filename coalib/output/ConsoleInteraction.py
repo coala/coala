@@ -55,12 +55,14 @@ class NoColorStyle(Style):
 
 
 def highlight_text(no_color, text, lexer=TextLexer(), style=None):
-    if style:
+    if no_color:
+        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
+    elif style:
         formatter = TerminalTrueColorFormatter(style=style)
     else:
         formatter = TerminalTrueColorFormatter()
-    if no_color:
-        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
+
+    # highlight() combines lexer and formatter to output a ``str`` object.
     return highlight(text, lexer, formatter)[:-1]
 
 
@@ -85,6 +87,9 @@ CLI_ACTIONS = (OpenEditorAction(),
                ShowPatchAction(),
                IgnoreResultAction())
 DIFF_EXCERPT_MAX_SIZE = 4
+MAX_UNRELATED_CHARS = 1000
+NUM_UNRELATED_CHARS = 100
+NUM_RELATED_CHARS = 250
 
 
 def format_lines(lines, line_nr=''):
@@ -163,6 +168,18 @@ def acquire_actions_and_apply(console_printer,
             break
 
 
+def _get_lexer(filename):
+    try:
+        lexer = get_lexer_for_filename(filename)
+    except ClassNotFound:
+        lexer = TextLexer()
+    lexer.add_filter(VisibleWhitespaceFilter(
+        spaces='•', tabs=True,
+        tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+
+    return lexer
+
+
 def print_lines(console_printer,
                 file_dict,
                 sourcerange):
@@ -177,6 +194,16 @@ def print_lines(console_printer,
                             lines to print.
     """
     no_color = not console_printer.print_colored
+    lexer = _get_lexer(sourcerange.file)
+    print_highlighted = lambda to_print: console_printer.print(
+        highlight_text(no_color, to_print, lexer, BackgroundSourceRangeStyle),
+        end=''
+    )
+    print_normal = lambda to_print: console_printer.print(
+        highlight_text(no_color, to_print, lexer),
+        end=''
+    )
+
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
         console_printer.print(format_lines(lines='', line_nr=i),
@@ -184,35 +211,42 @@ def print_lines(console_printer,
                               end='')
 
         line = file_dict[sourcerange.file][i - 1].rstrip('\n')
-        try:
-            lexer = get_lexer_for_filename(sourcerange.file)
-        except ClassNotFound:
-            lexer = TextLexer()
-        lexer.add_filter(VisibleWhitespaceFilter(
-            spaces='•', tabs=True,
-            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
-        # highlight() combines lexer and formatter to output a ``str``
-        # object.
+
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
-            console_printer.print(highlight_text(
-                no_color, line[:sourcerange.start.column - 1], lexer), end='')
+            if sourcerange.start.column > MAX_UNRELATED_CHARS:
+                print_normal('...')
+                printed_chars = (sourcerange.start.column - 1 -
+                                 NUM_UNRELATED_CHARS)
+
+            print_normal(line[printed_chars:sourcerange.start.column - 1])
 
             printed_chars = sourcerange.start.column - 1
 
         if i == sourcerange.end.line and sourcerange.end.column:
-            console_printer.print(highlight_text(
-                no_color, line[printed_chars:sourcerange.end.column - 1],
-                lexer, BackgroundSourceRangeStyle), end='')
+            if sourcerange.end.column - printed_chars > MAX_UNRELATED_CHARS:
+                print_highlighted(line[printed_chars:printed_chars +
+                                       NUM_RELATED_CHARS] +
+                                  '...')
+            else:
+                print_highlighted(line[printed_chars:sourcerange.end.column-1])
 
-            console_printer.print(highlight_text(
-               no_color, line[sourcerange.end.column - 1:], lexer), end='')
-            console_printer.print('')
-
+                # Only print unrelated tail if related part was fully shown
+                if len(line) - sourcerange.end.column > MAX_UNRELATED_CHARS:
+                    print_normal(line[sourcerange.end.column-1:
+                                      sourcerange.end.column-1 +
+                                      NUM_UNRELATED_CHARS] + '...')
+                else:
+                    print_normal(line[sourcerange.end.column - 1:])
         else:
-            console_printer.print(highlight_text(
-                no_color, line[printed_chars:], lexer), end='')
-            console_printer.print('')
+            if len(line) - printed_chars > MAX_UNRELATED_CHARS:
+                print_normal(
+                    line[printed_chars:printed_chars+NUM_UNRELATED_CHARS] +
+                    '...')
+            else:
+                print_normal(line[printed_chars:])
+
+        console_printer.print('')
 
 
 def print_result(console_printer,
