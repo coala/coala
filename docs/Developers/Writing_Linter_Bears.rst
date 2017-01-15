@@ -283,7 +283,7 @@ documentation together with the metadata attributes:
         """
         Lints your Python files!
 
-        Check for codings standards (like well-formed variable names), detects
+        Checks for coding standards (like well-formed variable names), detects
         semantical errors (like true implementation of declared interfaces or
         membership via type inference), duplicated code.
 
@@ -333,7 +333,7 @@ it should look something like this
         """
         Lints your Python files!
 
-        Check for codings standards (like well-formed variable names), detects
+        Checks for coding standards (like well-formed variable names), detects
         semantical errors (like true implementation of declared interfaces or
         membership via type inference), duplicated code.
 
@@ -382,7 +382,7 @@ gather information by using these values. Our bear now looks like:
       """
       Lints your Python files!
 
-      Check for codings standards (like well-formed variable names), detects
+      Checks for coding standards (like well-formed variable names), detects
       semantical errors (like true implementation of declared interfaces or
       membership via type inference), duplicated code.
 
