@@ -44,7 +44,6 @@ install:
   - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r requirements.txt"
   - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r test-requirements.txt"
   - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r requirements.txt"
-  - "%CMD_IN_ENV% pip -q install --upgrade astroid"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
