@@ -169,7 +169,7 @@ class Bear(Printer, LogPrinterMixin):
                  takes ``AUTHORS_EMAILS`` by default.
         """
         return (cls.AUTHORS_EMAILS if cls.MAINTAINERS_EMAILS == set()
-                else cls.MAINTAINERS)
+                else cls.MAINTAINERS_EMAILS)
 
     @enforce_signature
     def __init__(self,
