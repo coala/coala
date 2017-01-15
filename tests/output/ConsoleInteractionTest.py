@@ -679,7 +679,8 @@ class ShowBearsTest(unittest.TestCase):
                              'what categories it can detect.\n\n'
                              '  This bear cannot fix issues or does not '
                              'provide information about what categories it '
-                             'can fix.\n\n')
+                             'can fix.\n\n  Path:\n   ' +
+                             repr(SomelocalBear.source_location) + '\n\n')
 
     def test_show_bear_long_without_content(self):
         with retrieve_stdout() as stdout:
@@ -696,7 +697,8 @@ class ShowBearsTest(unittest.TestCase):
                              'what categories it can detect.\n\n'
                              '  This bear cannot fix issues or does not '
                              'provide information about what categories it '
-                             'can fix.\n\n')
+                             'can fix.\n\n  Path:\n   ' +
+                             repr(SomelocalBear.source_location) + '\n\n')
 
     def test_show_bear_with_content(self):
         with retrieve_stdout() as stdout:
@@ -714,7 +716,8 @@ class ShowBearsTest(unittest.TestCase):
                              "Optional, defaults to 'None'."
                              ')\n\n'
                              '  Can detect:\n   * Formatting\n\n'
-                             '  Can fix:\n   * Formatting\n\n')
+                             '  Can fix:\n   * Formatting\n\n  Path:\n   ' +
+                             repr(TestBear.source_location) + '\n\n')
 
     def test_show_bears_empty(self):
         with retrieve_stdout() as stdout:

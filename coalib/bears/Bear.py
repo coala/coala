@@ -1,3 +1,4 @@
+import inspect
 import traceback
 from functools import partial
 from os import makedirs
@@ -121,6 +122,13 @@ class Bear(Printer, LogPrinterMixin):
     ...     BEAR_DEPS = {SomeBear}
     >>> SomeOtherBear.BEAR_DEPS
     {<class 'coalib.bears.Bear.SomeBear'>}
+
+    Every bear resides in some directory which is specified by the
+    source_location attribute:
+
+    >>> class SomeBear(Bear): pass
+    >>> SomeBear.source_location
+    '...Bear.py'
     """
 
     LANGUAGES = set()
@@ -151,6 +159,13 @@ class Bear(Printer, LogPrinterMixin):
                  information from what it can fix too.
         """
         return cls.CAN_DETECT | cls.CAN_FIX
+
+    @classproperty
+    def source_location(cls):
+        """
+        :return: The file path where the bear was fetched from.
+        """
+        return inspect.getfile(cls)
 
     @classproperty
     def maintainers(cls):

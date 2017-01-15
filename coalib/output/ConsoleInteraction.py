@@ -751,6 +751,8 @@ def show_bear(bear,
                          '  ',
                          'This bear cannot fix issues or does not provide '
                          'information about what categories it can fix.')
+        console_printer.print(
+            '  Path:\n' + '   ' + repr(bear.source_location) + '\n')
 
 
 def print_bears(bears,
