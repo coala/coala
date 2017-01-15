@@ -200,7 +200,6 @@ def print_result(results,
                  section,
                  log_printer,
                  file_diff_dict,
-                 ignore_ranges,
                  console_printer):
     """
     Takes the results produced by each bear and gives them to the print_results
@@ -223,6 +222,14 @@ def print_result(results,
     :return:               Returns False if any results were yielded. Else
                            True.
     """
+    if results and 'affected_code' in results[0].__dict__.keys() \
+            and len(results[0].__dict__['affected_code']) > 0:
+        file_to_check = results[0].__dict__['affected_code'][
+            0].__dict__['_start'].__dict__['_file']
+        ignore_ranges = list(yield_ignore_ranges(
+            {file_to_check: file_dict[file_to_check]}))
+    else:
+        ignore_ranges = ''
     min_severity_str = str(section.get('min_severity', 'INFO')).upper()
     min_severity = RESULT_SEVERITY.str_dict.get(min_severity_str, 'INFO')
     results = list(filter(lambda result:
@@ -545,7 +552,7 @@ def process_queues(processes,
     global_processes = len(processes)
     global_result_buffer = []
     result_files = set()
-    ignore_ranges = list(yield_ignore_ranges(file_dict))
+    list(yield_ignore_ranges(file_dict))
 
     # One process is the logger thread
     while local_processes > 1:
@@ -566,7 +573,6 @@ def process_queues(processes,
                                            section,
                                            log_printer,
                                            file_diff_dict,
-                                           ignore_ranges,
                                            console_printer=console_printer)
                 local_result_dict[index] = res
             else:
@@ -588,7 +594,6 @@ def process_queues(processes,
                                    section,
                                    log_printer,
                                    file_diff_dict,
-                                   ignore_ranges,
                                    console_printer=console_printer)
         global_result_dict[elem] = res
 
@@ -606,7 +611,6 @@ def process_queues(processes,
                                            section,
                                            log_printer,
                                            file_diff_dict,
-                                           ignore_ranges,
                                            console_printer)
                 global_result_dict[index] = res
             else:
