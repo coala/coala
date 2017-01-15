@@ -1,5 +1,4 @@
 environment:
-  GOPATH: c:\gopath
   global:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
@@ -16,9 +15,7 @@ environment:
       PYTHON_ARCH: "64"
 
 cache:
-  - "%GOPATH%"
   - "C:\\wheels"
-  - "node_modules"
 
 branches:  # Only build official branches, PRs are built anyway.
   only:
