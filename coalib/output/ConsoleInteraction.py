@@ -55,12 +55,14 @@ class NoColorStyle(Style):
 
 
 def highlight_text(no_color, text, lexer=TextLexer(), style=None):
-    if style:
+    if no_color:
+        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
+    elif style:
         formatter = TerminalTrueColorFormatter(style=style)
     else:
         formatter = TerminalTrueColorFormatter()
-    if no_color:
-        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
+
+    # highlight() combines lexer and formatter to output a ``str`` object.
     return highlight(text, lexer, formatter)[:-1]
 
 
@@ -163,6 +165,18 @@ def acquire_actions_and_apply(console_printer,
             break
 
 
+def _get_lexer(filename):
+    try:
+        lexer = get_lexer_for_filename(filename)
+    except ClassNotFound:
+        lexer = TextLexer()
+    lexer.add_filter(VisibleWhitespaceFilter(
+        spaces='•', tabs=True,
+        tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+
+    return lexer
+
+
 def print_lines(console_printer,
                 file_dict,
                 sourcerange):
@@ -177,6 +191,20 @@ def print_lines(console_printer,
                             lines to print.
     """
     no_color = not console_printer.print_colored
+    lexer = _get_lexer(sourcerange.file)
+
+    def print_highlighted(to_print):
+        console_printer.print(
+            highlight_text(no_color, to_print, lexer,
+                           BackgroundSourceRangeStyle),
+            end=''
+        )
+
+    def print_normal(to_print):
+        console_printer.print(
+            highlight_text(no_color, to_print, lexer), end=''
+        )
+
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
         console_printer.print(format_lines(lines='', line_nr=i),
@@ -184,34 +212,21 @@ def print_lines(console_printer,
                               end='')
 
         line = file_dict[sourcerange.file][i - 1].rstrip('\n')
-        try:
-            lexer = get_lexer_for_filename(sourcerange.file)
-        except ClassNotFound:
-            lexer = TextLexer()
-        lexer.add_filter(VisibleWhitespaceFilter(
-            spaces='•', tabs=True,
-            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
-        # highlight() combines lexer and formatter to output a ``str``
-        # object.
+
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
-            console_printer.print(highlight_text(
-                no_color, line[:sourcerange.start.column - 1], lexer), end='')
+            print_normal(line[:sourcerange.start.column - 1])
 
             printed_chars = sourcerange.start.column - 1
 
         if i == sourcerange.end.line and sourcerange.end.column:
-            console_printer.print(highlight_text(
-                no_color, line[printed_chars:sourcerange.end.column - 1],
-                lexer, BackgroundSourceRangeStyle), end='')
+            print_highlighted(line[printed_chars:sourcerange.end.column - 1])
 
-            console_printer.print(highlight_text(
-               no_color, line[sourcerange.end.column - 1:], lexer), end='')
+            print_normal(line[sourcerange.end.column - 1:])
             console_printer.print('')
 
         else:
-            console_printer.print(highlight_text(
-                no_color, line[printed_chars:], lexer), end='')
+            print_normal(line[printed_chars:])
             console_printer.print('')
 
 
