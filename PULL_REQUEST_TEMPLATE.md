@@ -4,7 +4,7 @@ Thanks for your contribution!
 Reviewing pull requests takes a lot of time and we're all volunteers. Please make sure you go through the following checklist and all items before pinging someone for a review.
 -->
 
-> **Do not use the 'Update Branch' button (even if your life depended on it)! **
+> **Do not use the 'Update Branch' button (even if your life depended on it)!**
 
 ### Checklist
 
