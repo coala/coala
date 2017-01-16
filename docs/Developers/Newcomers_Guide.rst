@@ -338,14 +338,14 @@ go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
 
     **Do not only fix a newcomer issue!** It is highly recommended that you
     fix one newcomer issue to get familiar with the workflow at coala and
-    then proceed to a difficulty/low issues.
+    then proceed to a ``difficulty/low`` issue.
 
     However those who are familiar with opensource can start with
-    "difficulty/low" issues.
+    ``difficulty/low`` issues.
 
-    We highly encourage you to start reviewing other's "difficulty/low" or
-    newcomer issues after you complete your newcomer issue as reviewing helps,
-    you to learn more about coala and python.
+    We highly encourage you to start reviewing other's ``difficulty/low`` or
+    ``difficulty/newcomer`` issues after you complete your newcomer issue, as
+    reviewing helps you to learn more about coala and python.
 
 .. note::
 
