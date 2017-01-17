@@ -116,7 +116,7 @@ ignore = node_modules/**
 enabled = False
 
 bears = KeywordBear
-language = python3
+language = python 3
 
 ci_keywords, keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
