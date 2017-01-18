@@ -73,7 +73,15 @@ script:
       make -C docs clean
       python setup.py docs
     fi
+    source ./rultor_secrets.sh
   - bash .misc/deploy.coverage.sh
+
+deploy:
+  provider: pypi
+  server: https://testpypi.python.org/pypi
+  user: "$PYPIUSER"
+  password: "$PYPIPW"
+  distributions: "bdist_wheel" # Your distributions here
 
 notifications:
   email: false
