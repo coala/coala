@@ -18,9 +18,8 @@ cache:
   - "C:\\wheels"
 
 branches:  # Only build official branches, PRs are built anyway.
-  only:
-    - master
-    - /release.*/
+  except:
+    - /^sils\//
 
 install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
