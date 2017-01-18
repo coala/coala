@@ -19,7 +19,7 @@ cache:
 
 branches:  # Only build official branches, PRs are built anyway.
   except:
-    - /^sils\//
+    - /^sils[/]/
 
 install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
