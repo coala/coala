@@ -1,6 +1,7 @@
 import os
 import platform
 import re
+
 from functools import lru_cache
 
 from coala_utils.decorators import yield_once
