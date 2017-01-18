@@ -343,9 +343,9 @@ go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
     However those who are familiar with opensource can start with
     ``difficulty/low`` issues.
 
-    We highly encourage you to start reviewing other's ``difficulty/low`` or
-    ``difficulty/newcomer`` issues after you complete your newcomer issue, as
-    reviewing helps you to learn more about coala and python.
+    We highly encourage you to start `reviewing <https://coala.io/review>`__
+    other's issues after you complete your newcomer issue, as reviewing helps
+    you to learn more about coala and python.
 
 .. note::
 
