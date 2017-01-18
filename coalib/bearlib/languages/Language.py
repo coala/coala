@@ -20,7 +20,8 @@ convert_int_float = typechain(int, float)
 
 def parse_lang_str(string):
     """
-    Prarses any given language string into name and a list of float versions:
+    Parses any given language string into name
+    and a list of float versions (ignores leading whitespace):
 
     >>> parse_lang_str("Python")
     ('Python', [])
@@ -29,6 +30,8 @@ def parse_lang_str(string):
     >>> parse_lang_str("Python 3.6, 3.3")
     ('Python', [3.6, 3.3])
     >>> parse_lang_str("Objective C 3.6, 3.3")
+    ('Objective C', [3.6, 3.3])
+    >>> parse_lang_str("               Objective C 3.6, 3.3")
     ('Objective C', [3.6, 3.3])
     >>> parse_lang_str("Cobol, stupid!")  # +ELLIPSIS
     Traceback (most recent call last):
@@ -45,7 +48,7 @@ def parse_lang_str(string):
     else:
         versions.insert(0, version)
 
-    return name, versions
+    return name.strip(), versions
 
 
 class LanguageMeta(type, metaclass=LanguageUberMeta):
