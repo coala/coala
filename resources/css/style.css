@@ -79,7 +79,7 @@
 .term-install-card, pre{
   background-color: #2b2b2b;
   color: #fff;
-  font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
+  font-family: 'Roboto Mono', Menlo, "Ubuntu Mono", monospace;
 }
 
 pre{
@@ -89,7 +89,7 @@ pre{
 .term-install-card-small{
   background-color: #2b2b2b;
   color: #fff;
-  font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
+  font-family: 'Roboto Mono', Menlo, "Ubuntu Mono", monospace;
   font-size: 0.8em !important;
 }
 
@@ -328,10 +328,11 @@ input:not([type]), input[type=text], input[type=password], input[type=email], in
   margin-top: 0.6em;
 }
 .footer-coala-row{
-  margin-bottom: 0px !important;
+  margin: 0 !important;
 }
 .snippet-card{
   white-space: pre-line !important;
+  margin: 0;
 }
 .showcase{
   display: flex;
@@ -409,4 +410,15 @@ a:hover > .card{
 }
 .author-row{
   padding-top: 20%;
+}
+.snippet-card{
+  padding: 1em;
+}
+.snippet-span{
+  float: left;
+  clear: left;
+  font-family: 'Roboto Mono', monospace !important;
+}
+.tip-example{
+  padding: 1em;
 }

@@ -51,7 +51,7 @@
 
                 <div class="dev-row row no-border">
                     <div class="col-md-6 tip-big">Install coala without any bears</div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 tip-example">
                         <div class="card horizontal term-install-card-small">
                             <div class="card-stacked">
                                 <div class="card-content">
@@ -62,7 +62,7 @@
                     </div>
                     <div class="dev-row row">
                         <div class="col-md-6 tip-big">Install development version of coala</div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 tip-example">
                             <div class="card horizontal term-install-card-small">
                                 <div class="card-stacked">
                                     <div class="card-content">
@@ -74,7 +74,7 @@
                     </div>
                     <div class="dev-row row">
                         <div class="col-md-6 tip-big">Installing inside a virtualenv</div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 tip-example">
                             <div class="card horizontal term-install-card-small">
                                 <div class="card-stacked">
                                     <div class="card-content">
@@ -118,7 +118,7 @@
 
                 <div class="row">
                     <div class="col-md-4 example-select">
-                        <select ng-model="sc.lang_selected" ng-options="lang for lang in sc.languages">
+                        <select ng-init="sc.lang_selected='Python'" ng-model="sc.lang_selected" ng-options="lang for lang in sc.languages">
                             <option value="" disabled>Choose a Language</option>
                         </select>
 
@@ -127,10 +127,9 @@
                     <div class="col-md-8 example-card">
                         <div class="card horizontal term-install-card">
                         <div class="card-stacked">
-                            <div class="card-content">
+                            <div class="snippet-content">
                                 <pre class="snippet-card">
-
-                                   {{ sc.snip[sc.lang_selected]}}
+                                <span class="snippet-span" ng-repeat="line in sc.snip[sc.lang_selected]">{{line}}</span>
                                 </pre>
                             </div>
                         </div>
