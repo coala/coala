@@ -190,7 +190,8 @@ def print_lines(console_printer,
             lexer = TextLexer()
         lexer.add_filter(VisibleWhitespaceFilter(
             spaces=True, tabs=True,
-            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH,
+            newlines=True))
         # highlight() combines lexer and formatter to output a ``str``
         # object.
         printed_chars = 0
@@ -248,7 +249,6 @@ def print_result(console_printer,
     result.message = highlight_text(no_color, result.message,
                                     lexer, BackgroundMessageStyle)
     console_printer.print(format_lines(result.message))
-
     if interactive:
         cli_actions = CLI_ACTIONS
         show_patch_action = ShowPatchAction()

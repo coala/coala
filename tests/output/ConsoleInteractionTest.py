@@ -33,7 +33,6 @@ from coalib.settings.Setting import Setting
 from pygments.filters import VisibleWhitespaceFilter
 from pygments.lexers import TextLexer
 
-
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
                            'needed by {}: ')
 STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
@@ -139,7 +138,8 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.lexer.add_filter(VisibleWhitespaceFilter(
             spaces=True,
             tabs=True,
-            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH,
+            newlines=True))
 
     def tearDown(self):
         OpenEditorAction.is_applicable = self.old_open_editor_applicable
