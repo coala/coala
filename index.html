@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html ng-app="coala">
+<head>
+
+    <title>coala</title>
+
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/materialize/js/materialize.min.js"></script>
+    <script src="components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="resources/js/config.js"></script>
+    <script type="text/javascript" src="resources/js/snippets.js"></script>
+    <script type="text/javascript" src="resources/js/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="vendors/materialize/css/materialize.css">
+
+    <link rel="stylesheet" type="text/css" href="vendors/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,200,300,400,500,600,700,800,900|Ubuntu+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <script type="text/javascript" src="components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+    <script type="text/javascript" src="components/ngstorage/ngStorage.min.js"></script>
+
+
+</head>
+<body>
+<main>
+<div ng-controller="TabController as tc">
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <ul class="tabs">
+                    <li class="tab col s3"><a ng-click="tc.setTab(1)" ng-class="{active:tc.isSet(1)}">Home</a></li>
+                    <li class="tab col s3"><a ng-click="tc.setTab(2)" ng-class="{active:tc.isSet(2)}">Languages</a></li>
+                    <li class="tab col s3"><a ng-click="tc.setTab(3)" ng-class="{active:tc.isSet(3)}">Get Involved</a></li>
+                    <li class="tab col s3"><a ng-click="tc.setTab(4)" ng-class="{active:tc.isSet(4)}">Try Coala!</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+<div ng-show="tc.isSet(1)">
+<home></home>
+</div>
+
+<div ng-show="tc.isSet(2)">
+<languages></languages>
+</div>
+
+<div ng-show="tc.isSet(3)">
+<getinvolved></getinvolved>
+</div>
+
+<div ng-show="tc.isSet(4)">
+<tryonline></tryonline>
+</div>
+
+</div>
+</main>
+<footer class="page-footer">
+    <div class="row footer-coala-row">
+    <center>
+      <div class="col-md-6">
+        <img class="footer-logo" src="https://api.coala.io/en/latest/_static/images/coala_logo.svg"/>
+        </div>
+        <div class="col-md-6">
+                        <span class="footer-coala">coala</span>
+
+        </div>
+
+
+    </center>
+    </div>
+    <div class="footer-text">
+        <span class="ft-span"> licensed under GNU Affero General Public License v3.0</span>
+    </div>
+</footer>
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+$(document).ready(function () {
+            $('select').material_select();
+            //$('ul.tabs').tabs();
+            $('.github-card').html('<img src="http://placehold.it/100x100" />')
+})
+</script>

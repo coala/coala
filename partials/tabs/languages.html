@@ -1,0 +1,181 @@
+<section>
+<div class="main-content container">
+
+    <div class="col-md-8 col-md-offset-2">
+        <div class="input-field col-md-10">
+            <input ng-model="searchText" placeholder="Search for a bear or a language" id="search" type="text" class="validate">
+        </div>
+        <div class="input-field col-md-2">
+            <center>
+                <div><a class="explore waves-effect waves-light btn">EXPLORE</a>
+                </div>
+            </center>
+        </div>
+    </div>
+
+</div>
+
+<section>
+
+    <div class="container">
+        <div class="row showcase">
+<div ng-show="lang_loader" >
+ <center>
+             <div class="preloader-wrapper big active">
+
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+    <br>
+        <div class="bear-loader-msg">Sit tight! Calling all the bears!</div>
+</center>
+</div>
+
+    <div ng-click="lc.showTheatre(bear)" ng-repeat="bear in bearList | filter:searchText" class="card card-main showcase-card">
+        <div class="card-title name-bear">{{ bear.name }}</div>
+        <div class="card-content">{{ bear.desc | format_desc }}</div>
+        <div class="card-action">
+            <span ng-repeat="lang in bear.languages | limitTo:4">{{lang}} </span>
+        </div>
+    </div>
+
+
+</div>
+</div>
+</section>
+
+<div id="modal1" class="modal">
+    <div  class="modal-content-bear">
+
+        <div class="col-md-4 profile">
+            <div class="bear-name">
+                {{currentBear.name}}
+            </div>
+
+            <div class="can-detect">
+                <div ng-show="currentBear.CAN_DETECT.length>0" class="small-heading">CAN DETECT</div>
+                <span class="candetect chip" ng-repeat="candetect in currentBear.CAN_DETECT">{{ candetect }}</span><br>
+            </div>
+
+            <div class="can-detect">
+                <div ng-show="currentBear.CAN_FIX.length>0" class="small-heading">CAN FIX</div>
+                <span class="candetect chip" ng-repeat="canfix in currentBear.CAN_FIX">{{ canfix }}</span><br>
+            </div>
+
+            <div class="can-detect">
+                <div ng-show="currentBear.LANGUAGES.length>0" class="small-heading">LANGUAGES</div>
+                <span class="candetect chip" ng-repeat="langs in currentBear.LANGUAGES">{{ langs }}</span>
+            </div>
+
+
+        </div>
+
+        <div class="col-md-8 dashboard">
+            <div class="bear-description">
+                {{currentBear.metadata.desc}}
+            </div>
+
+            <div class="row author-row">
+                <center>
+                    <div class="col-md-4">
+                        <div ng-show="currentBear.AUTHORS.length>0" class="author">
+                            <div class="small-heading">AUTHORS</div>
+                            <span class="authors" ng-repeat="auth in currentBear.AUTHORS">{{ auth }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div ng-show="currentBear.AUTHORS_EMAILS.length>0" class="email">
+                            <div class="small-heading">AUTHORS EMAIL</div>
+                            <span class="authors" ng-repeat="auth in currentBear.AUTHORS_EMAILS">{{ auth }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div ng-show="currentBear.LICENSE" class="license">
+                        <div class="small-heading">LICENSE</div>
+                        <span class="authors">{{ currentBear.LICENSE }}</span>
+                    </div>
+                </div>
+            </center>
+        </div>
+
+
+
+    </div>
+    <div ng-show="lc.theatreLoader"  class="modal-footer">
+        <div class="container" >
+            <div class="row">
+                <div class="progress col-md-4 col-md-offset-4">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+            <center> <p class="">{{ lc.theatreLoaderMessage }}...</p></center>
+
+        </div>
+    </div>
+</div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+        $('.explore').click(function () {
+            $('html,body').animate({
+                scrollTop: $(".showcase").offset().top},
+                'slow');
+        })
+
+        $('.modal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: 0.8, // Opacity of modal background
+      in_duration: 300, // Transition in duration
+      out_duration: 200, // Transition out duration
+      starting_top: '50%', // Starting top style attribute
+      ending_top: '10%', // Ending top style attribute
+      ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+
+        console.log(modal, trigger);
+      },
+      complete: function() {  } // Callback for Modal close
+  }
+  );
+    })
+</script>

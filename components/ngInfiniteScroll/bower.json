@@ -1,0 +1,8 @@
+{
+    "name": "ngInfiniteScroll",
+    "main": "build/ng-infinite-scroll.js",
+    "license": "MIT",
+    "dependencies": {
+        "angular": ">=1.2.0"
+    }
+}

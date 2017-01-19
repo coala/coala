@@ -1,0 +1,165 @@
+<div class="main-content container-fluid">
+
+
+    <div class="row">
+
+
+
+        <div class="col-md-8 col-md-offset-2">
+            <div class="title-get-involved" >get involved</div>
+            <br>
+            <div class="description">Take a look at our <a href="" class="bear-link" >newcomer docs</a>! <br>
+                Or just drop us a message on <a href="" class="bear-link" >Gitter</a> -
+                we'd love to help you personally <br>
+                If you are looking how to write a bear
+                check our bear writing tutorial <a href="" class="bear-link" >here</a>.
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+<section>
+    <div class="container"><br>
+
+        <div class="gi-container-title">meet the community</div>
+           <div class="description">We, the coalaians.
+            </div>
+
+    </div>
+    <div class="container">
+        <div class="row showcase-gi">
+
+            <div  ng-repeat="member in gic.contributors" class="card card-main showcase-card-gi">
+               <div class="empty">
+               </div>
+               <div class="card-action profile-data" >
+                  <center>
+                    <img class="profile-img" height="100" ng-src="{{ member.avatar_url }}"></center>
+
+                    <div class="person-name">{{ member.user_details.name }}</div>
+                    <div class="person-github-id">@{{member.login}}</div>
+                    <div class="person-github-bio"> {{member.user_details.bio }}</div>
+                    <div class="row contributions-row">
+                     <div class="col-md-12">
+
+                             <div class="person-contributions">{{ member.contributions }}</div>
+                             <div class="small-heading-light">CONTRIBUTIONS</div>
+
+
+                     </div>
+
+<center>
+                     <a ng-href="{{ member.html_url }}" class="waves-effect github-link btn"><i class="fa fa-github" aria-hidden="true"></i>
+</a>
+        </center>
+             </div>
+
+
+         </div>
+     </div>
+
+
+ </div>
+</div>
+</section>
+
+<style>
+    .showcase-gi{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1em;
+    }
+
+    .showcase-card-gi{
+        width: 200px;
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+
+    }
+    .card-title{
+        padding-left: 1em;
+        padding-top: 0.3em;
+    }
+
+    a > .card{
+        color: black !important;
+    }
+
+    a:hover > .card{
+        color: black !important;
+    }
+    .profile-img{
+        margin-top: -5em;
+        border-radius: 100%;
+    }
+
+    .empty{
+        background-color: #eceff1  !important;
+        height: 5em;
+    }
+    .profile-data{
+        background-color: #263238 !important;
+        color: white;
+        height: 300px;
+    }
+    .person-name{
+            font-size: 1.1em;
+    font-weight: 300;
+    text-align: center;
+    }
+    .small-heading-light{
+            font-size: 12px;
+    letter-spacing: 0.1em;
+    text-align: center;
+    color: lightgray;
+    font-weight: 500;
+        opacity: 0.2;
+    }
+
+    .person-contributions{
+            margin-top: 2em;
+            text-align: center;
+            letter-spacing: 0.1em;
+
+
+    }
+.person-github-id{
+        font-size: 0.8em;
+    text-align: center;
+    opacity: 0.7;
+    padding: 0.5em;
+}
+.person-github-bio{
+        font-size: 0.8em;
+    text-align: center;
+    padding-top: 0.5em;
+}
+    .github-link{
+        bottom:0;
+        margin-top: 1em;
+    }
+.gi-container-title{
+        font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    font-size: 5em;
+    font-weight: 100;
+    text-align: center;
+}
+
+.gi-container-title-header{
+        font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    font-size: 6em;
+    font-weight: 200;
+    text-align: center;
+}
+    .contributions-row{
+        margin-bottom: 0px !important;
+    position: absolute;
+    text-align: center;
+    width: 180px;
+    bottom: 0;
+    padding-bottom: 1em;
+    }
+</style>

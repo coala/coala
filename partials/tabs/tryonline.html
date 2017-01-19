@@ -1,0 +1,19 @@
+<div class="main-content container-fluid">
+    <div class="container-title">Try coala Online!</div>
+    <form class="coa-form">
+        <textarea placeholder="Write some code here" class="file-data bb-data" name="file_data">print(a+b)</textarea>
+        <textarea placeholder="Type in some bears (separated by comma)" class="bear-data bb-data" name="bears">PEP8Bear</textarea>
+        <textarea placeholder="Type the programming language" class="lang-data bb-data" name="language">python</textarea>
+
+        <button type="submit" ng-click="toc.submit_coa_form()" class="btn waves-effect submit-coa-form">RUN coala!</button>
+    </form>
+    <div class="report-title">RESULTS</div>
+    <div class="results-data">
+   <div ng-repeat="data in toc.diff_data" class="results-row">
+        <span class="origin-diff">{{data.origin}}</span>
+         <span class=" severity-diff">Severity : {{data.severity}}</span>
+        <div class="data-diff">Message : <span class="diff-msg">{{data.message}}</span></div>
+        <div ng-repeat="(diff,val) in data.diffs"><pre class="val-diff">{{val}}</pre></div>
+    </div>
+    </div>
+</div>

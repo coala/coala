@@ -1,0 +1,412 @@
+
+.tabs .tab {
+  display: inline-block;
+  text-align: center;
+  line-height: 48px;
+  height: 48px;
+  padding: 0;
+  margin: 0;
+
+}
+
+.tabs .tab a {
+  color: lightslategrey !important;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: color .28s ease;
+}
+
+.tabs .tab a:hover, .tabs .tab a.active {
+  background-color: transparent;
+  color: black !important;
+}
+
+.tabs .tab.disabled a,
+.tabs .tab.disabled a:hover {
+  color: rgba(238, 110, 115, 0.7);
+  cursor: default;
+}
+
+.tabs .indicator {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background-color: black !important;
+  will-change: left, right;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+.title{
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: 14em;
+  font-weight: 100;
+  text-align: center;
+}
+
+.title-get-involved{
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: 5em;
+  font-weight: 100;
+  text-align: center;
+}
+
+.main-content{
+  margin-top: 2em;
+}
+
+.logo{
+  height:15em;
+  margin-top: 4em;
+
+}
+.tabs{
+  font-family: Roboto;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.description{
+  font-family: Roboto;
+  font-size: 1.6em;
+  text-align: center;
+  font-weight: 300;
+}
+.term-install-card, pre{
+  background-color: #2b2b2b;
+  color: #fff;
+  font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
+}
+
+pre{
+  padding: 0px;
+}
+
+.term-install-card-small{
+  background-color: #2b2b2b;
+  color: #fff;
+  font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
+  font-size: 0.8em !important;
+}
+
+.term-install-card-small > .card-stacked > .card-content{
+  padding:10px !important;
+}
+
+.tip{
+  font-size: 1.2em;
+}
+.tip-small{
+  font-size: 1em;
+}
+.terminal-install{
+  margin-top: 1em;
+}
+.dev-row{
+  border-top: 1px solid lightgrey;
+  padding-left:0em;
+  padding-right: 0em;
+  margin-bottom: 0px !important;
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+}
+.no-border{
+  border-top: 0px !important;
+}
+
+.tip-big{
+  font-size: 1.5em;
+  font-weight: 300;
+  text-align: justify;
+  padding:1em;
+
+}
+.install-tip{
+  margin-left: 5em;
+  margin-right: 5em;
+  margin-top: 3em;
+}
+
+.examples{
+  margin-left: 5em;
+  margin-right: 5em;
+  margin-top: 3em;
+}
+
+span.caret {
+  color: initial;
+  position: absolute;
+  right: 0;
+  top: 16px;
+  font-size: 10px;
+  padding-left: 10px;
+}
+
+.select-wrapper input.select-dropdown {
+  background-color: rgba(40, 53, 147, 0.1);
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px solid #f2f2f2;
+  border-top-color: rgb(242, 242, 242);
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-right-color: rgb(242, 242, 242);
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-bottom-color: rgb(242, 242, 242);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-left-color: rgb(242, 242, 242);
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  border-radius: 2px !important;
+  height: 3rem !important;
+}
+
+.example-card{
+  padding:2em;
+}
+.example-select{
+  padding:2em;
+}
+
+.footer-text{
+  text-align: center;
+  color: lightslategrey;
+  font-family: Roboto;
+  padding: 1em;
+
+}
+
+.ft-span{
+ text-transform: uppercase;
+ letter-spacing: 0.1em;
+}
+.container-title{
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: 3em;
+  font-weight: 100;
+
+}
+body {
+  display: flex !important;
+  min-height: 100vh !important;
+  flex-direction: column !important;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer.page-footer
+{
+  margin-top:20px;
+  padding-top:20px;
+  background-color:#fff !important
+}
+footer.page-footer .footer-copyright{
+  overflow:hidden;
+  height:50px;
+  line-height:50px;
+  color:lightslategrey !important;
+  background-color:#fff !important
+}
+
+input:not([type]), input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+  background-color: lightgray;
+  padding-left: 0.5em !important;
+}
+#search{
+  font-size: 24px !important;
+  border: none !important;
+  font-family: Roboto !important;
+  font-weight: 500;
+  color: black !important;
+  box-shadow: none !important;
+}
+
+.btn:hover, .btn-large:hover{
+  background-color: #424242 !important;
+}
+.btn, .btn-large{
+  background-color: black !important;
+}
+
+::-webkit-input-placeholder {
+  font-weight: 200;
+
+  color: #9e9e9e ;
+}
+
+:-moz-placeholder {
+  /* Firefox 18- */
+  font-weight: 200;
+
+  color: #d1d1d1;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  font-weight: 200;
+
+  color: #d1d1d1;
+}
+:-ms-input-placeholder {
+  font-weight: 200;
+
+  color: #d1d1d1;
+}
+.card-title{
+  overflow-wrap: break-word !important;
+}
+.coa-form{
+  margin-top: 2em;
+}
+.file-data{
+  height: 10rem;
+}
+.bb-data{
+  background: black;
+  color: white;
+  font-family: "Ubuntu Mono";
+  padding: 0.7em;
+}
+.val-diff{
+  padding: 0.5em !important;
+  font-size: 0.8em !important;
+}
+.results-row{
+  background: #b0bec5;
+  padding: 1em;
+  margin-top: 1em;
+}
+.submit-coa-form{
+  text-transform: none !important;
+}
+.origin-diff{
+  padding:0.5em;
+  background-color: #263238;
+  color: white;
+}
+.severity-diff{
+  padding: 0.5em;
+  background-color: #37474f ;
+  color:white;
+}
+.data-diff{
+  margin-top: 1em;
+  padding: 0.5em;
+  background-color: #455a64 ;
+  color: white
+}
+.report-title{
+  font-family: Roboto;
+  font-size: 1.5em;
+  text-align: left;
+  padding: 1em;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+.footer-coala{
+  font-size: 42px;
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-weight: 100;
+  float: left;
+}
+.footer-logo{
+  float: right;
+  margin-top: 0.6em;
+}
+.footer-coala-row{
+  margin-bottom: 0px !important;
+}
+.snippet-card{
+  white-space: pre-line !important;
+}
+.showcase{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 4em;
+}
+
+.showcase-card{
+  width: 300px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+
+}
+.card-title{
+  padding-left: 1em;
+  padding-top: 0.3em;
+}
+.name-bear{
+  font-size: 22px !important;
+}
+a > .card{
+  color: black !important;
+}
+a:hover > .card{
+  color: black !important;
+}
+.modal{
+  width: 100% !important;
+  border-radius: 0px !important;
+}
+.profile{
+  background-color: #000;
+  color: #fff;
+}
+.dashboard{
+  background-color: darkslategrey;
+}
+.modal-content-bear{
+  display: flex
+}
+.bear-name{
+  font-size: 3em;
+  text-align: center;
+  padding-right: 1em;
+  padding-top: 1em;
+  padding-bottom: 0.1em;
+  font-weight: 100;
+  overflow-wrap: break-word;
+}
+.bear-description{
+  color: lightgrey;
+  text-align: justify;
+  font-size: 1.5em;
+  font-family: Roboto;
+  font-weight: 300;
+  padding: 1em;
+}
+.candetect{
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.small-heading{
+  font-size: 0.9em;
+  padding: 0.5em;
+  font-weight: 400;
+  color: lightgoldenrodyellow;
+  letter-spacing: 0.1em;
+}
+.authors{
+  font-size: 14px;
+  color: wheat;
+  font-weight: 400;
+}
+.author-row{
+  padding-top: 20%;
+}

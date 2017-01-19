@@ -1,0 +1,47 @@
+{
+  "name": "ngstorage",
+  "version": "0.3.11",
+  "main": "./ngStorage.js",
+  "keywords": [
+    "angular",
+    "cookie",
+    "storage",
+    "local",
+    "localstorage",
+    "session",
+    "sessionstorage"
+  ],
+  "ignore": [
+    "CHANGELOG.md",
+    "components",
+    "node_modules",
+    "test",
+    "package.json",
+    "Gruntfile.js",
+    ".bowerrc",
+    ".gitignore",
+    ".travis.yml"
+  ],
+  "dependencies": {
+    "angular": ">=1.0.8"
+  },
+  "devDependencies": {
+    "angular-mocks": ">=1.0.8",
+    "chai": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gsklee/ngStorage.git"
+  },
+  "homepage": "https://github.com/gsklee/ngStorage",
+  "_release": "0.3.11",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.11",
+    "commit": "253b718a0b35b044fba25c78b1b2020d672c4017"
+  },
+  "_source": "https://github.com/gsklee/ngStorage.git",
+  "_target": "^0.3.11",
+  "_originalSource": "ngstorage",
+  "_direct": true
+}
