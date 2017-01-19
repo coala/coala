@@ -181,14 +181,6 @@ span.caret {
   padding:2em;
 }
 
-.footer-text{
-  text-align: center;
-  color: lightslategrey;
-  font-family: Roboto;
-  padding: 1em;
-
-}
-
 .ft-span{
  text-transform: uppercase;
  letter-spacing: 0.1em;
@@ -209,20 +201,6 @@ main {
   flex: 1 0 auto;
 }
 
-footer.page-footer
-{
-  margin-top:20px;
-  padding-top:20px;
-  background-color:#fff !important
-}
-footer.page-footer .footer-copyright{
-  overflow:hidden;
-  height:50px;
-  line-height:50px;
-  color:lightslategrey !important;
-  background-color:#fff !important
-}
-
 input:not([type]), input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
   background-color: lightgray;
   padding-left: 0.5em !important;
@@ -237,7 +215,7 @@ input:not([type]), input[type=text], input[type=password], input[type=email], in
 }
 
 .btn:hover, .btn-large:hover{
-  background-color: #424242 !important;
+  opacity: 0.5;
 }
 .btn, .btn-large{
   background-color: black !important;
@@ -317,19 +295,6 @@ input:not([type]), input[type=text], input[type=password], input[type=email], in
   font-weight: 700;
   letter-spacing: 0.2em;
 }
-.footer-coala{
-  font-size: 42px;
-  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  font-weight: 100;
-  float: left;
-}
-.footer-logo{
-  float: right;
-  margin-top: 0.6em;
-}
-.footer-coala-row{
-  margin: 0 !important;
-}
 .snippet-card{
   white-space: pre-line !important;
   margin: 0;
@@ -340,7 +305,6 @@ input:not([type]), input[type=text], input[type=password], input[type=email], in
   flex-wrap: wrap;
   margin-top: 4em;
 }
-
 .showcase-card{
   width: 300px;
   margin-left: 0.5em;
@@ -421,4 +385,60 @@ a:hover > .card{
 }
 .tip-example{
   padding: 1em;
+}
+.tabs .tab{
+  cursor: pointer;
+}
+.events{
+  font-size: 1.3em;
+  font-family: Roboto;
+}
+.agenda .date-label {
+  font-weight: bold;
+  background: #e5ecf9;
+  position: relative;
+}
+.view-container-border {
+  background-color: #e3e9ff;
+  border-radius: 0px !important
+}
+.page-footer{ 
+  background-color: #37474f !important; 
+}
+.footer-copyright{
+  background-color:  #263238 !important;
+}
+.footer-title{
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-weight: 100;
+}
+.footer-small-title{
+  text-transform: uppercase !important;
+  color: lightcyan !important;
+  letter-spacing: 0.1em !important;
+  padding: 1em !important;
+  text-align: center;
+}
+.page-footer li a:hover{
+  opacity: 1;
+}
+.page-footer li a{
+  opacity: 0.6;
+  cursor: pointer !important;
+}
+.page-footer li{
+  padding: 0.2em;
+}
+.footer-btn-text{
+  vertical-align: top;
+  padding-left: 1em;
+}
+.footer-btn-row{
+ text-transform: uppercase;
+ margin-top: 1.5em;
+}
+.footer-sponsor-row{
+}
+.footer-small-title-row{
+  margin-bottom: 0 !important;
 }

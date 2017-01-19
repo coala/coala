@@ -15,8 +15,6 @@
                 check our bear writing tutorial <a href="" class="bear-link" >here</a>.
             </div>
         </div>
-
-
     </div>
 
 </div>
@@ -24,45 +22,48 @@
     <div class="container"><br>
 
         <div class="gi-container-title">meet the community</div>
-           <div class="description">We, the coalaians.
-            </div>
+        <div class="description">We, the coalaians.
+        </div>
 
     </div>
     <div class="container">
         <div class="row showcase-gi">
 
             <div  ng-repeat="member in gic.contributors" class="card card-main showcase-card-gi">
-               <div class="empty">
-               </div>
-               <div class="card-action profile-data" >
-                  <center>
-                    <img class="profile-img" height="100" ng-src="{{ member.avatar_url }}"></center>
+                <div class="empty">
+                </div>
+                <div class="card-action profile-data" >
+                    <center>
+                        <img class="profile-img" height="100" ng-src="{{ member.avatar_url }}"></center>
 
-                    <div class="person-name">{{ member.user_details.name }}</div>
-                    <div class="person-github-id">@{{member.login}}</div>
-                    <div class="person-github-bio"> {{member.user_details.bio }}</div>
-                    <div class="row contributions-row">
-                     <div class="col-md-12">
+                        <div class="person-name">{{ member.user_details.name }}</div>
+                        <div class="person-github-id">@{{member.login}}</div>
+                        <div class="person-github-bio"> {{member.user_details.bio }}</div>
+                        <div class="row contributions-row">
+                            <div class="col-md-12">
 
                              <div class="person-contributions">{{ member.contributions }}</div>
                              <div class="small-heading-light">CONTRIBUTIONS</div>
+                         </div>
 
+                         <center>
+                            <a ng-href="{{ member.html_url }}" class="waves-effect github-link btn"><i class="fa fa-github" aria-hidden="true"></i>
+                            </a>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container events"><br>
 
-                     </div>
-
-<center>
-                     <a ng-href="{{ member.html_url }}" class="waves-effect github-link btn"><i class="fa fa-github" aria-hidden="true"></i>
-</a>
-        </center>
-             </div>
-
-
-         </div>
-     </div>
-
-
- </div>
-</div>
+        <div class="gi-container-title">come meet us</div>
+        <div class="description">We’d love to share a bar of chocolate with you!
+        </div><br>
+        <div class="col-md-8 col-md-offset-2">
+            <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&amp;mode=AGENDA&amp;height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src=hl3j7971mhoo6rhfkn3fcf5afk%40group.calendar.google.com&amp;color=%23875509&amp;src=jpmh8lq7evpptl8hmul9vfh267k1ab4i%40import.calendar.google.com&amp;color=%235F6B02&amp;ctz=Europe%2FBerlin" style="border-width:0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
+        </div>    
+    </div>
 </section>
 
 <style>
@@ -106,60 +107,60 @@
         height: 300px;
     }
     .person-name{
-            font-size: 1.1em;
-    font-weight: 300;
-    text-align: center;
+        font-size: 1.1em;
+        font-weight: 300;
+        text-align: center;
     }
     .small-heading-light{
-            font-size: 12px;
-    letter-spacing: 0.1em;
-    text-align: center;
-    color: lightgray;
-    font-weight: 500;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-align: center;
+        color: lightgray;
+        font-weight: 500;
         opacity: 0.2;
     }
 
     .person-contributions{
-            margin-top: 2em;
-            text-align: center;
-            letter-spacing: 0.1em;
+        margin-top: 2em;
+        text-align: center;
+        letter-spacing: 0.1em;
 
 
     }
-.person-github-id{
+    .person-github-id{
         font-size: 0.8em;
-    text-align: center;
-    opacity: 0.7;
-    padding: 0.5em;
-}
-.person-github-bio{
+        text-align: center;
+        opacity: 0.7;
+        padding: 0.5em;
+    }
+    .person-github-bio{
         font-size: 0.8em;
-    text-align: center;
-    padding-top: 0.5em;
-}
+        text-align: center;
+        padding-top: 0.5em;
+    }
     .github-link{
         bottom:0;
         margin-top: 1em;
     }
-.gi-container-title{
+    .gi-container-title{
         font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-    font-size: 5em;
-    font-weight: 100;
-    text-align: center;
-}
+        font-size: 5em;
+        font-weight: 100;
+        text-align: center;
+    }
 
-.gi-container-title-header{
+    .gi-container-title-header{
         font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-    font-size: 6em;
-    font-weight: 200;
-    text-align: center;
-}
+        font-size: 6em;
+        font-weight: 200;
+        text-align: center;
+    }
     .contributions-row{
         margin-bottom: 0px !important;
-    position: absolute;
-    text-align: center;
-    width: 180px;
-    bottom: 0;
-    padding-bottom: 1em;
+        position: absolute;
+        text-align: center;
+        width: 180px;
+        bottom: 0;
+        padding-bottom: 1em;
     }
 </style>
