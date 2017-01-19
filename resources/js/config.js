@@ -1,1 +1,1 @@
-api_link = "http://webservices.coala.io"
+api_link = "https://webservices.coala.io"
