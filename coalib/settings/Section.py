@@ -5,6 +5,7 @@ from collections import OrderedDict
 
 from coalib.collecting.Collectors import collect_registered_bears_dirs
 from coala_utils.decorators import enforce_signature, generate_repr
+from coala_utils.string_processing import unescape
 from coalib.misc.DictUtilities import update_ordered_dict_key
 from coalib.settings.Setting import Setting, path_list
 from coalib.parsing.Globbing import glob_escape
@@ -155,7 +156,7 @@ class Section:
 
         if self.__contains__(key, ignore_defaults=True) and allow_appending:
             val = self[key]
-            val.value = str(val.value) + '\n' + setting.value
+            val.value = str(val._value) + '\n' + setting._value
             self.append(val, custom_key=key)
         else:
             self.append(setting, custom_key=key)
@@ -205,7 +206,7 @@ class Section:
         res = copy.deepcopy(self.contents.get(key, None))
         if res is not None:
             if res.to_append and self.defaults and res.key in self.defaults:
-                res.value = self.defaults[key].value + ', ' + res.value
+                res.value = self.defaults[key]._value + ', ' + res._value
                 res.to_append = False
                 return res
             res.to_append = False

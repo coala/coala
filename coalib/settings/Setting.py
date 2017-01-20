@@ -132,6 +132,8 @@ class Setting(StringConverter):
         if not isinstance(to_append, bool):
             raise TypeError('to_append needs to be a boolean value.')
 
+        self.to_append = to_append
+
         StringConverter.__init__(
             self,
             value,
@@ -142,7 +144,6 @@ class Setting(StringConverter):
         self.from_cli = from_cli
         self.key = key
         self.origin = str(origin)
-        self.to_append = to_append
 
     def __path__(self, origin=None, glob_escape_origin=False):
         """
@@ -216,6 +217,13 @@ class Setting(StringConverter):
         """
         return [Setting.__glob__(elem, self.origin) for elem in self]
 
+    def __iter__(self, remove_backslashes=True):
+        if self.to_append:
+            raise ValueError('Iteration on this object is invalid because the '
+                             'value is incomplete. Please access the value of '
+                             'the setting in a section to iterate through it.')
+        return StringConverter.__iter__(self, remove_backslashes)
+
     @property
     def key(self):
         return self._key
@@ -227,3 +235,11 @@ class Setting(StringConverter):
             raise ValueError('An empty key is not allowed for a setting.')
 
         self._key = newkey
+
+    @StringConverter.value.getter
+    def value(self):
+        if self.to_append:
+            raise ValueError('This property is invalid because the value is '
+                             'incomplete. Please access the value of the '
+                             'setting in a section to get the complete value.')
+        return self._value
