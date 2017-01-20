@@ -4,7 +4,6 @@ import shlex
 from subprocess import PIPE, Popen, call, DEVNULL
 
 
-call_without_output = functools.partial(call, stdout=DEVNULL, stderr=DEVNULL)
 """
 Uses subprocess.call to execute a command, but suppresses the output and
 the errors.
