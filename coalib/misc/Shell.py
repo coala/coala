@@ -101,7 +101,7 @@ def run_shell_command(command, stdin=None, **kwargs):
     """
     with run_interactive_shell_command(command, **kwargs) as p:
         ret = p.communicate(stdin)
-    return ret
+    return ret 
 
 
 def get_shell_type():  # pragma: no cover
