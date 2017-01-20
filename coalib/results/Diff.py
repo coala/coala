@@ -218,7 +218,7 @@ class Diff:
         :param filename: The filename to associate the SourceRange's to.
         :return:         A list of all related SourceRange objects.
         """
-        return list(diff.range(filename)
+        return list(diff.source_range(filename)
                     for diff in self.split_diff(distance=0))
 
     def split_diff(self, distance=1):
@@ -277,7 +277,7 @@ class Diff:
         # always.
         yield this_diff
 
-    def range(self, filename):
+    def source_range(self, filename):
         """
         Calculates a SourceRange spanning over the whole Diff. If something is
         added after the 0th line (i.e. before the first line) the first line
@@ -285,10 +285,10 @@ class Diff:
 
         The range of an empty diff will only affect the filename:
 
-        >>> range = Diff([]).range("file")
-        >>> range.file is None
+        >>> source_range = Diff([]).source_range("file")
+        >>> source_range.file is None
         False
-        >>> print(range.start.line)
+        >>> print(source_range.start.line)
         None
 
         :param filename: The filename to associate the SourceRange with.
@@ -441,7 +441,7 @@ class Diff:
         linediff.change = (original_line, replacement)
         self._changes[line_nr] = linediff
 
-    def replace(self, range, replacement):
+    def replace(self, source_range, replacement):
         r"""
         Replaces a part of text. Allows to span multiple lines.
 
@@ -451,9 +451,9 @@ class Diff:
 
         >>> from coalib.results.TextRange import TextRange
         >>> test_text = ['hello\n', 'world\n', '4lines\n', 'done\n']
-        >>> def replace(range, text):
+        >>> def replace(source_range, text):
         ...     diff = Diff(test_text)
-        ...     diff.replace(range, text)
+        ...     diff.replace(source_range, text)
         ...     return diff.modified
         >>> replace(TextRange.from_values(1, 5, 4, 3), '\nyeah\ncool\nno')
         ['hell\n', 'yeah\n', 'cool\n', 'none\n']
@@ -467,11 +467,14 @@ class Diff:
         """
         # Remaining parts of the lines not affected by the replace.
         first_part = (
-            self.original[range.start.line - 1][:range.start.column - 1])
-        last_part = self.original[range.end.line - 1][range.end.column - 1:]
+            self.original[
+                source_range.start.line - 1][:source_range.start.column - 1])
+        last_part = (
+            self.original[
+                source_range.end.line - 1][source_range.end.column - 1:])
 
-        self.delete_lines(range.start.line, range.end.line)
-        self.add_lines(range.start.line - 1,
+        self.delete_lines(source_range.start.line, source_range.end.line)
+        self.add_lines(source_range.start.line - 1,
                        (first_part + replacement + last_part).splitlines(True))
 
     def insert(self, position, text):
@@ -496,15 +499,15 @@ class Diff:
         """
         self.replace(TextRange(position, position), text)
 
-    def remove(self, range):
+    def remove(self, source_range):
         r"""
         Removes a piece of text in a given range.
 
         >>> from coalib.results.TextRange import TextRange
         >>> test_text = ['nice\n', 'try\n', 'bro\n']
-        >>> def remove(range):
+        >>> def remove(source_range):
         ...     diff = Diff(test_text)
-        ...     diff.remove(range)
+        ...     diff.remove(source_range)
         ...     return diff.modified
         >>> remove(TextRange.from_values(1, 1, 1, 4))
         ['e\n', 'try\n', 'bro\n']
@@ -517,4 +520,4 @@ class Diff:
 
         :param range: The range to delete.
         """
-        self.replace(range, '')
+        self.replace(source_range, '')

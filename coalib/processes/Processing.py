@@ -184,9 +184,9 @@ def check_result_ignore(result, ignore_ranges):
                           This may be a list of globbed bear wildcards.
     :return:              True if the result has to be ignored.
     """
-    for bears, range in ignore_ranges:
-        orig = result.origin.lower().split(' ')[0]
-        if (result.overlaps(range) and
+    for bears, source_range in ignore_ranges:
+        orig = result.origin.lower()
+        if (result.overlaps(source_range) and
                 (len(bears) == 0 or orig in bears or fnmatch(orig, bears))):
             return True
 

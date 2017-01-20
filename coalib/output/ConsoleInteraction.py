@@ -337,13 +337,12 @@ def print_results_formatted(log_printer,
                                         **format_args))
                 continue
 
-            for range in result.affected_code:
-                format_args['affected_code'] = range
-                print(format_str.format(file=range.start.file,
-                                        line=range.start.line,
-                                        end_line=range.end.line,
-                                        column=range.start.column,
-                                        end_column=range.end.column,
+            for source_range in result.affected_code:
+                print(format_str.format(file=source_range.start.file,
+                                        line=source_range.start.line,
+                                        end_line=source_range.end.line,
+                                        column=source_range.start.column,
+                                        end_column=source_range.end.column,
                                         severity_str=severity_str,
                                         **format_args))
         except KeyError as exception:
