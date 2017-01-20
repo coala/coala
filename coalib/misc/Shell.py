@@ -1,7 +1,6 @@
 from contextlib import contextmanager
-import functools
 import shlex
-from subprocess import PIPE, Popen, call, DEVNULL
+from subprocess import PIPE, Popen, call
 
 
 """
