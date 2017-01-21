@@ -5,6 +5,7 @@ import logging
 import logging.config
 import sys
 
+
 def configure_logging():
     """
     Configures the logging with hard coded dictionary.
