@@ -192,14 +192,13 @@ footer.page-footer
 {
   margin-top:20px;
   padding-top:20px;
-  background-color:#fff !important
+  background-color: #37474f !important; 
 }
 footer.page-footer .footer-copyright{
   overflow:hidden;
   height:50px;
   line-height:50px;
-  color:lightslategrey !important;
-  background-color:#fff !important
+  background-color:  #263238 !important;    
 }
 
 input:not([type]), input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
@@ -397,4 +396,36 @@ a:hover > .card{
   float: left;
   clear: left;
   font-family: 'Roboto Mono', monospace !important;
-}
+} 
+.footer-title{    
+  font-family:apple-system, BlinkMacSystemFont, Roboto, sans-serif;   
+  font-weight: 100;   
+}   
+.footer-small-title{    
+  text-transform: uppercase !important;   
+  color: lightcyan !important;    
+  letter-spacing: 0.1em !important;   
+  padding: 1em !important;    
+  text-align: center;   
+}   
+.page-footer li a:hover{    
+  opacity: 1;   
+}   
+.page-footer li a{    
+  opacity: 0.6;   
+  cursor: pointer !important;   
+}   
+.page-footer li{    
+  padding: 0.2em;   
+}   
+.footer-btn-text{   
+  vertical-align: top;    
+  padding-left: 1em;    
+}   
+.footer-btn-row{    
+ text-transform: uppercase;   
+ margin-top: 1.5em;   
+}     
+.footer-small-title-row{    
+  margin-bottom: 0 !important;    
+} 
