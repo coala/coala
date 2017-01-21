@@ -24,6 +24,8 @@ addons:
     sources:
     - llvm-toolchain-precise
 before_install:
+- openssl aes-256-cbc -K $encrypted_38e9a52cc4ac_key -iv $encrypted_38e9a52cc4ac_iv
+  -in secret_text.txt.enc -out secret_text.txt -d
 - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
 - export TRAVIS_PYTHON_VERSION_MAJOR=${TRAVIS_PYTHON_VERSION%.[0-9]}
 - export TRAVIS_PYTHON_VERSION_MINOR=${TRAVIS_PYTHON_VERSION#[0-9].}
@@ -41,8 +43,8 @@ before_script:
 - mv requirements.orig requirements.txt
 script:
 - |
-  echo "WE ARE HERE"
-  echo "$SOMEVAR"
+  source secret_text.txt
+  echo $PA
   if [[ $TRAVIS_PYTHON_VERSION_MINOR < 4 || $TRAVIS_PYTHON_VERSION_MAJOR == 2 ]]; then
     coverage run setup.py install | grep -q 'coala supports only python 3.4 or later'
   else
@@ -67,6 +69,3 @@ notifications:
 branches:
   exclude:
   - "/^sils\\//"
-env:
-  global:
-    secure: n/c5d/dJmIrAL0Qx1q3LGK0o8auvndA8Cdry1rcaYgoBoLsK1ycnE5m5jAKtDsxCf23UMvgvzT2QTXRhKlqQBALvN43I50sgA0shFaOrLD1Bv6fej8Nc5ISTGIh03I8pxDP8lKlLLlmZzPAZHMBZUMPck9rwKuq56Snv9B1a4fo/X8Ybj/DAet9Wk1lYFvK2ZN3s0Oze5Xh/GCBow2Qhni0CrgvM094yG751TqvD6bA6npzyReeedW0vGx7P6jGD1s0Ca5uOr4C5+Acm5UQo0bLolBg7fTbILkJxEV8U3JulAgLVxLaO3QI5yYhLARNzW0dtWIHBWPbIlNSh2a4ZGGq63FtM2NSE/GAqC4t3glO76lNt3nSxFPFESlH5O7Fm7J6sscnlKXKdFm8Vx04mdz5FiF0hM8iCi1U6WSiVLrGFblSzfCrjO8gp2o6ZxaChK0Hr+dUdnuatPOXV+yrh4WdG4rjrOdiTpcIaTCyU/Haet/1ReH9hAdUzn3Id1Vx348TAIGVrY3WlIIYYxM88GS6TZKb6wwmHHKNFTi8vh5lYYcHl/Lft/W9RNVTfTSTvk2EyjI7wyPNhGsJw9sO15JQIin2+LEQRvE5gLYizNf5OhRVKywEnHTMOG0TcBBfCNLl8xmWzz7TxyZE5nP5OVx7rzOnzzOz9h4IeNXjjgAs=
