@@ -143,6 +143,18 @@
         };
     });
 
+	/* 
+	Filter from http://stackoverflow.com/a/18939029
+	*/
+	app.filter("toArray", function(){
+	    return function(obj) {
+	     var result = [];
+	     angular.forEach(obj, function(val, key) {
+	      result.push(val);
+	     });
+	     return result;
+	    };
+	});
 
 	app.directive('getinvolved', ['$http', function ($http) {
 		return {
@@ -157,8 +169,19 @@
 				}else{			
 				$http.get(api_link + '/contrib/')
 				.then(function (data) {
-					$scope.$get_involved_storage.contributors_data = data["data"]
-					self.contributors = data["data"]
+					var temp = {}
+					angular.forEach(data["data"], function(project, key){
+						angular.forEach(project, function(value, key){
+							if(Object.keys(temp).indexOf(value["login"]) > -1){
+								temp[value["login"]]["contributions"]+= value["contributions"]
+							}
+							else{
+								temp[value["login"]] = value
+							}
+						});
+					});
+					$scope.$get_involved_storage.contributors_data = temp
+					self.contributors = temp
 				}).catch(function (c) {
 					console.log(c);
 				})
