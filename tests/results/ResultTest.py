@@ -35,7 +35,7 @@ class ResultTest(unittest.TestCase):
         self.assertEqual(uut.message, 'msg')
 
         with self.assertRaises(KeyError):
-            Result('origin', '{msg}')
+            Result('origin', '{msg}', message_arguments={'message': 'msg'})
 
     def test_string_dict(self):
         uut = Result(None, '')

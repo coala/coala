@@ -105,7 +105,8 @@ class Result:
         self.origin = origin
         self.message_base = message
         self.message_arguments = message_arguments
-        self.message_base.format(**self.message_arguments)
+        if message_arguments:
+            self.message_base.format(**self.message_arguments)
         self.debug_msg = debug_msg
         self.additional_info = additional_info
         # Sorting is important for tuple comparison
@@ -120,6 +121,8 @@ class Result:
 
     @property
     def message(self):
+        if not self.message_arguments:
+            return self.message_base
         return self.message_base.format(**self.message_arguments)
 
     @message.setter
