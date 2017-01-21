@@ -36,7 +36,7 @@ def configure_logging():
                     'INFO': 'blue',
                     'DEBUG': 'green'
                 }
-            } 
+            }
         }
     })
 
