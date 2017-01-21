@@ -1,0 +1,3 @@
+merge:
+  fast-forward: only
+  script: echo "Nothing to do."
