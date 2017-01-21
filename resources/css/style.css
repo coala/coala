@@ -1,4 +1,3 @@
-
 .tabs .tab {
   display: inline-block;
   text-align: center;
@@ -6,9 +5,7 @@
   height: 48px;
   padding: 0;
   margin: 0;
-
 }
-
 .tabs .tab a {
   color: lightslategrey !important;
   display: block;
@@ -20,18 +17,16 @@
   overflow: hidden;
   transition: color .28s ease;
 }
-
-.tabs .tab a:hover, .tabs .tab a.active {
+.tabs .tab a:hover,
+.tabs .tab a.active {
   background-color: transparent;
   color: black !important;
 }
-
 .tabs .tab.disabled a,
 .tabs .tab.disabled a:hover {
   color: rgba(238, 110, 115, 0.7);
   cursor: default;
 }
-
 .tabs .indicator {
   position: absolute;
   bottom: 0;
@@ -41,82 +36,72 @@
   margin-left: 3em;
   margin-right: 3em;
 }
-.title{
+.title {
   font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   font-size: 14em;
   font-weight: 100;
   text-align: center;
 }
-
-.title-get-involved{
+.title-get-involved {
   font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   font-size: 5em;
   font-weight: 100;
   text-align: center;
 }
-
-.main-content{
+.main-content {
   margin-top: 2em;
 }
-
-.logo{
-  height:15em;
+.logo {
+  height: 15em;
   margin-top: 4em;
-
 }
-.tabs{
+.tabs {
   font-family: Roboto;
   font-size: 1em;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
-.description{
+.description {
   font-family: Roboto;
   font-size: 1.6em;
   text-align: center;
   font-weight: 300;
 }
-
-pre{
+pre {
   background-color: #2b2b2b !important;
   color: #fff;
-  padding:.8em;
+  padding: .8em;
   font-family: 'Roboto Mono', Menlo, "Ubuntu Mono", monospace;
 }
-
-.terminal-install{
+.terminal-install {
   margin-top: 1em;
 }
-.dev-row{
+.dev-row {
   border-top: 1px solid lightgrey;
-  padding-left:1em;
+  padding-left: 1em;
   padding-right: 1em;
   margin-bottom: 0px !important;
   padding-top: 2em;
   padding-bottom: 2em;
-
 }
-.no-border{
+.no-border {
   border-top: 0px !important;
 }
-
-.tip-big{
+.tip-big {
   font-size: 1.5em;
   font-weight: 300;
   text-align: justify;
 }
-.install-tip{
+.install-tip {
   margin-left: 5em;
   margin-right: 5em;
   margin-top: 3em;
 }
-
-.examples{
+.examples {
   margin-left: 5em;
   margin-right: 5em;
   margin-top: 3em;
 }
-
 span.caret {
   color: initial;
   position: absolute;
@@ -125,12 +110,10 @@ span.caret {
   font-size: 10px;
   padding-left: 10px;
 }
-
 .select-wrapper input.select-dropdown {
   background-color: rgba(40, 53, 147, 0.1);
   width: 100%;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 0;
   border: 1px solid #f2f2f2;
   border-top-color: rgb(242, 242, 242);
   border-top-style: solid;
@@ -152,142 +135,142 @@ span.caret {
   border-radius: 2px !important;
   height: 3rem !important;
 }
-
-.example-card{
-  padding:2em;
+.example-card {
+  padding: 2em;
 }
-.example-select{
-  padding:2em;
+.example-select {
+  padding: 2em;
 }
-
-.footer-text{
+.footer-text {
   text-align: center;
   color: lightslategrey;
   font-family: Roboto;
   padding: 1em;
-
 }
-
-.ft-span{
- text-transform: uppercase;
- letter-spacing: 0.1em;
+.ft-span {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
-.container-title{
+.container-title {
   font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   font-size: 3em;
   font-weight: 100;
-
 }
 body {
   display: flex !important;
   min-height: 100vh !important;
   flex-direction: column !important;
 }
-
 main {
   flex: 1 0 auto;
 }
-
-footer.page-footer
-{
-  margin-top:20px;
-  padding-top:20px;
-  background-color: #37474f !important; 
+footer.page-footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  background-color: #37474f !important;
 }
-footer.page-footer .footer-copyright{
-  overflow:hidden;
-  height:50px;
-  line-height:50px;
-  background-color:  #263238 !important;    
+footer.page-footer .footer-copyright {
+  overflow: hidden;
+  height: 50px;
+  line-height: 50px;
+  background-color: #263238 !important;
 }
-
-input:not([type]), input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+input:not([type]),
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=time],
+input[type=date],
+input[type=datetime],
+input[type=datetime-local],
+input[type=tel],
+input[type=number],
+input[type=search],
+textarea.materialize-textarea {
   background-color: lightgray;
   padding-left: 0.5em !important;
 }
-#search{
-  font-size: 24px !important;
+#search {
+  font-size: 24px;
   border: none !important;
   font-family: Roboto !important;
   font-weight: 500;
   color: black !important;
   box-shadow: none !important;
 }
-
-.btn:hover, .btn-large:hover{
+.btn:hover,
+.btn-large:hover {
   background-color: #424242 !important;
 }
-.btn, .btn-large{
+.btn,
+.btn-large {
   background-color: black !important;
 }
-
 ::-webkit-input-placeholder {
   font-weight: 200;
-
-  color: #9e9e9e ;
+  color: #9e9e9e;
 }
-
 :-moz-placeholder {
   /* Firefox 18- */
+  
   font-weight: 200;
-
   color: #d1d1d1;
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
+  
   font-weight: 200;
-
   color: #d1d1d1;
 }
 :-ms-input-placeholder {
   font-weight: 200;
-
   color: #d1d1d1;
 }
-.card-title{
+.card-title {
   overflow-wrap: break-word !important;
 }
-.coa-form{
+.coa-form {
   margin-top: 2em;
 }
-.file-data{
+.file-data {
   height: 10rem;
 }
-.bb-data{
+.bb-data {
   background: black;
   color: white;
   font-family: "Ubuntu Mono";
   padding: 0.7em;
 }
-.val-diff{
+.val-diff {
   padding: 0.5em !important;
   font-size: 0.8em !important;
 }
-.results-row{
+.results-row {
   background: #b0bec5;
   padding: 1em;
   margin-top: 1em;
 }
-.submit-coa-form{
+.submit-coa-form {
   text-transform: none !important;
 }
-.origin-diff{
-  padding:0.5em;
+.origin-diff {
+  padding: 0.5em;
   background-color: #263238;
   color: white;
 }
-.severity-diff{
+.severity-diff {
   padding: 0.5em;
-  background-color: #37474f ;
-  color:white;
+  background-color: #37474f;
+  color: white;
 }
-.data-diff{
+.data-diff {
   margin-top: 1em;
   padding: 0.5em;
-  background-color: #455a64 ;
+  background-color: #455a64;
   color: white
 }
-.report-title{
+.report-title {
   font-family: Roboto;
   font-size: 1.5em;
   text-align: left;
@@ -295,64 +278,62 @@ input:not([type]), input[type=text], input[type=password], input[type=email], in
   font-weight: 700;
   letter-spacing: 0.2em;
 }
-.footer-coala{
+.footer-coala {
   font-size: 42px;
   font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   font-weight: 100;
   float: left;
 }
-.footer-logo{
+.footer-logo {
   float: right;
   margin-top: 0.6em;
 }
-.footer-coala-row{
+.footer-coala-row {
   margin: 0 !important;
 }
-.snippet-card{
+.snippet-card {
   white-space: pre-line !important;
   margin: 0;
 }
-.showcase{
+.showcase {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 4em;
 }
-
-.showcase-card{
+.showcase-card {
   width: 300px;
   margin-left: 0.5em;
   margin-right: 0.5em;
-
 }
-.card-title{
+.card-title {
   padding-left: 1em;
   padding-top: 0.3em;
 }
-.name-bear{
+.name-bear {
   font-size: 22px !important;
 }
-a > .card{
+a > .card {
   color: black !important;
 }
-a:hover > .card{
+a:hover > .card {
   color: black !important;
 }
-.modal{
+.modal {
   width: 100% !important;
   border-radius: 0px !important;
 }
-.profile{
+.profile {
   background-color: #000;
   color: #fff;
 }
-.dashboard{
+.dashboard {
   background-color: darkslategrey;
 }
-.modal-content-bear{
+.modal-content-bear {
   display: flex
 }
-.bear-name{
+.bear-name {
   font-size: 3em;
   text-align: center;
   padding-right: 1em;
@@ -361,7 +342,7 @@ a:hover > .card{
   font-weight: 100;
   overflow-wrap: break-word;
 }
-.bear-description{
+.bear-description {
   color: lightgrey;
   text-align: justify;
   font-size: 1.5em;
@@ -369,63 +350,115 @@ a:hover > .card{
   font-weight: 300;
   padding: 1em;
 }
-.candetect{
+.candetect {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
-.small-heading{
+.small-heading {
   font-size: 0.9em;
   padding: 0.5em;
   font-weight: 400;
   color: lightgoldenrodyellow;
   letter-spacing: 0.1em;
 }
-.authors{
+.authors {
   font-size: 14px;
   color: wheat;
   font-weight: 400;
 }
-.author-row{
+.author-row {
   padding-top: 20%;
 }
-.snippet-card{
+.snippet-card {
   padding: 1em;
 }
-.snippet-span{
+.snippet-span {
   float: left;
   clear: left;
   font-family: 'Roboto Mono', monospace !important;
-} 
-.footer-title{    
-  font-family:apple-system, BlinkMacSystemFont, Roboto, sans-serif;   
-  font-weight: 100;   
-}   
-.footer-small-title{    
-  text-transform: uppercase !important;   
-  color: lightcyan !important;    
-  letter-spacing: 0.1em !important;   
-  padding: 1em !important;    
-  text-align: center;   
-}   
-.page-footer li a:hover{    
-  opacity: 1;   
-}   
-.page-footer li a{    
-  opacity: 0.6;   
-  cursor: pointer !important;   
-}   
-.page-footer li{    
-  padding: 0.2em;   
-}   
-.footer-btn-text{   
-  vertical-align: top;    
-  padding-left: 1em;    
-}   
-.footer-btn-row{    
- text-transform: uppercase;   
- margin-top: 1.5em;   
-}     
-.footer-small-title-row{    
-  margin-bottom: 0 !important;    
-} 
+}
+.footer-title {
+  font-family: apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-weight: 100;
+}
+.footer-small-title {
+  text-transform: uppercase !important;
+  color: lightcyan !important;
+  letter-spacing: 0.1em !important;
+  padding: 1em !important;
+  text-align: center;
+}
+.page-footer li a:hover {
+  opacity: 1;
+}
+.page-footer li a {
+  opacity: 0.6;
+  cursor: pointer !important;
+}
+.page-footer li {
+  padding: 0.2em;
+}
+.footer-btn-text {
+  vertical-align: top;
+  padding-left: 1em;
+}
+.footer-btn-row {
+  text-transform: uppercase;
+  margin-top: 1.5em;
+}
+.footer-small-title-row {
+  margin-bottom: 0 !important;
+}
+nav {
+  background: transparent;
+  box-shadow: 0 0 0 0;
+}
+nav a {
+  color: black;
+}
+.side-nav li {
+  padding-top: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+@media (max-width: 768px) {
+  .title {
+      font-size: 6em;
+  }
+  .install-tip {
+      margin-left: 0em;
+      margin-right: 0em;
+      margin-top: 0em;
+  }
+  .examples {
+      margin-left: 0em;
+      margin-right: 0em;
+      margin-top: 0em;
+  }
+  .gitter-btn {
+      margin-top: 1em;
+  }
+  nav {
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
+  }
+  .tab-container {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100%
+  }
+  .tab-container > .row{
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+  }
+  .logo {
+      height: 10em;
+      margin-top: 1em;
+  }
+  #search {
+      font-size: 1em;
+  }
+  .gi-container-title {
+      font-size: 3.5em !important;
+  }
+}

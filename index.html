@@ -5,6 +5,7 @@
 
     <title>coala</title>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="vendors/jquery/jquery.min.js"></script>
     <script src="vendors/materialize/js/materialize.min.js"></script>
     <script src="components/angular/angular.min.js"></script>
@@ -30,16 +31,26 @@
 <body>
 <main>
 <div ng-controller="TabController as tc">
-    <div class="container">
+    <div class="container tab-container">
         <div class="row">
-            <div class="col s12">
-                <ul class="tabs">
+        <nav>
+            <div class="col s12 nav-wrapper">
+              <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+
+                <ul class="tabs hide-on-med-and-down">
                     <li class="tab col s3"><a ng-click="tc.setTab(1)" ng-class="{active:tc.isSet(1)}">Home</a></li>
                     <li class="tab col s3"><a ng-click="tc.setTab(2)" ng-class="{active:tc.isSet(2)}">Languages</a></li>
                     <li class="tab col s3"><a ng-click="tc.setTab(3)" ng-class="{active:tc.isSet(3)}">Get Involved</a></li>
                     <li class="tab col s3"><a ng-click="tc.setTab(4)" ng-class="{active:tc.isSet(4)}">Try Coala!</a></li>
                 </ul>
+                 <ul class="side-nav" id="mobile-demo">
+                    <li class="tab col-md-12"><a ng-click="tc.setTab(1)" ng-class="{active:tc.isSet(1)}">Home</a></li>
+                    <li class="tab col-md-12"><a ng-click="tc.setTab(2)" ng-class="{active:tc.isSet(2)}">Languages</a></li>
+                    <li class="tab col-md-12"><a ng-click="tc.setTab(3)" ng-class="{active:tc.isSet(3)}">Get Involved</a></li>
+                    <li class="tab col-md-12"><a ng-click="tc.setTab(4)" ng-class="{active:tc.isSet(4)}">Try Coala!</a></li>
+                </ul>
             </div>
+            </nav>
         </div>
     </div>
 
@@ -70,6 +81,7 @@
 $(document).ready(function () {
             $('select').material_select();
             //$('ul.tabs').tabs();
+            $(".button-collapse").sideNav();
             $('.github-card').html('<img src="http://placehold.it/100x100" />')
 })
 </script>

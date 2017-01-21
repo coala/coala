@@ -16,6 +16,7 @@
 		this.tab = 1
 		this.setTab = function (stab) {
 			this.tab = stab
+			$(".button-collapse").sideNav('hide');
 		}
 		this.isSet = function (stab) {
 			return this.tab == stab
