@@ -1,83 +1,72 @@
 language: python
 python:
-  - 2.7
-  - 3.3
-  - 3.4
-  - 3.5
-  - 3.6-dev
-
+- 2.7
+- 3.3
+- 3.4
+- 3.5
+- 3.6-dev
 matrix:
   include:
-    - os: osx
-      osx_image: xcode6.4
-      language: bash
-      python: 3.6
-      env:
-        - DYLD_LIBRARY_PATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/
-      cache:
-        directories:
-          - ~/Library/Caches/pip
-
+  - os: osx
+    osx_image: xcode6.4
+    language: bash
+    python: 3.6
+    env:
+    - DYLD_LIBRARY_PATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/
+    cache:
+      directories:
+      - "~/Library/Caches/pip"
 cache: pip
-
 addons:
   apt:
     packages:
-      - clang-3.4
+    - clang-3.4
     sources:
-      - llvm-toolchain-precise
-
+    - llvm-toolchain-precise
 before_install:
-  - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
-  - export TRAVIS_PYTHON_VERSION_MAJOR=${TRAVIS_PYTHON_VERSION%.[0-9]}
-  - export TRAVIS_PYTHON_VERSION_MINOR=${TRAVIS_PYTHON_VERSION#[0-9].}
-
-  - >
-    if [[ $TRAVIS_OS_NAME == osx ]]; then
-      brew install python3
-      sudo ln -sf $(which python3) $(which python)
-      sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
-    fi
-
-  # https://github.com/coala/coala/issues/3183
-  # Travis automatically installs the `requirements.txt` in "install" stage
-  - cp requirements.txt requirements.orig
-  - cat test-requirements.txt docs-requirements.txt >> requirements.txt
-  - sed -i.bak '/^-r/d' requirements.txt
-
-  # OSX is not a real Travis 'python' image, so it does not install
-  # requirements.txt automatically.
-  - if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
-
+- if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
+- export TRAVIS_PYTHON_VERSION_MAJOR=${TRAVIS_PYTHON_VERSION%.[0-9]}
+- export TRAVIS_PYTHON_VERSION_MINOR=${TRAVIS_PYTHON_VERSION#[0-9].}
+- |
+  if [[ $TRAVIS_OS_NAME == osx ]]; then
+    brew install python3
+    sudo ln -sf $(which python3) $(which python)
+    sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
+  fi
+- cp requirements.txt requirements.orig
+- cat test-requirements.txt docs-requirements.txt >> requirements.txt
+- sed -i.bak '/^-r/d' requirements.txt
+- if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
 before_script:
-  # Restore the original requirements.txt
-  - mv requirements.orig requirements.txt
-
+- mv requirements.orig requirements.txt
 script:
-  - >
-    if [[ $TRAVIS_PYTHON_VERSION_MINOR < 4 || $TRAVIS_PYTHON_VERSION_MAJOR == 2 ]]; then
-      coverage run setup.py install | grep -q 'coala supports only python 3.4 or later'
+- |
+  echo "WE ARE HERE"
+  echo "$SOMEVAR"
+  if [[ $TRAVIS_PYTHON_VERSION_MINOR < 4 || $TRAVIS_PYTHON_VERSION_MAJOR == 2 ]]; then
+    coverage run setup.py install | grep -q 'coala supports only python 3.4 or later'
+  else
+    set -e
+    bash .misc/tests.sh
+    python setup.py bdist_wheel
+    pip install ./dist/coala-*.whl
+    pip install coala-bears[alldeps] --pre -U
+    # https://github.com/coala/coala-bears/issues/1037
+    if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
+      python3 -m nltk.downloader punkt maxent_treebank_pos_tagger averaged_perceptron_tagger
     else
-      set -e
-      bash .misc/tests.sh
-      python setup.py bdist_wheel
-      pip install ./dist/coala-*.whl
-      pip install coala-bears[alldeps] --pre -U
-      # https://github.com/coala/coala-bears/issues/1037
-      if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
-        python3 -m nltk.downloader punkt maxent_treebank_pos_tagger averaged_perceptron_tagger
-      else
-        sed -i.bak '/bears = GitCommitBear/d' .coafile
-      fi
-      coala --non-interactive
-      make -C docs clean
-      python setup.py docs
+      sed -i.bak '/bears = GitCommitBear/d' .coafile
     fi
-  - bash .misc/deploy.coverage.sh
-
+    coala --non-interactive
+    make -C docs clean
+    python setup.py docs
+  fi
+- bash .misc/deploy.coverage.sh
 notifications:
   email: false
-
 branches:
   exclude:
-    - /^sils\//
+  - "/^sils\\//"
+env:
+  global:
+    secure: n/c5d/dJmIrAL0Qx1q3LGK0o8auvndA8Cdry1rcaYgoBoLsK1ycnE5m5jAKtDsxCf23UMvgvzT2QTXRhKlqQBALvN43I50sgA0shFaOrLD1Bv6fej8Nc5ISTGIh03I8pxDP8lKlLLlmZzPAZHMBZUMPck9rwKuq56Snv9B1a4fo/X8Ybj/DAet9Wk1lYFvK2ZN3s0Oze5Xh/GCBow2Qhni0CrgvM094yG751TqvD6bA6npzyReeedW0vGx7P6jGD1s0Ca5uOr4C5+Acm5UQo0bLolBg7fTbILkJxEV8U3JulAgLVxLaO3QI5yYhLARNzW0dtWIHBWPbIlNSh2a4ZGGq63FtM2NSE/GAqC4t3glO76lNt3nSxFPFESlH5O7Fm7J6sscnlKXKdFm8Vx04mdz5FiF0hM8iCi1U6WSiVLrGFblSzfCrjO8gp2o6ZxaChK0Hr+dUdnuatPOXV+yrh4WdG4rjrOdiTpcIaTCyU/Haet/1ReH9hAdUzn3Id1Vx348TAIGVrY3WlIIYYxM88GS6TZKb6wwmHHKNFTi8vh5lYYcHl/Lft/W9RNVTfTSTvk2EyjI7wyPNhGsJw9sO15JQIin2+LEQRvE5gLYizNf5OhRVKywEnHTMOG0TcBBfCNLl8xmWzz7TxyZE5nP5OVx7rzOnzzOz9h4IeNXjjgAs=
