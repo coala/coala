@@ -26,7 +26,7 @@
 	app.directive('home', function () {
 		return {
 			restrict: 'E',
-			templateUrl: '/partials/tabs/home.html'
+			templateUrl: 'partials/tabs/home.html'
 		}
 	})
 
@@ -35,7 +35,7 @@
 	app.directive('languages',  ['$http',  '$timeout' ,function ($http, $timeout) {
 		return {
 			restrict: 'E',
-			templateUrl: '/partials/tabs/languages.html',
+			templateUrl: 'partials/tabs/languages.html',
 			controller: function ($scope, $sessionStorage) {
 				self = this
 				$scope.$storage = $sessionStorage
@@ -92,7 +92,7 @@
 	app.directive('tryonline',[ '$http', function ($http) {
 		return {
 			restrict: 'E',
-			templateUrl: '/partials/tabs/tryonline.html',
+			templateUrl: 'partials/tabs/tryonline.html',
 			controller: function () {
 				self = this;
 				self.diff_data = {};
@@ -159,7 +159,7 @@
 	app.directive('getinvolved', ['$http', function ($http) {
 		return {
 			restrict: 'E',
-			templateUrl: '/partials/tabs/getinvolved.html',
+			templateUrl: 'partials/tabs/getinvolved.html',
 			controller: function ($scope, $sessionStorage) {
 				var self = this
 				$scope.$get_involved_storage = $sessionStorage
