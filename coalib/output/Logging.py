@@ -44,7 +44,7 @@ def configure_logging(color=True):
     logging.config.dictConfig({
         'version': 1,
         'handlers': {
-            'colored': {
+            'console-handler': {
                 'class': 'logging.StreamHandler',
                 'formatter': 'colored' if color else 'plain',
                 'stream': sys.stderr
@@ -58,7 +58,7 @@ def configure_logging(color=True):
             'handlers': ['colored', 'counter']
         },
         'formatters': {
-            'colored': {
+            'color': {
                 '()': 'colorlog.ColoredFormatter',
                 'format': '%(log_color)s[%(levelname)s]%(reset)s[%(asctime)s]'
                           ' %(message)s',
@@ -91,7 +91,7 @@ def configure_json_logging():
     logging.config.dictConfig({
         'version': 1,
         'handlers': {
-            'json': {
+            'json-handler': {
                 'class': 'logging.StreamHandler',
                 'formatter': 'json',
                 'stream': stream
