@@ -2,9 +2,7 @@ import traceback
 from functools import partial
 from os import makedirs
 from os.path import join, abspath, exists
-from shutil import copyfileobj
-from urllib.request import urlopen
-
+import requests
 from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
@@ -388,8 +386,10 @@ class Bear(Printer, LogPrinterMixin):
         self.info('Downloading {filename!r} for bear {bearname} from {url}.'
                   .format(filename=filename, bearname=self.name, url=url))
 
-        with urlopen(url) as response, open(filename, 'wb') as out_file:
-            copyfileobj(response, out_file)
+        response = requests.get(url, stream=True, timeout=20)
+        with open(filename, 'wb') as file:
+            for chunk in response.iter_content(125):
+                file.write(chunk)
         return filename
 
     @classproperty

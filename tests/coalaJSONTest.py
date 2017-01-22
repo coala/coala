@@ -39,6 +39,9 @@ class coalaJSONTest(unittest.TestCase):
             output = json.loads(output)
             self.assertEqual(output['results']['default'][0]['message'],
                              'This file has 1 lines.')
+            self.assertEqual(output['results']['default'][0]
+                             ['message_arguments'],
+                             {})
             self.assertNotEqual(retval, 0,
                                 'coala-json must return nonzero when '
                                 'results found')

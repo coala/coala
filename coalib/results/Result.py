@@ -20,7 +20,8 @@ from coalib.results.SourceRange import SourceRange
                    'severity',
                    'confidence',
                    'origin',
-                   'message',
+                   'message_base',
+                   'message_arguments',
                    'aspect',
                    'additional_info',
                    'debug_msg')
@@ -29,6 +30,22 @@ class Result:
     A result is anything that has an origin and a message.
 
     Optionally it might affect a file.
+
+    Result messages can also have arguments. The message is python
+    style formatted with these arguments.
+
+    >>> r = Result('origin','{arg1} and {arg2}', \
+           message_arguments={'arg1': 'foo', 'arg2': 'bar'})
+    >>> r.message
+    'foo and bar'
+
+    Message arguments may be changed later. The result message
+    will also reflect these changes.
+
+    >>> r.message_arguments = {'arg1': 'spam', 'arg2': 'eggs'}
+    >>> r.message
+    'spam and eggs'
+
     """
 
     @enforce_signature
@@ -41,12 +58,15 @@ class Result:
                  debug_msg='',
                  diffs: (dict, None)=None,
                  confidence: int=100,
-                 aspect: (aspectbase, None)=None):
+                 aspect: (aspectbase, None)=None,
+                 message_arguments: dict={}):
         """
         :param origin:
             Class name or creator object of this object.
         :param message:
-            Message to show with this result.
+            Base message to show with this result.
+        :param message_arguments:
+            Arguments to be provided to the base message
         :param affected_code:
             A tuple of SourceRange objects pointing to related positions in the
             source code.
@@ -72,6 +92,9 @@ class Result:
             the leafs exactly your result belongs to.)
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
+        :raises KeyError:
+            Raised when message_base can not be formatted with
+            message_arguments.
         """
         origin = origin or ''
         if not isinstance(origin, str):
@@ -80,7 +103,10 @@ class Result:
             raise ValueError('severity is not a valid RESULT_SEVERITY')
 
         self.origin = origin
-        self.message = message
+        self.message_base = message
+        self.message_arguments = message_arguments
+        if message_arguments:
+            self.message_base.format(**self.message_arguments)
         self.debug_msg = debug_msg
         self.additional_info = additional_info
         # Sorting is important for tuple comparison
@@ -92,6 +118,16 @@ class Result:
         self.diffs = diffs
         self.id = uuid.uuid4().int
         self.aspect = aspect
+
+    @property
+    def message(self):
+        if not self.message_arguments:
+            return self.message_base
+        return self.message_base.format(**self.message_arguments)
+
+    @message.setter
+    def message(self, value: str):
+        self.message_base = value
 
     @classmethod
     @enforce_signature
@@ -108,7 +144,8 @@ class Result:
                     debug_msg='',
                     diffs: (dict, None)=None,
                     confidence: int=100,
-                    aspect: (aspectbase, None)=None):
+                    aspect: (aspectbase, None)=None,
+                    message_arguments: dict={}):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
@@ -116,7 +153,9 @@ class Result:
         :param origin:
             Class name or creator object of this object.
         :param message:
-            Message to show with this result.
+            Base message to show with this result.
+        :param message_arguments:
+            Arguments to be provided to the base message
         :param file:
             The related file.
         :param line:
@@ -162,7 +201,8 @@ class Result:
                    debug_msg=debug_msg,
                    diffs=diffs,
                    confidence=confidence,
-                   aspect=aspect)
+                   aspect=aspect,
+                   message_arguments=message_arguments)
 
     def to_string_dict(self):
         """
@@ -181,6 +221,8 @@ class Result:
                    'additional_info',
                    'debug_msg',
                    'message',
+                   'message_base',
+                   'message_arguments',
                    'origin',
                    'confidence']
 

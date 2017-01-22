@@ -30,6 +30,13 @@ class ResultTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             Result('o', 'm', confidence=101)
 
+    def test_message_arguments(self):
+        uut = Result('origin', '{msg}', message_arguments={'msg': 'msg'})
+        self.assertEqual(uut.message, 'msg')
+
+        with self.assertRaises(KeyError):
+            Result('origin', '{msg}', message_arguments={'message': 'msg'})
+
     def test_string_dict(self):
         uut = Result(None, '')
         output = uut.to_string_dict()
@@ -41,10 +48,13 @@ class ResultTest(unittest.TestCase):
                                   'severity': 'NORMAL',
                                   'debug_msg': '',
                                   'additional_info': '',
-                                  'confidence': '100'})
+                                  'confidence': '100',
+                                  'message_base': '',
+                                  'message_arguments': '{}'})
 
         uut = Result.from_values(origin='origin',
-                                 message='msg',
+                                 message='{test} msg',
+                                 message_arguments={'test': 'test'},
                                  file='file',
                                  line=2,
                                  severity=RESULT_SEVERITY.INFO,
@@ -54,13 +64,15 @@ class ResultTest(unittest.TestCase):
         output = uut.to_string_dict()
         self.assertEqual(output, {'id': str(uut.id),
                                   'origin': 'origin',
-                                  'message': 'msg',
+                                  'message': 'test msg',
                                   'file': abspath('file'),
                                   'line_nr': '2',
                                   'severity': 'INFO',
                                   'debug_msg': 'dbg',
                                   'additional_info': 'hi!',
-                                  'confidence': '50'})
+                                  'confidence': '50',
+                                  'message_base': '{test} msg',
+                                  'message_arguments': '{\'test\': \'test\'}'})
 
         uut = Result.from_values(origin='o', message='m', file='f', line=5)
         output = uut.to_string_dict()

@@ -1,8 +1,9 @@
 appdirs~=1.4
 coala_utils~=0.6.0
 colorlog~=2.7
-dependency_management~=0.3.0
+dependency_management~=0.3.1
 # libclang-py3 version numbering maps to the clang releases
 libclang-py3~=3.4.0
 Pygments~=2.1
 PyPrint~=0.2.6
+requests~=2.12.0

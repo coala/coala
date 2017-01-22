@@ -352,5 +352,7 @@ go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
     If you need help picking up an issue, you can always ask us and we'll help
     you!
 
+    If you ever have problems in finding some links maybe you can find
+    the solution in our :doc:`useful links section <Useful_Links>`.
 
 .. _this page: https://docs.coala.io/en/latest/Help/FAQ.html#what-are-those-things-failing-passing-on-my-pull-request
