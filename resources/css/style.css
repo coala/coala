@@ -417,6 +417,9 @@ nav {
 nav a {
   color: black;
 }
+ul li a{
+  color:inherit;
+}
 .side-nav li {
   padding-top: 1em;
   text-transform: uppercase;
