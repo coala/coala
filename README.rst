@@ -238,6 +238,14 @@ meta information in `setup.py <setup.py>`__ for the current maintainers.
 
 -----
 
+======
+Awards
+======
+
+.. image:: http://www.yegor256.com/images/award/2016/winner-sils.png
+
+-----
+
 =======
 License
 =======
