@@ -4,6 +4,7 @@ Thanks for your contribution!
 Reviewing pull requests takes a lot of time and we're all volunteers. Please make sure you go through the following checklist and all items before pinging someone for a review.
 -->
 
+
 ### Checklist
 
 - [ ] I have rebased properly. Please see [our tutorial on rebasing](http://coala.io/git#rebasing).
@@ -12,6 +13,8 @@ Reviewing pull requests takes a lot of time and we're all volunteers. Please mak
 - [ ] I have followed the [guidelines for the commit body](http://coala.io/commit#commit-body).
 - [ ] I have included the issue URL with the 'Fixes' keyword if the commit fixes a *real bug* and the 'Closes' keyword if it adds a feature or enhancement. For details, check the [issue reference section in our commit guidelines](http://coala.io/commit#issue-reference).
 - [ ] I have [run all the tests](http://api.coala.io/en/latest/Developers/Executing_Tests.html) and they all pass. If any CI (below) is not green, please fix them. If GitMate issues appear you will have to amend your commits, pushing new commits on top is not sufficient!
+
+> **After submitting the pull request, DO NOT click the 'Update Branch' button**
 
 ### Reviewers
 
