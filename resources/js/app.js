@@ -1,5 +1,25 @@
 (function(){
-	var app = angular.module('coala', ['ngStorage']);
+	var app = angular.module('coala', ['ngStorage','ngRoute']);
+
+    app.config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider.
+            when('/home', {
+                template: '<home></home>'
+            }).
+            when('/languages', {
+                template: '<languages></languages>'
+            }).
+            when('/getinvolved', {
+                template: '<getinvolved></getinvolved>'
+            }).
+            when('/tryonline', {
+                template: '<tryonline></tryonline>'
+            }).
+            otherwise({
+                redirectTo: '/home'
+            });
+        }]);
 
 	app.controller('SnippetController', function(){
 
