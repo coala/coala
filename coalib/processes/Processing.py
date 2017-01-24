@@ -237,8 +237,7 @@ def print_result(results,
                                         section,
                                         log_printer)
 
-    print_results(log_printer,
-                  section,
+    print_results(section,
                   patched_results,
                   file_dict,
                   file_diff_dict,

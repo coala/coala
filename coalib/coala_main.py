@@ -127,7 +127,7 @@ def run_coala(console_printer=None,
             cache.write()
 
         if did_nothing:
-            nothing_done(log_printer)
+            nothing_done()
             exitcode = 2
         elif yielded_unfixed_results:
             exitcode = 1

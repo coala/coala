@@ -1,4 +1,7 @@
-def fail_acquire_settings(log_printer, settings_names_dict, section):
+import logging
+
+
+def fail_acquire_settings(settings_names_dict, section):
     """
     This method throws an exception if any setting needs to be acquired.
 
@@ -22,5 +25,5 @@ def fail_acquire_settings(log_printer, settings_names_dict, section):
         for name, setting in settings_names_dict.items():
             msg += '{} (from {}) - {}'.format(name, setting[1], setting[0])
 
-        log_printer.err(msg)
+        logging.error(msg)
         raise AssertionError

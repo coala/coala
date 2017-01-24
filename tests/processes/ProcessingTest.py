@@ -96,7 +96,7 @@ class ProcessingTest(unittest.TestCase):
         results = execute_section(self.sections['default'],
                                   self.global_bears['default'],
                                   self.local_bears['default'],
-                                  lambda *args: self.result_queue.put(args[2]),
+                                  lambda *args: self.result_queue.put(args[1]),
                                   cache,
                                   self.log_printer,
                                   console_printer=self.console_printer)
@@ -113,7 +113,6 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(len(results[1]), 1)
         # One global bear
         self.assertEqual(len(results[2]), 1)
-
         local_result = local_results[0]
         global_result = global_results[0]
 
@@ -213,7 +212,7 @@ class ProcessingTest(unittest.TestCase):
                    '# Start ignoring ABear, BBear and CBear\n',
                    '# Stop ignoring\n',
                    'seventh']},
-            lambda *args: self.queue.put(args[2]),
+            lambda *args: self.queue.put(args[1]),
             section,
             None,
             self.log_printer,

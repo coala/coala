@@ -117,7 +117,6 @@ class SomelocalBear(Bear):
 class ConsoleInteractionTest(unittest.TestCase):
 
     def setUp(self):
-        self.log_printer = ListLogPrinter()
         self.console_printer = ConsolePrinter(print_colored=False)
         self.no_color = not self.console_printer.print_colored
         self.file_diff_dict = {}
@@ -148,24 +147,21 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_require_settings(self):
         curr_section = Section('')
         self.assertRaises(TypeError, acquire_settings,
-                          self.log_printer, 0, curr_section)
+                          0, curr_section)
 
         with simulate_console_inputs(0, 1, 2) as generator:
-            self.assertEqual(acquire_settings(self.log_printer,
-                                              {'setting': ['help text',
+            self.assertEqual(acquire_settings({'setting': ['help text',
                                                            'SomeBear']},
                                               curr_section),
                              {'setting': 0})
 
-            self.assertEqual(acquire_settings(self.log_printer,
-                                              {'setting': ['help text',
+            self.assertEqual(acquire_settings({'setting': ['help text',
                                                            'SomeBear',
                                                            'AnotherBear']},
                                               curr_section),
                              {'setting': 1})
 
-            self.assertEqual(acquire_settings(self.log_printer,
-                                              {'setting': ['help text',
+            self.assertEqual(acquire_settings({'setting': ['help text',
                                                            'SomeBear',
                                                            'AnotherBear',
                                                            'YetAnotherBear']},
@@ -317,7 +313,6 @@ class ConsoleInteractionTest(unittest.TestCase):
             file_dict = {some_file: ['1\n', '2\n', '3\n']}
             affected_code = (SourceRange.from_values(some_file),)
             print_affected_files(self.console_printer,
-                                 self.log_printer,
                                  Result('origin',
                                         'message',
                                         affected_code=affected_code),
@@ -412,8 +407,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                     retrieve_stdout() as stdout:
                 ApplyPatchAction.is_applicable = staticmethod(
                     lambda *args: True)
-                print_results_no_input(self.log_printer,
-                                       Section('someSection'),
+                print_results_no_input(Section('someSection'),
                                        [Result('origin', 'message', diffs={
                                            testfile_path: diff})],
                                        file_dict,
@@ -433,21 +427,21 @@ Project wide:
             self.assertEqual(stdout.getvalue(), 'Executing section name...\n')
 
     def test_nothing_done(self):
-        nothing_done(self.log_printer)
-        self.assertEqual(['No existent section was targeted or enabled. '
-                          'Nothing to do.'],
-                         [log.message for log in self.log_printer.logs])
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'WARNING') as log:
+            nothing_done()
+        self.assertEqual(['WARNING:root:No existent section was targeted or '
+                          'enabled. Nothing to do.'], log.output)
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
-            print_results(self.log_printer, Section(''), [], {}, {},
+            print_results(Section(''), [], {}, {},
                           self.console_printer)
             self.assertEqual(stdout.getvalue(), '')
 
     def test_print_results_project_wide(self):
         with retrieve_stdout() as stdout:
-            print_results(self.log_printer,
-                          Section(''),
+            print_results(Section(''),
                           [Result('origin', 'message')],
                           {},
                           {},
@@ -461,16 +455,15 @@ Project wide:
 
     def test_print_results_for_file(self):
         with retrieve_stdout() as stdout:
-            print_results(
-                self.log_printer,
-                Section(''),
-                [Result.from_values('SpaceConsistencyBear',
-                                    'Trailing whitespace found',
-                                    file='filename',
-                                    line=2)],
-                {abspath('filename'): ['test line\n', 'line 2\n', 'line 3\n']},
-                {},
-                self.console_printer)
+            print_results(Section(''),
+                          [Result.from_values('SpaceConsistencyBear',
+                                              'Trailing whitespace found',
+                                              file='filename',
+                                              line=2)],
+                          {abspath('filename'): [
+                                   'test line\n', 'line 2\n', 'line 3\n']},
+                          {},
+                          self.console_printer)
             self.assertEqual("""\nfilename
 |   2| {}
 |    | [NORMAL] SpaceConsistencyBear:
@@ -480,20 +473,18 @@ Project wide:
                 stdout.getvalue())
 
         with retrieve_stdout() as stdout:
-            print_results(
-                self.log_printer,
-                Section(''),
-                [Result.from_values('SpaceConsistencyBear',
-                                    'Trailing whitespace found',
-                                    file='filename',
-                                    line=5)],
-                {abspath('filename'): ['test line\n',
-                                       'line 2\n',
-                                       'line 3\n',
-                                       'line 4\n',
-                                       'line 5\n']},
-                {},
-                self.console_printer)
+            print_results(Section(''),
+                          [Result.from_values('SpaceConsistencyBear',
+                                              'Trailing whitespace found',
+                                              file='filename',
+                                              line=5)],
+                          {abspath('filename'): ['test line\n',
+                                                 'line 2\n',
+                                                 'line 3\n',
+                                                 'line 4\n',
+                                                 'line 5\n']},
+                          {},
+                          self.console_printer)
             self.assertEqual("""\nfilename
 |   5| {}
 |    | [NORMAL] SpaceConsistencyBear:
@@ -504,8 +495,7 @@ Project wide:
 
     def test_print_results_sorting(self):
         with retrieve_stdout() as stdout:
-            print_results(self.log_printer,
-                          Section(''),
+            print_results(Section(''),
                           [Result.from_values('SpaceConsistencyBear',
                                               'Trailing whitespace found',
                                               file='file',
@@ -544,18 +534,16 @@ file
             SourceRange.from_values('another_file', 1, 3, 1, 5),
             SourceRange.from_values('another_file', 3, 3, 3, 5))
         with retrieve_stdout() as stdout:
-            print_results(
-                self.log_printer,
-                Section(''),
-                [Result('ClangCloneDetectionBear',
-                        'Clone Found',
-                        affected_code)],
-                {abspath('some_file'): ['line ' + str(i + 1) + '\n'
-                                        for i in range(10)],
-                 abspath('another_file'): ['line ' + str(i + 1)
-                                           for i in range(10)]},
-                {},
-                self.console_printer)
+            print_results(Section(''),
+                          [Result('ClangCloneDetectionBear',
+                                  'Clone Found',
+                                  affected_code)],
+                          {abspath('some_file'): ['line ' + str(i + 1) + '\n'
+                                                  for i in range(10)],
+                           abspath('another_file'): ['line ' + str(i + 1)
+                                                     for i in range(10)]},
+                          {},
+                          self.console_printer)
             self.assertEqual("""
 another_file
 |   1| li{0}{1}
@@ -580,16 +568,13 @@ some_file
                 stdout.getvalue())
 
     def test_print_results_missing_file(self):
-        self.log_printer.log_level = logging.CRITICAL
         with retrieve_stdout() as stdout:
-            print_results(
-                self.log_printer,
-                Section(''),
-                [Result('t', 'msg'),
-                 Result.from_values('t', 'msg', file='file', line=5)],
-                {},
-                {},
-                self.console_printer)
+            print_results(Section(''),
+                          [Result('t', 'msg'),
+                           Result.from_values('t', 'msg', file='file', line=5)],
+                          {},
+                          {},
+                          self.console_printer)
             self.assertEqual('\n' + STR_PROJECT_WIDE + '\n'
                              '|    | [NORMAL] t:\n'
                              '|    | {0}\n'
@@ -604,14 +589,13 @@ some_file
 
     def test_print_results_missing_line(self):
         with retrieve_stdout() as stdout:
-            print_results(
-                self.log_printer,
-                Section(''),
-                [Result.from_values('t', 'msg', file='file', line=5),
-                 Result.from_values('t', 'msg', file='file', line=6)],
-                {abspath('file'): ['line ' + str(i + 1) for i in range(5)]},
-                {},
-                self.console_printer)
+            print_results(Section(''),
+                          [Result.from_values('t', 'msg', file='file', line=5),
+                           Result.from_values('t', 'msg', file='file', line=6)],
+                          {abspath('file'): ['line ' + str(i + 1)
+                                             for i in range(5)]},
+                          {},
+                          self.console_printer)
             self.assertEqual('\n'
                              'file\n'
                              '|   5| {0}\n'
@@ -631,13 +615,11 @@ some_file
 
     def test_print_results_without_line(self):
         with retrieve_stdout() as stdout:
-            print_results(
-                self.log_printer,
-                Section(''),
-                [Result.from_values('t', 'msg', file='file')],
-                {abspath('file'): []},
-                {},
-                self.console_printer)
+            print_results(Section(''),
+                          [Result.from_values('t', 'msg', file='file')],
+                          {abspath('file'): []},
+                          {},
+                          self.console_printer)
             self.assertEqual(
                 '\nfile\n'
                 '|    | [NORMAL] t:\n'
@@ -769,7 +751,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
                            'column:None:end_line:None:end_column:None:'
                            'severity:1:severity_str:NORMAL:message:2\n')
         with retrieve_stdout() as stdout:
-            print_results_formatted(self.logger,
+            print_results_formatted(
                                     self.section,
                                     [Result('1', '2')],
                                     None,
@@ -778,8 +760,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
 
         self.section.append(Setting('format', 'True'))
         with retrieve_stdout() as stdout:
-            print_results_formatted(self.logger,
-                                    self.section,
+            print_results_formatted(self.section,
                                     [Result('1', '2')],
                                     None,
                                     None)
@@ -796,8 +777,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
         affected_code = (SourceRange.from_values('some_file', 5, end_line=7),
                          SourceRange.from_values('another_file', 5, 3, 5, 5))
         with retrieve_stdout() as stdout:
-            print_results_formatted(self.logger,
-                                    self.section,
+            print_results_formatted(self.section,
                                     [Result('1', '2', affected_code)],
                                     None,
                                     None)
@@ -805,19 +785,19 @@ class PrintFormattedResultsTest(unittest.TestCase):
 
     def test_bad_format(self):
         self.section.append(Setting('format', '{nonexistant}'))
-        print_results_formatted(self.logger,
-                                self.section,
-                                [Result('1', '2')],
-                                None,
-                                None)
-        self.assertRegex(''.join(log.message for log in self.logger.logs),
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'ERROR') as log:
+            print_results_formatted(self.section,
+                                    [Result('1', '2')],
+                                    None,
+                                    None)
+        self.assertRegex(log.output[0],
                          '.*Unable to print.*')
 
     def test_good_format(self):
         self.section.append(Setting('format', '{origin}'))
         with retrieve_stdout() as stdout:
-            print_results_formatted(self.logger,
-                                    self.section,
+            print_results_formatted(self.section,
                                     [Result('1', '2')],
                                     None,
                                     None)
@@ -825,26 +805,22 @@ class PrintFormattedResultsTest(unittest.TestCase):
 
     def test_format_str(self):
         self.section.append(Setting('format_str', '{origin}'))
-        print_results_formatted(self.logger,
-                                self.section,
-                                [Result('1', '2')],
-                                None,
-                                None)
-        self.assertRegex(self.logger.logs[0].message, '.*The setting '
-                         '"format_str" has been deprecated.*')
-        print_results_formatted(self.logger,
-                                self.section,
-                                [Result('1', '2')],
-                                None,
-                                None)
-        self.assertEqual(1, len(self.logger.logs))
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'WARNING') as log:
+            print_results_formatted(self.section,
+                                    [Result('1', '2')],
+                                    None,
+                                    None)
+        self.assertEqual('WARNING:root:The setting "format_str" has been'
+                         ' deprecated.'
+                         ' Please use "format" instead', log.output[0])
+        self.assertEqual(1, len(log.output))
 
     def test_empty_list(self):
         self.section.append(Setting('format', '{origin}'))
         # Shouldn't attempt to format the string None and will fail badly if
         # its done wrong.
-        print_results_formatted(None,
-                                self.section,
+        print_results_formatted(self.section,
                                 [],
                                 None,
                                 None,
