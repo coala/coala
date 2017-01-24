@@ -32,16 +32,17 @@
 		})
 	})
 
-	app.controller('TabController', function () {
-		this.tab = 1
-		this.setTab = function (stab) {
-			this.tab = stab
-			$(".button-collapse").sideNav('hide');
-		}
-		this.isSet = function (stab) {
-			return this.tab == stab
-		}
-	})
+    app.controller('TabController', function ($location) {
+        this.tab = "/home";
+        this.setTab = function (stab) {
+            this.tab = stab;
+            $location.path(stab);
+            $(".button-collapse").sideNav('hide');
+        }
+        this.isSet = function (stab) {
+            return this.tab == stab
+        }
+    })
 
 	app.directive('home', function () {
 		return {
