@@ -230,9 +230,6 @@ textarea.materialize-textarea {
 .card-title {
   overflow-wrap: break-word !important;
 }
-.coa-form {
-  margin-top: 2em;
-}
 .file-data {
   height: 10rem;
 }
