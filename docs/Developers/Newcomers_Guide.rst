@@ -11,8 +11,8 @@ follow this guide. We put a lot of work into this for you!
 Everyone in the coala community is expected to follow our
 `Code of Conduct <http://coala.io/coc>`_.
 
-To become part of the coala developers team, there's a few steps you need
-to complete. The newcomer process is as it follows:
+To become part of the coala developers team, there are a few steps you need
+to complete. The newcomer process is as follows:
 
 You will start as a newcomer, which is kind of a trial. If you complete the
 following tasks, you will become a developer at coala:
