@@ -9,6 +9,7 @@
     <script src="vendors/jquery/jquery.min.js"></script>
     <script src="vendors/materialize/js/materialize.min.js"></script>
     <script src="components/angular/angular.min.js"></script>
+    <script src="components/angular/angular-route.min.js"></script>
     <script type="text/javascript" src="resources/js/config.js"></script>
     <script type="text/javascript" src="resources/js/snippets.js"></script>
     <script type="text/javascript" src="resources/js/app.js"></script>
@@ -54,21 +55,7 @@
         </div>
     </div>
 
-<div ng-show="tc.isSet(1)">
-<home></home>
-</div>
-
-<div ng-show="tc.isSet(2)">
-<languages></languages>
-</div>
-
-<div ng-show="tc.isSet(3)">
-<getinvolved></getinvolved>
-</div>
-
-<div ng-show="tc.isSet(4)">
-<tryonline></tryonline>
-</div>
+<div ng-view=""></div>
 
 </div>
 </main>
