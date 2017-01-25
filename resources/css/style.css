@@ -461,4 +461,8 @@ ul li a{
   .gi-container-title {
       font-size: 3.5em !important;
   }
+  nav ul a span.badge {
+      line-height: 4em;
+      height: 40px;
+  }
 }
