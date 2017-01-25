@@ -1,10 +1,9 @@
 from contextlib import contextmanager
-import functools
 import shlex
-from subprocess import PIPE, Popen, call, DEVNULL
+from subprocess import PIPE
+from subprocess import Popen
 
 
-call_without_output = functools.partial(call, stdout=DEVNULL, stderr=DEVNULL)
 """
 Uses subprocess.call to execute a command, but suppresses the output and
 the errors.
@@ -102,7 +101,7 @@ def run_shell_command(command, stdin=None, **kwargs):
     """
     with run_interactive_shell_command(command, **kwargs) as p:
         ret = p.communicate(stdin)
-    return ret
+    return ret 
 
 
 def get_shell_type():  # pragma: no cover
