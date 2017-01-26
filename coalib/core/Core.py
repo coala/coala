@@ -5,6 +5,61 @@ import logging
 import multiprocessing
 
 
+def group(iterable, key=lambda x: x):
+    """
+    Groups elements (out-of-order) together in the given iterable.
+
+    Supports non-hashable keys by comparing keys with ``==``.
+
+    Accessing the groups is supported using the iterator as follows:
+
+    >>> for key, elements in group([1, 3, 7, 1, 2, 1, 2]):
+    ...     print(key, list(elements))
+    1 [1, 1, 1]
+    3 [3]
+    7 [7]
+    2 [2, 2]
+
+    You can control how elements are grouped by using the ``key`` parameter. It
+    takes a function with a single parameter and maps to the group.
+
+    >>> data = [(1, 2), (3, 4), (1, 9), (2, 10), (1, 11), (7, 2), (10, 2),
+    ...         (2, 1), (3, 7), (4, 5)]
+    >>> for key, elements in group(data, key=sum):
+    ...     print(key, list(elements))
+    3 [(1, 2), (2, 1)]
+    7 [(3, 4)]
+    10 [(1, 9), (3, 7)]
+    12 [(2, 10), (1, 11), (10, 2)]
+    9 [(7, 2), (4, 5)]
+
+    :param iterable:
+        The iterable to group elements in.
+    :param key:
+        The key-function mapping an element to its group.
+    :return:
+        An iterable yielding tuples with ``key, elements``, where ``elements``
+        is also an iterable yielding the elements grouped under ``key``.
+    """
+    keys = []
+    elements = []
+
+    for element in iterable:
+        k = key(element)
+
+        try:
+            position = keys.index(k)
+            element_list = elements[position]
+        except ValueError:
+            keys.append(k)
+            element_list = []
+            elements.append(element_list)
+
+        element_list.append(element)
+
+    return zip(keys, elements)
+
+
 def get_cpu_count():
     try:
         return multiprocessing.cpu_count()
