@@ -104,7 +104,7 @@ class CachingTest(unittest.TestCase):
         with bear_test_module(), \
                 prepare_file(['a=(5,6)'], None) as (lines, filename):
             with simulate_console_inputs('0'):
-                retval, output = execute_coala(
+                retval, stdout, stderr = execute_coala(
                     coala.main,
                     'coala',
                     '-c', os.devnull,
@@ -113,26 +113,29 @@ class CachingTest(unittest.TestCase):
                     '-f', re.escape(filename),
                     '-b', 'LineCountTestBear',
                     '-L', 'DEBUG')
-                self.assertIn('This file has', output)
+                self.assertIn('This file has', stdout)
+                self.assertIn('Running bear LineCountTestBear', stderr)
 
             # Due to the change in configuration from the removal of
             # ``--flush-cache`` this run will not be sufficient to
             # assert this behavior.
-            retval, output = execute_coala(
+            retval, stdout, stderr = execute_coala(
                 coala.main,
                 'coala',
                 '-c', os.devnull,
                 '-f', re.escape(filename),
                 '-b', 'LineCountTestBear')
-            self.assertIn('This file has', output)
+            self.assertIn('This file has', stdout)
+            self.assertIn(' During execution of coala', stderr)
 
-            retval, output = execute_coala(
+            retval, stdout, stderr = execute_coala(
                 coala.main,
                 'coala',
                 '-c', os.devnull,
                 '-f', re.escape(filename),
                 '-b', 'LineCountTestBear')
-            self.assertIn('This file has', output)
+            self.assertIn('This file has', stdout)
+            self.assertIn('During execution of coala', stderr)
 
     def test_caching_multi_results(self):
         """
@@ -143,16 +146,18 @@ class CachingTest(unittest.TestCase):
         filename = 'tests/misc/test_caching_multi_results/'
         with bear_test_module():
             with simulate_console_inputs('0'):
-                retval, output = execute_coala(
+                retval, stdout, stderr = execute_coala(
                    coala.main,
                    'coala',
                    '-c', filename + '.coafile',
                    '-f', filename + 'test.py')
-                self.assertIn('This file has', output)
+                self.assertIn('This file has', stdout)
+                self.assertFalse(stderr)
 
-            retval, output = execute_coala(
+            retval, stdout, stderr = execute_coala(
                coala.main,
                'coala',
                '-c', filename + '.coafile',
                '-f', filename + 'test.py')
-            self.assertIn('This file has', output)
+            self.assertIn('This file has', stdout)
+            self.assertIn('During execution of coala', stderr)
