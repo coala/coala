@@ -37,12 +37,13 @@ def _import_bears(file_path, kinds):
 
 
 @yield_once
-def icollect(file_paths, ignored_globs=None):
+def icollect(file_paths, ignored_globs=None, match_cache={}):
     """
     Evaluate globs in file paths and return all matching files.
 
     :param file_paths:    File path or list of such that can include globs
     :param ignored_globs: List of globs to ignore when matching files
+    :param match_cache:   Dictionary to use for caching results
     :return:              Iterator that yields tuple of path of a matching
                           file, the glob where it was found
     """
@@ -50,7 +51,10 @@ def icollect(file_paths, ignored_globs=None):
         file_paths = [file_paths]
 
     for file_path in file_paths:
-        for match in iglob(file_path):
+        if file_path not in match_cache:
+            match_cache[file_path] = list(iglob(file_path))
+
+        for match in match_cache[file_path]:
             if not ignored_globs or not fnmatch(match, ignored_globs):
                 yield match, file_path
 
