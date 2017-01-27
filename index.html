@@ -7,9 +7,9 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="vendors/jquery/jquery.min.js"></script>
-    <script src="vendors/materialize/js/materialize.min.js"></script>
     <script src="components/angular/angular.min.js"></script>
     <script src="components/angular/angular-route.min.js"></script>
+    <script src="vendors/materialize/js/materialize.min.js"></script>
     <script type="text/javascript" src="resources/js/config.js"></script>
     <script type="text/javascript" src="resources/js/snippets.js"></script>
     <script type="text/javascript" src="resources/js/app.js"></script>
@@ -42,7 +42,7 @@
                     <li class="tab col s3"><a ng-click="tc.setTab('/home')"  ng-class="{active:tc.isSet('/home')}">Home</a></li>
                     <li class="tab col s3"><a ng-click="tc.setTab('/languages')"  ng-class="{active:tc.isSet('/languages')}">Languages</a></li>
                     <li class="tab col s3"><a ng-click="tc.setTab('/getinvolved')"  ng-class="{active:tc.isSet('/getinvolved')}">Get Involved</a></li>
-                    <li class="tab col s3"><a ng-click="tc.setTab('/tryonline')"  ng-class="{active:tc.isSet('/tryonline')}">Try Coala!</a></li>
+                    <li class="tab col s3"><a ng-click="tc.setTab('/tryonline')"  ng-class="{active:tc.isSet('/tryonline')}">Try Coala!<span class="new badge" data-badge-caption="">beta</span></a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
                     <li class="tab col-md-12"><a ng-click="tc.setTab('/home')"  ng-class="{active:tc.isSet('/home')}">Home</a></li>
