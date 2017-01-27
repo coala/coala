@@ -33,14 +33,14 @@
 	})
 
     app.controller('TabController', function ($location) {
-        this.tab = "/home";
+        this.tab = $location.path();
         this.setTab = function (stab) {
             this.tab = stab;
             $location.path(stab);
             $(".button-collapse").sideNav('hide');
         }
         this.isSet = function (stab) {
-            return this.tab == stab
+            return $location.path() == stab
         }
     })
 
