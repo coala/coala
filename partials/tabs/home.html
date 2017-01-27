@@ -90,7 +90,7 @@ $ source venv/bin/activate  # On Unix based systems
                 </div>
 
                 <div class="col-md-8 example-card">
-                    <pre class="card card-content">{{sc.snip[sc.lang_selected]}}</pre>
+                    <div btf-markdown ng-include="'data/snippets/' + sc.snip[sc.lang_selected]" class="card card-content"></div>
                 </div>
             </div>
         </div>
