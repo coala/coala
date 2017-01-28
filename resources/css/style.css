@@ -420,6 +420,99 @@ ul li a{
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
+.showcase-gi{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1em;
+}
+.showcase-card-gi{
+  width: 200px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+.card-title{
+  padding-left: 1em;
+  padding-top: 0.3em;
+}
+a > .card{
+  color: black !important;
+}
+a:hover > .card{
+  color: black !important;
+}
+.profile-img{
+  margin-top: -5em;
+  border-radius: 100%;
+}
+.empty{
+  background-color: #eceff1  !important;
+  height: 5em;
+}
+.profile-data{
+  background-color: #263238 !important;
+  color: white;
+  height: 300px;
+  padding: 10px !important;
+}
+.person-name{
+  font-size: 1.1em;
+  font-weight: 300;
+  text-align: center;
+}
+.small-heading-light{
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: lightgray;
+  font-weight: 500;
+  opacity: 0.2;
+}
+.person-contributions{
+  margin-top: 2em;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+.person-github-id{
+  font-size: 0.8em;
+  text-align: center;
+  opacity: 0.7;
+  padding: 0.5em;
+}
+.person-github-bio{
+  font-size: 0.8em;
+  text-align: center;
+  padding-top: 0.5em;
+}
+.github-link{
+  bottom:0;
+  margin-top: 1em;
+}
+.gi-container-title{
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: 5em;
+  font-weight: 100;
+  text-align: center;
+}
+.gi-container-title-header{
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: 6em;
+  font-weight: 200;
+  text-align: center;
+}
+.person-contributions-details{
+  margin-bottom: 0px !important;
+  text-align: center;
+  bottom: 0;
+  position: absolute;
+  padding-bottom: 1em;
+  left: 0;
+  right: 0;
+  word-wrap:break-word;
+}
+.person-contributions-details > .row{
+  margin-bottom: 5px !important;
+}
 @media (max-width: 768px) {
   .title {
       font-size: 6em;
@@ -464,3 +557,4 @@ ul li a{
       height: 40px;
   }
 }
+

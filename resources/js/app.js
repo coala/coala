@@ -67,8 +67,8 @@
     "Dodging the bushfires",
     "Gulping the eucalypt"
     ]
-    if($scope.$storage.bear_data){			
-     $scope.bearList = ($scope.$storage.bear_data)		
+    if($scope.$storage.bear_data){   
+     $scope.bearList = ($scope.$storage.bear_data)  
     }else{
      $scope.lang_loader=true;
      $http.get(api_link + '/list/bears')
@@ -79,7 +79,7 @@
         "name" : value,
         "desc" : data["data"][value]["desc"],
         "languages": data["data"][value]["languages"]
-       })		
+       })  
       })
       $scope.bearList = arr 
       $scope.$evalAsync();
@@ -87,17 +87,14 @@
       $scope.$storage.bear_data = arr
      })
     }
-    
+
     $scope.setCurrentBear = function (bear_data) {
-     console.log(bear_data);
      $scope.currentBear = bear_data["data"]
     }
-    self.showTheatre = function (bear_selected) {	
-     console.log("Im called!");
-     console.log(bear_selected);
+    self.showTheatre = function (bear_selected) { 
+
      $http.get(api_link + '/search/bears?bear=' + bear_selected["name"])
      .then(function (bear_data) {
-      console.log(bear_data);
       $scope.setCurrentBear(bear_data);
       $scope.$evalAsync();
       $('#modal1').modal('open');
@@ -117,7 +114,6 @@
     self.diff_data = {};
     self.update_diff_data = function (data) {
      self.diff_data = data
-     console.log(self.diff_data);
     };
 
     self.get_diff_data = function () {
@@ -185,7 +181,7 @@ app.directive('getinvolved', ['$http', function ($http) {
    self.contributors
    if($scope.$get_involved_storage.contributors_data){
     self.contributors = $scope.$get_involved_storage.contributors_data
-   }else{			
+   }else{   
     $http.get(api_link + '/contrib/')
     .then(function (data) {
      $scope.$get_involved_storage.contributors_data = data["data"]
@@ -193,7 +189,12 @@ app.directive('getinvolved', ['$http', function ($http) {
     }).catch(function (c) {
      console.log(c);
     })
-   }	
+   } 
+   $scope.totalDisplayed = 20;
+
+   $scope.loadMore = function () {
+    $scope.totalDisplayed += 20;  
+   };
   },
   controllerAs: "gic"
  }
