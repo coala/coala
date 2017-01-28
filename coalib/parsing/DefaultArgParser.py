@@ -166,8 +166,8 @@ To run coala without user interaction, run the `coala --non-interactive`,
     outputs_group.add_argument(
         '-L', '--log-level', nargs=1,
         choices=['ERROR', 'INFO', 'WARNING', 'DEBUG'], metavar='ENUM',
-        help='set log output level to DEBUG/INFO/WARNING/ERROR')
-
+        help='set log output level to DEBUG/INFO/WARNING/ERROR',
+              'default to INFO')
     outputs_group.add_argument(
         '-m', '--min-severity', nargs=1,
         choices=('INFO', 'NORMAL', 'MAJOR'), metavar='ENUM',
