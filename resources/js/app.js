@@ -112,6 +112,8 @@
    controller: function () {
     self = this;
     self.diff_data = {};
+    self.diff_data_status = false;
+    self.diff_loader = false;
     self.update_diff_data = function (data) {
      self.diff_data = data
     };
@@ -120,7 +122,7 @@
      return self.diff_data
     }
     self.submit_coa_form = function () {
-
+     self.diff_loader = true;
      $http({
       url: api_link + '/editor/',
       method: "POST",
@@ -132,6 +134,8 @@
      })
      .then(function(response) {
       self.update_diff_data(response["data"]["results"]["default"])
+      self.diff_data_status = true;
+      self.diff_loader = false;
      }).catch(function (c) {
       console.log(c);
      })
