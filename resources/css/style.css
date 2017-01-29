@@ -302,6 +302,7 @@ textarea.materialize-textarea {
   width: 330px;
   margin-left: 0.5em;
   margin-right: 0.5em;
+  cursor: pointer;
 }
 .card-title {
   padding-left: 1em;
