@@ -248,6 +248,9 @@ textarea.materialize-textarea {
 .submit-coa-form {
   text-transform: none !important;
 }
+.coa-form{
+ padding-top:2em;
+}
 .origin-diff {
   padding: 0.5em;
   background-color: #263238;
