@@ -9,11 +9,13 @@ from subprocess import check_call, CalledProcessError, DEVNULL
 from types import MappingProxyType
 
 from coalib.bears.LocalBear import LocalBear
+from coalib.bears.GlobalBear import GlobalBear
 from coala_utils.ContextManagers import make_temp
 from coala_utils.decorators import assert_right_type, enforce_signature
 from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
+from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
@@ -34,7 +36,8 @@ def _prepare_options(options, bear_class):
                        'use_stderr',
                        'config_suffix',
                        'executable_check_fail_info',
-                       'prerequisite_check_command'}
+                       'prerequisite_check_command',
+                       'global_bear'}
 
     if not options['use_stdout'] and not options['use_stderr']:
         raise ValueError('No output streams provided at all.')
@@ -64,6 +67,7 @@ def _prepare_options(options, bear_class):
             'origin',
             'message',
             'severity',
+            'filename',
             'line',
             'column',
             'end_line',
@@ -137,6 +141,10 @@ def _prepare_options(options, bear_class):
 
         allowed_options.add('prerequisite_check_fail_message')
 
+    if options['global_bear'] and options['use_stdin']:
+        raise ValueError('Incompatible arguments provided:'
+                         "'use_stdin' and 'global_bear' can't both be True.")
+
     # Check for illegal superfluous options.
     superfluous_options = options.keys() - allowed_options
     if superfluous_options:
@@ -155,7 +163,7 @@ def _create_linter(klass, options):
             return '<{} linter class (wrapping {!r})>'.format(
                 cls.__name__, options['executable'])
 
-    class LinterBase(LocalBear, metaclass=LinterMeta):
+    class LinterBase(metaclass=LinterMeta):
 
         @staticmethod
         def generate_config(filename, file):
@@ -180,26 +188,6 @@ def _create_linter(klass, options):
                 The config-file-contents as a string or ``None``.
             """
             return None
-
-        @staticmethod
-        def create_arguments(filename, file, config_file):
-            """
-            Creates the arguments for the linter.
-
-            You can provide additional keyword arguments and defaults. These
-            will be interpreted as required settings that need to be provided
-            through a coafile-section.
-
-            :param filename:
-                The name of the file the linter-tool shall process.
-            :param file:
-                The contents of the file.
-            :param config_file:
-                The path of the config-file if used. ``None`` if unused.
-            :return:
-                A sequence of arguments to feed the linter-tool with.
-            """
-            raise NotImplementedError
 
         @staticmethod
         def get_executable():
@@ -283,7 +271,8 @@ def _create_linter(klass, options):
             :param match:
                 The regex match object.
             :param filename:
-                The name of the file this match belongs to.
+                The name of the file this match belongs to or ``None`` for
+                project scope.
             :param severity_map:
                 The dict to use to map the severity-match to an actual
                 ``RESULT_SEVERITY``.
@@ -316,18 +305,30 @@ def _create_linter(klass, options):
                 groups['origin'] = '{} ({})'.format(klass.__name__,
                                                     groups['origin'].strip())
 
-            # Construct the result.
-            return Result.from_values(
-                origin=groups.get('origin', self),
-                message=(groups.get('message', '').strip()
-                         if result_message is None else result_message),
-                file=filename,
-                severity=groups['severity'],
-                line=groups['line'],
-                column=groups['column'],
-                end_line=groups['end_line'],
-                end_column=groups['end_column'],
-                additional_info=groups.get('additional_info', '').strip())
+            # GlobalBears do not pass a filename to the function. But they can
+            # still give one through the regex
+            if filename is None:
+                filename = groups.get('filename', None)
+
+            # Construct the result. If we have a filename, we
+            # use Result.from_values otherwise generate a project
+            # scope result.
+            result_params = {
+                'origin': groups.get('origin', self),
+                'message': (groups.get('message', '').strip()
+                            if result_message is None else result_message),
+                'severity': groups['severity'],
+                'additional_info': groups.get('additional_info', '').strip()
+            }
+
+            if filename:
+                range = SourceRange.from_values(filename,
+                                                groups['line'],
+                                                groups['column'],
+                                                groups['end_line'],
+                                                groups['end_column'])
+                result_params['affected_code'] = (range,)
+            return Result(**result_params)
 
         def process_output_corrected(self,
                                      output,
@@ -402,6 +403,8 @@ def _create_linter(klass, options):
                 of the following named groups (via ``(?P<name>...)``) to
                 provide a good result:
 
+                - filename - The name of the linted file. This is relevant for
+                    global bears only.
                 - line - The line where the issue starts.
                 - column - The column where the issue starts.
                 - end_line - The line where the issue ends.
@@ -471,7 +474,7 @@ def _create_linter(klass, options):
                 _processing_function = partialmethod(
                     process_output_regex, **_process_output_args)
 
-            def process_output(self, output, filename, file):
+            def process_output(self, output, filename=None, file=None):
                 """
                 Processes the output of the executable and yields results
                 accordingly.
@@ -484,9 +487,11 @@ def _create_linter(klass, options):
                     the selected output stream). If both are ``True``, a tuple
                     is placed with ``(stdout, stderr)``.
                 :param filename:
-                    The name of the file currently processed.
+                    The name of the file currently processed or ``None`` for
+                    project scope.
                 :param file:
-                    The contents of the file (line-splitted).
+                    The contents of the file (line-splitted) or ``None`` for
+                    project scope.
                 """
                 if isinstance(output, str):
                     output = (output,)
@@ -497,15 +502,17 @@ def _create_linter(klass, options):
 
         @classmethod
         @contextmanager
-        def _create_config(cls, filename, file, **kwargs):
+        def _create_config(cls, filename=None, file=None, **kwargs):
             """
             Provides a context-manager that creates the config file if the
             user provides one and cleans it up when done with linting.
 
             :param filename:
-                The filename of the file.
+                The filename of the file being linted. ``None`` for project
+                scope.
             :param file:
-                The file contents.
+                The content of the file being linted. ``None`` for project
+                scope.
             :param kwargs:
                 Section settings passed from ``run()``.
             :return:
@@ -521,7 +528,17 @@ def _create_linter(klass, options):
                         fl.write(content)
                     yield config_file
 
-        def run(self, filename, file, **kwargs):
+        def run(self, filename=None, file=None, **kwargs):
+            """
+            Runs the wrapped tool.
+
+            :param filename:
+                The filename of the file being linted. ``None`` for project
+                scope.
+            :param file:
+                The content of the file being linted. ``None`` for project
+                scope.
+            """
             # Get the **kwargs params to forward to `generate_config()`
             # (from `_create_config()`).
             generate_config_kwargs = FunctionMetadata.filter_parameters(
@@ -536,8 +553,16 @@ def _create_linter(klass, options):
                     FunctionMetadata.filter_parameters(
                         self._get_create_arguments_metadata(), kwargs))
 
-                args = self.create_arguments(filename, file, config_file,
-                                             **create_arguments_kwargs)
+                # The interface of create_arguments is different for local
+                # and global bears, therefore we must check here, what kind
+                # of bear we have.
+                if isinstance(self, LocalBear):
+                    args = self.create_arguments(filename,
+                                                 file, config_file,
+                                                 **create_arguments_kwargs)
+                else:
+                    args = self.create_arguments(config_file,
+                                                 **create_arguments_kwargs)
 
                 try:
                     args = tuple(args)
@@ -569,10 +594,54 @@ def _create_linter(klass, options):
             return '<{} linter object (wrapping {!r}) at {}>'.format(
                 type(self).__name__, self.get_executable(), hex(id(self)))
 
+    class LocalLinterBase(LinterBase, LocalBear):
+
+        @staticmethod
+        def create_arguments(filename, file, config_file):
+            """
+            Creates the arguments for the linter.
+
+            You can provide additional keyword arguments and defaults. These
+            will be interpreted as required settings that need to be provided
+            through a coafile-section.
+
+            :param filename:
+                The name of the file the linter-tool shall process.
+            :param file:
+                The contents of the file.
+            :param config_file:
+                The path of the config-file if used. ``None`` if unused.
+            :return:
+                A sequence of arguments to feed the linter-tool with.
+            """
+            raise NotImplementedError
+
+    class GlobalLinterBase(LinterBase, GlobalBear):
+
+        @staticmethod
+        def create_arguments(config_file):
+            """
+            Creates the arguments for the linter.
+
+            You can provide additional keyword arguments and defaults. These
+            will be interpreted as required settings that need to be provided
+            through a coafile-section. This is the file agnostic version for
+            global bears.
+
+            :param config_file:
+                The path of the config-file if used. ``None`` if unused.
+            :return:
+                A sequence of arguments to feed the linter-tool with.
+            """
+            raise NotImplementedError
+
+    LinterBaseClass = (
+        GlobalLinterBase if options['global_bear'] else LocalLinterBase
+    )
     # Mixin the linter into the user-defined interface, otherwise
     # `create_arguments` and other methods would be overridden by the
     # default version.
-    result_klass = type(klass.__name__, (klass, LinterBase), {
+    result_klass = type(klass.__name__, (klass, LinterBaseClass), {
         '__module__': klass.__module__})
     result_klass.__doc__ = klass.__doc__ or ''
     return result_klass
@@ -580,6 +649,7 @@ def _create_linter(klass, options):
 
 @enforce_signature
 def linter(executable: str,
+           global_bear: bool=False,
            use_stdin: bool=False,
            use_stdout: bool=True,
            use_stderr: bool=False,
@@ -678,6 +748,7 @@ def linter(executable: str,
         command-line-interface.
     :param use_stdout:
         Whether to use the stdout output stream.
+        Incompatible with ``global_bear=True``.
     :param use_stderr:
         Whether to use the stderr output stream.
     :param config_suffix:
@@ -695,6 +766,11 @@ def linter(executable: str,
         A custom message that gets displayed when ``check_prerequisites``
         fails while invoking ``prerequisite_check_command``. Can only be
         provided together with ``prerequisite_check_command``.
+    :param global_bear:
+        Whether the created bear should be a ``GlobalBear`` or not. Global
+        bears will be run only once instead of once per file. The ``file``
+        and ``filename`` args of all their methods will default to ``None``.
+        Incompatible with ``use_stdin=True``.
     :param output_format:
         The output format of the underlying executable. Valid values are
 
@@ -713,6 +789,8 @@ def linter(executable: str,
         following named groups (via ``(?P<name>...)``) to provide a good
         result:
 
+        - filename - The name of the linted file. This is relevant for
+            global bears only.
         - line - The line where the issue starts.
         - column - The column where the issue starts.
         - end_line - The line where the issue ends.
@@ -775,5 +853,6 @@ def linter(executable: str,
     options['config_suffix'] = config_suffix
     options['executable_check_fail_info'] = executable_check_fail_info
     options['prerequisite_check_command'] = prerequisite_check_command
+    options['global_bear'] = global_bear
 
     return partial(_create_linter, options=options)
