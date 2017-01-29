@@ -513,6 +513,10 @@ a:hover > .card{
 .person-contributions-details > .row{
   margin-bottom: 5px !important;
 }
+.example-card pre{
+	height:200px;
+	overflow:scroll;
+}
 @media (max-width: 768px) {
   .title {
       font-size: 6em;
