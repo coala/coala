@@ -67,6 +67,10 @@
   text-align: center;
   font-weight: 300;
 }
+.description-links{
+  margin-top: -0.5em;
+  margin-left: 0em !important;
+}
 pre {
   background-color: #2b2b2b !important;
   color: #fff;
@@ -525,6 +529,19 @@ a:hover > .card{
 }
 .text-center{
   text-align: center;
+}
+.description .chip i {
+  float: left;
+  margin: 0 8px 0 -12px;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  font-size: 1.5em;
+  padding: 0.3em 0 0 0.3em;
+}
+.description .chip:hover{
+  background: lightslategrey;
+  color: white;
 }
 @media (max-width: 768px) {
   .title {
