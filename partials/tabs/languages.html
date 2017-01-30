@@ -68,7 +68,7 @@
         <div class="card-title name-bear">{{ bear.name }}</div>
         <div class="card-content">{{ bear.desc | format_desc }}</div>
         <div class="card-action">
-            <span ng-repeat="lang in bear.languages | limitTo:4">{{lang}} </span>
+            <span class="chip" ng-repeat="lang in bear.languages | limitTo:4">{{lang}} </span>
         </div>
     </div>
 
