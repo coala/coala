@@ -2,12 +2,7 @@
 <div class="main-content container">
 
     <div class="col-md-8 col-md-offset-2">
-        <div class="input-field col-md-10">
-            <input ng-model="searchText" placeholder="Search for a bear or a language" id="search" type="text" class="validate">
-        </div>
-        <div class="input-field col-md-2">
-            <a class="explore waves-effect waves-light btn">EXPLORE</a>
-        </div>
+        <input ng-model="searchText" placeholder="Search for a bear or a language" id="search" type="text" class="validate">
     </div>
     <div class="col-md-8 col-md-offset-2 text-center">
         If you find an issue with this documentation, you can report it
@@ -155,15 +150,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
-
-
-        $('.explore').click(function () {
-            $('html,body').animate({
-                scrollTop: $(".showcase").offset().top},
-                'slow');
-        })
-
         $('.modal').modal({
       dismissible: true, // Modal can be dismissed by clicking outside of the modal
       opacity: 0.8, // Opacity of modal background
