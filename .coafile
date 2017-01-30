@@ -17,7 +17,7 @@ language = Python
 preferred_quotation = '
 
 default_actions = *: ApplyPatchAction
- 
+
 [autopep8]
 bears = PEP8Bear, PycodestyleBear
 
