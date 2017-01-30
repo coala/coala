@@ -210,13 +210,13 @@ textarea.materialize-textarea {
 }
 :-moz-placeholder {
   /* Firefox 18- */
-  
+
   font-weight: 200;
   color: #d1d1d1;
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
-  
+
   font-weight: 200;
   color: #d1d1d1;
 }
@@ -520,6 +520,9 @@ a:hover > .card{
 	height:200px;
 	overflow:scroll;
 }
+.text-center{
+  text-align: center;
+}
 @media (max-width: 768px) {
   .title {
       font-size: 6em;
@@ -564,4 +567,3 @@ a:hover > .card{
       height: 40px;
   }
 }
-
