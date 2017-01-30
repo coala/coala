@@ -304,6 +304,9 @@ textarea.materialize-textarea {
   margin-right: 0.5em;
   cursor: pointer;
 }
+.showcase-card .card-content{
+  height:150px;
+}
 .card-title {
   padding-left: 1em;
   padding-top: 0.3em;
