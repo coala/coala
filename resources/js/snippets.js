@@ -1,3 +1,4 @@
 var snippets = {
-	"Python" : "python.md"
+       "Python" : "python.md",
+       "Ruby" : "ruby.md"
 }
