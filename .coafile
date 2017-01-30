@@ -120,3 +120,9 @@ language = python 3
 
 ci_keywords, keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
+
+[urllib]
+# Encourage usage of requests library by blacklisting usage of urlopen()
+bears = KeywordBear
+language = python 3
+keywords = urlopen
