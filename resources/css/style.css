@@ -586,4 +586,8 @@ a:hover > .card{
       line-height: 4em;
       height: 40px;
   }
+  .description-links > .col-xs-4{
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+  }
 }
