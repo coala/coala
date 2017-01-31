@@ -233,7 +233,7 @@ class Bear(Printer, LogPrinterMixin):
             # If it's already a list it won't change it
             result = self.run_bear_from_section(args, kwargs)
             return [] if result is None else list(result)
-        except:
+        except (Exception, SystemExit):
             self.warn('Bear {} failed to run. Take a look at debug messages'
                       ' (`-V`) for further information.'.format(name))
             self.debug(

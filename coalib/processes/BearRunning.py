@@ -102,7 +102,7 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
 
     try:
         result_list = bear_instance.execute(*args, **kwargs)
-    except:
+    except (Exception, SystemExit):
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
