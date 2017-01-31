@@ -6,7 +6,6 @@ python:
 
 matrix:
   include:
-    - os: osx
       osx_image: xcode6.4
       language: bash
       python: 3.6
