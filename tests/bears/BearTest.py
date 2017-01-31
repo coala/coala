@@ -63,6 +63,34 @@ class BearWithPrerequisites(Bear):
         return cls.prerequisites_fulfilled
 
 
+class StandAloneBear(Bear):
+
+    def run(self, x: int, y: int, z: int=33):
+        """
+        Test run.
+        :param x: First value.
+        :param y: Second value.
+        :param z: Third value.
+        """
+        yield x
+        yield y
+        yield z
+
+
+class DependentBear(Bear):
+
+    BEAR_DEPS = {StandAloneBear}
+
+    def run(self, y: int, w: float):
+        """
+        Test run with more params.
+        :param y: Second value, but better.
+        :param w: Fourth value.
+        """
+        yield y
+        yield w
+
+
 class BearTest(unittest.TestCase):
 
     def setUp(self):
@@ -174,6 +202,22 @@ class BearTest(unittest.TestCase):
                            'The bear BearWithPrerequisites does not fulfill '
                            'all requirements. Just because I want to.')
         self.assertTrue(self.queue.empty())
+
+    def test_get_non_optional_settings(self):
+        self.assertEqual(StandAloneBear.get_non_optional_settings(recurse=True),
+                         {'x': ('First value.', int),
+                          'y': ('Second value.', int)})
+
+        # Test settings of dependency bears. Also test settings-override-
+        # behaviour for dependency bears with equal setting names.
+        self.assertEqual(DependentBear.get_non_optional_settings(recurse=True),
+                         {'x': ('First value.', int),
+                          'y': ('Second value, but better.', int),
+                          'w': ('Fourth value.', float)})
+
+        self.assertEqual(DependentBear.get_non_optional_settings(recurse=False),
+                         {'y': ('Second value, but better.', int),
+                          'w': ('Fourth value.', float)})
 
     def test_get_config_dir(self):
         section = Section('default')
