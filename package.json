@@ -1,0 +1,6 @@
+{
+  "name": "coala",
+  "dependencies": {
+    "csslint": "~1"
+    }
+}
