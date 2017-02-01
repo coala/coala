@@ -1,7 +1,6 @@
 [Default]
 use_spaces = True
 maxline_length = 80
-files = ./test.py
 
 [LineCounting]
 bears = LineCountTestBear

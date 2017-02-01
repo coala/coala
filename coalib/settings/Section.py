@@ -330,6 +330,6 @@ class Section:
                 self.defaults = sections[default_section]
             else:
                 self.set_default_section(sections, default_section)
-        elif 'default' in sections and self.name.lower() != 'default':
-            # Implicit "default" section inheritance
-            self.defaults = sections['default']
+        elif 'cli' in sections and self.name.lower() != 'cli':
+            # CLI section is now default
+            self.defaults = sections['cli']

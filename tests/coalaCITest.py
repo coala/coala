@@ -43,7 +43,7 @@ class coalaCITest(unittest.TestCase):
                                                    'SpaceConsistencyTestBear',
                                                    '--settings',
                                                    'use_spaces=True')
-            self.assertIn('Executing section Default', stdout)
+            self.assertIn('Executing section cli', stdout)
             self.assertFalse(stderr)
             self.assertEqual(retval, 0,
                              'coala-ci must return zero when successful')

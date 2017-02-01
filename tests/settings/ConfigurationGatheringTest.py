@@ -64,7 +64,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                                '-c ' + escape(temporary, '\\'),
                                                '-b LineCountBear -s']))
 
-        self.assertEqual(len(local_bears['default']), 0)
+        self.assertEqual(len(local_bears['cli']), 0)
 
     def test_default_coafile_parsing(self):
         tmp = Constants.system_coafile
@@ -174,7 +174,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                                '-c', escape(temporary, '\\')] +
                                      self.min_args))
 
-        self.assertEqual(sections['default'],
+        self.assertEqual(sections['cli'],
                          sections['test'].defaults)
 
     def test_back_saving(self):
@@ -193,8 +193,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         with open(filename, 'r') as f:
             lines = f.readlines()
-        self.assertEqual(['[Default]\n',
-                          '[cli]\n',
+        self.assertEqual(['[cli]\n',
                           'config = some_bad_filename\n'], lines)
 
         with self.assertRaises(SystemExit):
@@ -211,8 +210,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         os.remove(filename)
         if os.path.sep == '\\':
             filename = escape(filename, '\\')
-        self.assertEqual(['[Default]\n',
-                          '[cli]\n',
+        self.assertEqual(['[cli]\n',
                           'config = ' + filename + '\n',
                           '[test]\n',
                           'value = 5\n'], lines)
@@ -221,9 +219,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
             self.log_printer,
-            arg_list=['default', 'test1', 'test2'])
+            arg_list=['cli', 'test1', 'test2'])
 
-        self.assertEqual(targets, ['default', 'test1', 'test2'])
+        self.assertEqual(targets, ['cli', 'test1', 'test2'])
 
     def test_find_user_config(self):
         current_dir = os.path.abspath(os.path.dirname(__file__))
@@ -263,7 +261,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                  'child_dir')
         with change_directory(child_dir):
             sections, targets = load_configuration([], self.log_printer)
-            self.assertIn('value', sections['default'])
+            self.assertIn('value', sections['cli'])
 
             sections, targets = load_configuration(
                 ['--no-config'],
@@ -291,17 +289,19 @@ class ConfigurationGatheringTest(unittest.TestCase):
     def test_section_inheritance(self):
         current_dir = os.path.abspath(os.path.dirname(__file__))
         test_dir = os.path.join(current_dir, 'section_manager_test_files')
+        logger = logging.getLogger()
 
-        with change_directory(test_dir):
+        with change_directory(test_dir), \
+                self.assertLogs(logger, 'WARNING') as cm:
             sections, _, _, _ = gather_configuration(
                 lambda *args: True,
                 self.log_printer,
                 arg_list=['-c', 'inherit_coafile'])
             self.assertEqual(sections['all.python'].defaults, sections['all'])
             self.assertEqual(sections['all.c']['key'],
-                             sections['default']['key'])
+                             sections['cli']['key'])
             self.assertEqual(sections['java.test'].defaults,
-                             sections['default'])
+                             sections['cli'])
             self.assertEqual(int(sections['all.python']['max_line_length']),
                              80)
             self.assertEqual(sections['all.python.codestyle'].defaults,
@@ -310,12 +310,14 @@ class ConfigurationGatheringTest(unittest.TestCase):
                              sections['all'])
             self.assertEqual(str(sections['all']['ignore']),
                              './vendor')
-            sections['default']['ignore'] = './user'
+            sections['cli']['ignore'] = './user'
             self.assertEqual(str(sections['all']['ignore']),
                              './user, ./vendor')
-            sections['default']['ignore'] = './client'
+            sections['cli']['ignore'] = './client'
             self.assertEqual(str(sections['all']['ignore']),
                              './client, ./vendor')
+        self.assertRegex(cm.output[0],
+                         '\'cli\' is an internally reserved section name.')
 
     def test_default_section_deprecation_warning(self):
         logger = logging.getLogger()

@@ -189,23 +189,34 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
 
         sections = merge_section_dicts(sections, coafile_sections)
 
+        if 'cli' in sections:
+            logging.warning('\'cli\' is an internally reserved section name. '
+                            'It may have been generated into your coafile '
+                            'while running coala with `--save`. The settings '
+                            'in that section will inherit implicitly to all '
+                            'sections as defaults just like CLI args do.'
+                            'Please change the name of that section in your '
+                            'coafile to avoid any unexpected behavior.')
+
         sections = merge_section_dicts(sections, cli_sections)
 
     for name, section in list(sections.items()):
         section.set_default_section(sections)
-        if name == 'default' and not all(
-                setting.from_cli for setting in section.contents.values()):
-            logging.warning('Implicit \'Default\' section inheritance is '
-                            'deprecated. It will be removed soon. To silence '
-                            'this warning remove settings in the \'Default\' '
-                            'section from your coafile. You can use dots to '
-                            'specify inheritance: the section \'all.python\' '
-                            'will inherit all settings from \'all\'.')
+        if name == 'default':
+            if section.contents:
+                logging.warning('Implicit \'Default\' section inheritance is '
+                                'deprecated. It will be removed soon. To '
+                                'silence this warning remove settings in the '
+                                '\'Default\' section from your coafile. You '
+                                'can use dots to specify inheritance: the '
+                                'section \'all.python\' will inherit all '
+                                'settings from \'all\'.')
+                sections['default'].update(sections['cli'])
+                sections['default'].name = 'cli'
+                sections['cli'] = sections['default']
+            del sections['default']
 
-    str_log_level = str(sections['cli'].get(
-        'log_level',
-        sections['default'].get('log_level', '')
-        if 'default' in sections else '')).upper()
+    str_log_level = str(sections['cli'].get('log_level', '')).upper()
     log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
                                                    LOG_LEVEL.INFO)
 

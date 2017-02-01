@@ -189,9 +189,9 @@ class SectionTest(unittest.TestCase):
         section.set_default_section({})
         self.assertIsNone(section.defaults)
 
-        sections = {'default': Section('default')}
+        sections = {'cli': Section('cli')}
         section.set_default_section(sections)
-        self.assertEqual(section.defaults, sections['default'])
+        self.assertEqual(section.defaults, sections['cli'])
 
         sections = {'all': Section('all'), 'all.python': Section('all.python')}
         sections['all.python'].set_default_section(sections)

@@ -86,16 +86,16 @@ class ProcessingTest(unittest.TestCase):
                                          log_printer,
                                          arg_list=['--config',
                                                    re.escape(config_path)])
-        self.assertEqual(len(self.local_bears['default']), 1)
-        self.assertEqual(len(self.global_bears['default']), 1)
+        self.assertEqual(len(self.local_bears['cli']), 1)
+        self.assertEqual(len(self.global_bears['cli']), 1)
         self.assertEqual(targets, [])
 
     def test_run(self):
-        self.sections['default'].append(Setting('jobs', '1'))
+        self.sections['cli'].append(Setting('jobs', '1'))
         cache = FileCache(self.log_printer, 'coala_test', flush_cache=True)
-        results = execute_section(self.sections['default'],
-                                  self.global_bears['default'],
-                                  self.local_bears['default'],
+        results = execute_section(self.sections['cli'],
+                                  self.global_bears['cli'],
+                                  self.local_bears['cli'],
                                   lambda *args: self.result_queue.put(args[2]),
                                   cache,
                                   self.log_printer,
@@ -131,15 +131,15 @@ class ProcessingTest(unittest.TestCase):
                          ') at 0x[0-9a-fA-F]+>'.format(hex(global_result.id)))
 
     def test_empty_run(self):
-        execute_section(self.sections['default'],
+        execute_section(self.sections['cli'],
                         [],
                         [],
                         lambda *args: self.result_queue.put(args[2]),
                         None,
                         self.log_printer,
                         console_printer=self.console_printer)
-        self.sections['default'].append(Setting('jobs', 'bogus!'))
-        results = execute_section(self.sections['default'],
+        self.sections['cli'].append(Setting('jobs', 'bogus!'))
+        results = execute_section(self.sections['cli'],
                                   [],
                                   [],
                                   lambda *args: self.result_queue.put(args[2]),
