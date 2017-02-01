@@ -219,8 +219,7 @@ class ProcessingTest(unittest.TestCase):
             self.log_printer,
             self.console_printer)
 
-        self.assertEqual(self.queue.get(timeout=0), ([first_local,
-                                                      second_local,
+        self.assertEqual(self.queue.get(timeout=0), ([second_local,
                                                       third_local]))
         self.assertEqual(self.queue.get(timeout=0), ([fourth_local]))
         self.assertEqual(self.queue.get(timeout=0), ([first_global]))
@@ -357,7 +356,7 @@ class ProcessingTest(unittest.TestCase):
         self.assertTrue(check_result_ignore(result, ranges))
 
         result1 = Result.from_values('origin', 'message', file='e')
-        self.assertFalse(check_result_ignore(result1, ranges))
+        self.assertTrue(check_result_ignore(result1, ranges))
 
         ranges = [(['something', 'else', 'not origin'],
                    SourceRange.from_values('e', 1, 1, 2, 2))]
