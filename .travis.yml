@@ -1,3 +1,4 @@
+sudo: false
 language: python
 python:
   - 3.4
@@ -6,15 +7,8 @@ python:
 
 matrix:
   include:
-    - os: osx
-      osx_image: xcode6.4
-      language: bash
-      python: 3.6
-      env:
-        - DYLD_LIBRARY_PATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/
-      cache:
-        directories:
-          - ~/Library/Caches/pip
+    # OSX build removed due to long build startup delays
+    # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
       env: UNSUPPORTED=true
     - python: 3.3
