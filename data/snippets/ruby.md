@@ -1,5 +1,5 @@
 ```
-$ echo 'puts ( "Hello World" )' > hello-world.rb
+$ echo 'puts ( "Hello World" )' > hello.rb
 $ coala --files hello.rb --bears RubocopBear
 Executing section Default...
 
