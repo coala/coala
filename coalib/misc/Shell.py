@@ -1,7 +1,9 @@
 from contextlib import contextmanager
 import functools
+import platform
 import shlex
 from subprocess import PIPE, Popen, call, DEVNULL
+from shutil import which
 
 
 call_without_output = functools.partial(call, stdout=DEVNULL, stderr=DEVNULL)
@@ -60,6 +62,13 @@ def run_interactive_shell_command(command, **kwargs):
     """
     if not kwargs.get('shell', False) and isinstance(command, str):
         command = shlex.split(command)
+    else:
+        command = list(command)
+
+    if platform.system() == 'Windows':  # pragma: no cover
+        # subprocess doesn't implicitly look for .bat and .cmd scripts when
+        # running commands under Windows
+        command[0] = which(command[0])
 
     args = {'stdout': PIPE,
             'stderr': PIPE,
