@@ -104,15 +104,14 @@ def print_section_beginning(console_printer, section):
         name=section.name))
 
 
-def nothing_done(log_printer):
+def nothing_done():
     """
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
 
-    :param log_printer: A LogPrinter object.
     """
-    log_printer.warn('No existent section was targeted or enabled. '
-                     'Nothing to do.')
+    logging.warning('No existent section was targeted or enabled. '
+                    'Nothing to do.')
 
 
 def acquire_actions_and_apply(console_printer,
@@ -292,15 +291,13 @@ def print_diffs_info(diffs, printer):
 _warn_deprecated_format_str = True  # Remove when format_str is deprecated
 
 
-def print_results_formatted(log_printer,
-                            section,
+def print_results_formatted(section,
                             result_list,
                             *args):
     """
     Prints results through the format string from the format setting done by
     user.
 
-    :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong.
     :param result_list:    List of Result objects containing the corresponding
                            results.
@@ -313,8 +310,8 @@ def print_results_formatted(log_printer,
     if 'format_str' in section:
         format_str = str(section.get('format_str', default_format))
         if _warn_deprecated_format_str:
-            log_printer.warn('The setting "format_str" has been deprecated.'
-                             ' Please use "format" instead')
+            logging.warning('The setting "format_str" has been deprecated.'
+                            ' Please use "format" instead')
             _warn_deprecated_format_str = False
     else:
         format_str = str(section.get('format', default_format))
