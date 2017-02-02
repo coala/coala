@@ -95,6 +95,17 @@
 
      $http.get(api_link + '/search/bears?bear=' + bear_selected["name"])
      .then(function (bear_data) {
+      params_list = {
+        "optional_params": [],
+        "non_optional_params": []
+      }
+      angular.forEach(bear_data["data"]["metadata"]["optional_params"], function(value, key){
+        params_list["optional_params"].push(Object.keys(value)[0])
+      });
+      angular.forEach(bear_data["data"]["metadata"]["non_optional_params"], function(value, key){
+        params_list["non_optional_params"].push(Object.keys(value)[0])
+      });
+      bear_data["data"]["metadata"]["params_list"] = params_list;
       $scope.setCurrentBear(bear_data);
       $scope.$evalAsync();
       $('#modal1').modal('open');
