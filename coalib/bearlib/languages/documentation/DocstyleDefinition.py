@@ -1,5 +1,5 @@
 from collections import Iterable, namedtuple
-from glob import iglob
+from glob import glob
 import os.path
 
 from coala_utils.decorators import (
@@ -202,7 +202,7 @@ class DocstyleDefinition:
         language_config_parser = ConfParser(remove_empty_iter_elements=False)
         pattern = os.path.join(os.path.dirname(__file__), '*.coalang')
 
-        for coalang_file in iglob(pattern):
+        for coalang_file in glob(pattern):
             docstyle = os.path.splitext(os.path.basename(coalang_file))[0]
             # Ignore files that are not lowercase, as coalang files have to be.
             if docstyle.lower() == docstyle:

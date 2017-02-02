@@ -114,17 +114,17 @@ class DocstyleDefinitionTest(unittest.TestCase):
 
         self.assertTrue(expected.issubset(real))
 
-    @patch('coalib.bearlib.languages.documentation.DocstyleDefinition.iglob')
+    @patch('coalib.bearlib.languages.documentation.DocstyleDefinition.glob')
     @patch('coalib.bearlib.languages.documentation.DocstyleDefinition'
            '.ConfParser')
     def test_get_available_definitions_on_wrong_files(self,
                                                       confparser_mock,
-                                                      iglob_mock):
+                                                      glob_mock):
         # Test the case when a coalang was provided with uppercase letters.
         confparser_instance_mock = confparser_mock.return_value
         confparser_instance_mock.parse.return_value = ['X']
-        iglob_mock.return_value = ['some/CUSTOMSTYLE.coalang',
-                                   'SOME/xlang.coalang']
+        glob_mock.return_value = ['some/CUSTOMSTYLE.coalang',
+                                  'SOME/xlang.coalang']
 
         self.assertEqual(list(DocstyleDefinition.get_available_definitions()),
                          [('xlang', 'x')])
