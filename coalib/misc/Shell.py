@@ -1,6 +1,8 @@
 from contextlib import contextmanager
 import shlex
 from subprocess import PIPE, Popen
+from shutil import which
+import sys
 
 
 @contextmanager
@@ -51,7 +53,10 @@ def run_interactive_shell_command(command, **kwargs):
                     command.
     """
     if not kwargs.get('shell', False) and isinstance(command, str):
-        command = shlex.split(command)
+        command, *cargs = shlex.split(command)
+
+    if sys.platform.startswith('win'):
+        command = which(command)
 
     args = {'stdout': PIPE,
             'stderr': PIPE,
@@ -59,7 +64,7 @@ def run_interactive_shell_command(command, **kwargs):
             'universal_newlines': True}
     args.update(kwargs)
 
-    process = Popen(command, **args)
+    process = Popen((command, *cargs), **args)
     try:
         yield process
     finally:
