@@ -373,7 +373,10 @@ a:hover > .card {
   font-weight: 400;
 }
 .author-row {
-  padding-top: 20%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
 }
 .snippet-card {
   padding: 1em;
@@ -542,6 +545,18 @@ a:hover > .card{
 .description .chip:hover{
   background: lightslategrey;
   color: white;
+}
+.settings-options{
+  color:lightgrey;
+}
+.settings-opt{
+  color: cadetblue;
+}
+.settings-non-opt{
+  color: orange;
+}
+.padding-square-icon{
+  padding: 0 1em 0 1em;
 }
 @media (max-width: 768px) {
   .title {
