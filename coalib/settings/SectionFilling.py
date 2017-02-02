@@ -39,7 +39,7 @@ def fill_settings(sections, acquire_settings, log_printer):
         section_global_bears = Dependencies.resolve(section_global_bears)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
-        fill_section(section, acquire_settings, log_printer, all_bears)
+        fill_section(section, acquire_settings, all_bears)
 
         local_bears[section_name] = section_local_bears
         global_bears[section_name] = section_global_bears
@@ -47,7 +47,7 @@ def fill_settings(sections, acquire_settings, log_printer):
     return local_bears, global_bears
 
 
-def fill_section(section, acquire_settings, log_printer, bears):
+def fill_section(section, acquire_settings, bears):
     """
     Retrieves needed settings from given bears and asks the user for
     missing values.
@@ -62,7 +62,6 @@ def fill_section(section, acquire_settings, log_printer, bears):
                              settings name as key and a list containing a
                              description in [0] and the names of the bears
                              who need this setting in all following indexes.
-    :param log_printer:      The log printer for logging.
     :param bears:            All bear classes or instances.
     :return:                 The new section.
     """
@@ -85,7 +84,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
     # Get missing ones.
     if len(needed_settings) > 0:
-        new_vals = acquire_settings(log_printer, needed_settings, section)
+        new_vals = acquire_settings(needed_settings, section)
         for setting, help_text in new_vals.items():
             section.append(Setting(setting, help_text))
 

@@ -67,7 +67,6 @@ class SectionFillingTest(unittest.TestCase):
         with simulate_console_inputs(0, 0):
             new_section = fill_section(self.section,
                                        acquire_settings,
-                                       self.log_printer,
                                        [LocalTestBear,
                                         GlobalTestBear])
 
@@ -79,7 +78,6 @@ class SectionFillingTest(unittest.TestCase):
         # Shouldnt change anything the second time
         new_section = fill_section(self.section,
                                    acquire_settings,
-                                   self.log_printer,
                                    [LocalTestBear, GlobalTestBear])
 
         self.assertTrue('local name' in new_section)
