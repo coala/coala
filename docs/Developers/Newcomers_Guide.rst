@@ -143,6 +143,8 @@ issues link.
 The easy issues that will help you get started are labeled as
 ``difficulty/newcomer`` and are only there to give you a glimpse of how it is
 to work with us and learning the workflow.
+Look through the list for an issue that you feel comfortable to work on and
+understand what has to be changed without having to ask for help in the chat.
 
 Now pick an issue which isn't assigned.
 As stated before, you should never work on an issue without being assigned to
