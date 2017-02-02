@@ -409,6 +409,7 @@ def iglob(pattern):
     return iter(glob(pattern))
 
 
+@lru_cache()
 def glob(pattern):
     """
     Iterates all filesystem paths that get matched by the glob pattern.
