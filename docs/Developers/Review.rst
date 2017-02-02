@@ -105,6 +105,11 @@ For the Reviewers
 
 -  All the pull requests waiting to be reviewed can be found at :
    https://coala.io/review.
+-  Check the commit message.
+-  Read and try to understand the code. If something looks ineffective or
+   bug prone, leave a comment.
+   If in doubt, let the code-writer explain their reasoning until
+   reviewers have understood the code.
 -  Generated code is not intended to be reviewed. Instead rather try to
    verify that the generation was done right. The commit message should
    expose that.
@@ -116,13 +121,17 @@ For the Reviewers
    import when removing the use of something or similar things. It is
    usually good to take a look at the whole file to see if it's still
    consistent.
--  Check the commit message.
 -  Take a look at continuous integration results in the end even if they
    pass.
 -  Coverage must not fall.
 -  Be sure to assure that the tests cover all corner cases and validate the
    behaviour well. E.g. for bear tests just testing for a good and bad file
    is **not** sufficient.
+   `Writing Tests <http://api.coala.io/en/latest/Developers/Writing_Tests.html>`__
+   explains how tests should be written.
+   Bears require special attention during testing.
+   `Testing Bears <http://api.coala.io/en/latest/Developers/Testing_Bears.html>`__
+   provides a guideline for how to test bears.
 
 .. note::
 
