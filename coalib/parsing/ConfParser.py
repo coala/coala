@@ -1,6 +1,7 @@
 import os
 from collections import OrderedDict
 from types import MappingProxyType
+import logging
 
 from coalib.misc import Constants
 from coalib.parsing.LineParser import LineParser
@@ -86,6 +87,7 @@ class ConfParser:
         current_section_name = 'default'
         current_section = self.get_section(current_section_name)
         current_keys = []
+        no_section = True
 
         for line in lines:
             (section_name,
@@ -98,6 +100,7 @@ class ConfParser:
                 self.__add_comment(current_section, comment, origin)
 
             if section_name != '':
+                no_section = False
                 current_section_name = section_name
                 current_section = self.get_section(current_section_name, True)
                 current_keys = []
@@ -111,6 +114,12 @@ class ConfParser:
                 current_keys = keys
 
             for section_override, key in current_keys:
+                if no_section:
+                    logging.warning('A setting does not have a section.'
+                                    'This is a deprecated feature please '
+                                    'put this setting in a section defined'
+                                    ' with `[<your-section-name]` in a '
+                                    'configuration file.')
                 if key == '':
                     continue
 
