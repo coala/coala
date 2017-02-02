@@ -13,6 +13,8 @@ test:
   override:
     - bash .misc/tests.sh:
         parallel: true
+    - pip install pip setuptools -U:
+        parallel: true
     - python setup.py install:
         parallel: true
     - pip install coala-bears[alldeps] --pre -U:

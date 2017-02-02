@@ -5,6 +5,43 @@ from subprocess import PIPE, Popen
 from shutil import which
 
 
+class ShellCommandResult(tuple):
+    """
+    The result of a :func:`coalib.misc.run_shell_command` call.
+
+    It is based on a ``(stdout, stderr)`` string tuple like it is returned
+    form ``subprocess.Popen.communicate`` and was originally returned from
+    :func:`coalib.misc.run_shell_command`. So it is backwards-compatible.
+
+    It additionally stores the return ``.code``:
+
+    >>> process = Popen(['python', '-c', 'print(input() + " processed")'],
+    ...                 stdin=PIPE, stdout=PIPE, stderr=PIPE,
+    ...                 universal_newlines=True)
+
+    >>> stdout, stderr = process.communicate(input='data')
+    >>> result = ShellCommandResult(process.returncode, stdout, stderr)
+    >>> result[0]
+    'data processed\\n'
+    >>> result[1]
+    ''
+    >>> result.code
+    0
+    """
+
+    def __new__(cls, code, stdout, stderr):
+        """
+        Creates the basic tuple from `stdout` and `stderr`.
+        """
+        return tuple.__new__(cls, (stdout, stderr))
+
+    def __init__(self, code, stdout, stderr):
+        """
+        Stores the return `code`.
+        """
+        self.code = code
+
+
 @contextmanager
 def run_interactive_shell_command(command, **kwargs):
     """
@@ -103,7 +140,7 @@ def run_shell_command(command, stdin=None, **kwargs):
     """
     with run_interactive_shell_command(command, **kwargs) as p:
         ret = p.communicate(stdin)
-    return ret
+    return ShellCommandResult(p.returncode, *ret)
 
 
 def get_shell_type():  # pragma: no cover
