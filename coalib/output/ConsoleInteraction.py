@@ -120,7 +120,8 @@ def acquire_actions_and_apply(console_printer,
                               file_diff_dict,
                               result,
                               file_dict,
-                              cli_actions=None):
+                              cli_actions=None,
+                              context=dict):
     """
     Acquires applicable actions and applies them.
 
@@ -132,6 +133,8 @@ def acquire_actions_and_apply(console_printer,
     :param file_dict:       A dictionary containing all files with filename as
                             key.
     :param cli_actions:     The list of cli actions available.
+    :param context_line_nr: List containing line numbers which define
+                            context of affected lines
     """
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
@@ -159,8 +162,51 @@ def acquire_actions_and_apply(console_printer,
                                         failed_actions,
                                         result,
                                         file_diff_dict,
-                                        file_dict):
+                                        file_dict,
+                                        context):
             break
+
+
+def get_context(file_dict,
+                sourcerange):
+    """
+    Processes the affected line and the file to find the context for those
+    lines.
+
+    :param file_dict:       A dictionary containing all files as values with
+                            filenames as key.
+    :param sourcerange:     The SourceRange object referring to the related
+                            lines to print.
+    :return:                Returns affected_line's contextual information
+    """
+    related_lines = list()
+    related_line_nr = list()
+
+    affected_line = file_dict[sourcerange.file][
+        sourcerange.start.line - 1].rstrip()
+    affected_line = affected_line.replace('\t', 8*' ')
+    indent_space_count = len(affected_line) - len(affected_line.lstrip())
+
+    if indent_space_count > 0:
+        for j in range(sourcerange.start.line-2, -1, -1):    # pragma: no branch
+            rline = file_dict[sourcerange.file][j].rstrip()
+            affected_line = affected_line.replace('\t', 8*' ')
+            prv_space_count = len(rline) - len(rline.lstrip())
+            if prv_space_count < indent_space_count and rline:
+                related_lines.append(rline)
+                related_line_nr.append(j+1)
+                indent_space_count = prv_space_count
+            if indent_space_count == 0:
+                break
+    else:
+        pre_context = list(range(sourcerange.start.line-1))
+        pre_context.reverse()
+        pre_context = pre_context[0: min(2, len(pre_context))]
+        for i in pre_context:
+            related_lines.append(file_dict[sourcerange.file][i])
+            related_line_nr.append(i+1)
+
+    return related_lines, related_line_nr
 
 
 def print_lines(console_printer,
@@ -175,8 +221,31 @@ def print_lines(console_printer,
                             filenames as key.
     :param sourcerange:     The SourceRange object referring to the related
                             lines to print.
+    :return:                Returns line numbers of related code for affected
+                            lines.
     """
     no_color = not console_printer.print_colored
+    related_lines, related_line_nr = get_context(file_dict, sourcerange)
+
+    try:
+        lexer = get_lexer_for_filename(sourcerange.file)
+    except ClassNotFound:
+        lexer = TextLexer()
+    lexer.add_filter(VisibleWhitespaceFilter(
+                     spaces=True, tabs=True,
+                     tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+
+    related_lines.reverse()
+    related_line_nr.reverse()
+    # Print context for affected line.
+    for i in range(0, len(related_lines)):
+        console_printer.print(format_lines(lines='',
+                                           line_nr=related_line_nr[i]),
+                              end='')
+        console_printer.print(highlight_text(
+            no_color, related_lines[i], lexer))
+
+    related_line_nr.append(sourcerange.start.line)
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
         console_printer.print(format_lines(lines='', line_nr=i),
@@ -184,13 +253,7 @@ def print_lines(console_printer,
                               end='')
 
         line = file_dict[sourcerange.file][i - 1].rstrip('\n')
-        try:
-            lexer = get_lexer_for_filename(sourcerange.file)
-        except ClassNotFound:
-            lexer = TextLexer()
-        lexer.add_filter(VisibleWhitespaceFilter(
-            spaces=True, tabs=True,
-            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+
         # highlight() combines lexer and formatter to output a ``str``
         # object.
         printed_chars = 0
@@ -213,6 +276,7 @@ def print_lines(console_printer,
             console_printer.print(highlight_text(
                 no_color, line[printed_chars:], lexer), end='')
             console_printer.print('')
+    return related_line_nr
 
 
 def print_result(console_printer,
@@ -220,6 +284,7 @@ def print_result(console_printer,
                  file_diff_dict,
                  result,
                  file_dict,
+                 context,
                  interactive=True):
     """
     Prints the result to console.
@@ -231,6 +296,8 @@ def print_result(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
+    :param context:         List containing line numbers which define
+                            context of affected lines
     :param interactive:     Variable to check wether or not to
                             offer the user actions interactively.
     """
@@ -259,7 +326,8 @@ def print_result(console_printer,
                 show_patch_action.apply_from_section(result,
                                                      file_dict,
                                                      file_diff_dict,
-                                                     section)
+                                                     section,
+                                                     context)
                 cli_actions = tuple(action for action in cli_actions
                                     if not isinstance(action, ShowPatchAction))
             else:
@@ -269,7 +337,8 @@ def print_result(console_printer,
                                   file_diff_dict,
                                   result,
                                   file_dict,
-                                  cli_actions)
+                                  cli_actions,
+                                  context)
 
 
 def print_diffs_info(diffs, printer):
@@ -366,7 +435,10 @@ def print_affected_files(console_printer,
     :param result:          The result to print the context for.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
+    :return:                Returns line numbers of related code for affected
+                            lines.
     """
+    context_nr_list = dict()
     if len(result.affected_code) == 0:
         console_printer.print('\n' + STR_PROJECT_WIDE,
                               color=FILE_NAME_COLOR)
@@ -380,9 +452,17 @@ def print_affected_files(console_printer,
                                  "that doesn't seem to exist ({})"
                                  '.'.format(result, sourcerange.file))
             else:
-                print_affected_lines(console_printer,
-                                     file_dict,
-                                     sourcerange)
+                if sourcerange.file not in context_nr_list:
+                    context_nr_list[sourcerange.file] = print_affected_lines(
+                                                            console_printer,
+                                                            file_dict,
+                                                            sourcerange)
+                else:
+                    context_nr_list[sourcerange.file] += print_affected_lines(
+                                                             console_printer,
+                                                             file_dict,
+                                                             sourcerange)
+    return context_nr_list
 
 
 def print_results_no_input(log_printer,
@@ -405,16 +485,17 @@ def print_results_no_input(log_printer,
     """
     for result in result_list:
 
-        print_affected_files(console_printer,
-                             log_printer,
-                             result,
-                             file_dict)
+        context = print_affected_files(console_printer,
+                                       log_printer,
+                                       result,
+                                       file_dict)
 
         print_result(console_printer,
                      section,
                      file_diff_dict,
                      result,
                      file_dict,
+                     context,
                      interactive=False)
 
 
@@ -438,16 +519,17 @@ def print_results(log_printer,
     """
     for result in sorted(result_list):
 
-        print_affected_files(console_printer,
-                             log_printer,
-                             result,
-                             file_dict)
+        context = print_affected_files(console_printer,
+                                       log_printer,
+                                       result,
+                                       file_dict)
 
         print_result(console_printer,
                      section,
                      file_diff_dict,
                      result,
-                     file_dict)
+                     file_dict,
+                     context)
 
 
 def print_affected_lines(console_printer, file_dict, sourcerange):
@@ -459,6 +541,8 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
                                as key.
     :param sourcerange:        The SourceRange object referring to the related
                                lines to print.
+    :return:                   Returns line numbers of related code for
+                               affected lines.
     """
     console_printer.print('\n' + os.path.relpath(sourcerange.file),
                           color=FILE_NAME_COLOR)
@@ -468,9 +552,9 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
             console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
                                                line_nr=sourcerange.end.line))
         else:
-            print_lines(console_printer,
-                        file_dict,
-                        sourcerange)
+            return print_lines(console_printer,
+                               file_dict,
+                               sourcerange)
 
 
 def require_setting(setting_name, arr, section):
@@ -620,7 +704,8 @@ def ask_for_action_and_apply(console_printer,
                              failed_actions,
                              result,
                              file_diff_dict,
-                             file_dict):
+                             file_dict,
+                             context):
     """
     Asks the user for an action and applies it.
 
@@ -638,6 +723,8 @@ def ask_for_action_and_apply(console_printer,
                             the file with filename as keys.
     :param file_dict:       Dictionary with filename as keys and its contents
                             as values.
+    :param context:         List containing line numbers which define
+                            context of affected lines.
     :return:                Returns a boolean value. True will be returned, if
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
@@ -649,10 +736,12 @@ def ask_for_action_and_apply(console_printer,
 
     chosen_action = action_dict[action_name]
     try:
+        keywords = {'context': context}
         chosen_action.apply_from_section(result,
                                          file_dict,
                                          file_diff_dict,
-                                         section)
+                                         section,
+                                         **keywords)
         console_printer.print(
             format_lines(chosen_action.SUCCESS_MESSAGE),
             color=SUCCESS_COLOR)
