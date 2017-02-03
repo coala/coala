@@ -37,6 +37,7 @@ If you're trying to **use** coala, you should have a look at our
    Git Basics <Developers/Git_Basics>
    Review <Developers/Review>
    Development Setup <Developers/Development_Setup>
+   Adding CI to your Fork <Developers/Adding_CI>
    Writing Native Bears <Developers/Writing_Native_Bears>
    Writing Linter Bears <Developers/Writing_Linter_Bears>
    Linter Bears - Advanced <Developers/Linter_Bears_Advanced>
