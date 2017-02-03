@@ -45,6 +45,9 @@ before_install:
   # requirements.txt automatically.
   - if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
 
+install:
+  - pip3 install --upgrade packaging appdirs
+
 before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
