@@ -95,7 +95,7 @@ class UnreachableCode:
     Unreachable code, sometimes called dead code, is source code that
     can never be executed during the program execution.
     """
-    class deco:
+    class docs:
         example = """
         def func():
             return True
