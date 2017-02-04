@@ -1,6 +1,33 @@
 coala 0.10 - PolarBear
 ======================
 
+::
+
+
+                       `++-    -o+`                   
+                -oo:  :yhho    ohhy:  :oo.            
+                :hhhoohhh+      +hhhoohhy:            
+            ``.--shhhhhy:        /yhhhhho--..`        
+           +hhhhhhhhhhh+          ohhhhhhhhhhh/       
+           `/+/////+hhhh/        +hhhy+///////`       
+                    -yhhhs     hshhhy-                
+       .os/           hhhhy-  -yhhhh           +ss.   
+       .yhho           shhho``ohhhs          `ohhy`   
+        -yhhs`          +hhhsshhh+          `shhy-    
+      .::shhhs++/+yhy////shhhhhhs////yhy++++yhhho::-  
+     /hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh/ 
+      -::shhhs++++yhy////shhhhhhs          +shhhs::.  
+        -yhhs`          +hhhsshhh+          `shhy-    
+       .yhho`          shhho``ohhhs           ohhy.   
+       .ss+           hhhhy   -yhhhh           /so.   
+                    -yhhhs      shhhy-                
+           `///////+yhhh+        /hhhh+/////+/`       
+           /hhhhhhhhhhho          +hhhhhhhhhhh+       
+            `..--ohhhhhy/        :yhhhhhs--.``        
+                :hhhoohhh+      +hhhoohhh:            
+                -oo:  :yhho    ohhy:  :oo-            
+                       `+o-    -++`
+
 For this release we had 168 commits contributed by 66 unique contributors
 over 2.5 months.
 
