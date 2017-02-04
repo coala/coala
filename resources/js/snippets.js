@@ -2,6 +2,7 @@ var snippets = {
     "C" : "c.md",
     "CSS" : "css.md",
     "English" : "english.md",
+    "Haskell" : "haskell.md",
     "HTML" : "html.md",
     "JavaScript" : "javascript.md",
     "JSON" : "json.md",
