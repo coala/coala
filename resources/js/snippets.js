@@ -1,4 +1,5 @@
 var snippets = {
+       "HTML" : "html.md",
        "JavaScript" : "javascript.md",
        "PHP" : "php.md",
        "Python" : "python.md",
