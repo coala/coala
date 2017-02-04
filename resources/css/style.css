@@ -48,6 +48,15 @@
   font-weight: 100;
   text-align: center;
 }
+.row .get-description {
+  font-family: Roboto;
+  font-size: 1.6em;
+  text-align: justify;
+  font-weight: 300;
+}
+.get-description a:hover {
+  text-decoration: underline;
+}
 .main-content {
   margin-top: 2em;
 }
