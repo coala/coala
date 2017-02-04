@@ -331,9 +331,11 @@ a:hover > .card {
 .profile {
   background-color: #000;
   color: #fff;
+  width: 40%;
 }
 .dashboard {
   background-color: darkslategrey;
+  width: 60%;
 }
 .modal-content-bear {
   display: flex
@@ -376,7 +378,6 @@ a:hover > .card {
   bottom: 0;
   left: 0;
   right: 0;
-  position: absolute;
 }
 .snippet-card {
   padding: 1em;
@@ -527,8 +528,8 @@ a:hover > .card{
   margin-bottom: 5px !important;
 }
 .example-card pre{
-	height:300px;
-	overflow:scroll;
+    height:300px;
+    overflow:scroll;
 }
 .text-center{
   text-align: center;
@@ -549,14 +550,25 @@ a:hover > .card{
 .settings-options{
   color:lightgrey;
 }
-.settings-opt{
-  color: cadetblue;
+.settings-opt ,.settings-opt  .chip{
+  color: cadetblue !important;
+  border-radius: 0px !important;
 }
-.settings-non-opt{
-  color: orange;
+.settings-non-opt, .settings-non-opt  .chip{
+  color:darkgoldenrod !important;
+  border-radius: 0px !important;
 }
 .padding-square-icon{
   padding: 0 1em 0 1em;
+}
+.settings-div{
+  padding:0 0 0.5em 0 !important;
+}
+.material-tooltip{
+  max-width: calc(40% - 4px) !important;
+}
+.param{
+  cursor: pointer;
 }
 @media (max-width: 768px) {
   .title {

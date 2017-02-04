@@ -39,40 +39,38 @@
                 <div class="empty">
                 </div>
                 <div class="card-action profile-data center" >
-                 <img class="profile-img center" height="100" ng-src="https://avatars.githubusercontent.com/{{ member.login }}">
+                   <img class="profile-img center" height="100" ng-src="https://avatars.githubusercontent.com/{{ member.login }}">
 
-                 <div class="person-name">{{ member.name }}</div>
-                 <div class="person-github-id">@{{member.login}}</div>
-                 <div class="person-github-bio"> {{member.bio }}</div>
-                 <div class="center person-contributions-details">
-                 	<div class="row">
-                 		<div class="col-md-6">
-                 			<div class="person-contributions">{{ member.contributions }}</div>
-																				<div class="small-heading-light">COMMITS</div>
-																			</div>
-																			<div class="col-md-6">
-                 			<div class="person-contributions">{{ member.issues }}</div>
-																				<div class="small-heading-light">ISSUES OPENED</div>
-																			</div>
-                 	</div>
-
-                  <a ng-href="https://github.com/{{ member.login }}" class="waves-effect github-link btn center"><i class="fa fa-github" aria-hidden="true"></i></a>
-
-             				</div>
+                   <div class="person-name">{{ member.name }}</div>
+                   <div class="person-github-id">@{{member.login}}</div>
+                   <div class="person-github-bio"> {{member.bio }}</div>
+                   <div class="center person-contributions-details">
+                      <div class="row">
+                        <div class="col-md-6">
+                            <div class="person-contributions">{{ member.contributions }}</div>
+                            <div class="small-heading-light">COMMITS</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="person-contributions">{{ member.issues }}</div>
+                            <div class="small-heading-light">ISSUES OPENED</div>
+                        </div>
+                    </div>
+                    <a ng-href="https://github.com/{{ member.login }}" class="waves-effect github-link btn center"><i class="fa fa-github" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
-        <div class="center">
+    </div>
+    <div class="center">
         <a ng-click="loadMore()" class="waves-effect btn-large center">SHOW MORE CONTRIBUTORS</a>
-        </div>
     </div>
-    <div class="container events"><br>
+</div>
+<div class="container events"><br>
 
-        <div class="gi-container-title">come meet us</div>
-        <div class="description">We’d love to share a bar of chocolate with you!
-        </div><br>
-        <div class="col-md-8 col-md-offset-2">
-            <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&amp;mode=AGENDA&amp;height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src=hl3j7971mhoo6rhfkn3fcf5afk%40group.calendar.google.com&amp;color=%23875509&amp;src=jpmh8lq7evpptl8hmul9vfh267k1ab4i%40import.calendar.google.com&amp;color=%235F6B02&amp;ctz=Europe%2FBerlin" style="border-width:0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
-        </div>
+    <div class="gi-container-title">come meet us</div>
+    <div class="description">We’d love to share a bar of chocolate with you!
+    </div><br>
+    <div class="col-md-8 col-md-offset-2">
+        <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&amp;mode=AGENDA&amp;height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src=hl3j7971mhoo6rhfkn3fcf5afk%40group.calendar.google.com&amp;color=%23875509&amp;src=jpmh8lq7evpptl8hmul9vfh267k1ab4i%40import.calendar.google.com&amp;color=%235F6B02&amp;ctz=Europe%2FBerlin" style="border-width:0" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
     </div>
+</div>
 </section>

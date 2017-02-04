@@ -3,11 +3,3 @@ bears = SpaceConsistencyBear
 files = **.(md|html|css)
 ignore = vendors/**
 use_spaces = yeah
-
-[markdown]
-bears = MarkdownBear
-files = **.md
-
-[python]
-bears = PEP8Bear
-files = **.py

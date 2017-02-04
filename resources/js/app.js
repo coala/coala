@@ -106,6 +106,7 @@
         params_list["non_optional_params"].push(Object.keys(value)[0])
       });
       bear_data["data"]["metadata"]["params_list"] = params_list;
+      console.log(bear_data);
       $scope.setCurrentBear(bear_data);
       $scope.$evalAsync();
       $('#modal1').modal('open');
