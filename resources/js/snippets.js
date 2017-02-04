@@ -8,6 +8,7 @@ var snippets = {
     "Markdown" : "markdown.md",
     "PHP" : "php.md",
     "Python" : "python.md",
+    "R" : "r.md",
     "Ruby" : "ruby.md",
     "Typescript" : "typescript.md",
 }
