@@ -29,4 +29,5 @@ mult.js
 |    |  1: Open file(s)
 |    |  2: Add ignore comment
 |    | Enter number (Ctrl-D to exit):
+1 $
 ```
