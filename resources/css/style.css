@@ -576,6 +576,9 @@ a:hover > .card{
   line-height: 2em;
   font-weight: 400;
 }
+.profile, .dashboard{
+  max-width: none !important;
+}
 @media (max-width: 768px) {
   .title {
       font-size: 6em;
