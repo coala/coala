@@ -4,6 +4,7 @@ var snippets = {
     "English" : "english.md",
     "HTML" : "html.md",
     "JavaScript" : "javascript.md",
+    "JSON" : "json.md",
     "Markdown" : "markdown.md",
     "PHP" : "php.md",
     "Python" : "python.md",
