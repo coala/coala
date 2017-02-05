@@ -475,7 +475,7 @@ a:hover > .card{
   text-align: center;
 }
 .small-heading-light{
-  font-size: 12px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-align: center;
   color: lightgray;
@@ -626,4 +626,18 @@ a:hover > .card{
       padding-left: 0 !important;
       padding-right: 0 !important;
   }
+}
+
+.col-xs1-4 {
+    position: relative;
+    min-height: 1px;
+    padding-left: 1px;
+    padding-right: 1px;
+    float: left;
+    width: 33.33333333%;
+}
+
+.contribution-container {
+    width: 80%;
+    margin: 0 auto;
 }

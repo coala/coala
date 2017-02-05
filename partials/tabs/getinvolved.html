@@ -46,13 +46,19 @@
                    <div class="person-github-bio"> {{member.bio }}</div>
                    <div class="center person-contributions-details">
                       <div class="row">
-                        <div class="col-md-6">
-                            <div class="person-contributions">{{ member.contributions }}</div>
-                            <div class="small-heading-light">COMMITS</div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="person-contributions">{{ member.issues }}</div>
-                            <div class="small-heading-light">ISSUES OPENED</div>
+                        <div class="contribution-container">
+                            <div class="col-xs1-4">
+                                <div class="person-contributions">{{ member.contributions }}</div>
+                                <div class="small-heading-light">COMMITS</div>
+                            </div>
+                            <div class="col-xs1-4">
+                                <div class="person-contributions">{{ member.reviews }}</div>
+                                <div class="small-heading-light">REVIEWS</div>
+                            </div>
+                            <div class="col-xs1-4">
+                                <div class="person-contributions">{{ member.issues }}</div>
+                                <div class="small-heading-light">ISSUES</div>
+                            </div>
                         </div>
                     </div>
                     <a ng-href="https://github.com/{{ member.login }}" class="waves-effect github-link btn center"><i class="fa fa-github" aria-hidden="true"></i></a>
