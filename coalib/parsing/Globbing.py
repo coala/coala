@@ -1,3 +1,4 @@
+import logging
 import os
 import platform
 import re
@@ -343,7 +344,7 @@ def has_wildcard(pattern):
     return match is not None
 
 
-def _iglob(pattern):
+def _simple_glob(pattern):
     dirname, basename = os.path.split(pattern)
     if not has_wildcard(pattern):
         for file in _absolute_flat_glob(pattern):
@@ -365,7 +366,7 @@ def _iglob(pattern):
     # Prevent an infinite recursion if a drive or UNC path contains
     # wildcard characters (i.e. r'\\?\C:').
     if dirname != pattern and has_wildcard(dirname):
-        dirs = iglob(dirname)
+        dirs = glob(dirname)
     else:
         dirs = [dirname]
 
@@ -375,10 +376,9 @@ def _iglob(pattern):
 
 
 @yield_once
-def iglob(pattern):
+def _glob_with_alternatives(pattern):
     """
-    Iterates all filesystem paths that get matched by the glob pattern.
-    Syntax is equal to that of fnmatch.
+    Globs and iterates over the alternatives.
 
     :param pattern: Glob pattern with wildcards
     :return:        Iterator that yields all file names that match pattern
@@ -388,13 +388,28 @@ def iglob(pattern):
         pat = os.path.normcase(pat)
 
         if pat.endswith(os.sep):
-            for name in _iglob(pat):
+            for name in _simple_glob(pat):
                 yield name
         else:
-            for name in _iglob(pat):
+            for name in _simple_glob(pat):
                 yield name.rstrip(os.sep)
 
 
+def iglob(pattern):
+    """
+    DEPRECATED. Do not use. Wraps glob.
+
+    >>> import sys
+    >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    >>> iglob('Globbing.py')
+    DEBUG:root:iglob is deprecated. Do not use it.
+    <list_iterator object at ...>
+    """
+    logging.debug('iglob is deprecated. Do not use it.')
+    return iter(glob(pattern))
+
+
+@lru_cache()
 def glob(pattern):
     """
     Iterates all filesystem paths that get matched by the glob pattern.
@@ -403,4 +418,4 @@ def glob(pattern):
     :param pattern: Glob pattern with wildcards
     :return:        List of all file names that match pattern
     """
-    return list(iglob(pattern))
+    return list(_glob_with_alternatives(pattern))

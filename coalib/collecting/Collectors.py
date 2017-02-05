@@ -9,7 +9,7 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
 from coala_utils.decorators import yield_once
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
+from coalib.parsing.Globbing import fnmatch, glob, glob_escape
 from coalib.output.printers.LogPrinter import LogPrinter
 
 
@@ -50,7 +50,7 @@ def icollect(file_paths, ignored_globs=None):
         file_paths = [file_paths]
 
     for file_path in file_paths:
-        for match in iglob(file_path):
+        for match in glob(file_path):
             if not ignored_globs or not fnmatch(match, ignored_globs):
                 yield match, file_path
 
@@ -115,10 +115,10 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
     for bear_dir, dir_glob in filter(lambda x: os.path.isdir(x[0]),
                                      icollect(bear_dir_glob)):
         # Since we get a real directory here and since we
-        # pass this later to iglob, we need to escape this.
+        # pass this later to glob, we need to escape this.
         bear_dir = glob_escape(bear_dir)
         for bear_glob in bear_globs:
-            for matching_file in iglob(
+            for matching_file in glob(
                     os.path.join(bear_dir, bear_glob + '.py')):
 
                 try:
