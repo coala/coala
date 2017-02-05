@@ -8,7 +8,7 @@ To run locally:
 
     $ git clone https://github.com/coala/landing-frontend.git
     $ cd landing-frontend
-    $ python -m SimpleHTTPServer 8080
+    $ python2 -m SimpleHTTPServer 8080
 
 
 Open http://localhost:8080 in your browser.
