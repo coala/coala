@@ -32,9 +32,8 @@ At coala we are looking heavily at the maintainability of the code.
 
     Code is more often read than written!
 
-It is obvious that we need good code. In order to do that we are
-verifying that every change to our code (i.e. the commits) is making it
-better.
+We need good code. In order to do that we are verifying that every
+change to our code (i.e. the commits) is making it better.
 
 What Makes a Good Commit
 ------------------------
