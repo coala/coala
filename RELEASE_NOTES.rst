@@ -42,8 +42,9 @@ for the big changes that are outlined in the cEPs like section inheritance
 and the next generation core.
 
 **Known Bugs**
+
 - Results are cached even if a bear does not run. This can lead to empty
-  results when there should be errors. To temporarily deal with this
+  results where there should be errors. To temporarily deal with this
   run coala with the ``--flush-cache`` option
 
 **General**
