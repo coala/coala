@@ -10,6 +10,7 @@ var snippets = {
     "PHP" : "php.md",
     "Python" : "python.md",
     "R" : "r.md",
+    "reStructuredText" : "restructuredtext.md",
     "Ruby" : "ruby.md",
     "Typescript" : "typescript.md",
 }
