@@ -67,8 +67,8 @@
     "Dodging the bushfires",
     "Gulping the eucalypt"
     ]
-    if($scope.$storage.bear_data){   
-     $scope.bearList = ($scope.$storage.bear_data)  
+    if($scope.$storage.bear_data){
+     $scope.bearList = ($scope.$storage.bear_data)
     }else{
      $scope.lang_loader=true;
      $http.get(api_link + '/list/bears')
@@ -79,9 +79,9 @@
         "name" : value,
         "desc" : data["data"][value]["desc"],
         "languages": data["data"][value]["languages"]
-       })  
+       })
       })
-      $scope.bearList = arr 
+      $scope.bearList = arr
       $scope.$evalAsync();
       $scope.lang_loader = false;
       $scope.$storage.bear_data = arr
@@ -91,7 +91,7 @@
     $scope.setCurrentBear = function (bear_data) {
      $scope.currentBear = bear_data["data"]
     }
-    self.showTheatre = function (bear_selected) { 
+    self.showTheatre = function (bear_selected) {
 
      $http.get(api_link + '/search/bears?bear=' + bear_selected["name"])
      .then(function (bear_data) {
@@ -125,7 +125,29 @@
     self = this;
     self.diff_data = {};
     self.diff_data_status = false;
-    self.diff_loader = false;
+    self.diff_loader = true;
+    self.done_loading_bears = false;
+    self.error_on_run = false;
+    self.error_message = "";
+
+    $http.get(api_link + '/list/bears')
+    .then(function(data){
+     bears = {}
+     angular.forEach(Object.keys(data["data"]), function(value, key){
+       bears[value] = null;
+     })
+     $('.chips-bears').material_chip({
+       data: [{
+         tag: 'PEP8Bear'
+       }],
+       placeholder: '+bear',
+       secondaryPlaceholder: '+Add bear',
+       autocompleteData: bears
+     });
+     self.diff_loader = false;
+     self.done_loading_bears = true;
+    })
+
     self.update_diff_data = function (data) {
      self.diff_data = data
     };
@@ -133,21 +155,36 @@
     self.get_diff_data = function () {
      return self.diff_data
     }
+
     self.submit_coa_form = function () {
      self.diff_loader = true;
+     self.diff_data_status = false;
+     var bearsList="";
+     var chipsData = $('.chips-bears').material_chip('data');
+     if(chipsData.length > 0) {
+       bearsList += chipsData[0].tag;
+       for(var i = 1; i < chipsData.length; i++)
+        bearsList += ',' + chipsData[i].tag;
+     }
      $http({
       url: api_link + '/editor/',
       method: "POST",
       data: {
        "file_data": $(".file-data").val(),
-       "bears": $(".bear-data").val(),
+       "bears": bearsList,
        "language": $(".lang-data").val()
       }
      })
      .then(function(response) {
-      self.update_diff_data(response["data"]["results"]["default"])
-      self.diff_data_status = true;
       self.diff_loader = false;
+      self.diff_data_status = true;
+      self.error_on_run = false;
+      if(response["data"]["status"] == 'error') {
+        self.error_message = response["data"]["msg"];
+        self.error_on_run = true;
+      } else {
+        self.update_diff_data(response["data"]["results"]["default"])
+      }
      }).catch(function (c) {
       console.log(c);
      })
@@ -157,7 +194,7 @@
    controllerAs: 'toc'
   }
  }]);
- 
+
 
  app.filter('format_desc', function () {
   return function (value) {
@@ -174,7 +211,7 @@
   };
  });
 
-/* 
+/*
 Filter from http://stackoverflow.com/a/18939029
 */
 app.filter("toArray", function(){
@@ -197,7 +234,7 @@ app.directive('getinvolved', ['$http', function ($http) {
    self.contributors
    if($scope.$get_involved_storage.contributors_data){
     self.contributors = $scope.$get_involved_storage.contributors_data
-   }else{   
+   }else{
     $http.get(api_link + '/contrib/')
     .then(function (data) {
      $scope.$get_involved_storage.contributors_data = data["data"]
@@ -205,11 +242,11 @@ app.directive('getinvolved', ['$http', function ($http) {
     }).catch(function (c) {
      console.log(c);
     })
-   } 
+   }
    $scope.totalDisplayed = 20;
 
    $scope.loadMore = function () {
-    $scope.totalDisplayed += 20;  
+    $scope.totalDisplayed += 20;
    };
   },
   controllerAs: "gic"

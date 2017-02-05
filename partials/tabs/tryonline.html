@@ -1,13 +1,16 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-8 col-md-offset-2 col-xs-12">
-        <form class="coa-form">
-            <textarea placeholder="Write some code here" class="file-data bb-data" name="file_data">print( a + b )
+      <form class="coa-form">
+        <textarea placeholder="Write some code here" class="file-data bb-data" name="file_data">print( a + b )
 </textarea>  <!-- DONT EVER INDENT THIS, it ends up in the textarea -->
-            <textarea placeholder="Type in some bears (separated by comma)" class="bear-data bb-data" name="bears">PEP8Bear</textarea>
-
-            <button type="submit" ng-click="toc.submit_coa_form()" class="btn waves-effect submit-coa-form">RUN coala!</button>
-        </form>
+        <div class="col s10 m11 l11">
+          <div class="chips chips-bears bb-chips" ng-show="toc.done_loading_bears"></div>
+        </div>
+        <div class="col s2 m1 l1">
+          <button class="btn-floating waves-effect" type="submit" ng-click="toc.submit_coa_form()"><i class="material-icons right">send</i></button></div>
+        </div>
+      </form>
     </div>
   </div>
     <div ng-show="toc.diff_loader">
@@ -22,7 +25,8 @@
     <div class="col-md-offset-2 col-md-8 col-xs-12" ng-show="toc.diff_data_status">
         <div class="report-title">RESULTS</div>
         <div class="results-data">
-            <div ng-repeat="data in toc.diff_data" class="results-row">
+            <div class="origin-diff" ng-show="toc.error_on_run">{{toc.error_message}}</div>
+                  <div ng-repeat="data in toc.diff_data" class="results-row" ng-hide="toc.error_on_run">
                 <span class="origin-diff">{{data.origin}}</span>
                 <span class=" severity-diff">Severity : {{data.severity}}</span>
                 <div class="data-diff">Message : <span class="diff-msg">{{data.message}}</span></div>
