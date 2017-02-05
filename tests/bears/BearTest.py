@@ -6,6 +6,9 @@ import shutil
 from time import sleep
 
 from coalib.bears.Bear import Bear
+from coalib.bears.BEAR_KIND import BEAR_KIND
+from coalib.bears.GlobalBear import GlobalBear
+from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
@@ -18,6 +21,10 @@ class BadTestBear(Bear):
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
 
+    @staticmethod
+    def kind():
+        return BEAR_KIND.GLOBAL
+
     def run(self):
         raise NotImplementedError
 
@@ -28,6 +35,10 @@ class TestBear(Bear):
 
     def __init__(self, section, queue):
         Bear.__init__(self, section, queue)
+
+    @staticmethod
+    def kind():
+        return BEAR_KIND.GLOBAL
 
     def run(self):
         self.print('set', 'up', delimiter='=')
@@ -105,7 +116,7 @@ class BearTest(unittest.TestCase):
     def test_simple_api(self):
         self.assertRaises(TypeError, TestBear, self.settings, 2)
         self.assertRaises(TypeError, TestBear, None, self.queue)
-        self.assertRaises(NotImplementedError, self.uut.kind)
+        self.assertRaises(NotImplementedError, Bear.kind)
 
         base = Bear(self.settings, None)
         self.assertRaises(NotImplementedError, base.run)
@@ -128,6 +139,26 @@ class BearTest(unittest.TestCase):
                            'information.')
         # debug message contains custom content, dont test this here
         self.queue.get()
+
+    def test_print_filename_LocalBear(self):
+        self.uut = LocalBear(self.settings, self.queue)
+        self.uut.execute('filename.py', 'file\n')
+        self.check_message(LOG_LEVEL.DEBUG)
+        # Fails because of no run() implementation
+        self.check_message(LOG_LEVEL.WARNING,
+                           'Bear LocalBear failed to run on file filename.py. '
+                           'Take a look at debug messages (`-V`) for further '
+                           'information.')
+
+    def test_print_no_filename_GlobalBear(self):
+        self.uut = GlobalBear(None, self.settings, self.queue)
+        self.uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG)
+        # Fails because of no run() implementation
+        self.check_message(LOG_LEVEL.WARNING,
+                           'Bear GlobalBear failed to run. Take a look at '
+                           'debug messages (`-V`) for further '
+                           'information.')
 
     def test_inconvertible(self):
         self.uut = TypedTestBear(self.settings, self.queue)

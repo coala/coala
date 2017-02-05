@@ -14,6 +14,7 @@ from coala_utils.decorators import (enforce_signature, classproperty,
 from dependency_management.requirements.PackageRequirement import (
     PackageRequirement)
 from dependency_management.requirements.PipRequirement import PipRequirement
+from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
@@ -249,8 +250,14 @@ class Bear(Printer, LogPrinterMixin):
             result = self.run_bear_from_section(args, kwargs)
             return [] if result is None else list(result)
         except (Exception, SystemExit):
-            self.warn('Bear {} failed to run. Take a look at debug messages'
-                      ' (`-V`) for further information.'.format(name))
+            if self.kind() == BEAR_KIND.LOCAL:
+                self.warn('Bear {} failed to run on file {}. Take a look '
+                          'at debug messages (`-V`) for further '
+                          'information.'.format(name, args[0]))
+            else:
+                self.warn('Bear {} failed to run. Take a look '
+                          'at debug messages (`-V`) for further '
+                          'information.'.format(name))
             self.debug(
                 'The bear {bear} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '
