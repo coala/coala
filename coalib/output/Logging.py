@@ -1,8 +1,8 @@
 from datetime import datetime
 import json
 import io
-import logging
 import sys
+import logging
 import logging.config
 
 
