@@ -6,6 +6,7 @@ dependencies:
   pre:
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
     - nvm alias default node
+    - npm install -g csslint
   override:
     - bash .misc/deps.sh
 
