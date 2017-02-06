@@ -224,6 +224,35 @@ app.filter("toArray", function(){
  };
 });
 
+/*
+Filter from http://stackoverflow.com/a/27963602
+*/
+app.filter('orderEmpty', function () {
+    return function (array, key, type) {
+        var present, empty, result;
+
+        if(!angular.isArray(array)) return;
+        present = array.filter(function (item) {
+            return item[key];
+        });
+        empty = array.filter(function (item) {
+            return !item[key]
+        });
+        switch(type) {
+            case 'toBottom':
+                result = present.concat(empty);
+                break;
+            case 'toTop':
+                result = empty.concat(present);
+                break;
+            default:
+                result = array;
+                break;
+        }
+        return result;
+    };
+});
+
 app.directive('getinvolved', ['$http', function ($http) {
  return {
   restrict: 'E',
