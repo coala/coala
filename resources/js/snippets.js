@@ -13,4 +13,5 @@ var snippets = {
     "reStructuredText" : "restructuredtext.md",
     "Ruby" : "ruby.md",
     "Typescript" : "typescript.md",
+    "YAML" : "yaml.md",
 }
