@@ -342,6 +342,11 @@ def print_results_formatted(log_printer,
                 'Unable to print the result with the given format string.',
                 exception)
 
+        except ValueError as exception:
+            log_printer.log_exception('There is a problem with the content of'
+                                      'the object you tried to assign the value'
+                                      'to.', exception)
+
 
 def print_affected_files(console_printer,
                          log_printer,
