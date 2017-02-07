@@ -3,14 +3,13 @@ import json
 import io
 import logging
 import logging.config
+import sys
 
 
 def configure_logging():
     """
     Configures the logging with hard coded dictionary.
     """
-    import sys
-    import logging.config
 
     logging.config.dictConfig({
         'version': 1,
