@@ -23,7 +23,7 @@ test:
         timeout: 900  # Allow 15 mins
     - coala --non-interactive:
         parallel: true
-    - bash .misc/deploy.coverage.sh:
+    - codecov:
         parallel: true
     - make -C docs clean
     - python setup.py docs
