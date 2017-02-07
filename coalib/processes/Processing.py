@@ -53,12 +53,12 @@ def get_running_processes(processes):
 
 
 def create_process_group(command_array, **kwargs):
-    if platform.system() == 'Windows':  # pragma: no cover
+    if platform.system() == 'Windows':  # pragma posix: no cover
         proc = subprocess.Popen(
             command_array,
             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             **kwargs)
-    else:
+    else:  # pragma nt: no cover
         proc = subprocess.Popen(command_array,
                                 preexec_fn=os.setsid,
                                 **kwargs)

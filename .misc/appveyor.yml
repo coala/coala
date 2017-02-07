@@ -50,8 +50,14 @@ install:
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - "%CMD_IN_ENV% python -m pytest --cov"
+  - "%CMD_IN_ENV% bash .misc/tests.sh"
   - "%CMD_IN_ENV% python setup.py install"
+
+on_success:
+  - codecov
+
+on_failure:
+  - codecov
 
 matrix:
   fast_finish: true

@@ -21,7 +21,6 @@ for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
   pyenv local $dep_version
   python --version
-  source .misc/env_variables.sh
 
   pip install -r test-requirements.txt
   pip install -r requirements.txt

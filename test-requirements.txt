@@ -1,4 +1,4 @@
-coverage~=4.0
+coverage~=4.3.4
 codecov~=2.0.5
 pytest~=3.0
 pytest-cov~=2.2
