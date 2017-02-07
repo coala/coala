@@ -1,8 +1,9 @@
 <section>
 <div class="main-content container">
 
-    <div class="col-md-8 col-md-offset-2">
-        <input ng-model="searchText" placeholder="Search for a bear or a language" id="search" type="text" class="validate">
+    <div class="col-md-8 col-md-offset-2 input-field">
+      <input ng-model="searchText" placeholder="Search for a bear or a language" id="search" class="validate" type="search" required>
+      <label id="icon" class="label-icon" for="search"><i  class="material-icons">search</i></label>
     </div>
     <div class="col-md-8 col-md-offset-2 text-center">
         If you find an issue with this documentation, you can report it
