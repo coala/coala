@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import io
+import sys
 import logging
 import logging.config
 
@@ -9,8 +10,6 @@ def configure_logging():
     """
     Configures the logging with hard coded dictionary.
     """
-    import sys
-    import logging.config
 
     logging.config.dictConfig({
         'version': 1,
