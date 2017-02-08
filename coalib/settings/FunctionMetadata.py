@@ -8,7 +8,6 @@ from coalib.settings.DocstringMetadata import DocstringMetadata
 
 class FunctionMetadata:
     str_nodesc = 'No description given.'
-    str_optional = "Optional, defaults to '{}'."
 
     @enforce_signature
     def __init__(self,
@@ -126,7 +125,7 @@ class FunctionMetadata:
 
         for param in self.optional_params:
             if param in section:
-                _, annotation, _ = self.optional_params[param]
+                _, annotation, _, _ = self.optional_params[param]
                 params[param] = self._get_param(param, section, annotation)
 
         return params
@@ -186,11 +185,10 @@ class FunctionMetadata:
                     argspec.annotations.get(arg, None))
             else:
                 optional_params[arg] = (
-                    doc_comment.param_dict.get(arg, cls.str_nodesc) + ' (' +
-                    cls.str_optional.format(
-                        defaults[i-num_non_defaults]) + ')',
+                    doc_comment.param_dict.get(arg, cls.str_nodesc),
                     argspec.annotations.get(arg, None),
-                    defaults[i-num_non_defaults])
+                    defaults[i-num_non_defaults],
+                    'Optional')
 
         return cls(name=func.__name__,
                    desc=doc_comment.desc,

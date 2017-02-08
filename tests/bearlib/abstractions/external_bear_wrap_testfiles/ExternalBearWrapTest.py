@@ -99,15 +99,12 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         self.assertEqual(metadata.non_optional_params['asetting'][0],
                          FunctionMetadata.str_nodesc)
         self.assertEqual(metadata.optional_params['bsetting'][0],
-                         FunctionMetadata.str_nodesc + ' ' +
-                         FunctionMetadata.str_optional.format(True))
-        self.assertEqual(metadata.optional_params['csetting'][0], 'My desc.' +
-                         ' ' + FunctionMetadata.str_optional.format(False))
+                         FunctionMetadata.str_nodesc)
+        self.assertEqual(metadata.optional_params['csetting'][0], 'My desc.')
         self.assertEqual(metadata.non_optional_params['dsetting'][0],
                          'Another desc')
         self.assertEqual(metadata.optional_params['esetting'][0],
-                         FunctionMetadata.str_nodesc + ' ' +
-                         FunctionMetadata.str_optional.format(None))
+                         FunctionMetadata.str_nodesc)
 
     def test_optional_settings(self):
         uut = (external_bear_wrap(sys.executable, settings={

@@ -83,8 +83,7 @@ def _create_wrapper(klass, options):
             if default_value is NoDefaultValue:
                 return (description, setting_type)
             else:
-                return (description + ' ' +
-                        FunctionMetadata.str_optional.format(default_value),
+                return (description,
                         setting_type, default_value)
 
         @classmethod

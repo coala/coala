@@ -712,9 +712,7 @@ class ShowBearsTest(unittest.TestCase):
                              '  Needed Settings:\n'
                              '   * setting1: Required Setting.\n\n'
                              '  Optional Settings:\n'
-                             '   * setting2: Optional Setting. ('
-                             "Optional, defaults to 'None'."
-                             ')\n\n'
+                             '   * setting2: Optional Setting.\n\n'
                              '  Can detect:\n   * Formatting\n\n'
                              '  Can fix:\n   * Formatting\n\n  Path:\n   ' +
                              repr(TestBear.source_location) + '\n\n')
