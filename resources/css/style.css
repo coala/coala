@@ -354,7 +354,7 @@ a:hover > .card {
   display: flex
 }
 .bear-name {
-  font-size: 3em;
+  font-size: 3.5vw;
   text-align: center;
   padding-right: 1em;
   padding-top: 1em;
@@ -369,6 +369,7 @@ a:hover > .card {
   font-family: Roboto;
   font-weight: 300;
   padding: 1em;
+  overflow-wrap: break-word !important;
 }
 .candetect {
   font-size: 13px;
