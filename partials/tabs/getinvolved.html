@@ -44,7 +44,7 @@
                    <img class="profile-img center" height="100" ng-src="https://avatars.githubusercontent.com/{{ member.login }}">
                    <div class="person-name">{{ member.name }}</div>
                    <div class="person-github-id">@{{member.login}}</div>
-                   <div class="person-github-bio"> {{member.bio }}</div>
+                   <div class="person-github-bio"> {{member.bio | limitTo:80}}{{member.bio.length > 80 ? '...' : ''}}</div>
                    <div class="center person-contributions-details">
                       <div class="row">
                         <div class="contribution-container">
