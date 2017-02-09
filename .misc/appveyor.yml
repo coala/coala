@@ -9,10 +9,12 @@ environment:
     - PYTHON: "C:\\Python34"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "32"
+      LLVM_VERSION: 3.4.1
 
     - PYTHON: "C:\\Python34-x64"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "64"
+      LLVM_VERSION: 3.4.1
 
 cache:
   - "C:\\wheels"
@@ -26,7 +28,7 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "SET PATH=C:\\LLVM\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
@@ -42,8 +44,20 @@ install:
   - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r test-requirements.txt"
   - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r requirements.txt"
 
+  - curl -fsSL http://llvm.org/releases/%LLVM_VERSION%/LLVM-%LLVM_VERSION%-win32.exe -o LLVM.exe
+  - 7z x LLVM.exe -oC:\LLVM
+
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - "%CMD_IN_ENV% python -m pytest --cov"
+  - "%CMD_IN_ENV% bash .misc/tests.sh"
   - "%CMD_IN_ENV% python setup.py install"
+
+on_success:
+  - codecov
+
+on_failure:
+  - codecov
+
+matrix:
+  fast_finish: true

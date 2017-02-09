@@ -78,7 +78,7 @@ script:
       make -C docs clean
       python setup.py docs
     fi
-  - bash .misc/deploy.coverage.sh
+  - codecov
 
 notifications:
   email: false
