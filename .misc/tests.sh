@@ -1,12 +1,7 @@
 set -e
 set -x
 
-source .misc/env_variables.sh
+export PLATFORM_SYSTEM=$(python -c "import platform; print(platform.system())")
+export OS_NAME=$(python -c "import os; print(os.name)")
 
-args=()
-
-if [[ "$system_os" == "LINUX" || "$system_os" == "OSX" ]] ; then
-  args+=('--cov' '--cov-fail-under=100' '--doctest-modules')
-fi
-
-python3 -m pytest "${args[@]}"
+python -m pytest $*
