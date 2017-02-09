@@ -84,11 +84,33 @@ command:
   **myfork** is just a name we used for simplicity. You can
   name it however you want.
 
+The next thing you should know before getting down to work is how to check on
+the changes you've made to your project, and your current branch. The
+ability to check your current branch is also extremely important, as you'll see
+in the next section. The command to check this information is:
+
+::
+
+    $ git status
+
+Before we move onto the next section, you need to know about a very important
+branch called master. Master is the default branch that git checkouts for you
+when you clone a repository. It's our policy here at coala to never develop
+on your fork's master branch. This is why we create new branches, which leads
+us to the next section.
+
 Creating a new branch
 ---------------------
 
 To start working on an issue, you first need to create a new branch where you
-will work.
+will work. Do not change files when you are on your fork's master branch. If you
+submit a Pull Request from your fork's master branch, maintainers
+will assume that you didn't read this guide. coala developers may even reject
+your work (even if it is a good patch), because you are showing you haven't
+checked our documentation. The reason why you should never develop on your
+master branch is because your fork's master branch should always be
+synchronized with the main repository's master branch, which is much more
+challenging if it has new commits on it. This is why we create our own branch:
 
 ::
 
@@ -100,6 +122,16 @@ will work.
 
     ``-b`` will create a new branch if the branch doesn't already exist.
 
+    Some sample naming conventions for branches:
+    + issueXXX
+    + patchXXX
+    + gh-XXX
+    + A short form of the issue name
+    (Where XXX is your issue number.)
+
+    We also recommend naming your first branch "my-first-good-pull-request",
+    for the purpose of this guide.
+
 Checking your work
 ------------------
 
@@ -110,7 +142,8 @@ never submit a change that isn't tested), you should check your progress. Type:
 
     $ git status
 
-It will give you an idea about what files are currently modified.
+It will give you an idea about what files are currently modified and
+which branch you're developing on.
 
 .. note::
 
@@ -127,6 +160,15 @@ It will give you an idea about what files are currently modified.
 
 Adding the files and commiting
 ------------------------------
+
+First, make sure you're on the correct branch and not developing on master! If
+you've been following this guide, and this is your first pull request,
+you should be developing on the "my-first-good-pull-request" branch.
+You can check your branch with:
+
+::
+
+    $ git status
 
 Now you can add your files/folders to the current commit:
 
@@ -190,6 +232,12 @@ with merging your fix/pull request.
 Pushing the commit
 ------------------
 
+Before you push the commit, ensure that you are not developing on master again
+by running:
+
+::
+    git status
+
 Now you will need to push the commit to the fork. All you have to do is:
 
 ::
@@ -201,6 +249,19 @@ and your commit will be pushed online.
 
 Creating a Pull Request
 -----------------------
+
+If you've made it this far, and you're still using your 'master' branch, then
+we're definitely going to be able to tell you have not been reading this
+documentation. Naughty, naughty, but there is still a way to fix your changes
+if you have already commited. You can run the following command, which will
+take you to a new branch containing all of your commited changes (Note: Some
+sample naming conventions can be found under the "Creating a branch" section).
+Then, to set your fork's master branch back to a pristine state,
+check the commands in our `Common Git Issues section <http://api.coala.io/en/latest/Developers/Git_Basics.html#common-git-issues>`__
+
+::
+
+    $ git checkout -b <branchname>
 
 Now you would like to get your commit into the actual master branch. Making
 your changes available to all future users of the project. For this, you will
