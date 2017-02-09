@@ -130,3 +130,49 @@ def to_spacecase(string):
     return re.sub('(?<=[^\s])([A-Z])',
                   lambda match: ' ' + match.group(1),
                   string)
+
+
+def to_kebabcase(string):
+    """
+    Converts the given string to kebab-case.
+
+    >>> to_kebabcase('HelloWorld')
+    'hello-world'
+    >>> to_kebabcase('__Init__File__')
+    'init-file'
+    >>> to_kebabcase('')
+    ''
+    >>> to_kebabcase('already-kebab-case')
+    'already-kebab-case'
+    >>> to_kebabcase('   string  ')
+    'string'
+    >>> to_kebabcase('ABCde.F.G..H..IH')
+    'a-b-cde.f.g..h..i-h'
+
+    :param string: The string to convert.
+    :return:       The kebab-cased string.
+    """
+
+    string = re.sub('(\s)',
+                    lambda match: '-',
+                    string)
+    string = re.sub('(\_)',
+                    lambda match: '-',
+                    string)
+    string = re.sub('^(-*)([^-])',
+                    lambda match: match.group(1) + match.group(2).lower(),
+                    string)
+    string = re.sub('(\w*)([.]+)([A-Z])',
+                    lambda match: (match.group(1) + match.group(2) +
+                                   match.group(3).lower()),
+                    string)
+    string = re.sub('(?<=[^-])-+([^-])',
+                    lambda match: '-' + match.group(1).lower(),
+                    string)
+    string = re.sub('[A-Z]',
+                    lambda match: '-' + match.group(0).lower(),
+                    string)
+    string = re.sub(r'^-+|-+$',
+                    lambda match: ''*len(match.group()),
+                    string)
+    return re.sub('\-+', '-', string)
