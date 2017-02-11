@@ -20,8 +20,8 @@ Repositories
 ------------
 
 If you are interested in contributing to coala, we recommend that you read
-our :ref:`newcomers' guide <newcomer-guide>` to familiarize yourself with our
-workflow, and perhaps with GitHub itself.
+our `newcomers' guide <http://api.coala.io/en/latest/Developers/Newcomers_Guide.html>`__
+to familiarize yourself with our workflow, and perhaps with GitHub itself.
 
 You will most likely need to work only in the ``coala`` or ``coala-bears``
 repository. The former is the core of coala, and the latter contains the set
