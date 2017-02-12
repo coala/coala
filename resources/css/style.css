@@ -211,7 +211,9 @@ textarea.materialize-textarea {
   font-weight: 500;
   color: black !important;
   box-shadow: none !important;
-  text-align: center;
+}
+.input-field{
+  padding-left: 4em;
 }
 .btn:hover,
 .btn-large:hover {
