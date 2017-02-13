@@ -3,6 +3,8 @@ import logging
 import unittest
 import unittest.case
 
+from unidiff.errors import UnidiffParseError
+
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.Diff import ConflictError, Diff, SourceRange
 
@@ -206,6 +208,326 @@ class DiffTest(unittest.TestCase):
         b = ['first_changed', 'second_changed', 'fourth']
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.modified, b)
+
+    def test_from_unified_diff_single_addition(self):
+        source = ['single line']
+        target = ['single line', 'another line added']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1 +1,2 @@',
+                ' single line',
+                '+another line added']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_single_deletion(self):
+        source = ['two lines', 'to be removed']
+        target = ['two lines']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1 @@',
+                ' two lines',
+                '-to be removed']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_single_modification(self):
+        source = ['first', 'second']
+        target = ['only_first_changed', 'second']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,2 @@',
+                '-first',
+                '+only_first_changed',
+                ' second']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_multiple_additions_different_orderings(self):
+        source = ['A', 'B', 'C']
+        target = ['A', 'Y', 'Z', 'B', 'C']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,3 +1,5 @@',
+                ' A',
+                '+Y',
+                '+Z',
+                ' B',
+                ' C']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+        source = ['A', 'B', 'C']
+        target = ['A', 'Y', 'Z', 'C']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,3 +1,5 @@',
+                ' A',
+                '+Y',
+                '+Z',
+                '-B',
+                ' C']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+        source = ['A', 'B', 'C']
+        target = ['Y', 'Z', 'C']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,3 +1,5 @@',
+                '-A',
+                '+Y',
+                '+Z',
+                '-B',
+                ' C']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+        source = ['A', 'B', 'C']
+        target = ['A', 'B', 'C', 'Y', 'Z']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -3 +3,3 @@',
+                ' C',
+                '+Y',
+                '+Z']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diffrent_beginning_line_types(self):
+        source = ['A', 'B', 'C']
+        target = ['A', 'Y', 'B', 'C']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,3 +1,4 @@',
+                ' A',
+                '+Y',
+                ' B',
+                ' C']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+        source = ['A', 'B', 'C']
+        target = ['B', 'C']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,3 +1,2 @@',
+                '-A',
+                ' B',
+                ' C']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+        source = ['A', 'B', 'C']
+        target = ['Z', 'A', 'B', 'C']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,3 @@',
+                '+Z',
+                ' A',
+                ' B']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_multiple_modifications(self):
+        source = ['first', 'second']
+        target = ['first_changed', 'second_changed']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,2 @@',
+                '-first',
+                '-second',
+                '+first_changed',
+                '+second_changed']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_multiple_hunks(self):
+        source = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+        target = ['A', 'C', 'D', 'E', 'F']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,1 @@',
+                ' A',
+                '-B',
+                '@@ -3,5 +2,4 @@',
+                ' C',
+                ' D',
+                ' E',
+                ' F',
+                '-G']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_incomplete_hunks_multiple_deletions(self):
+        source = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+        target = ['A', 'C', 'D', 'E', 'F']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,1 @@',
+                ' A',
+                '-B',
+                '@@ -5,3 +4,2 @@',
+                ' E',
+                ' F',
+                '-G']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_incomplete_hunks_multiple_additions(self):
+        source = ['A', 'C', 'D', 'E', 'G']
+        target = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,1 +1,2 @@',
+                ' A',
+                '+B',
+                '@@ -4,2 +5,3 @@',
+                ' E',
+                '+F',
+                ' G']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_incomplete_hunks_multiple_modifications(self):
+        source = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+        target = ['A', 'B', 'Z', 'D', 'E', 'F', 'K']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,3 +1,3 @@',
+                ' A',
+                ' B',
+                '-C',
+                '+Z',
+                '@@ -6,2 +5,2 @@',
+                ' F',
+                '-G',
+                '+K']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_unmatched_line_to_delete(self):
+        source = ['first', 'second']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,2 @@',
+                '-line_to_be_deleted_is_not_same',
+                '+only_first_changed',
+                ' second']
+        diff_string = '\n'.join(diff)
+
+        error_message = ('The line to delete does not match with '
+                         'the line in the original file. '
+                         'Line to delete: {!r}, '
+                         'Original line #{!r}: {!r}')
+
+        with self.assertRaisesRegex(
+                RuntimeError,
+                error_message.format(
+                    'line_to_be_deleted_is_not_same',
+                    1,
+                    'first')):
+            Diff.from_unified_diff(diff_string, source)
+
+    def test_from_unified_diff_unmatched_context_line(self):
+        source = ['first', 'second']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,2 @@',
+                ' context_line_is_not_same',
+                ' second']
+        diff_string = '\n'.join(diff)
+
+        error_message = ('Context lines do not match. '
+                         'Line from unified diff: {!r}, '
+                         'Original line #{!r}: {!r}')
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            error_message.format(
+                'context_line_is_not_same',
+                1,
+                'first')):
+            Diff.from_unified_diff(diff_string, source)
+
+    def test_from_unified_diff_no_changes(self):
+        source = ['first', 'second']
+        target = ['first', 'second']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,2 @@',
+                ' first',
+                ' second']
+        diff_string = '\n'.join(diff)
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_no_changes_empty_diff(self):
+        source = ['first', 'second']
+        target = ['first', 'second']
+        diff_string = ''
+        self.uut = Diff.from_unified_diff(diff_string, source)
+        self.assertEqual(self.uut.original, source)
+        self.assertEqual(self.uut.modified, target)
+
+    def test_from_unified_diff_invalid_line_type_character(self):
+        source = ['first', 'invalid starting character']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,2 +1,2 @@',
+                ' first',
+                '*invalid_starting_character']
+        diff_string = '\n'.join(diff)
+        with self.assertRaises(UnidiffParseError):
+            self.uut = Diff.from_unified_diff(diff_string, source)
+
+    def test_from_unified_diff_invalid_hunk(self):
+        source = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+        diff = ['--- a/testfile',
+                '+++ b/testfile',
+                '@@ -1,7 +1,5 @@',
+                ' A',
+                ' B',
+                '-C',
+                '+Z',
+                '@@ -6,2 +5,2 @@',
+                ' F',
+                '-G',
+                '+K']
+        diff_string = '\n'.join(diff)
+        with self.assertRaises(UnidiffParseError):
+            self.uut = Diff.from_unified_diff(diff_string, source)
 
     def test_from_clang_fixit(self):
         try:
