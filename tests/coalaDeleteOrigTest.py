@@ -19,7 +19,7 @@ class coalaDeleteOrigTest(unittest.TestCase):
     @unittest.mock.patch('os.getcwd')
     def test_nonexistent_coafile(self, mocked_getcwd):
         mocked_getcwd.return_value = None
-        retval = coala_delete_orig.main()
+        retval = coala_delete_orig.delete_orig()
         self.assertEqual(retval, 255)
 
     @unittest.mock.patch('coalib.parsing.Globbing.glob')
@@ -53,9 +53,9 @@ class coalaDeleteOrigTest(unittest.TestCase):
 
     def test_log_printer_warning(self):
         with retrieve_stderr() as stderr:
-            configure_logging()
-            coala_delete_orig.main(log_printer='SomeLogPrinter',
-                                   section=self.section)
+            configure_logging(color=False)
+            coala_delete_orig.delete_orig(log_printer='SomeLogPrinter',
+                                          section=self.section)
             output = stderr.getvalue()
-            self.assertIn('[WARNING]', output)
-            self.assertIn('Using log_printer is deprecated', output)
+            self.assertRegexpMatches(
+                output, r'\[WARNING\]\[.+\] Using log_printer is deprecated')
