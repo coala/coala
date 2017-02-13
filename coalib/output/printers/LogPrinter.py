@@ -1,6 +1,7 @@
 import traceback
 import logging
 
+from coalib.output.Logging import configure_logging
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 
@@ -109,6 +110,8 @@ class LogPrinter(LogPrinterMixin):
                  timestamp_format='%X'):
         """
         Creates a new log printer from an existing Printer.
+        NOTE: coalib.output.Logging.configure_logging() should be run before
+        creating a LogPrinter instance if not specifying `printer` paramenter.
 
         :param printer:          The underlying Printer where log messages
                                  shall be written to. If you inherit from
@@ -121,22 +124,23 @@ class LogPrinter(LogPrinterMixin):
         self.logger = logging.getLogger()
 
         self._printer = printer
-        self.log_level = log_level
         self.timestamp_format = timestamp_format
+        if not printer:
+            self.log_level = log_level
 
     @property
     def log_level(self):
         """
         Returns current log_level used in logger.
         """
-        return self.logger.getEffectiveLevel()
+        return self.level
 
     @log_level.setter
     def log_level(self, log_level):
         """
         Sets log_level for logger.
         """
-        self.logger.setLevel(log_level)
+        self.level = configure_logging(log_level, True)
 
     @property
     def printer(self):
