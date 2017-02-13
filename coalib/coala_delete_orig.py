@@ -29,7 +29,7 @@ def start_delete_orig(section: Section=None):
     not_deleted = 0
     for ofile in orig_files:
         logging.info('Deleting old backup file... '
-                         + os.path.relpath(ofile))
+                     + os.path.relpath(ofile))
         try:
             os.remove(ofile)
         except OSError as oserror:
@@ -39,9 +39,9 @@ def start_delete_orig(section: Section=None):
 
     if not_deleted:
         logging.warn(str(not_deleted) + ' .orig backup files could not be'
-                         ' deleted, possibly because you lack the permission'
-                         ' to do so. coala may not be able to create'
-                         ' backup files when patches are applied.')
+                     ' deleted, possibly because you lack the permission'
+                     ' to do so. coala may not be able to create'
+                     ' backup files when patches are applied.')
     return 0
 
 
