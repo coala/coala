@@ -13,7 +13,10 @@ from coalib.parsing.Globbing import glob_escape
 
 def main(section: Section=None):
     configure_logging()
+    return start_delete_orig(section)
 
+
+def start_delete_orig(section: Section=None):
     start_path = get_config_directory(section)
 
     if start_path is None:

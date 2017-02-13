@@ -18,7 +18,7 @@ class coalaDeleteOrigTest(unittest.TestCase):
     @unittest.mock.patch('os.getcwd')
     def test_nonexistent_coafile(self, mocked_getcwd):
         mocked_getcwd.return_value = None
-        retval = coala_delete_orig.main()
+        retval = coala_delete_orig.start_delete_orig()
         self.assertEqual(retval, 255)
 
     @unittest.mock.patch('coalib.parsing.Globbing.glob')
