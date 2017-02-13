@@ -2,6 +2,8 @@ import copy
 import difflib
 import logging
 
+from unidiff import PatchSet
+
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
 from coalib.results.TextRange import TextRange
@@ -68,6 +70,90 @@ class Diff:
                         result.delete_line(index)
 
         return result
+
+    @classmethod
+    def from_unified_diff(cls, unified_diff, original_file):
+        """
+        Creates a ``Diff`` object from given unified diff.
+
+        If the provided unified diff does not contain any patch,
+        the ``Diff`` object initialized from the original file is
+        returned.
+
+        :param unified_diff:  Unified diff string.
+        :param original_file: The contents of the original file
+                              (line-splitted).
+        :raises RuntimeError: Raised when the context lines or the
+                              lines to be removed do not match in
+                              the original file and the unified diff.
+        """
+        patch_set = PatchSet(unified_diff.splitlines())
+
+        diff = Diff(original_file)
+
+        if not patch_set:
+            return diff
+
+        # FIXME Handle patches consisting of changes in more than one file
+        file = patch_set[0]
+
+        for hunk in file:
+            file_line = hunk.source_start
+            hunk_iterator = iter(hunk)
+
+            try:
+                while True:
+                    line = next(hunk_iterator)
+                    source_code = str(line)[1:]
+                    if line.is_added:
+                        add_set = []
+                        # As ``Diff`` does not allow line additions to a
+                        # position more than one time, add all the
+                        # consecutive '+' lines at once.
+                        try:
+                            while line.is_added:
+                                add_set.append(source_code)
+                                line = next(hunk_iterator)
+                                source_code = str(line)[1:]
+
+                            diff.add_lines(file_line-1, add_set)
+
+                        except StopIteration:
+                            diff.add_lines(file_line-1, add_set)
+                            break
+
+                    original_line = original_file[file_line-1].rstrip('\n')
+
+                    if line.is_removed:
+                        if source_code != original_line:
+                            raise RuntimeError(
+                                'The line to delete does not match with '
+                                'the line in the original file. '
+                                'Line to delete: {!r}, '
+                                'Original line #{!r}: {!r}'.format(
+                                    source_code,
+                                    file_line,
+                                    original_line)
+                                )
+                        diff.delete_line(file_line)
+
+                    else:
+                        if source_code != original_line:
+                            raise RuntimeError(
+                                'Context lines do not match. '
+                                'Line from unified diff: {!r}, '
+                                'Original line #{!r}: {!r}'.format(
+                                    source_code,
+                                    file_line,
+                                    original_line)
+                                )
+
+                    file_line += 1
+
+            except StopIteration:
+                pass
+
+        return diff
 
     @classmethod
     def from_clang_fixit(cls, fixit, file):

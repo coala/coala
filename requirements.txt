@@ -8,3 +8,4 @@ Pygments~=2.1
 PyPrint~=0.2.6
 requests~=2.12
 setuptools>=17.0
+unidiff~=0.5.2
