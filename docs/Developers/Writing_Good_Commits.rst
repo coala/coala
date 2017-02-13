@@ -38,7 +38,7 @@ change to our code (i.e. the commits) is making it better.
 What Makes a Good Commit
 ------------------------
 
-A good commit is atomic. It should describe only one change and not more.
+A good commit is atomic. It should describe one change and not more.
 
 Why? Because we may create more bugs if we had more changes per commit.
 
