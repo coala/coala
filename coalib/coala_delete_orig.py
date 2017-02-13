@@ -10,6 +10,10 @@ from coalib.settings.Section import Section
 
 def main(log_printer=None, section: Section=None):
     configure_logging()
+    return delete_orig(log_printer, section)
+
+
+def delete_orig(log_printer=None, section: Section=None):
     if log_printer is not None:
         logging.warning('Using log_printer is deprecated, '
                         'use python inbuilt logging instead.')
