@@ -109,11 +109,13 @@ Step 2. Grab an Invitation to the Organization
 ----------------------------------------------
 
 Let us know on gitter that you are interested in contributing and ask for an
-invitation to our org. This is your first step towards contributing.
-A maintainer will command ``cobot`` (our gitter bot) to invite
-you and be part of the Newcomer team.
+invitation to our org.
+This is your first step towards contributing.
+A maintainer will command ``cobot`` (our gitter bot) to invite you and be part
+of the Newcomer team.
 The invitation will be sent by mail and you will have to accept
-it to join. If you don't find the invitation, accept it `here <https://github.com/coala>`__.
+it to join.
+If you don't find the invitation, accept it `here <https://github.com/coala>`__.
 
 Now that you are part of our organization, you can start working on issues.
 If you are familiar with git, you can skip the next section and pick an issue.
@@ -121,15 +123,12 @@ If you are familiar with git, you can skip the next section and pick an issue.
 Optional. Get Help With Git
 ---------------------------
 
-We use GitHub to manage our repository. If you're not familiar with git, we
-strongly recommend following a tutorial, such as `this one <https://try.github.io/levels/1/challenges/1>`_.
+We use GitHub to manage our repository.
+If you're not familiar with git, we strongly recommend following a tutorial,
+such as `this one <https://try.github.io/levels/1/challenges/1>`_.
 
 We also have a page dedicated to git commands that will help you learn the
-basics: `here <http://coala.io/git>`_.
-
-If there's anything unclear, or you are encountering problems, feel free
-to contact us on `gitter <https://coala.io/chat>`_,
-and we will help you!
+basics: `here <http://coala.io/git>`__.
 
 Step 3. Picking Up an Issue
 ---------------------------
