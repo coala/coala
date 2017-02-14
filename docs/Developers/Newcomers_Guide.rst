@@ -175,8 +175,9 @@ fork repository.
    start working on an issue, you first need to create a new branch where you
    will work.
 
-   ::
-        $ git checkout -b <branchname>
+::
+
+     $ git checkout -b <branchname>
 
 Now you need to make sure your change is actually working. For this, you will
 need to test it locally before pushing it to your fork, and checking it with
