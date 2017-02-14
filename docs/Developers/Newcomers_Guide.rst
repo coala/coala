@@ -70,14 +70,19 @@ Step 0. Run coala
 -----------------
 
 As a preparation of joining the community you should find out what this project
-is about - if you didn't do this already. We highly recommend you
-`install coala <https://coala.io/install>`_ and use it on at least one of your
-projects. Also, we recommend that you read
-`development setup notes <http://coala.io/devsetup>`_
-to learn how to set up an environment to work on coala.
+is about - if you didn't do this already.
+We highly recommend you `install coala <https://coala.io/install>`_ and use it
+on at least one of your projects.
+Also, we recommend that you read the
+`development setup notes <http://coala.io/devsetup>`_ to learn how to set up an
+environment to work on coala.
 
-Most importantly, keep notes of what could be better to make the usage easier!
-What documentation was missing? What was hard to understand?
+Most importantly, keep notes of what could be better to make the usage easier
+and file issues for it!
+
+- What documentation was missing?
+- What was hard to understand?
+- ...
 
 .. note::
 
@@ -92,8 +97,8 @@ Once you complete this, please take the time and
 Step 1. Meet the Community!
 ---------------------------
 
-To get started, the first step is to meet the community. We use gitter to
-communicate, and there the helpful community will guide you.
+To get started, the first step is to meet the community.
+We use gitter to communicate, and there the helpful community will guide you.
 Join us at `coala gitter <https://coala.io/chat>`_.
 The newcomers should ping us "Hello World" to let us know they are here
 because we care!
