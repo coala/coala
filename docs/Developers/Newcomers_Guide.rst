@@ -135,38 +135,27 @@ Step 3. Picking Up an Issue
 
 Now it is time to pick an issue.
 It is the best way to familiarise yourself with the codebase.
-Here is the link that will lead you to `Newcomers issues <https://coala.io/new>`_.
-
-.. note::
-
-    You need to be logged in before you follow the Newcomers issues link.
-
-.. seealso::
-
-    For more information about what bears are, please check the following link: `Writing Native bears <http://api.coala.io/en/latest/Developers/Writing_Native_Bears.html>`_
+Here is the link that will lead you to
+`newcomer issues <https://coala.io/new>`_.
+Note however, that you need to be logged in before you can follow the Newcomers
+issues link.
 
 The easy issues that will help you get started are labeled as
 ``difficulty/newcomer`` and are only there to give you a glimpse of how it is
-to work with us and regarding the workflow.
+to work with us and learning the workflow.
 
-Now pick an issue which isn't assigned, and if you want to fix
-it, then leave a comment that you would like to get assigned. This way
-we don't have multiple people working on the same issue at the same time.
-Now you can start working on it.
+Now pick an issue which isn't assigned.
+As stated before, you should never work on an issue without being assigned to
+it.
+Fortunately, cobot is here to help you!
+So, if you are interested in picking up an issue just write the following
+command in the gitter chat::
 
-.. note::
+   cobot assign <issue_link>
 
-    As stated before, you should never work on an issue without any
-    assignment. Fortunately, cobot is here to help you! So, if you are
-    interested in picking up an issue just write in the gitter chat the
-    following command::
 
-        cobot assign <issue_link>
+Take care to write the full link to the issue.
 
-    Take care to write the full link to the issue
-
-    Before starting to write your first commit, check out this
-    link: `Writing good commits <http://coala.io/commit>`_.
 
 Step 4. Creating a Fork and Testing Your Changes
 ------------------------------------------------
