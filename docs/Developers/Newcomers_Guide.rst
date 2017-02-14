@@ -3,61 +3,68 @@
 Welcome to the Newcomers Guide!
 ===============================
 
-**DO NOT WORK ON ANY ISSUE WITHOUT ASSIGNMENT!** If you do, someone else might
-work on it as well and we might have no choice but reject one of your Pull
-Requests - we hate it if anyone wastes their time. For your own sake, please
-follow this guide. We put a lot of work into this for you!
+This is a step by step guide that teaches you the workflow used at coala and
+how to use the tools involved with it.
+**Please do read the guide before asking us, as most questions we get are
+covered in here.**
 
-Everyone in the coala community is expected to follow our
-`Code of Conduct <http://coala.io/coc>`_.
+Before you can start working there are a few things you need to know about
+coala:
 
-To become part of the coala developers team, there are a few steps you need
-to complete. The newcomer process is as follows:
+  - Everyone in the coala community is expected to follow our
+    `Code of Conduct <http://coala.io/coc>`_.
+  - Do not work on any issue without assignment. Someone else might be working
+    on it already.
+  - When something is unclear try to find a solution yourself. This is a
+    valuable skill!
+  - Only after you tried to solve a problem yourself ask the
+    `chat <coala.io/chat>`_
 
 You will start as a newcomer, which is kind of a trial. If you complete the
 following tasks, you will become a developer at coala:
 
-  - run coala on a project of yours
-  - merge a ``difficulty/newcomer`` Pull Request
-  - review at least a ``difficulty/newcomer`` Pull Request
-  - merge a ``difficulty/low`` Pull Request
-  - review at least a ``difficulty/low`` or higher Pull Request
-
-When you ran coala on a project, please fill our
-`usability survey <http://coala.io/usability>`_. Once you got your first Pull
-Request merged successfully, fill in our
-`survey form <http://coala.io/newform>`_. With that you can help us making your
-experience better!
-
-Once you have achieved all these, just ask for being promoted on the chat and
-provide links to your reviews and merged Pull Requests. Then, you will be able
-to name yourself a coala developer!
+  - Run coala on a project of yours and fill our
+    `usability survey <http://coala.io/usability>`_.
+  - Merge a ``difficulty/newcomer`` Pull Request and fill in our
+    `survey form <http://coala.io/newform>`_.
+  - Review at least a ``difficulty/newcomer`` Pull Request.
+  - Merge a ``difficulty/low`` Pull Request.
+  - Review at least a ``difficulty/low`` or higher Pull Request.
 
 .. note::
 
-    **Do not only fix a newcomer issue!** Supervising newcomers is really a lot
-    of work. We're all volunteers and we can't keep this up if you don't help
-    us in other areas as well!
+    Just accepting a PR does not count as a review. Even if that PR is
+    in a mergable state. We want you to learn and develop an eye for finding
+    improvements. When in doubt, don't give an ack and keep reviewing.
 
-Of course, the order is not important, although, we recommend you to start
-with a ``newcomer`` issue, end with a ``low`` issue, and review other PRs in
-the meantime!
+Once you have achieved all these, just ask for being promoted on the chat and
+provide links to your reviews and merged Pull Requests.
+Then, you will be able to name yourself a coala developer!
 
-This is a step-based guide that will help you get your first contribution
-at coala, making you familiar with the work flow!
-
-For more information about Pull Requests, keep reading!
+To see more information about the rights and duties of the different coala
+ranks, see the
+`membership cEP <https://github.com/coala/cEPs/blob/master/cEP-0001.md>`_.
 
 .. note::
 
     **You do not need to read the coala codebase to get started** - this guide
-    is intended to help you do that without reading tons of meaningless code.
-    Nobody is good at that.
+    is intended to help you getting started without reading tons of meaningless
+    code. Nobody is good at that.
 
-    Most importantly, this guide is not intended to "check if you are fit" to
-    contribute but rather a crash course to *make you fit* to contribute. We
-    are a bit picky when it comes to code quality but it's actually not at all
-    hard to get to this level if you bear with us through this guide.
+    **Please don't just fix a newcomer issue and leave!**
+    Supervising newcomers is a lot of work for us.
+    We're all volunteers and we can't keep this up if you don't give back some
+    of the work we put into helping you.
+
+Of course, the order is not important, but we recommend starting with a
+``newcomer`` issue, followed by a ``low`` issue, and reviewing other PRs while
+you wait for reviews.
+
+ Most importantly, this guide is not intended to "check if you are fit" to
+ contribute but rather a crash course to *make you fit* to contribute.
+ We are a bit picky when it comes to code quality but it's actually not hard at
+ all to get to this level if you bear with us through this guide.
+
 
 Step 0. Run coala
 -----------------
