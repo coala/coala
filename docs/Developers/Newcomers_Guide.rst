@@ -160,46 +160,54 @@ Take care to write the full link to the issue.
 Step 4. Creating a Fork and Testing Your Changes
 ------------------------------------------------
 
-This tutorial implies you working on your fork. To fork the repository, go
-to the official repository of coala/coala-bears and click on the ``Fork``
-button from the website interface. To add it locally, simply run:
+This tutorial implies you working on your fork.
+To fork the repository, go to the official repository of coala/coala-bears
+(or whatever coala repository you want to contribute to) and click on the
+``Fork`` button from the website interface.
+To add it locally, simply run::
 
-::
+    $ git remote add <fork_name> <fork_link>
 
-    $ git remote add myfork fork_link
+where ``<fork_name>`` is a name for your fork, and ``<fork_link>`` is a link to
+your fork repository.
 
-where ``myfork`` is the name of your fork, and ``fork_link`` is a link to your
-fork repository.
+To start working on an issue, you first need to create a new branch where you
+will work.
+This is important as working on the master brancht would lead to problems with
+our workflow.
+To create a new branch, run the following command, where ``<branch_name>`` is
+a name for your branch.
+Usually this could be something like ``username/feature`` as it helps with
+identification::
 
-.. note::
-   It is important that you do not make your changes on the master branch. To
-   start working on an issue, you first need to create a new branch where you
-   will work.
 
-   ::
-        $ git checkout -b <branchname>
+    $ git checkout -b <branch_name>
 
-Now you need to make sure your change is actually working. For this, you will
-need to test it locally before pushing it to your fork, and checking it with
-concrete examples. The first time, you will need to install some requirements.
+Now you need to make sure your change is actually working.
+For this, you will need to test it locally before pushing it to your fork,
+and checking it with concrete examples.
+The first time, you will need to install some requirements.
 This can be done by executing the following command while in the root of the
-coala project directory.
-
-::
+coala project directory::
 
     $ pip3 install -r test-requirements.txt -r requirements.txt
 
-After that, you can run coala by simply typing
-
-::
+After that, you can run coala by simply typing::
 
     $ coala
 
-into your bash. This will analyze your code and help you fix it.
+into your bash. This will analyze your code and help you fix it. If you get
+any GitMate errors on your PR that means you probably didn't run coala on it.
+To get reviews, fix all the GitMate errors or better, run coala before pushing
+to prevent them.
 
-.. seealso::
+You should also run all tests to make sure, that everything still works as
+intended. You can find a guide on how to run our tests
+`here <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`__.
 
-    `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
+If you add new code, that code also has to be tested. You can find a guide on
+how to write tests
+`here <http://api.coala.io/en/latest/Developers/Writing_Tests.html>`__.
 
 Step 5. Sending Your Changes
 ----------------------------
