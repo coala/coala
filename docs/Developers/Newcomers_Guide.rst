@@ -212,6 +212,9 @@ how to write tests
 Step 5. Sending Your Changes
 ----------------------------
 
+Before starting to write your first commit, check out
+`our commit guideline documentation <http://coala.io/commit>`_.
+
 .. note::
 
    Before committing your changes, please check that you are indeed in a
