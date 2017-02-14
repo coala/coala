@@ -15,7 +15,7 @@ Example of a good commit:
     It helps not writing more functions inside
     ``coalib`` for this.
 
-    Fixes https://github.com/coala/coala/issues/5861
+    Closes https://github.com/coala/coala/issues/5861
 
 - `setup.py: Change bears' entrypoint`: Describe the change in
    maximum of 50 characters.
@@ -62,7 +62,7 @@ Example:
     It helps not writing more functions inside
     ``coalib`` for this.
 
-    Fixes https://github.com/coala/coala/issues/5861
+    Closes https://github.com/coala/coala/issues/5861
 
 Shortlog
 ~~~~~~~~
