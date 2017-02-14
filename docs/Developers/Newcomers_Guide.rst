@@ -373,3 +373,50 @@ go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
     the solution in our :doc:`useful links section <Useful_Links>`.
 
 .. _this page: https://docs.coala.io/en/latest/Help/FAQ.html#what-are-those-things-failing-passing-on-my-pull-request
+
+Step 9. Finishing the newcomer process
+--------------------------------------
+
+So far you should have covered three of the five steps in the newcomer process:
+
+  - Run coala on a project of yours and fill our
+    `usability survey <http://coala.io/usability>`_.
+  - Merge a ``difficulty/newcomer`` Pull Request and fill in our
+    `survey form <http://coala.io/newform>`_.
+  - Review at least a ``difficulty/newcomer`` Pull Request.
+
+This means your are only missing the last two steps:
+
+  - Merge a ``difficulty/low`` Pull Request.
+  - Review at least a ``difficulty/low`` or higher Pull Request.
+
+The process is the same as for the `newcomer` issues and pull requests.
+
+  - Find a `difficulty/low` issue `here <http://coala.io/low>`__
+  - Use `cobot assign <issue url>` to get assigned
+  - Create a pull request for the issue
+  - Review a pull request for a `difficulty/low` issue from
+    `this list <http://coala.io/review>`_
+  - Get your pull request merged
+
+Now to the final step.
+Use this template to get your well deserved promotion into the developer rank::
+
+    Dear developers,
+    I have finished the newcomer guide and ask to be promoted to join the
+    ranks of coala developers.
+    Here are my contributions:
+
+    - <link to difficulty/newcomer pr>
+    - <link to difficulty/low review pr>
+    - <link to difficulty/newcomer review>
+    - <link to difficulty/low review review>
+
+    I also filled the usability and newcomer surveys.
+
+Congratulations!
+You have finished the coala newcomer guide and are now a official coala
+developer!
+You can show your org membership by visiting
+<https://github.com/orgs/coala/people>. Search for your name and make your
+membership public.
