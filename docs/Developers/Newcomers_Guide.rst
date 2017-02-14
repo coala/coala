@@ -245,22 +245,23 @@ Step 6. Creating a ``Pull Request``
 -----------------------------------
 
 Now that your commit has been sent to your fork, it is time
-to do a ``Pull Request``. It can be done by accessing your fork on GitHub and
-clicking ``New Pull Request``.
+to do a ``Pull Request``.
+It can be done by accessing your fork on GitHub and clicking
+``New Pull Request``.
 
 **Congratulations!** You have now created your first ``Pull Request``!
 
 .. note::
 
     Do not delete your comments on Github because it makes it hard for other
-    developers to follow on that issue. If necessary, edit your comment in case
-    there is a typo or a task list to be updated. If you have to add some new
-    information, make a new comment.
+    developers to follow on that issue.
+    If necessary, edit your comment in case there is a typo or a task list to
+    be updated.
+    If you have to add some new information, make a new comment.
 
 If you know you have more work to do on this ``Pull Request`` before it is
-ready to be accepted, you can optionally indicate this to other
-developers by starting your ``Pull Request`` title with ``wip``
-(case-insensitive).
+ready to be accepted, you can optionally indicate this to other developers
+by starting your ``Pull Request`` title with ``wip:`` (case-insensitive).
 
 Step 7. Waiting for Review
 --------------------------
