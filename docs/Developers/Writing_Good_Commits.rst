@@ -115,7 +115,7 @@ Example:
 
 ::
 
-    Fixes https://github.com/coala/coala/issues/269
+    Closes https://github.com/coala/coala/issues/269
 
 -  Should use the ``Fixes`` keyword if your commit fixes a bug, or ``Closes``
    if it adds a feature/enhancement.
