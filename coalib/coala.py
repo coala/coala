@@ -53,6 +53,9 @@ def main(debug=False):
         console_printer = ConsolePrinter(print_colored=not args.no_color)
         configure_logging(not args.no_color)
 
+        if args.json and args.format:
+            sys.exit(2)
+
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import get_all_bears
             kwargs = {}

@@ -323,6 +323,15 @@ class coalaTest(unittest.TestCase):
             self.assertEqual(
                 retval, 0, 'coala must return zero when there are no errors')
 
+    def test_format_and_json(self):
+        retval, stdout, stderr = execute_coala(coala.main, 'coala', '--json',
+                                               '--format', '-b',
+                                               'SpaceConsistencyTestBear',
+                                               '-f', '*.py'
+                                               )
+        self.assertEqual('', stdout)
+        self.assertIn('coala: error: do not use --format and --json', stderr)
+
     def test_coala_ignore_file(self):
         with bear_test_module(), \
                 prepare_file(['#fixme'], None) as (lines, filename):
