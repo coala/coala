@@ -38,8 +38,9 @@ before_install:
       sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
     fi
 
-  # always use latest versions of pip and setuptools
-  - pip install pip setuptools -U
+  # Use pip 9, so that setuptools can be downgraded.
+  - pip install pip==9 setuptools==17
+  - python .misc/check_setuptools.py
 
   # https://github.com/coala/coala/issues/3183
   # Travis automatically installs the `requirements.txt` in "install" stage
@@ -57,6 +58,7 @@ before_install:
 before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
+  - python .misc/check_setuptools.py
 
 script:
   - >
