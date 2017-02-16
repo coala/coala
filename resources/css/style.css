@@ -51,8 +51,9 @@
 .row .get-description {
   font-family: Roboto;
   font-size: 1.6em;
-  text-align: justify;
+  text-align: center;
   font-weight: 300;
+  line-height: 1.5em;
 }
 .get-description a:hover {
   text-decoration: underline;
