@@ -200,8 +200,9 @@ into your bash. This will analyze your code and help you fix it.
 
     `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
 
-Before going to the next step it is recommended you add a CI. Your contributions
-will be verified by an automated build, allowing the team to detect problems early.
+Before going to the next step it is recommended you add a CI. Your 
+contributions will be verified by an automated build, allowing the team to 
+detect problems early.
 `Add CI <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_.
 
 Step 5. Sending Your Changes
