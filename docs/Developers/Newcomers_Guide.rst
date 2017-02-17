@@ -202,7 +202,7 @@ into your bash. This will analyze your code and help you fix it.
 
 
 Before going to the next step it is recommended you add a CI. Your contributions 
-will be verified by an automated build, allowing teams to detect problems early.
+will be verified by an automated build, allowing the team to detect problems early.
 `Adding CI to your Fork <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_.
 
 
