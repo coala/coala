@@ -216,9 +216,9 @@ commit it using
 
     $ git commit -a --amend
 
-This will open your last commit message in a text editor and allow 
-you to edit it. If your commit message was considered fine by our 
-reviewers, you can simply send it again as it was. If not, edit 
+This will open your last commit message in a text editor and allow
+you to edit it. If your commit message was considered fine by our
+reviewers, you can simply send it again as it was. If not, edit
 it and send it.
 Now you have successfully edited your last commit!
 
