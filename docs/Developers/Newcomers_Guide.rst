@@ -200,8 +200,9 @@ into your bash. This will analyze your code and help you fix it.
 
     `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
 
-Before we get to the next step add CI to your fork.
-`Add CI <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_
+Before we get to the next step add
+`CI <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_
+to your fork.
 
 Step 5. Sending Your Changes
 ----------------------------
