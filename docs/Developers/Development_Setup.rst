@@ -20,7 +20,7 @@ Repositories
 ------------
 
 If you are interested in contributing to coala, we recommend that you read
-our :ref:`newcomers' guide <newcomer-guide>` to familiarize yourself with our
+our `newcomers' guide <http://coala.io/newcomer>`__ to familiarize yourself with our
 workflow, and perhaps with GitHub itself.
 
 You will most likely need to work only in the ``coala`` or ``coala-bears``
