@@ -165,6 +165,15 @@ Example 2 (implemented feature):
 
     Closes https://github.com/coala/coala/issues/2060
 
+How to Edit a Commit
+--------------------
+
+If you have previously made a commit and need to update the files changed,
+it is advisable to also update the commit message accordingly.
+
+In order to do this one can use the amend function as is described
+'here <http://api.coala.io/en/latest/Developers/Git_Basics.html#follow-up>'_
+
 Why Do We Need Good Commits?
 ----------------------------
 
