@@ -86,6 +86,11 @@ class Bear(Printer, LogPrinterMixin):
     >>> class SomeBear(Bear):
     ...     INCLUDE_LOCAL_FILES = {'checkstyle.jar', 'google_checks.xml'}
 
+    If your bear provides important analysis for the languages it supports,
+    set
+
+    >>> IS_IMPORTANT = True
+
     To keep track easier of what a bear can do, simply tell it to the CAN_FIX
     and the CAN_DETECT sets. Possible values:
 
@@ -141,6 +146,7 @@ class Bear(Printer, LogPrinterMixin):
     PLATFORMS = {'any'}
     LICENSE = ''
     INCLUDE_LOCAL_FILES = set()
+    IS_IMPORTANT = False
     CAN_DETECT = set()
     CAN_FIX = set()
     ASCIINEMA_URL = ''
