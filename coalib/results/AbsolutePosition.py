@@ -1,7 +1,8 @@
 from coalib.results.TextPosition import TextPosition
-from coala_utils.decorators import enforce_signature
+from coala_utils.decorators import enforce_signature, generate_ordering
 
 
+@generate_ordering('position')
 class AbsolutePosition(TextPosition):
 
     @enforce_signature

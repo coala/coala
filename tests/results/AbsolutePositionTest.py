@@ -73,3 +73,18 @@ class AbsolutePositionTest(unittest.TestCase):
         self.assertEqual(uut.position, 5)
         self.assertEqual(uut.line, None)
         self.assertEqual(uut.column, None)
+
+    def test_ordering(self):
+        text1 = ('A Lannister always pays his debts',)
+        text2 = ('Hello from the other side',)
+        uut1 = AbsolutePosition(text1, 4)
+        uut2 = AbsolutePosition(text1, 8)
+        uut3 = AbsolutePosition(text2, 4)
+        uut4 = AbsolutePosition(text2, 4)
+
+        self.assertTrue(uut1 <= uut2)
+        self.assertTrue(uut1 < uut2)
+        self.assertTrue(uut1 >= uut3)
+        self.assertTrue(uut2 > uut1)
+        self.assertFalse(uut1 == uut2)
+        self.assertTrue(uut1 == uut4)
