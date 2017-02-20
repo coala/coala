@@ -57,10 +57,8 @@ Example:
 
     setup.py: Change bears' entrypoint
 
-    This entrypoint ensures that coala discovers
-    the bears correctly.
-    It helps not writing more functions inside
-    ``coalib`` for this.
+    This entrypoint ensures that coala discovers the bears correctly.
+    It helps not writing more functions inside ``coalib`` for this.
 
     Closes https://github.com/coala/coala/issues/5861
 
@@ -71,7 +69,7 @@ Example:
 
 ::
 
-    setup: Install .coafile via package_data
+    setup.py: Change bears' entrypoint
 
 -  Maximum of 50 characters.
 -  Should describe the *change* - the action being done in the commit.
@@ -96,10 +94,8 @@ Example:
 
 ::
 
-    When installing the .coafile to distutils.sysconfig.get_python_lib, we
-    ignore that this is not the installation directory in every case. Thus
-    it is easier, more reliable and platform independent to let distutils
-    install it by itself.
+    This entrypoint ensures that coala discovers the bears correctly.
+    It helps not writing more functions inside ``coalib`` for this.
 
 -  Maximum of 72 chars excluding newline for *each* line.
 -  Not mandatory - but helps explain what you're doing.
@@ -115,7 +111,7 @@ Example:
 
 ::
 
-    Fixes https://github.com/coala/coala/issues/269
+    Fixes https://github.com/coala/coala/issues/5861
 
 -  Should use the ``Fixes`` keyword if your commit fixes a bug, or ``Closes``
    if it adds a feature/enhancement.
