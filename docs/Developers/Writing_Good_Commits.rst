@@ -15,7 +15,7 @@ Example of a good commit:
     It helps not writing more functions inside
     ``coalib`` for this.
 
-    Fixes https://github.com/coala/coala/issues/5861
+    Closes https://github.com/coala/coala/issues/5861
 
 - `setup.py: Change bears' entrypoint`: Describe the change in
    maximum of 50 characters.
@@ -23,7 +23,7 @@ Example of a good commit:
 - `This entrypoint.. ..for this`: Describe the reasoning of your changes
    in maximum of 72 characters per line.
 
-- `Fixes https://github.com/coala/coala/issues/5861`: Mention the URL
+- `Closes https://github.com/coala/coala/issues/5861`: Mention the URL
    of the issue it closes or fixes.
 
 At coala we are looking heavily at the maintainability of the code.
@@ -62,7 +62,7 @@ Example:
     It helps not writing more functions inside
     ``coalib`` for this.
 
-    Fixes https://github.com/coala/coala/issues/5861
+    Closes https://github.com/coala/coala/issues/5861
 
 Shortlog
 ~~~~~~~~
