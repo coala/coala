@@ -65,8 +65,6 @@ class Result:
             Class name or creator object of this object.
         :param message:
             Base message to show with this result.
-        :param message_arguments:
-            Arguments to be provided to the base message
         :param affected_code:
             A tuple of SourceRange objects pointing to related positions in the
             source code.
@@ -90,6 +88,8 @@ class Result:
             Note that this should be a leaf of the aspect tree!
             (If you have a node, spend some time figuring out which of
             the leafs exactly your result belongs to.)
+        :param message_arguments:
+            Arguments to be provided to the base message.
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
         :raises KeyError:
