@@ -426,7 +426,7 @@ class Bear(Printer, LogPrinterMixin):
         response.raise_for_status()
 
         with open(filename, 'wb') as file:
-            for chunk in response.iter_content(125):
+            for chunk in response.iter_content(chunk_size=16 * 1024):
                 file.write(chunk)
         return filename
 
