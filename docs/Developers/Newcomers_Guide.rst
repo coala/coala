@@ -196,6 +196,8 @@ After that, you can run coala by simply typing
 
 into your bash. This will analyze your code and help you fix it.
 
+After making the changes, you can test the code on your forked repository by adding the required CI tools. To add CI tools to your forked repository, check out this `Adding CI to you fork <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_
+
 .. seealso::
 
     `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
