@@ -209,8 +209,7 @@ class Section:
                 res.value = self.defaults[key]._value + ', ' + res._value
                 res.to_append = False
                 return res
-            res.to_append = False
-            return res
+         
 
         if self.defaults is None or ignore_defaults:
             raise IndexError('Required index is unavailable.')
