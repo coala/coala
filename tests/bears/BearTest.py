@@ -1,9 +1,11 @@
 import multiprocessing
 import unittest
 from os.path import abspath, exists, isfile, join, getmtime
-import requests_mock
 import shutil
 from time import sleep
+
+import requests
+import requests_mock
 
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
@@ -102,7 +104,7 @@ class DependentBear(Bear):
         yield w
 
 
-class BearTest(unittest.TestCase):
+class BearTestBase(unittest.TestCase):
 
     def setUp(self):
         self.queue = multiprocessing.Queue()
@@ -112,6 +114,9 @@ class BearTest(unittest.TestCase):
     def tearDown(self):
         if exists(self.uut.data_dir):
             shutil.rmtree(self.uut.data_dir)
+
+
+class BearTest(BearTestBase):
 
     def test_simple_api(self):
         self.assertRaises(TypeError, TestBear, self.settings, 2)
@@ -262,13 +267,36 @@ class BearTest(unittest.TestCase):
         expected = Result.from_values(bear, 'test message', '/tmp/testy')
         self.assertEqual(result, expected)
 
+
+class BearDownloadTest(BearTestBase):
+
+    def setUp(self):
+        super().setUp()
+        self.mock_url = 'https://test.com'
+        self.filename = 'test.html'
+        self.file_location = join(self.uut.data_dir, self.filename)
+
+    def test_connection_timeout_mocked(self):
+        exc = requests.exceptions.ConnectTimeout
+        with requests_mock.Mocker() as reqmock:
+            reqmock.get(self.mock_url, exc=exc)
+            with self.assertRaisesRegexp(exc, '^$'):
+                self.uut.download_cached_file(
+                    self.mock_url, self.filename)
+
+    def test_status_code_error(self):
+        exc = requests.exceptions.HTTPError
+        with self.assertRaisesRegexp(exc, '418 Client Error'):
+            self.uut.download_cached_file(
+                'http://httpbin.org/status/418', self.filename)
+
     def test_download_cached_file(self):
         mock_url = 'https://test.com'
         mock_text = """<html>
             <p> lorem impsum dolor</p>
         </hrml>"""
-        filename = 'test.html'
-        file_location = join(self.uut.data_dir, filename)
+        filename = self.filename
+        file_location = self.file_location
 
         with requests_mock.Mocker() as reqmock:
             reqmock.get(mock_url, text=mock_text)
