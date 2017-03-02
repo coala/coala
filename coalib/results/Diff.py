@@ -8,13 +8,14 @@ from coalib.results.TextRange import TextRange
 from coala_utils.decorators import enforce_signature, generate_eq
 
 
-@generate_eq('_file', 'modified', 'rename', 'delete')
+@generate_eq('_file', 'modified', 'rename', 'delete', 'create')
 class Diff:
     """
     A Diff result represents a difference for one file.
     """
 
-    def __init__(self, file_list, rename=False, delete=False):
+    def __init__(self, file_list=None,
+                 rename=False, delete=False, create=False):
         """
         Creates an empty diff for the given file.
 
@@ -22,11 +23,16 @@ class Diff:
                           lines.
         :param rename:    False or str containing new name of file.
         :param delete:    True if file is set to be deleted.
+        :param create:    False or str containing the file name of the file to
+                          be created.
         """
         self._changes = {}
         self._file = file_list
         self.rename = rename
         self.delete = delete
+        self.create = create
+
+        self._file = [] if create else file_list
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2, rename=False):
@@ -154,6 +160,22 @@ class Diff:
         self._delete = delete
 
     @property
+    def create(self):
+        """
+        :return: False or string containing the name of the file to be created.
+        """
+        return self._create
+
+    @create.setter
+    @enforce_signature
+    def create(self, create: (False, str)):
+        """
+        :param create: False or string containing the name of the file to be
+                       created.
+        """
+        self._create = create
+
+    @property
     def original(self):
         """
         Retrieves the original file.
@@ -200,9 +222,12 @@ class Diff:
         for equality comparison.
         """
         return ''.join(difflib.unified_diff(
-            self.original,
-            self.modified,
-            tofile=self.rename if isinstance(self.rename, str) else ''))
+                       self.original,
+                       self.modified,
+                       tofile=self.rename if isinstance(self.rename, str)
+                       else self.create
+                       if isinstance(self.create, str)
+                       else ''))
 
     def __json__(self):
         """
@@ -346,6 +371,7 @@ class Diff:
         """
         return (self.rename is not False or
                 self.delete is True or
+                self.create is not False or
                 len(self._changes) > 0)
 
     def delete_line(self, line_nr):

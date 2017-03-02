@@ -280,3 +280,23 @@ class DiffTest(unittest.TestCase):
         self.uut.delete = True
         self.assertEqual(self.uut.modified, [])
         self.uut.delete = False
+
+    def test_diff_creation(self):
+        uut = Diff(create='create_test.py')
+        self.assertEqual(uut.create, 'create_test.py')
+        self.assertEqual(uut._file, [])
+        uut.add_lines(0, ['line2', 'line3'])
+        self.assertEqual(uut.modified, ['line2', 'line3'])
+
+    def test_empty_diff_creation(self):
+        # Testing creation of a diff of not a new file
+        with self.assertRaisesRegexp(ValueError, 'file_list cannot be None')\
+                as err:
+            Diff()
+        self.assertEqual('file_list cannot be None.', str(err.exception))
+
+    def test_unified_diff_for_file_creation(self):
+        uut = Diff(create='create.py')
+        uut.add_lines(0, ['line2\n', 'line3\n'])
+        expected = '--- \n+++ create.py\n'
+        self.assertTrue(uut.unified_diff.startswith(expected))
