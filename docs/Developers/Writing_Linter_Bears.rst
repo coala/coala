@@ -1,7 +1,7 @@
 Linter Bears
 ============
 
-Welcome. This tutorial aims to show you how to use the ``@linter`` decorator in
+Welcome. This tutorial aims to show you how to use the ```@linter``<https://www.pylint.org/>` decorator in
 order to integrate linters in your bears.
 
 .. note::
