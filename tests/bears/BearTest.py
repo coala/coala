@@ -273,7 +273,7 @@ class BearDownloadTest(BearTestBase):
     def setUp(self):
         super().setUp()
         self.mock_url = 'https://test.com'
-        self.filename = 'test.html'
+        self.filename =  'test.html'
         self.file_location = join(self.uut.data_dir, self.filename)
 
     def test_connection_timeout_mocked(self):
