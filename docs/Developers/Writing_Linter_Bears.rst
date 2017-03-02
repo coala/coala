@@ -1,7 +1,7 @@
 Linter Bears
 ============
 
-Welcome. This tutorial aims to show you how to use the ```@linter``<https://www.pylint.org/>` decorator in
+Welcome. This tutorial aims to show you how to use the ``@linter`` `(details) <http://api.coala.io/en/latest/coalib.bearlib.abstractions.html#module-coalib.bearlib.abstractions.Linter>`__ decorator in
 order to integrate linters in your bears.
 
 .. note::
