@@ -1,3 +1,4 @@
+from io import BytesIO
 import multiprocessing
 import unittest
 from os.path import abspath, exists, isfile, join, getmtime
@@ -268,6 +269,25 @@ class BearTest(BearTestBase):
         self.assertEqual(result, expected)
 
 
+class BrokenReadHTTPResponse(BytesIO):
+
+    def __init__(self, chunks, *args, **kwargs):
+        self.read_count = 0
+        self.chunks = chunks
+
+    def read(self, *args, **kwargs):
+        # A HTTPResponse will return an empty string when you read from it
+        # after the socket has been closed.
+        if self.closed:
+            return b''
+
+        if self.read_count == len(self.chunks):
+            raise requests.exceptions.ReadTimeout('Fake read timeout')
+
+        self.read_count += 1
+        return self.chunks[self.read_count - 1]
+
+
 class BearDownloadTest(BearTestBase):
 
     def setUp(self):
@@ -283,6 +303,23 @@ class BearDownloadTest(BearTestBase):
             with self.assertRaisesRegexp(exc, '^$'):
                 self.uut.download_cached_file(
                     self.mock_url, self.filename)
+
+    def test_read_broken(self):
+        exc = requests.exceptions.RequestException
+        fake_content = [b'Fake read data', b'Another line']
+        fake_content_provider = BrokenReadHTTPResponse(fake_content)
+
+        self.assertFalse(isfile(self.file_location))
+
+        with requests_mock.Mocker() as reqmock:
+            reqmock.get(self.mock_url, body=fake_content_provider)
+            with self.assertRaisesRegexp(exc, 'Fake read timeout'):
+                self.uut.download_cached_file(
+                    self.mock_url, self.filename)
+
+        self.assertTrue(isfile(self.file_location))
+        self.assertEqual(open(self.file_location, 'rb').read(),
+                         b''.join(fake_content))
 
     def test_status_code_error(self):
         exc = requests.exceptions.HTTPError
