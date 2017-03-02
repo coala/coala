@@ -330,6 +330,42 @@ def _create_linter(klass, options):
                 result_params['affected_code'] = (range,)
             return Result(**result_params)
 
+        def process_diff(self,
+                         diff,
+                         filename,
+                         diff_severity,
+                         result_message,
+                         diff_distance):
+            """
+            Processes the given ``coalib.results.Diff`` object and yields
+            correction results.
+
+            :param diff:
+                An instance of ``coalib.results.Diff`` object containing
+                differences of the file named ``filename``.
+            :param filename:
+                The name of the file currently being corrected.
+            :param diff_severity:
+                The severity to use for generating results.
+            :param result_message:
+                The message to use for generating results.
+            :param diff_distance:
+                Number of unchanged lines that are allowed in between two
+                changed lines so they get yielded as one diff. If a negative
+                distance is given, every change will be yielded as an own diff,
+                even if they are right beneath each other.
+            :return:
+                An iterator returning results containing patches for the
+                file to correct.
+            """
+            for splitted_diff in diff.split_diff(distance=diff_distance):
+                yield Result(self,
+                             result_message,
+                             affected_code=splitted_diff.affected_code(
+                                 filename),
+                             diffs={filename: splitted_diff},
+                             severity=diff_severity)
+
         def process_output_corrected(self,
                                      output,
                                      filename,
@@ -359,15 +395,14 @@ def _create_linter(klass, options):
                 An iterator returning results containing patches for the
                 file to correct.
             """
-            for diff in Diff.from_string_arrays(
-                file,
-                output.splitlines(keepends=True)).split_diff(
-                    distance=diff_distance):
-                yield Result(self,
-                             result_message,
-                             affected_code=diff.affected_code(filename),
-                             diffs={filename: diff},
-                             severity=diff_severity)
+            return self.process_diff(
+                Diff.from_string_arrays(
+                    file,
+                    output.splitlines(keepends=True)),
+                filename,
+                diff_severity,
+                result_message,
+                diff_distance)
 
         def process_output_regex(
                 self, output, filename, file, output_regex,
