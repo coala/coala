@@ -5,6 +5,7 @@ import re
 
 from coalib import coala_delete_orig
 from coala_utils.ContextManagers import retrieve_stderr
+from coalib.output.Logging import configure_logging
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
@@ -49,3 +50,12 @@ class coalaDeleteOrigTest(unittest.TestCase):
             retval = coala_delete_orig.main(section=section)
             self.assertEqual(retval, 0)
             self.assertFalse(os.path.isfile(temporary[1]))
+
+    def test_log_printer_warning(self):
+        with retrieve_stderr() as stderr:
+            configure_logging()
+            coala_delete_orig.main(log_printer='SomeLogPrinter',
+                                   section=self.section)
+            output = stderr.getvalue()
+            self.assertIn('[WARNING]', output)
+            self.assertIn('Using log_printer is deprecated', output)
