@@ -11,7 +11,7 @@ class aspectclass(type):
     """
     Metaclass for aspectclasses.
 
-    Root aspectclass is :class:`coalib.bearlib.aspectclasses.Root`.
+    Root aspectclass is :class:`coalib.bearlib.aspects.Root`.
     """
     def __init__(cls, clsname, bases, clsattrs):
         """
@@ -23,7 +23,7 @@ class aspectclass(type):
     def tastes(cls):
         """
         Get a dictionary of all taste names mapped to their
-        :class:`coalib.bearlib.aspectclasses.Taste` instances.
+        :class:`coalib.bearlib.aspects.Taste` instances.
         """
         if cls.parent:
             return dict(cls.parent.tastes, **cls._tastes)
@@ -34,7 +34,7 @@ class aspectclass(type):
         """
         The sub-aspectclass decorator.
 
-        See :class:`coalib.bearlib.aspectclasses.Root` for description
+        See :class:`coalib.bearlib.aspects.Root` for description
         and usage.
         """
         aspectname = subcls.__name__
