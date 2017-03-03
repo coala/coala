@@ -8,9 +8,9 @@ class aspectbase:
     Base class for aspectclasses with common features for their instances.
 
     Derived classes must use
-    :class:`coalib.bearlib.aspectclasses.meta.aspectclass` as metaclass.
+    :class:`coalib.bearlib.aspects.meta.aspectclass` as metaclass.
     This is automatically handled by
-    :meth:`coalib.bearlib.aspectclasses.meta.aspectclass.subaspect` decorator.
+    :meth:`coalib.bearlib.aspects.meta.aspectclass.subaspect` decorator.
     """
 
     def __init__(self, language, **taste_values):

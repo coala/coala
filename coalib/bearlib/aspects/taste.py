@@ -11,7 +11,7 @@ class TasteError(AttributeError):
 
 class TasteMeta(type):
     """
-    Metaclass for :class:`coalib.bearlib.aspectclasses.Taste`
+    Metaclass for :class:`coalib.bearlib.aspects.Taste`
 
     Allows defining taste cast type via :meth:`.__getitem__`, like:
 
@@ -43,7 +43,7 @@ class Taste(metaclass=TasteMeta):
     (C#,)
 
     If no `languages` are given, they will be available for any language.
-    See :class:`coalib.bearlib.aspectclasses.Root` for further usage.
+    See :class:`coalib.bearlib.aspects.Root` for further usage.
     """
     cast_type = str
 
