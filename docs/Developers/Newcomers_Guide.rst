@@ -263,7 +263,7 @@ For more information about reviewing code, check out this `link <http://coala.io
 
 .. note::
 
-    Reviewing code helps you by analyzing other people's mistakes and thus 
+    Reviewing code helps you by analyzing other people's mistakes and thus
     improving yourself by doing this!
 
     **We highly encourage you to do reviews.** Don't be afraid of doing
