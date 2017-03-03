@@ -19,6 +19,13 @@ this will do:
 
     $ sudo apt-get install git-all
 
+For installing Git on a Mac OS system, you can use the `homebrew <https://brew.sh/>`_ package
+manager as follows:
+
+::
+
+    $ brew install git
+
 Getting Started with coala
 --------------------------
 
