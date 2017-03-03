@@ -207,6 +207,7 @@ class Section:
         if res is not None:
             if res.to_append and self.defaults and res.key in self.defaults:
                 res.value = self.defaults[key]._value + ', ' + res._value
+
                 res.to_append = False
                 return res
 
