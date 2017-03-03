@@ -3,9 +3,9 @@ import os
 
 from coalib.output.Logging import configure_logging
 from coalib.parsing import Globbing
+from coalib.parsing.Globbing import glob_escape
 from coalib.settings.ConfigurationGathering import get_config_directory
 from coalib.settings.Section import Section
-from coalib.parsing.Globbing import glob_escape
 
 
 def main(log_printer=None, section: Section=None):
