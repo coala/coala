@@ -10,6 +10,9 @@ from coalib.settings.Section import Section
 
 def main(log_printer=None, section: Section=None):
     configure_logging()
+    if log_printer is not None:
+        logging.warning('Using log_printer is deprecated, '
+                        'use python inbuilt logging instead.')
 
     start_path = get_config_directory(section)
 
