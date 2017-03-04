@@ -125,14 +125,7 @@ review, please comment on the pull request directly as follows:
    the first 6 characters of each passing commit hash delimited by
    spaces, commas, or forward slashes (the commit URLs from GitHub
    satisfy the commit hash requirements).
-
--  If a review has been confirmed,Unless there has been a technical discussion
-   or you disagree with the review comment, try not to be verbose. Fancy
-   comments like "Ok - Affirmative" are discouraged.
-
--  While reviewing, Instead of checking off items that have been addressed
-   it is recommended to use thumbs up.
-
+   
 .. note::
 
     GitMate only separates by spaces and commas. If you copy and paste the SHAs
