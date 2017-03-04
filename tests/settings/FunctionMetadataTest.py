@@ -76,7 +76,7 @@ class FunctionMetadataTest(unittest.TestCase):
         section.append(Setting('bad_param', 'value'))
         uut = FunctionMetadata.from_function(TestClass(5, 5).bad_function)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError):
             uut.create_params_from_section(section)
 
     def test_create_params_from_section_valid(self):
@@ -84,7 +84,7 @@ class FunctionMetadataTest(unittest.TestCase):
         section.append(Setting('a_param', 'value'))
         uut = FunctionMetadata.from_function(TestClass(5, 5).good_function)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError):
             uut.create_params_from_section(section)
 
         section.append(Setting('a_param', '5'))
