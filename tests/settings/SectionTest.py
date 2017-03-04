@@ -12,12 +12,12 @@ class SectionTest(unittest.TestCase):
     def test_construction(self):
         uut = Section(Constants.COMPLEX_TEST_STRING, None)
         uut = Section(Constants.COMPLEX_TEST_STRING, uut)
-        self.assertRaises(TypeError, Section, 'irrelevant', 5)
-        self.assertRaises(ValueError, uut.__init__, 'name', uut)
+        self.assertRaisesRegex(TypeError, Section, 'irrelevant', 5)
+        self.assertRaisesRegex(ValueError, uut.__init__, 'name', uut)
 
     def test_append(self):
         uut = Section(Constants.COMPLEX_TEST_STRING, None)
-        self.assertRaises(TypeError, uut.append, 5)
+        self.assertRaisesRegex(TypeError, uut.append, 5)
         uut.append(Setting(5, 5, 5))
         self.assertEqual(str(uut.get('5 ')), '5')
         self.assertEqual(int(uut.get('nonexistent', 5)), 5)
@@ -61,9 +61,9 @@ class SectionTest(unittest.TestCase):
         self.assertEqual(str(uut['test']), '4\nval')
         self.assertEqual(str(uut['custom']), '3, 4')
         self.assertEqual(int(uut['GREAT ']), 3)
-        self.assertRaises(IndexError, uut.__getitem__, 'doesnotexist')
-        self.assertRaises(IndexError, uut.__getitem__, 'great', True)
-        self.assertRaises(IndexError, uut.__getitem__, ' ')
+        self.assertRaisesRegex(IndexError, uut.__getitem__, 'doesnotexist')
+        self.assertRaisesRegex(IndexError, uut.__getitem__, 'great', True)
+        self.assertRaisesRegex(IndexError, uut.__getitem__, ' ')
 
     def test_setitem(self):
         uut = Section('section', None)
@@ -102,7 +102,7 @@ class SectionTest(unittest.TestCase):
         cli = Section('cli', None)
         conf = Section('conf', None)
 
-        self.assertRaises(TypeError, cli.update, 4)
+        self.assertRaisesRegex(TypeError, cli.update, 4)
 
         cli.append(Setting('key1', 'value11'))
         cli.append(Setting('key2', 'value12'))
