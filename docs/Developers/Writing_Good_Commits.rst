@@ -8,7 +8,7 @@ Example of a good commit:
 
 ::
 
-    setup.py: 'Change bears' entrypoint
+    setup.py: Change bears' entrypoint
 
     This entrypoint ensures that coala discovers
     the bears correctly.
@@ -69,7 +69,7 @@ Example:
 
 ::
 
-    setup.py: 'Change bears' entrypoint
+    setup.py: Change bears' entrypoint
 
 -  Maximum of 50 characters.
 -  Should describe the *change* - the action being done in the commit.
