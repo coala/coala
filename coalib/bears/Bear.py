@@ -423,6 +423,8 @@ class Bear(Printer, LogPrinterMixin):
                   .format(filename=filename, bearname=self.name, url=url))
 
         response = requests.get(url, stream=True, timeout=20)
+        response.raise_for_status()
+
         with open(filename, 'wb') as file:
             for chunk in response.iter_content(125):
                 file.write(chunk)

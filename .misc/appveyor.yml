@@ -17,7 +17,7 @@ environment:
       LLVM_VERSION: 3.4.1
 
 cache:
-  - "C:\\wheels"
+  - "C:\\pip_cache"
 
 branches:  # Only build official branches, PRs are built anyway.
   only:
@@ -34,15 +34,7 @@ install:
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip -q install wheel"
-  # Create c:/wheels if it does not exist.
-  - ps: If ( -not (Test-Path C:\\wheels) )  { mkdir C:\\wheels }
-  - ECHO "Cached wheels:"
-  - ps: "ls \"C:\\wheels\""
-  - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r test-requirements.txt"
-  - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r requirements.txt"
-  - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r test-requirements.txt"
-  - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r requirements.txt"
+  - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
 
   - curl -fsSL http://llvm.org/releases/%LLVM_VERSION%/LLVM-%LLVM_VERSION%-win32.exe -o LLVM.exe
   - 7z x LLVM.exe -oC:\LLVM
