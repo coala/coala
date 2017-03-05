@@ -1,5 +1,6 @@
 import unittest
 import os
+import re
 
 from coalib.misc import Constants
 from coalib.settings.Section import Section, Setting, append_to_sections
