@@ -1,4 +1,5 @@
 from unittest import TestCase
+import re
 
 from coalib.settings.Annotations import typechain
 
