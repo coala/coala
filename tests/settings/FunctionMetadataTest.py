@@ -1,4 +1,5 @@
 import unittest
+import re
 
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
