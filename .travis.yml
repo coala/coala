@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 language: python
 python:
   - 3.4
@@ -22,9 +22,11 @@ cache:
 addons:
   apt:
     packages:
-      - clang-3.4
+      - libclang-3.8
+      - clang-3.8
     sources:
-      - llvm-toolchain-precise
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.8
 
 before_install:
   - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
@@ -36,6 +38,18 @@ before_install:
       brew install python3
       sudo ln -sf $(which python3) $(which python)
       sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
+    fi
+
+  - LIBCLANG_PATH="$(find /usr/lib/ -name "libclang.so")"
+  - echo "$LIBCLANG_PATH"
+  - LIBCLANG1_PATH="$(find /usr/lib/ -name "libclang.so.1")"
+  - echo "$LIBCLANG1_PATH"
+
+  - >
+    if [ -n "$LIBCLANG_PATH" ]; then
+      sudo ln -s $LIBCLANG_PATH /usr/lib/libclang.so
+    else
+      sudo ln -s $LIBCLANG1_PATH /usr/lib/libclang.so
     fi
 
   # always use latest versions of pip and setuptools

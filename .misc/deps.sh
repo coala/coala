@@ -14,8 +14,19 @@ case $CIRCLE_NODE_INDEX in
 esac
 
 # apt-get commands
-deps="libclang1-3.4"
+deps="libclang1-3.8"
 sudo apt-get install $deps
+
+LIBCLANG_PATH="$(find /usr/lib/ -name "libclang.so")"
+echo "$LIBCLANG_PATH"
+LIBCLANG1_PATH="$(find /usr/lib/ -name "libclang.so.1")"
+echo "$LIBCLANG1_PATH"
+
+if [ -n "$LIBCLANG_PATH" ]; then
+  sudo ln -s $LIBCLANG_PATH /usr/lib/libclang.so
+else
+  sudo ln -s $LIBCLANG1_PATH /usr/lib/libclang.so
+fi
 
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
