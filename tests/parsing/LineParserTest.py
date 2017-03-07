@@ -14,6 +14,7 @@ class LineParserTest(unittest.TestCase):
         self.check_data_set('\n \n \n')
 
     def test_comment_parsing(self):
+        logger = logging.getLogger()
         self.check_data_set('# comment only$§\n',
                             output_comment='# comment only$§')
         self.check_data_set('   ; comment only  \n',
@@ -21,6 +22,16 @@ class LineParserTest(unittest.TestCase):
         self.check_data_set('   ; \\comment only  \n',
                             output_comment='; comment only')
         self.check_data_set('#', output_comment='#')
+        with self.assertLogs(logger, 'WARNING') as cm:
+            self.check_data_set('##\n',
+                                output_comment='##')
+        self.assertEquals(cm.output, "The comment line does not have \
+                                     whitespace after #")
+        with self.assertLogs(logger, 'WARNING') as cm:
+            self.check_data_set('C#\n',
+                                output_comment='C#')
+        self.assertEquals(cm.output, "There is no whitespace either \
+                                 before or after # in comment")
 
     def test_section_override(self):
         self.check_data_set(r'a.b, \a\.\b\ c=',

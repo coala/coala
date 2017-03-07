@@ -4,6 +4,7 @@ from coala_utils.string_processing.StringConverter import StringConverter
 from coala_utils.string_processing import (unescape, convert_to_raw,
                                            position_is_escaped,
                                            unescaped_rstrip)
+import logging
 
 
 class LineParser:
@@ -81,6 +82,20 @@ class LineParser:
         line, comment = self.__separate_by_first_occurrence(
             line,
             self.comment_separators)
+
+        # Comment starting with # should have whitespace after #
+        # Example: C# is the hybrid of C and C++.
+        if '#' in line:
+            start_index = line.index('#')
+            logger = logging.getLogger()
+            if line[start_index + 1] != ' ':
+                logger.warning('The comment line does not have \
+                                 whitespace after #')
+            elif line[start_index - 1] != ' ' \
+                    or line[start_index + 1] != ' ':
+                logger.warning('There is no whitespace either \
+                                 before or after # in comment')
+
         comment = unescape(comment)
         if line == '':
             return '', [], '', False, comment
