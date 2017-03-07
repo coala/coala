@@ -158,6 +158,10 @@ class SourceRange(TextRange):
 
         return format_str.format(self)
 
+    def overlaps(self, other):
+        return (self.start.file == other.start.file
+                and super().overlaps(other))
+
     def __contains__(self, item):
         return (super().__contains__(item) and
                 self.start.file == item.start.file)

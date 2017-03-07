@@ -103,6 +103,32 @@ class SourceRangeTest(unittest.TestCase):
         b = SourceRange.from_values('test_file', 1, 1, 50, 20)
         self.assertNotIn(a, b)
 
+    def test_overlaps(self):
+        a = SourceRange.from_values('test_file', 2, None, 3)
+        b = SourceRange.from_values('test_file', 3, None, 5)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file1', 2, None, 3)
+        b = SourceRange.from_values('test_file2', 3, None, 5)
+        self.assertFalse(a.overlaps(b))
+        self.assertFalse(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file', 2, None, 2, None)
+        b = SourceRange.from_values('test_file', 2, 2, 2, 80)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file1', 1, None, None, None)
+        b = SourceRange.from_values('test_file2', 1, None, 1, None)
+        self.assertFalse(a.overlaps(b))
+        self.assertFalse(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file', 1, None, None, None)
+        b = SourceRange.from_values('test_file', 1, None, 1, None)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
+
     def test_renamed_file(self):
         src_range = SourceRange(SourcePosition('test_file'))
         self.assertEqual(src_range.renamed_file({}), abspath('test_file'))
