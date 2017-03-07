@@ -55,7 +55,7 @@ class Taste(metaclass=TasteMeta):
         given `languages`, which must be language identifiers supported by
         :class:`coalib.bearlib.languages.Language`.
 
-        No need to specify name an cast type:
+        No need to specify the cast type:
 
         The taste name is defined by the taste's attribute name in an
         aspectclass definition.
