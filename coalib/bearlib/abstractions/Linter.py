@@ -593,7 +593,7 @@ def linter(executable: str,
     an external linter tool.
 
     The main functionality is achieved through the ``create_arguments()``
-    function that constructs the command-line-arguments that get parsed to your
+    function that constructs the command-line-arguments that get passed to your
     executable.
 
     >>> @linter("xlint", output_format="regex", output_regex="...")
