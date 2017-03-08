@@ -86,6 +86,8 @@ Example:
       - Written in imperative present tense (i.e. ``Add something``, not
         ``Adding something`` or ``Added something``).
       - No trailing period.
+      -Line break the commit message(to make the commit message readable 
+        without having to scroll horizontally)
 
 Commit Body
 ~~~~~~~~~~~
@@ -173,9 +175,9 @@ In order to do this one can use the amend function as is described `here.
 Why Do We Need Good Commits?
 ----------------------------
 
--  An atomic commit is way easier to review. The reviewer thus will be
-   able to review faster and find more bugs due to the lower complexity
-   of the change.
+-  An atomic commit is way easier to review. The reviewer(which could be you)
+   thus will be able to review faster and find more bugs due to the lower 
+   complexity of the change.
 -  Atomic commits are like good objects in object oriented programming -
    you can split up a bigger thing into many small objects. Reducing
    complexity is the key to developing good software and finding its bug
@@ -194,3 +196,4 @@ Why Do We Need Good Commits?
    atomic commits to find the commit which caused a bug, you should be
    able to identify the real cause of the bug fastly. Good commit
    messages and atomicity of commits are key to that ability.
+-      

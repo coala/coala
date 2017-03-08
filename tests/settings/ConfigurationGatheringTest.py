@@ -34,12 +34,12 @@ class ConfigurationGatheringTest(unittest.TestCase):
         args = (lambda *args: True, self.log_printer)
 
         # Using incomplete settings (e.g. an invalid coafile) will error
-        with self.assertRaises(SystemExit):
+        with self.assertRaisesRegex(SystemExit):
             gather_configuration(*args,
                                  arg_list=['-c abcdefghi/invalid/.coafile'])
 
         # Using a bad filename explicitly exits coala.
-        with self.assertRaises(SystemExit):
+        with self.assertRaisesRegex(SystemExit):
             gather_configuration(
                 *args,
                 arg_list=['-S', 'test=5', '-c', 'some_bad_filename'])
@@ -104,7 +104,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
     def test_nonexistent_file(self):
         filename = 'bad.one/test\neven with bad chars in it'
-        with self.assertRaises(SystemExit):
+        with self.assertRaisesRegex(SystemExit):
             gather_configuration(lambda *args: True,
                                  self.log_printer,
                                  arg_list=['-S', 'config=' + filename])
@@ -112,7 +112,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         tmp = Constants.system_coafile
         Constants.system_coafile = filename
 
-        with self.assertRaises(SystemExit):
+        with self.assertRaisesRegex(SystemExit):
             gather_configuration(lambda *args: True,
                                  self.log_printer,
                                  arg_list=[])
@@ -183,7 +183,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         # We need to use a bad filename or this will parse coalas .coafile
         # Despite missing settings (coala isn't run) the file is saved
-        with self.assertRaises(SystemExit):
+        with self.assertRaisesRegex(SystemExit):
             gather_configuration(
                 lambda *args: True,
                 self.log_printer,
@@ -196,7 +196,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(['[cli]\n',
                           'config = some_bad_filename\n'], lines)
 
-        with self.assertRaises(SystemExit):
+        with self.assertRaisesRegex(SystemExit):
             gather_configuration(
                 lambda *args: True,
                 self.log_printer,
@@ -274,13 +274,13 @@ class ConfigurationGatheringTest(unittest.TestCase):
             self.assertIn('use_spaces', sections['cli'])
             self.assertNotIn('values', sections['cli'])
 
-            with self.assertRaises(SystemExit) as cm:
+            with self.assertRaisesRegex(SystemExit) as cm:
                 sections, target = load_configuration(
                     ['--no-config', '--save'],
                     self.log_printer)
                 self.assertEqual(cm.exception.code, 2)
 
-            with self.assertRaises(SystemExit) as cm:
+            with self.assertRaisesRegex(SystemExit) as cm:
                 sections, target = load_configuration(
                     ['--no-config', '--find-config'],
                     self.log_printer)

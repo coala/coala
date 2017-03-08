@@ -331,7 +331,7 @@ class BearDownloadTest(BearTestBase):
         mock_url = 'https://test.com'
         mock_text = """<html>
             <p> lorem impsum dolor</p>
-        </hrml>"""
+        </html>"""
         filename = self.filename
         file_location = self.file_location
 

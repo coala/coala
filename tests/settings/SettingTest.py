@@ -12,8 +12,8 @@ from coalib.parsing.Globbing import glob_escape
 class SettingTest(unittest.TestCase):
 
     def test_construction(self):
-        self.assertRaises(ValueError, Setting, '', 2, 2)
-        self.assertRaises(TypeError, Setting, '', '', '', from_cli=5)
+        self.assertRaisesRegex(ValueError, Setting, '', 2, 2)
+        self.assertRaisesRegex(TypeError, Setting, '', '', '', from_cli=5)
         self.assertRaisesRegex(TypeError, 'to_append',
                                Setting, '', '', '', to_append=10)
 
@@ -28,7 +28,7 @@ class SettingTest(unittest.TestCase):
         self.assertEqual(path(self.uut), abspath)
 
         self.uut = Setting('key', ' 22', '')
-        self.assertRaises(ValueError, path, self.uut)
+        self.assertRaisesRegex(ValueError, path, self.uut)
         self.assertEqual(path(self.uut,
                               origin='test' + os.path.sep),
                          os.path.abspath(os.path.join('test', '22')))
@@ -51,7 +51,7 @@ class SettingTest(unittest.TestCase):
         uut = Setting('key', 'http://google.com')
         self.assertEqual(url(uut), 'http://google.com')
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError):
             uut = Setting('key', 'abc')
             url(uut)
 
@@ -70,7 +70,7 @@ class SettingTest(unittest.TestCase):
         self.assertEqual(typed_list(int)(self.uut),
                          [1, 2, 3])
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError):
             self.uut = Setting('key', '1, a, 3')
             typed_list(int)(self.uut)
 
@@ -79,7 +79,7 @@ class SettingTest(unittest.TestCase):
         self.assertEqual(typed_dict(int, str, None)(self.uut),
                          {1: None, 2: 't', 3: None})
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError):
             self.uut = Setting('key', '1, a, 3')
             typed_dict(int, str, '')(self.uut)
 
@@ -88,7 +88,7 @@ class SettingTest(unittest.TestCase):
         self.assertEqual(typed_ordered_dict(int, str, None)(self.uut),
                          OrderedDict([(1, None), (2, 't'), (3, None)]))
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError):
             self.uut = Setting('key', '1, a, 3')
             typed_ordered_dict(int, str, '')(self.uut)
 
@@ -96,7 +96,7 @@ class SettingTest(unittest.TestCase):
         self.uut = Setting('key', ' 22\n', '.', strip_whitespaces=True)
         self.assertEqual(str(self.uut), '22')
         self.assertEqual(int(self.uut), 22)
-        self.assertRaises(ValueError, bool, self.uut)
+        self.assertRaisesRegex(ValueError, bool, self.uut)
 
     def test_value_getter(self):
         with self.assertRaisesRegex(ValueError, 'This property is invalid'):
