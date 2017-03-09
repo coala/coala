@@ -126,7 +126,7 @@ passed.
                 file,
                 [Result.from_values('TooManyLinesBear',
                                     'Too many lines',
-                                    settings={'max_number_of_lines': int=20})])
+                                    settings={'max_number_of_lines': 20})])
 
 ``check_results`` asserts if your bear results match the actual
 results on execution on CLI. Just like the above example, we need to ``setUp``
