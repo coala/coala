@@ -1,9 +1,6 @@
 from coalib.bearlib.aspects import Taste, aspectclass
 from coalib.bearlib.aspects.base import aspectbase
 
-import coalib.bearlib.aspects.Metadata
-import coalib.bearlib.aspects.Redundancy
-
 import pytest
 
 
