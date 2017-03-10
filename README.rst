@@ -55,7 +55,7 @@ Features
 ========
 
 * Out-of-the-box support for various `popular languages <https://github.com/coala/bear-docs/blob/master/README.rst>`__,
-  such as **C/C++**, **Python**, **Javascript**, **CSS**, **Java** and many
+  such as **C/C++**, **Python**, **Javascript**, **CSS**, **Java**, **Ruby** and many 
   others with built-in check routines.
 * User-friendly interfaces such as JSON, interactive CLI or any custom format.
 * Plugins for
