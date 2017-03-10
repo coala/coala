@@ -11,9 +11,6 @@ from pyprint.Printer import Printer
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
-from dependency_management.requirements.PackageRequirement import (
-    PackageRequirement)
-from dependency_management.requirements.PipRequirement import PipRequirement
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
@@ -45,6 +42,10 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     To indicate which languages your bear supports, just give it the
     ``LANGUAGES`` value which should be a set of string(s):
 
+    >>> from dependency_management.requirements.PackageRequirement import (
+    ... PackageRequirement)
+    >>> from dependency_management.requirements.PipRequirement import (
+    ... PipRequirement)
     >>> class SomeBear(Bear):
     ...     LANGUAGES = {'C', 'CPP','C#', 'D'}
 
@@ -387,7 +388,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         This function gets executed at construction.
 
         Section value requirements shall be checked inside the ``run`` method.
-
+        >>> from dependency_management.requirements.PipRequirement import (
+        ... PipRequirement)
         >>> class SomeBear(Bear):
         ...     REQUIREMENTS = {PipRequirement('pip')}
 

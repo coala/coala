@@ -1,5 +1,4 @@
 from coalib.bearlib.aspects import Root
-from coalib.bearlib.aspects import aspectclass
 from coalib.bearlib.aspects.meta import issubaspect
 
 import pytest

@@ -1,5 +1,4 @@
 from coalib.bears.LocalBear import LocalBear
-from coalib.results.Result import Result
 
 
 class TestBear(LocalBear):

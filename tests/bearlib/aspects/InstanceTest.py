@@ -1,5 +1,3 @@
-from itertools import chain
-
 import pytest
 
 
