@@ -7,10 +7,12 @@ import pytest
 class AspectClassTest:
 
     def test_subaspect_without_definition(self, RootAspect):
-        with pytest.raises(TypeError):
+        error_str = 'must be an instance of one of'
+        with pytest.raises(TypeError) as exc:
             @RootAspect.subaspect
             class SubAspect:
                 pass
+        assert exc.match(error_str)
 
     def test_subaspect_without_docs(self, RootAspect):
         @RootAspect.subaspect

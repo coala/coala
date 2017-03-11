@@ -15,5 +15,7 @@ class AspectBaseTest:
         assert not isinstance(aspectbase, aspectclass)
 
     def test_init_needs_aspectclass(self):
-        with pytest.raises(AttributeError):
+        error_str = 'object has no attribute'
+        with pytest.raises(AttributeError) as exc:
             aspectbase('py')
+        exc.match(error_str)
