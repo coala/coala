@@ -20,7 +20,8 @@ class AspectInstanceTest:
             with pytest.raises(AttributeError) as exc:
                 setattr(aspect, name, 'value')
             assert str(exc.value) \
-                == "can't set taste values of aspectclass instances"
+                == "A 'taste' value for this aspectclass instance "\
+                   'exists already.'
         for name in ['docs', 'subaspects', 'tastes', '_tastes']:
             with pytest.raises(AttributeError) as exc:
                 setattr(aspect, name, 'value')
