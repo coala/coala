@@ -1,7 +1,7 @@
 import json
 import logging
 import unittest
-from unittest.case import SkipTest
+import unittest.case
 
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.Diff import ConflictError, Diff, SourceRange
@@ -210,7 +210,7 @@ class DiffTest(unittest.TestCase):
         try:
             from clang.cindex import Index, LibclangError
         except ImportError as err:
-            raise SkipTest(str(err))
+            raise unittest.case.SkipTest(str(err))
 
         joined_file = 'struct { int f0; }\nx = { f0 :1 };\n'
         file = joined_file.splitlines(True)
@@ -219,7 +219,7 @@ class DiffTest(unittest.TestCase):
             tu = Index.create().parse('t.c', unsaved_files=[
                 ('t.c', joined_file)])
         except LibclangError as err:
-            raise SkipTest(str(err))
+            raise unittest.case.SkipTest(str(err))
 
         fixit = tu.diagnostics[0].fixits[0]
         clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
