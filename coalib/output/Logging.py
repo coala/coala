@@ -1,8 +1,35 @@
 from datetime import datetime
+from collections import Counter
 import json
 import io
 import logging
 import logging.config
+
+
+class CounterHandler(logging.Handler):
+    """
+    A logging handler which counts the number of calls
+    for each logging level.
+    """
+    _call_counter = Counter()
+
+    @classmethod
+    def reset(cls):
+        """
+        Reset the counter to 0 for all levels
+        """
+        cls._call_counter.clear()
+
+    @classmethod
+    def emit(cls, record):
+        cls._call_counter[record.levelname] += 1
+
+    @classmethod
+    def get_num_calls_for_level(cls, level):
+        """
+        Returns the number of calls registered for a given log level.
+        """
+        return cls._call_counter[level]
 
 
 def configure_logging():
@@ -11,6 +38,9 @@ def configure_logging():
     """
     import sys
 
+    # reset counter handler
+    CounterHandler.reset()
+
     logging.config.dictConfig({
         'version': 1,
         'handlers': {
@@ -18,11 +48,14 @@ def configure_logging():
                 'class': 'logging.StreamHandler',
                 'formatter': 'colored',
                 'stream': sys.stderr
+            },
+            'counter': {
+                'class': 'coalib.output.Logging.CounterHandler'
             }
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['colored']
+            'handlers': ['colored', 'counter']
         },
         'formatters': {
             'colored': {
@@ -48,6 +81,9 @@ def configure_json_logging():
     """
     stream = io.StringIO()
 
+    # reset counter handler
+    CounterHandler.reset()
+
     logging.config.dictConfig({
         'version': 1,
         'handlers': {
@@ -55,11 +91,14 @@ def configure_json_logging():
                 'class': 'logging.StreamHandler',
                 'formatter': 'json',
                 'stream': stream
+            },
+            'counter': {
+                'class': 'coalib.output.Logging.CounterHandler'
             }
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['json']
+            'handlers': ['json', 'counter']
         },
         'formatters': {
             'json': {

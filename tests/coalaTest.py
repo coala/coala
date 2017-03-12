@@ -10,6 +10,7 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import assert_supported_version, coala
 from pyprint.ConsolePrinter import ConsolePrinter
 from coala_utils.ContextManagers import prepare_file
+from coalib.output.Logging import configure_logging
 
 from tests.TestUtilities import execute_coala, bear_test_module
 
@@ -34,6 +35,8 @@ class coalaTest(unittest.TestCase):
                           stdout,
                           'The output should report count as 1 lines')
             self.assertIn('During execution of coala', stderr)
+            self.assertNotEqual(retval, 0,
+                                'coala must return nonzero when errors occured')
 
     @unittest.mock.patch('sys.version_info', tuple((2, 7, 11)))
     def test_python_version_27(self):
@@ -70,8 +73,8 @@ class coalaTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '-I')
             self.assertEqual(retval, 0)
-            # 6 bears plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 7)
+            # 7 bears plus 1 line holding the closing colour escape sequence.
+            self.assertEqual(len(stdout.strip().splitlines()), 8)
             self.assertFalse(stderr)
 
     def test_show_language_bears(self):
@@ -102,6 +105,8 @@ class coalaTest(unittest.TestCase):
                            'dependency you have installed'), stderr)
             self.assertIn('pip install "msg2"', stderr)
             self.assertFalse(stdout)
+            self.assertNotEqual(retval, 0,
+                                'coala must return nonzero when errors occured')
 
     @unittest.mock.patch('coalib.collecting.Collectors._import_bears')
     def test_unimportable_bear(self, import_fn):
@@ -157,3 +162,20 @@ class coalaTest(unittest.TestCase):
                     )
                 )[0]['cli'])
             )
+
+    def test_logged_error_causes_non_zero_exitcode(self):
+        configure_logging()
+        with bear_test_module(), \
+                prepare_file(['#fixme  '], None) as (lines, filename):
+            _, exitcode, _ = run_coala(
+                console_printer=ConsolePrinter(),
+                log_printer=LogPrinter(),
+                arg_list=(
+                    '-c', os.devnull,
+                    '-f', re.escape(filename),
+                    '-b', 'ErrorTestBear'
+                ),
+                autoapply=False
+            )
+
+            assert exitcode == 1

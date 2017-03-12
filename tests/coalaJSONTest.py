@@ -31,6 +31,8 @@ class coalaJSONTest(unittest.TestCase):
         test_text = '{\n  "results": {}\n}\n'
         self.assertEqual(stdout, test_text)
         self.assertRegex(stderr, ".*requested coafile '.*' does not exist. .+")
+        self.assertNotEqual(retval, 0,
+                            'coala must return nonzero when errors occured')
 
     def test_find_issues(self):
         with bear_test_module(), \
@@ -60,6 +62,8 @@ class coalaJSONTest(unittest.TestCase):
             self.assertEqual(stdout, test_text)
             self.assertIn('During execution, we found that some',
                           stderr, 'Missing settings not logged')
+            self.assertNotEqual(retval, 0,
+                                'coala must return nonzero when errors occured')
 
     def test_show_all_bears(self):
         with bear_test_module():
@@ -67,7 +71,7 @@ class coalaJSONTest(unittest.TestCase):
                 coala.main, 'coala', '--json', '-B', '-I')
             self.assertEqual(retval, 0)
             output = json.loads(stdout)
-            self.assertEqual(len(output['bears']), 6)
+            self.assertEqual(len(output['bears']), 7)
             self.assertFalse(stderr)
 
     def test_show_language_bears(self):
@@ -115,6 +119,8 @@ class coalaJSONTest(unittest.TestCase):
             stderr,
             ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
         self.assertEqual(stdout, test_text)
+        self.assertNotEqual(retval, 0,
+                            'coala must return nonzero when errors occured')
 
     def test_output_file(self):
         with prepare_file(['#todo this is todo'], None) as (lines, filename):
@@ -127,6 +133,7 @@ class coalaJSONTest(unittest.TestCase):
 
         with open('file.json') as fp:
             data = json.load(fp)
+
         output = json.loads(stdout1)
         self.assertFalse(stderr1)
         # Remove 'time' key from both as we cant compare them
