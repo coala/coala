@@ -610,6 +610,10 @@ class DiffTest(unittest.TestCase):
         uut.add_lines(0, ['line2', 'line3'])
         self.assertEqual(uut.modified, ['line2', 'line3'])
 
+    def test_empty_diff_creation(self):
+        # Testing creation of a diff of not a new file
+        self.assertRaisesRegexp(ValueError, r'file_list cannot be None\.', Diff)
+
     def test_unified_diff_for_file_creation(self):
         uut = Diff(create='create.py')
         uut.add_lines(0, ['line2\n', 'line3\n'])

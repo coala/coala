@@ -22,17 +22,24 @@ class Diff:
         Creates an empty diff for the given file.
 
         :param file_list: The original (unmodified) file as a list of its
-                          lines.
+                          lines. It has to be provided if ``create`` is not set,
+                          else an error will be raised.
         :param rename:    False or str containing new name of file.
         :param delete:    True if file is set to be deleted.
         :param create:    False or str containing the name of the file to be
                           created.
+        :raises ValueError: If ``file_list`` is not provided and ``create`` is
+                            not set.
         """
         self._changes = {}
-        self._file = [] if create else file_list
         self.rename = rename
         self.delete = delete
         self.create = create
+
+        if create is False and file_list is None:
+            raise ValueError('file_list cannot be None.')
+
+        self._file = [] if create else file_list
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2, rename=False):
