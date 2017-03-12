@@ -1,4 +1,4 @@
-from collections import Iterable, OrderedDict
+from collections import defaultdict, Iterable, OrderedDict
 
 
 def inverse_dicts(*dicts):
@@ -14,7 +14,7 @@ def inverse_dicts(*dicts):
     :return:      The inversed dictionary which merges all dictionaries into
                   one.
     """
-    inverse = {}
+    inverse = defaultdict(list)
 
     for dictionary in dicts:
         for key, value in dictionary.items():
@@ -32,10 +32,7 @@ def add_pair_to_dict(key, value, dictionary):
     Add (key, value) pair to the dictionary. The value is added to a list of
     values for the key.
     """
-    if key in dictionary:
-        dictionary[key].append(value)
-    else:
-        dictionary[key] = [value]
+    dictionary[key].append(value)
 
 
 def update_ordered_dict_key(dictionary, old_key, new_key):
