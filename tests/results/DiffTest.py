@@ -290,10 +290,7 @@ class DiffTest(unittest.TestCase):
 
     def test_empty_diff_creation(self):
         # Testing creation of a diff of not a new file
-        with self.assertRaisesRegexp(ValueError, 'file_list cannot be None')\
-                as err:
-            Diff()
-        self.assertEqual('file_list cannot be None.', str(err.exception))
+        self.assertRaisesRegexp(ValueError, 'file_list cannot be None', Diff)
 
     def test_unified_diff_for_file_creation(self):
         uut = Diff(create='create.py')
