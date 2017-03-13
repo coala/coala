@@ -59,6 +59,13 @@ def configure_logging(log_level=logging.INFO, incremental=False,
                 'stream': sys.stdout if stdout else sys.stderr,
                 'level': LOG_LEVEL.reverse.get(log_level)
             },
+            'file-handler': {
+                'class': 'logging.FileHandler',
+                'formatter': 'no-color',
+                'filename': '.coala.log',
+                'mode': 'w',
+                'level': 'DEBUG'
+            },
             'json-handler': {
                 'class': 'logging.NullHandler',
                 'level': LOG_LEVEL.reverse.get(log_level)
@@ -66,7 +73,7 @@ def configure_logging(log_level=logging.INFO, incremental=False,
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['console-handler', 'json-handler']
+            'handlers': ['file-handler', 'console-handler', 'json-handler']
         },
         'formatters': {
             'color': {
@@ -112,10 +119,13 @@ def configure_json_logging():
             'console-handler': {
                 'class': 'logging.NullHandler'
             },
+            'file-handler': {
+                'class': 'logging.NullHandler'
+            },
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['json-handler', 'console-handler']
+            'handlers': ['json-handler', 'console-handler', 'file-handler']
         },
         'formatters': {
             'json': {
