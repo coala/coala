@@ -92,6 +92,13 @@ def configure_logging(log_level=logging.INFO, incremental=False,
             'counter-handler': {
                 'class': 'coalib.output.Logging.CounterHandler'
             },
+            'file-handler': {
+                'class': 'logging.FileHandler',
+                'formatter': 'no-color',
+                'filename': '.coala.log',
+                'mode': 'w',
+                'level': 'DEBUG'
+            },
             'json-handler': {
                 'class': 'logging.NullHandler',
                 'level': LOG_LEVEL.reverse.get(log_level)
@@ -99,7 +106,7 @@ def configure_logging(log_level=logging.INFO, incremental=False,
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['console-handler', 'json-handler', 'counter-handler']
+            'handlers': ['file-handler', 'console-handler', 'json-handler', 'counter-handler']
         },
         'formatters': {
             'color': {
@@ -148,13 +155,16 @@ def configure_json_logging():
             'counter-handler': {
                 'class': 'coalib.output.Logging.CounterHandler'
             }
-        },
-        'root': {
-            'level': 'DEBUG',
-            'handlers': ['json-handler', 'console-handler', 'counter-handler']
             'console-handler': {
                 'class': 'logging.NullHandler'
             },
+            'file-handler': {
+                'class': 'logging.NullHandler'
+            },
+        },
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['json-handler', 'console-handler', 'counter-handler', 'file-handler']
         },
         'formatters': {
             'json': {
