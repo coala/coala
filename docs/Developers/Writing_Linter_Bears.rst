@@ -431,7 +431,7 @@ To use our `pylint_rcfile` setting we can do
 ::
 
     $ coala --bear-dirs=. --bears=PythonTutorialBear \
-    > -S rcfile=my_rcfile --files=sample.py
+    > -S pylint_rcfile=my_rcfile --files=sample.py
 
 You now know how to write a linter Bear and also how to use it in your
 project.
