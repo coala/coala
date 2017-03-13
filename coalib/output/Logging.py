@@ -5,6 +5,7 @@ import logging.config
 from datetime import datetime
 from collections import Counter
 
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 class CounterHandler(logging.Handler):
     """
@@ -32,9 +33,23 @@ class CounterHandler(logging.Handler):
         return cls._call_counter[level]
 
 
-def configure_logging(color=True):
+def configure_logging(color=True, log_level=logging.INFO, incremental=False):
     """
     Configures the logging with hard coded dictionary.
+
+    If the incremental param is ``True``, all the log-handlers configuration
+    other than level will be ignored.
+    Thus, use it only when changing the log_level.
+    To change log level with this function, it has to be called once with
+    ``incremental=False``.
+
+    :param log_level:
+        The log level to set for json and console handlers.
+    :param incremental:
+        ``False`` if setting up new loggers, ``True`` if only changing
+        the log level.
+    :return:
+        The log_level is returned.
     """
     import sys
 
@@ -43,19 +58,26 @@ def configure_logging(color=True):
 
     logging.config.dictConfig({
         'version': 1,
+        'incremental': incremental,
         'handlers': {
             'console-handler': {
                 'class': 'logging.StreamHandler',
                 'formatter': 'colored' if color else 'plain',
                 'stream': sys.stderr
+                'level': LOG_LEVEL.reverse.get(log_level)
+
             },
-            'counter': {
+            'counter-handler': {
                 'class': 'coalib.output.Logging.CounterHandler'
+            },
+            'json-handler': {
+                'class': 'logging.NullHandler',
+                'level': LOG_LEVEL.reverse.get(log_level)
             }
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['colored', 'counter']
+            'handlers': ['console-handler', 'json-handler', 'counter-handler']
         },
         'formatters': {
             'color': {
@@ -76,11 +98,16 @@ def configure_logging(color=True):
             }
         }
     })
+    return log_level
 
 
 def configure_json_logging():
     """
     Configures logging for JSON.
+
+    NOTE: Use ``configure_logging`` to change log level even if the handler
+    is created by ``configure_json_logging``.
+
     :return: Returns a ``StringIO`` that captures the logs as JSON.
     """
     stream = io.StringIO()
@@ -96,13 +123,16 @@ def configure_json_logging():
                 'formatter': 'json',
                 'stream': stream
             },
-            'counter': {
+            'counter-handler': {
                 'class': 'coalib.output.Logging.CounterHandler'
             }
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['json', 'counter']
+            'handlers': ['json-handler', 'console-handler', 'counter-handler']
+            'console-handler': {
+                'class': 'logging.NullHandler'
+            },
         },
         'formatters': {
             'json': {
