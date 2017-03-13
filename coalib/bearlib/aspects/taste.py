@@ -55,6 +55,13 @@ class Taste(metaclass=TasteMeta):
         given `languages`, which must be language identifiers supported by
         :class:`coalib.bearlib.languages.Language`.
 
+        :param description:       A string describing the taste.
+        :param suggested_values:  A tuple containing the list of possible
+                                  values for the taste.
+        :param default:           The default value of the taste.
+        :param languages:         A tuple containing the list of languages, for
+                                  which taste is defined.
+
         No need to specify name an cast type:
 
         The taste name is defined by the taste's attribute name in an
