@@ -1,9 +1,9 @@
-from datetime import datetime
-from collections import Counter
-import json
 import io
+import json
 import logging
 import logging.config
+from datetime import datetime
+from collections import Counter
 
 
 class CounterHandler(logging.Handler):
