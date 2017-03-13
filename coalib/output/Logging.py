@@ -33,7 +33,8 @@ class CounterHandler(logging.Handler):
         return cls._call_counter[level]
 
 
-def configure_logging(color=True, log_level=logging.INFO, incremental=False):
+def configure_logging(log_level=logging.INFO, incremental=False,
+                      stdout=False, color=True):
     """
     Configures the logging with hard coded dictionary.
 
@@ -48,8 +49,29 @@ def configure_logging(color=True, log_level=logging.INFO, incremental=False):
     :param incremental:
         ``False`` if setting up new loggers, ``True`` if only changing
         the log level.
+    :param stdout:
+        If ``True`` the logging is done on stdout, else it's done on stderr.
+    :param color:
+        If ``True`` the logging uses ``color`` formatter, else it uses
+        the ``no-color`` formatter.
     :return:
-        The log_level is returned.
+        The new_log_level is returned.
+
+    >>> from coalib.output.Logging import configure_logging
+    >>> import logging
+    >>> import sys
+    >>> configure_logging(stdout=True, color=False)
+    20
+    >>> logging.info("This world doesn’t belong to them")
+    [INFO][...] This world doesn’t belong to them
+
+    We will now change the level to ``ERROR``.
+
+    >>> configure_logging(logging.ERROR, incremental=True)
+    40
+    >>> logging.info("it belongs to us.")
+    >>> logging.error("These violent delights have violent ends.")
+    [ERROR][...] These violent delights have violent ends.
     """
     import sys
 
@@ -63,7 +85,7 @@ def configure_logging(color=True, log_level=logging.INFO, incremental=False):
             'console-handler': {
                 'class': 'logging.StreamHandler',
                 'formatter': 'colored' if color else 'plain',
-                'stream': sys.stderr
+                'stream': sys.stderr if stdout else sys.stderr,
                 'level': LOG_LEVEL.reverse.get(log_level)
 
             },
