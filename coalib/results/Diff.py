@@ -351,7 +351,12 @@ class Diff:
     def delete_line(self, line_nr):
         """
         Mark the given line nr as deleted. The first line is line number 1.
+
+        Raises an exception if line number doesn't exist in the diff.
         """
+        if line_nr > len(self._file):
+            raise IndexError('The given line number is out of bounds.')
+
         linediff = self._get_change(line_nr)
         linediff.delete = True
         self._changes[line_nr] = linediff
@@ -359,6 +364,9 @@ class Diff:
     def delete_lines(self, line_nr_start, line_nr_end):
         """
         Delete lines in a specified range, inclusively.
+
+        The range must be valid, i.e. lines must exist in diff, else an
+        exception is raised.
         """
         for line_nr in range(line_nr_start, line_nr_end + 1):
             self.delete_line(line_nr)

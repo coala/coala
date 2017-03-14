@@ -37,13 +37,15 @@ class DiffTest(unittest.TestCase):
         additions, deletions = self.uut.stats()
         self.assertEqual(deletions, 1)
         self.assertRaises(IndexError, self.uut.delete_line, 0)
+        self.assertRaises(IndexError, self.uut.delete_line, 10)
 
     def test_delete_lines(self):
-        self.uut.delete_lines(1, 10)
-        self.uut.delete_lines(10, 20)
+        self.uut.delete_lines(1, 2)
+        self.uut.delete_lines(2, 3)
         additions, deletions = self.uut.stats()
-        self.assertEqual(deletions, 20)
-        self.assertRaises(IndexError, self.uut.delete_lines, 0, 10)
+        self.assertEqual(deletions, 3)
+        self.assertRaises(IndexError, self.uut.delete_lines, 0, 2)
+        self.assertRaises(IndexError, self.uut.delete_lines, 1, 6)
 
     def test_change_line(self):
         self.assertEqual(len(self.uut), 0)
@@ -98,11 +100,10 @@ class DiffTest(unittest.TestCase):
             SourceRange.from_values('file', start_line=2, end_line=3)]
         self.assertEqual(self.uut.affected_code('file'), affected_code)
 
-        self.uut.delete_line(6)
+        self.uut.delete_line(4)
         affected_code = [
             SourceRange.from_values('file', start_line=1),
-            SourceRange.from_values('file', start_line=2, end_line=3),
-            SourceRange.from_values('file', start_line=6)]
+            SourceRange.from_values('file', start_line=2, end_line=4)]
         self.assertEqual(self.uut.affected_code('file'), affected_code)
 
     def test_len(self):
