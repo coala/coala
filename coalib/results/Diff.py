@@ -97,7 +97,7 @@ class Diff:
         if not isinstance(line_nr, int):
             raise TypeError('line_nr needs to be an integer.')
         if line_nr < min_line:
-            raise ValueError('The given line number is not allowed.')
+            raise IndexError('The given line number is not allowed.')
 
         return self._changes.get(line_nr, LineDiff())
 

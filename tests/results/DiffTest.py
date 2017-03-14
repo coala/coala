@@ -28,7 +28,7 @@ class DiffTest(unittest.TestCase):
 
         # No double addition allowed
         self.assertRaises(ConflictError, self.uut.add_lines, 0, ['t'])
-        self.assertRaises(ValueError, self.uut.add_lines, -1, ['t'])
+        self.assertRaises(IndexError, self.uut.add_lines, -1, ['t'])
         self.assertRaises(TypeError, self.uut.add_lines, 'str', ['t'])
 
     def test_delete_line(self):
@@ -36,21 +36,21 @@ class DiffTest(unittest.TestCase):
         self.uut.delete_line(1)  # Double deletion possible without conflict
         additions, deletions = self.uut.stats()
         self.assertEqual(deletions, 1)
-        self.assertRaises(ValueError, self.uut.delete_line, 0)
+        self.assertRaises(IndexError, self.uut.delete_line, 0)
 
     def test_delete_lines(self):
         self.uut.delete_lines(1, 10)
         self.uut.delete_lines(10, 20)
         additions, deletions = self.uut.stats()
         self.assertEqual(deletions, 20)
-        self.assertRaises(ValueError, self.uut.delete_lines, 0, 10)
+        self.assertRaises(IndexError, self.uut.delete_lines, 0, 10)
 
     def test_change_line(self):
         self.assertEqual(len(self.uut), 0)
         self.uut.change_line(2, '1', '2')
         self.assertEqual(len(self.uut), 2)
         self.assertRaises(ConflictError, self.uut.change_line, 2, '1', '3')
-        self.assertRaises(ValueError, self.uut.change_line, 0, '1', '2')
+        self.assertRaises(IndexError, self.uut.change_line, 0, '1', '2')
 
         self.uut.delete_line(1)
         # Line was deleted, unchangeable
