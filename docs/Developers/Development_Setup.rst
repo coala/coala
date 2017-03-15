@@ -95,12 +95,12 @@ Coala-utils holds a collection of useful utilities that are used
 mainly by coala and can be used by outside sources as well.Install it using
 ::
 
-	(coala-venv)$ git clone https://gitlab.com/coala/coala-utils.git
+    (coala-venv)$ git clone https://gitlab.com/coala/coala-utils.git
 
 Package manager and requirement classes used by coala can be installed using
 ::
 
-	(coala-venv)$ git clone https://gitlab.com/coala/package_manager.git
+    (coala-venv)$ git clone https://gitlab.com/coala/package_manager.git
 
 
 Then you can install a repository-backed version of the repository you would
