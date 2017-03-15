@@ -87,5 +87,5 @@ class Taste(metaclass=TasteMeta):
         """
         if self.name in obj.__dict__:
             raise AttributeError(
-                "can't set taste values of aspectclass instances")
+                'A taste values of aspectclass instances already exists.')
         obj.__dict__[self.name] = self.cast_type(value)
