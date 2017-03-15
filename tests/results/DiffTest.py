@@ -219,7 +219,10 @@ class DiffTest(unittest.TestCase):
             tu = Index.create().parse('t.c', unsaved_files=[
                 ('t.c', joined_file)])
         except LibclangError as err:
-            raise SkipTest(str(err))
+            if 'libclang.so version' in str(err):
+                raise SkipTest(AssertionError('coala requires clang 3.4'))
+            else:
+                raise SkipTest(str(err))
 
         fixit = tu.diagnostics[0].fixits[0]
         clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
