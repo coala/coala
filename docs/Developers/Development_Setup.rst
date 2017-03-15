@@ -52,7 +52,7 @@ like to modify using
 
 ::
 
-    (venv)$ pip3 install -e <path/to/clone>
+    (venv)$ pip3 install -e <path/to/your_forked_coala_repo>
 
 You will then be able to edit the repository and have the changes take effect
 in your virtualenv immediately. You will also be able to use pip to manage
