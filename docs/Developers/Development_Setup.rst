@@ -39,7 +39,7 @@ NOTE: As coala works for python 3 we need to configure the environment according
 
 Enter the path where you have installed python 3.
 
-    $ source venv/bin/activate
+          $ source venv/bin/activate
     (venv)$ python --version
 
 Check your python version and make sure it is python 3.
