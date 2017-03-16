@@ -26,5 +26,5 @@ class TasteTest:
         for name, taste in SubAspect_tastes.items():
             assert getattr(SubAspect, name) is taste
             assert getattr(using_default_values, name) == taste.default
-            assert getattr(using_custom_values, name) \
-                == SubAspect_taste_values[name]
+            assert getattr(using_custom_values, name) == (
+                SubAspect_taste_values[name])
