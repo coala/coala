@@ -163,6 +163,19 @@ Now that your message is written, you will have to save the file. Press escape
 to exit insert mode, and save the file (in Vim that is being done by pressing
 shift + Z twice).
 
+Run coala
+------------------
+
+Now you can check if your commit messages and code formattings
+conform with the community guidelines.
+If something goes wrong, coala will let you know. The continuous integration
+(CI) will fail if coala reports errors which means that we cannot proceed
+with merging your fix/pull request.
+
+::
+
+  $ coala
+
 Pushing the commit
 ------------------
 
