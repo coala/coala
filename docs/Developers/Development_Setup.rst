@@ -83,25 +83,23 @@ master branch from and all of its dependencies with pip using
 
 ::
 
+    (coala-venv)$ # For the coala repository:
     (coala-venv)$ git clone https://github.com/coala/coala
-    (coala-venv)$ cd coala
-    (coala-venv)$ pip3 install -e .
-    (coala-venv)$ cd -
+    (coala-venv)$ pip3 install -e coala
+    (coala-venv)$ # For the coala-bears repository:
     (coala-venv)$ git clone https://github.com/coala/coala-bears
-    (coala-venv)$ cd coala-bears
-    (coala-venv)$ pip3 install -e .
+    (coala-venv)$ pip3 install -e coala-bears
 
-Then you can install a repository-backed version of the repository you would
-like to modify using
+To generally install a repository-backed version you can use
 
 ::
 
-    (coala-venv)$ pip3 install -e <path/to/clone>
+   $ pip3 install -e <path/to/clone>
 
-You will then be able to edit the repository and have the changes take effect
-in your virtualenv immediately. You will also be able to use pip to manage
-your installation of the package should you need to install from a different
-source in the future.
+This will install the repository in editable mode, meaning you will be able
+to edit the repository and have the changes take effect in your virtualenv
+immediately. You will also be able to use pip to manage your installation
+of the package should you need to install from a different source in the future.
 
 
 Building Documentation
