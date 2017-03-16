@@ -251,13 +251,15 @@ class Bear(Printer, LogPrinterMixin):
             return [] if result is None else list(result)
         except (Exception, SystemExit):
             if self.kind() == BEAR_KIND.LOCAL:
-                self.warn('Bear {} failed to run on file {}. Take a look '
-                          'at debug messages (`-V`) for further '
-                          'information.'.format(name, args[0]))
+                if '-V' not in args:
+                    self.warn('Bear {} failed to run on file {}. Take a look '
+                              'at debug messages (`-V`) for further '
+                              'information.'.format(name, args[0]))
             else:
-                self.warn('Bear {} failed to run. Take a look '
-                          'at debug messages (`-V`) for further '
-                          'information.'.format(name))
+                if '-V' not in args:
+                    self.warn('Bear {} failed to run. Take a look '
+                              'at debug messages (`-V`) for further '
+                              'information.'.format(name))
             self.debug(
                 'The bear {bear} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '
