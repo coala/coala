@@ -123,6 +123,7 @@ Step 3. Picking Up an Issue
 ---------------------------
 
 Now it is time to pick an issue.
+It is the best way to familiarise yourself with the codebase.
 Here is the link that will lead you to `Newcomers issues <https://coala.io/new>`_.
 
 .. note::

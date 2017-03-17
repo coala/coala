@@ -44,7 +44,7 @@ class aspectclass(type):
             attr: getattr(docs, attr, '') for attr in
             list(signature(Documentation).parameters.keys())[1:]})
 
-        # search for tastes int the sub-aspectclass
+        # search for tastes in the sub-aspectclass
         subtastes = {}
         for name, member in getmembers(subcls):
             if isinstance(member, Taste):
