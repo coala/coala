@@ -119,6 +119,8 @@ If there's anything unclear, or you are encountering problems, feel free
 to contact us on `gitter <https://coala.io/chat>`_,
 and we will help you!
 
+Optional. coala also has some of its repositories on  `Gitlab <https://gitlab.com/coala>`_.
+
 Step 3. Picking Up an Issue
 ---------------------------
 
