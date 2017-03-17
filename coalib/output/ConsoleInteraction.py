@@ -769,7 +769,8 @@ def print_bears(bears,
         return
 
     for bear, sections in sorted(bears.items(),
-                                 key=lambda bear_tuple: bear_tuple[0].name):
+                                 key=lambda bear_tuple:
+                                 bear_tuple[0].name.lower()):
         show_bear(bear,
                   show_description,
                   show_params,
