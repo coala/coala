@@ -57,100 +57,91 @@ class LinterComponentTest(unittest.TestCase):
         self.section = Section('TEST_SECTION')
 
     def test_decorator_invalid_parameters(self):
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'ABC', 'invalid_arg'"):
             linter('some-executable', invalid_arg=88,
                    ABC=2000)(self.EmptyTestLinter)
-        self.assertEqual(
-            str(cm.exception),
-            "Invalid keyword arguments provided: 'ABC', 'invalid_arg'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'diff_severity'"):
             linter('some-executable',
                    diff_severity=RESULT_SEVERITY.MAJOR)(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "Invalid keyword arguments provided: 'diff_severity'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'result_message'"):
             linter('some-executable',
                    result_message='Custom message')(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid keyword arguments provided: '
-                         "'result_message'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'output_regex'"):
             linter('some-executable',
                    output_format='corrected',
                    output_regex='.*')(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "Invalid keyword arguments provided: 'output_regex'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'severity_map'"):
             linter('some-executable',
                    output_format='corrected',
                    severity_map={})(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "Invalid keyword arguments provided: 'severity_map'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'prerequisite_check_fail_message'"):
             linter('some-executable',
                    prerequisite_check_fail_message='some_message'
                    )(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid keyword arguments provided: '
-                         "'prerequisite_check_fail_message'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Incompatible arguments provided:'
+                                    "'use_stdin' and 'global_bear' can't both"
+                                    ' be True.'):
             linter('some-executable',
                    global_bear=True,
                    use_stdin=True)(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Incompatible arguments provided:'
-                         "'use_stdin' and 'global_bear' can't both be True.")
 
     def test_decorator_invalid_states(self):
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'No output streams provided at all.'):
             linter('some-executable', use_stdout=False,
                    use_stderr=False)(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'No output streams provided at all.')
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid `output_format` specified.'):
             linter('some-executable',
                    output_format='INVALID')(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid `output_format` specified.')
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    '`output_regex` needed when specified'
+                                    " output-format 'regex'."):
             linter('some-executable',
                    output_format='regex')(self.EmptyTestLinter)
-        self.assertEqual(
-            str(cm.exception),
-            "`output_regex` needed when specified output-format 'regex'.")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Provided `severity_map` but named group '
+                                    '`severity` is not used '
+                                    'in `output_regex`.'):
             linter('some-executable',
                    output_format='regex',
                    output_regex='',
                    severity_map={})(self.EmptyTestLinter)
-        self.assertEqual(
-            str(cm.exception),
-            'Provided `severity_map` but named group `severity` is not used '
-            'in `output_regex`.')
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    '`process_output` not provided by given '
+                                    "class 'object'."):
             linter('some-executable')(object)
-        self.assertEqual(
-            str(cm.exception),
-            "`process_output` not provided by given class 'object'.")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Found `process_output` already defined '
+                                    "by class 'ManualProcessingTestLinter', "
+                                    "but 'regex' output-format is "
+                                    'specified.'):
             (linter('some-executable', output_format='regex', output_regex='')
              (self.ManualProcessingTestLinter))
-        self.assertEqual(
-            str(cm.exception),
-            'Found `process_output` already defined by class '
-            "'ManualProcessingTestLinter', but 'regex' output-format is "
-            'specified.')
 
     def test_decorator_generated_default_interface(self):
         uut = linter('some-executable')(self.ManualProcessingTestLinter)
@@ -171,24 +162,24 @@ class LinterComponentTest(unittest.TestCase):
                    output_regex='(?P<severity>)',
                    severity_map={3: 0})(self.EmptyTestLinter)
 
-        with self.assertRaises(TypeError) as cm:
+        with self.assertRaisesRegex(TypeError,
+                                    "The value 'invalid' for key 'critical' "
+                                    'inside given severity-map is no valid '
+                                    'severity value.'):
             linter('some-executable',
                    output_format='regex',
                    output_regex='(?P<severity>)',
                    severity_map={'critical': 'invalid'})(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "The value 'invalid' for key 'critical' inside given "
-                         'severity-map is no valid severity value.')
 
-        with self.assertRaises(TypeError) as cm:
+        with self.assertRaisesRegex(TypeError,
+                                    'Invalid severity value 389274234 for key '
+                                    '\'critical-error\' inside given severity-'
+                                    'map.'):
             linter('some-executable',
                    output_format='regex',
                    output_regex='(?P<severity>)',
                    severity_map={'critical-error': 389274234})(
                    self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid severity value 389274234 for key '
-                         "'critical-error' inside given severity-map.")
 
         # Other type-error test cases.
 
@@ -203,12 +194,12 @@ class LinterComponentTest(unittest.TestCase):
                    output_format='corrected',
                    result_message=list())(self.EmptyTestLinter)
 
-        with self.assertRaises(TypeError) as cm:
+        with self.assertRaisesRegex(TypeError,
+                                    'Invalid value for `diff_severity`: '
+                                    '999888777'):
             linter('some-executable',
                    output_format='corrected',
                    diff_severity=999888777)(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid value for `diff_severity`: 999888777')
 
         with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
