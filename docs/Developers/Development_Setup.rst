@@ -38,6 +38,7 @@ As coala works for python 3.
 Configure your environment for python 3.
 
 ::
+
           $ virtualenv venv -p /usr/bin/python3
 
 Enter the path where you have installed python 3.
