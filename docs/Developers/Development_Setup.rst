@@ -35,7 +35,7 @@ Installing from Git
 -------------------
 NOTE: As coala works for python 3 we need to configure the environment according to python 3.If you have both python 3 and python 2 installed check this out first.
 
-    $ virtualenv venv -p /usr/bin/python3
+          $ virtualenv venv -p /usr/bin/python3
 
 Enter the path where you have installed python 3.
 
