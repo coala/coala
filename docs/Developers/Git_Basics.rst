@@ -253,6 +253,20 @@ local fork going out of sync with the remote repository.
 To sync your changes with the remote repository run the following commands in
 the desired branch:
 
+.. note::
+
+    This assumes that the remote ``origin`` is the original
+    coala repository at https://github.com/coala/coala (or other,
+    like coala/coala-bears, etc.), **not your fork**.
+
+    If you have followed the steps outlined in this guide and cloned
+    the original coala repository, ``origin`` should refer to it.
+    You can proceed to the following section without worry.
+
+    If you're unsure about this, run ``git remote -v`` to check which
+    remote points to the original repository and use that instead
+    of ``origin`` in the following section.
+
 ::
 
     $ git fetch origin
