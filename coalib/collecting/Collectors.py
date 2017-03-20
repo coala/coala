@@ -60,7 +60,7 @@ def icollect(file_paths, ignored_globs=None, match_cache={}):
 
 
 def collect_files(file_paths, log_printer, ignored_file_paths=None,
-                  limit_file_paths=None):
+                  limit_file_paths=None, match_cache={}):
     """
     Evaluate globs in file paths and return all matching files
 
@@ -73,7 +73,8 @@ def collect_files(file_paths, log_printer, ignored_file_paths=None,
                      if limit_file_paths else lambda fname: True)
 
     valid_files = list(filter(lambda fname: os.path.isfile(fname[0]),
-                              icollect(file_paths, ignored_file_paths)))
+                              icollect(file_paths, ignored_file_paths,
+                                       match_cache)))
 
     # Find globs that gave no files and warn the user
     if valid_files:

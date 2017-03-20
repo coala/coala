@@ -91,6 +91,7 @@ def run_coala(console_printer=None,
         if not sections['cli'].get('disable_caching', False):
             cache = FileCache(log_printer, os.getcwd(), flush_cache)
 
+        file_match_cache = {}
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
                 continue
@@ -109,7 +110,8 @@ def run_coala(console_printer=None,
                 print_results=print_results,
                 cache=cache,
                 log_printer=log_printer,
-                console_printer=console_printer)
+                console_printer=console_printer,
+                match_cache=file_match_cache)
             yielded, yielded_unfixed, results[section_name] = (
                 simplify_section_result(section_result))
 
