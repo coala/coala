@@ -594,7 +594,12 @@ def _create_linter(klass, options):
             return '<{} linter object (wrapping {!r}) at {}>'.format(
                 type(self).__name__, self.get_executable(), hex(id(self)))
 
-    class LocalLinterBase(LinterBase, LocalBear):
+    class LocalLinterMeta(type(LinterBase), type(LocalBear)):
+        """
+        Solving base metaclasses conflict for ``LocalLinterBase``.
+        """
+
+    class LocalLinterBase(LinterBase, LocalBear, metaclass=LocalLinterMeta):
 
         @staticmethod
         def create_arguments(filename, file, config_file):
@@ -616,7 +621,12 @@ def _create_linter(klass, options):
             """
             raise NotImplementedError
 
-    class GlobalLinterBase(LinterBase, GlobalBear):
+    class GlobalLinterMeta(type(LinterBase), type(GlobalBear)):
+        """
+        Solving base metaclasses conflict for ``GlobalLinterBase``.
+        """
+
+    class GlobalLinterBase(LinterBase, GlobalBear, metaclass=GlobalLinterMeta):
 
         @staticmethod
         def create_arguments(config_file):

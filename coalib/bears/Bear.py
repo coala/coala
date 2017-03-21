@@ -21,8 +21,10 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
 
+from .meta import bearclass
 
-class Bear(Printer, LogPrinterMixin):
+
+class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     """
     A bear contains the actual subroutine that is responsible for checking
     source code for certain specifications. However it can actually do
@@ -139,6 +141,24 @@ class Bear(Printer, LogPrinterMixin):
     ...     SEE_MORE = 'https://www.pylint.org/'
     >>> PyLintBear.SEE_MORE
     'https://www.pylint.org/'
+
+    In the future, bears will not survive without aspects. aspects are defined
+    as part of the ``class`` statement's parameter list. According to the
+    classic ``CAN_DETECT`` and ``CAN_FIX`` attributes, aspects can either be
+    only ``'detect'``-able or also ``'fix'``-able:
+
+    >>> from coalib.bearlib.aspects.Metadata import CommitMessage
+
+    >>> class aspectsCommitBear(Bear, aspects={
+    ...         'detect': [CommitMessage.Shortlog.ColonExistence],
+    ...         'fix': [CommitMessage.Shortlog.TrailingPeriod],
+    ... }):
+    ...     pass
+
+    >>> aspectsCommitBear.aspects['detect']
+    [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.ColonExistence'>]
+    >>> aspectsCommitBear.aspects['fix']
+    [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.TrailingPeriod'>]
     """
 
     LANGUAGES = set()

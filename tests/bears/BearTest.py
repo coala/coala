@@ -1,3 +1,4 @@
+from collections import defaultdict
 from io import BytesIO
 import multiprocessing
 import unittest
@@ -8,6 +9,7 @@ from time import sleep
 import requests
 import requests_mock
 
+from coalib.bearlib.aspects.Metadata import CommitMessage
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -105,6 +107,25 @@ class DependentBear(Bear):
         yield w
 
 
+class aspectsTestBear(Bear, aspects={
+        'detect': [CommitMessage.Shortlog.ColonExistence],
+        'fix': [CommitMessage.Shortlog.TrailingPeriod],
+}):
+    pass
+
+
+class aspectsDetectOnlyTestBear(Bear, aspects={
+        'detect': [CommitMessage.Shortlog.ColonExistence],
+}):
+    pass
+
+
+class aspectsFixOnlyTestBear(Bear, aspects={
+        'fix': [CommitMessage.Shortlog.TrailingPeriod],
+}):
+    pass
+
+
 class BearTestBase(unittest.TestCase):
 
     def setUp(self):
@@ -118,6 +139,29 @@ class BearTestBase(unittest.TestCase):
 
 
 class BearTest(BearTestBase):
+
+    def test_default_aspects(self):
+        assert type(Bear.aspects) is defaultdict
+        assert Bear.aspects['detect'] == Bear.aspects['fix'] == []
+
+    def test_no_fix_aspects(self):
+        assert type(aspectsDetectOnlyTestBear.aspects) is defaultdict
+        assert aspectsDetectOnlyTestBear.aspects['fix'] == []
+        assert (aspectsDetectOnlyTestBear.aspects['detect'] ==
+                [CommitMessage.Shortlog.ColonExistence])
+
+    def test_no_detect_aspects(self):
+        assert type(aspectsFixOnlyTestBear.aspects) is defaultdict
+        assert aspectsFixOnlyTestBear.aspects['detect'] == []
+        assert (aspectsFixOnlyTestBear.aspects['fix'] ==
+                [CommitMessage.Shortlog.TrailingPeriod])
+
+    def test_detect_and_fix_aspects(self):
+        assert type(aspectsTestBear.aspects) is defaultdict
+        assert aspectsTestBear.aspects == {
+            'detect': [CommitMessage.Shortlog.ColonExistence],
+            'fix': [CommitMessage.Shortlog.TrailingPeriod],
+        }
 
     def test_simple_api(self):
         self.assertRaises(TypeError, TestBear, self.settings, 2)
