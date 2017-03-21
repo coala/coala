@@ -13,3 +13,4 @@ class Python:
     multiline_string_delimiters = {'"""': '"""', "'''": "'''"}
     indent_types = ':',
     encapsulators = {'(': ')', '[': ']', '{': '}'}
+    indent_keywords = 'if', 'while', 'for'

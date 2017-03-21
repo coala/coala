@@ -10,6 +10,7 @@ class C:
     multiline_string_delimiters = {}
     indent_types = {'{': '}'}
     encapsulators = {'(': ')', '[': ']'}
+    indent_keywords = 'if', 'while', 'for'
     keywords = [
         'auto', 'break', 'case', 'char', 'const', 'continue', 'default',
         'do', 'double', 'else', 'enum', 'extern', 'float', 'for', 'goto',
