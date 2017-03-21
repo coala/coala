@@ -152,6 +152,12 @@ class OpenEditorActionTest(unittest.TestCase):
             handle.writelines(file_dict[self.fb])
         result = Result.from_values('origin', 'msg', self.fb)
 
+        # Some users have the ``EDITOR`` environment variable set, so
+        # we should remove that temporarily.
+        if 'EDITOR' in os.environ:
+            del os.environ['EDITOR']
+            reload(coalib.results.result_actions.OpenEditorAction)
+
         # Currently an ``editor`` param is required, so this will raise
         # a ``TypeError``.
         from coalib.results.result_actions.OpenEditorAction import (
