@@ -32,11 +32,13 @@ class OpenEditorActionTest(unittest.TestCase):
         fbhandle, self.fb = tempfile.mkstemp()
         os.close(fbhandle)
         self.old_subprocess_call = subprocess.call
+        self.old_environ = os.environ
 
     def tearDown(self):
         os.remove(self.fa)
         os.remove(self.fb)
         subprocess.call = self.old_subprocess_call
+        os.environ = self.old_environ
 
     def test_apply(self):
         # Initial file contents, *before* a patch was applied
@@ -143,8 +145,6 @@ class OpenEditorActionTest(unittest.TestCase):
             OpenEditorAction.is_applicable(invalid_result, None, {})
 
     def test_environ_editor(self):
-        old_environ = os.environ
-
         file_dict = {self.fb: ['1\n', '2\n', '3\n']}
         diff_dict = {}
         subprocess.call = self.fake_edit
@@ -174,8 +174,6 @@ class OpenEditorActionTest(unittest.TestCase):
             OpenEditorAction)
         action = OpenEditorAction()
         action.apply(result, file_dict, diff_dict)
-
-        os.environ = old_environ
 
     def test_open_files_at_position_unknown_editor(self):
         uut = OpenEditorAction()
