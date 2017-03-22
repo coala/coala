@@ -297,3 +297,9 @@ class DiffTest(unittest.TestCase):
         uut.add_lines(0, ['line2\n', 'line3\n'])
         expected = '--- \n+++ create.py\n'
         self.assertTrue(uut.unified_diff.startswith(expected))
+
+    def test_create_diff_initialization(self):
+        initialization = ['One\n', 'Two\n', 'Three\n']
+        uut = Diff(initialization, create='create.py')
+        print(uut.modified)
+        self.assertEqual(uut.modified, initialization)

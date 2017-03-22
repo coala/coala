@@ -25,7 +25,9 @@ class Diff:
         :param rename:    False or str containing new name of file.
         :param delete:    True if file is set to be deleted.
         :param create:    False or str containing the file name of the file to
-                          be created.
+                          be created. If this propoerty is set and file_list
+                          is passed, then the lines in the ``file_list``
+                          are added to the diff.
         """
         self._changes = {}
         self._file = file_list
@@ -35,6 +37,9 @@ class Diff:
 
         if create is False and file_list is None:
             raise ValueError('file_list cannot be None.')
+
+        if create and file_list is not None:
+            self.add_lines(0, file_list)
 
         self._file = [] if create else file_list
 
