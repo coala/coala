@@ -374,6 +374,7 @@ def instantiate_processes(section,
     message_queue = multiprocessing.Queue()
     control_queue = multiprocessing.Queue()
 
+    loaded_local_bears_count = len(local_bear_list)
     local_bear_list[:], global_bear_list[:] = instantiate_bears(
         section,
         local_bear_list,
@@ -381,9 +382,13 @@ def instantiate_processes(section,
         complete_file_dict,
         message_queue,
         console_printer=console_printer)
+    loaded_valid_local_bears_count = len(local_bear_list)
+    # Note: the complete file dict is given as the file dict to bears and
+    # the whole project is accessible to every bear. However, local bears are
+    # run only for the changed files if caching is enabled.
 
     # Start tracking all the files
-    if cache:
+    if cache and loaded_valid_local_bears_count == loaded_local_bears_count:
         cache.track_files(set(complete_filename_list))
         changed_files = cache.get_uncached_files(
             set(filename_list)) if cache else filename_list
