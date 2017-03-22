@@ -143,6 +143,17 @@ class ApplyPatchActionTest(unittest.TestCase):
             # Recreate file so that context manager make_temp() can delete it
             open(f_a, 'w').close()
 
+    def test_apply_create(self):
+        uut = ApplyPatchAction()
+        file_dict = {}
+        file_diff_dict = {}
+        diff = Diff(create='.create')
+        uut.apply(Result('origin', 'msg', diffs={'.create': diff}),
+                  file_dict,
+                  file_diff_dict)
+        self.assertTrue(isfile('.create'))
+        os.remove('.create')
+
     def test_is_applicable(self):
         diff = Diff(['1\n', '2\n', '3\n'])
         diff.delete_line(2)

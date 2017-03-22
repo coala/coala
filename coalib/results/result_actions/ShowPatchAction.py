@@ -113,8 +113,10 @@ class ShowPatchAction(ResultAction):
 
         for filename, this_diff in sorted(result.diffs.items()):
             to_filename = this_diff.rename if this_diff.rename else filename
+            to_filename = this_diff.create if this_diff.create else to_filename
             to_filename = '/dev/null' if this_diff.delete else to_filename
-            original_file = original_file_dict[filename]
+            original_file = ([] if this_diff.create
+                             else original_file_dict[filename])
             try:
                 current_file = file_diff_dict[filename].modified
                 new_file = (file_diff_dict[filename] + this_diff).modified
@@ -125,11 +127,16 @@ class ShowPatchAction(ResultAction):
             if tuple(current_file) != tuple(new_file):
                 print_beautified_diff(difflib.unified_diff(current_file,
                                                            new_file,
-                                                           fromfile=filename,
+                                                           fromfile=(
+                                                               '/dev/null' if
+                                                               this_diff.create
+                                                               else filename),
                                                            tofile=to_filename),
                                       printer)
             elif filename != to_filename:
                 print_from_name(printer, join('a', relpath(filename)))
                 print_to_name(printer, join('b', relpath(to_filename)))
+            elif this_diff.create:
+                print_to_name(printer, join(relpath(to_filename)))
 
         return file_diff_dict
