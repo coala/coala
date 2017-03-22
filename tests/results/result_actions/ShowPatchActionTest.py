@@ -79,6 +79,29 @@ class ShowPatchActionTest(unittest.TestCase):
                              '|----|    | ' + join('a', 'a') + '\n'
                              '|    |++++| ' + join('b', 'b') + '\n')
 
+    def test_apply_creation_only(self):
+        with retrieve_stdout() as stdout:
+            diff = Diff(create='.create')
+            test_result = Result('origin', 'message',
+                                 diffs={'.create': diff})
+            self.assertEqual(self.uut.apply_from_section(test_result, {}, {},
+                                                         self.section), {})
+
+            self.assertEqual(stdout.getvalue(),
+                             '|    |++++| .create\n')
+
+            diff.add_lines(0, ['1', '2'])
+            test_result = Result('origin', 'message',
+                                 diffs={'.create': diff})
+            self.assertEqual(self.uut.apply_from_section(test_result, {}, {},
+                                                         self.section), {})
+
+            self.assertEqual('\n'.join(stdout.getvalue().splitlines()[1:]),
+                             '|----|    | /dev/null\n'
+                             '|    |++++| .create\n'
+                             '|    |   1|+1\n'
+                             '|    |   2|+2')
+
     def test_apply_empty(self):
         with retrieve_stdout() as stdout:
             test_result = Result('origin', 'message',
