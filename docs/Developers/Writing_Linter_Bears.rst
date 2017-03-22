@@ -10,6 +10,12 @@ order to integrate linters in your bears.
   wrapping a tool, please refer to
   :doc:`this link instead<Writing_Native_Bears>`.
 
+  This tutorial takes you through the process of writing a local linter
+  Bear. If you want to write a global linter Bear, for a tool that does not
+  run once for each file, but only once for the whole project, you can still
+  go through the steps and then read about the differences of global linter
+  Bears at :ref:`global_bears`.
+
 Why is This Useful?
 -------------------
 
@@ -437,6 +443,36 @@ You now know how to write a linter Bear and also how to use it in your
 project.
 
 Congratulations!
+
+.. _global_bears:
+
+Global Linter Bears
+-------------------
+
+Some linting tools do not run on file level, i.e. once for each file, but on
+project level. They might check some properties of the directory structure or
+only check one specific file like the ``setup.py``.
+
+For these tools we need a ``GlobalBear`` and we can also use ``@linter`` to
+give us one, by passing the parameter ``global_bear=True``:
+
+::
+
+    from coalib.bearlib.abstractions.Linter import linter
+
+    @linter(executable='some_tool',
+            global_bear=True,
+            output_format='regex',
+            output_regex=r'<filename>: <message>'')
+    class SomeToolBear:
+        @staticmethod
+        def create_arguments(config_file):
+            pass
+
+The ``create_arguments`` method takes no ``filename`` and ``file`` in this case
+since there is no file context. You can still make coala aware of the file an
+issue was detected in, by using the ``filename`` named group in
+your ``output_regex`` if relevant to the wrapped tool.
 
 Where to Find More...
 ---------------------
