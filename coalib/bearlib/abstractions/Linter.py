@@ -659,8 +659,9 @@ def linter(executable: str,
            output_format: (str, None)=None,
            **options):
     """
-    Decorator that creates a ``LocalBear`` that is able to process results from
-    an external linter tool.
+    Decorator that creates a ``Bear`` that is able to process results from
+    an external linter tool. Depending on the value of ``global_bear`` this
+    can either be a ``LocalBear`` or a ``GlobalBear``.
 
     The main functionality is achieved through the ``create_arguments()``
     function that constructs the command-line-arguments that get passed to your
@@ -670,6 +671,17 @@ def linter(executable: str,
     ... class XLintBear:
     ...     @staticmethod
     ...     def create_arguments(filename, file, config_file):
+    ...         return "--lint", filename
+
+    Or for a ``GlobalBear`` without the ``filename`` and ``file``:
+
+    >>> @linter("ylint",
+    ...         global_bear=True,
+    ...         output_format="regex",
+    ...         output_regex="...")
+    ... class YLintBear:
+    ...     @staticmethod
+    ...     def create_arguments(config_file):
     ...         return "--lint", filename
 
     Requiring settings is possible like in ``Bear.run()`` with supplying
@@ -768,8 +780,7 @@ def linter(executable: str,
         provided together with ``prerequisite_check_command``.
     :param global_bear:
         Whether the created bear should be a ``GlobalBear`` or not. Global
-        bears will be run only once instead of once per file. The ``file``
-        and ``filename`` args of all their methods will default to ``None``.
+        bears will be run once on the whole project, instead of once per file.
         Incompatible with ``use_stdin=True``.
     :param output_format:
         The output format of the underlying executable. Valid values are
