@@ -52,7 +52,8 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
             self.testfile_content = fl.read().splitlines(keepends=True)
 
     def test_decorator_invalid_parameters(self):
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError, 'Invalid keyword arguments'
+                                    " provided: 'invalid_arg'") as cm:
             external_bear_wrap('exec', invalid_arg=88)
         self.assertEqual(
             str(cm.exception),
