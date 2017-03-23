@@ -453,3 +453,7 @@ use an interactive rebasing session. This opens an editor where you can enter
 commands (described below) for each commit to be rebased. These commands
 determine how individual commits will be transferred to the new base. You can
 also reorder the commit listing to change the order of the commits themselves.
+
+If you would like more information/commands, please use your favourite search
+engine to look for it. Git is widely used throughout the world and there are
+many good tutorials and git related Q&A threads out there.
