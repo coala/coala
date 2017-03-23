@@ -130,6 +130,15 @@ class Bear(Printer, LogPrinterMixin):
     >>> class SomeBear(Bear): pass
     >>> SomeBear.source_location
     '...Bear.py'
+
+    Every linter bear makes use of an executable tool for its operations.
+    The SEE_MORE attribute provides a link to the main page of the linter
+    tool:
+
+    >>> class PyLintBear(Bear):
+    ...     SEE_MORE = 'https://www.pylint.org/'
+    >>> PyLintBear.SEE_MORE
+    'https://www.pylint.org/'
     """
 
     LANGUAGES = set()
@@ -144,6 +153,7 @@ class Bear(Printer, LogPrinterMixin):
     CAN_DETECT = set()
     CAN_FIX = set()
     ASCIINEMA_URL = ''
+    SEE_MORE = ''
     BEAR_DEPS = set()
 
     @classproperty
