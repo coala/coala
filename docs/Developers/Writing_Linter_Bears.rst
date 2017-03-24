@@ -71,7 +71,8 @@ appropriate parameters. This is done inside ``create_arguments``,
 - ``file``: The contents of the file to process, given as a list of lines
   (including the return character).
 - ``config_file``: The absolute path to a config file to use. If no config file
-  is used, this parameter is ``None``. More on that later.
+  is used, this parameter is ``None``. Processing of the config file
+  is left to the Bear's implementation of the method.
 
 You can use these parameters to construct the command line arguments. The
 linter expects from you to return an argument sequence here. A tuple is
