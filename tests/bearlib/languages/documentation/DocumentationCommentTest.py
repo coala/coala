@@ -61,7 +61,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
                                           self.Metadata('', '', ''))
         not_implemented = DocumentationComment(
             'some docs', raw_docstyle, None, None, None)
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaisesRegex(NotImplementedError, ''):
             not_implemented.parse()
 
     def test_from_metadata(self):
