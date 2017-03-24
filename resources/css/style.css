@@ -548,6 +548,9 @@ a:hover > .card{
     height:300px;
     overflow:scroll;
 }
+.example-card a{
+    cursor: pointer;
+}
 .text-center{
   text-align: center;
 }
