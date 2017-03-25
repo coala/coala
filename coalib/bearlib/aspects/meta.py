@@ -1,3 +1,5 @@
+import re
+
 from inspect import getmembers, signature
 
 from coala_utils.decorators import generate_repr
@@ -72,3 +74,25 @@ class aspectclass(type):
 
     def __repr__(cls):
         return '<%s %s>' % (type(cls).__name__, repr(cls.__qualname__))
+
+
+def issubaspect(subaspect, aspect):
+    """
+    This function checks whether or not ``subaspect`` is a subaspect of
+    ``aspect``.
+    """
+    if (not isinstance(subaspect, aspectclass)
+            and not isinstance(subaspect, aspectbase)):
+        raise TypeError(
+            '{} is not an aspectclass or an instance of an '
+            'aspectclass'.format(repr(subaspect)))
+    if (not isinstance(aspect, aspectclass)
+            and not isinstance(aspect, aspectbase)):
+        raise TypeError(
+            '{} is not an aspectclass or an instance of an '
+            'aspectclass'.format(repr(aspect)))
+    aspect_qualname = (aspect.__qualname__ if isinstance(
+                    aspect, aspectclass) else type(aspect).__qualname__)
+    subaspect_qualname = (subaspect.__qualname__ if isinstance(
+                    subaspect, aspectclass) else type(subaspect).__qualname__)
+    return re.match(aspect_qualname+'(\.|$)', subaspect_qualname) is not None
