@@ -5,12 +5,13 @@ from coalib.results.TextRange import TextRange
 
 
 class TextRangeTest(unittest.TestCase):
+    END_LT_START_RE = "End position can't be less than start position"
 
     def test_fail_instantation(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, self.END_LT_START_RE):
             TextRange(TextPosition(3, 4), TextPosition(2, 8))
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, self.END_LT_START_RE):
             TextRange(TextPosition(0, 10), TextPosition(0, 7))
 
         with self.assertRaises(TypeError):
@@ -35,7 +36,7 @@ class TextRangeTest(unittest.TestCase):
 
     def test_from_values(self):
         # Check if invalid ranges still fail.
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, self.END_LT_START_RE):
             TextRange.from_values(0, 10, 0, 7)
 
         uut = TextRange.from_values(1, 0, 7, 3)
@@ -140,6 +141,8 @@ class TextRangeTest(unittest.TestCase):
 
 
 class TextRangeJoinTest(unittest.TestCase):
+    JOIN_INSTANCEOF_RE = 'only instances of TextRange can be joined'
+    TEXT_OVERLAP_RE = 'TextRanges must overlap to be joined'
 
     def setUp(self):
         self.pos = [TextPosition(1, 1),
@@ -150,14 +153,14 @@ class TextRangeJoinTest(unittest.TestCase):
 
     def test_fails(self):
         # need to pass ranges
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(TypeError, self.JOIN_INSTANCEOF_RE):
             TextRange.join(self.pos[0], self.pos[1])
 
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(TypeError, self.JOIN_INSTANCEOF_RE):
             TextRange.join(TextRange(self.pos[0], self.pos[1]), self.pos[1])
 
         # ranges must overlap
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, self.TEXT_OVERLAP_RE):
             TextRange.join(TextRange(self.pos[0], self.pos[1]),
                            TextRange(self.pos[3], self.pos[4]))
 
