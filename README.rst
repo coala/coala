@@ -8,10 +8,10 @@ your code, regardless of the programming languages you use.**
 
 With coala, users can create
 `rules and standards <http://docs.coala.io/en/latest/Users/coafile.html>`__
-to be followed in the source
-code. coala has a **user-friendly interface** that is completely customizable.
-It can be used in any environment and is completely modular.
-
+to be followed in the source code. coala has a **user-friendly interface**
+ that is completely customizable. It can be used in any environment
+ and is completely modular.
+ 
 coala has a set of official bears (plugins) for **C/C++**, **Python**,
 **JavaScript**, **CSS**, **Java**, and many other languages, in addition
  to some generic language independent algorithms. To learn more about the
