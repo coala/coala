@@ -12,10 +12,10 @@ to be followed in the source
 code. coala has a **user-friendly interface** that is completely customizable.
 It can be used in any environment and is completely modular.
 
-coala has a set of official bears (plugins) for **C/C++**, **Python**, **JavaScript**, **CSS**,
-**Java**, and many other languages, in addition to some generic language independent
-algorithms. To learn more about the different languages supported and the
-bears themselves,
+coala has a set of official bears (plugins) for **C/C++**, **Python**,
+**JavaScript**, **CSS**, **Java**, and many other languages, in addition 
+to some generic language independent algorithms. To learn more about the 
+different languages supported and the bears themselves,
 `click here. <https://github.com/coala/bear-docs/blob/master/README.rst>`__
 
 To see what coala can do for your language, run:
@@ -204,7 +204,7 @@ Getting Involved
 
 If you would like to be a part of the coala community, you can check out our
 `Getting In Touch <http://docs.coala.io/en/latest/Help/Getting_In_Touch.html>`__
-page or ask us at our active Gitter channel, where you can reach our maintainers from
+page or ask us at our active Gitter channel. Our maintainers come from
 all over the world. We appreciate any help!
 
 We also have a
