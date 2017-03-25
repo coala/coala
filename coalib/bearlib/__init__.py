@@ -5,6 +5,7 @@ while offering the best possible flexibility.
 """
 
 import logging
+from functools import wraps
 
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
@@ -98,6 +99,7 @@ def deprecate_settings(**depr_args):
 
         logged_deprecated_args = set()
 
+        @wraps(func)
         def wrapping_function(*args, **kwargs):
             for arg, depr_value in wrapping_function.__metadata__.depr_values:
                 deprecated_arg = depr_value[0]
