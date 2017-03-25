@@ -9,12 +9,11 @@ your code, regardless of the programming languages you use.**
 With coala, users can create
 `rules and standards <http://docs.coala.io/en/latest/Users/coafile.html>`__
 to be followed in the source
-code. coala has an **user-friendly interface** that is completely customizable.
+code. coala has a **user-friendly interface** that is completely customizable.
 It can be used in any environment and is completely modular.
 
-coala has a set of official bears (plugins) for several languages, including
-popular languages such as **C/C++**, **Python**, **JavaScript**, **CSS**,
-**Java** and many more, in addition to some generic language independent
+coala has a set of official bears (plugins) for **C/C++**, **Python**, **JavaScript**, **CSS**,
+**Java**, and many other languages, in addition to some generic language independent
 algorithms. To learn more about the different languages supported and the
 bears themselves,
 `click here. <https://github.com/coala/bear-docs/blob/master/README.rst>`__
@@ -26,7 +25,7 @@ To see what coala can do for your language, run:
     $ coala --show-bears --filter-by-language Python
 
 You can generate a configuration from your command line arguments with the `-s`
-argument. Alternatively you can use
+argument. Alternatively, you can use
 `coala-quickstart <https://github.com/coala/coala-quickstart/blob/master/README.rst>`__
 to generate a configuration tailored for your project.
 
@@ -54,18 +53,18 @@ to generate a configuration tailored for your project.
 Features
 ========
 
-* Out-of-the-box support for various `popular languages <https://github.com/coala/bear-docs/blob/master/README.rst>`__,
-  such as **C/C++**, **Python**, **Javascript**, **CSS**, **Java** and many
-  others with built-in check routines.
-* User-friendly interfaces such as JSON, interactive CLI or any custom format.
+* Out-of-the-box support for `popular languages <https://github.com/coala/bear-docs/blob/master/README.rst>`__ like
+  **C/C++**, **Python**, **Javascript**, **CSS**, **Java** and many
+  others, with built-in check routines.
+* User-friendly interfaces such as JSON, interactive CLI, or any custom format.
 * Plugins for
   `gedit <https://github.com/coala/coala-gedit>`__,
   `Sublime Text <https://github.com/coala/coala-sublime>`__,
   `Atom <https://github.com/coala/coala-atom>`__,
   `Vim <https://github.com/coala/coala-vim>`__ and
   `Emacs <https://github.com/coala/coala-emacs>`__.
-* Optimized performace with multi-threading to parallelize the routines - can
-  complete a 26000 line python repository in less than 3 seconds.
+* Optimized performance with multi-threading to parallelize the routines; can
+  complete a 26000-line Python repository in less than three seconds.
 * File caching support - run only on changed files.
 
 -----
@@ -74,7 +73,7 @@ Features
 Installation
 ============
 
-To install the **latest stable version** run:
+To install the **latest stable version**, run:
 
 .. code-block:: bash
 
@@ -84,7 +83,7 @@ To install the **latest stable version** run:
 
 |Stable|
 
-To install the latest development version run:
+To install the latest development version, run:
 
 .. code-block:: bash
 
@@ -93,7 +92,7 @@ To install the latest development version run:
 The latest code from the master branch is automatically deployed as the
 development version in PyPI.
 
-To also install all bears for coala at once run:
+To also install all bears for coala at once, run:
 
 .. code-block:: bash
 
@@ -118,11 +117,11 @@ For usage instructions, consult
 Usage
 =====
 
-There are two options to run coala:
+To run coala, you have two options:
 
-* using a ``.coafile``, a project specific configuration file that will store
-  all your settings for coala
-* using command-line arguments
+* use a ``.coafile``, a project-specific configuration file that will store
+  all your settings for coala; or
+* use command-line arguments
 
 Using a ``.coafile``
 ********************
@@ -136,15 +135,15 @@ A sample ``.coafile`` will look something like this:
     bears = SpaceConsistencyBear
     use_spaces = True
 
-* The ``files`` key tells coala which files to lint - here we're linting all
-  python files inside the ``src/`` directory by using a glob expression.
+* The ``files`` key tells coala which files to lint. Here, we're linting all
+  Python files inside the ``src/`` directory by using a glob expression.
 * The ``bears`` key specifies which bears (plugins) you want to use. We support
-  a huge number of languages and you can find the whole list
+  a huge number of languages; find the whole list
   `here <https://github.com/coala/bear-docs/blob/master/README.rst>`__.
   If you don't find your language there, we've got some
-  `bears that work for all languages <https://github.com/coala/bear-docs/blob/master/README.rst#all>`__. Or you can file an issue and we would create a bear for you!
+  `bears that work for all languages <https://github.com/coala/bear-docs/blob/master/README.rst#all>`__. Or you can file an issue and we will create a bear for you!
 * ``use_spaces`` enforces spaces over tabs in the codebase. ``use_spaces`` is a
-  setting for the ``SpaceConsistencyBear`` defined
+  setting for the ``SpaceConsistencyBear``, defined
   `here <https://github.com/coala/bear-docs/blob/master/docs/SpaceConsistencyBear.rst>`__.
 
 ``[Spacing]`` is a *section*. Sections are executed in the order you
@@ -163,8 +162,8 @@ to learn more.
 Using command-line arguments
 ****************************
 
-However, if you don't want to save your settings, you can also run coala with
-command line arguments:
+If you don't want to save your settings, you can also run coala with
+command-line arguments:
 
 .. code-block:: bash
 
@@ -172,9 +171,9 @@ command line arguments:
 
 Note that this command does the same thing as having a coafile and running
 `coala`. The advantage of having a coafile is that you don't need to enter the
-settings as arguments everytime.
+settings as arguments every time.
 
-To get the complete list of arguments and their meaning, run:
+To get the complete list of arguments and their meanings, run:
 
 .. code-block:: bash
 
@@ -205,7 +204,7 @@ Getting Involved
 
 If you would like to be a part of the coala community, you can check out our
 `Getting In Touch <http://docs.coala.io/en/latest/Help/Getting_In_Touch.html>`__
-page or ask us at our active Gitter channel, where we have maintainers from
+page or ask us at our active Gitter channel, where you can reach our maintainers from
 all over the world. We appreciate any help!
 
 We also have a
@@ -222,7 +221,7 @@ or need some help, feel free to contact us on Gitter or drop a mail at our
 Support
 =======
 
-Feel free to contact us at our `Gitter channel <https://gitter.im/coala/coala>`__, we'd be happy to help!
+Feel free to contact us at our `Gitter channel <https://gitter.im/coala/coala>`__. We'd be happy to help!
 
 You can also drop an email at our
 `mailing list <https://github.com/coala/coala/wiki/Mailing-Lists>`__.
