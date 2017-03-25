@@ -13,9 +13,9 @@ code. coala has a **user-friendly interface** that is completely customizable.
 It can be used in any environment and is completely modular.
 
 coala has a set of official bears (plugins) for **C/C++**, **Python**,
-**JavaScript**, **CSS**, **Java**, and many other languages, in addition 
-to some generic language independent algorithms. To learn more about the 
-different languages supported and the bears themselves,
+**JavaScript**, **CSS**, **Java**, and many other languages, in addition
+ to some generic language independent algorithms. To learn more about the
+ different languages supported and the bears themselves,
 `click here. <https://github.com/coala/bear-docs/blob/master/README.rst>`__
 
 To see what coala can do for your language, run:
