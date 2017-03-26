@@ -19,8 +19,7 @@ class TasteTest:
         assert taste.default is None
 
     def test__get__(
-            self, SubAspect, SubAspect_tastes, SubAspect_taste_values
-    ):
+            self, SubAspect, SubAspect_tastes, SubAspect_taste_values):
         using_default_values = SubAspect('py')
         using_custom_values = SubAspect('py', **SubAspect_taste_values)
         for name, taste in SubAspect_tastes.items():
