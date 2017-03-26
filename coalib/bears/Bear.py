@@ -402,12 +402,18 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         >>> SomeOtherBear.check_prerequisites()
         'really_bad_package is not installed. You can install it using ...'
 
+        >>> class anotherBear(Bear):
+        ...     REQUIREMENTS = {PipRequirement('bad_package', '0.0.1')}
+
+        >>> anotherBear.check_prerequisites()
+        'bad_package 0.0.1 is not installed. You can install it using ...'
+
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
         """
         for requirement in cls.REQUIREMENTS:
             if not requirement.is_installed():
-                return requirement.package + ' is not installed. You can ' + (
+                return str(requirement) + ' is not installed. You can ' + (
                     'install it using ') + (
                     ' '.join(requirement.install_command()))
         return True
