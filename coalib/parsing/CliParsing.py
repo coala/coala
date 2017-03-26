@@ -110,7 +110,7 @@ def check_conflicts(sections):
                 (section.get('save', False) or
                  section.get('find_config', False))):
             ArgumentParser().error(
-                "'no_config' cannot be set together 'save' or 'find_config'.")
+                "'no_config' cannot be set together with 'save' or 'find_config'.")
 
         if (
                 not section.get('json', False) and
