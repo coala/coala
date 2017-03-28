@@ -20,14 +20,19 @@ class DocumentationComment:
         """
         Instantiates a new DocumentationComment.
 
-        :param documentation: The documentation text.
-        :param language:      The language of the documention.
-        :param docstyle:      The docstyle used in the documentation.
-        :param indent:        The string of indentation used in front
-                              of the first marker of the documentation.
-        :param marker:        The three-element tuple with marker strings,
-                              that identified this documentation comment.
-        :param range:         The position range of type TextRange.
+        :param documentation:
+            The documentation text.
+        :param docstyle_definition:
+            The ``DocstyleDefinition`` instance that defines what docstyle is
+            being used in the documentation.
+        :param indent:
+            The string of indentation used in front of the first marker of the
+            documentation.
+        :param marker:
+            The three-element tuple with marker strings, that identified this
+            documentation comment.
+        :param range:
+            The position range of type ``TextRange``.
         """
         self.documentation = documentation
         self.docstyle_definition = docstyle_definition
