@@ -163,6 +163,19 @@ Now that your message is written, you will have to save the file. Press escape
 to exit insert mode, and save the file (in Vim that is being done by pressing
 shift + Z twice).
 
+Run coala
+------------------
+
+Now you can check if your commit messages and code formattings
+conform with the community guidelines.
+If something goes wrong, coala will let you know. The continuous integration
+(CI) will fail if coala reports errors which means that we cannot proceed
+with merging your fix/pull request.
+
+::
+
+  $ coala
+
 Pushing the commit
 ------------------
 
@@ -239,6 +252,20 @@ As people work on coala new commits will be added. This will result in your
 local fork going out of sync with the remote repository.
 To sync your changes with the remote repository run the following commands in
 the desired branch:
+
+.. note::
+
+    This assumes that the remote ``origin`` is the original
+    coala repository at https://github.com/coala/coala (or other,
+    like coala/coala-bears, etc.), **not your fork**.
+
+    If you have followed the steps outlined in this guide and cloned
+    the original coala repository, ``origin`` should refer to it.
+    You can proceed to the following section without worry.
+
+    If you're unsure about this, run ``git remote -v`` to check which
+    remote points to the original repository and use that instead
+    of ``origin`` in the following section.
 
 ::
 

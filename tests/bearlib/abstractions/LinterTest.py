@@ -99,6 +99,14 @@ class LinterComponentTest(unittest.TestCase):
                          'Invalid keyword arguments provided: '
                          "'prerequisite_check_fail_message'")
 
+        with self.assertRaises(ValueError) as cm:
+            linter('some-executable',
+                   global_bear=True,
+                   use_stdin=True)(self.EmptyTestLinter)
+        self.assertEqual(str(cm.exception),
+                         'Incompatible arguments provided:'
+                         "'use_stdin' and 'global_bear' can't both be True.")
+
     def test_decorator_invalid_states(self):
         with self.assertRaises(ValueError) as cm:
             linter('some-executable', use_stdout=False,
@@ -615,7 +623,7 @@ class LinterComponentTest(unittest.TestCase):
         uut.run('', [])  # Does an assert in the output processing
 
 
-class LinterReallifeTest(unittest.TestCase):
+class LocalLinterReallifeTest(unittest.TestCase):
 
     def setUp(self):
         self.section = Section('REALLIFE_TEST_SECTION')
@@ -888,3 +896,137 @@ class LinterReallifeTest(unittest.TestCase):
             "'not_supported_name' used. Is this a typo? If not, consider "
             "removing the capturing group to improve coala's "
             'performance.'])
+
+
+class GlobalLinterReallifeTest(unittest.TestCase):
+
+    def setUp(self):
+        self.section = Section('REALLIFE_TEST_SECTION')
+
+        self.test_program_path = get_testfile_name('test_linter.py')
+        self.test_program_regex = (
+            r'(?P<severity>\S+?): (?P<message>.*)')
+        self.test_program_severity_map = {'MAJOR': RESULT_SEVERITY.MAJOR}
+
+    def test_global_linter_bear(self):
+        create_arguments_mock = Mock()
+
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                create_arguments_mock(config_file)
+                return ['MAJOR: Test Message']
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        results = list(uut.run())
+
+        expected = [Result(uut,
+                           'Test Message',
+                           severity=RESULT_SEVERITY.MAJOR)]
+
+        self.assertEqual(results, expected)
+        create_arguments_mock.assert_called_once_with(None)
+
+    def test_global_linter_bear_with_filename(self):
+        create_arguments_mock = Mock()
+
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                create_arguments_mock(config_file)
+                return ['test.txt:MAJOR: Test Message']
+
+        output_regex = (
+            r'(?P<filename>\S+?):(?P<severity>\S+?): (?P<message>.*)'
+        )
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=output_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        results = list(uut.run())
+
+        expected = [
+            Result.from_values(
+                uut,
+                'Test Message',
+                'test.txt',
+                severity=RESULT_SEVERITY.MAJOR,
+            )
+        ]
+
+        self.assertEqual(results, expected)
+        create_arguments_mock.assert_called_once_with(None)
+
+    def test_global_linter_bear_use_stderr(self):
+        create_arguments_mock = Mock()
+
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                create_arguments_mock(config_file)
+                return ['MAJOR: Test Message\nasd']
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      use_stderr=True,
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        results = list(uut.run())
+        expected = [Result(uut,
+                           'Test Message',
+                           severity=RESULT_SEVERITY.MAJOR)]
+
+        self.assertEqual(results, expected)
+        create_arguments_mock.assert_called_once_with(None)
+
+    def test_create_arguments_not_implemented(self):
+        class Handler:
+            pass
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        with self.assertRaises(NotImplementedError):
+            list(uut.run())
+
+    def test_create_arguments_not_iterable(self):
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                return None
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        with self.assertRaises(TypeError):
+            list(uut.run())

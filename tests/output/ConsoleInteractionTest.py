@@ -114,6 +114,24 @@ class SomelocalBear(Bear):
         return None
 
 
+class aSomelocalBear(Bear):
+
+    def run(self):
+        """
+        Some local-bear Description.
+        """
+        return None
+
+
+class BSomeglobalBear(Bear):
+
+    def run(self):
+        """
+        Some global-bear Description.
+        """
+        return None
+
+
 class ConsoleInteractionTest(unittest.TestCase):
 
     def setUp(self):
@@ -734,6 +752,21 @@ class ShowBearsTest(unittest.TestCase):
                                           True,
                                           self.console_printer)
 
+    def test_show_bears_sorted(self):
+        local_bears = OrderedDict([('default', [SomelocalBear]),
+                                   ('test', [aSomelocalBear])])
+        global_bears = OrderedDict([('default', [SomeglobalBear]),
+                                    ('test', [BSomeglobalBear])])
+
+        with retrieve_stdout() as stdout:
+            show_bears(local_bears, global_bears, False,
+                       False, self.console_printer)
+            self.assertEqual(stdout.getvalue(),
+                             'aSomelocalBear\n'
+                             'BSomeglobalBear\n'
+                             'SomeglobalBear\n'
+                             'SomelocalBear\n')
+
     def test_show_bears_capabilities(self):
         with retrieve_stdout() as stdout:
             show_language_bears_capabilities(
@@ -802,7 +835,7 @@ class PrintFormattedResultsTest(unittest.TestCase):
             print_results_formatted(self.logger,
                                     self.section,
                                     [Result('1', '2', affected_code)],
-                                    None,
+                                    {},
                                     None)
             self.assertRegex(stdout.getvalue(), expected_string)
 
@@ -836,3 +869,16 @@ class PrintFormattedResultsTest(unittest.TestCase):
                                 None,
                                 None,
                                 None)
+
+    def test_source_lines(self):
+        self.section.append(Setting(key='format', value='{source_lines}'))
+        affected_code = (SourceRange.from_values('file', 2, end_line=2),)
+        with retrieve_stdout() as stdout:
+            print_results_formatted(
+                self.logger,
+                self.section,
+                [Result('SpaceConsistencyBear', message='msg',
+                        affected_code=affected_code)],
+                {abspath('file'): ('def fun():\n', '    pass  \n')})
+            self.assertEqual(stdout.getvalue(),
+                             "('    pass  \\n',)\n")

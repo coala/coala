@@ -1,4 +1,5 @@
 import logging
+import re
 
 from coala_utils.string_processing.StringConverter import StringConverter
 from coala_utils.string_processing import (unescape, convert_to_raw,
@@ -78,6 +79,15 @@ class LineParser:
                      [(section_override, key), ...], value, to_append (True if
                      append delimiter is found else False), comment
         """
+        for separator in self.comment_separators:
+            if (re.match('[^ ]' + separator, line)
+                    or re.match(separator + '[^ ]', line)):
+                logging.warning('This comment does not have whitespace' +
+                                ' before or after ' + separator + ' in: ' +
+                                repr(line.replace('\n', '')) + '. If you ' +
+                                'didn\'t mean to make a comment, use a ' +
+                                'backslash for escaping.')
+
         line, comment = self.__separate_by_first_occurrence(
             line,
             self.comment_separators)

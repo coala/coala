@@ -20,8 +20,7 @@ class SubAspectTest:
         assert not tastes
 
     def test__init__unavailable_taste(
-            self, SubAspect, SubAspect_taste_values
-    ):
+            self, SubAspect, SubAspect_taste_values):
         with pytest.raises(TasteError):
             SubAspect('cs', **SubAspect_taste_values)
 
