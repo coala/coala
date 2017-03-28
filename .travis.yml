@@ -14,6 +14,9 @@ matrix:
     - python: 3.3
       env: UNSUPPORTED=true
 
+env:
+  - CI="Travis"
+
 cache:
   pip: true
   directories:
@@ -80,6 +83,9 @@ script:
 
 notifications:
   email: false
+
+after_success:
+  - bash .misc/deploy.pypi.sh
 
 branches:
   exclude:
