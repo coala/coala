@@ -53,25 +53,27 @@ def load_config_file(filename, log_printer, silent=False):
                         ``False``.
     """
     filename = os.path.abspath(filename)
-
+    strict = True  # TODO: Remove it (Just for testing purposes)
     try:
         return ConfParser().parse(filename)
     except FileNotFoundError:
         if not silent:
-            if os.path.basename(filename) == Constants.default_coafile:
+            if (not strict) and \
+                    os.path.basename(filename) == Constants.default_coafile:
                 log_printer.warn('The default coafile {0!r} was not found. '
                                  'You can generate a configuration file with '
-                                 'your current options by adding the `--save` '
-                                 'flag or suppress any use of config '
+                                 'your current options by adding the `--save`'
+                                 ' flag or suppress any use of config '
                                  'files with `-I`.'
                                  .format(Constants.default_coafile))
-            else:
+
+            else:  # The strict mode turned on
                 log_printer.err('The requested coafile {0!r} does not exist. '
                                 'You can generate it with your current '
                                 'options by adding the `--save` flag or '
                                 'suppress any use of config files with `-I`.'
                                 .format(filename))
-                sys.exit(2)
+            sys.exit(2)
 
         return {'default': Section('default')}
 
