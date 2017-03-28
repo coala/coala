@@ -6,8 +6,7 @@ import pytest
 class AspectInstanceTest:
 
     def test_tastes(
-            self, SubAspect, SubAspect_tastes, SubAspect_taste_values
-    ):
+            self, SubAspect, SubAspect_tastes, SubAspect_taste_values):
         using_default_values = SubAspect('py')
         using_custom_values = SubAspect('py', **SubAspect_taste_values)
         assert using_default_values.tastes == {

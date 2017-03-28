@@ -13,7 +13,7 @@ class Root(aspectbase, metaclass=aspectclass):
     Definition string is taken from doc-string of decorated class.
     Remaining docs are taken from a nested ``docs`` class.
     Tastes are defined as class attributes that are instances of
-    :class:`coalib.bearlib.aspectclasses.Taste`.
+    :class:`coalib.bearlib.aspects.Taste`.
 
     >>> @Root.subaspect
     ... class Formatting:

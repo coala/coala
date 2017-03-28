@@ -364,9 +364,31 @@ def instantiate_processes(section,
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
     complete_filename_list = filename_list
+    complete_file_dict = get_file_dict(complete_filename_list, log_printer)
+
+    manager = multiprocessing.Manager()
+    global_bear_queue = multiprocessing.Queue()
+    filename_queue = multiprocessing.Queue()
+    local_result_dict = manager.dict()
+    global_result_dict = manager.dict()
+    message_queue = multiprocessing.Queue()
+    control_queue = multiprocessing.Queue()
+
+    loaded_local_bears_count = len(local_bear_list)
+    local_bear_list[:], global_bear_list[:] = instantiate_bears(
+        section,
+        local_bear_list,
+        global_bear_list,
+        complete_file_dict,
+        message_queue,
+        console_printer=console_printer)
+    loaded_valid_local_bears_count = len(local_bear_list)
+    # Note: the complete file dict is given as the file dict to bears and
+    # the whole project is accessible to every bear. However, local bears are
+    # run only for the changed files if caching is enabled.
 
     # Start tracking all the files
-    if cache:
+    if cache and loaded_valid_local_bears_count == loaded_local_bears_count:
         cache.track_files(set(complete_filename_list))
         changed_files = cache.get_uncached_files(
             set(filename_list)) if cache else filename_list
@@ -381,18 +403,9 @@ def instantiate_processes(section,
     # Note: the complete file dict is given as the file dict to bears and
     # the whole project is accessible to every bear. However, local bears are
     # run only for the changed files if caching is enabled.
-    complete_file_dict = get_file_dict(complete_filename_list, log_printer)
     file_dict = {filename: complete_file_dict[filename]
                  for filename in filename_list
                  if filename in complete_file_dict}
-
-    manager = multiprocessing.Manager()
-    global_bear_queue = multiprocessing.Queue()
-    filename_queue = multiprocessing.Queue()
-    local_result_dict = manager.dict()
-    global_result_dict = manager.dict()
-    message_queue = multiprocessing.Queue()
-    control_queue = multiprocessing.Queue()
 
     bear_runner_args = {'file_name_queue': filename_queue,
                         'local_bear_list': local_bear_list,
@@ -404,14 +417,6 @@ def instantiate_processes(section,
                         'message_queue': message_queue,
                         'control_queue': control_queue,
                         'timeout': 0.1}
-
-    local_bear_list[:], global_bear_list[:] = instantiate_bears(
-        section,
-        local_bear_list,
-        global_bear_list,
-        complete_file_dict,
-        message_queue,
-        console_printer=console_printer)
 
     fill_queue(filename_queue, file_dict.keys())
     fill_queue(global_bear_queue, range(len(global_bear_list)))

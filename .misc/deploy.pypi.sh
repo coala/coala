@@ -11,11 +11,15 @@ echo "Uploading coala to pypi"
 pip3 install twine wheel
 python3 setup.py sdist bdist_wheel
 # Upload one by one to avoid timeout
-# Don't block merging because pypi is in error 500 mood again
-set +e
-twine upload dist/*.whl -u "$PYPIUSER" -p "$PYPIPW"
-twine upload dist/*.tar.gz -u "$PYPIUSER" -p "$PYPIPW"
-set -e
+twine upload dist/* -u "$PYPIUSER" -p "$PYPIPW" 2>&1 | tee twine_output.txt
+if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    SEARCH_STR="500 Server Error"
+    if grep -q "$SEARCH_STR" twine_output.txt; then
+        echo "Server error 500"
+        exit 1
+    fi
+fi
+rm twine_output.txt
 
 echo "Installing coala from pypi"
 pip3 install --pre coala==`cat coalib/VERSION` --upgrade

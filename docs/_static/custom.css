@@ -34,7 +34,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .body p, .body dd, .body li {
     font-family: Roboto;
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: 300;
     line-height: 2;
     text-align: justify;
