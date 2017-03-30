@@ -30,7 +30,7 @@ class BuildManPage(Command):
             --parser=coalib.parsing.DefaultArgParser:default_arg_parser
 
     If automatically want to build the man page every time you invoke
-    your build, add to your ```setup.cfg``` the following::
+    your build, add to your ``setup.cfg`` the following::
 
         [build_manpage]
         output = <appname>.1
