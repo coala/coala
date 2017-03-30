@@ -211,14 +211,15 @@ def extract_documentation_with_markers(content, docstyle_definition):
     """
     Extracts all documentation texts inside the given source-code-string.
 
-    :param content: The source-code-string where to extract documentation from.
-                    Needs to be a list or tuple where each string item is a
-                    single line (including ending whitespaces like ``\\n``).
-    :param markers: The list/tuple of marker-sets that identify a
-                    documentation-comment. Low-index markers have higher
-                    priority than high-index markers.
-    :return:        An iterator returning each DocumentationComment found in
-                    the content.
+    :param content:
+        The source-code-string where to extract documentation from.
+        Needs to be a list or tuple where each string item is a single
+        line (including ending whitespaces like ``\\n``).
+    :param docstyle_definition:
+        The ``DocstyleDefinition`` instance that defines what docstyle is
+        being used in the documentation.
+    :return:
+        An iterator returning each DocumentationComment found in the content.
     """
     # Prepare marker-tuple dict that maps a begin pattern to the corresponding
     # marker_set(s). This makes it faster to retrieve a marker-set from a
