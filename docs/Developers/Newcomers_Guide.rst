@@ -87,7 +87,23 @@ Step 1. Meet the Community!
 
 To get started, the first step is to meet the community. We use gitter to
 communicate, and there the helpful community will guide you.
-Join us at `coala gitter <https://coala.io/chat>`_.
+Gitter is instant messaging service used by developers and users of GitHub.
+Gitter uses chatrooms, where developers can join in and can talk about particular topic.
+Coala has several chatrooms. Here are a few of them. 
+
+* `coala <https://gitter.im/coala/coala>`_
+* `gsoc <https://gitter.im/coala/coala/gsoc>`_
+* `cobot-test <https://gitter.im/coala/cobot-test>`_
+* `coala-bears <https://gitter.im/coala/coala-bears>`_
+* `workshop <https://gitter.im/coala/coala/workshops>`_
+* `freelancers <https://gitter.im/coala/freelancers>`_
+
+But before joining the community, here are few things that you should keep in mind.
+
+* Don't @-mention or private message people, unless its utterly important
+* Don't repeatedly @-mention people in an ongoing conversation.
+
+Now you are ready to join coala community at `coala gitter <https://coala.io/chat>`_.
 The newcomers should ping us "Hello World" to let us know they are here
 because we care!
 
@@ -152,7 +168,8 @@ Now you can start working on it.
 
         cobot assign <issue_link>
 
-    Take care to write the full link to the issue
+    Take care to write the full link to the issue.
+    Also takeup the issue, only when you know what the problem is and how to solve it.
 
     Before starting to write your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
