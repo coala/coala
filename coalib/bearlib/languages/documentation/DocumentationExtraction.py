@@ -54,13 +54,11 @@ def _extract_doc_comment_continuous(content, line, column, markers):
 
     The property of the continuous layout is that the each-line-marker and the
     end-marker do equal. Documentation is extracted until no further marker is
-    found. Applies e.g. for doxygen style python documentation:
+    found. Applies e.g. for doxygen style python documentation::
 
-    ```
-    ## main
-    #
-    #  detailed
-    ```
+        ## main
+        #
+        #  detailed
 
     :param content: Presplitted lines of the source-code-string.
     :param line:    Line where the documentation comment starts (behind the
@@ -100,13 +98,11 @@ def _extract_doc_comment_standard(content, line, column, markers):
     Extract a documentation that starts at given beginning with standard
     layout.
 
-    The standard layout applies e.g. for C doxygen-style documentation:
+    The standard layout applies e.g. for C doxygen-style documentation::
 
-    ```
-    /**
-     * documentation
-     */
-    ```
+        /**
+         * documentation
+         */
 
     :param content: Presplitted lines of the source-code-string.
     :param line:    Line where the documentation comment starts (behind the
