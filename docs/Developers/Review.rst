@@ -72,6 +72,11 @@ The review process for coala is as follows:
     - ``reack commit_SHA`` in case the commit was acknowledged before, was
       rebased without conflicts and the rebase did not introduce logical
       problems.
+
+    .. note::
+
+        Only one acknowledgment is needed per commit i.e ``ack commit_SHA``.
+
 4. If the commits are not linearly mergeable into master, rebase and go
    to step one.
 5. All commits are acknowledged and fit linearly onto master. All

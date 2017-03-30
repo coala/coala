@@ -5,8 +5,12 @@ while offering the best possible flexibility.
 """
 
 import logging
+from functools import wraps
 
 from coalib.settings.FunctionMetadata import FunctionMetadata
+
+
+def _do_nothing(x): return x
 
 
 def deprecate_settings(**depr_args):
@@ -64,15 +68,29 @@ def deprecate_settings(**depr_args):
     >>> run(old='Hello!', new='Hello!')
     Hello!
 
+    Multiple deprecations can be provided for the same setting. The modifier
+    function for each deprecated setting can be given as a value in a dict
+    where the deprecated setting is the key. A default modifier may be
+    specified at the end of the deprecated settings tuple.
+
+    >>> @deprecate_settings(new=({'old': lambda x: x + ' coala!'},
+    ...                          'older',
+    ...                           lambda x: x + '!' ))
+    ... def run(new):
+    ...     print(new)
+    >>> run(old='Hi')
+    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    Hi coala!
+    >>> run(older='Hi')
+    WARNING:root:The setting `older` is deprecated. Please use `new` instead.
+    Hi!
+
     The metadata for coala has been adjusted as well:
 
     >>> list(run.__metadata__.non_optional_params.keys())
     ['new']
     >>> list(run.__metadata__.optional_params.keys())
-    ['old']
-
-    You cannot deprecate an already deprecated setting. Don't try. It will
-    introduce non-deterministic errors in your program.
+    ['old', 'older']
 
     :param depr_args: A dictionary of settings as keys and their deprecated
                       names as values.
@@ -81,12 +99,11 @@ def deprecate_settings(**depr_args):
 
         logged_deprecated_args = set()
 
+        @wraps(func)
         def wrapping_function(*args, **kwargs):
-            for arg, depr_arg_and_modifier in depr_args.items():
-                deprecated_arg, _func = (
-                    depr_arg_and_modifier
-                    if isinstance(depr_arg_and_modifier, tuple)
-                    else (depr_arg_and_modifier, lambda x: x))
+            for arg, depr_value in wrapping_function.__metadata__.depr_values:
+                deprecated_arg = depr_value[0]
+                _func = depr_value[1]
                 if deprecated_arg in kwargs:
                     if deprecated_arg not in logged_deprecated_args:
                         logging.warning(
@@ -105,11 +122,32 @@ def deprecate_settings(**depr_args):
             return func(*args, **kwargs)
 
         new_metadata = FunctionMetadata.from_function(func)
-        for arg, depr_arg_and_modifier in depr_args.items():
-            deprecated_arg = (depr_arg_and_modifier[0]
-                              if isinstance(depr_arg_and_modifier, tuple)
-                              else depr_arg_and_modifier)
-            new_metadata.add_deprecated_param(arg, deprecated_arg)
+        new_metadata.depr_values = []
+        for arg, depr_values in depr_args.items():
+            if not isinstance(depr_values, tuple):
+                depr_values = (depr_values,)
+
+            if callable(depr_values[-1]):
+                deprecated_args = depr_values[:-1]
+                default_modifier = depr_values[-1]
+            else:
+                deprecated_args = depr_values
+                default_modifier = _do_nothing
+
+            for depr_value in deprecated_args:
+                if isinstance(depr_value, dict):
+                    deprecated_arg = list(depr_value.keys())[0]
+                    modifier = depr_value[deprecated_arg]
+                    new_metadata.depr_values.append((arg,
+                                                     (deprecated_arg,
+                                                      modifier)))
+                else:
+                    deprecated_arg = depr_value
+                    new_metadata.depr_values.append((arg,
+                                                     (deprecated_arg,
+                                                      default_modifier)))
+                new_metadata.add_deprecated_param(arg, deprecated_arg)
+
         wrapping_function.__metadata__ = new_metadata
 
         return wrapping_function

@@ -1,6 +1,10 @@
 Welcome to coala API Documentation
 ==================================
 
+.. image:: _static/images/coala-header.png
+   :scale: 50
+   :align: center
+
 Hey there! You're in the right place if you:
 
 - want to develop coala itself!
