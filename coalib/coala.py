@@ -71,6 +71,9 @@ def main():
     except BaseException as exception:  # pylint: disable=broad-except
         return get_exitcode(exception, log_printer)
 
+    if args.non_interactive and args.format:
+        return mode_format()
+
     if args.non_interactive:
         return mode_non_interactive(console_printer, args)
 
