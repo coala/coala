@@ -438,7 +438,8 @@ Other Metadata
 ~~~~~~~~~~~~~~
 
 Other metadata such as ``AUTHORS``, ``AUTHORS_EMAILS``, ``MAINTAINERS``,
-``MAINTAINERS_EMAILS``, ``LICENSE``, ``ASCIINEMA_URL`` can be used as follows:
+``MAINTAINERS_EMAILS``, ``LICENSE``, ``ASCIINEMA_URL``, ``SEE_MORE``
+can be used as follows:
 
 .. code:: python
 
@@ -449,6 +450,7 @@ Other metadata such as ``AUTHORS``, ``AUTHORS_EMAILS``, ``MAINTAINERS``,
         MAINTAINERS_EMAILS = {'catelyn_stark@gmail.com'}
         LICENSE = 'AGPL-3.0'
         ASCIINEMA_URL = 'https://asciinema.org/a/80761'
+        SEE_MORE = 'https://www.pylint.org'
 
 
 .. _main tutorial: https://docs.coala.io/en/latest/Users/Tutorial.html
