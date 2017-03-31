@@ -231,8 +231,12 @@ def print_result(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
-    :param interactive:     Variable to check wether or not to
-                            offer the user actions interactively.
+<<<<<<< HEAD
+    :param interactive:     Variable to check whether or not to
+=======
+    :param interactive:     Variable to check whether or not to
+>>>>>>> be3d570cd4970340e9c31da60fbf69c42defded0
+                             offer the user actions interactively.
     """
     no_color = not console_printer.print_colored
     if not isinstance(result, Result):
