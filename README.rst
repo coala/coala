@@ -160,6 +160,15 @@ Please read our
 `coafile specification <http://docs.coala.io/en/latest/Users/coafile.html>`__
 to learn more.
 
+Using ``default_coafile``
+*************************
+
+* The content of ``default_coafile`` is similar to that of ``.coafile``,
+  but it is system wide.
+* It can be used to define the type of files you definitely don't want
+  to lint like minified files and backup files ( e.g. ``*.min.js``, ``*.orig``)
+
+
 Using command-line arguments
 ****************************
 
