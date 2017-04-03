@@ -269,7 +269,7 @@ textarea.materialize-textarea {
   text-transform: none !important;
 }
 .coa-form{
- padding-top:2em;
+  padding-top:2em;
 }
 .origin-diff {
   padding: 0.5em;
@@ -545,11 +545,11 @@ a:hover > .card{
   margin-bottom: 5px !important;
 }
 .example-card pre{
-    height:300px;
-    overflow:scroll;
+  height:300px;
+  overflow:scroll;
 }
 .example-card a{
-    cursor: pointer;
+  cursor: pointer;
 }
 .text-center{
   text-align: center;
@@ -647,17 +647,15 @@ a:hover > .card{
       padding-right: 0 !important;
   }
 }
-
 .col-xs1-4 {
-    position: relative;
-    min-height: 1px;
-    padding-left: 1px;
-    padding-right: 1px;
-    float: left;
-    width: 33.33333333%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  float: left;
+  width: 33.33333333%;
 }
-
 .contribution-container {
-    width: 80%;
-    margin: 0 auto;
+  width: 80%;
+  margin: 0 auto;
 }
