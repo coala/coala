@@ -1,5 +1,5 @@
 [Default]
-bears = SpaceConsistencyBear
+bears = SpaceConsistencyBear,IndentationBear
 files = **.(md|html|css)
 ignore = vendors/**
 use_spaces = yeah
