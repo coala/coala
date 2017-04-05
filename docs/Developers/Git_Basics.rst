@@ -369,6 +369,10 @@ Now, to revert the file to that revision, run the command:
 Now, after the file gets reverted back to the required revision, commit the
 changes and (force)push to the remote.
 
+If at any stage you are confused, or have an issue, do not close your Pull
+Request. Instead, contact us on gitter so that we can help you resolve your
+problem.
+
 Useful Git commands
 -------------------
 

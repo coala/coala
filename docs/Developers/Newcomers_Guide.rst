@@ -259,6 +259,7 @@ more about it, have patience and it is explained on the next step), and all
 you can do is wait. The best thing you can do while at this step is review
 other people's PRs. Not only will this help the maintainers with the workload,
 but this is one of the three core steps towards becoming a full-norm coalaian.
+Never close a Pull Request unless you are told to do so.
 
 For more information about reviewing code, check out this `link <http://coala.io/reviewing>`_.
 
