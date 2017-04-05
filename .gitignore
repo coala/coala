@@ -36,3 +36,4 @@ node_modules
 .vendor
 Goopfile.lock
 venv/
+**/coala-log
