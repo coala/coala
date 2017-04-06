@@ -7,17 +7,21 @@ formatting and settings are also included in coalib.
 
 import sys
 from os.path import join, dirname
+from pkg_resources import get_distribution, DistributionNotFound
 
 
 VERSION_FILE = join(dirname(__file__), 'VERSION')
 
 
-def get_version():
+def get_public_version():
     with open(VERSION_FILE, 'r') as ver:
         return ver.readline().strip()
 
 
-VERSION = get_version()
+try:
+    VERSION = get_distribution('coala').version
+except DistributionNotFound:
+    VERSION = get_public_version()
 __version__ = VERSION
 
 
