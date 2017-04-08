@@ -21,8 +21,10 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
 
+from .meta import bearclass
 
-class Bear(Printer, LogPrinterMixin):
+
+class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     """
     A bear contains the actual subroutine that is responsible for checking
     source code for certain specifications. However it can actually do
@@ -130,6 +132,33 @@ class Bear(Printer, LogPrinterMixin):
     >>> class SomeBear(Bear): pass
     >>> SomeBear.source_location
     '...Bear.py'
+
+    Every linter bear makes use of an executable tool for its operations.
+    The SEE_MORE attribute provides a link to the main page of the linter
+    tool:
+
+    >>> class PyLintBear(Bear):
+    ...     SEE_MORE = 'https://www.pylint.org/'
+    >>> PyLintBear.SEE_MORE
+    'https://www.pylint.org/'
+
+    In the future, bears will not survive without aspects. aspects are defined
+    as part of the ``class`` statement's parameter list. According to the
+    classic ``CAN_DETECT`` and ``CAN_FIX`` attributes, aspects can either be
+    only ``'detect'``-able or also ``'fix'``-able:
+
+    >>> from coalib.bearlib.aspects.Metadata import CommitMessage
+
+    >>> class aspectsCommitBear(Bear, aspects={
+    ...         'detect': [CommitMessage.Shortlog.ColonExistence],
+    ...         'fix': [CommitMessage.Shortlog.TrailingPeriod],
+    ... }):
+    ...     pass
+
+    >>> aspectsCommitBear.aspects['detect']
+    [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.ColonExistence'>]
+    >>> aspectsCommitBear.aspects['fix']
+    [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.TrailingPeriod'>]
     """
 
     LANGUAGES = set()
@@ -144,6 +173,7 @@ class Bear(Printer, LogPrinterMixin):
     CAN_DETECT = set()
     CAN_FIX = set()
     ASCIINEMA_URL = ''
+    SEE_MORE = ''
     BEAR_DEPS = set()
 
     @classproperty
@@ -423,8 +453,10 @@ class Bear(Printer, LogPrinterMixin):
                   .format(filename=filename, bearname=self.name, url=url))
 
         response = requests.get(url, stream=True, timeout=20)
+        response.raise_for_status()
+
         with open(filename, 'wb') as file:
-            for chunk in response.iter_content(125):
+            for chunk in response.iter_content(chunk_size=16 * 1024):
                 file.write(chunk)
         return filename
 

@@ -34,6 +34,11 @@ class ConfParserTest(unittest.TestCase):
     A = a, b, c
     B = a, ,, d
     C = ,,,
+
+    [name]
+    key1 = value1
+    key2 = value1
+    key1 = value2
     """
 
     def setUp(self):
@@ -176,3 +181,13 @@ class ConfParserTest(unittest.TestCase):
 
     def test_config_directory(self):
         self.uut.parse(self.tempdir)
+
+    def test_settings_override_warning(self):
+        self.assertEqual(self.cm.output[1], 'WARNING:root:test setting has '
+                                            'already been defined in section '
+                                            'foo. The previous setting will '
+                                            'be overridden.')
+        self.assertEqual(self.cm.output[2], 'WARNING:root:key1 setting has '
+                                            'already been defined in section '
+                                            'name. The previous setting will '
+                                            'be overridden.')

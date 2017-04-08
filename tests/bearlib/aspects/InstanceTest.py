@@ -6,8 +6,7 @@ import pytest
 class AspectInstanceTest:
 
     def test_tastes(
-            self, SubAspect, SubAspect_tastes, SubAspect_taste_values
-    ):
+            self, SubAspect, SubAspect_tastes, SubAspect_taste_values):
         using_default_values = SubAspect('py')
         using_custom_values = SubAspect('py', **SubAspect_taste_values)
         assert using_default_values.tastes == {
@@ -20,7 +19,8 @@ class AspectInstanceTest:
             with pytest.raises(AttributeError) as exc:
                 setattr(aspect, name, 'value')
             assert str(exc.value) \
-                == "can't set taste values of aspectclass instances"
+                == "A 'taste' value for this aspectclass instance "\
+                   'exists already.'
         for name in ['docs', 'subaspects', 'tastes', '_tastes']:
             with pytest.raises(AttributeError) as exc:
                 setattr(aspect, name, 'value')

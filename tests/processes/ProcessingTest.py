@@ -1,3 +1,4 @@
+import copy
 import multiprocessing
 import os
 import platform
@@ -9,6 +10,7 @@ import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from coalib.bears.Bear import Bear
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
@@ -219,8 +221,7 @@ class ProcessingTest(unittest.TestCase):
             self.log_printer,
             self.console_printer)
 
-        self.assertEqual(self.queue.get(timeout=0), ([first_local,
-                                                      second_local,
+        self.assertEqual(self.queue.get(timeout=0), ([second_local,
                                                       third_local]))
         self.assertEqual(self.queue.get(timeout=0), ([fourth_local]))
         self.assertEqual(self.queue.get(timeout=0), ([first_global]))
@@ -357,7 +358,7 @@ class ProcessingTest(unittest.TestCase):
         self.assertTrue(check_result_ignore(result, ranges))
 
         result1 = Result.from_values('origin', 'message', file='e')
-        self.assertFalse(check_result_ignore(result1, ranges))
+        self.assertTrue(check_result_ignore(result1, ranges))
 
         ranges = [(['something', 'else', 'not origin'],
                    SourceRange.from_values('e', 1, 1, 2, 2))]
@@ -492,6 +493,46 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(source_range.start.column, 1)
         self.assertEqual(source_range.end.line, 1)
         self.assertEqual(source_range.end.column, 14)
+
+    def test_loaded_bears_with_error_result(self):
+        class BearWithMissingPrerequisites(Bear):
+
+            def __init__(self, section, queue, timeout=0.1):
+                Bear.__init__(self, section, queue, timeout)
+
+            def run(self):
+                return []
+
+            @classmethod
+            def check_prerequisites(cls):
+                return False
+
+        multiprocessing.Queue()
+        tmp_local_bears = copy.copy(self.local_bears['cli'])
+        tmp_local_bears.append(BearWithMissingPrerequisites)
+        cache = FileCache(self.log_printer,
+                          'coala_test_on_error',
+                          flush_cache=True)
+        results = execute_section(self.sections['cli'],
+                                  [],
+                                  tmp_local_bears,
+                                  lambda *args: self.result_queue.put(args[2]),
+                                  cache,
+                                  self.log_printer,
+                                  console_printer=self.console_printer)
+        self.assertEqual(len(cache.data), 0)
+
+        cache = FileCache(self.log_printer,
+                          'coala_test_on_error',
+                          flush_cache=False)
+        results = execute_section(self.sections['cli'],
+                                  [],
+                                  self.local_bears['cli'],
+                                  lambda *args: self.result_queue.put(args[2]),
+                                  cache,
+                                  self.log_printer,
+                                  console_printer=self.console_printer)
+        self.assertGreater(len(cache.data), 0)
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):

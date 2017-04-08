@@ -54,13 +54,11 @@ def _extract_doc_comment_continuous(content, line, column, markers):
 
     The property of the continuous layout is that the each-line-marker and the
     end-marker do equal. Documentation is extracted until no further marker is
-    found. Applies e.g. for doxygen style python documentation:
+    found. Applies e.g. for doxygen style python documentation::
 
-    ```
-    ## main
-    #
-    #  detailed
-    ```
+        ## main
+        #
+        #  detailed
 
     :param content: Presplitted lines of the source-code-string.
     :param line:    Line where the documentation comment starts (behind the
@@ -100,13 +98,11 @@ def _extract_doc_comment_standard(content, line, column, markers):
     Extract a documentation that starts at given beginning with standard
     layout.
 
-    The standard layout applies e.g. for C doxygen-style documentation:
+    The standard layout applies e.g. for C doxygen-style documentation::
 
-    ```
-    /**
-     * documentation
-     */
-    ```
+        /**
+         * documentation
+         */
 
     :param content: Presplitted lines of the source-code-string.
     :param line:    Line where the documentation comment starts (behind the
@@ -211,14 +207,15 @@ def extract_documentation_with_markers(content, docstyle_definition):
     """
     Extracts all documentation texts inside the given source-code-string.
 
-    :param content: The source-code-string where to extract documentation from.
-                    Needs to be a list or tuple where each string item is a
-                    single line (including ending whitespaces like ``\\n``).
-    :param markers: The list/tuple of marker-sets that identify a
-                    documentation-comment. Low-index markers have higher
-                    priority than high-index markers.
-    :return:        An iterator returning each DocumentationComment found in
-                    the content.
+    :param content:
+        The source-code-string where to extract documentation from.
+        Needs to be a list or tuple where each string item is a single
+        line (including ending whitespaces like ``\\n``).
+    :param docstyle_definition:
+        The ``DocstyleDefinition`` instance that defines what docstyle is
+        being used in the documentation.
+    :return:
+        An iterator returning each DocumentationComment found in the content.
     """
     # Prepare marker-tuple dict that maps a begin pattern to the corresponding
     # marker_set(s). This makes it faster to retrieve a marker-set from a

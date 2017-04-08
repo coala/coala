@@ -15,11 +15,15 @@ class ShellCommandResult(tuple):
 
     It additionally stores the return ``.code``:
 
-    >>> process = Popen(['python', '-c', 'print(input() + " processed")'],
+    >>> process = Popen(['python', '-c',
+    ...                  'import sys; print(sys.stdin.readline().strip() +'
+    ...                  '                  " processed")'],
     ...                 stdin=PIPE, stdout=PIPE, stderr=PIPE,
     ...                 universal_newlines=True)
 
     >>> stdout, stderr = process.communicate(input='data')
+    >>> stderr
+    ''
     >>> result = ShellCommandResult(process.returncode, stdout, stderr)
     >>> result[0]
     'data processed\\n'

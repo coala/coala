@@ -1,7 +1,7 @@
 import json
 import logging
 import unittest
-from unittest.case import SkipTest
+import unittest.case
 
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.Diff import ConflictError, Diff, SourceRange
@@ -28,7 +28,7 @@ class DiffTest(unittest.TestCase):
 
         # No double addition allowed
         self.assertRaises(ConflictError, self.uut.add_lines, 0, ['t'])
-        self.assertRaises(ValueError, self.uut.add_lines, -1, ['t'])
+        self.assertRaises(IndexError, self.uut.add_lines, -1, ['t'])
         self.assertRaises(TypeError, self.uut.add_lines, 'str', ['t'])
 
     def test_delete_line(self):
@@ -36,21 +36,23 @@ class DiffTest(unittest.TestCase):
         self.uut.delete_line(1)  # Double deletion possible without conflict
         additions, deletions = self.uut.stats()
         self.assertEqual(deletions, 1)
-        self.assertRaises(ValueError, self.uut.delete_line, 0)
+        self.assertRaises(IndexError, self.uut.delete_line, 0)
+        self.assertRaises(IndexError, self.uut.delete_line, 10)
 
     def test_delete_lines(self):
-        self.uut.delete_lines(1, 10)
-        self.uut.delete_lines(10, 20)
+        self.uut.delete_lines(1, 2)
+        self.uut.delete_lines(2, 3)
         additions, deletions = self.uut.stats()
-        self.assertEqual(deletions, 20)
-        self.assertRaises(ValueError, self.uut.delete_lines, 0, 10)
+        self.assertEqual(deletions, 3)
+        self.assertRaises(IndexError, self.uut.delete_lines, 0, 2)
+        self.assertRaises(IndexError, self.uut.delete_lines, 1, 6)
 
     def test_change_line(self):
         self.assertEqual(len(self.uut), 0)
         self.uut.change_line(2, '1', '2')
         self.assertEqual(len(self.uut), 2)
         self.assertRaises(ConflictError, self.uut.change_line, 2, '1', '3')
-        self.assertRaises(ValueError, self.uut.change_line, 0, '1', '2')
+        self.assertRaises(IndexError, self.uut.change_line, 0, '1', '2')
 
         self.uut.delete_line(1)
         # Line was deleted, unchangeable
@@ -98,11 +100,10 @@ class DiffTest(unittest.TestCase):
             SourceRange.from_values('file', start_line=2, end_line=3)]
         self.assertEqual(self.uut.affected_code('file'), affected_code)
 
-        self.uut.delete_line(6)
+        self.uut.delete_line(4)
         affected_code = [
             SourceRange.from_values('file', start_line=1),
-            SourceRange.from_values('file', start_line=2, end_line=3),
-            SourceRange.from_values('file', start_line=6)]
+            SourceRange.from_values('file', start_line=2, end_line=4)]
         self.assertEqual(self.uut.affected_code('file'), affected_code)
 
     def test_len(self):
@@ -210,7 +211,7 @@ class DiffTest(unittest.TestCase):
         try:
             from clang.cindex import Index, LibclangError
         except ImportError as err:
-            raise SkipTest(str(err))
+            raise unittest.case.SkipTest(str(err))
 
         joined_file = 'struct { int f0; }\nx = { f0 :1 };\n'
         file = joined_file.splitlines(True)
@@ -219,7 +220,7 @@ class DiffTest(unittest.TestCase):
             tu = Index.create().parse('t.c', unsaved_files=[
                 ('t.c', joined_file)])
         except LibclangError as err:
-            raise SkipTest(str(err))
+            raise unittest.case.SkipTest(str(err))
 
         fixit = tu.diagnostics[0].fixits[0]
         clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified

@@ -1,5 +1,6 @@
 from coalib.bearlib.aspects import Taste
 from coalib.bearlib.aspects.taste import TasteMeta
+from coalib.bearlib.languages import Languages
 
 
 class TasteTest:
@@ -17,10 +18,13 @@ class TasteTest:
         assert taste.description is ''
         assert taste.suggested_values is ()
         assert taste.default is None
+        assert type(taste.languages) is Languages
+        assert not taste.languages
+        assert not len(taste.languages)
+        assert taste.languages == ()
 
     def test__get__(
-            self, SubAspect, SubAspect_tastes, SubAspect_taste_values
-    ):
+            self, SubAspect, SubAspect_tastes, SubAspect_taste_values):
         using_default_values = SubAspect('py')
         using_custom_values = SubAspect('py', **SubAspect_taste_values)
         for name, taste in SubAspect_tastes.items():

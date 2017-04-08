@@ -19,6 +19,13 @@ this will do:
 
     $ sudo apt-get install git-all
 
+For installing Git on a Mac OS system, you can use the `homebrew <https://brew.sh/>`_ package
+manager as follows:
+
+::
+
+    $ brew install git
+
 Getting Started with coala
 --------------------------
 
@@ -156,6 +163,19 @@ Now that your message is written, you will have to save the file. Press escape
 to exit insert mode, and save the file (in Vim that is being done by pressing
 shift + Z twice).
 
+Run coala
+------------------
+
+Now you can check if your commit messages and code formattings
+conform with the community guidelines.
+If something goes wrong, coala will let you know. The continuous integration
+(CI) will fail if coala reports errors which means that we cannot proceed
+with merging your fix/pull request.
+
+::
+
+  $ coala
+
 Pushing the commit
 ------------------
 
@@ -232,6 +252,20 @@ As people work on coala new commits will be added. This will result in your
 local fork going out of sync with the remote repository.
 To sync your changes with the remote repository run the following commands in
 the desired branch:
+
+.. note::
+
+    This assumes that the remote ``origin`` is the original
+    coala repository at https://github.com/coala/coala (or other,
+    like coala/coala-bears, etc.), **not your fork**.
+
+    If you have followed the steps outlined in this guide and cloned
+    the original coala repository, ``origin`` should refer to it.
+    You can proceed to the following section without worry.
+
+    If you're unsure about this, run ``git remote -v`` to check which
+    remote points to the original repository and use that instead
+    of ``origin`` in the following section.
 
 ::
 
@@ -335,6 +369,10 @@ Now, to revert the file to that revision, run the command:
 Now, after the file gets reverted back to the required revision, commit the
 changes and (force)push to the remote.
 
+If at any stage you are confused, or have an issue, do not close your Pull
+Request. Instead, contact us on gitter so that we can help you resolve your
+problem.
+
 Useful Git commands
 -------------------
 
@@ -419,3 +457,7 @@ use an interactive rebasing session. This opens an editor where you can enter
 commands (described below) for each commit to be rebased. These commands
 determine how individual commits will be transferred to the new base. You can
 also reorder the commit listing to change the order of the commits themselves.
+
+If you would like more information/commands, please use your favourite search
+engine to look for it. Git is widely used throughout the world and there are
+many good tutorials and git related Q&A threads out there.
