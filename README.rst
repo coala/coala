@@ -1,13 +1,14 @@
 .. image:: https://cloud.githubusercontent.com/assets/5716520/24838296/a9cf5f04-1d45-11e7-855c-47b816ce1e09.png
     :target: https://coala.io/
 
-Visit coala.io for More Information
------------------------------------
+coala.io: Linting and fixing code for all languages
+---------------------------------------------------
 
 coala provides a unified command-line interface for linting and fixing all
 your code, regardless of the programming languages you use.
 
-Visit `coala.io <https://coala.io>`__ for more information!
+Please visit `coala.io <https://coala.io>`__ for an introduction to coala, to
+see the supported rules and checks or to contribute!
 
 |Linux Build Status| |Windows Build status| |Scrutinizer Code Quality|
 |codecov.io| |Documentation Status| |Gitmate| |AGPL| |Chat|
