@@ -13,7 +13,7 @@ see the supported rules and checks or to contribute!
 |Linux Build Status| |Windows Build status| |Scrutinizer Code Quality|
 |codecov.io| |Documentation Status| |Gitmate| |AGPL| |Chat|
 
-.. image:: http://www.yegor256.com/images/award/2016/winner-sils.png
+.. image:: https://cloud.githubusercontent.com/assets/5716520/24838493/1c5ee0e6-1d49-11e7-9b2b-85f0c6bc2c60.png
    :alt: Awards - Yegor256 2016 Winner
 
 .. |Chat| image:: https://badges.gitter.im/coala/coala.svg
