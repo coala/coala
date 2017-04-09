@@ -6,6 +6,9 @@ var app = angular.module('coala', ['ngStorage','ngRoute', 'ngSanitize', 'btford.
    when('/home', {
     template: '<home></home>'
    }).
+   when('/about', {
+    template: '<about></about>'
+   }).
    when('/languages', {
     template: '<languages></languages>'
    }).
@@ -99,4 +102,3 @@ app.filter('orderEmpty', function () {
         return result;
     };
 });
-
