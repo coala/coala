@@ -83,8 +83,9 @@ Example:
    -  **Short Description**
 
       - Starts with a capital letter.
-      - Written in imperative present tense (i.e. ``Add something``, not
-        ``Adding something`` or ``Added something``).
+      - Written in present tense `imperative mood`_.
+        (i.e. ``Adds something``, not ``Adding something`` or
+        ``Added something``).
       - No trailing period.
 
 Commit Body
@@ -194,3 +195,5 @@ Why Do We Need Good Commits?
    atomic commits to find the commit which caused a bug, you should be
    able to identify the real cause of the bug fastly. Good commit
    messages and atomicity of commits are key to that ability.
+
+         .. _imperative mood: https://en.wikipedia.org/wiki/Imperative_mood
