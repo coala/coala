@@ -62,6 +62,7 @@ Features
   `gedit <https://github.com/coala/coala-gedit>`__,
   `Sublime Text <https://github.com/coala/coala-sublime>`__,
   `Atom <https://github.com/coala/coala-atom>`__,
+  `Vs Code <https://github.com/coala/coala-vs-code>`__,
   `Vim <https://github.com/coala/coala-vim>`__ and
   `Emacs <https://github.com/coala/coala-emacs>`__.
 * Optimized performace with multi-threading to parallelize the routines - can
