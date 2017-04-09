@@ -52,7 +52,7 @@ Using virtualenv
         $ virtualenv coala-venv
 
 NOTE:
-Depending on your system,you most likely need :code:`sudo` to install virtualenv
+Depending on your system,you most likely need :code:` sudo ` to install virtualenv.
 ::
     $ sudo pip3 install virtualenv
 
