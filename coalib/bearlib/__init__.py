@@ -25,10 +25,12 @@ def deprecate_settings(**depr_args):
     Now we can simply call the bear with the deprecated setting, we'll get a
     warning - but it still works!
 
+    >>> from coalib.output.Logging import configure_logging
+    >>> configure_logging(stdout=True, color=False)
+    20
     >>> import sys
-    >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     >>> run(old="Hello world!")
-    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    [WARNING][...] The setting `old` is deprecated. Please use `new` instead.
     Hello world!
     >>> run(new="Hello world!")
     Hello world!
@@ -41,7 +43,7 @@ def deprecate_settings(**depr_args):
     ...     print(new)
 
     >>> func(old="Welcome to ")
-    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    [WARNING][...] The setting `old` is deprecated. Please use `new` instead.
     Welcome to coala!
     >>> func(new='coala!')
     coala!
@@ -54,14 +56,14 @@ def deprecate_settings(**depr_args):
     ...     print(new)
     >>> # doctest: +ELLIPSIS
     ... run(old="Hello!", new='coala is always written with lowercase `c`.')
-    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
-    WARNING:root:The value of `old` and `new` are conflicting. `new` will...
+    [WARNING][...] The setting `old` is deprecated. Please use `new` instead.
+    [WARNING][...] The value of `old` and `new` are conflicting. `new` will...
     coala is always written with lowercase `c`.
     >>> @deprecate_settings(new='old')
     ... def run(new):
     ...     print(new)
     >>> run(old='Hello!', new='Hello!')
-    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    [WARNING][...] The setting `old` is deprecated. Please use `new` instead.
     Hello!
 
     Note that messages are cached. So the same message won't be printed twice:
@@ -79,10 +81,10 @@ def deprecate_settings(**depr_args):
     ... def run(new):
     ...     print(new)
     >>> run(old='Hi')
-    WARNING:root:The setting `old` is deprecated. Please use `new` instead.
+    [WARNING][...] The setting `old` is deprecated. Please use `new` instead.
     Hi coala!
     >>> run(older='Hi')
-    WARNING:root:The setting `older` is deprecated. Please use `new` instead.
+    [WARNING][...] The setting `older` is deprecated. Please use `new` instead.
     Hi!
 
     The metadata for coala has been adjusted as well:
@@ -172,9 +174,11 @@ def deprecate_bear(bear):
     Now let's run the bear:
 
     >>> import sys
-    >>> logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    >>> from coalib.output.Logging import configure_logging
+    >>> configure_logging(stdout=True,color=False)
+    20
     >>> SomeOldBear().run()
-    WARNING:root:The bear SomeOldBear is deprecated. Use SomeBear instead!
+    [WARNING][...] The bear SomeOldBear is deprecated. Use SomeBear instead!
     I'm running!
 
     :param bear: An old bear class that inherits from the new one (so it gets

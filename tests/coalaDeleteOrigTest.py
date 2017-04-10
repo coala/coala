@@ -5,6 +5,7 @@ import re
 
 from coalib import coala_delete_orig
 from coala_utils.ContextManagers import retrieve_stderr
+from coalib.output.Logging import configure_logging
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
@@ -18,7 +19,7 @@ class coalaDeleteOrigTest(unittest.TestCase):
     @unittest.mock.patch('os.getcwd')
     def test_nonexistent_coafile(self, mocked_getcwd):
         mocked_getcwd.return_value = None
-        retval = coala_delete_orig.main()
+        retval = coala_delete_orig.delete_orig()
         self.assertEqual(retval, 255)
 
     @unittest.mock.patch('coalib.parsing.Globbing.glob')
@@ -49,3 +50,12 @@ class coalaDeleteOrigTest(unittest.TestCase):
             retval = coala_delete_orig.main(section=section)
             self.assertEqual(retval, 0)
             self.assertFalse(os.path.isfile(temporary[1]))
+
+    def test_log_printer_warning(self):
+        with retrieve_stderr() as stderr:
+            configure_logging(color=False)
+            coala_delete_orig.delete_orig(log_printer='SomeLogPrinter',
+                                          section=self.section)
+            output = stderr.getvalue()
+            self.assertRegexpMatches(
+                output, r'\[WARNING\]\[.+\] Using log_printer is deprecated')
