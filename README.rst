@@ -1,34 +1,34 @@
-.. image:: https://cloud.githubusercontent.com/assets/5716520/24838296/a9cf5f04-1d45-11e7-855c-47b816ce1e09.png
+.. image:: https://cloud.githubusercontent.com/assets/5716520/24837754/982064c4-1d3b-11e7-9610-bbdd758c97b5.png
     :target: https://coala.io/
 
-coala.io: Linting and fixing code for all languages
----------------------------------------------------
+=====
 
-coala provides a unified command-line interface for linting and fixing all
-your code, regardless of the programming languages you use.
+:emphasis:`"Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live."` ― `John F. Woods <http://ruby.zigzo.com/2014/08/01/who-said-that-one-violent-psychopath-quote/>`_
 
-Please visit `coala.io <https://coala.io>`__ for an introduction to coala, to
-see the supported rules and checks or to contribute!
+=====
 
-|Linux Build Status| |Windows Build status| |Scrutinizer Code Quality|
-|codecov.io| |Documentation Status| |Gitmate| |AGPL| |Chat|
+|Linux Build Status| |Windows Build status| |macOS Build Status|
+|codecov.io| |Documentation Status| |AGPL|
 
-.. image:: https://cloud.githubusercontent.com/assets/5716520/24838493/1c5ee0e6-1d49-11e7-9b2b-85f0c6bc2c60.png
-   :alt: Awards - Yegor256 2016 Winner
+=====
 
-.. |Chat| image:: https://badges.gitter.im/coala/coala.svg
-    :target: https://coala.io/chat
+`coala <https://coala.io>`_ provides a unified interface for linting and fixing code with a single configuration file, regardless of the programming languages used. You can use coala from within your favorite editor, integrate it with your CI, get the results as JSON, or customize it to your needs with its flexible configuration syntax.
+
+coala supports popular programming languages including **Python**, **C/C++**, **Java**, **JavaScript**, **CSS**, and `several others <http://coala.io/#!/languages>`_ out of the box.
+
+
+`Install coala <http://coala.io/#!/home#installation>`_ | `Get Involved <http://coala.io/#!/getinvolved>`_ | `Chat <https://coala.io/chat>`_ | `Roadmap <https://projects.coala.io>`_ | `Blog <http://blog.coala.io>`_ | `Twitter <https://www.twitter.com/coala_io>`_
+
+
 .. |Linux Build Status| image:: https://img.shields.io/circleci/project/coala/coala/master.svg?label=linux%20build
    :target: https://circleci.com/gh/coala/coala
 .. |Windows Build status| image:: https://img.shields.io/appveyor/ci/coala/coala/master.svg?label=windows%20build
    :target: https://ci.appveyor.com/project/coala/coala/branch/master
-.. |Scrutinizer Code Quality| image:: https://img.shields.io/scrutinizer/g/coala-analyzer/coala.svg?label=scrutinizer%20quality
-   :target: https://scrutinizer-ci.com/g/coala-analyzer/coala/?branch=master
+.. |macOS Build Status| image:: https://img.shields.io/travis/coala/coala/master.svg?label=macOS%20build
+   :target: https://travis-ci/coala/coala
 .. |codecov.io| image:: https://img.shields.io/codecov/c/github/coala/coala/master.svg?label=branch%20coverage
    :target: https://codecov.io/github/coala/coala?branch=master
 .. |Documentation Status| image:: https://readthedocs.org/projects/coala/badge/?version=latest
    :target: http://docs.coala.io/
-.. |AGPL| image:: https://img.shields.io/github/license/coala/coala.svg
+.. |AGPL| image:: https://img.shields.io/pypi/l/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
-.. |Gitmate| image:: https://img.shields.io/badge/Gitmate-0%20issues-brightgreen.svg
-   :target: http://gitmate.io/
