@@ -44,15 +44,25 @@ To do this, you can use these to clone the coala/coala-bears repositories:
 
 ::
 
-    $ git clone https://github.com/coala/coala
+    $ git clone -o upstream https://github.com/coala/coala
 
 or
 
 ::
 
-    $ git clone https://github.com/coala/coala-bears
+    $ git clone -o upstream https://github.com/coala/coala-bears
 
-You should ideally clone the fork so that gets set to 'origin' automatically.
+.. note::
+
+    ``-o upstream`` sets the remote name of the original coala/coala-bears
+    repositories as ``upstream``.
+
+    **upstream** is just a name we used for simplicity. You can name it
+    however you want.
+
+    Don't worry if you're not familiar with what remotes are. The following
+    section will explain more about remotes.
+
 Now you have all your code on your local machine!
 
 Getting to work
@@ -62,8 +72,9 @@ First let's talk about remotes. To communicate with the outside world, git uses
 what are called remotes. These are repositories other than the one on your
 local disk which you can push your changes into (so that other people can see
 them) or pull from (so that you can get others changes).
-Now you should add a remote to your local machine so that you can ``pull`` and
-``push`` your commits. This can be simply done by using the command:
+Now you should add a remote of your fork to your local machine so that you can
+``pull`` and ``push`` your commits. This can be simply done by using the
+command:
 
 ::
 
@@ -255,22 +266,22 @@ the desired branch:
 
 .. note::
 
-    This assumes that the remote ``origin`` is the original
+    This assumes that the remote ``upstream`` is the original
     coala repository at https://github.com/coala/coala (or other,
     like coala/coala-bears, etc.), **not your fork**.
 
     If you have followed the steps outlined in this guide and cloned
-    the original coala repository, ``origin`` should refer to it.
+    the original coala repository, ``upstream`` should refer to it.
     You can proceed to the following section without worry.
 
     If you're unsure about this, run ``git remote -v`` to check which
     remote points to the original repository and use that instead
-    of ``origin`` in the following section.
+    of ``upstream`` in the following section.
 
 ::
 
-    $ git fetch origin
-    $ git rebase origin/master
+    $ git fetch upstream
+    $ git rebase upstream/master
 
 This will fetch the commits from the remote repository and will merge it into
 the branch where you are currently working, and move all of the local commits
