@@ -40,12 +40,35 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
+STR_INVALID_OPTION_ENTERED = 'Please enter a valid number.'
 
 
 class TestAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict, param):
         pass
+
+
+class TestAction1(ResultAction):
+
+    SUCCESS_MESSAGE = 'TestAction1 executed successfully'
+
+    def apply(self, result, original_file_dict, file_diff_dict):
+        """
+        TestAction1 description
+        """
+        return
+
+
+class TestAction2(ResultAction):
+
+    SUCCESS_MESSAGE = 'TestAction2 executed successfully'
+
+    def apply(self, result, original_file_dict, file_diff_dict):
+        """
+        TestAction2 description
+        """
+        return
 
 
 class TestBear(Bear):
@@ -261,6 +284,93 @@ class ConsoleInteractionTest(unittest.TestCase):
                          self.file_diff_dict,
                          Result('origin', 'msg', diffs={}),
                          {})
+
+        # Tests the behavior of Result objects with non-empty ``actions`` field
+        with retrieve_stdout() as stdout, \
+                simulate_console_inputs(0) as input_generator:
+            action_1 = TestAction1()
+            action_2 = TestAction2()
+
+            # Add custom actions to the result
+            result = Result('origin',
+                            'msg',
+                            actions=[action_1, action_2])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+            # check if the custom actions are being displayed
+            self.assertIn('|    |  1: TestAction1 description\n', output)
+            self.assertIn('|    |  2: TestAction2 description\n', output)
+            self.assertEqual(input_generator.last_input, 0)
+
+        with retrieve_stdout() as stdout, \
+                simulate_console_inputs(0) as input_generator:
+            TestAction1.is_applicable = staticmethod(lambda *args: False)
+            action_1 = TestAction1()
+            action_2 = TestAction2()
+
+            result = Result('origin',
+                            'msg',
+                            actions=[action_1, action_2])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+            # check if the custom actions are being displayed according to
+            # the applicability
+            self.assertNotIn('|    |  1: TestAction1 description\n', output)
+            self.assertIn('|    |  1: TestAction2 description\n', output)
+            self.assertEqual(input_generator.last_input, 0)
+
+        with simulate_console_inputs(2, 0) as generator, \
+                retrieve_stdout() as stdout:
+            action_2 = TestAction2()
+
+            result = Result('origin',
+                            'msg',
+                            actions=[action_2])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+            # As the number of actions are less than 3, error message
+            # should be displayed
+            self.assertIn('|    | '.format(STR_INVALID_OPTION_ENTERED),
+                          output)
+            self.assertEqual(generator.last_input, 1)
+
+        with simulate_console_inputs(1, 0) as generator, \
+                retrieve_stdout() as stdout:
+            action_2 = TestAction2()
+
+            result = Result('origin',
+                            'msg',
+                            actions=[action_2])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+            # Check if action_2 was executed
+            self.assertIn('|    | '.format(action_2.SUCCESS_MESSAGE),
+                          output)
+            self.assertEqual(generator.last_input, 1)
 
         with make_temp() as testfile_path:
             file_dict = {

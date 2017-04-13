@@ -78,12 +78,12 @@ CAPABILITY_COLOR = 'green'
 HIGHLIGHTED_CODE_COLOR = 'red'
 SUCCESS_COLOR = 'green'
 REQUIRED_SETTINGS_COLOR = 'green'
-CLI_ACTIONS = (OpenEditorAction(),
-               ApplyPatchAction(),
-               PrintDebugMessageAction(),
-               PrintMoreInfoAction(),
-               ShowPatchAction(),
-               IgnoreResultAction())
+NATIVE_ACTIONS = (OpenEditorAction(),
+                  ApplyPatchAction(),
+                  PrintDebugMessageAction(),
+                  PrintMoreInfoAction(),
+                  ShowPatchAction(),
+                  IgnoreResultAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
@@ -133,7 +133,7 @@ def acquire_actions_and_apply(console_printer,
                             key.
     :param cli_actions:     The list of cli actions available.
     """
-    cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
+    cli_actions = NATIVE_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     while True:
         actions = []
@@ -146,6 +146,8 @@ def acquire_actions_and_apply(console_printer,
 
         action_dict = {}
         metadata_list = []
+        # FIXME: If we want to allow users to add multiple actions of same
+        # type, ``metadata.name`` should not be used as a key for action_dict
         for action in actions:
             metadata = action.get_metadata()
             action_dict[metadata.name] = action
@@ -250,7 +252,9 @@ def print_result(console_printer,
     console_printer.print(format_lines(result.message))
 
     if interactive:
-        cli_actions = CLI_ACTIONS
+        # FIXME: Handle duplicate actions of same type across
+        # NATIVE_ACTIONS and result.actions
+        cli_actions = NATIVE_ACTIONS + tuple(result.actions)
         show_patch_action = ShowPatchAction()
         if show_patch_action.is_applicable(
                 result, file_dict, file_diff_dict) is True:
