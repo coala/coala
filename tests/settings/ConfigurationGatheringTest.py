@@ -20,6 +20,9 @@ from coalib.settings.ConfigurationGathering import (
 @pytest.mark.usefixtures('disable_bears')
 class ConfigurationGatheringTest(unittest.TestCase):
 
+    CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+    TEST_DIR = os.path.join(CURRENT_DIR, 'section_manager_test_files')
+
     def setUp(self):
         self.log_printer = LogPrinter(NullPrinter())
 
@@ -31,6 +34,37 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
     def test_gather_configuration(self):
         args = (lambda *args: True, self.log_printer)
+        logger = logging.getLogger()
+
+        with change_directory(self.TEST_DIR), \
+                self.assertLogs(logger, 'WARNING') as cm:
+            sections, _, _, _ = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-c', 'inherit_coafile', '-e', 'java.test'])
+
+        self.assertRaises(KeyError, lambda: sections['java.test'])
+
+        with change_directory(self.TEST_DIR), \
+                self.assertLogs(logger, 'WARNING') as cm:
+            sections, _, _, _ = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-c', 'inherit_coafile', '-e', 'java.test',
+                          'all.python'])
+
+        self.assertRaises(KeyError, lambda: sections['java.test'])
+        self.assertRaises(KeyError, lambda: sections['all.python'])
+
+        with change_directory(self.TEST_DIR), \
+                self.assertLogs(logger, 'WARNING') as cm:
+            sections, _, _, _ = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-c', 'inherit_coafile', '-e', 'not_section', '-f',
+                          '*.java'])
+
+        self.assertRaises(KeyError, lambda: sections['not_section'])
 
         # Using incomplete settings (e.g. an invalid coafile) will error
         with self.assertRaises(SystemExit):
@@ -223,8 +257,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(targets, ['cli', 'test1', 'test2'])
 
     def test_find_user_config(self):
-        current_dir = os.path.abspath(os.path.dirname(__file__))
-        c_file = os.path.join(current_dir,
+        c_file = os.path.join(self.CURRENT_DIR,
                               'section_manager_test_files',
                               'project',
                               'test.c')
@@ -233,15 +266,15 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual('', retval)
 
         retval = find_user_config(c_file, 2)
-        self.assertEqual(os.path.join(current_dir,
+        self.assertEqual(os.path.join(self.CURRENT_DIR,
                                       'section_manager_test_files',
                                       '.coafile'), retval)
 
-        child_dir = os.path.join(current_dir,
+        child_dir = os.path.join(self.CURRENT_DIR,
                                  'section_manager_test_files',
                                  'child_dir')
         retval = find_user_config(child_dir, 2)
-        self.assertEqual(os.path.join(current_dir,
+        self.assertEqual(os.path.join(self.CURRENT_DIR,
                                       'section_manager_test_files',
                                       'child_dir',
                                       '.coafile'), retval)
@@ -254,8 +287,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             self.assertEqual(bool(sections['cli']['find_config']), True)
 
     def test_no_config(self):
-        current_dir = os.path.abspath(os.path.dirname(__file__))
-        child_dir = os.path.join(current_dir,
+        child_dir = os.path.join(self.CURRENT_DIR,
                                  'section_manager_test_files',
                                  'child_dir')
         with change_directory(child_dir):
@@ -286,11 +318,9 @@ class ConfigurationGatheringTest(unittest.TestCase):
                 self.assertEqual(cm.exception.code, 2)
 
     def test_section_inheritance(self):
-        current_dir = os.path.abspath(os.path.dirname(__file__))
-        test_dir = os.path.join(current_dir, 'section_manager_test_files')
         logger = logging.getLogger()
 
-        with change_directory(test_dir), \
+        with change_directory(self.TEST_DIR), \
                 self.assertLogs(logger, 'WARNING') as cm:
             sections, _, _, _ = gather_configuration(
                 lambda *args: True,
