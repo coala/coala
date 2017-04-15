@@ -43,10 +43,15 @@ STR_PROJECT_WIDE = 'Project wide:'
 STR_INVALID_OPTION_ENTERED = 'Please enter a valid number.'
 
 
-class TestAction(ResultAction):
+class TestActionWithParam(ResultAction):
+
+    SUCCESS_MESSAGE = 'TestActionWithParam executed successfully'
 
     def apply(self, result, original_file_dict, file_diff_dict, param):
-        pass
+        """
+        TestActionWithParam description
+        """
+        return
 
 
 class TestAction1(ResultAction):
@@ -186,6 +191,23 @@ class ConsoleInteractionTest(unittest.TestCase):
         OpenEditorAction.is_applicable = self.old_open_editor_applicable
         ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
 
+    def assertActionDisplayed(self, action, position, output):
+        action_choice_string = '|    |  {}: {}\n'.format(
+            position, action.get_metadata().desc)
+
+        self.assertIn(action_choice_string, output)
+
+    def assertActionNotDisplayed(self, action, output):
+        self.assertNotIn(action.get_metadata().desc, output)
+
+    def assertActionExecuted(self, action, output):
+        action_executed_string = '|    | {}'.format(action.SUCCESS_MESSAGE)
+        self.assertIn(action_executed_string, output)
+
+    def assertActionNotExecuted(self, action, output):
+        action_executed_string = '|    | '.format(action.SUCCESS_MESSAGE)
+        self.assertNotIn(action_executed_string, output)
+
     def test_require_settings(self):
         curr_section = Section('')
         self.assertRaises(TypeError, acquire_settings,
@@ -304,8 +326,8 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             output = stdout.getvalue()
             # check if the custom actions are being displayed
-            self.assertIn('|    |  1: TestAction1 description\n', output)
-            self.assertIn('|    |  2: TestAction2 description\n', output)
+            self.assertActionDisplayed(action_1, 1, output)
+            self.assertActionDisplayed(action_2, 2, output)
             self.assertEqual(input_generator.last_input, 0)
 
         with retrieve_stdout() as stdout, \
@@ -327,8 +349,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             output = stdout.getvalue()
             # check if the custom actions are being displayed according to
             # the applicability
-            self.assertNotIn('|    |  1: TestAction1 description\n', output)
-            self.assertIn('|    |  1: TestAction2 description\n', output)
+            self.assertActionNotDisplayed(action_1, output)
+            self.assertActionDisplayed(action_2, 1, output)
             self.assertEqual(input_generator.last_input, 0)
 
         with simulate_console_inputs(2, 0) as generator, \
@@ -368,8 +390,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             output = stdout.getvalue()
             # Check if action_2 was executed
-            self.assertIn('|    | '.format(action_2.SUCCESS_MESSAGE),
-                          output)
+            self.assertActionExecuted(action_2, output)
             self.assertEqual(generator.last_input, 1)
 
         with make_temp() as testfile_path:
@@ -408,12 +429,13 @@ class ConsoleInteractionTest(unittest.TestCase):
 
                 os.remove(testfile_path + '.orig')
 
-                name, section = get_action_info(curr_section,
-                                                TestAction().get_metadata(),
-                                                failed_actions=set())
+                name, section = get_action_info(
+                    curr_section,
+                    TestActionWithParam().get_metadata(),
+                    failed_actions=set())
                 self.assertEqual(input_generator.last_input, 4)
                 self.assertEqual(str(section), " {param : '3'}")
-                self.assertEqual(name, 'TestAction')
+                self.assertEqual(name, 'TestActionWithParam')
 
         # Check if the user is asked for the parameter only the first time.
         # Use OpenEditorAction that needs this parameter (editor command).
@@ -506,24 +528,24 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_ask_for_actions_and_apply(self):
         failed_actions = set()
-        action = TestAction()
+        action = TestActionWithParam()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [action.get_metadata()], {'TestActionWithParam': action},
                 failed_actions, Result('origin', 'message'), {}, {}]
 
         with simulate_console_inputs(1, 'param1', 1, 'param2') as generator:
             action.apply = unittest.mock.Mock(side_effect=AssertionError)
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 1)
-            self.assertIn('TestAction', failed_actions)
+            self.assertIn('TestActionWithParam', failed_actions)
 
             action.apply = lambda *args, **kwargs: {}
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 3)
-            self.assertNotIn('TestAction', failed_actions)
+            self.assertNotIn('TestAction1', failed_actions)
 
     def test_default_input(self):
-        action = TestAction()
+        action = TestActionWithParam()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()], {'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}]
