@@ -14,6 +14,9 @@ class ResultAction:
 
     multiple_allowed = False
 
+    def __init__(self):
+        self.next_actions = []
+
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
         """
