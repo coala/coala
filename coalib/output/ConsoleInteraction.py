@@ -601,6 +601,51 @@ def print_actions(console_printer, section, actions, failed_actions):
     return get_action_info(section, actions[choice - 1], failed_actions)
 
 
+def apply_action_to_section(action,
+                            section,
+                            action_name,
+                            result,
+                            file_dict,
+                            file_diff_dict,
+                            console_printer,
+                            failed_actions):
+    """
+    Applies the given action.
+
+    :param action:          The action to the applied.
+    :param section:         Currently active section.
+    :param action_name:     The name of the action.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If it is an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    :param console_printer: Object to print messages on the console.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :return:                Returns the action, if action is executed without
+                            any Exception.
+    """
+    try:
+        action.apply_from_section(result,
+                                  file_dict,
+                                  file_diff_dict,
+                                  section)
+        console_printer.print(
+            format_lines(action.SUCCESS_MESSAGE),
+            color=SUCCESS_COLOR)
+        failed_actions.discard(action_name)
+
+    except Exception as exception:  # pylint: disable=broad-except
+        logging.error('Failed to execute the action {} with error: {}.'.format(
+            action_name, exception))
+        failed_actions.add(action_name)
+
+    return action
+
+
 def ask_for_action_and_apply(console_printer,
                              section,
                              metadata_list,
@@ -626,9 +671,9 @@ def ask_for_action_and_apply(console_printer,
                             the file with filename as keys.
     :param file_dict:       Dictionary with filename as keys and its contents
                             as values.
-    :return:                Returns a boolean value. True will be returned, if
-                            it makes sense that the user may choose to execute
-                            another action, False otherwise.
+    :return:                The applied action is returned, if it makes sense
+                            that the user may choose to execute another action,
+                            None is returned otherwise..
     """
     action_name, section = print_actions(console_printer, section,
                                          metadata_list, failed_actions)
@@ -636,20 +681,15 @@ def ask_for_action_and_apply(console_printer,
         return False
 
     chosen_action = action_dict[action_name]
-    try:
-        chosen_action.apply_from_section(result,
-                                         file_dict,
-                                         file_diff_dict,
-                                         section)
-        console_printer.print(
-            format_lines(chosen_action.SUCCESS_MESSAGE),
-            color=SUCCESS_COLOR)
-        failed_actions.discard(action_name)
-    except Exception as exception:  # pylint: disable=broad-except
-        logging.error('Failed to execute the action {} with error: {}.'.format(
-            action_name, exception))
-        failed_actions.add(action_name)
-    return True
+
+    return apply_action_to_section(chosen_action,
+                                   section,
+                                   action_name,
+                                   result,
+                                   file_dict,
+                                   file_diff_dict,
+                                   console_printer,
+                                   failed_actions)
 
 
 def show_enumeration(console_printer,
