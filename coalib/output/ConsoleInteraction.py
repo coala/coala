@@ -147,16 +147,44 @@ def acquire_actions_and_apply(console_printer,
             action_dict[metadata.name] = action
             metadata_list.append(metadata)
 
+        applied_action = ask_for_action_and_apply(console_printer,
+                                                  section,
+                                                  metadata_list,
+                                                  action_dict,
+                                                  failed_actions,
+                                                  result,
+                                                  file_diff_dict,
+                                                  file_dict)
+
         # User can always choose no action which is guaranteed to succeed
-        if not ask_for_action_and_apply(console_printer,
-                                        section,
-                                        metadata_list,
-                                        action_dict,
-                                        failed_actions,
-                                        result,
-                                        file_diff_dict,
-                                        file_dict):
+        if not applied_action:
             break
+        else:
+            next_actions = applied_action.next_actions
+
+            # FIXME: currently the code doensn't check for
+            # circular dependencies among the next_actions
+            while next_actions:
+                if len(next_actions) == 1:
+                    # Immediately execute the only action
+                    applied_action = directly_apply_action(next_actions[0],
+                                                           console_printer,
+                                                           section,
+                                                           failed_actions,
+                                                           result,
+                                                           file_diff_dict,
+                                                           file_dict)
+                    next_actions = (applied_action.next_actions
+                                    if applied_action else [])
+
+                if len(next_actions) > 1:
+                    result.actions = next_actions
+                    acquire_actions_and_apply(console_printer,
+                                              section,
+                                              file_diff_dict,
+                                              result,
+                                              file_dict)
+                    break
 
 
 def print_lines(console_printer,
@@ -603,7 +631,6 @@ def print_actions(console_printer, section, actions, failed_actions):
 
 def apply_action_to_section(action,
                             section,
-                            action_name,
                             result,
                             file_dict,
                             file_diff_dict,
@@ -614,7 +641,6 @@ def apply_action_to_section(action,
 
     :param action:          The action to the applied.
     :param section:         Currently active section.
-    :param action_name:     The name of the action.
     :param result:          Result corresponding to the actions.
     :param file_diff_dict:  If it is an action which applies a patch, this
                             contains the diff of the patch to be applied to
@@ -628,6 +654,8 @@ def apply_action_to_section(action,
     :return:                Returns the action, if action is executed without
                             any Exception.
     """
+    action_name = action.get_metadata().name
+
     try:
         action.apply_from_section(result,
                                   file_dict,
@@ -684,7 +712,44 @@ def ask_for_action_and_apply(console_printer,
 
     return apply_action_to_section(chosen_action,
                                    section,
-                                   action_name,
+                                   result,
+                                   file_dict,
+                                   file_diff_dict,
+                                   console_printer,
+                                   failed_actions)
+
+
+def directly_apply_action(action,
+                          console_printer,
+                          section,
+                          failed_actions,
+                          result,
+                          file_diff_dict,
+                          file_dict):
+    """
+    Applies the given action directly without prompting the user.
+
+    :param action:          Action to be applied.
+    :param console_printer: Object to print messages on the console.
+    :param section:         Currently active section.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If it is an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    :return:                The applied action is returned, if it makes sense
+                            that the user may choose to execute another action,
+                            None is returned otherwise.
+    """
+    action_name, section = get_action_info(
+        section, action.get_metadata(), failed_actions)
+
+    return apply_action_to_section(action,
+                                   section,
                                    result,
                                    file_dict,
                                    file_diff_dict,

@@ -15,8 +15,8 @@ from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
     print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
-    show_bear, show_bears, ask_for_action_and_apply, print_diffs_info,
-    show_language_bears_capabilities)
+    show_bear, show_bears, ask_for_action_and_apply, directly_apply_action,
+    print_diffs_info, show_language_bears_capabilities)
 from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
                                               highlight_text)
@@ -72,6 +72,17 @@ class TestAction2(ResultAction):
     def apply(self, result, original_file_dict, file_diff_dict):
         """
         TestAction2 description
+        """
+        return
+
+
+class TestAction3(ResultAction):
+
+    SUCCESS_MESSAGE = 'TestAction3 executed successfully'
+
+    def apply(self, result, original_file_dict, file_diff_dict):
+        """
+        TestAction3 description
         """
         return
 
@@ -526,6 +537,118 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
 
+    def test_acquire_actions_and_apply_next_actions(self):
+        action_1 = TestAction1()
+        action_2 = TestAction2()
+        action_3 = TestAction3()
+
+        # single next action
+        action_1.next_actions = [action_2]
+
+        with simulate_console_inputs(1, 0) as generator, \
+                retrieve_stdout() as stdout:
+
+            result = Result('origin',
+                            'msg',
+                            actions=[action_1])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+
+            self.assertActionExecuted(action_1, output)
+            self.assertActionExecuted(action_2, output)
+
+            # Check if action_2 was applied directly
+            self.assertActionNotDisplayed(action_2, output)
+            self.assertEqual(generator.last_input, 1)
+
+        # multiple next actions
+        action_1.next_actions = [action_2, action_3]
+
+        with simulate_console_inputs(1, 2, 0, 0) as generator, \
+                retrieve_stdout() as stdout:
+            result = Result('origin',
+                            'msg',
+                            actions=[action_1])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+
+            self.assertActionExecuted(action_1, output)
+            self.assertActionExecuted(action_3, output)
+
+            self.assertActionDisplayed(action_2, 1, output)
+            self.assertActionDisplayed(action_3, 2, output)
+
+            self.assertEqual(generator.last_input, 3)
+
+        # single, linearly cascaded actions
+        action_1.next_actions = [action_2]
+        action_2.next_actions = [action_3]
+
+        with simulate_console_inputs(1, 0) as generator, \
+                retrieve_stdout() as stdout:
+
+            result = Result('origin',
+                            'msg',
+                            actions=[action_1])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+
+            self.assertActionExecuted(action_1, output)
+            self.assertActionExecuted(action_2, output)
+            self.assertActionExecuted(action_3, output)
+
+            self.assertActionNotDisplayed(action_2, output)
+            self.assertActionNotDisplayed(action_3, output)
+
+            self.assertEqual(generator.last_input, 1)
+
+        # multiple, linearly cascaded actions
+        action_4 = TestActionWithParam()
+        action_1.next_actions = [action_2, action_3]
+        action_2.next_actions = [action_4]
+
+        with simulate_console_inputs(1, 1, 0, 0, 0) as generator, \
+                retrieve_stdout() as stdout:
+
+            result = Result('origin',
+                            'msg',
+                            actions=[action_1])
+
+            print_result(self.console_printer,
+                         self.section,
+                         self.file_diff_dict,
+                         result,
+                         {})
+
+            output = stdout.getvalue()
+
+            self.assertActionExecuted(action_1, output)
+            self.assertActionExecuted(action_2, output)
+            self.assertActionExecuted(action_4, output)
+
+            self.assertActionDisplayed(action_2, 1, output)
+            self.assertActionDisplayed(action_3, 2, output)
+            self.assertActionNotDisplayed(action_4, output)
+            self.assertEqual(generator.last_input, 4)
+
     def test_ask_for_actions_and_apply(self):
         failed_actions = set()
         action = TestActionWithParam()
@@ -543,6 +666,38 @@ class ConsoleInteractionTest(unittest.TestCase):
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('TestAction1', failed_actions)
+
+    def test_directly_apply_action(self):
+        failed_actions = set()
+        action = TestAction1()
+        args = [action, self.console_printer, Section(''),
+                failed_actions, Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs(0) as generator:
+            action.apply = unittest.mock.Mock(side_effect=AssertionError)
+            directly_apply_action(*args)
+            self.assertEqual(generator.last_input, -1)
+            self.assertIn('TestAction1', failed_actions)
+
+            action.apply = lambda *args, **kwargs: {}
+            directly_apply_action(*args)
+            self.assertEqual(generator.last_input, -1)
+            self.assertNotIn('TestAction1', failed_actions)
+
+        action = TestActionWithParam()
+        args = [action, self.console_printer, Section(''),
+                failed_actions, Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs(0, 0) as generator:
+            action.apply = unittest.mock.Mock(side_effect=AssertionError)
+            directly_apply_action(*args)
+            self.assertEqual(generator.last_input, 0)
+            self.assertIn('TestActionWithParam', failed_actions)
+
+            action.apply = lambda *args, **kwargs: {}
+            directly_apply_action(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertNotIn('TestActionWithParam', failed_actions)
 
     def test_default_input(self):
         action = TestActionWithParam()
