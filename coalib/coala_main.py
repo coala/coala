@@ -8,6 +8,7 @@ from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.Logging import CounterHandler
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.misc.Caching import FileCache
@@ -124,7 +125,9 @@ def run_coala(console_printer=None,
         if cache:
             cache.write()
 
-        if did_nothing:
+        if CounterHandler.get_num_calls_for_level('ERROR') > 0:
+            exitcode = 1
+        elif did_nothing:
             nothing_done(log_printer)
             exitcode = 2
         elif yielded_unfixed_results:

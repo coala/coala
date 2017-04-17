@@ -5,7 +5,6 @@ from collections import OrderedDict
 
 from coalib.collecting.Collectors import collect_registered_bears_dirs
 from coala_utils.decorators import enforce_signature, generate_repr
-from coala_utils.string_processing import unescape
 from coalib.misc.DictUtilities import update_ordered_dict_key
 from coalib.settings.Setting import Setting, path_list
 from coalib.parsing.Globbing import glob_escape

@@ -23,6 +23,8 @@ class coalaCITest(unittest.TestCase):
             coala_ci.main, 'coala-ci', '--help')
         self.assertIn('usage: coala', stdout)
         self.assertIn('Use of `coala-ci` binary is deprecated', stderr)
+        self.assertEqual(retval, 0,
+                         'coala must return zero when successful')
 
     def test_nonexistent(self):
         retval, stdout, stderr = execute_coala(
@@ -31,6 +33,8 @@ class coalaCITest(unittest.TestCase):
         self.assertRegex(
             stderr,
             ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
+        self.assertNotEqual(retval, 0,
+                            'coala must return nonzero when errors occured')
 
     def test_find_no_issues(self):
         with bear_test_module(), \
@@ -46,7 +50,7 @@ class coalaCITest(unittest.TestCase):
             self.assertIn('Executing section cli', stdout)
             self.assertFalse(stderr)
             self.assertEqual(retval, 0,
-                             'coala-ci must return zero when successful')
+                             'coala must return zero when successful')
 
     def test_find_issues(self):
         with bear_test_module(), \
@@ -61,7 +65,7 @@ class coalaCITest(unittest.TestCase):
                           'The output should report count as 1 lines')
             self.assertIn('This result has no patch attached.', stderr)
             self.assertNotEqual(retval, 0,
-                                'coala-ci was expected to return non-zero')
+                                'coala must return nonzero when errors occured')
 
     def test_show_patch(self):
         with bear_test_module(), \
@@ -75,7 +79,7 @@ class coalaCITest(unittest.TestCase):
             self.assertIn('Line contains ', stdout)  # Result message is shown
             self.assertIn("Applied 'ShowPatchAction'", stderr)
             self.assertEqual(retval, 5,
-                             'coala-ci must return exitcode 5 when it '
+                             'coala must return exitcode 5 when it '
                              'autofixes the code.')
 
     def test_fail_acquire_settings(self):
@@ -86,3 +90,5 @@ class coalaCITest(unittest.TestCase):
                                                    '-c', os.devnull)
             self.assertFalse(stdout)
             self.assertIn('During execution, we found that some', stderr)
+            self.assertNotEqual(retval, 0,
+                                'coala was expected to return non-zero')

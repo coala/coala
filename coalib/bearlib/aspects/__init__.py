@@ -1,111 +1,81 @@
+import re
+import sys
+from importlib import import_module
+from inspect import getmembers
+from pkgutil import iter_modules
+from types import ModuleType
+
 from .base import aspectbase
 from .meta import aspectclass
 from .taste import Taste, TasteError
 
-__all__ = ['Root', 'Taste', 'TasteError', 'aspectclass']
+# already import Root here to make it available in submodules that define
+# `Root.subaspect`s, which get imported in wrapper `aspectsModule.__init__`
+# before this module gets replaced with that wrapper in sys.modules
+from .root import Root
 
 
-class Root(aspectbase, metaclass=aspectclass):
+__all__ = ['Root', 'Taste', 'TasteError', 'aspectclass', 'aspectbase']
+
+
+class aspectsModule(ModuleType):
     """
-    The root aspectclass.
+    A special module wrapper for ``coalib.bearlib.aspects``, allowing
+    case-insensitive aspect lookup by name via direct indexing :)
 
-    Define sub-aspectclasses with class-bound ``.subaspect`` decorator.
-    Definition string is taken from doc-string of decorated class.
-    Remaining docs are taken from a nested ``docs`` class.
-    Tastes are defined as class attributes that are instances of
-    :class:`coalib.bearlib.aspects.Taste`.
+    >>> import coalib.bearlib.aspects
 
-    >>> @Root.subaspect
-    ... class Formatting:
-    ...     \"""
-    ...     A parent aspect for code formatting aspects...
-    ...     \"""
+    >>> coalib.bearlib.aspects['Metadata']
+    <aspectclass 'Root.Metadata'>
 
-    We can now create subaspects like this:
+    >>> coalib.bearlib.aspects['commitmessage']
+    <aspectclass 'Root.Metadata.CommitMessage'>
 
-    >>> @Formatting.subaspect
-    ... class LineLength:
-    ...     \"""
-    ...     This aspect controls the length of a line...
-    ...     \"""
-    ...     class docs:
-    ...        example = "..."
-    ...        example_language = "..."
-    ...        importance_reason = "..."
-    ...        fix_suggestions = "..."
-    ...
-    ...     max_line_length = Taste[int](
-    ...         "Maximum length allowed for a line.",
-    ...         (80, 90, 120), default=80)
-
-    The representation will show the full "path" to the leaf of the tree:
-
-    >>> Root.Formatting.LineLength
-    <aspectclass 'Root.Formatting.LineLength'>
-
-    We can see, which settings are availables:
-
-    >>> Formatting.tastes
-    {}
-    >>> LineLength.tastes
-    {'max_line_length': <....Taste[int] object at ...>}
-
-    And instantiate the aspect with the values, they will be automatically
-    converted:
-
-    >>> Formatting('Python')
-    <coalib.bearlib.aspects.Root.Formatting object at 0x...>
-    >>> LineLength('Python', max_line_length="100").tastes
-    {'max_line_length': 100}
-
-    If no settings are given, the defaults will be taken:
-
-    >>> LineLength('Python').tastes
-    {'max_line_length': 80}
-
-    Tastes can also be made available for only specific languages:
-
-    >>> from coalib.bearlib.languages import Language
-    >>> @Language
-    ... class GreaterTrumpScript:
-    ...     pass
-
-    >>> @Formatting.subaspect
-    ... class Greatness:
-    ...     \"""
-    ...     This aspect controls the greatness of a file...
-    ...     \"""
-    ...
-    ...     min_greatness = Taste[int](
-    ...         "Minimum greatness factor needed for a TrumpScript file. "
-    ...         "This is fact.",
-    ...         (1000000, 1000000000, 1000000000000), default=1000000,
-    ...         languages=('GreaterTrumpScript' ,))
-
-    >>> Greatness.tastes
-    {'min_greatness': <....Taste[int] object at ...>}
-    >>> Greatness('GreaterTrumpScript').tastes
-    {'min_greatness': 1000000}
-    >>> Greatness('GreaterTrumpScript', min_greatness=1000000000000).tastes
-    {'min_greatness': 1000000000000}
-
-    >>> Greatness('Python').tastes
-    {}
-
-    >>> Greatness('Python', min_greatness=1000000000)
-    ... # doctest: +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-      ...
-    coalib.bearlib.aspects.taste.TasteError:
-    Root.Formatting.Greatness.min_greatness is not available ...
-
-    >>> Greatness('Python').min_greatness
-    ... # doctest: +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-      ...
-    coalib.bearlib.aspects.taste.TasteError:
-    Root.Formatting.Greatness.min_greatness is not available ...
+    >>> coalib.bearlib.aspects['shortlog.colonExistence']
+    <aspectclass 'Root.Metadata.CommitMessage.Shortlog.ColonExistence'>
     """
-    parent = None
 
-    _tastes = {}
+    def __init__(self, module):
+        """
+        Take over all members from original `module` object and load all
+        direct ``Root.subaspect`` classes from their corresponding submodules
+        (all submodules starting with uppercase letters), and add them as
+        members to this wrapper module.
+        """
+        super().__init__(module.__name__)
+        self.__dict__.update(getmembers(module))
+        for _, submodname, _ in iter_modules(module.__path__):
+            if submodname[0].isupper():
+                submod = import_module('.' + submodname, module.__name__)
+                subaspect = getattr(submod, submodname)
+                setattr(self, submodname, subaspect)
+
+    def __getitem__(self, aspectname):
+        regex = re.compile('(^|\.)%s$' % aspectname.lower())
+        matches = []
+
+        def search(aspects):
+            """
+            Recursively search in `aspects` for those matching
+            case-insensitively the given ``aspectname``.
+            """
+            for aspect in aspects:
+                if regex.search(aspect.__qualname__.lower()):
+                    matches.append(aspect)
+                if aspect.subaspects:
+                    search(aspect.subaspects.values())
+
+        search([Root])
+        if not matches:
+            raise LookupError('no aspect named %s' % repr(aspectname))
+
+        if len(matches) > 1:
+            raise LookupError('multiple aspects named %s. choose from %s' % (
+                repr(aspectname),
+                repr(sorted(matches, key=lambda a: a.__qualname__))))
+
+        return matches[0]
+
+
+# replace original module with wrapper
+sys.modules[__name__] = aspectsModule(sys.modules[__name__])

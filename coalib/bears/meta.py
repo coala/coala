@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+from coalib.bearlib.aspects.collections import aspectlist
+
 
 class bearclass(type):
     """
@@ -10,7 +12,7 @@ class bearclass(type):
     """
 
     # by default a bear class has no aspects
-    aspects = defaultdict(lambda: [])
+    aspects = defaultdict(lambda: aspectlist([]))
 
     def __new__(mcs, clsname, bases, clsattrs, *varargs, aspects=None):
         return type.__new__(mcs, clsname, bases, clsattrs, *varargs)
@@ -22,4 +24,6 @@ class bearclass(type):
         """
         type.__init__(cls, clsname, bases, clsattrs, *varargs)
         if aspects is not None:
-            cls.aspects = defaultdict(lambda: [], aspects)
+            cls.aspects = defaultdict(
+                lambda: aspectlist([]),
+                ((k, aspectlist(v)) for (k, v) in dict(aspects).items()))

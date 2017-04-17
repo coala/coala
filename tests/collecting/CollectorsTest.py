@@ -308,7 +308,8 @@ class CollectorsTests(unittest.TestCase):
                  'LineCountTestBear',
                  'JavaTestBear',
                  'SpaceConsistencyTestBear',
-                 'TestBear'})
+                 'TestBear',
+                 'ErrorTestBear'})
 
     def test_get_all_bears_names(self):
         with bear_test_module():
@@ -321,4 +322,5 @@ class CollectorsTests(unittest.TestCase):
                  'LineCountTestBear',
                  'JavaTestBear',
                  'SpaceConsistencyTestBear',
-                 'TestBear'})
+                 'TestBear',
+                 'ErrorTestBear'})

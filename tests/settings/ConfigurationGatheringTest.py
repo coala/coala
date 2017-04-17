@@ -15,7 +15,6 @@ from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
     find_user_config, gather_configuration, load_configuration)
-from coalib.settings.Section import append_to_sections
 
 
 @pytest.mark.usefixtures('disable_bears')

@@ -9,6 +9,7 @@ from time import sleep
 import requests
 import requests_mock
 
+from coalib.bearlib.aspects.collections import aspectlist
 from coalib.bearlib.aspects.Metadata import CommitMessage
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
@@ -142,26 +143,42 @@ class BearTest(BearTestBase):
 
     def test_default_aspects(self):
         assert type(Bear.aspects) is defaultdict
+        assert type(Bear.aspects['detect']) is aspectlist
+        assert type(Bear.aspects['fix']) is aspectlist
         assert Bear.aspects['detect'] == Bear.aspects['fix'] == []
 
     def test_no_fix_aspects(self):
         assert type(aspectsDetectOnlyTestBear.aspects) is defaultdict
+        assert type(aspectsDetectOnlyTestBear.aspects['detect']) is aspectlist
+        assert type(aspectsDetectOnlyTestBear.aspects['fix']) is aspectlist
         assert aspectsDetectOnlyTestBear.aspects['fix'] == []
         assert (aspectsDetectOnlyTestBear.aspects['detect'] ==
                 [CommitMessage.Shortlog.ColonExistence])
+        assert (CommitMessage.Shortlog.ColonExistence in
+                aspectsDetectOnlyTestBear.aspects['detect'])
 
     def test_no_detect_aspects(self):
         assert type(aspectsFixOnlyTestBear.aspects) is defaultdict
+        assert type(aspectsFixOnlyTestBear.aspects['detect']) is aspectlist
+        assert type(aspectsFixOnlyTestBear.aspects['fix']) is aspectlist
         assert aspectsFixOnlyTestBear.aspects['detect'] == []
         assert (aspectsFixOnlyTestBear.aspects['fix'] ==
                 [CommitMessage.Shortlog.TrailingPeriod])
+        assert (CommitMessage.Shortlog.TrailingPeriod in
+                aspectsFixOnlyTestBear.aspects['fix'])
 
     def test_detect_and_fix_aspects(self):
         assert type(aspectsTestBear.aspects) is defaultdict
+        assert type(aspectsTestBear.aspects['detect']) is aspectlist
+        assert type(aspectsTestBear.aspects['fix']) is aspectlist
         assert aspectsTestBear.aspects == {
             'detect': [CommitMessage.Shortlog.ColonExistence],
             'fix': [CommitMessage.Shortlog.TrailingPeriod],
         }
+        assert (CommitMessage.Shortlog.ColonExistence in
+                aspectsTestBear.aspects['detect'])
+        assert (CommitMessage.Shortlog.TrailingPeriod in
+                aspectsTestBear.aspects['fix'])
 
     def test_simple_api(self):
         self.assertRaises(TypeError, TestBear, self.settings, 2)
