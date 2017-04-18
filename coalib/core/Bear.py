@@ -7,10 +7,10 @@ from os.path import join, abspath, exists
 
 from appdirs import user_data_dir
 
-from coala_utils.decorators import (enforce_signature, classproperty,
-                                    get_public_members)
+from coala_utils.decorators import classproperty, get_public_members
 
 import requests
+import attr
 
 from coalib.results.Result import Result
 from coalib.settings.ConfigurationGathering import get_config_directory
@@ -18,6 +18,7 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
 
+@attr.s
 class Bear:
     """
     A bear contains the actual subroutine that is responsible for checking
@@ -27,6 +28,16 @@ class Bear:
     This is the base class for every bear. If you want to write a bear, you
     will probably want to look at the ``ProjectBear`` and ``FileBear`` classes
     that inherit from this class.
+
+    To instantiate a bear, pass a section which contains the bear setting and
+    a file-dictionary (that maps filenames to the according file contents):
+
+    >>> section = Section('my-section')
+    >>> file_dict = {'file.py': ['This is a one-liner\\n']}
+    >>> bear = Bear(section, file_dict)
+
+    On instantiation, a ``RuntimeError`` is raised when the bear requirements
+    are not fulfilled.
 
     To indicate which languages your bear supports, just give it the
     ``LANGUAGES`` value which should be a set of string(s):
@@ -131,6 +142,13 @@ class Bear:
     ASCIINEMA_URL = ''
     BEAR_DEPS = set()
 
+    section = attr.ib(hash=False,
+                      validator=attr.validators.instance_of(Section))
+    file_dict = attr.ib(hash=False,
+                        validator=attr.validators.instance_of(dict))
+    _dependency_results = attr.ib(init=False, default=defaultdict(list),
+                                  hash=False)
+
     @classproperty
     def name(cls):
         """
@@ -179,24 +197,11 @@ class Bear:
                 if cls.MAINTAINERS_EMAILS == set() else
                 cls.MAINTAINERS_EMAILS)
 
-    @enforce_signature
-    def __init__(self, section: Section, file_dict: dict):
+    def __attrs_post_init__(self):
         """
-        Constructs a new bear.
-
-        :param section:
-            The section object where bear settings are contained.
-        :param file_dict:
-            The file-dictionary containing a mapping of filenames to the
-            according file contents.
-        :raises RuntimeError:
-            Raised when bear requirements are not fulfilled.
+        This function is called after all attributes are initialized.
+        It checks for prerequisites.
         """
-        self.section = section
-        self.file_dict = file_dict
-
-        self._dependency_results = defaultdict(list)
-
         self.setup_dependencies()
         cp = type(self).check_prerequisites()
         if cp is not True:
@@ -277,7 +282,8 @@ class Bear:
         """
         # Those members get duplicated if they aren't excluded because they
         # exist also as fields.
-        excluded_members = {'can_detect', 'maintainers', 'maintainers_emails'}
+        excluded_members = {'can_detect', 'maintainers', 'maintainers_emails',
+                            'file_dict', 'section'}
 
         # json cannot serialize properties, so drop them
         data = {
