@@ -33,7 +33,7 @@ class TextPosition:
 
     def __le__(self, other):
         """
-        Test whether ``self`` is behind or equals the other
+        Test whether ``self`` is before or equals the other
         ``TextPosition``.
 
         If the column in a ``TextPosition`` is ``None``, consider
@@ -46,18 +46,18 @@ class TextPosition:
         """
         if self.line is None or other.line is None:
             return True
+
         if self.line == other.line:
-            return (True
-                    if self.column is None or
-                    other.column is None
-                    else
-                    self.column <= other.column)
+            if self.column is None or other.column is None:
+                return True
+            else:
+                return self.column <= other.column
         else:
             return self.line < other.line
 
     def __ge__(self, other):
         """
-        Test whether ``self`` is ahead of or equals the
+        Test whether ``self`` is behind or equals the
         other ``TextPosition``.
 
         If the column in a ``TextPosition`` is ``None``, consider
@@ -70,12 +70,12 @@ class TextPosition:
         """
         if self.line is None or other.line is None:
             return True
+
         if self.line == other.line:
-            return (True
-                    if self.column is None or
-                    other.column is None
-                    else
-                    self.column >= other.column)
+            if self.column is None or other.column is None:
+                return True
+            else:
+                return self.column >= other.column
         else:
             return self.line > other.line
 
