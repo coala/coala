@@ -3,7 +3,6 @@ from coala_utils.decorators import (
 
 
 @generate_repr('line', 'column')
-@generate_ordering('line', 'column')
 class TextPosition:
 
     @enforce_signature
