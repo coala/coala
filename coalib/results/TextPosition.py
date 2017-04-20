@@ -43,12 +43,12 @@ class TextPosition:
         """
         if self.line is None or other.line is None:
             return True
+
         if self.line == other.line:
-            return (True
-                    if self.column is None or
-                    other.column is None
-                    else
-                    self.column <= other.column)
+            if self.column is None or other.column is None:
+                return True
+            else:
+                return self.column <= other.column
         else:
             return self.line < other.line
 
@@ -67,12 +67,12 @@ class TextPosition:
         """
         if self.line is None or other.line is None:
             return True
+
         if self.line == other.line:
-            return (True
-                    if self.column is None or
-                    other.column is None
-                    else
-                    self.column >= other.column)
+            if self.column is None or other.column is None:
+                return True
+            else:
+                return self.column >= other.column
         else:
             return self.line > other.line
 
