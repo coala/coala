@@ -10,6 +10,8 @@ class ApplyPatchAction(ResultAction):
 
     SUCCESS_MESSAGE = 'Patch applied successfully.'
 
+    multiple_allowed = True
+
     is_applicable = staticmethod(ShowPatchAction.is_applicable)
 
     def apply(self,

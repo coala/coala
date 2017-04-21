@@ -57,6 +57,7 @@ class Result:
 
     It is also possible to add or remove actions.
 
+    >>> ResultAction.multiple_allowed = True
     >>> foo_action = ResultAction()
     >>> bar_action = ResultAction()
     >>> r.add_actions(foo_action, bar_action)
