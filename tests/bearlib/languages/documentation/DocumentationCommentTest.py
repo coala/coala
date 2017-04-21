@@ -194,6 +194,25 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(expected, parsed_docs)
 
 
+class GoDocumentationCommentTest(DocumentationCommentTest):
+
+    def test_go_default(self):
+        data = load_testdata('default.go')
+
+        parsed_docs = [doc.parse() for doc in
+                       extract_documentation(data, 'golang', 'golang')]
+
+        expected = [['\n',
+                     'Comments may span\n',
+                     'multiple lines\n'],
+                    ['A class comment\n',
+                     'that also spans\n',
+                     'multiple lines\n'],
+                    ['More documentation for everyone, but in one line\n']]
+
+        self.assertEqual(expected, parsed_docs)
+
+
 class DocumentationAssemblyTest(unittest.TestCase):
 
     def test_python_assembly(self):
