@@ -119,8 +119,7 @@ def acquire_actions_and_apply(console_printer,
                               section,
                               file_diff_dict,
                               result,
-                              file_dict,
-                              cli_actions=None):
+                              file_dict):
     """
     Acquires applicable actions and applies them.
 
@@ -131,15 +130,10 @@ def acquire_actions_and_apply(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
-    :param cli_actions:     The list of cli actions available.
     """
-    cli_actions = NATIVE_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     while True:
-        actions = []
-        for action in cli_actions:
-            if action.is_applicable(result, file_dict, file_diff_dict) is True:
-                actions.append(action)
+        actions = result.get_filtered_actions(file_dict, file_diff_dict)
 
         if actions == []:
             return
@@ -252,9 +246,7 @@ def print_result(console_printer,
     console_printer.print(format_lines(result.message))
 
     if interactive:
-        # FIXME: Handle duplicate actions of same type across
-        # NATIVE_ACTIONS and result.actions
-        cli_actions = NATIVE_ACTIONS + tuple(result.actions)
+        result._native_actions = list(NATIVE_ACTIONS)
         show_patch_action = ShowPatchAction()
         if show_patch_action.is_applicable(
                 result, file_dict, file_diff_dict) is True:
@@ -264,16 +256,16 @@ def print_result(console_printer,
                                                      file_dict,
                                                      file_diff_dict,
                                                      section)
-                cli_actions = tuple(action for action in cli_actions
-                                    if not isinstance(action, ShowPatchAction))
+                result._native_actions = [
+                    action for action in result._native_actions
+                    if not isinstance(action, ShowPatchAction)]
             else:
                 print_diffs_info(result.diffs, console_printer)
         acquire_actions_and_apply(console_printer,
                                   section,
                                   file_diff_dict,
                                   result,
-                                  file_dict,
-                                  cli_actions)
+                                  file_dict)
 
 
 def print_diffs_info(diffs, printer):

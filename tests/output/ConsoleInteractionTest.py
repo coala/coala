@@ -467,7 +467,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                                           Section(''),
                                           self.file_diff_dict,
                                           Result('origin', 'message', diffs={
-                                              testfile_path: diff}),
+                                              testfile_path: diff}, actions=[
+                                              ApplyPatchAction()]),
                                           file_dict)
                 self.assertEqual(generator.last_input, 1)
                 self.assertIn(ApplyPatchAction.SUCCESS_MESSAGE, sio.getvalue())
@@ -490,9 +491,9 @@ class ConsoleInteractionTest(unittest.TestCase):
                                           Section(''),
                                           self.file_diff_dict,
                                           Result('origin', 'message',
-                                                 diffs={testfile_path: diff}),
-                                          file_dict,
-                                          cli_actions=cli_actions)
+                                                 diffs={testfile_path: diff},
+                                                 actions=cli_actions),
+                                          file_dict)
                 self.assertEqual(generator.last_input, 2)
 
                 action_fail = 'Failed to execute the action'
