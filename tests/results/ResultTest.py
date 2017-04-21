@@ -41,6 +41,7 @@ class ResultTest(unittest.TestCase):
     def test_result_actions(self):
         uut = Result('origin', 'msg')
         self.assertEqual(uut.actions, tuple())
+        ResultAction.multiple_allowed = True
 
         action_1 = ResultAction()
 
@@ -61,6 +62,24 @@ class ResultTest(unittest.TestCase):
 
         uut.remove_actions(action_2, action_3)
         self.assertEqual(uut.actions, (action_1,))
+
+    def test_get_filtered_actions_no_multiples_allowed(self):
+        ResultAction.multiple_allowed = False
+        uut = Result('origin', 'msg')
+        action_1 = ResultAction()
+        action_2 = ResultAction()
+        self.assertEqual(uut.actions, tuple())
+        uut.actions = [action_1, action_2]
+        self.assertEqual(uut.actions, (action_1,))
+
+    def test_get_filtered_actions_multiple_allowed(self):
+        ResultAction.multiple_allowed = True
+        uut = Result('new', 'msg')
+        self.assertEqual(uut.actions, tuple())
+        action_1 = ResultAction()
+        action_2 = ResultAction()
+        uut.actions = [action_1, action_2]
+        self.assertEqual(uut.actions, (action_1, action_2))
 
     def test_string_dict(self):
         uut = Result(None, '')
