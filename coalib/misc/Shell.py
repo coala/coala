@@ -164,3 +164,7 @@ def get_shell_type():  # pragma: no cover
     if out.strip() == '$0':
         return 'cmd'
     return 'sh'
+
+
+def call_without_output(command):
+    run_shell_command(' '.join(command), stdout=PIPE, stderr=PIPE)
