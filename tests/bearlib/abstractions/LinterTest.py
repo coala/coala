@@ -236,38 +236,38 @@ class LinterComponentTest(unittest.TestCase):
         uut = linter('some-executable')(self.ManualProcessingTestLinter)
         self.assertEqual(uut.get_executable(), 'some-executable')
 
-    def test_check_prerequisites(self):
+    def test_check_all_deps(self):
         uut = linter(sys.executable)(self.ManualProcessingTestLinter)
-        self.assertTrue(uut.check_prerequisites())
+        self.assertTrue(uut.check_all_deps())
 
         uut = (linter('invalid_nonexisting_programv412')
                (self.ManualProcessingTestLinter))
-        self.assertEqual(uut.check_prerequisites(),
+        self.assertEqual(uut.check_all_deps(),
                          "'invalid_nonexisting_programv412' is not installed.")
 
         uut = (linter('invalid_nonexisting_programv412',
                       executable_check_fail_info="You can't install it.")
                (self.ManualProcessingTestLinter))
-        self.assertEqual(uut.check_prerequisites(),
+        self.assertEqual(uut.check_all_deps(),
                          "'invalid_nonexisting_programv412' is not installed. "
                          "You can't install it.")
 
         uut = (linter(sys.executable,
                       prerequisite_check_command=(sys.executable, '--version'))
                (self.ManualProcessingTestLinter))
-        self.assertTrue(uut.check_prerequisites())
+        self.assertTrue(uut.check_all_deps())
 
         uut = (linter(sys.executable,
                       prerequisite_check_command=('invalid_programv413',))
                (self.ManualProcessingTestLinter))
-        self.assertEqual(uut.check_prerequisites(),
+        self.assertEqual(uut.check_all_deps(),
                          'Prerequisite check failed.')
 
         uut = (linter(sys.executable,
                       prerequisite_check_command=('invalid_programv413',),
                       prerequisite_check_fail_message='NOPE')
                (self.ManualProcessingTestLinter))
-        self.assertEqual(uut.check_prerequisites(), 'NOPE')
+        self.assertEqual(uut.check_all_deps(), 'NOPE')
 
     def test_output_stream(self):
         process_output_mock = Mock()

@@ -76,7 +76,7 @@ class BearWithPrerequisites(Bear):
         return []
 
     @classmethod
-    def check_prerequisites(cls):
+    def check_all_deps(cls):
         return cls.prerequisites_fulfilled
 
 
@@ -267,7 +267,7 @@ class BearTest(BearTestBase):
                                                         BadTestBear]),
                          set())
 
-    def test_check_prerequisites(self):
+    def test_check_all_deps(self):
         uut = BearWithPrerequisites(self.settings, self.queue, True)
         uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)

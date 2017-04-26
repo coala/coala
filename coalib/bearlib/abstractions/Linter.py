@@ -201,13 +201,14 @@ def _create_linter(klass, options):
             return options['executable']
 
         @classmethod
-        def check_prerequisites(cls):
+        def check_all_deps(cls):
             """
             Checks whether the linter-tool the bear uses is operational.
 
             :return:
                 True if operational, otherwise a string containing more info.
             """
+
             if shutil.which(cls.get_executable()) is None:
                 return (repr(cls.get_executable()) + ' is not installed.' +
                         (' ' + options['executable_check_fail_info']
@@ -222,7 +223,7 @@ def _create_linter(klass, options):
                         return True
                     except (OSError, CalledProcessError):
                         return options['prerequisite_check_fail_message']
-                return True
+                return super().check_all_deps()
 
         @classmethod
         def _get_create_arguments_metadata(cls):
@@ -864,10 +865,10 @@ def linter(executable: str,
         Information that is provided together with the fail message from the
         normal executable check. By default no additional info is printed.
     :param prerequisite_check_command:
-        A custom command to check for when ``check_prerequisites`` gets
+        A custom command to check for when ``check_all_deps`` gets
         invoked (via ``subprocess.check_call()``). Must be an ``Iterable``.
     :param prerequisite_check_fail_message:
-        A custom message that gets displayed when ``check_prerequisites``
+        A custom message that gets displayed when ``check_all_deps``
         fails while invoking ``prerequisite_check_command``. Can only be
         provided together with ``prerequisite_check_command``.
     :param global_bear:
