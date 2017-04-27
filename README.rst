@@ -32,3 +32,8 @@ coala supports popular programming languages including **Python**, **C/C++**, **
    :target: http://docs.coala.io/
 .. |AGPL| image:: https://img.shields.io/pypi/l/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
+
+
+.. image:: https://graphs.waffle.io/coala/coala/throughput.svg
+ :target: https://waffle.io/coala/coala/metrics/throughput
+ :alt: 'Throughput Graph'
