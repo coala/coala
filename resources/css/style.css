@@ -330,10 +330,6 @@ textarea.materialize-textarea {
 .showcase-card .card-content{
   height:150px;
 }
-.card-title {
-  padding-left: 1em;
-  padding-top: 0.3em;
-}
 .name-bear {
   font-size: 22px !important;
 }
@@ -464,10 +460,6 @@ ul li a{
   width: 200px;
   margin-left: 0.5em;
   margin-right: 0.5em;
-}
-.card-title{
-  padding-left: 1em;
-  padding-top: 0.3em;
 }
 a > .card{
   color: black !important;
@@ -661,4 +653,7 @@ a:hover > .card{
 .contribution-container {
   width: 80%;
   margin: 0 auto;
+}
+.about-container li{
+  margin-bottom: 1em;
 }
