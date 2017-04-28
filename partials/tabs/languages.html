@@ -66,8 +66,10 @@
 </div>
 
     <div ng-click="lc.showTheatre(bear)" ng-repeat="bear in bearList | filter:searchText" class="card card-main showcase-card waves-effect">
-        <div class="card-title name-bear">{{ bear.name }}</div>
-        <div btf-markdown="bear.desc | format_desc" class="card-content"></div>
+        <div class="card-content">
+          <span class="card-title">{{ bear.name }}</span>
+          <p btf-markdown="bear.desc | format_desc"></p>
+        </div>
         <div class="card-action">
             <span class="chip" ng-repeat="lang in bear.languages | limitTo:4">{{lang}} </span>
         </div>
