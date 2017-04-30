@@ -160,7 +160,8 @@ def warn_config_absent(sections, argument, log_printer):
     return False
 
 
-def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
+def load_configuration(arg_list, log_printer, arg_parser=None, args=None,
+                       silent=False):
     """
     Parses the CLI args and loads the config file accordingly, taking
     default_coafile and the users .coarc into account.
@@ -170,6 +171,9 @@ def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
     :param arg_parser:  An ``argparse.ArgumentParser`` instance used for
                         parsing the CLI arguments.
     :param args:        Alternative pre-parsed CLI arguments.
+    :param arg_list:    Alternative pre-parsed CLI arguments.
+    :param silent:      Whether or not to warn the user/exit if the file
+                        doesn't exist. It is ignored when `save` is enabled.
     :return:            A tuple holding (log_printer: LogPrinter, sections:
                         dict(str, Section), targets: list(str)). (Types
                         indicated after colon.)
@@ -211,7 +215,8 @@ def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
             # but to a specific file.
             save = True
 
-        coafile_sections = load_config_file(config, log_printer, silent=save)
+        coafile_sections = load_config_file(
+            config, log_printer, silent=silent or save)
 
         sections = merge_section_dicts(base_sections, user_sections)
 
@@ -351,7 +356,8 @@ def get_all_bears(log_printer, arg_parser=None):
     """
     sections, _ = load_configuration(arg_list=None,
                                      log_printer=log_printer,
-                                     arg_parser=arg_parser)
+                                     arg_parser=arg_parser,
+                                     silent=True)
     local_bears, global_bears = collect_all_bears_from_sections(
         sections, log_printer)
     return local_bears, global_bears

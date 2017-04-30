@@ -387,3 +387,23 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
         self.assertEqual(str(local_bears['cli'][1]),
                          "<class 'LineCountTestBear.LineCountTestBear'>")
         self.assertEqual(len(global_bears['cli']), 0)
+
+    def test_show_bears(self):
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        child_dir = os.path.join(current_dir,
+                                 'section_manager_test_files',
+                                 'child_dir')
+        logger = logging.getLogger()
+
+        with change_directory(child_dir):
+            with self.assertLogs(logger, 'WARNING') as cm:
+                local_bears, global_bears = get_filtered_bears(
+                    [],
+                    self.log_printer)
+            self.assertNotIn('WARNING', cm.output[0])
+
+            with self.assertLogs(logger, 'WARNING') as cm:
+                local_bears, global_bears = get_filtered_bears(
+                    ['c'],
+                    self.log_printer)
+            self.assertNotIn('WARNING', cm.output[0])
