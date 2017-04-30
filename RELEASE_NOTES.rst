@@ -1,6 +1,36 @@
 coala 0.11 - BrewBear
 =====================
 
+::
+
+                                                   /ss.
+                             -+ooooyhhsoo+++/-...-d+``oy-
+                         `:sNMMMMMMMMMMMMMMMMMMMMMMMMNMMMs
+                       .sNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd`
+                     :hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm:
+                   +mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN.
+                 /mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNN-
+               /mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMhd
+             `yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMmNMMMMMMMMMMm
+            `dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh  :smMMMMMMMN
+            sMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh+. ./ohNMmh
+           -NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMmy/.
+          -mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMds/.
+          hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd----:oyyyNMMMMMMMyo+-
+         `MMMMMMMMMMMMMMMMMMMMMMMMMdMMMMMMMo   `+ydMMMMMMMMMMMMMNs-
+         /MMMMMMMMMMMMMMMMMMMMMdo.``-/sMMMM+.omMMMMMMMMMMMMMMMMMMMMh:
+         /MMMMMMMMMMMMMMMMMMMs.       oMMMhyMMMMMMMMMMMMMMMMMMMMMMMMMh`
+          yNMMMMMMMMMMMMMMMMM/        yMMmmMMMMMMMMMmyo///oyNMMMMMMMMMs
+           +mMMMMMMMMMMMMMMMMy         /dMMMMMMMMMd:  ./+/-  :dMMMMMMMd
+           `oMMMMMMMMMMMMMMMMd`        .MMMMMMMMMh  .dMMMMMm:  hMMMMMMM:
+          oNMMMMMMMMMMMMMMMMMM:        :MMMMMMMMM:  hMMMMMMMm  :MMMMMMM/
+        :NMMMMMMMMMMMMMMMMMMMM/        -MMMMMMMMMo  -NMMMMMN/  oMMMMMMM/
+        -mMMMMMMdhdMMMMMMMMMMM/`       `dMMMMMMMMM+   :oso/`  oMMMMMMMM:
+         :NMMMN.   :dMMMMMMMMM+         :MMMMMMMMMMmo:`   .:smMMMMMMMNo
+          .yNMMh:   .mMMMMMMMMd          hMMMMMMMMMMMMMMMMMMMMMMMMMMd.
+             ``       .:////++:           oNMMMMMMMMMMMMMMMMMMMMMMd+`
+                                            -+syhhdmmmNNNNNmdhss/.
+
 This release was brought to you by 65 contributors contributing 141
 commits.
 
