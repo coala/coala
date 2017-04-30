@@ -1,3 +1,104 @@
+coala 0.11 - BrewBear
+=====================
+
+This release was brought to you by 65 contributors contributing 141
+commits.
+
+The name of this release is BrewBear to highlight the improvements made to
+our dependency management system, including the addition of ``brew`` support
+for mac users. Mac has been an officially supported platform for a long time
+and we would like to draw attention to this often overlooked fact.
+Support has also been added for ``conda`` and ``cargo`` allowing bears which
+use linters available from those package managers to manage their dependencies.
+
+Initial next generation core code has been merged and will be integrated over
+the coming releases. Until then, please use the current API.
+
+We have added a release candidate system to our release process to allow users
+to easily test changes in the latest pre-release version of coala.
+Instructions for obtaining the rc package will be posted for each minor/major
+release to the coala gitter channel, blog, and twitter. We encourage all users
+interested in checking out new features or helping to test these pre-releases
+on their projects. If you do find a regression in a release candidate, please
+report it to the issue tracker with the word ``Regression`` somewhere in the
+title.
+
+**Breaking Changes**
+
+- coala now exits with a non zero exit code when error level results are logged.
+  If you relied on coala logging in scripts or other automated systems please
+  modify them to work with the new behavior. You can find all exit codes
+  `here <http://docs.coala.io/en/latest/Users/Exit_Codes.html>`__.
+  `PR #3905 <https://github.com/coala/coala/pull/3905>`_
+
+**General**
+
+- Section Inheritance had been added to the coafile parsing. With this
+  change we are deprecating implicit ``default`` section inheritance.
+  Instead, you can now have definite section inheritance by using the
+  ``.`` in the section title. Append operators are now supported allowing
+  addition of values to inherited section. See the
+  ``Explicit Setting Inheritance`` section of the
+  `docs <https://docs.coala.io/en/latest/Users/coafile.html#explicit-setting-inheritance>`__
+  for a syntax example and detailed instructions
+- The section name ``cli`` is reserved for cli arguments and should not be
+  used in the coala configuration file (``coafile``). If you are currently
+  using it in a configuration file, coala will warn you.
+- coala now outputs absolute file paths when a bear fails. This should
+  make debugging bear failures easier when using custom bears.
+
+**Usability**
+
+- A new placeholder, ``source_lines``,  has been added to the coala
+  ``--format`` option. Use it to output the affected lines in the source file
+  when a result occurs.
+- Bears are displayed alphabetically when listed using ``--show-bears``.
+- coala outputs a warning if a setting is overridden in the same section
+  since this is probably not what the user intended.
+- ``--format`` is handled correctly when ``--ci`` is specified, outputting
+  formatted output without asking questions.
+  `Issue #3999 <https://github.com/coala/coala/issues/3999>`_
+- coala will report the version of the dependency required when the version
+  check fails.
+  `Issue #3982 <https://github.com/coala/coala/issues/3982>`_
+
+**Bear Developers**
+
+- ``@linter`` decorator works with global bears. See our bear writing
+  `docs <http://api.coala.io/en/latest/Developers/Writing_Linter_Bears.html#global-bears>`__
+  for more information on how to write a global bear with the ``@linter``
+  decorator.
+- ``Bear.DownloadCachedFile`` raises exceptions when the download fails.
+  Please see the requests library
+  `docs <http://docs.python-requests.org/en/master/user/quickstart/#errors-and-exceptions>`__
+  for a complete list of possible exceptions that will need to be handled.
+- The ``deprecate_settings`` decorator now supports multiple deprecations
+  of the same setting.
+  `Issue # 3537 <https://github.com/coala/coala/issues/3537>`_
+- A new ``SEE_MORE`` attribute has been added to the ``Bear`` class. Use it
+  to attribute (usually by linking the main page)  the original tool in
+  linter bears.
+- Unified Diff support has been added to the ``Diff`` result, linter
+  and display mechanisms.
+
+**Bugfixes**
+
+- Caching has been fixed to work correctly. Results are only cached when a
+  bear successfully runs. A bear which fails in the middle of a run will
+  not have a result cached anymore. This should make flushing the cache
+  manually mostly unnecessary for end users.
+  `PR #3722 <https://github.com/coala/coala/pull/3722>`_
+- Non-optional settings check settings from dependent bears now. Previously,
+  it would error because the dependency would not have its settings satisfied.
+  `Issue #3149 <https://github.com/coala/coala/pull/3149>`_
+- The ``Result`` object now handles ``None`` values of TextPosition properly.
+  Previously, it would return arbitrary results which would impact bear
+  authors.
+  `Issue #3094 <https://github.com/coala/coala/issues/3094>`_
+- A few problems when using coala in systems with incomplete locales data
+  have been fixed. This was common in Docker containers.
+  `Issue #3906 <https://github.com/coala/coala/issues/3906>`_
+
 coala 0.10 - PolarBear
 ======================
 
