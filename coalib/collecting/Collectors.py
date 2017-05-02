@@ -60,13 +60,14 @@ def icollect(file_paths, ignored_globs=None, match_cache={}):
 
 
 def collect_files(file_paths, log_printer, ignored_file_paths=None,
-                  limit_file_paths=None):
+                  limit_file_paths=None, section_name=''):
     """
     Evaluate globs in file paths and return all matching files
 
     :param file_paths:         File path or list of such that can include globs
     :param ignored_file_paths: List of globs that match to-be-ignored files
     :param limit_file_paths:   List of globs that the files are limited to
+    :param section_name:       Name of currently executing section
     :return:                   List of paths of all matching files
     """
     limit_fnmatch = (functools.partial(fnmatch, globs=limit_file_paths)
@@ -82,7 +83,10 @@ def collect_files(file_paths, log_printer, ignored_file_paths=None,
         collected_files, file_globs_with_files = [], []
 
     _warn_if_unused_glob(log_printer, file_paths, file_globs_with_files,
-                         "No files matching '{}' were found.")
+                         'No files matching \'{}\' were found. '
+                         'If this rule is not required, you can remove it '
+                         'from section [' + section_name + '] in your '
+                         '.coafile to deactivate this warning.')
     limited_files = list(filter(limit_fnmatch, collected_files))
     return limited_files
 
@@ -174,9 +178,9 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
 
     if warn_if_unused_glob:
         _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
-                             "No bears matching '{}' were found. Make sure you "
-                             'have coala-bears installed or you have typed the '
-                             'name correctly.')
+                             'No bears matching \'{}\' were found. Make sure '
+                             'you have coala-bears installed or you have typed '
+                             'the name correctly.')
     return bears_found
 
 

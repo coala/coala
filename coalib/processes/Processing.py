@@ -356,7 +356,8 @@ def instantiate_processes(section,
         glob_list(section.get('files', '')),
         log_printer,
         ignored_file_paths=glob_list(section.get('ignore', '')),
-        limit_file_paths=glob_list(section.get('limit_files', '')))
+        limit_file_paths=glob_list(section.get('limit_files', '')),
+        section_name=section.name)
 
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
