@@ -416,6 +416,7 @@ gather information by using these values. Our bear now looks like:
       LICENSE = 'AGPL-3.0'
       CAN_DETECT = {'Unused Code', 'Formatting', 'Duplication', 'Security',
                     'Syntax'}
+      SEE_MORE = 'https://pylint.org/'
 
       @staticmethod
       def create_arguments(filename, file, config_file,
