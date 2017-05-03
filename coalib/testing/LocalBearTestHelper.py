@@ -65,8 +65,33 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                                create_tempfile=create_tempfile,
                                tempfile_kwargs=tempfile_kwargs
                                )
-            return
+        else:
+            return self.check_invalidity(local_bear, lines,
+                                         filename=filename,
+                                         force_linebreaks=force_linebreaks,
+                                         create_tempfile=create_tempfile,
+                                         tempfile_kwargs=tempfile_kwargs,
+                                         )
 
+    def check_invalidity(self,
+                         local_bear,
+                         lines,
+                         filename=None,
+                         force_linebreaks=True,
+                         create_tempfile=True,
+                         tempfile_kwargs={}):
+        """
+        Asserts that a check of the given lines with the given local bear
+        yields results.
+
+        :param local_bear:       The local bear to check with.
+        :param lines:            The lines to check. (List of strings)
+        :param filename:         The filename, if it matters.
+        :param force_linebreaks: Whether to append newlines at each line
+                                 if needed. (Bears expect a \\n for every line)
+        :param create_tempfile:  Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
@@ -142,6 +167,8 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                 self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
             else:
                 self.assertEqual(bear_output, results, msg=msg)
+
+            return bear_output
 
 
 def verify_local_bear(bear,
