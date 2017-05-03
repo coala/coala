@@ -153,7 +153,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     >>> class aspectsCommitBear(Bear, aspects={
     ...         'detect': [CommitMessage.Shortlog.ColonExistence],
     ...         'fix': [CommitMessage.Shortlog.TrailingPeriod],
-    ... }):
+    ... }, languages=['Python']):
     ...     pass
 
     >>> aspectsCommitBear.aspects['detect']

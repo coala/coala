@@ -13,6 +13,7 @@ import requests_mock
 
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.Metadata import CommitMessage
+from coalib.bearlib.languages.Language import Languages
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -113,19 +114,19 @@ class DependentBear(Bear):
 class aspectsTestBear(Bear, aspects={
         'detect': [CommitMessage.Shortlog.ColonExistence],
         'fix': [CommitMessage.Shortlog.TrailingPeriod],
-}):
+}, languages=['Python', 'C#']):
     pass
 
 
 class aspectsDetectOnlyTestBear(Bear, aspects={
         'detect': [CommitMessage.Shortlog.ColonExistence],
-}):
+}, languages=['Python']):
     pass
 
 
 class aspectsFixOnlyTestBear(Bear, aspects={
         'fix': [CommitMessage.Shortlog.TrailingPeriod],
-}):
+}, languages=['Python']):
     pass
 
 
@@ -142,6 +143,12 @@ class BearTestBase(unittest.TestCase):
 
 
 class BearTest(BearTestBase):
+
+    def test_languages(self):
+        self.assertIs(type(aspectsTestBear.languages), Languages)
+        self.assertIn('Python', aspectsTestBear.languages)
+        self.assertIn('csharp', aspectsTestBear.languages)
+        self.assertNotIn('javascript', aspectsTestBear.languages)
 
     def test_default_aspects(self):
         assert type(Bear.aspects) is defaultdict
