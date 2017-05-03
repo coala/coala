@@ -26,7 +26,7 @@ def execute_bear(bear, *args, **kwargs):
     return list(bear_output_generator)
 
 
-class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
+class LocalBearTestHelper(unittest.TestCase):
     """
     This is a helper class for simplification of testing of local bears.
 
