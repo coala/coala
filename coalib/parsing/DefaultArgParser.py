@@ -230,11 +230,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-n', '--no-orig', const=True, action='store_const',
         help="don't create .orig backup files before patching")
 
-    try:  # pragma: no cover
+    try:
         # Auto completion should be optional, because of somewhat complicated
         # setup.
         import argcomplete
         argcomplete.autocomplete(arg_parser)
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
+
     return arg_parser
