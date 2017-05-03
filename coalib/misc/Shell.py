@@ -145,22 +145,3 @@ def run_shell_command(command, stdin=None, **kwargs):
     with run_interactive_shell_command(command, **kwargs) as p:
         ret = p.communicate(stdin)
     return ShellCommandResult(p.returncode, *ret)
-
-
-def get_shell_type():  # pragma: no cover
-    """
-    Finds the current shell type based on the outputs of common pre-defined
-    variables in them. This is useful to identify which sort of escaping
-    is required for strings.
-
-    :return: The shell type. This can be either "powershell" if Windows
-             Powershell is detected, "cmd" if command prompt is been
-             detected or "sh" if it's neither of these.
-    """
-    out = run_shell_command('echo $host.name', shell=True)[0]
-    if out.strip() == 'ConsoleHost':
-        return 'powershell'
-    out = run_shell_command('echo $0', shell=True)[0]
-    if out.strip() == '$0':
-        return 'cmd'
-    return 'sh'
