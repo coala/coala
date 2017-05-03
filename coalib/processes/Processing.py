@@ -30,11 +30,8 @@ ACTIONS = [ApplyPatchAction,
 
 
 def get_cpu_count():
-    try:
-        return multiprocessing.cpu_count()
     # cpu_count is not implemented for some CPU architectures/OSes
-    except NotImplementedError:  # pragma: no cover
-        return 2
+    return os.cpu_count() or 2
 
 
 def fill_queue(queue_fill, any_list):
