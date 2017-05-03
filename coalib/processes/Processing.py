@@ -264,7 +264,7 @@ def get_file_dict(filename_list, log_printer):
             log_printer.warn("Failed to read file '{}'. It seems to contain "
                              'non-unicode characters. Leaving it '
                              'out.'.format(filename))
-        except OSError as exception:  # pragma: no cover
+        except OSError as exception:
             log_printer.log_exception("Failed to read file '{}' because of "
                                       'an unknown error. Leaving it '
                                       'out.'.format(filename),
