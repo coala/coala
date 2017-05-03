@@ -11,6 +11,7 @@ import requests_mock
 
 from coalib.bearlib.aspects.collections import aspectlist
 from coalib.bearlib.aspects.Metadata import CommitMessage
+from coalib.bearlib.languages.Language import Languages
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -108,6 +109,10 @@ class DependentBear(Bear):
         yield w
 
 
+class languagesTestBear(Bear, languages=['Python', 'C#']):
+    pass
+
+
 class aspectsTestBear(Bear, aspects={
         'detect': [CommitMessage.Shortlog.ColonExistence],
         'fix': [CommitMessage.Shortlog.TrailingPeriod],
@@ -140,6 +145,12 @@ class BearTestBase(unittest.TestCase):
 
 
 class BearTest(BearTestBase):
+
+    def test_languages(self):
+        assert type(languagesTestBear.languages) is Languages
+        assert 'Python' in languagesTestBear.languages
+        assert 'csharp' in languagesTestBear.languages
+        assert 'javascript' not in languagesTestBear.languages
 
     def test_default_aspects(self):
         assert type(Bear.aspects) is defaultdict
@@ -179,6 +190,10 @@ class BearTest(BearTestBase):
                 aspectsTestBear.aspects['detect'])
         assert (CommitMessage.Shortlog.TrailingPeriod in
                 aspectsTestBear.aspects['fix'])
+
+    def test_aspectlist_bear(self):
+        assert aspectsTestBear.aspects['fix'].bear is aspectsTestBear
+        assert aspectsTestBear.aspects['detect'].bear is aspectsTestBear
 
     def test_simple_api(self):
         self.assertRaises(TypeError, TestBear, self.settings, 2)
