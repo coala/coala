@@ -29,5 +29,7 @@ class bearclass(type):
         type.__init__(cls, clsname, bases, clsattrs, *varargs)
         if aspects is not None:
             cls.aspects = defaultdict(
+                lambda: aspectlist([], cls),
+                ((k, aspectlist(v, cls)) for (k, v) in dict(aspects).items()))
         if languages is not None:
             cls.languages = Languages(languages)

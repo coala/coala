@@ -1,5 +1,7 @@
 from coalib.bearlib.aspects import Taste, aspectclass
 from coalib.bearlib.aspects.base import aspectbase
+from coalib.bearlib.aspects.Metadata import Metadata
+from coalib.bears.LocalBear import LocalBear
 
 import pytest
 
@@ -76,3 +78,13 @@ def SubAspect(RootAspect, SubAspect_docs, SubAspect_tastes):
         sour = SubAspect_tastes['sour']
 
     return SubAspect
+
+
+@pytest.fixture
+def aspectsTestBear():
+    class testBear(LocalBear, aspects={
+        'detect': [Metadata.CommitMessage.Shortlog],
+        'fix': [Metadata.CommitMessage.Shortlog.TrailingPeriod]},
+                      languages=['Python']):
+        pass
+    return testBear
