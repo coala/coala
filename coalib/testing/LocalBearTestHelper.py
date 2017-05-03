@@ -57,6 +57,16 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         :param create_tempfile:  Whether to save lines in tempfile if needed.
         :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
         """
+        if valid:
+            self.check_results(local_bear, lines,
+                               results=[], filename=filename,
+                               check_order=True,
+                               force_linebreaks=force_linebreaks,
+                               create_tempfile=create_tempfile,
+                               tempfile_kwargs=tempfile_kwargs
+                               )
+            return
+
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
@@ -70,14 +80,9 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                           create_tempfile=create_tempfile,
                           tempfile_kwargs=tempfile_kwargs) as (file, fname), \
                 execute_bear(local_bear, fname, file) as bear_output:
-            if valid:
-                msg = ("The local bear '{}' yields a result although it "
-                       "shouldn't.".format(local_bear.__class__.__name__))
-                self.assertEqual(bear_output, [], msg=msg)
-            else:
-                msg = ("The local bear '{}' yields no result although it "
-                       'should.'.format(local_bear.__class__.__name__))
-                self.assertNotEqual(len(bear_output), 0, msg=msg)
+            msg = ("The local bear '{}' yields no result although it "
+                   'should.'.format(local_bear.__class__.__name__))
+            self.assertNotEqual(len(bear_output), 0, msg=msg)
             return bear_output
 
     def check_results(self,
@@ -117,15 +122,22 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg='The given results are not a list.')
 
+        if results in [[], ()]:
+            msg = ("The local bear '{}' yields a result although it "
+                   "shouldn't.".format(local_bear.__class__.__name__))
+            check_order = True
+        else:
+            msg = ("The local bear '{}' doesn't yield the right results."
+                   .format(local_bear.__class__.__name__))
+            if check_order:
+                msg += ' Or the order may be wrong.'
+
         with prepare_file(lines, filename,
                           force_linebreaks=force_linebreaks,
                           create_tempfile=create_tempfile,
                           tempfile_kwargs=tempfile_kwargs) as (file, fname), \
                 execute_bear(local_bear, fname, file,
                              **settings) as bear_output:
-            msg = ("The local bear '{}' doesn't yield the right results. Or "
-                   'the order may be wrong.'
-                   .format(local_bear.__class__.__name__))
             if not check_order:
                 self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
             else:
