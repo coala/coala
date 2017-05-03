@@ -2,15 +2,6 @@ import asyncio
 import concurrent.futures
 import functools
 import logging
-import multiprocessing
-
-
-def _get_cpu_count():
-    try:
-        return multiprocessing.cpu_count()
-    except NotImplementedError:  # pragma: no cover
-        # cpu_count is not implemented for some CPU architectures/OSes
-        return 1
 
 
 def cleanup_bear(bear,
@@ -156,8 +147,7 @@ def run(bears, result_callback):
 
     # Set up event loop and executor.
     event_loop = asyncio.SelectorEventLoop()
-    executor = concurrent.futures.ProcessPoolExecutor(
-        max_workers=_get_cpu_count())
+    executor = concurrent.futures.ProcessPoolExecutor()
 
     # Let's go.
     schedule_bears(bears, result_callback, event_loop, {}, executor)
