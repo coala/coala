@@ -9,7 +9,7 @@ from termcolor import colored
 try:
     # This import has side effects and is needed to make input() behave nicely
     import readline  # pylint: disable=unused-import
-except ImportError:  # pragma: no cover
+except ImportError:  # pragma posix: no cover
     pass
 
 from coalib.misc.DictUtilities import inverse_dicts
