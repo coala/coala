@@ -163,7 +163,11 @@ class Setting(StringConverter):
         :raises ValueError:        If no origin is specified in the setting
                                    nor the given origin parameter.
         """
-        strrep = str(self).strip()
+        if hasattr(self, 'value'):
+            strrep = self.value.strip()
+        else:
+            strrep = str(self).strip()
+
         if os.path.isabs(strrep):
             return strrep
 
