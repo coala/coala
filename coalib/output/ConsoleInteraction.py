@@ -165,45 +165,35 @@ def acquire_actions_and_apply(console_printer,
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     applied_actions = {}
+
     while True:
-        actions = []
-        for action in cli_actions:
-            if action.is_applicable(result, file_dict, file_diff_dict) is True:
-                actions.append(action)
-
-        if actions == []:
-            return
-
         action_dict = {}
         metadata_list = []
-        for action in actions:
-            metadata = action.get_metadata()
-            action_dict[metadata.name] = action
-            metadata_list.append(metadata)
+
+        for action in cli_actions:
+            if action.is_applicable(result,
+                                    file_dict,
+                                    file_diff_dict,
+                                    tuple(applied_actions.keys())) is True:
+                metadata = action.get_metadata()
+                action_dict[metadata.name] = action
+                metadata_list.append(metadata)
+
+        if not metadata_list:
+            return
 
         # User can always choose no action which is guaranteed to succeed
-        if apply_single:
-            ask_for_action_and_apply(console_printer,
-                                     section,
-                                     metadata_list,
-                                     action_dict,
-                                     failed_actions,
-                                     result,
-                                     file_diff_dict,
-                                     file_dict,
-                                     applied_actions,
-                                     apply_single=apply_single)
-            break
-        elif not ask_for_action_and_apply(console_printer,
-                                          section,
-                                          metadata_list,
-                                          action_dict,
-                                          failed_actions,
-                                          result,
-                                          file_diff_dict,
-                                          file_dict,
-                                          applied_actions,
-                                          apply_single=apply_single):
+        chosen_action = ask_for_action_and_apply(console_printer,
+                                                 section,
+                                                 metadata_list,
+                                                 action_dict,
+                                                 failed_actions,
+                                                 result,
+                                                 file_diff_dict,
+                                                 file_dict,
+                                                 applied_actions,
+                                                 apply_single=apply_single)
+        if not chosen_action or apply_single:
             break
 
 
