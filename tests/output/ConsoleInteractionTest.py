@@ -575,7 +575,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 set(), Result('origin', 'message'), {}, {}, {}, apply_single]
 
         with simulate_console_inputs('a') as generator:
-            self.assertTrue(ask_for_action_and_apply(*args))
+            self.assertFalse(ask_for_action_and_apply(*args))
 
     def test_default_input_apply_single_fail(self):
         action = TestAction()
@@ -592,7 +592,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                     apply_single]
 
         with simulate_console_inputs('a') as generator:
-            self.assertTrue(ask_for_action_and_apply(*args))
+            self.assertFalse(ask_for_action_and_apply(*args))
 
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:

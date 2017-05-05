@@ -101,7 +101,10 @@ class OpenEditorAction(ResultAction):
 
     @staticmethod
     @enforce_signature
-    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+    def is_applicable(result: Result,
+                      original_file_dict,
+                      file_diff_dict,
+                      applied_actions=()):
         """
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
