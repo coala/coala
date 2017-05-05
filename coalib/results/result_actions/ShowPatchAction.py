@@ -58,7 +58,10 @@ class ShowPatchAction(ResultAction):
 
     @staticmethod
     @enforce_signature
-    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+    def is_applicable(result: Result,
+                      original_file_dict,
+                      file_diff_dict,
+                      applied_actions=()):
 
         if not result.diffs:
             return 'This result has no patch attached.'
