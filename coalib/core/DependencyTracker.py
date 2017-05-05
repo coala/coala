@@ -1,3 +1,5 @@
+from itertools import chain
+
 from coalib.core.Graphs import traverse_graph
 
 
@@ -155,6 +157,52 @@ class DependencyTracker:
             append_to_dependencies)
 
         return dependencies
+
+    @property
+    def dependants(self):
+        """
+        Returns a set of all registered dependants.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.add(1, 3)
+        >>> tracker.dependants
+        {1, 2, 3}
+        """
+        return set(chain.from_iterable(self._dependency_dict.values()))
+
+    @property
+    def dependencies(self):
+        """
+        Returns a set of all registered dependencies.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.add(1, 3)
+        >>> tracker.dependencies
+        {0, 1}
+        """
+        return set(self._dependency_dict.keys())
+
+    def __iter__(self):
+        """
+        Returns an iterator that iterates over all dependency relations.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.add(1, 2)
+        >>> for dependency, dependant in sorted(tracker):
+        ...     print(dependency, '->', dependant)
+        0 -> 1
+        0 -> 2
+        1 -> 2
+        """
+        return ((dependency, dependant)
+                for dependency, dependants in self._dependency_dict.items()
+                for dependant in dependants)
 
     def add(self, dependency, dependant):
         """

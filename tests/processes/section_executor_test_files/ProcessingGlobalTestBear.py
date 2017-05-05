@@ -2,7 +2,7 @@ from coalib.bears.GlobalBear import GlobalBear
 from coalib.results.Result import Result
 
 
-class ProcessingGlobalTestBear(GlobalBear):  # pragma: no cover
+class ProcessingGlobalTestBear(GlobalBear):
 
     def run(self):
         for filename in self.file_dict:

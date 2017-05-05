@@ -278,6 +278,14 @@ class Diff:
         return result
 
     @property
+    def has_changes(self):
+        """
+        True if the modified file is different than the original file,
+        else False.
+        """
+        return self.modified != self._file
+
+    @property
     def unified_diff(self):
         """
         Generates a unified diff corresponding to this patch.

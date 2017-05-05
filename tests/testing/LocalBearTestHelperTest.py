@@ -5,6 +5,7 @@ from tests.test_bears.TestBear import TestBear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.testing.LocalBearTestHelper import verify_local_bear, execute_bear
+from coalib.testing.LocalBearTestHelper import LocalBearTestHelper as Helper
 
 
 files = ('Everything is invalid/valid/raises error',)
@@ -15,6 +16,23 @@ invalidTest = verify_local_bear(TestBear,
 validTest = verify_local_bear(TestBear,
                               valid_files=files,
                               invalid_files=())
+
+
+class LocalBearCheckResultsTest(Helper):
+
+    def setUp(self):
+        section = Section('')
+        section.append(Setting('result', 'a, b'))
+        self.uut = TestBear(section, Queue())
+
+    def test_order_ignored(self):
+        self.check_results(self.uut, ['a', 'b'], ['b', 'a'],
+                           check_order=False)
+
+    def test_require_order(self):
+        with self.assertRaises(AssertionError):
+            self.check_results(self.uut, ['a', 'b'], ['b', 'a'],
+                               check_order=True)
 
 
 class LocalBearTestHelper(unittest.TestCase):
