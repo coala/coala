@@ -49,8 +49,8 @@ def traverse_graph(start_nodes, get_successive_nodes,
                 run_on_edge(node, subnode)
 
                 if subnode in path:
-                    raise CircularDependencyError(subnode)
-
+                    raise CircularDependencyError([repr(subnode), '...',
+                                                   repr(subnode)])
                 visit(subnode)
 
             path.remove(node)
