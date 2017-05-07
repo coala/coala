@@ -293,7 +293,7 @@ class DependencyTracker:
          ...
         coalib.core.CircularDependencyError.CircularDependencyError: ...
 
-        :raises CircularDependencyError:
+        :raises coalib.core.CircularDependencyError.CircularDependencyError:
             Raised on circular dependency conflicts.
         """
         traverse_graph(
