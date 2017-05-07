@@ -34,7 +34,7 @@ def traverse_graph(start_nodes, get_successive_nodes,
         A callable that is run on each edge during traversing. Takes in two
         parameters, the previous- and next-node which form an edge. The default
         is an empty function.
-    :raises coalib.core.CircularDependencyError.CircularDependencyError:
+    :raises CircularDependencyError:
         Raised when the graph is cyclic.
     """
     path = set()
@@ -49,8 +49,8 @@ def traverse_graph(start_nodes, get_successive_nodes,
                 run_on_edge(node, subnode)
 
                 if subnode in path:
-                    raise CircularDependencyError(subnode)
-
+                    raise CircularDependencyError([repr(subnode), '...',
+                                                   repr(subnode)])
                 visit(subnode)
 
             path.remove(node)
