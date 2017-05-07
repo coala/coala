@@ -1,8 +1,10 @@
 Linter Bears
 ============
 
-Welcome. This tutorial aims to show you how to use the ``@linter`` decorator in
-order to integrate linters in your bears.
+Welcome. This tutorial aims to show you how to use the ``@linter`` (`ref
+<http://api.coala.io/en/latest/coalib.bearlib.abstractions.html#
+module-coalib.bearlib.abstractions.Linter>`__) decorator in order to
+integrate linters in your bears.
 
 .. note::
 
