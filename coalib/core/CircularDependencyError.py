@@ -1,19 +1,19 @@
-class CircularDependencyError(Exception):
+class CircularDependencyError(RuntimeError):
     """
     An error identifying a circular dependency.
     """
 
-    def __init__(self, node=None):
+    def __init__(self, names=None):
         """
         Creates the CircularDependencyError with a helpful message about the
         dependency.
 
-        :param node:
-            The node that was encountered twice and closes the dependency
-            circle.
+        :param names:
+            The names of the nodes that form a dependency circle.
         """
-        message = 'Circular dependency detected.'
-        if node is not None:
-            message += ' {0!r} -> ... -> {0!r}'.format(node)
-
-        Exception.__init__(self, message)
+        if names:
+            msg = 'Circular dependency detected: {names}'.format(
+                names=' -> '.join(names))
+        else:
+            msg = 'Circular dependency detected.'
+        super().__init__(msg)

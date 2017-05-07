@@ -7,14 +7,15 @@ class CircularDependencyErrorTest(unittest.TestCase):
 
     def test_default_message(self):
         with self.assertRaises(CircularDependencyError) as cm:
+            # test the default case (names is None)
             raise CircularDependencyError
 
         self.assertEqual(str(cm.exception), 'Circular dependency detected.')
 
-    def test_message_with_causing_node(self):
+    def test_message_with_dependency_circle(self):
+
         with self.assertRaises(CircularDependencyError) as cm:
-            # "3" is the causing node.
-            raise CircularDependencyError(3)
+            raise CircularDependencyError(['A', 'B', 'C'])
 
         self.assertEqual(str(cm.exception),
-                         'Circular dependency detected. 3 -> ... -> 3')
+                         'Circular dependency detected: A -> B -> C')
