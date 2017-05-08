@@ -335,7 +335,8 @@ def instantiate_processes(section,
                           job_count,
                           cache,
                           log_printer,
-                          console_printer):
+                          console_printer,
+                          match_cache={}):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -348,6 +349,8 @@ def instantiate_processes(section,
                              a file cache buffer.
     :param log_printer:      The log printer to warn to.
     :param console_printer:  Object to print messages on the console.
+    :param match_cache:      The cached collected file list of previous
+                             sections.
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
@@ -356,7 +359,8 @@ def instantiate_processes(section,
         glob_list(section.get('files', '')),
         log_printer,
         ignored_file_paths=glob_list(section.get('ignore', '')),
-        limit_file_paths=glob_list(section.get('limit_files', '')))
+        limit_file_paths=glob_list(section.get('limit_files', '')),
+        match_cache=match_cache)
 
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
@@ -658,7 +662,8 @@ def execute_section(section,
                     print_results,
                     cache,
                     log_printer,
-                    console_printer):
+                    console_printer,
+                    match_cache={}):
     """
     Executes the section with the given bears.
 
@@ -682,6 +687,8 @@ def execute_section(section,
                              a file cache buffer.
     :param log_printer:      The log_printer to warn to.
     :param console_printer:  Object to print messages on the console.
+    :param match_cache:      The cached collected file list of previous
+                             sections.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
@@ -704,7 +711,8 @@ def execute_section(section,
                                                 running_processes,
                                                 cache,
                                                 log_printer,
-                                                console_printer=console_printer)
+                                                console_printer=console_printer,
+                                                match_cache=match_cache)
 
     logger_thread = LogPrinterThread(arg_dict['message_queue'],
                                      log_printer)
