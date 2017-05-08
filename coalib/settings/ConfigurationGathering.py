@@ -143,7 +143,7 @@ def load_configuration(arg_list, log_printer, arg_parser=None):
 
     :param arg_list:    The list of command line arguments.
     :param log_printer: The LogPrinter object for logging.
-    :param arg_parser:  An ``ArgParser`` object.
+    :param arg_parser:  An ``argparse.ArgumentParser`` object.
     :return:            A tuple holding (log_printer: LogPrinter, sections:
                         dict(str, Section), targets: list(str)). (Types
                         indicated after colon.)
