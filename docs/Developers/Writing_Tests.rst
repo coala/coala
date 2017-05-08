@@ -49,7 +49,7 @@ The name of the test file has to end with ``Test.py`` (for example
         $ pytest -k <your-test>
 
     You can even give partial names or queries like "not MyCustomTest"
-    to not run a specific test. More information can be got with
+    to not run a specific test. More information is shown with
     ``pytest -h``
 
 Coming to the test file structure. Every test script starts with your
@@ -186,7 +186,7 @@ as a kickstart for test-writing.
 
 Put the code under the desired folder inside ``tests``,
 modify it to let it test your stuff and run the test from
-the coala root folder ``pytest``.
+the coala root folder using ``pytest``.
 
 .. code:: python
 
