@@ -1,7 +1,10 @@
 import os
-from collections import OrderedDict
+from collections import Iterable, OrderedDict
 
-from coala_utils.decorators import generate_repr
+from coala_utils.decorators import (
+    enforce_signature,
+    generate_repr,
+)
 from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.parsing.Globbing import glob_escape
 
@@ -93,15 +96,16 @@ class Setting(StringConverter):
     conversions into common data types.
     """
 
+    @enforce_signature
     def __init__(self,
                  key,
                  value,
-                 origin='',
-                 strip_whitespaces=True,
-                 list_delimiters=(',', ';'),
-                 from_cli=False,
-                 remove_empty_iter_elements=True,
-                 to_append=False):
+                 origin: str='',
+                 strip_whitespaces: bool=True,
+                 list_delimiters: Iterable=(',', ';'),
+                 from_cli: bool=False,
+                 remove_empty_iter_elements: bool=True,
+                 to_append: bool=False):
         """
         Initializes a new Setting,
 
@@ -126,12 +130,6 @@ class Setting(StringConverter):
                                            needs to be appended to a setting in
                                            the defaults of a section.
         """
-        if not isinstance(from_cli, bool):
-            raise TypeError('from_cli needs to be a boolean value.')
-
-        if not isinstance(to_append, bool):
-            raise TypeError('to_append needs to be a boolean value.')
-
         self.to_append = to_append
 
         StringConverter.__init__(
