@@ -310,7 +310,7 @@ coala 0.8.0 - grizzly
 For this release, we have had 46 developers from around the world contributing
 over 150 commits in the last 9 weeks.
 
-Improving the API available for bear writers is one of the areas we've focused
+Improving the API available for bear authors is one of the areas we've focused
 on for this release, with several new and exciting features. General performance
 has also been improved heavily with some major changes under the hood. The
 documentation has also been worked on, with an emphasis on user-friendliness
@@ -337,7 +337,7 @@ Below are some of the important changes introduced for this release:
 - Display the line number when a line is missing; this could happen if a bear
   that had run previously overwrites it.
 
-**For Bear Writers**
+**For Bear Authors**
 
 - Bears now have a new ``REQUIREMENTS`` attribute which will be used to
   automatically resolve bear dependencies. This includes:
@@ -505,7 +505,7 @@ Bugfixes:
 - If errors happen before the initialization of logging, tracebacks will be
   shown.
 
-For bear writers:
+For bear authors:
 
 - Bears can have a number of attributes now, including author information,
   supported languages or categories. A requirements attribute will help
@@ -566,7 +566,7 @@ Bugfixes:
 -  Ignore statements without a stop statement are now accepted as well
    (https://github.com/coala-analyzer/coala/issues/2003).
 
-For bear writers:
+For bear authors:
 
 -  A tutorial for managing bear dependencies is available in our documentation
    now.
@@ -707,7 +707,7 @@ Bugfixes:
 -  Some cases, where result ignoring within files didn't work have been
    resolved. (https://github.com/coala-analyzer/coala/issues/1232)
 
-For bear writers:
+For bear authors:
 
 -  A new built-in type is available from ``Setting`` for using inside ``run()``
    signature: ``url``.
@@ -883,7 +883,7 @@ This release features the following feature changes:
    from source.
 -  A ``coala-dbus`` binary will now be installed that spawns up a dbus
    API for controlling coala. (Linux only.)
--  The StringProcessing libary is there to help bear writers deal with
+-  The StringProcessing libary is there to help bear authors deal with
    regexes and similar things.
 -  A new glob syntax was introduced and documented.
    (http://docs.coala.io/en/latest/Users/Glob_Patterns.html)
