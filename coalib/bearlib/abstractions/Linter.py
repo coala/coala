@@ -196,9 +196,9 @@ def _create_linter(klass, options):
             Returns the executable of this class.
 
             :return:
-                The executable name.
+                The full path to the executable file.
             """
-            return options['executable']
+            return shutil.which(options['executable'])
 
         @classmethod
         def check_prerequisites(cls):
