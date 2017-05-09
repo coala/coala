@@ -125,7 +125,7 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
         # Since we get a real directory here and since we
         # pass this later to iglob, we need to escape this.
         bear_dir = glob_escape(bear_dir)
-        for bear_glob in bear_globs:
+        for bear_glob in bear_globs + ["__init__"]:
             for matching_file in iglob(
                     os.path.join(bear_dir, bear_glob + '.py')):
 
