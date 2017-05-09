@@ -11,7 +11,9 @@ import setuptools.command.build_py
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
-from coalib import VERSION, assert_supported_version, get_version
+from coalib import VERSION
+from coalib import assert_supported_version
+from coalib import get_version
 from coalib.misc.BuildManPage import BuildManPage
 
 try:
@@ -21,9 +23,6 @@ try:
         locale.setlocale(locale.LC_ALL, 'C.UTF-8')
 except (ValueError, UnicodeError):
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-
-
-assert_supported_version()
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):
