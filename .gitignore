@@ -6,7 +6,7 @@ __pycache__
 *~
 build
 *.mo
-dist
+disttest 
 MANIFEST
 *.pyc
 .coverage
