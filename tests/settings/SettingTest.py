@@ -11,11 +11,18 @@ from coalib.parsing.Globbing import glob_escape
 
 class SettingTest(unittest.TestCase):
 
-    def test_construction(self):
-        self.assertRaises(ValueError, Setting, '', 2, 2)
+    def test_constructor_signature(self):
+        self.assertRaises(TypeError, Setting, '', 2, 2)
         self.assertRaises(TypeError, Setting, '', '', '', from_cli=5)
         self.assertRaisesRegex(TypeError, 'to_append',
                                Setting, '', '', '', to_append=10)
+        self.assertRaises(TypeError, Setting, 'a', 'b', list_delimiters=5)
+        self.assertRaises(TypeError, Setting, 'a', 'b', list_delimiters=None)
+
+    def test_empty_key(self):
+        with self.assertRaisesRegex(
+                ValueError, 'An empty key is not allowed for a setting'):
+            Setting('', 2)
 
     def test_path(self):
         self.uut = Setting(

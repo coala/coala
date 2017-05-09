@@ -18,7 +18,7 @@ class SectionTest(unittest.TestCase):
     def test_append(self):
         uut = Section(Constants.COMPLEX_TEST_STRING, None)
         self.assertRaises(TypeError, uut.append, 5)
-        uut.append(Setting(5, 5, 5))
+        uut.append(Setting(5, 5))
         self.assertEqual(str(uut.get('5 ')), '5')
         self.assertEqual(int(uut.get('nonexistent', 5)), 5)
 
@@ -36,16 +36,16 @@ class SectionTest(unittest.TestCase):
     def test_iter(self):
         defaults = Section('default', None)
         uut = Section('name', defaults)
-        uut.append(Setting(5, 5, 5))
-        uut.add_or_create_setting(Setting('TEsT', 4, 5))
-        defaults.append(Setting('tEsT', 1, 3))
-        defaults.append(Setting(' great   ', 3, 8))
-        defaults.append(Setting(' great   ', 3, 8), custom_key='custom')
-        uut.add_or_create_setting(Setting('custom', 4, 8, to_append=True))
-        uut.add_or_create_setting(Setting(' NEW   ', 'val', 8))
-        uut.add_or_create_setting(Setting(' NEW   ', 'vl', 8),
+        uut.append(Setting(5, 5))
+        uut.add_or_create_setting(Setting('TEsT', 4))
+        defaults.append(Setting('tEsT', 1))
+        defaults.append(Setting(' great   ', 3))
+        defaults.append(Setting(' great   ', 3), custom_key='custom')
+        uut.add_or_create_setting(Setting('custom', 4, to_append=True))
+        uut.add_or_create_setting(Setting(' NEW   ', 'val'))
+        uut.add_or_create_setting(Setting(' NEW   ', 'vl'),
                                   allow_appending=False)
-        uut.add_or_create_setting(Setting('new', 'val', 9),
+        uut.add_or_create_setting(Setting('new', 'val'),
                                   custom_key='teSt ',
                                   allow_appending=True)
         self.assertEqual(list(uut), ['5', 'test', 'custom', 'new', 'great'])
