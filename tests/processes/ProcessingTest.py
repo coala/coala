@@ -707,6 +707,6 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         results = [5, HiddenResult('origin', []),
                    Result('somebear', 'message', debug_msg='debug')]
         retval, newres = print_result(results, {}, 0, lambda *args: None,
-                                      self.section, self.log_printer, {}, [],
+                                      self.section, self.log_printer, {},
                                       console_printer=self.console_printer)
         self.assertEqual(newres, [])
