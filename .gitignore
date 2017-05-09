@@ -21,9 +21,8 @@ htmlcov
 *.sublime-project
 *.sublime-workspace
 .python-version
-coala.egg-info
+*.egg-info
 .coverage.*
-coala.1
 src
 site
 .zanata-cache
