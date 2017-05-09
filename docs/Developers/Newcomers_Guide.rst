@@ -197,6 +197,10 @@ After that, you can run coala by simply typing
 
 into your bash. This will analyze your code and help you fix it.
 
+Before proceeding
+`ADD CI <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_
+to your fork.
+
 .. seealso::
 
     `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
