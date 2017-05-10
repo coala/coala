@@ -16,7 +16,7 @@ integrate linters in your bears.
   Bear. If you want to write a global linter Bear, for a tool that does not
   run once for each file, but only once for the whole project, you can still
   go through the steps and then read about the differences of global linter
-  Bears at :ref:`global_bears`.
+  Bears at `global_bears`_.
 
 Why is This Useful?
 -------------------

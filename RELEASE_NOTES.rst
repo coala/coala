@@ -62,9 +62,9 @@ and the next generation core.
 - coala will now output a warning if you specify an editor that is not known.
 - The ``noqa`` keyword used by other linters as an ignore keyword is now
   supported as a coala ignore keyword.
-- ``libclang-py3`` update to 3.4 is known to cause problems for some users. Please
-  uninstall and reinstall it if coala tells you there is a version mismatch
-  in ``libclang-py3``.
+- ``libclang-py3`` update to 3.4 is known to cause problems for some users.
+  Please uninstall and reinstall it if coala tells you there is a version
+  mismatch in ``libclang-py3``.
 - ``C#`` now has proper language support and should work with AnnotationBear
   and all other bears which require language configuration.
 
@@ -193,10 +193,10 @@ the first aspects are already in our source code and that bears can already
 associate results with them so future versions of coala will be able to tell
 the user a plethora of facts around the type of issue pointed out.
 
-**For users**, we have added a lot of usability improvements as well as for example
-the ability to merge patches within one line: if you previously had to run
-coala multiple times because of patch conflicts, this is likely not the case
-anymore!
+**For users**, we have added a lot of usability improvements as well as for
+example the ability to merge patches within one line: if you previously had
+to run coala multiple times because of patch conflicts, this is likely not
+the case anymore!
 
 **As a Bear writer** you now have access to our ``Language`` facilities: they
 will give you facts about programming languages that you analyse so you can
@@ -342,7 +342,8 @@ Below are some of the important changes introduced for this release:
 - Bears now have a new ``REQUIREMENTS`` attribute which will be used to
   automatically resolve bear dependencies. This includes:
 
-  + Native requirements (from package managers such as ``apt-get``, ``dnf``, ``pacman``, ...)
+  + Native requirements
+    (from package managers such as ``apt-get``, ``dnf``, ``pacman``, ...)
   + Conda requirements
   + Python requirements through ``pip3``
   + ``go`` requirements
@@ -361,10 +362,12 @@ Below are some of the important changes introduced for this release:
   ever before to create external linter based bears for coala!
 
 - A new `ASCIINEMA_URL` attribute has been added to bears. This should
-  contain an URL to an asciinema video displaying the bear's capabilities in action.
+  contain an URL to an asciinema video displaying the bear's capabilities in
+  action.
 
 - Bear results may now have a ``confidence`` parameter: this is supposed to
-  quantify the confidence, on a scale of 1 to 100, the bear has when flagging results.
+  quantify the confidence, on a scale of 1 to 100, the bear has when flagging
+  results.
 
 - A ``deprecate_settings`` decorator has been created to deprecate old,
   unsupported bear parameters. Please see

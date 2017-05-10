@@ -42,7 +42,7 @@ ignore_length_regex = ^.*https?://
 [DOCS]
 bears = SpaceConsistencyBear, LineLengthBear
 
-files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
+files = docs/**/*.rst,*.rst
 ignore = docs/API/**
 ignore_length_regex = ^.*https?://
 
@@ -52,7 +52,7 @@ default_actions = SpaceConsistencyBear: ApplyPatchAction
 enabled = False
 
 bears = LanguageToolBear
-files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
+files = docs/**/*.rst,*.rst
 ignore = docs/API/**
 languagetool_disable_rules =
     EN_QUOTES,                          # `` for links in rst files
@@ -116,6 +116,11 @@ files = docs/_static/**.css
 [rst]
 bears = reSTLintBear
 files = README.rst
+
+[rstcheck]
+bears = RSTcheckBear
+files = **.rst
+ignore = docs/Developers/coala_settings.rst
 
 [text]
 bears = SpaceConsistencyBear

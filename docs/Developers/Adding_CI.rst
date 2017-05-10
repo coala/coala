@@ -83,7 +83,7 @@ Codecov
 -------
 
 We require 100% test coverage, and to test that we use
-`codecov.io <https://codecov.io>`_ which takes data from all other
+`codecov.io <https://codecov.io>`__ which takes data from all other
 CI to confirm its coverage.
 Here are two example reports from coala and coala-bears repository :
 https://codecov.io/gh/coala/coala/ and
@@ -91,7 +91,7 @@ https://codecov.io/gh/coala/coala-bears/. Once you follow the
 instructions here, you will have identical reports for your forked
 repository.
 
-1. Go to `codecov.io <https://codecov.io>`_ and sign up using your
+1. Go to `codecov.io <https://codecov.io>`__ and sign up using your
    GitHub account.
 2. Click on your username, and that will take you to a page where
    the repositories that use codecov are listed.
