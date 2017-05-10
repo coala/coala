@@ -133,6 +133,16 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '--no-autoapply-warn', const=True, action='store_const',
         help='turn off warning about patches not being auto applicable')
 
+    if parser_type == "coala-format":
+        config_group.add_argument(
+            '--format-str', const=True, action='store', nargs='+',
+            metavar='FIELD',
+            help='To format the printed text by giving one or more of the '
+                'following: \n'
+                '[id, origin, column, end_column, file, line, end_line,'
+                'severity, severity_str, message]',
+        )
+
     inputs_group = arg_parser.add_argument_group('Inputs')
 
     inputs_group.add_argument(
