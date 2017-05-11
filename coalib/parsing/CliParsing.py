@@ -58,7 +58,7 @@ def parse_cli(arg_list=None,
                                   line_parser)
         else:
             if isinstance(arg_value, list):
-                arg_value = ','.join([str(val) for val in arg_value])
+                arg_value = ','.join(str(val) for val in arg_value)
 
             append_to_sections(sections,
                                arg_key,

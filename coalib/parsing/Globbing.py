@@ -290,13 +290,9 @@ def relative_wildcard_glob(dirname, pattern):
             names = os.listdir(dirname)
     except OSError:
         return []
-    result = []
     pattern = os.path.normcase(pattern)
     match = re.compile(translate(pattern)).match
-    for name in names:
-        if match(os.path.normcase(name)):
-            result.append(name)
-    return result
+    return [name for name in names if match(os.path.normcase(name))]
 
 
 def relative_flat_glob(dirname, basename):
@@ -309,7 +305,7 @@ def relative_flat_glob(dirname, basename):
     """
     if os.path.exists(os.path.join(dirname, basename)):
         return [basename]
-    return[]
+    return []
 
 
 def relative_recursive_glob(dirname, pattern):
@@ -325,8 +321,7 @@ def relative_recursive_glob(dirname, pattern):
     assert pattern == '**'
     if dirname:
         yield pattern[:0]
-    for relative_dir in _iter_relative_dirs(dirname):
-        yield relative_dir
+    yield from _iter_relative_dirs(dirname)
 
 
 wildcard_check_pattern = re.compile('([*?[])')
@@ -346,8 +341,7 @@ def has_wildcard(pattern):
 def _iglob(pattern):
     dirname, basename = os.path.split(pattern)
     if not has_wildcard(pattern):
-        for file in _absolute_flat_glob(pattern):
-            yield file
+        yield from _absolute_flat_glob(pattern)
         return
 
     if basename == '**':
@@ -358,8 +352,7 @@ def _iglob(pattern):
         relative_glob_function = relative_flat_glob
 
     if not dirname:
-        for file in relative_glob_function(dirname, basename):
-            yield file
+        yield from relative_glob_function(dirname, basename)
         return
 
     # Prevent an infinite recursion if a drive or UNC path contains
@@ -384,15 +377,12 @@ def iglob(pattern):
     :return:        Iterator that yields all file names that match pattern
     """
     for pat in _iter_alternatives(pattern):
-        pat = os.path.expanduser(pat)
-        pat = os.path.normcase(pat)
+        pat = os.path.normcase(os.path.expanduser(pat))
 
         if pat.endswith(os.sep):
-            for name in _iglob(pat):
-                yield name
+            yield from _iglob(pat)
         else:
-            for name in _iglob(pat):
-                yield name.rstrip(os.sep)
+            yield from (name.rstrip(os.sep) for name in _iglob(pat))
 
 
 def glob(pattern):
