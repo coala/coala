@@ -203,32 +203,19 @@ class DependencyTracker:
         # Check if dependency has itself dependencies which aren't resolved,
         # these need to be removed too. This operation does not free any
         # dependencies.
-        dependencies_to_remove = []
-        for tracked_dependency, dependants in self._dependency_dict.items():
+        for tracked_deps, dependants in tuple(self._dependency_dict.items()):
             if dependency in dependants:
                 dependants.remove(dependency)
 
-                # If dependants set is now empty, schedule dependency for
-                # removal from dependency_dict.
+                # If dependants set is now empty, remove from dependency_dict
                 if not dependants:
-                    dependencies_to_remove.append(tracked_dependency)
+                    del self._dependency_dict[tracked_deps]
 
-        for tracked_dependency in dependencies_to_remove:
-            del self._dependency_dict[tracked_dependency]
-
+        from itertools import chain
         # Now free dependants which do depend on the given dependency.
         possible_freed_dependants = self._dependency_dict.pop(
             dependency, set())
-        non_free_dependants = set()
-
-        for possible_freed_dependant in possible_freed_dependants:
-            # Check if all dependencies of dependants from above are satisfied.
-            # If so, there are no more dependencies for dependant. Thus it's
-            # resolved.
-            for dependants in self._dependency_dict.values():
-                if possible_freed_dependant in dependants:
-                    non_free_dependants.add(possible_freed_dependant)
-                    break
+        non_free_dependants = set(chain(*self._dependency_dict.values()))
 
         # Remaining dependents are officially resolved.
         return possible_freed_dependants - non_free_dependants
