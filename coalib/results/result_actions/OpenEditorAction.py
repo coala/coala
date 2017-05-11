@@ -39,6 +39,10 @@ KNOWN_EDITORS = {
         'file_arg_template': '{filename} +{line}',
         'gui': False
     },
+    'nvim': {
+        'file_arg_template': '{filename} +{line}',
+        'gui': False
+    },
     'nano': {
         'file_arg_template': '+{line},{column} {filename} ',
         'gui': False
