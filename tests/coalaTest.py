@@ -179,3 +179,30 @@ class coalaTest(unittest.TestCase):
             )
 
             assert exitcode == 1
+
+    def test_coala_with_color(self):
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala')
+            errors = filter(bool, stderr.split('\n'))
+            # Every error message must start with characters
+            # used for coloring.
+            for err in errors:
+                self.assertNotRegex(err, '^\[WARNING\]')
+            self.assertEqual(
+                retval, 0, 'coala must return zero when there are no errors')
+
+    def test_coala_without_color(self):
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (lines, filename):
+
+            retval, stdout, stderr = execute_coala(
+                             coala.main, 'coala', '-N')
+            errors = filter(bool, stderr.split('\n'))
+            # Any error message must not start with characters
+            # used for coloring.
+            for err in errors:
+                self.assertRegex(err, '^\[WARNING\]')
+            self.assertEqual(
+                retval, 0, 'coala must return zero when there are no errors')

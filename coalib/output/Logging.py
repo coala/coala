@@ -32,7 +32,7 @@ class CounterHandler(logging.Handler):
         return cls._call_counter[level]
 
 
-def configure_logging():
+def configure_logging(color=True):
     """
     Configures the logging with hard coded dictionary.
     """
@@ -46,7 +46,7 @@ def configure_logging():
         'handlers': {
             'colored': {
                 'class': 'logging.StreamHandler',
-                'formatter': 'colored',
+                'formatter': 'colored' if color else 'plain',
                 'stream': sys.stderr
             },
             'counter': {
@@ -69,6 +69,10 @@ def configure_logging():
                     'INFO': 'blue',
                     'DEBUG': 'green'
                 }
+            },
+            'plain': {
+                'format': '[%(levelname)s][%(asctime)s] %(message)s',
+                'datefmt': '%X',
             }
         }
     })

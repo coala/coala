@@ -36,6 +36,7 @@ def main():
             show_bears, show_language_bears_capabilities)
 
         console_printer = ConsolePrinter(print_colored=not args.no_color)
+        configure_logging(not args.no_color)
 
         if args.json:  # needs to be checked in order to display bears in json
             return mode_json(args)
