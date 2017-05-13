@@ -148,12 +148,21 @@ class DiffTest(unittest.TestCase):
         del result_file[2]
         self.assertEqual(self.uut.modified, result_file)
 
-    def test_has_changes(self):
-        self.assertFalse(self.uut.has_changes)
+    def test_bool(self):
+        self.assertFalse(self.uut)
         self.uut.add_line(4, '4')
-        self.assertTrue(self.uut.has_changes)
+        self.assertTrue(self.uut)
         self.uut.delete_line(4)
-        self.assertFalse(self.uut.has_changes)
+        self.assertFalse(self.uut)
+
+        # test if it works with tuples.
+        uutuple = Diff(('1', '2', '3', '4'))
+
+        self.assertFalse(uutuple)
+        uutuple.add_line(4, '4')
+        self.assertTrue(uutuple)
+        uutuple.delete_line(4)
+        self.assertFalse(uutuple)
 
     def test_addition(self):
         self.assertRaises(TypeError, self.uut.__add__, 5)
