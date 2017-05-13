@@ -159,6 +159,11 @@ class ConsoleInteractionTest(unittest.TestCase):
             tabs=True,
             tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
 
+        patcher = patch('coalib.results.result_actions.OpenEditorAction.'
+                        'subprocess')
+        self.addCleanup(patcher.stop)
+        patcher.start()
+
     def tearDown(self):
         OpenEditorAction.is_applicable = self.old_open_editor_applicable
         ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
