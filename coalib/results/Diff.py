@@ -26,7 +26,7 @@ class Diff:
         :param delete:    True if file is set to be deleted.
         """
         self._changes = {}
-        self._file = file_list
+        self._file = list(file_list)
         self.rename = rename
         self.delete = delete
 

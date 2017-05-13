@@ -560,8 +560,16 @@ class DiffTest(unittest.TestCase):
         b = ['first', 'third']
         diff_1 = Diff.from_string_arrays(a, b)
 
+        c = ['first', 'second', 'third']
+        d = ['first', 'third']
+
+        diff_2 = Diff.from_string_arrays(c, d)
+
+        self.assertEqual(diff_1, diff_2)
+
+        # changing the original array should not influence
+        # the diff
         a[1] = 'else'
-        diff_2 = Diff.from_string_arrays(a, b)
         self.assertEqual(diff_1, diff_2)
 
         diff_1.rename = 'abcd'
