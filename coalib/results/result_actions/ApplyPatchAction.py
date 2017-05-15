@@ -28,6 +28,8 @@ class ApplyPatchAction(ResultAction):
                 diff = file_diff_dict[filename]
                 pre_patch_filename = (diff.rename
                                       if diff.rename is not False
+                                      else diff.create
+                                      if diff.create is not False
                                       else filename)
                 file_diff_dict[filename] += result.diffs[filename]
             else:
@@ -46,6 +48,8 @@ class ApplyPatchAction(ResultAction):
             if not diff.delete:
                 new_filename = (diff.rename
                                 if diff.rename is not False
+                                else diff.create
+                                if diff.create is not False
                                 else filename)
                 with open(new_filename, mode='w', encoding='utf-8') as file:
                     file.writelines(diff.modified)
