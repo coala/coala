@@ -46,6 +46,10 @@ class ShellCommandResult(tuple):
         self.code = code
 
 
+def call_without_output(command):
+    run(' '.join(command), stdout=Capture(), stderr=Capture())
+
+
 @contextmanager
 def run_interactive_shell_command(command, **kwargs):
     """
