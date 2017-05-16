@@ -2,6 +2,7 @@ import argparse
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
+from coalib.parsing.FilterHelper import FilterHelper
 
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -185,6 +186,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
     outputs_group.add_argument(
         '-l', '--filter-by-language', nargs='+', metavar='LANG',
         help='filters `--show-bears` by the given languages')
+
+    outputs_group.add_argument(
+        '--filter-by', action='append', nargs='+',
+        help='filters `--show-bears` by the filter given as argument. '
+             'Available filters: {}'.format(
+                 FilterHelper.get_all_filters_str()))
 
     outputs_group.add_argument(
         '-p', '--show-capabilities', nargs='+', metavar='LANG',

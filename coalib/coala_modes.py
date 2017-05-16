@@ -50,8 +50,6 @@ def mode_json(args, debug=False):
     from coalib.misc.Exceptions import get_exitcode
     from coalib.output.Logging import configure_json_logging
     from coalib.output.JSONEncoder import create_json_encoder
-    from coalib.output.printers.LogPrinter import LogPrinter
-    from coalib.settings.ConfigurationGathering import get_filtered_bears
 
     if args.log_json:
         log_stream = configure_json_logging()
@@ -61,8 +59,10 @@ def mode_json(args, debug=False):
 
     if args.show_bears:
         try:
-            local_bears, global_bears = get_filtered_bears(
-                args.filter_by_language, LogPrinter())
+            from coalib.parsing.FilterHelper import FilterHelper
+
+            local_bears, global_bears = FilterHelper.get_filtered_bears(
+                'language', args.filter_by_language)
             bears = inverse_dicts(local_bears, global_bears)
             for bear, _ in sorted(bears.items(),
                                   key=lambda bear_tuple:

@@ -6,9 +6,9 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.bears.Bear import Bear
 from coalib.collecting.Collectors import (
-    collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
-    collect_registered_bears_dirs, filter_section_bears_by_languages,
-    get_all_bears, get_all_bears_names)
+    collect_all_bears_from_sections, collect_bears, collect_dirs,
+    collect_files, collect_registered_bears_dirs, get_all_bears,
+    get_all_bears_names)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
@@ -283,24 +283,6 @@ class CollectorsTests(unittest.TestCase):
         self.collectors_test_dir = os.path.join(current_dir,
                                                 'collectors_test_dir')
         self.log_printer = LogPrinter(ConsolePrinter())
-
-    def test_filter_section_bears_by_languages(self):
-        test_section = Section('test_section')
-        test_section.bear_dirs = lambda: os.path.join(self.collectors_test_dir,
-                                                      'bears_local_global',
-                                                      '**')
-        local_bears, global_bears = collect_all_bears_from_sections(
-            {'test_section': test_section},
-            self.log_printer)
-        local_bears = filter_section_bears_by_languages(local_bears, ['C'])
-        self.assertEqual(len(local_bears['test_section']), 1)
-        self.assertEqual(str(local_bears['test_section'][0]),
-                         "<class 'bears2.Test2LocalBear'>")
-
-        global_bears = filter_section_bears_by_languages(global_bears, ['Java'])
-        self.assertEqual(len(global_bears['test_section']), 1)
-        self.assertEqual(str(global_bears['test_section'][0]),
-                         "<class 'bears1.Test1GlobalBear'>")
 
     def test_get_all_bears(self):
         with bear_test_module():

@@ -18,6 +18,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from dependency_management.requirements.PipRequirement import PipRequirement
 
+from coalib.parsing.FilterHelper import FilterHelper, InvalidFilterException
 from coalib.output.Logging import configure_logging
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
@@ -59,11 +60,29 @@ def main(debug=False):
 
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (
-                get_filtered_bears)
+                get_all_bears)
+            filtered_bears = get_all_bears(log_printer)
+            if args.filter_by_language:
+                log_printer.warn(
+                    "'--filter-by-language ...' is deprecated. "
+                    "Use '--filter-by language ...' instead.")
+                if args.filter_by is None:
+                    args.filter_by = []
+                args.filter_by.append(['language'] + args.filter_by_language)
+            if args.filter_by:
+                # Each iteration of the following loop applies
+                # filters one by one provided as arguments
+                for filter_by in args.filter_by:
+                    filter_by_x, *filter_args = filter_by
+                    try:
+                        filtered_bears = FilterHelper.get_filtered_bears(
+                            filter_by_x, filter_args, filtered_bears)
+                    except InvalidFilterException as ex:
+                        # If filter is not available
+                        console_printer.print(ex)
+                        return 2
 
-            local_bears, global_bears = get_filtered_bears(
-                args.filter_by_language, log_printer)
-
+            local_bears, global_bears = filtered_bears
             show_bears(local_bears,
                        global_bears,
                        args.show_description or args.show_details,
@@ -74,11 +93,8 @@ def main(debug=False):
         elif args.show_capabilities:
             from coalib.collecting.Collectors import (
                 filter_capabilities_by_languages)
-            from coalib.settings.ConfigurationGathering import (
-                get_filtered_bears)
-
-            local_bears, global_bears = get_filtered_bears(
-                args.filter_by_language, log_printer)
+            local_bears, _ = FilterHelper.get_filtered_bears(
+                'language', args.show_capabilities)
             capabilities = filter_capabilities_by_languages(
                 local_bears, args.show_capabilities)
             show_language_bears_capabilities(capabilities, console_printer)

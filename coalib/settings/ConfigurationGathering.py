@@ -3,8 +3,7 @@ import re
 import sys
 import logging
 
-from coalib.collecting.Collectors import (
-    collect_all_bears_from_sections, filter_section_bears_by_languages)
+from coalib.collecting.Collectors import collect_all_bears_from_sections
 from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -322,11 +321,8 @@ def get_config_directory(section):
     return config if os.path.isdir(config) else os.path.dirname(config)
 
 
-def get_filtered_bears(languages, log_printer, arg_parser=None):
+def get_all_bears(log_printer, arg_parser=None):
     """
-    Fetch bears and filter them based on given list of languages.
-
-    :param languages:   List of languages.
     :param log_printer: The log_printer to handle logging.
     :param arg_parser:  An ``ArgParser`` object.
     :return:            Tuple containing dictionaries of local bears
@@ -337,11 +333,6 @@ def get_filtered_bears(languages, log_printer, arg_parser=None):
                                      arg_parser=arg_parser)
     local_bears, global_bears = collect_all_bears_from_sections(
         sections, log_printer)
-    if languages:
-        local_bears = filter_section_bears_by_languages(
-            local_bears, languages)
-        global_bears = filter_section_bears_by_languages(
-            global_bears, languages)
     return local_bears, global_bears
 
 

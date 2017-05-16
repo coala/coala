@@ -164,7 +164,8 @@ class coalaTest(unittest.TestCase):
             self.assertEqual(retval, 0)
             # 2 bears plus 1 line holding the closing colour escape sequence.
             self.assertEqual(len(stdout.splitlines()), 3)
-            self.assertFalse(stderr)
+            self.assertIn(
+                "'--filter-by-language ...' is deprecated", stderr)
 
     def test_show_language_bears_debug(self):
         self.test_show_language_bears(debug=True)
