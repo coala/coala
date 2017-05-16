@@ -11,27 +11,27 @@ class DocstyleDefinitionTest(unittest.TestCase):
     dummy_metadata = Metadata(':param ', ':', ':return:')
 
     def test_fail_instantation(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, ''):
             DocstyleDefinition('PYTHON', 'doxyGEN',
                                (('##', '#'),), self.dummy_metadata)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, ''):
             DocstyleDefinition('WEIRD-PY',
                                'schloxygen',
                                (('##+', 'x', 'y', 'z'),),
                                self.dummy_metadata)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, ''):
             DocstyleDefinition('PYTHON',
                                'doxygen',
                                (('##', '', '#'), ('"""', '"""')),
                                self.dummy_metadata)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(TypeError, ''):
             DocstyleDefinition(123, ['doxygen'], (('"""', '"""')),
                                self.dummy_metadata)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(TypeError, ''):
             DocstyleDefinition('language', ['doxygen'], (('"""', '"""')),
                                'metdata')
 
@@ -72,15 +72,15 @@ class DocstyleDefinitionTest(unittest.TestCase):
 
     def test_load(self):
         # Test unregistered docstyle.
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaisesRegex(FileNotFoundError, ''):
             next(DocstyleDefinition.load('PYTHON', 'INVALID'))
 
         # Test unregistered language in existing docstyle.
-        with self.assertRaises(KeyError):
+        with self.assertRaisesRegex(KeyError, ''):
             next(DocstyleDefinition.load('bake-a-cake', 'default'))
 
         # Test wrong argument type.
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(TypeError, ''):
             next(DocstyleDefinition.load(123, ['list']))
 
         # Test python 3 default configuration and if everything is parsed
