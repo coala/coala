@@ -35,6 +35,10 @@ For each editor the following info is stored:
 """
 KNOWN_EDITORS = {
     # non-gui editors
+    'nvim': {
+        'file_arg_template': '{filename} +{line}',
+        'gui': False
+    },
     'vim': {
         'file_arg_template': '{filename} +{line}',
         'gui': False
