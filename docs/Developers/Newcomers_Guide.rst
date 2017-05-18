@@ -87,7 +87,41 @@ Step 1. Meet the Community!
 
 To get started, the first step is to meet the community. We use gitter to
 communicate, and there the helpful community will guide you.
-Join us at `coala gitter <https://coala.io/chat>`_.
+Gitter is an instant messaging service used by developers and users of GitHub.
+Gitter uses chatrooms, where developers can join in and can talk about a
+particular topic.
+coala has 2 types of chatrooms - repository chatrooms and discussion topics.
+Repository chatrooms are related to a specific repository and
+discussion chatrooms are related to general discussion topics like
+conferences, workshops, etc.
+
+  * `coala <https://gitter.im/coala/coala>`_
+    This is the main chatroom and repository chatroom of coala/coala.
+  * `gsoc <https://gitter.im/coala/coala/gsoc>`_
+    This is where you discuss about Google Summer of Code.
+  * `coala-bears <https://gitter.im/coala/coala-bears>`_
+    Repo chatroom for coala/coala-bears.
+  * `workshop <https://gitter.im/coala/coala/workshops>`_
+    Discussions related to workshops go here.
+  * `conferences <https://gitter.im/coala/conferences>`_
+    Everything related to conferences.
+  * `perfomance <https://gitter.im/coala/performance>`_
+    Profiling and performance optimizations!
+
+The list of all available chatrooms are available here - `channel list <https://coala.io/channels>`_
+
+But before joining the community, here are few things that you should
+keep in mind.
+
+  * Don't @-mention or private message people, unless its utterly important.
+    @ mentions generate notifications on the various gitter clients the user
+    may be signed into, you might even wake someone on the other side of the
+    world up. Also it discourages other people to answer the question,
+    so you might wait longer for an answer.
+  * Never use @/all as a newcomer.
+  * Don't repeatedly @-mention people in an ongoing conversation.
+
+Now you are ready to join coala community at `coala gitter <https://coala.io/chat>`_.
 The newcomers should ping us "Hello World" to let us know they are here
 because we care!
 
@@ -152,7 +186,20 @@ Now you can start working on it.
 
         cobot assign <issue_link>
 
-    Take care to write the full link to the issue
+    Take care to write the full link to the issue.
+    Also take up the issue, only when you know what the problem is and
+    how to solve it.
+
+    You can do amazing stuff using cobot.
+
+        * Issue assigning as stated earlier.
+        * File issues::
+
+            cobot file issue <repo> <title>
+            <description>
+        * To learn more about cobot,
+
+            cobot help
 
     Before starting to write your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
