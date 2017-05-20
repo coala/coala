@@ -40,7 +40,7 @@
 <body>
 <main>
 <div ng-controller="TabController as tc">
-    <div class="container tab-container">
+    <div class="tab-container">
         <div class="row">
         <nav>
             <div class="col s12 nav-wrapper">
@@ -54,11 +54,11 @@
                   <li class="tab"><a ng-click="tc.setTab('/tryonline')"  ng-class="{active:tc.isSet('/tryonline')}">Try online!<span class="new badge" data-badge-caption="">beta</span></a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
-                  <li class="tab col-md-12"><a ng-click="tc.setTab('/home')"  ng-class="{active:tc.isSet('/home')}">Home</a></li>
-                  <li class="tab col-md-12"><a ng-click="tc.setTab('/about')"  ng-class="{active:tc.isSet('/about')}">About</a></li>
-                  <li class="tab col-md-12"><a ng-click="tc.setTab('/languages')"  ng-class="{active:tc.isSet('/languages')}">Languages</a></li>
-                  <li class="tab col-md-12"><a ng-click="tc.setTab('/getinvolved')"  ng-class="{active:tc.isSet('/getinvolved')}">Get Involved</a></li>
-                  <li class="tab col-md-12"><a ng-click="tc.setTab('/tryonline')"  ng-class="{active:tc.isSet('/tryonline')}">Try online!<span class="new badge" data-badge-caption="">beta</span></a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/home')"  ng-class="{active:tc.isSet('/home')}">Home</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/about')"  ng-class="{active:tc.isSet('/about')}">About</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/languages')"  ng-class="{active:tc.isSet('/languages')}">Languages</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/getinvolved')"  ng-class="{active:tc.isSet('/getinvolved')}">Get Involved</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/tryonline')"  ng-class="{active:tc.isSet('/tryonline')}">Try online!<span class="new badge" data-badge-caption="">beta</span></a></li>
                 </ul>
 
             </div>
@@ -66,7 +66,7 @@
         </div>
     </div>
 
-<div ng-view="" class="container"></div>
+<div ng-view=""></div>
 
 </div>
 </main>
