@@ -1,159 +1,165 @@
-<section>
-<div class="main-content container">
+<section class="container">
+<div>
 
-    <div class="col-md-8 col-md-offset-2 input-field">
+    <div class="col-md-8 col-md-offset-2 input-field searchbar">
       <input ng-model="searchText" placeholder="Search for a bear or a language" id="search" class="validate" type="search" required>
       <label id="icon" class="label-icon" for="search"><i  class="material-icons">search</i></label>
     </div>
-    <div class="col-md-8 col-md-offset-2 text-center">
+    <div class="col-md-8 col-md-offset-2 center">
         If you find an issue with this documentation, you can report it
         <a href="https://github.com/coala/coala-bears/issues">at the coala-bears repository</a>.
     </div>
 
 </div>
 
+<br>
+
 <section>
+  <div class="section">
+    <div class="showcase">
+      <div ng-show="lang_loader" class="center">
+        <div class="preloader-wrapper big active">
+          <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
 
-    <div class="container">
-        <div class="row showcase">
-<div ng-show="lang_loader" >
- <center>
-             <div class="preloader-wrapper big active">
+          <div class="spinner-layer spinner-red">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
 
-      <div class="spinner-layer spinner-blue">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
+          <div class="spinner-layer spinner-yellow">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+
+          <div class="spinner-layer spinner-green">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
         </div>
+        <p class="center">Sit tight! Catching all the bears!</p>
       </div>
-
-      <div class="spinner-layer spinner-red">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-
-      <div class="spinner-layer spinner-yellow">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-
-      <div class="spinner-layer spinner-green">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
+      <br>
+      <div>
+        <div class="parent-wrapper">
+          <div class="parent">
+            <div ng-click="lc.showTheatre(bear)" ng-repeat="bear in bearList | filter:searchText" class="card child small waves-effect">
+                <div class="card-content">
+                  <span class="card-title">{{ bear.name }}</span>
+                  <p btf-markdown="bear.desc | format_desc"></p>
+                </div>
+                <div class="card-action">
+                  <span class="chip" ng-repeat="lang in bear.languages | limitTo:4">{{lang}} </span>
+                </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <br>
-    <div class="bear-loader-msg">Sit tight! Catching all the bears!</div>
-</center>
-</div>
-
-    <div ng-click="lc.showTheatre(bear)" ng-repeat="bear in bearList | filter:searchText" class="card card-main showcase-card waves-effect">
-        <div class="card-content">
-          <span class="card-title">{{ bear.name }}</span>
-          <p btf-markdown="bear.desc | format_desc"></p>
-        </div>
-        <div class="card-action">
-            <span class="chip" ng-repeat="lang in bear.languages | limitTo:4">{{lang}} </span>
-        </div>
-    </div>
-
-
-</div>
-</div>
+  </div>
 </section>
 
-<div id="modal1" class="modal">
-    <div  class="modal-content-bear">
+<div id="modal1" class="modal theatre">
+    <div  class="modal-content">
 
         <div class="container profile">
-            <div class="bear-name">
+            <div class="name">
                 {{currentBear.name}}
             </div>
 
-            <div class="can-detect" ng-show="currentBear.CAN_DETECT.length>0" >
+            <div class="label" ng-show="currentBear.CAN_DETECT.length>0" >
                 <div class="small-heading">CAN DETECT</div>
                 <span class="candetect chip" ng-repeat="candetect in currentBear.CAN_DETECT">{{ candetect }}</span><br>
             </div>
 
-            <div class="can-detect" ng-show="currentBear.CAN_FIX.length>0">
+            <div class="label" ng-show="currentBear.CAN_FIX.length>0">
                 <div class="small-heading">CAN FIX</div>
                 <span class="candetect chip" ng-repeat="canfix in currentBear.CAN_FIX">{{ canfix }}</span><br>
             </div>
 
-            <div class="can-detect" ng-show="currentBear.LANGUAGES.length>0">
+            <div class="label" ng-show="currentBear.LANGUAGES.length>0">
                 <div class="small-heading">LANGUAGES</div>
                 <span class="candetect chip" ng-repeat="langs in currentBear.LANGUAGES">{{ langs }}</span><br>
             </div><br>
 
         </div>
         <div class="container dashboard">
-            <div btf-markdown="currentBear.metadata.desc" class="bear-description">
+            <div btf-markdown="currentBear.metadata.desc" class="description">
             </div>
 
-            <div class="can-detect" ng-show="currentBear.metadata.non_optional_params.length>0 ||
+            <div class="label" ng-show="currentBear.metadata.non_optional_params.length>0 ||
               currentBear.metadata.optional_params.length>0" >
               <div class="small-heading">SETTINGS</div>
-              <div class="settings-div">
+              <div class="settings">
                 <span class="settings-options">
-                  <i class="fa fa-square settings-opt padding-square-icon" aria-hidden="true"></i>Optional
+                  <i class="fa fa-square blue-text" aria-hidden="true"></i>
+                  &nbsp; &nbsp;
+                  Optional
+                  &nbsp; &nbsp;
                   <span>
-                    <span class="settings-options">
-                      <i class="fa fa-square settings-non-opt padding-square-icon" aria-hidden="true"></i>Non Optional
-                    </span>
-                  </div>
-                  <span class="settings-opt" ng-repeat="param in currentBear.metadata.optional_params"><span class="chip param tooltipped" ng-repeat="(key, value) in param" data-position="bottom" data-delay="50" data-tooltip="{{value}}">{{ key }}</span>
+                <span class="settings-options">
+                  <i class="fa fa-square blue-grey-text" aria-hidden="true"></i>
+                  &nbsp; &nbsp;
+                  Non Optional
+                  &nbsp; &nbsp;
                 </span>
-                <span class="settings-non-opt" ng-repeat="param in currentBear.metadata.non_optional_params"><span class="param chip tooltipped" ng-repeat="(key, value) in param" data-position="bottom" data-delay="50" data-tooltip="{{value}}">{{ key }}</span>
+              </div>
+              <span class="settings" ng-repeat="param in currentBear.metadata.optional_params">
+                <span class="chip param tooltipped blue-text" ng-repeat="(key, value) in param" data-position="bottom" data-delay="50" data-tooltip="{{value}}">{{ key }}
+                </span>
               </span>
-
+              <span class="settings" ng-repeat="param in currentBear.metadata.non_optional_params">
+                <span class="param chip tooltipped blue-grey-text" ng-repeat="(key, value) in param" data-position="bottom" data-delay="50" data-tooltip="{{value}}">{{ key }}
+                </span>
+              </span>
             </div>
-
 
             <br>
 
-            <div class="row author-row">
+            <div class="row detail-row">
                 <center>
-                    <div class="col-md-4">
+                    <div class="col m4">
                         <div ng-show="currentBear.AUTHORS.length>0" class="author">
                             <div class="small-heading">AUTHORS</div>
-                            <span class="authors" ng-repeat="auth in currentBear.AUTHORS">{{ auth }}</span>
+                            <span ng-repeat="auth in currentBear.AUTHORS">{{ auth }}</span>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col m4">
                         <div ng-show="currentBear.AUTHORS_EMAILS.length>0" class="email">
                             <div class="small-heading">AUTHORS EMAIL</div>
-                            <span class="authors" ng-repeat="auth in currentBear.AUTHORS_EMAILS">{{ auth }}</span>
+                            <span ng-repeat="auth in currentBear.AUTHORS_EMAILS">{{ auth }}</span>
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
+                    <div class="col m4"></div>
                     <div ng-show="currentBear.LICENSE" class="license">
                         <div class="small-heading">LICENSE</div>
-                        <span class="authors">{{ currentBear.LICENSE }}</span>
+                        <span>{{ currentBear.LICENSE }}</span>
                     </div>
                 </div>
             </center>
         </div>
-
-
-
     </div>
     <div ng-show="lc.theatreLoader"  class="modal-footer">
         <div class="container" >
@@ -162,8 +168,7 @@
                     <div class="indeterminate"></div>
                 </div>
             </div>
-            <center> <p class="">{{ lc.theatreLoaderMessage }}...</p></center>
-
+            <p class="center">{{ lc.theatreLoaderMessage }}...</p>
         </div>
     </div>
 </div>
