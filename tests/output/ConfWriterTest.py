@@ -5,7 +5,6 @@ import unittest
 from coalib.output.ConfWriter import ConfWriter
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import load_configuration
-from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 
 
@@ -47,7 +46,6 @@ class ConfWriterTest(unittest.TestCase):
         with open(self.file, 'w', encoding='utf-8') as file:
             file.write(self.example_file)
 
-        self.log_printer = LogPrinter()
         self.write_file_name = os.path.join(tempfile.gettempdir(),
                                             'ConfWriterTestFile')
         self.uut = ConfWriter(self.write_file_name)
@@ -81,8 +79,7 @@ class ConfWriterTest(unittest.TestCase):
                        '# thats a comment\n',
                        'test = push\n',
                        't = \n']
-        sections = load_configuration(['-c', escape(self.file, '\\')],
-                                      self.log_printer)[0]
+        sections = load_configuration(['-c', escape(self.file, '\\')])[0]
         del sections['cli'].contents['config']
         self.uut.write_sections(sections)
         self.uut.close()
@@ -107,8 +104,7 @@ class ConfWriterTest(unittest.TestCase):
                        'a, d += 5, 6, 7\n',
                        '[cli]\n']
 
-        sections = load_configuration(['-c', escape(self.file, '\\')],
-                                      self.log_printer)[0]
+        sections = load_configuration(['-c', escape(self.file, '\\')])[0]
         del sections['cli'].contents['config']
         self.uut.write_sections(sections)
         self.uut.close()

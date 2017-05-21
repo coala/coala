@@ -1,12 +1,9 @@
 import unittest
 
-from pyprint.ConsolePrinter import ConsolePrinter
-
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coala_utils.ContextManagers import simulate_console_inputs
 from coalib.output.ConsoleInteraction import acquire_settings
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import Setting, fill_section, fill_settings
 from tests.TestUtilities import bear_test_module
@@ -37,7 +34,6 @@ class LocalTestBear(LocalBear):
 class SectionFillingTest(unittest.TestCase):
 
     def setUp(self):
-        self.log_printer = LogPrinter(ConsolePrinter())
         self.section = Section('test')
         self.section.append(Setting('key', 'val'))
 
@@ -45,16 +41,14 @@ class SectionFillingTest(unittest.TestCase):
         sections = {'test': self.section}
         with simulate_console_inputs() as generator:
             fill_settings(sections,
-                          acquire_settings,
-                          self.log_printer)
+                          acquire_settings)
             self.assertEqual(generator.last_input, -1)
 
         self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
 
         with simulate_console_inputs('True'), bear_test_module():
             local_bears, global_bears = fill_settings(sections,
-                                                      acquire_settings,
-                                                      self.log_printer)
+                                                      acquire_settings)
             self.assertEqual(len(local_bears['test']), 1)
             self.assertEqual(len(global_bears['test']), 0)
 
@@ -67,7 +61,6 @@ class SectionFillingTest(unittest.TestCase):
         with simulate_console_inputs(0, 0):
             new_section = fill_section(self.section,
                                        acquire_settings,
-                                       self.log_printer,
                                        [LocalTestBear,
                                         GlobalTestBear])
 
@@ -79,7 +72,6 @@ class SectionFillingTest(unittest.TestCase):
         # Shouldnt change anything the second time
         new_section = fill_section(self.section,
                                    acquire_settings,
-                                   self.log_printer,
                                    [LocalTestBear, GlobalTestBear])
 
         self.assertTrue('local name' in new_section)
@@ -91,6 +83,6 @@ class SectionFillingTest(unittest.TestCase):
         sections = {'test': self.section}
         self.section['bears'] = 'DependentBear'
         with simulate_console_inputs('True'), bear_test_module():
-            fill_settings(sections, acquire_settings, self.log_printer)
+            fill_settings(sections, acquire_settings)
 
         self.assertEqual(bool(self.section['use_spaces']), True)

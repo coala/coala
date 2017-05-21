@@ -7,7 +7,7 @@ from coalib.collecting.Collectors import (
 from coalib.settings.Setting import Setting
 
 
-def fill_section(section, acquire_settings, log_printer, bears):
+def fill_section(section, acquire_settings, bears):
     """
     Retrieves needed settings from given bears and asks the user for
     missing values.
@@ -22,7 +22,6 @@ def fill_section(section, acquire_settings, log_printer, bears):
                              settings name as key and a list containing a
                              description in [0] and the names of the bears
                              who need this setting in all following indexes.
-    :param log_printer:      The log printer for logging.
     :param bears:            All bear classes or instances.
     :return:                 The new section.
     """
@@ -45,7 +44,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
     # Get missing ones.
     if len(needed_settings) > 0:
-        new_vals = acquire_settings(log_printer, needed_settings, section)
+        new_vals = acquire_settings(needed_settings, section)
         for setting, help_text in new_vals.items():
             section.append(Setting(setting, help_text))
 
@@ -54,7 +53,6 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
 def fill_settings(sections,
                   acquire_settings,
-                  log_printer,
                   fill_section_method=fill_section,
                   **kwargs):
     """
@@ -69,7 +67,6 @@ def fill_settings(sections,
                                 the settings name as key and a list containing
                                 a description in [0] and the names of the bears
                                 who need this setting in all following indexes.
-    :param log_printer:         The log printer to use for logging.
     :param fill_section_method: Method to be used to fill the section settings.
     :param kwargs:              Any other arguments for the fill_section_method
                                 can be supplied via kwargs, which are passed
@@ -94,15 +91,13 @@ def fill_settings(sections,
             section_local_bears, section_global_bears = collect_bears(
                 bear_dirs,
                 bears,
-                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
-                log_printer)
+                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
         section_local_bears = Dependencies.resolve(section_local_bears)
         section_global_bears = Dependencies.resolve(section_global_bears)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
         fill_section_method(section,
                             acquire_settings,
-                            log_printer,
                             all_bears,
                             **kwargs)
 

@@ -1,13 +1,10 @@
+import logging
 import os
 import platform
-
-from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib import VERSION
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Logging import CounterHandler
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
@@ -51,7 +48,6 @@ def format_lines(lines, symbol='', line_nr=''):
 
 
 def run_coala(console_printer=None,
-              log_printer=None,
               print_results=do_nothing,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
@@ -67,7 +63,6 @@ def run_coala(console_printer=None,
     reduces executing coala to one function call.
 
     :param console_printer:         Object to print messages on the console.
-    :param log_printer:             A LogPrinter object to use for logging.
     :param print_results:           A callback that takes a LogPrinter, a
                                     section, a list of results to be printed,
                                     the file dict and the mutable file diff
@@ -129,10 +124,6 @@ def run_coala(console_printer=None,
 
         args.apply_patch = False
 
-    log_printer = (
-        LogPrinter(ConsolePrinter(), LOG_LEVEL.DEBUG) if log_printer is None
-        else log_printer)
-
     exitcode = 0
     sections = {}
     results = {}
@@ -142,22 +133,21 @@ def run_coala(console_printer=None,
         did_nothing = True
         sections, local_bears, global_bears, targets = gather_configuration(
             acquire_settings,
-            log_printer,
             arg_parser=arg_parser,
             arg_list=arg_list,
             args=args)
 
-        log_printer.debug('Platform {} -- Python {}, coalib {}'
-                          .format(platform.system(), platform.python_version(),
-                                  VERSION))
+        logging.debug('Platform {} -- Python {}, coalib {}'
+                      .format(platform.system(), platform.python_version(),
+                              VERSION))
 
         settings_hash = get_settings_hash(sections, targets)
         flush_cache = bool(sections['cli'].get('flush_cache', False) or
-                           settings_changed(log_printer, settings_hash))
+                           settings_changed(settings_hash))
 
         cache = None
         if not sections['cli'].get('disable_caching', False):
-            cache = FileCache(log_printer, os.getcwd(), flush_cache)
+            cache = FileCache(os.getcwd(), flush_cache)
 
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
@@ -175,7 +165,6 @@ def run_coala(console_printer=None,
                 local_bear_list=local_bears[section_name],
                 print_results=print_results,
                 cache=cache,
-                log_printer=log_printer,
                 console_printer=console_printer,
                 debug=debug or args and args.debug,
                 apply_single=(apply_single
@@ -191,14 +180,14 @@ def run_coala(console_printer=None,
 
             file_dicts[section_name] = section_result[3]
 
-        update_settings_db(log_printer, settings_hash)
+        update_settings_db(settings_hash)
         if cache:
             cache.write()
 
         if CounterHandler.get_num_calls_for_level('ERROR') > 0:
             exitcode = 1
         elif did_nothing:
-            nothing_done(log_printer)
+            nothing_done()
             exitcode = 2
         elif yielded_unfixed_results:
             exitcode = 1
@@ -216,6 +205,6 @@ def run_coala(console_printer=None,
             if debug:
                 raise
 
-        exitcode = exitcode or get_exitcode(exception, log_printer)
+        exitcode = exitcode or get_exitcode(exception)
 
     return results, exitcode, file_dicts

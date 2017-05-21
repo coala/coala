@@ -6,14 +6,12 @@ import logging
 import sys
 
 from pyprint.ClosableObject import close_objects
-from pyprint.NullPrinter import NullPrinter
 import pytest
 
 from coalib.misc import Constants
 from coalib.settings.Section import Section
 from coala_utils.ContextManagers import (
     make_temp, change_directory, retrieve_stdout)
-from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
     aspectize_sections,
@@ -30,32 +28,30 @@ from tests.TestUtilities import bear_test_module, TEST_BEARS_COUNT
 class ConfigurationGatheringTest(unittest.TestCase):
 
     def setUp(self):
-        self.log_printer = LogPrinter(NullPrinter())
-
         # Needed so coala doesn't error out
         self.min_args = ['-f', '*.java', '-b', 'JavaTestBear']
 
     def tearDown(self):
-        close_objects(self.log_printer)
+        close_objects()
 
     def test_gather_configuration(self):
-        args = (lambda *args: True, self.log_printer)
+        def args(): return True
 
         # Using incomplete settings (e.g. an invalid coafile) will error
         with self.assertRaises(SystemExit):
-            gather_configuration(*args,
+            gather_configuration(args,
                                  arg_list=['-c abcdefghi/invalid/.coafile'])
 
         # Using a bad filename explicitly exits coala.
         with self.assertRaises(SystemExit):
             gather_configuration(
-                *args,
+                args,
                 arg_list=['-S', 'test=5', '-c', 'some_bad_filename'])
 
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (
                 gather_configuration(
-                    *args,
+                    args,
                     arg_list=['-S', 'test=5', '-c', escape(temporary, '\\'),
                               '-s'] + self.min_args))
 
@@ -66,7 +62,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (
-                gather_configuration(*args,
+                gather_configuration(args,
                                      arg_list=['-S test=5',
                                                '-f *.java',
                                                '-c ' + escape(temporary, '\\'),
@@ -84,7 +80,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer,
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
@@ -102,7 +97,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer,
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
@@ -114,7 +108,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         filename = 'bad.one/test\neven with bad chars in it'
         with self.assertRaises(SystemExit):
             gather_configuration(lambda *args: True,
-                                 self.log_printer,
                                  arg_list=['-S', 'config=' + filename])
 
         tmp = Constants.system_coafile
@@ -122,7 +115,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         with self.assertRaises(SystemExit):
             gather_configuration(lambda *args: True,
-                                 self.log_printer,
                                  arg_list=[])
 
         Constants.system_coafile = tmp
@@ -142,7 +134,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         # Check merging of default_coafile and .coafile
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer,
             arg_list=['-c', re.escape(config)])
 
         self.assertEqual(str(sections['test']),
@@ -153,7 +144,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         # Check merging of default_coafile, .coafile and cli
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer,
             arg_list=['-c',
                       re.escape(config),
                       '-S',
@@ -177,7 +167,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (
                 gather_configuration(lambda *args: True,
-                                     self.log_printer,
                                      arg_list=['-S', 'value=1', 'test.value=2',
                                                '-c', escape(temporary, '\\')] +
                                      self.min_args))
@@ -194,7 +183,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             gather_configuration(
                 lambda *args: True,
-                self.log_printer,
                 arg_list=['-S',
                           'save=' + escape(filename, '\\'),
                           '-c=some_bad_filename'])
@@ -207,7 +195,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             gather_configuration(
                 lambda *args: True,
-                self.log_printer,
                 arg_list=['-S',
                           'save=true',
                           'config=' + escape(filename, '\\'),
@@ -226,7 +213,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
     def test_targets(self):
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
-            self.log_printer,
             arg_list=['cli', 'test1', 'test2'])
 
         self.assertEqual(targets, ['cli', 'test1', 'test2'])
@@ -258,7 +244,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with change_directory(child_dir):
             sections, _, _, _ = gather_configuration(
                 lambda *args: True,
-                self.log_printer,
                 arg_list=['--find-config'])
             self.assertEqual(bool(sections['cli']['find_config']), True)
 
@@ -268,30 +253,26 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                  'section_manager_test_files',
                                  'child_dir')
         with change_directory(child_dir):
-            sections, targets = load_configuration([], self.log_printer)
+            sections, targets = load_configuration([])
             self.assertIn('value', sections['cli'])
 
             sections, targets = load_configuration(
-                ['--no-config'],
-                self.log_printer)
+                ['--no-config'])
             self.assertNotIn('value', sections['cli'])
 
             sections, targets = load_configuration(
-                ['--no-config', '-S', 'use_spaces=True'],
-                self.log_printer)
+                ['--no-config', '-S', 'use_spaces=True'])
             self.assertIn('use_spaces', sections['cli'])
             self.assertNotIn('values', sections['cli'])
 
             with self.assertRaises(SystemExit) as cm:
                 sections, target = load_configuration(
-                    ['--no-config', '--save'],
-                    self.log_printer)
+                    ['--no-config', '--save'])
                 self.assertEqual(cm.exception.code, 2)
 
             with self.assertRaises(SystemExit) as cm:
                 sections, target = load_configuration(
-                    ['--no-config', '--find-config'],
-                    self.log_printer)
+                    ['--no-config', '--find-config'])
                 self.assertEqual(cm.exception.code, 2)
 
     def test_section_inheritance(self):
@@ -303,7 +284,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
                 self.assertLogs(logger, 'WARNING') as cm:
             sections, _, _, _ = gather_configuration(
                 lambda *args: True,
-                self.log_printer,
                 arg_list=['-c', 'inherit_coafile'])
             self.assertEqual(sections['all.python'].defaults, sections['all'])
             self.assertEqual(sections['all.c']['key'],
@@ -333,13 +313,12 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with self.assertLogs(logger, 'WARNING') as cm:
             # This gathers the configuration from the '.coafile' of this repo.
             gather_configuration(lambda *args: True,
-                                 self.log_printer,
                                  arg_list=[])
 
         self.assertIn('WARNING', cm.output[0])
 
         with retrieve_stdout() as stdout:
-            load_configuration(['--no-config'], self.log_printer)
+            load_configuration(['--no-config'])
             self.assertNotIn('WARNING', stdout.getvalue())
 
     def test_aspectize_sections(self):
@@ -354,24 +333,21 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
 
     def setUp(self):
         self.old_argv = sys.argv
-        self.log_printer = LogPrinter(NullPrinter())
 
     def tearDown(self):
-        close_objects(self.log_printer)
+        close_objects()
         sys.argv = self.old_argv
 
     def test_get_filtered_bears(self):
         sys.argv = ['coala', '-I']
 
         with bear_test_module():
-            local_bears, global_bears = get_filtered_bears(
-                None, self.log_printer)
+            local_bears, global_bears = get_filtered_bears(None)
 
         self.assertEqual(len(local_bears['cli']), TEST_BEARS_COUNT)
 
         with bear_test_module():
-            local_bears, global_bears = get_filtered_bears(
-                ['Java'], self.log_printer)
+            local_bears, global_bears = get_filtered_bears(['Java'])
 
         self.assertEqual(len(local_bears['cli']), 2)
         self.assertEqual(str(local_bears['cli'][0]),
