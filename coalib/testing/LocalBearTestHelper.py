@@ -59,7 +59,8 @@ class LocalBearTestHelper(unittest.TestCase):
                        valid=True,
                        force_linebreaks=True,
                        create_tempfile=True,
-                       tempfile_kwargs={}):
+                       tempfile_kwargs={},
+                       settings={}):
         """
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
@@ -79,7 +80,8 @@ class LocalBearTestHelper(unittest.TestCase):
                                check_order=True,
                                force_linebreaks=force_linebreaks,
                                create_tempfile=create_tempfile,
-                               tempfile_kwargs=tempfile_kwargs
+                               tempfile_kwargs=tempfile_kwargs,
+                               settings=settings,
                                )
         else:
             return self.check_invalidity(local_bear, lines,
@@ -87,6 +89,7 @@ class LocalBearTestHelper(unittest.TestCase):
                                          force_linebreaks=force_linebreaks,
                                          create_tempfile=create_tempfile,
                                          tempfile_kwargs=tempfile_kwargs,
+                                         settings=settings,
                                          )
 
     def check_invalidity(self,
@@ -95,7 +98,8 @@ class LocalBearTestHelper(unittest.TestCase):
                          filename=None,
                          force_linebreaks=True,
                          create_tempfile=True,
-                         tempfile_kwargs={}):
+                         tempfile_kwargs={},
+                         settings={}):
         """
         Asserts that a check of the given lines with the given local bear
         yields results.
@@ -120,7 +124,9 @@ class LocalBearTestHelper(unittest.TestCase):
                                   filename=filename,
                                   force_linebreaks=force_linebreaks,
                                   create_tempfile=create_tempfile,
-                                  tempfile_kwargs=tempfile_kwargs)
+                                  tempfile_kwargs=tempfile_kwargs,
+                                  settings=settings,
+                                  )
         msg = ("The local bear '{}' yields no result although it "
                'should.'.format(local_bear.__class__.__name__))
         self.assertNotEqual(len(bear_output), 0, msg=msg)
