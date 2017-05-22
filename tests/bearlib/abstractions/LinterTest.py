@@ -29,7 +29,7 @@ def get_testfile_name(name):
 
 class LinterComponentTest(unittest.TestCase):
 
-    PARAM_TYPE_ERROR_RE = '[a-z_]+ must be an instance'
+    PARAM_TYPE_ERROR_RE = '[A-Za-z_]+ must be an instance of one of .*'
 
     # Using `object` instead of an empty class results in inheritance problems
     # inside the linter decorator.
