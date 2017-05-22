@@ -616,3 +616,32 @@ class Diff:
         :param range: The range to delete.
         """
         self.replace(range, '')
+
+    @staticmethod
+    def _add_linebreaks(lines):
+        """
+        Validate that each line in lines ends with a
+        newline character and appends one if that is not the case.
+
+        :param lines: A list of strings, representing lines.
+        """
+
+        return [line
+                if line.endswith('\n')
+                else line + '\n'
+                for line in lines]
+
+    @staticmethod
+    def _generate_linebreaks(lines):
+        """
+        Validate that each line in lines ends with a
+        newline character and appends one if that is not the case.
+        Exception is the last line in the list.
+
+        :param lines: A list of strings, representing lines.
+        """
+
+        if lines == []:
+            return []
+
+        return Diff._add_linebreaks(lines[:-1]) + [lines[-1]]

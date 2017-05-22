@@ -626,3 +626,46 @@ class DiffTest(unittest.TestCase):
         self.uut.delete = True
         self.assertEqual(self.uut.modified, [])
         self.uut.delete = False
+
+    def test_add_linebreaks(self):
+        expected = ['1\n', '2\n', '3\n']
+
+        self.assertEqual(
+            Diff._add_linebreaks(['1', '2', '3']),
+            expected)
+
+        self.assertEqual(
+            Diff._add_linebreaks(['1', '2\n', '3']),
+            expected)
+
+        self.assertEqual(
+            Diff._add_linebreaks(expected),
+            expected)
+
+        self.assertEqual(Diff._add_linebreaks([]), [])
+
+    def test_generate_linebreaks(self):
+        eof_ln = ['1\n', '2\n', '3\n']
+        no_eof_ln = ['1\n', '2\n', '3']
+
+        self.assertEqual(
+            Diff._generate_linebreaks(['1', '2', '3']),
+            no_eof_ln)
+
+        self.assertEqual(
+            Diff._generate_linebreaks(['1', '2', '3\n']),
+            eof_ln)
+
+        self.assertEqual(
+            Diff._generate_linebreaks(['1', '2\n', '3']),
+            no_eof_ln)
+
+        self.assertEqual(
+            Diff._generate_linebreaks(no_eof_ln),
+            no_eof_ln)
+
+        self.assertEqual(
+            Diff._generate_linebreaks(eof_ln),
+            eof_ln)
+
+        self.assertEqual(Diff._generate_linebreaks([]), [])
