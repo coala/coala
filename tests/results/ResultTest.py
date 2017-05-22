@@ -89,7 +89,7 @@ class ResultTest(unittest.TestCase):
         }
         diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
 
         uut = Result('origin', 'msg', diffs={'f_a': diff})
         uut.apply(file_dict)
@@ -113,11 +113,11 @@ class ResultTest(unittest.TestCase):
         uut1 = Result('origin', 'msg', diffs={'f_a': diff})
 
         diff = Diff(file_dict['f_a'])
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut2 = Result('origin', 'msg', diffs={'f_a': diff})
 
         diff = Diff(file_dict['f_b'])
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut3 = Result('origin', 'msg', diffs={'f_b': diff})
 
         uut1 += uut2 + uut3
@@ -177,7 +177,7 @@ class ResultTest(unittest.TestCase):
         }
         diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut = Result('origin', 'msg', diffs={'f_a': diff}).__json__(True)
         self.assertEqual(uut['diffs']['f_a'].__json__(), '--- \n'
                                                          '+++ \n'

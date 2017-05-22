@@ -62,8 +62,7 @@ class Diff:
                     result.add_lines(a_index_1,
                                      file_array_2[b_index_1:b_index_2])
                 elif tag == 'replace':
-                    result.change_line(a_index_1+1,
-                                       file_array_1[a_index_1],
+                    result.modify_line(a_index_1+1,
                                        file_array_2[b_index_1])
                     result.add_lines(a_index_1+1,
                                      file_array_2[b_index_1+1:b_index_2])
@@ -424,7 +423,7 @@ class Diff:
             if change.add_after is not False:
                 result.add_lines(line_nr, change.add_after)
             if change.change is not False:
-                result.change_line(line_nr, change.change[0], change.change[1])
+                result.modify_line(line_nr, change.change[1])
 
         return result
 

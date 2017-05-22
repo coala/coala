@@ -74,11 +74,11 @@ class DiffTest(unittest.TestCase):
             'use modify_line method, without the original_line argument'])
 
     def test_double_changes_with_same_diff(self):
-        self.uut.change_line(2, '1', '2')
+        self.uut.modify_line(2, '2')
 
         # Double addition when diff is equal is allowed
         try:
-            self.uut.change_line(2, '1', '2')
+            self.uut.modify_line(2, '2')
         except Exception:
             self.fail('We should not have a conflict on same diff!')
 
@@ -113,7 +113,7 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(len(self.uut), 1)
         self.uut.add_lines(2, ['2.3', '2.5', '2.6'])
         self.assertEqual(len(self.uut), 4)
-        self.uut.change_line(1, '1', '1.1')
+        self.uut.modify_line(1, '1.1')
         self.assertEqual(len(self.uut), 6)
 
     def test_stats(self):
@@ -121,7 +121,7 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.stats(), (0, 1))
         self.uut.add_lines(2, ['2.3', '2.5', '2.6'])
         self.assertEqual(self.uut.stats(), (3, 1))
-        self.uut.change_line(1, '1', '1.1')
+        self.uut.modify_line(1, '1.1')
         self.assertEqual(self.uut.stats(), (4, 2))
 
     def test_modified(self):
@@ -135,7 +135,7 @@ class DiffTest(unittest.TestCase):
         self.uut.delete_line(2)
         self.uut.add_lines(0, ['0.1', '0.2'])
         self.uut.add_lines(1, ['1.1'])
-        self.uut.change_line(3, '3', '3.changed')
+        self.uut.modify_line(3, '3.changed')
 
         self.assertEqual(self.uut.modified, result_file)
 
@@ -177,12 +177,12 @@ class DiffTest(unittest.TestCase):
 
         other = Diff(self.file)
         other.delete_line(1)
-        other.change_line(2, '1', '2')
+        other.modify_line(2, '2')
         other.add_lines(0, ['1'])
 
         self.uut.delete_line(1)
         self.uut.delete_line(3)
-        self.uut.change_line(4, '4', '2')
+        self.uut.modify_line(4, '2')
         result = self.uut + other
 
         self.assertEqual(result.modified, result_file)
