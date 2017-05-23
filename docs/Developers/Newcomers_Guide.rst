@@ -82,8 +82,8 @@ easier!  What documentation was missing? What was hard to understand?
 Once you complete this, please take the time to
 `fill out this form <https://coala.io/usability>`_ so we can get better!
 
-Step 1. Meet the Community!
----------------------------
+Step 1. Meet the Community and Get an Invitation to the Organization
+--------------------------------------------------------------------
 
 To get started, the first step is to meet the community. We use gitter to
 communicate, and there the helpful community will guide you.
@@ -126,22 +126,14 @@ Now you are ready to join coala community at `coala gitter <https://coala.io/cha
 The newcomers should ping us "Hello World" to let us know they are here
 because we care!
 
-**Congratulations!** You are now part of our community.
+When you say "Hello World" in chat ``cobot`` (our gitter bot) will invite you
+to be part of the Newcomer team. The invitation will be sent by mail and you
+will have to accept it to join. If you don't find the invitation, accept it
+`here <https://github.com/coala>`__.
 
-Step 2. Grab an Invitation to the Organization
-----------------------------------------------
-
-Let us know on gitter that you are interested in contributing and ask for an
-invitation to our org. This is the first step towards contributing.
-A maintainer will command ``cobot`` (our gitter bot) to invite
-you to the Newcomer team.
-The invitation will be sent by email and you will have to accept
-it to join. If you don't see the invitation, accept it on our `team page
-<https://github.com/coala>`__.
-
-Now that you are part of our organization, you can start working on issues.
-If you are familiar with git/GitHub, you can skip the next section and pick an
-issue.
+**Congratulations!** Now that you are part of our organization, you can start
+working on issues. If you are familiar with git, you can skip the next section
+and pick an issue.
 
 Optional. Get Help With Git
 ---------------------------
@@ -157,7 +149,7 @@ If anything is unclear, or you are encountering problems, feel free
 to contact us on `gitter <https://coala.io/chat>`_,
 and we will help you!
 
-Step 3. Picking Up an Issue
+Step 2. Picking Up an Issue
 ---------------------------
 
 Now it is time to pick an issue.
@@ -227,7 +219,7 @@ Now you can start working on it!
       please check the following link:
       `PEP8 Style Guide for Python code <https://www.python.org/dev/peps/pep-0008/>`_
 
-Step 4. Creating a Fork and Testing Your Changes
+Step 3. Creating a Fork and Testing Your Changes
 ------------------------------------------------
 
 This tutorial assumes you are working on your own fork. To fork the
@@ -292,7 +284,7 @@ into your bash prompt. This will analyze your code and help you fix it.
 
     `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
 
-Step 5. Sending Your Changes
+Step 4. Sending Your Changes
 ----------------------------
 
 .. note::
@@ -321,7 +313,7 @@ where ``myfork`` is the name of your fork that you added at the previous step.
     You can also add a profile picture to your Github account so that
     you can stand out from the crowd!
 
-Step 6. Creating a ``Pull Request``
+Step 5. Creating a ``Pull Request``
 -----------------------------------
 
 Now that your commit has been sent to your fork, it is time
@@ -342,7 +334,7 @@ ready to be accepted, you can indicate this to other
 developers by starting your ``Pull Request`` title with ``wip``
 (case-insensitive, stands for "Work in Progress").
 
-Step 7. Waiting for Review
+Step 6. Waiting for Review
 --------------------------
 
 After creating a Pull Request, your PR moves to the review process (all will
@@ -363,7 +355,7 @@ For more information about reviewing code, check out this `link <http://coala.io
     something wrong - there will always be someone looking over it before
     merging it to master.
 
-Step 8. Review Process
+Step 7. Review Process
 ----------------------
 
 After creating your ``Pull Request``, it enters the review process. You can
