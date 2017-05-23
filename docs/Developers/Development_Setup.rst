@@ -93,18 +93,18 @@ master branch from and all of its dependencies with pip using
 
     (coala-venv)$ git clone https://github.com/coala/coala
     (coala-venv)$ cd coala
-    (coala-venv)$ pip3 install -e .
+    (coala-venv)$ pip3 install .
     (coala-venv)$ cd -
     (coala-venv)$ git clone https://github.com/coala/coala-bears
     (coala-venv)$ cd coala-bears
-    (coala-venv)$ pip3 install -e .
+    (coala-venv)$ pip3 install .
 
-Then you can install a repository-backed version of the repository you would
-like to modify using
+Once you have forked the repository you would like to modify, you can
+install a repository-backed version of the repository using
 
 ::
 
-    (coala-venv)$ pip3 install -e <path/to/clone>
+    (coala-venv)$ pip3 install -e <path/to/forked/repository>
 
 You will then be able to edit the repository and have the changes take effect
 in your virtualenv immediately. You will also be able to use pip to manage
