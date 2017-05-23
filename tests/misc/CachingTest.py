@@ -122,20 +122,28 @@ class CachingTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main,
                 'coala',
+                '--non-interactive', '--no-color',
                 '-c', os.devnull,
                 '-f', re.escape(filename),
                 '-b', 'LineCountTestBear')
             self.assertIn('This file has', stdout)
-            self.assertIn(' During execution of coala', stderr)
+            self.assertEqual(1, len(stderr.splitlines()))
+            self.assertIn(
+                'LineCountTestBear: This result has no patch attached.',
+                stderr)
 
             retval, stdout, stderr = execute_coala(
                 coala.main,
                 'coala',
+                '--non-interactive', '--no-color',
                 '-c', os.devnull,
                 '-f', re.escape(filename),
                 '-b', 'LineCountTestBear')
             self.assertIn('This file has', stdout)
-            self.assertIn('During execution of coala', stderr)
+            self.assertEqual(1, len(stderr.splitlines()))
+            self.assertIn(
+                'LineCountTestBear: This result has no patch attached.',
+                stderr)
 
     def test_caching_multi_results(self):
         """
@@ -159,10 +167,14 @@ class CachingTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                coala.main,
                'coala',
+               '--non-interactive', '--no-color',
                '-c', filename + '.coafile',
                '-f', filename + 'test.py')
             self.assertIn('This file has', stdout)
-            self.assertIn('During execution of coala', stderr)
+            self.assertEqual(2, len(stderr.splitlines()))
+            self.assertIn(
+                'LineCountTestBear: This result has no patch attached.',
+                stderr)
             self.assertIn(
                 'Implicit \'Default\' section inheritance is deprecated',
                 stderr)
