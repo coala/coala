@@ -1,10 +1,12 @@
 from collections import defaultdict
+import datetime
 from io import BytesIO
 import multiprocessing
 import unittest
 from os.path import abspath, exists, isfile, join, getmtime
 import shutil
-from time import sleep
+
+from freezegun import freeze_time
 
 import requests
 import requests_mock
@@ -396,7 +398,9 @@ class BearDownloadTest(BearTestBase):
         filename = self.filename
         file_location = self.file_location
 
-        with requests_mock.Mocker() as reqmock:
+        with freeze_time('2017-01-01') as frozen_datetime, \
+                requests_mock.Mocker() as reqmock:
+
             reqmock.get(mock_url, text=mock_text)
             self.assertFalse(isfile(file_location))
             expected_filename = file_location
@@ -404,8 +408,8 @@ class BearDownloadTest(BearTestBase):
             self.assertTrue(isfile(join(file_location)))
             self.assertEqual(result_filename, expected_filename)
             expected_time = getmtime(file_location)
-            sleep(0.5)
 
+            frozen_datetime.tick(delta=datetime.timedelta(seconds=0.5))
             result_filename = self.uut.download_cached_file(mock_url, filename)
             self.assertEqual(result_filename, expected_filename)
             result_time = getmtime(file_location)
