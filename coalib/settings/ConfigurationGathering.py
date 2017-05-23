@@ -109,11 +109,18 @@ def warn_nonexistent_targets(targets, sections, log_printer):
     :param sections:    The sections to search. (Dict.)
     :param log_printer: The log printer to warn to.
     """
+
+    sections_substrings = {
+        substring
+        for sections_name in sections
+        for substring in sections_name.split('.')
+    }
     for target in targets:
-        if target not in sections:
+        if target not in sections_substrings | set(sections):
             log_printer.warn(
-                "The requested section '{section}' is not existent. "
-                'Thus it cannot be executed.'.format(section=target))
+                "No matching section found for '{section}'.".format(
+                    section=target)
+            )
 
     # Can't be summarized as python will evaluate conditions lazily, those
     # functions have intended side effects though.
@@ -398,9 +405,31 @@ def gather_configuration(acquire_settings,
                                               acquire_settings,
                                               log_printer)
     save_sections(sections)
+    add_substring_targets(targets, sections)
     warn_nonexistent_targets(targets, sections, log_printer)
 
     return (sections,
             local_bears,
             global_bears,
             targets)
+
+
+def get_substring_targets(target):
+    for dot in (m.start() for m in re.finditer('\.', target)):
+        yield target[0:dot]
+
+
+def add_substring_targets(targets, sections):
+    section_names = list(sections.keys())
+
+    new_targets = {
+        section_name
+        for target in targets
+        for section_name in section_names
+        if target in set(section_name.split('.')).union(
+            get_substring_targets(section_name))
+    }
+
+    new_targets = new_targets.difference(targets)
+
+    targets.extend(sorted(new_targets, key=section_names.index))
