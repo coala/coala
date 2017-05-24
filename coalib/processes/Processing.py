@@ -242,14 +242,16 @@ def print_result(results,
     return retval or len(results) > 0, patched_results
 
 
-def get_file_dict(filename_list, log_printer):
+def get_file_dict(filename_list, log_printer, allow_raw_files=False):
     """
     Reads all files into a dictionary.
 
-    :param filename_list: List of names of paths to files to get contents of.
-    :param log_printer:   The logger which logs errors.
-    :return:              Reads the content of each file into a dictionary
-                          with filenames as keys.
+    :param filename_list:   List of names of paths to files to get contents of.
+    :param log_printer:     The logger which logs errors.
+    :param allow_raw_files: Allow the usage of raw files (non text files),
+                            disabled by default
+    :return:                Reads the content of each file into a dictionary
+                            with filenames as keys.
     """
     file_dict = {}
     for filename in filename_list:
@@ -257,6 +259,9 @@ def get_file_dict(filename_list, log_printer):
             with open(filename, 'r', encoding='utf-8') as _file:
                 file_dict[filename] = tuple(_file.readlines())
         except UnicodeDecodeError:
+            if allow_raw_files:
+                file_dict[filename] = None
+                continue
             log_printer.warn("Failed to read file '{}'. It seems to contain "
                              'non-unicode characters. Leaving it '
                              'out.'.format(filename))
@@ -339,7 +344,8 @@ def instantiate_processes(section,
                           cache,
                           log_printer,
                           console_printer,
-                          debug=False):
+                          debug=False,
+                          use_raw_files=False):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -351,6 +357,7 @@ def instantiate_processes(section,
     :param cache:            An instance of ``misc.Caching.FileCache`` to use as
                              a file cache buffer.
     :param log_printer:      The log printer to warn to.
+    :param use_raw_files:    Allow the usage of raw files (non text files)
     :param console_printer:  Object to print messages on the console.
     :param debug:            Bypass multiprocessing and activate debug mode
                              for bears, not catching any exceptions on running
@@ -369,7 +376,8 @@ def instantiate_processes(section,
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
     complete_filename_list = filename_list
-    complete_file_dict = get_file_dict(complete_filename_list, log_printer)
+    complete_file_dict = get_file_dict(complete_filename_list, log_printer,
+                                       use_raw_files)
 
     if debug:
         from . import DebugProcessing as processing
@@ -398,7 +406,8 @@ def instantiate_processes(section,
     # run only for the changed files if caching is enabled.
 
     # Start tracking all the files
-    if cache and loaded_valid_local_bears_count == loaded_local_bears_count:
+    if cache and (loaded_valid_local_bears_count == loaded_local_bears_count
+                  and not use_raw_files):
         cache.track_files(set(complete_filename_list))
         changed_files = cache.get_uncached_files(
             set(filename_list)) if cache else filename_list
@@ -464,6 +473,11 @@ def yield_ignore_ranges(file_dict):
         start = None
         bears = []
         stop_ignoring = False
+
+        # Do not process raw files
+        if file is None:
+            continue
+
         for line_number, line in enumerate(file, start=1):
             # Before lowering all lines ever read, first look for the biggest
             # common substring, case sensitive: I*gnor*e, start i*gnor*ing,
@@ -722,6 +736,22 @@ def execute_section(section,
         except IndexError:
             running_processes = get_cpu_count()
 
+    bears = global_bear_list + local_bear_list
+    use_raw_files = set(bear.USE_RAW_FILES for bear in bears)
+
+    if len(use_raw_files) > 1:
+        log_printer.err("Bears that uses raw files can't be mixed with "
+                        'Bears that uses text files. Please move the following '
+                        'bears to their own section: ' +
+                        ', '.join(bear.name for bear in bears
+                                  if not bear.USE_RAW_FILES))
+        return ((), {}, {}, {})
+
+    # use_raw_files is expected to be only one object.
+    # The if statement is to ensure this doesn't fail when
+    # it's running on an empty run
+    use_raw_files = use_raw_files.pop() if len(use_raw_files) > 0 else False
+
     processes, arg_dict = instantiate_processes(section,
                                                 local_bear_list,
                                                 global_bear_list,
@@ -729,7 +759,8 @@ def execute_section(section,
                                                 cache,
                                                 log_printer,
                                                 console_printer=console_printer,
-                                                debug=debug)
+                                                debug=debug,
+                                                use_raw_files=use_raw_files)
 
     logger_thread = LogPrinterThread(arg_dict['message_queue'],
                                      log_printer)

@@ -160,6 +160,16 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.ColonExistence'>]
     >>> aspectsCommitBear.aspects['fix']
     [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.TrailingPeriod'>]
+
+    To indicate the bear uses raw files, set ``USE_RAW_FILES`` to True:
+
+    >>> class RawFileBear(Bear):
+    ...     USE_RAW_FILES = True
+    >>> RawFileBear.USE_RAW_FILES
+    True
+
+    However if ``USE_RAW_FILES`` is enabled the Bear is in charge of managing
+    the file (opening the file, closing the file, reading the file, etc).
     """
 
     LANGUAGES = set()
@@ -176,6 +186,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     ASCIINEMA_URL = ''
     SEE_MORE = ''
     BEAR_DEPS = set()
+    USE_RAW_FILES = False
 
     @classproperty
     def name(cls):
