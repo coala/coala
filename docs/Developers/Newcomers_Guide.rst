@@ -23,14 +23,15 @@ following tasks, you will become a developer at coala:
   - merge a ``difficulty/low`` Pull Request
   - review at least a ``difficulty/low`` or higher Pull Request
 
-When you ran coala on a project, please fill our
-`usability survey <http://coala.io/usability>`_. Once you got your first Pull
-Request merged successfully, fill in our
-`survey form <http://coala.io/newform>`_. With that you can help us making your
-experience better!
 
-Once you have achieved all these, just ask for being promoted on the chat and
-provide links to your reviews and merged Pull Requests. Then, you will be able
+When you have run coala on a project, please fill out our
+`usability survey <http://coala.io/usability>`_. Once you have successfully
+merged your first Pull Request, fill in our
+`survey form <http://coala.io/newform>`_. That will help us make your
+experience better.
+
+Once you have achieved these steps, just ask to be promoted on the chat and
+provide links to your reviews and merged Pull Requests. Then you will be able
 to name yourself a coala developer!
 
 .. note::
@@ -41,7 +42,7 @@ to name yourself a coala developer!
 
 Of course, the order is not important, although, we recommend you to start
 with a ``newcomer`` issue, end with a ``low`` issue, and review other PRs in
-the meantime!
+the meantime.
 
 This is a step-based guide that will help you get your first contribution
 at coala, making you familiar with the work flow!
@@ -62,14 +63,14 @@ For more information about Pull Requests, keep reading!
 Step 0. Run coala
 -----------------
 
-As a preparation of joining the community you should find out what this project
-is about - if you didn't do this already. We highly recommend you
+As preparation for joining the community, you should find out what this project
+is about, if you haven't already. We highly recommend you
 `install coala <https://coala.io/install>`_ and use it on at least one of your
 projects. Also, we recommend that you read
 `development setup notes <http://coala.io/devsetup>`_
 to learn how to set up an environment to work on coala.
 
-Most importantly, keep notes of what could be better to make the usage easier!
+Most importantly, keep notes of what could be better to make the usage easier.
 What documentation was missing? What was hard to understand?
 
 .. note::
@@ -79,32 +80,26 @@ What documentation was missing? What was hard to understand?
     which can help you find a suitable repository and run coala on a bigger
     project.
 
-Once you complete this, please take the time and
-`fill this form <https://coala.io/usability>`_ so we can improve this!
+Once you complete this, please take the time to
+`fill out this form <https://coala.io/usability>`_ so we can improve the
+process.
 
-Step 1. Meet the Community!
----------------------------
+Step 1. Meet the Community and Get an Invitation to the Organization
+--------------------------------------------------------------------
 
 To get started, the first step is to meet the community. We use gitter to
-communicate, and there the helpful community will guide you.
-Join us at `coala gitter <https://coala.io/chat>`_.
-The newcomers should ping us "Hello World" to let us know they are here
-because we care!
+communicate, and there the helpful community will guide you. Join us at
+`coala gitter <https://coala.io/chat>`_. The newcomers should ping us "Hello
+World" to let us know they are here because we care!
 
-**Congratulations!** You are now part of our community.
+When you say "Hello World" in chat ``cobot`` (our gitter bot) will invite you
+to be part of the Newcomer team. The invitation will be sent by mail and you
+will have to accept it to join. If you don't find the invitation, accept it
+`here <https://github.com/coala>`__.
 
-Step 2. Grab an Invitation to the Organization
-----------------------------------------------
-
-Let us know on gitter that you are interested in contributing and ask for an
-invitation to our org. This is your first step towards contributing.
-A maintainer will command ``cobot`` (our gitter bot) to invite
-you and be part of the Newcomer team.
-The invitation will be sent by mail and you will have to accept
-it to join. If you don't find the invitation, accept it `here <https://github.com/coala>`__.
-
-Now that you are part of our organization, you can start working on issues.
-If you are familiar with git, you can skip the next section and pick an issue.
+**Congratulations!** Now that you are part of our organization, you can start
+working on issues. If you are familiar with git, you can skip the next section
+and pick an issue.
 
 Optional. Get Help With Git
 ---------------------------
@@ -119,7 +114,7 @@ If there's anything unclear, or you are encountering problems, feel free
 to contact us on `gitter <https://coala.io/chat>`_,
 and we will help you!
 
-Step 3. Picking Up an Issue
+Step 2. Picking Up an Issue
 ---------------------------
 
 Now it is time to pick an issue.
@@ -157,7 +152,7 @@ Now you can start working on it.
     Before starting to write your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
 
-Step 4. Creating a Fork and Testing Your Changes
+Step 3. Creating a Fork and Testing Your Changes
 ------------------------------------------------
 
 This tutorial implies you working on your fork. To fork the repository, go
@@ -201,7 +196,7 @@ into your bash. This will analyze your code and help you fix it.
 
     `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
 
-Step 5. Sending Your Changes
+Step 4. Sending Your Changes
 ----------------------------
 
 .. note::
@@ -230,7 +225,7 @@ where ``myfork`` is the name of your fork that you added at the previous step.
     You could also add a profile picture on your Github account, so that
     you can be distinguished out from the crowd!
 
-Step 6. Creating a ``Pull Request``
+Step 5. Creating a ``Pull Request``
 -----------------------------------
 
 Now that your commit has been sent to your fork, it is time
@@ -251,7 +246,7 @@ ready to be accepted, you can optionally indicate this to other
 developers by starting your ``Pull Request`` title with ``wip``
 (case-insensitive).
 
-Step 7. Waiting for Review
+Step 6. Waiting for Review
 --------------------------
 
 After creating a Pull Request, your PR is open to the review process (to read
@@ -272,7 +267,7 @@ For more information about reviewing code, check out this `link <http://coala.io
     something wrong - there will always be someone looking over it before
     merging it to master.
 
-Step 8. Review Process
+Step 7. Review Process
 ----------------------
 
 After creating your ``Pull Request``, it is under the review process. This can
