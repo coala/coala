@@ -130,7 +130,7 @@ review, please comment on the pull request directly as follows:
    the first 6 characters of each passing commit hash delimited by
    spaces, commas, or forward slashes (the commit URLs from GitHub
    satisfy the commit hash requirements).
-
+   
 .. note::
 
     GitMate only separates by spaces and commas. If you copy and paste the SHAs
