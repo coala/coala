@@ -248,7 +248,7 @@ def _absolute_flat_glob(pattern):
     else:
         # Patterns ending with a slash should match only directories.
         if os.path.isdir(dirname):
-            yield pattern
+            yield dirname
     return
 
 
