@@ -1,6 +1,6 @@
 import hashlib
 import os
-import pickle
+import cPickle
 
 from coalib.misc import Constants
 
@@ -87,8 +87,8 @@ def pickle_load(log_printer, identifier, fallback=None):
         return fallback
     with open(file_path, 'rb') as f:
         try:
-            return pickle.load(f)
-        except (pickle.UnpicklingError, EOFError) as e:
+            return cPickle.load(f)
+        except (cPickle.UnpicklingError, EOFError) as e:
             log_printer.warn('The given file is corrupted and will be '
                              'removed.')
             delete_files(log_printer, [identifier])
@@ -113,7 +113,7 @@ def pickle_dump(log_printer, identifier, data):
         # Exit silently since the error has been logged in ``get_data_path``
         return False
     with open(file_path, 'wb') as f:
-        pickle.dump(data, f)
+        cPickle.dump(data, f)
     return True
 
 
