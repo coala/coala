@@ -1,5 +1,21 @@
-[Default]
-bears = SpaceConsistencyBear,IndentationBear
-files = **.(md|html|css)
+[global]
+bears = coalaBear
+files = **.yml, **.html, **.md, **.js, **.css
 ignore = vendors/**
-use_spaces = yeah
+
+[linecount]
+files = **.yml, **.html, **.md, **.js
+bears = LineCountBear
+ignore = vendors/**, components/**
+max_lines_per_file = 600
+
+[spacing]
+bears = SpaceConsistencyBear
+files = **.html, **.css, **.js
+ignore = vendors/**, components/**
+use_spaces = True
+
+[html]
+bears = HTMLLintBear
+files = **.html
+htmllint_ignore = optional_tag, protocol, indentation, concerns_separation, capitalization
