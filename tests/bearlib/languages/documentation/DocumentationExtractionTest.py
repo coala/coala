@@ -180,7 +180,16 @@ class DocumentationExtractionTest(unittest.TestCase):
                          'short'),
                         docstyle_PYTHON3_default, '',
                         docstyle_PYTHON3_default.markers[0],
-                        TextRange.from_values(40, 1, 42, 9)))
+                        TextRange.from_values(40, 1, 42, 9)),
+                    DocumentationComment(
+                        ('\n'
+                         'A bad indented docstring\n'
+                         '    Improper indentation.\n'
+                         ':param impact: The force of Impact.\n'),
+                        docstyle_PYTHON3_default, ' ' * 4,
+                        docstyle_PYTHON3_default.markers[0],
+                        TextRange.from_values(45, 5, 49, 8)),
+                    )
 
         self.assertEqual(
             tuple(extract_documentation(data, 'PYTHON3', 'default')),

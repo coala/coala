@@ -40,3 +40,10 @@ def foobar_travel(country):
 """super
  nicely
 short"""
+
+def foobar_collision(impact):
+    """
+ A bad indented docstring
+        Improper indentation.
+    :param impact: The force of Impact.
+    """

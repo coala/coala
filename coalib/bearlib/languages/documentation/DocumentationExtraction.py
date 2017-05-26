@@ -36,7 +36,10 @@ def _extract_doc_comment_simple(content, line, column, markers):
     while line < len(content):
         pos = content[line].find(markers[2])
         if pos == -1:
+            line_column = len(content[line])-len(content[line].lstrip())
             doc_comment += ('\n' if content[line][align_column:] == ''
+                            else content[line].strip()+'\n'
+                            if line_column < align_column
                             else content[line][align_column:])
         else:
             doc_comment += content[line][align_column:pos]
