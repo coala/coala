@@ -25,6 +25,8 @@ test:
         parallel: true
     - pip install chardet==3.0.3:
         parallel: true
+    - pip install docutils==0.13.1:
+        parallel: true
     - coala --non-interactive:
         parallel: true
     - codecov:
