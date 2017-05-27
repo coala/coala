@@ -368,7 +368,10 @@ class BearDownloadTest(BearTestBase):
                     self.mock_url, self.filename)
 
     def test_read_broken(self):
-        exc = requests.exceptions.RequestException
+        exc = (
+            requests.exceptions.RequestException,
+            requests.packages.urllib3.exceptions.ProtocolError,
+        )
         fake_content = [b'Fake read data', b'Another line']
         fake_content_provider = BrokenReadHTTPResponse(fake_content)
 
