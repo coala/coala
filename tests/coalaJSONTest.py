@@ -22,7 +22,7 @@ class coalaJSONTest(unittest.TestCase):
     def test_deprecation_log(self):
         retval, stdout, stderr = execute_coala(
             coala_json.main, 'coala-json', '--help')
-        self.assertIn('Use of `coala-json` binary is deprecated', stderr)
+        self.assertIn('Use of `coala-json` executable is deprecated', stderr)
         self.assertIn('usage: coala', stdout)
 
     def test_nonexistent(self):

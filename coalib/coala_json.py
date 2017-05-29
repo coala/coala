@@ -5,7 +5,7 @@ from coalib.coala import main as coala_main
 
 
 def main(debug=False):
-    logging.warning('Use of `coala-json` binary is deprecated, use '
+    logging.warning('Use of `coala-json` executable is deprecated, use '
                     'coala --json` instead.')
 
     sys.argv.append('--json')

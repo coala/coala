@@ -5,7 +5,7 @@ from coalib.coala import main as coala_main
 
 
 def main(debug=False):
-    logging.warning('Use of `coala-ci` binary is deprecated, use '
+    logging.warning('Use of `coala-ci` executable is deprecated, use '
                     '`coala --non-interactive` instead.')
 
     sys.argv.append('--non-interactive')

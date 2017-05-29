@@ -19,7 +19,7 @@ class coalaFormatTest(unittest.TestCase):
     def test_deprecation_log(self):
         retval, stdout, stderr = execute_coala(
             coala_format.main, 'coala-format', '--help')
-        self.assertIn('Use of `coala-format` binary is deprecated', stderr)
+        self.assertIn('Use of `coala-format` executable is deprecated', stderr)
         self.assertIn('usage: coala', stdout)
 
     def test_line_count(self):

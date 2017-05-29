@@ -22,7 +22,7 @@ class coalaCITest(unittest.TestCase):
         retval, stdout, stderr = execute_coala(
             coala_ci.main, 'coala-ci', '--help', debug=debug)
         self.assertIn('usage: coala', stdout)
-        self.assertIn('Use of `coala-ci` binary is deprecated', stderr)
+        self.assertIn('Use of `coala-ci` executable is deprecated', stderr)
         self.assertEqual(retval, 0,
                          'coala must return zero when successful')
 
