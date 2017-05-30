@@ -68,8 +68,6 @@ script:
   - python setup.py bdist_wheel
   - pip install ./dist/coala-*.whl
   - pip install coala-bears[alldeps] --pre -U
-  - pip uninstall --yes vim-vint
-  - pip install chardet==3.0.3
   - pip install docutils==0.13.1
   # https://github.com/coala/coala-bears/issues/1037
   - >
