@@ -5,6 +5,7 @@ import unittest.case
 
 from unidiff.errors import UnidiffParseError
 
+from coalib.results.Diff import coala_unified_diff
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.Diff import ConflictError, Diff, SourceRange
 
@@ -626,3 +627,135 @@ class DiffTest(unittest.TestCase):
         self.uut.delete = True
         self.assertEqual(self.uut.modified, [])
         self.uut.delete = False
+
+    def test_unified_diff(self):
+        '"" Test no newline at end of file, from https://github.com/coala/coala/issues/2006 ""'
+
+        with_no_new_lines = list(coala_unified_diff(
+            'one\ntwo\nthree'.splitlines(1),
+            'one\ntwo\ntrois'.splitlines(1),
+            'Before', 'After'))
+        with_no_new_lines_expected = [
+            '--- Before\n',
+            '+++ After\n',
+            '@@ -1,3 +1,3 @@\n',
+            ' one\n',
+            ' two\n',
+            '-three\n',
+            '\\ No newline at end of file\n',
+            '+trois\n',
+            '\\ No newline at end of file\n'
+        ]
+        self.assertEqual(with_no_new_lines, with_no_new_lines_expected)
+        with_new_lines = list(coala_unified_diff(
+            'one\ntwo\nthree\n'.splitlines(1),
+            'one\ntwo\ntrois\n'.splitlines(1),
+            'Before', 'After'))
+        with_new_lines_expected = [
+            '--- Before\n',
+            '+++ After\n',
+            '@@ -1,3 +1,3 @@\n',
+            ' one\n',
+            ' two\n',
+            '-three\n',
+            '+trois\n'
+        ]
+        self.assertEqual(with_new_lines, with_new_lines_expected)
+        all_equal_lines1 = list(coala_unified_diff(
+            'one\ntwo\nthree\n'.splitlines(1),
+            'one\ntwo\nthree'.splitlines(1),
+            'Before', 'After'))
+        all_equal_lines_expected1 = [
+            '--- Before\n',
+            '+++ After\n',
+            '@@ -1,3 +1,3 @@\n',
+            ' one\n',
+            ' two\n',
+            '-three\n',
+            '+three\n',
+            '\\ No newline at end of file\n'
+        ]
+        self.assertEqual(all_equal_lines1, all_equal_lines_expected1)
+        all_equal_lines2 = list(coala_unified_diff(
+            'one\ntwo\nthree'.splitlines(1),
+            'one\ntwo\nthree\n'.splitlines(1),
+            'Before', 'After'))
+        all_equal_lines_expected2 = [
+            '--- Before\n',
+            '+++ After\n',
+            '@@ -1,3 +1,3 @@\n',
+            ' one\n',
+            ' two\n',
+            '-three\n',
+            '\\ No newline at end of file\n',
+            '+three\n'
+        ]
+        self.assertEqual(all_equal_lines2, all_equal_lines_expected2)
+        insert_lines = list(coala_unified_diff(
+            'one\ntwo\nthree'.splitlines(1),
+            'one\ntwo\nthree\n'.splitlines(1),
+            'Before', 'After'))
+        insert_lines_expected = [
+            '--- Before\n',
+            '+++ After\n',
+            '@@ -1,3 +1,3 @@\n',
+            ' one\n',
+            ' two\n',
+            '-three\n',
+            '\\ No newline at end of file\n',
+            '+three\n'
+        ]
+        self.assertEqual(insert_lines, insert_lines_expected)
+        del_lines = list(coala_unified_diff(
+            'one\ntwo'.splitlines(1),
+            'one\n'.splitlines(1),
+            'Before', 'After'))
+        del_lines_expected = [
+            '--- Before\n',
+            '+++ After\n',
+            '@@ -1,2 +1,1 @@\n',
+            ' one\n',
+            '-two\n',
+            '\\ No newline at end of file\n'
+        ]
+        self.assertEqual(del_lines, del_lines_expected)
+        ins_lines = list(coala_unified_diff(
+            'one\ntwo\n'.splitlines(1),
+            'one\ntwo\nthree'.splitlines(1),
+            'Before', 'After', '2016-01-26 23:30:50', '2016-04-02 10:20:52'))
+        ins_lines_expected = [
+            '--- Before\t2016-01-26 23:30:50\n',
+            '+++ After\t2016-04-02 10:20:52\n',
+            '@@ -1,2 +1,3 @@\n',
+            ' one\n',
+            ' two\n',
+            '+three\n',
+            '\\ No newline at end of file\n'
+        ]
+        self.assertEqual(ins_lines, ins_lines_expected)
+        a = list(map(str, range(1, 40)))
+        b = a[:]
+        b[8:8] = ['i']
+        b[20] += 'x'
+        b[23:28] = []
+        b[30] += 'y'
+        groups_check_lines = list(coala_unified_diff(
+            a, b,
+            'Before', 'After', '2016-01-26 23:30:50', '2016-04-02 10:20:52'))
+        groups_check_lines_expected = [
+            '--- Before\t2016-01-26 23:30:50\n',
+            '+++ After\t2016-04-02 10:20:52\n',
+            '@@ -6,6 +6,7 @@\n', ' 6', ' 7', ' 8', '+i\n',
+            '\\ No newline at end of file\n', ' 9', ' 10', ' 11',
+            '@@ -17,14 +18,9 @@\n', ' 17', ' 18', ' 19', '-20\n',
+            '\\ No newline at end of file\n', '+20x\n',
+            '\\ No newline at end of file\n', ' 21', ' 22', '-23\n',
+            '\\ No newline at end of file\n',
+            '-24\n', '\\ No newline at end of file\n', '-25\n',
+            '\\ No newline at end of file\n', '-26\n',
+            '\\ No newline at end of file\n', '-27\n',
+            '\\ No newline at end of file\n', ' 28', ' 29',
+            ' 30', '@@ -32,7 +28,7 @@\n', ' 32', ' 33', ' 34', '-35\n',
+            '\\ No newline at end of file\n', '+35y\n',
+            '\\ No newline at end of file\n', ' 36', ' 37', ' 38']
+        self.assertEqual(groups_check_lines, groups_check_lines_expected)
