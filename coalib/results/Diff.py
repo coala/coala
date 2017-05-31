@@ -292,13 +292,21 @@ class Diff:
         """
         Generates a unified diff corresponding to this patch.
 
+        Each change will be displayed on its own line. Additionally, the
+        unified diff preserves the EOF-state of the original file. This
+        means that the ``Diff`` will only have a linebreak on the last line,
+        if that was also present in the original file.
+
         Note that the unified diff is not deterministic and thus not suitable
         for equality comparison.
         """
-        return ''.join(difflib.unified_diff(
+
+        list_unified_diff = list(difflib.unified_diff(
             self._file,
             self._raw_modified(),
             tofile=self.rename if isinstance(self.rename, str) else ''))
+
+        return ''.join(self._generate_linebreaks(list_unified_diff))
 
     def __json__(self):
         """

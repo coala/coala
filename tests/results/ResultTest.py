@@ -182,8 +182,12 @@ class ResultTest(unittest.TestCase):
         self.assertEqual(uut['diffs']['f_a'].__json__(), '--- \n'
                                                          '+++ \n'
                                                          '@@ -1,3 +1,2 @@\n'
-                                                         ' 1-2-3+3_changed')
+                                                         ' 1\n'
+                                                         '-2\n'
+                                                         '-3\n'
+                                                         '+3_changed')
         JSONEncoder = create_json_encoder(use_relpath=True)
         json_dump = json.dumps(diff, cls=JSONEncoder, sort_keys=True)
         self.assertEqual(
-            json_dump, '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1-2-3+3_changed"')
+            json_dump,
+            '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1\\n-2\\n-3\\n+3_changed"')
