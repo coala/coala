@@ -23,7 +23,7 @@ class DiffTest(unittest.TestCase):
     def test_add_line(self):
         self.uut.add_line(0, 't')
         self.assertRaises(ConflictError, self.uut.add_line, 0, 't')
-        self.assertEqual(self.uut.modified, ['t', '1', '2', '3', '4'])
+        self.assertEqual(self.uut.modified, ['t\n', '1\n', '2\n', '3\n', '4'])
 
     def test_double_addition(self):
         self.uut.add_lines(0, ['t'])
@@ -125,11 +125,11 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.stats(), (4, 2))
 
     def test_modified(self):
-        result_file = ['0.1',
-                       '0.2',
-                       '1',
-                       '1.1',
-                       '3.changed',
+        result_file = ['0.1\n',
+                       '0.2\n',
+                       '1\n',
+                       '1.1\n',
+                       '3.changed\n',
                        '4']
 
         self.uut.delete_line(2)
@@ -138,10 +138,10 @@ class DiffTest(unittest.TestCase):
         self.uut.change_line(3, '3', '3.changed')
 
         self.assertEqual(self.uut.modified, result_file)
-        self.assertEqual(self.uut.original, self.file)
 
         self.uut.delete_line(len(self.file))
-        del result_file[len(result_file) - 1]
+        del result_file[-1]
+        result_file[-1] = result_file[-1].rstrip('\n')
         self.assertEqual(self.uut.modified, result_file)
 
         self.uut.delete_line(1)
@@ -154,6 +154,8 @@ class DiffTest(unittest.TestCase):
         self.assertTrue(self.uut)
         self.uut.delete_line(4)
         self.assertFalse(self.uut)
+        self.uut.modify_line(1, '1\n')
+        self.assertFalse(self.uut)
 
         # test if it works with tuples.
         uutuple = Diff(('1', '2', '3', '4'))
@@ -163,12 +165,14 @@ class DiffTest(unittest.TestCase):
         self.assertTrue(uutuple)
         uutuple.delete_line(4)
         self.assertFalse(uutuple)
+        uutuple.modify_line(1, '1\n')
+        self.assertFalse(uutuple)
 
     def test_addition(self):
         self.assertRaises(TypeError, self.uut.__add__, 5)
 
-        result_file = ['1',
-                       '2',
+        result_file = ['1\n',
+                       '2\n',
                        '2']
 
         other = Diff(self.file)
@@ -200,34 +204,34 @@ class DiffTest(unittest.TestCase):
         self.assertRaises(ConflictError, other.__add__, uut)
 
     def test_from_string_arrays(self):
-        a = ['q', 'a', 'b', 'x', 'c', 'd']
-        b = ['a', 'b', 'y', 'c', 'd', 'f']
+        a = ['q\n', 'a\n', 'b\n', 'x\n', 'c\n', 'd\n']
+        b = ['a\n', 'b\n', 'y\n', 'c\n', 'd\n', 'f\n']
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.modified, b)
 
-        a = ['first', 'fourth']
-        b = ['first', 'second', 'third', 'fourth']
+        a = ['first\n', 'fourth\n']
+        b = ['first\n', 'second\n', 'third\n', 'fourth\n']
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.modified, b)
 
-        a = ['first', 'fourth']
-        b = ['first_changed', 'second', 'third', 'fourth']
+        a = ['first\n', 'fourth\n']
+        b = ['first_changed\n', 'second\n', 'third\n', 'fourth\n']
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.modified, b)
 
-        a = ['first', 'second', 'third', 'fourth']
-        b = ['first', 'fourth']
+        a = ['first\n', 'second\n', 'third\n', 'fourth\n']
+        b = ['first\n', 'fourth\n']
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.modified, b)
 
-        a = ['first', 'second', 'third', 'fourth']
-        b = ['first_changed', 'second_changed', 'fourth']
+        a = ['first\n', 'second\n', 'third\n', 'fourth\n']
+        b = ['first_changed\n', 'second_changed\n', 'fourth\n']
         self.uut = Diff.from_string_arrays(a, b)
         self.assertEqual(self.uut.modified, b)
 
     def test_from_unified_diff_single_addition(self):
         source = ['single line']
-        target = ['single line', 'another line added']
+        target = ['single line\n', 'another line added']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1 +1,2 @@',
@@ -239,8 +243,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_single_deletion(self):
-        source = ['two lines', 'to be removed']
-        target = ['two lines']
+        source = ['two lines\n', 'to be removed']
+        target = ['two lines\n']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,2 +1 @@',
@@ -252,8 +256,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_single_modification(self):
-        source = ['first', 'second']
-        target = ['only_first_changed', 'second']
+        source = ['first\n', 'second']
+        target = ['only_first_changed\n', 'second']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,2 +1,2 @@',
@@ -266,8 +270,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_multiple_additions_different_orderings(self):
-        source = ['A', 'B', 'C']
-        target = ['A', 'Y', 'Z', 'B', 'C']
+        source = ['A\n', 'B\n', 'C']
+        target = ['A\n', 'Y\n', 'Z\n', 'B\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,3 +1,5 @@',
@@ -281,8 +285,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.original, source)
         self.assertEqual(self.uut.modified, target)
 
-        source = ['A', 'B', 'C']
-        target = ['A', 'Y', 'Z', 'C']
+        source = ['A\n', 'B\n', 'C']
+        target = ['A\n', 'Y\n', 'Z\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,3 +1,5 @@',
@@ -296,8 +300,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.original, source)
         self.assertEqual(self.uut.modified, target)
 
-        source = ['A', 'B', 'C']
-        target = ['Y', 'Z', 'C']
+        source = ['A\n', 'B\n', 'C']
+        target = ['Y\n', 'Z\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,3 +1,5 @@',
@@ -311,8 +315,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.original, source)
         self.assertEqual(self.uut.modified, target)
 
-        source = ['A', 'B', 'C']
-        target = ['A', 'B', 'C', 'Y', 'Z']
+        source = ['A\n', 'B\n', 'C']
+        target = ['A\n', 'B\n', 'C\n', 'Y\n', 'Z']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -3 +3,3 @@',
@@ -325,8 +329,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diffrent_beginning_line_types(self):
-        source = ['A', 'B', 'C']
-        target = ['A', 'Y', 'B', 'C']
+        source = ['A\n', 'B\n', 'C']
+        target = ['A\n', 'Y\n', 'B\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,3 +1,4 @@',
@@ -339,8 +343,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.original, source)
         self.assertEqual(self.uut.modified, target)
 
-        source = ['A', 'B', 'C']
-        target = ['B', 'C']
+        source = ['A\n', 'B\n', 'C']
+        target = ['B\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,3 +1,2 @@',
@@ -352,8 +356,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.original, source)
         self.assertEqual(self.uut.modified, target)
 
-        source = ['A', 'B', 'C']
-        target = ['Z', 'A', 'B', 'C']
+        source = ['A\n', 'B\n', 'C']
+        target = ['Z\n', 'A\n', 'B\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,2 +1,3 @@',
@@ -366,8 +370,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_multiple_modifications(self):
-        source = ['first', 'second']
-        target = ['first_changed', 'second_changed']
+        source = ['first\n', 'second']
+        target = ['first_changed\n', 'second_changed']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,2 +1,2 @@',
@@ -381,8 +385,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_multiple_hunks(self):
-        source = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-        target = ['A', 'C', 'D', 'E', 'F']
+        source = ['A\n', 'B\n', 'C\n', 'D\n', 'E\n', 'F\n', 'G']
+        target = ['A\n', 'C\n', 'D\n', 'E\n', 'F\n']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,2 +1,1 @@',
@@ -400,8 +404,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_incomplete_hunks_multiple_deletions(self):
-        source = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-        target = ['A', 'C', 'D', 'E', 'F']
+        source = ['A\n', 'B\n', 'C\n', 'D\n', 'E\n', 'F\n', 'G']
+        target = ['A\n', 'C\n', 'D\n', 'E\n', 'F\n']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,2 +1,1 @@',
@@ -417,8 +421,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_incomplete_hunks_multiple_additions(self):
-        source = ['A', 'C', 'D', 'E', 'G']
-        target = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+        source = ['A\n', 'C\n', 'D\n', 'E\n', 'G']
+        target = ['A\n', 'B\n', 'C\n', 'D\n', 'E\n', 'F\n', 'G']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,1 +1,2 @@',
@@ -434,8 +438,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_incomplete_hunks_multiple_modifications(self):
-        source = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-        target = ['A', 'B', 'Z', 'D', 'E', 'F', 'K']
+        source = ['A\n', 'B\n', 'C\n', 'D\n', 'E\n', 'F\n', 'G']
+        target = ['A\n', 'B\n', 'Z\n', 'D\n', 'E\n', 'F\n', 'K']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,3 +1,3 @@',
@@ -497,8 +501,8 @@ class DiffTest(unittest.TestCase):
             Diff.from_unified_diff(diff_string, source)
 
     def test_from_unified_diff_no_changes(self):
-        source = ['first', 'second']
-        target = ['first', 'second']
+        source = ['first\n', 'second']
+        target = ['first\n', 'second']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
                 '@@ -1,2 +1,2 @@',
@@ -510,8 +514,8 @@ class DiffTest(unittest.TestCase):
         self.assertEqual(self.uut.modified, target)
 
     def test_from_unified_diff_no_changes_empty_diff(self):
-        source = ['first', 'second']
-        target = ['first', 'second']
+        source = ['first\n', 'second']
+        target = ['first\n', 'second']
         diff_string = ''
         self.uut = Diff.from_unified_diff(diff_string, source)
         self.assertEqual(self.uut.original, source)

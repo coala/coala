@@ -84,7 +84,7 @@ class ResultTest(unittest.TestCase):
             'f_b': ['1', '2', '3']
         }
         expected_file_dict = {
-            'f_a': ['1', '3_changed'],
+            'f_a': ['1\n', '3_changed'],
             'f_b': ['1', '2', '3']
         }
         diff = Diff(file_dict['f_a'])
@@ -103,8 +103,8 @@ class ResultTest(unittest.TestCase):
             'f_c': ['1', '2', '3']
         }
         expected_file_dict = {
-            'f_a': ['1', '3_changed'],
-            'f_b': ['1', '2', '3_changed'],
+            'f_a': ['1\n', '3_changed'],
+            'f_b': ['1\n', '2\n', '3_changed'],
             'f_c': ['1', '2', '3']
         }
 

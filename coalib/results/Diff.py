@@ -27,6 +27,7 @@ class Diff:
         """
         self._changes = {}
         self._file = list(file_list)
+        self._original = self._generate_linebreaks(self._file)
         self.rename = rename
         self.delete = delete
 
@@ -244,10 +245,9 @@ class Diff:
         """
         Retrieves the original file.
         """
-        return self._file
+        return self._original
 
-    @property
-    def modified(self):
+    def _raw_modified(self):
         """
         Calculates the modified file, after applying the Diff to the original.
         """
@@ -278,6 +278,17 @@ class Diff:
         return result
 
     @property
+    def modified(self):
+        """
+        Calculates the modified file, after applying the Diff to the original.
+
+        This property also adds linebreaks at the end of each line.
+        If no newline was present at the end of file before, this state will
+        be preserved, except if the last line is deleted.
+        """
+        return self._generate_linebreaks(self._raw_modified())
+
+    @property
     def unified_diff(self):
         """
         Generates a unified diff corresponding to this patch.
@@ -286,8 +297,8 @@ class Diff:
         for equality comparison.
         """
         return ''.join(difflib.unified_diff(
-            self.original,
-            self.modified,
+            self._file,
+            self._raw_modified(),
             tofile=self.rename if isinstance(self.rename, str) else ''))
 
     def __json__(self):
@@ -432,7 +443,7 @@ class Diff:
         """
         return (self.rename is not False or
                 self.delete is True or
-                self.modified != self._file)
+                self.modified != self.original)
 
     def delete_line(self, line_nr):
         """
@@ -524,11 +535,12 @@ class Diff:
             if len(replacement) == len(linediff.change[1]) == 1:
                 raise ConflictError('Cannot merge the given line changes.')
 
+            # The following diffs are created from strings, instead of lists.
             orig_diff = Diff.from_string_arrays(linediff.change[0],
                                                 linediff.change[1])
             new_diff = Diff.from_string_arrays(linediff.change[0],
                                                replacement)
-            replacement = ''.join((orig_diff + new_diff).modified)
+            replacement = ''.join((orig_diff + new_diff)._raw_modified())
 
         linediff.change = (self._file[line_nr-1], replacement)
         self._changes[line_nr] = linediff
@@ -565,8 +577,8 @@ class Diff:
         """
         # Remaining parts of the lines not affected by the replace.
         first_part = (
-            self.original[range.start.line - 1][:range.start.column - 1])
-        last_part = self.original[range.end.line - 1][range.end.column - 1:]
+            self._file[range.start.line - 1][:range.start.column - 1])
+        last_part = self._file[range.end.line - 1][range.end.column - 1:]
 
         self.delete_lines(range.start.line, range.end.line)
         self.add_lines(range.start.line - 1,
