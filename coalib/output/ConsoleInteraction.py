@@ -64,6 +64,8 @@ def highlight_text(no_color, text, lexer=TextLexer(), style=None):
     return highlight(text, lexer, formatter)[:-1]
 
 
+STR_VAL_SPACES = ('Spaces are to be used instead of tabs? (True/False)')
+STR_VAL_LANG = ('Enter the programming language of the source code:')
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
                            'needed by {} for section \"{}\": ')
 STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
@@ -479,10 +481,14 @@ def require_setting(setting_name, arr, section):
     needed = join_names(arr[1:])
 
     # Don't use input, it can't deal with escapes!
-
-    print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed,
-                                                 section.name),
-                  REQUIRED_SETTINGS_COLOR))
+    if setting_name == 'use_spaces':
+        print(colored(STR_VAL_SPACES, REQUIRED_SETTINGS_COLOR))
+    elif setting_name == 'language':
+        print(colored(STR_VAL_LANG, REQUIRED_SETTINGS_COLOR))
+    else:
+        print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0],
+                                                     needed, section.name),
+                      REQUIRED_SETTINGS_COLOR))
     return input()
 
 
@@ -560,8 +566,7 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
-        console_printer.print(format_lines('*0: ' +
-                                           'Do nothing'))
+        console_printer.print(format_lines('(D)o nothing'))
         for i, action in enumerate(actions, 1):
             console_printer.print(format_lines('{:>2}: {}'.format(
                 i,
@@ -579,7 +584,7 @@ def choose_action(console_printer, actions):
         except ValueError:
             pass
 
-        console_printer.print(format_lines('Please enter a valid number.'))
+        console_printer.print(format_lines('Please enter a valid letter.'))
 
 
 def print_actions(console_printer, section, actions, failed_actions):
