@@ -69,21 +69,23 @@ class ResultFilterTest(unittest.TestCase):
             debug_msg='another debug message')
 
         file_dict = {abspath('original'): []}
+        relative_file_dict = {'original': []}
 
-        self.assertEqual(sorted(filter_results(original_file_dict=file_dict,
-                                               modified_file_dict=file_dict,
-                                               original_results=[
-                                                   original_result],
-                                               modified_results=[
-                                                   clone_result,
-                                                   wrong_origin_result,
-                                                   wrong_message_result,
-                                                   wrong_severity_result,
-                                                   wrong_debug_msg_result])),
-                         sorted([wrong_origin_result,
-                                 wrong_message_result,
-                                 wrong_severity_result,
-                                 wrong_debug_msg_result]))
+        self.assertEqual(
+            sorted(filter_results(original_file_dict=relative_file_dict,
+                                  modified_file_dict=file_dict,
+                                  original_results=[
+                                      original_result],
+                                  modified_results=[
+                                      clone_result,
+                                      wrong_origin_result,
+                                      wrong_message_result,
+                                      wrong_severity_result,
+                                      wrong_debug_msg_result])),
+            sorted([wrong_origin_result,
+                    wrong_message_result,
+                    wrong_severity_result,
+                    wrong_debug_msg_result]))
 
     def test_affected_code(self):
 

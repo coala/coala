@@ -1,5 +1,6 @@
 import copy
 from difflib import SequenceMatcher
+import os
 
 from coalib.results.Diff import ConflictError, Diff
 from coalib.results.SourceRange import SourceRange
@@ -200,8 +201,13 @@ def remove_result_ranges_diffs(result_list, file_dict):
 
         for source_range in source_ranges:
             file_name = source_range.file
-            new_file = remove_range(mod_file_dict[file_name],
-                                    source_range)
+            if os.path.abspath(file_name) in mod_file_dict.keys():
+                new_file = remove_range(
+                    mod_file_dict[os.path.abspath(file_name)], source_range)
+            else:
+                new_file = remove_range(
+                    mod_file_dict[os.path.relpath(file_name)], source_range)
+
             mod_file_dict[file_name] = new_file
 
         diff_dict = {}
