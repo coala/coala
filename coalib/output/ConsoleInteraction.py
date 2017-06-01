@@ -72,7 +72,7 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
-STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
+STR_ENTER_NUMBER = 'Enter letter (Ctrl-{} to exit): '.format(
     'Z' if platform.system() == 'Windows' else 'D')
 FILE_NAME_COLOR = 'blue'
 FILE_LINES_COLOR = 'blue'
@@ -566,21 +566,31 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
+        possible_actions = []
         console_printer.print(format_lines('(D)o nothing'))
+        possible_actions.append('D')
         for i, action in enumerate(actions, 1):
-            console_printer.print(format_lines('{:>2}: {}'.format(
-                i,
+            console_printer.print(format_lines('{}'.format(
                 action.desc)))
-
+            if action.desc == '(O)pen file':
+                possible_actions.append('O')
+            elif action.desc == '(A)pply patch':
+                possible_actions.append('A')
+            elif action.desc == 'Print (M)ore info':
+                possible_actions.append('M')
+            elif action.desc == 'Add (I)gnore comment':
+                possible_actions.append('I')
+            elif action.desc == 'Print D(E)bug message':
+                possible_actions.append('E')
+            elif action.desc == 'Print Aspec(T) Information':
+                possible_actions.append('T')
         try:
             line = format_lines(STR_ENTER_NUMBER)
-
             choice = input(line)
             if not choice:
                 return 0
-            choice = int(choice)
-            if 0 <= choice <= len(actions):
-                return choice
+            if choice.upper() in possible_actions:
+                return possible_actions.index(choice.upper())
         except ValueError:
             pass
 
