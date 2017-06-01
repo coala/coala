@@ -108,8 +108,14 @@ language_definitions = os.path.join(coalib_root,
                                     'bearlib',
                                     'languages',
                                     'definitions')
-
-system_coafile = os.path.join(coalib_root, 'default_coafile')
+									
+#checks for default_coafile in coala/coalib									
+for root, dirs, file_lists in os.walk('coalib'):
+    for file in file_lists:
+        if file == 'default_coafile'
+			logging.warning
+		
+system_coafile = os.path.join(coalib_root, 'system_coafile')
 
 user_coafile = os.path.join(os.path.expanduser('~'), '.coarc')
 
