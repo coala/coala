@@ -21,9 +21,9 @@ class LanguageAttributeErrorTest(unittest.TestCase):
         pass
 
     def test_invalid_attribute(self):
-        with self.assertRaisesRegexp(AttributeError, 'not a valid attribute'):
+        with self.assertRaisesRegex(AttributeError, 'not a valid attribute'):
             self.lang_cpp.not_an_attribute
 
     def test_attribute_list_empy(self):
-        with self.assertRaisesRegexp(AttributeError, 'no available attribute'):
+        with self.assertRaisesRegex(AttributeError, 'no available attribute'):
             self.lang_unknown.not_an_attribute

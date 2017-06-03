@@ -364,7 +364,7 @@ class BearDownloadTest(BearTestBase):
         exc = requests.exceptions.ConnectTimeout
         with requests_mock.Mocker() as reqmock:
             reqmock.get(self.mock_url, exc=exc)
-            with self.assertRaisesRegexp(exc, '^$'):
+            with self.assertRaisesRegex(exc, '^$'):
                 self.uut.download_cached_file(
                     self.mock_url, self.filename)
 
@@ -380,17 +380,18 @@ class BearDownloadTest(BearTestBase):
 
         with requests_mock.Mocker() as reqmock:
             reqmock.get(self.mock_url, body=fake_content_provider)
-            with self.assertRaisesRegexp(exc, 'Fake read timeout'):
+            with self.assertRaisesRegex(exc, 'Fake read timeout'):
                 self.uut.download_cached_file(
                     self.mock_url, self.filename)
 
         self.assertTrue(isfile(self.file_location))
-        self.assertEqual(open(self.file_location, 'rb').read(),
-                         b''.join(fake_content))
+
+        with open(self.file_location, 'rb') as fh:
+            self.assertEqual(fh.read(), b''.join(fake_content))
 
     def test_status_code_error(self):
         exc = requests.exceptions.HTTPError
-        with self.assertRaisesRegexp(exc, '418 Client Error'):
+        with self.assertRaisesRegex(exc, '418 Client Error'):
             self.uut.download_cached_file(
                 'http://httpbin.org/status/418', self.filename)
 
