@@ -1,7 +1,6 @@
 import os
 import logging
 import subprocess
-import tempfile
 import unittest
 from importlib import reload
 
@@ -11,6 +10,7 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.settings.Section import Section, Setting
+from coala_utils.tempfile_utils import make_temp_closed
 
 
 class OpenEditorActionTest(unittest.TestCase):
@@ -27,10 +27,8 @@ class OpenEditorActionTest(unittest.TestCase):
             f.writelines(lines)
 
     def setUp(self):
-        fahandle, self.fa = tempfile.mkstemp()
-        os.close(fahandle)
-        fbhandle, self.fb = tempfile.mkstemp()
-        os.close(fbhandle)
+        self.fa = make_temp_closed()
+        self.fb = make_temp_closed()
         self.old_subprocess_call = subprocess.call
         self.old_environ = os.environ
 
