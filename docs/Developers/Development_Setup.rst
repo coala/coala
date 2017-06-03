@@ -85,6 +85,22 @@ https://github.com/coala/coala-bears
 
 Installing from Git
 -------------------
+NOTE: 
+As coala works for python 3.
+Configure your environment for python 3.
+
+::
+
+          $ virtualenv venv -p /usr/bin/python3
+
+Enter the path where you have installed python 3.
+
+::
+
+          $ source venv/bin/activate
+    (venv)$ python --version
+
+Check your python version and make sure it is python 3.
 
 We recommend first installing the latest development snapshot of coala's
 master branch from and all of its dependencies with pip using
