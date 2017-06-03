@@ -109,11 +109,11 @@ language_definitions = os.path.join(coalib_root,
                                     'languages',
                                     'definitions')
 
-system_coafile = os.path.join(coalib_root, 'default_coafile')
+system_coafile = os.path.join(coalib_root, 'system_coafile')
 
 user_coafile = os.path.join(os.path.expanduser('~'), '.coarc')
 
-default_coafile = '.coafile'
+system_coafile = '.coafile'
 
 USER_DATA_DIR = appdirs.user_data_dir('coala', version=VERSION)
 

@@ -65,13 +65,13 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         self.assertEqual(len(local_bears['cli']), 0)
 
-    def test_default_coafile_parsing(self):
+    def test_system_coafile_parsing(self):
         tmp = Constants.system_coafile
 
         Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
-            'default_coafile'))
+            'system_coafile'))
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
@@ -89,7 +89,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         Constants.user_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
-            'default_coafile'))
+            'system_coafile'))
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
@@ -123,14 +123,14 @@ class ConfigurationGatheringTest(unittest.TestCase):
         Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
-            'default_coafile'))
+            'system_coafile'))
 
         config = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
             '.coafile'))
 
-        # Check merging of default_coafile and .coafile
+        # Check merging of system_coafile and .coafile
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
             self.log_printer,
@@ -141,7 +141,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(str(sections['test-2']),
                          "test-2 {files : '.', bears : 'LineCountBear'}")
 
-        # Check merging of default_coafile, .coafile and cli
+        # Check merging of system_coafile, .coafile and cli
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
             self.log_printer,

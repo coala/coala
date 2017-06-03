@@ -46,7 +46,7 @@ class ConfParser:
                            and their Setting objects as values.
         """
         if os.path.isdir(input_data):
-            input_data = os.path.join(input_data, Constants.default_coafile)
+            input_data = os.path.join(input_data, Constants.system_coafile)
 
         with open(input_data, 'r', encoding='utf-8') as _file:
             lines = _file.readlines()

@@ -107,12 +107,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
     config_group.add_argument(
         '-c', '--config', nargs=1, metavar='FILE',
         help='configuration file to be used, defaults to {}'.format(
-            Constants.default_coafile))
+            Constants.system_coafile))
 
     config_group.add_argument(
         '-F', '--find-config', action='store_const', const=True,
         help='find {} in ancestors of the working directory'.format(
-            Constants.default_coafile))
+            Constants.system_coafile))
 
     config_group.add_argument(
         '-I', '--no-config', const=True, action='store_const',
@@ -121,7 +121,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
     config_group.add_argument(
         '-s', '--save', nargs='?', const=True, metavar='FILE',
         help='save used arguments to a config file to a {}, the given path, '
-             'or at the value of -c'.format(Constants.default_coafile))
+             'or at the value of -c'.format(Constants.system_coafile))
 
     config_group.add_argument(
         '--disable-caching', const=True, action='store_const',
