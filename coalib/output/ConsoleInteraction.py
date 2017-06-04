@@ -8,7 +8,6 @@ try:
     import readline  # pylint: disable=unused-import
 except ImportError:  # pragma: no cover
     pass
-import os.path
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
@@ -241,7 +240,7 @@ def print_result(console_printer,
 
     console_printer.print('\n**** {bear} [Section: {section}] ****\n'
                           .format(bear=result.origin, section=section.name),
-                    color=RESULT_SEVERITY_COLORS[result.severity])
+                          color=RESULT_SEVERITY_COLORS[result.severity])
 
     console_printer.print(format_lines('[Severity: {sev}]'.format(
         sev=RESULT_SEVERITY.__str__(result.severity)), '!'),
@@ -458,7 +457,8 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     if sourcerange.start.line is not None:
         if len(file_dict[sourcerange.file]) < sourcerange.end.line:
             console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
-                                               line_nr=sourcerange.end.line), '!')
+                                               line_nr=sourcerange.end.line,
+                                               symbol='!'))
         else:
             print_lines(console_printer,
                         file_dict,
@@ -587,8 +587,13 @@ def choose_action(console_printer, actions):
             choice = input(line)
             if not choice:
                 return 0
-            if choice.upper() in possible_actions:
-                return possible_actions.index(choice.upper())
+            choice = str(choice)
+            if choice.isdecimal():
+                return 0
+            elif choice.isalpha():
+                if choice.upper() in possible_actions:
+                    return possible_actions.index(choice.upper())
+
         except ValueError:
             pass
 

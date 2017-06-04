@@ -12,9 +12,9 @@ from coala_utils.decorators import enforce_signature
 
 def format_line(line, real_nr='', sign=']', mod_nr='', symbol='', ):
     return '[{:>4}{}{:1}{}'.format(real_nr,
-                                         sign,
-                                         symbol,
-                                         line.rstrip('\n'))
+                                   sign,
+                                   symbol,
+                                   line.rstrip('\n'))
 
 
 def print_from_name(printer, line):
@@ -42,7 +42,8 @@ def print_beautified_diff(difflines, printer):
             print_to_name(printer, line[1:])
             current_line_added += 1
         elif line.startswith('-'):
-            printer.print(format_line('Line affected {}'.format(current_line_added)))
+            printer.print(format_line(
+                'Line affected {}'.format(current_line_added)))
             printer.print(format_line(''))
             print_from_name(printer, line[1:])
             current_line_subtracted += 1
