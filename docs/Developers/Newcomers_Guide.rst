@@ -210,6 +210,20 @@ Now you can start working on it.
     Before starting to write your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
 
+.. seealso::
+
+    An important part of working on issues is documenting your work
+    in such a way that it is easy for others to read and understand.
+    A lot of Newcomer issues involve improving documentation.
+
+    * For more information about writing good documentation,
+      please check the following link: `Writing Documentation <https://api.coala.io/en/latest/Developers/Writing_Documentation.html>`_
+
+    * For more information about how to style Python code
+      according to the PEP8 code style convention,
+      please check the following link:
+      `PEP8 Style Guide for Python code <https://www.python.org/dev/peps/pep-0008/>`_
+
 Step 4. Creating a Fork and Testing Your Changes
 ------------------------------------------------
 
