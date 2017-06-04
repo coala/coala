@@ -89,9 +89,13 @@ CLI_ACTIONS = (OpenEditorAction(),
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
-def format_lines(lines, line_nr=''):
-    return '\n'.join('|{:>4}| {}'.format(line_nr, line)
-                     for line in lines.rstrip('\n').split('\n'))
+def format_lines(lines, symbol, line_nr=''):
+    if symbol == '[':
+        return '\n'.join('{}{:>4}{} {}'.format(symbol, ']', line_nr, line)
+                         for line in lines.rstrip('\n').split('\n'))
+    else:
+        return '\n'.join('{}{:>4}{} {}'.format(symbol, symbol, line_nr, line)
+                         for line in lines.rstrip('\n').split('\n'))
 
 
 def print_section_beginning(console_printer, section):
@@ -181,9 +185,6 @@ def print_lines(console_printer,
     no_color = not console_printer.print_colored
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
-        console_printer.print(format_lines(lines='', line_nr=i),
-                              color=FILE_LINES_COLOR,
-                              end='')
 
         line = file_dict[sourcerange.file][i - 1].rstrip('\n')
         try:
@@ -209,11 +210,6 @@ def print_lines(console_printer,
 
             console_printer.print(highlight_text(
                no_color, line[sourcerange.end.column - 1:], lexer), end='')
-            console_printer.print('')
-
-        else:
-            console_printer.print(highlight_text(
-                no_color, line[printed_chars:], lexer), end='')
             console_printer.print('')
 
 
@@ -243,13 +239,17 @@ def print_result(console_printer,
                         'class.')
         return
 
-    console_printer.print(format_lines('[{sev}] {bear}:'.format(
-        sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
+    console_printer.print('\n**** {bear} [Section: {section}] ****\n'
+                          .format(bear=result.origin, section=section.name),
+                    color=RESULT_SEVERITY_COLORS[result.severity])
+
+    console_printer.print(format_lines('[Severity: {sev}]'.format(
+        sev=RESULT_SEVERITY.__str__(result.severity)), '!'),
         color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
                                     lexer, BackgroundMessageStyle)
-    console_printer.print(format_lines(result.message))
+    console_printer.print(format_lines(result.message, '!'))
 
     if interactive:
         cli_actions = CLI_ACTIONS
@@ -287,7 +287,7 @@ def print_diffs_info(diffs, printer):
             format_lines('+{additions} -{deletions} in {file}'.format(
                 file=filename,
                 additions=additions,
-                deletions=deletions)),
+                deletions=deletions), '!'),
             color='green')
 
 
@@ -454,13 +454,11 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     :param sourcerange:        The SourceRange object referring to the related
                                lines to print.
     """
-    console_printer.print('\n' + os.path.relpath(sourcerange.file),
-                          color=FILE_NAME_COLOR)
 
     if sourcerange.start.line is not None:
         if len(file_dict[sourcerange.file]) < sourcerange.end.line:
             console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
-                                               line_nr=sourcerange.end.line))
+                                               line_nr=sourcerange.end.line), '!')
         else:
             print_lines(console_printer,
                         file_dict,
@@ -550,7 +548,7 @@ def get_action_info(section, action, failed_actions):
         if param_name not in section or action.name in failed_actions:
             question = format_lines(
                 "Please enter a value for the parameter '{}' ({}): "
-                .format(param_name, params[param_name][0]))
+                .format(param_name, params[param_name][0]), '!')
             section.append(Setting(param_name, input(question)))
 
     return action.name, section
@@ -567,11 +565,11 @@ def choose_action(console_printer, actions):
     """
     while True:
         possible_actions = []
-        console_printer.print(format_lines('(D)o nothing'))
+        console_printer.print(format_lines('(D)o nothing', '['))
         possible_actions.append('D')
         for i, action in enumerate(actions, 1):
             console_printer.print(format_lines('{}'.format(
-                action.desc)))
+                action.desc), '['))
             if action.desc == '(O)pen file':
                 possible_actions.append('O')
             elif action.desc == '(A)pply patch':
@@ -585,7 +583,7 @@ def choose_action(console_printer, actions):
             elif action.desc == 'Print Aspec(T) Information':
                 possible_actions.append('T')
         try:
-            line = format_lines(STR_ENTER_NUMBER)
+            line = format_lines(STR_ENTER_NUMBER, '[')
             choice = input(line)
             if not choice:
                 return 0
@@ -594,7 +592,7 @@ def choose_action(console_printer, actions):
         except ValueError:
             pass
 
-        console_printer.print(format_lines('Please enter a valid letter.'))
+        console_printer.print(format_lines('Please enter a valid letter.', '['))
 
 
 def print_actions(console_printer, section, actions, failed_actions):
@@ -661,7 +659,7 @@ def ask_for_action_and_apply(console_printer,
                                          file_diff_dict,
                                          section)
         console_printer.print(
-            format_lines(chosen_action.SUCCESS_MESSAGE),
+            format_lines(chosen_action.SUCCESS_MESSAGE, '['),
             color=SUCCESS_COLOR)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
