@@ -380,6 +380,10 @@ Now, to revert the file to that revision, run the command:
 Now, after the file gets reverted back to the required revision, commit the
 changes and (force)push to the remote.
 
+While rebasing, you may come across mid-rebase conflicts. For information
+regarding how to resolve mid-rebase conflicts, please check this
+`tutorial <http://gitforteams.com/resources/rebasing.html>`_.
+
 If at any stage you are confused, or have an issue, do not close your Pull
 Request. Instead, contact us on gitter so that we can help you resolve your
 problem.
