@@ -8,7 +8,7 @@
 =====
 
 |Linux Build Status| |Windows Build status| |macOS Build Status|
-|codecov.io| |Documentation Status| |AGPL|
+|codecov.io| |Documentation Status| |AGPL| |OpenHub|
 
 =====
 
@@ -32,7 +32,8 @@ coala supports popular programming languages including **Python**, **C/C++**, **
    :target: http://docs.coala.io/
 .. |AGPL| image:: https://img.shields.io/pypi/l/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
-
+.. |OpenHub| image:: http://www.openhub.net/p/coala/widgets/project_thin_badge.gif
+   :target: https://www.openhub.net/p/coala
 
 .. image:: https://graphs.waffle.io/coala/coala/throughput.svg
  :target: https://waffle.io/coala/coala/metrics/throughput
