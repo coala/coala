@@ -222,6 +222,13 @@ class DocumentationAssemblyTest(unittest.TestCase):
         for doc in extract_documentation(data, 'python', 'default'):
             self.assertIn(doc.assemble(), docs)
 
+    def test_doxygen_assembly(self):
+        data = load_testdata('doxygen.py')
+        docs = ''.join(data)
+
+        for doc in extract_documentation(data, 'python', 'doxygen'):
+            self.assertIn(doc.assemble(), docs)
+
     def test_c_assembly(self):
         data = load_testdata('default.c')
         docs = ''.join(data)

@@ -221,6 +221,7 @@ class DocumentationComment:
         assembled += ''.join('\n' if line == '\n' and not self.marker[1]
                              else self.indent + self.marker[1] + line
                              for line in lines[1:])
-        return (assembled +
-                (self.indent if lines[-1][-1] == '\n' else '') +
-                self.marker[2])
+        return (assembled if self.marker[1] == self.marker[2] else
+                (assembled +
+                 (self.indent if lines[-1][-1] == '\n' else '') +
+                 self.marker[2]))
