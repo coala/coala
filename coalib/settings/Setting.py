@@ -46,47 +46,75 @@ def glob_list(obj, *args, **kwargs):
 
 def typed_list(conversion_func):
     """
-    Creates a function that converts a setting into a list of elements each
+    Creates a class that converts a setting into a list of elements each
     converted with the given conversion function.
 
     :param conversion_func: The conversion function that converts a string into
                             your desired list item object.
-    :return:                A conversion function.
+    :return:                An instance of the created conversion class.
     """
-    return lambda setting: [
-        conversion_func(StringConverter(elem)) for elem in setting]
+
+    class Converter:
+
+        def __call__(self, setting):
+            return [conversion_func(StringConverter(elem))
+                    for elem in setting]
+
+        def __repr__(self):
+            return 'typed_list(%s)' % conversion_func.__name__
+
+    return Converter()
 
 
 def typed_dict(key_type, value_type, default):
     """
-    Creates a function that converts a setting into a dict with the given
-    types.
+    Creates a class that converts a setting into a dict with the given types.
 
     :param key_type:   The type conversion function for the keys.
     :param value_type: The type conversion function for the values.
     :param default:    The default value to use if no one is given by the user.
-    :return:           A conversion function.
+    :return:           An instance of the created conversion class.
     """
-    return lambda setting: {
-        key_type(StringConverter(key)):
-        value_type(StringConverter(value)) if value != '' else default
-        for key, value in dict(setting).items()}
+
+    class Converter:
+
+        def __call__(self, setting):
+            return {key_type(StringConverter(key)):
+                    value_type(StringConverter(value))
+                    if value != '' else default
+                    for key, value in dict(setting).items()}
+
+        def __repr__(self):
+            return 'typed_dict(%s, %s, default=%s)' % (
+                key_type.__name__, value_type.__name__, default)
+
+    return Converter()
 
 
 def typed_ordered_dict(key_type, value_type, default):
     """
-    Creates a function that converts a setting into an ordered dict with the
+    Creates a class that converts a setting into an ordered dict with the
     given types.
 
     :param key_type:   The type conversion function for the keys.
     :param value_type: The type conversion function for the values.
     :param default:    The default value to use if no one is given by the user.
-    :return:           A conversion function.
+    :return:           An instance of the created conversion class.
     """
-    return lambda setting: OrderedDict(
-        (key_type(StringConverter(key)),
-         value_type(StringConverter(value)) if value != '' else default)
-        for key, value in OrderedDict(setting).items())
+
+    class Converter:
+
+        def __call__(self, setting):
+            return OrderedDict((key_type(StringConverter(key)),
+                                value_type(StringConverter(value))
+                                if value != '' else default)
+                               for key, value in OrderedDict(setting).items())
+
+        def __repr__(self):
+            return 'typed_ordered_dict(%s, %s, default=%s)' % (
+                key_type.__name__, value_type.__name__, default)
+
+    return Converter()
 
 
 @generate_repr('key', 'value', 'origin', 'from_cli', 'to_append')
