@@ -18,6 +18,7 @@ cache:
   pip: true
   directories:
     - node_modules
+    - docs/_build
 
 addons:
   apt:
@@ -75,7 +76,6 @@ script:
       sed -i.bak '/bears = GitCommitBear/d' .coafile
     fi
   - coala --non-interactive
-  - make -C docs clean
   - python setup.py docs
   - codecov
 
