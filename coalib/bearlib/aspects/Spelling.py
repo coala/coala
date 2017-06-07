@@ -6,6 +6,19 @@ class Spelling:
     """
     This aspect describes spelling of your source code.
     """
+    class docs:
+        example = """
+        `Coala`, `AspectsYEAH`
+        """
+        example_language = 'All'
+        importance_reason = """
+        They are words we always want to be written the way we want like the
+        name of our app eg: `coala`...
+        """
+        fix_suggestions = """
+        Use coala :) to detect what word is not written as expected, given
+        that there is a bear for it ;).
+        """
 
 
 @Spelling.subaspect
