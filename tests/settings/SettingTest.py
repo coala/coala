@@ -81,6 +81,8 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1, a, 3')
             typed_list(int)(self.uut)
 
+        self.assertEqual(repr(typed_list(int)), 'typed_list(int)')
+
     def test_typed_dict(self):
         self.uut = Setting('key', '1, 2: t, 3')
         self.assertEqual(typed_dict(int, str, None)(self.uut),
@@ -90,6 +92,9 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1, a, 3')
             typed_dict(int, str, '')(self.uut)
 
+        self.assertEqual(repr(typed_dict(int, str, None)),
+                         'typed_dict(int, str, default=None)')
+
     def test_typed_ordered_dict(self):
         self.uut = Setting('key', '1, 2: t, 3')
         self.assertEqual(typed_ordered_dict(int, str, None)(self.uut),
@@ -98,6 +103,9 @@ class SettingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.uut = Setting('key', '1, a, 3')
             typed_ordered_dict(int, str, '')(self.uut)
+
+        self.assertEqual(repr(typed_ordered_dict(int, str, None)),
+                         'typed_ordered_dict(int, str, default=None)')
 
     def test_inherited_conversions(self):
         self.uut = Setting('key', ' 22\n', '.', strip_whitespaces=True)
