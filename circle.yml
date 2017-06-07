@@ -12,7 +12,7 @@ dependencies:
 
 test:
   override:
-    - bash .misc/tests.sh:
+    - py.test:
         parallel: true
     - pip install pip setuptools -U:
         parallel: true

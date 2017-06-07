@@ -64,7 +64,7 @@ script:
       coverage run setup.py install | grep -q 'coala supports only python 3.4 or later'
     fi
   - if [[ "$UNSUPPORTED" == true ]]; then codecov || true; exit; fi
-  - bash .misc/tests.sh
+  - py.test
   - python setup.py bdist_wheel
   - pip install ./dist/coala-*.whl
   - pip install coala-bears[alldeps] --pre -U
