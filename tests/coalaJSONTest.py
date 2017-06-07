@@ -71,7 +71,7 @@ class coalaJSONTest(unittest.TestCase):
                 coala.main, 'coala', '--json', '-B', '-I')
             self.assertEqual(retval, 0)
             output = json.loads(stdout)
-            self.assertEqual(len(output['bears']), 7)
+            self.assertEqual(len(output['bears']), 8)
             self.assertFalse(stderr)
 
     def test_show_language_bears(self):

@@ -309,7 +309,7 @@ def relative_flat_glob(dirname, basename):
     """
     if os.path.exists(os.path.join(dirname, basename)):
         return [basename]
-    return[]
+    return []
 
 
 def relative_recursive_glob(dirname, pattern):

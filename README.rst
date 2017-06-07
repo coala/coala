@@ -25,10 +25,15 @@ coala supports popular programming languages including **Python**, **C/C++**, **
 .. |Windows Build status| image:: https://img.shields.io/appveyor/ci/coala/coala/master.svg?label=windows%20build
    :target: https://ci.appveyor.com/project/coala/coala/branch/master
 .. |macOS Build Status| image:: https://img.shields.io/travis/coala/coala/master.svg?label=macOS%20build
-   :target: https://travis-ci/coala/coala
+   :target: https://travis-ci.org/coala/coala
 .. |codecov.io| image:: https://img.shields.io/codecov/c/github/coala/coala/master.svg?label=branch%20coverage
    :target: https://codecov.io/github/coala/coala?branch=master
 .. |Documentation Status| image:: https://readthedocs.org/projects/coala/badge/?version=latest
    :target: http://docs.coala.io/
 .. |AGPL| image:: https://img.shields.io/pypi/l/coala.svg
    :target: https://www.gnu.org/licenses/agpl-3.0.html
+
+
+.. image:: https://graphs.waffle.io/coala/coala/throughput.svg
+ :target: https://waffle.io/coala/coala/metrics/throughput
+ :alt: 'Throughput Graph'

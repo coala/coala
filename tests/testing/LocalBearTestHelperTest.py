@@ -35,6 +35,19 @@ class LocalBearCheckResultsTest(Helper):
                                check_order=True)
 
 
+class LocalBearTestCheckLineResultCountTest(Helper):
+
+    def setUp(self):
+        section = Section('')
+        section.append(Setting('result', True))
+        self.uut = TestBear(section, Queue())
+
+    def test_check_line_result_count(self):
+        self.check_line_result_count(self.uut,
+                                     ['a', '', 'b', '   ', '# abc', '1'],
+                                     [1, 1, 1])
+
+
 class LocalBearTestHelper(unittest.TestCase):
 
     def setUp(self):
