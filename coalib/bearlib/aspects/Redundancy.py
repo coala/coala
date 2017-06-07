@@ -8,6 +8,15 @@ class Redundancy:
     This aspect describes redundancy in your source code.
     """
     class docs:
+        example = """
+        int foo(int iX)
+        {
+            int iY = iX*2;
+
+            return iX*2;
+        }
+        """
+        example_language = 'C++'
         importance_reason = """
         Redundant code makes your code harder to read and understand.
         """
@@ -160,6 +169,10 @@ class UnreachableStatement:
             print (id(a))
         """
         example_language = 'python'
+        importance_reason = """
+        We should always keep our codebase clean, having dead code uselessly
+        makes the code longer and ambiguous.
+        """
         fix_suggestions = """
         These statement can be remove without harming the code.
         """
