@@ -33,3 +33,27 @@ class aspectsYEAH:
         ``aspects`` or ``aspect`` are always written with all lower-case
         letters or the term ``aspectsYEAH`` must match the exact expression.
         """
+
+
+@Spelling.subaspect
+class coalaCorrect:
+    """
+    This aspect dictates that the term ``coala`` must always be written with
+    with a lowercase `c`.
+    """
+    class docs:
+        example = """
+        Valid Cases:
+        # ``coala`` is so much fun!
+        # ``coalA`` hmm... not exactly ``coala`` but it is fine ;)
+        Invalid Cases:
+        # ``Coala`` hmm... this is wrong :(
+        # ``CoalA``... @cobot please do something about this :(
+        """
+        example_language = 'All'
+        importance_reason = """
+        We like it this way ;).
+        """
+        fix_suggestions = """
+        Always write ``coala`` with a lower case ``c``.
+        """

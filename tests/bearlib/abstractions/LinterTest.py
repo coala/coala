@@ -91,6 +91,20 @@ class LinterComponentTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError,
                                     'Invalid keyword arguments provided: '
+                                    "'output_regex'"):
+            linter('some-executable',
+                   output_format='unified-diff',
+                   output_regex='.*')(self.EmptyTestLinter)
+
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'severity_map'"):
+            linter('some-executable',
+                   output_format='unified-diff',
+                   severity_map={})(self.EmptyTestLinter)
+
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
                                     "'prerequisite_check_fail_message'"):
             linter('some-executable',
                    prerequisite_check_fail_message='some_message'
@@ -200,6 +214,18 @@ class LinterComponentTest(unittest.TestCase):
             linter('some-executable',
                    output_format='corrected',
                    diff_severity=999888777)(self.EmptyTestLinter)
+
+        with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
+            linter('some-executable',
+                   output_format='unified-diff',
+                   result_message=list())(self.EmptyTestLinter)
+
+        with self.assertRaises(TypeError) as cm:
+            linter('some-executable',
+                   output_format='unified-diff',
+                   diff_severity=123456789)(self.EmptyTestLinter)
+        self.assertEqual(str(cm.exception),
+                         'Invalid value for `diff_severity`: 123456789')
 
         with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
@@ -323,6 +349,107 @@ class LinterComponentTest(unittest.TestCase):
                (self.section, None))
 
         results = list(uut.process_output(fixed_string,
+                                          'some-file.c',
+                                          original))
+        self.assertEqual(len(results), 2)
+
+    def test_process_output_unified_diff_simple_modifications(self):
+        uut = (linter(sys.executable, output_format='unified-diff')
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        original = ['void main()  {', 'return 09;', '}']
+
+        diff = ['--- a/some-file.c',
+                '+++ b/some-file.c',
+                '@@ -1,3 +1,4 @@',
+                '-void main()  {',
+                '-return 09;',
+                '+void main()'
+                '+{',
+                '+       return 9;',
+                ' }']
+
+        diff_string = '\n'.join(diff)
+
+        results = list(uut.process_output(diff_string,
+                                          'some-file.c',
+                                          original))
+
+        diffs = list(Diff.from_unified_diff(diff_string, original).split_diff())
+
+        expected = [Result.from_values(uut,
+                                       'Inconsistency found.',
+                                       'some-file.c',
+                                       1, None, 2, None,
+                                       RESULT_SEVERITY.NORMAL,
+                                       diffs={'some-file.c': diffs[0]})]
+
+        self.assertEqual(results, expected)
+
+        uut = (linter(sys.executable,
+                      output_format='unified-diff',
+                      diff_distance=-1)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        results = list(uut.process_output(diff_string,
+                                          'some-file.c',
+                                          original))
+        self.assertEqual(len(results), 2)
+
+    def test_process_output_unified_diff_incomplete_hunk(self):
+        uut = (linter(sys.executable, output_format='unified-diff')
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        original = ['void main()  {',
+                    '// This comment is missing',
+                    '// in the unified diff',
+                    'return 09;',
+                    '}']
+
+        diff = ['--- a/some-file.c',
+                '+++ b/some-file.c',
+                '@@ -1,1 +1,2 @@',
+                '-void main()  {',
+                '+void main()',
+                '+{',
+                '@@ -4,2 +5,2 @@',
+                '-return 09;',
+                '+       return 9;',
+                ' }']
+
+        diff_string = '\n'.join(diff)
+
+        results = list(uut.process_output(diff_string,
+                                          'some-file.c',
+                                          original))
+
+        diffs = list(Diff.from_unified_diff(diff_string, original).split_diff())
+
+        expected = [Result.from_values(uut,
+                                       'Inconsistency found.',
+                                       'some-file.c',
+                                       1, None, 1, None,
+                                       RESULT_SEVERITY.NORMAL,
+                                       diffs={'some-file.c': diffs[0]}),
+                    Result.from_values(uut,
+                                       'Inconsistency found.',
+                                       'some-file.c',
+                                       4, None, 4, None,
+                                       RESULT_SEVERITY.NORMAL,
+                                       diffs={'some-file.c': diffs[1]})]
+
+        self.assertEqual(results, expected)
+
+        uut = (linter(sys.executable,
+                      output_format='unified-diff',
+                      diff_distance=-1)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        results = list(uut.process_output(diff_string,
                                           'some-file.c',
                                           original))
         self.assertEqual(len(results), 2)

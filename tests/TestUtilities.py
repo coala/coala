@@ -6,12 +6,14 @@ import unittest.mock
 from coala_utils.ContextManagers import retrieve_stdout, retrieve_stderr
 
 
-def execute_coala(func, binary, *args):
+def execute_coala(func, binary, *args, debug=False):
     """
     Executes the main function with the given argument string from given module.
 
     :param function:    A main function from coala_json, coala_ci module etc.
     :param binary:      A binary to execute coala test
+    :param debug:       Run main function with ``debug=True`` and re-raise any
+                        exception coming back.
     :return:            A tuple holding a return value as first element,
                         a stdout output as second element and a stderr output
                         as third element if stdout_only is False.
@@ -19,7 +21,7 @@ def execute_coala(func, binary, *args):
     sys.argv = [binary] + list(args)
     with retrieve_stdout() as stdout:
         with retrieve_stderr() as stderr:
-            retval = func()
+            retval = func(debug=debug)
             return (retval, stdout.getvalue(), stderr.getvalue())
 
 

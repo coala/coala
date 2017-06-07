@@ -6,7 +6,7 @@ from pkgutil import iter_modules
 from types import ModuleType
 
 from .base import aspectbase
-from .meta import aspectclass
+from .meta import aspectclass, aspectTypeError
 from .taste import Taste, TasteError
 
 # already import Root here to make it available in submodules that define
@@ -15,7 +15,8 @@ from .taste import Taste, TasteError
 from .root import Root
 
 
-__all__ = ['Root', 'Taste', 'TasteError', 'aspectclass', 'aspectbase']
+__all__ = ['Root', 'Taste', 'TasteError',
+           'aspectclass', 'aspectbase', 'aspectTypeError']
 
 
 class aspectsModule(ModuleType):

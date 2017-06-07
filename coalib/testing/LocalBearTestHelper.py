@@ -26,7 +26,23 @@ def execute_bear(bear, *args, **kwargs):
     return list(bear_output_generator)
 
 
-class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
+def get_results(local_bear,
+                lines,
+                filename=None,
+                force_linebreaks=True,
+                create_tempfile=True,
+                tempfile_kwargs={},
+                settings={}):
+    with prepare_file(lines, filename,
+                      force_linebreaks=force_linebreaks,
+                      create_tempfile=create_tempfile,
+                      tempfile_kwargs=tempfile_kwargs) as (file, fname), \
+        execute_bear(local_bear, fname, file,
+                     **settings) as bear_output:
+        return bear_output
+
+
+class LocalBearTestHelper(unittest.TestCase):
     """
     This is a helper class for simplification of testing of local bears.
 
@@ -43,7 +59,8 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                        valid=True,
                        force_linebreaks=True,
                        create_tempfile=True,
-                       tempfile_kwargs={}):
+                       tempfile_kwargs={},
+                       settings={}):
         """
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
@@ -57,6 +74,44 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
         :param create_tempfile:  Whether to save lines in tempfile if needed.
         :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
         """
+        if valid:
+            self.check_results(local_bear, lines,
+                               results=[], filename=filename,
+                               check_order=True,
+                               force_linebreaks=force_linebreaks,
+                               create_tempfile=create_tempfile,
+                               tempfile_kwargs=tempfile_kwargs,
+                               settings=settings,
+                               )
+        else:
+            return self.check_invalidity(local_bear, lines,
+                                         filename=filename,
+                                         force_linebreaks=force_linebreaks,
+                                         create_tempfile=create_tempfile,
+                                         tempfile_kwargs=tempfile_kwargs,
+                                         settings=settings,
+                                         )
+
+    def check_invalidity(self,
+                         local_bear,
+                         lines,
+                         filename=None,
+                         force_linebreaks=True,
+                         create_tempfile=True,
+                         tempfile_kwargs={},
+                         settings={}):
+        """
+        Asserts that a check of the given lines with the given local bear
+        yields results.
+
+        :param local_bear:       The local bear to check with.
+        :param lines:            The lines to check. (List of strings)
+        :param filename:         The filename, if it matters.
+        :param force_linebreaks: Whether to append newlines at each line
+                                 if needed. (Bears expect a \\n for every line)
+        :param create_tempfile:  Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
@@ -65,20 +120,17 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               (list, tuple),
                               msg='The given lines are not a list.')
 
-        with prepare_file(lines, filename,
-                          force_linebreaks=force_linebreaks,
-                          create_tempfile=create_tempfile,
-                          tempfile_kwargs=tempfile_kwargs) as (file, fname), \
-                execute_bear(local_bear, fname, file) as bear_output:
-            if valid:
-                msg = ("The local bear '{}' yields a result although it "
-                       "shouldn't.".format(local_bear.__class__.__name__))
-                self.assertEqual(bear_output, [], msg=msg)
-            else:
-                msg = ("The local bear '{}' yields no result although it "
-                       'should.'.format(local_bear.__class__.__name__))
-                self.assertNotEqual(len(bear_output), 0, msg=msg)
-            return bear_output
+        bear_output = get_results(local_bear, lines,
+                                  filename=filename,
+                                  force_linebreaks=force_linebreaks,
+                                  create_tempfile=create_tempfile,
+                                  tempfile_kwargs=tempfile_kwargs,
+                                  settings=settings,
+                                  )
+        msg = ("The local bear '{}' yields no result although it "
+               'should.'.format(local_bear.__class__.__name__))
+        self.assertNotEqual(len(bear_output), 0, msg=msg)
+        return bear_output
 
     def check_results(self,
                       local_bear,
@@ -117,19 +169,70 @@ class LocalBearTestHelper(unittest.TestCase):  # pragma: no cover
                               list,
                               msg='The given results are not a list.')
 
-        with prepare_file(lines, filename,
-                          force_linebreaks=force_linebreaks,
-                          create_tempfile=create_tempfile,
-                          tempfile_kwargs=tempfile_kwargs) as (file, fname), \
-                execute_bear(local_bear, fname, file,
-                             **settings) as bear_output:
-            msg = ("The local bear '{}' doesn't yield the right results. Or "
-                   'the order may be wrong.'
+        if results in [[], ()]:
+            msg = ("The local bear '{}' yields a result although it "
+                   "shouldn't.".format(local_bear.__class__.__name__))
+            check_order = True
+        else:
+            msg = ("The local bear '{}' doesn't yield the right results."
                    .format(local_bear.__class__.__name__))
-            if not check_order:
-                self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
-            else:
-                self.assertEqual(bear_output, results, msg=msg)
+            if check_order:
+                msg += ' Or the order may be wrong.'
+
+        bear_output = get_results(local_bear, lines,
+                                  filename=filename,
+                                  force_linebreaks=force_linebreaks,
+                                  create_tempfile=create_tempfile,
+                                  tempfile_kwargs=tempfile_kwargs,
+                                  settings=settings)
+        if not check_order:
+            self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
+        else:
+            self.assertEqual(bear_output, results, msg=msg)
+
+        return bear_output
+
+    def check_line_result_count(self,
+                                local_bear,
+                                lines,
+                                results_num,
+                                filename=None,
+                                check_order=False,
+                                force_linebreaks=True,
+                                create_tempfile=True,
+                                tempfile_kwargs={},
+                                settings={}):
+        """
+        Check many results for each line.
+
+        :param local_bear:       The local bear to check with.
+        :param lines:            The lines to check. (List of strings)
+        :param results_num:      The expected list of many results each line.
+        :param filename:         The filename, if it matters.
+        :param force_linebreaks: Whether to append newlines at each line
+                                 if needed. (Bears expect a \\n for every line)
+        :param create_tempfile:  Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        :param settings:         A dictionary of keys and values (both strings)
+                                 from which settings will be created that will
+                                 be made available for the tested bear.
+        """
+
+        modified_lines = []
+        for line in lines:
+            stripped_line = line.strip()
+            if stripped_line == '' or stripped_line.startswith('#'):
+                continue
+            modified_lines.append(line)
+
+        for line, num in zip(modified_lines, results_num):
+            bear_output = get_results(local_bear, [line],
+                                      filename=filename,
+                                      force_linebreaks=force_linebreaks,
+                                      create_tempfile=create_tempfile,
+                                      tempfile_kwargs=tempfile_kwargs,
+                                      settings=settings)
+            self.assertEqual(num, len(bear_output))
 
 
 def verify_local_bear(bear,

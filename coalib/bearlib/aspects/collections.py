@@ -1,5 +1,4 @@
-from coalib.bearlib.aspects import aspectclass, aspectbase
-from coalib.bearlib.aspects.meta import issubaspect
+from coalib.bearlib.aspects.meta import issubaspect, assert_aspect
 
 
 class aspectlist(list):
@@ -8,12 +7,7 @@ class aspectlist(list):
     """
 
     def __init__(self, seq=()):
-        for item in seq:
-            if not isinstance(item, (aspectclass, aspectbase)):
-                raise TypeError(
-                    '{} is not an aspectclass or an instance of an '
-                    'aspectclass'.format(repr(item)))
-        list.__init__(self, seq)
+        super().__init__(map(assert_aspect, seq))
 
     def __contains__(self, aspect):
         for item in self:

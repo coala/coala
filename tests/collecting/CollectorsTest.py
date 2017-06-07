@@ -27,10 +27,17 @@ class CollectFilesTest(unittest.TestCase):
         self.assertRaises(TypeError, collect_files)
 
     def test_file_invalid(self):
-        self.assertEqual(collect_files(['invalid_path'],
-                                       self.log_printer), [])
+        self.assertEqual(collect_files(file_paths=['invalid_path'],
+                                       log_printer=self.log_printer,
+                                       ignored_file_paths=None,
+                                       limit_file_paths=None,
+                                       section_name='section'), [])
         self.assertEqual([log.message for log in self.log_printer.logs],
-                         ["No files matching 'invalid_path' were found."])
+                         ['No files matching \'invalid_path\' were found. '
+                          'If this rule is not required, you can remove it '
+                          'from section [section] in your .coafile to '
+                          'deactivate this warning.'
+                          ])
 
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
@@ -212,7 +219,7 @@ class CollectBearsTest(unittest.TestCase):
                                        ['invalid kind'],
                                        self.log_printer), ([],))
         self.assertEqual([log.message for log in self.log_printer.logs],
-                         ["No bears matching 'invalid_name' were found. Make "
+                         ['No bears matching \'invalid_name\' were found. Make '
                           'sure you have coala-bears installed or you have '
                           'typed the name correctly.'])
 
@@ -309,7 +316,8 @@ class CollectorsTests(unittest.TestCase):
                  'JavaTestBear',
                  'SpaceConsistencyTestBear',
                  'TestBear',
-                 'ErrorTestBear'})
+                 'ErrorTestBear',
+                 'RaiseTestBear'})
 
     def test_get_all_bears_names(self):
         with bear_test_module():
@@ -323,4 +331,5 @@ class CollectorsTests(unittest.TestCase):
                  'JavaTestBear',
                  'SpaceConsistencyTestBear',
                  'TestBear',
-                 'ErrorTestBear'})
+                 'ErrorTestBear',
+                 'RaiseTestBear'})

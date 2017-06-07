@@ -1,8 +1,10 @@
 Linter Bears
 ============
 
-Welcome. This tutorial aims to show you how to use the ``@linter`` decorator in
-order to integrate linters in your bears.
+Welcome. This tutorial aims to show you how to use the ``@linter`` (`ref
+<http://api.coala.io/en/latest/coalib.bearlib.abstractions.html#
+module-coalib.bearlib.abstractions.Linter>`__) decorator in order to
+integrate linters in your bears.
 
 .. note::
 
@@ -97,6 +99,8 @@ handling different output formats:
 - ``regex``: This parses issue messages yielded by the underlying executable.
 - ``corrected``: Auto-generates results from a fixed/corrected file provided by
   the tool.
+- ``unified-diff``: This auto-generates results from a unified-diff output
+  provided by the executable.
 
 In this tutorial we are going to use the ``regex`` output format. But before we
 continue with modifying our bear, we need to figure out how exactly output from
@@ -228,10 +232,10 @@ Normally, providing a severity-map is not needed, as coala has a default
 severity-map which recognizes many common words used for severities. Check out
 the API documentation for keywords supported!
 
-Suggest Corrections Using the ``corrected`` Output Format
----------------------------------------------------------
+Suggest Corrections Using the ``corrected`` and ``unified-diff`` Output Formats
+-------------------------------------------------------------------------------
 
-This output format is very simple to use and doesn't require further setup from
+These output formats are very simple to use and don't require further setup from
 your side inside the bear:
 
 ::
@@ -239,8 +243,16 @@ your side inside the bear:
     @linter(...
             output_format='corrected')
 
-If your underlying tool generates a corrected file, the class automatically
-generates patches for the changes made and yields results accordingly.
+or
+
+::
+
+    @linter(...
+            output_format='unified-diff')
+
+If your underlying tool generates a corrected file or a unified-diff of the
+corrections, the class automatically generates patches for the changes made and
+yields results accordingly.
 
 Adding Settings to our Bear
 ---------------------------
@@ -406,6 +418,7 @@ gather information by using these values. Our bear now looks like:
       LICENSE = 'AGPL-3.0'
       CAN_DETECT = {'Unused Code', 'Formatting', 'Duplication', 'Security',
                     'Syntax'}
+      SEE_MORE = 'https://pylint.org/'
 
       @staticmethod
       def create_arguments(filename, file, config_file,

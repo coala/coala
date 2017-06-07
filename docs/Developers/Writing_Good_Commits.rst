@@ -71,7 +71,11 @@ Example:
 
     setup.py: Change bears' entrypoint
 
--  Maximum of 50 characters.
+.. _50:
+
+-  | Maximum of 50 characters.
+   | Keeping subject lines at this length ensures that they are
+     readable, and explains the change in a concise way.
 -  Should describe the *change* - the action being done in the commit.
 -  Should have a tag and a short description separated by a colon (``:``)
 
@@ -97,12 +101,19 @@ Example:
     This entrypoint ensures that coala discovers the bears correctly.
     It helps not writing more functions inside ``coalib`` for this.
 
--  Maximum of 72 chars excluding newline for *each* line.
+.. _72:
+
+-  | Maximum of 72 chars excluding newline for *each* line.
+   | The recommendation is to add a line break at 72 characters,
+     so that Git has plenty of room to indent text while still
+     keeping everything under 80 characters overall.
 -  Not mandatory - but helps explain what you're doing.
 -  Should describe the reasoning for your changes. This is especially
    important for complex changes that are not self explanatory. This is also
    the right place to write about related bugs.
 -  First person should not be used here.
+
+The bot will complain if the 50_/72_ rule is not followed.
 
 Issue reference
 ~~~~~~~~~~~~~~~
