@@ -2,4 +2,4 @@
 -r requirements.txt
 -r test-requirements.txt
 sphinx~=1.6.2
-sphinx-argparse~=0.2.0
+sphinx-argparse~=0.2.1
