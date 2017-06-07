@@ -19,6 +19,11 @@ class Root(aspectbase, metaclass=aspectclass):
     ...     \"""
     ...     A parent aspect for code formatting aspects...
     ...     \"""
+    ...     class docs:
+    ...        example = "..."
+    ...        example_language = "..."
+    ...        importance_reason = "..."
+    ...        fix_suggestions = "..."
 
     We can now create subaspects like this:
 
@@ -74,7 +79,11 @@ class Root(aspectbase, metaclass=aspectclass):
     ...     \"""
     ...     This aspect controls the greatness of a file...
     ...     \"""
-    ...
+    ...     class docs:
+    ...        example = "..."
+    ...        example_language = "..."
+    ...        importance_reason = "..."
+    ...        fix_suggestions = "..."
     ...     min_greatness = Taste[int](
     ...         "Minimum greatness factor needed for a TrumpScript file. "
     ...         "This is fact.",
