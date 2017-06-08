@@ -149,7 +149,7 @@ class OpenEditorAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
-        Open file(s)
+        (O)pen file
 
         :param editor: The editor to open the file with.
         """

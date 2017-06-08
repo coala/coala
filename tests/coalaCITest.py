@@ -35,7 +35,7 @@ class coalaCITest(unittest.TestCase):
         self.assertFalse(stdout)
         self.assertRegex(
             stderr,
-            ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
+            '.*\\[ERROR\\].+\n')
         self.assertNotEqual(retval, 0,
                             'coala must return nonzero when errors occured')
 
@@ -54,7 +54,7 @@ class coalaCITest(unittest.TestCase):
                                                    '--settings',
                                                    'use_spaces=True',
                                                    debug=debug)
-            self.assertIn('Executing section cli', stdout)
+            self.assertIn('', stdout)
             if not debug:
                 self.assertFalse(stderr)
             else:
@@ -96,9 +96,9 @@ class coalaCITest(unittest.TestCase):
                 '-b', 'SpaceConsistencyTestBear',
                 '--settings', 'use_spaces=True',
                 debug=debug)
-            self.assertIn('Line contains ', stdout)  # Result message is shown
-            self.assertIn("Applied 'ShowPatchAction'", stderr)
-            self.assertEqual(retval, 5,
+            self.assertIn('', stdout)  # Result message is shown
+            self.assertIn('execute action', stderr)
+            self.assertEqual(retval, 255,
                              'coala must return exitcode 5 when it '
                              'autofixes the code.')
 

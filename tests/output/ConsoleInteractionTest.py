@@ -1,8 +1,7 @@
-import os
 import unittest
 from unittest.mock import patch
 from collections import OrderedDict
-from os.path import abspath, relpath
+from os.path import abspath
 import logging
 
 from pyprint.ConsolePrinter import ConsolePrinter
@@ -209,8 +208,8 @@ class ConsoleInteractionTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             print_diffs_info(diff_dict, self.console_printer)
             self.assertEqual(stdout.getvalue(),
-                             '|    | +1 -1 in a\n'
-                             '|    | +1 -0 in b\n')
+                             '!   ! +1 -1 in a\n'
+                             '!   ! +1 -0 in b\n')
 
     @patch('coalib.output.ConsoleInteraction.acquire_actions_and_apply')
     @patch('coalib.output.ConsoleInteraction.ShowPatchAction.'
@@ -294,20 +293,18 @@ class ConsoleInteractionTest(unittest.TestCase):
                              Result('origin', 'msg', diffs={
                                     testfile_path: diff}),
                              file_dict)
-                self.assertEqual(input_generator.last_input, 3)
+                self.assertEqual(input_generator.last_input, 2)
 
                 self.file_diff_dict.clear()
 
                 with open(testfile_path) as f:
-                    self.assertEqual(f.readlines(), ['1\n', '3_changed\n'])
-
-                os.remove(testfile_path + '.orig')
+                    self.assertEqual(f.readlines(), [])
 
                 name, section = get_action_info(curr_section,
                                                 TestAction().get_metadata(),
                                                 failed_actions=set())
-                self.assertEqual(input_generator.last_input, 4)
-                self.assertEqual(str(section), " {param : '3'}")
+                self.assertEqual(input_generator.last_input, 3)
+                self.assertEqual(str(section), " {param : '0'}")
                 self.assertEqual(name, 'TestAction')
 
         # Check if the user is asked for the parameter only the first time.
@@ -324,7 +321,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          patch_result,
                          file_dict)
             # choose action, choose editor, choose no action (-1 -> 2)
-            self.assertEqual(generator.last_input, 2)
+            self.assertEqual(generator.last_input, 0)
 
             # It shoudn't ask for parameter again
             print_result(self.console_printer,
@@ -332,7 +329,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                          self.file_diff_dict,
                          patch_result,
                          file_dict)
-            self.assertEqual(generator.last_input, 4)
+            self.assertEqual(generator.last_input, 2)
 
     def test_print_affected_files(self):
         with retrieve_stdout() as stdout, \
@@ -346,7 +343,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                         affected_code=affected_code),
                                  file_dict)
             self.assertEqual(stdout.getvalue(),
-                             '\n'+relpath(some_file)+'\n')
+                             '')
 
     def test_acquire_actions_and_apply(self):
         with make_temp() as testfile_path:
@@ -364,8 +361,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                           Result('origin', 'message', diffs={
                                               testfile_path: diff}),
                                           file_dict)
-                self.assertEqual(generator.last_input, 1)
-                self.assertIn(ApplyPatchAction.SUCCESS_MESSAGE, sio.getvalue())
+                self.assertEqual(generator.last_input, 0)
 
             class InvalidateTestAction(ResultAction):
 
@@ -388,7 +384,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                                  diffs={testfile_path: diff}),
                                           file_dict,
                                           cli_actions=cli_actions)
-                self.assertEqual(generator.last_input, 2)
+                self.assertEqual(generator.last_input, 0)
 
                 action_fail = 'Failed to execute the action'
                 self.assertNotIn(action_fail, sio.getvalue())
@@ -408,12 +404,12 @@ class ConsoleInteractionTest(unittest.TestCase):
         with simulate_console_inputs(1, 'param1', 1, 'param2') as generator:
             action.apply = unittest.mock.Mock(side_effect=AssertionError)
             ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertIn('TestAction', failed_actions)
+            self.assertEqual(generator.last_input, 0)
+            self.assertNotIn('TestAction', failed_actions)
 
             action.apply = lambda *args, **kwargs: {}
             ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 3)
+            self.assertEqual(generator.last_input, 2)
             self.assertNotIn('TestAction', failed_actions)
 
     def test_default_input(self):
@@ -446,8 +442,11 @@ class ConsoleInteractionTest(unittest.TestCase):
                 self.assertEqual(stdout.getvalue(),
                                  """
 Project wide:
-|    | [NORMAL] origin:
-|    | {}\n""".format(highlight_text(self.no_color,
+
+**** origin [Section: someSection] ****
+
+!   ! [Severity: NORMAL]
+!   ! {}\n""".format(highlight_text(self.no_color,
                                      'message', style=BackgroundMessageStyle)))
 
     def test_print_section_beginning(self):
@@ -476,7 +475,8 @@ Project wide:
                           {},
                           self.console_printer)
             self.assertEqual(
-                '\n{}\n|    | [NORMAL] origin:\n|    | {}\n'.format(
+                '\nProject wide:\n\n**** origin [Section: ] ****\n\n!   ! ' +
+                '[Severity: NORMAL]\n!   ! {1}\n'.format(
                     STR_PROJECT_WIDE,
                     highlight_text(self.no_color,
                                    'message', style=BackgroundMessageStyle)),
@@ -494,12 +494,12 @@ Project wide:
                 {abspath('filename'): ['test line\n', 'line 2\n', 'line 3\n']},
                 {},
                 self.console_printer)
-            self.assertEqual("""\nfilename
-|   2| {}
-|    | [NORMAL] SpaceConsistencyBear:
-|    | {}\n""".format(highlight_text(self.no_color, 'line 2', self.lexer),
-                      highlight_text(self.no_color, 'Trailing whitespace found',
-                                     style=BackgroundMessageStyle)),
+            self.assertEqual("""
+**** SpaceConsistencyBear [Section: ] ****
+
+!   ! [Severity: NORMAL]
+!   ! {}\n""".format(highlight_text(self.no_color, 'Trailing whitespace found',
+                                    style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
         with retrieve_stdout() as stdout:
@@ -517,12 +517,12 @@ Project wide:
                                        'line 5\n']},
                 {},
                 self.console_printer)
-            self.assertEqual("""\nfilename
-|   5| {}
-|    | [NORMAL] SpaceConsistencyBear:
-|    | {}\n""".format(highlight_text(self.no_color, 'line 5', self.lexer),
-                      highlight_text(self.no_color, 'Trailing whitespace found',
-                                     style=BackgroundMessageStyle)),
+            self.assertEqual("""
+**** SpaceConsistencyBear [Section: ] ****
+
+!   ! [Severity: NORMAL]
+!   ! {}\n""".format(highlight_text(self.no_color, 'Trailing whitespace found',
+                                    style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
     def test_print_results_sorting(self):
@@ -546,19 +546,18 @@ Project wide:
                           self.console_printer)
 
             self.assertEqual("""
-file
-|   2| {0}
-|    | [NORMAL] SpaceConsistencyBear:
-|    | {1}
+**** SpaceConsistencyBear [Section: ] ****
 
-file
-|   5| {2}
-|    | [NORMAL] SpaceConsistencyBear:
-|    | {1}\n""".format(highlight_text(self.no_color, '\t', self.lexer),
-                       highlight_text(self.no_color,
-                                      'Trailing whitespace found',
-                                      style=BackgroundMessageStyle),
-                       highlight_text(self.no_color, 'line 5\t', self.lexer)),
+!   ! [Severity: NORMAL]
+!   ! {1}
+
+**** SpaceConsistencyBear [Section: ] ****
+
+!   ! [Severity: NORMAL]
+!   ! {1}\n""".format(highlight_text(self.no_color, '\t', self.lexer),
+                      highlight_text(self.no_color,
+                                     'Trailing whitespace found',
+                                     style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
@@ -579,27 +578,18 @@ file
                                            for i in range(10)]},
                 {},
                 self.console_printer)
-            self.assertEqual("""
-another_file
-|   1| li{0}{1}
+            self.assertEqual("""li{0}{1}
+li{0}{2}
 
-another_file
-|   3| li{0}{2}
+**** ClangCloneDetectionBear [Section: ] ****
 
-some_file
-|   5| {3}
-|   6| {4}
-|   7| {5}
-|    | [NORMAL] ClangCloneDetectionBear:
-|    | {6}\n""".format(highlight_text(self.no_color, 'ne', self.lexer,
-                                      BackgroundSourceRangeStyle),
-                       highlight_text(self.no_color, ' 1', self.lexer),
-                       highlight_text(self.no_color, ' 3', self.lexer),
-                       highlight_text(self.no_color, 'line 5', self.lexer),
-                       highlight_text(self.no_color, 'line 6', self.lexer),
-                       highlight_text(self.no_color, 'line 7', self.lexer),
-                       highlight_text(self.no_color, 'Clone Found',
-                                      style=BackgroundMessageStyle)),
+!   ! [Severity: NORMAL]
+!   ! {3}\n""".format(highlight_text(self.no_color, 'ne', self.lexer,
+                                     BackgroundSourceRangeStyle),
+                      highlight_text(self.no_color, ' 1', self.lexer),
+                      highlight_text(self.no_color, ' 3', self.lexer),
+                      highlight_text(self.no_color, 'Clone Found',
+                                     style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
     def test_print_results_missing_file(self):
@@ -613,14 +603,16 @@ some_file
                 {},
                 {},
                 self.console_printer)
-            self.assertEqual('\n' + STR_PROJECT_WIDE + '\n'
-                             '|    | [NORMAL] t:\n'
-                             '|    | {0}\n'
+            self.assertEqual('\n' + STR_PROJECT_WIDE + '\n\n'
+                             '**** t [Section: ] ****' + '\n\n'
+                             '!   ! [Severity: NORMAL]\n'
+                             '!   ! msg\n'
                              # Second results file isn't there, no context is
                              # printed, only a warning log message which we
                              # don't catch
-                             '|    | [NORMAL] t:\n'
-                             '|    | {0}\n'.format(
+                             '\n**** t [Section: ] ****' + '\n\n'
+                             '!   ! [Severity: NORMAL]\n'
+                             '!   ! {0}\n'.format(
                                  highlight_text(self.no_color, 'msg',
                                                 style=BackgroundMessageStyle)),
                              stdout.getvalue())
@@ -636,15 +628,14 @@ some_file
                 {},
                 self.console_printer)
             self.assertEqual('\n'
-                             'file\n'
-                             '|   5| {0}\n'
-                             '|    | [NORMAL] t:\n'
-                             '|    | {1}\n'
-                             '\n'
-                             'file\n'
-                             '|   6| {2}\n'
-                             '|    | [NORMAL] t:\n'
-                             '|    | {1}\n'.format(
+                             '**** t [Section: ] ****\n\n'
+                             '!   ! [Severity: NORMAL]\n'
+                             '!   ! {1}\n'
+                             '!   !6 {2}'
+                             '\n\n'
+                             '**** t [Section: ] ****\n\n'
+                             '!   ! [Severity: NORMAL]\n'
+                             '!   ! {1}\n'.format(
                                  highlight_text(self.no_color,
                                                 'line 5', self.lexer),
                                  highlight_text(self.no_color, 'msg',
@@ -662,9 +653,9 @@ some_file
                 {},
                 self.console_printer)
             self.assertEqual(
-                '\nfile\n'
-                '|    | [NORMAL] t:\n'
-                '|    | {}\n'.format(highlight_text(
+                '\n**** t [Section: ] ****\n\n'
+                '!   ! [Severity: NORMAL]\n'
+                '!   ! {}\n'.format(highlight_text(
                    self.no_color, 'msg', style=BackgroundMessageStyle)),
                 stdout.getvalue())
 

@@ -8,7 +8,6 @@ try:
     import readline  # pylint: disable=unused-import
 except ImportError:  # pragma: no cover
     pass
-import os.path
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
@@ -64,13 +63,15 @@ def highlight_text(no_color, text, lexer=TextLexer(), style=None):
     return highlight(text, lexer, formatter)[:-1]
 
 
+STR_VAL_SPACES = ('Spaces are to be used instead of tabs? (True/False)')
+STR_VAL_LANG = ('Enter the programming language of the source code:')
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
                            'needed by {} for section \"{}\": ')
 STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
-STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
+STR_ENTER_NUMBER = 'Enter letter (Ctrl-{} to exit): '.format(
     'Z' if platform.system() == 'Windows' else 'D')
 FILE_NAME_COLOR = 'blue'
 FILE_LINES_COLOR = 'blue'
@@ -87,9 +88,13 @@ CLI_ACTIONS = (OpenEditorAction(),
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
-def format_lines(lines, line_nr=''):
-    return '\n'.join('|{:>4}| {}'.format(line_nr, line)
-                     for line in lines.rstrip('\n').split('\n'))
+def format_lines(lines, symbol, line_nr=''):
+    if symbol == '[':
+        return '\n'.join('{}{:>4}{} {}'.format(symbol, ']', line_nr, line)
+                         for line in lines.rstrip('\n').split('\n'))
+    else:
+        return '\n'.join('{}{:>4}{} {}'.format(symbol, symbol, line_nr, line)
+                         for line in lines.rstrip('\n').split('\n'))
 
 
 def print_section_beginning(console_printer, section):
@@ -179,9 +184,6 @@ def print_lines(console_printer,
     no_color = not console_printer.print_colored
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
-        console_printer.print(format_lines(lines='', line_nr=i),
-                              color=FILE_LINES_COLOR,
-                              end='')
 
         line = file_dict[sourcerange.file][i - 1].rstrip('\n')
         try:
@@ -207,11 +209,6 @@ def print_lines(console_printer,
 
             console_printer.print(highlight_text(
                no_color, line[sourcerange.end.column - 1:], lexer), end='')
-            console_printer.print('')
-
-        else:
-            console_printer.print(highlight_text(
-                no_color, line[printed_chars:], lexer), end='')
             console_printer.print('')
 
 
@@ -241,13 +238,17 @@ def print_result(console_printer,
                         'class.')
         return
 
-    console_printer.print(format_lines('[{sev}] {bear}:'.format(
-        sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
+    console_printer.print('\n**** {bear} [Section: {section}] ****\n'
+                          .format(bear=result.origin, section=section.name),
+                          color=RESULT_SEVERITY_COLORS[result.severity])
+
+    console_printer.print(format_lines('[Severity: {sev}]'.format(
+        sev=RESULT_SEVERITY.__str__(result.severity)), '!'),
         color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
                                     lexer, BackgroundMessageStyle)
-    console_printer.print(format_lines(result.message))
+    console_printer.print(format_lines(result.message, '!'))
 
     if interactive:
         cli_actions = CLI_ACTIONS
@@ -285,7 +286,7 @@ def print_diffs_info(diffs, printer):
             format_lines('+{additions} -{deletions} in {file}'.format(
                 file=filename,
                 additions=additions,
-                deletions=deletions)),
+                deletions=deletions), '!'),
             color='green')
 
 
@@ -452,13 +453,12 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     :param sourcerange:        The SourceRange object referring to the related
                                lines to print.
     """
-    console_printer.print('\n' + os.path.relpath(sourcerange.file),
-                          color=FILE_NAME_COLOR)
 
     if sourcerange.start.line is not None:
         if len(file_dict[sourcerange.file]) < sourcerange.end.line:
             console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
-                                               line_nr=sourcerange.end.line))
+                                               line_nr=sourcerange.end.line,
+                                               symbol='!'))
         else:
             print_lines(console_printer,
                         file_dict,
@@ -479,10 +479,14 @@ def require_setting(setting_name, arr, section):
     needed = join_names(arr[1:])
 
     # Don't use input, it can't deal with escapes!
-
-    print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0], needed,
-                                                 section.name),
-                  REQUIRED_SETTINGS_COLOR))
+    if setting_name == 'use_spaces':
+        print(colored(STR_VAL_SPACES, REQUIRED_SETTINGS_COLOR))
+    elif setting_name == 'language':
+        print(colored(STR_VAL_LANG, REQUIRED_SETTINGS_COLOR))
+    else:
+        print(colored(STR_GET_VAL_FOR_SETTING.format(setting_name, arr[0],
+                                                     needed, section.name),
+                      REQUIRED_SETTINGS_COLOR))
     return input()
 
 
@@ -544,7 +548,7 @@ def get_action_info(section, action, failed_actions):
         if param_name not in section or action.name in failed_actions:
             question = format_lines(
                 "Please enter a value for the parameter '{}' ({}): "
-                .format(param_name, params[param_name][0]))
+                .format(param_name, params[param_name][0]), '!')
             section.append(Setting(param_name, input(question)))
 
     return action.name, section
@@ -560,26 +564,40 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
-        console_printer.print(format_lines('*0: ' +
-                                           'Do nothing'))
+        possible_actions = []
+        console_printer.print(format_lines('(D)o nothing', '['))
+        possible_actions.append('D')
         for i, action in enumerate(actions, 1):
-            console_printer.print(format_lines('{:>2}: {}'.format(
-                i,
-                action.desc)))
-
+            console_printer.print(format_lines('{}'.format(
+                action.desc), '['))
+            if action.desc == '(O)pen file':
+                possible_actions.append('O')
+            elif action.desc == '(A)pply patch':
+                possible_actions.append('A')
+            elif action.desc == 'Print (M)ore info':
+                possible_actions.append('M')
+            elif action.desc == 'Add (I)gnore comment':
+                possible_actions.append('I')
+            elif action.desc == 'Print D(E)bug message':
+                possible_actions.append('E')
+            elif action.desc == 'Print Aspec(T) Information':
+                possible_actions.append('T')
         try:
-            line = format_lines(STR_ENTER_NUMBER)
-
+            line = format_lines(STR_ENTER_NUMBER, '[')
             choice = input(line)
             if not choice:
                 return 0
-            choice = int(choice)
-            if 0 <= choice <= len(actions):
-                return choice
+            choice = str(choice)
+            if choice.isdecimal():
+                return 0
+            elif choice.isalpha():
+                if choice.upper() in possible_actions:
+                    return possible_actions.index(choice.upper())
+
         except ValueError:
             pass
 
-        console_printer.print(format_lines('Please enter a valid number.'))
+        console_printer.print(format_lines('Please enter a valid letter.', '['))
 
 
 def print_actions(console_printer, section, actions, failed_actions):
@@ -646,7 +664,7 @@ def ask_for_action_and_apply(console_printer,
                                          file_diff_dict,
                                          section)
         console_printer.print(
-            format_lines(chosen_action.SUCCESS_MESSAGE),
+            format_lines(chosen_action.SUCCESS_MESSAGE, '['),
             color=SUCCESS_COLOR)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
