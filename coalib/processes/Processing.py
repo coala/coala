@@ -1,11 +1,12 @@
 from itertools import chain
+from re import split
 import os
 import platform
 import queue
 import subprocess
+from functools import partial
 
 from coalib.collecting.Collectors import collect_files
-from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
@@ -437,20 +438,35 @@ def instantiate_processes(section,
             bear_runner_args)
 
 
-def get_ignore_scope(line, keyword):
+def get_ignore_scope(line, keywords):
     """
     Retrieves the bears that are to be ignored defined in the given line.
 
-    :param line:    The line containing the ignore declaration.
-    :param keyword: The keyword that was found. Everything after the rightmost
-                    occurrence of it will be considered for the scope.
-    :return:        A list of lower cased bearnames or an empty list (-> "all")
+    :param line:     The line containing the ignore declaration.
+    :param keywords: List of keyword to look for. Everything after the leftmost
+                     occurrence of any keyword will be considered for the scope.
+    :return:         A list of lower cased bearnames or an empty list (-> "all")
     """
-    toignore = line[line.rfind(keyword) + len(keyword):]
-    if toignore.startswith('all'):
-        return []
-    else:
-        return list(StringConverter(toignore, list_delimiters=', '))
+    line = line.lower()
+    start_ind = len(line)
+    real_keys = []
+
+    for keyword in keywords:
+        ind = line.find(keyword)
+
+        if ind >= 0:
+            real_keys.append(keyword)
+            start_ind = ind if ind < start_ind else start_ind
+
+    toignore = line[start_ind:].rstrip('\n')
+
+    ignore = split(' and |, | ', toignore)
+    split_key = list(
+        chain.from_iterable(keyword.split() for keyword in real_keys))
+
+    bears = list(filter(lambda x: x not in split_key, ignore))
+
+    return [] if 'all' in bears else bears
 
 
 def yield_ignore_ranges(file_dict):
@@ -460,48 +476,56 @@ def yield_ignore_ranges(file_dict):
 
     :param file_dict: The file dictionary.
     """
+    ignores = ['ignore ', 'noqa', 'noqa ']
     for filename, file in file_dict.items():
-        start = None
-        bears = []
-        stop_ignoring = False
+        start_range = None
+        create_range = partial(get_bear_range, filename, file)
         for line_number, line in enumerate(file, start=1):
             # Before lowering all lines ever read, first look for the biggest
             # common substring, case sensitive: I*gnor*e, start i*gnor*ing,
             # N*oqa*.
-            if 'gnor' in line or 'oqa' in line:
-                line = line.lower()
-                if 'start ignoring ' in line:
-                    start = line_number
-                    bears = get_ignore_scope(line, 'start ignoring ')
-                elif 'stop ignoring' in line:
-                    stop_ignoring = True
-                    if start:
-                        yield (bears,
-                               SourceRange.from_values(
-                                   filename,
-                                   start,
-                                   1,
-                                   line_number,
-                                   len(file[line_number-1])))
+            if 'gnor' not in line and 'oqa' not in line:
+                continue
 
-                else:
-                    for ignore_stmt in ['ignore ', 'noqa ', 'noqa']:
-                        if ignore_stmt in line:
-                            end_line = min(line_number + 1, len(file))
-                            yield (get_ignore_scope(line, ignore_stmt),
-                                   SourceRange.from_values(
-                                       filename,
-                                       line_number, 1,
-                                       end_line, len(file[end_line-1])))
-                            break
+            line = line.lower()
 
-        if stop_ignoring is False and start is not None:
-            yield (bears,
-                   SourceRange.from_values(filename,
-                                           start,
-                                           1,
-                                           len(file),
-                                           len(file[-1])))
+            if 'start ignoring ' in line:
+                start_range = line_number
+
+            elif (('stop ignoring' in line or len(file) is line_number) and
+                    start_range is not None):
+                yield create_range(
+                        start_range,
+                        line_number,
+                        get_ignore_scope(file[start_range-1],
+                                         ignores + ['start ignoring ']))
+                start_range = None
+
+            elif any(stmt in line for stmt in ignores):
+                yield create_range(
+                        line_number,
+                        line_number + 1,
+                        get_ignore_scope(line, ignores))
+
+
+def get_bear_range(filename, file, start_nr, end_nr, bears):
+    """
+    Create tuple of bears to ignore and the SourceRange they apply to.
+    :param filename: The name of the file.
+    :param file: The current file.
+    :param start_nr: Starting line of the SourceRange.
+    :param end_nr: Ending line of the SourceRange.
+    :param bears: the bears to ignore.
+    """
+    end_line = min(end_nr, len(file))
+
+    return (bears,
+            SourceRange.from_values(
+                filename,
+                start_nr,
+                1,
+                end_line,
+                len(file[end_line-1])))
 
 
 def get_file_list(results):

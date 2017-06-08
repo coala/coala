@@ -17,7 +17,7 @@ from coalib.processes.Processing import (
     ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
     execute_section, filter_raising_callables, get_default_actions,
     get_file_dict, print_result, process_queues, simplify_section_result,
-    yield_ignore_ranges)
+    yield_ignore_ranges, get_ignore_scope)
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -208,7 +208,7 @@ class ProcessingTest(unittest.TestCase):
                  Result.from_values('ABear', 'u', 'f', 5, 1),
                  Result.from_values('ABear', 'u', 'f', 6, 1)]},
             {1: [first_global]},
-            {'f': ['first line  # stop ignoring, invalid ignore range\n',
+            {'f': ['first line  # stop ignoring, invalid range\n',
                    'second line  # ignore all\n',
                    'third line\n',
                    "fourth line  # gnore shouldn't trigger without i!\n",
@@ -710,3 +710,57 @@ class ProcessingTest_PrintResult(unittest.TestCase):
                                       self.section, self.log_printer, {}, [],
                                       console_printer=self.console_printer)
         self.assertEqual(newres, [])
+
+    def test_get_ignore_scope(self):
+        line1 = 'hallo # ignore aBear ignore bBear'
+        line2 = 'hallo # ignore, aBear, ignore, bBear'
+        line2 = 'hallo # start ignoring aBear, ignore, bBear'
+
+        self.assertEqual(get_ignore_scope(line1, ['ignore', 'ignoring']),
+                         ['abear', 'bbear'])
+        self.assertEqual(get_ignore_scope(line2, ['ignore', 'ignoring']),
+                         ['abear', 'bbear'])
+
+    def test_yield_ignore_rang(self):
+        d = {'d': ['first line  # stop ignoring, missing start\n',
+                   'second line  # ignore all\n',
+                   'third line\n',
+                   "fourth line  # gnore shouldn't trigger without i!\n",
+                   '# Start ignoring ABear, BBear and CBear\n',
+                   '# Stop ignoring\n',
+                   'seventh'],
+             'f': ['# ignore DBear Start ignoring ABear, BBear and CBear\n',
+                   'seventh',
+                   '# Stop ignoring\n'],
+             'g': ['# start ignoring ABear\n',
+                   '# start without stopping\n']}
+
+        gen = yield_ignore_ranges(d)
+
+        for bears, source in gen:
+            if source.file == 'd':
+                self.assertEqual(bears, [])
+                self.assertEqual(source.start.line, 2)
+                self.assertEqual(source.start.column, 1)
+                self.assertEqual(source.end.line, 3)
+                self.assertEqual(source.end.column, 11)
+                bears, source = next(gen)
+                self.assertEqual(bears, ['abear', 'bbear', 'cbear'])
+                self.assertEqual(source.start.line, 5)
+                self.assertEqual(source.start.column, 1)
+                self.assertEqual(source.end.line, 6)
+                self.assertEqual(source.end.column, 16)
+
+            if source.file == 'f':
+                self.assertEqual(bears, ['dbear', 'abear', 'bbear', 'cbear'])
+                self.assertEqual(source.start.line, 1)
+                self.assertEqual(source.start.column, 1)
+                self.assertEqual(source.end.line, 3)
+                self.assertEqual(source.end.column, 16)
+
+            if source.file == 'g':
+                self.assertEqual(bears, ['abear'])
+                self.assertEqual(source.start.line, 1)
+                self.assertEqual(source.start.column, 1)
+                self.assertEqual(source.end.line, 2)
+                self.assertEqual(source.end.column, 25)
