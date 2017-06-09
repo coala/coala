@@ -33,9 +33,7 @@ class coalaCITest(unittest.TestCase):
         retval, stdout, stderr = execute_coala(
             coala.main, 'coala', '--non-interactive', '-c', 'nonex', 'test')
         self.assertFalse(stdout)
-        self.assertRegex(
-            stderr,
-            ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
+        self.assertIn('You can:\tGenerate', stderr)
         self.assertNotEqual(retval, 0,
                             'coala must return nonzero when errors occured')
 
@@ -54,7 +52,7 @@ class coalaCITest(unittest.TestCase):
                                                    '--settings',
                                                    'use_spaces=True',
                                                    debug=debug)
-            self.assertIn('Executing section cli', stdout)
+            self.assertEqual('', stdout)
             if not debug:
                 self.assertFalse(stderr)
             else:
