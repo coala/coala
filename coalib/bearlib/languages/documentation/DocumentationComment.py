@@ -118,12 +118,16 @@ class DocumentationComment:
 
             if stripped_line.startswith(param_identifiers[0]):
                 parse_mode = self.Parameter
+                # param_offset contains the starting column of param's name.
                 param_offset = line.find(
                     param_identifiers[0]) + len(param_identifiers[0])
+                # splitted contains the whole line from the param's name,
+                # which in turn is further divided into its name and desc.
                 splitted = line[param_offset:].split(param_identifiers[1], 1)
                 cur_param = splitted[0].strip()
 
                 param_desc = splitted[1]
+                # parsed section is added to the final list.
                 parsed.append(self.Parameter(name=cur_param, desc=param_desc))
 
             elif stripped_line.startswith(exception_identifiers[0]):
@@ -145,6 +149,9 @@ class DocumentationComment:
                 retval_desc = line[return_offset:]
                 parsed.append(self.ReturnValue(desc=retval_desc))
 
+            # These conditions will take care if the parsed section
+            # descriptions are not on the same line as that of it's
+            # name. Further, adding the parsed section to the final list.
             elif parse_mode == self.ReturnValue:
                 retval_desc += line
                 parsed.pop()
