@@ -14,6 +14,7 @@ class DocumentationCommentTest(unittest.TestCase):
 
     Description = DocumentationComment.Description
     Parameter = DocumentationComment.Parameter
+    ExceptionValue = DocumentationComment.ExceptionValue
     ReturnValue = DocumentationComment.ReturnValue
 
     Metadata = DocstyleDefinition.Metadata
@@ -39,7 +40,9 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
 
         python_doxygen = DocstyleDefinition.load('python', 'doxygen')
 
-        python_doxygen_metadata = self.Metadata('@param ', ' ', '@return ')
+        python_doxygen_metadata = self.Metadata('@param ', ' ',
+                                                '@raises ', ' ',
+                                                '@return ')
 
         uut = DocumentationComment('qwertzuiop',
                                    python_doxygen,
@@ -58,7 +61,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
 
     def test_not_implemented(self):
         raw_docstyle = DocstyleDefinition('nolang', 'nostyle', ('', '', ''),
-                                          self.Metadata('', '', ''))
+                                          self.Metadata('', '', '', '', ''))
         not_implemented = DocumentationComment(
             'some docs', raw_docstyle, None, None, None)
         with self.assertRaises(NotImplementedError):
@@ -114,6 +117,15 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                     self.Parameter(name='test', desc='  test description2 \n')]
         self.check_docstring(doc, expected)
 
+    def test_exception_default(self):
+        doc = (' :raises test:  test description1\n'
+               ' :raises test:  test description2\n')
+        expected = [self.ExceptionValue(name='test',
+                                        desc='  test description1\n'),
+                    self.ExceptionValue(name='test',
+                                        desc='  test description2\n')]
+        self.check_docstring(doc, expected)
+
     def test_return_values_default(self):
         doc = (' :return: something1 \n'
                ' :return: something2 ')
@@ -147,7 +159,26 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                             desc='\n    Short Param description.\n\n'),
              self.ReturnValue(desc=' Long Return Description That Makes No '
                                    'Sense And Will\n         Cut to the Next'
-                                   ' Line.\n')]]
+                                   ' Line.\n')],
+            [self.Description(desc='\nThis is dummy docstring find '
+                                   'function.\n\n'),
+             self.Parameter(name='filename',
+                            desc='\n    contains filename\n'),
+             self.ExceptionValue(name='FileNotFoundError',
+                                 desc='\n    raised when the given '
+                                      'file name was not found\n\n'),
+             self.ReturnValue(desc=' returns all possible docstrings'
+                                   ' in a file\n')],
+            [self.Description(desc='\nThis returns perimeter '
+                                   'of a triangle.   \n\n'),
+             self.Parameter(name='side_A',
+                            desc='\n    length of side_A       \n'),
+             self.Parameter(name='side_B',
+                            desc='\n    length of side_B    \n'),
+             self.Parameter(name='side_C',
+                            desc='\n    length of side_C  \n\n'),
+             self.ReturnValue(desc=' returns perimeter\n')],
+                   ]
 
         self.assertEqual(parsed_docs, expected)
 
@@ -170,7 +201,14 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
             [self.Description(desc=' This is the best docstring ever!\n\n'),
              self.Parameter(name='param1', desc='Parameter 1\n'),
              self.Parameter(name='param2', desc='Parameter 2\n'),
-             self.ReturnValue(desc='Nothing\n')]]
+             self.ReturnValue(desc='Nothing\n')],
+            [self.Description(desc=' This is dummy docstring find '
+                                   'function.\n\n'),
+             self.Parameter(name='filename', desc='contains filename\n'),
+             self.ExceptionValue(name='FileNotFoundError',
+                                 desc='raises when filename is not found\n'),
+             self.ReturnValue(desc='nothing\n')],
+                   ]
 
         self.assertEqual(parsed_docs, expected)
 
@@ -188,6 +226,8 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
                           ' argument.\n\n'),
                      self.Parameter(name='name',
                                     desc='the name to which to say hello\n'),
+                     self.ExceptionValue(name='IOException',
+                                         desc='throws IOException\n'),
                      self.ReturnValue(
                          desc='     the concatenated string\n')]]
 

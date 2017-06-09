@@ -16,6 +16,7 @@ class DocstyleDefinition:
     etc.).
     """
     Metadata = namedtuple('Metadata', ('param_start', 'param_end',
+                                       'exception_start', 'exception_end',
                                        'return_sep'))
 
     @enforce_signature
@@ -178,7 +179,9 @@ class DocstyleDefinition:
             raise KeyError('Language {!r} is not defined for docstyle {!r}.'
                            .format(language, docstyle))
 
-        metadata_settings = ('param_start', 'param_end', 'return_sep')
+        metadata_settings = ('param_start', 'param_end',
+                             'exception_start', 'exception_end',
+                             'return_sep')
 
         metadata = cls.Metadata(*(str(docstyle_settings.get(req_setting, ''))
                                   for req_setting in metadata_settings))

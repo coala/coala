@@ -37,3 +37,30 @@ def best_docstring(param1, param2):
              Cut to the Next Line.
     """
     return None
+
+def docstring_find(filename):
+    """
+    This is dummy docstring find function.
+
+    :param filename:
+        contains filename
+    :raises FileNotFoundError:
+        raised when the given file name was not found
+
+    :return: returns all possible docstrings in a file
+    """
+
+def foobar_triangle(side_A, side_B, side_C):
+    """
+    This returns perimeter of a triangle.   
+
+    :param side_A:
+        length of side_A       
+    :param side_B:
+        length of side_B    
+    :param side_C:
+        length of side_C  
+
+    :return: returns perimeter
+    """
+    return side_A + side_B + side_C

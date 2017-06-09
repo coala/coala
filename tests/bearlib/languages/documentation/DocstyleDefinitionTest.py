@@ -8,7 +8,7 @@ from coalib.bearlib.languages.documentation.DocstyleDefinition import (
 class DocstyleDefinitionTest(unittest.TestCase):
 
     Metadata = DocstyleDefinition.Metadata
-    dummy_metadata = Metadata(':param ', ':', ':return:')
+    dummy_metadata = Metadata(':param ', ':', ':raises ', ':', ':return:')
 
     def test_fail_instantation(self):
         with self.assertRaises(ValueError):

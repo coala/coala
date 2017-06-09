@@ -32,3 +32,11 @@ class PyClass:
     # @param param2 Parameter 2
     # @return Nothing
         return None
+
+def docstring_find(filename):
+    ## This is dummy docstring find function.
+    #
+    #  @param filename contains filename
+    #  @raises FileNotFoundError raises when filename is not found
+    #  @return nothing
+        return None
