@@ -5,6 +5,41 @@ from coalib.results.TextRange import TextRange
 from functools import lru_cache
 
 
+SPHINX_REF = {
+    'Attribute': (':attr:`', '`'),
+    'Class': (':class:`', '`'),
+    'Constant': (':const:`', '`'),
+    'Data': (':data:`', '`'),
+    'Exception': (':exc:`', '`'),
+    'Function': (':func:`', '`'),
+    'Method': (':meth:`', '`'),
+    'Module': (':mod:`', '`'),
+    'Object': (':obj:`', '`')}
+
+
+def _find_references(line, identifiers):
+    """
+    Find references to another object in the given line.
+
+    :param line:
+        String to look into.
+    :param identifiers:
+        A dict mapping the type of references to a tuple of two strings with
+        which the reference might start and end respectively.
+    :return:
+        A list of two-element tuples containing the type of reference (inferred
+        from the given dict) and the corresponding index of occurence in the
+        line, sorted according to the index.
+    """
+    occurences = []
+    for ref_type, identifier in identifiers.items():
+        ref = line.find(identifier[0])
+        while ref != -1:
+            occurences.append((ref_type, ref))
+            ref = line.find(identifier[0], ref+1)
+    return sorted(occurences, key=lambda x: x[1])
+
+
 @generate_repr()
 @generate_eq('documentation', 'language', 'docstyle',
              'indent', 'marker', 'position')
@@ -17,6 +52,7 @@ class DocumentationComment:
     ExceptionValue = namedtuple('ExceptionValue', 'name, desc')
     ReturnValue = namedtuple('ReturnValue', 'desc')
     Description = namedtuple('Description', 'desc')
+    Reference = namedtuple('Reference', ['type_ref', 'ref_addr'])
     top_padding = 0
     bottom_padding = 0
     docstring_type = 'others'
@@ -80,7 +116,7 @@ class DocumentationComment:
         """
         if self.language == 'python' and self.docstyle == 'default':
             return self._parse_documentation_with_symbols(
-                (':param ', ':'), (':raises ', ':'), ':return:')
+                (':param ', ':'), (':raises ', ':'), ':return:', SPHINX_REF)
         elif self.language == 'python' and self.docstyle == 'doxygen':
             return self._parse_documentation_with_symbols(
                 ('@param ', ' '), ('@raises ', ' '), '@return ')
@@ -98,7 +134,8 @@ class DocumentationComment:
     def _parse_documentation_with_symbols(self,
                                           param_identifiers,
                                           exception_identifiers,
-                                          return_identifiers):
+                                          return_identifiers,
+                                          ref_identifiers={}):
         """
         Parses documentation based on parameter, exception and return symbols.
 
@@ -113,6 +150,7 @@ class DocumentationComment:
             section is a named tuple of either ``Description``, ``Parameter``,
             ``ExceptionValue`` or ``ReturnValue``.
         """
+
         lines = self.documentation.splitlines(keepends=True)
 
         parse_mode = self.Description
@@ -168,6 +206,16 @@ class DocumentationComment:
                     return_identifiers) + len(return_identifiers)
                 retval_desc = line[return_offset:]
                 parsed.append(self.ReturnValue(desc=retval_desc))
+
+            elif _find_references(line, ref_identifiers):
+                occurences = _find_references(line, ref_identifiers)
+                for ref, _ in occurences:
+                    identifier = ref_identifiers[ref]
+                    splitted = line.split(identifier[0], 1)[1].split(
+                        identifier[1], 1)
+                    addr = splitted[0].strip()
+                    line = splitted[1:][0]
+                    parsed.append(self.Reference(type_ref=ref, ref_addr=addr))
 
             # These conditions will take care if the parsed section
             # descriptions are not on the same line as that of it's
