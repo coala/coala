@@ -34,8 +34,8 @@ class coalaCITest(unittest.TestCase):
             coala.main, 'coala', '--non-interactive', '-c', 'nonex', 'test')
         self.assertFalse(stdout)
         self.assertRegex(
-            stderr,
-            ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
+             stderr,
+             ".*\\[ERROR\\].*Requested coafile '.*' does not exist")
         self.assertNotEqual(retval, 0,
                             'coala must return nonzero when errors occured')
 

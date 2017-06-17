@@ -30,7 +30,7 @@ class coalaJSONTest(unittest.TestCase):
             coala.main, 'coala', '--json', '-c', 'nonex', 'test')
         test_text = '{\n  "results": {}\n}\n'
         self.assertEqual(stdout, test_text)
-        self.assertRegex(stderr, ".*requested coafile '.*' does not exist. .+")
+        self.assertRegex(stderr, ".*Requested coafile '.*' does not exist")
         self.assertNotEqual(retval, 0,
                             'coala must return nonzero when errors occured')
 
@@ -116,8 +116,8 @@ class coalaJSONTest(unittest.TestCase):
             coala.main, 'coala', '--json', '-c', 'nonex')
         test_text = '{\n  "results": {}\n}\n'
         self.assertRegex(
-            stderr,
-            ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
+             stderr,
+             ".*\\[ERROR\\].*Requested coafile '.*' does not exist")
         self.assertEqual(stdout, test_text)
         self.assertNotEqual(retval, 0,
                             'coala must return nonzero when errors occured')
