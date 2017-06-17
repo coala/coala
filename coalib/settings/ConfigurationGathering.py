@@ -13,6 +13,13 @@ from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import fill_settings
 from coalib.settings.Setting import Setting, path
+from string import Template
+
+COAFILE_OUTPUT = Template('$type \'$file\' $found!\n'
+                          'Here\'s what you can do:\n'
+                          '* add `--save` to generate a config file with '
+                          'your current options\n'
+                          '* add `-I` to suppress any use of config files\n')
 
 
 def merge_section_dicts(lower, higher):
@@ -59,18 +66,15 @@ def load_config_file(filename, log_printer, silent=False):
     except FileNotFoundError:
         if not silent:
             if os.path.basename(filename) == Constants.default_coafile:
-                log_printer.warn('The default coafile {0!r} was not found. '
-                                 'You can generate a configuration file with '
-                                 'your current options by adding the `--save` '
-                                 'flag or suppress any use of config '
-                                 'files with `-I`.'
-                                 .format(Constants.default_coafile))
+                log_printer.warn(COAFILE_OUTPUT
+                                 .substitute(type='Default coafile',
+                                             file=Constants.default_coafile,
+                                             found='not found'))
             else:
-                log_printer.err('The requested coafile {0!r} does not exist. '
-                                'You can generate it with your current '
-                                'options by adding the `--save` flag or '
-                                'suppress any use of config files with `-I`.'
-                                .format(filename))
+                log_printer.err(COAFILE_OUTPUT
+                                .substitute(type='Requested coafile',
+                                            file=filename,
+                                            found='does not exist'))
                 sys.exit(2)
 
         return {'default': Section('default')}
