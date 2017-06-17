@@ -10,12 +10,11 @@ from coalib.results.result_actions.ResultAction import ResultAction
 from coala_utils.decorators import enforce_signature
 
 
-def format_line(line, real_nr='', sign='|', mod_nr='', symbol='', ):
-    return '|{:>4}{}{:>4}|{:1}{}'.format(real_nr,
-                                         sign,
-                                         mod_nr,
-                                         symbol,
-                                         line.rstrip('\n'))
+def format_line(line, real_nr='', sign=']', mod_nr='', symbol='', ):
+    return '[{:>4}{}{:1}{}'.format(real_nr,
+                                   sign,
+                                   symbol,
+                                   line.rstrip('\n'))
 
 
 def print_from_name(printer, line):
@@ -23,7 +22,7 @@ def print_from_name(printer, line):
 
 
 def print_to_name(printer, line):
-    printer.print(format_line(line, mod_nr='++++'), color='green')
+    printer.print(format_line(line, real_nr='++++'), color='green')
 
 
 def print_beautified_diff(difflines, printer):
@@ -40,24 +39,14 @@ def print_beautified_diff(difflines, printer):
         elif line.startswith('+++'):
             print_to_name(printer, line[4:])
         elif line.startswith('+'):
-            printer.print(format_line(line[1:],
-                                      mod_nr=current_line_added,
-                                      symbol='+'),
-                          color='green')
+            print_to_name(printer, line[1:])
             current_line_added += 1
         elif line.startswith('-'):
-            printer.print(format_line(line[1:],
-                                      real_nr=current_line_subtracted,
-                                      symbol='-'),
-                          color='red')
+            printer.print(format_line
+                          ('Line affected {}'.format(current_line_added)))
+            printer.print(format_line(''))
+            print_from_name(printer, line[1:])
             current_line_subtracted += 1
-        else:
-            printer.print(format_line(line[1:],
-                                      real_nr=current_line_subtracted,
-                                      mod_nr=current_line_added,
-                                      symbol=' '))
-            current_line_subtracted += 1
-            current_line_added += 1
 
 
 class ShowPatchAction(ResultAction):
