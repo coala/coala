@@ -27,15 +27,21 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - set PATH=C:\LLVM\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%;C:\Program Files\Git\mingw64\bin
+  - set PATH=C:\LLVM\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%
+  - set PATH=%PATH%;C:\Program Files\Git\mingw64\bin
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
+  - >
+    "%CMD_IN_ENV% pip install
+    --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt
 
-  - curl -fsSL http://llvm.org/releases/%LLVM_VERSION%/LLVM-%LLVM_VERSION%-win32.exe -o LLVM.exe
+  - >
+    curl -fsSL -o LLVM.exe
+    http://llvm.org/releases/%LLVM_VERSION%/LLVM-%LLVM_VERSION%-win32.exe
+
   - 7z x LLVM.exe -oC:\LLVM
 
 build: false  # Not a C# project, build stuff at the test step instead.
