@@ -11,8 +11,10 @@ matrix:
     # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
       env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
     - python: 3.3
       env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
 
 cache:
   pip: true
@@ -60,11 +62,6 @@ before_script:
   - python .misc/check_setuptools.py
 
 script:
-  - >
-    if [[ "$UNSUPPORTED" == true ]]; then
-      coverage run setup.py install | grep -q 'coala supports only python 3.4 or later'
-    fi
-  - if [[ "$UNSUPPORTED" == true ]]; then codecov || true; exit; fi
   - py.test
   - python setup.py bdist_wheel
   - pip install ./dist/coala-*.whl
@@ -77,6 +74,11 @@ script:
     fi
   - coala --non-interactive
   - python setup.py docs
+
+after_success:
+  - codecov
+
+after_failure:
   - codecov
 
 notifications:
