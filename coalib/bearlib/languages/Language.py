@@ -22,7 +22,7 @@ convert_int_float_str = typechain(int, float, str)
 
 def parse_lang_str(string):
     """
-    Prarses any given language `string` into name and a list of either
+    Parses any given language `string` into name and a list of either
     ``int``, ``float``, or ``str`` versions (ignores leading whitespace):
 
     >>> parse_lang_str("Python")
