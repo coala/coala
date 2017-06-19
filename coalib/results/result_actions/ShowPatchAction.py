@@ -64,6 +64,8 @@ class ShowPatchAction(ResultAction):
 
     SUCCESS_MESSAGE = 'Displayed patch successfully.'
 
+    multiple_allowed = True
+
     @staticmethod
     @enforce_signature
     def is_applicable(result: Result, original_file_dict, file_diff_dict):

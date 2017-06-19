@@ -4,6 +4,7 @@ from os.path import relpath
 from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
 from coalib.bearlib.aspects import aspectbase
+from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -23,6 +24,7 @@ from coalib.results.SourceRange import SourceRange
                    'message_base',
                    'message_arguments',
                    'aspect',
+                   'actions',
                    'additional_info',
                    'debug_msg')
 class Result:
@@ -46,6 +48,26 @@ class Result:
     >>> r.message
     'spam and eggs'
 
+    Result can optionally be supplied with multiple result actions.
+
+    >>> xyz_action = ResultAction()
+    >>> r.actions = xyz_action
+    >>> len(r.actions)
+    1
+
+    It is also possible to add or remove actions.
+
+    >>> ResultAction.multiple_allowed = True
+    >>> foo_action = ResultAction()
+    >>> bar_action = ResultAction()
+    >>> r.add_actions(foo_action, bar_action)
+    >>> len(r.actions)
+    3
+
+    >>> r.remove_actions(xyz_action, foo_action)
+    >>> len(r.actions)
+    1
+
     """
 
     @enforce_signature
@@ -59,6 +81,7 @@ class Result:
                  diffs: (dict, None)=None,
                  confidence: int=100,
                  aspect: (aspectbase, None)=None,
+                 actions: list=[],
                  message_arguments: dict={}):
         """
         :param origin:
@@ -88,6 +111,8 @@ class Result:
             Note that this should be a leaf of the aspect tree!
             (If you have a node, spend some time figuring out which of
             the leafs exactly your result belongs to.)
+        :param actions:
+            A list of ``ResultAction`` instances associated with the result.
         :param message_arguments:
             Arguments to be provided to the base message.
         :raises ValueError:
@@ -118,6 +143,68 @@ class Result:
         self.diffs = diffs
         self.id = uuid.uuid4().int
         self.aspect = aspect
+        self._actions = actions
+        self._native_actions = []
+
+    @property
+    def actions(self):
+        return tuple(self.get_filtered_actions())
+
+    @actions.setter
+    @enforce_signature
+    def actions(self, value: (ResultAction, list)):
+        self._actions = value if type(value) == list else [value]
+
+    def add_actions(self, *values: ResultAction):
+        for action in values:
+            self._actions.append(action)
+
+    def remove_actions(self, *values: ResultAction):
+        for action in values:
+            self._actions.remove(action)
+
+    def get_filtered_actions(self, file_dict={}, file_diff_dict={}):
+        """
+        Filters the actions associated with the instance by checking for
+        applicability of the action on the result and multiple instances of
+        actions of same type of ResultAction. In case of duplicity, the
+        custom action is preferred over the native action. If the duplicity
+        is due to custom actions of same type, it is resolved according to
+        the boolean value of `multiple_allowed` class variable.
+
+        :param file_dict:      A dictionary containing all files as values with
+                               filenames as key.
+        :param file_diff_dict: Dictionary containing filenames as keys and Diff
+                               objects as values.
+        :return:               A list of filtered ``ResultAction`` instances
+                               suitable for the result.
+        """
+        actions = self._actions + self._native_actions
+
+        indices_to_delete = set()
+
+        for idx, action in enumerate(actions):
+            action_type = type(action)
+            for follow_idx, following_action in enumerate(actions[idx+1:]):
+                if type(following_action) is action_type \
+                        and not action_type.multiple_allowed:
+                    indices_to_delete.add(idx + 1 + follow_idx)
+        filtered_actions = (
+            [actions[i] for i in range(len(actions))
+             if i not in indices_to_delete])
+
+        return self.get_applicable_actions(
+            filtered_actions,
+            file_dict,
+            file_diff_dict)
+
+    def get_applicable_actions(self, actions, file_dict, file_diff_dict):
+        filtered_actions = []
+        for action in actions:
+            if action.is_applicable(self, file_dict, file_diff_dict) is True:
+                filtered_actions.append(action)
+
+        return filtered_actions
 
     @property
     def message(self):
@@ -145,6 +232,7 @@ class Result:
                     diffs: (dict, None)=None,
                     confidence: int=100,
                     aspect: (aspectbase, None)=None,
+                    actions: list=[],
                     message_arguments: dict={}):
         """
         Creates a result with only one SourceRange with the given start and end
@@ -186,6 +274,8 @@ class Result:
             should be a leaf of the aspect tree! (If you have a node, spend
             some time figuring out which of the leafs exactly your result
             belongs to.)
+        :param actions:
+            A list of ``ResultAction`` instances associated with the result.
         """
         range = SourceRange.from_values(file,
                                         line,
@@ -202,6 +292,7 @@ class Result:
                    diffs=diffs,
                    confidence=confidence,
                    aspect=aspect,
+                   actions=actions,
                    message_arguments=message_arguments)
 
     def to_string_dict(self):

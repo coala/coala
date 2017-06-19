@@ -78,12 +78,12 @@ CAPABILITY_COLOR = 'green'
 HIGHLIGHTED_CODE_COLOR = 'red'
 SUCCESS_COLOR = 'green'
 REQUIRED_SETTINGS_COLOR = 'green'
-CLI_ACTIONS = (OpenEditorAction(),
-               ApplyPatchAction(),
-               PrintDebugMessageAction(),
-               PrintMoreInfoAction(),
-               ShowPatchAction(),
-               IgnoreResultAction())
+NATIVE_ACTIONS = (OpenEditorAction(),
+                  ApplyPatchAction(),
+                  PrintDebugMessageAction(),
+                  PrintMoreInfoAction(),
+                  ShowPatchAction(),
+                  IgnoreResultAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
@@ -119,8 +119,7 @@ def acquire_actions_and_apply(console_printer,
                               section,
                               file_diff_dict,
                               result,
-                              file_dict,
-                              cli_actions=None):
+                              file_dict):
     """
     Acquires applicable actions and applies them.
 
@@ -131,36 +130,61 @@ def acquire_actions_and_apply(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
-    :param cli_actions:     The list of cli actions available.
     """
-    cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     while True:
-        actions = []
-        for action in cli_actions:
-            if action.is_applicable(result, file_dict, file_diff_dict) is True:
-                actions.append(action)
+        actions = result.get_filtered_actions(file_dict, file_diff_dict)
 
         if actions == []:
             return
 
         action_dict = {}
         metadata_list = []
+        # FIXME: If we want to allow users to add multiple actions of same
+        # type, ``metadata.name`` should not be used as a key for action_dict
         for action in actions:
             metadata = action.get_metadata()
             action_dict[metadata.name] = action
             metadata_list.append(metadata)
 
+        applied_action = ask_for_action_and_apply(console_printer,
+                                                  section,
+                                                  metadata_list,
+                                                  action_dict,
+                                                  failed_actions,
+                                                  result,
+                                                  file_diff_dict,
+                                                  file_dict)
+
         # User can always choose no action which is guaranteed to succeed
-        if not ask_for_action_and_apply(console_printer,
-                                        section,
-                                        metadata_list,
-                                        action_dict,
-                                        failed_actions,
-                                        result,
-                                        file_diff_dict,
-                                        file_dict):
+        if not applied_action:
             break
+        else:
+            next_actions = applied_action.next_actions
+
+            # FIXME: currently the code doensn't check for
+            # circular dependencies among the next_actions
+            while next_actions:
+                if len(next_actions) == 1:
+                    # Immediately execute the only action
+                    applied_action = directly_apply_action(next_actions[0],
+                                                           console_printer,
+                                                           section,
+                                                           failed_actions,
+                                                           result,
+                                                           file_diff_dict,
+                                                           file_dict)
+                    next_actions = (applied_action.next_actions
+                                    if applied_action else [])
+
+                if len(next_actions) > 1:
+                    result.actions = next_actions
+                    acquire_actions_and_apply(console_printer,
+                                              section,
+                                              file_diff_dict,
+                                              result,
+                                              file_dict)
+                    break
 
 
 def print_lines(console_printer,
@@ -250,7 +274,7 @@ def print_result(console_printer,
     console_printer.print(format_lines(result.message))
 
     if interactive:
-        cli_actions = CLI_ACTIONS
+        result._native_actions = list(NATIVE_ACTIONS)
         show_patch_action = ShowPatchAction()
         if show_patch_action.is_applicable(
                 result, file_dict, file_diff_dict) is True:
@@ -260,16 +284,16 @@ def print_result(console_printer,
                                                      file_dict,
                                                      file_diff_dict,
                                                      section)
-                cli_actions = tuple(action for action in cli_actions
-                                    if not isinstance(action, ShowPatchAction))
+                result._native_actions = [
+                    action for action in result._native_actions
+                    if not isinstance(action, ShowPatchAction)]
             else:
                 print_diffs_info(result.diffs, console_printer)
         acquire_actions_and_apply(console_printer,
                                   section,
                                   file_diff_dict,
                                   result,
-                                  file_dict,
-                                  cli_actions)
+                                  file_dict)
 
 
 def print_diffs_info(diffs, printer):
@@ -605,6 +629,51 @@ def print_actions(console_printer, section, actions, failed_actions):
     return get_action_info(section, actions[choice - 1], failed_actions)
 
 
+def apply_action_to_section(action,
+                            section,
+                            result,
+                            file_dict,
+                            file_diff_dict,
+                            console_printer,
+                            failed_actions):
+    """
+    Applies the given action.
+
+    :param action:          The action to the applied.
+    :param section:         Currently active section.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If it is an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    :param console_printer: Object to print messages on the console.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :return:                Returns the action, if action is executed without
+                            any Exception.
+    """
+    action_name = action.get_metadata().name
+
+    try:
+        action.apply_from_section(result,
+                                  file_dict,
+                                  file_diff_dict,
+                                  section)
+        console_printer.print(
+            format_lines(action.SUCCESS_MESSAGE),
+            color=SUCCESS_COLOR)
+        failed_actions.discard(action_name)
+
+    except Exception as exception:  # pylint: disable=broad-except
+        logging.error('Failed to execute the action {} with error: {}.'.format(
+            action_name, exception))
+        failed_actions.add(action_name)
+
+    return action
+
+
 def ask_for_action_and_apply(console_printer,
                              section,
                              metadata_list,
@@ -630,9 +699,9 @@ def ask_for_action_and_apply(console_printer,
                             the file with filename as keys.
     :param file_dict:       Dictionary with filename as keys and its contents
                             as values.
-    :return:                Returns a boolean value. True will be returned, if
-                            it makes sense that the user may choose to execute
-                            another action, False otherwise.
+    :return:                The applied action is returned, if it makes sense
+                            that the user may choose to execute another action,
+                            None is returned otherwise..
     """
     action_name, section = print_actions(console_printer, section,
                                          metadata_list, failed_actions)
@@ -640,20 +709,52 @@ def ask_for_action_and_apply(console_printer,
         return False
 
     chosen_action = action_dict[action_name]
-    try:
-        chosen_action.apply_from_section(result,
-                                         file_dict,
-                                         file_diff_dict,
-                                         section)
-        console_printer.print(
-            format_lines(chosen_action.SUCCESS_MESSAGE),
-            color=SUCCESS_COLOR)
-        failed_actions.discard(action_name)
-    except Exception as exception:  # pylint: disable=broad-except
-        logging.error('Failed to execute the action {} with error: {}.'.format(
-            action_name, exception))
-        failed_actions.add(action_name)
-    return True
+
+    return apply_action_to_section(chosen_action,
+                                   section,
+                                   result,
+                                   file_dict,
+                                   file_diff_dict,
+                                   console_printer,
+                                   failed_actions)
+
+
+def directly_apply_action(action,
+                          console_printer,
+                          section,
+                          failed_actions,
+                          result,
+                          file_diff_dict,
+                          file_dict):
+    """
+    Applies the given action directly without prompting the user.
+
+    :param action:          Action to be applied.
+    :param console_printer: Object to print messages on the console.
+    :param section:         Currently active section.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If it is an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    :return:                The applied action is returned, if it makes sense
+                            that the user may choose to execute another action,
+                            None is returned otherwise.
+    """
+    action_name, section = get_action_info(
+        section, action.get_metadata(), failed_actions)
+
+    return apply_action_to_section(action,
+                                   section,
+                                   result,
+                                   file_dict,
+                                   file_diff_dict,
+                                   console_printer,
+                                   failed_actions)
 
 
 def show_enumeration(console_printer,

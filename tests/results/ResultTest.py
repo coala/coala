@@ -4,6 +4,7 @@ from os.path import abspath
 
 from coalib.results.Diff import Diff
 from coalib.results.Result import RESULT_SEVERITY, Result
+from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.output.JSONEncoder import create_json_encoder
 
@@ -36,6 +37,49 @@ class ResultTest(unittest.TestCase):
 
         with self.assertRaises(KeyError):
             Result('origin', '{msg}', message_arguments={'message': 'msg'})
+
+    def test_result_actions(self):
+        uut = Result('origin', 'msg')
+        self.assertEqual(uut.actions, tuple())
+        ResultAction.multiple_allowed = True
+
+        action_1 = ResultAction()
+
+        uut.actions = action_1
+        self.assertEqual(uut.actions, (action_1,))
+
+        uut.remove_actions(action_1)
+        self.assertEqual(uut.actions, tuple())
+
+        action_2 = ResultAction()
+        action_3 = ResultAction()
+
+        uut.add_actions(action_1)
+        self.assertEqual(uut.actions, (action_1,))
+
+        uut.add_actions(action_2, action_3)
+        self.assertEqual(uut.actions, (action_1, action_2, action_3))
+
+        uut.remove_actions(action_2, action_3)
+        self.assertEqual(uut.actions, (action_1,))
+
+    def test_get_filtered_actions_no_multiples_allowed(self):
+        ResultAction.multiple_allowed = False
+        uut = Result('origin', 'msg')
+        action_1 = ResultAction()
+        action_2 = ResultAction()
+        self.assertEqual(uut.actions, tuple())
+        uut.actions = [action_1, action_2]
+        self.assertEqual(uut.actions, (action_1,))
+
+    def test_get_filtered_actions_multiple_allowed(self):
+        ResultAction.multiple_allowed = True
+        uut = Result('new', 'msg')
+        self.assertEqual(uut.actions, tuple())
+        action_1 = ResultAction()
+        action_2 = ResultAction()
+        uut.actions = [action_1, action_2]
+        self.assertEqual(uut.actions, (action_1, action_2))
 
     def test_string_dict(self):
         uut = Result(None, '')

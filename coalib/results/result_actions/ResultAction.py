@@ -12,6 +12,11 @@ class ResultAction:
 
     SUCCESS_MESSAGE = 'The action was executed successfully.'
 
+    multiple_allowed = False
+
+    def __init__(self):
+        self.next_actions = []
+
     @staticmethod
     def is_applicable(result, original_file_dict, file_diff_dict):
         """

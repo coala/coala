@@ -6,6 +6,8 @@ from coala_utils.decorators import enforce_signature
 
 class PrintDebugMessageAction(ResultAction):
 
+    multiple_allowed = True
+
     @staticmethod
     @enforce_signature
     def is_applicable(result: Result, original_file_dict, file_diff_dict):
