@@ -8,7 +8,6 @@ try:
     import readline  # pylint: disable=unused-import
 except ImportError:  # pragma: no cover
     pass
-import os.path
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
@@ -64,13 +63,14 @@ def highlight_text(no_color, text, lexer=TextLexer(), style=None):
     return highlight(text, lexer, formatter)[:-1]
 
 
-STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
-                           'needed by {} for section \"{}\": ')
+STR_GET_VAL_FOR_SETTING = ('Enter a value for \"{}\" ({}) '
+                           '[Bear: {} -- Section: \"{}\"]: ')
+STR_OUTPUT_SECTION = ('\n**** {} [Section: {}] ****\n')
 STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
-STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
+STR_ENTER_NUMBER = 'Enter letter (Ctrl-{} to exit): '.format(
     'Z' if platform.system() == 'Windows' else 'D')
 FILE_NAME_COLOR = 'blue'
 FILE_LINES_COLOR = 'blue'
@@ -87,8 +87,11 @@ CLI_ACTIONS = (OpenEditorAction(),
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
-def format_lines(lines, line_nr=''):
-    return '\n'.join('|{:>4}| {}'.format(line_nr, line)
+def format_lines(lines, symbol='', line_nr=''):
+    if symbol == '[':
+        return '\n'.join('{}{:>4}{} {}'.format(symbol, ']', line_nr, line)
+                         for line in lines.rstrip('\n').split('\n'))
+    return '\n'.join('{}{:>4}{} {}'.format(symbol, symbol, line_nr, line)
                      for line in lines.rstrip('\n').split('\n'))
 
 
@@ -179,9 +182,6 @@ def print_lines(console_printer,
     no_color = not console_printer.print_colored
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
-        console_printer.print(format_lines(lines='', line_nr=i),
-                              color=FILE_LINES_COLOR,
-                              end='')
 
         line = file_dict[sourcerange.file][i - 1].rstrip('\n')
         try:
@@ -207,11 +207,6 @@ def print_lines(console_printer,
 
             console_printer.print(highlight_text(
                no_color, line[sourcerange.end.column - 1:], lexer), end='')
-            console_printer.print('')
-
-        else:
-            console_printer.print(highlight_text(
-                no_color, line[printed_chars:], lexer), end='')
             console_printer.print('')
 
 
@@ -241,13 +236,21 @@ def print_result(console_printer,
                         'class.')
         return
 
-    console_printer.print(format_lines('[{sev}] {bear}:'.format(
-        sev=RESULT_SEVERITY.__str__(result.severity), bear=result.origin)),
+    if hasattr(section, 'name'):
+        console_printer.print('\n**** {bear} [Section: {section}] ****\n'
+                              .format(bear=result.origin, section=section.name),
+                              color=RESULT_SEVERITY_COLORS[result.severity])
+    else:
+        console_printer.print('\n**** {bear} [Section: {section}] ****\n'
+                              .format(bear=result.origin, section='<empty>'),
+                              color=RESULT_SEVERITY_COLORS[result.severity])
+    console_printer.print(format_lines('[Severity: {sev}]'.format(
+        sev=RESULT_SEVERITY.__str__(result.severity)), '!'),
         color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
                                     lexer, BackgroundMessageStyle)
-    console_printer.print(format_lines(result.message))
+    console_printer.print(format_lines(result.message, symbol='!'))
 
     if interactive:
         cli_actions = CLI_ACTIONS
@@ -285,7 +288,7 @@ def print_diffs_info(diffs, printer):
             format_lines('+{additions} -{deletions} in {file}'.format(
                 file=filename,
                 additions=additions,
-                deletions=deletions)),
+                deletions=deletions), '!'),
             color='green')
 
 
@@ -452,13 +455,12 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     :param sourcerange:        The SourceRange object referring to the related
                                lines to print.
     """
-    console_printer.print('\n' + os.path.relpath(sourcerange.file),
-                          color=FILE_NAME_COLOR)
 
     if sourcerange.start.line is not None:
         if len(file_dict[sourcerange.file]) < sourcerange.end.line:
             console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
-                                               line_nr=sourcerange.end.line))
+                                               line_nr=sourcerange.end.line,
+                                               symbol='!'))
         else:
             print_lines(console_printer,
                         file_dict,
@@ -540,11 +542,11 @@ def get_action_info(section, action, failed_actions):
     """
     params = action.non_optional_params
 
-    for param_name in params:
+    for param_name in params:  # pragma: no cover
         if param_name not in section or action.name in failed_actions:
             question = format_lines(
                 "Please enter a value for the parameter '{}' ({}): "
-                .format(param_name, params[param_name][0]))
+                .format(param_name, params[param_name][0]), symbol='!')
             section.append(Setting(param_name, input(question)))
 
     return action.name, section
@@ -560,26 +562,35 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
-        console_printer.print(format_lines('*0: ' +
-                                           'Do nothing'))
+        dict_actions = {'(O)pen file': 'O', '(A)pply patch': 'A',
+                        'Print (M)ore info': 'M', 'Add (I)gnore comment':
+                            'I', 'Print (D)ebug message': 'D',
+                            'Print Aspec(T) Information': 'T'}
+        possible_actions = []
+        console_printer.print(format_lines('Do (N)othing', symbol='['))
+        possible_actions.append('N')
         for i, action in enumerate(actions, 1):
-            console_printer.print(format_lines('{:>2}: {}'.format(
-                i,
-                action.desc)))
-
+            console_printer.print(format_lines('{}'.format(
+                action.desc), symbol='['))
+            if action.desc in dict_actions.keys():
+                possible_actions.append(str(dict_actions[action.desc]))
         try:
-            line = format_lines(STR_ENTER_NUMBER)
+            line = format_lines(STR_ENTER_NUMBER, symbol='[')
 
             choice = input(line)
             if not choice:
                 return 0
-            choice = int(choice)
-            if 0 <= choice <= len(actions):
-                return choice
-        except ValueError:
+            choice = str(choice)
+            if choice.isdecimal():
+                return 0
+            elif choice.isalpha():
+                if choice.upper() in possible_actions:
+                    return possible_actions.index(choice.upper())
+        except ValueError:  # pragma: no cover
             pass
 
-        console_printer.print(format_lines('Please enter a valid number.'))
+        console_printer.print(format_lines(
+            'Please enter a valid letter.', symbol='['))
 
 
 def print_actions(console_printer, section, actions, failed_actions):
@@ -646,10 +657,10 @@ def ask_for_action_and_apply(console_printer,
                                          file_diff_dict,
                                          section)
         console_printer.print(
-            format_lines(chosen_action.SUCCESS_MESSAGE),
+            format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
             color=SUCCESS_COLOR)
         failed_actions.discard(action_name)
-    except Exception as exception:  # pylint: disable=broad-except
+    except Exception as exception:  # pragma: no cover
         logging.error('Failed to execute the action {} with error: {}.'.format(
             action_name, exception))
         failed_actions.add(action_name)

@@ -15,7 +15,7 @@ class PrintMoreInfoAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """
-        Print more info
+        Print (M)ore info
         """
         print(result.additional_info)
 

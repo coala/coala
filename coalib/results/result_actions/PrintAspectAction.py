@@ -15,7 +15,7 @@ class PrintAspectAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """
-        Print Aspect Information
+        Print Aspec(T) Information
         """
         print(type(result.aspect).__qualname__ + '\n' +
               type(result.aspect).docs.definition)

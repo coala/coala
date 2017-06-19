@@ -59,17 +59,18 @@ def load_config_file(filename, log_printer, silent=False):
     except FileNotFoundError:
         if not silent:
             if os.path.basename(filename) == Constants.default_coafile:
-                log_printer.warn('The default coafile {0!r} was not found. '
-                                 'You can generate a configuration file with '
-                                 'your current options by adding the `--save` '
-                                 'flag or suppress any use of config '
-                                 'files with `-I`.'
+                log_printer.warn('{0!r} was not found. '
+                                 'You can:\tGenerate a configuration file with '
+                                 'your current options by adding the `--save`\n'
+                                 '        \tSuppress any use of config files'
+                                 'with `-I`.'
                                  .format(Constants.default_coafile))
             else:
-                log_printer.err('The requested coafile {0!r} does not exist. '
-                                'You can generate it with your current '
-                                'options by adding the `--save` flag or '
-                                'suppress any use of config files with `-I`.'
+                log_printer.err('{0!r} does not exists. '
+                                'You can:\tGenerate a configuration file with '
+                                'your current options by adding the `--save`\n'
+                                '        \tSuppress any use of config files'
+                                'with `-I`.'
                                 .format(filename))
                 sys.exit(2)
 
