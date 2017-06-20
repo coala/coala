@@ -18,7 +18,7 @@ class ApplyPatchAction(ResultAction):
               file_diff_dict,
               no_orig: bool=False):
         """
-        Apply patch
+        (A)pply patch
 
         :param no_orig: Whether or not to create .orig backup files
         """

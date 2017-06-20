@@ -35,7 +35,7 @@ class IgnoreResultAction(ResultAction):
     def apply(self, result, original_file_dict, file_diff_dict, language: str,
               no_orig: bool=False):
         """
-        Add ignore comment
+        Add (I)gnore comment
         """
 
         ignore_comment = self.get_ignore_comment(result.origin, language)
