@@ -84,7 +84,7 @@ class ShowPatchAction(ResultAction):
               colored: bool=True,
               show_result_on_top: bool=False):
         """
-        Show patch
+        (S)how patch
 
         :param colored:
             Whether or not to use colored output.
