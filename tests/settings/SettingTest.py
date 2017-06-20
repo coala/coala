@@ -3,9 +3,10 @@ import re
 import unittest
 from collections import OrderedDict
 
+import coalib.bearlib.aspects.Spelling
 from coalib.settings.Setting import (
     Setting, path, path_list, url, typed_dict, typed_list, typed_ordered_dict,
-    glob, glob_list)
+    glob, glob_list, aspect_list)
 from coalib.parsing.Globbing import glob_escape
 
 
@@ -98,6 +99,15 @@ class SettingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.uut = Setting('key', '1, a, 3')
             typed_ordered_dict(int, str, '')(self.uut)
+
+    def test_aspect_list(self):
+        self.uut = Setting('aspect', 'coalaCorrect, aspectYEAH')
+        self.assertEqual([Spelling.coalaCorrect,
+                          Spelling.aspectYEAH], aspect_list(self.uut))
+
+        with self.assertRaises(LookupError):
+            self.uut = Setting('aspect', 'nonexistentAspect')
+            aspect_list(self.uut)
 
     def test_inherited_conversions(self):
         self.uut = Setting('key', ' 22\n', '.', strip_whitespaces=True)

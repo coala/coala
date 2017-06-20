@@ -1,11 +1,13 @@
 import os
 from collections import Iterable, OrderedDict
 
+import coalib.bearlib.aspects
 from coala_utils.decorators import (
     enforce_signature,
     generate_repr,
 )
 from coala_utils.string_processing.StringConverter import StringConverter
+from coalib.bearlib.aspects.collections import aspectlist
 from coalib.parsing.Globbing import glob_escape
 
 
@@ -87,6 +89,17 @@ def typed_ordered_dict(key_type, value_type, default):
         (key_type(StringConverter(key)),
          value_type(StringConverter(value)) if value != '' else default)
         for key, value in OrderedDict(setting).items())
+
+
+def aspect_list(obj, *args, **kwargs):
+    """
+    Create an aspectlist instance from a list of string that hold aspect name.
+
+    :param obj: The ``Setting`` object from which the key is obtained.
+    :return:    An aspectlist instance.
+    """
+    return aspectlist([coalib.bearlib.aspects[aspect] for aspect in
+                       obj.__iter__(*args, **kwargs)])
 
 
 @generate_repr('key', 'value', 'origin', 'from_cli', 'to_append')
