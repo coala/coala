@@ -92,7 +92,7 @@ class MethodSmell:
         'Represents the max number of lines for a method or a function\'s'
         'definition.',
         (40,), default=40)
-    max_paramters = Taste[int](
+    max_parameters = Taste[int](
         'Represents the max number of parameters for a function\'s.',
         (5, 10), default=10)
 
