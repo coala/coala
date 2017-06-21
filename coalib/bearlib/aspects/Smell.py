@@ -6,7 +6,7 @@ class Smell:
     """
     This aspect detects `code smells` or `bad smells` in your code.
 
-    `Smells` are certain structures in the code that indicate violation of
+    `Smells` are certain structures in a code that indicate violation of
     fundamental design principles. They are usually not bugs; they are not
     technically incorrect and do not currently prevent the program from
     functioning.
@@ -21,10 +21,23 @@ class Smell:
         """
         example_language = 'English'
         importance_reason = """
-        Even though they are not necessarily bugs, code smells increase the risk
-        of bugs or failure in the future and may slow down development.
+        Even though they are not necessarily bugs, code smells increase the
+        risk of bugs or failure in the future and may slow down development.
         """
-        fix_suggestions = 'some fix suggestions'
+        fix_suggestions = """
+        There are several `refactoring techniques` that can be used to deal
+        with `code smells` including:
+
+        * Composing methods
+        * Moving features between objects
+        * Organizing data
+        * Simplifying conditional expressions
+        * Simplifying method calls
+        * Dealing with generalisation
+
+        See <https://sourcemaking.com/refactoring/refactorings> for more
+        information.
+        """
 
 
 @Smell.subaspect
@@ -33,9 +46,9 @@ class ClassSmell:
     This aspect detects `code smells` or `bad smells` related to classes'
     definitions in your codebase.
 
-    Class-level code smells are simply code smells indicating poorly defined
-    classes (including too large classes or God object, data clump feature
-    envy etc...) in your source code.
+    Class-level code smells indicate poorly defined classes (including too
+    large classes or God object, data clump feature envy etc...) in your
+    source code.
     """
     class docs:
         example = """
@@ -46,28 +59,28 @@ class ClassSmell:
         """
         example_language = 'English'
         importance_reason = """
-        These classes (the classes containing code smells) should be
-        refactored for better readability and maintainability of your source
-        code.
+        These classes should be refactored for better readability and
+        maintainability of your source code.
         """
         fix_suggestions = """
-        When a class is wearing too many (functional) hats, think about
-        splitting it up:
-            * Extract class
-            * Extract subclass
-            * Extract interface
+        When a class is wearing too many (functional) hats (too large
+        classes), you should probably think about splitting it up:
+
+        * Extract class
+        * Extract subclass
+        * Extract interface
         """
 
 
 @Smell.subaspect
 class MethodSmell:
     """
-    This aspect detects `code smells` or `bad smells` related to methods'
-    and functions definitions in your codebase.
+    This aspect detects `code smells` related to methods' and functions
+    definitions in your codebase.
 
-    Method-level code smells are simply code smells indicating poorly defined
-    method and or functions (too long method or functions, or functions with
-    too many parameters) in your source code.
+    Method-level code smells indicate poorly defined method and or
+    functions (too long method or functions, or functions with too many
+    parameters) in your source code.
     """
     class docs:
         example = """
@@ -78,9 +91,9 @@ class MethodSmell:
         """
         example_language = 'python'
         importance_reason = """
-        Make your functions and methods unambiguous(by reducing the number of
-        parameters, easy to read(by reducing the length of your methods and
-        functions) and debug.
+        Make your functions and methods unambiguous, easy to read and debug
+        by reducing the number of parameters and length of your methods and
+        functions.
         """
         fix_suggestions = """
         A fix for this would simply consist of redefining the functions
@@ -124,8 +137,8 @@ class DataClump:
                               String occupation, String city){
 
             System.out.printf("Welcome %s %s, a %d-year-old %s "\
-                      "from %s who works as a%s\n",firstName, lastName,
-                       age, gender, city, occupation);
+"from %s who works as a%s\n",firstName, lastName, age, gender, city, \
+occupation);
         }
         """
         example_language = 'java'
@@ -245,7 +258,7 @@ class Naming:
     """
     This aspect checks on identifiers in your codebase (their length
     and the appropriate naming convention to use for them, be it variables,
-    classes or functions)
+    classes or functions names.)
     """
     class docs:
         example = """
@@ -263,15 +276,15 @@ class Naming:
 
     variable_naming_convention = Taste[str](
         'Naming convention to use for variables\'s identifiers',
-        ('lowerCamelCase', 'snake_case', 'hyphenated-case', 'UpperCamelCase'),
+        ('lowerCamelCase', 'snake_case', 'kebab-case', 'UpperCamelCase'),
         default='snake_case')
     function_naming_convention = Taste[str](
         'Naming convention to use for functions\'s or methods\'s identifiers',
-        ('lowerCamelCase', 'snake_case', 'hyphenated-case', 'UpperCamelcase'),
+        ('lowerCamelCase', 'snake_case', 'kebab-case', 'UpperCamelcase'),
         default='snake_case')
     class_naming_convention = Taste[str](
         'Naming convention to use for classes\'s identifiers',
-        ('lowerCamelCase', 'snake_case', 'hyphenated-case', 'UpperCamelCase'),
+        ('lowerCamelCase', 'snake_case', 'kebab-case', 'UpperCamelCase'),
         default='UpperCamelCase')
     max_identifier_length = Taste[int](
         'The maximum number of character for an identifier.',
@@ -281,7 +294,7 @@ class Naming:
 @Smell.subaspect
 class Complexity:
     """
-    This aspect checks on the cyclomatic complexity of your code
+    This aspect checks on the cyclomatic complexity of your code.
     """
     class docs:
         example = """
