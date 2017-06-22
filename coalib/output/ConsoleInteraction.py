@@ -559,23 +559,26 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
-        console_printer.print(format_lines('{}'.format('*0: Do nothing'),
+        console_printer.print(format_lines('Do (N)othing',
                                            symbol='['))
         for i, action in enumerate(actions, 1):
-            console_printer.print(format_lines('{:>2}: {}'.format(
-                i, action.desc), symbol='['))
+            console_printer.print(format_lines('{}'.format(
+                action.desc), symbol='['))
 
-        try:
-            line = format_lines(STR_ENTER_NUMBER, symbol='[')
+        line = format_lines(STR_ENTER_NUMBER, symbol='[')
 
-            choice = input(line)
-            if not choice:
+        choice = input(line)
+        if not choice:
+            return 0
+        choice = str(choice)
+        if choice.isalpha():
+            choice = choice.upper()
+            choice = '(' + choice + ')'
+            if choice == '(N)':
                 return 0
-            choice = int(choice)
-            if 0 <= choice <= len(actions):
-                return choice
-        except ValueError:
-            pass
+            for i, action in enumerate(actions, 1):
+                if choice in action.desc:
+                    return i
 
         console_printer.print(format_lines(
             'Please enter a valid letter.', symbol='['))

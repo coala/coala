@@ -45,7 +45,9 @@ STR_PROJECT_WIDE = 'Project wide:'
 class TestAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict, param):
-        pass
+        """
+        Test (A)ction
+        """
 
 
 class TestBear(Bear):
@@ -173,19 +175,19 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.assertRaises(TypeError, acquire_settings,
                           self.log_printer, 0, curr_section)
 
-        with simulate_console_inputs(0, 1, 2) as generator:
+        with simulate_console_inputs('n', 'a', 'o') as generator:
             self.assertEqual(acquire_settings(self.log_printer,
                                               {'setting': ['help text',
                                                            'SomeBear']},
                                               curr_section),
-                             {'setting': 0})
+                             {'setting': 'n'})
 
             self.assertEqual(acquire_settings(self.log_printer,
                                               {'setting': ['help text',
                                                            'SomeBear',
                                                            'AnotherBear']},
                                               curr_section),
-                             {'setting': 1})
+                             {'setting': 'a'})
 
             self.assertEqual(acquire_settings(self.log_printer,
                                               {'setting': ['help text',
@@ -193,7 +195,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                                            'AnotherBear',
                                                            'YetAnotherBear']},
                                               curr_section),
-                             {'setting': 2})
+                             {'setting': 'o'})
 
             self.assertEqual(generator.last_input, 2)
 
@@ -260,7 +262,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                      'illegal value',
                      {})
 
-        with simulate_console_inputs(0):
+        with simulate_console_inputs('n'):
             print_result(self.console_printer,
                          self.section,
                          self.file_diff_dict,
@@ -283,9 +285,9 @@ class ConsoleInteractionTest(unittest.TestCase):
             # param
             with simulate_console_inputs('INVALID',
                                          -1,
-                                         1,
-                                         0,
-                                         3) as input_generator:
+                                         'a',
+                                         'n',
+                                         'm') as input_generator:
                 curr_section = Section('')
                 print_section_beginning(self.console_printer, curr_section)
                 print_result(self.console_printer,
@@ -307,12 +309,16 @@ class ConsoleInteractionTest(unittest.TestCase):
                                                 TestAction().get_metadata(),
                                                 failed_actions=set())
                 self.assertEqual(input_generator.last_input, 4)
-                self.assertEqual(str(section), " {param : '3'}")
+                self.assertEqual(str(section), " {param : 'm'}")
                 self.assertEqual(name, 'TestAction')
 
         # Check if the user is asked for the parameter only the first time.
         # Use OpenEditorAction that needs this parameter (editor command).
-        with simulate_console_inputs(1, 'test_editor', 0, 1, 0) as generator:
+        with simulate_console_inputs('o',
+                                     'test_editor',
+                                     'n',
+                                     'o',
+                                     'n') as generator:
             OpenEditorAction.is_applicable = staticmethod(lambda *args: True)
 
             patch_result = Result('origin', 'msg', diffs={testfile_path: diff})
@@ -353,7 +359,7 @@ class ConsoleInteractionTest(unittest.TestCase):
             diff = Diff(file_dict[testfile_path])
             diff.delete_line(2)
             diff.change_line(3, '3\n', '3_changed\n')
-            with simulate_console_inputs(1, 0) as generator, \
+            with simulate_console_inputs('a', 'n') as generator, \
                     retrieve_stdout() as sio:
                 ApplyPatchAction.is_applicable = staticmethod(
                     lambda *args: True)
@@ -378,7 +384,7 @@ class ConsoleInteractionTest(unittest.TestCase):
             ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
             cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
 
-            with simulate_console_inputs(2, 1, 0) as generator, \
+            with simulate_console_inputs('a', 'o', 'n') as generator, \
                     retrieve_stdout() as sio:
                 acquire_actions_and_apply(self.console_printer,
                                           Section(''),
@@ -393,7 +399,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 self.assertNotIn(action_fail, sio.getvalue())
 
                 apply_path_desc = ApplyPatchAction().get_metadata().desc
-                self.assertEqual(sio.getvalue().count(apply_path_desc), 1)
+                self.assertEqual(sio.getvalue().count(apply_path_desc), 3)
 
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
 
@@ -404,7 +410,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 [action.get_metadata()], {'TestAction': action},
                 failed_actions, Result('origin', 'message'), {}, {}]
 
-        with simulate_console_inputs(1, 'param1', 1, 'param2') as generator:
+        with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
             action.apply = unittest.mock.Mock(side_effect=AssertionError)
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 1)
