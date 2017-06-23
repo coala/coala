@@ -13,6 +13,7 @@ from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 from coalib.settings.SectionFilling import fill_settings
 from coalib.settings.Setting import Setting, path
+from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
 def merge_section_dicts(lower, higher):
@@ -203,6 +204,18 @@ def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
                             'coafile to avoid any unexpected behavior.')
 
         sections = merge_section_dicts(sections, cli_sections)
+
+    arg_parser = default_arg_parser() if arg_parser is None else arg_parser
+
+    exclude_sections = vars(arg_parser.parse_args(arg_list))['exclude_sections']
+
+    if exclude_sections is not None:
+        for section_name in exclude_sections:
+            if section_name in sections:
+                del sections[section_name]
+            else:
+                logging.warning('The {} section doesn\'t exist'
+                                .format(section_name))
 
     for name, section in list(sections.items()):
         section.set_default_section(sections)

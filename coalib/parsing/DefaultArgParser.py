@@ -105,6 +105,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
     config_group = arg_parser.add_argument_group('Configuration')
 
     config_group.add_argument(
+        '-e', '--exclude-sections', nargs='*', metavar='STR',
+        help='exclude sections for the current run')
+
+    config_group.add_argument(
         '-c', '--config', nargs=1, metavar='FILE',
         help='configuration file to be used, defaults to {}'.format(
             Constants.default_coafile))
