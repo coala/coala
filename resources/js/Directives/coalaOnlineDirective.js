@@ -2,74 +2,125 @@ app.directive('coalaonline',[ '$http', function ($http) {
     return {
         restrict: 'E',
         templateUrl: 'partials/tabs/coalaonline.html',
-        controller: function () {
-            self = this;
-            self.diff_data = {};
-            self.diff_data_status = false;
-            self.diff_loader = true;
-            self.done_loading_bears = false;
-            self.error_on_run = false;
-            self.error_message = "";
+        controller: function ($scope, $sessionStorage, $q) {
+            $scope.storage = $sessionStorage;
+            self = this
+            self.LANGUAGES = exts;
+            self.file_data ='';
+            $scope.running_coala = false;
+            $scope.loading_coajson = false;
+            $("#file_data").on('input',function(e){
+                if(e.target.value != ''){
+                     self.file_data = e.target.value
+                }
+            });
+            $('#lang').change(function(){
+                $scope.lng = $('#lang').val().replace("string:", "").toLowerCase();
+                json = {
+                    "file_data" : $('#file-data').val(),
+                    "language" :  $scope.lng,
+                    "mode" : "bears"
+                }
+                $scope.run_quickstart(json);
+            })
+            $scope.run_quickstart = function(json){
+                bear_lists = [];
+                $scope.loading_coajson = true;
+                $http.post(coala_online_api, JSON.stringify(json))
+                .then(function(data){
+                    $scope.sections = {}
+                    angular.forEach(Object.keys(data.data.response), function(section) {
+                        $scope.sections[section] = {}
+                        $scope.sections[section]["files"] = data.data.response[section]["files"]
+                        $scope.sections[section]["bears"] = {}
+                        bear_json = $scope.fetch_bear_data(
+                                    data.data.response[section]["bears"]
+                                    .replace(/\s/g,'')
+                                    .split(','), section);
+                        $scope.sections[section]["bears"] = bear_json;
+                    });
+                    $scope.$evalAsync();
+                    $scope.loading_coajson = false;
+                })
+            }
+            $scope.fetch_bear_data = function(bear_list, section){
+                bear_json = {};
+                bear_list.forEach(function(bear) {
+                    $scope.sections[section]["bears"][bear] = {};
+                    $scope.fetch_bear_settings(bear, section);
+                });
+                return bear_json;
+            }
+            $scope.fetch_bear_settings = function(bear, section){
+                var deferred = $q.defer();
+                $http.get(api_link + '/search/bears?bear=' + bear)
+                .then(function(data){
+                    nop_json = {};
+                    nop = data.data.metadata.non_optional_params;
+                    nop.forEach(function(element){
+                        elem = Object.keys(element)[0];
+                        nop_json[elem] = "";
+                    })
+                    $scope.sections[section]["bears"][bear] = nop_json;
+                }, function (failure) {
+                    // bear not found at webServices
+                    console.log(failure);
+                })
+                .catch(function(err){
+                    console.log('Error!');
+                });
+            }
+            $scope.run_coala = function(){
+                var json = {
+                    "sections" : $scope.sections,
+                    "mode" : "coala",
+                    "file_data" : $('#file-data').val(),
+                    "language" : $scope.lng
+                }
+                $scope.running_coala = true;
+                $http.post(coala_online_api, JSON.stringify(json))
+                .then(function(data){
+                    $scope.results = data.data.response.results;
+                    $scope.coafile = data.data.coafile;
+                    $scope.$evalAsync();
+                    $scope.running_coala = false;
+                })
+            }
 
-            $http.get(api_link + '/list/bears')
+            $scope.add_bears = function(section){
+                $scope.sections[section]["bears"][""] = "";
+                $http.get(api_link + '/list/bears')
                 .then(function(data){
                     bears = {}
                     angular.forEach(Object.keys(data["data"]), function(value, key){
                         bears[value] = null;
                     })
-                    $('.chips-bears').material_chip({
-                        data: [{
-                            tag: 'PEP8Bear'
-                        }],
-                        placeholder: '+bear',
-                        secondaryPlaceholder: '+Add bear',
-                        autocompleteData: bears
+                    $('input.autocomplete').autocomplete({
+                        data: bears,
+                        limit: 5,
+                        onAutocomplete: function(val) {
+                            delete $scope.sections[section]["bears"][""];
+                            $scope.fetch_bear_settings(val, section);
+                        },
+                        minLength: 1,
                     });
-                    self.diff_loader = false;
-                    self.done_loading_bears = true;
                 })
-
-            self.update_diff_data = function (data) {
-                self.diff_data = data
-            };
-
-            self.get_diff_data = function () {
-                return self.diff_data
             }
 
-            self.submit_coa_form = function () {
-                self.diff_loader = true;
-                self.diff_data_status = false;
-                var bearsList="";
-                var chipsData = $('.chips-bears').material_chip('data');
-                if(chipsData.length > 0) {
-                    bearsList += chipsData[0].tag;
-                    for(var i = 1; i < chipsData.length; i++)
-                        bearsList += ',' + chipsData[i].tag;
-                }
-                $http({
-                    url: api_link + '/editor/',
-                    method: "POST",
-                    data: {
-                        "file_data": $(".file-data").val(),
-                        "bears": bearsList,
-                        "language": $(".lang-data").val()
-                    }
-                })
-                    .then(function(response) {
-                        self.diff_loader = false;
-                        self.diff_data_status = true;
-                        self.error_on_run = false;
-                        if(response["data"]["status"] == 'error') {
-                            self.error_message = response["data"]["msg"];
-                            self.error_on_run = true;
-                        } else {
-                            self.update_diff_data(response["data"]["results"]["default"])
-                        }
-                    }).catch(function (c) {
-                    console.log(c);
-                })
+            $scope.remove_bears = function(section, bear){
+                delete $scope.sections[section]["bears"][bear];
+            }
 
+            $scope.add_sections = function(){
+                var section = $('#new-section').val();
+                $scope.sections[section] = {
+                    "bears": {},
+                    "files" : ""
+                }
+            }
+
+            $scope.remove_sections = function(section){
+                delete $scope.sections[section]
             }
         },
         controllerAs: 'toc'
