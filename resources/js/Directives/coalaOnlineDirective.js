@@ -1,7 +1,7 @@
-app.directive('tryonline',[ '$http', function ($http) {
+app.directive('coalaonline',[ '$http', function ($http) {
     return {
         restrict: 'E',
-        templateUrl: 'partials/tabs/tryonline.html',
+        templateUrl: 'partials/tabs/coalaonline.html',
         controller: function () {
             self = this;
             self.diff_data = {};

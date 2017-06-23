@@ -15,8 +15,8 @@ var app = angular.module('coala', ['ngStorage','ngRoute', 'ngSanitize', 'btford.
    when('/getinvolved', {
     template: '<getinvolved></getinvolved>'
    }).
-   when('/tryonline', {
-    template: '<tryonline></tryonline>'
+   when('/coalaonline', {
+    template: '<coalaonline></coalaonline>'
    }).
    otherwise({
     redirectTo: '/home'
