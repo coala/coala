@@ -33,12 +33,28 @@ def get_results(local_bear,
                 create_tempfile=True,
                 tempfile_kwargs={},
                 settings={}):
+    if local_bear.BEAR_DEPS:
+        # Get results of bear's dependencies first
+        deps_results = dict()
+        for bear in local_bear.BEAR_DEPS:
+            uut = bear(local_bear.section, queue.Queue())
+            deps_results[bear.name] = get_results(uut,
+                                                  lines,
+                                                  filename,
+                                                  force_linebreaks,
+                                                  create_tempfile,
+                                                  tempfile_kwargs,
+                                                  settings)
+    else:
+        deps_results = None
+
     with prepare_file(lines, filename,
                       force_linebreaks=force_linebreaks,
                       create_tempfile=create_tempfile,
                       tempfile_kwargs=tempfile_kwargs) as (file, fname), \
-        execute_bear(local_bear, fname, file,
-                     **settings) as bear_output:
+        execute_bear(local_bear, fname, file, dependency_results=deps_results,
+                     **local_bear.get_metadata().filter_parameters(settings)
+                     ) as bear_output:
         return bear_output
 
 

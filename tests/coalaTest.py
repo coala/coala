@@ -83,7 +83,7 @@ class coalaTest(unittest.TestCase):
                 coala.main, 'coala', '-B', '-I', debug=debug)
             self.assertEqual(retval, 0)
             # 8 bears plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 9)
+            self.assertEqual(len(stdout.strip().splitlines()), 14)
             self.assertFalse(stderr)
 
     def test_show_all_bears_debug(self):

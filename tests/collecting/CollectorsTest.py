@@ -317,7 +317,12 @@ class CollectorsTests(unittest.TestCase):
                  'SpaceConsistencyTestBear',
                  'TestBear',
                  'ErrorTestBear',
-                 'RaiseTestBear'})
+                 'RaiseTestBear',
+                 'TestDepBearA',
+                 'TestDepBearBDependsA',
+                 'TestDepBearCDependsB',
+                 'TestDepBearAA',
+                 'TestDepBearDependsAAndAA'})
 
     def test_get_all_bears_names(self):
         with bear_test_module():
@@ -332,4 +337,9 @@ class CollectorsTests(unittest.TestCase):
                  'SpaceConsistencyTestBear',
                  'TestBear',
                  'ErrorTestBear',
-                 'RaiseTestBear'})
+                 'RaiseTestBear',
+                 'TestDepBearA',
+                 'TestDepBearBDependsA',
+                 'TestDepBearCDependsB',
+                 'TestDepBearAA',
+                 'TestDepBearDependsAAndAA'})

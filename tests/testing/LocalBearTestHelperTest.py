@@ -2,6 +2,9 @@ from queue import Queue
 import unittest
 
 from tests.test_bears.TestBear import TestBear
+from tests.test_bears.TestBearDep import (TestDepBearBDependsA,
+                                          TestDepBearCDependsB,
+                                          TestDepBearDependsAAndAA)
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.testing.LocalBearTestHelper import verify_local_bear, execute_bear
@@ -46,6 +49,49 @@ class LocalBearTestCheckLineResultCountTest(Helper):
         self.check_line_result_count(self.uut,
                                      ['a', '', 'b', '   ', '# abc', '1'],
                                      [1, 1, 1])
+
+
+class LocalBearTestDependency(Helper):
+
+    def setUp(self):
+        self.section = Section('')
+
+    def test_check_results_bear_with_dependency(self):
+        bear = TestDepBearBDependsA(self.section, Queue())
+        self.check_results(bear, [], [['settings1',
+                                       'settings2',
+                                       'settings3',
+                                       'settings4']],
+                           settings={'settings1': 'settings1',
+                                     'settings2': 'settings2',
+                                     'settings3': 'settings3',
+                                     'settings4': 'settings4'})
+
+    def test_check_results_bear_with_2_deep_dependency(self):
+        bear = TestDepBearCDependsB(self.section, Queue())
+        self.check_results(bear, [], [['settings1',
+                                       'settings2',
+                                       'settings3',
+                                       'settings4',
+                                       'settings5',
+                                       'settings6']],
+                           settings={'settings1': 'settings1',
+                                     'settings2': 'settings2',
+                                     'settings3': 'settings3',
+                                     'settings4': 'settings4',
+                                     'settings5': 'settings5',
+                                     'settings6': 'settings6'})
+
+    def test_check_results_bear_with_two_dependencies(self):
+        bear = TestDepBearDependsAAndAA(self.section, Queue())
+        self.check_results(bear, [], [['settings1',
+                                       'settings2',
+                                       'settings3',
+                                       'settings4']],
+                           settings={'settings1': 'settings1',
+                                     'settings2': 'settings2',
+                                     'settings3': 'settings3',
+                                     'settings4': 'settings4'})
 
 
 class LocalBearTestHelper(unittest.TestCase):
