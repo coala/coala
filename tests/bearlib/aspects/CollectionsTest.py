@@ -10,6 +10,18 @@ from coalib.bearlib.aspects.Metadata import Metadata
 
 class AspectListTest(unittest.TestCase):
 
+    def setUp(self):
+        self.aspectlist_excludes = AspectList(
+            seq=[Metadata.CommitMessage.Shortlog,
+                 Metadata.CommitMessage.Body],
+            exclude=[Metadata.CommitMessage.Shortlog.TrailingPeriod,
+                     Metadata.CommitMessage.Body.Existence])
+        self.instancelist_excludes = AspectList(
+            seq=[Metadata.CommitMessage.Shortlog('py'),
+                 Metadata.CommitMessage.Body('py')],
+            exclude=[Metadata.CommitMessage.Shortlog.TrailingPeriod,
+                     Metadata.CommitMessage.Body.Existence])
+
     def test__init__(self):
         list_of_aspect = AspectList(['CommitMessage.Shortlog',
                                      'CommitMessage.Body'])
@@ -44,6 +56,14 @@ class AspectListTest(unittest.TestCase):
         exc.match("<class 'str'> is not an "
                   'aspectclass or an instance of an aspectclass')
 
+    def test__contains__excludes(self):
+        self.assertIn(Metadata.CommitMessage.Shortlog.ColonExistence,
+                      self.aspectlist_excludes)
+        self.assertNotIn(Metadata.CommitMessage.Shortlog.TrailingPeriod,
+                         self.aspectlist_excludes)
+        self.assertNotIn(Metadata.CommitMessage.Body.Existence,
+                         self.aspectlist_excludes)
+
     def test_get(self):
         list_of_aspect = AspectList(
             [Metadata.CommitMessage.Shortlog, Metadata.CommitMessage.Body])
@@ -54,3 +74,21 @@ class AspectListTest(unittest.TestCase):
         self.assertIs(list_of_aspect.get('Body.Length'),
                       Metadata.CommitMessage.Body.Length)
         self.assertIsNone(list_of_aspect.get(Metadata))
+
+    def test_get_excludes(self):
+        CommitMessage = Metadata.CommitMessage
+        ColonExistence = Metadata.CommitMessage.Shortlog.ColonExistence
+
+        self.assertIs(self.aspectlist_excludes.get(ColonExistence),
+                      ColonExistence)
+        self.assertIsNone(self.aspectlist_excludes.get(
+                          CommitMessage.Shortlog.TrailingPeriod))
+        self.assertIsNone(self.aspectlist_excludes.get(
+                          CommitMessage.Body.Existence))
+
+        self.assertEqual(self.instancelist_excludes.get(ColonExistence),
+                         ColonExistence('py'))
+        self.assertIsNone(self.instancelist_excludes.get(
+                          CommitMessage.Shortlog.TrailingPeriod))
+        self.assertIsNone(self.instancelist_excludes.get(
+                          CommitMessage.Body.Existence))
