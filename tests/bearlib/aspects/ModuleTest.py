@@ -18,11 +18,12 @@ class aspectsModuleTest(unittest.TestCase):
                 coalib.bearlib.aspects.aspectsModule)
 
     def test__getitem__(self):
+        dict_spelling = coalib.bearlib.aspects.Root.Spelling.DictionarySpelling
         # check a leaf aspect
-        for aspectname in ['aspectsYEAH', 'spelling.aspectsYEAH',
-                           'root.SPELLING.aspectsYEAH']:
-            assert (coalib.bearlib.aspects[aspectname] is
-                    coalib.bearlib.aspects.Root.Spelling.aspectsYEAH)
+        for aspectname in ['DictionarySpelling',
+                           'spelling.DictionarySpelling',
+                           'root.SPELLING.DictionarySpelling']:
+            assert coalib.bearlib.aspects[aspectname] is dict_spelling
         # check a container aspect
         for aspectname in ['Spelling', 'SPELLING', 'ROOT.spelling']:
             assert (coalib.bearlib.aspects[aspectname] is
@@ -33,7 +34,8 @@ class aspectsModuleTest(unittest.TestCase):
                     coalib.bearlib.aspects.Root)
 
     def test__getitem__no_match(self):
-        for aspectname in ['noaspect', 'NOASPECT', 'Root.aspectsYEAH']:
+        for aspectname in ['noaspect', 'NOASPECT',
+                           'Root.DictionarySpelling']:
             with pytest.raises(AspectNotFoundError) as exc:
                 coalib.bearlib.aspects[aspectname]
             exc.match(r"^No aspect named '%s'$" % aspectname)
