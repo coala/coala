@@ -174,12 +174,16 @@ def _extract_doc_comment(content, line, column, markers):
 
 def _compile_multi_match_regex(strings):
     """
-    Compiles a regex object that matches each of the given strings.
+    Compiles a regex object that checks for indentation before the starting
+    marker (so as to ignore triple quote string literals) and group matches
+    each of the given strings.
 
     :param strings: The strings to match.
     :return:        A regex object.
     """
-    return re.compile('|'.join(re.escape(s) for s in strings))
+    return re.compile('(?P<indent>^\s*)(?P<marker>' +
+                      ('|'.join(re.escape(s) for s in strings)) +
+                      ')')
 
 
 def _extract_doc_comment_from_line(content, line, column, regex,
@@ -187,15 +191,15 @@ def _extract_doc_comment_from_line(content, line, column, regex,
     cur_line = content[line]
     begin_match = regex.search(cur_line, column)
     if begin_match:
-        indent = cur_line[:begin_match.start()]
         column = begin_match.end()
-        for marker in marker_dict[begin_match.group()]:
+        indent = begin_match.group('indent')
+        for marker in marker_dict[begin_match.group('marker')]:
             doc_comment = _extract_doc_comment(content, line, column, marker)
             if doc_comment is not None:
                 end_line, end_column, documentation = doc_comment
 
                 rng = TextRange.from_values(line + 1,
-                                            begin_match.start() + 1,
+                                            len(indent) + 1,
                                             end_line + 1,
                                             end_column + 1)
                 doc = DocumentationComment(documentation, docstyle_definition,

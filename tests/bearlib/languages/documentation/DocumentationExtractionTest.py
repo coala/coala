@@ -243,3 +243,16 @@ class DocumentationExtractionTest(unittest.TestCase):
                                   docstyle_PYTHON3_doxygen, '',
                                   docstyle_PYTHON3_doxygen.markers[1],
                                   TextRange.from_values(1, 1, 1, 55))])
+
+    def test_extract_documentation_PYTHON3_4(self):
+        data = ['\n', 'triple_quote_string_test = """\n',
+                'This is not a docstring\n', '"""\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        # Nothing is yielded as triple quote string literals are being
+        # ignored.
+        self.assertEqual(
+            list(extract_documentation(data, 'PYTHON3', 'default')),
+            [])
