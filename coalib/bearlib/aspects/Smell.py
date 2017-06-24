@@ -136,15 +136,16 @@ class DataClump:
                               Integer age, String gender,
                               String occupation, String city){
 
-            System.out.printf("Welcome %s %s, a %d-year-old %s "\
-"from %s who works as a%s\n",firstName, lastName, age, gender, city, \
-occupation);
+            System.out.printf(
+              "Welcome %s %s, a %d-year-old %s from %s who works as a%s",
+              firstName, lastName, age, gender, city, occupation
+            );
         }
         """
         example_language = 'java'
         importance_reason = """
-        Data clumps make codes difficult to read, debug, scale, and also
-        hardly reusable.
+        Data clumps make code difficult to read, understand, and reuse.
+        It also spoils their architecture.
         """
         fix_suggestions = """
         Formally group the different variables together into a single object.
