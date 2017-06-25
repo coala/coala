@@ -214,6 +214,17 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
 
         self.assertEqual(parsed_docs, expected)
 
+    def test_python_missing_ending_colon(self):
+        doc = (' This is a malformed docstring\n'
+               ' :param abc  test description1\n'
+               ' :raises xyz  test description2\n')
+        expected = [self.Description(desc=' This is a malformed docstring\n'),
+                    self.Parameter(name='abc',
+                                   desc=' test description1\n'),
+                    self.ExceptionValue(name='xyz',
+                                        desc=' test description2\n')]
+        self.check_docstring(doc, expected)
+
 
 class JavaDocumentationCommentTest(DocumentationCommentTest):
 
