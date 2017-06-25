@@ -8,6 +8,7 @@ from coalib.bearlib.languages.documentation.DocumentationExtraction import (
     extract_documentation)
 from tests.bearlib.languages.documentation.TestUtils import (
     load_testdata)
+from coalib.results.TextPosition import TextPosition
 
 
 class DocumentationCommentTest(unittest.TestCase):
@@ -28,7 +29,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
                                    c_doxygen,
                                    ' ',
                                    ('/**', '*', '*/'),
-                                   (25, 45))
+                                   TextPosition(3, 1))
 
         self.assertEqual(uut.documentation, 'my doc')
         self.assertEqual(uut.language, 'c')
@@ -36,7 +37,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(uut.indent, ' ')
         self.assertEqual(str(uut), 'my doc')
         self.assertEqual(uut.marker, ('/**', '*', '*/'))
-        self.assertEqual(uut.range, (25, 45))
+        self.assertEqual(uut.position, TextPosition(3, 1))
 
         python_doxygen = DocstyleDefinition.load('python', 'doxygen')
 
@@ -57,6 +58,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(str(uut), 'qwertzuiop')
         self.assertEqual(uut.marker, ('##', '#', '#'))
         self.assertEqual(uut.range, None)
+        self.assertEqual(uut.position, None)
         self.assertEqual(uut.metadata, python_doxygen_metadata)
 
     def test_not_implemented(self):
@@ -72,7 +74,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
 
         original = list(extract_documentation(data, 'python', 'default'))
 
-        parsed_docs = [(doc.parse(), doc.marker, doc.indent, doc.range)
+        parsed_docs = [(doc.parse(), doc.marker, doc.indent, doc.position)
                        for doc in original]
 
         docstyle_definition = DocstyleDefinition.load('python', 'default')
