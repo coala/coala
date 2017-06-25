@@ -131,6 +131,11 @@ class DocumentationComment:
                 # splitted contains the whole line from the param's name,
                 # which in turn is further divided into its name and desc.
                 splitted = line[param_offset:].split(param_identifiers[1], 1)
+                # parser breaks if param_identifiers[1] is not present.
+                # This checks for space and then splits the line accordingly
+                # to extract param's name and desc.
+                if len(splitted) == 1:
+                    splitted = line[param_offset:].split(' ', 1)
                 cur_param = splitted[0].strip()
 
                 param_desc = splitted[1]
@@ -143,6 +148,11 @@ class DocumentationComment:
                     exception_identifiers[0]) + len(exception_identifiers[0])
                 splitted = line[exception_offset:].split(
                     exception_identifiers[1], 1)
+                # parser breaks if exception_identifiers[1] is not present.
+                # This checks for space and then splits the line accordingly
+                # to extract exception's name and desc.
+                if len(splitted) == 1:
+                    splitted = line[exception_offset:].split(' ', 1)
                 cur_exception = splitted[0].strip()
 
                 exception_desc = splitted[1]
