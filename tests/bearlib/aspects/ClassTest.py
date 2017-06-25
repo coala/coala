@@ -1,4 +1,4 @@
-from coalib.bearlib.aspects import Root, aspectTypeError
+from coalib.bearlib.aspects import Root, AspectTypeError as aspectTypeError
 from coalib.bearlib.aspects.meta import isaspect, assert_aspect, issubaspect
 
 import pytest
