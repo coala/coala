@@ -201,7 +201,7 @@ class DocumentationComment:
         ...               Parameter(name='age', desc=' Age\n')]
         >>> str(DocumentationComment.from_metadata(
         ...         parsed_doc, python_default,
-        ...         python_default.markers[0], 4,
+        ...         python_default.markers[0], '    ',
         ...         TextRange.from_values(0, 0, 0, 0)))
         '\nDescription\n:param age: Age\n'
 
