@@ -33,3 +33,11 @@ class aspectlistTest:
         assert not isaspect(str)
         exc.match("<class 'str'> is not an "
                   'aspectclass or an instance of an aspectclass')
+
+    def test_bear__contains__(self, aspectsTestBear):
+        aspectClass = Metadata.CommitMessage.Shortlog
+        aspectInstance1 = Metadata.CommitMessage.Shortlog('Python')
+        aspectInstance2 = Metadata.CommitMessage.Shortlog('C#')
+        assert aspectClass in aspectsTestBear.aspects['detect']
+        assert aspectInstance1 in aspectsTestBear.aspects['detect']
+        assert aspectInstance2 not in aspectsTestBear.aspects['detect']
