@@ -1,7 +1,7 @@
 from coalib.bearlib.aspects.meta import issubaspect, assert_aspect
 
 
-class aspectlist(list):
+class AspectList(list):
     """
     List-derived container to hold aspects.
     """

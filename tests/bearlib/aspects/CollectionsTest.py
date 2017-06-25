@@ -1,21 +1,21 @@
 import pytest
 
 from coalib.bearlib.aspects import aspectTypeError
-from coalib.bearlib.aspects.collections import aspectlist
+from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.meta import isaspect
 from coalib.bearlib.aspects.Metadata import Metadata
 
 
-class aspectlistTest:
+class AspectListTest:
 
     def test__init__(self):
         with pytest.raises(aspectTypeError) as exc:
-            aspectlist(['String'])
+            AspectList(['String'])
         exc.match("'String' is not an aspectclass or "
                   'an instance of an aspectclass')
 
     def test__contains__(self):
-        list_of_aspect = aspectlist(
+        list_of_aspect = AspectList(
             [Metadata.CommitMessage.Shortlog, Metadata.CommitMessage.Body])
         assert Metadata.CommitMessage.Shortlog in list_of_aspect
         assert Metadata.CommitMessage.Shortlog.ColonExistence in list_of_aspect

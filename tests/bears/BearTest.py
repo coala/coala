@@ -12,7 +12,7 @@ import requests
 import requests_mock
 import urllib3
 
-from coalib.bearlib.aspects.collections import aspectlist
+from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.Metadata import CommitMessage
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
@@ -146,14 +146,14 @@ class BearTest(BearTestBase):
 
     def test_default_aspects(self):
         assert type(Bear.aspects) is defaultdict
-        assert type(Bear.aspects['detect']) is aspectlist
-        assert type(Bear.aspects['fix']) is aspectlist
+        assert type(Bear.aspects['detect']) is AspectList
+        assert type(Bear.aspects['fix']) is AspectList
         assert Bear.aspects['detect'] == Bear.aspects['fix'] == []
 
     def test_no_fix_aspects(self):
         assert type(aspectsDetectOnlyTestBear.aspects) is defaultdict
-        assert type(aspectsDetectOnlyTestBear.aspects['detect']) is aspectlist
-        assert type(aspectsDetectOnlyTestBear.aspects['fix']) is aspectlist
+        assert type(aspectsDetectOnlyTestBear.aspects['detect']) is AspectList
+        assert type(aspectsDetectOnlyTestBear.aspects['fix']) is AspectList
         assert aspectsDetectOnlyTestBear.aspects['fix'] == []
         assert (aspectsDetectOnlyTestBear.aspects['detect'] ==
                 [CommitMessage.Shortlog.ColonExistence])
@@ -162,8 +162,8 @@ class BearTest(BearTestBase):
 
     def test_no_detect_aspects(self):
         assert type(aspectsFixOnlyTestBear.aspects) is defaultdict
-        assert type(aspectsFixOnlyTestBear.aspects['detect']) is aspectlist
-        assert type(aspectsFixOnlyTestBear.aspects['fix']) is aspectlist
+        assert type(aspectsFixOnlyTestBear.aspects['detect']) is AspectList
+        assert type(aspectsFixOnlyTestBear.aspects['fix']) is AspectList
         assert aspectsFixOnlyTestBear.aspects['detect'] == []
         assert (aspectsFixOnlyTestBear.aspects['fix'] ==
                 [CommitMessage.Shortlog.TrailingPeriod])
@@ -172,8 +172,8 @@ class BearTest(BearTestBase):
 
     def test_detect_and_fix_aspects(self):
         assert type(aspectsTestBear.aspects) is defaultdict
-        assert type(aspectsTestBear.aspects['detect']) is aspectlist
-        assert type(aspectsTestBear.aspects['fix']) is aspectlist
+        assert type(aspectsTestBear.aspects['detect']) is AspectList
+        assert type(aspectsTestBear.aspects['fix']) is AspectList
         assert aspectsTestBear.aspects == {
             'detect': [CommitMessage.Shortlog.ColonExistence],
             'fix': [CommitMessage.Shortlog.TrailingPeriod],
