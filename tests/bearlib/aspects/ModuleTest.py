@@ -1,6 +1,8 @@
 from types import ModuleType
 
 import coalib.bearlib.aspects
+from coalib.bearlib.aspects.exceptions import (AspectNotFoundError,
+                                               MultipleAspectFoundError)
 
 import pytest
 
@@ -31,16 +33,16 @@ class aspectsModuleTest:
 
     def test__getitem__no_match(self):
         for aspectname in ['noaspect', 'NOASPECT', 'Root.aspectsYEAH']:
-            with pytest.raises(LookupError) as exc:
+            with pytest.raises(AspectNotFoundError) as exc:
                 coalib.bearlib.aspects[aspectname]
-            exc.match(r"^no aspect named '%s'$" % aspectname)
+            exc.match(r"^No aspect named '%s'$" % aspectname)
 
     def test__getitem__multi_match(self):
         for aspectname in ['Length', 'length', 'LENGTH']:
-            with pytest.raises(LookupError) as exc:
+            with pytest.raises(MultipleAspectFoundError) as exc:
                 coalib.bearlib.aspects[aspectname]
-            exc.match(r"^multiple aspects named '%s'. " % aspectname +
-                      r'choose from '
+            exc.match(r"^Multiple aspects named '%s'. " % aspectname +
+                      r'Choose from '
                       r'\[<aspectclass'
                       r" 'Root.Metadata.CommitMessage.Body.Length'>,"
                       r' <aspectclass'
