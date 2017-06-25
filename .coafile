@@ -19,3 +19,7 @@ use_spaces = True
 bears = HTMLLintBear
 files = **.html
 htmllint_ignore = optional_tag, protocol, indentation, concerns_separation, capitalization
+
+[yml]
+bears = YAMLLintBear
+files = **.yml
