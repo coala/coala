@@ -37,8 +37,8 @@ class DocumentationComment:
         """
         self.documentation = documentation
         self.docstyle_definition = docstyle_definition
-        self.indent = indent
-        self.marker = marker
+        self.indent = '' if indent is None else indent
+        self.marker = ('', '', '') if marker is None else marker
         self.range = range
 
     def __str__(self):
