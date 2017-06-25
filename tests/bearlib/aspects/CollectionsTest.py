@@ -1,6 +1,6 @@
 import pytest
 
-from coalib.bearlib.aspects import aspectTypeError
+from coalib.bearlib.aspects import AspectTypeError as aspectTypeError
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.meta import isaspect
 from coalib.bearlib.aspects.Metadata import Metadata

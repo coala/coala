@@ -6,6 +6,7 @@ from coala_utils.decorators import generate_repr
 
 from .base import aspectbase
 from .docs import Documentation
+from .exceptions import AspectTypeError
 from .taste import Taste
 
 
@@ -76,19 +77,6 @@ class aspectclass(type):
         return '<%s %s>' % (type(cls).__name__, repr(cls.__qualname__))
 
 
-class aspectTypeError(TypeError):
-    """
-    This error is raised when an object is not an ``aspectclass`` or an
-    instance of ``aspectclass``
-    """
-
-    def __init__(self, item):
-        self.item = item
-        message = ('{} is not an aspectclass or an instance of an '
-                   'aspectclass'.format(repr(self.item)))
-        super().__init__(message)
-
-
 def isaspect(item):
     """
     This function checks whether or not an object is an ``aspectclass`` or an
@@ -99,11 +87,11 @@ def isaspect(item):
 
 def assert_aspect(item):
     """
-    This function raises ``aspectTypeError`` when an object is not an
+    This function raises ``AspectTypeError`` when an object is not an
     ``aspectclass`` or an instance of ``aspectclass``
     """
     if not isaspect(item):
-        raise aspectTypeError(item)
+        raise AspectTypeError(item)
     return item
 
 

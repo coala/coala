@@ -6,7 +6,8 @@ from pkgutil import iter_modules
 from types import ModuleType
 
 from .base import aspectbase
-from .meta import aspectclass, aspectTypeError
+from .exceptions import AspectTypeError
+from .meta import aspectclass
 from .taste import Taste, TasteError
 
 # already import Root here to make it available in submodules that define
@@ -16,7 +17,7 @@ from .root import Root
 
 
 __all__ = ['Root', 'Taste', 'TasteError',
-           'aspectclass', 'aspectbase', 'aspectTypeError']
+           'aspectclass', 'aspectbase', 'AspectTypeError']
 
 
 class aspectsModule(ModuleType):
@@ -68,12 +69,10 @@ class aspectsModule(ModuleType):
 
         search([Root])
         if not matches:
-            raise LookupError('no aspect named %s' % repr(aspectname))
+            raise AspectNotFoundError(aspectname)
 
         if len(matches) > 1:
-            raise LookupError('multiple aspects named %s. choose from %s' % (
-                repr(aspectname),
-                repr(sorted(matches, key=lambda a: a.__qualname__))))
+            raise MultipleAspectFoundError(aspectname, matches)
 
         return matches[0]
 
