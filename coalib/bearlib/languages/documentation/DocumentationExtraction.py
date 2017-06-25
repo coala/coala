@@ -4,7 +4,7 @@ from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
-from coalib.results.TextRange import TextRange
+from coalib.results.TextPosition import TextPosition
 
 
 def _extract_doc_comment_simple(content, line, column, markers):
@@ -198,12 +198,9 @@ def _extract_doc_comment_from_line(content, line, column, regex,
             if doc_comment is not None:
                 end_line, end_column, documentation = doc_comment
 
-                rng = TextRange.from_values(line + 1,
-                                            len(indent) + 1,
-                                            end_line + 1,
-                                            end_column + 1)
+                position = TextPosition(line + 1, len(indent) + 1)
                 doc = DocumentationComment(documentation, docstyle_definition,
-                                           indent, marker, rng)
+                                           indent, marker, position)
 
                 return end_line, end_column, doc
 

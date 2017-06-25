@@ -1,11 +1,13 @@
 from collections import namedtuple
 
 from coala_utils.decorators import generate_eq, generate_repr
+from coalib.results.TextRange import TextRange
+from functools import lru_cache
 
 
 @generate_repr()
 @generate_eq('documentation', 'language', 'docstyle',
-             'indent', 'marker', 'range')
+             'indent', 'marker', 'position')
 class DocumentationComment:
     """
     The DocumentationComment holds information about a documentation comment
@@ -17,7 +19,7 @@ class DocumentationComment:
     Description = namedtuple('Description', 'desc')
 
     def __init__(self, documentation, docstyle_definition,
-                 indent, marker, range):
+                 indent, marker, position):
         """
         Instantiates a new DocumentationComment.
 
@@ -32,14 +34,19 @@ class DocumentationComment:
         :param marker:
             The three-element tuple with marker strings, that identified this
             documentation comment.
-        :param range:
-            The position range of type ``TextRange``.
+        :param position:
+            The starting ``TextPosition`` of the documentation.
         """
         self.documentation = documentation
         self.docstyle_definition = docstyle_definition
         self.indent = '' if indent is None else indent
         self.marker = ('', '', '') if marker is None else marker
-        self.range = range
+        self.position = position
+        self.range = None if position is None else TextRange.from_values(
+            position.line,
+            position.column,
+            position.line + self.assemble().count('\n'),
+            len(self.assemble()) - self.assemble().rfind('\n'))
 
     def __str__(self):
         return self.documentation
@@ -182,7 +189,7 @@ class DocumentationComment:
 
     @classmethod
     def from_metadata(cls, doccomment, docstyle_definition,
-                      marker, indent, range):
+                      marker, indent, position):
         r"""
         Assembles a list of parsed documentation comment metadata.
 
@@ -193,7 +200,7 @@ class DocumentationComment:
         ...     import DocumentationComment
         >>> from coalib.bearlib.languages.documentation.DocstyleDefinition \
         ...     import DocstyleDefinition
-        >>> from coalib.results.TextRange import TextRange
+        >>> from coalib.results.TextPosition import TextPosition
         >>> Description = DocumentationComment.Description
         >>> Parameter = DocumentationComment.Parameter
         >>> python_default = DocstyleDefinition.load("python3", "default")
@@ -202,7 +209,7 @@ class DocumentationComment:
         >>> str(DocumentationComment.from_metadata(
         ...         parsed_doc, python_default,
         ...         python_default.markers[0], '    ',
-        ...         TextRange.from_values(0, 0, 0, 0)))
+        ...         TextPosition(0, 0)))
         '\nDescription\n:param age: Age\n'
 
         :param doccomment:
@@ -214,8 +221,8 @@ class DocumentationComment:
             The markers to be used in the documentation comment.
         :param indent:
             The indentation to be used in the documentation comment.
-        :param range:
-            The range of the documentation comment.
+        :param position:
+            The starting position of the documentation comment.
         :return:
             A ``DocumentationComment`` instance of the assembled documentation.
         """
@@ -239,8 +246,10 @@ class DocumentationComment:
             assembled_doc += ''.join(section_desc)
 
         return DocumentationComment(assembled_doc, docstyle_definition, indent,
-                                    marker, range)
+                                    marker, position)
 
+    # we need to cache this function so as to construct full `self.range`
+    @lru_cache(maxsize=1)
     def assemble(self):
         """
         Assembles parsed documentation to the original documentation.
