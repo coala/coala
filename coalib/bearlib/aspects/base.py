@@ -37,7 +37,9 @@ class aspectbase:
                 setattr(self, name, taste_values.get(name, taste.default))
 
     def __eq__(self, other):
-        return type(self) is type(other) and self.tastes == other.tastes
+        return (type(self) is type(other) and
+                self.tastes == other.tastes and
+                self.language == self.language)
 
     @property
     def tastes(self):
