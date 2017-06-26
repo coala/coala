@@ -1,5 +1,7 @@
 import pytest
 
+import coalib.bearlib.aspects
+
 
 class AspectInstanceTest:
 
@@ -24,3 +26,29 @@ class AspectInstanceTest:
                 setattr(aspect, name, 'value')
             assert str(exc.value) \
                 == "can't set attributes of aspectclass instances"
+
+    def test_get(self, RootAspect, SubAspect, SubSubAspect):
+        assert RootAspect.get(RootAspect) is RootAspect
+        assert RootAspect.get(SubAspect) is SubAspect
+        assert RootAspect.get(SubSubAspect) is SubSubAspect
+        assert SubAspect.get(SubSubAspect) is SubSubAspect
+
+        metadata = coalib.bearlib.aspects.Metadata
+        assert metadata.get('commitmessage') is metadata.CommitMessage
+        assert metadata.get('body') is metadata.CommitMessage.Body
+
+        assert SubAspect.get(RootAspect) is None
+
+        with pytest.raises(NotImplementedError) as exc:
+            RootAspect('py').get(SubAspect)
+        exc.match('Cannot access children of aspect instance.')
+
+        with pytest.raises(AttributeError) as exc:
+            RootAspect.get(SubAspect('py'))
+        exc.match('Cannot search an aspect instance using '
+                  'another aspect instance as argument.')
+
+        with pytest.raises(AttributeError) as exc:
+            RootAspect('py').get(SubAspect('py'))
+        exc.match('Cannot search an aspect instance using '
+                  'another aspect instance as argument.')

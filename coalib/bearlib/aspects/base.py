@@ -1,6 +1,97 @@
+import functools
+import re
+
 from coalib.bearlib.languages import Language
 
+import coalib.bearlib.aspects
 from .taste import TasteError
+
+
+def get_subaspect(parent, subaspect):
+    """
+    Get a subaspect from an aspectclass or aspectclass instance.
+
+    >>> import coalib.bearlib.aspects as coala_aspects
+    >>> metadata = coala_aspects['Metadata']
+    >>> commit_msg = coala_aspects['CommitMessage']
+    >>> shortlog = coala_aspects['Shortlog']
+
+    We can get direct children.
+
+    >>> get_subaspect(metadata, commit_msg)
+    <aspectclass 'Root.Metadata.CommitMessage'>
+
+    Or even a grandchildren.
+
+    >>> get_subaspect(metadata, shortlog)
+    <aspectclass 'Root.Metadata.CommitMessage.Shortlog'>
+
+    Or with string of aspect name
+
+    >>> get_subaspect(metadata, 'shortlog')
+    <aspectclass 'Root.Metadata.CommitMessage.Shortlog'>
+
+    Trying to access children of aspect instance will raise
+    NotImplementedError because of instanced aspect doesn't instance
+    its children and will cause wrong result.
+    See https://github.com/coala/coala/issues/4388
+
+    >>> get_subaspect(metadata('Python'), commit_msg)
+    Traceback (most recent call last):
+    ...
+    NotImplementedError: Cannot access children of aspect instance.
+
+    But, passing subaspect instance as argument is prohibited, because
+    it doesn't really make sense.
+
+    >>> get_subaspect(metadata('Python'), commit_msg('Java'))
+    Traceback (most recent call last):
+    ...
+    AttributeError: Cannot search an aspect instance using another ...
+
+    :param parent:    The parent aspect that should be searched.
+    :param subaspect: An subaspect that we want to find in an
+                      aspectclass.
+    :return:          An aspectclass. Return None if not found.
+    """
+    # Avoid circular import
+    from .meta import isaspect, issubaspect
+    if not isaspect(subaspect):
+        subaspect = coalib.bearlib.aspects[subaspect]
+    if not issubaspect(subaspect, parent):
+        return None
+    if isinstance(subaspect, aspectbase):
+        raise AttributeError('Cannot search an aspect instance using '
+                             'another aspect instance as argument.')
+    if isinstance(parent, aspectbase):
+        raise NotImplementedError('Cannot access children of aspect '
+                                  'instance.')
+
+    parent_qualname = (type(parent).__qualname__ if isinstance(
+                       parent, aspectbase) else parent.__qualname__)
+    if parent_qualname == subaspect.__qualname__:
+        return parent
+
+    # Trim common parent name
+    aspect_path = re.sub(r'^%s\.' % parent_qualname, '',
+                         subaspect.__qualname__)
+    aspect_path = aspect_path.split('.')
+    child = parent
+    # Traverse through children until we got our subaspect
+    for path in aspect_path:
+        child = child.subaspects[path]
+    return child
+
+
+class SubaspectGetter:
+    """
+    Special "getter" class to implement ``get()`` method in aspectbase that
+    could be accessed from the aspectclass or aspectclass instance.
+    """
+
+    def __get__(self, obj, owner):
+        parent = obj if obj is not None else owner
+        return functools.partial(get_subaspect, parent)
 
 
 class aspectbase:
@@ -12,6 +103,8 @@ class aspectbase:
     This is automatically handled by
     :meth:`coalib.bearlib.aspects.meta.aspectclass.subaspect` decorator.
     """
+
+    get = SubaspectGetter()
 
     def __init__(self, language, **taste_values):
         """
