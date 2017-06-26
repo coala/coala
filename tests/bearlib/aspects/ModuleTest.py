@@ -5,9 +5,10 @@ from coalib.bearlib.aspects.exceptions import (AspectNotFoundError,
                                                MultipleAspectFoundError)
 
 import pytest
+import unittest
 
 
-class aspectsModuleTest:
+class aspectsModuleTest(unittest.TestCase):
 
     def test_module(self):
         # check that module is correctly wrapped
@@ -48,3 +49,34 @@ class aspectsModuleTest:
                       r' <aspectclass'
                       r" 'Root.Metadata.CommitMessage.Shortlog.Length'>"
                       r'\]$')
+
+    def test_get(self):
+        # check a leaf aspect
+        for aspectname in ['clone', 'redundancy.clone',
+                           'root.redundancy.clone']:
+            self.assertIs(coalib.bearlib.aspects.get(aspectname),
+                          coalib.bearlib.aspects.Root.Redundancy.Clone)
+        # check a container aspect
+        for aspectname in ['Spelling', 'SPELLING', 'ROOT.spelling']:
+            self.assertIs(coalib.bearlib.aspects.get(aspectname),
+                          coalib.bearlib.aspects.Root.Spelling)
+        # check root aspect
+        for aspectname in ['Root', 'root', 'ROOT']:
+            self.assertIs(coalib.bearlib.aspects.get(aspectname),
+                          coalib.bearlib.aspects.Root)
+
+    def test_get_no_match(self):
+        for aspectname in ['noaspect', 'NOASPECT', 'Root.aspectsYEAH']:
+            self.assertIsNone(coalib.bearlib.aspects.get(aspectname))
+
+    def test_get_multi_match(self):
+        with self.assertRaisesRegex(
+                MultipleAspectFoundError,
+                r"^Multiple aspects named 'length'. "
+                r'Choose from '
+                r'\[<aspectclass'
+                r" 'Root.Metadata.CommitMessage.Body.Length'>,"
+                r' <aspectclass'
+                r" 'Root.Metadata.CommitMessage.Shortlog.Length'>"
+                r'\]$'):
+            coalib.bearlib.aspects.get('length')
