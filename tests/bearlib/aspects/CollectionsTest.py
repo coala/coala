@@ -43,3 +43,14 @@ class AspectListTest(unittest.TestCase):
         assert not isaspect(str)
         exc.match("<class 'str'> is not an "
                   'aspectclass or an instance of an aspectclass')
+
+    def test_get(self):
+        list_of_aspect = AspectList(
+            [Metadata.CommitMessage.Shortlog, Metadata.CommitMessage.Body])
+        self.assertIs(list_of_aspect.get(Metadata.CommitMessage.Shortlog),
+                      Metadata.CommitMessage.Shortlog)
+        self.assertIs(list_of_aspect.get(Metadata.CommitMessage.Body.Length),
+                      Metadata.CommitMessage.Body.Length)
+        self.assertIs(list_of_aspect.get('Body.Length'),
+                      Metadata.CommitMessage.Body.Length)
+        self.assertIsNone(list_of_aspect.get(Metadata))
