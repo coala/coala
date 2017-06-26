@@ -54,6 +54,24 @@ class aspectsModule(ModuleType):
                 subaspect = getattr(submod, submodname)
                 setattr(self, submodname, subaspect)
 
+    def get(self, aspectname):
+        """
+        Search and get an aspectclass from string of full or partial
+        qualified name of the aspect. Similiar to ``__getitem__``, but doesn't
+        raise exception for trying to search non existing aspect.
+
+        :param aspectname:
+            Name of the aspect that should be searched.
+        :raise MultipleAspectFoundError:
+            When multiple aspects with same name was found.
+        :return:
+            An aspectclass or None.
+        """
+        try:
+            return self[aspectname]
+        except AspectNotFoundError:
+            return None
+
     def __getitem__(self, aspectname):
         regex = re.compile('(^|\.)%s$' % aspectname.lower())
         matches = []
