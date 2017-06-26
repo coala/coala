@@ -30,3 +30,19 @@ class AspectList(list):
             if issubaspect(aspect, item):
                 return True
         return False
+
+    def get(self, aspect):
+        """
+        Return first item that match or contain an aspect. See
+        :meth:`coalib.bearlib.aspects.aspectbase.get` for further example.
+
+        :param aspect: An aspectclass OR name of an aspect.
+        :return:       An aspectclass OR aspectclass instance, depend on
+                       AspectList content. Return None if no match found.
+        """
+        if not isaspect(aspect):
+            aspect = coalib.bearlib.aspects[aspect]
+        try:
+            return next(filter(None, (item.get(aspect) for item in self)))
+        except StopIteration:
+            return None
