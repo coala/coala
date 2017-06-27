@@ -1,5 +1,6 @@
 import logging
 import platform
+import os
 
 from termcolor import colored
 
@@ -86,6 +87,25 @@ CLI_ACTIONS = (OpenEditorAction(),
                IgnoreResultAction(),
                ChainPatchAction())
 DIFF_EXCERPT_MAX_SIZE = 4
+
+
+def color_letter(console_printer, line):
+    x = -1
+    y = -1
+    letter = ''
+    for i, l in enumerate(line, 0):
+        if line[i] == '(':
+            x = i
+        if line[i] == ')':
+            y = i
+        if l.isupper() and x != -1:
+            letter = l
+    first_part = line[:x+1]
+    second_part = line[y:]
+
+    console_printer.print(first_part, end='')
+    console_printer.print(letter, color='blue', end='')
+    console_printer.print(second_part)
 
 
 def format_lines(lines, symbol='', line_nr=''):
@@ -181,6 +201,9 @@ def print_lines(console_printer,
     no_color = not console_printer.print_colored
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
         # Print affected file's line number in the sidebar.
+        console_printer.print(format_lines(lines='', line_nr=i, symbol='['),
+                              color=FILE_LINES_COLOR,
+                              end='')
 
         line = file_dict[sourcerange.file][i - 1].rstrip('\n')
         try:
@@ -205,7 +228,11 @@ def print_lines(console_printer,
                 lexer, BackgroundSourceRangeStyle), end='')
 
             console_printer.print(highlight_text(
-                no_color, line[sourcerange.end.column - 1:], lexer), end='')
+               no_color, line[sourcerange.end.column - 1:], lexer), end='')
+            console_printer.print('')
+        else:
+            console_printer.print(highlight_text(
+                no_color, line[printed_chars:], lexer), end='')
             console_printer.print('')
 
 
@@ -454,6 +481,8 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     :param sourcerange:        The SourceRange object referring to the related
                                lines to print.
     """
+    console_printer.print('\n' + os.path.relpath(sourcerange.file),
+                          color=FILE_NAME_COLOR)
 
     if sourcerange.start.line is not None:
         if len(file_dict[sourcerange.file]) < sourcerange.end.line:
@@ -561,11 +590,10 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
-        console_printer.print(format_lines('Do (N)othing',
-                                           symbol='['))
+        color_letter(console_printer, '[    ] *0. Do (N)othing')
         for i, action in enumerate(actions, 1):
-            console_printer.print(format_lines('{}'.format(
-                action.desc), symbol='['))
+            color_letter(console_printer, format_lines('{:>2}. {}'.format(
+                i, action.desc), symbol='['))
 
         line = format_lines(STR_ENTER_NUMBER, symbol='[')
 
@@ -581,6 +609,11 @@ def choose_action(console_printer, actions):
             for i, action in enumerate(actions, 1):
                 if choice in action.desc:
                     return i
+        elif choice.isnumeric():
+            choice = int(choice)
+            print(choice)
+            if 0 <= choice <= len(actions):
+                return choice
 
         console_printer.print(format_lines(
             'Please enter a valid letter.', symbol='['))
