@@ -76,9 +76,42 @@ to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
     argument ``--flush-cache`` when running coala) if you run a new bear on a
     file which has been previously analyzed (by coala).
 
-You should now see the debug message for our sample file.
+You should now see an output like this on your command line:
 
-The Bear class also supports ``warn`` and ``err``.
+::
+
+    [WARNING][15:07:39] Default coafile '.coafile' not found!
+    Here's what you can do:
+    * add `--save` to generate a config file with your current options
+    * add `-I` to suppress any use of config files
+    [DEBUG][15:07:39] Platform Linux -- Python 3.5.2, coalib
+    0.12.0.dev20170626132008
+    [DEBUG][15:07:39] The file cache was successfully flushed.
+    [DEBUG][15:07:39] Files that will be checked:
+    /home/LordVoldemort/programs/coa_dir/coala-tutorial/src/main.c
+    [DEBUG][15:07:40] coala is run only on changed files, bears' log
+    messages from previous runs may not appear. You may use the
+    `--flush-cache` flag to see them.
+    [DEBUG][15:07:40] Running bear HelloWorldBear...
+    [DEBUG][15:07:40] Hello World! Checking file /home/LordVoldemort/
+    programs/coa_dir/coala-tutorial/src/main.c .
+
+    Notice that the last ``[DEBUG]`` message is what was coded in
+    ``HelloWorldBear.py``. All the other messages are inherited from the
+    ``LocalBear`` class or run by the code responsible for executing the
+    bear.
+
+.. note::
+
+    The first ``WARNING`` message is because our directory, does not
+    contain a ``.coafile``. If you have followed the instructions in
+    our `main tutorial`_, you will have a ``.coafile`` in your working
+    directory. Its best if you delete that file before working on this
+    tutorial, else you will see a bunch of other outputs from other bears
+    as well.
+
+The Bear class also supports ``warn`` and ``err`` to create ``WARNING`` and
+``ERROR`` messages respectively.
 
 Communicating with the User
 ---------------------------
@@ -123,8 +156,42 @@ Try executing it:
 
     coala -f=src/\*.c -d=bears -b=CommunicationBear -L=DEBUG --flush-cache
 
-Hey, we'll get asked for the user\_input! Wasn't that easy? Go ahead,
+Hey, we'll get asked for the user\_input!
+
+::
+
+    [WARNING][15:20:18] Default coafile '.coafile' not found!
+    Here's what you can do:
+    * add `--save` to generate a config file with your current options
+    * add `-I` to suppress any use of config files
+    Please enter a value for the setting "user_input" (No description given.)
+    needed by CommunicationBear for section "cli":
+
+Wasn't that easy? Go ahead,
 enter something and observe the output.
+
+::
+
+    Avada Kedavra
+    [DEBUG][15:22:55] Platform Linux -- Python 3.5.2, coalib
+    0.12.0.dev20170626132008
+    [DEBUG][15:22:55] The file cache was successfully flushed.
+    [DEBUG][15:22:55] Files that will be checked:
+    /home/LordVoldemort/programs/coa_dir/coala-tutorial/src/main.c
+    [DEBUG][15:22:55] coala is run only on changed files, bears' log messages
+    from previous runs may not appear. You may use the `--flush-cache` flag to
+    see them.
+    [DEBUG][15:22:55] Running bear CommunicationBear...
+    [DEBUG][15:22:55] Got 'Avada Kedavra' as user input of type <class 'str'>.
+
+    **** CommunicationBear [Section: cli] ****
+
+    !    ! [Severity: NORMAL]
+    !    ! A hello world result.
+    [    ] Do (N)othing
+    [    ] (O)pen file
+    [    ] Add (I)gnore comment
+    [    ] Enter number (Ctrl-D to exit):
 
 So, what did coala do here?
 
