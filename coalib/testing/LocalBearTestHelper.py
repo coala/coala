@@ -22,7 +22,7 @@ def execute_bear(bear, *args, **kwargs):
         msg = []
         while not bear.message_queue.empty():
             msg.append(bear.message_queue.get().message)
-        raise AssertionError(str(err) + ' \n' + '\n'.join(msg))
+        raise AssertionError(str(err) + ''.join('\n' + m for m in msg))
     return list(bear_output_generator)
 
 
