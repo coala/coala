@@ -9,6 +9,10 @@ app.directive('coalaonline',[ '$http', function ($http) {
             self.file_data ='';
             $scope.running_coala = false;
             $scope.loading_coajson = false;
+            $scope.state = "instant";
+            $(document).ready(function(){
+                $('ul.tabs').tabs();
+            });
             $("#file_data").on('input',function(e){
                 if(e.target.value != ''){
                      self.file_data = e.target.value
@@ -23,6 +27,22 @@ app.directive('coalaonline',[ '$http', function ($http) {
                 }
                 $scope.run_quickstart(json);
             })
+            $('.git-link').change(function(){
+                var git_url = $('.git-link').val()
+                if(git_url.slice(-4)!=".git"){
+                    git_url += ".git"
+                }
+                json = {
+                    "url" : git_url,
+                    "mode" : "bears"
+                }
+                $scope.run_quickstart(json);
+            })
+            $scope.set_state = function(state) {
+                $scope.sections = null;
+                $scope.lang_sel = null;
+                $scope.state = state;
+            }
             $scope.run_quickstart = function(json){
                 bear_lists = [];
                 $scope.loading_coajson = true;
@@ -57,6 +77,17 @@ app.directive('coalaonline',[ '$http', function ($http) {
                 .then(function(data){
                     nop_json = {};
                     nop = data.data.metadata.non_optional_params;
+                    data.data["BEAR_DEPS"].forEach(function(dep){
+                        dep.metadata.non_optional_params.forEach(function(dep_nop){
+                            if (Array.isArray(dep_nop)){
+                                dep_nop.forEach(function(dn){
+                                    nop.push(dn);
+                                })
+                            } else {
+                                nop.push(dep_nop);
+                            }
+                        })
+                    })
                     nop.forEach(function(element){
                         elem = Object.keys(element)[0];
                         nop_json[elem] = "";
@@ -74,8 +105,12 @@ app.directive('coalaonline',[ '$http', function ($http) {
                 var json = {
                     "sections" : $scope.sections,
                     "mode" : "coala",
-                    "file_data" : $('#file-data').val(),
-                    "language" : $scope.lng
+                }
+                if ($scope.state == "instant") {
+                    json["file_data"] = $('#file-data').val(),
+                    json["language"] = $scope.lng
+                } else {
+                    json["url"] = $(".git-link").val();
                 }
                 $scope.running_coala = true;
                 $http.post(coala_online_api, JSON.stringify(json))

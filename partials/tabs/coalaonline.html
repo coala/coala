@@ -1,20 +1,36 @@
 <div class="coala-online">
+
   <div class="row">
     <div class="col m8 offset-m2 s12">
-      <form class="coa-form">
-        <textarea placeholder="Write some code here" id="file-data" class="file-data bb-data pre small" name="file_data">print( a + b )
-</textarea>  <!-- DONT EVER INDENT THIS, it ends up in the textarea -->
-      </form>
+      <ul class="tabs">
+        <li class="tab col s6"><a ng-click="set_state('instant')" ng-class="{active:(state == 'instant')}" href="#instant">INSTANT</a></li>
+        <li class="tab col s6"><a ng-click="set_state('git')" ng-class="{active:(state == 'git')}" href="#git">GIT REPOSITORY</a></li>
+      </ul>
     </div>
   </div>
 
   <div class="row">
     <div class="col m8 offset-m2 s12">
-      <select id="lang" ng-init="sc.lang_sel='Python'" ng-model="toc.lang_sel" ng-options="lang for lang in toc.LANGUAGES">
+      <form id="instant" class="coa-form black pre z-depth-3">
+        <textarea placeholder="Write some code here" id="file-data" class="black no-border file-data no-outline pre small prettyprint linenums" name="file_data">print( a + b )
+</textarea>  <!-- DONT EVER INDENT THIS, it ends up in the textarea -->
+      </form>
+      <div id="git">
+        <input placeholder="Paste link to git repository or clone url and Press Enter" class="black pre z-depth-3 git-link no-borders" type="text">
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="state=='instant'" class="row">
+    <div class="col m8 offset-m2 s12">
+      <select id="lang" ng-model="lang_sel" ng-options="lang for lang in toc.LANGUAGES">
         <option value="" disabled>Choose a Language</option>
       </select>
     </div>
-    <div class="m2" ng-show="loading_coajson">
+  </div>
+
+  <div class="row">
+    <div class="col m12 s12 center" ng-show="loading_coajson">
       <div class="preloader-wrapper small active">
         <div class="spinner-layer spinner-blue">
           <div class="circle-clipper left">
