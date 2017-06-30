@@ -128,6 +128,11 @@ class aspectbase:
                         type(self).__qualname__, name, language))
             else:
                 setattr(self, name, taste_values.get(name, taste.default))
+        # Recursively instance its subaspects too
+            instanced_child = {}
+            for name, child in self.subaspects.items():
+                instanced_child[name] = child(language, **taste_values)
+            self.__dict__['subaspects'] = instanced_child
 
     def __eq__(self, other):
         return type(self) is type(other) and self.tastes == other.tastes
