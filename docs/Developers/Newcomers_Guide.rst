@@ -239,9 +239,29 @@ where ``myfork`` is the name of your fork, and ``fork_link`` is a link to your
 fork repository.
 
 .. note::
-   It is important that you do not make your changes on the master branch. To
-   start working on an issue, you first need to create a new branch where you
-   will work.
+   It is important that you **DO NOT** make your changes on the master branch
+   of your forked repository to avoid the following cases:
+
+   - If you make a rebase to synchronize your repository to the original,
+     every commit that is pushed to the remote master will be pulled in your
+     master branch. Then if you make a pull request to commit your changes to
+     the remote, the commits that got synced from the rebase will be
+     recommitted along with your work in the pull request.
+
+   - You cannot have two pull requests using the same branch name. Therefore,
+     if your fork's master has been used in a pull request and you decide to
+     work on a different issue you will have to branch eventually. Differently
+     every new commit that you make on your master branch will get attached to
+     the initial pull request and that will result in altering the purpose of
+     that request.
+
+   - If your fork's master has been used in a pull request, you have to keep
+     the change in the branch until that get's merged to the remote master.
+     That will lead to the complications listed above, if you decide to work
+     on a different issue.
+
+   In order to avoid the above mentioned cases you can create a new branch
+   where you will work on the issue. To do that run:
 
    ::
 
