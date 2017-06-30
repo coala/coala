@@ -24,8 +24,6 @@ test:
         timeout: 900  # Allow 15 mins
     - pip install -r docs-requirements.txt:
         parallel: true
-    - pip install docutils==0.13.1:
-        parallel: true
     - coala --non-interactive:
         parallel: true
     - codecov:
