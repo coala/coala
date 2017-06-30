@@ -25,6 +25,7 @@ from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
@@ -420,6 +421,77 @@ class ConsoleInteractionTest(unittest.TestCase):
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('TestAction', failed_actions)
+
+    def test_ask_for_actions_and_apply2(self):
+        failed_actions = set()
+        action = ApplyPatchAction()
+        action2 = ChainPatchAction()
+        args = [self.console_printer, Section(''),
+                [action.get_metadata(), action2.get_metadata()],
+                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
+                failed_actions, Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('c', 'a') as generator:
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertIn('ApplyPatchAction', failed_actions)
+
+        with simulate_console_inputs('c', 'n') as generator:
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertNotIn('ChainPatchAction', failed_actions)
+
+        with simulate_console_inputs('c', 'x') as generator:
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 0)
+            self.assertNotIn('ChainPatchAction', failed_actions)
+
+        with simulate_console_inputs('c', 'o') as generator:
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 0)
+            self.assertNotIn('ChainPatchAction', failed_actions)
+
+    def test_ask_for_actions_and_apply3(self):
+        failed_actions = set()
+        action = ApplyPatchAction()
+        action2 = ChainPatchAction()
+        args = [self.console_printer, Section(''),
+                [action.get_metadata(), action2.get_metadata()],
+                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
+                failed_actions, Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('c', 'x') as generator:
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertNotIn('ChainPatchAction', failed_actions)
+
+    def test_ask_for_actions_and_apply4(self):
+        failed_actions = set()
+        action = ApplyPatchAction()
+        action2 = ChainPatchAction()
+        args = [self.console_printer, Section(''),
+                [action.get_metadata(), action2.get_metadata()],
+                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
+                failed_actions, Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('c', 1) as generator:
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertNotIn('ChainPatchAction', failed_actions)
+
+    def test_ask_for_actions_and_apply5(self):
+        failed_actions = set()
+        action = ApplyPatchAction()
+        action2 = ChainPatchAction()
+        args = [self.console_printer, Section(''),
+                [action.get_metadata(), action2.get_metadata()],
+                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
+                failed_actions, Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('c', 'i') as generator:
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertNotIn('ChainPatchAction', failed_actions)
 
     def test_default_input(self):
         action = TestAction()

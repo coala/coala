@@ -15,6 +15,7 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
+from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.PrintMoreInfoAction import (
@@ -82,7 +83,8 @@ CLI_ACTIONS = (OpenEditorAction(),
                PrintDebugMessageAction(),
                PrintMoreInfoAction(),
                ShowPatchAction(),
-               IgnoreResultAction())
+               IgnoreResultAction(),
+               ChainPatchAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
@@ -607,6 +609,126 @@ def print_actions(console_printer, section, actions, failed_actions):
     return get_action_info(section, actions[choice - 1], failed_actions)
 
 
+def try_to_apply_action(action_name,
+                        chosen_action,
+                        console_printer,
+                        section,
+                        metadata_list,
+                        action_dict,
+                        failed_actions,
+                        result,
+                        file_diff_dict,
+                        file_dict):
+    """
+    Try to apply the given action.
+
+    :param action_name:     The name of the action.
+    :param choose_action:   The action object that will be applied.
+    :param console_printer: Object to print messages on the console.
+    :param section:         Currently active section.
+    :param metadata_list:   Contains metadata for all the actions.
+    :param action_dict:     Contains the action names as keys and their
+                            references as values.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If it is an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    """
+    try:
+        chosen_action.apply_from_section(result,
+                                         file_dict,
+                                         file_diff_dict,
+                                         section)
+        console_printer.print(
+            format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
+            color=SUCCESS_COLOR)
+        failed_actions.discard(action_name)
+    except Exception as exception:  # pylint: disable=broad-except
+        logging.error('Failed to execute the action {} with error: {}.'
+                      .format(action_name, exception))
+        failed_actions.add(action_name)
+
+
+def apply_chain_action(console_printer,
+                       section,
+                       metadata_list,
+                       action_dict,
+                       failed_actions,
+                       result,
+                       file_diff_dict,
+                       file_dict):
+    """
+    Asks the user for an action and applies it.
+
+    :param console_printer: Object to print messages on the console.
+    :param section:         Currently active section.
+    :param metadata_list:   Contains metadata for all the actions.
+    :param action_dict:     Contains the action names as keys and their
+                            references as values.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If it is an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    :return:                Return False if the action that is applied is Do
+                            (N)othing or True otherwise.
+    """
+    flag = False
+
+    action_list = str(section['actions'])
+    action_list = list(action_list)
+    for action_choice in action_list:
+        if action_choice.isalpha():
+            action_choice = action_choice.upper()
+            action_choice = '(' + action_choice + ')'
+            if action_choice == '(N)':
+                return False
+            flag = False
+            for action_n in metadata_list:
+                if action_choice in action_n.desc:
+                    chosen_action = action_dict[action_n.name]
+                    action_choice_made = action_choice
+                    flag = True
+                    break
+            if flag:
+                for index, action_details in enumerate(metadata_list, 1):
+                    if action_choice_made in action_details.desc:
+                        action_name, section = get_action_info(
+                            section, metadata_list[index-1], failed_actions)
+                        try_to_apply_action(action_name,
+                                            chosen_action,
+                                            console_printer,
+                                            section,
+                                            metadata_list,
+                                            action_dict,
+                                            failed_actions,
+                                            result,
+                                            file_diff_dict,
+                                            file_dict)
+            else:
+                console_printer.print(
+                    format_lines('Couldn\'t apply \'{}\''.format(
+                        action_choice), symbol='['),
+                    color=HIGHLIGHTED_CODE_COLOR)
+        else:
+            console_printer.print(
+                format_lines('Please enter a letter'.format(
+                    action_choice), symbol='['),
+                color=HIGHLIGHTED_CODE_COLOR)
+
+    section.delete_setting('actions')
+    return True
+
+
 def ask_for_action_and_apply(console_printer,
                              section,
                              metadata_list,
@@ -641,21 +763,29 @@ def ask_for_action_and_apply(console_printer,
     if action_name is None:
         return False
 
-    chosen_action = action_dict[action_name]
-    try:
-        chosen_action.apply_from_section(result,
-                                         file_dict,
-                                         file_diff_dict,
-                                         section)
-        console_printer.print(
-            format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
-            color=SUCCESS_COLOR)
-        failed_actions.discard(action_name)
-    except Exception as exception:  # pylint: disable=broad-except
-        logging.error('Failed to execute the action {} with error: {}.'.format(
-            action_name, exception))
-        failed_actions.add(action_name)
-    return True
+    if action_name == 'ChainPatchAction':
+        ret = apply_chain_action(console_printer,
+                                 section,
+                                 metadata_list,
+                                 action_dict,
+                                 failed_actions,
+                                 result,
+                                 file_diff_dict,
+                                 file_dict)
+        return ret
+    else:
+        chosen_action = action_dict[action_name]
+        try_to_apply_action(action_name,
+                            chosen_action,
+                            console_printer,
+                            section,
+                            metadata_list,
+                            action_dict,
+                            failed_actions,
+                            result,
+                            file_diff_dict,
+                            file_dict)
+        return True
 
 
 def show_enumeration(console_printer,
