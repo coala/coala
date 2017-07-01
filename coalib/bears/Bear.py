@@ -288,6 +288,16 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         name = self.name
         try:
             self.debug('Running bear {}...'.format(name))
+
+            # If `dependency_results` kwargs is defined but there are no
+            # dependency results (usually in Bear that has no dependency)
+            # delete the `dependency_results` kwargs, since most Bears don't
+            # define `dependency_results` kwargs in its `run()` function.
+            if ('dependency_results' in kwargs and
+                    kwargs['dependency_results'] is None and
+                    not self.BEAR_DEPS):
+                del kwargs['dependency_results']
+
             # If it's already a list it won't change it
             result = self.run_bear_from_section(args, kwargs)
             return [] if result is None else list(result)
