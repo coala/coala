@@ -654,7 +654,8 @@ def _create_linter(klass, options):
                     return
 
                 arguments = (self.get_executable(),) + args
-                self.debug("Running '{}'".format(' '.join(arguments)))
+                self.debug("Running '{}'".format(
+                    ' '.join(str(arg) for arg in arguments)))
 
                 output = run_shell_command(
                     arguments,
