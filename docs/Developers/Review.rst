@@ -95,7 +95,8 @@ request but should ideally pass for every commit.
 
 For the Reviewers
 -----------------
-
+-  You can find the pull requests waiting to be reviewed at -
+   https://coala.io/review
 -  Generated code is not intended to be reviewed. Instead rather try to
    verify that the generation was done right. The commit message should
    expose that.
