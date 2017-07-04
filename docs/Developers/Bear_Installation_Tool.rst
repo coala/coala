@@ -1,6 +1,11 @@
 Bear Installation Tool
 ======================
 
+.. note::
+
+    cib is currently broken. Most of the commands listed here will
+    not work.
+
 coala features a Bear Installation Tool that helps installing bears one by one
 or all of them. This tool is helpful as it also manages to install the bears'
 external dependencies.
