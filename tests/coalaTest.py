@@ -190,7 +190,7 @@ class coalaTest(unittest.TestCase):
             self.assertEqual(retval, 13)
             self.assertIn(('There is a conflict in the version of a '
                            'dependency you have installed'), stderr)
-            self.assertIn('pip install "msg2"', stderr)
+            self.assertIn('pip3 install "msg2"', stderr)
             self.assertFalse(stdout)
             self.assertNotEqual(retval, 0,
                                 'coala must return nonzero when errors occured')
@@ -213,7 +213,7 @@ class coalaTest(unittest.TestCase):
                              'Unable to collect bears from .* because there '
                              'is a conflict with the version of a dependency '
                              'you have installed')
-            self.assertIn('pip install "msg2"', stderr)
+            self.assertIn('pip3 install "msg2"', stderr)
             self.assertIn('No bears to show.', stdout)
 
     def test_run_coala_no_autoapply(self, debug=False):

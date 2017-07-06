@@ -138,7 +138,7 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
                          'is a conflict with the version of a dependency '
                          'you have installed. This may be resolved by '
                          'creating a separate virtual environment for coala '
-                         'or running `pip install \"{pkg}\"`. Be aware that '
+                         'or running `pip3 install \"{pkg}\"`. Be aware that '
                          'the latter solution might break other python '
                          'packages that depend on the currently installed '
                          'version.').format(file=matching_file,

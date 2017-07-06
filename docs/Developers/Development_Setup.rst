@@ -40,7 +40,7 @@ Using venv
 Using virtualenv
 ~~~~~~~~~~~~~~~~
 
-- Install virtualenv using pip :
+- Install virtualenv using pip3 :
     ::
 
         $ pip3 install virtualenv
@@ -87,7 +87,7 @@ Installing from Git
 -------------------
 
 We recommend first installing the latest development snapshot of coala's
-master branch from and all of its dependencies with pip using
+master branch from and all of its dependencies with pip3 using
 
 ::
 
@@ -107,7 +107,7 @@ install a repository-backed version of the repository using
     (coala-venv)$ pip3 install -e <path/to/forked/repository>
 
 You will then be able to edit the repository and have the changes take effect
-in your virtualenv immediately. You will also be able to use pip to manage
+in your virtualenv immediately. You will also be able to use pip3 to manage
 your installation of the package should you need to install from a different
 source in the future.
 
