@@ -14,24 +14,9 @@ Everyone in the coala community is expected to follow our
 To become part of the coala developers team, there are a few steps you need
 to complete. The newcomer process is as follows:
 
-You will start as a newcomer, which is kind of a trial. If you complete the
-following tasks, you will become a developer at coala:
-
-  - run coala on a project of yours
-  - merge a ``difficulty/newcomer`` Pull Request
-  - review at least a ``difficulty/newcomer`` Pull Request
-  - merge a ``difficulty/low`` Pull Request
-  - review at least a ``difficulty/low`` or higher Pull Request
-
-When you ran coala on a project, please fill our
-`usability survey <http://coala.io/usability>`_. Once you got your first Pull
-Request merged successfully, fill in our
-`survey form <http://coala.io/newform>`_. With that you can help us making your
-experience better!
-
-Once you have achieved all these, just ask for being promoted on the chat and
-provide links to your reviews and merged Pull Requests. Then, you will be able
-to name yourself a coala developer!
+You will start as a newcomer, which is kind of a trial. To read more about
+how to get promoted to a coala developer, please check out
+:doc:`this page. <Rankings>`
 
 .. note::
 

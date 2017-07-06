@@ -39,6 +39,7 @@ If you're trying to **use** coala, you should have a look at our
    Writing Good Commit Messages <Developers/Writing_Good_Commits>
    Codestyle <Developers/Codestyle>
    Git Basics <Developers/Git_Basics>
+   Rankings <Developers/Rankings>
    Review <Developers/Review>
    Development Setup <Developers/Development_Setup>
    Adding CI to your Fork <Developers/Adding_CI>
