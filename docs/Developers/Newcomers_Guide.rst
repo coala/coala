@@ -126,7 +126,7 @@ Now you are ready to join coala community at `coala gitter <https://coala.io/cha
 The newcomers should ping us "Hello World" to let us know they are here
 because we care!
 
-When you say "Hello World" in chat ``cobot`` (our gitter bot) will invite you
+When you say "Hello World" in chat ``corobo`` (our gitter bot) will invite you
 to be part of the Newcomer team. The invitation will be sent by mail and you
 will have to accept it to join. If you don't find the invitation, accept it
 `here <https://github.com/coala>`__.
@@ -176,31 +176,31 @@ Now you can start working on it!
 .. note::
 
     As stated above, you should never work on an issue without being
-    assigned. Fortunately, cobot is here to help you! If you are
+    assigned. Fortunately, corobo is here to help you! If you are
     interested in picking up an issue, just write the following command
     in gitter chat::
 
-        cobot assign <issue_link>
+        corobo assign <issue_link>
 
     Be sure to copy the full link to the issue!
     Also take up the issue, only when you know what the problem is and
     how to solve it.
 
-    You can do amazing stuff using cobot.
+    You can do amazing stuff using corobo.
 
         * Issue assigning as stated earlier.
         * File issues::
 
-            cobot file issue <repo> <title>
+            corobo file issue <repo> <title>
             <description>
 
         * You shouldn't close any PR, instead mark them as work in progress::
 
-            cobot mark wip <full url>
+            corobo mark wip <full url>
 
-        * To see all of the cobot commands, ::
+        * To see all of the corobo commands, ::
 
-            cobot help
+            corobo help
 
     Before starting your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
