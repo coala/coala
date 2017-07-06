@@ -54,9 +54,8 @@ class AspectInstanceTest:
 
         assert SubAspect.get(RootAspect) is None
 
-        with pytest.raises(NotImplementedError) as exc:
-            RootAspect('py').get(SubAspect)
-        exc.match('Cannot access children of aspect instance.')
+        assert RootAspect('py').get(SubAspect) == SubAspect('py')
+        assert RootAspect('py').get(SubSubAspect) == SubSubAspect('py')
 
         with pytest.raises(AttributeError) as exc:
             RootAspect.get(SubAspect('py'))

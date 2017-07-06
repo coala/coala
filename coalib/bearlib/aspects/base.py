@@ -31,15 +31,10 @@ def get_subaspect(parent, subaspect):
     >>> get_subaspect(metadata, 'shortlog')
     <aspectclass 'Root.Metadata.CommitMessage.Shortlog'>
 
-    Trying to access children of aspect instance will raise
-    NotImplementedError because of instanced aspect doesn't instance
-    its children and will cause wrong result.
-    See https://github.com/coala/coala/issues/4388
+    We can also get child instance of an aspect instance.
 
     >>> get_subaspect(metadata('Python'), commit_msg)
-    Traceback (most recent call last):
-    ...
-    NotImplementedError: Cannot access children of aspect instance.
+    <...CommitMessage object at 0x...>
 
     But, passing subaspect instance as argument is prohibited, because
     it doesn't really make sense.
@@ -63,9 +58,6 @@ def get_subaspect(parent, subaspect):
     if isinstance(subaspect, aspectbase):
         raise AttributeError('Cannot search an aspect instance using '
                              'another aspect instance as argument.')
-    if isinstance(parent, aspectbase):
-        raise NotImplementedError('Cannot access children of aspect '
-                                  'instance.')
 
     parent_qualname = (type(parent).__qualname__ if isinstance(
                        parent, aspectbase) else parent.__qualname__)
@@ -129,10 +121,10 @@ class aspectbase:
             else:
                 setattr(self, name, taste_values.get(name, taste.default))
         # Recursively instance its subaspects too
-            instanced_child = {}
-            for name, child in self.subaspects.items():
-                instanced_child[name] = child(language, **taste_values)
-            self.__dict__['subaspects'] = instanced_child
+        instanced_child = {}
+        for name, child in self.subaspects.items():
+            instanced_child[name] = child(language, **taste_values)
+        self.__dict__['subaspects'] = instanced_child
 
     def __eq__(self, other):
         return type(self) is type(other) and self.tastes == other.tastes
