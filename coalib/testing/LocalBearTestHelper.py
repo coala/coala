@@ -213,7 +213,6 @@ class LocalBearTestHelper(unittest.TestCase):
                                 lines,
                                 results_num,
                                 filename=None,
-                                check_order=False,
                                 force_linebreaks=True,
                                 create_tempfile=True,
                                 tempfile_kwargs={},
