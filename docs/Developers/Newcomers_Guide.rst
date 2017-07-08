@@ -311,7 +311,7 @@ where ``myfork`` is the name of your fork that you added at the previous step.
 .. note::
 
     You can also add a profile picture to your Github account so that
-    you can stand out from the crowd
+    you can stand out from the crowd!
 
 Step 5. Creating a Pull Request
 -------------------------------
