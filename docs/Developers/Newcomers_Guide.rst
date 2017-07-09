@@ -313,8 +313,8 @@ where ``myfork`` is the name of your fork that you added at the previous step.
     You can also add a profile picture to your Github account so that
     you can stand out from the crowd!
 
-Step 5. Creating a ``Pull Request``
------------------------------------
+Step 5. Creating a Pull Request
+-------------------------------
 
 Now that your commit has been sent to your fork, it is time
 to create a ``Pull Request``. You can do this by accessing your fork on GitHub
