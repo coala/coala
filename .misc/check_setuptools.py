@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import subprocess
 import sys
+import re
 
 import setuptools
 
@@ -9,7 +10,8 @@ import setuptools
 def get_setuptools_version():
     with open('requirements.txt') as f:
         for line in f:
-            if line.startswith('setuptools'):
+            # Ensure that line matched is setuptools
+            if re.match(r'^setuptools(>|<|~|=|$)', line):
                 line = line.rstrip()
                 if '>=' not in line:
                     raise ValueError('%s doesnt use ">="' % line)

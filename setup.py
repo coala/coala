@@ -11,7 +11,9 @@ import setuptools.command.build_py
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
-from coalib import VERSION, assert_supported_version, get_version
+from setuptools_scm.version import get_local_node_and_date
+
+from coalib import assert_supported_version, get_public_version
 from coalib.misc.BuildManPage import BuildManPage
 
 try:
@@ -24,6 +26,8 @@ except (ValueError, UnicodeError):
 
 
 assert_supported_version()
+
+VERSION = get_public_version()
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):
@@ -75,6 +79,17 @@ with open('README.rst') as readme:
     long_description = readme.read()
 
 
+def _get_public_version_string(scm_version):
+    return VERSION
+
+
+def _get_local_version_string(scm_version):
+    if 'dev' in VERSION:
+        return get_local_node_and_date(scm_version)
+    else:
+        return ''
+
+
 if __name__ == '__main__':
     if platform.system() != 'Windows':
         data_files = [('.', ['coala.1'])]
@@ -82,7 +97,10 @@ if __name__ == '__main__':
         data_files = [('.', [])]
 
     setup(name='coala',
-          version=VERSION,
+          use_scm_version={
+              'version_scheme': _get_public_version_string,
+              'local_scheme': _get_local_version_string
+          },
           description='Linting and Fixing Code for All Languages',
           author='The coala developers',
           author_email='coala.analyzer@gmail.com',
