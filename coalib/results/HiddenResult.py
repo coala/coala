@@ -1,6 +1,14 @@
 from coalib.results.Result import Result
+from coala_utils.decorators import generate_ordering, generate_repr
 
 
+@generate_repr(('id', hex),
+               'origin',
+               'message',
+               'contents')
+@generate_ordering('contents',
+                   'origin',
+                   'message_base')
 class HiddenResult(Result):
     """
     This is a result that is not meant to be shown to the user. It can be used
