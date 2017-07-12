@@ -424,6 +424,12 @@ The ``Pull Request`` will automatically update with the newest changes.
 Now you should `tell us about your experience <https://coala.io/newform>`_ and
 go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
 
+
+.. note::
+
+    Do not delete the fork subsequent to Pull Request for review or
+    after it is merged!
+
 .. note::
 
     **Do not just fix a newcomer issue!** It is highly recommended that you
