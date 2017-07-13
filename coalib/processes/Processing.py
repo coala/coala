@@ -199,7 +199,8 @@ def print_result(results,
                  log_printer,
                  file_diff_dict,
                  ignore_ranges,
-                 console_printer):
+                 console_printer,
+                 apply_single=False):
     """
     Takes the results produced by each bear and gives them to the print_results
     method to present to the user.
@@ -240,7 +241,8 @@ def print_result(results,
                   patched_results,
                   file_dict,
                   file_diff_dict,
-                  console_printer)
+                  console_printer,
+                  apply_single)
     return retval or len(results) > 0, patched_results
 
 
@@ -542,7 +544,8 @@ def process_queues(processes,
                    cache,
                    log_printer,
                    console_printer,
-                   debug=False):
+                   debug=False,
+                   apply_single=False):
     """
     Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
@@ -602,7 +605,9 @@ def process_queues(processes,
                                            log_printer,
                                            file_diff_dict,
                                            ignore_ranges,
-                                           console_printer=console_printer)
+                                           console_printer=console_printer,
+                                           apply_single=apply_single
+                                           )
                 local_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL
@@ -624,7 +629,8 @@ def process_queues(processes,
                                    log_printer,
                                    file_diff_dict,
                                    ignore_ranges,
-                                   console_printer=console_printer)
+                                   console_printer=console_printer,
+                                   apply_single=apply_single)
         global_result_dict[elem] = res
 
     # One process is the logger thread
@@ -642,7 +648,8 @@ def process_queues(processes,
                                            log_printer,
                                            file_diff_dict,
                                            ignore_ranges,
-                                           console_printer)
+                                           console_printer,
+                                           apply_single)
                 global_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
@@ -693,7 +700,10 @@ def execute_section(section,
                     cache,
                     log_printer,
                     console_printer,
-                    debug=False):
+                    debug=False,
+                    apply_single=False):
+    # type: (object, object, object, object, object, object, object, object,
+    # object) -> object
     """
     Executes the section with the given bears.
 
@@ -786,7 +796,8 @@ def execute_section(section,
                                cache,
                                log_printer,
                                console_printer=console_printer,
-                               debug=debug),
+                               debug=debug,
+                               apply_single=apply_single),
                 arg_dict['local_result_dict'],
                 arg_dict['global_result_dict'],
                 arg_dict['file_dict'])

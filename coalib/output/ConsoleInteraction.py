@@ -142,7 +142,8 @@ def acquire_actions_and_apply(console_printer,
                               file_diff_dict,
                               result,
                               file_dict,
-                              cli_actions=None):
+                              cli_actions=None,
+                              apply_single=False):
     """
     Acquires applicable actions and applies them.
 
@@ -174,14 +175,26 @@ def acquire_actions_and_apply(console_printer,
             metadata_list.append(metadata)
 
         # User can always choose no action which is guaranteed to succeed
-        if not ask_for_action_and_apply(console_printer,
-                                        section,
-                                        metadata_list,
-                                        action_dict,
-                                        failed_actions,
-                                        result,
-                                        file_diff_dict,
-                                        file_dict):
+        if apply_single:
+            ask_for_action_and_apply(console_printer,
+                                     section,
+                                     metadata_list,
+                                     action_dict,
+                                     failed_actions,
+                                     result,
+                                     file_diff_dict,
+                                     file_dict,
+                                     apply_single=apply_single)
+            break
+        elif not ask_for_action_and_apply(console_printer,
+                                          section,
+                                          metadata_list,
+                                          action_dict,
+                                          failed_actions,
+                                          result,
+                                          file_diff_dict,
+                                          file_dict,
+                                          apply_single=apply_single):
             break
 
 
@@ -241,7 +254,8 @@ def print_result(console_printer,
                  file_diff_dict,
                  result,
                  file_dict,
-                 interactive=True):
+                 interactive=True,
+                 apply_single=False):
     """
     Prints the result to console.
 
@@ -298,7 +312,8 @@ def print_result(console_printer,
                                   file_diff_dict,
                                   result,
                                   file_dict,
-                                  cli_actions)
+                                  cli_actions,
+                                  apply_single=apply_single)
 
 
 def print_diffs_info(diffs, printer):
@@ -411,7 +426,8 @@ def print_results_no_input(log_printer,
                            result_list,
                            file_dict,
                            file_diff_dict,
-                           console_printer):
+                           console_printer,
+                           apply_single=False):
     """
     Prints all non interactive results in a section
 
@@ -436,7 +452,8 @@ def print_results_no_input(log_printer,
                      file_diff_dict,
                      result,
                      file_dict,
-                     interactive=False)
+                     interactive=False,
+                     apply_single=apply_single)
 
 
 def print_results(log_printer,
@@ -444,7 +461,8 @@ def print_results(log_printer,
                   result_list,
                   file_dict,
                   file_diff_dict,
-                  console_printer):
+                  console_printer,
+                  apply_single=False):
     """
     Prints all the results in a section.
 
@@ -468,7 +486,8 @@ def print_results(log_printer,
                      section,
                      file_diff_dict,
                      result,
-                     file_dict)
+                     file_dict,
+                     apply_single=apply_single)
 
 
 def print_affected_lines(console_printer, file_dict, sourcerange):
@@ -580,7 +599,7 @@ def get_action_info(section, action, failed_actions):
     return action.name, section
 
 
-def choose_action(console_printer, actions):
+def choose_action(console_printer, actions, apply_single=False):
     """
     Presents the actions available to the user and takes as input the action
     the user wants to choose.
@@ -589,37 +608,45 @@ def choose_action(console_printer, actions):
     :param actions:         Actions available to the user.
     :return:                Return choice of action of user.
     """
-    while True:
-        color_letter(console_printer, '[    ] *0. Do (N)othing')
-        for i, action in enumerate(actions, 1):
-            color_letter(console_printer, format_lines('{:>2}. {}'.format(
-                i, action.desc), symbol='['))
-
-        line = format_lines(STR_ENTER_NUMBER, symbol='[')
-
-        choice = input(line)
-        if not choice:
+    if apply_single:
+        if apply_single == 'Do (N)othing':
             return 0
-        choice = str(choice)
-        if choice.isalpha():
-            choice = choice.upper()
-            choice = '(' + choice + ')'
-            if choice == '(N)':
-                return 0
+        for i, action in enumerate(actions, 1):
+            if apply_single == action.desc:
+                return i
+        return 0
+    else:
+        while True:
+            color_letter(console_printer, '[    ] *0. Do (N)othing')
             for i, action in enumerate(actions, 1):
-                if choice in action.desc:
-                    return i
-        elif choice.isnumeric():
-            choice = int(choice)
-            print(choice)
-            if 0 <= choice <= len(actions):
-                return choice
+                color_letter(console_printer, format_lines('{:>2}. {}'.format(
+                    i, action.desc), symbol='['))
 
-        console_printer.print(format_lines(
-            'Please enter a valid letter.', symbol='['))
+            line = format_lines(STR_ENTER_NUMBER, symbol='[')
+
+            choice = input(line)
+            if not choice:
+                return 0
+            choice = str(choice)
+            if choice.isalpha():
+                choice = choice.upper()
+                choice = '(' + choice + ')'
+                if choice == '(N)':
+                    return 0
+                for i, action in enumerate(actions, 1):
+                    if choice in action.desc:
+                        return i
+            elif choice.isnumeric():
+                choice = int(choice)
+                if 0 <= choice <= len(actions):
+                    return choice
+
+            console_printer.print(format_lines(
+                'Please enter a valid letter.', symbol='['))
 
 
-def print_actions(console_printer, section, actions, failed_actions):
+def print_actions(console_printer, section, actions, failed_actions,
+                  apply_single):
     """
     Prints the given actions and lets the user choose.
 
@@ -634,7 +661,7 @@ def print_actions(console_printer, section, actions, failed_actions):
                             values for the action. If the user did
                             choose to do nothing, return (None, None).
     """
-    choice = choose_action(console_printer, actions)
+    choice = choose_action(console_printer, actions, apply_single)
 
     if choice == 0:
         return None, None
@@ -769,7 +796,8 @@ def ask_for_action_and_apply(console_printer,
                              failed_actions,
                              result,
                              file_diff_dict,
-                             file_dict):
+                             file_dict,
+                             apply_single=False):
     """
     Asks the user for an action and applies it.
 
@@ -792,7 +820,8 @@ def ask_for_action_and_apply(console_printer,
                             another action, False otherwise.
     """
     action_name, section = print_actions(console_printer, section,
-                                         metadata_list, failed_actions)
+                                         metadata_list, failed_actions,
+                                         apply_single=apply_single)
     if action_name is None:
         return False
 

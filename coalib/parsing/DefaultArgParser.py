@@ -231,6 +231,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help="don't create .orig backup files before patching")
 
     misc_group.add_argument(
+        '-A', '--single-action', const=True, action='store_const',
+        help='apply a single action for all results')
+
+    misc_group.add_argument(
         '--debug', const=True, action='store_const',
         help='run coala in debug mode, starting ipdb, '
              'which must be separately installed, '

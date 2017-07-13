@@ -11,6 +11,15 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Logging import CounterHandler
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
+from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
+from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
+from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
+from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.PrintAspectAction import PrintAspectAction
+from coalib.results.result_actions.PrintMoreInfoAction import  \
+    PrintMoreInfoAction
+from coalib.results.result_actions.PrintDebugMessageAction import \
+    PrintDebugMessageAction
 from coalib.misc.Caching import FileCache
 from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)
@@ -18,6 +27,27 @@ from coalib.misc.CachingUtilities import (
 
 def do_nothing(*args):
     return True
+
+
+STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
+    'Z' if platform.system() == 'Windows' else 'D')
+
+
+def provide_all_actions():
+    return ['Do (N)othing', ShowPatchAction().get_metadata().desc,
+            ApplyPatchAction().get_metadata().desc,
+            IgnoreResultAction().get_metadata().desc,
+            OpenEditorAction().get_metadata().desc,
+            PrintAspectAction().get_metadata().desc,
+            PrintDebugMessageAction().get_metadata().desc,
+            PrintMoreInfoAction().get_metadata().desc]
+
+
+def format_lines(lines, symbol='', line_nr=''):
+    # type: (object, object, object) -> object
+    def sym(x): return ']' if x is '[' else x
+    return '\n'.join('{}{:>5}{} {}'.format(symbol, sym(symbol), line_nr, line)
+                     for line in lines.rstrip('\n').split('\n'))
 
 
 def run_coala(console_printer=None,
@@ -69,6 +99,35 @@ def run_coala(console_printer=None,
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
+    all_actions_possible = provide_all_actions()
+    apply_single = None
+    if getattr(args, 'single_action', None) is not None:
+        while True:
+            for i, action in enumerate(all_actions_possible, 1):
+                console_printer.print(format_lines('{}'.format(
+                    action), symbol='['))
+
+            line = format_lines(STR_ENTER_NUMBER, symbol='[')
+
+            choice = input(line)
+
+            if choice.isalpha():
+                choice = choice.upper()
+                choice = '(' + choice + ')'
+                if choice == '(N)':
+                    apply_single = 'Do (N)othing'
+                    break
+                for i, action in enumerate(all_actions_possible, 1):
+                    if choice in action:
+                        apply_single = action
+                        break
+                if apply_single:
+                    break
+                console_printer.print(format_lines(
+                                    'Please enter a valid letter.',
+                                    symbol='['))
+
+        args.apply_patch = False
 
     log_printer = (
         LogPrinter(ConsolePrinter(), LOG_LEVEL.DEBUG) if log_printer is None
@@ -118,7 +177,10 @@ def run_coala(console_printer=None,
                 cache=cache,
                 log_printer=log_printer,
                 console_printer=console_printer,
-                debug=debug or args and args.debug)
+                debug=debug or args and args.debug,
+                apply_single=(apply_single
+                              if apply_single is not None else
+                              False))
             yielded, yielded_unfixed, results[section_name] = (
                 simplify_section_result(section_result))
 

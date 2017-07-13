@@ -404,6 +404,57 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
 
+    def test_acquire_actions_and_apply(self):
+        with make_temp() as testfile_path:
+            file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
+            diff = Diff(file_dict[testfile_path])
+            diff.delete_line(2)
+            diff.change_line(3, '3\n', '3_changed\n')
+            with simulate_console_inputs('a', 'n') as generator, \
+                    retrieve_stdout() as sio:
+                ApplyPatchAction.is_applicable = staticmethod(
+                    lambda *args: True)
+                acquire_actions_and_apply(self.console_printer,
+                                          Section(''),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message', diffs={
+                                              testfile_path: diff}),
+                                          file_dict, apply_single=True)
+                self.assertEqual(generator.last_input, -1)
+                self.assertIn('', sio.getvalue())
+
+            class InvalidateTestAction(ResultAction):
+
+                is_applicable = staticmethod(lambda *args: True)
+
+                def apply(*args, **kwargs):
+                    ApplyPatchAction.is_applicable = staticmethod(
+                        lambda *args: 'ApplyPatchAction cannot be applied.')
+
+            old_applypatch_is_applicable = ApplyPatchAction.is_applicable
+            ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
+            cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
+
+            with simulate_console_inputs('a') as generator, \
+                    retrieve_stdout() as sio:
+                acquire_actions_and_apply(self.console_printer,
+                                          Section(''),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message',
+                                                 diffs={testfile_path: diff}),
+                                          file_dict,
+                                          cli_actions=cli_actions,
+                                          apply_single=True)
+                self.assertEqual(generator.last_input, -1)
+
+                action_fail = 'Failed to execute the action'
+                self.assertNotIn(action_fail, sio.getvalue())
+
+                apply_path_desc = ApplyPatchAction().get_metadata().desc
+                self.assertEqual(sio.getvalue().count(apply_path_desc), 0)
+
+            ApplyPatchAction.is_applicable = old_applypatch_is_applicable
+
     def test_ask_for_actions_and_apply(self):
         failed_actions = set()
         action = TestAction()
@@ -527,6 +578,49 @@ class ConsoleInteractionTest(unittest.TestCase):
                 set(), Result('origin', 'message'), {}, {}]
 
         with simulate_console_inputs(5, 0) as generator:
+            self.assertFalse(ask_for_action_and_apply(*args))
+
+    def test_default_input_apply_single_nothing(self):
+        action = TestAction()
+        args = [self.console_printer, Section(''),
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs(1, 'a') as generator:
+            apply_single = 'Do (N)othing'
+            se = Section('cli')
+            args = [self.console_printer, se,
+                    [action.get_metadata()], {'TestAction': action},
+                    set(), Result('origin', 'message'), {}, {}, apply_single]
+
+        with simulate_console_inputs('') as generator:
+            self.assertFalse(ask_for_action_and_apply(*args))
+
+    def test_default_input_apply_single_test(self):
+        action = TestAction()
+        apply_single = 'Test (A)ction'
+        se = Section('cli')
+        args = [self.console_printer, se,
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}, apply_single]
+
+        with simulate_console_inputs('a') as generator:
+            self.assertTrue(ask_for_action_and_apply(*args))
+
+    def test_default_input_apply_single_fail(self):
+        action = TestAction()
+        args = [self.console_printer, Section(''),
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs(5, 0) as generator:
+            apply_single = 'Test (X)ction'
+            se = Section('cli')
+            args = [self.console_printer, se,
+                    [action.get_metadata()], {'TestAction': action},
+                    set(), Result('origin', 'message'), {}, {}, apply_single]
+
+        with simulate_console_inputs('a') as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
 
     def test_print_result_no_input(self):
