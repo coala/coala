@@ -1,7 +1,6 @@
 import tempfile
 import unittest
 import os
-import re
 
 from coalib import coala_delete_orig
 from coala_utils.ContextManagers import retrieve_stderr
@@ -45,7 +44,7 @@ class coalaDeleteOrigTest(unittest.TestCase):
             temporary = tempfile.mkstemp(suffix='.orig', dir=directory)
             os.close(temporary[0])
             section = Section('')
-            section.append(Setting('project_dir', re.escape(directory)))
+            section.append(Setting('project_dir', directory))
             retval = coala_delete_orig.main(section=section)
             self.assertEqual(retval, 0)
             self.assertFalse(os.path.isfile(temporary[1]))
