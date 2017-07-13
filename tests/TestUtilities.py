@@ -5,7 +5,7 @@ import unittest.mock
 
 from coala_utils.ContextManagers import retrieve_stdout, retrieve_stderr
 
-TEST_BEARS_COUNT = 13
+TEST_BEARS_COUNT = 14
 
 
 def execute_coala(func, binary, *args, debug=False):
