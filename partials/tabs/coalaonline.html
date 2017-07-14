@@ -216,6 +216,17 @@
                 <span class="severity">{{k}}</span>
                 <span class="origin">{{data.origin}}</span>
                 <span class="severity">Severity : {{data.severity}}</span>
+                <span class="origin blue-grey darken-4 white-text">
+                  <span ng-show="data.affected_code[0].start.line !=
+                  data.affected_code[0].end.line">
+                  Between lines {{ data.affected_code[0].start.line }}
+                  and {{ data.affected_code[0].end.line }}
+                  </span>
+                  <span ng-show="data.affected_code[0].start.line ==
+                  data.affected_code[0].end.line">
+                  On Line {{ data.affected_code[0].start.line }}
+                </span>
+                </span>
                 <div class="label">Message :
                   <span>{{data.message}}</span>
                 </div>
