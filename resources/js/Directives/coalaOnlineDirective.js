@@ -47,14 +47,15 @@ app.directive('coalaonline',[ '$http', function ($http) {
                 bear_lists = [];
                 $scope.loading_coajson = true;
                 $http.post(coala_online_api, JSON.stringify(json))
-                .then(function(data){
+                .then(function(res){
+                    response = res.data.response.response;
                     $scope.sections = {}
-                    angular.forEach(Object.keys(data.data.response), function(section) {
+                    angular.forEach(Object.keys(response), function(section) {
                         $scope.sections[section] = {}
-                        $scope.sections[section]["files"] = data.data.response[section]["files"]
+                        $scope.sections[section]["files"] = response[section]["files"]
                         $scope.sections[section]["bears"] = {}
                         bear_json = $scope.fetch_bear_data(
-                                    data.data.response[section]["bears"]
+                                    response[section]["bears"]
                                     .replace(/\s/g,'')
                                     .split(','), section);
                         $scope.sections[section]["bears"] = bear_json;
