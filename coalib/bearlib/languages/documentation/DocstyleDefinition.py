@@ -202,12 +202,12 @@ class DocstyleDefinition:
 
         :return: A sequence of pairs with ``(docstyle, language)``.
         """
-        language_config_parser = ConfParser(remove_empty_iter_elements=False)
         pattern = os.path.join(os.path.dirname(__file__), '*.coalang')
 
         for coalang_file in iglob(pattern):
             docstyle = os.path.splitext(os.path.basename(coalang_file))[0]
             # Ignore files that are not lowercase, as coalang files have to be.
             if docstyle.lower() == docstyle:
-                for language in language_config_parser.parse(coalang_file):
+                parser = ConfParser(remove_empty_iter_elements=False)
+                for language in parser.parse(coalang_file):
                     yield docstyle, language.lower()
