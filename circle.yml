@@ -21,7 +21,7 @@ test:
         parallel: true
     - pip install coala-bears[alldeps] --pre -U:
         parallel: true
-        timeout: 900  # Allow 15 mins
+        timeout: 1800  # Allow 30 mins
     - pip install -r docs-requirements.txt:
         parallel: true
     - coala --non-interactive:
