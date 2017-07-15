@@ -15,6 +15,7 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
+from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.PrintMoreInfoAction import (
@@ -77,7 +78,8 @@ CAPABILITY_COLOR = 'green'
 HIGHLIGHTED_CODE_COLOR = 'red'
 SUCCESS_COLOR = 'green'
 REQUIRED_SETTINGS_COLOR = 'green'
-CLI_ACTIONS = (OpenEditorAction(),
+CLI_ACTIONS = (DoNothingAction(),
+               OpenEditorAction(),
                ApplyPatchAction(),
                PrintDebugMessageAction(),
                PrintMoreInfoAction(),
@@ -559,9 +561,7 @@ def choose_action(console_printer, actions):
     :return:                Return choice of action of user.
     """
     while True:
-        console_printer.print(format_lines('Do (N)othing',
-                                           symbol='['))
-        for i, action in enumerate(actions, 1):
+        for i, action in enumerate(actions, 0):
             console_printer.print(format_lines('{}'.format(
                 action.desc), symbol='['))
 
@@ -574,9 +574,7 @@ def choose_action(console_printer, actions):
         if choice.isalpha():
             choice = choice.upper()
             choice = '(' + choice + ')'
-            if choice == '(N)':
-                return 0
-            for i, action in enumerate(actions, 1):
+            for i, action in enumerate(actions, 0):
                 if choice in action.desc:
                     return i
 
@@ -604,7 +602,7 @@ def print_actions(console_printer, section, actions, failed_actions):
     if choice == 0:
         return None, None
 
-    return get_action_info(section, actions[choice - 1], failed_actions)
+    return get_action_info(section, actions[choice], failed_actions)
 
 
 def ask_for_action_and_apply(console_printer,
