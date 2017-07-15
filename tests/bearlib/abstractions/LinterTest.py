@@ -6,8 +6,6 @@ import sys
 import unittest
 from unittest.mock import ANY, Mock
 
-from dependency_management.requirements.PipRequirement import PipRequirement
-
 from coalib.bearlib.abstractions.Linter import linter
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
@@ -245,12 +243,6 @@ class LinterComponentTest(unittest.TestCase):
     def test_check_prerequisites(self):
         uut = linter(sys.executable)(self.ManualProcessingTestLinter)
         self.assertTrue(uut.check_prerequisites())
-
-        uut.REQUIREMENTS = {PipRequirement('not-there', '3.4.0')}
-        self.assertRegex(uut.check_prerequisites(),
-                         'not-there 3.4.0 is not installed. '
-                         'You can install it using '
-                         '.* -m pip install not-there==3.4.0')
 
         uut = (linter('invalid_nonexisting_programv412')
                (self.ManualProcessingTestLinter))

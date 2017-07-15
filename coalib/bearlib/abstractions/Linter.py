@@ -208,10 +208,6 @@ def _create_linter(klass, options):
             :return:
                 True if operational, otherwise a string containing more info.
             """
-            super_prerequisites = super(LinterBase, cls).check_prerequisites()
-            if super_prerequisites is not True:
-                return super_prerequisites
-
             if shutil.which(cls.get_executable()) is None:
                 return (repr(cls.get_executable()) + ' is not installed.' +
                         (' ' + options['executable_check_fail_info']
