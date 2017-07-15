@@ -18,6 +18,16 @@ from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 
 
+def requirement_is_installed(requirement):
+    try:
+        return requirement.is_installed()
+    except NotImplementedError:  # No supported package manager
+        logging.debug('Unable to check for presence of {}. If failures '
+                      'occur, make sure that it is installed correctly '
+                      'and available in PATH.'.format(str(requirement)))
+        return True  # We can't tell, fallback
+
+
 class Bear:
     """
     A bear contains the actual subroutine that is responsible for checking
@@ -331,9 +341,10 @@ class Bear:
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
         """
-        not_installed_requirements = [requirement
-                                      for requirement in cls.REQUIREMENTS
-                                      if not requirement.is_installed()]
+        not_installed_requirements = [
+            requirement for requirement in cls.REQUIREMENTS
+            if not requirement_is_installed(requirement)
+        ]
 
         if not_installed_requirements:
             return 'Following requirements are not installed: ' + ', '.join(

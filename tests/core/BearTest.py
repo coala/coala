@@ -5,7 +5,9 @@ import shutil
 import unittest
 
 from dependency_management.requirements.PipRequirement import PipRequirement
-
+from dependency_management.requirements.DistributionRequirement import (
+    DistributionRequirement
+)
 from freezegun import freeze_time
 
 import requests
@@ -118,6 +120,12 @@ class BearTest(unittest.TestCase):
                 req2.package, ' '.join(req2.install_command()))
             for req1, req2 in permutations(BearWithPrerequisites.REQUIREMENTS)
         ]
+
+        # This should fallback to True as the requirements status can't be
+        # figured out by dependency_management
+        BearWithPrerequisites.REQUIREMENTS.add(
+            DistributionRequirement(unkknown_manager='python3')
+        )
 
         self.assertIn(BearWithPrerequisites.check_prerequisites(),
                       expected_possibilities)
