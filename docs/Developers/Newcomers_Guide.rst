@@ -113,6 +113,10 @@ The list of all available chatrooms are available here - `channel list <https://
 But before joining the community, here are few things that you should
 keep in mind.
 
+  * Only log into Gitter using your GitHub account and not your Twitter account
+    since the Gitter bot `corobo` identifies each user from their GitHub
+    username which makes it possible to automate certain tasks such as asking
+    the bot to assign an issue to your profile.
   * Don't @-mention or private message people, unless its utterly important.
     @ mentions generate notifications on the various gitter clients the user
     may be signed into, you might even wake someone on the other side of the
