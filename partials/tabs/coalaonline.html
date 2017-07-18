@@ -227,6 +227,10 @@
                   On Line {{ data.affected_code[0].start.line }}
                 </span>
                 </span>
+                <div ng-show="state=='git'" class="label blue-grey darken-3 white-text">
+                  <!-- slice(6) : As 6 is the depth of repository folder server side -->
+                  <span>{{data.affected_code[0].file.split('/').slice(6).join('/') }}</span>
+                </div>
                 <div class="label">Message :
                   <span>{{data.message}}</span>
                 </div>
