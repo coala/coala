@@ -160,7 +160,7 @@ class Session:
     first BearB will be executed, followed by BearA.
     """
 
-    def __init__(self, bears, result_callback):
+    def __init__(self, bears, result_callback, executor=None):
         """
         :param bears:
             The bear instances to run.
@@ -170,13 +170,19 @@ class Session:
 
                 def result_callback(result):
                     pass
+        :param executor:
+            Custom executor used to run the bears. If ``None``, a
+            ``ProcessPoolExecutor`` is used using as many processes as cores
+            available on the system.
         """
         self.bears = bears
         self.result_callback = result_callback
 
         # Set up event loop and executor.
         self.event_loop = asyncio.SelectorEventLoop()
-        self.executor = concurrent.futures.ProcessPoolExecutor()
+        self.executor = (concurrent.futures.ProcessPoolExecutor()
+                         if executor is None else
+                         executor)
         self.running_tasks = {}
 
         # Initialize dependency tracking.
@@ -324,7 +330,7 @@ class Session:
                         exc_info=ex)
 
 
-def run(bears, result_callback):
+def run(bears, result_callback, executor=None):
     """
     Initiates a session with the given parameters and runs it.
 
@@ -336,5 +342,9 @@ def run(bears, result_callback):
 
             def result_callback(result):
                 pass
+    :param executor:
+        Custom executor used to run the bears. If ``None``, a
+        ``ProcessPoolExecutor`` is used using as many processes as cores
+        available on the system.
     """
     Session(bears, result_callback, executor).run()

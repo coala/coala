@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import logging
 import unittest
 import unittest.mock
@@ -377,13 +378,13 @@ class CoreTest(unittest.TestCase):
         self.filedict1 = {'f1': []}
 
     @staticmethod
-    def execute_run(bears):
+    def execute_run(bears, executor=None):
         results = []
 
         def on_result(result):
             results.append(result)
 
-        run(bears, on_result)
+        run(bears, on_result, executor)
 
         return results
 
@@ -609,6 +610,16 @@ class CoreTest(unittest.TestCase):
         bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=100)
 
         results = self.execute_run({bear})
+
+        result_set = set(results)
+        self.assertEqual(len(result_set), len(results))
+        self.assertEqual(result_set, {i for i in range(100)})
+        self.assertEqual(bear.dependency_results, {})
+
+    def test_custom_executor(self):
+        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=100)
+
+        results = self.execute_run({bear}, ThreadPoolExecutor(max_workers=10))
 
         result_set = set(results)
         self.assertEqual(len(result_set), len(results))
