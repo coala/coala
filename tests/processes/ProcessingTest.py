@@ -126,15 +126,17 @@ class ProcessingTest(unittest.TestCase):
         self.assertRegex(repr(local_result),
                          "<Result object\\(id={}, origin='LocalTestBear', aff"
                          'ected_code=\\(\\), severity=NORMAL, confidence=100'
-                         ", message='test msg', aspect=NoneType\\) at "
-                         '0x[0-9a-fA-F]+>'.format(hex(local_result.id)))
+                         ", message='test msg', aspect=NoneType, "
+                         'applied_actions={}\\) at '
+                         '0x[0-9a-fA-F]+>'.format(hex(local_result.id), '{}'))
         self.assertRegex(repr(global_result),
                          "<Result object\\(id={}, origin='GlobalTestBear', "
                          'affected_code=\\(.*start=.*file=.*section_executor_'
                          'test_files.*line=None.*end=.*\\), severity=NORMAL, c'
                          "onfidence=100, message='test message', "
-                         'aspect=NoneType\\'
-                         ') at 0x[0-9a-fA-F]+>'.format(hex(global_result.id)))
+                         'aspect=NoneType, applied_actions={}\\'
+                         ') at 0x[0-9a-fA-F]+>'.format(hex(global_result.id),
+                                                       '{}'))
 
     def test_empty_run(self):
         execute_section(self.sections['cli'],

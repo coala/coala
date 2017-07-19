@@ -1,3 +1,4 @@
+import copy
 import logging
 import platform
 import os
@@ -17,6 +18,8 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
+from coalib.results.result_actions.ShowAppliedPatchesAction import (
+    ShowAppliedPatchesAction)
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.PrintMoreInfoAction import (
@@ -85,7 +88,8 @@ CLI_ACTIONS = (OpenEditorAction(),
                PrintMoreInfoAction(),
                ShowPatchAction(),
                IgnoreResultAction(),
-               ChainPatchAction())
+               ChainPatchAction(),
+               ShowAppliedPatchesAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
@@ -160,6 +164,7 @@ def acquire_actions_and_apply(console_printer,
     """
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
+    applied_actions = {}
     while True:
         actions = []
         for action in cli_actions:
@@ -186,6 +191,7 @@ def acquire_actions_and_apply(console_printer,
                                      result,
                                      file_diff_dict,
                                      file_dict,
+                                     applied_actions,
                                      apply_single=apply_single)
             break
         elif not ask_for_action_and_apply(console_printer,
@@ -196,6 +202,7 @@ def acquire_actions_and_apply(console_printer,
                                           result,
                                           file_diff_dict,
                                           file_dict,
+                                          applied_actions,
                                           apply_single=apply_single):
             break
 
@@ -379,7 +386,6 @@ def print_results_formatted(log_printer,
             for range in result.affected_code:
                 format_args['affected_code'] = range
                 format_args['source_lines'] = range.affected_source(file_dict)
-
                 print(format_str.format(file=range.start.file,
                                         line=range.start.line,
                                         end_line=range.end.line,
@@ -690,7 +696,8 @@ def try_to_apply_action(action_name,
                         failed_actions,
                         result,
                         file_diff_dict,
-                        file_dict):
+                        file_dict,
+                        applied_actions):
     """
     Try to apply the given action.
 
@@ -708,6 +715,8 @@ def try_to_apply_action(action_name,
     :param file_diff_dict:  If it is an action which applies a patch, this
                             contains the diff of the patch to be applied to
                             the file with filename as keys.
+    :param applied_actions: A dictionary that contains the result, file_dict,
+                            file_diff_dict and the section for an action.
     :param file_dict:       Dictionary with filename as keys and its contents
                             as values.
     """
@@ -719,6 +728,11 @@ def try_to_apply_action(action_name,
         console_printer.print(
             format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
             color=SUCCESS_COLOR)
+        applied_actions[action_name] = [copy.copy(result), copy.copy(
+            file_dict),
+                                    copy.copy(file_diff_dict),
+                                    copy.copy(section)]
+        result.set_applied_actions(applied_actions)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
         logging.error('Failed to execute the action {} with error: {}.'
@@ -733,7 +747,8 @@ def apply_chain_action(console_printer,
                        failed_actions,
                        result,
                        file_diff_dict,
-                       file_dict):
+                       file_dict,
+                       applied_actions):
     """
     Asks the user for an action and applies it.
 
@@ -751,6 +766,8 @@ def apply_chain_action(console_printer,
                             the file with filename as keys.
     :param file_dict:       Dictionary with filename as keys and its contents
                             as values.
+    :param applied_actions: A dictionary that contains the result, file_dict,
+                            file_diff_dict and the section for an action.
     :return:                Return False if the action that is applied is Do
                             (N)othing or True otherwise.
     """
@@ -785,7 +802,8 @@ def apply_chain_action(console_printer,
                                             failed_actions,
                                             result,
                                             file_diff_dict,
-                                            file_dict)
+                                            file_dict,
+                                            applied_actions)
             else:
                 console_printer.print(
                     format_lines('Couldn\'t apply \'{}\''.format(
@@ -809,6 +827,7 @@ def ask_for_action_and_apply(console_printer,
                              result,
                              file_diff_dict,
                              file_dict,
+                             applied_actions,
                              apply_single=False):
     """
     Asks the user for an action and applies it.
@@ -829,6 +848,8 @@ def ask_for_action_and_apply(console_printer,
                             as values.
     :param apply_single:    The action that should be applied for all results.
                             If it's not selected, has a value of False.
+    :param applied_actions: A dictionary that contains the result, file_dict,
+                            file_diff_dict and the section for an action.
     :return:                Returns a boolean value. True will be returned, if
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
@@ -847,7 +868,8 @@ def ask_for_action_and_apply(console_printer,
                                  failed_actions,
                                  result,
                                  file_diff_dict,
-                                 file_dict)
+                                 file_dict,
+                                 applied_actions)
         return ret
     else:
         chosen_action = action_dict[action_name]
@@ -860,7 +882,8 @@ def ask_for_action_and_apply(console_printer,
                             failed_actions,
                             result,
                             file_diff_dict,
-                            file_dict)
+                            file_dict,
+                            applied_actions)
         return True
 
 

@@ -26,6 +26,8 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
+from coalib.results.result_actions.ShowAppliedPatchesAction \
+    import ShowAppliedPatchesAction
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
@@ -460,7 +462,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()], {'TestAction': action},
-                failed_actions, Result('origin', 'message'), {}, {}]
+                failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
             action.apply = unittest.mock.Mock(side_effect=AssertionError)
@@ -480,7 +482,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         args = [self.console_printer, Section(''),
                 [action.get_metadata(), action2.get_metadata()],
                 {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}]
+                failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('c', 'a') as generator:
             ask_for_action_and_apply(*args)
@@ -509,7 +511,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         args = [self.console_printer, Section(''),
                 [action.get_metadata(), action2.get_metadata()],
                 {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}]
+                failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('c', 'x') as generator:
             ask_for_action_and_apply(*args)
@@ -523,7 +525,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         args = [self.console_printer, Section(''),
                 [action.get_metadata(), action2.get_metadata()],
                 {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}]
+                failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('c', 1) as generator:
             ask_for_action_and_apply(*args)
@@ -537,7 +539,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         args = [self.console_printer, Section(''),
                 [action.get_metadata(), action2.get_metadata()],
                 {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}]
+                failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('c', 'i') as generator:
             ask_for_action_and_apply(*args)
@@ -548,7 +550,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()], {'TestAction': action},
-                set(), Result('origin', 'message'), {}, {}]
+                set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('') as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
@@ -557,7 +559,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()], {'TestAction': action},
-                set(), Result('origin', 'message'), {}, {}]
+                set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 1) as generator:
             self.assertTrue(ask_for_action_and_apply(*args))
@@ -566,7 +568,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()], {'TestAction': action},
-                set(), Result('origin', 'message'), {}, {}]
+                set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 'a') as generator:
             self.assertTrue(ask_for_action_and_apply(*args))
@@ -575,7 +577,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()], {'TestAction': action},
-                set(), Result('origin', 'message'), {}, {}]
+                set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(5, 0) as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
@@ -584,14 +586,15 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()], {'TestAction': action},
-                set(), Result('origin', 'message'), {}, {}]
+                set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 'a') as generator:
             apply_single = 'Do (N)othing'
             se = Section('cli')
             args = [self.console_printer, se,
                     [action.get_metadata()], {'TestAction': action},
-                    set(), Result('origin', 'message'), {}, {}, apply_single]
+                    set(), Result('origin', 'message'), {}, {},
+                    {}, apply_single]
 
         with simulate_console_inputs('') as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
@@ -602,7 +605,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         se = Section('cli')
         args = [self.console_printer, se,
                 [action.get_metadata()], {'TestAction': action},
-                set(), Result('origin', 'message'), {}, {}, apply_single]
+                set(), Result('origin', 'message'), {}, {}, {}, apply_single]
 
         with simulate_console_inputs('a') as generator:
             self.assertTrue(ask_for_action_and_apply(*args))
@@ -618,7 +621,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             se = Section('cli')
             args = [self.console_printer, se,
                     [action.get_metadata()], {'TestAction': action},
-                    set(), Result('origin', 'message'), {}, {}, apply_single]
+                    set(), Result('origin', 'message'), {}, {}, {},
+                    apply_single]
 
         with simulate_console_inputs('a') as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
