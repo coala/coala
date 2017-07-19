@@ -338,7 +338,22 @@ Step 6. Waiting for Review
 --------------------------
 
 After creating a Pull Request, your PR moves to the review process (all will
-be explained in the next step), and all you can do is wait. The best thing you
+be explained in the next step),
+and all you can do is wait.
+But before pinging someone for a review make
+sure you have completed this checklist:
+  - have rebased properly.Please check our `Git Tutorial <http://api.coala.io/en/latest/Developers/Git_Basics.html>`_.
+  - have read and followed the `commit guidlines <http://api.coala.io/en/latest/Developers/Writing_Good_Commits.html>`_.
+  - have read `contributing guidelines <https://github.com/coala/coala/blob/master/CONTRIBUTING.rst>`_.
+  - run coala over your code locally and made sure that all commits
+    pass individually.It is not suficient
+    to have "fixup commits" on your PR,our bot will still
+    report issues for the previous commit.
+After you submit your PR, **DO NOT click the 'Update branch' button**.
+When asked for a rebase consult this
+`link <http://api.coala.io/en/latest/Developers/Git_Basics.html>`_.
+After submitting your PR,
+the best thing you
 can do at this step is review other people's PRs. Not only will this help
 the maintainers with the workload, but this is one of the three core steps
 towards becoming a full-blown coalaian.  Never close a Pull Request unless you
