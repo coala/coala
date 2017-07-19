@@ -529,6 +529,217 @@ class ConsoleInteractionTest(unittest.TestCase):
         with simulate_console_inputs(5, 0) as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
 
+        args = [self.console_printer, Section('cli'),
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('') as generator:
+            self.assertFalse(ask_for_action_and_apply(*args))
+
+    def test_default_input_reprompt_false(self):
+        action = TestAction()
+        se = Section('cli')
+        se.add_or_create_setting(Setting('reprompt', 'False'))
+        args = [self.console_printer, se,
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('a') as generator:
+            self.assertFalse(ask_for_action_and_apply(*args))
+
+    def test_default_input_reprompt_true(self):
+        action = TestAction()
+        se = Section('cli')
+        se.add_or_create_setting(Setting('reprompt', 'True'))
+        args = [self.console_printer, se,
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('a', 'False') as generator:
+            self.assertTrue(ask_for_action_and_apply(*args))
+
+    def test_default_input_reprompt_true_false(self):
+        action = TestAction()
+        se = Section('cli')
+        se.add_or_create_setting(Setting('reprompt', 'True'))
+        args = [self.console_printer, se,
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('a', 'False') as generator:
+            self.assertTrue(ask_for_action_and_apply(*args))
+
+    def test_default_input_reprompt_true_no_setting(self):
+        action = TestAction()
+        se = Section('cli')
+        se.add_or_create_setting(Setting('reprompt', 'True'))
+        args = [self.console_printer, se,
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('') as generator:
+            self.assertFalse(ask_for_action_and_apply(*args))
+
+    def test_default_input_no_reprompt(self):
+        action = TestAction()
+        args = [self.console_printer, Section('cli'),
+                [action.get_metadata()], {'TestAction': action},
+                set(), Result('origin', 'message'), {}, {}]
+
+        with simulate_console_inputs('a', 'False') as generator:
+            self.assertTrue(ask_for_action_and_apply(*args))
+
+    def test_acquire_actions_and_apply2(self):
+        with make_temp() as testfile_path:
+            file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
+            diff = Diff(file_dict[testfile_path])
+            diff.delete_line(2)
+            diff.change_line(3, '3\n', '3_changed\n')
+            with simulate_console_inputs('a', 'y', 'n') as generator, \
+                    retrieve_stdout() as sio:
+                ApplyPatchAction.is_applicable = staticmethod(
+                    lambda *args: True)
+                acquire_actions_and_apply(self.console_printer,
+                                          Section('cli'),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message', diffs={
+                                              testfile_path: diff}),
+                                          file_dict)
+                self.assertEqual(generator.last_input, 2)
+                self.assertIn(ApplyPatchAction.SUCCESS_MESSAGE, sio.getvalue())
+
+            class InvalidateTestAction(ResultAction):
+
+                is_applicable = staticmethod(lambda *args: True)
+
+                def apply(*args, **kwargs):
+                    ApplyPatchAction.is_applicable = staticmethod(
+                        lambda *args: 'ApplyPatchAction cannot be applied.')
+
+            old_applypatch_is_applicable = ApplyPatchAction.is_applicable
+            ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
+            cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
+
+            with simulate_console_inputs('a', 'o', 'n') as generator, \
+                    retrieve_stdout() as sio:
+                acquire_actions_and_apply(self.console_printer,
+                                          Section(''),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message',
+                                                 diffs={testfile_path: diff}),
+                                          file_dict,
+                                          cli_actions=cli_actions)
+                self.assertEqual(generator.last_input, 2)
+
+                action_fail = 'Failed to execute the action'
+                self.assertNotIn(action_fail, sio.getvalue())
+
+                apply_path_desc = ApplyPatchAction().get_metadata().desc
+                self.assertEqual(sio.getvalue().count(apply_path_desc), 3)
+
+            ApplyPatchAction.is_applicable = old_applypatch_is_applicable
+
+    def test_acquire_actions_and_apply3(self):
+        with make_temp() as testfile_path:
+            file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
+            diff = Diff(file_dict[testfile_path])
+            diff.delete_line(2)
+            diff.change_line(3, '3\n', '3_changed\n')
+            with simulate_console_inputs('a', 'no', 'n') as generator, \
+                    retrieve_stdout() as sio:
+                ApplyPatchAction.is_applicable = staticmethod(
+                    lambda *args: True)
+                acquire_actions_and_apply(self.console_printer,
+                                          Section('cli'),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message', diffs={
+                                              testfile_path: diff}),
+                                          file_dict)
+                self.assertEqual(generator.last_input, 1)
+                self.assertIn(ApplyPatchAction.SUCCESS_MESSAGE, sio.getvalue())
+
+            class InvalidateTestAction(ResultAction):
+
+                is_applicable = staticmethod(lambda *args: True)
+
+                def apply(*args, **kwargs):
+                    ApplyPatchAction.is_applicable = staticmethod(
+                        lambda *args: 'ApplyPatchAction cannot be applied.')
+
+            old_applypatch_is_applicable = ApplyPatchAction.is_applicable
+            ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
+            cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
+
+            with simulate_console_inputs('a', 'o', 'n') as generator, \
+                    retrieve_stdout() as sio:
+                acquire_actions_and_apply(self.console_printer,
+                                          Section(''),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message',
+                                                 diffs={testfile_path: diff}),
+                                          file_dict,
+                                          cli_actions=cli_actions)
+                self.assertEqual(generator.last_input, 2)
+
+                action_fail = 'Failed to execute the action'
+                self.assertNotIn(action_fail, sio.getvalue())
+
+                apply_path_desc = ApplyPatchAction().get_metadata().desc
+                self.assertEqual(sio.getvalue().count(apply_path_desc), 3)
+
+            ApplyPatchAction.is_applicable = old_applypatch_is_applicable
+
+    def test_acquire_actions_and_apply_reprompt(self):
+        with make_temp() as testfile_path:
+            file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
+            diff = Diff(file_dict[testfile_path])
+            diff.delete_line(2)
+            diff.change_line(3, '3\n', '3_changed\n')
+            with simulate_console_inputs('a', 'x', 'n') as generator, \
+                    retrieve_stdout() as sio:
+                ApplyPatchAction.is_applicable = staticmethod(
+                    lambda *args: True)
+                acquire_actions_and_apply(self.console_printer,
+                                          Section('cli'),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message', diffs={
+                                              testfile_path: diff}),
+                                          file_dict)
+                self.assertEqual(generator.last_input, 1)
+                self.assertIn('Reprompt available actions (Y/N)? Bad input.',
+                              sio.getvalue())
+
+            class InvalidateTestAction(ResultAction):
+
+                is_applicable = staticmethod(lambda *args: True)
+
+                def apply(*args, **kwargs):
+                    ApplyPatchAction.is_applicable = staticmethod(
+                        lambda *args: 'ApplyPatchAction cannot be applied.')
+
+            old_applypatch_is_applicable = ApplyPatchAction.is_applicable
+            ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
+            cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
+
+            with simulate_console_inputs('a', 'o', 'n') as generator, \
+                    retrieve_stdout() as sio:
+                acquire_actions_and_apply(self.console_printer,
+                                          Section(''),
+                                          self.file_diff_dict,
+                                          Result('origin', 'message',
+                                                 diffs={testfile_path: diff}),
+                                          file_dict,
+                                          cli_actions=cli_actions)
+                self.assertEqual(generator.last_input, 2)
+
+                action_fail = 'Failed to execute the action'
+                self.assertNotIn(action_fail, sio.getvalue())
+
+                apply_path_desc = ApplyPatchAction().get_metadata().desc
+                self.assertEqual(sio.getvalue().count(apply_path_desc), 3)
+
+            ApplyPatchAction.is_applicable = old_applypatch_is_applicable
+
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ['1\n', '2\n', '3\n']}

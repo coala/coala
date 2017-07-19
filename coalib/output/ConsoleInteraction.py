@@ -11,6 +11,7 @@ except ImportError:  # pragma: no cover
     pass
 
 from coalib.misc.DictUtilities import inverse_dicts
+from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -183,6 +184,20 @@ def acquire_actions_and_apply(console_printer,
                                         file_diff_dict,
                                         file_dict):
             break
+
+        if section.name == 'cli':
+            question = format_lines(
+                'Reprompt available actions (Y/N)? ', symbol='!')
+            input_q = input(question)
+            input_q = str(input_q).lower()
+            try:
+                if StringConverter(input_q).__bool__():
+                    section.append(Setting('reprompt', 'True'))
+                else:
+                    section.append(Setting('reprompt', 'False'))
+            except ValueError:
+                console_printer.print('Bad input. `Do (N)othing` applied.')
+                break
 
 
 def print_lines(console_printer,
@@ -634,12 +649,22 @@ def print_actions(console_printer, section, actions, failed_actions):
                             values for the action. If the user did
                             choose to do nothing, return (None, None).
     """
-    choice = choose_action(console_printer, actions)
 
-    if choice == 0:
-        return None, None
-
-    return get_action_info(section, actions[choice - 1], failed_actions)
+    reprompt = section.get('reprompt').value
+    if section.name == 'cli':
+        if (not reprompt or StringConverter(reprompt).__bool__()):
+            choice = choose_action(console_printer, actions)
+            if choice == 0:
+                return None, None
+            return get_action_info(section, actions[choice - 1],
+                                   failed_actions)
+        else:
+            return None, None
+    else:
+        choice = choose_action(console_printer, actions)
+        if choice == 0:
+            return None, None
+        return get_action_info(section, actions[choice - 1], failed_actions)
 
 
 def try_to_apply_action(action_name,
