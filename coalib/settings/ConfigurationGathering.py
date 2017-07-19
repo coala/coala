@@ -5,6 +5,7 @@ import logging
 
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, filter_section_bears_by_languages)
+from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.languages.Language import Language, UnknownLanguageError
 from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
@@ -183,6 +184,21 @@ def warn_nonexistent_targets(targets, sections, log_printer=None):
     bears_config_absent = warn_config_absent(sections, ['bears', 'aspects'])
     if files_config_absent or bears_config_absent:
         raise SystemExit(2)  # Invalid CLI options provided
+
+
+def warn_bears_absent(bears, log_printer=None):
+    """
+    Checks if coala-bears was also installed.
+
+    :param bears:        A dictionary with bears as keys and list of
+                         sections containing those bears as values.
+    :param log_printer:  A log printer to emit the warning to.
+    """
+    if not bears:
+        logging.error('No bears are installed. Did you forget to install '
+                      'the `coala-bears` package? Try `pip3 install '
+                      'coala-bears`.')
+        raise SystemExit(2)
 
 
 def warn_config_absent(sections, argument, log_printer=None):
@@ -486,8 +502,9 @@ def gather_configuration(acquire_settings,
                                            args=args)
     _set_section_language(sections)
     aspectize_sections(sections)
-    local_bears, global_bears = fill_settings(sections,
-                                              acquire_settings)
+    local_bears, global_bears = fill_settings(sections, acquire_settings)
+    bears = inverse_dicts(local_bears, global_bears)
+    warn_bears_absent(bears, log_printer)
     save_sections(sections)
     warn_nonexistent_targets(targets, sections)
 
