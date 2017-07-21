@@ -1,6 +1,7 @@
 import pytest
 
 import coalib.bearlib.aspects
+import coalib.bearlib.aspects.Metadata as Metadata
 
 
 class AspectInstanceTest:
@@ -66,3 +67,10 @@ class AspectInstanceTest:
             RootAspect('py').get(SubAspect('py'))
         exc.match('Cannot search an aspect instance using '
                   'another aspect instance as argument.')
+
+    def test_get_leaf_aspects(self, RootAspect, SubAspect, SubSubAspect):
+        assert RootAspect.get_leaf_aspects() == [SubSubAspect]
+        assert RootAspect('py').get_leaf_aspects() == [SubSubAspect('py')]
+
+        assert (Metadata.get_leaf_aspects() ==
+                Metadata.CommitMessage.get_leaf_aspects())

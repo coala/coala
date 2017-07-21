@@ -1,3 +1,5 @@
+import itertools
+
 import coalib.bearlib.aspects
 from coalib.bearlib.aspects.meta import isaspect, issubaspect
 from coalib.bearlib.aspects.base import aspectbase
@@ -59,3 +61,39 @@ class AspectList(list):
             return next(filter(None, (item.get(aspect) for item in self)))
         except StopIteration:
             return None
+
+    def _remove(self, item):
+        """
+        Remove first matching item in list.
+
+        :param item:        An aspectclass
+        :raises ValueError: When to be removed item is not found in list.
+        """
+        for aspect in self:
+            if aspect is item or isinstance(aspect, item):
+                return super().remove(aspect)
+
+        raise ValueError('{}._remove(x): {} not in list.'
+                         .format(type(self).__name__, item))
+
+    def get_leaf_aspects(self):
+        """
+        Breakdown all of item in self into their leaf subaspects.
+
+        :return: An AspectList contain ONLY leaf aspects.
+        """
+        aspects = type(self)()
+        for leaf_aspect in itertools.chain.from_iterable([
+                aspect.get_leaf_aspects() for aspect in self]):
+            # Make sure no duplication
+            if leaf_aspect not in aspects:
+                aspects.append(leaf_aspect)
+
+        for excluded_aspect in itertools.chain.from_iterable(
+                [aspect.get_leaf_aspects() for aspect in self.exclude]):
+            try:
+                aspects._remove(excluded_aspect)
+            except ValueError:
+                continue
+
+        return aspects

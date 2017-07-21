@@ -6,6 +6,7 @@ from coalib.bearlib.aspects import (
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.meta import isaspect
 from coalib.bearlib.aspects.Metadata import Metadata
+from coalib.bearlib.aspects.Redundancy import Redundancy
 from coalib.bears.LocalBear import LocalBear
 
 
@@ -22,6 +23,11 @@ class AspectListTest(unittest.TestCase):
                  Metadata.CommitMessage.Body('py')],
             exclude=[Metadata.CommitMessage.Shortlog.TrailingPeriod,
                      Metadata.CommitMessage.Body.Existence])
+        self.unused_variable_leaves = AspectList([
+            Redundancy.UnusedVariable.UnusedGlobalVariable,
+            Redundancy.UnusedVariable.UnusedLocalVariable,
+            Redundancy.UnusedVariable.UnusedParameter,
+        ])
 
     def test__init__(self):
         list_of_aspect = AspectList(['CommitMessage.Shortlog',
@@ -107,3 +113,42 @@ class AspectListTest(unittest.TestCase):
                           CommitMessage.Shortlog.TrailingPeriod))
         self.assertIsNone(self.instancelist_excludes.get(
                           CommitMessage.Body.Existence))
+
+    def test_get_leaf_aspects(self):
+        leaves = AspectList([
+            Metadata.CommitMessage.Body.Length('py'),
+            Metadata.CommitMessage.Shortlog.ColonExistence('py'),
+            Metadata.CommitMessage.Shortlog.FirstCharacter('py'),
+            Metadata.CommitMessage.Shortlog.Length('py'),
+            Metadata.CommitMessage.Shortlog.Tense('py'),
+        ])
+        instancelist_leaf = self.instancelist_excludes.get_leaf_aspects()
+
+        self.assertCountEqual(instancelist_leaf, leaves)
+
+    def test_get_leaf_aspects_duplicated_node(self):
+        aspects = AspectList([
+            Redundancy.UnusedVariable,
+            Redundancy.UnusedVariable.UnusedLocalVariable,
+        ]).get_leaf_aspects()
+
+        self.assertCountEqual(aspects, self.unused_variable_leaves)
+
+    def test_get_leaf_aspects_irrelevant_exclude(self):
+        aspects = AspectList([Redundancy.UnusedVariable],
+                             exclude=[Metadata]).get_leaf_aspects()
+
+        self.assertCountEqual(aspects, self.unused_variable_leaves)
+
+    def test_remove(self):
+        aspectlist = AspectList([Metadata.CommitMessage])
+        self.assertIn(Metadata.CommitMessage, aspectlist)
+
+        with self.assertRaisesRegex(
+                ValueError,
+                "^AspectList._remove\(x\): <aspectclass 'Root.Metadata'> "
+                'not in list.$'):
+            aspectlist._remove(Metadata)
+
+        aspectlist._remove(Metadata.CommitMessage)
+        self.assertEqual(aspectlist, AspectList())
