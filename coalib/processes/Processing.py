@@ -220,6 +220,8 @@ def print_result(results,
                            diff objects as values.
     :param ignore_ranges:  A list of SourceRanges. Results that affect code in
                            any of those ranges will be ignored.
+    :param apply_single:   The action that should be applied for all results,
+                           If it's not selected, has a value of False.
     :param console_printer: Object to print messages on the console.
     :return:               Returns False if any results were yielded. Else
                            True.
@@ -574,6 +576,9 @@ def process_queues(processes,
                                as a file cache buffer.
     :param debug:              Run in debug mode, expecting that no logger
                                thread is running.
+    :param apply_single:       The action that should be applied for all
+                               results. If it's not selected, has a value of
+                               False.
     :return:                   Return True if all bears execute successfully and
                                Results were delivered to the user. Else False.
     """
@@ -732,6 +737,8 @@ def execute_section(section,
     :param console_printer:  Object to print messages on the console.
     :param debug:            Bypass multiprocessing and run bears in debug mode,
                              not catching any exceptions.
+    :param apply_single:     The action that should be applied for all results.
+                             If it's not selected, has a value of False.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)

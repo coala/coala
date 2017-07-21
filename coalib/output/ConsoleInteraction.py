@@ -154,6 +154,8 @@ def acquire_actions_and_apply(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
+    :param apply_single:    The action that should be applied for all results.
+                            If it's not selected, has a value of False.
     :param cli_actions:     The list of cli actions available.
     """
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
@@ -266,6 +268,8 @@ def print_result(console_printer,
     :param result:          A derivative of Result.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
+    :param apply_single:    The action that should be applied for all results.
+                            If it's not selected, has a value of False.
     :param interactive:     Variable to check whether or not to
                             offer the user actions interactively.
     """
@@ -438,6 +442,8 @@ def print_results_no_input(log_printer,
                            key.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
+    :param apply_single:   The action that should be applied for all results.
+                           If it's not selected, has a value of False.
     :param console_printer: Object to print messages on the console.
     """
     for result in result_list:
@@ -473,6 +479,8 @@ def print_results(log_printer,
                            key.
     :param file_diff_dict: A dictionary that contains filenames as keys and
                            diff objects as values.
+    :param apply_single:   The action that should be applied for all results.
+                           If it's not selected, has a value of False.
     :param console_printer: Object to print messages on the console.
     """
     for result in sorted(result_list):
@@ -606,6 +614,8 @@ def choose_action(console_printer, actions, apply_single=False):
 
     :param console_printer: Object to print messages on the console.
     :param actions:         Actions available to the user.
+    :param apply_single:    The action that should be applied for all results.
+                            If it's not selected, has a value of False.
     :return:                Return choice of action of user.
     """
     if apply_single:
@@ -655,6 +665,8 @@ def print_actions(console_printer, section, actions, failed_actions,
     :param failed_actions:  A set of all actions that have failed. A failed
                             action remains in the list until it is
                             successfully executed.
+    :param apply_single:    The action that should be applied for all results.
+                            If it's not selected, has a value of False.
     :return:                A tuple with the name member of the
                             FunctionMetadata object chosen by the user
                             and a Section containing at least all needed
@@ -815,6 +827,8 @@ def ask_for_action_and_apply(console_printer,
                             the file with filename as keys.
     :param file_dict:       Dictionary with filename as keys and its contents
                             as values.
+    :param apply_single:    The action that should be applied for all results.
+                            If it's not selected, has a value of False.
     :return:                Returns a boolean value. True will be returned, if
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
