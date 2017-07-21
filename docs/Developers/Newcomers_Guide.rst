@@ -308,7 +308,7 @@ to be merged, create a commit and push it to your fork, using:
 
 ::
 
-    $ git push myfork
+    $ git push -u myfork <branchname>
 
 where ``myfork`` is the name of your fork that you added at the previous step.
 
