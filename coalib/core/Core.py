@@ -201,6 +201,7 @@ class Session:
         try:
             self.event_loop.run_forever()
         finally:
+            self.executor.shutdown()
             self.event_loop.close()
 
     def _schedule_bears(self, bears):
