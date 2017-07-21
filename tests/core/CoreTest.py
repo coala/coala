@@ -619,3 +619,23 @@ class CoreOnThreadPoolExecutorTest(CoreTest):
     def setUp(self):
         super().setUp()
         self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=8)
+
+
+# This test class only runs test cases once, as the tests here rely on specific
+# executors / having the control over executors.
+class CoreOnSpecificExecutorTest(CoreTestBase):
+    def test_custom_executor_closed_after_run(self):
+        bear = MultiTaskBear(Section('test-section'),
+                             {'some-file': []},
+                             tasks_count=1)
+
+        # The executor should be closed regardless how many bears are passed.
+        for bears in [set(), {bear}]:
+            executor = ThreadPoolExecutor(max_workers=1)
+
+            self.execute_run(bears, executor)
+
+            # Submitting new tasks should raise an exception now.
+            with self.assertRaisesRegex(
+                    RuntimeError, 'cannot schedule new futures after shutdown'):
+                executor.submit(lambda: None)
