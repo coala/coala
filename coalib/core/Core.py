@@ -173,7 +173,8 @@ class Session:
         :param executor:
             Custom executor used to run the bears. If ``None``, a
             ``ProcessPoolExecutor`` is used using as many processes as cores
-            available on the system.
+            available on the system. Note that a passed custom executor is
+            closed after the core has finished.
         """
         self.bears = bears
         self.result_callback = result_callback
@@ -193,12 +194,15 @@ class Session:
         """
         Runs the coala session.
         """
-        if self.bears:
-            self._schedule_bears(self.bears_to_schedule)
-            try:
-                self.event_loop.run_forever()
-            finally:
-                self.event_loop.close()
+        try:
+            if self.bears:
+                self._schedule_bears(self.bears_to_schedule)
+                try:
+                    self.event_loop.run_forever()
+                finally:
+                    self.event_loop.close()
+        finally:
+            self.executor.shutdown()
 
     def _schedule_bears(self, bears):
         """
