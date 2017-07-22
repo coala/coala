@@ -377,13 +377,16 @@ class CoreTest(unittest.TestCase):
         self.filedict1 = {'f1': []}
 
     @staticmethod
-    def execute_run(bears):
+    def execute_run(bears, result_callback=None):
         results = []
 
         def on_result(result):
             results.append(result)
 
-        run(bears, on_result)
+        if result_callback is None:
+            result_callback = on_result
+
+        run(bears, result_callback)
 
         return results
 
@@ -514,7 +517,7 @@ class CoreTest(unittest.TestCase):
         on_result = unittest.mock.Mock(side_effect=ValueError)
 
         with self.assertLogs(logging.getLogger()) as cm:
-            run({bear}, on_result)
+            self.execute_run({bear}, on_result)
 
         on_result.assert_has_calls([unittest.mock.call(i) for i in range(10)],
                                    any_order=True)
