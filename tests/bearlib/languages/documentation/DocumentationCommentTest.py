@@ -4,8 +4,8 @@ from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
-from coalib.bearlib.languages.documentation.DocumentationExtraction import (
-    extract_documentation)
+from coalib.bearlib.languages.documentation.DocBaseClass import (
+    DocBaseClass)
 from tests.bearlib.languages.documentation.TestUtils import (
     load_testdata)
 from coalib.results.TextPosition import TextPosition
@@ -72,7 +72,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
     def test_from_metadata(self):
         data = load_testdata('default.py')
 
-        original = list(extract_documentation(data, 'python', 'default'))
+        original = list(DocBaseClass.extract(data, 'python', 'default'))
 
         parsed_docs = [(doc.parse(), doc.marker, doc.indent, doc.position)
                        for doc in original]
@@ -109,7 +109,8 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
 
     def test_description(self):
         doc = ' description only '
-        self.check_docstring(doc, [self.Description(desc=' description only ')])
+        self.check_docstring(
+            doc, [self.Description(desc=' description only ')])
 
     def test_params_default(self):
         self.maxDiff = None
@@ -139,7 +140,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('default.py')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, 'python', 'default')]
+                       DocBaseClass.extract(data, 'python', 'default')]
 
         expected = [
             [self.Description(desc='\nModule description.\n\n'
@@ -188,7 +189,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('doxygen.py')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, 'python', 'doxygen')]
+                       DocBaseClass.extract(data, 'python', 'doxygen')]
 
         expected = [
             [self.Description(desc=' @package pyexample\n  Documentation for'
@@ -232,7 +233,7 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('default.java')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, 'java', 'default')]
+                       DocBaseClass.extract(data, 'java', 'default')]
 
         expected = [[self.Description(
                      desc='\n Returns an String that says Hello with the name'
@@ -253,7 +254,7 @@ class GoDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('default.go')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, 'golang', 'golang')]
+                       DocBaseClass.extract(data, 'golang', 'golang')]
 
         expected = [['\n',
                      'Comments may span\n',
@@ -272,19 +273,19 @@ class DocumentationAssemblyTest(unittest.TestCase):
         data = load_testdata('default.py')
         docs = ''.join(data)
 
-        for doc in extract_documentation(data, 'python', 'default'):
+        for doc in DocBaseClass.extract(data, 'python', 'default'):
             self.assertIn(doc.assemble(), docs)
 
     def test_doxygen_assembly(self):
         data = load_testdata('doxygen.py')
         docs = ''.join(data)
 
-        for doc in extract_documentation(data, 'python', 'doxygen'):
+        for doc in DocBaseClass.extract(data, 'python', 'doxygen'):
             self.assertIn(doc.assemble(), docs)
 
     def test_c_assembly(self):
         data = load_testdata('default.c')
         docs = ''.join(data)
 
-        for doc in extract_documentation(data, 'c', 'doxygen'):
+        for doc in DocBaseClass.extract(data, 'c', 'doxygen'):
             self.assertIn(doc.assemble(), docs)

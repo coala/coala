@@ -4,25 +4,28 @@ from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
     DocumentationComment)
-from coalib.bearlib.languages.documentation.DocumentationExtraction import (
-    extract_documentation)
+from coalib.bearlib.languages.documentation.DocBaseClass import (
+    DocBaseClass)
 from tests.bearlib.languages.documentation.TestUtils import (
     load_testdata)
 from coalib.results.TextPosition import TextPosition
+from coalib.results.TextRange import TextRange
+from coalib.results.Diff import Diff
 
 
-class DocumentationExtractionTest(unittest.TestCase):
+class DocBaseClassTest(unittest.TestCase):
 
-    def test_extract_documentation_invalid_input(self):
+    def test_DocBaseClass_extraction_invalid_input(self):
+
         with self.assertRaises(FileNotFoundError):
-            tuple(extract_documentation('', 'PYTHON', 'INVALID'))
+            tuple(DocBaseClass.extract('', 'PYTHON', 'INVALID'))
 
-    def test_extract_documentation_C(self):
+    def test_DocBaseClass_extraction_C(self):
         data = load_testdata('data.c')
 
         # No built-in documentation for C.
         with self.assertRaises(KeyError):
-            tuple(extract_documentation(data, 'C', 'default'))
+            tuple(DocBaseClass.extract(data, 'C', 'default'))
 
         docstyle_C_doxygen = DocstyleDefinition.load('C', 'doxygen')
 
@@ -59,31 +62,31 @@ class DocumentationExtractionTest(unittest.TestCase):
                                 TextPosition(28, 1)))
 
         self.assertEqual(tuple(
-            extract_documentation(data, 'C', 'doxygen')),
+            DocBaseClass.extract(data, 'C', 'doxygen')),
             expected_results)
 
-    def test_extract_documentation_C_2(self):
+    def test_DocBaseClass_extraction_C_2(self):
         data = ['/** my main description\n', ' * continues here */']
 
         docstyle_C_doxygen = DocstyleDefinition.load('C', 'doxygen')
 
         self.assertEqual(
-            list(extract_documentation(data, 'C', 'doxygen')),
+            list(DocBaseClass.extract(data, 'C', 'doxygen')),
             [DocumentationComment(' my main description\n continues here',
                                   docstyle_C_doxygen, '',
                                   docstyle_C_doxygen.markers[0],
                                   TextPosition(1, 1))])
 
-    def test_extract_documentation_CPP(self):
+    def test_DocBaseClass_extraction_CPP(self):
         data = load_testdata('data.cpp')
 
         # No built-in documentation for C++.
         with self.assertRaises(KeyError):
-            tuple(extract_documentation(data, 'CPP', 'default'))
+            tuple(DocBaseClass.extract(data, 'CPP', 'default'))
 
         docstyle_CPP_doxygen = DocstyleDefinition.load('CPP', 'doxygen')
 
-        self.assertEqual(tuple(extract_documentation(data, 'CPP', 'doxygen')),
+        self.assertEqual(tuple(DocBaseClass.extract(data, 'CPP', 'doxygen')),
                          (DocumentationComment(
                               ('\n'
                                ' This is the main function.\n'
@@ -118,12 +121,12 @@ class DocumentationExtractionTest(unittest.TestCase):
                               docstyle_CPP_doxygen.markers[4],
                               TextPosition(32, 1))))
 
-    def test_extract_documentation_CPP_2(self):
+    def test_DocBaseClass_CPP_2(self):
         data = load_testdata('data2.cpp')
 
         docstyle_CPP_doxygen = DocstyleDefinition.load('CPP', 'doxygen')
 
-        self.assertEqual(tuple(extract_documentation(data, 'CPP', 'doxygen')),
+        self.assertEqual(tuple(DocBaseClass.extract(data, 'CPP', 'doxygen')),
                          (DocumentationComment(
                           ('module comment\n'
                            ' hello world\n'),
@@ -131,7 +134,7 @@ class DocumentationExtractionTest(unittest.TestCase):
                           docstyle_CPP_doxygen.markers[0],
                           TextPosition(1, 1)),))
 
-    def test_extract_documentation_PYTHON3(self):
+    def test_DocBaseClass_PYTHON3(self):
         data = load_testdata('data.py')
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
                                                            'default')
@@ -192,9 +195,8 @@ class DocumentationExtractionTest(unittest.TestCase):
                     )
 
         self.assertEqual(
-            tuple(extract_documentation(data, 'PYTHON3', 'default')),
+            tuple(DocBaseClass.extract(data, 'PYTHON3', 'default')),
             expected)
-
         # Change only the docstyle in expected results.
         expected = list(DocumentationComment(r.documentation,
                                              docstyle_PYTHON3_doxygen,
@@ -214,37 +216,37 @@ class DocumentationExtractionTest(unittest.TestCase):
             TextPosition(30, 1)))
 
         self.assertEqual(
-            list(extract_documentation(data, 'PYTHON3', 'doxygen')),
+            list(DocBaseClass.extract(data, 'PYTHON3', 'doxygen')),
             expected)
 
-    def test_extract_documentation_PYTHON3_2(self):
+    def test_DocBaseClass_extraction_PYTHON3_2(self):
         data = ['\n', '""" documentation in single line  """\n', 'print(1)\n']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
                                                            'default')
 
         self.assertEqual(
-            list(extract_documentation(data, 'PYTHON3', 'default')),
+            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
             [DocumentationComment(' documentation in single line  ',
                                   docstyle_PYTHON3_default, '',
                                   docstyle_PYTHON3_default.markers[0],
                                   TextPosition(2, 1))])
 
-    def test_extract_documentation_PYTHON3_3(self):
+    def test_DocBaseClass_extraction_PYTHON3_3(self):
         data = ['## documentation in single line without return at end.']
 
         docstyle_PYTHON3_doxygen = DocstyleDefinition.load('PYTHON3',
                                                            'doxygen')
 
         self.assertEqual(
-            list(extract_documentation(data, 'PYTHON3', 'doxygen')),
+            list(DocBaseClass.extract(data, 'PYTHON3', 'doxygen')),
             [DocumentationComment(' documentation in single line without '
                                   'return at end.',
                                   docstyle_PYTHON3_doxygen, '',
                                   docstyle_PYTHON3_doxygen.markers[1],
                                   TextPosition(1, 1))])
 
-    def test_extract_documentation_PYTHON3_4(self):
+    def test_DocBaseClass_extraction_PYTHON3_4(self):
         data = ['\n', 'triple_quote_string_test = """\n',
                 'This is not a docstring\n', '"""\n']
 
@@ -254,5 +256,35 @@ class DocumentationExtractionTest(unittest.TestCase):
         # Nothing is yielded as triple quote string literals are being
         # ignored.
         self.assertEqual(
-            list(extract_documentation(data, 'PYTHON3', 'default')),
+            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
             [])
+
+    def test_generate_diff(self):
+        data_old = ['\n', '""" documentation in single line  """\n']
+        for doc_comment in DocBaseClass.extract(
+                                data_old, 'PYTHON3', 'default'):
+            old_doc_comment = doc_comment
+
+        old_range = TextRange.from_values(
+            old_doc_comment.range.start.line,
+            1,
+            old_doc_comment.range.end.line,
+            old_doc_comment.range.end.column)
+
+        data_new = ['\n', '"""\n documentation in single line\n"""\n']
+        for doc_comment in DocBaseClass.extract(
+                                data_new, 'PYTHON3', 'default'):
+            new_doc_comment = doc_comment
+
+        diff = DocBaseClass.generate_diff(
+                        data_old, old_doc_comment, new_doc_comment)
+
+        diff_expected = Diff(data_old)
+        diff_expected.replace(old_range, new_doc_comment.assemble())
+
+        self.assertEqual(diff, diff_expected)
+
+    def test_DocBaseClass_process_documentation_not_implemented(self):
+        test_object = DocBaseClass()
+        self.assertRaises(NotImplementedError,
+                          test_object.process_documentation)
