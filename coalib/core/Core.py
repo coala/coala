@@ -327,7 +327,7 @@ def initialize_dependencies(bears):
     return dependency_tracker, bears
 
 
-def run(bears, result_callback):
+def run(bears, result_callback, executor=None):
     """
     Runs a coala session.
 
@@ -339,14 +339,13 @@ def run(bears, result_callback):
 
             def result_callback(result):
                 pass
+    :param executor:
+        Custom executor used to run the bears.
     """
-    # FIXME Allow to pass different executors nicely, for example to execute
-    # FIXME   coala with less cores, or to schedule jobs on distributed systems
-    # FIXME   (for example Mesos).
-
     # Set up event loop and executor.
     event_loop = asyncio.SelectorEventLoop()
-    executor = concurrent.futures.ProcessPoolExecutor()
+    if executor is None:
+        executor = concurrent.futures.ProcessPoolExecutor()
 
     # Initialize dependency tracking.
     dependency_tracker, bears_to_schedule = initialize_dependencies(bears)
