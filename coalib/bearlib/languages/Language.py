@@ -416,6 +416,9 @@ class Language(metaclass=LanguageMeta):
         return (type(self) is type(item)
                 and set(item.versions).issubset(set(self.versions)))
 
+    def __reduce__(self):
+        return (Language.__getitem__, (str(self),))
+
     @property
     def attributes(self):
         """

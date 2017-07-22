@@ -1,3 +1,4 @@
+import pickle
 import unittest
 
 from coalib.bearlib.languages.Language import Language, LanguageMeta
@@ -9,6 +10,12 @@ class LanguageTest(unittest.TestCase):
         assert set(dir(Language)) == {
             l.__name__ for l in LanguageMeta.all
         }.union(type.__dir__(Language))
+
+    def test_pickle_ability(self):
+        cpp = Language['CPP']
+        cpp_str = pickle.dumps(cpp)
+        cpp_unpickled = pickle.loads(cpp_str)
+        self.assertEqual(str(cpp), str(cpp_unpickled))
 
 
 class LanguageAttributeErrorTest(unittest.TestCase):
