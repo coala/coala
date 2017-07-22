@@ -127,21 +127,22 @@ def _extract_doc_comment_standard(content, line, column, markers):
     line += 1
 
     while line < len(content):
-        pos = content[line].find(markers[2])
-        each_line_pos = content[line].find(markers[1])
+        pos = content[line].find(markers[2].strip())
+        each_line_pos = content[line].find(markers[1].strip())
 
         if pos == -1:
             if each_line_pos == -1:
                 # If the first text occurrence is not the each-line marker
                 # now we violate the doc-comment layout.
                 return None
-            doc_comment += content[line][each_line_pos + len(markers[1]):]
+            doc_comment += content[line][
+                           each_line_pos + len(markers[1].strip()):]
         else:
             # If no each-line marker found or it's located past the end marker:
             # extract no further and end the doc-comment.
             if each_line_pos != -1 and each_line_pos + 1 < pos:
                 doc_comment += content[line][each_line_pos +
-                                             len(markers[1]):pos]
+                                             len(markers[1].strip()):pos]
 
             return line, pos + len(markers[2]), doc_comment
 

@@ -243,7 +243,12 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
                      self.ExceptionValue(name='IOException',
                                          desc='throws IOException\n'),
                      self.ReturnValue(
-                         desc='     the concatenated string\n')]]
+                         desc='     the concatenated string\n')],
+                    [self.Description(
+                     desc='\n Returns Area of a square.\n\n'),
+                     self.Parameter(name='side', desc='side of square\n'),
+                     self.ReturnValue(desc=' area of a square\n')],
+                    ]
 
         self.assertEqual(expected, parsed_docs)
 
