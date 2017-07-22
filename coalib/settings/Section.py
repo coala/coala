@@ -3,6 +3,7 @@ import os
 import sys
 from collections import OrderedDict
 
+from coalib.bearlib.aspects import AspectList
 from coalib.collecting.Collectors import collect_registered_bears_dirs
 from coala_utils.decorators import enforce_signature, generate_repr
 from coalib.misc.DictUtilities import update_ordered_dict_key
@@ -41,6 +42,39 @@ def append_to_sections(sections,
 
     sections[section_name.lower()].append(Setting(
         key, str(value), origin, from_cli=from_cli, to_append=to_append))
+
+
+def extract_aspects_from_section(section):
+    """
+    Extracts aspects and their related settings from a section and create an
+    AspectList from it.
+
+    :param section: Section object.
+    :return:        AspectList containing aspectclass instance with
+                    user-defined tastes.
+    """
+    aspects = section.get('aspects')
+    language = section.get('language')
+
+    # Skip aspects initialization if not configured in section
+    if not len(aspects):
+        return None
+
+    if not len(language):
+        raise AttributeError('Language was not found in configuration file. '
+                             'Usage of aspect-based configuration must '
+                             'include language information.')
+
+    aspect_instances = AspectList(exclude=section.get('excludes'))
+
+    for aspect in AspectList(aspects):
+        # Search all related tastes in section.
+        tastes = {name.split('.')[-1]: value
+                  for name, value in section.contents.items()
+                  if name.lower().startswith(aspect.__name__.lower())}
+        aspect_instances.append(aspect(language, **tastes))
+
+    return aspect_instances
 
 
 @generate_repr()

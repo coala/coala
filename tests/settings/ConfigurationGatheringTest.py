@@ -9,12 +9,14 @@ from pyprint.NullPrinter import NullPrinter
 import pytest
 
 from coalib.misc import Constants
+from coalib.settings.Section import Section
 from coala_utils.ContextManagers import (
     make_temp, change_directory, retrieve_stdout)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
-    find_user_config, gather_configuration, load_configuration)
+    find_user_config, gather_configuration, load_configuration,
+    aspectize_sections)
 
 
 @pytest.mark.usefixtures('disable_bears')
@@ -332,3 +334,10 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             load_configuration(['--no-config'], self.log_printer)
             self.assertNotIn('WARNING', stdout.getvalue())
+
+    def test_aspectize_sections(self):
+        section = Section('test')
+        sections = {'test': section}
+        aspectize_sections(sections)
+
+        self.assertIsNone(sections['test'].aspects)

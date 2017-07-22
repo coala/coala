@@ -9,7 +9,7 @@ from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParsing import parse_cli, check_conflicts
 from coalib.parsing.ConfParser import ConfParser
-from coalib.settings.Section import Section
+from coalib.settings.Section import Section, extract_aspects_from_section
 from coalib.settings.SectionFilling import fill_settings
 from coalib.settings.Setting import Setting, path
 from string import Template
@@ -19,6 +19,19 @@ COAFILE_OUTPUT = Template('$type \'$file\' $found!\n'
                           '* add `--save` to generate a config file with '
                           'your current options\n'
                           '* add `-I` to suppress any use of config files\n')
+
+
+def aspectize_sections(sections):
+    """
+    Search for aspects related setting in a section, initialize it, and then
+    embed the aspects information as AspectList object into the section itself.
+
+    :param sections:  List of section that potentially contain aspects setting.
+    :return:          The new sections.
+    """
+    for _, section in sections.items():
+        section.aspects = extract_aspects_from_section(section)
+    return sections
 
 
 def merge_section_dicts(lower, higher):
@@ -385,6 +398,7 @@ def gather_configuration(acquire_settings,
         arg_list = sys.argv[1:] if arg_list is None else arg_list
     sections, targets = load_configuration(arg_list, log_printer, arg_parser,
                                            args=args)
+    aspectize_sections(sections)
     local_bears, global_bears = fill_settings(sections,
                                               acquire_settings,
                                               log_printer)
