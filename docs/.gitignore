@@ -2,3 +2,5 @@
 *.rst
 # …except for the index
 !index.rst
+# …and the hand-written developers docs.
+!Developers/*.rst
