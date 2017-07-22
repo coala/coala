@@ -617,7 +617,7 @@ class CoreTest(unittest.TestCase):
 
         result_set = set(results)
         self.assertEqual(len(result_set), len(results))
-        self.assertEqual(result_set, {i for i in range(100)})
+        self.assertEqual(result_set, set(range(100)))
         self.assertEqual(bear.dependency_results, {})
 
 
