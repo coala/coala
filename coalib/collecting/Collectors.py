@@ -184,6 +184,26 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
     return bears_found
 
 
+def filter_section_bears_by_languages(bears, languages):
+    """
+    Filters the bears by languages.
+
+    :param bears:       The dictionary of the sections as keys and list of
+                        bears as values.
+    :param languages:   Languages that bears are being filtered on.
+    :return:            New dictionary with filtered out bears that don't match
+                        any language from languages.
+    """
+    new_bears = {}
+    # All bears with "all" languages supported shall be shown
+    languages = set(language.lower() for language in languages) | {'all'}
+    for section in bears.keys():
+        new_bears[section] = tuple(
+            bear for bear in bears[section]
+            if {language.lower() for language in bear.LANGUAGES} & languages)
+    return new_bears
+
+
 def filter_capabilities_by_languages(bears, languages):
     """
     Filters the bears capabilities by languages.

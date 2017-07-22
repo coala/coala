@@ -3,6 +3,7 @@ import re
 import tempfile
 import unittest
 import logging
+import sys
 
 from pyprint.ClosableObject import close_objects
 from pyprint.NullPrinter import NullPrinter
@@ -15,8 +16,14 @@ from coala_utils.ContextManagers import (
 from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
-    find_user_config, gather_configuration, load_configuration,
-    aspectize_sections)
+    aspectize_sections,
+    find_user_config,
+    gather_configuration,
+    get_filtered_bears,
+    load_configuration,
+)
+
+from tests.TestUtilities import bear_test_module
 
 
 @pytest.mark.usefixtures('disable_bears')
@@ -341,3 +348,34 @@ class ConfigurationGatheringTest(unittest.TestCase):
         aspectize_sections(sections)
 
         self.assertIsNone(sections['test'].aspects)
+
+
+class ConfigurationGatheringCollectionTest(unittest.TestCase):
+
+    def setUp(self):
+        self.old_argv = sys.argv
+        self.log_printer = LogPrinter(NullPrinter())
+
+    def tearDown(self):
+        close_objects(self.log_printer)
+        sys.argv = self.old_argv
+
+    def test_get_filtered_bears(self):
+        sys.argv = ['coala', '-I']
+
+        with bear_test_module():
+            local_bears, global_bears = get_filtered_bears(
+                None, self.log_printer)
+
+        self.assertEqual(len(local_bears['cli']), 13)
+
+        with bear_test_module():
+            local_bears, global_bears = get_filtered_bears(
+                ['Java'], self.log_printer)
+
+        self.assertEqual(len(local_bears['cli']), 2)
+        self.assertEqual(str(local_bears['cli'][0]),
+                         "<class 'JavaTestBear.JavaTestBear'>")
+        self.assertEqual(str(local_bears['cli'][1]),
+                         "<class 'LineCountTestBear.LineCountTestBear'>")
+        self.assertEqual(len(global_bears['cli']), 0)
