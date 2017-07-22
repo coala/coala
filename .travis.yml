@@ -16,6 +16,10 @@ matrix:
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
 
+env:
+  global:
+    - PATH="$PATH:$TRAVIS_BUILD_DIR/node_modules/.bin"
+
 cache:
   pip: true
   directories:
