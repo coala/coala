@@ -31,4 +31,5 @@ class bearclass(type):
             cls.languages = Languages(languages)
             cls.aspects = defaultdict(
                 lambda: AspectList([]),
-                ((k, AspectList(v)) for (k, v) in dict(aspects).items()))
+                ((k, AspectList(v, languages=cls.languages))
+                 for (k, v) in dict(aspects).items()))

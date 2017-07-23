@@ -6,6 +6,7 @@ from coalib.bearlib.aspects import (
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.meta import isaspect
 from coalib.bearlib.aspects.Metadata import Metadata
+from coalib.bears.LocalBear import LocalBear
 
 
 class AspectListTest(unittest.TestCase):
@@ -63,6 +64,20 @@ class AspectListTest(unittest.TestCase):
                          self.aspectlist_excludes)
         self.assertNotIn(Metadata.CommitMessage.Body.Existence,
                          self.aspectlist_excludes)
+
+    def test_bear__contains__(self):
+        class aspectsTestBear(LocalBear, aspects={
+                    'detect': [Metadata.CommitMessage.Shortlog],
+                    'fix': [Metadata.CommitMessage.Shortlog.TrailingPeriod]
+                }, languages=['Python', 'Vala']):
+            pass
+
+        aspectClass = Metadata.CommitMessage.Shortlog
+        aspectInstance1 = Metadata.CommitMessage.Shortlog('Python')
+        aspectInstance2 = Metadata.CommitMessage.Shortlog('C#')
+        self.assertIn(aspectClass, aspectsTestBear.aspects['detect'])
+        self.assertIn(aspectInstance1, aspectsTestBear.aspects['detect'])
+        self.assertNotIn(aspectInstance2, aspectsTestBear.aspects['detect'])
 
     def test_get(self):
         list_of_aspect = AspectList(

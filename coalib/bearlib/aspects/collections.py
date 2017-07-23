@@ -1,5 +1,6 @@
 import coalib.bearlib.aspects
 from coalib.bearlib.aspects.meta import isaspect, issubaspect
+from coalib.bearlib.aspects.base import aspectbase
 
 
 class AspectList(list):
@@ -7,7 +8,7 @@ class AspectList(list):
     List-derived container to hold aspects.
     """
 
-    def __init__(self, seq=(), exclude=None):
+    def __init__(self, seq=(), exclude=None, languages=None):
         """
         Initialize a new AspectList.
 
@@ -27,9 +28,15 @@ class AspectList(list):
         super().__init__((item if isaspect(item) else
                           coalib.bearlib.aspects[item] for item in seq))
 
+        self.languages = languages
         self.exclude = AspectList(exclude) if exclude is not None else []
 
     def __contains__(self, aspect):
+        # Check if ``aspects`` language is supported.
+        if self.languages is not None and isinstance(aspect, aspectbase):
+            if aspect.language not in self.languages:
+                return False
+
         for item in self:
             if issubaspect(aspect, item):
                 return aspect not in self.exclude
