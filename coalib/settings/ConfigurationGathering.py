@@ -30,8 +30,13 @@ def aspectize_sections(sections):
     :param sections:  List of section that potentially contain aspects setting.
     :return:          The new sections.
     """
-    for _, section in sections.items():
+    for section_name, section in sections.items():
         section.aspects = extract_aspects_from_section(section)
+        if section.aspects is not None and len(section.get('bears')):
+            logging.warning("'aspects' and 'bears' configuration is detected "
+                            "in section '{}'. Aspect-based configuration will "
+                            'takes priority and will overwrite any '
+                            'explicitly listed bears'.format(section_name))
     return sections
 
 

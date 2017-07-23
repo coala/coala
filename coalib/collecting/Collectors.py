@@ -204,6 +204,33 @@ def filter_section_bears_by_languages(bears, languages):
     return new_bears
 
 
+def collect_bears_by_aspects(aspects, kinds):
+    """
+    Collect bear based on aspects.
+
+    Return a list of bears that have capability to analyze all aspects from
+    given AspectList requirement.
+
+    :param aspects: An AspectList that need to be covered.
+    :param kinds:   List of bear kinds to be collected.
+    :return:        Tuple of list of bear classes based on kind. The lists are
+                    in the same order as kinds.
+    """
+    all_bears = get_all_bears()
+    bears_found = tuple([] for i in range(len(kinds)))
+    for aspect in aspects.get_leaf_aspects():
+        for bear in all_bears:
+            if (aspect in bear.aspects['detect'] or
+                    aspect in bear.aspects['fix']):
+                index = kinds.index(_get_kind(bear))
+                # Avoid duplicate
+                if bear not in bears_found[index]:
+                    bears_found[index].append(bear)
+                break
+
+    return bears_found
+
+
 def filter_capabilities_by_languages(bears, languages):
     """
     Filters the bears capabilities by languages.
