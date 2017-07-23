@@ -1,10 +1,12 @@
 from queue import Queue
+import sys
 import unittest
 
 from tests.test_bears.TestBear import TestBear
 from tests.test_bears.TestBearDep import (TestDepBearBDependsA,
                                           TestDepBearCDependsB,
                                           TestDepBearDependsAAndAA)
+from coalib.bearlib.abstractions.Linter import linter
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.testing.LocalBearTestHelper import verify_local_bear, execute_bear
@@ -100,6 +102,45 @@ class LocalBearTestHelper(unittest.TestCase):
         section = Section('')
         section.append(Setting('exception', True))
         self.uut = TestBear(section, Queue())
+
+    def test_stdout_stderr_on_linter_test_fail(self):
+
+        class TestLinter:
+            @staticmethod
+            def process_output(output, filename, file):
+                pass
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                code = '\n'.join(['import sys',
+                                  "print('hello stdout')",
+                                  "print('hello stderr', file=sys.stderr)"])
+                return '-c', code
+
+        # Testing with both stdout and stderr enabled
+        uut = (linter(sys.executable, use_stdout=True, use_stderr=True)
+               (TestLinter)
+               (Section('TEST_SECTION'), Queue()))
+        try:
+            with execute_bear(uut, 'filename', ['file']) as result:
+                raise AssertionError
+        except AssertionError as ex:
+            self.assertIn('The program yielded the following output:', str(ex))
+            self.assertIn('Stdout:', str(ex))
+            self.assertIn('hello stdout', str(ex))
+            self.assertIn('Stderr:', str(ex))
+            self.assertIn('hello stderr', str(ex))
+
+        # Testing with only stdout enabled
+        uut = (linter(sys.executable, use_stdout=True)
+               (TestLinter)
+               (Section('TEST_SECTION'), Queue()))
+        try:
+            with execute_bear(uut, 'filename', ['file']) as result:
+                raise AssertionError
+        except AssertionError as ex:
+            self.assertIn('The program yielded the following output:', str(ex))
+            self.assertIn('hello stdout', str(ex))
 
     def test_exception(self):
 

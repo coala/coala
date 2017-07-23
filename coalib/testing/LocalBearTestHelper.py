@@ -1,6 +1,7 @@
 import queue
 import unittest
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
+from unittest.mock import patch
 
 import pytest
 
@@ -14,7 +15,30 @@ from coalib.settings.Setting import Setting
 @contextmanager
 def execute_bear(bear, *args, **kwargs):
     try:
-        bear_output_generator = bear.execute(*args, **kwargs)
+        console_output = []
+
+        # For linters provide additional information, such as
+        # stdout and stderr.
+        with ExitStack() as stack:
+            if hasattr(bear, 'process_output'):
+                console_output.append('The program yielded '
+                                      'the following output:\n')
+                old_process_output = bear.process_output
+
+                def new_process_output(output, filename=None, file=None):
+                    if isinstance(output, tuple):
+                        stdout, stderr = output
+                        console_output.append('Stdout:\n' + stdout)
+                        console_output.append('Stderr:\n' + stderr)
+                    else:
+                        console_output.append(output)
+                    return old_process_output(output, filename, file)
+
+                stack.enter_context(patch.object(
+                    bear, 'process_output', wraps=new_process_output))
+
+            bear_output_generator = bear.execute(*args, **kwargs)
+
         assert bear_output_generator is not None, \
             'Bear returned None on execution\n'
         yield bear_output_generator
@@ -22,6 +46,7 @@ def execute_bear(bear, *args, **kwargs):
         msg = []
         while not bear.message_queue.empty():
             msg.append(bear.message_queue.get().message)
+        msg += console_output
         raise AssertionError(str(err) + ''.join('\n' + m for m in msg))
     return list(bear_output_generator)
 
