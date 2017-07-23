@@ -400,7 +400,7 @@ def gather_configuration(acquire_settings,
     :param arg_list:         CLI args to use
     :param arg_parser:       Instance of ArgParser that is used to parse
                              none-setting arguments.
-    :param args:             Alernative pre-parsed CLI arguments.
+    :param args:             Alternative pre-parsed CLI arguments.
     :return:                 A tuple with the following contents:
 
                              -  A dictionary with the sections
