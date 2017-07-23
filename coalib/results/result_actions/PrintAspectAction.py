@@ -17,7 +17,8 @@ class PrintAspectAction(ResultAction):
         """
         Print Aspec(T) Information
         """
-        print(type(result.aspect).__qualname__ + '\n' +
-              type(result.aspect).docs.definition)
+        aspect_info = (type(result.aspect).__qualname__ + ':\n' +
+                       '    ' + type(result.aspect).docs.definition)
+        print('This code does not comply to ' + aspect_info)
 
         return file_diff_dict

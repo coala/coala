@@ -15,6 +15,7 @@ from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
+from coalib.results.result_actions.PrintAspectAction import PrintAspectAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -294,19 +295,22 @@ def print_result(console_printer,
 
     if interactive:
         cli_actions = CLI_ACTIONS
-        show_patch_action = ShowPatchAction()
-        if show_patch_action.is_applicable(
-                result, file_dict, file_diff_dict) is True:
-            diff_size = sum(len(diff) for diff in result.diffs.values())
-            if diff_size <= DIFF_EXCERPT_MAX_SIZE:
-                show_patch_action.apply_from_section(result,
-                                                     file_dict,
-                                                     file_diff_dict,
-                                                     section)
-                cli_actions = tuple(action for action in cli_actions
-                                    if not isinstance(action, ShowPatchAction))
-            else:
-                print_diffs_info(result.diffs, console_printer)
+        _actions = (ShowPatchAction(), PrintAspectAction())
+        for _action in _actions:
+            if _action.is_applicable(result, 
+                                     file_dict, file_diff_dict) is True:
+                diff_size = sum(len(diff) for diff in result.diffs.values())
+                if (diff_size <= DIFF_EXCERPT_MAX_SIZE or
+                        isinstance(_action, PrintAspectAction)):
+                    _action.apply_from_section(result,
+                                               file_dict,
+                                               file_diff_dict,
+                                               section)
+                    cli_actions = tuple(action for action in cli_actions
+                                        if not isinstance(action, 
+                                                          type(_action)))
+                else:
+                    print_diffs_info(result.diffs, console_printer)
         acquire_actions_and_apply(console_printer,
                                   section,
                                   file_diff_dict,
