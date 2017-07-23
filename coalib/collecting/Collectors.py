@@ -126,9 +126,11 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
         # pass this later to iglob, we need to escape this.
         bear_dir = glob_escape(bear_dir)
         for bear_glob in bear_globs:
-            for matching_file in iglob(
-                    os.path.join(bear_dir, bear_glob + '.py')):
+            matching_files = iglob(os.path.join(bear_dir, bear_glob + '.py'))
 
+            matching_files = sorted(matching_files)
+
+            for matching_file in matching_files:
                 try:
                     for bear in _import_bears(matching_file, kinds):
                         yield bear, bear_glob
