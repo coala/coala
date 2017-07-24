@@ -28,7 +28,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     whatever it wants with the files it gets. If you are missing some Result
     type, feel free to contact us and/or help us extending the coalib.
 
-    This is the base class for every bear. If you want to write an bear, you
+    This is the base class for every bear. If you want to write a bear, you
     will probably want to look at the GlobalBear and LocalBear classes that
     inherit from this class. In any case you'll want to overwrite at least the
     run method. You can send debug/warning/error messages through the
