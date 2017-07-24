@@ -72,15 +72,13 @@ def main(debug=False):
             if args.filter_by:
                 # Each iteration of the following loop applies
                 # filters one by one provided as arguments
-                for filter_by in args.filter_by:
-                    filter_by_x, *filter_args = filter_by
-                    try:
-                        filtered_bears = FilterHelper.get_filtered_bears(
-                            filter_by_x, filter_args, filtered_bears)
-                    except InvalidFilterException as ex:
-                        # If filter is not available
-                        console_printer.print(ex)
-                        return 2
+                try:
+                    filtered_bears = FilterHelper.filter_bears(
+                        filtered_bears, args.filter_by)
+                except InvalidFilterException as ex:
+                    # If filter is not available
+                    console_printer.print(ex)
+                    return 2
 
             local_bears, global_bears = filtered_bears
             show_bears(local_bears,
