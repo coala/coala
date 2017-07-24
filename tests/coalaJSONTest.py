@@ -113,7 +113,7 @@ class coalaJSONTest(unittest.TestCase):
             import_fn.side_effect = VersionConflict('msg1', 'msg2')
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--json', '-B')
-            self.assertEqual(retval, TEST_BEARS_COUNT)
+            self.assertEqual(retval, 13)
 
     def test_text_logs(self):
         retval, stdout, stderr = execute_coala(
