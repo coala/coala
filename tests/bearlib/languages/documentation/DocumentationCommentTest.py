@@ -279,6 +279,8 @@ class DocumentationAssemblyTest(unittest.TestCase):
         docs = ''.join(data)
 
         for doc in DocBaseClass.extract(data, 'python', 'default'):
+            doc.bottom_padding = 2
+            doc.assemble.cache_clear()
             self.assertIn(doc.assemble(), docs)
 
     def test_doxygen_assembly(self):
@@ -293,4 +295,6 @@ class DocumentationAssemblyTest(unittest.TestCase):
         docs = ''.join(data)
 
         for doc in DocBaseClass.extract(data, 'c', 'doxygen'):
+            doc.top_padding = 1
+            doc.assemble.cache_clear()
             self.assertIn(doc.assemble(), docs)

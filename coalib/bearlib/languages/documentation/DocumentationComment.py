@@ -17,6 +17,8 @@ class DocumentationComment:
     ExceptionValue = namedtuple('ExceptionValue', 'name, desc')
     ReturnValue = namedtuple('ReturnValue', 'desc')
     Description = namedtuple('Description', 'desc')
+    top_padding = 0
+    bottom_padding = 0
 
     def __init__(self, documentation, docstyle_definition,
                  indent, marker, position):
@@ -275,7 +277,10 @@ class DocumentationComment:
         assembled += ''.join('\n' if line == '\n' and not self.marker[1]
                              else self.indent + self.marker[1] + line
                              for line in lines[1:])
-        return (assembled if self.marker[1] == self.marker[2] else
-                (assembled +
-                 (self.indent if lines[-1][-1] == '\n' else '') +
-                 self.marker[2]))
+        assembled = (assembled if self.marker[1] == self.marker[2] else
+                     (assembled +
+                      (self.indent if lines[-1][-1] == '\n' else '') +
+                      self.marker[2]))
+        assembled = ('\n' * self.top_padding + assembled +
+                     '\n' * self.bottom_padding)
+        return assembled
