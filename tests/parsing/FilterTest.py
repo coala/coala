@@ -2,7 +2,11 @@ import unittest
 
 from coalib import coala
 from coalib.parsing.FilterHelper import FilterHelper, InvalidFilterException
-from tests.TestUtilities import execute_coala, bear_test_module
+from tests.TestUtilities import (
+    bear_test_module,
+    execute_coala,
+    TEST_BEARS_COUNT,
+)
 
 
 class FilterTest(unittest.TestCase):
@@ -109,13 +113,15 @@ class FilterTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '--filter-by', 'can_fix')
             self.assertEqual(retval, 0)
-            # 8 bears plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 14)
+            # All bears plus 1 line holding the closing colour escape sequence.
+            self.assertEqual(len(stdout.strip().splitlines()),
+                             TEST_BEARS_COUNT + 1)
 
     def test_filter_by_can_detect_null(self):
         with bear_test_module():
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '--filter-by', 'can_detect')
             self.assertEqual(retval, 0)
-            # 8 bear plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 14)
+            # All bear plus 1 line holding the closing colour escape sequence.
+            self.assertEqual(len(stdout.strip().splitlines()),
+                             TEST_BEARS_COUNT + 1)

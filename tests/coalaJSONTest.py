@@ -8,7 +8,11 @@ from pkg_resources import VersionConflict
 
 from coalib import coala, coala_json
 from coala_utils.ContextManagers import prepare_file
-from tests.TestUtilities import bear_test_module, execute_coala
+from tests.TestUtilities import (
+    bear_test_module,
+    execute_coala,
+    TEST_BEARS_COUNT,
+)
 
 
 class coalaJSONTest(unittest.TestCase):
@@ -71,7 +75,7 @@ class coalaJSONTest(unittest.TestCase):
                 coala.main, 'coala', '--json', '-B', '-I')
             self.assertEqual(retval, 0)
             output = json.loads(stdout)
-            self.assertEqual(len(output['bears']), 13)
+            self.assertEqual(len(output['bears']), TEST_BEARS_COUNT)
             self.assertFalse(stderr)
 
     def test_show_language_bears(self):
@@ -109,7 +113,7 @@ class coalaJSONTest(unittest.TestCase):
             import_fn.side_effect = VersionConflict('msg1', 'msg2')
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--json', '-B')
-            self.assertEqual(retval, 13)
+            self.assertEqual(retval, TEST_BEARS_COUNT)
 
     def test_text_logs(self):
         retval, stdout, stderr = execute_coala(

@@ -14,7 +14,11 @@ from coalib.output.Logging import configure_logging
 from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 
-from tests.TestUtilities import execute_coala, bear_test_module
+from tests.TestUtilities import (
+    bear_test_module,
+    execute_coala,
+    TEST_BEARS_COUNT,
+)
 
 
 class coalaTest(unittest.TestCase):
@@ -150,8 +154,9 @@ class coalaTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '-I', debug=debug)
             self.assertEqual(retval, 0)
-            # 8 bears plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 14)
+            # All bears plus 1 line holding the closing colour escape sequence.
+            self.assertEqual(len(stdout.strip().splitlines()),
+                             TEST_BEARS_COUNT + 1)
             self.assertFalse(stderr)
 
     def test_show_all_bears_debug(self):

@@ -23,7 +23,7 @@ from coalib.settings.ConfigurationGathering import (
     load_configuration,
 )
 
-from tests.TestUtilities import bear_test_module
+from tests.TestUtilities import bear_test_module, TEST_BEARS_COUNT
 
 
 @pytest.mark.usefixtures('disable_bears')
@@ -367,7 +367,7 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
             local_bears, global_bears = get_filtered_bears(
                 None, self.log_printer)
 
-        self.assertEqual(len(local_bears['cli']), 13)
+        self.assertEqual(len(local_bears['cli']), TEST_BEARS_COUNT)
 
         with bear_test_module():
             local_bears, global_bears = get_filtered_bears(
