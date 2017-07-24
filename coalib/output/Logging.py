@@ -7,6 +7,7 @@ from collections import Counter
 
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
+
 class CounterHandler(logging.Handler):
     """
     A logging handler which counts the number of calls
@@ -67,7 +68,8 @@ def configure_logging(log_level=logging.INFO, incremental=False,
 
     We will now change the level to ``ERROR``.
 
-    >>> configure_logging(logging.ERROR, incremental=True)
+    >>> configure_logging(color=False, stdout=True,
+    ...                   log_level=logging.ERROR, incremental=True)
     40
     >>> logging.info("it belongs to us.")
     >>> logging.error("These violent delights have violent ends.")
@@ -80,12 +82,11 @@ def configure_logging(log_level=logging.INFO, incremental=False,
 
     logging.config.dictConfig({
         'version': 1,
-        'incremental': incremental,
         'handlers': {
             'console-handler': {
                 'class': 'logging.StreamHandler',
-                'formatter': 'colored' if color else 'plain',
-                'stream': sys.stderr if stdout else sys.stderr,
+                'formatter': 'color' if color else 'plain',
+                'stream': sys.stdout if stdout else sys.stderr,
                 'level': LOG_LEVEL.reverse.get(log_level)
 
             },
@@ -94,19 +95,20 @@ def configure_logging(log_level=logging.INFO, incremental=False,
             },
             'file-handler': {
                 'class': 'logging.FileHandler',
-                'formatter': 'no-color',
+                'formatter': 'plain',
                 'filename': '.coala.log',
                 'mode': 'w',
                 'level': 'DEBUG'
             },
             'json-handler': {
                 'class': 'logging.NullHandler',
-                'level': LOG_LEVEL.reverse.get(log_level)
+                'level': 'INFO'
             }
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['file-handler', 'console-handler', 'json-handler', 'counter-handler']
+            'handlers': ['file-handler', 'console-handler',
+                         'json-handler', 'counter-handler']
         },
         'formatters': {
             'color': {
@@ -154,7 +156,7 @@ def configure_json_logging():
             },
             'counter-handler': {
                 'class': 'coalib.output.Logging.CounterHandler'
-            }
+            },
             'console-handler': {
                 'class': 'logging.NullHandler'
             },
@@ -164,7 +166,8 @@ def configure_json_logging():
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['json-handler', 'console-handler', 'counter-handler', 'file-handler']
+            'handlers': ['json-handler', 'console-handler',
+                         'counter-handler', 'file-handler']
         },
         'formatters': {
             'json': {
