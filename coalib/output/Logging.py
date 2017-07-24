@@ -51,29 +51,21 @@ def configure_logging(log_level=logging.INFO, incremental=False,
 
     logging.config.dictConfig({
         'version': 1,
-        'incremental': incremental,
         'handlers': {
             'console-handler': {
                 'class': 'logging.StreamHandler',
-                'formatter': 'color' if color else 'no-color',
-                'stream': sys.stdout if stdout else sys.stderr,
-                'level': LOG_LEVEL.reverse.get(log_level)
-            },
-            'file-handler': {
-                'class': 'logging.FileHandler',
-                'formatter': 'no-color',
-                'filename': '.coala.log',
-                'mode': 'w',
-                'level': 'DEBUG'
+                'formatter': 'color',
+                'stream': sys.stderr,
+                'level': 'INFO'
             },
             'json-handler': {
                 'class': 'logging.NullHandler',
-                'level': LOG_LEVEL.reverse.get(log_level)
+                'level': 'INFO'
             }
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['file-handler', 'console-handler', 'json-handler']
+            'handlers': ['console-handler', 'json-handler']
         },
         'formatters': {
             'color': {
