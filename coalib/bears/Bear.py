@@ -356,6 +356,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                                     for param in non_optional_params),
             'optional_params': ({param: optional_params[param][0]}
                                 for param in optional_params)}
+        if hasattr(cls, 'languages'):
+            _dict['languages'] = (str(language) for language in cls.languages)
         return _dict
 
     @classmethod
