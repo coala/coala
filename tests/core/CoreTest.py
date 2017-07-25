@@ -607,6 +607,9 @@ class CoreTest(CoreTestBase):
         self.assertEqual(result_set, set(range(100)))
         self.assertEqual(bear.dependency_results, {})
 
+    def test_run_empty(self):
+        self.execute_run(set())
+
 
 # Execute the same tests from CoreTest, but use a ThreadPoolExecutor instead.
 # The core shall also seamlessly work with Python threads. Also there are
