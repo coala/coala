@@ -193,11 +193,12 @@ class Session:
         """
         Runs the coala session.
         """
-        self._schedule_bears(self.bears_to_schedule)
-        try:
-            self.event_loop.run_forever()
-        finally:
-            self.event_loop.close()
+        if self.bears:
+            self._schedule_bears(self.bears_to_schedule)
+            try:
+                self.event_loop.run_forever()
+            finally:
+                self.event_loop.close()
 
     def _schedule_bears(self, bears):
         """
