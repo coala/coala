@@ -193,10 +193,6 @@ class Session:
         """
         Runs the coala session.
         """
-        # FIXME Allow to pass different executors nicely, for example to execute
-        # FIXME   coala with less cores, or to schedule jobs on distributed
-        # FIXME   systems (for example Mesos).
-
         self._schedule_bears(self.bears_to_schedule)
         try:
             self.event_loop.run_forever()
