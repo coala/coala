@@ -9,6 +9,8 @@ from coalib.core.Core import initialize_dependencies, run
 
 from coala_utils.decorators import generate_eq
 
+from tests.core.CoreTestBase import CoreTestBase
+
 
 # Classes are hashed by instance, so they can be placed inside a set, compared
 # to normal tuples which hash their contents. This allows to pass the file-dict
@@ -369,28 +371,13 @@ class InitializeDependenciesTest(unittest.TestCase):
         self.assertEqual(bears_to_schedule, set(bears_b))
 
 
-class CoreTest(unittest.TestCase):
+class CoreTest(CoreTestBase):
 
     def setUp(self):
         logging.getLogger().setLevel(logging.DEBUG)
 
         self.section1 = Section('test-section1')
         self.filedict1 = {'f1': []}
-
-    @staticmethod
-    def get_run_results(bears, executor=None):
-        results = []
-
-        def on_result(result):
-            results.append(result)
-
-        run(bears, on_result, executor)
-
-        return results
-
-    @classmethod
-    def execute_run(cls, bears):
-        return cls.get_run_results(bears)
 
     @staticmethod
     def get_comparable_results(results):
@@ -626,6 +613,6 @@ class CoreTest(unittest.TestCase):
 # coverage issues on Windows with ProcessPoolExecutor as coverage data isn't
 # passed properly back from the pool processes.
 class CoreOnThreadPoolExecutorTest(CoreTest):
-    @classmethod
-    def execute_run(cls, bears):
-        return cls.get_run_results(bears, ThreadPoolExecutor(max_workers=8))
+    def setUp(self):
+        super().setUp()
+        self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=8)
