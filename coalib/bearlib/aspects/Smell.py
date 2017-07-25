@@ -320,7 +320,7 @@ class ClassLength:
         """
     max_class_length = Taste[int](
         'Represents the max number of lines for a class\'s definition.',
-        (999,), default=999)
+        (999, 900), default=900)
 
 
 @ClassSize.subaspect
