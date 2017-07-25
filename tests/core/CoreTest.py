@@ -120,6 +120,13 @@ class DynamicTaskBear(TestBearBase):
         return (((i,), {}) for i in range(tasks_count))
 
 
+class DependentOnMultipleZeroTaskBearsTestBear(TestBearBase):
+    BEAR_DEPS = {type('NoTasksBear{}'.format(i),
+                      (Bear,),
+                      dict(generate_tasks=lambda self: tuple()))
+                 for i in range(100)} | {MultiResultBear}
+
+
 def get_next_instance(typ, iterable):
     """
     Reads all elements in the iterable and returns the first occurrence
@@ -594,6 +601,33 @@ class CoreTest(CoreTestBase):
             len(bear.dependency_results[MultiResultBear]), 2)
         self.assertEqual(
             len(bear.dependency_results[BearA]), 1)
+
+    def test_run_multiple_dependency_bears_with_zero_tasks(self):
+        # The core shall not stop too early because some of the bears have
+        # offloaded no tasks, while others have not. This is a non-deterministic
+        # issue, so we can only provoke it by offloading a huge amount of bears
+        # without tasks.
+
+        # Because bear dependencies are type-bound, we need to create many new
+        # bear types doing the same so the core treats them actually as
+        # different bear dependencies. Otherwise it would merge them together
+        # into a single instance in the dependency-tree.
+        uut = DependentOnMultipleZeroTaskBearsTestBear(self.section1,
+                                                       self.filedict1)
+
+        results = self.execute_run({uut})
+
+        self.assertEqual(len(results), 3)
+        self.assertIn(1, results)
+        self.assertIn(2, results)
+
+        uut_result = get_next_instance(TestResult, results)
+        self.assertEqual(uut_result.bear.name, uut.name)
+        self.assertEqual(uut_result.section_name, self.section1.name)
+        self.assertEqual(uut_result.file_dict, self.filedict1)
+
+        self.assertEqual(len(uut.dependency_results), 1)
+        self.assertEqual(uut.dependency_results[MultiResultBear], [1, 2])
 
     def test_run_heavy_cpu_load(self):
         # No normal computer should expose 100 cores at once, so we can test

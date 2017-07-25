@@ -211,6 +211,8 @@ class Session:
         :param bears:
             A list of bear instances to be scheduled onto the process pool.
         """
+        bears_without_tasks = []
+
         for bear in bears:
             if self.dependency_tracker.get_dependencies(
                     bear):  # pragma: no cover
@@ -235,11 +237,15 @@ class Session:
                 logging.debug('Scheduled {!r} (tasks: {})'.format(bear,
                                                                   len(tasks)))
 
+                # Cleanup bears without tasks after all bears had the chance to
+                # schedule their tasks. Not doing so might stop the run too
+                # early, as the cleanup is also responsible for stopping the
+                # event-loop when no more tasks do exist.
                 if not tasks:
-                    # We need to recheck our runtime if something is left to
-                    # process, as when no tasks were offloaded the event-loop
-                    # could hang up otherwise.
-                    self._cleanup_bear(bear)
+                    bears_without_tasks.append(bear)
+
+        for bear in bears_without_tasks:
+            self._cleanup_bear(bear)
 
     def _cleanup_bear(self, bear):
         """
