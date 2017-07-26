@@ -129,6 +129,7 @@ def print_section_beginning(console_printer, section):
     console_printer.print('Executing section {name}...'.format(
         name=section.name))
 
+
 def acquire_actions_and_apply(console_printer,
                               section,
                               file_diff_dict,
