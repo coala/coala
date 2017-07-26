@@ -198,7 +198,8 @@ def run_coala(console_printer=None,
         if CounterHandler.get_num_calls_for_level('ERROR') > 0:
             exitcode = 1
         elif did_nothing:
-            nothing_done(log_printer)
+            log_printer.warn('No existent section was targeted or enabled. '
+                             'Nothing to do.')
             exitcode = 2
         elif yielded_unfixed_results:
             exitcode = 1
