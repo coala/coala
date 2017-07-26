@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import logging
+import sys
 import unittest
 import unittest.mock
 
@@ -98,6 +99,19 @@ class BearH_NeedsG(TestBearBase):
     BEAR_DEPS = {BearG_NeedsF}
 
 
+class BearI_NeedsA_NeedsBDuringRuntime(TestBearBase):
+    BEAR_DEPS = {BearA}
+
+    def __init__(self, section, filedict):
+        super().__init__(section, filedict)
+
+        self.BEAR_DEPS.add(BearB)
+
+
+class BearJ_NeedsI(TestBearBase):
+    BEAR_DEPS = {BearI_NeedsA_NeedsBDuringRuntime}
+
+
 class MultiResultBear(TestBearBase):
 
     def analyze(self, bear, section_name, file_dict):
@@ -120,10 +134,18 @@ class DynamicTaskBear(TestBearBase):
         return (((i,), {}) for i in range(tasks_count))
 
 
+# Define those classes at module level to make them picklable.
+for i in range(100):
+    classname = 'NoTasksBear{}'.format(i)
+    generated_type = type(classname,
+                          (Bear,),
+                          dict(generate_tasks=lambda self: tuple()))
+
+    setattr(sys.modules[__name__], classname, generated_type)
+
+
 class DependentOnManyZeroTaskBearsTestBear(TestBearBase):
-    BEAR_DEPS = {type('NoTasksBear{}'.format(i),
-                      (Bear,),
-                      dict(generate_tasks=lambda self: tuple()))
+    BEAR_DEPS = {getattr(sys.modules[__name__], 'NoTasksBear{}'.format(i))
                  for i in range(100)} | {MultiResultBear}
 
 
@@ -643,6 +665,49 @@ class CoreTest(CoreTestBase):
 
     def test_run_empty(self):
         self.execute_run(set())
+
+    def test_bears_with_runtime_dependencies(self):
+        bear = BearI_NeedsA_NeedsBDuringRuntime(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 2)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearA],
+            [(BearA.name, self.section1.name, self.filedict1)])
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearB],
+            [(BearB.name, self.section1.name, self.filedict1)])
+
+        # See whether this also works with a bear using the bear with runtime
+        # dependencies itself as a dependency.
+        bear = BearJ_NeedsI(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1),
+             (BearJ_NeedsI.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 1)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearI_NeedsA_NeedsBDuringRuntime],
+            [(BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
 
 
 # Execute the same tests from CoreTest, but use a ThreadPoolExecutor instead.
