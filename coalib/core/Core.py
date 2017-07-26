@@ -124,17 +124,21 @@ def initialize_dependencies(bears):
             type_to_instance_map[bear] = bear
             type_to_instance_map[type(bear)] = bear
 
-        def instantiate_and_track(prev_bear_type, next_bear_type):
-            if next_bear_type not in type_to_instance_map:
-                type_to_instance_map[next_bear_type] = (
-                    next_bear_type(section, file_dict))
+        def get_successive_nodes_and_track(bear):
+            for dependency_bear_type in bear.BEAR_DEPS:
+                if dependency_bear_type not in type_to_instance_map:
+                    dependency_bear = dependency_bear_type(section, file_dict)
+                    type_to_instance_map[dependency_bear_type] = dependency_bear
 
-            dependency_tracker.add(type_to_instance_map[next_bear_type],
-                                   type_to_instance_map[prev_bear_type])
+                dependency_tracker.add(
+                    type_to_instance_map[dependency_bear_type], bear)
 
-        traverse_graph(bears_per_section,
-                       lambda bear: bear.BEAR_DEPS,
-                       instantiate_and_track)
+            # Return the dependencies of the instances instead of the types, so
+            # bears are capable to specify dependencies at runtime.
+            return (type_to_instance_map[dependency_bear_type]
+                    for dependency_bear_type in bear.BEAR_DEPS)
+
+        traverse_graph(bears_per_section, get_successive_nodes_and_track)
 
     # Get all bears that aren't resolved and exclude those from scheduler set.
     bears -= {bear for bear in bears

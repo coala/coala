@@ -26,6 +26,10 @@ class Bear2(Bear):
     pass
 
 
+class BearWithDependencies(Bear):
+    BEAR_DEPS = {Bear1}
+
+
 class BearWithAnalysis(Bear):
 
     def analyze(self, x: int, y: int, z: int=33):
@@ -254,3 +258,18 @@ class BearTest(unittest.TestCase):
             'REQUIREMENTS': set()}
 
         self.assertEqual(result, expected)
+
+    def test_class_bear_deps_immutability(self):
+        section = Section('test-section')
+        uut = BearWithDependencies(section, {})
+
+        self.assertNotEqual(id(uut.BEAR_DEPS),
+                            id(BearWithDependencies.BEAR_DEPS))
+
+        self.assertEqual(BearWithDependencies.BEAR_DEPS, {Bear1})
+        self.assertEqual(uut.BEAR_DEPS, {Bear1})
+
+        uut.BEAR_DEPS.add(Bear2)
+
+        self.assertEqual(BearWithDependencies.BEAR_DEPS, {Bear1})
+        self.assertEqual(uut.BEAR_DEPS, {Bear1, Bear2})
