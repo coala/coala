@@ -29,4 +29,4 @@ def get_filtered_bears(cls, filter, args, all_bears=None):
         raise InvalidFilterException('{!r} is an invalid filter. Available filters: {}'.format(filter, cls.get_all_filters_str()))
     if not args or len(args) == 0:
         return all_bears
-    return cls.available_filters[filter](all_bears, args
+    return cls.available_filters[filter](all_bears, args)
