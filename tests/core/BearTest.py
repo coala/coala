@@ -116,17 +116,21 @@ class BearTest(unittest.TestCase):
 
         # Test default implementation.
         expected_possibilities = [
-            'Following requirements are not installed: '
+            'The bear BearWithPrerequisites does not fulfill all '
+            'requirements. Following requirements are not installed: '
             '{} (installable via `{}`), {} (installable via `{}`)'.format(
                 req1.package, ' '.join(req1.install_command()),
                 req2.package, ' '.join(req2.install_command()))
             for req1, req2 in permutations(BearWithPrerequisites.REQUIREMENTS)
         ]
 
-        self.assertIn(BearWithPrerequisites.check_prerequisites(),
+        with self.assertRaises(RuntimeError) as cm:
+            BearWithPrerequisites(section, filedict)
+
+        self.assertIn(str(cm.exception),
                       expected_possibilities)
 
-        # Test correct exception throwing in constructor.
+        # Test custom implementation.
         BearWithPrerequisitesOverride.prerequisites_fulfilled = True
         BearWithPrerequisitesOverride(section, filedict)
 
@@ -273,3 +277,22 @@ class BearTest(unittest.TestCase):
 
         self.assertEqual(BearWithDependencies.BEAR_DEPS, {Bear1})
         self.assertEqual(uut.BEAR_DEPS, {Bear1, Bear2})
+
+    @unittest.mock.patch('dependency_management.requirements.PipRequirement'
+                         '.PipRequirement.is_installed')
+    def test_class_requirements_immutability(self, patched_function):
+        patched_function.return_value = True
+
+        section = Section('test-section')
+        uut = BearWithPrerequisites(section, {})
+
+        self.assertNotEqual(id(uut.REQUIREMENTS),
+                            id(BearWithPrerequisites.REQUIREMENTS))
+
+        self.assertEqual(len(BearWithPrerequisites.REQUIREMENTS), 2)
+        self.assertEqual(len(uut.REQUIREMENTS), 2)
+
+        uut.REQUIREMENTS.add(PipRequirement('worse-package'))
+
+        self.assertEqual(len(BearWithPrerequisites.REQUIREMENTS), 2)
+        self.assertEqual(len(uut.REQUIREMENTS), 3)
