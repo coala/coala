@@ -1,8 +1,6 @@
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.InvalidFilterException import InvalidFilterException
-from coalib.parsing.filters.LanguageFilter import language_filter
-from coalib.parsing.filters.CanDetectFilter import can_detect_filter
-from coalib.parsing.filters.CanFixFilter import can_fix_filter
+
 
 def get_all_filters_str(arg, sep=', '):
     return sep.join(sorted(arg.available_filters))
