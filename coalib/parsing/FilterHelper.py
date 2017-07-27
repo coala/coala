@@ -1,5 +1,3 @@
-from coalib.output.printers.LogPrinter import LogPrinter
-
 from coalib.parsing.InvalidFilterException import InvalidFilterException
 
 from coalib.parsing.filters.LanguageFilter import language_filter
@@ -25,7 +23,7 @@ class FilterHelper:
         if all_bears is None:
             from coalib.settings.ConfigurationGathering import (
                 get_all_bears)
-            all_bears = get_all_bears(LogPrinter())
+            all_bears = get_all_bears()
         if not cls.is_valid_filter(filter_name):
             raise InvalidFilterException('{!r} is an invalid filter. '
                                          'Available filters: {}'.format(

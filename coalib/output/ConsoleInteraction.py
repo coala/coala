@@ -12,6 +12,7 @@ except ImportError:  # pragma: no cover
     pass
 
 from coalib.misc.DictUtilities import inverse_dicts
+from coalib.misc.Exceptions import log_exception
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -130,15 +131,15 @@ def print_section_beginning(console_printer, section):
         name=section.name))
 
 
-def nothing_done(log_printer):
+def nothing_done(log_printer=None):
     """
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
 
     :param log_printer: A LogPrinter object.
     """
-    log_printer.warn('No existent section was targeted or enabled. '
-                     'Nothing to do.')
+    logging.warning('No existent section was targeted or enabled. Nothing to '
+                    'do.')
 
 
 def acquire_actions_and_apply(console_printer,
@@ -395,7 +396,7 @@ def print_results_formatted(log_printer,
                                         message=result.message,
                                         **format_args))
         except KeyError as exception:
-            log_printer.log_exception(
+            log_exception(
                 'Unable to print the result with the given format string.',
                 exception)
 
@@ -421,10 +422,10 @@ def print_affected_files(console_printer,
             if (
                     sourcerange.file is not None and
                     sourcerange.file not in file_dict):
-                log_printer.warn('The context for the result ({}) cannot '
-                                 'be printed because it refers to a file '
-                                 "that doesn't seem to exist ({})"
-                                 '.'.format(result, sourcerange.file))
+                logging.warning('The context for the result ({}) cannot '
+                                'be printed because it refers to a file '
+                                "that doesn't seem to exist ({})"
+                                '.'.format(result, sourcerange.file))
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
@@ -455,7 +456,7 @@ def print_results_no_input(log_printer,
     for result in result_list:
 
         print_affected_files(console_printer,
-                             log_printer,
+                             None,
                              result,
                              file_dict)
 
@@ -492,7 +493,7 @@ def print_results(log_printer,
     for result in sorted(result_list):
 
         print_affected_files(console_printer,
-                             log_printer,
+                             None,
                              result,
                              file_dict)
 

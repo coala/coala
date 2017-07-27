@@ -2,6 +2,7 @@
 Replacement for ``multiprocessing`` library in coala's debug mode.
 """
 
+import logging
 import sys
 import queue
 from functools import partial
@@ -70,7 +71,7 @@ class Queue(queue.Queue):
         there is a ``self.log_printer``. Then `item` is just sent to logger
         instead.
         """
-        if self.log_printer is not None and isinstance(item, LogMessage):
-            self.log_printer.log_message(item)
+        if isinstance(item, LogMessage):
+            logging.log(item.log_level, item.message)
         else:
             super().put(item)

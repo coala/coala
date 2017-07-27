@@ -7,6 +7,8 @@ import logging
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from testfixtures import LogCapture, StringComparison
+
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.Bear import Bear
 from coala_utils.ContextManagers import (
@@ -26,8 +28,6 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
-from coalib.results.result_actions.ShowAppliedPatchesAction \
-    import ShowAppliedPatchesAction
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
@@ -661,10 +661,12 @@ Project wide:
             self.assertEqual(stdout.getvalue(), 'Executing section name...\n')
 
     def test_nothing_done(self):
-        nothing_done(self.log_printer)
-        self.assertEqual(['No existent section was targeted or enabled. '
-                          'Nothing to do.'],
-                         [log.message for log in self.log_printer.logs])
+        with LogCapture() as capture:
+            nothing_done(self.log_printer)
+        capture.check(
+            ('root', 'WARNING', 'No existent section was targeted or enabled. '
+                                'Nothing to do.')
+        )
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
@@ -828,7 +830,7 @@ some_file
                 stdout.getvalue())
 
     def test_print_results_missing_file(self):
-        self.log_printer.log_level = logging.CRITICAL
+        logging.getLogger().setLevel(logging.CRITICAL)
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,
@@ -1080,13 +1082,16 @@ class PrintFormattedResultsTest(unittest.TestCase):
 
     def test_bad_format(self):
         self.section.append(Setting('format', '{nonexistant}'))
-        print_results_formatted(self.logger,
-                                self.section,
-                                [Result('1', '2')],
-                                None,
-                                None)
-        self.assertRegex(''.join(log.message for log in self.logger.logs),
-                         '.*Unable to print.*')
+        with LogCapture() as capture:
+            print_results_formatted(self.logger,
+                                    self.section,
+                                    [Result('1', '2')],
+                                    None,
+                                    None)
+        capture.check(
+            ('root', 'ERROR', StringComparison(r'.*Unable to print.*')),
+            ('root', 'INFO', StringComparison(r'.*Exception was.*'))
+        )
 
     def test_good_format(self):
         self.section.append(Setting('format', '{origin}'))

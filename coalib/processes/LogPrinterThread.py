@@ -1,5 +1,8 @@
+import logging
 import queue
 import threading
+
+from coalib.processes.communication.LogMessage import LogMessage
 
 
 class LogPrinterThread(threading.Thread):
@@ -9,16 +12,18 @@ class LogPrinterThread(threading.Thread):
     0.1 seconds.
     """
 
-    def __init__(self, message_queue, log_printer):
+    def __init__(self, message_queue, log_printer=None):
         threading.Thread.__init__(self)
         self.running = True
         self.message_queue = message_queue
-        self.log_printer = log_printer
 
     def run(self):
         while self.running:
             try:
                 elem = self.message_queue.get(timeout=0.1)
-                self.log_printer.log_message(elem)
+                if isinstance(elem, LogMessage):
+                    logging.log(elem.log_level, elem.message)
+                else:
+                    logging.info(elem)
             except queue.Empty:
                 pass
