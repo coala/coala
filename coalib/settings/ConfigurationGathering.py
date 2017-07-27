@@ -136,28 +136,34 @@ def warn_nonexistent_targets(targets, sections, log_printer):
     # Can't be summarized as python will evaluate conditions lazily, those
     # functions have intended side effects though.
     files_config_absent = warn_config_absent(sections, 'files', log_printer)
-    bears_config_absent = warn_config_absent(sections, 'bears', log_printer)
+    bears_config_absent = warn_config_absent(sections, ['bears', 'aspects'],
+                                             log_printer)
     if files_config_absent or bears_config_absent:
         raise SystemExit(2)  # Invalid CLI options provided
 
 
 def warn_config_absent(sections, argument, log_printer):
     """
-    Checks if the given argument is present somewhere in the sections and emits
-    a warning that code analysis can not be run without it.
+    Checks if at least 1 of the given arguments is present somewhere in the
+    sections and emits a warning that code analysis can not be run without it.
 
     :param sections:    A dictionary of sections.
-    :param argument:    The argument to check for, e.g. "files".
+    :param argument:    An argument OR a list of arguments that at least 1
+                        should present.
     :param log_printer: A log printer to emit the warning to.
     :return:            Returns a boolean True if the given argument
                         is present in the sections, else returns False.
     """
-    if all(argument not in section for section in sections.values()):
-        log_printer.warn('coala will not run any analysis. Did you forget '
-                         'to give the `--{}` argument?'.format(argument))
-        return True
+    if isinstance(argument, str):
+        argument = [argument]
+    for section in sections.values():
+        if any(arg in section for arg in argument):
+            return False
 
-    return False
+    formatted_args = ' or '.join('`--{}`'.format(arg) for arg in argument)
+    log_printer.warn('coala will not run any analysis. Did you forget '
+                     'to give the {} argument?'.format(formatted_args))
+    return True
 
 
 def load_configuration(arg_list,
