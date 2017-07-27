@@ -198,11 +198,13 @@ class Bear:
         # Copy the bears specified in Bear.BEAR_DEPS to this instance, so
         # runtime modifications are allowed.
         self.BEAR_DEPS = set(self.BEAR_DEPS)
+        # Do the same for Bear.REQUIREMENTS.
+        self.REQUIREMENTS = set(self.REQUIREMENTS)
 
         self._dependency_results = defaultdict(list)
 
         self.setup_dependencies()
-        cp = type(self).check_prerequisites()
+        cp = self.check_prerequisites()
         if cp is not True:
             error_string = ('The bear ' + self.name +
                             ' does not fulfill all requirements.')
@@ -309,8 +311,7 @@ class Bear:
         OS independent way.
         """
 
-    @classmethod
-    def check_prerequisites(cls):
+    def check_prerequisites(self):
         """
         Checks whether needed runtime prerequisites of the bear are satisfied.
 
@@ -320,23 +321,32 @@ class Bear:
 
         >>> from dependency_management.requirements.PipRequirement import (
         ...     PipRequirement)
+        >>> from coalib.settings.Section import Section
         >>> class SomeBear(Bear):
         ...     REQUIREMENTS = {PipRequirement('pip')}
 
-        >>> SomeBear.check_prerequisites()
+        >>> section = Section('my-section')
+        >>> filedict = {}
+
+        >>> bear = SomeBear(section, filedict)
+        >>> bear.check_prerequisites()
         True
 
         >>> class SomeOtherBear(Bear):
         ...     REQUIREMENTS = {PipRequirement('really_bad_package')}
 
-        >>> SomeOtherBear.check_prerequisites()
-        'Following requirements are not installed: really_bad_package (...)'
+        >>> SomeOtherBear(section, filedict)
+        Traceback (most recent call last):
+            ...
+        RuntimeError: The bear BearWithPrerequisites does not fulfill all \
+requirements. Following requirements are not installed: really_bad_package \
+(...)
 
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
         """
         not_installed_requirements = [requirement
-                                      for requirement in cls.REQUIREMENTS
+                                      for requirement in self.REQUIREMENTS
                                       if not requirement.is_installed()]
 
         if not_installed_requirements:
