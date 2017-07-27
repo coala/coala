@@ -273,3 +273,18 @@ class BearTest(unittest.TestCase):
 
         self.assertEqual(BearWithDependencies.BEAR_DEPS, {Bear1})
         self.assertEqual(uut.BEAR_DEPS, {Bear1, Bear2})
+
+    def test_class_requirements_immutability(self):
+        section = Section('test-section')
+        uut = BearWithPrerequisites(section, {})
+
+        self.assertNotEqual(id(uut.REQUIREMENTS),
+                            id(BearWithDependencies.REQUIREMENTS))
+
+        self.assertEqual(len(BearWithDependencies.REQUIREMENTS), 2)
+        self.assertEqual(len(uut.REQUIREMENTS), 2)
+
+        uut.REQUIREMENTS.add(PipRequirement('worse-package'))
+
+        self.assertEqual(len(BearWithDependencies.REQUIREMENTS), 2)
+        self.assertEqual(len(uut.REQUIREMENTS), 3)
