@@ -2,7 +2,7 @@ import os
 import pkg_resources
 import unittest
 
-from pyprint.ConsolePrinter import ConsolePrinter
+from testfixtures import LogCapture
 
 from coalib.bearlib.aspects import AspectList, get as get_aspect
 from coalib.bears.BEAR_KIND import BEAR_KIND
@@ -11,8 +11,6 @@ from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
     collect_registered_bears_dirs, filter_section_bears_by_languages,
     get_all_bears, get_all_bears_names, collect_bears_by_aspects)
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
 from tests.TestUtilities import bear_test_module
 
@@ -23,30 +21,27 @@ class CollectFilesTest(unittest.TestCase):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 'collectors_test_dir')
-        self.log_printer = ListLogPrinter()
 
     def test_file_empty(self):
         self.assertRaises(TypeError, collect_files)
 
     def test_file_invalid(self):
-        self.assertEqual(collect_files(file_paths=['invalid_path'],
-                                       log_printer=self.log_printer,
-                                       ignored_file_paths=None,
-                                       limit_file_paths=None,
-                                       section_name='section'), [])
-        self.assertEqual([log.message for log in self.log_printer.logs],
-                         ['No files matching \'invalid_path\' were found. '
-                          'If this rule is not required, you can remove it '
-                          'from section [section] in your .coafile to '
+        with LogCapture() as capture:
+            self.assertEqual(collect_files(file_paths=['invalid_path'],
+                                           ignored_file_paths=None,
+                                           limit_file_paths=None,
+                                           section_name='section'), [])
+        exp_log_message = 'No files matching \'invalid_path\' were found. ' \
+                          'If this rule is not required, you can remove it ' \
+                          'from section [section] in your .coafile to ' \
                           'deactivate this warning.'
-                          ])
+        capture.check(('root', 'WARNING', exp_log_message))
 
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
                                                      'others',
                                                      '*',
-                                                     '*2.py')],
-                                       self.log_printer),
+                                                     '*2.py')]),
                          [os.path.normcase(os.path.join(
                              self.collectors_test_dir,
                              'others',
@@ -57,8 +52,7 @@ class CollectFilesTest(unittest.TestCase):
         self.assertEqual(collect_files(os.path.join(self.collectors_test_dir,
                                                     'others',
                                                     '*',
-                                                    '*2.py'),
-                                       self.log_printer),
+                                                    '*2.py')),
                          [os.path.normcase(os.path.join(
                              self.collectors_test_dir,
                              'others',
@@ -74,7 +68,6 @@ class CollectFilesTest(unittest.TestCase):
                                                      'others',
                                                      '*',
                                                      '*2.py')],
-                                       self.log_printer,
                                        ignored_file_paths=[os.path.join(
                                            self.collectors_test_dir,
                                            'others',
@@ -88,7 +81,6 @@ class CollectFilesTest(unittest.TestCase):
                                         'others',
                                         '*',
                                         '*py')],
-                          self.log_printer,
                           limit_file_paths=[os.path.join(
                                                 self.collectors_test_dir,
                                                 'others',
@@ -210,60 +202,53 @@ class CollectBearsTest(unittest.TestCase):
         self.collectors_test_dir = os.path.join(current_dir,
                                                 'collectors_test_dir')
 
-        self.log_printer = ListLogPrinter()
-
     def test_bear_empty(self):
         self.assertRaises(TypeError, collect_bears)
 
     def test_bear_invalid(self):
-        self.assertEqual(collect_bears(['invalid_paths'],
-                                       ['invalid_name'],
-                                       ['invalid kind'],
-                                       self.log_printer), ([],))
-        self.assertEqual([log.message for log in self.log_printer.logs],
-                         ['No bears matching \'invalid_name\' were found. Make '
-                          'sure you have coala-bears installed or you have '
-                          'typed the name correctly.'])
+        with LogCapture() as capture:
+            self.assertEqual(collect_bears(['invalid_paths'],
+                                           ['invalid_name'],
+                                           ['invalid kind']), ([],))
+        exp_log_message = 'No bears matching \'invalid_name\' were found. ' \
+                          'Make sure you have coala-bears installed or ' \
+                          'you have typed the name correctly.'
+        capture.check(('root', 'WARNING', exp_log_message))
 
         self.assertEqual(collect_bears(['invalid_paths'],
                                        ['invalid_name'],
-                                       ['invalid kind1', 'invalid kind2'],
-                                       self.log_printer), ([], []))
+                                       ['invalid kind1', 'invalid kind2']
+                                       ), ([], []))
 
     def test_simple_single(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, 'bears')],
             ['bear1'],
-            ['kind'],
-            self.log_printer)[0]), 1)
+            ['kind'])[0]), 1)
 
     def test_string_single(self):
         self.assertEqual(len(collect_bears(
             os.path.join(self.collectors_test_dir, 'bears'),
             ['bear1'],
-            ['kind'],
-            self.log_printer)[0]), 1)
+            ['kind'])[0]), 1)
 
     def test_reference_single(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, 'bears')],
             ['metabear'],
-            ['kind'],
-            self.log_printer)[0]), 1)
+            ['kind'])[0]), 1)
 
     def test_no_duplications(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, 'bears', '**')],
             ['*'],
-            ['kind'],
-            self.log_printer)[0]), 2)
+            ['kind'])[0]), 2)
 
     def test_wrong_kind(self):
         self.assertEqual(len(collect_bears(
             [os.path.join(self.collectors_test_dir, 'bears', '**')],
             ['*'],
-            ['other_kind'],
-            self.log_printer)[0]), 0)
+            ['other_kind'])[0]), 0)
 
     def test_all_bears_from_sections(self):
         test_section = Section('test_section')
@@ -271,8 +256,7 @@ class CollectBearsTest(unittest.TestCase):
                                                       'bears_local_global',
                                                       '**')
         local_bears, global_bears = collect_all_bears_from_sections(
-            {'test_section': test_section},
-            self.log_printer)
+            {'test_section': test_section})
 
         self.assertEqual(len(local_bears['test_section']), 2)
         self.assertEqual(len(global_bears['test_section']), 2)
@@ -295,7 +279,6 @@ class CollectorsTests(unittest.TestCase):
         current_dir = os.path.split(__file__)[0]
         self.collectors_test_dir = os.path.join(current_dir,
                                                 'collectors_test_dir')
-        self.log_printer = LogPrinter(ConsolePrinter())
 
     def test_filter_section_bears_by_languages(self):
         test_section = Section('test_section')
@@ -303,8 +286,7 @@ class CollectorsTests(unittest.TestCase):
                                                       'bears_local_global',
                                                       '**')
         local_bears, global_bears = collect_all_bears_from_sections(
-            {'test_section': test_section},
-            self.log_printer)
+            {'test_section': test_section})
         local_bears = filter_section_bears_by_languages(local_bears, ['C'])
         self.assertEqual(len(local_bears['test_section']), 1)
         self.assertEqual(str(local_bears['test_section'][0]),

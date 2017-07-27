@@ -6,7 +6,6 @@ import unittest
 from unittest.mock import patch
 
 from coalib.coala_main import run_coala
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import coala
 from pyprint.ConsolePrinter import ConsolePrinter
 from coala_utils.ContextManagers import prepare_file
@@ -47,7 +46,6 @@ class coalaDebugTest(unittest.TestCase):
                     r"requirements. 'I_do_not_exist' is not installed.$"):
             run_coala(
                 console_printer=ConsolePrinter(),
-                log_printer=LogPrinter(),
                 arg_list=(
                     '-c', os.devnull,
                     '-f', re.escape(filename),
@@ -75,7 +73,6 @@ class coalaDebugTest(unittest.TestCase):
                     RuntimeError, r"^That's all the RaiseTestBear can do\.$"):
             run_coala(
                 console_printer=ConsolePrinter(),
-                log_printer=LogPrinter(),
                 arg_list=(
                     '-c', os.devnull,
                     '-f', re.escape(filename),

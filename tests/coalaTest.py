@@ -6,7 +6,6 @@ import unittest.mock
 from pkg_resources import VersionConflict
 
 from coalib.coala_main import run_coala
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import assert_supported_version, coala
 from pyprint.ConsolePrinter import ConsolePrinter
 from coala_utils.ContextManagers import prepare_file
@@ -228,7 +227,6 @@ class coalaTest(unittest.TestCase):
                 1,
                 len(run_coala(
                     console_printer=ConsolePrinter(),
-                    log_printer=LogPrinter(),
                     arg_list=(
                         '-c', os.devnull,
                         '-f', re.escape(filename),
@@ -245,7 +243,6 @@ class coalaTest(unittest.TestCase):
                 0,
                 len(run_coala(
                     console_printer=ConsolePrinter(),
-                    log_printer=LogPrinter(),
                     arg_list=(
                         '-c', os.devnull,
                         '-f', re.escape(filename),
@@ -266,7 +263,6 @@ class coalaTest(unittest.TestCase):
                 prepare_file(['#fixme  '], None) as (lines, filename):
             _, exitcode, _ = run_coala(
                 console_printer=ConsolePrinter(),
-                log_printer=LogPrinter(),
                 arg_list=(
                     '-c', os.devnull,
                     '-f', re.escape(filename),

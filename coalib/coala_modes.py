@@ -1,4 +1,4 @@
-def mode_normal(console_printer, log_printer, args, debug=False):
+def mode_normal(console_printer, args, debug=False):
     import functools
 
     from coalib.coala_main import run_coala

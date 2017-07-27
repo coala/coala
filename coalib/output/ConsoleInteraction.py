@@ -13,6 +13,8 @@ except ImportError:  # pragma: no cover
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
+from coalib.misc.Exceptions import log_exception
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -130,15 +132,13 @@ def print_section_beginning(console_printer, section):
         name=section.name))
 
 
-def nothing_done(log_printer):
+def nothing_done():
     """
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
-
-    :param log_printer: A LogPrinter object.
     """
-    log_printer.warn('No existent section was targeted or enabled. '
-                     'Nothing to do.')
+    logging.warning('No existent section was targeted or enabled. '
+                    'Nothing to do.')
 
 
 def acquire_actions_and_apply(console_printer,
@@ -344,8 +344,7 @@ def print_diffs_info(diffs, printer):
             color='green')
 
 
-def print_results_formatted(log_printer,
-                            section,
+def print_results_formatted(section,
                             result_list,
                             file_dict,
                             *args):
@@ -353,7 +352,6 @@ def print_results_formatted(log_printer,
     Prints results through the format string from the format setting done by
     user.
 
-    :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong.
     :param result_list:    List of Result objects containing the corresponding
                            results.
@@ -395,20 +393,18 @@ def print_results_formatted(log_printer,
                                         message=result.message,
                                         **format_args))
         except KeyError as exception:
-            log_printer.log_exception(
+            log_exception(
                 'Unable to print the result with the given format string.',
-                exception)
+                exception, LOG_LEVEL.ERROR)
 
 
 def print_affected_files(console_printer,
-                         log_printer,
                          result,
                          file_dict):
     """
     Prints all the affected files and affected lines within them.
 
     :param console_printer: Object to print messages on the console.
-    :param log_printer:     Printer responsible for logging the messages.
     :param result:          The result to print the context for.
     :param file_dict:       A dictionary containing all files with filename as
                             key.
@@ -421,18 +417,17 @@ def print_affected_files(console_printer,
             if (
                     sourcerange.file is not None and
                     sourcerange.file not in file_dict):
-                log_printer.warn('The context for the result ({}) cannot '
-                                 'be printed because it refers to a file '
-                                 "that doesn't seem to exist ({})"
-                                 '.'.format(result, sourcerange.file))
+                logging.warning('The context for the result ({}) cannot '
+                                'be printed because it refers to a file '
+                                "that doesn't seem to exist ({})"
+                                '.'.format(result, sourcerange.file))
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
                                      sourcerange)
 
 
-def print_results_no_input(log_printer,
-                           section,
+def print_results_no_input(section,
                            result_list,
                            file_dict,
                            file_diff_dict,
@@ -441,7 +436,6 @@ def print_results_no_input(log_printer,
     """
     Prints all non interactive results in a section
 
-    :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
     :param file_dict:      A dictionary containing all files with filename as
@@ -455,7 +449,6 @@ def print_results_no_input(log_printer,
     for result in result_list:
 
         print_affected_files(console_printer,
-                             log_printer,
                              result,
                              file_dict)
 
@@ -468,8 +461,7 @@ def print_results_no_input(log_printer,
                      apply_single=apply_single)
 
 
-def print_results(log_printer,
-                  section,
+def print_results(section,
                   result_list,
                   file_dict,
                   file_diff_dict,
@@ -478,7 +470,6 @@ def print_results(log_printer,
     """
     Prints all the results in a section.
 
-    :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
     :param file_dict:      A dictionary containing all files with filename as
@@ -492,7 +483,6 @@ def print_results(log_printer,
     for result in sorted(result_list):
 
         print_affected_files(console_printer,
-                             log_printer,
                              result,
                              file_dict)
 
@@ -549,13 +539,10 @@ def require_setting(setting_name, arr, section):
     return input()
 
 
-def acquire_settings(log_printer, settings_names_dict, section):
+def acquire_settings(settings_names_dict, section):
     """
     This method prompts the user for the given settings.
 
-    :param log_printer:
-        Printer responsible for logging the messages. This is needed to comply
-        with the interface.
     :param settings_names_dict:
         A dictionary with the settings name as key and a list containing a
         description in [0] and the name of the bears who need this setting in

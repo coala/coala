@@ -3,11 +3,8 @@ import re
 import os
 from unittest.mock import patch
 
-from pyprint.NullPrinter import NullPrinter
-
 from coalib.misc.Caching import FileCache
 from coalib.misc.CachingUtilities import pickle_load, pickle_dump
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import coala
 from coala_utils.ContextManagers import prepare_file
 from coala_utils.ContextManagers import simulate_console_inputs
@@ -21,8 +18,7 @@ class CachingTest(unittest.TestCase):
         self.caching_test_dir = os.path.join(
             current_dir,
             'caching_testfiles')
-        self.log_printer = LogPrinter(NullPrinter())
-        self.cache = FileCache(self.log_printer, 'coala_test', flush_cache=True)
+        self.cache = FileCache('coala_test', flush_cache=True)
 
     def test_file_tracking(self):
         self.cache.track_files({'test.c', 'file.py'})
@@ -49,7 +45,7 @@ class CachingTest(unittest.TestCase):
     @patch('coalib.misc.Caching.os')
     def test_get_uncached_files(self, mock_os):
         file_path = os.path.join(self.caching_test_dir, 'test.c')
-        cache = FileCache(self.log_printer, 'coala_test3', flush_cache=True)
+        cache = FileCache('coala_test3', flush_cache=True)
 
         # Since this is a new FileCache object, the return must be the full set
         cache.current_time = 0
@@ -75,25 +71,25 @@ class CachingTest(unittest.TestCase):
         self.assertEqual(cache.get_uncached_files({file_path}), set())
 
     def test_persistence(self):
-        with FileCache(self.log_printer, 'test3', flush_cache=True) as cache:
+        with FileCache('test3', flush_cache=True) as cache:
             cache.track_files({'file.c'})
         self.assertTrue('file.c' in cache.data)
 
-        with FileCache(self.log_printer, 'test3', flush_cache=False) as cache:
+        with FileCache('test3', flush_cache=False) as cache:
             self.assertTrue('file.c' in cache.data)
 
     def test_time_travel(self):
-        cache = FileCache(self.log_printer, 'coala_test2', flush_cache=True)
+        cache = FileCache('coala_test2', flush_cache=True)
         cache.track_files({'file.c'})
         cache.write()
         self.assertTrue('file.c' in cache.data)
 
-        cache_data = pickle_load(self.log_printer, 'coala_test2', {})
+        cache_data = pickle_load('coala_test2', {})
         # Back to the future :)
         cache_data['time'] = 2000000000
-        pickle_dump(self.log_printer, 'coala_test2', cache_data)
+        pickle_dump('coala_test2', cache_data)
 
-        cache = FileCache(self.log_printer, 'coala_test2', flush_cache=False)
+        cache = FileCache('coala_test2', flush_cache=False)
         self.assertFalse('file.c' in cache.data)
 
     def test_caching_results(self):

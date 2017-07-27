@@ -3,6 +3,16 @@ import logging
 import unittest
 
 from coalib.output.Logging import configure_json_logging
+from coalib.output.printers.LogPrinter import LogPrinterMixin
+
+
+class TestLogger(LogPrinterMixin):
+
+    def __init__(self):
+        pass
+
+    def log_message(self, log_message, **kwargs):
+        super(TestLogger, self).log_message(log_message)
 
 
 class LoggingTest(unittest.TestCase):
@@ -30,3 +40,7 @@ class LoggingTest(unittest.TestCase):
         self.assertEqual(logs_list[2]['level'], 'WARNING')
         self.assertEqual(logs_list[3]['message'], 'This is error log.')
         self.assertEqual(logs_list[3]['level'], 'ERROR')
+
+    def test_logger(self):
+        logger = TestLogger()
+        self.assertRaises(NotImplementedError, logger.log_message, None)

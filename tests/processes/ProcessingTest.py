@@ -1,4 +1,5 @@
 import copy
+import logging
 import multiprocessing
 import os
 import platform
@@ -8,12 +9,11 @@ import subprocess
 import sys
 import unittest
 
+from testfixtures import LogCapture, StringComparison
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.bears.Bear import Bear
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
     ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
@@ -55,17 +55,6 @@ class DummyProcess(multiprocessing.Process):
         return not self.control_queue.empty() and not self.starts_dead
 
 
-class ProcessingTestLogPrinter(LogPrinter):
-
-    def __init__(self, log_queue):
-        LogPrinter.__init__(self, self)
-        self.log_queue = log_queue
-        self.set_up = False
-
-    def log_message(self, log_message, timestamp=None, **kwargs):
-        self.log_queue.put(log_message)
-
-
 class ProcessingTest(unittest.TestCase):
 
     def setUp(self):
@@ -82,14 +71,11 @@ class ProcessingTest(unittest.TestCase):
         self.queue = queue.Queue()
         self.log_queue = queue.Queue()
         self.console_printer = ConsolePrinter()
-        log_printer = LogPrinter(ConsolePrinter())
-        self.log_printer = ProcessingTestLogPrinter(self.log_queue)
 
         (self.sections,
          self.local_bears,
          self.global_bears,
          targets) = gather_configuration(lambda *args: True,
-                                         log_printer,
                                          arg_list=['--config',
                                                    re.escape(config_path)])
         self.assertEqual(len(self.local_bears['cli']), 1)
@@ -98,13 +84,12 @@ class ProcessingTest(unittest.TestCase):
 
     def test_run(self):
         self.sections['cli'].append(Setting('jobs', '1'))
-        cache = FileCache(self.log_printer, 'coala_test', flush_cache=True)
+        cache = FileCache('coala_test', flush_cache=True)
         results = execute_section(self.sections['cli'],
                                   self.global_bears['cli'],
                                   self.local_bears['cli'],
-                                  lambda *args: self.result_queue.put(args[2]),
+                                  lambda *args: self.result_queue.put(args[1]),
                                   cache,
-                                  self.log_printer,
                                   console_printer=self.console_printer)
         self.assertTrue(results[0])
 
@@ -142,17 +127,15 @@ class ProcessingTest(unittest.TestCase):
         execute_section(self.sections['cli'],
                         [],
                         [],
-                        lambda *args: self.result_queue.put(args[2]),
+                        lambda *args: self.result_queue.put(args[1]),
                         None,
-                        self.log_printer,
                         console_printer=self.console_printer)
         self.sections['cli'].append(Setting('jobs', 'bogus!'))
         results = execute_section(self.sections['cli'],
                                   [],
                                   [],
-                                  lambda *args: self.result_queue.put(args[2]),
+                                  lambda *args: self.result_queue.put(args[1]),
                                   None,
-                                  self.log_printer,
                                   console_printer=self.console_printer)
         # No results
         self.assertFalse(results[0])
@@ -163,24 +146,24 @@ class ProcessingTest(unittest.TestCase):
 
     def test_mixed_run(self):
         self.sections['mixed'].append(Setting('jobs', '1'))
-        log_printer = ListLogPrinter()
         global_bears = self.global_bears['mixed']
         local_bears = self.local_bears['mixed']
         bears = global_bears + local_bears
 
-        results = execute_section(self.sections['mixed'],
-                                  global_bears,
-                                  local_bears,
-                                  lambda *args: self.result_queue.put(args[2]),
-                                  None,
-                                  log_printer,
-                                  console_printer=self.console_printer)
-        self.assertIn("Bears that uses raw files can't be mixed with "
-                      'Bears that uses text files. Please move the following '
-                      'bears to their own section: ' +
-                      ', '.join(bear.name for bear in bears
-                                if not bear.USE_RAW_FILES),
-                      [log.message for log in log_printer.logs])
+        with LogCapture() as capture:
+            results = execute_section(self.sections['mixed'],
+                                      global_bears,
+                                      local_bears,
+                                      lambda *args: self.result_queue.put(
+                                          args[2]),
+                                      None,
+                                      console_printer=self.console_printer)
+        capture.check(
+            ('root', 'ERROR', "Bears that uses raw files can't be mixed with "
+                              'Bears that uses text files. Please move the '
+                              'following bears to their own section: ' +
+             ', '.join(bear.name for bear in bears
+                       if not bear.USE_RAW_FILES)))
 
     def test_raw_run(self):
         self.sections['raw'].append(Setting('jobs', '1'))
@@ -189,7 +172,6 @@ class ProcessingTest(unittest.TestCase):
                                   self.local_bears['raw'],
                                   lambda *args: self.result_queue.put(args[2]),
                                   None,
-                                  self.log_printer,
                                   console_printer=self.console_printer)
         self.assertTrue(results[0])
 
@@ -280,10 +262,9 @@ class ProcessingTest(unittest.TestCase):
                    '# Start ignoring ABear, BBear and CBear\n',
                    '# Stop ignoring\n',
                    'seventh']},
-            lambda *args: self.queue.put(args[2]),
+            lambda *args: self.queue.put(args[1]),
             section,
             None,
-            self.log_printer,
             self.console_printer)
 
         self.assertEqual(self.queue.get(timeout=0), ([second_local,
@@ -302,10 +283,9 @@ class ProcessingTest(unittest.TestCase):
         process_queues(
             [DummyProcess(ctrlq, starts_dead=True) for i in range(3)],
             ctrlq, {}, {}, {},
-            lambda *args: self.queue.put(args[2]),
+            lambda *args: self.queue.put(args[1]),
             Section(''),
             None,
-            self.log_printer,
             self.console_printer)
         with self.assertRaises(queue.Empty):
             self.queue.get(timeout=0)
@@ -317,10 +297,9 @@ class ProcessingTest(unittest.TestCase):
         process_queues(
             [DummyProcess(ctrlq, starts_dead=True) for i in range(3)],
             ctrlq, {}, {}, {},
-            lambda *args: self.queue.put(args[2]),
+            lambda *args: self.queue.put(args[1]),
             Section(''),
             None,
-            self.log_printer,
             self.console_printer)
         with self.assertRaises(queue.Empty):
             self.queue.get(timeout=0)
@@ -379,42 +358,48 @@ class ProcessingTest(unittest.TestCase):
             list(filter_raising_callables(test_list, C, exc=(B, C)))
 
     def test_get_file_dict(self):
-        file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
+        with LogCapture() as capture:
+            file_dict = get_file_dict([self.testcode_c_path])
         self.assertEqual(len(file_dict), 1)
         self.assertEqual(type(file_dict[self.testcode_c_path]),
                          tuple,
                          msg='files in file_dict should not be editable')
-        self.assertEqual('Files that will be checked:\n' + self.testcode_c_path,
-                         self.log_printer.log_queue.get().message)
+        capture.check(
+            ('root', 'DEBUG', 'Files that will be checked:\n'
+                              + self.testcode_c_path))
 
     def test_get_file_dict_non_existent_file(self):
-        file_dict = get_file_dict(['non_existent_file'], self.log_printer)
+        with LogCapture() as capture:
+            file_dict = get_file_dict(['non_existent_file'])
         self.assertEqual(file_dict, {})
-        self.assertIn(("Failed to read file 'non_existent_file' because of "
-                       'an unknown error.'),
-                      self.log_printer.log_queue.get().message)
+        capture.check(
+            ('root', 'WARNING',
+             StringComparison(r".*Failed to read file 'non_existent_file' "
+                              r'because of an unknown error.*')),
+            ('root', 'INFO', StringComparison(r'.*Exception was:.*')),
+            ('root', 'DEBUG',
+             StringComparison(r'.*Files that will be checked.*')))
 
     def test_get_file_dict_allow_raw_file(self):
-        log_printer = ListLogPrinter()
-        file_dict = get_file_dict([self.unreadable_path], log_printer,
-                                  True)
+        with LogCapture() as capture:
+            file_dict = get_file_dict([self.unreadable_path], True)
         self.assertNotEqual(file_dict, {})
         self.assertEqual(file_dict[self.unreadable_path], None)
-        self.assertEqual(len(log_printer.logs), 0)
+        capture.check(
+            ('root', 'DEBUG',
+             StringComparison(r'(?s).*Files that will be checked(?s).*')))
 
     def test_get_file_dict_forbid_raw_file(self):
-        log_printer = ListLogPrinter()
-        file_dict = get_file_dict([self.unreadable_path], log_printer,
-                                  False)
+        with LogCapture() as capture:
+            file_dict = get_file_dict([self.unreadable_path], False)
         self.assertEqual(file_dict, {})
-        self.assertEqual(len(log_printer.logs), 1)
-
-        log_message = log_printer.logs[0]
-        self.assertEqual(("Failed to read file '{}'. It seems to contain "
-                          'non-unicode characters. Leaving it '
-                          'out.'.format(self.unreadable_path)),
-                         log_message.message)
-        self.assertEqual(log_message.log_level, LOG_LEVEL.WARNING)
+        capture.check(
+            ('root', 'WARNING', "Failed to read file '{}'. It seems "
+                                'to contain non-unicode characters. '
+                                'Leaving it out.'.format(
+                                    self.unreadable_path)),
+            ('root', 'DEBUG',
+             StringComparison(r'(?s).*Files that will be checked(?s).*')))
 
     def test_simplify_section_result(self):
         results = (True,
@@ -597,27 +582,23 @@ class ProcessingTest(unittest.TestCase):
         multiprocessing.Queue()
         tmp_local_bears = copy.copy(self.local_bears['cli'])
         tmp_local_bears.append(BearWithMissingPrerequisites)
-        cache = FileCache(self.log_printer,
-                          'coala_test_on_error',
+        cache = FileCache('coala_test_on_error',
                           flush_cache=True)
         results = execute_section(self.sections['cli'],
                                   [],
                                   tmp_local_bears,
-                                  lambda *args: self.result_queue.put(args[2]),
+                                  lambda *args: self.result_queue.put(args[1]),
                                   cache,
-                                  self.log_printer,
                                   console_printer=self.console_printer)
         self.assertEqual(len(cache.data), 0)
 
-        cache = FileCache(self.log_printer,
-                          'coala_test_on_error',
+        cache = FileCache('coala_test_on_error',
                           flush_cache=False)
         results = execute_section(self.sections['cli'],
                                   [],
                                   self.local_bears['cli'],
-                                  lambda *args: self.result_queue.put(args[2]),
+                                  lambda *args: self.result_queue.put(args[1]),
                                   cache,
-                                  self.log_printer,
                                   console_printer=self.console_printer)
         self.assertGreater(len(cache.data), 0)
 
@@ -657,7 +638,6 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
 
     def setUp(self):
         self.log_queue = queue.Queue()
-        self.log_printer = ProcessingTestLogPrinter(self.log_queue)
 
         self.resultY = Result('YBear', 'msg1')
         self.resultZ = Result('ZBear', 'msg2')
@@ -668,24 +648,23 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         ret = autoapply_actions(self.results,
                                 {},
                                 {},
-                                self.section,
-                                self.log_printer)
+                                self.section)
         self.assertEqual(ret, self.results)
         self.assertTrue(self.log_queue.empty())
 
     def test_with_invalid_action(self):
         self.section.append(Setting('default_actions',
                                     'XBear: nonSENSE_action'))
-        ret = autoapply_actions(self.results,
-                                {},
-                                {},
-                                self.section,
-                                self.log_printer)
+        with LogCapture() as capture:
+            ret = autoapply_actions(self.results,
+                                    {},
+                                    {},
+                                    self.section)
         self.assertEqual(ret, self.results)
-        self.assertEqual(self.log_queue.get().message,
-                         "Selected default action 'nonSENSE_action' for bear "
-                         "'XBear' does not exist. Ignoring action.")
-        self.assertTrue(self.log_queue.empty())
+        capture.check(
+            ('root', 'WARNING', "Selected default action 'nonSENSE_action' "
+                                "for bear 'XBear' does not exist. "
+                                'Ignoring action.'))
 
     def test_without_default_action_and_unapplicable(self):
         # Use a result where no default action is supplied for and another one
@@ -698,51 +677,48 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         self.section.append(Setting(
             'default_actions',
             'NoBear: ApplyPatchAction, YBear: ApplyPatchAction'))
-        ret = autoapply_actions(self.results,
-                                {},
-                                {},
-                                self.section,
-                                self.log_printer)
+        with LogCapture() as capture:
+            ret = autoapply_actions(self.results,
+                                    {},
+                                    {},
+                                    self.section)
         self.assertEqual(ret, self.results)
-        self.assertEqual(self.log_queue.get().message,
-                         'YBear: The ApplyPatchAction cannot be applied')
-        self.assertTrue(self.log_queue.empty())
+        capture.check(
+            ('root', 'WARNING', 'YBear: The ApplyPatchAction cannot '
+                                'be applied'))
 
         ApplyPatchAction.is_applicable = old_is_applicable
 
         self.section.append(Setting(
             'no_autoapply_warn', True))
-        autoapply_actions(self.results,
-                          {},
-                          {},
-                          self.section,
-                          self.log_printer)
-        self.assertTrue(self.log_queue.empty())
+        with LogCapture() as capture:
+            autoapply_actions(self.results,
+                              {},
+                              {},
+                              self.section)
+        capture.check()
 
     def test_applicable_action(self):
         # Use a result whose action can be successfully applied.
-        log_printer = self.log_printer
-
         class TestAction(ResultAction):
 
             def apply(self, *args, **kwargs):
-                log_printer.debug('ACTION APPLIED SUCCESSFULLY.')
+                logging.debug('ACTION APPLIED SUCCESSFULLY')
 
         ACTIONS.append(TestAction)
 
         self.section.append(Setting('default_actions', 'Z*: TestAction'))
-        ret = autoapply_actions(self.results,
-                                {},
-                                {},
-                                self.section,
-                                log_printer)
+        with LogCapture() as capture:
+            ret = autoapply_actions(self.results,
+                                    {},
+                                    {},
+                                    self.section)
         self.assertEqual(ret, [self.resultY])
-        self.assertEqual(self.log_queue.get().message,
-                         'ACTION APPLIED SUCCESSFULLY.')
-        self.assertEqual(self.log_queue.get().message,
-                         "Applied 'TestAction' "
-                         "on the whole project from 'ZBear'.")
-        self.assertTrue(self.log_queue.empty())
+        capture.check(
+            ('root', 'DEBUG', 'ACTION APPLIED SUCCESSFULLY'),
+            ('root', 'INFO', "Applied 'TestAction' on the whole project "
+                             "from 'ZBear'.")
+        )
 
         ACTIONS.pop()
 
@@ -756,21 +732,18 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
 
         self.section.append(Setting('default_actions',
                                     'YBear: FailingTestAction'))
-        ret = autoapply_actions(self.results,
-                                {},
-                                {},
-                                self.section,
-                                self.log_printer)
+        with LogCapture() as capture:
+            ret = autoapply_actions(self.results,
+                                    {},
+                                    {},
+                                    self.section)
         self.assertEqual(ret, self.results)
-        self.assertEqual(self.log_queue.get().message,
-                         "Failed to execute action 'FailingTestAction'"
-                         " with error: YEAH THAT'S A FAILING BEAR.")
-        self.assertIn("YEAH THAT'S A FAILING BEAR",
-                      self.log_queue.get().message)
-        self.assertEqual(self.log_queue.get().message,
-                         '-> for result ' + repr(self.resultY) + '.')
-        self.assertTrue(self.log_queue.empty())
-
+        capture.check(
+            ('root', 'ERROR', "Failed to execute action 'FailingTestAction' "
+                              "with error: YEAH THAT'S A FAILING BEAR."),
+            ('root', 'INFO', StringComparison(
+                r"(?s).*YEAH THAT'S A FAILING BEAR.*")),
+            ('root', 'DEBUG', '-> for result ' + repr(self.resultY) + '.'))
         ACTIONS.pop()
 
 
@@ -778,7 +751,6 @@ class ProcessingTest_PrintResult(unittest.TestCase):
 
     def setUp(self):
         self.section = Section('name')
-        self.log_printer = LogPrinter(ConsolePrinter(), log_level=0)
         self.console_printer = ConsolePrinter()
 
     def test_autoapply_override(self):
@@ -794,6 +766,6 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         results = [5, HiddenResult('origin', []),
                    Result('somebear', 'message', debug_msg='debug')]
         retval, newres = print_result(results, {}, 0, lambda *args: None,
-                                      self.section, self.log_printer, {}, [],
+                                      self.section, {}, [],
                                       console_printer=self.console_printer)
         self.assertEqual(newres, [])
