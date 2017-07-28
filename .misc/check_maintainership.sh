@@ -7,7 +7,7 @@ set -e
 source ../rultor_secrets.sh
 
 # Make sure the user is a maintainer
-if curl "https://api.github.com/teams/1238757/memberships/${author}?access_token=${GITHUB_TOKEN}" | grep -vq "active"; then
+if curl "https://api.github.com/teams/1238757/memberships/${author}?access_token=${GITHUB_TOKEN}" | grep -q "Not Found"; then
     echo "@${author} is not in the maintainers group."
     exit 1
 fi
