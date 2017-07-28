@@ -392,23 +392,26 @@ displayed for the single commit.
 Common Git Issues
 -----------------
 
-Sometimes, you use git add-A and add files you didn't want to your push (often
-after rebasing) and push it to the remote. Here ,is a short outline of, how can
-you remove (or revert changes in) particular files from your commit even after
-pushing to remote.
+Sometimes, you use ``git add -A`` and add files you didn't want to your push
+(often after rebasing) and push it to the remote. Here ,is a short outline of,
+how can you remove (or revert changes in) particular files from your commit even
+after pushing to remote.
 
 In your local repo, to revert the file to the state before the previous commit
 run the following:
+
 ::
 
     $ git checkout HEAD^ /path/to/file
 
 Now , after reverting the file(s) update your last commit, by running :
+
 ::
 
     $ git commit -a --amend
 
 To apply these changes to the remote you need to force update the branch :
+
 ::
 
     $ git push -f myfork
@@ -422,24 +425,26 @@ To apply these changes to the remote you need to force update the branch :
 The ``git checkout <revision sha> path/to/file`` command offers you more
 flexibility in reverting the changes in a file, done even from earlier than the
 last commit. By replacing the ``HEAD^`` by the revision number of the particular
-HEAD commit, you can refer to the required revision of the file.
+``HEAD`` commit, you can refer to the required revision of the file.
 
 Might sound a little intimidating, but don't worry, an example has been
 provided for you.
 First you can check the commit's revision number, where the file was revised by
 running the following command:
+
 ::
 
     $ git log /path/to/file
 
 The revision number might look like ``3cdc61015724f9965575ba954c8cd4232c8b42e4``
 Now, to revert the file to that revision, run the command:
+
 ::
 
     $ git checkout 3cdc61015724f9965575ba954c8cd4232c8b42e4 /path/to/file.txt
 
 Now, after the file gets reverted back to the required revision, commit the
-changes and (force)push to the remote.
+changes and (force) push to the remote.
 
 While rebasing, you may come across mid-rebase conflicts. For information
 regarding how to resolve mid-rebase conflicts, please check this
