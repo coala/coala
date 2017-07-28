@@ -25,14 +25,16 @@ def execute_bear(bear, *args, **kwargs):
                                       'the following output:\n')
                 old_process_output = bear.process_output
 
-                def new_process_output(output, filename=None, file=None):
+                def new_process_output(output, filename=None, file=None,
+                                       **process_output_kwargs):
                     if isinstance(output, tuple):
                         stdout, stderr = output
                         console_output.append('Stdout:\n' + stdout)
                         console_output.append('Stderr:\n' + stderr)
                     else:
                         console_output.append(output)
-                    return old_process_output(output, filename, file)
+                    return old_process_output(output, filename, file,
+                                              **process_output_kwargs)
 
                 stack.enter_context(patch.object(
                     bear, 'process_output', wraps=new_process_output))
