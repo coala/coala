@@ -226,11 +226,17 @@ class Session:
                     'should be smarter. Please report this to the developers.'
                     .format(bear))
             else:
-                tasks = {
-                    self.event_loop.run_in_executor(
-                        self.executor, bear.execute_task,
-                        bear_args, bear_kwargs)
-                    for bear_args, bear_kwargs in bear.generate_tasks()}
+                try:
+                    tasks = {
+                        self.event_loop.run_in_executor(
+                            self.executor, bear.execute_task,
+                            bear_args, bear_kwargs)
+                        for bear_args, bear_kwargs in bear.generate_tasks()}
+                except:
+                    bears_without_tasks_to_cleanup.append(bear)
+                    logging.exception(
+                        'Error during task scheduling of {}.'.format(bear.name))
+                    break
 
                 self.running_tasks[bear] = tasks
 
