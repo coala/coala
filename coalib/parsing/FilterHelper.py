@@ -35,16 +35,16 @@ class FilterHelper:
         return cls.available_filters[filter](all_bears, args)
 
     @classmethod
-    def apply_filters(cls, bears, args):
+    def apply_filters(cls, args, bears=None):
         """
         Returns bears after filtering based on ``args``. It returns
         intersection of bears if more than one element is present in ``args``
         list.
 
-        :param bears: The bears to filter.
         :param args:  List of args based on ``bears`` has to be filtered.
                       For example:
                       ``[['language', 'c', 'java'], ['can_fix', 'syntax']]``
+        :param bears: The bears to filter.
         :return:      Filtered bears.
         """
         for filter_by in args:
