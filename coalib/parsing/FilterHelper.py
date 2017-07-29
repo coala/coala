@@ -21,34 +21,38 @@ class FilterHelper:
         return filter in cls.available_filters
 
     @classmethod
-    def apply_filter(cls, filter, args, all_bears=None):
+    def apply_filter(cls, filter_name, filter_args, all_bears=None):
         if all_bears is None:
             from coalib.settings.ConfigurationGathering import (
                 get_all_bears)
             all_bears = get_all_bears(LogPrinter())
-        if not cls.is_valid_filter(filter):
+        if not cls.is_valid_filter(filter_name):
             raise InvalidFilterException('{!r} is an invalid filter. '
                                          'Available filters: {}'.format(
-                                             filter, cls.get_all_filters_str()))
-        if not args or len(args) == 0:
+                                             filter_name,
+                                             cls.get_all_filters_str()))
+        if not filter_args or len(filter_args) == 0:
             return all_bears
-        return cls.available_filters[filter](all_bears, args)
+        return cls.available_filters[filter_name](all_bears, filter_args)
 
     @classmethod
-    def apply_filters(cls, args, bears=None):
+    def apply_filters(cls, filters, bears=None):
         """
         Returns bears after filtering based on ``args``. It returns
         intersection of bears if more than one element is present in ``args``
         list.
 
-        :param args:  List of args based on ``bears`` has to be filtered.
-                      For example:
-                      ``[['language', 'c', 'java'], ['can_fix', 'syntax']]``
-        :param bears: The bears to filter.
-        :return:      Filtered bears.
+        :param filters:
+            List of args based on ``bears`` has to be filtered.
+            For example:
+            ``[['language', 'c', 'java'], ['can_fix', 'syntax']]``
+        :param bears:
+            The bears to filter.
+        :return:
+            Filtered bears.
         """
-        for filter_by in args:
-            filter_by_x, *filter_args = filter_by
+        for filter in filters:
+            filter_name, *filter_args = filter
             bears = cls.apply_filter(
-                filter_by_x, filter_args, bears)
+                filter_name, filter_args, bears)
         return bears
