@@ -1,7 +1,8 @@
 import unittest
 
 from coalib import coala
-from coalib.parsing.FilterHelper import FilterHelper, InvalidFilterException
+from coalib.parsing.FilterHelper import FilterHelper,get_all_filters_str,is_valid_filter,get_filtered_bears
+from coalib.parsing.InvalidFilterException import InvalidFilterException
 from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
@@ -106,7 +107,7 @@ class FilterTest(unittest.TestCase):
                                    '{!r} is an invalid filter. Available '
                                    'filters: {}'.format(
                                        filter,
-                                       FilterHelper.get_all_filters_str()))
+                                           get_all_filters_str()))
 
     def test_filter_by_can_fix_null(self):
         with bear_test_module():
@@ -123,5 +124,4 @@ class FilterTest(unittest.TestCase):
                 coala.main, 'coala', '-B', '--filter-by', 'can_detect')
             self.assertEqual(retval, 0)
             # All bear plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()),
-                             TEST_BEARS_COUNT + 1)
+            self.assertEqual(len(stdout.strip().splitlines()),TEST_BEARS_COUNT + 1)
