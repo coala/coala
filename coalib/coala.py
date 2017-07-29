@@ -73,7 +73,7 @@ def main(debug=False):
                 # Each iteration of the following loop applies
                 # filters one by one provided as arguments
                 try:
-                    filtered_bears = FilterHelper.filter_bears(
+                    filtered_bears = FilterHelper.apply_filters(
                         filtered_bears, args.filter_by)
                 except InvalidFilterException as ex:
                     # If filter is not available
@@ -91,7 +91,7 @@ def main(debug=False):
         elif args.show_capabilities:
             from coalib.collecting.Collectors import (
                 filter_capabilities_by_languages)
-            local_bears, _ = FilterHelper.get_filtered_bears(
+            local_bears, _ = FilterHelper.apply_filter(
                 'language', args.show_capabilities)
             capabilities = filter_capabilities_by_languages(
                 local_bears, args.show_capabilities)

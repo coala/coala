@@ -21,7 +21,7 @@ class FilterHelper:
         return filter in cls.available_filters
 
     @classmethod
-    def get_filtered_bears(cls, filter, args, all_bears=None):
+    def apply_filter(cls, filter, args, all_bears=None):
         if all_bears is None:
             from coalib.settings.ConfigurationGathering import (
                 get_all_bears)
@@ -35,7 +35,7 @@ class FilterHelper:
         return cls.available_filters[filter](all_bears, args)
 
     @classmethod
-    def filter_bears(cls, bears, args):
+    def apply_filters(cls, bears, args):
         """
         Returns bears after filtering based on ``args``. It returns
         intersection of bears if more than one element is present in ``args``
@@ -49,6 +49,6 @@ class FilterHelper:
         """
         for filter_by in args:
             filter_by_x, *filter_args = filter_by
-            bears = cls.get_filtered_bears(
+            bears = cls.apply_filter(
                 filter_by_x, filter_args, bears)
         return bears
