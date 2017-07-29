@@ -27,9 +27,7 @@ class FilterHelper:
                 get_all_bears)
             all_bears = get_all_bears(LogPrinter())
         if not cls.is_valid_filter(filter):
-            raise InvalidFilterException('{!r} is an invalid filter. '
-                                         'Available filters: {}'.format(
-                                             filter, cls.get_all_filters_str()))
+            raise InvalidFilterException(str(filter), cls.get_all_filters_str())
         if not args or len(args) == 0:
             return all_bears
         return cls.available_filters[filter](all_bears, args)
