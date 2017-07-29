@@ -214,7 +214,7 @@ class BearRunningUnitTest(unittest.TestCase):
                              LOG_LEVEL.ERROR,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING]
+                             LOG_LEVEL.ERROR]
 
         for msg in expected_messages:
             self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
@@ -271,7 +271,7 @@ d
             self.control_queue)
 
         expected_messages = [LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING,
+                             LOG_LEVEL.ERROR,
                              LOG_LEVEL.DEBUG,
                              LOG_LEVEL.WARNING,
                              LOG_LEVEL.DEBUG,

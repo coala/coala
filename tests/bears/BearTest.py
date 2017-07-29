@@ -209,7 +209,7 @@ class BearTest(BearTestBase):
         self.uut = BadTestBear(self.settings, self.queue)
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            'Bear BadTestBear failed to run. Take a look at '
                            'debug messages (`-V`) for further '
                            'information.')
@@ -221,7 +221,7 @@ class BearTest(BearTestBase):
         self.uut.execute('filename.py', 'file\n')
         self.check_message(LOG_LEVEL.DEBUG)
         # Fails because of no run() implementation
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            'Bear LocalBear failed to run on file filename.py. '
                            'Take a look at debug messages (`-V`) for further '
                            'information.')
@@ -231,7 +231,7 @@ class BearTest(BearTestBase):
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
         # Fails because of no run() implementation
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            'Bear GlobalBear failed to run. Take a look at '
                            'debug messages (`-V`) for further '
                            'information.')
