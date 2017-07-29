@@ -1,5 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
-
 from coalib.core.ProjectBear import ProjectBear
 from coalib.settings.Section import Section
 
@@ -129,13 +127,3 @@ class ProjectBearTest(CoreTestBase):
             expected=['___fileX:[]\n'
                       "___fileY:['hello']\n"
                       "___fileZ:['x\\ny']"])
-
-
-# Execute the same tests from ProjectBearTest, but use a ThreadPoolExecutor
-# instead. It shall also seamlessly work with Python threads. Also there are
-# coverage issues on Windows with ProcessPoolExecutor as coverage data isn't
-# passed properly back from the pool processes.
-class ProjectBearOnThreadPoolExecutorTest(ProjectBearTest):
-    def setUp(self):
-        super().setUp()
-        self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=8)

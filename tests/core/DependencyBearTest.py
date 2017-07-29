@@ -1,5 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
-
 from coalib.core.DependencyBear import DependencyBear
 from coalib.core.FileBear import FileBear
 from coalib.core.ProjectBear import ProjectBear
@@ -205,13 +203,3 @@ class DependencyBearTest(CoreTestBase):
                       'TestFileBear (500) - fileX:0',
                       'TestFileBear (500) - fileY:1',
                       'TestFileBear (500) - fileZ:2'])
-
-
-# Execute the same tests from DependencyBearTest, but use a ThreadPoolExecutor
-# instead. It shall also seamlessly work with Python threads. Also there are
-# coverage issues on Windows with ProcessPoolExecutor as coverage data isn't
-# passed properly back from the pool processes.
-class DependencyBearOnThreadPoolExecutorTest(DependencyBearTest):
-    def setUp(self):
-        super().setUp()
-        self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=8)

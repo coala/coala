@@ -1,5 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
-
 from coalib.core.FileBear import FileBear
 from coalib.settings.Section import Section
 
@@ -111,13 +109,3 @@ class FileBearTest(CoreTestBase):
             file_dict={'fileX': [], 'fileY': [], 'fileZ': []},
             expected=['fileX0', 'fileX1', 'fileY0', 'fileY1', 'fileZ0',
                       'fileZ1'])
-
-
-# Execute the same tests from FileBearTest, but use a ThreadPoolExecutor
-# instead. It shall also seamlessly work with Python threads. Also there are
-# coverage issues on Windows with ProcessPoolExecutor as coverage data isn't
-# passed properly back from the pool processes.
-class FileBearOnThreadPoolExecutorTest(FileBearTest):
-    def setUp(self):
-        super().setUp()
-        self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=8)
