@@ -2,8 +2,7 @@ import argparse
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
-from coalib.parsing.FilterHelper import FilterHelper
-
+from coalib.parsing.FilterHelper import FilterHelper,get_all_filters_str,is_valid_filter,get_filtered_bears
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
     """
@@ -25,7 +24,6 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter):
 def default_arg_parser(formatter_class=None):
     """
     This function creates an ArgParser to parse command line arguments.
-
     :param formatter_class: Formatting the arg_parser output into a specific
                             form. For example: In the manpage format.
     """
@@ -35,25 +33,16 @@ def default_arg_parser(formatter_class=None):
     description = """
 coala provides a common command-line interface for linting and fixing all your
 code, regardless of the programming languages you use.
-
 To find out what kind of analysis coala offers for the languages you use, visit
 http://coala.io/languages, or run::
-
     $ coala --show-bears --filter-by-language C Python
-
 To perform code analysis, simply specify the analysis routines (bears) and the
 files you want it to run on, for example:
-
     spaceBear::
-
             $ coala --bears SpaceConsistencyBear --files **.py
-
 coala can also automatically fix your code:
-
     spacePatchBear::
-
             $ coala --bears SpaceConsistencyBear --files **.py --apply-patches
-
 To run coala without user interaction, run the `coala --non-interactive`,
 `coala --json` and `coala --format` commands.
 """
@@ -190,8 +179,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
     outputs_group.add_argument(
         '--filter-by', action='append', nargs='+',
         help='filters `--show-bears` by the filter given as argument. '
-             'Available filters: {}'.format(
-                 FilterHelper.get_all_filters_str()))
+             'Available filters: {}'.format(get_all_filters_str()))
 
     outputs_group.add_argument(
         '-p', '--show-capabilities', nargs='+', metavar='LANG',
