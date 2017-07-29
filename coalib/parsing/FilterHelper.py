@@ -2,10 +2,6 @@ from coalib.output.printers.LogPrinter import LogPrinter
 
 from coalib.parsing.InvalidFilterException import InvalidFilterException
 
-from coalib.parsing.filters.LanguageFilter import language_filter
-from coalib.parsing.filters.CanDetectFilter import can_detect_filter
-from coalib.parsing.filters.CanFixFilter import can_fix_filter
-
 
 class FilterHelper:
     available_filters = {'language': language_filter,
@@ -33,3 +29,41 @@ class FilterHelper:
         if not args or len(args) == 0:
             return all_bears
         return cls.available_filters[filter](all_bears, args)
+
+
+def language_filter(bear, args):
+    """
+    Filters the bears by ``LANGUAGES``.
+
+    :param bear: Bear object.
+    :param args: Set of languages on which ``bear`` is to be filtered.
+    :return:     ``True`` if this bear matches the criteria inside args,
+                 ``False`` otherwise.
+    """
+    return bool({lang.lower() for lang in bear.LANGUAGES} & (args | {'all'}))
+
+
+def can_detect_filter(bear, args):
+    """
+    Filters the bears by ``CAN_DETECT``.
+
+    :param bear: Bear object.
+    :param args: Set of detectable issue types on which ``bear`` is to be
+                 filtered.
+    :return:     ``True`` if this bear matches the criteria inside args,
+                 ``False`` otherwise.
+    """
+    return bool({detect.lower() for detect in bear.CAN_DETECT} & args)
+
+
+def can_fix_filter(bear, args):
+    """
+    Filters the bears by ``CAN_FIX``.
+
+    :param bear: Bear object.
+    :param args: Set of fixable issue types on which ``bear`` is to be
+                 filtered.
+    :return:     ``True`` if this bear matches the criteria inside args,
+                 ``False`` otherwise.
+    """
+    return bool({fix.lower() for fix in bear.CAN_FIX} & args)
