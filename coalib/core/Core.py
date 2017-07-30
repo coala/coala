@@ -173,7 +173,8 @@ class Session:
         :param executor:
             Custom executor used to run the bears. If ``None``, a
             ``ProcessPoolExecutor`` is used using as many processes as cores
-            available on the system.
+            available on the system. Note that a passed custom executor is
+            closed after the core has finished.
         """
         self.bears = bears
         self.result_callback = result_callback
@@ -193,15 +194,15 @@ class Session:
         """
         Runs the coala session.
         """
-        # FIXME Allow to pass different executors nicely, for example to execute
-        # FIXME   coala with less cores, or to schedule jobs on distributed
-        # FIXME   systems (for example Mesos).
-
-        self._schedule_bears(self.bears_to_schedule)
         try:
-            self.event_loop.run_forever()
+            if self.bears:
+                self._schedule_bears(self.bears_to_schedule)
+                try:
+                    self.event_loop.run_forever()
+                finally:
+                    self.event_loop.close()
         finally:
-            self.event_loop.close()
+            self.executor.shutdown()
 
     def _schedule_bears(self, bears):
         """
@@ -210,6 +211,8 @@ class Session:
         :param bears:
             A list of bear instances to be scheduled onto the process pool.
         """
+        bears_without_tasks_to_cleanup = []
+
         for bear in bears:
             if self.dependency_tracker.get_dependencies(
                     bear):  # pragma: no cover
@@ -234,11 +237,18 @@ class Session:
                 logging.debug('Scheduled {!r} (tasks: {})'.format(bear,
                                                                   len(tasks)))
 
+                # Cleanup bears without tasks after all bears had the chance to
+                # schedule their tasks. Not doing so might stop the run too
+                # early, as the cleanup is also responsible for stopping the
+                # event-loop when no more tasks do exist.
                 if not tasks:
-                    # We need to recheck our runtime if something is left to
-                    # process, as when no tasks were offloaded the event-loop
-                    # could hang up otherwise.
-                    self._cleanup_bear(bear)
+                    bears_without_tasks_to_cleanup.append(bear)
+
+        for bear in bears_without_tasks_to_cleanup:
+            # We need to recheck our runtime if something is left to process, as
+            # when no tasks were offloaded the event-loop could hang up
+            # otherwise.
+            self._cleanup_bear(bear)
 
     def _cleanup_bear(self, bear):
         """
