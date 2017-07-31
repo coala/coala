@@ -30,6 +30,8 @@ from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ShowAppliedPatchesAction \
     import ShowAppliedPatchesAction
+from coalib.results.result_actions.GeneratePatchesAction import (
+    GeneratePatchesAction)
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section

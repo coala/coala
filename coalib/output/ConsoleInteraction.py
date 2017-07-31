@@ -19,6 +19,8 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
+from coalib.results.result_actions.GeneratePatchesAction import (
+    GeneratePatchesAction)
 from coalib.results.result_actions.ShowAppliedPatchesAction import (
     ShowAppliedPatchesAction)
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -86,7 +88,8 @@ CLI_ACTIONS = (OpenEditorAction(),
                PrintMoreInfoAction(),
                ShowPatchAction(),
                IgnoreResultAction(),
-               ShowAppliedPatchesAction())
+               ShowAppliedPatchesAction(),
+               GeneratePatchesAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
