@@ -90,3 +90,4 @@ ENV/
 
 # Orig files
 **.orig
+rultor_github_secrets.sh
