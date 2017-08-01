@@ -61,7 +61,7 @@ def merge_section_dicts(lower, higher):
     return lower
 
 
-def load_config_file(filename, log_printer, silent=False):
+def load_config_file(filename, log_printer=None, silent=False):
     """
     Loads sections from a config file. Prints an appropriate warning if
     it doesn't exist and returns a section dict containing an empty
@@ -84,15 +84,15 @@ def load_config_file(filename, log_printer, silent=False):
     except FileNotFoundError:
         if not silent:
             if os.path.basename(filename) == Constants.default_coafile:
-                log_printer.warn(COAFILE_OUTPUT
-                                 .substitute(type='Default coafile',
-                                             file=Constants.default_coafile,
-                                             found='not found'))
+                logging.warning(COAFILE_OUTPUT
+                                .substitute(type='Default coafile',
+                                            file=Constants.default_coafile,
+                                            found='not found'))
             else:
-                log_printer.err(COAFILE_OUTPUT
-                                .substitute(type='Requested coafile',
-                                            file=filename,
-                                            found='does not exist'))
+                logging.error(COAFILE_OUTPUT
+                              .substitute(type='Requested coafile',
+                                          file=filename,
+                                          found='does not exist'))
                 sys.exit(2)
 
         return {'default': Section('default')}
@@ -118,7 +118,7 @@ def save_sections(sections):
     conf_writer.close()
 
 
-def warn_nonexistent_targets(targets, sections, log_printer):
+def warn_nonexistent_targets(targets, sections, log_printer=None):
     """
     Prints out a warning on the given log printer for all targets that are
     not existent within the given sections.
@@ -129,20 +129,19 @@ def warn_nonexistent_targets(targets, sections, log_printer):
     """
     for target in targets:
         if target not in sections:
-            log_printer.warn(
+            logging.warning(
                 "The requested section '{section}' is not existent. "
                 'Thus it cannot be executed.'.format(section=target))
 
     # Can't be summarized as python will evaluate conditions lazily, those
     # functions have intended side effects though.
-    files_config_absent = warn_config_absent(sections, 'files', log_printer)
-    bears_config_absent = warn_config_absent(sections, ['bears', 'aspects'],
-                                             log_printer)
+    files_config_absent = warn_config_absent(sections, 'files')
+    bears_config_absent = warn_config_absent(sections, ['bears', 'aspects'])
     if files_config_absent or bears_config_absent:
         raise SystemExit(2)  # Invalid CLI options provided
 
 
-def warn_config_absent(sections, argument, log_printer):
+def warn_config_absent(sections, argument, log_printer=None):
     """
     Checks if at least 1 of the given arguments is present somewhere in the
     sections and emits a warning that code analysis can not be run without it.
@@ -161,13 +160,13 @@ def warn_config_absent(sections, argument, log_printer):
             return False
 
     formatted_args = ' or '.join('`--{}`'.format(arg) for arg in argument)
-    log_printer.warn('coala will not run any analysis. Did you forget '
-                     'to give the {} argument?'.format(formatted_args))
+    logging.warning('coala will not run any analysis. Did you forget '
+                    'to give the {} argument?'.format(formatted_args))
     return True
 
 
 def load_configuration(arg_list,
-                       log_printer,
+                       log_printer=None,
                        arg_parser=None,
                        args=None,
                        silent=False):
@@ -205,12 +204,9 @@ def load_configuration(arg_list,
         sections = cli_sections
     else:
         base_sections = load_config_file(Constants.system_coafile,
-                                         log_printer,
                                          silent=silent)
         user_sections = load_config_file(
-            Constants.user_coafile,
-            log_printer,
-            silent=True)
+            Constants.user_coafile, silent=True)
 
         default_config = str(base_sections['default'].get('config', '.coafile'))
         user_config = str(user_sections['default'].get(
@@ -226,7 +222,6 @@ def load_configuration(arg_list,
             save = True
 
         coafile_sections = load_config_file(config,
-                                            log_printer,
                                             silent=save or silent)
 
         sections = merge_section_dicts(base_sections, user_sections)
@@ -261,8 +256,8 @@ def load_configuration(arg_list,
             del sections['default']
 
     str_log_level = str(sections['cli'].get('log_level', '')).upper()
-    log_printer.log_level = LOG_LEVEL.str_dict.get(str_log_level,
-                                                   LOG_LEVEL.INFO)
+    logging.getLogger().setLevel(LOG_LEVEL.str_dict.get(str_log_level,
+                                                        LOG_LEVEL.INFO))
 
     return sections, targets
 
@@ -358,7 +353,7 @@ def get_config_directory(section):
     return config if os.path.isdir(config) else os.path.dirname(config)
 
 
-def get_all_bears(log_printer, arg_parser=None, silent=True):
+def get_all_bears(log_printer=None, arg_parser=None, silent=True):
     """
     :param log_printer: The log_printer to handle logging.
     :param arg_parser:  An ``ArgParser`` object.
@@ -367,17 +362,16 @@ def get_all_bears(log_printer, arg_parser=None, silent=True):
                         and global bears.
     """
     sections, _ = load_configuration(arg_list=None,
-                                     log_printer=log_printer,
                                      arg_parser=arg_parser,
-                                     args=None,
-                                     silent=silent)
+                                     silent=silent,
+                                     args=None)
     local_bears, global_bears = collect_all_bears_from_sections(
-        sections, log_printer)
+        sections)
     return local_bears, global_bears
 
 
 def get_filtered_bears(languages,
-                       log_printer,
+                       log_printer=None,
                        arg_parser=None,
                        silent=True):
     """
@@ -388,8 +382,7 @@ def get_filtered_bears(languages,
     :return:            Tuple containing dictionaries of local bears
                         and global bears.
     """
-    local_bears, global_bears = get_all_bears(log_printer,
-                                              arg_parser,
+    local_bears, global_bears = get_all_bears(arg_parser=arg_parser,
                                               silent=silent)
     if languages:
         local_bears = filter_section_bears_by_languages(
@@ -400,7 +393,7 @@ def get_filtered_bears(languages,
 
 
 def gather_configuration(acquire_settings,
-                         log_printer,
+                         log_printer=None,
                          arg_list=None,
                          arg_parser=None,
                          args=None):
@@ -446,14 +439,13 @@ def gather_configuration(acquire_settings,
         # Note: arg_list can also be []. Hence we cannot use
         # `arg_list = arg_list or default_list`
         arg_list = sys.argv[1:] if arg_list is None else arg_list
-    sections, targets = load_configuration(arg_list, log_printer, arg_parser,
+    sections, targets = load_configuration(arg_list, arg_parser=arg_parser,
                                            args=args)
     aspectize_sections(sections)
     local_bears, global_bears = fill_settings(sections,
-                                              acquire_settings,
-                                              log_printer)
+                                              acquire_settings)
     save_sections(sections)
-    warn_nonexistent_targets(targets, sections, log_printer)
+    warn_nonexistent_targets(targets, sections)
 
     return (sections,
             local_bears,
