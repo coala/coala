@@ -7,6 +7,11 @@ import sys
 from os import getenv
 from subprocess import call
 
+
+
+
+
+
 import setuptools.command.build_py
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
@@ -63,7 +68,8 @@ if on_rtd:
         current_version = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
-        VERSION = get_version()
+        VERSION =
+        get_version()
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
@@ -118,7 +124,7 @@ if __name__ == '__main__':
               'Environment :: Win32 (MS Windows)',
               'Environment :: X11 Applications :: Gnome',
 
-              'Intended Audience :: Science/Research',
+              "Intended Audience :: Science/Research",
               'Intended Audience :: Developers',
 
               'License :: OSI Approved :: GNU Affero General Public License '
