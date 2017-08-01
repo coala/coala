@@ -1,3 +1,7 @@
 merge:
   fast-forward: only
-  script: echo "Nothing to do."
+  script:
+    - bash .ci/check_maintainership.sh
+
+decrypt:
+  rultor_github_secrets.sh: "repo/.ci/rultor_github_secrets.sh.asc"
