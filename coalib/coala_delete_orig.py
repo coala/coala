@@ -40,5 +40,5 @@ def main(log_printer=None, section: Section = None):
     return 0
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':
     sys.exit(main())
