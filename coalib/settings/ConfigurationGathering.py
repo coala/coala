@@ -149,6 +149,8 @@ def warn_config_absent(sections, argument, log_printer):
     :param sections:    A dictionary of sections.
     :param argument:    The argument to check for, e.g. "files".
     :param log_printer: A log printer to emit the warning to.
+    :return:            Returns a boolean True if the given argument
+                        is present in the sections, else returns False.
     """
     if all(argument not in section for section in sections.values()):
         log_printer.warn('coala will not run any analysis. Did you forget '
