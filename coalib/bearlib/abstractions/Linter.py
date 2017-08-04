@@ -8,6 +8,7 @@ import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
 from types import MappingProxyType
 
+from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
 from coala_utils.ContextManagers import make_temp
@@ -737,6 +738,7 @@ def _create_linter(klass, options):
     result_klass = type(klass.__name__, (klass, LinterBaseClass), {
         '__module__': klass.__module__})
     result_klass.__doc__ = klass.__doc__ or ''
+    LinterClass.register(result_klass)
     return result_klass
 
 
@@ -834,6 +836,11 @@ def linter(executable: str,
     inputs a tuple with ``(stdout, stderr)``. Providing ``use_stdout=False``
     and ``use_stderr=False`` raises a ``ValueError``. By default ``use_stdout``
     is ``True`` and ``use_stderr`` is ``False``.
+
+    Every ``linter`` is also a subclass of the ``LinterClass`` class.
+
+    >>> issubclass(XLintBear, LinterClass)
+    True
 
     Documentation:
     Bear description shall be provided at class level.

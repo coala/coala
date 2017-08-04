@@ -60,7 +60,7 @@ def mode_json(args, debug=False):
         try:
             from coalib.parsing.FilterHelper import FilterHelper
 
-            local_bears, global_bears = FilterHelper.get_filtered_bears(
+            local_bears, global_bears = FilterHelper.apply_filter(
                 'language', args.filter_by_language)
             bears = inverse_dicts(local_bears, global_bears)
             for bear, _ in sorted(bears.items(),

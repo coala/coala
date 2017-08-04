@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
+from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
 from coala_utils.ContextManagers import prepare_file
@@ -20,19 +21,21 @@ def execute_bear(bear, *args, **kwargs):
         # For linters provide additional information, such as
         # stdout and stderr.
         with ExitStack() as stack:
-            if hasattr(bear, 'process_output'):
+            if isinstance(bear, LinterClass):
                 console_output.append('The program yielded '
                                       'the following output:\n')
                 old_process_output = bear.process_output
 
-                def new_process_output(output, filename=None, file=None):
+                def new_process_output(output, filename=None, file=None,
+                                       **process_output_kwargs):
                     if isinstance(output, tuple):
                         stdout, stderr = output
                         console_output.append('Stdout:\n' + stdout)
                         console_output.append('Stderr:\n' + stderr)
                     else:
                         console_output.append(output)
-                    return old_process_output(output, filename, file)
+                    return old_process_output(output, filename, file,
+                                              **process_output_kwargs)
 
                 stack.enter_context(patch.object(
                     bear, 'process_output', wraps=new_process_output))
