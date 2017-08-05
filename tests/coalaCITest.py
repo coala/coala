@@ -54,7 +54,7 @@ class coalaCITest(unittest.TestCase):
                                                    '--settings',
                                                    'use_spaces=True',
                                                    debug=debug)
-            self.assertEqual('', stdout)
+            self.assertEqual('Executing section cli...\n', stdout)
             if not debug:
                 self.assertFalse(stderr)
             else:
