@@ -160,7 +160,11 @@ def warn_config_absent(sections, argument, log_printer):
     return False
 
 
-def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
+def load_configuration(arg_list,
+                       log_printer,
+                       arg_parser=None,
+                       args=None,
+                       silent=False):
     """
     Parses the CLI args and loads the config file accordingly, taking
     default_coafile and the users .coarc into account.
@@ -170,6 +174,8 @@ def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
     :param arg_parser:  An ``argparse.ArgumentParser`` instance used for
                         parsing the CLI arguments.
     :param args:        Alternative pre-parsed CLI arguments.
+    :param silent:      Whether or not to display warnings, ignored if ``save``
+                        is enabled.
     :return:            A tuple holding (log_printer: LogPrinter, sections:
                         dict(str, Section), targets: list(str)). (Types
                         indicated after colon.)
@@ -192,7 +198,9 @@ def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
     if bool(cli_sections['cli'].get('no_config', 'False')):
         sections = cli_sections
     else:
-        base_sections = load_config_file(Constants.system_coafile, log_printer)
+        base_sections = load_config_file(Constants.system_coafile,
+                                         log_printer,
+                                         silent=silent)
         user_sections = load_config_file(
             Constants.user_coafile,
             log_printer,
@@ -211,7 +219,9 @@ def load_configuration(arg_list, log_printer, arg_parser=None, args=None):
             # but to a specific file.
             save = True
 
-        coafile_sections = load_config_file(config, log_printer, silent=save)
+        coafile_sections = load_config_file(config,
+                                            log_printer,
+                                            silent=save or silent)
 
         sections = merge_section_dicts(base_sections, user_sections)
 
@@ -342,30 +352,39 @@ def get_config_directory(section):
     return config if os.path.isdir(config) else os.path.dirname(config)
 
 
-def get_all_bears(log_printer, arg_parser=None):
+def get_all_bears(log_printer, arg_parser=None, silent=True):
     """
     :param log_printer: The log_printer to handle logging.
     :param arg_parser:  An ``ArgParser`` object.
+    :param silent:      Whether or not to display warnings.
     :return:            Tuple containing dictionaries of local bears
                         and global bears.
     """
     sections, _ = load_configuration(arg_list=None,
                                      log_printer=log_printer,
-                                     arg_parser=arg_parser)
+                                     arg_parser=arg_parser,
+                                     args=None,
+                                     silent=silent)
     local_bears, global_bears = collect_all_bears_from_sections(
         sections, log_printer)
     return local_bears, global_bears
 
 
-def get_filtered_bears(languages, log_printer, arg_parser=None):
+def get_filtered_bears(languages,
+                       log_printer,
+                       arg_parser=None,
+                       silent=True):
     """
     :param languages:   List of languages.
     :param log_printer: The log_printer to handle logging.
     :param arg_parser:  An ``ArgParser`` object.
+    :param silent:      Whether or not to display warnings.
     :return:            Tuple containing dictionaries of local bears
                         and global bears.
     """
-    local_bears, global_bears = get_all_bears(log_printer, arg_parser)
+    local_bears, global_bears = get_all_bears(log_printer,
+                                              arg_parser,
+                                              silent=silent)
     if languages:
         local_bears = filter_section_bears_by_languages(
             local_bears, languages)
