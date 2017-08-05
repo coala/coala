@@ -1,5 +1,3 @@
-.. _dev-notes:
-
 Development Setup Notes
 =======================
 
