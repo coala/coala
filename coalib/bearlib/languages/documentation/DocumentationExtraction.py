@@ -1,3 +1,11 @@
+"""
+Language and docstyle independent extraction of documenation comments.
+
+Each of the functions is built upon one another, and at the last,
+exposes a single function :func:`extract_documentation_with_markers`
+which is used by :class:`.DocBaseClass`, to extract documentation.
+"""
+
 import re
 
 from coalib.bearlib.languages.documentation.DocumentationComment import (
