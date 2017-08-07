@@ -648,10 +648,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 self.assertEqual(stdout.getvalue(),
                                  """
 Project wide:
-
-**** origin [Section: someSection] ****
-
-!    ! [Severity: NORMAL]
+**** origin [Section: someSection | Severity: NORMAL] ****
 !    ! {}\n""".format(highlight_text(self.no_color,
                                      'message', style=BackgroundMessageStyle)))
 
@@ -681,8 +678,8 @@ Project wide:
                           {},
                           self.console_printer)
             self.assertEqual(
-                '\nProject wide:\n\n**** origin [Section: ] ****\n\n!    ! ' +
-                '[Severity: NORMAL]\n!    ! {1}\n'.format(
+                '\nProject wide:\n**** origin [Section:  | Severity: NORMAL] '
+                '****\n!    ! {1}\n'.format(
                     STR_PROJECT_WIDE,
                     highlight_text(self.no_color,
                                    'message', style=BackgroundMessageStyle)),
@@ -703,10 +700,7 @@ Project wide:
             self.assertEqual("""
 filename
 [    ]2 {0}
-
-**** SpaceConsistencyBear [Section: ] ****
-
-!    ! [Severity: NORMAL]
+**** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! {1}\n""".format(highlight_text(self.no_color, 'line 2', self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
@@ -731,10 +725,7 @@ filename
             self.assertEqual("""
 filename
 [    ]5 {0}
-
-**** SpaceConsistencyBear [Section: ] ****
-
-!    ! [Severity: NORMAL]
+**** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! {1}\n""".format(highlight_text(self.no_color, 'line 5', self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
@@ -764,18 +755,12 @@ filename
             self.assertEqual("""
 file
 [    ]2 {0}
-
-**** SpaceConsistencyBear [Section: ] ****
-
-!    ! [Severity: NORMAL]
+**** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! Trailing whitespace found
 
 file
 [    ]5 {2}
-
-**** SpaceConsistencyBear [Section: ] ****
-
-!    ! [Severity: NORMAL]
+**** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! {1}\n""".format(highlight_text(self.no_color, '\t', self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
@@ -812,10 +797,7 @@ some_file
 [    ]5 li{0}{3}
 [    ]6 li{0}{4}
 [    ]7 li{0}{5}
-
-**** ClangCloneDetectionBear [Section: ] ****
-
-!    ! [Severity: NORMAL]
+**** ClangCloneDetectionBear [Section:  | Severity: NORMAL] ****
 !    ! {6}\n""".format(highlight_text(self.no_color, 'ne', self.lexer,
                                       BackgroundSourceRangeStyle),
                        highlight_text(self.no_color, ' 1', self.lexer),
@@ -838,15 +820,15 @@ some_file
                 {},
                 {},
                 self.console_printer)
-            self.assertEqual('\n' + STR_PROJECT_WIDE + '\n\n'
-                             '**** t [Section: ] ****' + '\n\n'
-                             '!    ! [Severity: NORMAL]\n'
+            self.assertEqual('\n' + STR_PROJECT_WIDE + '\n'
+                             '**** t [Section:  | Severity: NORMAL] ****'
+                             '\n'
                              '!    ! msg\n'
                              # Second results file isn't there, no context is
                              # printed, only a warning log message which we
                              # don't catch
-                             '\n**** t [Section: ] ****' + '\n\n'
-                             '!    ! [Severity: NORMAL]\n'
+                             '**** t [Section:  | Severity: NORMAL] ****'
+                             '\n'
                              '!    ! {0}\n'.format(
                                  highlight_text(self.no_color, 'msg',
                                                 style=BackgroundMessageStyle)),
@@ -864,17 +846,15 @@ some_file
                 self.console_printer)
             self.assertEqual(
                              '\nfile\n'
-                             '[    ]5 {0}\n'
+                             '[    ]5 {0}'
                              '\n'
-                             '**** t [Section: ] ****\n\n'
-                             '!    ! [Severity: NORMAL]\n'
+                             '**** t [Section:  | Severity: NORMAL] ****\n'
                              '!    ! {1}\n'
                              '\n'
                              'file\n'
                              '!    !6 {2}'
-                             '\n\n'
-                             '**** t [Section: ] ****\n\n'
-                             '!    ! [Severity: NORMAL]\n'
+                             '\n'
+                             '**** t [Section:  | Severity: NORMAL] ****\n'
                              '!    ! {1}\n'.format(
                                  highlight_text(self.no_color,
                                                 'line 5', self.lexer),
@@ -895,8 +875,7 @@ some_file
             self.assertEqual(
                 '\n'
                 'file\n'
-                '\n**** t [Section: ] ****\n\n'
-                '!    ! [Severity: NORMAL]\n'
+                '**** t [Section:  | Severity: NORMAL] ****\n'
                 '!    ! {}\n'.format(highlight_text(
                     self.no_color, 'msg', style=BackgroundMessageStyle)),
                 stdout.getvalue())

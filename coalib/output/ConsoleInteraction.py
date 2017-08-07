@@ -288,16 +288,20 @@ def print_result(console_printer,
         return
 
     if hasattr(section, 'name'):
-        console_printer.print('\n**** {bear} [Section: {section}] ****\n'
-                              .format(bear=result.origin, section=section.name),
+        console_printer.print('**** {bear} [Section: {section} | Severity: '
+                              '{severity}] ****'
+                              .format(bear=result.origin,
+                                      section=section.name,
+                                      severity=RESULT_SEVERITY.__str__(
+                                          result.severity)),
                               color=RESULT_SEVERITY_COLORS[result.severity])
     else:
-        console_printer.print('\n**** {bear} [Section: {section}] ****\n'
-                              .format(bear=result.origin, section='<empty>'),
+        console_printer.print('**** {bear} [Section {section} | Severity '
+                              '{severity}] ****'
+                              .format(bear=result.origin, section='<empty>',
+                                      severity=RESULT_SEVERITY.__str__(
+                                          result.severity)),
                               color=RESULT_SEVERITY_COLORS[result.severity])
-    console_printer.print(format_lines('[Severity: {sev}]'.format(
-        sev=RESULT_SEVERITY.__str__(result.severity)), '!'),
-        color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
                                     lexer, BackgroundMessageStyle)
