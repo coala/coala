@@ -35,6 +35,8 @@ from coalib.settings.Setting import Setting
 
 from pygments.filters import VisibleWhitespaceFilter
 from pygments.lexers import TextLexer
+from pygments.style import Style
+from pygments.token import Token
 
 
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
@@ -43,6 +45,12 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
+
+
+class NoColorStyle(Style):
+    styles = {
+        Token: 'noinherit'
+    }
 
 
 class TestAction(ResultAction):
@@ -656,7 +664,8 @@ Project wide:
 filename
 [    ]2 {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, 'line 2', self.lexer),
+!    ! {1}\n""".format(highlight_text(self.no_color, 'line 2', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
                                       style=BackgroundMessageStyle), ''),
@@ -681,7 +690,8 @@ filename
 filename
 [    ]5 {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, 'line 5', self.lexer),
+!    ! {1}\n""".format(highlight_text(self.no_color, 'line 5', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
                                       style=BackgroundMessageStyle), ''),
@@ -716,11 +726,13 @@ file
 file
 [    ]5 {2}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, '\t', self.lexer),
+!    ! {1}\n""".format(highlight_text(self.no_color, '\t', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
                                       style=BackgroundMessageStyle),
-                       highlight_text(self.no_color, 'line 5\t', self.lexer)),
+                       highlight_text(self.no_color, 'line 5\t',
+                                      NoColorStyle, self.lexer)),
                 stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
@@ -753,13 +765,18 @@ some_file
 [    ]6 li{0}{4}
 [    ]7 li{0}{5}
 **** ClangCloneDetectionBear [Section:  | Severity: NORMAL] ****
-!    ! {6}\n""".format(highlight_text(self.no_color, 'ne', self.lexer,
-                                      BackgroundSourceRangeStyle),
-                       highlight_text(self.no_color, ' 1', self.lexer),
-                       highlight_text(self.no_color, ' 3', self.lexer),
-                       highlight_text(self.no_color, ' 5', self.lexer),
-                       highlight_text(self.no_color, ' 6', self.lexer),
-                       highlight_text(self.no_color, ' 7', self.lexer),
+!    ! {6}\n""".format(highlight_text(self.no_color, 'ne',
+                                      BackgroundSourceRangeStyle, self.lexer),
+                       highlight_text(self.no_color, ' 1', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 3', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 5', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 6', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 7', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color, 'Clone Found',
                                       style=BackgroundMessageStyle), ' '),
                 stdout.getvalue())
@@ -812,7 +829,8 @@ some_file
                              '**** t [Section:  | Severity: NORMAL] ****\n'
                              '!    ! {1}\n'.format(
                                  highlight_text(self.no_color,
-                                                'line 5', self.lexer),
+                                                'line 5', NoColorStyle,
+                                                self.lexer),
                                  highlight_text(self.no_color, 'msg',
                                                 style=BackgroundMessageStyle),
                                  STR_LINE_DOESNT_EXIST, ' '),

@@ -58,11 +58,8 @@ class NoColorStyle(Style):
     }
 
 
-def highlight_text(no_color, text, lexer=TextLexer(), style=None):
-    if style:
-        formatter = TerminalTrueColorFormatter(style=style)
-    else:
-        formatter = TerminalTrueColorFormatter()
+def highlight_text(no_color, text, style, lexer=TextLexer()):
+    formatter = TerminalTrueColorFormatter(style=style)
     if no_color:
         formatter = TerminalTrueColorFormatter(style=NoColorStyle)
     return highlight(text, lexer, formatter)[:-1]
@@ -239,21 +236,24 @@ def print_lines(console_printer,
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
             console_printer.print(highlight_text(
-                no_color, line[:sourcerange.start.column - 1], lexer), end='')
+                no_color, line[:sourcerange.start.column - 1],
+                BackgroundMessageStyle, lexer), end='')
 
             printed_chars = sourcerange.start.column - 1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             console_printer.print(highlight_text(
                 no_color, line[printed_chars:sourcerange.end.column - 1],
-                lexer, BackgroundSourceRangeStyle), end='')
+                BackgroundSourceRangeStyle, lexer), end='')
 
             console_printer.print(highlight_text(
-               no_color, line[sourcerange.end.column - 1:], lexer), end='')
+               no_color, line[sourcerange.end.column - 1:],
+               BackgroundSourceRangeStyle, lexer), end='')
             console_printer.print('')
         else:
             console_printer.print(highlight_text(
-                no_color, line[printed_chars:], lexer), end='')
+                no_color, line[printed_chars:], BackgroundMessageStyle, lexer),
+                                  end='')
             console_printer.print('')
 
 
@@ -303,7 +303,7 @@ def print_result(console_printer,
                               color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
-                                    lexer, BackgroundMessageStyle)
+                                    BackgroundMessageStyle, lexer)
     console_printer.print(format_lines(result.message, symbol='!'))
 
     if interactive:
