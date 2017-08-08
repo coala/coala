@@ -17,6 +17,7 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
+from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.ShowAppliedPatchesAction import (
     ShowAppliedPatchesAction)
@@ -628,18 +629,17 @@ def choose_action(console_printer, actions, apply_single=False):
                             If it's not selected, has a value of False.
     :return:                Return choice of action of user.
     """
+    actions.insert(0, DoNothingAction().get_metadata())
     if apply_single:
-        if apply_single == 'Do (N)othing':
-            return 0
-        for i, action in enumerate(actions, 1):
+        for i, action in enumerate(actions, 0):
             if apply_single == action.desc:
                 return i
         return 0
     else:
         while True:
-            color_letter(console_printer, '[    ] *0. Do (N)othing')
-            for i, action in enumerate(actions, 1):
-                color_letter(console_printer, format_lines('{:>2}. {}'.format(
+            for i, action in enumerate(actions, 0):
+                output = '{:>2}. {}' if i != 0 else '*{}. {}'
+                color_letter(console_printer, format_lines(output.format(
                     i, action.desc), symbol='['))
 
             line = format_lines(STR_ENTER_NUMBER, symbol='[')
@@ -651,9 +651,7 @@ def choose_action(console_printer, actions, apply_single=False):
             if choice.isalpha():
                 choice = choice.upper()
                 choice = '(' + choice + ')'
-                if choice == '(N)':
-                    return 0
-                for i, action in enumerate(actions, 1):
+                for i, action in enumerate(actions, 0):
                     if choice in action.desc:
                         return i
             elif choice.isnumeric():
@@ -688,7 +686,7 @@ def print_actions(console_printer, section, actions, failed_actions,
     if choice == 0:
         return None, None
 
-    return get_action_info(section, actions[choice - 1], failed_actions)
+    return get_action_info(section, actions[choice], failed_actions)
 
 
 def try_to_apply_action(action_name,

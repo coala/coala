@@ -26,6 +26,7 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
+from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ShowAppliedPatchesAction \
     import ShowAppliedPatchesAction
 from coalib.results.result_actions.ResultAction import ResultAction
@@ -460,8 +461,10 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_ask_for_actions_and_apply(self):
         failed_actions = set()
         action = TestAction()
+        do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [do_nothing_action.get_metadata(), action.get_metadata()],
+                {'DoNothingAction': do_nothing_action, 'TestAction': action},
                 failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
@@ -557,8 +560,10 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input2(self):
         action = TestAction()
+        do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [do_nothing_action.get_metadata(), action.get_metadata()],
+                {'DoNothingAction': do_nothing_action, 'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 1) as generator:
@@ -566,8 +571,10 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input3(self):
         action = TestAction()
+        do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [do_nothing_action.get_metadata(), action.get_metadata()],
+                {'DoNothingAction': do_nothing_action, 'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 'a') as generator:
@@ -601,10 +608,12 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input_apply_single_test(self):
         action = TestAction()
+        do_nothing_action = DoNothingAction()
         apply_single = 'Test (A)ction'
         se = Section('cli')
         args = [self.console_printer, se,
-                [action.get_metadata()], {'TestAction': action},
+                [do_nothing_action.get_metadata(), action.get_metadata()],
+                {'DoNothingAction': do_nothing_action, 'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}, {}, apply_single]
 
         with simulate_console_inputs('a') as generator:

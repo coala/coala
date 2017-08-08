@@ -11,6 +11,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.output.Logging import CounterHandler
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
+from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
@@ -34,7 +35,8 @@ STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
 
 
 def provide_all_actions():
-    return ['Do (N)othing', ShowPatchAction().get_metadata().desc,
+    return [DoNothingAction().get_metadata().desc,
+            ShowPatchAction().get_metadata().desc,
             ApplyPatchAction().get_metadata().desc,
             IgnoreResultAction().get_metadata().desc,
             OpenEditorAction().get_metadata().desc,

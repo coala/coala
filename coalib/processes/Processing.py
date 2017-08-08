@@ -13,6 +13,7 @@ from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.results.Result import Result
+from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
@@ -27,7 +28,8 @@ from coalib.settings.Setting import glob_list
 from coalib.parsing.Globbing import fnmatch
 
 
-ACTIONS = [ApplyPatchAction,
+ACTIONS = [DoNothingAction,
+           ApplyPatchAction,
            PrintDebugMessageAction,
            ShowPatchAction,
            IgnoreResultAction,
