@@ -369,11 +369,11 @@ def instantiate_processes(section,
     :param cache:            An instance of ``misc.Caching.FileCache`` to use as
                              a file cache buffer.
     :param log_printer:      The log printer to warn to.
-    :param use_raw_files:    Allow the usage of raw files (non text files)
     :param console_printer:  Object to print messages on the console.
     :param debug:            Bypass multiprocessing and activate debug mode
                              for bears, not catching any exceptions on running
                              them.
+    :param use_raw_files:    Allow the usage of raw files (non text files)
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
