@@ -102,3 +102,64 @@ app.filter('orderEmpty', function () {
         return result;
     };
 });
+
+/*
+Filter from http://jsfiddle.net/jonjon/Cx3Pk/23/
+*/
+app.filter('bearSearch', function () {
+  return function (bears, searchText, AND_OR) {
+    var returnArray = [];
+
+    if(searchText){
+      splitext = searchText.toLowerCase().split(/\s+/),
+      regexp_and = "(?=.*" + splitext.join(")(?=.*") + ")",
+      regexp_or = searchText.toLowerCase().replace(/\s+/g, "|"),
+      re = new RegExp((AND_OR == "AND") ? regexp_and : regexp_or, "i");
+      match_by_lang = 0;
+
+      // Iterate over all bears
+      for (var x = 0; x < bears.length; x++) {
+        match = 0;
+        // If user seaches by bear name
+        if(re.test(bears[x].name.toLowerCase())) {
+          match = 1;
+        }
+        // If user searches by language name
+        for (var j = 0; j < bears[x].languages.length; j++) {
+          // If language is supported by bear then match is set to 1
+          if(re.test(bears[x].languages[j].toLowerCase())) {
+            match = 1;
+            match_by_lang = 1;
+          }
+        }
+        if (match == 1) {
+          // Add that bear to final array (returnArray)
+          returnArray.push(bears[x]);
+        }
+      }
+
+      /*
+       If match was found by language name
+       return all bears having support for All languages
+      */
+      if (match_by_lang == 1) {
+        for (var x = 0; x < bears.length; x++) {
+          // Check if a bear already exists in returnArray
+          var found = returnArray.some(function (el) {
+            return el.name === bears[x].name;
+          });
+
+          /*
+           If bear doesn't already exists in returnArray and
+           it supports all languages, then add it to returnArray
+          */
+          if (!found && bears[x].languages.indexOf("All") > -1) {
+            returnArray.push(bears[x]);
+          }
+        }
+      }
+      return returnArray;
+    }
+    return bears;
+  }
+})
