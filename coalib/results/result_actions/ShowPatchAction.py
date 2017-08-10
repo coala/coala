@@ -39,14 +39,17 @@ def print_beautified_diff(difflines, printer):
         elif line.startswith('+++'):
             print_to_name(printer, line[4:])
         elif line.startswith('+'):
-            print_to_name(printer, line[1:])
+            printer.print(format_line(line[1:], real_nr=current_line_added),
+                          color='green')
             current_line_added += 1
         elif line.startswith('-'):
-            printer.print(format_line
-                          ('Line affected {}'.format(current_line_added)))
-            printer.print(format_line(''))
-            print_from_name(printer, line[1:])
+            printer.print(format_line(line[1:],
+                                      real_nr=current_line_subtracted),
+                          color='red')
             current_line_subtracted += 1
+        else:
+            current_line_subtracted += 1
+            current_line_added += 1
 
 
 class ShowPatchAction(ResultAction):

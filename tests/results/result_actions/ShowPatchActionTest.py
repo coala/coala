@@ -56,13 +56,11 @@ class ShowPatchActionTest(unittest.TestCase):
             self.assertEqual(stdout.getvalue(),
                              '[----] a\n'
                              '[++++] a\n'
-                             '[++++] test\n'
-                             '[    ] Line affected 2\n'
-                             '[    ] \n'
-                             '[----] c\n'
+                             '[   2] test\n'
+                             '[   3] c\n'
                              '[----] b\n'
                              '[++++] b\n'
-                             '[++++] first\n')
+                             '[   1] first\n')
 
     def test_apply_renaming_only(self):
         with retrieve_stdout() as stdout:
@@ -102,13 +100,11 @@ class ShowPatchActionTest(unittest.TestCase):
             self.assertEqual(stdout.getvalue(),
                              '[----] a\n'
                              '[++++] a\n'
-                             '[++++] test\n'
-                             '[    ] Line affected 2\n'
-                             '[    ] \n'
-                             '[----] c\n'
+                             '[   2] test\n'
+                             '[   3] c\n'
                              '[----] b\n'
                              '[++++] b\n'
-                             '[++++] first\n')
+                             '[   1] first\n')
 
     def test_apply_with_rename(self):
         with retrieve_stdout() as stdout:
@@ -131,12 +127,8 @@ class ShowPatchActionTest(unittest.TestCase):
             self.assertEqual(stdout.getvalue(),
                              '[----] a\n'
                              '[++++] a.rename\n'
-                             '[++++] test\n'
-                             '[    ] Line affected 2\n'
-                             '[    ] \n'
-                             '[----] c\n'
+                             '[   2] test\n'
+                             '[   3] c\n'
                              '[----] b\n'
                              '[++++] /dev/null\n'
-                             '[    ] Line affected 0\n'
-                             '[    ] \n'
-                             '[----] old_first\n')
+                             '[   1] old_first\n')
