@@ -189,6 +189,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     outputs_group.add_argument(
         '--filter-by', action='append', nargs='+',
+        metavar=('FILTER_NAME FILTER_ARG', 'FILTER_ARG'),
         help='filters `--show-bears` by the filter given as argument. '
              'Available filters: {}'.format(
                  FilterHelper.get_all_filters_str()))
