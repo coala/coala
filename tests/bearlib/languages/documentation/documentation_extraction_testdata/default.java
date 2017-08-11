@@ -11,16 +11,3 @@ class HelloWorld {
         return "Hello, " + name;
     }
 }
-
-class AreaSquare {
-
-/**
-* Returns Area of a square.
-*
-* @param  side side of square
-* @return  area of a square
-*/
-    public String sayHello(int side) {
-        return side * side;
-    }
-}

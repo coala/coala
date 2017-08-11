@@ -33,8 +33,7 @@ int foobar(int x) {
 }
 
      /** line 1
-      *  line2
-      */
+      *  line2 */
 
     /** */
 

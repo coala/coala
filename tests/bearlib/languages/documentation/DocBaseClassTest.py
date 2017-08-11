@@ -72,7 +72,7 @@ class DocBaseClassTest(unittest.TestCase):
 
         self.assertEqual(
             list(DocBaseClass.extract(data, 'C', 'doxygen')),
-            [DocumentationComment(' my main description\n continues here ',
+            [DocumentationComment(' my main description\n continues here',
                                   docstyle_C_doxygen, '',
                                   docstyle_C_doxygen.markers[0],
                                   TextPosition(1, 1))])
