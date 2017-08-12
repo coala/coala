@@ -21,7 +21,7 @@ class ShowPatchActionTest(unittest.TestCase):
 
         self.test_result = Result('origin', 'message', diffs=self.diff_dict)
         self.section = Section('name')
-        self.section.append(Setting('colored', 'false'))
+        self.section.append(Setting('no_color', 'True'))
 
     def test_is_applicable(self):
         diff = Diff([], rename='new_name')

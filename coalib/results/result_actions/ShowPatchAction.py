@@ -81,18 +81,18 @@ class ShowPatchAction(ResultAction):
               result,
               original_file_dict,
               file_diff_dict,
-              colored: bool=True,
+              no_color: bool=False,
               show_result_on_top: bool=False):
         """
         (S)how patch
 
-        :param colored:
+        :param no_color:
             Whether or not to use colored output.
         :param show_result_on_top:
             Set this to True if you want to show the result info on top.
             (Useful for e.g. coala_ci.)
         """
-        printer = ConsolePrinter(colored)
+        printer = ConsolePrinter(not no_color)
 
         if show_result_on_top:
             from coalib.output.ConsoleInteraction import print_result
