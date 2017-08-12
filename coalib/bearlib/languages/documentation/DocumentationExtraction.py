@@ -246,4 +246,14 @@ def extract_documentation_with_markers(content, docstyle_definition):
             marker_dict,
             docstyle_definition)
         if doc:
-            yield doc
+            # Ignore string literals
+            ignore_regex = re.compile(
+                '^\s*r?(?P<marker>' +
+                ('|'.join(re.escape(s) for s in doc.marker[0])) +
+                ')')
+            # Starting line of doc_string where marker is present
+            start_line = doc.range.start.line - 1
+            ignore_string_match = ignore_regex.search(content[start_line])
+
+            if ignore_string_match:
+                yield doc

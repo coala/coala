@@ -246,6 +246,32 @@ class DocBaseClassTest(unittest.TestCase):
                                   docstyle_PYTHON3_doxygen.markers[1],
                                   TextPosition(1, 1))])
 
+    def test_DocBaseClass_extraction_PYTHON3_4(self):
+        data = ['\n', 'triple_quote_string_test = """\n',
+                'This is not a docstring\n', '"""\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        # Nothing is yielded as triple quote string literals are being
+        # ignored.
+        self.assertEqual(
+            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
+            [])
+
+    def test_DocBaseClass_extraction_PYTHON3_5(self):
+        data = ['r"""\n', 'This is a raw docstring\n', '"""\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        self.assertEqual(
+            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
+            [DocumentationComment('\nThis is a raw docstring\n',
+                                  docstyle_PYTHON3_default, 'r',
+                                  docstyle_PYTHON3_default.markers[0],
+                                  TextPosition(1, 2))])
+
     def test_generate_diff(self):
         data_old = ['\n', '""" documentation in single line  """\n']
         for doc_comment in DocBaseClass.extract(

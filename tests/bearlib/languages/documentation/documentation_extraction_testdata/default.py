@@ -75,3 +75,8 @@ def foobar_triangle(side_A, side_B, side_C):
 
 
     return side_A + side_B + side_C
+
+    # This example of triple quote string literal is ignored.
+    triple_quote_string_literal_test = """
+This is a triple quoted string and is not a valid docstring.
+"""
