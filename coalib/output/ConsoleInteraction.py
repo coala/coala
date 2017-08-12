@@ -407,6 +407,16 @@ def print_results_formatted(log_printer,
                 exception)
 
 
+def print_bears_formatted(bears, format=None):
+    format_str = format or ('name:{name}:can_detect:{can_detect}:'
+                            'can_fix:{can_fix}:description:{description}')
+    print('\n\n'.join(format_str.format(name=bear.name,
+                                        can_detect=bear.CAN_DETECT,
+                                        can_fix=bear.CAN_FIX,
+                                        description=bear.get_metadata().desc)
+                      for bear in bears))
+
+
 def print_affected_files(console_printer,
                          log_printer,
                          result,
@@ -911,7 +921,8 @@ def show_bear(bear,
 def print_bears(bears,
                 show_description,
                 show_params,
-                console_printer):
+                console_printer,
+                args=None):
     """
     Presents all bears being used in a stylized manner.
 
@@ -922,6 +933,7 @@ def print_bears(bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param args:             Args passed to coala command.
     """
     if not bears:
         console_printer.print('No bears to show. Did you forget to install '
@@ -929,20 +941,50 @@ def print_bears(bears,
                               'coala-bears`.')
         return
 
+    results = []
+    if args and args.json:
+        from coalib.output.JSONEncoder import create_json_encoder
+        JSONEncoder = create_json_encoder(use_relpath=args.relpath)
+
     for bear, sections in sorted(bears.items(),
                                  key=lambda bear_tuple:
                                  bear_tuple[0].name.lower()):
-        show_bear(bear,
-                  show_description,
-                  show_params,
-                  console_printer)
+        if args and (args.json or args.format):
+            results.append(bear)
+        else:
+            show_bear(bear,
+                      show_description,
+                      show_params,
+                      console_printer)
+
+    if args:
+        if args.json:
+            json_output = {'bears': results}
+            import json
+            if args.output:
+                filename = str(args.output[0])
+                with open(filename, 'w+') as fp:
+                    json.dump(json_output, fp,
+                              cls=JSONEncoder,
+                              sort_keys=True,
+                              indent=2,
+                              separators=(',', ': '))
+            else:
+                print(json.dumps(json_output,
+                                 cls=JSONEncoder,
+                                 sort_keys=True,
+                                 indent=2,
+                                 separators=(',', ': ')))
+        elif args.format:
+            print_bears_formatted(results)
 
 
 def show_bears(local_bears,
                global_bears,
                show_description,
                show_params,
-               console_printer):
+               console_printer,
+               args=None):
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
@@ -956,10 +998,11 @@ def show_bears(local_bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param args:             Args passed to coala command.
     """
     bears = inverse_dicts(local_bears, global_bears)
 
-    print_bears(bears, show_description, show_params, console_printer)
+    print_bears(bears, show_description, show_params, console_printer, args)
 
 
 def show_language_bears_capabilities(language_bears_capabilities,

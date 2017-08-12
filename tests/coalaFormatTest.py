@@ -53,3 +53,13 @@ class coalaFormatTest(unittest.TestCase):
                              'coala --format --ci must return exitcode 1 when '
                              'it yields results')
             self.assertFalse(stderr)
+
+    def test_format_show_bears(self):
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '-B', '--filter-by', 'language',
+                'java', '-I', '--format')
+        self.assertEqual(retval, 0)
+        self.assertFalse(stderr)
+        self.assertRegex(stdout, 'name:.*:can_detect:.*:can_fix:.*:'
+                                 'description:.*')
