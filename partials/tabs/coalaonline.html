@@ -87,12 +87,6 @@
           <span class="section-name">{{ section }}</span>
           <span>
             <a class="waves-light">
-              <i ng-click="add_bears(section)" class="fa fa-plus-circle white-text bears-icon" aria-hidden="true">
-              </i>
-            </a>
-          </span>
-          <span>
-            <a class="waves-light">
               <i ng-click="remove_sections(section)" class="fa fa-minus-circle white-text bears-icon" aria-hidden="true">
               </i>
             </a>
@@ -114,20 +108,48 @@
               <input type="text" id="autocomplete-input" class="autocomplete">
             </div>
           </div>
-          <div class="col m8">
+          <div class="col m7">
             <ul class="left no-margin">
-              <li ng-repeat="(k,v) in val">
+              <li ng-repeat="(k,v) in val['nop']">
                 <div class="input-field no-margin">
-                <input type="text" ng-model="sections[section]['bears'][bear][k]">
-                <label>{{k}}</label>
+                  <input type="text" ng-model="sections[section]['bears'][bear]['nop'][k]">
+                  <label>{{k}}</label>
                 </div>
               </li>
             </ul>
           </div>
-          <div class="col m1">
-            <i ng-click="remove_bears(section, bear)" class="fa fa-minus-circle black-text bears-icon" aria-hidden="true">
+          <div class="col m2">
+            <i ng-click="add_optional_settings(section, bear)" class="fa fa-sliders black-text bears-icon left" aria-hidden="true">
+            </i>
+            <i ng-click="remove_bears(section, bear)" class="fa fa-minus-circle black-text bears-icon right" aria-hidden="true">
             </i>
           </div>
+          <!-- Modal Structure -->
+          <div id="settingmodal" class="modal bottom-sheet">
+            <div class="modal-content col m12">
+              <h4>Optional Settings</h4>
+              <p>{{ current_bear }}</p>
+              <div class="parent-wrapper">
+                <div class="parent">
+                  <div class="child" ng-repeat="(k,v) in sections[section_settings]['bears'][current_bear]['op']">
+                    <div class="input-field no-margin">
+                      <input type="text" ng-model="sections[section_settings]['bears'][current_bear]['op'][k]">
+                      <label>{{k}}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
+        <div class="row blue-grey darken-4 white-text z-depth-1 no-margin">
+          <span>
+            <a class="waves-effect grey-text text-lighten-2">
+              <i ng-click="add_bears(section)" class="fa fa-plus-circle bears-icon-small" aria-hidden="true"> &nbsp;ADD BEAR
+              </i>
+            </a>
+          </span>
         </div>
       </div>
 

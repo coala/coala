@@ -93,7 +93,28 @@ app.directive('coalaonline',[ '$http', function ($http) {
                         elem = Object.keys(element)[0];
                         nop_json[elem] = "";
                     })
-                    $scope.sections[section]["bears"][bear] = nop_json;
+
+                    op_json = {};
+                    op = data.data.metadata.optional_params;
+                    data.data["BEAR_DEPS"].forEach(function(dep){
+                        dep.metadata.optional_params.forEach(function(dep_op){
+                            if (Array.isArray(dep_op)){
+                                dep_op.forEach(function(dn){
+                                    op.push(dn);
+                                })
+                            } else {
+                                op.push(dep_op);
+                            }
+                        })
+                    })
+                    op.forEach(function(element){
+                        elem = Object.keys(element)[0];
+                        op_json[elem] = "";
+                    })
+                    $scope.sections[section]["bears"][bear] = {};
+                    $scope.sections[section]["bears"][bear]['nop'] = nop_json;
+                    $scope.sections[section]["bears"][bear]['op'] = op_json;
+                    $scope.$evalAsync();
                 }, function (failure) {
                     // bear not found at webServices
                     console.log(failure);
@@ -103,6 +124,11 @@ app.directive('coalaonline',[ '$http', function ($http) {
                 });
             }
             $scope.run_coala = function(){
+
+                var sections_copy = JSON.stringify($scope.sections);
+
+                $scope.sections = $scope.pre_format_settings($scope.sections);
+
                 var json = {
                     "sections" : $scope.sections,
                     "mode" : "coala",
@@ -113,8 +139,10 @@ app.directive('coalaonline',[ '$http', function ($http) {
                 } else {
                     json["url"] = $(".git-link").val();
                 }
+                jsn_str = JSON.stringify(json)
+                $scope.sections = JSON.parse(sections_copy);
                 $scope.running_coala = true;
-                $http.post(coala_online_api, JSON.stringify(json))
+                $http.post(coala_online_api, jsn_str)
                 .then(function(data){
                     $scope.results = data.data.response.results;
                     $scope.coafile = data.data.coafile;
@@ -158,6 +186,38 @@ app.directive('coalaonline',[ '$http', function ($http) {
             $scope.remove_sections = function(section){
                 delete $scope.sections[section]
             }
+
+            $scope.add_optional_settings = function (section, bear) {
+                $scope.section_settings = section;
+                $scope.current_bear = bear;
+                $(document).ready(function () {
+                    $('.modal').modal();
+                    $('#settingmodal').modal('open');
+                })
+            }
+
+            $scope.pre_format_settings = function (settings) {
+                angular.forEach(settings, function(section, key){
+                    angular.forEach(section['bears'], function(bears, key){
+                        temp = {}
+                        angular.forEach(bears, function(bear, key){
+                            if (key == "nop") {
+                                angular.forEach(Object.keys(bear), function(value, key){
+                                    temp[value] = bear[value];
+                                });
+                            } else {
+                                angular.forEach(Object.keys(bear), function(value, key){
+                                    if (bear[value] != "") temp[value] = bear[value];
+                                });
+                            }
+                        });
+                        section['bears'][key] = temp;
+                    });
+                });
+
+                return settings;
+            }
+
         },
         controllerAs: 'toc'
     }
