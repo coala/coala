@@ -3,7 +3,7 @@ import unittest
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
-    DocumentationComment)
+    DocumentationComment, MalformedComment)
 from coalib.bearlib.languages.documentation.DocBaseClass import (
     DocBaseClass)
 from tests.bearlib.languages.documentation.TestUtils import (
@@ -11,6 +11,7 @@ from tests.bearlib.languages.documentation.TestUtils import (
 from coalib.results.TextPosition import TextPosition
 from coalib.results.TextRange import TextRange
 from coalib.results.Diff import Diff
+from textwrap import dedent
 
 
 class DocBaseClassTest(unittest.TestCase):
@@ -301,3 +302,47 @@ class DocBaseClassTest(unittest.TestCase):
         test_object = DocBaseClass()
         self.assertRaises(NotImplementedError,
                           test_object.process_documentation)
+
+    def test_MalformedComment1_C(self):
+        data = ['/**\n',
+                '* A doc-comment aborted in the middle of writing\n',
+                '* This won\'t get parsed (hopefully...)\n']
+
+        expected = [dedent("""\
+            Please check the docstring for faulty markers. A starting
+            marker has been found, but no instance of DocComment is
+            returned."""), 0]
+
+        for doc_comment in DocBaseClass.extract(data, 'C', 'doxygen'):
+            self.assertEqual(
+                [doc_comment.message, doc_comment.line],
+                expected)
+
+    def test_MalformedComment2_CPP(self):
+        data = ['\n',
+                '/** Aborts...\n']
+
+        expected = [dedent("""\
+            Please check the docstring for faulty markers. A starting
+            marker has been found, but no instance of DocComment is
+            returned."""), 1]
+
+        for doc_comment in DocBaseClass.extract(data, 'CPP', 'doxygen'):
+            self.assertEqual(
+                [doc_comment.message, doc_comment.line],
+                expected)
+
+    def test_MalformedComment3_JAVA(self):
+        data = ['/**\n',
+                '* Markers are faulty\n',
+                '*/']
+
+        expected = [dedent("""\
+            Please check the docstring for faulty markers. A starting
+            marker has been found, but no instance of DocComment is
+            returned."""), 0]
+
+        for doc_comment in DocBaseClass.extract(data, 'JAVA', 'default'):
+            self.assertEqual(
+                [doc_comment.message, doc_comment.line],
+                expected)

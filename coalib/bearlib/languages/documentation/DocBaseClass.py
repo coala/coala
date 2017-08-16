@@ -39,8 +39,9 @@ class DocBaseClass:
                                    defined in given docstyle.
         :raises ValueError:        Raised when a docstyle definition setting
                                    has an invalid format.
-        :return:                   An iterator returning each
-                                   DocumentationComment found in the content.
+        :return:                   An iterator returning instances of
+                                   DocumentationComment or MalformedComment
+                                   found in the content.
         """
         docstyle_definition = DocstyleDefinition.load(language, docstyle)
         return extract_documentation_with_markers(

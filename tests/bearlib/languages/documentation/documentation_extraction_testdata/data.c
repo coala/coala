@@ -31,8 +31,3 @@ int myfield;
 int foobar(int x) {
     return x * x - x + 1;
 }
-
-
-/**
- * A doc-comment aborted in the middle of writing
- * This won't get parsed (hopefully...)

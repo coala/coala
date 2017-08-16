@@ -1,8 +1,9 @@
 import re
 
 from coalib.bearlib.languages.documentation.DocumentationComment import (
-    DocumentationComment)
+    DocumentationComment, MalformedComment)
 from coalib.results.TextPosition import TextPosition
+from textwrap import dedent
 
 
 def _extract_doc_comment_simple(content, line, column, markers):
@@ -196,7 +197,16 @@ def _extract_doc_comment_from_line(content, line, column, regex,
                 doc = DocumentationComment(documentation, docstyle_definition,
                                            indent, marker, position)
 
-                return end_line, end_column, doc
+                break
+
+        if doc_comment:
+            return end_line, end_column, doc
+        else:
+            malformed_comment = MalformedComment(dedent("""\
+                Please check the docstring for faulty markers. A starting
+                marker has been found, but no instance of DocComment is
+                returned."""), line)
+            return line + 1, 0, malformed_comment
 
     return line + 1, 0, None
 
@@ -244,7 +254,10 @@ def extract_documentation_with_markers(content, docstyle_definition):
             begin_regex,
             marker_dict,
             docstyle_definition)
-        if doc:
+
+        if doc and isinstance(doc, MalformedComment):
+            yield doc
+        elif doc:
             # Ignore string literals
             ignore_regex = re.compile(
                 '^\s*r?(?P<marker>' +
