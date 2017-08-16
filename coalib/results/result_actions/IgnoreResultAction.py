@@ -1,4 +1,5 @@
 from coalib.bearlib.languages import Language
+from coalib.bearlib.languages.Language import UnknownLanguageError
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
@@ -98,7 +99,7 @@ class IgnoreResultAction(ResultAction):
                 ignore_comment = (str(start_comment) + ' Ignore ' +
                                   origin + ' ' +
                                   str(end_comment) + '\n')
-            except AttributeError:
+            except UnknownLanguageError:
                 # multiline comments also not supported by language
                 logging.warning(
                     'coala does not support Ignore in "{language}". Consider'

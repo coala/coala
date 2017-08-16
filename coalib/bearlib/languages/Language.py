@@ -10,6 +10,12 @@ from packaging.version import Version, InvalidVersion
 from coalib.settings.Annotations import typechain
 
 
+class UnknownLanguageError(AttributeError, KeyError):
+    """
+    This exception occurs when an unknown language is requested.
+    """
+
+
 class LanguageUberMeta(type):
     """
     This class is used to hide the `all` attribute from the Language class.
@@ -122,7 +128,9 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         try:
             return next(lang for lang in type(cls).all if item in lang)
         except StopIteration:
-            raise AttributeError
+            raise UnknownLanguageError(
+                'Language `{}` is not a valid language name or '
+                'not recognized by coala.'.format(item))
 
     def __getitem__(cls, item):
         if isinstance(item, cls):
@@ -133,6 +141,7 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         name, versions = parse_lang_str(item)
 
         language = getattr(cls, name)
+
         if not versions:
             return language()
 
@@ -355,7 +364,7 @@ class Language(metaclass=LanguageMeta):
     >>> Language.Cobol
     Traceback (most recent call last):
      ...
-    AttributeError
+    UnknownLanguageError: No language found for `Cobol`
     """
 
     def __init__(self, *versions):
