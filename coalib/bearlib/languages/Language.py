@@ -33,11 +33,11 @@ def parse_lang_str(string):
     ('Python', [3.6, '3.3.1'])
     >>> parse_lang_str("Objective C 3.6, 3")
     ('Objective C', [3.6, 3])
-    >>> parse_lang_str("Cobol, stupid!")  # +ELLIPSIS
+    >>> parse_lang_str("Cobol, stupid!")
     Traceback (most recent call last):
      ...
     packaging.version.InvalidVersion: Invalid version: 'stupid!'
-    >>> parse_lang_str("Cobol seems at least stupid ;)")  # +ELLIPSIS
+    >>> parse_lang_str("Cobol seems at least stupid ;)")
     ('Cobol seems at least stupid ;)', [])
     """
     name, *str_versions = re.split(r'\s*,\s*', str(string).strip())

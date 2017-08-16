@@ -531,8 +531,7 @@ class Diff:
         However, if we change something that has been changed before, we'll get
         a conflict:
 
-        >>> diff.modify_line(1,  # +ELLIPSIS
-        ...                  'Hello. This is not ok. Gorgeous.\n')
+        >>> diff.modify_line(1, 'Hello. This is not ok. Gorgeous.\n')
         Traceback (most recent call last):
          ...
         coalib.results.LineDiff.ConflictError: ...
