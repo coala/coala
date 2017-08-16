@@ -1,7 +1,8 @@
 var app = angular.module('coala', ['ngStorage','ngRoute', 'ngSanitize', 'btford.markdown']);
 
- app.config(['$routeProvider',
-  function($routeProvider) {
+ app.config(['$routeProvider', '$locationProvider',
+  function($routeProvider, $locationProvider) {
+    $locationProvider.hashPrefix('')
    $routeProvider.
    when('/home', {
     template: '<home></home>'
@@ -17,6 +18,12 @@ var app = angular.module('coala', ['ngStorage','ngRoute', 'ngSanitize', 'btford.
    }).
    when('/coalaonline', {
     template: '<coalaonline></coalaonline>'
+   }).
+   when('/home/:person', {
+    template: '<people></people>'
+   }).
+   when('/:person', {
+    template: '<people></people>'
    }).
    otherwise({
     redirectTo: '/home'

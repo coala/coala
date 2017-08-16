@@ -1,0 +1,50 @@
+/* CSS for custom profile page */
+.valign-wrapper h1,
+.valign-wrapper .card {
+  width: 100%;
+}
+.profile-card {
+  padding-left: 3em !important;
+  padding-top: 2em !important;
+}
+.profile-card h4 {
+  text-indent: 0.2em;
+}
+.slant {
+  -moz-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-5deg, 0deg);
+  -webkit-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-5deg, 0deg);
+  -o-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-5deg, 0deg);
+  -ms-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-5deg, 0deg);
+  transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-5deg, 0deg);
+}
+.icons {
+  display: flex;
+}
+.icon-element {
+  flex: 1;
+}
+.icon-element.fa {
+  font-size: 5em;
+  padding: 0.1em;
+}
+.parent {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10px 0 0 -10px;
+}
+.child {
+  display: inline-block;
+  margin: 10px 0 0 10px;
+  flex-grow: 1;
+  width: calc(100% * (1/4) - 10px - 1px)
+}
+.prop {
+  padding: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: darkslategray;
+}
+.val {
+  padding-bottom: 1em;
+}

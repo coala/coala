@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="valign-wrapper">
+    <div class="card">
+        <div class="person-profile">
+            <div class="row no-margin">
+                <div class="col m8 profile-card">
+                <br>
+                    <h1 class="no-margin fine">{{ person.name }}</h1>
+                    <br>
+                    <h4 class="no-margin light">{{ person.nick }}</h4>
+                    <br><br>
+                    <h5 class="no-margin light slant"> " {{ person.bio }} "</h5>
+                </div>
+        <div class="col m4"><img class="responsive-img" ng-src="{{person.img}}"></div>
+        </div>
+        </div>
+    </div>
+    <br><br>
+  </div>
+  <div class="card icons center">
+    <div class="icon-element" ng-repeat="(key, value) in person.social">
+    <a href="{{value.url}}"><i class="{{value.color}}-text icon-element fa {{value.icon}}"></i></a>
+    </div>
+  </div>
+  <div class="card">
+   <div class="center parent-wrapper">
+  <div class="parent">
+      <div class="child" ng-repeat="(key, value) in person.metadata">
+        <div class="prop">{{key}}</div>
+        <div class="val">{{value}}</div>
+      </dib>
+    </dib>
+  </div>
+  </div>
+</div>
+<link rel="stylesheet" href="/resources/css/people.css">
