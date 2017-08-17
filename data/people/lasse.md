@@ -1,7 +1,12 @@
 name: Lasse Schuirmann
 nick: sils
 img: https://avatars0.githubusercontent.com/u/5716520?v=4&s=460
-bio:
+bio: >
+  After freetime-founding the coala analyzer OS project with more than 500
+  contributors, Lasse mentored 5 GSoC students and administered >40 mentors
+  in various open source projects. He also forges high quality software and
+  conducts talks and workshops for his clients/at conferences around the world
+  while founding his startup GitMate.io to improve software developer tooling.
 social: !!map
   github:
     icon: fa-github
