@@ -15,6 +15,10 @@ social: !!map
     icon: fa-comments
     url: https://gitter.im/iamcelestine
     color: green
+  instagram:
+    icon: fa-instagram
+    url: https://www.instagram.com/celestine_kleinesper/
+    color: pink
 
 metadata: !!map
   country: Germany
