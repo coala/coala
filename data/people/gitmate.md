@@ -1,7 +1,10 @@
 name: GitMate
 nick: gitmate-bot
 img: https://avatars0.githubusercontent.com/u/15421488?v=4&s=460
-bio:
+bio: >
+  GitMate is the youngest of all coala members. It helps maintaining our review
+  queue at coala.io/review and is a trainee on issue triaging right now. - And
+  it can help your project too!
 social: !!map
   github:
     icon: fa-github
