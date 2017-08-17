@@ -48,3 +48,6 @@
 .val {
   padding-bottom: 1em;
 }
+.profile-bio > p:before, .profile-bio > p:after {
+  content: ' " ';
+}
