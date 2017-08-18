@@ -19,6 +19,7 @@ class DocumentationComment:
     Description = namedtuple('Description', 'desc')
     top_padding = 0
     bottom_padding = 0
+    docstring_type = 'others'
 
     def __init__(self, documentation, docstyle_definition,
                  indent, marker, position):

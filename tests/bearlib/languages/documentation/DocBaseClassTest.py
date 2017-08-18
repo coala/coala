@@ -273,6 +273,151 @@ class DocBaseClassTest(unittest.TestCase):
                                   docstyle_PYTHON3_default.markers[0],
                                   TextPosition(1, 2))])
 
+    def test_DocBaseClass_instantiate_padding_PYTHON3_6(self):
+        data = ['def some_function:\n',
+                '\n',
+                '   """ documentation in single line """\n',
+                '\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [1, 2])
+
+    def test_DocBaseClass_instantiate_padding_PYTHON3_7(self):
+        data = ['class some_class:\n',
+                '\n',
+                '\n',
+                '   """ documentation in single line """\n',
+                '\n',
+                '\n',
+                'print(1)\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [2, 2])
+
+    def test_DocBaseClass_instantiate_padding_inline_PYTHON3_8(self):
+        # To test that bottom_padding sets to nothing if docstring is
+        # followed by inline docstring.
+        data = ['def some_function:\n',
+                '\n',
+                '   """\n',
+                '   documentation in single line\n',
+                '   """ # This is inline docstring',
+                '\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [1, 0])
+
+    def test_DocBaseClass_instantiate_padding_inline_PYTHON3_9(self):
+        # Paddings will not be instantiated for docstring_type=others
+        data = ['\n',
+                '   """\n',
+                '   documentation in single line\n',
+                '   """ # This is inline docstring',
+                '\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [0, 0])
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_10(self):
+        data = ['class xyz:\n',
+                '   """\n',
+                '   This docstring is of docstring_type class\n',
+                '   """\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'class')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_11(self):
+        data = ['def xyz:\n',
+                '   """\n',
+                '   This docstring is of docstring_type function\n',
+                '   """\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'function')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_12(self):
+        data = ['\n',
+                '   """\n',
+                '   This docstring is of docstring_type others\n',
+                '   """\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'others')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_13(self):
+        data = ['## Documentation for a function.\n',
+                '#\n',
+                '#  More details.\n',
+                'def func():\n',
+                '    pass\n']
+
+        docstyle_PYTHON3_doxygen = DocstyleDefinition.load('PYTHON3',
+                                                           'doxygen')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'doxygen'):
+            self.assertEqual(doc.docstring_type, 'function')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_14(self):
+        data = ['## Documentation for a class.\n',
+                '#\n',
+                '#  More details.\n',
+                'class PyClass:\n',
+                '\n']
+
+        docstyle_PYTHON3_doxygen = DocstyleDefinition.load('PYTHON3',
+                                                           'doxygen')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'doxygen'):
+            self.assertEqual(doc.docstring_type, 'class')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_15(self):
+        data = ['def some_function():\n',
+                '"""\n',
+                'documentation\n',
+                '"""\n',
+                'class myPrivateClass:\n',
+                '    pass']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'function')
+
     def test_generate_diff(self):
         data_old = ['\n', '""" documentation in single line  """\n']
         for doc_comment in DocBaseClass.extract(

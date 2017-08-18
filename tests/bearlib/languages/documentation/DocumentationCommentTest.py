@@ -19,6 +19,9 @@ class DocumentationCommentTest(unittest.TestCase):
     ReturnValue = DocumentationComment.ReturnValue
 
     Metadata = DocstyleDefinition.Metadata
+    ClassPadding = DocstyleDefinition.ClassPadding
+    FunctionPadding = DocstyleDefinition.FunctionPadding
+    DocstringTypeRegex = DocstyleDefinition.DocstringTypeRegex
 
 
 class GeneralDocumentationCommentTest(DocumentationCommentTest):
@@ -63,7 +66,11 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
 
     def test_not_implemented(self):
         raw_docstyle = DocstyleDefinition('nolang', 'nostyle', ('', '', ''),
-                                          self.Metadata('', '', '', '', ''))
+                                          self.Metadata('', '', '', '', ''),
+                                          self.ClassPadding('', ''),
+                                          self.FunctionPadding('', ''),
+                                          self.DocstringTypeRegex('', ''),
+                                          '')
         not_implemented = DocumentationComment(
             'some docs', raw_docstyle, None, None, None)
         with self.assertRaises(NotImplementedError):
@@ -274,8 +281,6 @@ class DocumentationAssemblyTest(unittest.TestCase):
         docs = ''.join(data)
 
         for doc in DocBaseClass.extract(data, 'python', 'default'):
-            doc.bottom_padding = 2
-            doc.assemble.cache_clear()
             self.assertIn(doc.assemble(), docs)
 
     def test_doxygen_assembly(self):
@@ -293,3 +298,49 @@ class DocumentationAssemblyTest(unittest.TestCase):
             doc.top_padding = 1
             doc.assemble.cache_clear()
             self.assertIn(doc.assemble(), docs)
+
+    def test_python_default_padding_amend_assembly_1(self):
+        data = ['\n', '\n', '""" documentation in single line """\n',
+                '\n', '\n', 'print(1)\n']
+
+        for doc in DocBaseClass.extract(data, 'python', 'default'):
+            doc.top_padding = 1
+            doc.bottom_padding = 0
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '\n""" documentation in single line """')
+
+    def test_python_default_padding_amend_assembly_2(self):
+        data = ['""" documentation in single line """\n']
+
+        for doc in DocBaseClass.extract(data, 'python', 'default'):
+            doc.top_padding = 2
+            doc.bottom_padding = 3
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '\n\n""" documentation in single line """\n\n\n')
+
+    def test_python_doxygen_padding_amend_assembly(self):
+        data = ['## documentation in single line without return at end.']
+
+        for doc in DocBaseClass.extract(data, 'python', 'doxygen'):
+            doc.top_padding = 0
+            doc.bottom_padding = 2
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '## documentation in single line '
+                             'without return at end.\n\n')
+
+    def test_c_default_padding_amend_assembly(self):
+        data = ['/**\n',
+                ' * This is the main function.\n',
+                ' */\n']
+
+        for doc in DocBaseClass.extract(data, 'c', 'doxygen'):
+            doc.top_padding = 1
+            doc.bottom_padding = 2
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '\n/**\n'
+                             ' * This is the main function.\n'
+                             ' */\n\n')
