@@ -16,6 +16,7 @@ from coala_utils.ContextManagers import (
 
 from tests.TestUtilities import (
     bear_test_module,
+    collect_error_test_bears_module,
     execute_coala,
     TEST_BEARS_COUNT,
 )
@@ -161,6 +162,16 @@ class coalaTest(unittest.TestCase):
 
     def test_show_all_bears_debug(self):
         return self.test_show_all_bears(debug=True)
+
+    def test_show_all_bears_debug_exception(self, debug=True):
+        with collect_error_test_bears_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '-B', '-I', debug=debug)
+            self.assertEqual(retval, 0)
+            # All bears plus 1 line holding the closing colour escape sequence.
+            self.assertEqual(stdout.strip().splitlines(),
+                             TEST_BEARS_COUNT + 1)
+            self.assertFalse(stderr)
 
     def test_show_language_bears(self, debug=False):
         with bear_test_module():

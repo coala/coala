@@ -109,7 +109,7 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
 
 
 @yield_once
-def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
+def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer, debug=False):
     """
     Collect all bears from bear directories that have a matching kind.
 
@@ -117,6 +117,7 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
     :param bear_globs:    Globs of bears to collect
     :param kinds:         List of bear kinds to be collected
     :param log_printer:   Log_printer to handle logging
+    :param debug:         Run in debug mode, not catching any exceptions.
     :return:              Iterator that yields a tuple with bear class and
                           which bear_glob was used to find that bear class.
     """
@@ -147,6 +148,9 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
                                             pkg=exception.req),
                         exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
+                    if debug:
+                        raise
+
                     log_printer.log_exception(
                         'Unable to collect bears from {file}. Probably the '
                         'file is malformed or the module code raises an '
@@ -156,7 +160,7 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
 
 
 def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
-                  warn_if_unused_glob=True):
+                  warn_if_unused_glob=True, debug=False):
     """
     Collect all bears from bear directories that have a matching kind
     matching the given globs.
@@ -168,12 +172,14 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
     :param log_printer:         log_printer to handle logging.
     :param warn_if_unused_glob: True if warning message should be shown if a
                                 glob didn't give any bears.
+    :param debug:               Run in debug mode, not catching any exceptions.
     :return:                    Tuple of list of matching bear classes based on
                                 kind. The lists are in the same order as kinds.
     """
     bears_found = tuple([] for i in range(len(kinds)))
     bear_globs_with_bears = set()
-    for bear, glob in icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
+    for bear, glob in icollect_bears(bear_dirs, bear_globs, kinds, log_printer,
+                                     debug=debug):
         index = kinds.index(_get_kind(bear))
         bears_found[index].append(bear)
         bear_globs_with_bears.add(glob)
@@ -264,9 +270,11 @@ def filter_capabilities_by_languages(bears, languages):
     return language_bears_capabilities
 
 
-def get_all_bears():
+def get_all_bears(debug=False):
     """
     Get a ``list`` of all available bears.
+
+    :param debug: Run in debug mode, not catching any exceptions.
     """
     from coalib.settings.Section import Section
     printer = LogPrinter(NullPrinter())
@@ -275,7 +283,8 @@ def get_all_bears():
         ['**'],
         [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
         printer,
-        warn_if_unused_glob=False)
+        warn_if_unused_glob=False,
+        debug=debug)
     return list(itertools.chain(local_bears, global_bears))
 
 
@@ -286,12 +295,13 @@ def get_all_bears_names():
     return [bear.name for bear in get_all_bears()]
 
 
-def collect_all_bears_from_sections(sections, log_printer):
+def collect_all_bears_from_sections(sections, log_printer, debug=False):
     """
     Collect all kinds of bears from bear directories given in the sections.
 
     :param sections:    List of sections so bear_dirs are taken into account
     :param log_printer: Log_printer to handle logging
+    :param debug:       Run in debug mode, not catching any exceptions.
     :return:            Tuple of dictionaries of local and global bears.
                         The dictionary key is section class and
                         dictionary value is a list of Bear classes
@@ -305,7 +315,8 @@ def collect_all_bears_from_sections(sections, log_printer):
             ['**'],
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
             log_printer,
-            warn_if_unused_glob=False)
+            warn_if_unused_glob=False,
+            debug=debug)
     return local_bears, global_bears
 
 

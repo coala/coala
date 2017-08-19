@@ -66,3 +66,26 @@ def bear_test_module():
     with unittest.mock.patch('pkg_resources.iter_entry_points',
                              return_value=[EntryPoint()]) as mocked:
         yield
+
+
+@contextmanager
+def collect_error_test_bears_module():
+    """
+    This function mocks the ``pkg_resources.iter_entry_points()``
+    to use the testing bear module we have. Hence, it doesn't test
+    the collection of entry points.
+    """
+    bears_test_module = os.path.join(os.path.dirname(__file__),
+                                     'collect_error_test_bears', '__init__.py')
+
+    class EntryPoint:
+
+        @staticmethod
+        def load():
+            class PseudoPlugin:
+                __file__ = bears_test_module
+            return PseudoPlugin()
+
+    with unittest.mock.patch('pkg_resources.iter_entry_points',
+                             return_value=[EntryPoint()]) as mocked:
+        yield

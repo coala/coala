@@ -352,11 +352,12 @@ def get_config_directory(section):
     return config if os.path.isdir(config) else os.path.dirname(config)
 
 
-def get_all_bears(log_printer, arg_parser=None, silent=True):
+def get_all_bears(log_printer, arg_parser=None, silent=True, debug=False):
     """
     :param log_printer: The log_printer to handle logging.
     :param arg_parser:  An ``ArgParser`` object.
     :param silent:      Whether or not to display warnings.
+    :param debug:       Run in debug mode, not catching any exceptions.
     :return:            Tuple containing dictionaries of local bears
                         and global bears.
     """
@@ -366,7 +367,7 @@ def get_all_bears(log_printer, arg_parser=None, silent=True):
                                      args=None,
                                      silent=silent)
     local_bears, global_bears = collect_all_bears_from_sections(
-        sections, log_printer)
+        sections, log_printer, debug=debug)
     return local_bears, global_bears
 
 
