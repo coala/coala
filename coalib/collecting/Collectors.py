@@ -289,12 +289,15 @@ def get_all_bears_names():
     return [bear.name for bear in get_all_bears()]
 
 
-def collect_all_bears_from_sections(sections, log_printer=None):
+def collect_all_bears_from_sections(sections,
+                                    log_printer=None,
+                                    bear_globs=('**',)):
     """
     Collect all kinds of bears from bear directories given in the sections.
 
     :param sections:    List of sections so bear_dirs are taken into account
     :param log_printer: Log_printer to handle logging
+    :param bear_globs:  List of glob patterns.
     :return:            Tuple of dictionaries of local and global bears.
                         The dictionary key is section class and
                         dictionary value is a list of Bear classes
@@ -305,7 +308,7 @@ def collect_all_bears_from_sections(sections, log_printer=None):
         bear_dirs = sections[section].bear_dirs()
         local_bears[section], global_bears[section] = collect_bears(
             bear_dirs,
-            ['**'],
+            bear_globs,
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
             warn_if_unused_glob=False)
     return local_bears, global_bears

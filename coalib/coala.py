@@ -56,7 +56,10 @@ def main(debug=False):
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (
                 get_all_bears)
-            filtered_bears = get_all_bears()
+            kwargs = {}
+            if args.bears:
+                kwargs['bear_globs'] = args.bears
+            filtered_bears = get_all_bears(**kwargs)
             if args.filter_by_language:
                 logging.warning(
                     "'--filter-by-language ...' is deprecated. "

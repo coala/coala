@@ -11,6 +11,7 @@ from testfixtures import LogCapture, StringComparison
 
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.Bear import Bear
+from coalib import coala
 from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 from coalib.output.ConsoleInteraction import (
@@ -41,6 +42,8 @@ from pygments.filters import VisibleWhitespaceFilter
 from pygments.lexers import TextLexer
 from pygments.style import Style
 from pygments.token import Token
+
+from tests.TestUtilities import bear_test_module, execute_coala
 
 
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
@@ -1082,3 +1085,20 @@ class PrintFormattedResultsTest(unittest.TestCase):
                 {abspath('file'): ('def fun():\n', '    pass  \n')})
             self.assertEqual(stdout.getvalue(),
                              "('    pass  \\n',)\n")
+
+    def test_show_bears_specified_in_args(self):
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '-B', '--bears',
+                'JavaTestBear', '--no-color')
+            self.assertEqual(retval, 0)
+            self.assertEqual(stdout.strip(), 'JavaTestBear')
+
+    def test_show_bears_specified_in_args_regex(self):
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '-B', '--bears',
+                '*Java*', '*Space*', '--no-color')
+            self.assertEqual(retval, 0)
+            self.assertEqual(['JavaTestBear', 'SpaceConsistencyTestBear'],
+                             [bear.strip() for bear in stdout.splitlines()])
