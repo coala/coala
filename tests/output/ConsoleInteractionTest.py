@@ -936,6 +936,19 @@ class ShowBearsTest(unittest.TestCase):
                              '  Can fix:\n   * Formatting\n\n  Path:\n   ' +
                              repr(TestBear.source_location) + '\n\n')
 
+    def test_show_bear_settings_only(self):
+        with retrieve_stdout() as stdout:
+            from coalib.parsing.DefaultArgParser import default_arg_parser
+            args = default_arg_parser().parse_args(['--show-settings'])
+            show_bear(TestBear, False, False, self.console_printer, args)
+            self.assertEqual(stdout.getvalue(),
+                             'TestBear\n'
+                             '  Needed Settings:\n'
+                             '   * setting1: Required Setting.\n\n'
+                             '  Optional Settings:\n'
+                             '   * setting2: Optional Setting. ('
+                             "Optional, defaults to 'None'.)\n\n")
+
     def test_show_bears_empty(self):
         with retrieve_stdout() as stdout:
             show_bears({}, {}, True, True, self.console_printer)
@@ -949,7 +962,8 @@ class ShowBearsTest(unittest.TestCase):
         show_bear.assert_called_once_with(SomelocalBear,
                                           True,
                                           True,
-                                          self.console_printer)
+                                          self.console_printer,
+                                          None)
 
     def test_show_bears_sorted(self):
         local_bears = OrderedDict([('default', [SomelocalBear]),

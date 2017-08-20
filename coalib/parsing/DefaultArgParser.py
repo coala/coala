@@ -203,6 +203,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='show bear descriptions for `--show-bears`')
 
     outputs_group.add_argument(
+        '--show-settings', const=True, action='store_const',
+        help='show bear settings for `--show-bears`')
+
+    outputs_group.add_argument(
         '--show-details', const=True, action='store_const',
         help='show bear details for `--show-bears`')
 

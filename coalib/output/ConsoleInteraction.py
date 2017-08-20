@@ -858,7 +858,8 @@ def show_enumeration(console_printer,
 def show_bear(bear,
               show_description,
               show_params,
-              console_printer):
+              console_printer,
+              args=None):
     """
     Displays all information about a bear.
 
@@ -866,11 +867,9 @@ def show_bear(bear,
     :param show_description: True if the main description should be shown.
     :param show_params:      True if the details should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param args:             Args passed to coala command.
     """
     console_printer.print(bear.name, color='blue')
-
-    if not show_description and not show_params:
-        return
 
     metadata = bear.get_metadata()
 
@@ -886,6 +885,8 @@ def show_bear(bear,
             '  ',
             'The bear does not provide information about which languages '
             'it can analyze.')
+
+    if (args and args.show_settings) or show_params:
         show_enumeration(console_printer,
                          'Needed Settings:',
                          metadata.non_optional_params,
@@ -896,6 +897,8 @@ def show_bear(bear,
                          metadata.optional_params,
                          '  ',
                          'No optional settings.')
+
+    if show_params:
         show_enumeration(console_printer,
                          'Can detect:',
                          bear.can_detect,
@@ -961,7 +964,8 @@ def print_bears(bears,
             show_bear(bear,
                       show_description,
                       show_params,
-                      console_printer)
+                      console_printer,
+                      args)
 
 
 def show_bears(local_bears,
