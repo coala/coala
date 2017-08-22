@@ -39,7 +39,7 @@ code, regardless of the programming languages you use.
 To find out what kind of analysis coala offers for the languages you use, visit
 http://coala.io/languages, or run::
 
-    $ coala --show-bears --filter-by-language C Python
+    $ coala --show-bears filter-by language C Python
 
 To perform code analysis, simply specify the analysis routines (bears) and the
 files you want it to run on, for example:
@@ -184,7 +184,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='list all bears')
 
     outputs_group.add_argument(
-        '-l', '--filter-by-language', nargs='+', metavar='LANG',
+        '-l', 'filter-by language', nargs='+', metavar='LANG',
         help='filters `--show-bears` by the given languages')
 
     outputs_group.add_argument(
