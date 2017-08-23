@@ -662,7 +662,7 @@ Project wide:
                 self.console_printer)
             self.assertEqual("""
 filename
-[    ]2 {0}
+[   2] {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! {1}\n""".format(highlight_text(self.no_color, 'line 2', NoColorStyle,
                                       self.lexer),
@@ -688,7 +688,7 @@ filename
                 self.console_printer)
             self.assertEqual("""
 filename
-[    ]5 {0}
+[   5] {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! {1}\n""".format(highlight_text(self.no_color, 'line 5', NoColorStyle,
                                       self.lexer),
@@ -719,12 +719,12 @@ filename
 
             self.assertEqual("""
 file
-[    ]2 {0}
+[   2] {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! Trailing whitespace found
 
 file
-[    ]5 {2}
+[   5] {2}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! {1}\n""".format(highlight_text(self.no_color, '\t', NoColorStyle,
                                       self.lexer),
@@ -755,15 +755,15 @@ file
                 self.console_printer)
             self.assertEqual("""
 another_file
-[    ]1 li{0}{1}
+[   1] li{0}{1}
 
 another_file
-[    ]3 li{0}{2}
+[   3] li{0}{2}
 
 some_file
-[    ]5 li{0}{3}
-[    ]6 li{0}{4}
-[    ]7 li{0}{5}
+[   5] li{0}{3}
+[   6] li{0}{4}
+[   7] li{0}{5}
 **** ClangCloneDetectionBear [Section:  | Severity: NORMAL] ****
 !    ! {6}\n""".format(highlight_text(self.no_color, 'ne',
                                       BackgroundSourceRangeStyle, self.lexer),
@@ -818,13 +818,13 @@ some_file
                 self.console_printer)
             self.assertEqual(
                              '\nfile\n'
-                             '[    ]5 {0}'
+                             '[   5] {0}'
                              '\n'
                              '**** t [Section:  | Severity: NORMAL] ****\n'
                              '!    ! {1}\n'
                              '\n'
                              'file\n'
-                             '!    !6 {2}'
+                             '!   6! {2}'
                              '\n'
                              '**** t [Section:  | Severity: NORMAL] ****\n'
                              '!    ! {1}\n'.format(

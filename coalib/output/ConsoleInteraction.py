@@ -110,7 +110,7 @@ def color_letter(console_printer, line):
 
 def format_lines(lines, symbol='', line_nr=''):
     def sym(x): return ']' if x is '[' else x
-    return '\n'.join('{}{:>5}{} {}'.format(symbol, sym(symbol), line_nr, line)
+    return '\n'.join('{}{:>4}{} {}'.format(symbol, line_nr, sym(symbol), line)
                      for line in lines.rstrip('\n').split('\n'))
 
 
