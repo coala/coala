@@ -25,7 +25,6 @@ from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
-from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ShowAppliedPatchesAction \
     import ShowAppliedPatchesAction
@@ -287,11 +286,12 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             # Interaction must be closed by the user with `0` if it's not a
             # param
-            with simulate_console_inputs('INVALID',
+            with simulate_console_inputs('x',
                                          -1,
-                                         'a',
+                                         1,
+                                         0,
                                          'n',
-                                         'm') as input_generator:
+                                         0) as input_generator:
                 curr_section = Section('')
                 print_section_beginning(self.console_printer, curr_section)
                 print_result(self.console_printer,
@@ -313,7 +313,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                                 TestAction().get_metadata(),
                                                 failed_actions=set())
                 self.assertEqual(input_generator.last_input, 4)
-                self.assertEqual(str(section), " {param : 'm'}")
+                self.assertEqual(str(section), " {param : 'n'}")
                 self.assertEqual(name, 'TestAction')
 
         # Check if the user is asked for the parameter only the first time.
@@ -478,76 +478,23 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('TestAction', failed_actions)
 
-    def test_ask_for_actions_and_apply2(self):
+    def test_ask_for_actions_and_apply(self):
         failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
+        action = TestAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
+                [action.get_metadata()], {'TestAction': action},
                 failed_actions, Result('origin', 'message'), {}, {}, {}]
 
-        with simulate_console_inputs('c', 'a') as generator:
+        with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
+            action.apply = unittest.mock.Mock(side_effect=AssertionError)
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 1)
-            self.assertIn('ApplyPatchAction', failed_actions)
+            self.assertIn('TestAction', failed_actions)
 
-        with simulate_console_inputs('c', 'n') as generator:
+            action.apply = lambda *args, **kwargs: {}
             ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-        with simulate_console_inputs('c', 'x') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 0)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-        with simulate_console_inputs('c', 'o') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 0)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-    def test_ask_for_actions_and_apply3(self):
-        failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
-        args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('c', 'x') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-    def test_ask_for_actions_and_apply4(self):
-        failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
-        args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('c', 1) as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-    def test_ask_for_actions_and_apply5(self):
-        failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
-        args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('c', 'i') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
+            self.assertEqual(generator.last_input, 3)
+            self.assertNotIn('TestAction', failed_actions)
 
     def test_default_input(self):
         action = TestAction()
@@ -560,10 +507,9 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input2(self):
         action = TestAction()
-        do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
-                [do_nothing_action.get_metadata(), action.get_metadata()],
-                {'DoNothingAction': do_nothing_action, 'TestAction': action},
+                [action.get_metadata()],
+                {'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 1) as generator:
@@ -571,10 +517,9 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input3(self):
         action = TestAction()
-        do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
-                [do_nothing_action.get_metadata(), action.get_metadata()],
-                {'DoNothingAction': do_nothing_action, 'TestAction': action},
+                [action.get_metadata()],
+                {'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 'a') as generator:
@@ -587,7 +532,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(5, 0) as generator:
-            self.assertFalse(ask_for_action_and_apply(*args))
+            self.assertTrue(ask_for_action_and_apply(*args))
 
     def test_default_input_apply_single_nothing(self):
         action = TestAction()
@@ -602,6 +547,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                     [action.get_metadata()], {'TestAction': action},
                     set(), Result('origin', 'message'), {}, {},
                     {}, apply_single]
+            self.assertFalse(ask_for_action_and_apply(*args))
 
         with simulate_console_inputs('') as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
@@ -634,7 +580,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                     apply_single]
 
         with simulate_console_inputs('a') as generator:
-            self.assertFalse(ask_for_action_and_apply(*args))
+            self.assertTrue(ask_for_action_and_apply(*args))
 
     def test_print_result_no_input(self):
         with make_temp() as testfile_path:

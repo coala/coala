@@ -3,6 +3,7 @@ import os
 
 from coalib.bearlib.aspects import AspectList, Root, get as get_aspect
 from coalib.bearlib.aspects.meta import issubaspect
+from coalib.bearlib.languages.Language import UnknownLanguageError
 from coalib.misc import Constants
 from coalib.settings.Section import (
     Section, Setting, append_to_sections, extract_aspects_from_section)
@@ -264,5 +265,5 @@ class SectionTest(unittest.TestCase):
         section = Section('section')
         section.append(Setting('aspects', 'commitmessage'))
         section.append(Setting('language', 'not a language'))
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(UnknownLanguageError):
             extract_aspects_from_section(section)

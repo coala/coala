@@ -16,7 +16,6 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
-from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.ShowAppliedPatchesAction \
     import ShowAppliedPatchesAction
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -33,7 +32,6 @@ ACTIONS = [DoNothingAction,
            PrintDebugMessageAction,
            ShowPatchAction,
            IgnoreResultAction,
-           ChainPatchAction,
            ShowAppliedPatchesAction]
 
 
