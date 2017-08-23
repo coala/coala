@@ -1,3 +1,4 @@
+import logging
 import os
 import pkg_resources
 import unittest
@@ -279,7 +280,10 @@ class CollectBearsTest(unittest.TestCase):
 
     def test_aspect_bear(self):
         with bear_test_module():
-            aspects = AspectList([get_aspect('unusedvariable')('py')])
+            aspects = AspectList([
+                get_aspect('unusedglobalvariable')('py'),
+                get_aspect('unusedlocalvariable')('py'),
+            ])
             local_bears, global_bears = collect_bears_by_aspects(
                 aspects,
                 [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
@@ -287,6 +291,26 @@ class CollectBearsTest(unittest.TestCase):
         self.assertEqual(len(global_bears), 0)
         self.assertEqual(len(local_bears), 1)
         self.assertIs(local_bears[0].name, 'AspectTestBear')
+
+    def test_collect_bears_unfulfilled_aspect(self):
+        aspects = AspectList([
+            get_aspect('unusedvariable')('py'),
+        ])
+
+        logger = logging.getLogger()
+        with bear_test_module(), self.assertLogs(logger, 'WARNING') as log:
+            local_bears, global_bears = collect_bears_by_aspects(
+                aspects,
+                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
+        self.assertRegex(log.output[0],
+                         'coala cannot find bear that could analyze the '
+                         'following aspects: \['
+                         "'Root\.Redundancy\.UnusedVariable\.UnusedParameter'"
+                         '\]')
+
+        self.assertEqual(global_bears, [])
+        self.assertEqual(str(local_bears),
+                         "[<class 'AspectTestBear.AspectTestBear'>]")
 
 
 class CollectorsTests(unittest.TestCase):
