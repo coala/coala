@@ -1,0 +1,14 @@
+Hi there, this file will be used to test the correct tracking of results across
+changes.
+
+before CHANGE after
+
+before
+REMOVE
+after
+
+before addition
+after
+
+Hi there, this file was used to test the correct tracking of results across
+changes.
